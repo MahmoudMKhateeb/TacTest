@@ -1,0 +1,53 @@
+<div
+  bsModal
+  #AddNewEntityModalComponent="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static', keyboard: !saving }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!--begin::Card-->
+      <div class="card card-custom">
+        <!--begin::Header-->
+        <div class="card-header align-items-center px-4 py-3">
+          <h3>{{ l('NewTemplate') }}</h3>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <form *ngIf="active" novalidate class="card-body">
+          <div class="form-group">
+            <label>{{ l('TemplateName') }}</label>
+            <input
+              #templateNameInput="ngModel"
+              name="templateName"
+              type="text"
+              class="form-control"
+              placeholder="{{ l('TemplateName') }}"
+              maxlength="50"
+              minlength="3"
+              [class.is-valid]="templateNameInput.touched && templateNameInput.valid"
+              [class.is-invalid]="templateNameInput.touched && !templateNameInput.valid"
+              [(ngModel)]="templateName"
+              required
+            />
+            <validation-messages [formCtrl]="templateNameInput"></validation-messages>
+          </div>
+          <!--end::Body-->
+          <!--begin::Footer-->
+          <div class="card-footer d-flex justify-content-end">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()" [disabled]="saving">{{ l('Close') }}</button>
+            <button type="button" class="btn btn-primary" [disabled]="saving || !templateNameInput.valid" [busyIf]="saving" (click)="save()">
+              {{ l('Save') }}
+            </button>
+          </div>
+          <!--end::Footer-->
+        </form>
+      </div>
+      <!--end::Card-->
+    </div>
+  </div>
+</div>

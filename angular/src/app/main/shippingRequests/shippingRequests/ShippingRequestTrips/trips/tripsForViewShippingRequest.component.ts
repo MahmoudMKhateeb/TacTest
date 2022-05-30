@@ -27,6 +27,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: CreateOrEditTripComponent;
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
   @ViewChild('AddRemarksModal', { static: false }) AddRemarksModal: AddNewRemarksTripModalComponent;
+  @ViewChild('saveAsTemplateModal', { static: false }) saveAsTemplateModal: ViewTripModalComponent;
 
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() shippingRequestForView: any;

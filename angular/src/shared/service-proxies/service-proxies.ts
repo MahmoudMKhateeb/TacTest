@@ -14914,6 +14914,372 @@ export class EntityLogServiceProxy {
 }
 
 @Injectable()
+export class EntityTemplateServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param type (optional)
+   * @param filter (optional)
+   * @param sorting (optional)
+   * @param maxResultCount (optional)
+   * @param skipCount (optional)
+   * @return Success
+   */
+  getAll(
+    type: SavedEntityType | undefined,
+    filter: string | null | undefined,
+    sorting: string | null | undefined,
+    maxResultCount: number | undefined,
+    skipCount: number | undefined
+  ): Observable<PagedResultDtoOfEntityTemplateListDto> {
+    let url_ = this.baseUrl + '/api/services/app/EntityTemplate/GetAll?';
+    if (type === null) throw new Error("The parameter 'type' cannot be null.");
+    else if (type !== undefined) url_ += 'Type=' + encodeURIComponent('' + type) + '&';
+    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfEntityTemplateListDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfEntityTemplateListDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfEntityTemplateListDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfEntityTemplateListDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfEntityTemplateListDto>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditEntityTemplateInputDto | undefined): Observable<string> {
+    let url_ = this.baseUrl + '/api/services/app/EntityTemplate/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<string>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<string>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<string> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = resultData200 !== undefined ? resultData200 : <any>null;
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<string>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getForView(id: number | undefined): Observable<EntityTemplateForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/EntityTemplate/GetForView?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetForView(<any>response_);
+            } catch (e) {
+              return <Observable<EntityTemplateForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<EntityTemplateForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetForView(response: HttpResponseBase): Observable<EntityTemplateForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = EntityTemplateForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<EntityTemplateForViewDto>(<any>null);
+  }
+
+  /**
+   * @param parentEntityId (optional)
+   * @return Success
+   */
+  getAllForDropdown(type: SavedEntityType, parentEntityId: string | null | undefined): Observable<SelectItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/EntityTemplate/GetAllForDropdown?';
+    if (type === undefined || type === null) throw new Error("The parameter 'type' must be defined and cannot be null.");
+    else url_ += 'Type=' + encodeURIComponent('' + type) + '&';
+    if (parentEntityId !== undefined && parentEntityId !== null) url_ += 'ParentEntityId=' + encodeURIComponent('' + parentEntityId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllForDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllForDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllForDropdown(response: HttpResponseBase): Observable<SelectItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<SelectItemDto[]>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  delete(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/EntityTemplate/Delete?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+}
+
+@Injectable()
 export class FacilitiesServiceProxy {
   private http: HttpClient;
   private baseUrl: string;
@@ -69786,6 +70152,225 @@ export class PagedResultDtoOfEntityLogListDto implements IPagedResultDtoOfEntity
 export interface IPagedResultDtoOfEntityLogListDto {
   totalCount: number;
   items: EntityLogListDto[] | undefined;
+}
+
+export enum SavedEntityType {
+  ShippingRequestTemplate = 1,
+  TripTemplate = 2,
+}
+
+export class EntityTemplateListDto implements IEntityTemplateListDto {
+  savedEntityId!: string | undefined;
+  templateName!: string | undefined;
+  creationTime!: moment.Moment;
+  entityTypeTitle!: string | undefined;
+  entityType!: SavedEntityType;
+  id!: number;
+
+  constructor(data?: IEntityTemplateListDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.savedEntityId = _data['savedEntityId'];
+      this.templateName = _data['templateName'];
+      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
+      this.entityTypeTitle = _data['entityTypeTitle'];
+      this.entityType = _data['entityType'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): EntityTemplateListDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new EntityTemplateListDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['savedEntityId'] = this.savedEntityId;
+    data['templateName'] = this.templateName;
+    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+    data['entityTypeTitle'] = this.entityTypeTitle;
+    data['entityType'] = this.entityType;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IEntityTemplateListDto {
+  savedEntityId: string | undefined;
+  templateName: string | undefined;
+  creationTime: moment.Moment;
+  entityTypeTitle: string | undefined;
+  entityType: SavedEntityType;
+  id: number;
+}
+
+export class PagedResultDtoOfEntityTemplateListDto implements IPagedResultDtoOfEntityTemplateListDto {
+  totalCount!: number;
+  items!: EntityTemplateListDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfEntityTemplateListDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(EntityTemplateListDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfEntityTemplateListDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfEntityTemplateListDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfEntityTemplateListDto {
+  totalCount: number;
+  items: EntityTemplateListDto[] | undefined;
+}
+
+export class CreateOrEditEntityTemplateInputDto implements ICreateOrEditEntityTemplateInputDto {
+  templateName!: string;
+  savedEntity!: string | undefined;
+  savedEntityId!: string | undefined;
+  entityType!: SavedEntityType;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditEntityTemplateInputDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.templateName = _data['templateName'];
+      this.savedEntity = _data['savedEntity'];
+      this.savedEntityId = _data['savedEntityId'];
+      this.entityType = _data['entityType'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditEntityTemplateInputDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditEntityTemplateInputDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['templateName'] = this.templateName;
+    data['savedEntity'] = this.savedEntity;
+    data['savedEntityId'] = this.savedEntityId;
+    data['entityType'] = this.entityType;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditEntityTemplateInputDto {
+  templateName: string;
+  savedEntity: string | undefined;
+  savedEntityId: string | undefined;
+  entityType: SavedEntityType;
+  id: number | undefined;
+}
+
+export class EntityTemplateForViewDto implements IEntityTemplateForViewDto {
+  savedEntity!: string | undefined;
+  savedEntityId!: string | undefined;
+  tenantId!: number;
+  templateName!: string | undefined;
+  creationTime!: moment.Moment;
+  entityTypeTitle!: string | undefined;
+  entityType!: SavedEntityType;
+  id!: number;
+
+  constructor(data?: IEntityTemplateForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.savedEntity = _data['savedEntity'];
+      this.savedEntityId = _data['savedEntityId'];
+      this.tenantId = _data['tenantId'];
+      this.templateName = _data['templateName'];
+      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
+      this.entityTypeTitle = _data['entityTypeTitle'];
+      this.entityType = _data['entityType'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): EntityTemplateForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new EntityTemplateForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['savedEntity'] = this.savedEntity;
+    data['savedEntityId'] = this.savedEntityId;
+    data['tenantId'] = this.tenantId;
+    data['templateName'] = this.templateName;
+    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+    data['entityTypeTitle'] = this.entityTypeTitle;
+    data['entityType'] = this.entityType;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IEntityTemplateForViewDto {
+  savedEntity: string | undefined;
+  savedEntityId: string | undefined;
+  tenantId: number;
+  templateName: string | undefined;
+  creationTime: moment.Moment;
+  entityTypeTitle: string | undefined;
+  entityType: SavedEntityType;
+  id: number;
 }
 
 export class FacilityDto implements IFacilityDto {

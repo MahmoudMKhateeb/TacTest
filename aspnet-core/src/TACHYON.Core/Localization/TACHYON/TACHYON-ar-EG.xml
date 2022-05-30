@@ -2532,5 +2532,28 @@
 		<text name="ThereAre">يوجد</text>
 		<text name="OtherUnitOfMeasure">وحدة القياس الأخرى</text>
 		<text name="OtherUnitOfMeasureHint">أدخل اسم وحدة القياس الأخرى كنص عادي</text>
+		<text name="TripTemplates">قوالب الرحلات</text>
+		<text name="SelectATripTemplate">أختر قالب الرحلة</text>
+		<text name="Load">تحميل</text>
+		<text name="SaveAsTemplate">احفظ كقالب</text>
+		<text name="NewTemplate">قالب جديد</text>
+		<text name="TemplateName">اسم القالب</text>
+		<text name="TemplateSavedSuccessfully">تم حفظ القالب بنجاح</text>
+		<text name="CreateNewTemplate">انشاء قالب جديد</text>
+		<text name="TemplateType">نوع القالب</text>
+		<text name="TemplateReference">مرجع القالب</text>
+		<text name="Template">قالب</text>
+		<text name="TemplateImportedSuccessfully">تم استيراد القالب بنجاح</text>
+		<text name="NotSupportedEntityType">نوع غير مدعوم</text>
+		<text name="TemplateNameAlreadyUsed">اسم القالب مستخدم بالفعل</text>
+		<text name="SavedTemplates">القوالب المحفوظة</text>
+		<text name="CreateEntityTemplate"> انشاء قالب</text>
+		<text name="UpdateEntityTemplate">تعديل قالب</text>
+		<text name="DeleteEntityTemplate">حذف قالب</text>
+		<text name="TemplateWithIdXIsNotFound">لم يتم العثور على القالب</text>
+		<text name="ShippingRequestTemplate">قالب طلب شحن</text>
+		<text name="TripTemplate">قالب رحلة</text>
+		<text name="UseTemplate">استخدم القالب</text>
+		<text name="TripTemplateUsageMsg">يمكنك استخدام قالب الرحلة أثناء إنشاء رحلة جديدة فقط</text>
 	</texts>
 </localizationDictionary>

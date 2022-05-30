@@ -5,12 +5,15 @@ import {
   CreateOrEditRoutPointDto,
   CreateOrEditShippingRequestTripDto,
   CreateOrEditShippingRequestTripVasDto,
+  EntityTemplateServiceProxy,
   FacilityForDropdownDto,
   GetShippingRequestVasForViewDto,
   PickingType,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
+  SavedEntityType,
+  SelectItemDto,
   ShippingRequestDto,
   ShippingRequestRouteType,
   ShippingRequestsTripServiceProxy,
@@ -34,7 +37,7 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
 import * as moment from 'moment';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
-
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 @Component({
   selector: 'AddNewTripModal',
   styleUrls: ['./createOrEditTrip.component.css'],
@@ -97,7 +100,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * DocFileUploader onProgressItem file name
    */
   docProgressFileName: any;
-
+  templatesLoading: boolean;
+  tripTemples: SelectItemDto[];
+  SavedEntityType = SavedEntityType;
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -108,7 +113,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     public _TripService: TripService,
     private _PointsService: PointsService,
     private _tokenService: TokenService,
-    private _receiversServiceProxy: ReceiversServiceProxy
+    private _receiversServiceProxy: ReceiversServiceProxy,
+    private _templates: EntityTemplateServiceProxy
   ) {
     super(injector);
   }
@@ -119,9 +125,13 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   receiversLoading: boolean;
   allReceivers: ReceiverFacilityLookupTableDto[];
   pickupPointSenderId: number;
+  selectedTemplate: number;
 
   get isFileInputValid() {
     return this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto.name ? true : false) : true;
+  }
+  get tripAsJson(): string {
+    return JSON.stringify(this.trip);
   }
   ngOnInit() {
     //link the trip from the shared service to the this component
@@ -474,7 +484,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       //to be Changed
       this._receiversServiceProxy.getAllReceiversByFacilityForTableDropdown(facilityId).subscribe((result) => {
         this.allReceivers = result;
-        console.log('all Receivers logged .................  : ', result);
         this.receiversLoading = false;
       });
     }
@@ -498,5 +507,47 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     } else {
       return true;
     }
+  }
+
+  /**
+   * Validates Shipping Request Trip Before Create Template
+   * @private
+   */
+  public PointsAreInValid(): boolean {
+    //if there is no routePoints
+    if (!isNotNullOrUndefined(this.trip.routPoints)) {
+      return true;
+    }
+    //if there is route points check for good details
+    //if there is no good details return false
+    if (this.trip.routPoints.find((x) => x.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x.goodsDetailListDto))) {
+      return true;
+    }
+    //else return false
+    return false;
+  }
+  /**
+   * load Trip Templates For Drop Down
+   */
+  loadTemplates() {
+    this.templatesLoading = true;
+    this._templates.getAllForDropdown(this.SavedEntityType.TripTemplate, this.shippingRequest.id.toString()).subscribe((res) => {
+      this.templatesLoading = false;
+      this.tripTemples = res;
+    });
+  }
+
+  /**
+   * apply Selected Template to the Trip
+   */
+  applyTemplate() {
+    let jsonObject = null;
+    this._templates.getForView(this.selectedTemplate).subscribe((res) => {
+      jsonObject = JSON.parse(res.savedEntity);
+      this.trip = jsonObject;
+      this.trip.id = undefined;
+      this.loadReceivers(this.trip.originFacilityId);
+      this._PointsService.updateWayPoints(this.trip.routPoints);
+    });
   }
 }
