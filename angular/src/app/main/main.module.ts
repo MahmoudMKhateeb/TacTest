@@ -281,6 +281,9 @@ import { AddNewRemarksTripModalComponent } from '@app/main/shippingRequests/ship
 import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 import { DriverLicenseTypeTranslationsComponent } from './driverLicenseTypes/driverLicenseTypeTranslations/driver-license-type-translations/driver-license-type-translations.component';
 
+import { CancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/cancel-trip-modal/cancel-trip-modal.component';
+import { TmsCancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/tms-cancel-trip-modal/tms-cancel-trip-modal.component';
+import { ViewCancelReasonModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/view-cancel-reason-modal/view-cancel-reason-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -534,6 +537,9 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ImportCitiesPolygonsModalComponent,
     AddNewRemarksTripModalComponent,
     DriverLicenseTypeTranslationsComponent,
+    CancelTripModalComponent,
+    TmsCancelTripModalComponent,
+    ViewCancelReasonModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

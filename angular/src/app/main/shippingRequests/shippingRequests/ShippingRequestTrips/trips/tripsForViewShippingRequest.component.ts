@@ -8,7 +8,9 @@ import {
   GetShippingRequestVasForViewDto,
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
+  ShippingRequestStatus,
   ShippingRequestsTripServiceProxy,
+  ShippingRequestTripCancelStatus,
   ShippingRequestTripStatus,
 } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
@@ -31,9 +33,11 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() shippingRequestForView: any;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
-  tripsByTmsEnabled = false;
-  saving = false;
+  tripsByTmsEnabled: boolean;
   ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
+  ShippingRequestStatusEnum = ShippingRequestStatus;
+  ShippingRequestTripCancelStatusEnum = ShippingRequestTripCancelStatus;
+  saving = false;
   constructor(
     injector: Injector,
     private _TripService: TripService,
@@ -128,5 +132,11 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   }
   ngOnChanges() {
     this.reloadPage();
+  }
+  getCancelStatus(statusId) {
+    if (statusId == this.ShippingRequestTripCancelStatusEnum.Canceled) return this.l('CanceledTrip');
+    else if (statusId == this.ShippingRequestTripCancelStatusEnum.Rejected) return this.l('RejectedTripCancelation');
+    else if (statusId == this.ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval) return this.l('WaitingCancelApproveFromTMS');
+    else return this.l('None');
   }
 }

@@ -49,7 +49,6 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   private TruckTypeId: number;
   pickUpPointSender: string;
   activeTripId: any;
-
   shippingRequestTripStatusEnum = ShippingRequestTripStatus;
   constructor(
     injector: Injector,

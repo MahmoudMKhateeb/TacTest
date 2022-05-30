@@ -275,7 +275,7 @@ namespace TACHYON.Authorization
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Delete, L("DeleteShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
 
             // new AppAuthorizationTripsProvider(pages);
-
+   
             var ShippingRequestBis = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids,
                 L("ShippingRerquestBids"), multiTenancySides: MultiTenancySides.Tenant);
             ShippingRequestBis.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids_Create,

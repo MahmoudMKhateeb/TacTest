@@ -139,43 +139,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="close()">{{ l('Cancel') }}</button>
-
-        <div *ngIf="feature.isEnabled('App.TachyonDealer') && canShowCancelButton()" class="btn-group dropdown" dropdown>
-          <button dropdownToggle class="dropdown-toggle btn btn-primary btn-sm dropdown-toggle">
-            <i class="fa fa-cog"></i><span class="caret"></span>
-            {{ 'Actions' | localize }}
-          </button>
-          <div class="dropdown-menu dropdown-menu-left dropdown-excel-operations" *dropdownMenu>
-            <a class="dropdown-item" href="javascript:;" (click)="CancelTrip()">{{ 'CancelTrip' | localize }}</a>
-            <a class="dropdown-item" href="javascript:;" (click)="ForceCancelTrip()">{{ 'ForceCancelTrip' | localize }}</a>
-          </div>
-        </div>
-
-        <button *ngIf="!feature.isEnabled('App.TachyonDealer') && canShowCancelButton()" type="button" (click)="CancelTrip()" class="btn btn-primary">
-          <i class="flaticon-cancel"></i> <span>{{ CancelationStatus }}</span>
-        </button>
-
-        <a
-          *ngIf="Trip.status < 3 && feature.isEnabled('App.Shipper') && Trip.isApproveCancledByShipper && !Trip.isApproveCancledByCarrier"
-          class="dropdown-item cancelHint infoHighLight red stautsTruck"
-          href="javascript:;"
-          >{{ l('CancelSendAndWaitForCarrier') | localize }}</a
-        >
-
-        <a
-          *ngIf="Trip.status < 3 && feature.isEnabled('App.Carrier') && Trip.isApproveCancledByCarrier && !Trip.isApproveCancledByShipper"
-          class="dropdown-item cancelHint infoHighLight red stautsTruck"
-          href="javascript:;"
-          >{{ l('CancelSendAndWaitForShipper') | localize }}</a
-        >
-
-        <a
-          *ngIf="Trip.status < 3 && feature.isEnabled('App.TachyonDealer') && (!Trip.isApproveCancledByCarrier || !Trip.isApproveCancledByShipper)"
-          class="dropdown-item cancelHint infoHighLight red stautsTruck"
-          href="javascript:;"
-          >{{ l('WaitForCancelByShipperORCarrier') | localize }}</a
-        >
+        <button type="button" class="btn btn-secondary" (click)="close()">{{ l('Close') }}</button>
       </div>
     </div>
   </div>

@@ -62,6 +62,7 @@ namespace TACHYON.Notifications
 
         #region Trips
 
+
         Task NotifyDriverWhenAssignTrip(int tripId, params UserIdentifier[] drivers);
 
         Task NotifyDriverWhenUnassignedTrip(int tripId,
@@ -86,11 +87,9 @@ namespace TACHYON.Notifications
         #region Accident
 
         Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data);
-
-        Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users,
-            ShippingRequestTrip trip,
-            User UserCancel);
-
+        Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users, ShippingRequestTrip trip, User UserCancel);
+        Task ShippingRequestTripCanceled(List<UserIdentifier> Users, ShippingRequestTrip trip, string tenantName);
+        Task ShippingRequestTripRejectCancelByTachyonDealer(List<UserIdentifier> Users, ShippingRequest request);
         #endregion
 
         #region ShippingRequest

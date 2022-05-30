@@ -1,5 +1,7 @@
 a{
     cursor:pointer;
+    background-color: unset !important;
+    text-anchor: unset !important;
 }
 ::ng-deep .p-togglebutton {
     background-color: #d82631 !important;
@@ -9,4 +11,17 @@ a{
 }
 .pi-lock:before{
     color : white!important;
+}
+
+.cancelLink{
+  color: #3699ff !important;
+}
+.noPadding{
+    padding: 0 !important;
+}
+.bg-danger{
+    background-color: #fff3f3 !important;
+}
+.noColor{
+    color: unset !important;
 }

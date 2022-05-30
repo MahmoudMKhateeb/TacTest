@@ -2758,5 +2758,24 @@
 		<text name="ThereAre">There are</text>
 		<text name="OtherUnitOfMeasure">Other Unit Of Measure</text>
 		<text name="OtherUnitOfMeasureHint">Enter the name of other unit of measure as a plain text</text>
+    <text name="ShippingRequestTripCanceled">
+      {0} has performed a cancelation on the trip
+      with the waybill number {1} from the request {2}
+    </text>
+    <text name="ShippingRequestTripRejectCancelByTachyonDealer"></text>
+    <text name="ShippingRequestTripNeedsCancelApproval"></text>
+    <text name="YouMustEnterRejectedReason">Rejected reason is required!</text>
+    <text name="CanceledReasonIsRequired">Canceled reason in required!</text>
+    <text name="TripNotFound">Trip not found</text>
+	<text name="RejectCancel">Reject Cancel Trip</text>
+	<text name="CancelReasonName">Cancelation Reason</text>
+	<text name="WaitingCancelApproveFromTMS">Waiting TMS cancel Approve</text>
+    <text name="RejectedReasonName">Rejected Reason Name</text>
+    <text name="ApproveCancelTrip">Approve Cancel Trip</text>
+	<text name="ApplyCancel">Apply Cancel</text>
+	<text name="CanceledTrip">Canceled Trip</text>
+	<text name="RejectedTripCancelation">Rejected Trip Cancelation</text>
+	<text name="ViewCancelReasonTrip">View Cancel Reason Trip</text>
+	<text name="SuccessfullyRejectCancelation">Successfully Reject Cancelation</text>
 	</texts>
 </localizationDictionary>
