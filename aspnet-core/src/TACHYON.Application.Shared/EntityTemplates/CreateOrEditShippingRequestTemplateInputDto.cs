@@ -53,6 +53,9 @@ namespace TACHYON.EntityTemplates
         public string OtherGoodsCategoryName { get; set; }
         public string OtherTransportTypeName { get; set; }
         public string OtherTrucksTypeName { get; set; }
+
+        public string OtherPackingTypeName { get; set; }
+
         // step 4
         public List<CreateOrEditShippingRequestVasListDto> ShippingRequestVasList { get; set; }
     }
