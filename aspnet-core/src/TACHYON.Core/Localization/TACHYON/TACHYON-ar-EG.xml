@@ -8,7 +8,7 @@
 		<text name="9digitsNumber">يجب أن يتكون من 9 أرقام</text>
 		<text name="About">حول التطبيق</text>
 		<text name="AboutUs">من نحن</text>
-    <text name="Abp.Organizations.OrganizationUnit">الوحدة التنظيمية</text>
+		<text name="Abp.Organizations.OrganizationUnit">الوحدة التنظيمية</text>
 		<text name="Accept">قبول</text>
     <text name="PleaseTryAgainIn5Minutes">يرجى المحاولة مرة أخرى في 5 دقائق</text>
     <text name="AcceptBid" />
@@ -82,17 +82,17 @@
 		<text name="AdminUserAccountInfo">معلومات المستخدم الرئيسي للحساب</text>
 		<text name="Adress">العنوان</text>
 		<text name="All">الكل</text>
-    <text name="NumberOfRequests">عدد الطلبات</text>
-    <text name="MostShippersRequests">الشاحن الأكثر طلباً</text>
-    <text name="MostCarriersRequests">الناقل الأكثر طلباً</text>
-    <text name="TopRatedShippers">الشاحن الأعلى تقييماً</text>
-    <text name="TopRatedCarriers">الناقل الأعلى تقييماً</text>
-    <text name="NumberOfDeliveredTrips">عدد الرحلات التي تم تسليمها</text>
-    <text name="RequestBeingPricedBeforeBidEndDate">الطلبات التى تم تسعيرها قبل انتهاء تاريخها </text>
-    <text name="RequestAcceptancePercentage">نسبة قبول الطلبات</text>
-    <text name="InvoicesPaidBeforeDueDatePercentage">النسبة المئوية للفواتير المدفوعة قبل تاريخ الاستحقاق</text>
-    <text name="UnPricedShippingRequests">طلبات الشحن التى لم يتم تسعيرها</text>
-    <text name="AllBidsOnShippingRequest">جميع التسعيرات على طلب الشحن</text>
+		<text name="NumberOfRequests">عدد الطلبات</text>
+		<text name="MostShippersRequests">الشاحن الأكثر طلباً</text>
+		<text name="MostCarriersRequests">الناقل الأكثر طلباً</text>
+		<text name="TopRatedShippers">الشاحن الأعلى تقييماً</text>
+		<text name="TopRatedCarriers">الناقل الأعلى تقييماً</text>
+		<text name="NumberOfDeliveredTrips">عدد الرحلات التي تم تسليمها</text>
+		<text name="RequestBeingPricedBeforeBidEndDate">الطلبات التى تم تسعيرها قبل انتهاء تاريخها </text>
+		<text name="RequestAcceptancePercentage">نسبة قبول الطلبات</text>
+		<text name="InvoicesPaidBeforeDueDatePercentage">النسبة المئوية للفواتير المدفوعة قبل تاريخ الاستحقاق</text>
+		<text name="UnPricedShippingRequests">طلبات الشحن التى لم يتم تسعيرها</text>
+		<text name="AllBidsOnShippingRequest">جميع التسعيرات على طلب الشحن</text>
 		<text name="AllCachesSuccessfullyCleared">تم مسح كل ذاكرة التخزين المؤقت بنجاح.</text>
 		<text name="AllFunctionalityYouHaveInTheApplication">جميع الوظائف لديك في التطبيق</text>
 		<text name="AllOfThesePermissionsMustBeGranted">لم يتم منح الصلاحيات المطلوبة. يجب منح جميع هذه الصلاحيات: {0}</text>
@@ -662,22 +662,22 @@
 		<text name="EmailActivation_Title">مرحباً بك في تاكيون</text>
 		<text name="EmailAddress">عنوان البريد الإلكتروني</text>
 		<text name="EmailConfirm">تأكيد البريد الإلكتروني</text>
-    
-    <text name="ClickButtonMessage">:الرجاء النقر على الرابط أدناه للتحقق من عنوان بريدك الإلكتروني</text>
-    <text name="CopyLinkMessage">إذا لم يعمل الزر أعلاه ، فالرجاء لصق الرابط أدناه في متصفحك</text>
-    <text name="DearsAt">الأعزاء في</text>
-    <text name="ApprovalDocumentsEmailMessage">تم إرسال هذا البريد  إليك لإبلاغك بأنه قد تم قبول مستنداتك ، ويمكنك الآن استخدام المنصة.</text>
-    <text name="DocumentsApproved">المستندات المعتمدة</text>
-    <text name="ApprovedDocuments_Title">المستندات المعتمدة</text>
 
-    <text name="SubscriptionExpiringSoon_Title">أبزيروتيمبلات إشعار انتهاء صلاحية الاشتراك</text>
-    <text name="SubscriptionExpiringSoon_Email_Body"></text>
-    <text name="SubscriptionExpiringSoon_Email_Subject"></text>
-	<text name="IssuedInvoiceMessage">شكرا لك على عملك . {0} يرجى العثور على الفاتورة المرفقة مع تاريخ الإصدار {1} بإجمالي {2} مستحقة في {3} الرجاء {4} لمزيد من التفاصيل</text>
-	<text name="DueInvoiceMessage">هذا فقط لتذكيرك بأن الفتورة {0} بأجمالي {1} اصبحت مستحقة الأن</text>
-	<text name="DocumentExpirationReminderMessage">نود إبلاغك بأن نسخة المستند {0} على وشك الانتهاء ، يرجي تقديم المستند الذي تم تجديده قبل تاريخ {1} التي  تم تحميلها على منصة تاكيون لمنع تعليق الحساب</text>
+		<text name="ClickButtonMessage">:الرجاء النقر على الرابط أدناه للتحقق من عنوان بريدك الإلكتروني</text>
+		<text name="CopyLinkMessage">إذا لم يعمل الزر أعلاه ، فالرجاء لصق الرابط أدناه في متصفحك</text>
+		<text name="DearsAt">الأعزاء في</text>
+		<text name="ApprovalDocumentsEmailMessage">تم إرسال هذا البريد  إليك لإبلاغك بأنه قد تم قبول مستنداتك ، ويمكنك الآن استخدام المنصة.</text>
+		<text name="DocumentsApproved">المستندات المعتمدة</text>
+		<text name="ApprovedDocuments_Title">المستندات المعتمدة</text>
 
-    <text name="EmailConfirmationRequiredForLogin">مطلوب تأكيد البريد الإلكتروني لتسجيل الدخول</text>
+		<text name="SubscriptionExpiringSoon_Title">أبزيروتيمبلات إشعار انتهاء صلاحية الاشتراك</text>
+		<text name="SubscriptionExpiringSoon_Email_Body"></text>
+		<text name="SubscriptionExpiringSoon_Email_Subject"></text>
+		<text name="IssuedInvoiceMessage">شكرا لك على عملك . {0} يرجى العثور على الفاتورة المرفقة مع تاريخ الإصدار {1} بإجمالي {2} مستحقة في {3} الرجاء {4} لمزيد من التفاصيل</text>
+		<text name="DueInvoiceMessage">هذا فقط لتذكيرك بأن الفتورة {0} بأجمالي {1} اصبحت مستحقة الأن</text>
+		<text name="DocumentExpirationReminderMessage">نود إبلاغك بأن نسخة المستند {0} على وشك الانتهاء ، يرجي تقديم المستند الذي تم تجديده قبل تاريخ {1} التي  تم تحميلها على منصة تاكيون لمنع تعليق الحساب</text>
+
+		<text name="EmailConfirmationRequiredForLogin">مطلوب تأكيد البريد الإلكتروني لتسجيل الدخول</text>
 		<text name="EmailMessage_CopyTheLinkBelowToYourBrowser">إذا لم يعمل الزر أعلاه ، فقم بنسخ الرابط في متصفح الانترنت:</text>
 		<text name="EmailSecurityCodeBody">رمز الأمان الخاص بك هو</text>
 		<text name="EmailSecurityCodeSubject">رمز الأمان</text>
@@ -1183,12 +1183,12 @@
 		<text name="PasswordResetMailSentMessage">رابط إعادة تعيين كلمة المرور تم إرساله إلى بريدك الإلكتروني. يرجى التحقق من رسائل بريدك الإلكتروني</text>
 		<text name="PasswordsDontMatch">كلمة المرور غير مطابقة!</text>
 
-    <text name="Contain8To12Characters">تتألف من 8 إلى 12 حرفًا</text>
-    <text name="ContainAtLeast1UpperCaseLetter">تحتوي على حرف واحد كبير على الأقل</text>
-    <text name="ContainAtLeast1LowerCaseLetter">تحتوي على حرف واحد صغير على الأقل</text>
-    <text name="ContainAtLeast1Number">تحتوي على رقم واحد على الأقل</text>
-    <text name="IfYouDidNotRequestPasswordReset">إذا لم تطلب إعادة تعيين كلمة المرور ، فلا داعي لاتخاذ أي إجراء آخر</text>
-    
+		<text name="Contain8To12Characters">تتألف من 8 إلى 12 حرفًا</text>
+		<text name="ContainAtLeast1UpperCaseLetter">تحتوي على حرف واحد كبير على الأقل</text>
+		<text name="ContainAtLeast1LowerCaseLetter">تحتوي على حرف واحد صغير على الأقل</text>
+		<text name="ContainAtLeast1Number">تحتوي على رقم واحد على الأقل</text>
+		<text name="IfYouDidNotRequestPasswordReset">إذا لم تطلب إعادة تعيين كلمة المرور ، فلا داعي لاتخاذ أي إجراء آخر</text>
+
 		<text name="PayInAdvance">الدفع مسبقاً</text>
 		<text name="Payment">دفعة</text>
 		<text name="PaymentCouldNotCompleted">تعذر إتمام الدفع</text>
@@ -1570,7 +1570,7 @@
 		<text name="SubscriptionExpire_SubTitle">يتم إرسال هذا البريد الإلكتروني إليك لإعلامك بانتهاء صلاحية الاشتراك</text>
 		<text name="SubscriptionExpire_Title">تنتهي صلاحية اشتراك أبزيروتيمبلات</text>
 		<text name="SubscriptionExpireNotification">سينتهي اشتراكك خلال {0} أيام.</text>
-		
+
 		<text name="SubscriptionExpiringSoon_SubTitle">يتم إرسال هذا البريد الإلكتروني إليك لإعلامك بانتهاء صلاحية الاشتراك.</text>
 		<text name="ShipperDoseNotHavedirectRequestCommissionFeautre">الناقل {0} لايمتلك خاصية الطلب</text>
 
@@ -2134,18 +2134,18 @@
 		<text name="Publish">نشر</text>
 		<text name="Trips:InProgress">الرحلات: قيد التنفيذ</text>
 		<text name="Trips:completed">الرحلات: مكتملة</text>
-    <text name="StandBy">تمت الموافقة/ لم تبدأ</text>
-    <text name="TripHasAnAttachment">يوجد مرفقات</text> 
-    <text name="TripNeedDeliveryNotes">بحاجة إلى مذكرة تسليم</text>
-    <text name="UploadDeliveryNote">مذكرة التسليم</text>
-    <text name="PleaseUploadDeliveryNote">يرجى رفع مذكرة التسليم</text>
-    <text name="Navigation">ابدأ التنقل</text>
-    <text name="IdDropOff">هوية المستلم</text>
-    <text name="Skip">تخطي</text>
-    <text name="Acknowledge">موافقة</text>
-    <text name="ReceiverCode">رمز المستلم</text>
-    <text name="AnotherTripWarning">ملاحظة: يجب عليك إكمال الرحلة السابقة قبل البدء برحلة جديدة</text>
-    <text name="StartMovingToOfLoadingLocation">الذهاب إلى موقع التنزيل</text>
+		<text name="StandBy">تمت الموافقة/ لم تبدأ</text>
+		<text name="TripHasAnAttachment">يوجد مرفقات</text>
+		<text name="TripNeedDeliveryNotes">بحاجة إلى مذكرة تسليم</text>
+		<text name="UploadDeliveryNote">مذكرة التسليم</text>
+		<text name="PleaseUploadDeliveryNote">يرجى رفع مذكرة التسليم</text>
+		<text name="Navigation">ابدأ التنقل</text>
+		<text name="IdDropOff">هوية المستلم</text>
+		<text name="Skip">تخطي</text>
+		<text name="Acknowledge">موافقة</text>
+		<text name="ReceiverCode">رمز المستلم</text>
+		<text name="AnotherTripWarning">ملاحظة: يجب عليك إكمال الرحلة السابقة قبل البدء برحلة جديدة</text>
+		<text name="StartMovingToOfLoadingLocation">الذهاب إلى موقع التنزيل</text>
 		<text name="Review and submit">عرض واعتماد</text>
 		<text name="Delivered">تم التوصيل</text>
 		<text name="TheNumberOfDropsMustHigerOrEqualTwo">عدد مرات التنزيل يجب ان يكون اكبر من او يساوي 2 </text>
@@ -2196,8 +2196,8 @@
 
 		<text name="CompanyNameIsAlreadyTaken">اسم الشركة {0} مستخدم مسبقاً</text>
 		<text name="PickupFacilityAndDropOffFacilityCantBeTheSame">المنشأة لا يمكن أن تكون منشأة تحميل وتنزيل في ذات الوقت</text>
-	    <text name="CreateOrEditPoint">أضافة أو تعديل موقع تنزيل</text>
-	    <text name="SelectADangerousGoodType">أختر نوع البضائع الخطرة</text>
+		<text name="CreateOrEditPoint">أضافة أو تعديل موقع تنزيل</text>
+		<text name="SelectADangerousGoodType">أختر نوع البضائع الخطرة</text>
 		<text name="DangerousGoodType">نوع البضائع الخطرة</text>
 		<text name="NotAccepted">غير مقبول</text>
 		<text name="NotRejected">غير مرفوض</text>
@@ -2246,11 +2246,11 @@
 		<text name="ClickToRateFacility">الرجاء الضغط هنا لتقييم المنشأة</text>
 		<text name="StartOffloading">بدء التنزيل </text>
 		<text name="Enter9DigitsNumber">رقم الجوال . 9 أرقام تبدأ بخمسة </text>
-		
+
 		<text name="CompanyNamePatternError">اسم الشركة اطول من 3 احرف ,الاحرف الانجليزية والارقام والشَرطة و الشَرطة السفلية مسموحة فقط</text>
 		<text name="CompanyLegalNamePatternError">الأسم القانوني للشركة اطول من 3 احرف ,الاحرف الانجليزية والعربية والارقام والشَرطة و الشَرطة السفلية مسموحة فقط</text>
-    <text name="ImportTrucksProcessStart">بدأت عملية استيراد الشاحنات</text>
-	<text name="ImportTrucksUploadFailed">فشلت عملية استيراد الشاحنات.</text>
+		<text name="ImportTrucksProcessStart">بدأت عملية استيراد الشاحنات</text>
+		<text name="ImportTrucksUploadFailed">فشلت عملية استيراد الشاحنات.</text>
 		<text name="NumberOfRating">عدد تقييمات الشركة</text>
     <text name="IsMandatoryDocumentTemplate">المستند إلزامي</text>
     <text name="IsMandatoryNumber">الرقم إلزامي</text>
@@ -2559,5 +2559,18 @@
 		<text name="TripTemplate">قالب رحلة</text>
 		<text name="UseTemplate">استخدم القالب</text>
 		<text name="TripTemplateUsageMsg">يمكنك استخدام قالب الرحلة أثناء إنشاء رحلة جديدة فقط</text>
+		<text name="ThePricePackageWasNotExists">حزمة الاسعار غير موجودة</text>
+		<text name="ThePricePackageNameIsExists">اسم حزمة الاسعار موجود من قبل</text>
+		<text name="TheShippingRequestDoesNotExist">طلب الشحن غير موجود</text>
+		<text name="ThePricePackageOfferDoesNotExist">عرض حزمة الاسعار غير موجود</text>
+		<text name="TheDirectRequestDoesNotExist">طلب الشحن المباشر غير موجود</text>
+		<text name="YouCannotAcceptTheOffer">لا يمكنك قبول العرض</text>
+		<text name="PreviewMatchingPricePackage">مشاهدة حزمة الاسعار المتطابقة</text>
+		<text name="PreviewPricePackageOffer">مشاهدة عرض حزمة الاسعار المتطابقة</text>
+		<text name="VatNotIncluded">غير شامل الضريبة</text>
+		<text name="MatchingPricePackages">حزم الأسعار المتطابقة</text>
+		<text name="CarrierRate">تقييم الناقل</text>
+		<text name="SendPricePackageOffer">إرسال عرض حزمة الأسعار</text>
+
 	</texts>
 </localizationDictionary>

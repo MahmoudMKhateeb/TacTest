@@ -46,6 +46,7 @@ using TACHYON.Nationalities.NationalitiesTranslation;
 using TACHYON.Offers;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.PriceOffers;
+using TACHYON.PricePackages;
 using TACHYON.Rating;
 using TACHYON.Receivers;
 using TACHYON.Routs;
@@ -291,6 +292,9 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<EntityLog> EntityLogs { get; set; }
         
         public DbSet<EntityTemplate> EntityTemplates { get; set; }
+        public DbSet<NormalPricePackage> NormalPricePackages { get; set; }
+        public DbSet<PricePackageOffer> PricePackageOffers { get; set; }
+        public DbSet<PricePackageOfferItem> PricePackageOfferItems { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;

@@ -321,7 +321,12 @@ import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-lis
             loadChildren: () => import('app/main/profile/profile.module').then((m) => m.ProfileModule), //Lazy load main module
             data: { preload: true },
           },
-
+          {
+            path: 'pricePackages/normalPricePackages',
+            loadChildren: () =>
+              import('app/main/pricePackages/price-package-module/price-package-module.module').then((m) => m.PricePackageModuleModule), //Lazy load main module
+            data: { preload: true },
+          },
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           //TODO:// to be removed after menu Structure work is complete
           //

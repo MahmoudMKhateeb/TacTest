@@ -10,6 +10,7 @@ namespace TACHYON.PriceOffers.Dto
         public string Filter { get; set; }
         public string Carrier { get; set; }
         public long? ShippingRequestId { get; set; }
+        public long? DirectRequestId { get; set; }
         public PriceOfferChannel? Channel { get; set; }
         public ShippingRequestType? RequestType { get; set; }
 

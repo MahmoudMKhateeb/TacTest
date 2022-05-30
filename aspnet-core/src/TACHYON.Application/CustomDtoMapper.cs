@@ -98,6 +98,9 @@ using TACHYON.Offers.Dtos;
 using TACHYON.Organizations.Dto;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.Packing.PackingTypes.Dtos;
+using TACHYON.PriceOffers;
+using TACHYON.PricePackages;
+using TACHYON.PricePackages.Dto.NormalPricePackage;
 using TACHYON.Receivers;
 using TACHYON.Receivers.Dtos;
 using TACHYON.Routs.Dtos;
@@ -790,6 +793,11 @@ namespace TACHYON
             configuration.CreateMap(typeof(TACHYONAppServiceBase.TachyonLoadResult<>), typeof(LoadResult)).ReverseMap();
 
             configuration.CreateMap<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>, PointTransactionDto>();
+
+
+
+
+
         }
 
         /// <summary>

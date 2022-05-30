@@ -26,6 +26,7 @@ namespace TACHYON.Notifications
         public const string RejectShippingRequest = "App.RejectShippingRequest";
         public const string AcceptShippingRequestBid = "App.AcceptShippingRequestBid";
         public const string ShippingRequestAsBidWithSameTruck = "App.ShippingRequestAsBidWithSameTruck";
+        public const string ShippingRequestAsBidWithMatchingPricePackage = "App.ShippingRequestAsBidWithMatchingPricePackage";
         public const string CreateShippingRequestBid = "app.CreateShippingRequestBid";
         public const string UpdateShippingRequestBid = "app.UpdateShippingRequestBid";
         public const string CancelShippingRequestBid = "app.CancelShippingRequestBid";
@@ -49,6 +50,8 @@ namespace TACHYON.Notifications
 
         public const string ShipperShippingRequestFinish = "App.Shipper.ShippingRequest.Finish";
         public const string DriverGpsOff = "App.DriverGpsOff";
+        public const string PricePackageOfferWasCreated = "App.PricePackageOfferWasCreated";
+        public const string CarrierAcceptPricePackageOffer = "App.CarrierAcceptPricePackageOffer";
 
         #region Trip
 

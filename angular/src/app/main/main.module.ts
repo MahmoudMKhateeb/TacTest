@@ -284,6 +284,8 @@ import { RequestTemplatesComponent } from './shippingRequests/shippingRequests/r
 import { CreateNewEntityTemplateModalComponent } from './shippingRequests/shippingRequests/request-templates/create-new-entity-template-modal/create-new-entity-template-modal.component';
 import { CreateOrEditTemplateDropDownButtonComponent } from './shippingRequests/shippingRequests/request-templates/create-or-edit-template-drop-down-button/create-or-edit-template-drop-down-button.component';
 import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
+import { NormalPricePackagesList } from '@app/main/shippingRequests/shippingRequests/normal-price-packages/normal-price-packages-list.component';
+import { NormalPricePackageCalculationComponent } from '@app/main/shippingRequests/shippingRequests/normal-price-packages/normal-price-package-calculation/normal-price-package-calculation-component';
 
 import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
 import { CreateOrEditPenaltyModalComponent } from './Penalties/penalties-list/create-or-edit-penalty-modal/create-or-edit-penalty-modal.component';
@@ -550,6 +552,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     PenaltiesListComponent,
     RegisterComplaintModalComponent,
     ViewComplaintModalComponent,
+    NormalPricePackagesList,
+    NormalPricePackageCalculationComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

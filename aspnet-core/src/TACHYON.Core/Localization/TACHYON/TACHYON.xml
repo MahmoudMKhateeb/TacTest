@@ -2797,5 +2797,36 @@
 	<text name="NotifyShipperWhenApplyDetention">
 		The Allowed Detention time policy in the Facility {0} was violated on the Trip {1} and according to Tachyon’s policies you will be charged {2}. Please Contact Tachyon platform administration for any Inquiries.
 	</text>
+	<text name="NormalPricePackages">Normal price packages</text>
+	<text name="PricePackages">Price packages</text>
+	<text name="DirectRequestPrice">Direct request price</text>
+	<text name="TachyonMSRequestPrice">Tachyon MS request price</text>
+	<text name="MarcketPlaceRequestPrice">Marcket place request price</text>
+	<text name="PricePerExtraDrop">Price per extra drop</text>
+	<text name="IsMultiDrop">Is multi drop</text>
+	<text name="CreateNormalPricePackage">Create normal price package</text>
+	<text name="PricePackageName">Price package name </text>
+	<text name="SelectATransportType">Select a transport type</text>
+	<text name="SelectATruckType">Select a truck type</text>
+	<text name="SelectADestination ">Select a destination </text>
+	<text name="HeaderNormalPricePackageDetails">Normal price package details</text>
+	<text name="EditNormalPricePackage">Edit normal price package</text>
+	<text name="MultipleDrop">Multiple drop</text>
+	<text name="BidNormalPricePackageWasCreated">{0} choose your PP with Ref {1} to handel his request with number {2}</text>
+	<text name="PreviewPricePackageOffer">Preview Price Package Offer</text>
+	<text name="CarrierAcceptPricePackageOffer">{0} Accept your price package offer on request {1}</text>
+	<text name="ShippingRequestAsBidWithMatchingPricePackage">Shipping Request {0} that matches You Price Package {1}, click to view details</text>
+	<text name="ThePricePackageWasNotExists">The Price Package Was Not Exists</text>
+	<text name="ThePricePackageNameIsExists">The Price Package Name Is Exists</text>
+	<text name="TheShippingRequestDoesNotExist">The Shipping Request Does Not Exist</text>
+	<text name="ThePricePackageOfferDoesNotExist">The Price Package Offer Does Not Exist</text>
+	<text name="TheDirectRequestDoesNotExist">The Direct Request Does Not Exist</text>
+	<text name="YouCannotAcceptTheOffer">You Can't Accept The Offer</text>
+    <text name="PreviewMatchingPricePackage">Preview Matching Price Package</text>
+	<text name="VatNotIncluded">Vat not included</text>
+	<text name="MatchingPricePackages">Matching price packages</text>
+	<text name="CarrierRate">Carrier rate</text>
+	<text name="SendPricePackageOffer">Send price package offer</text>
+		
 	</texts>
 </localizationDictionary>

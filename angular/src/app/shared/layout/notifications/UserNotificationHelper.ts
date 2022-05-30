@@ -150,6 +150,10 @@ export class UserNotificationHelper extends AppComponentBase {
           '&offerid=' +
           userNotification.notification.data.properties.offerid
         );
+      case 'App.PricePackageOfferWasCreated':
+        return `/app/main/directrequest/list?directRequestId=${userNotification.notification.data.properties.directRequestId}`;
+      case 'App.ShippingRequestAsBidWithSameTruck':
+        return `/app/main/marketplace/list?srId=${userNotification.notification.data.properties.shippingRequestId}`;
     }
 
     //No url for this notification
