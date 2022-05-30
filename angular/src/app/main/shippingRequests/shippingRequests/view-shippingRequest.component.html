@@ -13,6 +13,9 @@
           <a class="btn btn-outline-success" (click)="scrollToDirectRequests()">{{ l('SendDirectRequests') }}</a>
           <a class="btn btn-outline-success" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">{{ l('StartBidding') }}</a>
         </ng-container>
+        <a class="btn btn-outline-primary" (click)="srPostPriceUpdatesModal.show(activeShippingRequestId)">
+          <i class="flaticon-edit-1"></i> {{ l('ShippingRequestUpdates') }}
+        </a>
       </div>
     </sub-header>
 
@@ -383,4 +386,5 @@
   </div>
   <!--  <sendDirectRequestsModal #sendDirectRequestsModal [shippingRequestId]="activeShippingRequestId"></sendDirectRequestsModal>-->
   <tachyonDealToBiddingModal #tachyonDealToBiddingModal (modalsave)="reloadCurrentPage()"></tachyonDealToBiddingModal>
+  <SrPostPriceUpdatesModal #srPostPriceUpdatesModal></SrPostPriceUpdatesModal>
 </div>

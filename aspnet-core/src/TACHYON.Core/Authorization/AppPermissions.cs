@@ -562,6 +562,15 @@
 
         public const string Pages_Invoices_Transaction = "Pages.Invoices.Transaction";
 
+        #region ShippingRequestPostPriceUpdate
+
+        public const string Pages_SrPostPriceUpdate = "Pages.SrPostPriceUpdate";
+        public const string Pages_SrPostPriceUpdate_CreateAction = "Pages.SrPostPriceUpdate.CreateAction";
+        public const string Pages_SrPostPriceUpdate_CreateOfferAction = "Pages.SrPostPriceUpdate.CreateOfferAction";
+
+        #endregion
+        
+        
         #region shpping
 
         public const string Pages_Tracking = "Pages.shipment.Tracking";

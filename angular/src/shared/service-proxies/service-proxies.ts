@@ -30025,6 +30025,75 @@ export class PriceOfferServiceProxy {
    * @param offerId (optional)
    * @return Success
    */
+  getAsInput(id: number | undefined, offerId: number | null | undefined): Observable<CreateOrEditPriceOfferInput> {
+    let url_ = this.baseUrl + '/api/services/app/PriceOffer/GetAsInput?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    if (offerId !== undefined && offerId !== null) url_ += 'offerId=' + encodeURIComponent('' + offerId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAsInput(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAsInput(<any>response_);
+            } catch (e) {
+              return <Observable<CreateOrEditPriceOfferInput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<CreateOrEditPriceOfferInput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAsInput(response: HttpResponseBase): Observable<CreateOrEditPriceOfferInput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = CreateOrEditPriceOfferInput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<CreateOrEditPriceOfferInput>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @param offerId (optional)
+   * @return Success
+   */
   getPriceOfferForCreateOrEdit(id: number | undefined, offerId: number | null | undefined): Observable<PriceOfferDto> {
     let url_ = this.baseUrl + '/api/services/app/PriceOffer/GetPriceOfferForCreateOrEdit?';
     if (id === null) throw new Error("The parameter 'id' cannot be null.");
@@ -43420,6 +43489,295 @@ export class ShippingTypesServiceProxy {
   }
 
   protected processDeleteTranslation(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+}
+
+@Injectable()
+export class SrPostPriceUpdateServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param sorting (optional)
+   * @param maxResultCount (optional)
+   * @param skipCount (optional)
+   * @return Success
+   */
+  getAll(
+    shippingRequestId: number,
+    sorting: string | null | undefined,
+    maxResultCount: number | undefined,
+    skipCount: number | undefined
+  ): Observable<PagedResultDtoOfSrPostPriceUpdateListDto> {
+    let url_ = this.baseUrl + '/api/services/app/SrPostPriceUpdate/GetAll?';
+    if (shippingRequestId === undefined || shippingRequestId === null)
+      throw new Error("The parameter 'shippingRequestId' must be defined and cannot be null.");
+    else url_ += 'ShippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfSrPostPriceUpdateListDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfSrPostPriceUpdateListDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfSrPostPriceUpdateListDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfSrPostPriceUpdateListDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfSrPostPriceUpdateListDto>(<any>null);
+  }
+
+  /**
+   * @param srUpdateId (optional)
+   * @return Success
+   */
+  getForView(srUpdateId: number | undefined): Observable<ViewSrPostPriceUpdateDto> {
+    let url_ = this.baseUrl + '/api/services/app/SrPostPriceUpdate/GetForView?';
+    if (srUpdateId === null) throw new Error("The parameter 'srUpdateId' cannot be null.");
+    else if (srUpdateId !== undefined) url_ += 'srUpdateId=' + encodeURIComponent('' + srUpdateId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetForView(<any>response_);
+            } catch (e) {
+              return <Observable<ViewSrPostPriceUpdateDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ViewSrPostPriceUpdateDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetForView(response: HttpResponseBase): Observable<ViewSrPostPriceUpdateDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = ViewSrPostPriceUpdateDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ViewSrPostPriceUpdateDto>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createUpdateAction(body: CreateSrPostPriceUpdateActionDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/SrPostPriceUpdate/CreateUpdateAction';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateUpdateAction(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateUpdateAction(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateUpdateAction(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOfferAction(body: CreateSrPostPriceUpdateOfferActionDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/SrPostPriceUpdate/CreateOfferAction';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOfferAction(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOfferAction(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOfferAction(response: HttpResponseBase): Observable<void> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -63607,8 +63965,8 @@ export interface IGetCapacityForEditOutput {
 
 export class ISelectItemDto implements IISelectItemDto {
   id!: string | undefined;
-  displayName!: string | undefined;
   isOther!: boolean | undefined;
+  displayName!: string | undefined;
 
   constructor(data?: IISelectItemDto) {
     if (data) {
@@ -63621,8 +63979,8 @@ export class ISelectItemDto implements IISelectItemDto {
   init(_data?: any) {
     if (_data) {
       this.id = _data['id'];
-      this.displayName = _data['displayName'];
       this.isOther = _data['isOther'];
+      this.displayName = _data['displayName'];
     }
   }
 
@@ -63636,16 +63994,16 @@ export class ISelectItemDto implements IISelectItemDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['id'] = this.id;
-    data['displayName'] = this.displayName;
     data['isOther'] = this.isOther;
+    data['displayName'] = this.displayName;
     return data;
   }
 }
 
 export interface IISelectItemDto {
   id: string | undefined;
-  displayName: string | undefined;
   isOther: boolean | undefined;
+  displayName: string | undefined;
 }
 
 export enum FilterDatePeriod {
@@ -75597,12 +75955,16 @@ export class CreateOrEditPriceOfferInput implements ICreateOrEditPriceOfferInput
   commissionType!: PriceOfferCommissionType;
   vasCommissionPercentageOrAddValue!: number | undefined;
   vasCommissionType!: PriceOfferCommissionType;
+  isPostPrice!: boolean;
 
   constructor(data?: ICreateOrEditPriceOfferInput) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
       }
+    }
+    if (!data) {
+      this.isPostPrice = false;
     }
   }
 
@@ -75620,6 +75982,7 @@ export class CreateOrEditPriceOfferInput implements ICreateOrEditPriceOfferInput
       this.commissionType = _data['commissionType'];
       this.vasCommissionPercentageOrAddValue = _data['vasCommissionPercentageOrAddValue'];
       this.vasCommissionType = _data['vasCommissionType'];
+      this.isPostPrice = _data['isPostPrice'] !== undefined ? _data['isPostPrice'] : false;
     }
   }
 
@@ -75644,6 +76007,7 @@ export class CreateOrEditPriceOfferInput implements ICreateOrEditPriceOfferInput
     data['commissionType'] = this.commissionType;
     data['vasCommissionPercentageOrAddValue'] = this.vasCommissionPercentageOrAddValue;
     data['vasCommissionType'] = this.vasCommissionType;
+    data['isPostPrice'] = this.isPostPrice;
     return data;
   }
 }
@@ -75658,6 +76022,7 @@ export interface ICreateOrEditPriceOfferInput {
   commissionType: PriceOfferCommissionType;
   vasCommissionPercentageOrAddValue: number | undefined;
   vasCommissionType: PriceOfferCommissionType;
+  isPostPrice: boolean;
 }
 
 export enum UserNotificationState {
@@ -79058,28 +79423,28 @@ export interface IEnvelope {
 }
 
 export class Geometry implements IGeometry {
+  readonly area!: number;
+  dimension!: Dimension;
+  readonly geometryType!: string | undefined;
+  readonly isEmpty!: boolean;
+  readonly isValid!: boolean;
+  readonly length!: number;
+  readonly numGeometries!: number;
+  readonly numPoints!: number;
+  boundary!: Geometry;
+  centroid!: Point;
+  envelope!: Geometry;
+  interiorPoint!: Point;
+  readonly isSimple!: boolean;
+  pointOnSurface!: Point;
+  ogcGeometryType!: OgcGeometryType;
+  srid!: number;
   factory!: GeometryFactory;
   userData!: any | undefined;
-  srid!: number;
-  readonly geometryType!: string | undefined;
-  ogcGeometryType!: OgcGeometryType;
   precisionModel!: PrecisionModel;
   coordinate!: Coordinate;
   readonly coordinates!: Coordinate[] | undefined;
-  readonly numPoints!: number;
-  readonly numGeometries!: number;
-  readonly isSimple!: boolean;
-  readonly isValid!: boolean;
-  readonly isEmpty!: boolean;
-  readonly area!: number;
-  readonly length!: number;
-  centroid!: Point;
-  interiorPoint!: Point;
-  pointOnSurface!: Point;
-  dimension!: Dimension;
-  boundary!: Geometry;
   boundaryDimension!: Dimension;
-  envelope!: Geometry;
   envelopeInternal!: Envelope;
   readonly isRectangle!: boolean;
 
@@ -79093,31 +79458,31 @@ export class Geometry implements IGeometry {
 
   init(_data?: any) {
     if (_data) {
+      (<any>this).area = _data['area'];
+      this.dimension = _data['dimension'];
+      (<any>this).geometryType = _data['geometryType'];
+      (<any>this).isEmpty = _data['isEmpty'];
+      (<any>this).isValid = _data['isValid'];
+      (<any>this).length = _data['length'];
+      (<any>this).numGeometries = _data['numGeometries'];
+      (<any>this).numPoints = _data['numPoints'];
+      this.boundary = _data['boundary'] ? Geometry.fromJS(_data['boundary']) : <any>undefined;
+      this.centroid = _data['centroid'] ? Point.fromJS(_data['centroid']) : <any>undefined;
+      this.envelope = _data['envelope'] ? Geometry.fromJS(_data['envelope']) : <any>undefined;
+      this.interiorPoint = _data['interiorPoint'] ? Point.fromJS(_data['interiorPoint']) : <any>undefined;
+      (<any>this).isSimple = _data['isSimple'];
+      this.pointOnSurface = _data['pointOnSurface'] ? Point.fromJS(_data['pointOnSurface']) : <any>undefined;
+      this.ogcGeometryType = _data['ogcGeometryType'];
+      this.srid = _data['srid'];
       this.factory = _data['factory'] ? GeometryFactory.fromJS(_data['factory']) : <any>undefined;
       this.userData = _data['userData'];
-      this.srid = _data['srid'];
-      (<any>this).geometryType = _data['geometryType'];
-      this.ogcGeometryType = _data['ogcGeometryType'];
       this.precisionModel = _data['precisionModel'] ? PrecisionModel.fromJS(_data['precisionModel']) : <any>undefined;
       this.coordinate = _data['coordinate'] ? Coordinate.fromJS(_data['coordinate']) : <any>undefined;
       if (Array.isArray(_data['coordinates'])) {
         (<any>this).coordinates = [] as any;
         for (let item of _data['coordinates']) (<any>this).coordinates!.push(Coordinate.fromJS(item));
       }
-      (<any>this).numPoints = _data['numPoints'];
-      (<any>this).numGeometries = _data['numGeometries'];
-      (<any>this).isSimple = _data['isSimple'];
-      (<any>this).isValid = _data['isValid'];
-      (<any>this).isEmpty = _data['isEmpty'];
-      (<any>this).area = _data['area'];
-      (<any>this).length = _data['length'];
-      this.centroid = _data['centroid'] ? Point.fromJS(_data['centroid']) : <any>undefined;
-      this.interiorPoint = _data['interiorPoint'] ? Point.fromJS(_data['interiorPoint']) : <any>undefined;
-      this.pointOnSurface = _data['pointOnSurface'] ? Point.fromJS(_data['pointOnSurface']) : <any>undefined;
-      this.dimension = _data['dimension'];
-      this.boundary = _data['boundary'] ? Geometry.fromJS(_data['boundary']) : <any>undefined;
       this.boundaryDimension = _data['boundaryDimension'];
-      this.envelope = _data['envelope'] ? Geometry.fromJS(_data['envelope']) : <any>undefined;
       this.envelopeInternal = _data['envelopeInternal'] ? Envelope.fromJS(_data['envelopeInternal']) : <any>undefined;
       (<any>this).isRectangle = _data['isRectangle'];
     }
@@ -79132,31 +79497,31 @@ export class Geometry implements IGeometry {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['area'] = this.area;
+    data['dimension'] = this.dimension;
+    data['geometryType'] = this.geometryType;
+    data['isEmpty'] = this.isEmpty;
+    data['isValid'] = this.isValid;
+    data['length'] = this.length;
+    data['numGeometries'] = this.numGeometries;
+    data['numPoints'] = this.numPoints;
+    data['boundary'] = this.boundary ? this.boundary.toJSON() : <any>undefined;
+    data['centroid'] = this.centroid ? this.centroid.toJSON() : <any>undefined;
+    data['envelope'] = this.envelope ? this.envelope.toJSON() : <any>undefined;
+    data['interiorPoint'] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
+    data['isSimple'] = this.isSimple;
+    data['pointOnSurface'] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
+    data['ogcGeometryType'] = this.ogcGeometryType;
+    data['srid'] = this.srid;
     data['factory'] = this.factory ? this.factory.toJSON() : <any>undefined;
     data['userData'] = this.userData;
-    data['srid'] = this.srid;
-    data['geometryType'] = this.geometryType;
-    data['ogcGeometryType'] = this.ogcGeometryType;
     data['precisionModel'] = this.precisionModel ? this.precisionModel.toJSON() : <any>undefined;
     data['coordinate'] = this.coordinate ? this.coordinate.toJSON() : <any>undefined;
     if (Array.isArray(this.coordinates)) {
       data['coordinates'] = [];
       for (let item of this.coordinates) data['coordinates'].push(item.toJSON());
     }
-    data['numPoints'] = this.numPoints;
-    data['numGeometries'] = this.numGeometries;
-    data['isSimple'] = this.isSimple;
-    data['isValid'] = this.isValid;
-    data['isEmpty'] = this.isEmpty;
-    data['area'] = this.area;
-    data['length'] = this.length;
-    data['centroid'] = this.centroid ? this.centroid.toJSON() : <any>undefined;
-    data['interiorPoint'] = this.interiorPoint ? this.interiorPoint.toJSON() : <any>undefined;
-    data['pointOnSurface'] = this.pointOnSurface ? this.pointOnSurface.toJSON() : <any>undefined;
-    data['dimension'] = this.dimension;
-    data['boundary'] = this.boundary ? this.boundary.toJSON() : <any>undefined;
     data['boundaryDimension'] = this.boundaryDimension;
-    data['envelope'] = this.envelope ? this.envelope.toJSON() : <any>undefined;
     data['envelopeInternal'] = this.envelopeInternal ? this.envelopeInternal.toJSON() : <any>undefined;
     data['isRectangle'] = this.isRectangle;
     return data;
@@ -79164,28 +79529,28 @@ export class Geometry implements IGeometry {
 }
 
 export interface IGeometry {
+  area: number;
+  dimension: Dimension;
+  geometryType: string | undefined;
+  isEmpty: boolean;
+  isValid: boolean;
+  length: number;
+  numGeometries: number;
+  numPoints: number;
+  boundary: Geometry;
+  centroid: Point;
+  envelope: Geometry;
+  interiorPoint: Point;
+  isSimple: boolean;
+  pointOnSurface: Point;
+  ogcGeometryType: OgcGeometryType;
+  srid: number;
   factory: GeometryFactory;
   userData: any | undefined;
-  srid: number;
-  geometryType: string | undefined;
-  ogcGeometryType: OgcGeometryType;
   precisionModel: PrecisionModel;
   coordinate: Coordinate;
   coordinates: Coordinate[] | undefined;
-  numPoints: number;
-  numGeometries: number;
-  isSimple: boolean;
-  isValid: boolean;
-  isEmpty: boolean;
-  area: number;
-  length: number;
-  centroid: Point;
-  interiorPoint: Point;
-  pointOnSurface: Point;
-  dimension: Dimension;
-  boundary: Geometry;
   boundaryDimension: Dimension;
-  envelope: Geometry;
   envelopeInternal: Envelope;
   isRectangle: boolean;
 }
@@ -90330,6 +90695,343 @@ export interface ICreateOrEditShippingTypeTranslationDto {
   displayName: string;
   description: string | undefined;
   id: number | undefined;
+}
+
+export enum SrPostPriceUpdateAction {
+  Pending = 1,
+  Accept = 2,
+  ChangePrice = 3,
+  Reject = 4,
+}
+
+export enum SrPostPriceUpdateOfferStatus {
+  None = 0,
+  Pending = 1,
+  Accepted = 2,
+  Rejected = 3,
+}
+
+export class SrPostPriceUpdateListDto implements ISrPostPriceUpdateListDto {
+  action!: SrPostPriceUpdateAction;
+  actionTitle!: string | undefined;
+  creationTime!: moment.Moment;
+  isApplied!: boolean;
+  priceOfferId!: number | undefined;
+  offerStatus!: SrPostPriceUpdateOfferStatus;
+  offerStatusTitle!: string | undefined;
+  rejectionReason!: string | undefined;
+  id!: number;
+
+  constructor(data?: ISrPostPriceUpdateListDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.action = _data['action'];
+      this.actionTitle = _data['actionTitle'];
+      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
+      this.isApplied = _data['isApplied'];
+      this.priceOfferId = _data['priceOfferId'];
+      this.offerStatus = _data['offerStatus'];
+      this.offerStatusTitle = _data['offerStatusTitle'];
+      this.rejectionReason = _data['rejectionReason'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): SrPostPriceUpdateListDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new SrPostPriceUpdateListDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['action'] = this.action;
+    data['actionTitle'] = this.actionTitle;
+    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+    data['isApplied'] = this.isApplied;
+    data['priceOfferId'] = this.priceOfferId;
+    data['offerStatus'] = this.offerStatus;
+    data['offerStatusTitle'] = this.offerStatusTitle;
+    data['rejectionReason'] = this.rejectionReason;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ISrPostPriceUpdateListDto {
+  action: SrPostPriceUpdateAction;
+  actionTitle: string | undefined;
+  creationTime: moment.Moment;
+  isApplied: boolean;
+  priceOfferId: number | undefined;
+  offerStatus: SrPostPriceUpdateOfferStatus;
+  offerStatusTitle: string | undefined;
+  rejectionReason: string | undefined;
+  id: number;
+}
+
+export class PagedResultDtoOfSrPostPriceUpdateListDto implements IPagedResultDtoOfSrPostPriceUpdateListDto {
+  totalCount!: number;
+  items!: SrPostPriceUpdateListDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfSrPostPriceUpdateListDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(SrPostPriceUpdateListDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfSrPostPriceUpdateListDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfSrPostPriceUpdateListDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfSrPostPriceUpdateListDto {
+  totalCount: number;
+  items: SrPostPriceUpdateListDto[] | undefined;
+}
+
+export class SrUpdateChangeItem implements ISrUpdateChangeItem {
+  changeName!: string | undefined;
+  changeMsg!: string | undefined;
+
+  constructor(data?: ISrUpdateChangeItem) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.changeName = _data['changeName'];
+      this.changeMsg = _data['changeMsg'];
+    }
+  }
+
+  static fromJS(data: any): SrUpdateChangeItem {
+    data = typeof data === 'object' ? data : {};
+    let result = new SrUpdateChangeItem();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['changeName'] = this.changeName;
+    data['changeMsg'] = this.changeMsg;
+    return data;
+  }
+}
+
+export interface ISrUpdateChangeItem {
+  changeName: string | undefined;
+  changeMsg: string | undefined;
+}
+
+export class ViewSrPostPriceUpdateDto implements IViewSrPostPriceUpdateDto {
+  action!: SrPostPriceUpdateAction;
+  actionTitle!: string | undefined;
+  rejectionReason!: string | undefined;
+  creationTime!: moment.Moment;
+  isApplied!: boolean;
+  priceOfferId!: number | undefined;
+  offerStatus!: SrPostPriceUpdateOfferStatus;
+  offerStatusTitle!: string | undefined;
+  changes!: SrUpdateChangeItem[] | undefined;
+  id!: number;
+
+  constructor(data?: IViewSrPostPriceUpdateDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.action = _data['action'];
+      this.actionTitle = _data['actionTitle'];
+      this.rejectionReason = _data['rejectionReason'];
+      this.creationTime = _data['creationTime'] ? moment(_data['creationTime'].toString()) : <any>undefined;
+      this.isApplied = _data['isApplied'];
+      this.priceOfferId = _data['priceOfferId'];
+      this.offerStatus = _data['offerStatus'];
+      this.offerStatusTitle = _data['offerStatusTitle'];
+      if (Array.isArray(_data['changes'])) {
+        this.changes = [] as any;
+        for (let item of _data['changes']) this.changes!.push(SrUpdateChangeItem.fromJS(item));
+      }
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): ViewSrPostPriceUpdateDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ViewSrPostPriceUpdateDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['action'] = this.action;
+    data['actionTitle'] = this.actionTitle;
+    data['rejectionReason'] = this.rejectionReason;
+    data['creationTime'] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+    data['isApplied'] = this.isApplied;
+    data['priceOfferId'] = this.priceOfferId;
+    data['offerStatus'] = this.offerStatus;
+    data['offerStatusTitle'] = this.offerStatusTitle;
+    if (Array.isArray(this.changes)) {
+      data['changes'] = [];
+      for (let item of this.changes) data['changes'].push(item.toJSON());
+    }
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IViewSrPostPriceUpdateDto {
+  action: SrPostPriceUpdateAction;
+  actionTitle: string | undefined;
+  rejectionReason: string | undefined;
+  creationTime: moment.Moment;
+  isApplied: boolean;
+  priceOfferId: number | undefined;
+  offerStatus: SrPostPriceUpdateOfferStatus;
+  offerStatusTitle: string | undefined;
+  changes: SrUpdateChangeItem[] | undefined;
+  id: number;
+}
+
+export class CreateSrPostPriceUpdateActionDto implements ICreateSrPostPriceUpdateActionDto {
+  action!: SrPostPriceUpdateAction;
+  rejectionReason!: string | undefined;
+  offer!: CreateOrEditPriceOfferInput;
+  id!: number;
+
+  constructor(data?: ICreateSrPostPriceUpdateActionDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.action = _data['action'];
+      this.rejectionReason = _data['rejectionReason'];
+      this.offer = _data['offer'] ? CreateOrEditPriceOfferInput.fromJS(_data['offer']) : <any>undefined;
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateSrPostPriceUpdateActionDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateSrPostPriceUpdateActionDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['action'] = this.action;
+    data['rejectionReason'] = this.rejectionReason;
+    data['offer'] = this.offer ? this.offer.toJSON() : <any>undefined;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateSrPostPriceUpdateActionDto {
+  action: SrPostPriceUpdateAction;
+  rejectionReason: string | undefined;
+  offer: CreateOrEditPriceOfferInput;
+  id: number;
+}
+
+export enum SrPostPriceUpdateOfferAction {
+  Accept = 1,
+  Reject = 2,
+}
+
+export class CreateSrPostPriceUpdateOfferActionDto implements ICreateSrPostPriceUpdateOfferActionDto {
+  offerAction!: SrPostPriceUpdateOfferAction;
+  offerRejectionReason!: string | undefined;
+  id!: number;
+
+  constructor(data?: ICreateSrPostPriceUpdateOfferActionDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.offerAction = _data['offerAction'];
+      this.offerRejectionReason = _data['offerRejectionReason'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateSrPostPriceUpdateOfferActionDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateSrPostPriceUpdateOfferActionDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['offerAction'] = this.offerAction;
+    data['offerRejectionReason'] = this.offerRejectionReason;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateSrPostPriceUpdateOfferActionDto {
+  offerAction: SrPostPriceUpdateOfferAction;
+  offerRejectionReason: string | undefined;
+  id: number;
 }
 
 export class StripeConfigurationDto implements IStripeConfigurationDto {

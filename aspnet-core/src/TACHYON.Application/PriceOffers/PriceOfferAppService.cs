@@ -1,4 +1,4 @@
-﻿using Abp;
+using Abp;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -26,6 +26,7 @@ using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.SrPostPriceUpdates;
 using TACHYON.Shipping.Trips;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
@@ -46,13 +47,15 @@ namespace TACHYON.PriceOffers
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IRepository<TrucksTypesTranslation> _truckTypeTranslationRepository;
+        private readonly IRepository<Facility,long> _facilityRepository;
+        private readonly IRepository<SrPostPriceUpdate,long> _srPostPriceUpdateRepository;
 
 
         private IRepository<VasPrice> _vasPriceRepository;
         public PriceOfferAppService(IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
             IRepository<ShippingRequest, long> shippingRequestsRepository, PriceOfferManager priceOfferManager,
             IRepository<PriceOffer, long> priceOfferRepository, IRepository<VasPrice> vasPriceRepository,
-            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<TrucksTypesTranslation> truckTypeTranslationRepository)
+            IRepository<City> cityRepository, IRepository<TrucksType, long> trucksTypeRepository, IAppNotifier appNotifier, IRepository<ShippingRequestTrip> shippingRequestTripRepository,IRepository<TrucksTypesTranslation> truckTypeTranslationRepository, IRepository<Facility, long> facilityRepository, IRepository<SrPostPriceUpdate, long> srPostPriceUpdateRepository)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -64,6 +67,8 @@ namespace TACHYON.PriceOffers
             _appNotifier = appNotifier;
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _truckTypeTranslationRepository = truckTypeTranslationRepository;
+            _facilityRepository = facilityRepository;
+            _srPostPriceUpdateRepository = srPostPriceUpdateRepository;
         }
         #region Services
 
@@ -121,7 +126,53 @@ namespace TACHYON.PriceOffers
 
             return searchList;
         }
+        
+        // todo (this action for test only ) remove it after development
+        public async Task<CreateOrEditPriceOfferInput> GetAsInput(long id, long? offerId)
+        {
+            
+            DisableTenancyFilters();
+            var shippingRequest = await _shippingRequestsRepository.GetAll()
+                .Include(x => x.ShippingRequestVases)
+                .ThenInclude(v => v.VasFk)
+                .SingleAsync(x => x.Id == id);
 
+            var offer = await _priceOfferRepository
+                .GetAll()
+                .Include(i => i.PriceOfferDetails)
+                .Where(x => x.ShippingRequestId == shippingRequest.Id)
+                .Where( x => x.Id == offerId).FirstOrDefaultAsync();
+            CreateOrEditPriceOfferInput priceOfferDto = new CreateOrEditPriceOfferInput();
+            if (offer != null)
+            {
+                priceOfferDto = ObjectMapper.Map<CreateOrEditPriceOfferInput>(offer);
+                priceOfferDto.ItemDetails = new List<PriceOfferDetailDto>();
+
+                if (shippingRequest.ShippingRequestVases == null || shippingRequest.ShippingRequestVases.Count <= 0)
+                    return priceOfferDto;
+                
+
+                foreach (var vas in shippingRequest.ShippingRequestVases)
+                {
+                    var item = new PriceOfferDetailDto()
+                    {
+                        CommissionType = PriceOfferCommissionType.CommissionValue,
+                        Price = 0,
+                        PriceType = PriceOfferType.Vas,
+                        CommissionPercentageOrAddValue = 0,
+                        ItemId = vas.Id
+                    };
+
+                    priceOfferDto.ItemDetails.Add(item);
+                }
+
+
+            }
+            
+            return priceOfferDto;
+            
+        }
+        
         /// <summary>
         /// Get the price offer when the user need to create offer or edit
         /// </summary>
@@ -132,10 +183,18 @@ namespace TACHYON.PriceOffers
         public async Task<PriceOfferDto> GetPriceOfferForCreateOrEdit(long id, long? OfferId)
         {
             DisableTenancyFilters();
+
+            var hasPostPriceUpdate = await _srPostPriceUpdateRepository.GetAll()
+                .AnyAsync(x => x.ShippingRequestId == id && x.Action == SrPostPriceUpdateAction.Pending);
+
             var shippingRequest = await _shippingRequestsRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
-                  .ThenInclude(v => v.VasFk)
-                .FirstOrDefaultAsync(x => x.Id == id && (x.Status == ShippingRequestStatus.PrePrice || x.Status == ShippingRequestStatus.NeedsAction || x.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier));
+                .ThenInclude(v => v.VasFk)
+                .WhereIf(!hasPostPriceUpdate,x=> (x.Status ==
+                ShippingRequestStatus.PrePrice ||
+                x.Status == ShippingRequestStatus.NeedsAction ||
+                x.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier))
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (shippingRequest == null) throw new UserFriendlyException(L("TheRecordIsNotFound"));
 
@@ -220,8 +279,9 @@ namespace TACHYON.PriceOffers
 
             foreach (var item in priceOfferDto.Items)
             {
-                item.ItemName = offer.ShippingRequestFk.ShippingRequestVases.FirstOrDefault(x => x.Id == item.SourceId)?.VasFk.Key;
-                if (await IsShipper())
+                item.ItemName = offer.ShippingRequestFk?.ShippingRequestVases?.FirstOrDefault(x => x.Id == item.SourceId)?
+                    .VasFk?.Name ?? L("VasRemoved");
+                if (AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper))
                 {
                     item.ItemPrice = item.ItemSubTotalAmountWithCommission;
                     item.ItemTotalAmount = item.ItemTotalAmountWithCommission;

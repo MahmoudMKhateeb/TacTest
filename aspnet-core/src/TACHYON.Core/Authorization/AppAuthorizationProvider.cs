@@ -1,8 +1,10 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using TACHYON.Authorization.Permissions.Shipping.Trips;
+using TACHYON.Features;
 
 namespace TACHYON.Authorization
 {
@@ -645,6 +647,21 @@ namespace TACHYON.Authorization
 
 
 
+            #region SrPostPricePermissions
+
+            
+           var srPostPrice = context.CreatePermission(AppPermissions.Pages_SrPostPriceUpdate, L("SrPostPriceUpdates"),
+                multiTenancySides: MultiTenancySides.Tenant);
+
+           srPostPrice.CreateChildPermission(AppPermissions.Pages_SrPostPriceUpdate_CreateAction,
+               L("SrPostPriceUpdateAction"), multiTenancySides: MultiTenancySides.Tenant,
+               featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier));
+
+           srPostPrice.CreateChildPermission(AppPermissions.Pages_SrPostPriceUpdate_CreateOfferAction,
+               L("SrPostPriceUpdateOfferAction"), multiTenancySides: MultiTenancySides.Tenant,
+               featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper));
+
+           #endregion
 
 
 
