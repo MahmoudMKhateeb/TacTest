@@ -573,6 +573,15 @@
         public const string Pages_NormalPricePackages_Edit = "Pages.NormalPricePackages.Edit";
         public const string Pages_NormalPricePackages_Delete = "Pages.NormalPricePackages.Delete";
 
+        #region ShippingRequestPostPriceUpdate
+
+        public const string Pages_SrPostPriceUpdate = "Pages.SrPostPriceUpdate";
+        public const string Pages_SrPostPriceUpdate_CreateAction = "Pages.SrPostPriceUpdate.CreateAction";
+        public const string Pages_SrPostPriceUpdate_CreateOfferAction = "Pages.SrPostPriceUpdate.CreateOfferAction";
+
+        #endregion
+        
+        
         #region shpping
 
         public const string Pages_Tracking = "Pages.shipment.Tracking";

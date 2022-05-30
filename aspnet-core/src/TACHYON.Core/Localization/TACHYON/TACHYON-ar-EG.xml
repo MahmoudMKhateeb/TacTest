@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="ar-EG">
 	<texts>
 		<text name="{0}IsInvalid">"{0}" غير صالح</text>
@@ -2572,5 +2572,49 @@
 		<text name="CarrierRate">تقييم الناقل</text>
 		<text name="SendPricePackageOffer">إرسال عرض حزمة الأسعار</text>
 
+        
+	<text name="PostPriceSrUpdatedMsg">تم إجراء تغيير على تفاصيل الطلب بالرقم المرجعي {0}.</text>
+		<text name="PostPriceSrUpdateActionMsg">التغيير الذي أجريته في الطلب باستخدام الرقم المرجعي {0} تم {1}الرقم المرجعي {0} تم {1}</text>
+		<text name="PostPriceSrUpdateChangeInPriceRequestedMsg">التغيير الذي أجريته في الطلب بمرجع {} تم قبوله مع تغيير في السعر</text>
+		<text name="PostPriceUpdateWaitingForCarrierAction">بأنتظار إجراء الناقل </text>
+		<text name="AcceptedPostPriceUpdateByCarrier">قبول التغيير</text>
+		<text name="ChangePriceRequestedForPostPriceUpdate">قبول مع إعادة التسعير</text>
+		<text name="RejectedPostPriceUpdateByCarrier">رفض التغيير</text>
+    <text name="OfferRejected">تم رفض التسعير</text>
+    <text name="OfferAccepted">تم قبول التسعير</text>
+    <text name="PendingShipperAction">في إنتظار إجراء الشاحن</text>
+    <text name="NoActionYet">لا يوجد اجراء بعد</text>
+
+    <text name="VasRemoved">تم حذف الخدمة الإضافية </text>
+
+    <text name="ChangedFromTo">تم التغيير من {0} الى {1}</text>
+    <text name="MaxAmountChangedFromTo">تم تغيير اعلى قيمة من {0} الى {1}</text>
+    <text name="MaxCountChangedFromTo">تم تغيير أقصى عدد من {0} الى {1}</text>
+    <text name="NumberOfTripsChangedFromTo">تم عدد الرحلات من {0} الى {1}</text>
+
+    <text name="ViewOffer">عرض التسعير</text>
+    <text name="ShippingRequestUpdates">تغييرات طلب الشحن</text>
+    <text name="ViewShippingRequestUpdate">عرض تغيير طلب الشحن</text>
+
+    <text name="Applied">تم تطبيقه</text>
+    <text name="NotApplied">لم يتم تطبيقه</text>
+
+    <text name="UpdateAdditionDate">تاريخ اضافة التعديل</text>
+    <text name="UpdateAction">إجراء التعديل</text>
+    <text name="IsUpdateApplied">حالة تطبيق التعديل </text>
+    <text name="UpdateChangesDetails">تفاصيل تغييرات التعديل</text>
+    <text name="ChangeName">اسم التغيير</text>
+    <text name="ChangeDetails">تفاصيل التغيير</text>
+    <text name="RejectUpdate">رفض التغيير</text>
+    <text name="UpdateRejectionReason">سبب رفض التغيير</text>
+    <text name="RejectedSuccessfully">تم الرفض بنجاح</text>
+    <text name="PriceOfferStatus">حالة عرض السعر</text>
+    <text name="NewVasAdded">تم إضافة خدمة إضافية جديدة</text>
+
+    <text name="MaxCountWithValue">أقصى عدد ({0})</text>
+    <text name="MaxAmountWithValue">أقصى قيمة ({0})</text>
+    <text name="NumberOfTripsWtihValue">عدد الرحلات ({0})</text>
+    <text name="PostPriceUpdateWarningMsg">أنت تقوم بالتعديل في مرحلة ما بعد التسعير، اي تغيير تقوم به لن يأخد تأثير على الفور، تحتاج الى إنتظار إجراء الناقل لمزيد من التفاصيل انتقل إلى تحديثات طلب الشحن</text>
+    
 	</texts>
 </localizationDictionary>

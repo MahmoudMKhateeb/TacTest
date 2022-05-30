@@ -666,6 +666,24 @@ namespace TACHYON.Authorization
             normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Edit, L("EditNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
             normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Delete, L("DeleteNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
 
+            #region SrPostPricePermissions
+
+            
+           var srPostPrice = context.CreatePermission(AppPermissions.Pages_SrPostPriceUpdate, L("SrPostPriceUpdates"),
+                multiTenancySides: MultiTenancySides.Tenant);
+
+           srPostPrice.CreateChildPermission(AppPermissions.Pages_SrPostPriceUpdate_CreateAction,
+               L("SrPostPriceUpdateAction"), multiTenancySides: MultiTenancySides.Tenant,
+               featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier));
+
+           srPostPrice.CreateChildPermission(AppPermissions.Pages_SrPostPriceUpdate_CreateOfferAction,
+               L("SrPostPriceUpdateOfferAction"), multiTenancySides: MultiTenancySides.Tenant,
+               featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper));
+
+           #endregion
+
+
+
 
         }
 

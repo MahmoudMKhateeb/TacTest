@@ -2828,5 +2828,48 @@
 	<text name="CarrierRate">Carrier rate</text>
 	<text name="SendPricePackageOffer">Send price package offer</text>
 		
+    <text name="PostPriceSrUpdatedMsg">A Change was made on the details of request with the reference Number {0}.</text>
+    <text name="PostPriceSrUpdateActionMsg">The Change That you made in the Request with the reference number {0} was {1}</text>
+    <text name="PostPriceSrUpdateChangeInPriceRequestedMsg">The Change That you made in the Request with the reference number {0} was Accepted with a change in price.</text>
+	<text name="PostPriceUpdateWaitingForCarrierAction">Pending carrier action</text>
+	<text name="AcceptedPostPriceUpdateByCarrier">Accept Change</text>
+	<text name="ChangePriceRequestedForPostPriceUpdate">Accept with reprice</text>
+	<text name="RejectedPostPriceUpdateByCarrier">Reject Change</text>
+	<text name="OfferRejected">Offer Rejected</text>
+	<text name="OfferAccepted">Offer Accepted</text>
+	<text name="PendingShipperAction">Pending Shipper Action</text>
+	<text name="NoActionYet">No action yet</text>
+	<text name="VasRemoved">Vas removed</text>
+
+  <text name="ChangedFromTo">Changed from ({0}) to ({1})</text>
+	<text name="MaxAmountChangedFromTo">Max amount changed from {0} to {1}</text>
+  <text name="MaxCountChangedFromTo">Max count changed from {0} to {1}</text>
+  <text name="NumberOfTripsChangedFromTo">Number of trips changed from {0} to {1}</text>
+  
+	<text name="ViewOffer">View offer</text>
+	<text name="ShippingRequestUpdates">Shipping Request Updates</text>
+	<text name="ViewShippingRequestUpdate">View Shipping Request Update</text>
+    
+	<text name="Applied">Applied</text>
+	<text name="NotApplied">Not applied</text>
+    
+	<text name="UpdateAdditionDate">Update addition date</text>
+	<text name="UpdateAction">Update action</text>
+	<text name="IsUpdateApplied">Is update applied</text>
+	<text name="UpdateChangesDetails">Update changes details</text>
+	<text name="ChangeName">Change name</text>
+	<text name="ChangeDetails">Change details</text>
+    
+	<text name="RejectUpdate">Reject Update</text>
+	<text name="UpdateRejectionReason">Update rejection reason</text>
+  <text name="RejectedSuccessfully">Rejected successfully</text>
+  <text name="PriceOfferStatus">Price offer status</text>
+  <text name="NewVasAdded">New vas added</text>
+    
+  <text name="MaxCountWithValue">Max count ({0})</text>
+  <text name="MaxAmountWithValue">Max amount ({0})</text>
+  <text name="NumberOfTripsWtihValue">number of trips ({0})</text>
+  <text name="PostPriceUpdateWarningMsg">You are doing changes in post pricing stage, Any change you are adding will not take effect immediately, You need to wait for carrier action for more details go to shipping request updates </text>
+	
 	</texts>
 </localizationDictionary>

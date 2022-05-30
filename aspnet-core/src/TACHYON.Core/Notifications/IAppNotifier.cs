@@ -14,6 +14,7 @@ using TACHYON.PricePackages.Dto.NormalPricePackage;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.SrPostPriceUpdates;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.TachyonPriceOffers;
 
@@ -207,5 +208,25 @@ namespace TACHYON.Notifications
         Task NotfiyCarrierWhenReceiveBidPricePackage(int carrierTenantId, string SenderTenantName, string pricePackageId, long directRequestId, string referanceNumber);
         Task CarrierAcceptPricePackageOffer(int tenantId, string carrierTenantName, string requestReferance, long shippingRequestId);
         Task ShippingRequestAsBidWithMatchingPricePackage(List<CarrierPricePackageDto> carriers, string shippingRequestReferance, long shippingRequestId);
+
+        #region ShippingRequestPostPriceUpdate
+
+        Task NotifyCarrierWhenPostPriceSrUpdated(long srId, string referenceNumber, int carrierTenantId);
+
+        /// <summary>
+        /// This method <b>used only for (Accept or Reject) </b>shipping request post price update <br/>
+        /// Note: don't use it when carrier request a change in price
+        /// and use this method when change in price requested <see cref="NotifyShipperWhenRequestChangePrice"/>
+        /// </summary>
+        /// <param name="srId"></param>
+        /// <param name="tenantId"></param>
+        /// <param name="referenceNumber"></param>
+        /// <param name="action"></param>
+        Task NotifyShipperForPostPriceSrUpdateAction(long srId,int tenantId,string referenceNumber,SrPostPriceUpdateAction action);
+
+        Task NotifyShipperWhenRequestChangePrice(long srId, int tenantId, string referenceNumber);
+
+        #endregion
+
     }
 }
