@@ -767,7 +767,7 @@ namespace TACHYON
             configuration.CreateMap<GetAllInvoiceItemDto, InvoiceNoteItem>();
 
             configuration.CreateMap<CreateOrEditInvoiceNoteDto, InvoiceNote>()
-                .ForMember(dto=>dto.InvoiceItems , options=>options.MapFrom(entity=>entity.InvoiceItems))
+                .ForMember(dto=>dto.InvoiceItems , options=>options.Ignore())
                 .AfterMap(AddOrUpdateInvoiceNote)
                 .ReverseMap();
 
