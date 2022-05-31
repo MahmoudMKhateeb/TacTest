@@ -25,12 +25,13 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   active = false;
   noteTypeId: number;
-  form: CreateOrEditInvoiceNoteDto;
+  form: CreateOrEditInvoiceNoteDto = new CreateOrEditInvoiceNoteDto();
   noteTypeEnum = NoteType;
   noteTypes = this.enumToArray.transform(this.noteTypeEnum);
   allCompanies: CompayForDropDownDto[];
   allInvoices: InvoiceRefreanceNumberDto[];
   allWaybills: GetAllInvoiceItemDto[] = [];
+  selectedWaybills: GetAllInvoiceItemDto[] = [];
   saving: boolean;
   manualInvoiceNoteIsEnabled = true;
 
@@ -70,6 +71,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
   save() {
     // console.log(this.form);
     this.saving = true;
+    this.form.invoiceItems = this.selectedWaybills;
     this._invoiceNoteServiceProxy
       .createOrEdit(this.form)
       .pipe(
@@ -98,6 +100,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
       //edit
       this._invoiceNoteServiceProxy.getInvoiceNoteForEdit(id).subscribe((res) => {
         this.form = res;
+        this.selectedWaybills = res.invoiceItems;
         this.getAllInvoicesByCompanyId();
         console.log('Edit Fired .........');
         //this.getAllWaybillByInvoiceId();

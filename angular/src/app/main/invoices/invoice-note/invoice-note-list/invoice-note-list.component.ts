@@ -28,7 +28,7 @@ import { VoidInvoiceNoteModalComponent } from './void-invoice-note-modal/void-in
 export class InvoiceNoteListComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
   @ViewChild('inoviceNoteModalComponent') inoviceNoteModalComponent: InoviceNoteModalComponent;
-  @ViewChild('createOrEditNoteModalComponent') createOrEditNoteModalComponent: CreateOrEditNoteModalComponent;
+  @ViewChild('createOrEditNoteModalComponent', { static: true }) createOrEditNoteModalComponent: CreateOrEditNoteModalComponent;
   @ViewChild('voidInvoice') voidInvoice: VoidInvoiceNoteModalComponent;
   @ViewChild('noteModal') noteModal: NoteModalComponent;
 

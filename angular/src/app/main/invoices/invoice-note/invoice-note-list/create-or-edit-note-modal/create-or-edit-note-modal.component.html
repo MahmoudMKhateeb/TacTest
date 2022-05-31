@@ -144,15 +144,15 @@
                 />
               </div>
             </ng-container>
-            <div *ngIf="!form.isManual" class="col-lg-12 mt-4">
+            <div class="col-lg-12 mt-4">
               <label>{{ l('Waybills') }} <span class="required-fileds">*</span></label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
                 <p-multiSelect
                   [options]="allWaybills"
-                  [(ngModel)]="form.invoiceItems"
+                  [(ngModel)]="selectedWaybills"
                   name="Waybills"
-                  defaultLabel="{{ l('SelectWayBills') }}"
-                  optionLabel="waybillNumber"
+                  dataKey="waybillNumber"
+                  [optionLabel]="'waybillNumber'"
                   display="chip"
                   required
                 ></p-multiSelect>
