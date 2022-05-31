@@ -245,14 +245,14 @@ namespace TACHYON.Invoices.InvoiceNotes
                 return await _invoiveTripRepository.GetAll()
                .Where(x => x.InvoiceId == id)
                .Include(x => x.ShippingRequestTripFK)
-               .Select(x => new GetAllInvoiceItemDto() { TripId = x.TripId, WaybillNumber = x.ShippingRequestTripFK.WaybillNumber.Value })
+               .Select(x => new GetAllInvoiceItemDto() {TripId = x.TripId, WaybillNumber = x.ShippingRequestTripFK.WaybillNumber.Value })
                .AsNoTracking()
                .ToListAsync();
             }
             return await _submitInvoiceTrip.GetAll()
             .Where(x => x.SubmitId == id)
             .Include(x => x.ShippingRequestTripFK)
-            .Select(x => new GetAllInvoiceItemDto() {Id=x.Id, TripId = x.TripId, WaybillNumber = x.ShippingRequestTripFK.WaybillNumber.Value })
+            .Select(x => new GetAllInvoiceItemDto() {TripId = x.TripId, WaybillNumber = x.ShippingRequestTripFK.WaybillNumber.Value })
             .AsNoTracking()
             .ToListAsync();
         }
