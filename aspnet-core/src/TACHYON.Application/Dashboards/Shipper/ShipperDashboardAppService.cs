@@ -38,28 +38,25 @@ namespace TACHYON.Dashboards.Shipper
     {
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
-        private readonly IRepository<InvoiceTrip, long> _invoiceTripsRepository;
-        private readonly IRepository<RoutPointDocument, long> _routePointDocumentRepository;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly IRepository<Invoice, long> _invoiceRepository;
         private readonly IRepository<PriceOffer, long> _priceOffersRepository;
+        private readonly IRepository<ShippingRequestTripAccident> _accidentRepository;
 
         public ShipperDashboardAppService(
              IRepository<ShippingRequest, long> shippingRequestRepository,
              IRepository<ShippingRequestTrip> shippingRequestTripRepository,
-             IRepository<InvoiceTrip, long> invoiceTripsRepository,
-             IRepository<RoutPointDocument, long> routePointDocumentRepository,
              IRepository<DocumentFile, Guid> documentFileRepository,
              IRepository<Invoice, long> invoiceRepository,
-             IRepository<PriceOffer, long> priceOffersRepository)
+             IRepository<PriceOffer, long> priceOffersRepository,
+             IRepository<ShippingRequestTripAccident> accidentRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
-            _invoiceTripsRepository = invoiceTripsRepository;
-            _routePointDocumentRepository = routePointDocumentRepository;
             _documentFileRepository = documentFileRepository;
             _invoiceRepository = invoiceRepository;
             _priceOffersRepository = priceOffersRepository;
+            _accidentRepository = accidentRepository;
         }
 
 
@@ -396,8 +393,8 @@ namespace TACHYON.Dashboards.Shipper
                     WaybillNumber = rp.WaybillNumber,
                     Longitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.X : 0),
                     Latitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.Y : 0)
-                }).ToList()
-
+                }).ToList(),
+                HasIncident = _accidentRepository.GetAll().Any(a=> a.RoutPointFK.ShippingRequestTripId == s.Id),
             });
 
             var pagedAndFilteredTrips = trips
