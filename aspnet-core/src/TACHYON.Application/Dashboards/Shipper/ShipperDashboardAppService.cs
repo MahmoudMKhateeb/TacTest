@@ -362,17 +362,21 @@ namespace TACHYON.Dashboards.Shipper
             .Include(r => r.RoutPoints)
             .ThenInclude(r => r.FacilityFk)
             .Include(x => x.OriginFacilityFk)
-            .ThenInclude(x => x.CityFk)
+            .ThenInclude(x => x.CityFk).ThenInclude(x=> x.Translations)
             .Include(x => x.DestinationFacilityFk)
-            .ThenInclude(x => x.CityFk)
+            .ThenInclude(x => x.CityFk).ThenInclude(x=> x.Translations)
             .AsNoTracking()
             .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
             .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
             .Where(r => r.Status == ShippingRequestTripStatus.InTransit && r.CreationTime.Year == Clock.Now.Year)
             .Select(s => new TrackingMapDto()
             {
-                DestinationCity = s.DestinationFacilityFk.Name,
-                OriginCity = s.OriginFacilityFk.Name,
+                DestinationCity = s.DestinationFacilityFk.CityFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null
+                    ? s.DestinationFacilityFk.CityFk.DisplayName: s.DestinationFacilityFk.CityFk.Translations
+                        .FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName ,
+                OriginCity = s.OriginFacilityFk.CityFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null
+                    ? s.OriginFacilityFk.CityFk.DisplayName: s.OriginFacilityFk.CityFk.Translations
+                        .FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName,
                 DestinationLongitude = (s.DestinationFacilityFk.Location != null ? s.DestinationFacilityFk.Location.X : 0),
                 DestinationLatitude = (s.DestinationFacilityFk.Location != null ? s.DestinationFacilityFk.Location.Y : 0),
                 OriginLongitude = (s.OriginFacilityFk.Location != null ? s.OriginFacilityFk.Location.X : 0),
