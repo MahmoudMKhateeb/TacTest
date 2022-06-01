@@ -356,6 +356,8 @@ namespace TACHYON.Dashboards.Shipper
             var trips = _shippingRequestTripRepository.GetAll()
             .Include(r => r.ShippingRequestFk)
             .ThenInclude(r => r.Tenant)
+            .Include(r => r.ShippingRequestFk).ThenInclude(x=> x.TrucksTypeFk)
+            .ThenInclude(x=> x.Translations)
             .Include(r => r.RoutPoints)
             .ThenInclude(r => r.FacilityFk)
             .Include(x => x.OriginFacilityFk)
@@ -395,6 +397,9 @@ namespace TACHYON.Dashboards.Shipper
                     Latitude = (rp.FacilityFk.Location != null ? rp.FacilityFk.Location.Y : 0)
                 }).ToList(),
                 HasIncident = _accidentRepository.GetAll().Any(a=> a.RoutPointFK.ShippingRequestTripId == s.Id),
+                TruckType = s.ShippingRequestFk.TrucksTypeFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null
+                    ? s.ShippingRequestFk.TrucksTypeFk.Key : s.ShippingRequestFk.TrucksTypeFk.Translations
+                        .FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName
             });
 
             var pagedAndFilteredTrips = trips
