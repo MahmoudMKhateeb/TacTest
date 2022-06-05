@@ -65,6 +65,8 @@
     <Compile Remove="Migrations\20220316075549_Add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
     <Compile Remove="Migrations\20220524121023_Edit_NoteType_Enum.cs" />
     <Compile Remove="Migrations\20220524121023_Edit_NoteType_Enum.Designer.cs" />
+    <Compile Remove="Migrations\20220602080553_AddPrice_InvoiceNoteItem.cs" />
+    <Compile Remove="Migrations\20220602080553_AddPrice_InvoiceNoteItem.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />

@@ -23,6 +23,8 @@ using TACHYON.Invoices.InoviceNote.Dto;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
+using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.ShippingRequestTripVases;
 
 namespace TACHYON.Invoices.InvoiceNotes
 {
@@ -33,6 +35,8 @@ namespace TACHYON.Invoices.InvoiceNotes
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<Invoice, long> _invoiceReposity;
         private readonly IRepository<InvoiceTrip, long> _invoiveTripRepository;
+        private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
+        private readonly IRepository<ShippingRequestTripVas, long> _shippingRequestTripVasRepository;
         private readonly IRepository<SubmitInvoiceTrip, long> _submitInvoiceTrip;
         private readonly IRepository<SubmitInvoice, long> _submitInvoiceReposity;
         private readonly IRepository<InvoiceNoteItem, long> _invoiceNoteItemReposity;
@@ -41,7 +45,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         private readonly IAbpSession _AbpSession;
         private readonly UserManager _userManager;
 
-        public InvoiceNoteAppService(IRepository<InvoiceNote, long> invoiceRepository, IRepository<Tenant> tenantRepository, IRepository<Invoice, long> invoiceReposity, IRepository<InvoiceTrip, long> invoiveTripRepository, IRepository<SubmitInvoiceTrip, long> submitInvoiceTrip, IAppNotifier appNotifier, IRepository<SubmitInvoice, long> submitInvoiceReposity, IRepository<InvoiceNoteItem, long> invoiceNoteItemReposity, IRepository<DocumentFile, Guid> documentFileRepository, UserManager userManager, IAbpSession abpSession)
+        public InvoiceNoteAppService(IRepository<InvoiceNote, long> invoiceRepository, IRepository<Tenant> tenantRepository, IRepository<Invoice, long> invoiceReposity, IRepository<InvoiceTrip, long> invoiveTripRepository, IRepository<SubmitInvoiceTrip, long> submitInvoiceTrip, IAppNotifier appNotifier, IRepository<SubmitInvoice, long> submitInvoiceReposity, IRepository<InvoiceNoteItem, long> invoiceNoteItemReposity, IRepository<DocumentFile, Guid> documentFileRepository, UserManager userManager, IAbpSession abpSession, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequestTripVas, long> shippingRequestTripVasRepository)
         {
             _invoiceNoteRepository = invoiceRepository;
             _tenantRepository = tenantRepository;
@@ -54,6 +58,8 @@ namespace TACHYON.Invoices.InvoiceNotes
             _documentFileRepository = documentFileRepository;
             _userManager = userManager;
             _AbpSession = abpSession;
+            _shippingRequestTripRepository = shippingRequestTripRepository;
+            _shippingRequestTripVasRepository = shippingRequestTripVasRepository;
         }
 
         #region MainFunctions
@@ -208,7 +214,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         {
             return await _tenantRepository.GetAll()
                 .Where(x => x.EditionId == ShipperEditionId || x.EditionId == CarrierEditionId)
-                .Select(x => new CompayForDropDownDto { Id = x.Id, DisplayName = x.TenancyName }).AsNoTracking().ToListAsync();
+                .Select(x => new CompayForDropDownDto { Id = x.Id, DisplayName = x.TenancyName,isShipper=x.EditionId == ShipperEditionId }).AsNoTracking().ToListAsync();
         }
         /// <summary>
         ///  Get All Invoice Number Base On Company DropDown
@@ -256,6 +262,67 @@ namespace TACHYON.Invoices.InvoiceNotes
             .AsNoTracking()
             .ToListAsync();
         }
+
+        public async Task<WaybillsVasesPricesOutput> GetWaybillOrVasPrices(int? tripId, long? tripVasId, bool isShipperTenant)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            if (tripId != null)
+            {
+                return await CalculateTripPrices(tripId, isShipperTenant);
+            }
+            else
+            {
+                return await CalculateTripVasPrices(tripVasId, isShipperTenant);
+            }
+
+        }
+
+        private async Task<WaybillsVasesPricesOutput> CalculateTripVasPrices(long? tripVasId, bool isShipperTenant)
+        {
+            var tripVas = await _shippingRequestTripVasRepository.FirstOrDefaultAsync(tripVasId.Value);
+            if (isShipperTenant)
+            {
+                return new WaybillsVasesPricesOutput
+                {
+                    price = tripVas.TotalAmountWithCommission,
+                    TotalAmount = tripVas.TotalAmount,
+                    VatAmount = tripVas.VatAmount
+                };
+            }
+            else
+            {
+                return new WaybillsVasesPricesOutput
+                {
+                    price = tripVas.TotalAmount,
+                    TotalAmount = tripVas.TotalAmount,
+                    VatAmount = tripVas.VatAmount
+                };
+            }
+        }
+
+        private async Task<WaybillsVasesPricesOutput> CalculateTripPrices(int? tripId, bool isShipperTenant)
+        {
+            var trip = await _shippingRequestTripRepository.FirstOrDefaultAsync(tripId.Value);
+
+            if (isShipperTenant)
+            {
+                return new WaybillsVasesPricesOutput
+                {
+                    price = trip.TotalAmountWithCommission,
+                    TotalAmount = trip.TotalAmountWithCommission,
+                    VatAmount = trip.VatAmountWithCommission
+                };
+            }
+            else
+            {
+                return new WaybillsVasesPricesOutput
+                {
+                    price = trip.TotalAmount,
+                    TotalAmount = trip.TotalAmount,
+                    VatAmount = trip.VatAmount
+                };
+            }
+        }
         #endregion
 
         #region Helper
@@ -263,13 +330,27 @@ namespace TACHYON.Invoices.InvoiceNotes
         [RequiresFeature(AppFeatures.TachyonDealer)]
         private async Task Create(CreateOrEditInvoiceNoteDto input)
         {
+            if (input.InvoiceItems.Any())
+            {
+                foreach (var noteItem in input.InvoiceItems)
+                {
+                    noteItem.TotalAmount = noteItem.Price + noteItem.VatAmount;
+                }
+            }
+            else
+            {
+                if (input.Price <= 0)
+                    throw new UserFriendlyException(L("PriceMustGreaterThanZero"));
+                input.TotalValue = input.Price + input.VatAmount;
+            }
+
             var invoiceNote = ObjectMapper.Map<InvoiceNote>(input);
             
             var invoiceNoteId = await _invoiceNoteRepository.InsertAndGetIdAsync(invoiceNote);
 
             invoiceNote.ReferanceNumber = GenerateInvoiceNoteReferanceNumber(invoiceNoteId, invoiceNote.NoteType);
             if (input.InvoiceItems.Any())
-                await ItemValueCalculator(input.InvoiceNumber, invoiceNote.InvoiceItems, invoiceNote);
+                 ItemValueCalculator(invoiceNote.InvoiceItems, invoiceNote);
         }
         [AbpAuthorize(AppPermissions.Pages_InvoiceNote_Edit)]
         [RequiresFeature(AppFeatures.TachyonDealer)]
@@ -283,18 +364,23 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             ObjectMapper.Map(model, inoviceNote);
 
-            if (!inoviceNote.IsManual)
-                await ItemValueCalculator(inoviceNote.InvoiceNumber, inoviceNote.InvoiceItems, inoviceNote);
+           // if (!inoviceNote.IsManual)
+                 ItemValueCalculator(inoviceNote.InvoiceItems, inoviceNote);
         }
-        private async Task ItemValueCalculator(long InvoiceNumber, List<InvoiceNoteItem> items, InvoiceNote invoiceNote)
+        private void ItemValueCalculator(List<InvoiceNoteItem> items, InvoiceNote invoiceNote)
         {
-            await DisableTenancyFilterIfTachyonDealerOrHost();
-            var invoiceTenant = await _invoiceReposity.FirstOrDefaultAsync(x => x.InvoiceNumber == InvoiceNumber);
-            if (invoiceTenant != null)
-                await CalculateForShipper(InvoiceNumber, items, invoiceNote);
-            else
-                await CalculateForCarrier(InvoiceNumber, items, invoiceNote);
+            //await DisableTenancyFilterIfTachyonDealerOrHost();
+            //var invoiceTenant = await _invoiceReposity.FirstOrDefaultAsync(x => x.InvoiceNumber == InvoiceNumber);
+            //if (invoiceTenant != null)
+            //    await CalculateForShipper(InvoiceNumber, items, invoiceNote);
+            //else
+            //    await CalculateForCarrier(InvoiceNumber, items, invoiceNote);
+            invoiceNote.Price = items.Sum(r => r.Price);
+            invoiceNote.TotalValue = items.Sum(r => r.TotalAmount);
+            invoiceNote.VatAmount = items.Sum(r => r.VatAmount);
         }
+
+
         private async Task CalculateForShipper(long InvoiceNumber, List<InvoiceNoteItem> items, InvoiceNote invoiceNote)
         {
             var trips = await _invoiceReposity.GetAll()
@@ -381,6 +467,8 @@ namespace TACHYON.Invoices.InvoiceNotes
             var invoiceNoteId = await _invoiceNoteRepository.InsertAndGetIdAsync(invoiceNote);
             invoiceNote.ReferanceNumber = GenerateInvoiceNoteReferanceNumber(invoiceNoteId, NoteType.Credit);
         }
+        #endregion
+        #region report
         public List<InvoiceNoteInfoDto> GetInvoiceNoteReportInfo(long id)
         {
             DisableTenancyFilters();
@@ -418,21 +506,7 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             return new List<InvoiceNoteInfoDto>() { invoiceNoteDto };
         }
-        private async Task<InvoiceNote> GetInvoiceNoteInfo(long invoiceNoteId)
-        {
-            var invoiceNote = await _invoiceNoteRepository.GetAll()
-                 .Include(x => x.InvoiceItems)
-                 .ThenInclude(z => z.ShippingRequestTripFK)
-                 .ThenInclude(v => v.ShippingRequestTripVases)
-                 .ThenInclude(t => t.ShippingRequestVasFk)
-                 .ThenInclude(m => m.VasFk)
-                 .FirstOrDefaultAsync(x => x.Id == invoiceNoteId);
-
-            if (invoiceNote == null)
-                throw new UserFriendlyException(L("Theinvoicedoesnotfound"));
-
-            return invoiceNote;
-        }
+       
         public List<InvoiceNoteItemDto> GetInvoiceNoteItemReportInfo(long invoiceNoteId)
         {
             DisableTenancyFilters();
@@ -443,28 +517,31 @@ namespace TACHYON.Invoices.InvoiceNotes
             if (!invoiceNote.IsManual)
             {
                 List<InvoiceNoteItemDto> Items = new List<InvoiceNoteItemDto>();
-                invoiceNote.InvoiceItems.ToList().ForEach(trip =>
+                invoiceNote.InvoiceItems.ToList().ForEach(invoiceItem =>
                 {
                     Items.Add(new InvoiceNoteItemDto
                     {
                         Sequence = $"{Sequence}/{TotalItem}",
                         Price =
-                                AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
-                                    ? trip.ShippingRequestTripFK.SubTotalAmount.Value
-                                    : trip.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
+                                //AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
+                                //    ? invoiceItem.ShippingRequestTripFK.SubTotalAmount.Value
+                                //    : invoiceItem.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
+                                invoiceItem.Price,
                         VatAmount =
-                                AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
-                                    ? trip.ShippingRequestTripFK.VatAmount.Value
-                                    : trip.ShippingRequestTripFK.VatAmountWithCommission.Value,
+                                //AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
+                                //    ? trip.ShippingRequestTripFK.VatAmount.Value
+                                //    : trip.ShippingRequestTripFK.VatAmountWithCommission.Value,
+                                invoiceItem.VatAmount,
                         TotalAmount =
-                                AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
-                                    ? trip.ShippingRequestTripFK.TotalAmount.Value
-                                    : trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
-                        WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
+                                //AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier)
+                                //    ? trip.ShippingRequestTripFK.TotalAmount.Value
+                                //    : trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
+                                invoiceItem.TotalAmount,
+                        WayBillNumber = invoiceItem.ShippingRequestTripFK.WaybillNumber.ToString(),
                         Date =
-                            trip.ShippingRequestTripFK.EndTripDate.HasValue
-                                ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy")
-                                : trip.InvoiceNoteFK.CreationTime.ToString("dd/MM/yyyy")
+                            invoiceItem.ShippingRequestTripFK.EndTripDate.HasValue
+                                ? invoiceItem.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy")
+                                : invoiceItem.InvoiceNoteFK.CreationTime.ToString("dd/MM/yyyy")
                     });
                     Sequence++;
                 });
@@ -479,6 +556,22 @@ namespace TACHYON.Invoices.InvoiceNotes
                 VatAmount = x.VatAmount,
                 WayBillNumber = x.WaybillNumber
             }).ToList();
+        }
+
+        private async Task<InvoiceNote> GetInvoiceNoteInfo(long invoiceNoteId)
+        {
+            var invoiceNote = await _invoiceNoteRepository.GetAll()
+                 .Include(x => x.InvoiceItems)
+                 .ThenInclude(z => z.ShippingRequestTripFK)
+                 .ThenInclude(v => v.ShippingRequestTripVases)
+                 .ThenInclude(t => t.ShippingRequestVasFk)
+                 .ThenInclude(m => m.VasFk)
+                 .FirstOrDefaultAsync(x => x.Id == invoiceNoteId);
+
+            if (invoiceNote == null)
+                throw new UserFriendlyException(L("Theinvoicedoesnotfound"));
+
+            return invoiceNote;
         }
         private string GenerateInvoiceNoteReferanceNumber(long id, NoteType noteType)
         {

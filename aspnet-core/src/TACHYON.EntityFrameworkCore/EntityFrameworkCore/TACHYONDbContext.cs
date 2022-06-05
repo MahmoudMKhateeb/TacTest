@@ -247,7 +247,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<GroupPeriodInvoice> GroupPeriodInvoice { get; set; }
         public DbSet<InvoicePaymentMethod> InvoicePaymentMethods { get; set; }
         public DbSet<InvoiceNote> InvoiceNotes { get; set; }
-        public DbSet<InvoiceNoteItem> InvoiceNoteItem { get; set; }
+        public DbSet<InvoiceNoteItem> InvoiceNoteItems { get; set; }
         public DbSet<SubmitInvoice> SubmitInvoices { get; set; }
         public DbSet<SubmitInvoiceTrip> SubmitInvoiceTrips { get; set; }
         public virtual DbSet<BalanceRecharge> BalanceRecharge { get; set; }

@@ -22,5 +22,6 @@ namespace TACHYON.Invoices.InoviceNote.Dto
         public decimal VatAmount { get; set; }
         public string ReferanceNumber { get; set; }
         public long InvoiceNumber { get; set; }
+        public decimal Price { get; set; }
     }
 }

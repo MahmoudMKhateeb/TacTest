@@ -84,10 +84,6 @@
           <DataField>ContractNo</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="NoteTypeTitle">
-          <DataField>NoteTypeTitle</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="Address">
           <DataField>Address</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -104,10 +100,18 @@
           <DataField>VatAmount</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="Note">
+          <DataField>Note</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Price">
+          <DataField>Price</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>GetInvoiceNoteReportInfoDataset</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\Mohammed\source\repos\tachyon-core\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceNoteReportInfoDataset.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceNoteReportInfoDataset.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
@@ -843,6 +847,141 @@
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
+                  <Height>0.6cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox5">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Invoice Subtotal SAR</Value>
+                                  <Style>
+                                    <FontFamily>Cairo SemiBold</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Color>#282828</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox5</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>White</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <BackgroundColor>#e1e1e1</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>6pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox6">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=First(Fields!Price.Value, "GetInvoiceNoteReportInfoDataset")</Value>
+                                  <Style>
+                                    <FontFamily>Cairo</FontFamily>
+                                    <FontSize>7.5pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Color>#181818</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>SAR</Value>
+                                  <Style>
+                                    <FontFamily>Cairo</FontFamily>
+                                    <FontSize>7.5pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Color>#181818</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox6</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>White</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>#e1e1e1</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox7">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>مجموع الفاتوة ر.س</Value>
+                                  <Style>
+                                    <FontFamily>Cairo</FontFamily>
+                                    <FontSize>7pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox7</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>White</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <BackgroundColor>#e1e1e1</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
                   <Height>0.71413cm</Height>
                   <TablixCells>
                     <TablixCell>
@@ -991,7 +1130,6 @@
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <FontWeight>Normal</FontWeight>
                                   </Style>
                                 </TextRun>
                                 <TextRun>
@@ -999,7 +1137,6 @@
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <FontWeight>Normal</FontWeight>
                                   </Style>
                                 </TextRun>
                                 <TextRun>
@@ -1007,7 +1144,6 @@
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <FontWeight>Normal</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1144,7 +1280,6 @@
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
                                   </Style>
                                 </TextRun>
@@ -1190,6 +1325,9 @@
             <TablixRowHierarchy>
               <TablixMembers>
                 <TablixMember>
+                  <KeepWithGroup>After</KeepWithGroup>
+                </TablixMember>
+                <TablixMember>
                   <Group Name="Details7" />
                   <TablixMembers>
                     <TablixMember />
@@ -1201,7 +1339,7 @@
             <DataSetName>GetInvoiceNoteReportInfoDataset</DataSetName>
             <Top>6.6896cm</Top>
             <Left>10.18206cm</Left>
-            <Height>1.42826cm</Height>
+            <Height>2.02826cm</Height>
             <Width>9.18154cm</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -1214,8 +1352,8 @@
             <Source>Embedded</Source>
             <Value>ID154405</Value>
             <Sizing>FitProportional</Sizing>
-            <Top>9.53285cm</Top>
-            <Left>1.10737cm</Left>
+            <Top>10.12552cm</Top>
+            <Left>1.13515cm</Left>
             <Height>1.84177cm</Height>
             <Width>4.5419cm</Width>
             <ZIndex>2</ZIndex>
@@ -1246,8 +1384,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox107</rd:DefaultName>
-            <Top>8.53598cm</Top>
-            <Left>1.10737cm</Left>
+            <Top>9.12865cm</Top>
+            <Left>1.13515cm</Left>
             <Height>0.82048cm</Height>
             <Width>4.5419cm</Width>
             <ZIndex>3</ZIndex>
@@ -1284,9 +1422,9 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>2.63878in</Top>
+            <Top>2.6337in</Top>
             <Left>0.42368in</Left>
-            <Height>0.56231in</Height>
+            <Height>0.79853in</Height>
             <Width>3.51556in</Width>
             <ZIndex>4</ZIndex>
             <Style>

@@ -8,5 +8,6 @@ namespace TACHYON.Invoices.InoviceNote.Dto
     {
         public int Id { get; set; }
         public string DisplayName { get; set; }
+        public bool isShipper { get; set; }
     }
 }
