@@ -18,6 +18,7 @@ import { CreateOrEditNoteModalComponent } from './create-or-edit-note-modal/crea
 import { InoviceNoteModalComponent } from './inovice-note-modal/inovice-note-modal.component';
 import { NoteModalComponent } from './note-modal/note-modal.component';
 import { VoidInvoiceNoteModalComponent } from './void-invoice-note-modal/void-invoice-note-modal.component';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   selector: 'app-invoice-note-list',
@@ -31,6 +32,7 @@ export class InvoiceNoteListComponent extends AppComponentBase implements OnInit
   @ViewChild('createOrEditNoteModalComponent', { static: true }) createOrEditNoteModalComponent: CreateOrEditNoteModalComponent;
   @ViewChild('voidInvoice') voidInvoice: VoidInvoiceNoteModalComponent;
   @ViewChild('noteModal') noteModal: NoteModalComponent;
+  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
   Tenants: ISelectItemDto[];
   dataSource: any = {};
@@ -88,7 +90,8 @@ export class InvoiceNoteListComponent extends AppComponentBase implements OnInit
 
   downloadReport(id: number) {
     this._InvoiceReportServiceProxy.downloadInvoiceNoteReportPdf(id).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
+      let temp = this._fileDownloadService.downloadTempFile(result);
+      this.fileViwerComponent.show(temp, 'pdf');
     });
   }
 
