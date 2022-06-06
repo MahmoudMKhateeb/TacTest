@@ -1,4 +1,4 @@
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -14,12 +14,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Dashboards.Host.Dto;
 using TACHYON.Dashboards.Shipper;
 using TACHYON.Dashboards.Shipper.Dto;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Invoices;
 using TACHYON.MultiTenancy;
@@ -30,6 +32,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Tenants.Dashboard.Dto;
+using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.Dashboards.Shipper
 {
@@ -42,6 +45,7 @@ namespace TACHYON.Dashboards.Shipper
         private readonly IRepository<Invoice, long> _invoiceRepository;
         private readonly IRepository<PriceOffer, long> _priceOffersRepository;
         private readonly IRepository<ShippingRequestTripAccident> _accidentRepository;
+        private readonly IRepository<TrucksType,long> _truckTypesRepository;
 
         public ShipperDashboardAppService(
              IRepository<ShippingRequest, long> shippingRequestRepository,
@@ -49,7 +53,8 @@ namespace TACHYON.Dashboards.Shipper
              IRepository<DocumentFile, Guid> documentFileRepository,
              IRepository<Invoice, long> invoiceRepository,
              IRepository<PriceOffer, long> priceOffersRepository,
-             IRepository<ShippingRequestTripAccident> accidentRepository)
+             IRepository<ShippingRequestTripAccident> accidentRepository,
+             IRepository<TrucksType, long> truckTypesRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
@@ -57,6 +62,7 @@ namespace TACHYON.Dashboards.Shipper
             _invoiceRepository = invoiceRepository;
             _priceOffersRepository = priceOffersRepository;
             _accidentRepository = accidentRepository;
+            _truckTypesRepository = truckTypesRepository;
         }
 
 
@@ -370,6 +376,8 @@ namespace TACHYON.Dashboards.Shipper
             .WhereIf(!input.WaybillNumber.IsNullOrEmpty(),x=> x.WaybillNumber.HasValue && x.WaybillNumber.ToString().Contains(input.WaybillNumber))
             .WhereIf(input.TruckTypeId.HasValue,x=> x.ShippingRequestFk.TrucksTypeId == input.TruckTypeId)
             .WhereIf(input.RouteType.HasValue,x=> x.ShippingRequestFk.RouteTypeId == input.RouteType)
+            .WhereIf(input.SourceCityId.HasValue,x=> x.OriginFacilityFk.CityId == input.SourceCityId )
+            .WhereIf(input.DestinationCityId.HasValue,x=> x.DestinationFacilityFk.CityId == input.DestinationCityId )
             .WhereIf(!input.DriverName.IsNullOrEmpty(),x=> x.AssignedDriverUserFk.Name.Contains(input.DriverName) || x.AssignedDriverUserFk.Surname.Contains(input.DriverName))
             .Where(r => r.Status == ShippingRequestTripStatus.InTransit && r.CreationTime.Year == Clock.Now.Year)
             .Select(s => new TrackingMapDto()
@@ -400,6 +408,7 @@ namespace TACHYON.Dashboards.Shipper
                 TruckType = s.ShippingRequestFk.TrucksTypeFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null
                     ? s.ShippingRequestFk.TrucksTypeFk.Key : s.ShippingRequestFk.TrucksTypeFk.Translations
                         .FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName,
+                DriverName = $"{s.AssignedDriverUserFk.Name} {s.AssignedDriverUserFk.Surname}",
                 ExpectedDeliveryTime = s.ExpectedDeliveryTime.HasValue ? s.ExpectedDeliveryTime.ToString() : String.Empty,
             });
 
@@ -414,6 +423,20 @@ namespace TACHYON.Dashboards.Shipper
                 await pagedAndFilteredTrips.ToListAsync()
             );
 
+        }
+
+        [AbpAuthorize]
+        public async Task<List<SelectItemDto>> GetAllTruckTypesForDropdown()
+        {
+            var truckTypesList = await ( from truckType in _truckTypesRepository.GetAll().AsNoTracking()
+                let truckTypeTrans = truckType.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                select new SelectItemDto()
+                {
+                    Id = truckType.Id.ToString(),
+                    DisplayName = truckTypeTrans != null ? truckTypeTrans.DisplayName : truckType.Key
+                }).ToListAsync();
+
+            return truckTypesList;
         }
 
         #region Helpers

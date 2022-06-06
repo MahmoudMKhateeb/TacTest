@@ -22,6 +22,10 @@ namespace TACHYON.Dashboards.Shipper.Dto
         public string WaybillNumber { get; set; }
 
         public string DriverName { get; set; }
+
+        public int? SourceCityId { get; set; }
+        
+        public int? DestinationCityId { get; set; }
         
     }
 

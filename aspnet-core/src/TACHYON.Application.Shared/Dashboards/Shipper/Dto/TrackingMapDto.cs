@@ -1,4 +1,4 @@
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
@@ -24,6 +24,7 @@ namespace TACHYON.Dashboards.Shipper.Dto
         public string WayBillNumber { get; set; }
 
         public string ExpectedDeliveryTime { get; set; }
+        public string DriverName { get; set; }
         public string TruckType { get; set; }
         public bool HasIncident { get; set; }
         public List<RoutePointsTripDto> RoutPoints { get; set; }
