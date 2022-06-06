@@ -12,6 +12,7 @@ import {
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { finalize } from 'rxjs/operators';
+import { timeStamp } from 'console';
 
 @Component({
   selector: 'create-or-edit-note-modal',
@@ -34,6 +35,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
   selectedWaybills: GetAllInvoiceItemDto[] = [];
   saving: boolean;
   manualInvoiceNoteIsEnabled = true;
+  waybillsLoading = false;
 
   constructor(inject: Injector, private _invoiceNoteServiceProxy: InvoiceNoteServiceProxy, private enumToArray: EnumToArrayPipe) {
     super(inject);
@@ -56,22 +58,34 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
   getAllInvoicesByCompanyId() {
     this._invoiceNoteServiceProxy.getAllInvoiceNumberBaseOnCompanyDropDown(this.form.tenantId).subscribe((res) => {
       this.allInvoices = res;
-      this.getAllWaybillByInvoiceId();
+      //this.getAllWaybillByInvoiceId();
     });
   }
 
   getAllWaybillByInvoiceId() {
+    this.waybillsLoading = true;
     if (this.form.id) this.form.invoiceItems = [];
     let id = this.allInvoices.find((x) => x.refreanceNumber == this.form.invoiceNumber).id;
-    this._invoiceNoteServiceProxy.getAllInvoicmItemDto(id).subscribe((res) => {
-      this.allWaybills = res;
-    });
+    console.log(id);
+    this._invoiceNoteServiceProxy
+      .getAllInvoicmItemDto(id)
+      .pipe(
+        finalize(() => {
+          this.waybillsLoading = false;
+        })
+      )
+      .subscribe((res) => {
+        this.allWaybills = res;
+      });
   }
 
   save() {
     // console.log(this.form);
     this.saving = true;
-    this.form.invoiceItems = this.selectedWaybills;
+    //this.selectedWaybills=this.allWaybills.filter(item => { return item.checked; })
+    this.form.invoiceItems = this.selectedWaybills.filter((item) => {
+      return item.checked;
+    });
     this._invoiceNoteServiceProxy
       .createOrEdit(this.form)
       .pipe(
@@ -98,13 +112,21 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
     this.form = new CreateOrEditInvoiceNoteDto();
     if (isNotNullOrUndefined(id)) {
       //edit
-      this._invoiceNoteServiceProxy.getInvoiceNoteForEdit(id).subscribe((res) => {
-        this.form = res;
-        this.selectedWaybills = res.invoiceItems;
-        this.getAllInvoicesByCompanyId();
-        console.log('Edit Fired .........');
-        //this.getAllWaybillByInvoiceId();
-      });
+      this._invoiceNoteServiceProxy
+        .getInvoiceNoteForEdit(id)
+        .pipe(
+          finalize(() => {
+            this.getAllWaybillByInvoiceId();
+          })
+        )
+        .subscribe((res) => {
+          this.form = res;
+          this.selectedWaybills = res.invoiceItems;
+          this.getAllInvoicesByCompanyId();
+          console.log('Edit Fired .........');
+        });
+    } else {
+      this.form.vatAmount = 0;
     }
     this.modal.show();
     console.log(this.form);
@@ -124,5 +146,26 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
       this.getAllInvoicesByCompanyId();
       this.form.invoiceItems = [];
     }
+  }
+
+  calculator(price: number, taxVat: number, index: number): void {
+    this.allWaybills[index].vatAmount = (price * taxVat) / 100;
+    this.allWaybills[index].totalAmount = this.allWaybills[index].vatAmount + price;
+    this.selectedWaybills = this.allWaybills.filter((item) => {
+      return item.checked;
+    });
+    //this.allWaybills.push();
+    var sumAllPrice = this.selectedWaybills.reduce((prev, next) => prev + next.price, 0);
+    this.form.price = sumAllPrice;
+    var allVatAmount = this.selectedWaybills.reduce((prev, next) => prev + next.vatAmount, 0);
+    this.form.vatAmount = allVatAmount;
+    this.form.totalValue = sumAllPrice + allVatAmount;
+    // console.log(this.form.price);
+    // console.log(this.form);
+  }
+
+  CalculateTotalPrice(): void {
+    this.form.totalValue = this.form.price + this.form.vatAmount;
+    console.log(this.form);
   }
 }

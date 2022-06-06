@@ -8,7 +8,7 @@
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-md">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="save()">
         <div class="modal-header">
@@ -90,8 +90,8 @@
                 </select>
               </div>
             </div>
-            <ng-container *ngIf="form.isManual">
-              <div class="col-lg-12 mt-4">
+            <!--<ng-container *ngIf="form.isManual">
+               <div class="col-lg-12 mt-4">
                 <label>{{ l('WaybillNumber') }} <span class="required-fileds">*</span></label>
                 <input
                   #waybillNumberfreeText="ngModel"
@@ -103,8 +103,8 @@
                   [class.is-invalid]="waybillNumberfreeText.invalid && (waybillNumberfreeText.dirty || waybillNumberfreeText.touched)"
                   required
                 />
-              </div>
-              <div class="col-lg-12 mt-4">
+              </div> -->
+            <!-- <div class="col-lg-12 mt-4">
                 <label>{{ l('TotalValue') }} <span class="required-fileds">*</span></label>
                 <input
                   #totalValue="ngModel"
@@ -114,7 +114,8 @@
                   name="totalValue"
                   [class.is-valid]="totalValue.valid && (totalValue.dirty || totalValue.touched)"
                   [class.is-invalid]="totalValue.invalid && (totalValue.dirty || totalValue.touched)"
-                  [required]="form.isManual"
+                  [required]="!form.invoiceItems"
+                  [disabled]="form.invoiceItems"
                 />
               </div>
               <div class="col-lg-12 mt-4">
@@ -127,25 +128,28 @@
                   name="vatAmount"
                   [class.is-valid]="vatAmount.valid && (vatAmount.dirty || vatAmount.touched)"
                   [class.is-invalid]="vatAmount.invalid && (vatAmount.dirty || vatAmount.touched)"
-                  [required]="form.isManual"
+                  [required]="!form.invoiceItems"
+                  [disabled]="form.invoiceItems"
                 />
               </div>
               <div class="col-lg-12 mt-4">
                 <label>{{ l('Price') }} <span class="required-fileds">*</span></label>
+                 [class.is-valid]="Price.valid && (Price.dirty || Price.touched)"
+                  [class.is-invalid]="Price.invalid && (Price.dirty || Price.touched)" 
                 <input
                   #Price="ngModel"
                   type="number"
                   class="form-control"
                   [(ngModel)]="form.price"
                   name="Price"
-                  [class.is-valid]="Price.valid && (Price.dirty || Price.touched)"
-                  [class.is-invalid]="Price.invalid && (Price.dirty || Price.touched)"
-                  [required]="form.isManual"
+                  
+                  [required]="!form.invoiceItems"
+                  [disabled]="form.invoiceItems"
                 />
               </div>
-            </ng-container>
-            <div class="col-lg-12 mt-4">
-              <label>{{ l('Waybills') }} <span class="required-fileds">*</span></label>
+            </ng-container> -->
+            <div class="row col-lg-12 mt-4">
+              <!-- <label>{{ l('Waybills') }} <span class="required-fileds">*</span></label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
                 <p-multiSelect
                   [options]="allWaybills"
@@ -156,8 +160,138 @@
                   display="chip"
                   required
                 ></p-multiSelect>
+              </div> -->
+
+              <!-- <div class="col-sm-4">
+                <p-listbox
+                  [options]="allWaybills"
+                  [checkbox]="true"
+                  filter="true"
+                  multiple="true"
+                  [(ngModel)]="selectedWaybills"
+                  [listStyle]="'text-align: center;'"
+                  optionLabel="waybillNumber"
+                  [dataKey]="'waybillNumber'"
+                ></p-listbox>
+              </div> -->
+              <div class="col-sm-12">
+                <!-- *ngIf="allWaybills.length > 0" -->
+                <table class="table" [busyIf]="waybillsLoading">
+                  <thead>
+                    <tr class="table-active">
+                      <th scope="col" width="20%">{{ l('WaybillNumber') }}</th>
+                      <th scope="col">{{ l('Price') }}</th>
+                      <th scope="col">{{ l('VatAmount') }}</th>
+                      <th scope="col">{{ l('TotalAmount') }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of allWaybills; index as i">
+                      <td>
+                        <input
+                          (change)="calculator(item.price, item.taxVat, i)"
+                          type="checkbox"
+                          [value]="item.waybillNumber"
+                          [(ngModel)]="item.checked"
+                          name="waybill{{ i }}"
+                          id="waybill{{ i }}"
+                        />
+                        {{ item.waybillNumber }}
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          #NotePrice="ngModel"
+                          id="NotePrice{{ i }}"
+                          [(ngModel)]="item.price"
+                          (change)="calculator(item.price, item.taxVat, i)"
+                          (keypress)="numberOnly($event)"
+                          [required]="true"
+                          class="form-control"
+                          name="NotePrice{{ i }}"
+                          min="0"
+                          [class.is-invalid]="NotePrice.touched && item.waybillNumber <= 0"
+                          [class.is-valid]="NotePrice.touched && NotePrice.valid && item.waybillNumber > 0"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          #VatAmount2="ngModel"
+                          id="VatAmount2{{ i }}"
+                          [(ngModel)]="item.vatAmount"
+                          class="form-control"
+                          name="VatAmount2{{ i }}"
+                          disabled
+                        />
+                      </td>
+                      <td>
+                        <input
+                          #totalAmount="ngModel"
+                          type="number"
+                          id="TotalAmount{{ i }}"
+                          [(ngModel)]="item.totalAmount"
+                          class="form-control"
+                          name="TotalAmount{{ i }}"
+                          disabled
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
+
+            <div class="col-lg-4 mt-4">
+              <label>{{ l('totalPrice') }}</label>
+              <input
+                type="number"
+                #Price="ngModel"
+                name="Price"
+                id="Price"
+                [(ngModel)]="form.price"
+                class="form-control"
+                [required]="selectedWaybills != null && selectedWaybills.length == 0"
+                min="0"
+                value="0"
+                [disabled]="selectedWaybills != null && selectedWaybills.length > 0"
+                [class.is-valid]="Price.valid && (Price.dirty || Price.touched)"
+                [class.is-invalid]="Price.invalid && (Price.dirty || Price.touched)"
+                (change)="CalculateTotalPrice()"
+              />
+            </div>
+            <div class="col-lg-4 mt-4">
+              <label>{{ l('totalVatAmount') }}</label>
+              <input
+                type="number"
+                #vatAmount="ngModel"
+                name="vatAmount"
+                id="vatAmount"
+                class="form-control"
+                [required]="!selectedWaybills"
+                [disabled]="selectedWaybills != null && selectedWaybills.length > 0"
+                [class.is-valid]="vatAmount.valid && (vatAmount.dirty || vatAmount.touched)"
+                [class.is-invalid]="vatAmount.invalid && (vatAmount.dirty || vatAmount.touched)"
+                [(ngModel)]="form.vatAmount"
+                (change)="CalculateTotalPrice()"
+              />
+            </div>
+            <div class="col-lg-4 mt-4">
+              <label>{{ l('totalAmount') }}</label>
+              <input
+                type="number"
+                #totalValue="ngModel"
+                name="totalValue"
+                id="totalValue"
+                class="form-control"
+                [required]="!selectedWaybills"
+                [disabled]="selectedWaybills"
+                [class.is-valid]="totalValue.valid && (totalValue.dirty || totalValue.touched)"
+                [class.is-invalid]="totalValue.invalid && (totalValue.dirty || totalValue.touched)"
+                [(ngModel)]="form.totalValue"
+              />
+            </div>
+
             <div class="col-lg-12 mt-4">
               <label>{{ l('Remarks') }}</label>
               <textarea

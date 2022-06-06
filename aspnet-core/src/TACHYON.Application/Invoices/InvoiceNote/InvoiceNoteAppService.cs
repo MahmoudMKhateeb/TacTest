@@ -130,7 +130,9 @@ namespace TACHYON.Invoices.InvoiceNotes
             if (invoiceNote == null)
                 throw new UserFriendlyException(L("Theinvoicedoesnotfound"));
 
-            return ObjectMapper.Map<CreateOrEditInvoiceNoteDto>(invoiceNote);
+            var list= ObjectMapper.Map<CreateOrEditInvoiceNoteDto>(invoiceNote);
+            list.InvoiceItems.ForEach(x => x.Checked = true);
+            return list;
         }
         public async Task GenrateFullVoidInvoiceNote(long id)
         {
@@ -251,14 +253,26 @@ namespace TACHYON.Invoices.InvoiceNotes
                 return await _invoiveTripRepository.GetAll()
                .Where(x => x.InvoiceId == id)
                .Include(x => x.ShippingRequestTripFK)
-               .Select(x => new GetAllInvoiceItemDto() {TripId = x.TripId, WaybillNumber = x.ShippingRequestTripFK.WaybillNumber.Value })
+               .Select(x => new GetAllInvoiceItemDto() {TripId = x.TripId,
+                   WaybillNumber = x.ShippingRequestTripFK.WaybillNumber.Value,
+               Price=x.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
+               VatAmount=x.ShippingRequestTripFK.VatAmountWithCommission.Value,
+               TotalAmount=x.ShippingRequestTripFK.TotalAmountWithCommission.Value,
+               TaxVat=x.ShippingRequestTripFK.TaxVat.Value
+               })
                .AsNoTracking()
                .ToListAsync();
             }
             return await _submitInvoiceTrip.GetAll()
             .Where(x => x.SubmitId == id)
             .Include(x => x.ShippingRequestTripFK)
-            .Select(x => new GetAllInvoiceItemDto() {TripId = x.TripId, WaybillNumber = x.ShippingRequestTripFK.WaybillNumber.Value })
+            .Select(x => new GetAllInvoiceItemDto() {TripId = x.TripId, 
+                WaybillNumber = x.ShippingRequestTripFK.WaybillNumber.Value,
+                Price = x.ShippingRequestTripFK.SubTotalAmount.Value,
+                VatAmount = x.ShippingRequestTripFK.VatAmount.Value,
+                TotalAmount = x.ShippingRequestTripFK.TotalAmount.Value,
+                TaxVat=x.ShippingRequestTripFK.TaxVat.Value
+            })
             .AsNoTracking()
             .ToListAsync();
         }
