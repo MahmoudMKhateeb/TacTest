@@ -112,6 +112,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
 
   close() {
     this.active = false;
+    this.selectedWaybills = null;
     this.manualInvoiceNoteIsEnabled = true;
     this.modal.hide();
   }
