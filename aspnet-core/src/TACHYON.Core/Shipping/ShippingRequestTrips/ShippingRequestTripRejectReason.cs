@@ -10,9 +10,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
     public class ShippingRequestTripRejectReason : FullAuditedEntity,
         IMultiLingualEntity<ShippingRequestTripRejectReasonTranslation>
     {
-        /*[Required]
-        [StringLength(500, MinimumLength = 3)]
-        public string DisplayName { get; set; }*/
+        [Required]
+        [StringLength(60, MinimumLength = 3)]
+        public string Key { get; set; }
         public ICollection<ShippingRequestTripRejectReasonTranslation> Translations { get; set; }
     }
 }
