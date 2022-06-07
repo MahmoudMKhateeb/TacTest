@@ -1,6 +1,16 @@
 import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ShipperDashboardServiceProxy, TrackingMapDto, WaybillsServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  ShipperDashboardServiceProxy,
+  TrackingMapDto,
+  WaybillsServiceProxy,
+  ShippingRequestRouteType,
+  CapacitiesServiceProxy,
+  ISelectItemDto,
+  TenantServiceProxy,
+  FacilitiesServiceProxy,
+  FacilityCityLookupTableDto,
+} from '@shared/service-proxies/service-proxies';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { FirebaseHelperClass, trackingIconsList } from '@app/main/shippingRequests/shippingRequests/tracking/firebaseHelper.class';
@@ -9,6 +19,8 @@ import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { finalize } from 'rxjs/operators';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-tracking-map',
@@ -16,6 +28,7 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./tracking-map.component.scss'],
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
+  providers: [EnumToArrayPipe],
 })
 export class TrackingMapComponent extends AppComponentBase implements OnInit {
   route1: any;
@@ -36,18 +49,48 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   driversToggle = true;
   waybillDownloading = false;
   trackingIconsList = trackingIconsList;
+  advancedFiltersAreShown = true;
+  waybillNumber: string;
+  TruckType: number;
+  RouteType: number;
+  driverName: string;
+  ShippingRequestRouteType = this.enumToArray.transform(ShippingRequestRouteType);
+
+  allTruckTypes: ISelectItemDto[];
+  cityFillter: number;
+  destCityFilter: number;
+  citiesList: FacilityCityLookupTableDto[];
   constructor(
     private injector: Injector,
     private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private _db: AngularFireDatabase
+    private _db: AngularFireDatabase,
+    private enumToArray: EnumToArrayPipe,
+    private facilitiesServiceProxy: FacilitiesServiceProxy
   ) {
     super(injector);
   }
 
   ngOnInit(): void {
     this.getDriverLiveLocation();
+    this.getallTruckTypes();
+    this.getAllCities();
+  }
+
+  getallTruckTypes() {
+    this._shipperDashboardServiceProxy.getAllTruckTypesForDropdown().subscribe((res) => {
+      this.allTruckTypes = res;
+    });
+  }
+
+  /**
+   * get all cities
+   */
+  getAllCities() {
+    this.facilitiesServiceProxy.getAllCityForTableDropdown().subscribe((res) => {
+      this.citiesList = res;
+    });
   }
 
   getTableRecords(event?: LazyLoadEvent) {
@@ -59,6 +102,12 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
 
     this._shipperDashboardServiceProxy
       .getTrackingMap(
+        this.TruckType,
+        this.RouteType,
+        this.waybillNumber,
+        this.driverName,
+        this.cityFillter,
+        this.destCityFilter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -85,15 +134,18 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
           };
 
           r.routPoints.forEach((x) => {
-            if (r.routPoints.indexOf(x) === 0) {
-              direction.origin = new google.maps.LatLng(x.latitude, x.longitude);
-            } else if (r.routPoints.indexOf(x) === r.routPoints.length - 1) {
-              direction.destination = new google.maps.LatLng(x.latitude, x.longitude);
-            } else {
-              direction.waypoints.push({
-                location: new google.maps.LatLng(x.latitude, x.longitude),
-              });
-            }
+            setTimeout(() => {
+              console.log('a Query Request Was Fired');
+              if (r.routPoints.indexOf(x) === 0) {
+                direction.origin = new google.maps.LatLng(x.latitude, x.longitude);
+              } else if (r.routPoints.indexOf(x) === r.routPoints.length - 1) {
+                direction.destination = new google.maps.LatLng(x.latitude, x.longitude);
+              } else {
+                direction.waypoints.push({
+                  location: new google.maps.LatLng(x.latitude, x.longitude),
+                });
+              }
+            }, 1000);
           });
 
           this.directions.push(direction);
@@ -165,6 +217,18 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
     this.tripsToggle = !this.tripsToggle;
   }
 
+  /**
+   * check if trip Delayed or on time
+   */
+  isTripDelayed(tripExpectedArrivalDate): 'Delayed' | 'OnTime' | 'Unknown' {
+    if (tripExpectedArrivalDate == '') return 'Unknown';
+    let todayMoment = this.dateFormatterService.GetTodayGregorian();
+    if (tripExpectedArrivalDate < todayMoment) {
+      return 'OnTime';
+    } else {
+      return 'Delayed';
+    }
+  }
   getRandomColor(): string {
     let color = '#'; // <-----------
     let letters = '0123456789ABCDEF';

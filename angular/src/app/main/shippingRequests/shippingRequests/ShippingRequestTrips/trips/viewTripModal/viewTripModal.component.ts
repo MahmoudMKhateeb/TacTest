@@ -13,6 +13,7 @@ import {
   ShippingRequestDriverServiceProxy,
   GetShippingRequestForViewOutput,
   ShippingRequestTripStatus,
+  UpdateExpectedDeliveryTimeInput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -51,6 +52,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   activeTripId: any;
 
   shippingRequestTripStatusEnum = ShippingRequestTripStatus;
+  expectedDeliveryTime: moment.Moment;
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -102,6 +104,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this.pickUpPointSender = res.routPoints[0].senderOrReceiverContactName;
         this.assignDriverAndTruck.assignedTruckId = this.trip.assignedTruckId;
         this.assignDriverAndTruck.assignedDriverUserId = this.trip.assignedDriverUserId;
+        this.expectedDeliveryTime = this.trip.expectedDeliveryTime;
       });
 
     this.modal.show();
@@ -206,6 +209,20 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
           this.modalSave.emit('');
         });
       } //end of if
+    });
+  }
+
+  /**
+   * update the expected Delivery Time Of the Trip
+   */
+  updateTripExpectedDeliveryTime() {
+    if (!isNotNullOrUndefined(this.currentTripId)) return;
+    // console.log('Trip Expected Delivery time Was Updated');
+    let body = new UpdateExpectedDeliveryTimeInput();
+    body.id = this.currentTripId;
+    body.expectedDeliveryTime = this.expectedDeliveryTime;
+    this._shippingRequestTripsService.updateExpectedDeliveryTimeForTrip(body).subscribe((res) => {
+      this.notify.success(this.l('TripExpectedDateWasUpdated'));
     });
   }
 }

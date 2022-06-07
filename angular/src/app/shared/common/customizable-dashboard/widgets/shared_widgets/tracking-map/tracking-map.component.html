@@ -30,21 +30,8 @@
           </div>
         </div>
       </div>
-      <ng-container *ngIf="tripsToggle">
-        <ng-container *ngFor="let direction of directions">
-          <agm-direction
-            *ngIf="direction.show"
-            [origin]="direction.origin"
-            [destination]="direction.destination"
-            [waypoints]="direction.waypoints"
-            [optimizeWaypoints]="false"
-            [renderOptions]="direction.renderOptions"
-          >
-          </agm-direction>
-        </ng-container>
-      </ng-container>
       <ng-container *ngIf="driversToggle">
-        <agm-marker *ngFor="let driver of allDrivers" [longitude]="driver.lng" [latitude]="driver.lat" [iconUrl]="trackingIconsList.driverIcon">
+        <agm-marker *ngFor="let driver of allDrivers" [longitude]="driver.lng" [latitude]="driver.lat" [iconUrl]="trackingIconsList.truckIcon">
           <agm-info-window>
             <div class="d-flex flex-column">
               <div>
@@ -60,9 +47,98 @@
           </agm-info-window>
         </agm-marker>
       </ng-container>
+
+      <ng-container *ngIf="tripsToggle">
+        <ng-container *ngFor="let direction of directions">
+          <agm-direction
+            *ngIf="direction.show"
+            [origin]="direction.origin"
+            [destination]="direction.destination"
+            [renderOptions]="direction.renderOptions"
+          >
+          </agm-direction>
+        </ng-container>
+      </ng-container>
     </agm-map>
   </div>
   <div class="col-lg-12">
+    <div class="container-fluid">
+      <form class="form" autocomplete="off">
+        <div>
+          <div class="row" [hidden]="!advancedFiltersAreShown">
+            <div class="col-md-12">
+              <div class="kt-separator kt-separator--border-dashed"></div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="sourceCity">{{ l('sourceCity') }}</label>
+                <select name="sourceCity" id="sourceCity" [(ngModel)]="cityFillter" class="form-control" (change)="getTableRecords()">
+                  <option value="" selected>
+                    {{ 'All' | localize }}
+                  </option>
+                  <option [value]="t.id" *ngFor="let t of citiesList">
+                    {{ t.displayName | localize }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="destCity">{{ l('destCity') }}</label>
+                <select name="destCity" id="destCity" [(ngModel)]="destCityFilter" class="form-control" (change)="getTableRecords()">
+                  <option value="" selected>
+                    {{ 'All' | localize }}
+                  </option>
+                  <option [value]="t.id" *ngFor="let t of citiesList">
+                    {{ t.displayName | localize }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="waybill">{{ l('waybill') }}</label>
+                <input type="text" class="form-control" id="waybill" name="waybill" [(ngModel)]="waybillNumber" (change)="getTableRecords()" />
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="TruckType">{{ l('TruckType') }}</label>
+                <!--              <input type="text" class="form-control" id="TruckType" name="TruckType" [(ngModel)]="TruckType" (change)="getTableRecords()" />-->
+
+                <select name="TruckType" id="TruckType" [(ngModel)]="TruckType" class="form-control" (change)="getTableRecords()">
+                  <option value="" selected>
+                    {{ 'All' | localize }}
+                  </option>
+                  <option [value]="t.id" *ngFor="let t of allTruckTypes">
+                    {{ t.displayName | localize }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="RouteType">{{ l('RouteType') }}</label>
+                <select name="RouteType" id="RouteType" [(ngModel)]="RouteType" class="form-control" (change)="getTableRecords()">
+                  <option value="" selected>
+                    {{ 'All' | localize }}
+                  </option>
+                  <option [value]="t.key" *ngFor="let t of ShippingRequestRouteType">
+                    {{ t.value | localize }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="DriverName">{{ l('DriverName') }}</label>
+                <input type="text" class="form-control" id="DriverName" name="DriverName" [(ngModel)]="driverName" (change)="getTableRecords()" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
     <!--<Primeng-Datatable-Start>-->
     <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
       <p-table
@@ -91,12 +167,19 @@
               {{ l('WaybillNumber') }}
               <p-sortIcon field="WaybillNumber"></p-sortIcon>
             </th>
-            <th pSortableColumn="NumberOfDrops">
-              {{ l('NumberOfDrops') }}
-              <p-sortIcon field="NumberOfDrops"></p-sortIcon>
+            <th pSortableColumn="truckType">
+              {{ l('TruckType') }}
+              <p-sortIcon field="truckType"></p-sortIcon>
+            </th>
+            <th pSortableColumn="driverName">
+              {{ l('driverName') }}
+              <p-sortIcon field="driverName"></p-sortIcon>
+            </th>
+            <th>
+              {{ l('deliveryStatus') }}
             </th>
             <th>{{ l('Show') }}</th>
-            <th>{{ l('tag') }}</th>
+            <!--            <th>{{ l('tag') }}</th>-->
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-record="$implicit">
@@ -111,11 +194,27 @@
             </td>
             <td>
               <span class="ui-column-title"> {{ l('WaybillNumber') }}</span>
-              {{ record.trackingMapDto?.wayBillNumber }}
+              {{ record.trackingMapDto?.wayBillNumber }} <i style="color: {{ record.color }}" class="fa fa-genderless fs-1"></i>
             </td>
             <td>
-              <span class="ui-column-title"> {{ l('NumberOfDrops') }}</span>
-              {{ record.trackingMapDto?.routPoints?.length - 1 }}
+              <span class="ui-column-title"> {{ l('truckType') }}</span>
+              {{ record.trackingMapDto.truckType }}
+            </td>
+            <td>
+              <span class="ui-column-title"> {{ l('driverName') }}</span>
+              {{ record.trackingMapDto.driverName }}
+            </td>
+            <td>
+              <span class="ui-column-title"> {{ l('deliveryStatus') }}</span>
+              <span
+                class="label label-xl label-inline mr-2"
+                [ngClass]="{
+                  'label-info': isTripDelayed(record.trackingMapDto.expectedDeliveryTime) === 'Delayed',
+                  'label-danger': isTripDelayed(record.trackingMapDto.expectedDeliveryTime) === 'OnTime',
+                  'label-warning': isTripDelayed(record.trackingMapDto.expectedDeliveryTime) === 'Unknown'
+                }"
+                >{{ isTripDelayed(record.trackingMapDto.expectedDeliveryTime) }}</span
+              >
             </td>
             <td>
               <span class="switch switch-sm">
@@ -125,7 +224,7 @@
                 </label>
               </span>
             </td>
-            <td><i style="color: {{ record.color }}" class="icon-2x flaticon-add-label-button"></i></td>
+            <!--            <td><i style="color: {{ record.color }}" class="icon-2x flaticon-add-label-button"></i></td>-->
           </tr>
         </ng-template>
       </p-table>
