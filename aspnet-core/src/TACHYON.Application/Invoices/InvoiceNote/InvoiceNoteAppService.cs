@@ -227,17 +227,18 @@ namespace TACHYON.Invoices.InvoiceNotes
         {
             DisableTenancyFilters();
             var tenantEdition = await _tenantRepository.FirstOrDefaultAsync(x => x.Id == id);
-            if (tenantEdition.EditionId == ShipperEditionId)
-            {
-                return await _invoiceReposity.GetAll()
+      
+                var invoices =  await _invoiceReposity.GetAll()
                .Where(m => m.TenantId == id)
                .Select(x => new InvoiceRefreanceNumberDto { Id = x.Id, RefreanceNumber = x.InvoiceNumber})
                .AsNoTracking().ToListAsync();
-            }
-            return await _submitInvoiceReposity.GetAll()
+            
+            var submitInvoices =  await _submitInvoiceReposity.GetAll()
                .Where(m => m.TenantId == id)
                .Select(x => new InvoiceRefreanceNumberDto { Id = x.Id, RefreanceNumber = x.ReferencNumber.Value })
                .AsNoTracking().ToListAsync();
+
+            return invoices.Concat<InvoiceRefreanceNumberDto>(submitInvoices).ToList();
         }
         /// <summary>
         /// Get All Invoice ItemDto
@@ -358,6 +359,12 @@ namespace TACHYON.Invoices.InvoiceNotes
                 input.TotalValue = input.Price + input.VatAmount;
             }
 
+            if(input.InvoiceNumber!=null && input.InvoiceItems.Count() == 0)
+            {
+                throw new UserFriendlyException(L("YouMustSelectWaybills"));
+            }
+
+
             var invoiceNote = ObjectMapper.Map<InvoiceNote>(input);
             
             var invoiceNoteId = await _invoiceNoteRepository.InsertAndGetIdAsync(invoiceNote);
@@ -371,16 +378,31 @@ namespace TACHYON.Invoices.InvoiceNotes
         private async Task Update(CreateOrEditInvoiceNoteDto model)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
-            var inoviceNote = await _invoiceNoteRepository.GetAllIncluding(x=>x.InvoiceItems).FirstOrDefaultAsync(x => x.Id == model.Id.Value);
+            var inoviceNote = await _invoiceNoteRepository.GetAllIncluding(x => x.InvoiceItems).FirstOrDefaultAsync(x => x.Id == model.Id.Value);
 
             if (inoviceNote == null)
                 throw new UserFriendlyException(L("Theinvoicedoesnotfound"));
 
+            await RemoveDeletedWaybills(model, inoviceNote);
             ObjectMapper.Map(model, inoviceNote);
 
-           // if (!inoviceNote.IsManual)
-                 ItemValueCalculator(inoviceNote.InvoiceItems, inoviceNote);
+            // if (!inoviceNote.IsManual)
+            ItemValueCalculator(inoviceNote.InvoiceItems, inoviceNote);
+            
         }
+
+        private async Task RemoveDeletedWaybills(CreateOrEditInvoiceNoteDto model, InvoiceNote inoviceNote)
+        {
+            foreach (var item in inoviceNote.InvoiceItems.ToList())
+            {
+                if (!model.InvoiceItems.Any(x => x.Id == item.Id))
+                {
+                    await _invoiceNoteItemReposity.DeleteAsync(item);
+                    inoviceNote.InvoiceItems.Remove(item);
+                }
+            }
+        }
+
         private void ItemValueCalculator(List<InvoiceNoteItem> items, InvoiceNote invoiceNote)
         {
             //await DisableTenancyFilterIfTachyonDealerOrHost();
@@ -389,9 +411,9 @@ namespace TACHYON.Invoices.InvoiceNotes
             //    await CalculateForShipper(InvoiceNumber, items, invoiceNote);
             //else
             //    await CalculateForCarrier(InvoiceNumber, items, invoiceNote);
-            invoiceNote.Price = items.Sum(r => r.Price);
-            invoiceNote.TotalValue = items.Sum(r => r.TotalAmount);
-            invoiceNote.VatAmount = items.Sum(r => r.VatAmount);
+            invoiceNote.Price = items.Count()>0 ?items.Sum(r => r.Price):invoiceNote.Price;
+            invoiceNote.VatAmount = items.Count() > 0 ?items.Sum(r => r.VatAmount) :invoiceNote.VatAmount;
+            invoiceNote.TotalValue = invoiceNote.Price+ invoiceNote.VatAmount;
         }
 
 
