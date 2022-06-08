@@ -126,7 +126,9 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
 
   getAllWaybillByInvoiceId() {
     let id = this.allInvoices.find((x) => x.refreanceNumber == this.form.invoiceNumber)?.id;
-    if (!id) {
+    var index = this.allInvoices.findIndex((x) => x.refreanceNumber == this.form.invoiceNumber);
+    var id = this.allInvoices[index].id;
+    if (!isNotNullOrUndefined(id)) {
       this.allWaybills = [];
       return;
     }

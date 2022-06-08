@@ -84,9 +84,9 @@
                   (change)="getAllWaybillByInvoiceId()"
                   [attr.disabled]="manualInvoiceNoteIsEnabled ? null : true"
                 >
-                  <option value="">{{ l('SelectInvoiceReference') }}</option>
+                  <!--                  <option value="">{{ l('SelectInvoiceReference') }}</option>-->
                   <!-- <option [ngValue]="null" >{{ l('None') }}</option> -->
-                  <option *ngFor="let item of allInvoices" [value]="item.refreanceNumber">{{ item.refreanceNumber }}</option>
+                  <option *ngFor="let item of allInvoices" [ngValue]="item.refreanceNumber">{{ item.refreanceNumber }}</option>
                 </select>
               </div>
             </div>
