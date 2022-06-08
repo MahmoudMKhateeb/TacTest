@@ -80,5 +80,9 @@ export class CreateOrEditTripAccidentModalComponent extends AppComponentBase imp
     this.accident.documentName = file.name;
   }
 
+  IfOther(items, id) {
+    if (id != undefined) return items?.find((x) => x.id == id).isOther;
+    else return false;
+  }
   onChangeReason(reasonId: number | null): void {}
 }
