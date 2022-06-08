@@ -298,6 +298,7 @@
 		<text name="CountriesTranslations">ترجمة الدول</text>
 		<text name="Country">البلد</text>
 		<text name="County">الدولة</text>
+		<text name="ComanyName">اسم الشركة</text>
 		<text name="CountyDisplayName">الدولة</text>
 		<text name="Create">إنشاء</text>
 		<text name="DriverInformation">معلومات السائق</text>
@@ -370,6 +371,7 @@
 		<text name="CreatingNewRole">إنشاء دور جديد</text>
 		<text name="CreatingNewTenant">إنشاء شركة جديدة</text>
 		<text name="CreatingNewUser">إضافة مستخدم جديد</text>
+		<text name="CreateNewInvoiceNote">إضافة فاتورة ملاحظة جديدة</text>
 		<text name="CreatingWebhooks">Creating new webhook</text>
 		<text name="CreationDate">تاريخ الإنشاء</text>
 		<text name="CreationTime">تاريخ الإنشاء</text>
@@ -551,6 +553,7 @@
 		<text name="DownloadCollectedData_Description">تحميل إعدادات حسابك</text>
 		<text name="DownloadDropWaybill">تحميل وثيقة الشحن</text>
 		<text name="DownloadInvoice">تحميل الفاتورة</text>
+		<text name="downloadNote">تنزيل الملاحظة</text>
 		<text name="UploadInvoiceDocument">تحميل مستند الفاتورة</text>
 		<text name="DriectRequestCarrierRespone">{clientname} قام بوضع عرض مالي للشحنة رقم: {ShipimentNo}.</text>
 		<text name="Driver">سائق</text>
@@ -654,6 +657,7 @@
 		<text name="EditVasPrice">تعديل سعر الخدمات الإضافية</text>
 		<text name="EditWebhookSubscription">Edit Webhook Subscription</text>
 		<text name="EditYourName">تعديل الاسم</text>
+		<text name="EditNote">تعديل الملاحظة</text>
 		<text name="Email">البريد الإلكتروني</text>
 		<text name="EmailActivation">تفعيل البريد الإلكتروني</text>
 		<text name="EmailActivation_ClickTheLinkBelowToVerifyYourEmail">يرجى الضغط على الرابط أدناه لتأكيد البريد الإلكتروني:</text>
@@ -871,6 +875,7 @@
 		<text name="InvoiceNumber">رقم الفاتورة</text>
 		<text name="Invoices">الفواتير</text>
 		<text name="InvoicesList">قائمة الفواتير</text>
+		<text name="InvoiceNotesList">الملاحظة قائمة الفواتير</text>
 		<text name="InvoicesProformas">الفواتير الأولية</text>
 		<text name="InvoiceTo">فاتورة</text>
 		<text name="InvoiceVasRemarksAll">العدد:{0}, الكمية:{1}</text>
@@ -898,8 +903,11 @@
 		<text name="IssuanceDate">تاريخ الإصدار</text>
 		<text name="Istimara">الإستمارة</text>
 		<text name="IsTrialActive">يمكن التجربة</text>
+		<text name="InvoiceReferenceNumber">رقم فاتورة الملاحظة</text>
 		<text name="IsTwoFactorEnabled">تم تمكين المصادقة الثنائية</text>
 		<text name="Item">مادة</text>
+		<text name="Invoice Note">فاتورة ملاحظة</text>
+		<text name="IsManual">يدوي</text>
 		<text name="Key">مفتاح</text>
 		<text name="Kg">كجم</text>
 		<text name="Language">لغة</text>
@@ -1087,6 +1095,7 @@
 		<text name="None">لا شيء</text>
 		<text name="NoNotificationsYet">لا يوجد اشعارات بعد</text>
 		<text name="NoOfTrips">عدد الرحلات</text>
+		<text name="NoteDetails">نفاصيل الملاحظة</text>
 		<text name="NoOrganizationUnitDefinedYet">لا توجد وحدات تنظيمية.</text>
 		<text name="NoPermission">ليس لديك أي صلاحيات تواصل مع مشرف حسابك</text>
 		<text name="NoRecordsFound">لا يوجد سجلات</text>
@@ -1114,6 +1123,7 @@
 		<text name="NumberOfPacking">عدد أنواع التعبئة</text>
 		<text name="NumberOfTrips">عدد الرحلات</text>
 		<text name="NumbersOnly">أرقام فقط</text>
+		<text name="NoteType">نوع الملاحظة</text>
 		<text name="Object">Object</text>
 		<text name="OccupationCard">البطاقة المهنية</text>
 		<text name="Off">معطّل</text>
@@ -1456,6 +1466,7 @@
 		<text name="SelfUserDelegationErrorMessage">لا يمكنك تفويض نفسك!</text>
 		<text name="SelfUserRegistrationIsDisabledMessage">لايمكنك التسجيل بالمنصة</text>
 		<text name="SelfUserRegistrationIsDisabledMessage_Detail">تم تعطيل خاصية التسجيل الذاتي يرجى الاتصال بمسؤول النظام للتسجيل</text>
+		<text name="SelectInvoiceReference">اختر رقم الفاتورة</text>
 		<text name="Send">إرسال</text>
 		<text name="SendActivationEmail">إرسال رسالة تفعيل البريد الإلكتروني.</text>
 		<text name="SendDirectRequest">ارسال طلب خاص</text>
@@ -1606,6 +1617,7 @@
 		<text name="SuccessfullyUnlinked">تم إزالة الربط بنجاح.</text>
 		<text name="Summary">ملخص</text>
 		<text name="Surname">إسم العائلة</text>
+		<text name="SelectNoteType">اختر نوع الملاحظة</text>
 		<text name="SwitchToDelegatedUserWarningMessage">هل أنت متأكد من التبديل إلى المستخدم {0}؟</text>
 		<text name="SwitchToLinkedAccountTokenErrorMessage">رمز التمثيل غير صالح أو منتهية صلاحيتة!</text>
 		<text name="SwitchToTenant">التبديل إلى الشركة</text>
@@ -1767,6 +1779,7 @@
 		<text name="ToleranceDaysBeforeDeactivateAfterExpiration">عدد أيام السماح بعد تاريخ إنتهاء الصلاحية</text>
 		<text name="TopMenu">القائمة العلوية</text>
 		<text name="Total">المجموع</text>
+		<text name="TotalValue">القيمة الاجماليه</text>
 		<text name="TotalAmount">المبلغ الإجمالي</text>
 		<text name="TotalBids">عدد العروض</text>
 		<text name="TotalBidsCount">عدد عروض التسعيرات</text>
@@ -1854,6 +1867,7 @@
 		<text name="TypeAMessageHere">اكتب رسالتك هنا...</text>
 		<text name="TypeTitle">النوع</text>
 		<text name="thereisanewpriceoffer">هناك عرض سعر جديد</text>
+		<text name="Theinvoicedosenotfound">فاتورة الملاحظة غير موجودة</text>
 		<text name="UiCustomization_AllowAsideHiding">السماح بغلق الجانب</text>
 		<text name="UiCustomization_AllowAsideMinimizing">السماح بتقليل الجانب</text>
 		<text name="UiCustomization_Boxed">مربع</text>
@@ -2022,6 +2036,7 @@
 		<text name="WaybillNumber">رقم وثيقة الشحن</text>
 		<text name="Waybills">وثائق الشحن</text>
 		<text name="Weak">ضعيف</text>
+		<text name="WaitingtobePaid">انتظار الدفع</text>
 		<text name="WebhookEndpoint">Webhook Endpoint</text>
 		<text name="WebhookEvent">Webhook Event</text>
 		<text name="WebhookEventDetail">Webhook Event Detail</text>
@@ -2108,7 +2123,9 @@
 		<text name="YourPriceAlreadyAcceptedYouCanEdit">لا يمكنك  تحرير السعر في حال تم إعتماده</text>
 		<text name="YourSessionIsAboutToExpire">جلستك على وشك الانتهاء</text>
 		<text name="YourSessionIsLocked">الجلسة مغلقة</text>
+		<text name="TheInvoiceNotFound">الجلسة مغلقة</text>
 		<text name="Youruseridentifier">معرف المستخدم</text>
+		<text name="YouCanNotChangeInvoiceNoteStatus">لا يمكنك تغير حالة الملاحظة</text>
 		<text name="Youruserprofileinformation(firstname,lastname,etc.)">معلومات الملف الشخصي للمستخدم (الاسم الأول واسم العائلة وما إلى ذلك)</text>
 		<text name="TrucksSubmittedDocuments">مستندات الشاحنات</text>
 		<text name="DriversSubmittedDocuments">مستندات السائقين</text>
@@ -2170,11 +2187,16 @@
     <text name="ResetPassword">إعادة تعيين كلمة المرور</text>
     <text name="YourNewPasswordMust">كلمة المرور الجديدة الخاصة بك يجب أن:</text>
     <text name="PasswordResetEmail_Subject">إعادة تعيين كلمة المرور</text>
-    
-    <text name="PasswordUpdated_Title">تحديث كلمة المرور</text>
+    <text name="VoidInvoice">فاتورة باطلة</text>
+    <text name="FullVoid">ابطال كامل</text>
+    <text name="PartiallyVoid">ابطال جزئي</text>
+    <text name="GenerationDate">تاريخ الانشاء</text>
+
+		<text name="PasswordUpdated_Title">تحديث كلمة المرور</text>
     <text name="YourPasswordChangedSuccessfully">تم تغيير كلمة المرور الخاصة بك بنجاح.</text>
     <text name="YourNewPasswordIs">كلمة مرورك الجديدة هي</text>
     <text name="PasswordUpdated">تحديث كلمة المرور</text>
+		
     <text name="WarningSuspendAccount_Title">تنبيه إنتهاء مستند</text>
     <text name="WarningSuspendAccount">تنبيه إنتهاء مستند</text>
     <text name="InvoiceDue_Title">تذكير فاتورة</text>
@@ -2194,6 +2216,8 @@
 		<text name="CarrierTripUpdatedNotificationMessage">هناك بعض التغييرات في الرحلة برقم بوليصة الشحن {0}. لمزيد من التفاصيل، الرجاء الضغط هنا</text>
 		<text name="TachyonDealerTripUpdatedNotificationMessage">هناك بعض التغييرات في الرحلة برقم بوليصة الشحن {0}. لمزيد من التفاصيل، الرجاء الضغط هنا</text>
 		<text name="NotSet">غير محدد</text>
+		<text name="CreaditOrDebitNoteAdded"> تم تعيينه لك بواسطة منصة تاكيون ، انقر لعرض التفاصيل{0} </text>
+		<text name="TheCreaditOrDebitNotePaid">تم دفع {0}</text>
 
 		<text name="CompanyNameIsAlreadyTaken">اسم الشركة {0} مستخدم مسبقاً</text>
 		<text name="PickupFacilityAndDropOffFacilityCantBeTheSame">المنشأة لا يمكن أن تكون منشأة تحميل وتنزيل في ذات الوقت</text>
@@ -2671,5 +2695,7 @@
 	<text name="RejectedTripCancelation">رفض الغاء الرحلة</text>
 	<text name="ViewCancelReasonTrip">عرض تفاصيل الغاء الرحلة</text>
 	<text name="SuccessfullyRejectCancelation">تم رفض الإلغاء بنجاح</text>
+    <text name="TotalPrice">إجمالي السعر</text>
+    <text name="TotalVatAmount">إجمالي الضريبة المضافة</text>
 	</texts>
 </localizationDictionary>

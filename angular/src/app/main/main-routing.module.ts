@@ -69,6 +69,8 @@ import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/docu
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
 import { RequestTemplatesComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/request-templates.component';
 import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
+import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
+import { InvoiceNoteListComponent } from './invoices/invoice-note/invoice-note-list/invoice-note-list.component';
 
 @NgModule({
   imports: [
@@ -280,6 +282,8 @@ import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-lis
           { path: 'trucksTypes/trucksTypes', component: TrucksTypesComponent, data: { permission: 'Pages.TrucksTypes' } },
           { path: 'invoices/view', component: InvoicesListComponent, data: { permission: 'Pages.Invoices' } },
           { path: 'penalties/view', component: PenaltiesListComponent, data: { permission: 'Pages.Invoices' } },
+
+          { path: 'invoicenote/view', component: InvoiceNoteListComponent, data: { permission: 'Pages.Invoices' } },
 
           {
             path: 'invoices/detail/:id',

@@ -685,6 +685,10 @@ namespace TACHYON.Authorization
 
 
 
+            var InvoiceNotes = pages.CreateChildPermission(AppPermissions.Pages_Invoices_InvoiceNote, L("InvoiceNotes"));
+            InvoiceNotes.CreateChildPermission(AppPermissions.Pages_InvoiceNote_Create, L("CreateNewInvoiceNote"));
+            InvoiceNotes.CreateChildPermission(AppPermissions.Pages_InvoiceNote_Edit, L("EditInvoiceNote"));
+            InvoiceNotes.CreateChildPermission(AppPermissions.Pages_InvoiceNote_View, L("ViewInvoiceNote"));
         }
 
         private static ILocalizableString L(string name)

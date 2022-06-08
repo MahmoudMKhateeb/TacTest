@@ -548,7 +548,9 @@ namespace TACHYON.Shipping.Drivers
                 .Where(x => x.Status != ShippingRequestTripStatus.Canceled)
                 .FirstOrDefaultAsync(x => x.Id == TripId);
 
-            await ResetTripStatus(trip);
+
+                await ResetTripStatus(trip);
+            
         }
         private async Task ResetTripStatus(ShippingRequestTrip trip)
         {

@@ -1,0 +1,59 @@
+<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{ l('NoteDetails') }}</span>
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6 mb-3">
+            <h6>{{ l('NoteType') }}:</h6>
+            {{ item?.noteTypeTitle }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('ComanyName') }} :</h6>
+            {{ item?.comanyName }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('GenerationDate') }}:</h6>
+            {{ item?.generationDate }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Status') }}:</h6>
+            {{ item?.statusTitle }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('TotalValue') }}:</h6>
+            {{ item?.totalValue }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Remarks') }}:</h6>
+            {{ item?.remarks }}
+          </div>
+          <!-- <div class="col-6 mb-3">
+            <h6>{{ l('DonwloadNote') }}:</h6>
+           <a href="javascript:;"(click)="invoiceNoteListComponent.downloadReport(item?.id)">DonwlodFile</a>
+          </div> -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button [disabled]="saving" type="button" class="btn btn-primary blue" (click)="close()">{{ l('Close') }}</button>
+      </div>
+    </div>
+    <!-- <app-invoice-note-list #invoiceNoteListComponent></app-invoice-note-list> -->
+  </div>
+</div>

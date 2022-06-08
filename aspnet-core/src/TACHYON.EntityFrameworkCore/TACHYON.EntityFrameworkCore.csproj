@@ -63,6 +63,24 @@
     <Compile Remove="Migrations\20220328193025_add_destination_tenant_to_Penalty.Designer.cs" />
     <Compile Remove="Migrations\20220329112432_edit_trip_fk_in_penalty.cs" />
     <Compile Remove="Migrations\20220329112432_edit_trip_fk_in_penalty.Designer.cs" />
+    <Compile Remove="Migrations\20220220125523_add_InvoiceItme_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220220125523_add_InvoiceItme_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220220190455_add_InvoiceNote_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220220190455_add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220224080459_add_InvoiceNote_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220224080459_add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220225211742_add_InvoiceNote_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220225211742_add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220225213459_add_InvoiceNote_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220225213459_add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220225220933_add_InvoiceNote_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220225220933_add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220316075549_Add_InvoiceNote_InvoiceNoteItem_Tables.cs" />
+    <Compile Remove="Migrations\20220316075549_Add_InvoiceNote_InvoiceNoteItem_Tables.Designer.cs" />
+    <Compile Remove="Migrations\20220524121023_Edit_NoteType_Enum.cs" />
+    <Compile Remove="Migrations\20220524121023_Edit_NoteType_Enum.Designer.cs" />
+    <Compile Remove="Migrations\20220602080553_AddPrice_InvoiceNoteItem.cs" />
+    <Compile Remove="Migrations\20220602080553_AddPrice_InvoiceNoteItem.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />

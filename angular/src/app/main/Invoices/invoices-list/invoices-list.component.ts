@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
+import { VoidInvoiceNoteModalComponent } from '../invoice-note/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
 
 @Component({
   templateUrl: './invoices-list.component.html',
@@ -26,6 +27,7 @@ import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 export class InvoicesListComponent extends AppComponentBase implements OnInit {
   @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
+  @ViewChild('voidModal', { static: true }) voidModal: VoidInvoiceNoteModalComponent;
 
   IsStartSearch = false;
   PaidStatus: boolean | null | undefined;
@@ -46,6 +48,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   duteDateRangeActive = false;
   accountType: InvoiceAccountType | undefined = undefined;
   dataSource: any = {};
+
   constructor(
     injector: Injector,
     private _InvoiceServiceProxy: InvoiceServiceProxy,
@@ -96,6 +99,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       }
     });
   }
+
   search(event) {
     this._CommonServ.getAutoCompleteTenants(event.query, '').subscribe((result) => {
       this.Tenants = result;

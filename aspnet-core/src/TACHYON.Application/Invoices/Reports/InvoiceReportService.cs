@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using TACHYON.DataExporting;
 using TACHYON.Dto;
+using TACHYON.Invoices.InoviceNote;
 
 namespace TACHYON.Invoices.Reports
 {
@@ -12,12 +13,13 @@ namespace TACHYON.Invoices.Reports
     {
         private readonly InvoiceAppService _invoiceAppService;
         private readonly PdfExporterBase _pdfExporterBase;
+        private readonly IInvoiceNoteAppService _InvoiceNoteAppService;
 
-
-        public InvoiceReportService(InvoiceAppService invoiceAppService, PdfExporterBase pdfExporterBase)
+        public InvoiceReportService(InvoiceAppService invoiceAppService, PdfExporterBase pdfExporterBase, IInvoiceNoteAppService invoiceNoteAppService)
         {
             _invoiceAppService = invoiceAppService;
             _pdfExporterBase = pdfExporterBase;
+            _InvoiceNoteAppService = invoiceNoteAppService;
         }
 
         public FileDto DownloadInvoiceReportPdf(long invoiceId)
@@ -50,6 +52,21 @@ namespace TACHYON.Invoices.Reports
             data.Add(_invoiceAppService.GetInvoicePenaltiseInvoiceReportInfo(invoiceId));
 
             return _pdfExporterBase.CreateRdlcPdfPackageFromList("Invoice", reportPath, names, data);
+        }
+        public FileDto DownloadInvoiceNoteReportPdf(long invoiceNoteId)
+        {
+            var reportPath = "/Invoices/Reports/InvoiceNote.rdlc";
+
+            ArrayList names = new ArrayList();
+            ArrayList data = new ArrayList();
+
+            names.Add("GetInvoiceNoteReportInfoDataset");
+            data.Add(_InvoiceNoteAppService.GetInvoiceNoteReportInfo(invoiceNoteId));
+
+            names.Add("GetInvoiceNoteItemReportInfoDataset");
+            data.Add(_InvoiceNoteAppService.GetInvoiceNoteItemReportInfo(invoiceNoteId));
+
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList("InvoiceNote", reportPath, names, data);
         }
     }
 }
