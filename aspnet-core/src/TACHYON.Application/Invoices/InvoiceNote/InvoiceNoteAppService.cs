@@ -80,6 +80,14 @@ namespace TACHYON.Invoices.InvoiceNotes
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
 
+            //Check duplication in waybills
+            if(input.InvoiceItems.GroupBy(x => x.WaybillNumber)
+                .Any(group => group.Count() > 1))
+            {
+                throw new UserFriendlyException(L("WaybillsShouldnotBeDuplicated"));
+            }
+                    
+
             if (!input.Id.HasValue)
             {
                 await Create(input);
@@ -526,7 +534,11 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             if (invoice != null)
                 invoiceNoteDto.ReInvoiceDate = invoice.CreationTime.ToString("dd/mm/yyyy mm:hh");
-
+            else
+            {
+                var submitInvoice = AsyncHelper.RunSync(() => _submitInvoiceReposity.FirstOrDefaultAsync(x => x.ReferencNumber == invoiceNote.InvoiceNumber));
+                invoiceNoteDto.ReInvoiceDate = submitInvoice.CreationTime.ToString("dd/mm/yyyy mm:hh");
+            }
             var document = AsyncHelper.RunSync(() => _documentFileRepository
             .FirstOrDefaultAsync(x => x.TenantId == invoiceNote.TenantId && x.DocumentTypeId == 14));
             if (document != null)
