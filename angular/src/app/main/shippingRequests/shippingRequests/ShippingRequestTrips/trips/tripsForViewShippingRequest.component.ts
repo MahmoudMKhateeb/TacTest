@@ -17,23 +17,22 @@ import { LazyLoadEvent } from 'primeng/api';
 
 import {
   GetShippingRequestVasForViewDto,
+  ImportGoodsDetailsDto,
+  ImportRoutePointDto,
+  ImportTripDto,
+  ImportTripVasesFromExcelInput,
   ShippingRequestDto,
+  ShippingRequestRouteType,
   ShippingRequestsServiceProxy,
   ShippingRequestStatus,
   ShippingRequestsTripServiceProxy,
   ShippingRequestTripCancelStatus,
   ShippingRequestTripStatus,
-  ImportTripDto,
-  ImportRoutePointDto,
-  ImportGoodsDetailsDto,
-  ShippingRequestRouteType,
-  ImportTripVasesFromExcelInput,
 } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
 import { TripService } from '../trip.service';
 import { AddNewRemarksTripModalComponent } from './add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
-import Swal from 'sweetalert2';
 import { finalize } from 'rxjs/operators';
 import { AppConsts } from '@shared/AppConsts';
 import { FileUpload } from 'primeng/fileupload';
@@ -72,7 +71,6 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   ShippingRequestStatusEnum = ShippingRequestStatus;
   ShippingRequestTripCancelStatusEnum = ShippingRequestTripCancelStatus;
   saving = false;
-  ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
   uploadUrl: string;
   uploadPointUrl: string;
   tripVases: string;
@@ -82,7 +80,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   pointsList: ImportRoutePointDto;
   goodDetailsList: ImportGoodsDetailsDto;
   vasesList: ImportTripVasesFromExcelInput;
-  loading: boolean = false;
+  loading = false;
   uploadGoodDetailsUrl: string;
   ShippingRequestRouteTypeEnum = ShippingRequestRouteType;
 
@@ -303,8 +301,9 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     this.reloadPage();
   }
   getCancelStatus(statusId) {
-    if (statusId == this.ShippingRequestTripCancelStatusEnum.Canceled) return this.l('CanceledTrip');
-    else if (statusId == this.ShippingRequestTripCancelStatusEnum.Rejected) return this.l('RejectedTripCancelation');
+    if (statusId == this.ShippingRequestTripCancelStatusEnum.Canceled) {
+      return this.l('CanceledTrip');
+    } else if (statusId == this.ShippingRequestTripCancelStatusEnum.Rejected) return this.l('RejectedTripCancelation');
     else if (statusId == this.ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval) return this.l('WaitingCancelApproveFromTMS');
     else return this.l('None');
   }

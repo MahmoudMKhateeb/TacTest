@@ -34,44 +34,7 @@
             <div class="divirCard"></div>
           </ng-template>
 
-          <div class="table-sendOffer">
-            <span class="titleSendOffer">
-              <a href="javascript:void(0)" class="edit" (click)="ModelPrice.show(input.shippingRequestId ,offer.id);close()" *ngIf="canEditOffer()">
-                <i class="fas fa-pen"></i>
-                {{offer.status==2? l('RePricing'):l('Edit')}}
-              </a>
-              <a href="javascript:void(0)" (click)="delete()" class="delete" *ngIf="canDeleteOffer()">
-                <i class="far fa-trash-alt"></i>
-                {{l('Delete')}}
-              </a>
-              <a href="javascript:void(0)" class="reject" (click)="ModelReject.show(offer.id,isPostPriceOffer)" *ngIf="canAcceptOrRejectOffer()">
-                <i class="fas fa-ban"></i>
-                {{l('RejectOffer')}}
-              </a>
-              <a href="javascript:void(0)" class="accept" (click)="acceptoffer()" *ngIf="canAcceptOrRejectOffer()">
-                <i class="fas fa-check"></i>
-                {{l('AcceptPrice')}}
-              </a>
-
-              <a
-                href="javascript:void(0)"
-                class="accept"
-                (click)="ModelPrice.show(input.shippingRequestId ,offer.id);close()"
-                *ngIf="canSendOfferOrCancel()"
-              >
-                <i class="fas fa-check"></i>
-                {{l('SendOffer')}}
-              </a>
-              <a href="javascript:void(0)" class="acceptTMS" (click)="accepTMStoffer()" *ngIf="canAcceptOrRejectOffer()">
-                <i class="fas fa-check"></i>
-                {{l('AcceptOfferOnBehalfShipper')}}
-              </a>
-
-              <a href="javascript:void(0)" class="delete" (click)="CancelAccepted()" *ngIf="canSendOfferOrCancel()">
-                <i class="fas fa-check"></i>
-                {{l('Cancel')}}
-              </a>
-            </span>
+          <div>
             <table class="table">
               <thead>
                 <tr class="table-active">
@@ -208,4 +171,4 @@
   </div>
 </div>
 <price-offer-model #ModelPrice [Channel]="Channel"></price-offer-model>
-<price-offer-reject-model #ModelReject (modalsave)="reject($event)" (postPriceOfferReject)="postPriceOfferReject($event)"></price-offer-reject-model>
+<price-offer-reject-model #ModelReject (modalsave)="reject($event)"></price-offer-reject-model>

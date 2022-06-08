@@ -18,7 +18,6 @@ import KTWizard from '@metronic/common/js/components/wizard';
 import {
   CarriersForDropDownDto,
   CountyDto,
-  CreateOrEditEntityTemplateInputDto,
   CreateOrEditShippingRequestStep1Dto,
   CreateOrEditShippingRequestVasListDto,
   EditShippingRequestStep2Dto,
@@ -31,7 +30,6 @@ import {
   GetShippingRequestForViewOutput,
   GoodsDetailsServiceProxy,
   ISelectItemDto,
-  RoutStepCityLookupTableDto,
   RoutStepsServiceProxy,
   SavedEntityType,
   SelectItemDto,
@@ -55,7 +53,6 @@ import { DateType } from '@app/admin/required-document-files/hijri-gregorian-dat
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
-import { parseJson } from '@angular/cli/utilities/json-file';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -198,7 +195,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.loadAllDropDownLists();
     this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
     this.isCarrierSass = this.feature.isEnabled('App.CarrierAsASaas');
-    this.GetAllCarriersForDropDown();
     this.useShippingRequestTemplate();
   }
 

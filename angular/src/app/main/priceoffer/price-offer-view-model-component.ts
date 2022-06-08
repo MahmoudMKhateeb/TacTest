@@ -43,7 +43,6 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
 
   show(shippingRequestId: number, offerId: number, isPostPriceOffer: boolean = false): void {
     this.isPostPriceOffer = isPostPriceOffer;
-    this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this._CurrentServ.getPriceOfferForView(offerId).subscribe((result) => {
       this.offerForEditOutput = result;
       this.Items = this.offerForEditOutput.priceOfferViewDto.items;
