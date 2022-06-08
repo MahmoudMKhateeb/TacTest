@@ -327,6 +327,12 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             private global::System.Data.DataColumn columnTenantVatNumber;
             
+            private global::System.Data.DataColumn columnFinancialName;
+            
+            private global::System.Data.DataColumn columnFinancialPhone;
+            
+            private global::System.Data.DataColumn columnFinancialEmail;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public DataTable1DataTable() {
@@ -553,7 +559,31 @@ namespace TACHYON.Invoices.Reports.Datasets {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn FinancialNameColumn {
+                get {
+                    return this.columnFinancialName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn FinancialPhoneColumn {
+                get {
+                    return this.columnFinancialPhone;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn FinancialEmailColumn {
+                get {
+                    return this.columnFinancialEmail;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -613,7 +643,10 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         string TaxVat, 
                         string BankNameArabic, 
                         string BankNameEnglish, 
-                        string TenantVatNumber) {
+                        string TenantVatNumber, 
+                        string FinancialName, 
+                        string FinancialPhone, 
+                        string FinancialEmail) {
                 DataTable1Row rowDataTable1Row = ((DataTable1Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         InvoiceNumber,
@@ -639,7 +672,10 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         TaxVat,
                         BankNameArabic,
                         BankNameEnglish,
-                        TenantVatNumber};
+                        TenantVatNumber,
+                        FinancialName,
+                        FinancialPhone,
+                        FinancialEmail};
                 rowDataTable1Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTable1Row);
                 return rowDataTable1Row;
@@ -686,6 +722,9 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 this.columnBankNameArabic = base.Columns["BankNameArabic"];
                 this.columnBankNameEnglish = base.Columns["BankNameEnglish"];
                 this.columnTenantVatNumber = base.Columns["TenantVatNumber"];
+                this.columnFinancialName = base.Columns["FinancialName"];
+                this.columnFinancialPhone = base.Columns["FinancialPhone"];
+                this.columnFinancialEmail = base.Columns["FinancialEmail"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -739,6 +778,12 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 base.Columns.Add(this.columnBankNameEnglish);
                 this.columnTenantVatNumber = new global::System.Data.DataColumn("TenantVatNumber", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTenantVatNumber);
+                this.columnFinancialName = new global::System.Data.DataColumn("FinancialName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFinancialName);
+                this.columnFinancialPhone = new global::System.Data.DataColumn("FinancialPhone", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFinancialPhone);
+                this.columnFinancialEmail = new global::System.Data.DataColumn("FinancialEmail", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFinancialEmail);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1264,7 +1309,55 @@ namespace TACHYON.Invoices.Reports.Datasets {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string FinancialName {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.FinancialNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'FinancialName\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.FinancialNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string FinancialPhone {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.FinancialPhoneColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'FinancialPhone\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.FinancialPhoneColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string FinancialEmail {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.FinancialEmailColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'FinancialEmail\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.FinancialEmailColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsInvoiceNumberNull() {
                 return this.IsNull(this.tableDataTable1.InvoiceNumberColumn);
             }
@@ -1549,6 +1642,42 @@ namespace TACHYON.Invoices.Reports.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetTenantVatNumberNull() {
                 this[this.tableDataTable1.TenantVatNumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsFinancialNameNull() {
+                return this.IsNull(this.tableDataTable1.FinancialNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetFinancialNameNull() {
+                this[this.tableDataTable1.FinancialNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsFinancialPhoneNull() {
+                return this.IsNull(this.tableDataTable1.FinancialPhoneColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetFinancialPhoneNull() {
+                this[this.tableDataTable1.FinancialPhoneColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsFinancialEmailNull() {
+                return this.IsNull(this.tableDataTable1.FinancialEmailColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetFinancialEmailNull() {
+                this[this.tableDataTable1.FinancialEmailColumn] = global::System.Convert.DBNull;
             }
         }
         

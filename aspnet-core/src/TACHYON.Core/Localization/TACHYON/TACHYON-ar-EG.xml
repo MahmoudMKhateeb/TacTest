@@ -2699,5 +2699,6 @@
 	<text name="SuccessfullyRejectCancelation">تم رفض الإلغاء بنجاح</text>
     <text name="TotalPrice">إجمالي السعر</text>
     <text name="TotalVatAmount">إجمالي الضريبة المضافة</text>
+		<text name="FinancialDepartmentDetails">تفاصيل الإدارة المالية</text>
 	</texts>
 </localizationDictionary>

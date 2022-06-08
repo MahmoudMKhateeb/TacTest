@@ -716,6 +716,9 @@ namespace TACHYON
                     options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName));
 
             configuration.CreateMap<Invoice, InvoiceInfoDto>()
+                .ForMember(dto => dto.FinancialPhone, options => options.MapFrom(entity => entity.Tenant.FinancialPhone))
+                .ForMember(dto => dto.FinancialName, options => options.MapFrom(entity => entity.Tenant.FinancialName))
+                .ForMember(dto => dto.FinancialEmail, options => options.MapFrom(entity => entity.Tenant.FinancialEmail))
                 .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
                 .ForMember(dto => dto.Attn, options => options.MapFrom(entity => entity.Tenant.Name))
                 .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber))

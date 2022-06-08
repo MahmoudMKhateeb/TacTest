@@ -2954,5 +2954,6 @@
     <text name="TotalVatAmount">Total Vat Amount</text>
     <text name="supposedPickupDateFrom">Supposed Pick up Date From</text>
 	<text name="supposedPickupDateTo">Supposed Pick up Date To</text>
+		<text name="FinancialDepartmentDetails">Financial department details</text>
 	</texts>
 </localizationDictionary>
