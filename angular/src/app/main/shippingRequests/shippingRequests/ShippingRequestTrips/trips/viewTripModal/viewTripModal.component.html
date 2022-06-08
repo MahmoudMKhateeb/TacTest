@@ -30,6 +30,10 @@
             <i class="fa flaticon2-print"></i>
             {{ l('PrintWaybill') }}
           </button>
+          <button class="btn btn-primary" (click)="getNotes()">
+            <i class="fa fa-list"></i>
+            {{ l('Notes') }}
+          </button>
         </div>
       </div>
       <div class="modal-body" [busyIf]="loading">
@@ -270,3 +274,5 @@
   </div>
 </div>
 <shared-file-viewer #fileViwerComponent></shared-file-viewer>
+
+<app-trip-notes-modal #TripNotesModal [tripId]="currentTripId" [type]="type"> </app-trip-notes-modal>

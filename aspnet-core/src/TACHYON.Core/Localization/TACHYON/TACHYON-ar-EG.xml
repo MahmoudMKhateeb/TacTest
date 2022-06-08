@@ -2406,6 +2406,20 @@
 		<text name="waybillSearch">رقم وثيقة الشحن ...</text>
 		<text name="supposedPickupDateFrom">تاريخ الاستلام المفترض من</text>
 		<text name="supposedPickupDateTo">تاريخ الاستلام المفترض الى</text>
+		<text name="DeleteWarningMessage">رسالة تحذير للحذف</text>
+		<text name="AddNote">أضف ملاحظة</text>
+		<text name="Internal">داخلي</text>
+		<text name="IsPrintedByWabillInvoice">طباعة الى وثيقة الشحن </text>
+		<text name="Attachments">المرفقات</text>
+		<text name="TMSAndCarrier">Tachyon Manage Service الناقل و</text>
+		<text name="CarrierOnly">الناقل فقط</text>
+		<text name="TMSOnly">فقط Tachyon Manage Service </text>		
+		<text name="ShipperOnly">الشاحن فقط</text>
+		<text name="AddedAt">تمت الاضافة</text>
+		<text name="LastModifiedAt">تاريخ آخر تعديل</text>
+		<text name="by">بواسطة</text>
+		<text name="ViewNote">عرض الملاحظة</text>
+		<text name="UpdateNote">تحديث ملاحظة</text>
 
 		
 

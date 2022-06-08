@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220330210832_ShippingRequestAndTripNotes_tbl")]
+    partial class ShippingRequestAndTripNotes_tbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2334,14 +2336,16 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Key")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<int>("WasIIntegrationId")
                         .HasColumnType("int");
@@ -2349,29 +2353,6 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DriverLicenseTypes");
-                });
-
-            modelBuilder.Entity("TACHYON.DriverLicenseTypes.DriverLicenseTypeTranslation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CoreId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Language")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CoreId");
-
-                    b.ToTable("DriverLicenseTypeTranslations");
                 });
 
             modelBuilder.Entity("TACHYON.DriverLocationLogs.DriverLocationLog", b =>
@@ -2547,56 +2528,6 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EntityHistoryLog");
-                });
-
-            modelBuilder.Entity("TACHYON.EntityTemplates.EntityTemplate", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EntityType")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("SavedEntity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SavedEntityId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TemplateName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EntityTemplates");
                 });
 
             modelBuilder.Entity("TACHYON.Friendships.Friendship", b =>
@@ -3061,7 +2992,7 @@ namespace TACHYON.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("InvoiceNumber")
+                    b.Property<long?>("InvoiceNumber")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsDeleted")
@@ -3100,126 +3031,14 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("InvoiceNumber")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[InvoiceNumber] IS NOT NULL");
 
                     b.HasIndex("PeriodId");
 
                     b.HasIndex("TenantId");
 
                     b.ToTable("Invoices");
-                });
-
-            modelBuilder.Entity("TACHYON.Invoices.InvoiceNote", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("CanBePrinted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("InvoiceNumber")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsManual")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte>("NoteType")
-                        .HasColumnType("tinyint");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ReferanceNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("VatAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("VoidType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("WaybillNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("InvoiceNotes");
-                });
-
-            modelBuilder.Entity("TACHYON.Invoices.InvoiceNoteItem", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("InvoiceNoteId")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("TripId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("TripVasId")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("VatAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvoiceNoteId");
-
-                    b.HasIndex("TripId");
-
-                    b.HasIndex("TripVasId");
-
-                    b.ToTable("InvoiceNoteItems");
                 });
 
             modelBuilder.Entity("TACHYON.Invoices.InvoiceProforma", b =>
@@ -3425,9 +3244,6 @@ namespace TACHYON.Migrations
 
                     b.Property<string>("DocumentName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DueDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -4606,9 +4422,6 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("ActualPickupOrDeliveryDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("BulkUploadReference")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("CanGoToNextLocation")
                         .HasColumnType("bit");
 
@@ -5312,18 +5125,6 @@ namespace TACHYON.Migrations
                     b.Property<string>("BayanId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("CanBePrinted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("BulkUploadRef")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte>("CancelStatus")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("CanceledReason")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal?>("CommissionAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -5332,9 +5133,6 @@ namespace TACHYON.Migrations
 
                     b.Property<byte?>("CommissionType")
                         .HasColumnType("tinyint");
-
-                    b.Property<string>("ContainerNumber")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -5365,9 +5163,6 @@ namespace TACHYON.Migrations
 
                     b.Property<bool>("HasAttachment")
                         .HasColumnType("bit");
-
-                    b.Property<int>("InvoiceStatus")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsApproveCancledByCarrier")
                         .HasColumnType("bit");
@@ -5412,13 +5207,7 @@ namespace TACHYON.Migrations
                     b.Property<int?>("RejectReasonId")
                         .HasColumnType("int");
 
-                    b.Property<string>("RejectedCancelingReason")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("RejectedReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RoundTrip")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte>("RoutePointStatus")
@@ -5441,12 +5230,6 @@ namespace TACHYON.Migrations
 
                     b.Property<decimal?>("SubTotalAmountWithCommission")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("SupposedPickupDateFrom")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("SupposedPickupDateTo")
-                        .HasColumnType("datetime2");
 
                     b.Property<decimal?>("TaxVat")
                         .HasColumnType("decimal(18,2)");
@@ -6814,12 +6597,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<string>("OtherTransportTypeName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OtherTrucksTypeName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid?>("PictureId")
                         .HasColumnType("uniqueidentifier");
 
@@ -7276,29 +7053,6 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UnitOfMeasures");
-                });
-
-            modelBuilder.Entity("TACHYON.UnitOfMeasures.UnitOfMeasureTranslation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CoreId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Language")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CoreId");
-
-                    b.ToTable("UnitOfMeasureTranslations");
                 });
 
             modelBuilder.Entity("TACHYON.Vases.Vas", b =>
@@ -7794,15 +7548,6 @@ namespace TACHYON.Migrations
                         .HasForeignKey("EditionId");
                 });
 
-            modelBuilder.Entity("TACHYON.DriverLicenseTypes.DriverLicenseTypeTranslation", b =>
-                {
-                    b.HasOne("TACHYON.DriverLicenseTypes.DriverLicenseType", "Core")
-                        .WithMany("Translations")
-                        .HasForeignKey("CoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TACHYON.DriverLocationLogs.DriverLocationLog", b =>
                 {
                     b.HasOne("TACHYON.Authorization.Users.User", "CreatorUserFk")
@@ -7940,32 +7685,6 @@ namespace TACHYON.Migrations
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("TACHYON.Invoices.InvoiceNote", b =>
-                {
-                    b.HasOne("TACHYON.MultiTenancy.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TACHYON.Invoices.InvoiceNoteItem", b =>
-                {
-                    b.HasOne("TACHYON.Invoices.InvoiceNote", "InvoiceNoteFK")
-                        .WithMany("InvoiceItems")
-                        .HasForeignKey("InvoiceNoteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTrip", "ShippingRequestTripFK")
-                        .WithMany()
-                        .HasForeignKey("TripId");
-
-                    b.HasOne("TACHYON.ShippingRequestTripVases.ShippingRequestTripVas", "ShippingRequestTripVasFK")
-                        .WithMany()
-                        .HasForeignKey("TripVasId");
                 });
 
             modelBuilder.Entity("TACHYON.Invoices.InvoiceProforma", b =>
@@ -8746,15 +8465,6 @@ namespace TACHYON.Migrations
             modelBuilder.Entity("TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.TrucksTypesTranslation", b =>
                 {
                     b.HasOne("TACHYON.Trucks.TrucksTypes.TrucksType", "Core")
-                        .WithMany("Translations")
-                        .HasForeignKey("CoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TACHYON.UnitOfMeasures.UnitOfMeasureTranslation", b =>
-                {
-                    b.HasOne("TACHYON.UnitOfMeasures.UnitOfMeasure", "Core")
                         .WithMany("Translations")
                         .HasForeignKey("CoreId")
                         .OnDelete(DeleteBehavior.Cascade)

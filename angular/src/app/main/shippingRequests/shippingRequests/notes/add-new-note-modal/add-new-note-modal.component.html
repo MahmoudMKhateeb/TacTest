@@ -1,0 +1,156 @@
+<div
+  bsModal
+  #AddNewNoteModal="bs-modal"
+  class="modal fade"
+  role="dialog"
+  tabindex="-1"
+  aria-labelledby="AddNewNoteModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <form [busyIf]="loading" #addNewNoteModal="ngForm" (ngSubmit)="createOrEditNote()" novalidate autocomplete="off">
+        <div class="modal-header">
+          <p class="modal-title">
+            <span> {{ item.noteId > 0 ? l('UpdateNote') : l('AddNote') }}</span>
+          </p>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!--       start:: Notes       -->
+            <div class="col-lg-12">
+              <label>{{ 'Notes' | localize }}</label>
+              <div class="input-group">
+                <textarea
+                  #notes="ngModel"
+                  name="notes"
+                  class="form-control"
+                  [(ngModel)]="item.note"
+                  rows="5"
+                  required
+                  [class.is-valid]="addNewNoteModal.submitted && notes.touched && notes.valid"
+                  [class.is-invalid]="addNewNoteModal.submitted && notes.touched && !notes.valid && notes.value?.length == 0"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="col-lg-6 mt-7">
+              <div class="form-group">
+                <div class="radio-inline">
+                  <label class="radio radio-danger">
+                    <input
+                      type="radio"
+                      name="radios5"
+                      checked="checked"
+                      [(ngModel)]="item.visibility"
+                      [value]="visibility.Internal"
+                      (change)="open = false"
+                    />
+                    <span></span>
+                    {{ 'Internal' | localize }}
+                  </label>
+
+                  <label class="radio radio-danger">
+                    <input type="radio" name="radios5" [value]="others" [(ngModel)]="item.visibility" (change)="open = true" />
+                    <span></span>
+                    {{ 'Others' | localize }}
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 mt-4">
+              <div class="form-group">
+                <div class="col-12 col-form-label">
+                  <div class="checkbox-inline">
+                    <label class="checkbox checkbox-danger">
+                      <input type="checkbox" name="item.isPrintedByWabillInvoice" [(ngModel)]="item.isPrintedByWabillInvoice" />
+                      <span></span>
+                      {{ 'IsPrintedByWabillInvoice' | localize }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-12">
+              <div class="form-group" [hidden]="!open">
+                <label for="otherSelect">{{ 'Others' | localize }}</label>
+                <select class="form-control" name="otherSelect" [(ngModel)]="item.visibility" (change)="others = item.visibility" required>
+                  <option *ngIf="feature.isEnabled('App.Shipper')" value="{{ visibility.TMSAndCarrier }}">{{ 'TMSAndCarrier' | localize }}</option>
+                  <option *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')" value="{{ visibility.CarrierOnly }}">
+                    {{ 'CarrierOnly' | localize }}
+                  </option>
+                  <option *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.Carrier')" value="{{ visibility.TMSOnly }}">
+                    {{ 'TMSOnly' | localize }}
+                  </option>
+                  <option *ngIf="feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer')" value="{{ visibility.ShipperOnly }}">
+                    {{ 'ShipperOnly' | localize }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label>
+                  {{ 'Attachments' | localize }}
+                </label>
+                <div class="custom-file">
+                  <input
+                    accept="image/x-png,image/jpeg,application/pdf"
+                    (change)="DocFileChangeEvent($event, item.createOrEditDocumentFileDto)"
+                    type="file"
+                    multiple
+                    class="custom-file-input is-valid"
+                  />
+                  <label class="custom-file-label text-truncate">{{ 'SelectFile' | localize }}</label>
+                </div>
+                <div class="margin-top-5">
+                  <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
+                </div>
+                <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
+
+                <table role="presentation" class="table table-striped clearfix">
+                  <tbody class="files">
+                    <tr class="template-upload" *ngFor="let file of files">
+                      <td>
+                        <p class="name">{{ file.name }}</p>
+                        <strong class="error text-danger">{{ file.notes }}</strong>
+                      </td>
+                      <td>
+                        <p class="size">{{ file.extn }}</p>
+                      </td>
+                      <td>
+                        <button class="btn btn-danger btn-icon btn-xs" (click)="removeFile(file.name)" title="{{ 'Delete' | localize }}">
+                          <i class="fa fa-times" [attr.aria-label]="l('Delete')"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!--End :: notes-->
+          </div>
+          <!--end::Body-->
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6" (click)="close()">
+            {{ 'Close' | localize }}
+          </button>
+          <button
+            type="submit"
+            [buttonBusy]="saving"
+            [disabled]="saving || !addNewNoteModal.form.valid || !isFileInputValid"
+            class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
+          >
+            {{ item.noteId > 0 ? l('UpdateNote') : l('AddNote') }}
+          </button>
+          <!--end::Buttons-->
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

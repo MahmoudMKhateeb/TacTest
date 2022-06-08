@@ -1,0 +1,23 @@
+<div
+  bsModal
+  id="TripNotesModal"
+  #TripNotesModal="bs-modal"
+  class="modal fade"
+  role="dialog"
+  tabindex="-1"
+  aria-labelledby="TripNotesModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <app-notes #NotesComponent [tripId]="tripId" [type]="type"> </app-notes>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6" (click)="close()">
+          {{ 'Close' | localize }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

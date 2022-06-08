@@ -85,6 +85,7 @@ using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.UnitOfMeasures;
 using TACHYON.Vases;
 using TACHYON.Penalties;
+using TACHYON.Shipping.ShippingRequestAndTripNotes;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -124,6 +125,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<ShippingRequestTripTransition> ShippingRequestTripTransitions { get; set; }
         public virtual DbSet<ShippingRequestTrip> ShippingRequestTrips { get; set; }
+        public virtual DbSet<ShippingRequestAndTripNote> ShippingRequestAndTripNotes { get; set; }
 
         public virtual DbSet<ShippingRequestReasonAccident> ShippingRequestReasonAccidents { get; set; }
         public DbSet<ShippingRequestReasonAccidentTranslation> ShippingRequestReasonAccidentTranslations { get; set; }
