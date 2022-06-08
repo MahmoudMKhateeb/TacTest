@@ -156,11 +156,11 @@
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="Source">
-              {{ l('Source') }}
+              {{ l('originCity') }}
               <p-sortIcon field="Source"></p-sortIcon>
             </th>
             <th pSortableColumn="Destination">
-              {{ l('Destination') }}
+              {{ l('destinationCity') }}
               <p-sortIcon field="Destination"></p-sortIcon>
             </th>
             <th pSortableColumn="WaybillNumber">
@@ -177,6 +177,9 @@
             </th>
             <th>
               {{ l('deliveryStatus') }}
+            </th>
+            <th>
+              {{ l('intransitStatus') }}
             </th>
             <th>{{ l('Show') }}</th>
             <!--            <th>{{ l('tag') }}</th>-->
@@ -215,6 +218,10 @@
                 }"
                 >{{ isTripDelayed(record.trackingMapDto.expectedDeliveryTime) }}</span
               >
+            </td>
+            <td>
+              <span class="ui-column-title"> {{ l('expectedDeliveryTime') }}</span>
+              {{ record.trackingMapDto.expectedDeliveryTime | date }}
             </td>
             <td>
               <span class="switch switch-sm">

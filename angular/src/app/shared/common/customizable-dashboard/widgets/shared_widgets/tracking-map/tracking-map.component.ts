@@ -21,6 +21,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { finalize } from 'rxjs/operators';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import * as _moment from 'moment';
 
 @Component({
   selector: 'app-tracking-map',
@@ -222,10 +223,10 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
    */
   isTripDelayed(tripExpectedArrivalDate): 'Delayed' | 'OnTime' | 'Unknown' {
     if (tripExpectedArrivalDate == '') return 'Unknown';
-    let todayMoment = this.dateFormatterService.GetTodayGregorian();
-    if (tripExpectedArrivalDate < todayMoment) {
+    let todayMoment = this.dateFormatterService.NgbDateStructToMoment(this.dateFormatterService.GetTodayGregorian());
+    if (_moment(tripExpectedArrivalDate) >= todayMoment) {
       return 'OnTime';
-    } else {
+    } else if (_moment(tripExpectedArrivalDate) < todayMoment) {
       return 'Delayed';
     }
   }
