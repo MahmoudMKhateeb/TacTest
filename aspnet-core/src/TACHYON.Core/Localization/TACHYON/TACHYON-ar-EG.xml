@@ -553,7 +553,7 @@
 		<text name="DownloadCollectedData_Description">تحميل إعدادات حسابك</text>
 		<text name="DownloadDropWaybill">تحميل وثيقة الشحن</text>
 		<text name="DownloadInvoice">تحميل الفاتورة</text>
-		<text name="downloadNote">تزيل الملاحظة</text>
+		<text name="downloadNote">تنزيل الملاحظة</text>
 		<text name="UploadInvoiceDocument">تحميل مستند الفاتورة</text>
 		<text name="DriectRequestCarrierRespone">{clientname} قام بوضع عرض مالي للشحنة رقم: {ShipimentNo}.</text>
 		<text name="Driver">سائق</text>
@@ -2556,5 +2556,7 @@
 		<text name="ThereAre">يوجد</text>
 		<text name="OtherUnitOfMeasure">وحدة القياس الأخرى</text>
 		<text name="OtherUnitOfMeasureHint">أدخل اسم وحدة القياس الأخرى كنص عادي</text>
+    <text name="TotalPrice">إجمالي السعر</text>
+    <text name="TotalVatAmount">إجمالي الضريبة المضافة</text>
 	</texts>
 </localizationDictionary>

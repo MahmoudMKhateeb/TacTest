@@ -2780,5 +2780,7 @@
 		<text name="ThereAre">There are</text>
 		<text name="OtherUnitOfMeasure">Other Unit Of Measure</text>
 		<text name="OtherUnitOfMeasureHint">Enter the name of other unit of measure as a plain text</text>
+    <text name="TotalPrice">Total price</text>
+    <text name="TotalVatAmount">Total Vat Amount</text>
 	</texts>
 </localizationDictionary>
