@@ -2952,5 +2952,7 @@
 	<text name="SuccessfullyRejectCancelation">Successfully Reject Cancelation</text>
     <text name="TotalPrice">Total price</text>
     <text name="TotalVatAmount">Total Vat Amount</text>
+    <text name="supposedPickupDateFrom">Supposed Pick up Date From</text>
+	<text name="supposedPickupDateTo">Supposed Pick up Date To</text>
 	</texts>
 </localizationDictionary>

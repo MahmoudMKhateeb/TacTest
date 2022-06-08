@@ -140,8 +140,16 @@
                 <div class="invalid-feedback">{{ l('PickupFacilityAndDropOffFacilityCantBeTheSame') }}</div>
               </div>
             </div>
-            <!--  end:: Source Dest Facilitys  -->
-            <div class="col-lg-6"></div>
+            <div class="col-lg-6 form-group d-inline-flex">
+              <div class="input-group d-inline-block">
+                <label> {{ l('supposedPickupDateFrom') }} <span class="required-fileds">*</span></label>
+                <input name="fromTime" class="form-control" type="time" required [(ngModel)]="fromTime" />
+              </div>
+              <div class="input-group d-inline-block">
+                <label> {{ l('supposedPickupDateTo') }} <span class="required-fileds">*</span></label>
+                <input name="toTime" required class="form-control" type="time" [(ngModel)]="toTime" />
+              </div>
+            </div>
             <!--  begin:: Trip start&End Dates-->
             <div class="col-lg-6">
               <div class="form-group">

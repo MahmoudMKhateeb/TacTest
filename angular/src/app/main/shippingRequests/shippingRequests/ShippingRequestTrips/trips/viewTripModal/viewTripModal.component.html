@@ -54,7 +54,16 @@
               <input type="text" class="form-control" name="destinationFacility" [(ngModel)]="trip.destinationFacility" disabled />
             </div>
           </div>
-          <div class="col-lg-6"></div>
+          <div class="col-lg-6 form-group d-inline-flex">
+            <div class="input-group d-inline-block">
+              <label> {{ l('supposedPickupDateFrom') }}</label>
+              <input name="fromTime" class="form-control" type="time" disabled [(ngModel)]="fromTime" />
+            </div>
+            <div class="input-group d-inline-block">
+              <label> {{ l('supposedPickupDateTo') }}</label>
+              <input name="toTime" class="form-control" type="time" disabled [(ngModel)]="toTime" />
+            </div>
+          </div>
 
           <!--  end:: Source Dest Facilitys  -->
           <!--  begin:: Trip start&End Dates-->

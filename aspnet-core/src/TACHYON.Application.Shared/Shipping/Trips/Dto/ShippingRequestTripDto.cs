@@ -25,5 +25,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public virtual long? DestinationFacilityId { get; set; }
         public string TotalValue { get; set; }
         public string Note { get; set; }
+        public DateTime? SupposedPickupDateFrom { get; set; }
+        public DateTime? SupposedPickupDateTo { get; set; }
     }
 }

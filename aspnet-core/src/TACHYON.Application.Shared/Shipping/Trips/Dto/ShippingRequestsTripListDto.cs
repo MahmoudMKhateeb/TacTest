@@ -42,5 +42,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public long? WaybillNumber { get; set; }
         public bool IsTripRateBefore { get; set; }
 
+        public DateTime? SupposedPickupDateFrom { get; set; }
+        public DateTime? SupposedPickupDateTo { get; set; }
     }
 }
