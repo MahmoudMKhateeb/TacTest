@@ -59,6 +59,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   minTripDate: any;
   tripStartDate = new FormControl('', Validators.required);
   endTripDate = new FormControl('');
+  tripExpectedDeliveryTime = new FormControl('');
   selectedDateType: DateType = DateType.Hijri; // or DateType.Gregorian
   @Input() parentForm: NgForm;
   @ViewChild('userForm', { static: false }) userForm: NgForm;

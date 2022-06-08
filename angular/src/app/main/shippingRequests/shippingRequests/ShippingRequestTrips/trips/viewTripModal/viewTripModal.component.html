@@ -118,7 +118,7 @@
                 <option *ngFor="let item of allDrivers" [value]="item.id">{{ item.displayName }}</option>
               </select>
             </div>
-            <div class="form-group col-lg-{{ trip.driverStatus == 0 ? 5 : 6 }}">
+            <div class="form-group col-lg-5">
               <label>{{ l('Truck') }}</label>
               <select
                 name="truck"
@@ -140,6 +140,26 @@
               >
                 {{ l('Save') }}
               </button>
+            </div>
+            <div class="col-lg-6">
+              <label>{{ l('tripExpectedDeliveryTime') }}</label>
+              <div class="form-group">
+                <!--                expected trip Delivery Date-->
+                <input
+                  id="tripExpectedDeliveryTime"
+                  type="text"
+                  class="form-control"
+                  name="tripStartDate"
+                  bsDatepicker
+                  datePickerMomentModifier
+                  [(date)]="expectedDeliveryTime"
+                  (dateChange)="updateTripExpectedDeliveryTime()"
+                  [bsConfig]="{ adaptivePosition: true }"
+                  [minDate]="trip.startTripDate"
+                  readonly="readonly"
+                  required
+                />
+              </div>
             </div>
           </ng-container>
 

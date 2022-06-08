@@ -179,6 +179,26 @@
                 </hijri-gregorian-datepicker-test>
               </div>
             </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <!--                expected trip Delivery Date-->
+                <input
+                  id="tripExpectedDeliveryTime"
+                  [formControl]="tripExpectedDeliveryTime"
+                  type="text"
+                  class="form-control"
+                  name="tripStartDate"
+                  bsDatepicker
+                  datePickerMomentModifier
+                  [class.is-valid]="tripExpectedDeliveryTime.valid && tripExpectedDeliveryTime.value"
+                  [(date)]="trip.expectedDeliveryTime"
+                  [minDate]="shippingRequest.startTripDate"
+                  [bsConfig]="{ adaptivePosition: true }"
+                  readonly="readonly"
+                  required
+                />
+              </div>
+            </div>
             <!--  end:: Trip start&End Dates-->
             <!-- begin::Vas's  -->
             <div class="col-lg-6" *ngIf="VasListFromFather?.length > 0">

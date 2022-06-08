@@ -3,6 +3,7 @@ using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.EntityHistory;
@@ -366,6 +367,16 @@ namespace TACHYON.Shipping.Trips
         //    }
         //}
 
+
+        public async Task UpdateExpectedDeliveryTimeForTrip(UpdateExpectedDeliveryTimeInput input)
+        {
+            var trip = await _shippingRequestTripRepository.GetAllIncluding(x=> x.ShippingRequestFk)
+                .SingleAsync(x=> x.Id == input.Id);
+
+            await ValidateExpectedDeliveryTime(input.ExpectedDeliveryTime, trip);
+            trip.ExpectedDeliveryTime = input.ExpectedDeliveryTime;
+        }
+
         public async Task AssignDriverAndTruckToShippmentByCarrier(AssignDriverAndTruckToShippmentByCarrierInput input)
         {
             ShippingRequestTrip trip;
@@ -542,6 +553,7 @@ namespace TACHYON.Shipping.Trips
             await RemoveDeletedTripPoints(input, trip);
             await RemoveDeletedTripVases(input, trip);
 
+            await ValidateExpectedDeliveryTime(input.ExpectedDeliveryTime, trip);
 
             if (input.HasAttachment)
             {
@@ -562,6 +574,18 @@ namespace TACHYON.Shipping.Trips
             }
 
             ObjectMapper.Map(input, trip);
+        }
+
+        private async Task ValidateExpectedDeliveryTime(DateTime? expectedDeliveryTime, ShippingRequestTrip trip)
+        {
+            if (!expectedDeliveryTime.Equals(trip.ExpectedDeliveryTime))
+            {
+                var isPickupPointCompleted = await _routPointRepository.GetAll()
+                    .AnyAsync(x => x.PickingType == PickingType.Pickup &&
+                                   x.ShippingRequestTripId == trip.Id && x.Status == RoutePointStatus.FinishLoading);
+                if (isPickupPointCompleted)
+                    throw new UserFriendlyException(L("YouCanNotEditExpectedDeliveryTime"));
+            }
         }
 
 

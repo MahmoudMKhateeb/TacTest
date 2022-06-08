@@ -27,6 +27,7 @@ namespace TACHYON.Shipping.Trips.Dto
 
         public bool NeedsDeliveryNote { get; set; }
 
+        public DateTime? ExpectedDeliveryTime { get; set; }
         //Facility
         public virtual long? OriginFacilityId { get; set; }
 

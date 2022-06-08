@@ -34,6 +34,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public ShippingRequestTripCancelStatus CancelStatus { get; set; }
         public RoutePointStatus RoutePointStatus { get; set; }
 
+        public DateTime? ExpectedDeliveryTime { get; set; }
         public long? AssignedDriverUserId { get; set; }
 
         /// <summary>
