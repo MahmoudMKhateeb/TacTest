@@ -230,7 +230,18 @@
             </tr>
           </ng-template>
           <ng-template let-record="$implicit" pTemplate="body">
-            <tr [ngClass]="record.hasAccident ? 'table-warning' : ''">
+            <tr
+              [ngClass]="{
+                'table-warning': record.hasAccident || record.cancelStatus == ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval,
+                'bg-danger':
+                  record.cancelStatus == ShippingRequestTripCancelStatusEnum.Rejected ||
+                  record.cancelStatus == ShippingRequestTripCancelStatusEnum.Canceled
+              }"
+            >
+              <!-- <td style="width: 50px;">
+                  <span class="ui-column-title"> {{ l('id') }}</span>
+                  {{ record.id }}
+                </td> -->
               <td>
                 <span class="ui-column-title"> {{ l('bulkUploadReference') }}</span>
                 {{ record.bulkUploadRef }}
@@ -258,8 +269,46 @@
 
               <td>
                 <span class="ui-column-title"> {{ l('tripStatus') }}</span>
-                {{ l(record.statusTitle) }}
-                <a (click)="ViewTripAccidentModal.getAll(record)" *ngIf="record.hasAccident"><i class="flaticon-warning text-danger"></i></a>
+                <span class="noPadding" *ngIf="record.status != ShippingRequestTripStatusEnum.Canceled">
+                  {{ l(record.statusTitle) }}
+                  <a
+                    class="noPadding noColor"
+                    (click)="ViewCancelReasonModal.show(record.status, record.canceledReason, record.rejectedCancelingReason, record.cancelStatus)"
+                  >
+                    <span
+                      class="cancelLink"
+                      *ngIf="
+                        record.cancelStatus !== ShippingRequestTripCancelStatusEnum.Canceled &&
+                        record.cancelStatus !== ShippingRequestTripCancelStatusEnum.None
+                      "
+                    >
+                      - {{ getCancelStatus(record.cancelStatus) }}
+                    </span>
+                  </a>
+                </span>
+
+                <a
+                  class="noPadding noColor"
+                  *ngIf="record.status == ShippingRequestTripStatusEnum.Canceled"
+                  (click)="ViewCancelReasonModal.show(record.status, record.canceledReason, record.rejectedCancelingReason, record.cancelStatus)"
+                >
+                  <span class="cancelLink" *ngIf="record.cancelStatus == ShippingRequestTripCancelStatusEnum.Canceled">
+                    {{ l(record.statusTitle) }}
+                  </span>
+
+                  <span
+                    *ngIf="
+                      record.cancelStatus !== ShippingRequestTripCancelStatusEnum.Canceled &&
+                      record.cancelStatus !== ShippingRequestTripCancelStatusEnum.None
+                    "
+                  >
+                    - {{ getCancelStatus(record.cancelStatus) }}
+                  </span>
+                </a>
+
+                <span>
+                  <a (click)="ViewTripAccidentModal.getAll(record)" *ngIf="record.hasAccident"><i class="flaticon-warning text-danger"></i> </a>
+                </span>
               </td>
               <td>
                 <span class="ui-column-title"> {{ l('waybillNumber') }}</span>
@@ -293,10 +342,39 @@
                     <li *ngIf="canResetTrip(record)">
                       <a class="dropdown-item" (click)="ViewTripModal.ResetTrip(record.id)">{{ l('Reset') }}</a>
                     </li>
-                    <li *ngIf="record.status != 0 && record.status != 6 && record.status != 7">
+                    <li *ngIf="record.status != ShippingRequestTripStatusEnum.New">
                       <a class="dropdown-item" (click)="TripAccidentModal.show(record.id, null)">{{ l('CreateAccident') }}</a>
                     </li>
-                    <li *ngIf="permission.isGranted('Pages.ShippingRequestTrips.Delete') && feature.isEnabled('App.Shipper') && record.status == 0">
+                    <li
+                      *ngIf="
+                        ShippingRequest.status == ShippingRequestStatusEnum.PrePrice &&
+                        record.status == ShippingRequestTripStatusEnum.New &&
+                        ((!feature.isEnabled('App.TachyonDealer') && record.cancelStatus == ShippingRequestTripCancelStatusEnum.None) ||
+                          (feature.isEnabled('App.TachyonDealer') &&
+                            (record.cancelStatus == ShippingRequestTripCancelStatusEnum.None ||
+                              record.cancelStatus == ShippingRequestTripCancelStatusEnum.Rejected)))
+                      "
+                    >
+                      <a class="dropdown-item" (click)="CancelTripModal.show(record.id, record.requestType)">
+                        {{ l('Cancel') }}
+                      </a>
+                    </li>
+                    <li
+                      *ngIf="
+                        ShippingRequest.status == ShippingRequestStatusEnum.PrePrice &&
+                        feature.isEnabled('App.TachyonDealer') &&
+                        record.cancelStatus == ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval
+                      "
+                    >
+                      <a class="dropdown-item" (click)="TmsCancelTripModal.ApplyCancel(record.id)">{{ l('ApplyCancel') }}</a>
+                    </li>
+                    <li
+                      *ngIf="
+                        permission.isGranted('Pages.ShippingRequestTrips.Delete') &&
+                        feature.isEnabled('App.Shipper') &&
+                        record.status == ShippingRequestTripStatusEnum.New
+                      "
+                    >
                       <a class="dropdown-item" (click)="AddNewTripModal.deleteTrip(record.id)">{{ l('Delete') }}</a>
                     </li>
                     <li *ngIf="isShipper || isTachyonDealer">
@@ -370,8 +448,13 @@
   (modalSave)="reloadPage()"
   [shippingRequest]="ShippingRequest"
   [VasListFromFather]="VasListFromFather"
->
-</AddNewTripModal>
+></AddNewTripModal>
+<app-view-cancel-reason-modal #ViewCancelReasonModal></app-view-cancel-reason-modal>
+<app-cancel-trip-modal #CancelTripModal (modalSave)="reloadPage()"></app-cancel-trip-modal>
+<app-tms-cancel-trip-modal #TmsCancelTripModal (modalSave)="reloadPage()"></app-tms-cancel-trip-modal>
+<viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
+<trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
+<view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>
 <app-add-new-remarks-trip-modal #AddRemarksModal></app-add-new-remarks-trip-modal>
 <app-shipping-request-rating-modal #shippingRequestRatingModal></app-shipping-request-rating-modal>
 <create-new-entity-template-modal #saveAsTemplateModal></create-new-entity-template-modal>

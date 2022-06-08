@@ -106,9 +106,9 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
             this.origin = this.origin;
             this.destination = this.destination;
           }
-          if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.Carrier')) {
-            if (r.requestTypeTitle == 'TachyonManageService' && r.statusTitle == 'NeedsAction') {
-              r.statusTitle = 'New';
+          if (this.feature.isEnabled('App.Shipper')) {
+            if (r.requestType == ShippingRequestType.TachyonManageService && r.status == ShippingRequestStatus.NeedsAction) {
+              r.statusTitle = this.l('New');
             }
           }
           // only in this case i need to use double equal not triple (type is difference)

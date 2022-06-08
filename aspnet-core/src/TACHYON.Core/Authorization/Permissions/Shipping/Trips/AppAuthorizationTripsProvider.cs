@@ -12,14 +12,14 @@ namespace TACHYON.Authorization.Permissions.Shipping.Trips
                         context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
             var shippingRequestTrips =
-                pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips, L("ShippingRequests"));
+                pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips, L("ShippingRequestTrips"));
             shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Create,
                 L("CreateNewShippingRequestTrip"), multiTenancySides: MultiTenancySides.Tenant);
             shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Edit,
                 L("EditShippingRequestTrip"), multiTenancySides: MultiTenancySides.Tenant);
             shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Delete,
                 L("DeleteShippingRequestTrip"), multiTenancySides: MultiTenancySides.Tenant);
-            shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Acident_Cancel,
+            shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Cancel,
                 L("CancelTrip"), multiTenancySides: MultiTenancySides.Tenant);
 
             var ResoneAccident = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestResoneAccidents,

@@ -152,6 +152,12 @@ export class UserNotificationHelper extends AppComponentBase {
       case 'App.NotifyShipperWhenRequestChangePrice':
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
 
+      case 'App.ShippingRequest.ShippingRequestTripCanceled':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      case 'App.ShippingRequest.ShippingRequestTripRejectCancelByTachyonDealer':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      case 'App.ShippingRequest.ShippingRequestTripNeedsCancelApproval':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
       //New Offer Redirection
       case 'App.ShippingRequestSendOfferWhenAddPrice':
         return (

@@ -1063,6 +1063,33 @@ namespace TACHYON.Notifications
                 notificationData, userIds: Users.ToArray());
         }
 
+        public async Task ShippingRequestTripCanceled(List<UserIdentifier> Users, ShippingRequestTrip trip, string tenantName)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    string.Format(L("ShippingRequestTripCanceled"), tenantName, trip.WaybillNumber, trip.ShippingRequestFk.ReferenceNumber),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["ReqId"] = trip.ShippingRequestFk.Id;
+            notificationData["TripId"] = trip.Id;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestTripCanceled, notificationData, userIds: Users.ToArray());
+        }
+
+        public async Task ShippingRequestTripRejectCancelByTachyonDealer(List<UserIdentifier> Users, ShippingRequest request)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShippingRequestTripRejectCancelByTachyonDealer"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["id"] = request.Id;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestCancelByTripAccidents, notificationData, userIds: Users.ToArray());
+        }
+
         #endregion
 
         #region TachyonDeal

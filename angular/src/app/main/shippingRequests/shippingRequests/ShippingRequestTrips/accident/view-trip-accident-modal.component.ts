@@ -69,32 +69,4 @@ export class ViewTripAccidentModelComponent extends AppComponentBase {
     this.modal.hide();
     this.active = false;
   }
-
-  CancelTrip(): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._tripServ.cancelByAccident(this.Trip.id, false).subscribe(() => {
-          this.notify.success(this.l('SuccessfullyTripCancled'));
-          this.close();
-          this.modalcanceltrip.emit(null);
-        });
-      }
-    });
-  }
-
-  /**
-   * forced cancelation only by tackhyon dealer ,
-   * send isForced nullable param as true for cancel or false in other cases
-   */
-  ForceCancelTrip(): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._tripServ.cancelByAccident(this.Trip.id, true).subscribe(() => {
-          this.notify.success(this.l('SuccessfullyTripCancled'));
-          this.close();
-          this.modalcanceltrip.emit(null);
-        });
-      }
-    });
-  }
 }

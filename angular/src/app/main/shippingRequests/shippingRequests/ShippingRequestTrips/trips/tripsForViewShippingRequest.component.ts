@@ -19,7 +19,9 @@ import {
   GetShippingRequestVasForViewDto,
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
+  ShippingRequestStatus,
   ShippingRequestsTripServiceProxy,
+  ShippingRequestTripCancelStatus,
   ShippingRequestTripStatus,
   ImportTripDto,
   ImportRoutePointDto,
@@ -65,7 +67,10 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() shippingRequestForView: any;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
-  tripsByTmsEnabled = false;
+  tripsByTmsEnabled: boolean;
+  ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
+  ShippingRequestStatusEnum = ShippingRequestStatus;
+  ShippingRequestTripCancelStatusEnum = ShippingRequestTripCancelStatus;
   saving = false;
   ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
   uploadUrl: string;
@@ -296,5 +301,11 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   }
   ngOnChanges() {
     this.reloadPage();
+  }
+  getCancelStatus(statusId) {
+    if (statusId == this.ShippingRequestTripCancelStatusEnum.Canceled) return this.l('CanceledTrip');
+    else if (statusId == this.ShippingRequestTripCancelStatusEnum.Rejected) return this.l('RejectedTripCancelation');
+    else if (statusId == this.ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval) return this.l('WaitingCancelApproveFromTMS');
+    else return this.l('None');
   }
 }

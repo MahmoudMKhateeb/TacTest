@@ -299,6 +299,9 @@ import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-lis
 import { CreateOrEditPenaltyModalComponent } from './Penalties/penalties-list/create-or-edit-penalty-modal/create-or-edit-penalty-modal.component';
 import { RegisterComplaintModalComponent } from './Penalties/register-complaint/register-complaint-modal.component';
 import { ViewComplaintModalComponent } from './Penalties/penalties-list/view-complaint/view-complaint-modal.component';
+import { CancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/cancel-trip-modal/cancel-trip-modal.component';
+import { TmsCancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/tms-cancel-trip-modal/tms-cancel-trip-modal.component';
+import { ViewCancelReasonModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/view-cancel-reason-modal/view-cancel-reason-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -568,6 +571,9 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewImportedPointsFromExcelModalComponent,
     ViewImportedGoodDetailsFromExcelModalComponent,
     ViewImportVasesFromExcelModalComponent,
+    CancelTripModalComponent,
+    TmsCancelTripModalComponent,
+    ViewCancelReasonModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
