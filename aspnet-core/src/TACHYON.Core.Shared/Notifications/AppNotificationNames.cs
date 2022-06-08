@@ -75,6 +75,7 @@ namespace TACHYON.Notifications
 
         public const string ShippingRequestAccidents = "App.ShippingRequest.Accident";
         public const string ShippingRequestCancelByTripAccidents = "App.ShippingRequest.trip.Accident.Cancel";
+        public const string TripAccidentResolved = "App.Trip.Accident.Resolved";
 
         #endregion
 

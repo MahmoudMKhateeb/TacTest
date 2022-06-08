@@ -150,6 +150,9 @@ export class UserNotificationHelper extends AppComponentBase {
           '&offerid=' +
           userNotification.notification.data.properties.offerid
         );
+
+      case 'App.Trip.Accident.Resolved':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
     }
 
     //No url for this notification

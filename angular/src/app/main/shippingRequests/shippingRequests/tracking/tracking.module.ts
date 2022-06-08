@@ -24,11 +24,14 @@ import { BsDatepickerModule } from '@node_modules/ngx-bootstrap/datepicker';
 import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
 import { ViewDetailsAccidentModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/view-details-accident-modal.component';
 import { AddAccidentCommentModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/accident-comment/add-accident-comment-modal.component';
-import { CreateOrEditTripResolveAccidentModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/resolves/create-or-edit-resolve-trip-accident-modal.component';
 import { TableModule } from '@node_modules/primeng/table';
 import { TrackingRoutingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-routing.module';
 import { NgbDropdownModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { TimelineModule } from '@node_modules/primeng/timeline';
+import { BsDropdownModule } from '@node_modules/ngx-bootstrap/dropdown';
+import { PaginatorModule } from '@node_modules/primeng/paginator';
+import { CascadeSelectModule } from '@node_modules/primeng/cascadeselect';
+import { TripAccidentResolveModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/resolves/trip-accident-resolve-modal.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +44,7 @@ import { TimelineModule } from '@node_modules/primeng/timeline';
     ViewTripAccidentModelComponent,
     ViewDetailsAccidentModalComponent,
     AddAccidentCommentModalComponent,
-    CreateOrEditTripResolveAccidentModalComponent,
+    TripAccidentResolveModalComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
@@ -63,13 +66,15 @@ import { TimelineModule } from '@node_modules/primeng/timeline';
     TrackingRoutingModule,
     NgbDropdownModule,
     TimelineModule,
+    BsDropdownModule,
+    PaginatorModule,
+    CascadeSelectModule,
   ],
   exports: [
     CreateOrEditTripAccidentModalComponent,
     ViewTripAccidentModelComponent,
     ViewDetailsAccidentModalComponent,
     AddAccidentCommentModalComponent,
-    CreateOrEditTripResolveAccidentModalComponent,
   ],
 })
 export class TrackingModule {}

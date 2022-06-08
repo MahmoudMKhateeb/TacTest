@@ -424,7 +424,7 @@
 		<text name="CreateNewVas">Add new VAS</text>
 		<text name="CreateNewVasPrice">Add new VAS price</text>
 		<text name="CreateReason">Add reason</text>
-		<text name="CreateResolve">Create resolve</text>
+		<text name="CreateResolve">Create Resolve</text>
 		<text name="CreateShippingRequest">Create new shipping request</text>
 		<text name="CreateUserFirstName">First name</text>
 		<text name="CreateUserLastName">Last name</text>
@@ -1715,8 +1715,8 @@
 		<text name="ShipperReminderToCompleteTrips">You have a shipment that has not completed its journeys</text>
 		<text name="ShipperShippingRequestFinishNotificationMessage">all shippments are completed for shipping request</text>
 		<text name="ShippingNote">Shipper notes</text>
-		<text name="ShippingRequest">Shipping Request</text>
-		<text name="ShippingRequestAccidentsOccure">There has been an accident for shipment No.: {id}.</text>
+		<text name="ShippingRequest">Shipping request</text>
+		<text name="ShippingRequestAccidentsOccure">An incident occurred on the trip number {0} of the Request with the reference number {1}</text>
 		<text name="ShippingRequestAsBidWithSameTruckNotificationMessage">Shipping request with your same trucks is created in marketplace</text>
 		<text name="ShippingRequestCancelTripByAccidents">The shipment No.:{id} cancled by incident.</text>
 		<text name="ShippingRequestDetails">Shipping request details</text>
@@ -2064,7 +2064,7 @@
 		<text name="TripDetails">Trip Details</text>
 		<text name="TripEndDate">Trip end date</text>
 		<text name="TripFinishedSuccessfully">Your trip has been completed successfully</text>
-		<text name="TripIncident">Trip incident</text>
+		<text name="TripIncident">Trip incidents</text>
 		<text name="TripInfo">Trip Info</text>
 		<text name="TripRejectReason">Trip reject reason</text>
 		<text name="TripsEndDate">Trip pickup date end</text>
@@ -2758,5 +2758,30 @@
 		<text name="ThereAre">There are</text>
 		<text name="OtherUnitOfMeasure">Other Unit Of Measure</text>
 		<text name="OtherUnitOfMeasureHint">Enter the name of other unit of measure as a plain text</text>
+        	<text name="TripAccidentResolvedMsg">The incident that occurred on the trip number {0} of the Request with the reference number {1} was resolved by {2}</text>
+	<text name="ResolveApplied"> Resolve applied</text>
+	<text name="ResolveNotApplied"> Resolve not applied</text>
+	<text name="WaitAcceptanceFromShipper">Waiting for shipper approval</text>
+	<text name="WaitAcceptanceFromCarrier">Waiting for carrier approval</text>
+	<text name="NoResolveYet">No resolve yet</text>
+	<text name="ResolveActions">Resolve actions</text>
+	<text name="Comments">Comments</text>
+	<text name="ChangeDriverResolve">Change driver</text>
+	<text name="ChangeTruckResolve">Change truck</text>
+	<text name="ChangeDriverAndTruckResolve">Change driver and truck</text>
+	<text name="NoActionNeededResolve">No action needed</text>
+	<text name="ApproveResolve">Approve resolve</text>
+	<text name="ViewResolve">View resolve</text>
+	<text name="EnforceChange">Enforce change</text>
+	<text name="ApproveChange">Approve change</text>
+	<text name="EditAccident">Edit Accident</text>
+	<text name="EditResolve">Edit Resolve</text>
+	<text name="ChangeDriver">Change driver</text>
+	<text name="ChangeTruck">Change truck</text>
+	<text name="SelectADriver">Select a driver</text>
+	<text name="SelectATruck">Select a truck</text>
+	<text name="ViewAccidentDetails">View Accident Details</text>
+	<text name="TripIncidentComments">Trip Incident Comments</text>
+	<text name="AddComment">Add comment</text>
 	</texts>
 </localizationDictionary>

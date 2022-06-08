@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
@@ -31,6 +31,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() shippingRequestForView: any;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
+  @Output() incidentResolved: EventEmitter<void>;
   tripsByTmsEnabled = false;
   saving = false;
   ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
@@ -42,6 +43,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy
   ) {
     super(injector);
+    this.incidentResolved = new EventEmitter<void>();
   }
 
   /**
@@ -94,6 +96,9 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   //     } //end of if
   //   });
   // }
+  refreshWhenIncidentResolved() {
+    this.incidentResolved.emit();
+  }
 
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());

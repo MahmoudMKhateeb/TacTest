@@ -62,7 +62,6 @@ export class CreateOrEditTripAccidentModalComponent extends AppComponentBase imp
       .createOrEdit(this.accident)
       .pipe(finalize(() => (this.saving = false)))
       .subscribe(() => {
-        this.notify.info(this.l('SavedSuccessfully'));
         this.close();
         this.modalSave.emit(this.Trip);
         abp.event.trigger('TripReportedAccident', this.tripId);

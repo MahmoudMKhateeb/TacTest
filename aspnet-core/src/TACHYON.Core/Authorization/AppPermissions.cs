@@ -86,6 +86,8 @@
 
         public const string Pages_ShippingRequest_Accidents_Resolve_Edit =
             "Pages.ShippingRequest.Accidents.Resolve.Edit";
+        public const string Pages_ShippingRequest_Accidents_Resolve_ApproveChange = "Pages.ShippingRequest.Accidents.Resolve.ApproveChange";
+        public const string Pages_ShippingRequest_Accidents_Resolve_EnforceChange = "Pages.ShippingRequest.Accidents.Resolve.EnforceChange";
 
         public const string Pages_ShippingRequestTrip_Accident_Comments = "Pages.ShippingRequestTrip.Accident.Comments";
 

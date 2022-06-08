@@ -5,6 +5,7 @@ using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Notifications;
 using Abp.Runtime.Session;
+using NUglify.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -924,11 +925,11 @@ namespace TACHYON.Notifications
 
         #region Accident
 
-        public async Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data)
+        public async Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data,string waybillNumber, string referenceNumber)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                    L("ShippingRequestAccidentsOccure"),
+                    L("ShippingRequestAccidentsOccure",waybillNumber,referenceNumber),
                     TACHYONConsts.LocalizationSourceName
                 )
             );
@@ -955,6 +956,30 @@ namespace TACHYON.Notifications
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestCancelByTripAccidents,
                 notificationData, userIds: Users.ToArray());
+        }
+
+        public async Task TripAccidentResolved(ShippingRequest request,string waybillNum,TripAccidentResolveType resolveType)
+        {
+
+            var shipper = await GetTenantAdminUser(request.TenantId);
+            UserIdentifier carrier = null;
+            if (request.CarrierTenantId.HasValue)
+                carrier = await GetTenantAdminUser(request.CarrierTenantId.Value);
+            
+            var resolveMethod = L(resolveType.GetEnumDescription());
+            
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("TripAccidentResolvedMsg",waybillNum,request.ReferenceNumber,resolveMethod),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            ) {["id"] = request.Id};
+
+            var users = new List<UserIdentifier>() {shipper, await GetAdminTachyonDealerAsync()};
+            
+            if (carrier != null) users.Add(carrier); 
+            
+            await _notificationPublisher.PublishAsync(AppNotificationNames.TripAccidentResolved, notificationData, userIds: users.ToArray());
         }
 
         #endregion

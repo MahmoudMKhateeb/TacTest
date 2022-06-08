@@ -20,5 +20,6 @@ namespace TACHYON.Shipping.Trips
 
         Task Delete(EntityDto input);
         Task CancelByAccident(long Id, bool isForce);
+        Task AssignDriverAndTruckToShippmentByCarrier(AssignDriverAndTruckToShippmentByCarrierInput input);
     }
 }
