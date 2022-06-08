@@ -68,6 +68,8 @@ namespace TACHYON.Notifications
         public const string NotifyShipperWhenTripUpdated = "App.NotifyShipperWhenTripUpdated";
         public const string NotifyCarrierWhenTripUpdated = "App.NotifyCarrierWhenTripUpdated";
         public const string NotifyTachyonDealWhenTripUpdated = "App.NotifyTachyonDealWhenTripUpdated";
+        
+        public const string NotifyOfferOwnerWhenSrUpdated = "App.NotifyOfferOwnerWhenShippingRequestUpdated";
 
         #endregion
 

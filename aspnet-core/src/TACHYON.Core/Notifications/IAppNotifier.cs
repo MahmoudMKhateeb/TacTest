@@ -199,5 +199,7 @@ namespace TACHYON.Notifications
         Task NotifyDriverOnlyWhenTripUpdated(int tripId,
             string waybillNumber,
             params UserIdentifier[] drivers);
+
+        Task NotifyOfferOwnerWhenSrUpdated(long srId, string referanceNumber, params int[] tenantsIds);
     }
 }

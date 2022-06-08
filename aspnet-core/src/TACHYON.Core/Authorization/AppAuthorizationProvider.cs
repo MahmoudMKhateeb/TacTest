@@ -1,8 +1,10 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using TACHYON.Authorization.Permissions.Shipping.Trips;
+using TACHYON.Features;
 
 namespace TACHYON.Authorization
 {
@@ -643,10 +645,17 @@ namespace TACHYON.Authorization
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Dashboard, L("Dashboard"), multiTenancySides: MultiTenancySides.Host);
             cities.CreateChildPermission(AppPermissions.Pages_Administration_PolygonsImport, L("PolygonsImport"), multiTenancySides: MultiTenancySides.Host);
 
+            var srUpdateFeatureDependency = new SimpleFeatureDependency(false, AppFeatures.Carrier, AppFeatures.TachyonDealer); 
+            
+            var srUpdate =  pages.CreateChildPermission(
+                AppPermissions.Pages_ShippingRequestUpdates, L("ShippingRequestUpdate"),
+                multiTenancySides: MultiTenancySides.Tenant,
+                featureDependency: srUpdateFeatureDependency);
 
-
-
-
+            srUpdate.CreateChildPermission(AppPermissions.Pages_ShippingRequestUpdates_TakeAction,
+                L("ShippingRequestUpdateAction"),
+                multiTenancySides: MultiTenancySides.Tenant,
+                featureDependency: srUpdateFeatureDependency);
 
 
         }

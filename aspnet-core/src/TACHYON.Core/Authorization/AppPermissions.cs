@@ -567,6 +567,9 @@
         public const string Pages_Tracking = "Pages.shipment.Tracking";
         public const string Pages_Tracking_ReceiverCode = "Pages.Shipment.Tracking.ReceiverCode";
         public const string Pages_Tracking_ResetPointReceiverCode = "Pages.Shipment.Tracking.ResetPointReceiverCode";
+        
+        public const string Pages_ShippingRequestUpdates = "Pages.ShippingRequestUpdates";
+        public const string Pages_ShippingRequestUpdates_TakeAction = "Pages.ShippingRequestUpdates.TakeAction";
 
         #endregion
     }

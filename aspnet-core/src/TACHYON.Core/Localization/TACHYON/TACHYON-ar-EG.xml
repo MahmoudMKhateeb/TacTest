@@ -2532,5 +2532,16 @@
 		<text name="ThereAre">يوجد</text>
 		<text name="OtherUnitOfMeasure">وحدة القياس الأخرى</text>
 		<text name="OtherUnitOfMeasureHint">أدخل اسم وحدة القياس الأخرى كنص عادي</text>
+	<text name="SrUpdatedMsgForOfferOwner">تم إجراء تغيير على تفاصيل طلب الشحن بالرقم المرجعي {0}.</text>
+	<!-- (another value) =>  (في انتظار التحديث)  -->
+	<text name="PendingUpdate">تحديث معلق</text>
+	<text name="RepricedShippingRequestUpdateAction">تم إعادة تسعير عرض السعر</text>
+	<text name="KeepSamePriceShippingRequestUpdateAction">عرض السعر حافظ على نفس السعر</text>
+	<text name="DismissedShippingRequestUpdateAction">تم الغاء عرض السعر</text>
+  <text name="ShippingRequestsUpdates">تغييرات طلب الشحن</text>
+  <text name="Reprice">إعادة تسعير</text>
+  <text name="KeepSamePrice">الحفاظ على نفس السعر</text>
+  <text name="DismissRequest">إلغاء عرض التسعير</text>
+		
 	</texts>
 </localizationDictionary>

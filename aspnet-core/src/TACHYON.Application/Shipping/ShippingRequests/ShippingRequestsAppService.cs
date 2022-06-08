@@ -962,6 +962,22 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
+        /// <summary>
+        /// Used to check if the updated shipping request has any offer
+        /// and if it has any offer this method will notify all offers owners.
+        /// please use this method for pre-priced shipping requests only
+        /// </summary>
+        /// <param name="shippingRequestId"></param>
+        /// <param name="referanceNumber"></param>
+        private async Task CheckHasOffersToNotifyCarriers(long shippingRequestId,string referanceNumber)
+        {
+            DisableTenancyFilters();
+            var carriers = await _priceOfferRepository.GetAll()
+                .Where(x => x.ShippingRequestId == shippingRequestId)
+                .Select(x => x.TenantId).ToArrayAsync();
+
+            await _appNotifier.NotifyOfferOwnerWhenSrUpdated(shippingRequestId, referanceNumber, carriers);
+        }
         private async Task ValidateGoodsCategory(CreateOrEditShippingRequestDto input)
         {
             if (input.GoodCategoryId != null)
@@ -1005,6 +1021,9 @@ namespace TACHYON.Shipping.ShippingRequests
             }
 
             await ValidateGoodsCategory(input);
+            
+            if (shippingRequest.Status == ShippingRequestStatus.NeedsAction) 
+                await CheckHasOffersToNotifyCarriers(shippingRequest.Id,shippingRequest.ReferenceNumber);
 
             ObjectMapper.Map(input, shippingRequest);
 
