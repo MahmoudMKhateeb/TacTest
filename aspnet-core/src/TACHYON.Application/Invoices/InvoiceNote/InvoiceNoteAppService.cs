@@ -379,7 +379,7 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             invoiceNote.ReferanceNumber = GenerateInvoiceNoteReferanceNumber(invoiceNoteId, invoiceNote.NoteType);
             if (input.InvoiceItems.Any())
-                 ItemValueCalculator(invoiceNote.InvoiceItems, invoiceNote);
+                 ItemValueCalculator(invoiceNote);
         }
         [AbpAuthorize(AppPermissions.Pages_InvoiceNote_Edit)]
         [RequiresFeature(AppFeatures.TachyonDealer)]
@@ -393,9 +393,7 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             await RemoveDeletedWaybills(model, inoviceNote);
             ObjectMapper.Map(model, inoviceNote);
-
-            // if (!inoviceNote.IsManual)
-            ItemValueCalculator(inoviceNote.InvoiceItems, inoviceNote);
+            ItemValueCalculator(inoviceNote);
             
         }
 
@@ -411,7 +409,7 @@ namespace TACHYON.Invoices.InvoiceNotes
             }
         }
 
-        private void ItemValueCalculator(List<InvoiceNoteItem> items, InvoiceNote invoiceNote)
+        private void ItemValueCalculator(InvoiceNote invoiceNote)
         {
             //await DisableTenancyFilterIfTachyonDealerOrHost();
             //var invoiceTenant = await _invoiceReposity.FirstOrDefaultAsync(x => x.InvoiceNumber == InvoiceNumber);
@@ -419,8 +417,8 @@ namespace TACHYON.Invoices.InvoiceNotes
             //    await CalculateForShipper(InvoiceNumber, items, invoiceNote);
             //else
             //    await CalculateForCarrier(InvoiceNumber, items, invoiceNote);
-            invoiceNote.Price = items.Count()>0 ?items.Sum(r => r.Price):invoiceNote.Price;
-            invoiceNote.VatAmount = items.Count() > 0 ?items.Sum(r => r.VatAmount) :invoiceNote.VatAmount;
+            invoiceNote.Price = invoiceNote.InvoiceItems.Count()>0 ? invoiceNote.InvoiceItems.Sum(r => r.Price):invoiceNote.Price;
+            invoiceNote.VatAmount = invoiceNote.InvoiceItems.Count() > 0 ? invoiceNote.InvoiceItems.Sum(r => r.VatAmount) :invoiceNote.VatAmount;
             invoiceNote.TotalValue = invoiceNote.Price+ invoiceNote.VatAmount;
         }
 

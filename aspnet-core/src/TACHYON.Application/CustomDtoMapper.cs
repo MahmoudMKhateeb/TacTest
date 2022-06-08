@@ -781,7 +781,7 @@ namespace TACHYON
                 .ForMember(dto => dto.InvoiceNumber, options => options.MapFrom(entity => entity.ReferencNumber))
                 .ReverseMap();
 
-            configuration.CreateMap<ShippingRequestTrip, GetAllInvoiceItemDto>();
+            //configuration.CreateMap<ShippingRequestTrip, GetAllInvoiceItemDto>();
 
             configuration.CreateMap<InvoiceNoteItem, GetAllInvoiceItemDto>()
                 .ForMember(dto => dto.WaybillNumber, options => options.MapFrom(entity => entity.ShippingRequestTripFK.WaybillNumber));
@@ -1063,7 +1063,7 @@ namespace TACHYON
                     }
                     else
                     {
-                        _Mapper.Map(item, note.InvoiceItems.SingleOrDefault(c => c.Id == note.Id));
+                        _Mapper.Map(item, note.InvoiceItems.SingleOrDefault(c => c.Id == item.Id));
                     }
                 }
             }
