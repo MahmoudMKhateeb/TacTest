@@ -248,6 +248,8 @@ namespace TACHYON.Shipping.Trips.Accidents
                 join accident in _ShippingRequestTripAccidentRepository.GetAll() on accidentId equals accident.Id
                 join request in _ShippingRequestRepository.GetAll() on accident.ShippingRequestId equals request.Id
                 where driver.TenantId == request.CarrierTenantId
+                      && driver.IsDriver && _ShippingRequestRepository.GetAll().SelectMany(x => x.ShippingRequestTrips).Where(x=> x.Status == ShippingRequestTripStatus.InTransit )
+                          .All(x =>  x.AssignedDriverUserId != driver.Id)
                 select new SelectItemDto {Id = driver.Id.ToString(), DisplayName = $"{driver.Name} {driver.Surname}"});
             return await drivers.AsNoTracking().ToListAsync();
         }
