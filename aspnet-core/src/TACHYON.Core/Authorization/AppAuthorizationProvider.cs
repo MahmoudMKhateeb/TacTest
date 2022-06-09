@@ -673,10 +673,12 @@ namespace TACHYON.Authorization
                 L("DeleteEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant
                 ,featureDependency: templateFeatureDependency);
 
+
             var normalPricePackage = pages.CreateChildPermission(AppPermissions.Pages_NormalPricePackages, L("NormalPricePackages"));
             normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Create, L("CreateNewNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
             normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Edit, L("EditNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
             normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Delete, L("DeleteNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
+
 
             #region SrPostPricePermissions
 
@@ -695,12 +697,27 @@ namespace TACHYON.Authorization
            #endregion
 
 
+           var InvoiceNotes = pages.CreateChildPermission(AppPermissions.Pages_Invoices_InvoiceNote, L("InvoiceNotes"));
+           InvoiceNotes.CreateChildPermission(AppPermissions.Pages_InvoiceNote_Create, L("CreateNewInvoiceNote"));
+           InvoiceNotes.CreateChildPermission(AppPermissions.Pages_InvoiceNote_Edit, L("EditInvoiceNote"));
+           InvoiceNotes.CreateChildPermission(AppPermissions.Pages_InvoiceNote_View, L("ViewInvoiceNote"));
 
+           var srUpdateFeatureDependency = new SimpleFeatureDependency(false, AppFeatures.Carrier, AppFeatures.TachyonDealer);
 
-            var InvoiceNotes = pages.CreateChildPermission(AppPermissions.Pages_Invoices_InvoiceNote, L("InvoiceNotes"));
-            InvoiceNotes.CreateChildPermission(AppPermissions.Pages_InvoiceNote_Create, L("CreateNewInvoiceNote"));
-            InvoiceNotes.CreateChildPermission(AppPermissions.Pages_InvoiceNote_Edit, L("EditInvoiceNote"));
-            InvoiceNotes.CreateChildPermission(AppPermissions.Pages_InvoiceNote_View, L("ViewInvoiceNote"));
+           var srUpdate = pages.CreateChildPermission
+           (
+               AppPermissions.Pages_ShippingRequestUpdates,
+               L("ShippingRequestUpdate"),
+               multiTenancySides: MultiTenancySides.Tenant,
+               featureDependency: srUpdateFeatureDependency
+           );
+           srUpdate.CreateChildPermission
+           (
+               AppPermissions.Pages_ShippingRequestUpdates_TakeAction,
+               L("ShippingRequestUpdateAction"),
+               multiTenancySides: MultiTenancySides.Tenant,
+               featureDependency: srUpdateFeatureDependency
+           );
         }
 
         private static ILocalizableString L(string name)

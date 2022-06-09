@@ -61,6 +61,7 @@ using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.ShippingRequestUpdates;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Shipping.SrPostPriceUpdates;
 using TACHYON.ShippingRequestTripVases;
@@ -299,6 +300,8 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<NormalPricePackage> NormalPricePackages { get; set; }
         public DbSet<PricePackageOffer> PricePackageOffers { get; set; }
         public DbSet<PricePackageOfferItem> PricePackageOfferItems { get; set; }
+        
+        public DbSet<ShippingRequestUpdate> ShippingRequestUpdates { get; set; }
 
         public DbSet<SrPostPriceUpdate> PostPriceUpdates { get; set; }
 

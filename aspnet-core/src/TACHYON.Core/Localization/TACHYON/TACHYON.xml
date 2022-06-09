@@ -2543,6 +2543,7 @@
 	<text name="NoMatchingDrivers">There is no Drivers</text>
     <text name="ResetReceiverCode">Reset shipment receiver code</text>
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
+
 	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
 	<text name="SelectAnEmailTemplateType">Select an email template type</text>
 		<text name="AllowedWeightShouldBeMaximum">Allowed Weight Should Be Maximum</text>
@@ -2969,5 +2970,15 @@
 	<text name="by">by</text>
 	<text name="ViewNote">View Note</text>
 	<text name="UpdateNote">Update Note</text>
+        <text name="SrUpdatedMsgForOfferOwner">A Change was made on the details of request with the reference Number {0}.</text>
+    <text name="PendingUpdate">Pending Update</text>
+    <text name="RepricedShippingRequestUpdateAction">The PriceOffer is Repriced</text>
+    <text name="KeepSamePriceShippingRequestUpdateAction">PriceOffer keeped same price</text>
+    <text name="DismissedShippingRequestUpdateAction">PriceOffer is Dismissed</text>
+    <text name="ShippingRequestsUpdates">Shipping Requests Updates</text>
+    <text name="Reprice">Reprice</text>
+    <text name="KeepSamePrice">Keep same price</text>
+    <text name="DismissRequest">Dismiss request</text>
+    
 	</texts>
 </localizationDictionary>

@@ -20,7 +20,7 @@
       </div>
 
       <div class="modal-body">
-        <div class="" *ngIf="active">
+        <div class="" [busyIf]="!active">
           <div class="timeline timeline-3">
             <div class="timeline-items">
               <div class="timeline-item" *ngFor="let log of entityLogs">

@@ -156,6 +156,7 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
     ApiServiceProxies.SrPostPriceUpdateServiceProxy,
     ApiServiceProxies.ImportShipmentFromExcelServiceProxy,
     ApiServiceProxies.ShippingRequestAndTripNotesServiceProxy,
+    ApiServiceProxies.ShippingRequestUpdateServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },

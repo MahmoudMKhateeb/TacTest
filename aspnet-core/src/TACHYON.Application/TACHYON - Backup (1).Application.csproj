@@ -61,16 +61,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>GetInvoiceNoteItemReportInfoDataset.xsd</DependentUpon>
     </Compile>
-    <Compile Update="Invoices\Reports\Datasets\GetInvoiceNoteReportInfoDataset.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>GetInvoiceNoteReportInfoDataset.xsd</DependentUpon>
-    </Compile>
-    <Compile Update="Invoices\Reports\Datasets\GetInvoicePenaltiseInvoiceReportInfo.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>GetInvoicePenaltiseInvoiceReportInfo.xsd</DependentUpon>
-    </Compile>
     <Compile Update="Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -129,11 +119,9 @@
     </None>
     <None Update="Invoices\Reports\Datasets\GetInvoiceNoteReportInfoDataset.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>GetInvoiceNoteReportInfoDataset.Designer.cs</LastGenOutput>
     </None>
     <None Update="Invoices\Reports\Datasets\GetInvoicePenaltiseInvoiceReportInfo.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>GetInvoicePenaltiseInvoiceReportInfo.Designer.cs</LastGenOutput>
     </None>
     <None Update="Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd">
       <Generator>MSDataSetGenerator</Generator>

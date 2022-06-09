@@ -232,5 +232,7 @@ namespace TACHYON.Notifications
 
         #endregion
 
+
+        Task NotifyOfferOwnerWhenSrUpdated(long srId, string referanceNumber, params int[] tenantsIds);
     }
 }

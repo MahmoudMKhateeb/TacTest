@@ -17,6 +17,7 @@ import { ShippingRequestForPriceOfferGetAllInput } from '../../../../shared/comm
 import { ActivatedRoute, Router } from '@angular/router';
 import { ShippingrequestsDetailsModelComponent } from '../details/shippingrequests-details-model.component';
 import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
@@ -38,6 +39,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   destination: any;
   direction = 'ltr';
   openCardId: number;
+  activeShippingRequestId: number;
   bidsloading = false;
   zoom: Number = 13; //map zoom
   lat: Number = 24.717942;
@@ -64,6 +66,9 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
       this.searchInput.isTMS = true;
     }
     this.searchInput.directRequestId = this.directRequestId;
+    if (isNotNullOrUndefined(this.activeShippingRequestId)) {
+      this.searchInput.shippingRequestId = this.activeShippingRequestId;
+    }
     this.LoadData();
   }
   LoadData() {
@@ -121,7 +126,6 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
           }
         });
         this.Items.push(...result.items);
-        console.log('LoadingMore Date .....');
       });
   }
   canDeleteDirectRequest(input: GetShippingRequestForPriceOfferListDto) {

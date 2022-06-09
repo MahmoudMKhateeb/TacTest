@@ -18,7 +18,7 @@ namespace TACHYON.PriceOffers
         Task<long> CreateOrEdit(CreateOrEditPriceOfferInput Input);
         Task<PriceOfferDto> GetPriceOfferForCreateOrEdit(long id, long? OfferId);
         Task<GetOfferForViewOutput> GetPriceOfferForView(long OfferId);
-        Task Delete(EntityDto Input);
+        Task Delete(EntityDto<long> Input);
         Task<GetShippingRequestForPricingOutput> GetShippingRequestForPricing(GetShippingRequestForPricingInput input);
 
         Task<PriceOfferStatus> Accept(long id);

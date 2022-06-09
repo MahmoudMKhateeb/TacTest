@@ -17,7 +17,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form #Form="ngForm" novalidate (ngSubmit)="confirmSendOffer()">
+        <form #Form="ngForm" novalidate (ngSubmit)="type == 'Reprice' ? Reprice(SRUpdateId) : confirmSendOffer()">
           <div class="form-group row">
             <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
               <label>{{ l('CommissionType') }}:</label>
