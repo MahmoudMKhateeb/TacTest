@@ -88,7 +88,7 @@ export class SrPostPriceUpdateComponent extends AppComponentBase {
 
   acceptChangesWithReprice(srUpdate: SrPostPriceUpdateListDto) {
     this.activeUpdateIdForRepricing = srUpdate.id;
-    this.priceOfferModal.show(this.shippingRequestId, undefined, true);
+    this.priceOfferModal.show(this.shippingRequestId, undefined, undefined, undefined, true);
   }
 
   sendPostPriceOffer(event: CreateOrEditPriceOfferInput) {

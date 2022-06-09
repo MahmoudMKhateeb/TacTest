@@ -39,7 +39,6 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   destination: any;
   direction = 'ltr';
   openCardId: number;
-  activeShippingRequestId: number;
   bidsloading = false;
   zoom: Number = 13; //map zoom
   lat: Number = 24.717942;
