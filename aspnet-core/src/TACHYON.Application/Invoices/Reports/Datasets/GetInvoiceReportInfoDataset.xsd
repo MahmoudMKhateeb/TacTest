@@ -42,6 +42,7 @@
               <xs:element name="FinancialName" msprop:Generator_ColumnVarNameInTable="columnFinancialName" msprop:Generator_ColumnPropNameInRow="FinancialName" msprop:Generator_ColumnPropNameInTable="FinancialNameColumn" msprop:Generator_UserColumnName="FinancialName" type="xs:string" minOccurs="0" />
               <xs:element name="FinancialPhone" msprop:Generator_ColumnVarNameInTable="columnFinancialPhone" msprop:Generator_ColumnPropNameInRow="FinancialPhone" msprop:Generator_ColumnPropNameInTable="FinancialPhoneColumn" msprop:Generator_UserColumnName="FinancialPhone" type="xs:string" minOccurs="0" />
               <xs:element name="FinancialEmail" msprop:Generator_ColumnVarNameInTable="columnFinancialEmail" msprop:Generator_ColumnPropNameInRow="FinancialEmail" msprop:Generator_ColumnPropNameInTable="FinancialEmailColumn" msprop:Generator_UserColumnName="FinancialEmail" type="xs:string" minOccurs="0" />
+              <xs:element name="QRCode" msprop:Generator_ColumnVarNameInTable="columnQRCode" msprop:Generator_ColumnPropNameInRow="QRCode" msprop:Generator_ColumnPropNameInTable="QRCodeColumn" msprop:Generator_UserColumnName="QRCode" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

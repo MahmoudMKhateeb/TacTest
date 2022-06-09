@@ -2983,5 +2983,8 @@
 	<text name="WorkingDaysHours">Working Days Hours</text>
 	<text name="PleaseEnterfacilityWorkingHours">Please Enter Working Days Hours</text>
 	<text name="PleaseEnterCity">Please Enter City</text>
+		<text name="InvoiceDate">Invoice date</text>
+		<text name="VatNumber">Vat number</text>
+		<text name="TaxInvoice">Tax Invoice</text>
 	</texts>
 </localizationDictionary>

@@ -7,8 +7,13 @@ using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using QRCoder;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -17,6 +22,7 @@ using TACHYON.Authorization.Users;
 using TACHYON.Cities.Dtos;
 using TACHYON.Common;
 using TACHYON.Configuration;
+using TACHYON.DataExporting;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
 using TACHYON.Exporting;
@@ -28,7 +34,7 @@ using TACHYON.Invoices.Transactions;
 using TACHYON.Penalties;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Trucks.TrucksTypes.Dtos;
-
+using TACHYON.Url;
 
 namespace TACHYON.Invoices
 {
@@ -45,6 +51,8 @@ namespace TACHYON.Invoices
         private readonly IExcelExporterManager<InvoiceListDto> _excelExporterManager;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly IExcelExporterManager<InvoiceItemDto> _excelExporterInvoiceItemManager;
+        private readonly IWebUrlService _webUrlService;
+        private readonly PdfExporterBase _pdfExporterBase;
 
 
         public InvoiceAppService(
@@ -57,7 +65,8 @@ namespace TACHYON.Invoices
             IExcelExporterManager<InvoiceListDto> excelExporterManager,
             IRepository<ShippingRequestVas, long> shippingRequestVasesRepository,
             IRepository<DocumentFile, Guid> documentFileRepository,
-            IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager)
+            IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager,
+             IWebUrlService webUrlService, PdfExporterBase pdfExporterBase)
 
         {
             _invoiceRepository = invoiceRepository;
@@ -70,6 +79,8 @@ namespace TACHYON.Invoices
             _excelExporterManager = excelExporterManager;
             _documentFileRepository = documentFileRepository;
             _excelExporterInvoiceItemManager = excelExporterInvoiceItemManager;
+            _webUrlService = webUrlService;
+            _pdfExporterBase = pdfExporterBase;
         }
 
 
@@ -326,8 +337,6 @@ namespace TACHYON.Invoices
                 Invoice.IsPaid = false;
             }
         }
-
-
         public async Task OnDemand(int Id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
@@ -336,6 +345,20 @@ namespace TACHYON.Invoices
 
             // if (tenant == null || tenant.Name == AppConsts.ShipperEditionName) throw new UserFriendlyException(L("TheTenantSelectedIsNotShipper"));
             await _invoiceManager.GenertateInvoiceOnDeman(tenant);
+        }
+
+        [AbpAllowAnonymous]
+        public async Task<InvoiceOutSideDto> GetInvoiceOutSide(EntityDto<long> input)
+        {
+            DisableTenancyFilters();
+            var invoiceDto = await _invoiceRepository.GetAll()
+                .Where(x => x.Id == input.Id)
+                .ProjectTo<InvoiceOutSideDto>(AutoMapperConfigurationProvider)
+                .FirstOrDefaultAsync();
+
+            var documentVat = await _documentFileRepository.FirstOrDefaultAsync(x => x.TenantId == invoiceDto.TenantId && x.DocumentTypeId == 15);
+            if (documentVat != null) invoiceDto.VATNumber = documentVat.Number;
+            return invoiceDto;
         }
 
         #region Reports
@@ -371,8 +394,11 @@ namespace TACHYON.Invoices
                 _documentFileRepository.FirstOrDefaultAsync(x =>
                     x.TenantId == invoice.TenantId && x.DocumentTypeId == 15));
             if (document != null) invoiceDto.TenantVatNumber = documentVat.Number;
+            var link = $"{_webUrlService.WebSiteRootAddressFormat }account/outsideInvoice?id={invoiceId}";
+            invoiceDto.QRCode = _pdfExporterBase.GenerateQrCode(link);
             return new List<InvoiceInfoDto>() { invoiceDto };
         }
+
         public IEnumerable<InvoiceItemDto> GetInvoiceShippingRequestsReportInfo(long invoiceId)
         {
             DisableTenancyFilters();
@@ -648,8 +674,6 @@ namespace TACHYON.Invoices
                 }
             );
         }
-
-
         public async Task<FileDto> ExportItems(long id)
         {
             var invoice = await GetInvoiceInfo(id);
@@ -672,6 +696,8 @@ namespace TACHYON.Invoices
         #endregion
 
         #region Helper
+
+
 
         private async Task<PagedResultDto<InvoiceListDto>> GetInvoicesWithPaging(InvoiceFilterInput input)
         {

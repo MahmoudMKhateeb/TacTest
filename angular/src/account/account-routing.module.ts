@@ -27,6 +27,7 @@ import { TermAndConditionRegistrationComponent } from '@account/register/term-an
 import { RatingPageComponent } from '@app/rating-page/rating-page.component';
 import { TrackingOutsidePlatformComponent } from '@account/tracking-outside-platform/tracking-outside-platform.component';
 
+import { InvoiceOutsideComponent } from '@account/invoice-outside/invoice-outside.component';
 @NgModule({
   imports: [
     RouterModule.forChild([
@@ -64,6 +65,10 @@ import { TrackingOutsidePlatformComponent } from '@account/tracking-outside-plat
           {
             path: 'outsideTracking',
             component: TrackingOutsidePlatformComponent,
+          },
+          {
+            path: 'outsideInvoice',
+            component: InvoiceOutsideComponent,
           },
           { path: '**', redirectTo: 'login' },
         ],

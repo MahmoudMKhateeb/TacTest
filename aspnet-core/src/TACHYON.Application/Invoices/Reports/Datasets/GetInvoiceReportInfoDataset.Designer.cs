@@ -333,6 +333,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             private global::System.Data.DataColumn columnFinancialEmail;
             
+            private global::System.Data.DataColumn columnQRCode;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public DataTable1DataTable() {
@@ -584,6 +586,14 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn QRCodeColumn {
+                get {
+                    return this.columnQRCode;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -643,10 +653,11 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         string TaxVat, 
                         string BankNameArabic, 
                         string BankNameEnglish, 
-                        string TenantVatNumber, 
                         string FinancialName, 
                         string FinancialPhone, 
-                        string FinancialEmail) {
+                        string FinancialEmail,
+                        string TenantVatNumber, 
+                        string QRCode) {
                 DataTable1Row rowDataTable1Row = ((DataTable1Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         InvoiceNumber,
@@ -672,10 +683,11 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         TaxVat,
                         BankNameArabic,
                         BankNameEnglish,
-                        TenantVatNumber,
                         FinancialName,
                         FinancialPhone,
-                        FinancialEmail};
+                        FinancialEmail,
+                        TenantVatNumber,
+                        QRCode};
                 rowDataTable1Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTable1Row);
                 return rowDataTable1Row;
@@ -725,6 +737,7 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 this.columnFinancialName = base.Columns["FinancialName"];
                 this.columnFinancialPhone = base.Columns["FinancialPhone"];
                 this.columnFinancialEmail = base.Columns["FinancialEmail"];
+                this.columnQRCode = base.Columns["QRCode"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -784,6 +797,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 base.Columns.Add(this.columnFinancialPhone);
                 this.columnFinancialEmail = new global::System.Data.DataColumn("FinancialEmail", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnFinancialEmail);
+                this.columnQRCode = new global::System.Data.DataColumn("QRCode", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnQRCode);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1358,6 +1373,22 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string QRCode {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.QRCodeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'QRCode\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.QRCodeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsInvoiceNumberNull() {
                 return this.IsNull(this.tableDataTable1.InvoiceNumberColumn);
             }
@@ -1678,6 +1709,18 @@ namespace TACHYON.Invoices.Reports.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetFinancialEmailNull() {
                 this[this.tableDataTable1.FinancialEmailColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsQRCodeNull() {
+                return this.IsNull(this.tableDataTable1.QRCodeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetQRCodeNull() {
+                this[this.tableDataTable1.QRCodeColumn] = global::System.Convert.DBNull;
             }
         }
         

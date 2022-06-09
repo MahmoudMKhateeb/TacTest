@@ -2728,5 +2728,8 @@
   <text name="KeepSamePrice">الحفاظ على نفس السعر</text>
   <text name="DismissRequest">إلغاء عرض التسعير</text>
 		
+		<text name="InvoiceDate">تاريخ الفاتورة</text>
+		<text name="VatNumber">الرقم الضريبي</text>
+		<text name="TaxInvoice">فاتورة ضريبية</text>
 	</texts>
 </localizationDictionary>

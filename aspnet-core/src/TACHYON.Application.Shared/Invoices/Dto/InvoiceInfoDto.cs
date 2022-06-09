@@ -32,6 +32,7 @@ namespace TACHYON.Invoices.Dto
         public string FinancialName { get; set; }
         public string FinancialPhone { get; set; }
         public string FinancialEmail { get; set; }
+        public string QRCode { get; set; }
         public List<InvoiceItemDto> Items { get; set; }
 
         /// <summary>

@@ -15,12 +15,16 @@
   <ItemGroup>
     <None Remove="Invoices\Reports\Dedicated_Invoice.rdlc" />
     <None Remove="Invoices\Reports\Invoice.rdlc" />
+    <None Remove="Invoices\Reports\LandScapeInvoice.rdlc" />
     <None Remove="Waybills\Reports\Master_Waybill.rdlc" />
     <None Remove="Waybills\Reports\Multiple_Drop_Waybill.rdlc" />
     <None Remove="Waybills\Reports\Single_Drop_Waybill.rdlc" />
     <None Remove="Shipping\Trips\ShippingRequestsTripManager.cs.orig" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Invoices\Reports\LandScapeInvoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\Invoice.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -43,6 +47,7 @@
     <PackageReference Include="KubernetesClient" Version="1.6.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="3.1.3" />
     <PackageReference Include="NPOI" Version="2.5.1" />
+    <PackageReference Include="QRCoder" Version="1.4.2" />
     <PackageReference Include="ReportViewerCore.NETCore" Version="15.1.15" />
     <PackageReference Include="System.CodeDom" Version="5.0.0" />
   </ItemGroup>

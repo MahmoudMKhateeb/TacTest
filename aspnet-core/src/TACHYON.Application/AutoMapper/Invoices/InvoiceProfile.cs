@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.Invoices;
 using TACHYON.Invoices.Dto;
 using TACHYON.Shipping.ShippingRequestTrips;
 
@@ -19,6 +20,9 @@ namespace TACHYON.AutoMapper.Invoices
                             ? src.ShippingRequestFk.EndTripDate.Value.ToString("dd MMM, yyyy")
                             : ""))
                 ;
+            CreateMap<Invoice, InvoiceOutSideDto>()
+               .ForMember(dst => dst.CompanyName, opt => opt.MapFrom(src => src.Tenant.Name));
+
         }
     }
 }
