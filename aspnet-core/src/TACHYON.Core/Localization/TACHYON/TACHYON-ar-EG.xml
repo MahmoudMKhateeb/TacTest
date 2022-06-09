@@ -2373,6 +2373,9 @@
 		<text name="WorstRatedShippers">الشواحن الأقل تقييماً</text>
 		<text name="ReferanceNumber">رقم المرجع للطلب</text>
 		<text name="ForCurrentYear">السنة الحاليه</text>
+		<text name="WorkingDaysHours">ساعات أيام العمل</text>
+		<text name="PleaseEnterfacilityWorkingHours">لطفا أدخل ساعات أيام العمل</text>
+		<text name="PleaseEnterCity">أدخل المدينة</text>
 
 
 

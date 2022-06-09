@@ -21,17 +21,19 @@ namespace TACHYON.AddressBook
     public class FacilitiesAppService : TACHYONAppServiceBase, IFacilitiesAppService
     {
         private readonly IRepository<Facility, long> _facilityRepository;
+        private readonly IRepository<FacilityWorkingHour> _facilityWorkingHourRepository;
         private readonly IFacilitiesExcelExporter _facilitiesExcelExporter;
         private readonly IRepository<City, int> _lookup_cityRepository;
 
 
         public FacilitiesAppService(IRepository<Facility, long> facilityRepository,
             IFacilitiesExcelExporter facilitiesExcelExporter,
-            IRepository<City, int> lookup_cityRepository)
+            IRepository<City, int> lookup_cityRepository, IRepository<FacilityWorkingHour> facilityWorkingHourRepository)
         {
             _facilityRepository = facilityRepository;
             _facilitiesExcelExporter = facilitiesExcelExporter;
             _lookup_cityRepository = lookup_cityRepository;
+            _facilityWorkingHourRepository = facilityWorkingHourRepository;
         }
 
         public async Task<PagedResultDto<GetFacilityForViewOutput>> GetAll(GetAllFacilitiesInput input)
@@ -40,6 +42,7 @@ namespace TACHYON.AddressBook
                 .Include(e => e.CityFk)
                 .ThenInclude(c => c.CountyFk)
                 .ThenInclude(t => t.Translations)
+                .Include(x=>x.FacilityWorkingHours)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,
                     i => i.CreationTime >= input.FromDate && i.CreationTime <= input.ToDate)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
@@ -68,7 +71,8 @@ namespace TACHYON.AddressBook
                     },
                     CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
                     Country = o.CityFk.CountyFk.DisplayName ?? "",
-                    CreationTime = o.CreationTime
+                    CreationTime = o.CreationTime,
+                    FacilityWorkingHours = ObjectMapper.Map<List<FacilityWorkingHourDto>>(o.FacilityWorkingHours)
                 };
 
             var totalCount = await filteredFacilities.CountAsync();
@@ -99,7 +103,9 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Edit)]
         public async Task<GetFacilityForEditOutput> GetFacilityForEdit(EntityDto<long> input)
         {
-            var facility = await _facilityRepository.FirstOrDefaultAsync(input.Id);
+            var facility = await _facilityRepository.GetAll()
+                .Include(x=>x.FacilityWorkingHours)
+                .FirstOrDefaultAsync(x=> x.Id==input.Id);
 
             var output =
                 new GetFacilityForEditOutput { Facility = ObjectMapper.Map<CreateOrEditFacilityDto>(facility) };
@@ -118,17 +124,6 @@ namespace TACHYON.AddressBook
             }
 
             return output;
-        }
-
-        public async Task ValidateFacilityName(CreateOrEditFacilityDto input)
-        {
-            var ExsistItem = await _facilityRepository.GetAll().AsNoTracking()
-                .FirstOrDefaultAsync(e => e.Name.Equals(input.Name) && e.TenantId == AbpSession.TenantId);
-            if (input.Id != null)
-                ExsistItem = await _facilityRepository.GetAll().AsNoTracking().FirstOrDefaultAsync(e =>
-                    e.Name.Equals(input.Name) && e.Id != input.Id && e.TenantId == AbpSession.TenantId);
-            if (ExsistItem != null)
-                throw new UserFriendlyException(L("facilityNameIsAlreadyExistsForThisTenant"));
         }
 
         public async Task<long> CreateOrEdit(CreateOrEditFacilityDto input)
@@ -165,15 +160,21 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Edit)]
         protected virtual async Task<long> Update(CreateOrEditFacilityDto input)
         {
-            var facility = await _facilityRepository.FirstOrDefaultAsync((long)input.Id);
+            var facility = await _facilityRepository.GetAll().Include(x => x.FacilityWorkingHours).FirstOrDefaultAsync(x => x.Id == (long)input.Id);
+
+            await RemoveDeletedWorkingHours(input, facility);
             ObjectMapper.Map(input, facility);
             return facility.Id;
         }
 
+        
+
         [AbpAuthorize(AppPermissions.Pages_Facilities_Delete)]
         public async Task Delete(EntityDto<long> input)
         {
-            await _facilityRepository.DeleteAsync(input.Id);
+            var facility = await _facilityRepository.GetAll().Include(x => x.FacilityWorkingHours).FirstOrDefaultAsync(x => x.Id == (long)input.Id);
+            facility.FacilityWorkingHours.Clear();
+            await _facilityRepository.DeleteAsync(facility);
         }
 
         public async Task<FileDto> GetFacilitiesToExcel(GetAllFacilitiesForExcelInput input)
@@ -218,6 +219,28 @@ namespace TACHYON.AddressBook
                     Id = city.Id,
                     DisplayName = city == null || city.DisplayName == null ? "" : city.DisplayName.ToString()
                 }).ToListAsync();
+        }
+
+        private async Task ValidateFacilityName(CreateOrEditFacilityDto input)
+        {
+            var ExsistItem = await _facilityRepository.GetAll().AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Name.Equals(input.Name) && e.TenantId == AbpSession.TenantId);
+            if (input.Id != null)
+                ExsistItem = await _facilityRepository.GetAll().AsNoTracking().FirstOrDefaultAsync(e =>
+                    e.Name.Equals(input.Name) && e.Id != input.Id && e.TenantId == AbpSession.TenantId);
+            if (ExsistItem != null)
+                throw new UserFriendlyException(L("facilityNameIsAlreadyExistsForThisTenant"));
+        }
+
+        private async Task RemoveDeletedWorkingHours(CreateOrEditFacilityDto input, Facility facility)
+        {
+            foreach (var facilityWorkHour in facility.FacilityWorkingHours)
+            {
+                if (!input.FacilityWorkingHours.Any(x => x.Id == facilityWorkHour.Id))
+                {
+                    await _facilityWorkingHourRepository.DeleteAsync(facilityWorkHour);
+                }
+            }
         }
     }
 }

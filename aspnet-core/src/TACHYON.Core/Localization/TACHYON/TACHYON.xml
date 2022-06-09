@@ -2758,5 +2758,8 @@
 		<text name="ThereAre">There are</text>
 		<text name="OtherUnitOfMeasure">Other Unit Of Measure</text>
 		<text name="OtherUnitOfMeasureHint">Enter the name of other unit of measure as a plain text</text>
+	<text name="WorkingDaysHours">Working Days Hours</text>
+	<text name="PleaseEnterfacilityWorkingHours">Please Enter Working Days Hours</text>
+	<text name="PleaseEnterCity">Please Enter City</text>
 	</texts>
 </localizationDictionary>

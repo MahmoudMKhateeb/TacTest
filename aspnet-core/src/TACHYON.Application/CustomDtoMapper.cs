@@ -323,11 +323,17 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditPortDto, Port>().ReverseMap();
             configuration.CreateMap<PortDto, Port>().ReverseMap();
 
-            configuration.CreateMap<CreateOrEditFacilityDto, Facility>();
+        
             configuration.CreateMap<Facility, CreateOrEditFacilityDto>()
                 .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
                  .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y))
                 .ForMember(x => x.CityId, x => x.MapFrom(i => i.CityId));
+            configuration.CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
+            configuration.CreateMap<UnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
+            configuration.CreateMap<CreateOrEditFacilityDto, Facility>()
+                .ForMember(d => d.FacilityWorkingHours, opt => opt.Ignore())
+                .AfterMap(AddOrUpdateFacilityWorkingHours).ReverseMap();
+
             configuration.CreateMap<Facility, FacilityLocationListDto>()
                 .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
                 .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
@@ -1007,6 +1013,23 @@ namespace TACHYON
                 else
                 {
                     _Mapper.Map(good, point.GoodsDetails.SingleOrDefault(c => c.Id == good.Id));
+                }
+            }
+        }
+
+        private static void AddOrUpdateFacilityWorkingHours(CreateOrEditFacilityDto dto, Facility facility)
+        {
+            if (facility.FacilityWorkingHours == null) facility.FacilityWorkingHours = new Collection<FacilityWorkingHour>();
+            foreach(var workingHour in dto.FacilityWorkingHours)
+            {
+                if (!workingHour.Id.HasValue)
+                {
+                    var ee = _Mapper.Map<FacilityWorkingHour>(workingHour);
+                    facility.FacilityWorkingHours.Add(ee);
+                }
+                else
+                {
+                    _Mapper.Map(workingHour, facility.FacilityWorkingHours.FirstOrDefault(c => c.Id == workingHour.Id));
                 }
             }
         }
