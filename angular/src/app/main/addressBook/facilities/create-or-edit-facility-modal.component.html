@@ -130,6 +130,7 @@
                 required
               />
             </div>
+
             <!-- CreateNewFacilityMap -->
             <div class="form-group col-md-12" [ngClass]="{ preventClick: !facility.cityId }">
               <agm-map
@@ -152,6 +153,15 @@
                   [style]="polygonStyle"
                 ></agm-data-layer>
               </agm-map>
+            </div>
+
+            <div class="col-md-6">
+              <app-create-or-edit-working-hours
+                #CreateOrEditWorkingHoursComponent
+                [FacilityWorkingHoursInput]="FacilityWorkingHours"
+                [parentForm]="createFacilityForm"
+              >
+              </app-create-or-edit-working-hours>
             </div>
           </div>
         </div>

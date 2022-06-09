@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Rating;
 
@@ -17,5 +18,6 @@ namespace TACHYON.AddressBook
         public decimal Rate { get; set; }
 
         public int RateNumber { get; set; }
+        public ICollection<FacilityWorkingHour> FacilityWorkingHours { get; set; }
     }
 }
