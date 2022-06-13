@@ -278,7 +278,7 @@ namespace TACHYON.Shipping.Trips
             //ValidateNumberOfDrops(input, request);
             _shippingRequestTripManager.ValidateNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), request);
             //ValidateTotalweight(input, request);
-            _shippingRequestTripManager.ValidateTotalweight(input.RoutPoints.SelectMany(x => x.GoodsDetailListDto).ToList<ICreateOrEditGoodsDetailDtoBase>(), request);
+            _shippingRequestTripManager.ValidateTotalweight(input.RoutPoints.Where(x=>x.PickingType==PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).ToList<ICreateOrEditGoodsDetailDtoBase>(), request);
             if (!input.Id.HasValue)
             {
                 //int requestNumberOfTripsAdd = await _shippingRequestTripRepository.GetAll()
