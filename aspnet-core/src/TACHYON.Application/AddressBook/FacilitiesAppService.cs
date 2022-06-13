@@ -5,6 +5,7 @@ using Abp.Linq.Extensions;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -181,6 +182,7 @@ namespace TACHYON.AddressBook
         {
             var filteredFacilities = _facilityRepository.GetAll()
                 .Include(e => e.CityFk)
+                .Include(e => e.FacilityWorkingHours)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
                     e => false || e.Name.Contains(input.Filter) || e.Address.Contains(input.Filter))
                 .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
@@ -199,7 +201,8 @@ namespace TACHYON.AddressBook
                         Address = o.Address,
                         Longitude = o.Location.X,
                         Latitude = o.Location.Y,
-                        Id = o.Id
+                        Id = o.Id,
+                        FacilityWorkingHours = string.Join(",", o.FacilityWorkingHours.Select(r=>"Day " + r.DayOfWeek.ToString() + " : "+ "("+r.StartTime.Duration().Hours + ":" + r.StartTime.Duration().Minutes + ")" + " To "+ "(" + r.EndTime.Duration().Hours + ":" + r.EndTime.Duration().Minutes + ")").ToList())
                     },
                     CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString()
                 });
