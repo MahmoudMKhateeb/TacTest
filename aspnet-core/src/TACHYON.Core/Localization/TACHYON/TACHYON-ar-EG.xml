@@ -2420,8 +2420,8 @@
 		<text name="by">بواسطة</text>
 		<text name="ViewNote">عرض الملاحظة</text>
 		<text name="UpdateNote">تحديث ملاحظة</text>
-		<text name="WorkingDaysHours">ساعات أيام العمل</text>
-		<text name="PleaseEnterfacilityWorkingHours">لطفا أدخل ساعات أيام العمل</text>
+		<text name="WorkingDaysHours">ساعات العمل</text>
+		<text name="PleaseEnterfacilityWorkingHours">لطفا أدخل ساعات العمل</text>
 		<text name="PleaseEnterCity">أدخل المدينة</text>
 
 		

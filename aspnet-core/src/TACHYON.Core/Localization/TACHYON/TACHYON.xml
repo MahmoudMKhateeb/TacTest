@@ -2980,8 +2980,8 @@
     <text name="KeepSamePrice">Keep same price</text>
     <text name="DismissRequest">Dismiss request</text>
     
-	<text name="WorkingDaysHours">Working Days Hours</text>
-	<text name="PleaseEnterfacilityWorkingHours">Please Enter Working Days Hours</text>
+	<text name="WorkingDaysHours">Working Hours</text>
+	<text name="PleaseEnterfacilityWorkingHours">Please Enter Working Hours</text>
 	<text name="PleaseEnterCity">Please Enter City</text>
 		<text name="InvoiceDate">Invoice date</text>
 		<text name="VatNumber">Vat number</text>

@@ -134,7 +134,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    */
   save(): void {
     this.saving = true;
-    this.facility.facilityWorkingHours = this.FacilityWorkingHours.filter((r) => r.startTime && r.endTime).map(
+    this.facility.facilityWorkingHours = this.FacilityWorkingHours.filter((r) => r.startTime && r.endTime && r.hasTime).map(
       (fh) =>
         new CreateOrEditFacilityWorkingHourDto({
           dayOfWeek: fh.dayOfWeek,
