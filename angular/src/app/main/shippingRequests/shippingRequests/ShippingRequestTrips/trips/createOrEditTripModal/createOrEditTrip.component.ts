@@ -556,6 +556,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.trip = jsonObject;
       this.trip.id = undefined;
       this.loadReceivers(this.trip.originFacilityId);
+      this.pickupPointSenderId = this.trip.routPoints[0].receiverId;
       this._PointsService.updateWayPoints(this.trip.routPoints);
     });
   }
