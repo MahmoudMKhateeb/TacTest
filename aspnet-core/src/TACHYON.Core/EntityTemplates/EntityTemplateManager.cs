@@ -126,7 +126,7 @@ namespace TACHYON.EntityTemplates
 
         private async Task<CreateOrEditShippingRequestTemplateInputDto> GetShippingRequest(string savedEntityId)
         {
-            var shippingRequest = await _shippingRequestRepository.GetAllIncluding(x=> x.ShippingRequestVases)
+            var shippingRequest = await _shippingRequestRepository.GetAllIncluding(x=> x.ShippingRequestVases,x=> x.OriginCityFk,x=> x.DestinationCityFk)
                 .AsNoTracking().FirstOrDefaultAsync(x => x.Id.ToString().Equals(savedEntityId));
             return ObjectMapper.Map<CreateOrEditShippingRequestTemplateInputDto>(shippingRequest);
         }
