@@ -11,7 +11,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
-        <button type="button" class="close" style="position: relative; z-index: 99999;" (click)="close()" aria-label="Close">
+        <button type="button" class="close" style="position: relative; z-index: 99999" (click)="close()" aria-label="Close">
           <i class="fas fa-times"></i>
         </button>
 
@@ -45,9 +45,9 @@
                 </div>
               </div>
               <div class="col-xl-6">
-                <label for="OriginCity">{{ 'TruckType' | localize }}</label>
+                <label for="truckType">{{ 'TruckType' | localize }}</label>
                 <div class="input-group">
-                  <select name="input.truckTypeId" [(ngModel)]="input.truckTypeId" class="form-control" required>
+                  <select id="truckType" name="input.truckTypeId" [(ngModel)]="input.truckTypeId" class="form-control" required>
                     <option value="">{{ l('All') }}</option>
                     <option [value]="t.value" *ngFor="let t of truckTypes">
                       {{ t.displayText | localize }}
@@ -102,9 +102,14 @@
               </div>
 
               <div class="col-xl-6">
-                <label for="OriginCity">{{ 'Origin' | localize }}</label>
-                <div class="input-group">
-                  <select name="input.originId" [(ngModel)]="input.originId" class="form-control" required>
+                <label for="origin">{{ 'Origin' | localize }}</label>
+                <div
+                  [ngClass]="{
+                    'spinner spinner-success spinner-right ': isDataLoading,
+                    'input-group': !isDataLoading
+                  }"
+                >
+                  <select [disabled]="isDataLoading" id="origin" name="input.originId" [(ngModel)]="input.originId" class="form-control" required>
                     <option value="">{{ l('All') }}</option>
                     <option [value]="c.value" *ngFor="let c of cites">
                       {{ c.displayText | localize }}
@@ -113,9 +118,21 @@
                 </div>
               </div>
               <div class="col-xl-6">
-                <label for="OriginCity">{{ 'Destination' | localize }}</label>
-                <div class="input-group">
-                  <select name="input.destinationId" [(ngModel)]="input.destinationId" class="form-control" required>
+                <label for="destination">{{ 'Destination' | localize }}</label>
+                <div
+                  [ngClass]="{
+                    'spinner spinner-success spinner-right ': isDataLoading,
+                    'input-group': !isDataLoading
+                  }"
+                >
+                  <select
+                    [disabled]="isDataLoading"
+                    id="destination"
+                    name="input.destinationId"
+                    [(ngModel)]="input.destinationId"
+                    class="form-control"
+                    required
+                  >
                     <option value="">{{ l('All') }}</option>
                     <option [value]="c.value" *ngFor="let c of cites">
                       {{ c.displayText | localize }}
@@ -125,9 +142,9 @@
               </div>
 
               <div class="col-xl-6">
-                <label for="RouteType">{{ 'RouteType' | localize }}</label>
+                <label for="routeType">{{ 'RouteType' | localize }}</label>
                 <div class="input-group">
-                  <select name="input.routeTypeId" [(ngModel)]="input.routeTypeId" class="form-control" required>
+                  <select id="routeType" name="input.routeTypeId" [(ngModel)]="input.routeTypeId" class="form-control" required>
                     <option value="">{{ l('All') }}</option>
                     <option [value]="r.key" *ngFor="let r of routeTypes">
                       {{ l(r.value) | localize }}
@@ -137,9 +154,9 @@
               </div>
               <ng-template [ngIf]="!input.channel && !input.isTMS">
                 <div class="col-xl-6">
-                  <label for="RequestType">{{ 'ShippingRequestType' | localize }}</label>
+                  <label for="requestType">{{ 'ShippingRequestType' | localize }}</label>
                   <div class="input-group">
-                    <select name="input.requestType" [(ngModel)]="input.requestType" class="form-control" required>
+                    <select id="requestType" name="input.requestType" [(ngModel)]="input.requestType" class="form-control" required>
                       <option value="">{{ l('All') }}</option>
                       <option [value]="r.key" *ngFor="let r of requestTypes">
                         {{ l(r.value) | localize }}
@@ -149,9 +166,9 @@
                 </div>
               </ng-template>
               <div class="col-xl-6">
-                <label for="RequestType">{{ 'ShippingRequestStatusName' | localize }}</label>
+                <label for="status">{{ 'ShippingRequestStatusName' | localize }}</label>
                 <div class="input-group">
-                  <select name="input.status" [(ngModel)]="input.status" class="form-control" required>
+                  <select id="status" name="input.status" [(ngModel)]="input.status" class="form-control" required>
                     <option value="">{{ l('All') }}</option>
                     <option [value]="s.value" *ngFor="let s of statusData">
                       {{ l(s.displayText) | localize }}
