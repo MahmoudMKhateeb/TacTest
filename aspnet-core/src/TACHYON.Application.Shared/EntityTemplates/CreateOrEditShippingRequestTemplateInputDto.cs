@@ -37,6 +37,10 @@ namespace TACHYON.EntityTemplates
 
         [Required] public int DestinationCityId { get; set; }
         
+        public int OriginCountryId { get; set; }
+
+        public int DestinationCountryId { get; set; }
+        
         public int NumberOfDrops { get; set; }
         [Required] public int NumberOfTrips { get; set; }
 
