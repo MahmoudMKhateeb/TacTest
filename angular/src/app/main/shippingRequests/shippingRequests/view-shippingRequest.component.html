@@ -389,6 +389,7 @@
           [ShippingRequest]="shippingRequestforView.shippingRequest"
           [shippingRequestForView]="shippingRequestforView"
           [VasListFromFather]="shippingRequestforView.shippingRequestVasDtoList"
+          (incidentResolved)="reloadCurrentPage()"
         ></TripsForViewShippingRequest>
       </ng-template>
 

@@ -66,10 +66,11 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() shippingRequestForView: any;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
-  tripsByTmsEnabled: boolean;
+  tripsByTmsEnabled = false;
   ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
   ShippingRequestStatusEnum = ShippingRequestStatus;
   ShippingRequestTripCancelStatusEnum = ShippingRequestTripCancelStatus;
+  @Output() incidentResolved: EventEmitter<void>;
   saving = false;
   uploadUrl: string;
   uploadPointUrl: string;
@@ -99,6 +100,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     this.uploadPointUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportPointsFromExcel';
     this.uploadGoodDetailsUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportGoodsDetailsFromExcel';
     this.tripVases = AppConsts.remoteServiceBaseUrl + '/Helper/ImportTripVasesFromExcel';
+    this.incidentResolved = new EventEmitter<void>();
   }
 
   /**
@@ -151,6 +153,9 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   //     } //end of if
   //   });
   // }
+  refreshWhenIncidentResolved() {
+    this.incidentResolved.emit();
+  }
 
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());

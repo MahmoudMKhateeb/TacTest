@@ -753,7 +753,6 @@ namespace TACHYON.Shipping.Trips
             var request = await _shippingRequestRepository.GetAll()
                 .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
-                .WhereIf(await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
                 .FirstOrDefaultAsync(x => x.Id == shippingRequestId);
             if (request == null)
             {

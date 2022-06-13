@@ -1505,8 +1505,8 @@
 		<text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">لقد استخدمت أكثر من 70% من حدك الإئتماني</text>
 		<text name="ShipperReminderToCompleteTrips">لديك شحنة لم تكمل الرحلات الخاصة بها</text>
 		<text name="ShippingNote">ملاحظات الشاحن</text>
-		<text name="ShippingRequest">طلبات الشحن</text>
-		<text name="ShippingRequestAccidentsOccure">لقد حدث حادث للشحنة رقم: {id}.</text>
+		<text name="ShippingRequest">إنشاء طلب شحن</text>
+		<text name="ShippingRequestAccidentsOccure">وقع حادث في الرحلة رقم {0} للطلب مع الرقم المرجعي {1}</text>
 		<text name="ShippingRequestCancelTripByAccidents">لقد تم إلغاء الشحنة رقم {id} بسبب وجود حادث</text>
 		<text name="ShippingRequestDetails">تفاصيل طلب الشحن</text>
 		<text name="ShippingRequestNotifyCarrirerWhenShipperAccepted">لقد قام الشاحن {clientname} بقبول عرضك المالي للشحنة.</text>
@@ -2731,5 +2731,36 @@
 		<text name="InvoiceDate">تاريخ الفاتورة</text>
 		<text name="VatNumber">الرقم الضريبي</text>
 		<text name="TaxInvoice">فاتورة ضريبية</text>
+        
+        		<text name="TripAccidentResolvedMsg">تم حل الحادث الذي وقع على رقم الرحلة {0} لطلب الشحن بالرقم المرجعي {1} بواسطة {2}</text>
+		<text name="ResolveApplied"> تم تطبيق الحل</text>
+		<text name="ResolveNotApplied"> لم يتم تطبيق الحل</text>
+		<text name="WaitAcceptanceFromShipper">في انتظار موافقة الشاحن</text>
+		<text name="WaitAcceptanceFromCarrier">في انتظار موافقة الناقل</text>
+		<text name="NoResolveYet">لا يوجد حل بعد</text>
+		<text name="ResolveStatus">حالة حل الحادث</text>
+		<text name="Comments">التعليقات</text>
+		<text name="Resolve">حل الحادث</text>
+		<text name="ChangeDriverResolve">تغيير السائق</text>
+		<text name="ChangeTruckResolve">تغيير الشاحنة</text>
+		<text name="ChangeDriverAndTruckResolve">تغيير السائق والشاحنة</text>
+		<text name="NoActionNeededResolve">لا اجراء مطلوب</text>
+		<text name="ApproveResolve">الموافقة على الحل</text>
+		<text name="ViewResolve">عرض الحل</text>
+		<text name="EnforceChange">فرض التغيير</text>
+		<text name="ApproveChange">الموافقة على التغيير</text>
+		<text name="ResolveActions">إجرائات حل الحادث</text>
+		<text name="TripIncident">حوادث الرحلة</text>
+		<text name="EditAccident">تعديل حادث</text>
+		<text name="CreateResolve">انشاء حل حادث</text>
+		<text name="EditResolve">تعديل حل الحادث</text>
+		<text name="ChangeDriver">تغيير سائق</text>
+		<text name="ChangeTruck">تغيير شاحنة</text>
+		<text name="SelectADriver">أختر سائق</text>
+		<text name="SelectATruck">أختر شاحنة</text>
+		<text name="ViewAccidentDetails">عرض تفاصيل الحادث</text>
+		<text name="TripIncidentComments">تعليقات حادث الرحلة</text>
+		<text name="AddComment">إضافة تعليق</text>
+        
 	</texts>
 </localizationDictionary>

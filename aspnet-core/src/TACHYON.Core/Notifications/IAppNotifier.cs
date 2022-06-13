@@ -15,6 +15,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.SrPostPriceUpdates;
+using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.TachyonPriceOffers;
 
@@ -94,10 +95,11 @@ namespace TACHYON.Notifications
 
         #region Accident
 
-        Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data);
+        Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data,string waybillNumber, string referenceNumber);
         Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users, ShippingRequestTrip trip, User UserCancel);
         Task ShippingRequestTripCanceled(List<UserIdentifier> Users, ShippingRequestTrip trip, string tenantName);
         Task ShippingRequestTripRejectCancelByTachyonDealer(List<UserIdentifier> Users, ShippingRequest request);
+        Task TripAccidentResolved(ShippingRequest request, string waybillNum, TripAccidentResolveType resolveType);
         #endregion
 
         #region ShippingRequest

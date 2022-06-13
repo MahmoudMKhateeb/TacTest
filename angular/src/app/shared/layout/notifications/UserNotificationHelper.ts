@@ -173,6 +173,9 @@ export class UserNotificationHelper extends AppComponentBase {
         return `/app/main/directrequest/list?directRequestId=${userNotification.notification.data.properties.directRequestId}`;
       case 'App.ShippingRequestAsBidWithSameTruck':
         return `/app/main/marketplace/list?srId=${userNotification.notification.data.properties.shippingRequestId}`;
+
+      case 'App.Trip.Accident.Resolved':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
     }
 
     //No url for this notification

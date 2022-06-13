@@ -454,7 +454,7 @@
 <app-tms-cancel-trip-modal #TmsCancelTripModal (modalSave)="reloadPage()"></app-tms-cancel-trip-modal>
 <viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
 <trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
-<view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>
+<view-trip-accident-modal #ViewTripAccidentModal (incidentResolved)="refreshWhenIncidentResolved()"></view-trip-accident-modal>
 <app-add-new-remarks-trip-modal #AddRemarksModal></app-add-new-remarks-trip-modal>
 <app-shipping-request-rating-modal #shippingRequestRatingModal></app-shipping-request-rating-modal>
 <create-new-entity-template-modal #saveAsTemplateModal></create-new-entity-template-modal>

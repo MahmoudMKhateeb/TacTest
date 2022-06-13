@@ -124,6 +124,7 @@ using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Shipping.ShippingTypes.Dtos;
+using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Shipping.Trips.Importing.Dto;
@@ -494,7 +495,11 @@ namespace TACHYON
                 .ForPath(dst => dst.Location.X, opt => opt.MapFrom(src => src.Longitude))
                 .ForPath(dst => dst.Location.Y, opt => opt.MapFrom(src => src.Latitude))
                 .ReverseMap();
-
+           configuration.CreateMap<Tuple<ShippingRequestTripAccident, TripAccidentResolveListDto>, ShippingRequestTripAccidentListDto>()
+                .ForMember(x => x.ResolveListDto, x => x.MapFrom(i => i.Item2))
+                .ForPath(x => x.ResolveListDto.ResolveTypeTitle, x =>  x.MapFrom(i =>i.Item2.ResolveType.HasValue?  i.Item2.ResolveType.Value.GetEnumDescription(): null))
+                .AfterMap((src, dto) => _Mapper.Map(src.Item1,dto)) 
+                .ReverseMap();
             configuration.CreateMap<CitiesTranslation, GetCitiesTranslationForViewDto>()
                 .ForMember(x => x.CityDisplayName, x => x.MapFrom(i => i.TranslatedDisplayName));
 
