@@ -123,7 +123,7 @@
                 name="driver"
                 type="text"
                 [(ngModel)]="assignDriverAndTruck.assignedDriverUserId"
-                (click)="checkData()"
+                (click)="checkData('driver')"
                 class="form-control"
                 [disabled]="saving"
               >
@@ -137,7 +137,7 @@
                 name="truck"
                 type="text"
                 [(ngModel)]="assignDriverAndTruck.assignedTruckId"
-                (click)="checkData()"
+                (click)="checkData('truck')"
                 class="form-control"
                 [disabled]="saving"
               >

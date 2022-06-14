@@ -370,6 +370,7 @@ namespace TACHYON.Shipping.Trips
 
         public async Task UpdateExpectedDeliveryTimeForTrip(UpdateExpectedDeliveryTimeInput input)
         {
+            DisableTenancyFilters();
             var trip = await _shippingRequestTripRepository.GetAllIncluding(x=> x.ShippingRequestFk)
                 .SingleAsync(x=> x.Id == input.Id);
 
