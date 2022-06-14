@@ -36,7 +36,7 @@
     <text name="InvoiceDueDateIn6Days">invoices that will be due within a week</text>
     <text name="RequestsInMarketPlace">Requests In MarketPlace</text>
     <text name="MostUsedOrigins">Most Used Origins</text>
-    <text name="CompletedTripsvsPod">Completed Trips vs Proof of delivary</text>
+    <text name="CompletedTripsvsPod">Completed Trips vs Proof of delivery</text>
     <text name="MostUsedDestantions">Most Used Destantions</text>
     <text name="InvoicesVsPaidInvoices">Invoices Vs Paid Invoices</text>
     <text name="{0}IsInvalid">"{0}" is invalid</text>
@@ -226,7 +226,7 @@
 		<text name="CancelMyBid">Cancel my bid</text>
 		<text name="CancelShipment">The shipment has been canceled by {cancelby}</text>
 		<text name="CancelTrip">Cancel trip</text>
-		<text name="Cancled">Cancled</text>
+		<text name="Cancled">Canceled</text>
 		<text name="CancledReason">Cancelled reason</text>
 		<text name="CanNotChangeAdminUserName">Can not change admin user name</text>
 		<text name="CanNotEditOrDeleteDefaultLanguages">Can not edit or delete default languages. You can only edit or delete the languages you added. But you can change texts of all languages.</text>
