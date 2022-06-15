@@ -96,64 +96,92 @@
           <div class="form-row">
             <div class="col-md-6 form-group">
               <label for="NormalPricePackage_DirectRequestPrice">{{ l('DirectRequestPrice') }} <span class="required-fileds">*</span></label>
-              <input
-                class="form-control"
-                #NormalPricePackage_DirectRequestPrice="ngModel"
-                id="NormalPricePackage_DirectRequestPrice"
-                name="directRequestPrice"
-                type="number"
-                step="0.01"
-                min="1"
-                [(ngModel)]="normalPricePackage.directRequestPrice"
-                required
-              />
+              <div class="input-group date">
+                <input
+                  class="form-control"
+                  #NormalPricePackage_DirectRequestPrice="ngModel"
+                  id="NormalPricePackage_DirectRequestPrice"
+                  name="directRequestPrice"
+                  type="number"
+                  step="0.01"
+                  min="1"
+                  [(ngModel)]="normalPricePackage.directRequestPrice"
+                  required
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    {{ l('SAR') }}
+                  </span>
+                </div>
+              </div>
               <span class="form-text text-muted">{{ l('VatNotIncluded') }}</span>
               <validation-messages [formCtrl]="NormalPricePackage_DirectRequestPrice"></validation-messages>
             </div>
             <div class="col-md-6 form-group">
               <label>{{ l('MarcketPlaceRequestPrice') }} <span class="required-fileds">*</span></label>
-              <input
-                class="form-control"
-                type="number"
-                step="0.01"
-                min="1"
-                name="marcketPlaceRequestPrice"
-                id="marcketPlaceRequestPrice"
-                [(ngModel)]="normalPricePackage.marcketPlaceRequestPrice"
-                required
-              />
+              <div class="input-group date">
+                <input
+                  class="form-control"
+                  type="number"
+                  step="0.01"
+                  min="1"
+                  name="marcketPlaceRequestPrice"
+                  id="marcketPlaceRequestPrice"
+                  [(ngModel)]="normalPricePackage.marcketPlaceRequestPrice"
+                  required
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    {{ l('SAR') }}
+                  </span>
+                </div>
+              </div>
               <span class="form-text text-muted">{{ l('VatNotIncluded') }}</span>
             </div>
           </div>
           <div class="form-row">
             <div class="col-md-6 form-group">
               <label>{{ l('TachyonMSRequestPrice') }} <span class="required-fileds">*</span></label>
-              <input
-                class="form-control"
-                name="tachyonMSRequestPrice"
-                id="tachyonMSRequestPrice"
-                [(ngModel)]="normalPricePackage.tachyonMSRequestPrice"
-                type="number"
-                step="0.01"
-                min="1"
-                required
-              />
+              <div class="input-group date">
+                <input
+                  class="form-control"
+                  name="tachyonMSRequestPrice"
+                  id="tachyonMSRequestPrice"
+                  [(ngModel)]="normalPricePackage.tachyonMSRequestPrice"
+                  type="number"
+                  step="0.01"
+                  min="1"
+                  required
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    {{ l('SAR') }}
+                  </span>
+                </div>
+              </div>
               <span class="form-text text-muted">{{ l('VatNotIncluded') }}</span>
             </div>
             <div class="col-md-6 form-group" *ngIf="normalPricePackage.isMultiDrop">
               <div class="right">
                 <label for="NormalPricePackage_PricePerExtraDrop">{{ 'PricePerExtraDrop' }}<span class="required-fileds"> *</span> </label>
-                <input
-                  id="NormalPricePackage_PricePerExtraDrop"
-                  name="pricePerExtraDrop"
-                  #NormalPricePackage_PricePerExtraDrop="ngModel"
-                  class="form-control"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  [(ngModel)]="normalPricePackage.pricePerExtraDrop"
-                  [required]="normalPricePackage.isMultiDrop"
-                />
+                <div class="input-group date">
+                  <input
+                    id="NormalPricePackage_PricePerExtraDrop"
+                    name="pricePerExtraDrop"
+                    #NormalPricePackage_PricePerExtraDrop="ngModel"
+                    class="form-control"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    [(ngModel)]="normalPricePackage.pricePerExtraDrop"
+                    [required]="normalPricePackage.isMultiDrop"
+                  />
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      {{ l('SAR') }}
+                    </span>
+                  </div>
+                </div>
                 <span class="form-text text-muted">{{ l('VatNotIncluded') }}</span>
                 <validation-messages [formCtrl]="NormalPricePackage_PricePerExtraDrop"></validation-messages>
               </div>
