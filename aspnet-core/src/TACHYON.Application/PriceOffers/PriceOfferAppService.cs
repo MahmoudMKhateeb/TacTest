@@ -233,6 +233,7 @@ namespace TACHYON.PriceOffers
             if (offer != null)
             {
                 priceOfferDto = ObjectMapper.Map<PriceOfferDto>(offer);
+                priceOfferDto.Items = GetVases(shippingRequest);
                 foreach (var item in priceOfferDto.Items)
                 {
                     item.ItemName = shippingRequest.ShippingRequestVases.FirstOrDefault(x => x.Id == item.SourceId)?.VasFk.Key;
@@ -501,7 +502,8 @@ namespace TACHYON.PriceOffers
             long? pricePackageOfferId = default, matchingPricePackageId = default;
             if (shippingRequest == null) throw new UserFriendlyException(L("TheRecordIsNotFound"));
 
-            if (AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier))// Applay permission for carrier if can see the shipping request details
+            var isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
+            if (AbpSession.TenantId.HasValue && isCarrier)// Applay permission for carrier if can see the shipping request details
             {
                 if (!_priceOfferManager.CheckCarrierIsPricing(input.Id))
                 {
@@ -533,6 +535,12 @@ namespace TACHYON.PriceOffers
             getShippingRequestForPricingOutput.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(shippingRequest.DestinationCityFk).DisplayName;
             getShippingRequestForPricingOutput.PricePackageOfferId = pricePackageOfferId;
             getShippingRequestForPricingOutput.MatchingPricePackageId = matchingPricePackageId;
+            if (isCarrier)
+            {
+                getShippingRequestForPricingOutput.OfferId = await _priceOfferRepository.GetAll()
+                    .Where(x=> x.ShippingRequestId == shippingRequest.Id && x.TenantId == AbpSession.TenantId)
+                    .Select(x=> x.Id).FirstOrDefaultAsync();
+            }
 
             return getShippingRequestForPricingOutput;
 

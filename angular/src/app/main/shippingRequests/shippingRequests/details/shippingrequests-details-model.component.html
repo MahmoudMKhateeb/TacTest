@@ -315,7 +315,7 @@
   </div>
 </div>
 <app-entity-log #appEntityLog [entityType]="4"></app-entity-log>
-<price-offer-model #ModelPrice [Channel]="Channel" (modalSave)="update($event)"></price-offer-model>
+<price-offer-model #ModelPrice [Channel]="Channel" (offerRepriced)="onRepriceOffer()" (modalSave)="update($event)"></price-offer-model>
 <price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="delete()"></price-offer-view-model>
 <normal-price-package-calculation
   [directRequestStatus]="shippingrequest.directRequestStatus"

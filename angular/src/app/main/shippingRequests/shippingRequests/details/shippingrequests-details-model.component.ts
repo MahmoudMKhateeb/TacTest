@@ -234,11 +234,15 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
   ngAfterViewInit(): void {
     this.changeDetectorRef.detectChanges();
     this.primengTableHelper.adjustScroll(this.dataTable);
-    abp.event.on('RepriceOffer', () => {
-      this.getAll(this.shippingrequest.offerId);
-    });
   }
 
+  onRepriceOffer() {
+    this._CurrentServ.getShippingRequestForPricing(this.Channel, this.shippingrequest.id).subscribe((result) => {
+      this.request = result;
+      this.Items = this.request.items;
+      this.shippingrequest.offerId = result.offerId;
+    });
+  }
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
   }
