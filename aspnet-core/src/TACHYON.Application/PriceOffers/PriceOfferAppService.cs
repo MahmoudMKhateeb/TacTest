@@ -688,6 +688,11 @@ namespace TACHYON.PriceOffers
                 else if (AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) && request.Status == ShippingRequestDirectRequestStatus.Response)
                 {
                     dto.DirectRequestStatusTitle = "WaitingForResponse";
+                    
+                    if (await _srUpdateManager.IsRequestHasBendingUpdates(request.ShippingRequestId,request.CarrierTenantId))
+                    {
+                        dto.DirectRequestStatusTitle = "PendingUpdate";
+                    }
                 }
 
                 var offer = await _priceOfferManager.GetOfferBySource(request.Id, PriceOfferChannel.DirectRequest);
