@@ -230,6 +230,7 @@ namespace TACHYON.Notifications
 
         Task NotifyShipperWhenRequestChangePrice(long srId, int tenantId, string referenceNumber);
 
+        Task RejectedPostPriceOffer(PriceOffer offer, string rejectedBy);
         #endregion
 
 

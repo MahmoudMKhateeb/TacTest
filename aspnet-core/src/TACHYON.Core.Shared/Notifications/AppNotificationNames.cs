@@ -109,6 +109,7 @@ namespace TACHYON.Notifications
         public const string NotifyCarrierWhenPostPriceSrUpdated = "App.NotifyCarrierWhenPostPriceSrUpdated";
         public const string NotifyShipperForPostPriceSrUpdateAction = "App.NotifyShipperForPostPriceSrUpdateAction";
         public const string NotifyShipperWhenRequestChangePrice = "App.NotifyShipperWhenRequestChangePrice";
+        public const string RejectedPostPriceOffer = "App.RejectedPostPriceOffer";
 
         #endregion
 

@@ -392,7 +392,7 @@ namespace TACHYON.PriceOffers
             result.Offer.Status = PriceOfferStatus.Rejected;
             result.Offer.RejectedReason = reason;
 
-            await _appNotifier.RejectedOffer(result.Offer, result.TenantName);
+            await _appNotifier.RejectedPostPriceOffer(result.Offer, result.TenantName);
         }
 
         private async Task<PriceOffer> GetOffer(long id)

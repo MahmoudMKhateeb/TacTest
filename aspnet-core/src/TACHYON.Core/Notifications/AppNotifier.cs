@@ -779,6 +779,18 @@ namespace TACHYON.Notifications
                 notificationData, userIds: new []{shipperAdmin});
         }
         
+        public async Task RejectedPostPriceOffer(PriceOffer offer, string rejectedBy)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(L("RejectedOffer"),
+                    TACHYONConsts.LocalizationSourceName));
+            notificationData["srId"] = offer.ShippingRequestId;
+            List<UserIdentifier> users =
+                new List<UserIdentifier> {new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value)};
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedPostPriceOffer, notificationData,
+                userIds: users.ToArray());
+        }
         
         #endregion
 
