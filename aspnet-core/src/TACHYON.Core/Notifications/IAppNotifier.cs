@@ -234,6 +234,7 @@ namespace TACHYON.Notifications
         #endregion
 
 
-        Task NotifyOfferOwnerWhenSrUpdated(long srId, string referanceNumber, params int[] tenantsIds);
+        Task NotifyOfferOwnerWhenMarketplaceSrUpdated(long srId,string referenceNumber, params int[] tenantsIds);
+        Task NotifyOfferOwnerWhenDirectRequestSrUpdated(long srId, string referenceNumber, params int[] tenantsIds);
     }
 }

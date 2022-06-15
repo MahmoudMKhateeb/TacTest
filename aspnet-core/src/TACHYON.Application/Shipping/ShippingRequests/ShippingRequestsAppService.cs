@@ -976,16 +976,22 @@ namespace TACHYON.Shipping.ShippingRequests
         /// and if it has any offer this method will notify all offers owners.
         /// please use this method for pre-priced shipping requests only
         /// </summary>
-        /// <param name="shippingRequestId"></param>
-        /// <param name="referanceNumber"></param>
-        private async Task CheckHasOffersToNotifyCarriers(long shippingRequestId,string referanceNumber)
+        /// <param name="request"></param>
+        private async Task CheckHasOffersToNotifyCarriers(ShippingRequest request)
         {
             DisableTenancyFilters();
             var carriers = await _priceOfferRepository.GetAll()
-                .Where(x => x.ShippingRequestId == shippingRequestId)
+                .Where(x => x.ShippingRequestId == request.Id)
                 .Select(x => x.TenantId).ToArrayAsync();
 
-            await _appNotifier.NotifyOfferOwnerWhenSrUpdated(shippingRequestId, referanceNumber, carriers);
+            if (request.RequestType == ShippingRequestType.DirectRequest)
+            {
+                await _appNotifier.NotifyOfferOwnerWhenDirectRequestSrUpdated(request.Id, request.ReferenceNumber,
+                    carriers);
+                return;
+            }
+                
+            await _appNotifier.NotifyOfferOwnerWhenMarketplaceSrUpdated(request.Id, request.ReferenceNumber, carriers);
         }
         private async Task ValidateGoodsCategory(CreateOrEditShippingRequestDto input)
         {
@@ -1043,7 +1049,7 @@ namespace TACHYON.Shipping.ShippingRequests
             await ValidateGoodsCategory(input);
             
             if (shippingRequest.Status == ShippingRequestStatus.NeedsAction) 
-                await CheckHasOffersToNotifyCarriers(shippingRequest.Id,shippingRequest.ReferenceNumber);
+                await CheckHasOffersToNotifyCarriers(shippingRequest);
 
             ObjectMapper.Map(input, shippingRequest);
 

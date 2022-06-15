@@ -698,19 +698,35 @@ namespace TACHYON.Notifications
             }
         }
         
-        public async Task NotifyOfferOwnerWhenSrUpdated(long srId,string referanceNumber, params int[] tenantsIds)
+        public async Task NotifyOfferOwnerWhenMarketplaceSrUpdated(long srId,string referenceNumber, params int[] tenantsIds)
         {
             var tenantsAdmin = await GetTenantsAdminUsers(tenantsIds);
 
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                    L("SrUpdatedMsgForOfferOwner",referanceNumber),
+                    L("SrUpdatedMsgForOfferOwner",referenceNumber),
                     TACHYONConsts.LocalizationSourceName))
             {
                 Properties = new Dictionary<string, object>() { { "srId", srId } }
             };
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyOfferOwnerWhenSrUpdated,
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyOfferOwnerWhenMarketplaceSrUpdated,
+                notificationData, userIds: tenantsAdmin);
+        }
+        
+        public async Task NotifyOfferOwnerWhenDirectRequestSrUpdated(long srId,string referenceNumber, params int[] tenantsIds)
+        {
+            var tenantsAdmin = await GetTenantsAdminUsers(tenantsIds);
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("SrUpdatedMsgForOfferOwner",referenceNumber),
+                    TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "srId", srId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyOfferOwnerWhenDirectRequestSrUpdated,
                 notificationData, userIds: tenantsAdmin);
         }
 
