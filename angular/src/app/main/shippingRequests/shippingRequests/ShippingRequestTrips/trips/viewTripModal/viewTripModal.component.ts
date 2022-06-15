@@ -126,9 +126,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this.modal.hide();
   }
 
-  checkData() {
-    if (this.allTrucks.length == 0) this.getAlert(this.l('NoMatchingTrucks'));
-    if (this.allDrivers.length == 0) this.getAlert(this.l('NoMatchingDrivers'));
+  checkData(category) {
+    if (category == 'truck' && this.allTrucks.length == 0) this.getAlert(this.l('NoMatchingTrucks'));
+    if (category == 'driver' && this.allDrivers.length == 0) this.getAlert(this.l('NoMatchingDrivers'));
   }
 
   getAlert(msg: string) {
