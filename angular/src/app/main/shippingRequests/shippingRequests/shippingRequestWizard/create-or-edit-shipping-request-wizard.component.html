@@ -91,7 +91,7 @@
                           (change)="shippingRequestType = 'tachyondeal'"
                           required
                         >
-                          <option [value]="undefined">{{ l('SelectShipper') }}</option>
+                          <option [value]="undefined" disabled>{{ l('SelectShipper') }}</option>
                           <option *ngFor="let item of AllShippers" value="{{ item.id }}">{{ item.displayName }}</option>
                         </select>
                       </div>
@@ -118,7 +118,7 @@
                         readonly="readonly"
                         [attr.disabled]="step1Dto.shipperId > 0 ? true : null"
                       >
-                        <option value="undefined" selected>{{ l('Select') }}</option>
+                        <option value="undefined" selected disabled>{{ l('Select') }}</option>
                         <option *ngIf="feature.isEnabled('App.MarketPlace')" [value]="'bidding'">{{ l('Marketplace') }}</option>
                         <option [value]="'tachyondeal'">{{ l('TachyonManageService') }}</option>
                         <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">
