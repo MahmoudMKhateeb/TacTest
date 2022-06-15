@@ -95,6 +95,7 @@ namespace TACHYON.Shipping.ShippingRequestUpdates
             srUpdate.Status = ShippingRequestUpdateStatus.Repriced;
             // Here we need to delete the old offer and create a new one
             await _offerManager.Delete(new EntityDto<long>(srUpdate.PriceOfferId));
+            input.IgnoreExistingOffer = true;
             var createdOfferId = await _offerManager.CreateOrEdit(input);
             srUpdate.OldPriceOfferId = srUpdate.PriceOfferId;
             srUpdate.PriceOfferId = createdOfferId;

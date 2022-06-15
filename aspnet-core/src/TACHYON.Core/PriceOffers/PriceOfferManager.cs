@@ -100,7 +100,7 @@ namespace TACHYON.PriceOffers
             }
 
             PriceOffer offer = null;
-            if (!input.IsPostPrice) 
+            if (!input.IsPostPrice && !input.IgnoreExistingOffer) 
                 offer = GetCarrierPricingOrNull(input.ShippingRequestId);
 
             if (offer == null || offer.Status == PriceOfferStatus.Rejected)
