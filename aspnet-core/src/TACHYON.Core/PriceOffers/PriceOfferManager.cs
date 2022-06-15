@@ -162,7 +162,7 @@ namespace TACHYON.PriceOffers
             {
                 if (pricing.ShippingRequestFk.BidStatus != ShippingRequestBidStatus.OnGoing)
                     throw new UserFriendlyException(L("TheRecordNotFound"));
-                request.TotalOffers -= 1;
+                
             }
             else if (pricing.Channel == PriceOfferChannel.DirectRequest)
             {
@@ -177,6 +177,7 @@ namespace TACHYON.PriceOffers
                 request.Status = ShippingRequestStatus.PrePrice;
             }
 
+            request.TotalOffers -= 1;
             await _priceOfferRepository.DeleteAsync(pricing);
         }
 
