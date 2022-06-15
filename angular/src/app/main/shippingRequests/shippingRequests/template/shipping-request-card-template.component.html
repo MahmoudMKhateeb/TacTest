@@ -250,7 +250,7 @@
             <div *ngIf="openCardId == item.id">
               <!--  start of ShippingRequestType::Details-->
               <div class="mb-2">
-                <div class="form-group row fv-plugins-icon-container">
+                <div class="form-group fv-plugins-icon-container">
                   <div *ngIf="!this.feature.isEnabled('App.Carrier')">
                     <shipping-request-offers-list
                       [shippingRequestId]="item.id"
