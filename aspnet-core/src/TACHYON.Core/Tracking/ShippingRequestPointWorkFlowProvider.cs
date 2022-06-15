@@ -739,10 +739,11 @@ namespace TACHYON.Tracking
                 point.FacilityFk.Name,
                 point.ShippingRequestTripFk.WaybillNumber);
 
-            await _penaltyManager.ApplyNotDeliveringAllDropsPenalty(shippingRequest.CarrierTenantId.Value,
-                shippingRequest.TenantId,
-                point.ShippingRequestTripFk.EndTripDate.Value,
-                point.ShippingRequestTripId);
+            if (point.ShippingRequestTripFk.EndTripDate.HasValue)
+                await _penaltyManager.ApplyNotDeliveringAllDropsPenalty(shippingRequest.CarrierTenantId.Value,
+                    shippingRequest.TenantId,
+                    point.ShippingRequestTripFk.EndTripDate.Value,
+                    point.ShippingRequestTripId);
 
             return nameof(RoutPointDropOffStep4);
         }

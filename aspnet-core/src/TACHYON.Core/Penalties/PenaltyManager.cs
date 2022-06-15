@@ -110,14 +110,14 @@ namespace TACHYON.Penalties
             }
 
         }
-        public async Task ApplyNotDeliveringAllDropsPenalty(int tenantId, int destinationTenantId, DateTime startTripDate, int tripId)
+        public async Task ApplyNotDeliveringAllDropsPenalty(int tenantId, int destinationTenantId, DateTime endTripDate, int tripId)
         {
             var amount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_Amount));
             var startAmount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_StartingAmount));
             var maxAmount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_MaximumAmount));
             var unitOfMeasure = (UnitOfMeasure)Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_UnitsOfMeasure));
             var numberUnitOfMeasure = Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.NotDeliveringAllDropsBeforeEndDate_NumberOfUnitsOfMeasure));
-            var numberOfDelay = (decimal)GetDelayBasedOnUnitOfMeasure(startTripDate, unitOfMeasure);
+            var numberOfDelay = (decimal)GetDelayBasedOnUnitOfMeasure(endTripDate, unitOfMeasure);
             numberOfDelay -= numberUnitOfMeasure;
                 if (numberOfDelay > 0)
             {
