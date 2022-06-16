@@ -3012,5 +3012,8 @@
 	<text name="TripIncidentComments">Trip Incident Comments</text>
 	<text name="AddComment">Add comment</text>
 		<text name="PointStandBy">Stand By</text>
+		<text name="NoCurrentLoads">No current loads</text>
+		<text name="NoUpcomingLoads">No upcoming loads</text>
+		<text name="NoPastLoad">No past loads</text>
 	</texts>
 </localizationDictionary>

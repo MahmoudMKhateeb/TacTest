@@ -2762,6 +2762,9 @@
 		<text name="TripIncidentComments">تعليقات حادث الرحلة</text>
 		<text name="AddComment">إضافة تعليق</text>
 		<text name="PointStandBy">إستعداد</text>
+		<text name="NoCurrentLoads">لا توجد حمولات حالية</text>
+		<text name="NoUpcomingLoads">لا توجد حمولات قادمة</text>
+		<text name="NoPastLoad">لا توجد حمولات سابقة</text>
         
 	</texts>
 </localizationDictionary>
