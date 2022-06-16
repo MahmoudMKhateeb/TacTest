@@ -14,6 +14,7 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using NUglify.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -288,6 +289,13 @@ namespace TACHYON.Shipping.Drivers
 
             //return good category name automatic from default language
             tripDto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk).DisplayName;
+
+            if (trip.Status == ShippingRequestTripStatus.New &&
+                trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
+                tripDto.StatusTitle = L("StandBy");
+
+            else tripDto.StatusTitle = L(Enum.GetName(typeof(ShippingRequestTripStatus), trip.Status));
+
             return tripDto;
         }
 
@@ -326,7 +334,7 @@ namespace TACHYON.Shipping.Drivers
                  AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
              }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
-            routes.ForEach(x => x.StatusTitle = L(x.Status.ToString()));
+            routes.ForEach(x => x.StatusTitle = x.Status == RoutePointStatus.StandBy ? L("PointStandBy") : L(x.Status.ToString()));
             var trip = _ShippingRequestTrip.Get(id);
             var mapper = ObjectMapper.Map<DriverRoutPointDto>(trip);
             mapper.RoutPoint = routes;

@@ -3011,5 +3011,6 @@
 	<text name="ViewAccidentDetails">View Accident Details</text>
 	<text name="TripIncidentComments">Trip Incident Comments</text>
 	<text name="AddComment">Add comment</text>
+		<text name="PointStandBy">Stand By</text>
 	</texts>
 </localizationDictionary>
