@@ -236,7 +236,7 @@ export class AppNavigationService {
         'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
         '',
         [],
-        [new AppMenuItem('NormalPricePackages', 'Pages.NormalPricePackages', '', '/app/main/pricePackages/normalPricePackages')],
+        [new AppMenuItem('PricePackages', 'Pages.NormalPricePackages', '', '/app/main/pricePackages/normalPricePackages')],
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
         undefined,
         undefined,
