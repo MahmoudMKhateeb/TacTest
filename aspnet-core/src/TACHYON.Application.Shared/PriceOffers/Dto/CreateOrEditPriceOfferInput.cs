@@ -24,6 +24,9 @@ namespace TACHYON.PriceOffers.Dto
          
         [DefaultValue(false)]
         public bool IsPostPrice { get; set; }
+        
+        [JsonIgnore]
+        public bool IgnoreExistingOffer { get; set; }
         public void AddValidationErrors(CustomValidationContext context)
         {
             if (ItemPrice < 0)

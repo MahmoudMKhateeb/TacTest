@@ -59,5 +59,8 @@ namespace TACHYON.Shipping.ShippingRequestUpdates
             => await _srUpdateRepository.GetAll().Where(x => x.Status == ShippingRequestUpdateStatus.None)
                 .AnyAsync(x => x.PriceOfferId == priceOfferId);
 
+        public async Task<bool> IsRequestHasBendingUpdates(long shippingRequestId, int carrierTenantId)
+            => await _srUpdateRepository.GetAll().Where(x => x.Status == ShippingRequestUpdateStatus.None)
+                .AnyAsync(x => x.ShippingRequestId == shippingRequestId && x.PriceOffer.TenantId == carrierTenantId);
     }
 }

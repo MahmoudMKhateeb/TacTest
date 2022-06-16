@@ -30,6 +30,7 @@ import { NgForm } from '@angular/forms';
 export class PriceOfferModelComponent extends AppComponentBase {
   @Input() Channel: PriceOfferChannel | null | undefined;
   @Output() modalSave: EventEmitter<number> = new EventEmitter<number>();
+  @Output() offerRepriced = new EventEmitter();
   @Output() postPriceOfferSubmitted = new EventEmitter<CreateOrEditPriceOfferInput>();
 
   @ViewChild('modal', { static: false }) modal: ModalDirective;
@@ -221,7 +222,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
       .takeAction(this.CreateSrUpdateActionInput)
       .pipe(finalize(() => (this.saving = false)))
       .subscribe((result) => {
-        abp.event.trigger('RepriceOffer');
+        this.offerRepriced.emit();
         this.notify.info(this.l('SendSuccessfully'));
         this.close();
       });

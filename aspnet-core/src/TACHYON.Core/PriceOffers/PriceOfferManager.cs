@@ -100,7 +100,7 @@ namespace TACHYON.PriceOffers
             }
 
             PriceOffer offer = null;
-            if (!input.IsPostPrice) 
+            if (!input.IsPostPrice && !input.IgnoreExistingOffer) 
                 offer = GetCarrierPricingOrNull(input.ShippingRequestId);
 
             if (offer == null || offer.Status == PriceOfferStatus.Rejected)
@@ -162,7 +162,7 @@ namespace TACHYON.PriceOffers
             {
                 if (pricing.ShippingRequestFk.BidStatus != ShippingRequestBidStatus.OnGoing)
                     throw new UserFriendlyException(L("TheRecordNotFound"));
-                request.TotalOffers -= 1;
+                
             }
             else if (pricing.Channel == PriceOfferChannel.DirectRequest)
             {
@@ -177,6 +177,7 @@ namespace TACHYON.PriceOffers
                 request.Status = ShippingRequestStatus.PrePrice;
             }
 
+            request.TotalOffers -= 1;
             await _priceOfferRepository.DeleteAsync(pricing);
         }
 
@@ -392,7 +393,7 @@ namespace TACHYON.PriceOffers
             result.Offer.Status = PriceOfferStatus.Rejected;
             result.Offer.RejectedReason = reason;
 
-            await _appNotifier.RejectedOffer(result.Offer, result.TenantName);
+            await _appNotifier.RejectedPostPriceOffer(result.Offer, result.TenantName);
         }
 
         private async Task<PriceOffer> GetOffer(long id)

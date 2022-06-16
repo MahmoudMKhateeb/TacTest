@@ -76,7 +76,8 @@ namespace TACHYON.Notifications
         public const string ShippingRequestTripRejectCancelByTachyonDealer = "App.ShippingRequest.ShippingRequestTripRejectCancelByTachyonDealer";
         public const string ShippingRequestTripNeedsCancelApproval = "App.ShippingRequest.ShippingRequestTripNeedsCancelApproval";
         
-        public const string NotifyOfferOwnerWhenSrUpdated = "App.NotifyOfferOwnerWhenShippingRequestUpdated";
+        public const string NotifyOfferOwnerWhenMarketplaceSrUpdated = "App.NotifyOfferOwnerWhenMarketplaceShippingRequestUpdated";
+        public const string NotifyOfferOwnerWhenDirectRequestSrUpdated = "App.NotifyOfferOwnerWhenDirectRequestShippingRequestUpdated";
 
         #endregion
 
@@ -110,6 +111,7 @@ namespace TACHYON.Notifications
         public const string NotifyCarrierWhenPostPriceSrUpdated = "App.NotifyCarrierWhenPostPriceSrUpdated";
         public const string NotifyShipperForPostPriceSrUpdateAction = "App.NotifyShipperForPostPriceSrUpdateAction";
         public const string NotifyShipperWhenRequestChangePrice = "App.NotifyShipperWhenRequestChangePrice";
+        public const string RejectedPostPriceOffer = "App.RejectedPostPriceOffer";
 
         #endregion
 

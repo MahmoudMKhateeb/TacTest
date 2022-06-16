@@ -138,7 +138,7 @@
         </button>
         <button
           class="btn btn-warning"
-          (click)="ModelReject.show(offerForEditOutput.priceOfferViewDto.id)"
+          (click)="ModelReject.show(offerForEditOutput.priceOfferViewDto.id,isPostPriceOffer)"
           *ngIf="offerForEditOutput.canIAcceptOffer"
         >
           <i class="fas fa-ban"></i>
@@ -171,4 +171,4 @@
   </div>
 </div>
 <price-offer-model #ModelPrice [Channel]="Channel"></price-offer-model>
-<price-offer-reject-model #ModelReject (modalsave)="reject($event)"></price-offer-reject-model>
+<price-offer-reject-model #ModelReject (postPriceOfferReject)="postPriceOfferReject($event)" (modalsave)="reject($event)"></price-offer-reject-model>
