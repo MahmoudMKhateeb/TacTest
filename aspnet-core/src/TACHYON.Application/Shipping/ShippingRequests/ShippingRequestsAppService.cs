@@ -776,15 +776,15 @@ namespace TACHYON.Shipping.ShippingRequests
                 bool isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
                 int? abpSessionTenantId = AbpSession.TenantId;
 
-
+                
                 // shippers access
-                if (isShipper && shippingRequest.TenantId != abpSessionTenantId)
+                if (abpSessionTenantId!=null && shippingRequest.TenantId != abpSessionTenantId && isShipper)
                 {
                     throw new UserFriendlyException("You cant view this shipping request msg");
                 }
 
                 //carrier access if he is not assigned to the SR
-                if (isCarrier && shippingRequest.CarrierTenantId != abpSessionTenantId)
+                if (abpSessionTenantId != null && isCarrier && shippingRequest.CarrierTenantId != abpSessionTenantId)
                 {
                     //if PrePrice or NeedsAction
                     if (shippingRequest.Status == ShippingRequestStatus.PrePrice ||
