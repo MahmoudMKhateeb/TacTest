@@ -109,8 +109,7 @@ namespace TACHYON.Trucks
         public async Task<LoadResult> GetAll(GetAllTrucksInput input)
         {
 
-            DisableTenancyFiltersIfHost();
-            await DisableTenancyFiltersIfTachyonDealer();
+            DisableTenancyFilters();
             var documentQuery = _documentFileRepository.GetAll()
                                                .Where(x => x.DocumentTypeFk.SpecialConstant == TACHYONConsts.TruckIstimaraDocumentTypeSpecialConstant.ToLower());
             var query = from truck in _truckRepository.GetAll()
