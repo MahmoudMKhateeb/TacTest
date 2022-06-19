@@ -262,6 +262,8 @@ namespace TACHYON.PricePackages
 
             priceOffer.Status = accepted ? PriceOfferStatus.New : PriceOfferStatus.Pending;
             directRequest.ShippingRequestFK.Status = ShippingRequestStatus.NeedsAction;
+            priceOffer.Channel = PriceOfferChannel.DirectRequest;
+            priceOffer.SourceId = directRequest.Id;
             await _priceOfferRepository.InsertAndGetIdAsync(priceOffer);
 
             await HandleTachyonDealerOffer(priceOffer);

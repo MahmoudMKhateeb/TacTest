@@ -243,8 +243,12 @@ namespace TACHYON.PriceOffers
                 }
 
                 if (parentOffer != null && parentOffer.Channel == PriceOfferChannel.DirectRequest)
+                {
                     await ChangeDirectRequestStatus(parentOffer.SourceId.Value,
                         ShippingRequestDirectRequestStatus.Accepted);
+                    parentOffer.Status = PriceOfferStatus.Accepted;
+                }
+
                 if (offer.Channel == PriceOfferChannel.DirectRequest)
                     await ChangeDirectRequestStatus(offer.SourceId.Value, ShippingRequestDirectRequestStatus.Accepted);
 
