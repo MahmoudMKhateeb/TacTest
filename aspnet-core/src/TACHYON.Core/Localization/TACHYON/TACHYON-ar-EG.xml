@@ -2404,8 +2404,8 @@
 		<text name="PickupDate">تاريخ الإلتقاط</text>
 		<text name="DropOffDate">تاريخ التنزيل</text>
 		<text name="waybillSearch">رقم وثيقة الشحن ...</text>
-		<text name="supposedPickupDateFrom">تاريخ الاستلام المفترض من</text>
-		<text name="supposedPickupDateTo">تاريخ الاستلام المفترض الى</text>
+		<text name="supposedPickupTimeFrom">تاريخ الاستلام المفترض من</text>
+		<text name="supposedPickupTimeTo">تاريخ الاستلام المفترض الى</text>
 		<text name="DeleteWarningMessage">رسالة تحذير للحذف</text>
 		<text name="AddNote">أضف ملاحظة</text>
 		<text name="Internal">داخلي</text>
