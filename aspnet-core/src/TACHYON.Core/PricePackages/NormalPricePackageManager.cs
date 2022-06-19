@@ -166,6 +166,7 @@ namespace TACHYON.PricePackages
             if (directRequest.ShippingRequestFK.IsTachyonDeal)
             {
                 await AcceptTMSOffer(pricePackageOffer, directRequest);
+                await _appNotifier.CarrierAcceptPricePackageOffer(directRequest.TenantId, directRequest.Carrier.Name, directRequest.ShippingRequestFK.ReferenceNumber, directRequest.ShippingRequestId);
                 return directRequest.Status;
             }
 
