@@ -171,6 +171,13 @@ export class UserNotificationHelper extends AppComponentBase {
           '&offerid=' +
           userNotification.notification.data.properties.offerid
         );
+      case 'App.SendPriceOfferToShipper':
+        return (
+          '/app/main/shippingRequests/shippingRequests/view?id=' +
+          userNotification.notification.data.properties.id +
+          '&offerid=' +
+          userNotification.notification.data.properties.offerid
+        );
       case 'App.PricePackageOfferWasCreated':
         return `/app/main/directrequest/list?directRequestId=${userNotification.notification.data.properties.directRequestId}`;
       case 'App.ShippingRequestAsBidWithSameTruck':
