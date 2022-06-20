@@ -122,8 +122,7 @@ namespace TACHYON.PriceOffers
                     .GetAll()
                     .Include(x => x.Tenant)
                     .Include(x => x.ShippingRequestVases)
-                    .WhereIf(!input.IsPostPrice,r=> (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice ||
-                                                     r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier) )
+                    .WhereIf(input.IsPostPrice,r=> (r.Status == ShippingRequestStatus.PostPrice || r.Status == ShippingRequestStatus.Completed))
                     .FirstOrDefaultAsync(r => r.Id == input.ShippingRequestId);
                 if (shippingRequest == null) throw new UserFriendlyException(L("TheShippingRequestNotFound"));
 
