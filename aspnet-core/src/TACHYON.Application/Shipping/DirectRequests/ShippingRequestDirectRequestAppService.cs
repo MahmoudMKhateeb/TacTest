@@ -2,12 +2,15 @@
 using Abp.Application.Services.Dto;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TACHYON.Features;
 using TACHYON.MultiTenancy;
@@ -54,12 +57,12 @@ namespace TACHYON.Shipping.DirectRequests
             var query = _shippingRequestDirectRequestRepository
                 .GetAll()
                 .Include(x => x.Carrier)
-                .Where(x => x.ShippingRequestId == input.ShippingRequestId)
-                .OrderBy(input.Sorting ?? "id desc");
-            var Result = await query.PageBy(input).ToListAsync();
+                .Where(x => x.ShippingRequestId == input.ShippingRequestId);
+            
+            var pageResult = await GetSorting(query, input).PageBy(input).ToListAsync();
             var totalCount = await query.CountAsync();
 
-            var list = ObjectMapper.Map<List<ShippingRequestDirectRequestListDto>>(Result);
+            var list = ObjectMapper.Map<List<ShippingRequestDirectRequestListDto>>(pageResult);
 
             return new PagedResultDto<ShippingRequestDirectRequestListDto>(totalCount, list);
         }
@@ -228,6 +231,21 @@ namespace TACHYON.Shipping.DirectRequests
                 throw new UserFriendlyException(L("YouDoNoHaveAccess"));
         }
 
+        private IOrderedQueryable<ShippingRequestDirectRequest> GetSorting(IQueryable<ShippingRequestDirectRequest> query,ISortedResultRequest input)
+        {
+            if (input.Sorting.IsNullOrEmpty()) return query.OrderBy("id desc");
+
+            
+            Expression<Func<ShippingRequestDirectRequest, dynamic>> expression = input.Sorting.Split(" ").First() switch
+            {
+                "carrierName" => (request => request.Carrier.Name),
+                "statusTitle" => (request => request.Status),
+                _ => (request => request.Id), // default sorting if input.Sorting is null or any unhandled value (-_-)
+            };
+
+            return input.Sorting.ToLower().Contains("desc") ? query.OrderByDescending(expression) : query.OrderBy(expression);
+        }
+        
         #endregion
     }
 }
