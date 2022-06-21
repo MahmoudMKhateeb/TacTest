@@ -776,6 +776,11 @@ namespace TACHYON.Shipping.ShippingRequests
                 bool isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
                 int? abpSessionTenantId = AbpSession.TenantId;
 
+                async Task<bool> IsCarrierSaasAndSrOwner()
+                {
+                    return await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierAsASaas) &&
+                           shippingRequest.TenantId == AbpSession.TenantId;
+                }
 
                 // shippers access
                 if (isShipper && shippingRequest.TenantId != abpSessionTenantId)
@@ -784,7 +789,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 }
 
                 //carrier access if he is not assigned to the SR
-                if (isCarrier && shippingRequest.CarrierTenantId != abpSessionTenantId)
+                if (!await IsCarrierSaasAndSrOwner() && isCarrier && shippingRequest.CarrierTenantId != abpSessionTenantId)
                 {
                     //if PrePrice or NeedsAction
                     if (shippingRequest.Status == ShippingRequestStatus.PrePrice ||
