@@ -72,7 +72,7 @@
               </div>
             </div>
             <div class="col-lg-12 mt-4">
-              <label>{{ l('InvoiceReferenceNumber') }} <span class="required-fileds">*</span></label>
+              <label>{{ l('InvoiceReferenceNumber') }} </label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
                 <select
                   #invoiceNumber="ngModel"
@@ -85,7 +85,7 @@
                   [attr.disabled]="manualInvoiceNoteIsEnabled ? null : true"
                 >
                   <!--                  <option value="">{{ l('SelectInvoiceReference') }}</option>-->
-                  <!-- <option [ngValue]="null" >{{ l('None') }}</option> -->
+                  <option [ngValue]="null" disabled selected>{{ l('selectInvoice') }}</option>
                   <option *ngFor="let item of allInvoices" [ngValue]="item.refreanceNumber">{{ item.refreanceNumber }}</option>
                 </select>
               </div>
@@ -94,7 +94,7 @@
             <div class="row col-lg-12 mt-4">
               <div class="col-sm-12">
                 <!-- *ngIf="allWaybills.length > 0" -->
-                <table class="table" [busyIf]="waybillsLoading">
+                <table *ngIf="form.invoiceNumber" class="table" [busyIf]="waybillsLoading">
                   <thead>
                     <tr class="table-active">
                       <th scope="col" width="20%">{{ l('WaybillNumber') }}</th>
@@ -107,10 +107,10 @@
                     <tr *ngFor="let item of allWaybills; index as i">
                       <td>
                         <input type="hidden" [(ngModel)]="item.id" name="id" id="id" />
+                        <!-- [value]="item.waybillNumber" -->
                         <input
                           (change)="calculator(item.price, item.taxVat, i)"
                           type="checkbox"
-                          [value]="item.waybillNumber"
                           [(ngModel)]="item.checked"
                           name="waybill{{ i }}"
                           id="waybill{{ i }}"
@@ -159,6 +159,95 @@
                     </tr>
                   </tbody>
                 </table>
+                <table *ngIf="!form.invoiceNumber" class="table">
+                  <thead>
+                    <tr class="table-active">
+                      <th scope="col">{{ l('Price') }}</th>
+                      <th scope="col">{{ l('VatAmount') }}</th>
+                      <th scope="col">{{ l('TotalAmount') }}</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let field of AllItemsWithoutInvoice; let i = index">
+                      <td>
+                        <input type="hidden" [(ngModel)]="field.id" name="id" id="id" />
+                        <input type="checkbox" [(ngModel)]="field.checked" name="field.id{{ i }}" id="field.id{{ i }}" value="field.checked" hidden />
+                        <input
+                          [(ngModel)]="field.price"
+                          #NewPrice="ngModel"
+                          disabled
+                          class="form-control"
+                          type="text"
+                          name="newPrice{{ i }}"
+                          id="newPrice{{ i }}"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          [(ngModel)]="field.vatAmount"
+                          #NewVatAmount="ngModel"
+                          disabled
+                          class="form-control"
+                          type="text"
+                          name="newVatAmount{{ i }}"
+                          id="newVatAmount{{ i }}"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          [(ngModel)]="field.totalAmount"
+                          #NewTotalPrice="ngModel"
+                          class="form-control"
+                          type="text"
+                          name="newTotalAmount{{ i }}"
+                          id="newTotalAmount{{ i }}"
+                        />
+                      </td>
+                      <td>
+                        <button class="btn btn-default" type="button" (click)="deleteFieldValue(i)">Delete</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <input
+                          class="form-control"
+                          type="number"
+                          (keypress)="numberOnly($event)"
+                          id="newAttributeCode"
+                          [(ngModel)]="newAttribute.price"
+                          (change)="calculatePrice(newAttribute.price)"
+                          name="newAttributeCode"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          class="form-control"
+                          type="number"
+                          disabled
+                          id="newAttributeName"
+                          [(ngModel)]="newAttribute.vatAmount"
+                          name="newAttributeName"
+                          #vatAmount="ngModel"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          class="form-control"
+                          type="number"
+                          disabled
+                          id="newAttributePrice"
+                          [(ngModel)]="newAttribute.totalAmount"
+                          name="newAttributePrice"
+                          #PriceAfterVat="ngModel"
+                        />
+                      </td>
+                      <td>
+                        <button class="btn btn-default" type="button" [disabled]="!newAttribute.price" (click)="addFieldValue()">Add</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
 
@@ -175,10 +264,9 @@
                 [required]="form.invoiceNumber == null"
                 min="0"
                 value="0"
-                [disabled]="form.invoiceNumber != null"
+                disabled
                 [class.is-valid]="Price.valid && (Price.dirty || Price.touched)"
                 [class.is-invalid]="Price.invalid && (Price.dirty || Price.touched)"
-                (change)="CalculateTotalPrice()"
               />
             </div>
             <div class="col-lg-4 mt-4">
@@ -190,11 +278,10 @@
                 id="vatAmount"
                 class="form-control"
                 [required]="!selectedWaybills"
-                [disabled]="selectedWaybills != null && selectedWaybills.length > 0"
+                disabled
                 [class.is-valid]="vatAmount.valid && (vatAmount.dirty || vatAmount.touched)"
                 [class.is-invalid]="vatAmount.invalid && (vatAmount.dirty || vatAmount.touched)"
                 [(ngModel)]="form.vatAmount"
-                (change)="CalculateTotalPrice()"
               />
             </div>
             <div class="col-lg-4 mt-4">
@@ -232,7 +319,7 @@
           <button
             type="submit"
             class="btn btn-primary"
-            [disabled]="!Form.form.valid"
+            [disabled]="!Form.form.valid || selectedWaybills.length == 0"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot' | localize)"
             (click)="save()"
