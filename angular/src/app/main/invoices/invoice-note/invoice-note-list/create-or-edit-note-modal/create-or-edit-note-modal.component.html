@@ -107,7 +107,7 @@
                     <tr *ngFor="let item of allWaybills; index as i">
                       <td>
                         <input type="hidden" [(ngModel)]="item.id" name="id" id="id" />
-                        <!-- [value]="item.waybillNumber" -->
+
                         <input
                           (change)="calculator(item.price, item.taxVat, i)"
                           type="checkbox"
@@ -202,6 +202,7 @@
                           type="text"
                           name="newTotalAmount{{ i }}"
                           id="newTotalAmount{{ i }}"
+                          disabled
                         />
                       </td>
                       <td>

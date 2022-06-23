@@ -818,7 +818,7 @@ namespace TACHYON
                 .ForMember(dto => dto.InvoiceNumber, options => options.MapFrom(entity => entity.ReferencNumber))
                 .ReverseMap();
 
-            //configuration.CreateMap<ShippingRequestTrip, GetAllInvoiceItemDto>();
+            configuration.CreateMap<ShippingRequestTrip, GetAllInvoiceItemDto>();
 
             configuration.CreateMap<InvoiceNoteItem, GetAllInvoiceItemDto>()
                 .ForMember(dto => dto.WaybillNumber, options => options.MapFrom(entity => entity.ShippingRequestTripFK.WaybillNumber));

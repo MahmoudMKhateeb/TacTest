@@ -32,7 +32,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
   allInvoices: InvoiceRefreanceNumberDto[];
   allWaybills: GetAllInvoiceItemDto[] = [];
   AllItemsWithoutInvoice: GetAllInvoiceItemDto[] = [];
-  selectedWaybills: GetAllInvoiceItemDto[] = [];
+  selectedWaybills: any[] = [];
   saving: boolean;
   manualInvoiceNoteIsEnabled = true;
   waybillsLoading = false;
@@ -60,11 +60,26 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
     // console.log(this.form);
     this.saving = true;
     //this.selectedWaybills=this.allWaybills.filter(item => { return item.checked; })
-    console.log(this.selectedWaybills);
-    JSON.stringify(this.selectedWaybills);
-    this.form.invoiceItems = this.selectedWaybills.filter((item) => {
-      return item.checked;
-    });
+    // console.log(this.selectedWaybills);
+    //JSON.stringify(this.selectedWaybills);
+    this.form.invoiceItems = this.selectedWaybills
+      .filter((item) => {
+        return item.checked;
+      })
+      .map(
+        (it) =>
+          new GetAllInvoiceItemDto({
+            checked: it.checked,
+            id: it.id,
+            price: it.price,
+            vatAmount: it.vatAmount,
+            totalAmount: it.totalAmount,
+            taxVat: it.taxVat,
+            tripId: it.tripId,
+            tripVasId: it.tripVasId,
+            waybillNumber: it.wayBillNumber,
+          })
+      );
     this._invoiceNoteServiceProxy
       .createOrEdit(this.form)
       .pipe(
@@ -94,6 +109,9 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
       this._invoiceNoteServiceProxy.getInvoiceNoteForEdit(id).subscribe((res) => {
         this.form = res;
         this.selectedWaybills = res.invoiceItems;
+        if (res.invoiceItems.filter((x) => x.waybillNumber)) {
+          this.AllItemsWithoutInvoice = res.invoiceItems;
+        }
         this.getAllInvoicesByCompanyId();
       });
     } else {
@@ -106,6 +124,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
   close() {
     this.active = false;
     this.selectedWaybills = null;
+    this.AllItemsWithoutInvoice = null;
     this.manualInvoiceNoteIsEnabled = true;
     this.form = undefined;
     this.allWaybills = undefined;
@@ -189,6 +208,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
 
   deleteFieldValue(index) {
     this.AllItemsWithoutInvoice.splice(index, 1);
+    this.calculateTotalPrice();
   }
 
   calculatePrice(newPrice: number): void {
