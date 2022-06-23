@@ -437,7 +437,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>(VAT  %) SAR
+                                  <Value>(VAT 15 %) SAR
 قيمة الضريبة المضافة ر.س</Value>
                                   <Style>
                                     <FontFamily>Cairo SemiBold</FontFamily>
@@ -3297,7 +3297,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=First(Fields!InvoiceNumber.Value, "GetInvoiceNoteReportInfoDataset")</Value>
+                      <Value>=First(Fields!ReferanceNumber.Value, "GetInvoiceNoteReportInfoDataset")</Value>
                       <Style>
                         <FontFamily>Free 3 of 9 Extended</FontFamily>
                         <FontSize>26pt</FontSize>
@@ -3332,7 +3332,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=First(Fields!InvoiceNumber.Value, "GetInvoiceNoteReportInfoDataset")</Value>
+                      <Value>=First(Fields!ReferanceNumber.Value, "GetInvoiceNoteReportInfoDataset")</Value>
                       <Style>
                         <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
