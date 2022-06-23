@@ -179,6 +179,8 @@ export class UserNotificationHelper extends AppComponentBase {
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
       case 'App.RejectedPostPriceOffer':
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
+      case 'App.ShippingRequestAddedByTms':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
     }
 
     //No url for this notification

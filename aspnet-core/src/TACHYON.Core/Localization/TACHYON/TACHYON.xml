@@ -3015,5 +3015,6 @@
 		<text name="NoCurrentLoads">No current loads</text>
 		<text name="NoUpcomingLoads">No upcoming loads</text>
 		<text name="NoPastLoad">No past loads</text>
+		<text name="ShippingRequestAddedByTms">There's a new shipping request with reference number {0} added by the tachyon dealer</text>
 	</texts>
 </localizationDictionary>

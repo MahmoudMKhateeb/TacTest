@@ -731,6 +731,22 @@ namespace TACHYON.Notifications
                 notificationData, userIds: tenantsAdmin);
         }
 
+        public async Task NotifyShipperWhenSrAddedByTms(long srId, string referenceNumber,int shipperId)
+        {
+            var tenantsAdmin = await GetTenantsAdminUsers(shipperId);
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShippingRequestAddedByTms",referenceNumber),
+                    TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "srId", srId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestAddedByTms,
+                notificationData, userIds: tenantsAdmin);
+        }
+
         public async Task NotfiyCarrierWhenReceiveBidPricePackage(int carrierTenantId, string SenderTenantName, string pricePackageId, long directRequestId, string referanceNumber)
         {
 

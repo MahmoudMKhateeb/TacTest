@@ -238,5 +238,7 @@ namespace TACHYON.Notifications
 
         Task NotifyOfferOwnerWhenMarketplaceSrUpdated(long srId,string referenceNumber, params int[] tenantsIds);
         Task NotifyOfferOwnerWhenDirectRequestSrUpdated(long srId, string referenceNumber, params int[] tenantsIds);
+
+        Task NotifyShipperWhenSrAddedByTms(long srId, string referenceNumber, int shipperId);
     }
 }

@@ -2765,6 +2765,6 @@
 		<text name="NoCurrentLoads">لا توجد حمولات حالية</text>
 		<text name="NoUpcomingLoads">لا توجد حمولات قادمة</text>
 		<text name="NoPastLoad">لا توجد حمولات سابقة</text>
-        
+		<text name="ShippingRequestAddedByTms">يوجد طلب شحن جديد برقم مرجعي {0} تم إنشائه بواسطة دارة خدمات تاكيون</text>
 	</texts>
 </localizationDictionary>

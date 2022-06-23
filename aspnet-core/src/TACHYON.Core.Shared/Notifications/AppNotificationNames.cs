@@ -105,6 +105,7 @@ namespace TACHYON.Notifications
             "App.ShippingRequestNotifyCarrirerWhenShipperAccepted";
 
         public const string ShipperReminderToCompleteTrips = "App.ShipperReminderToCompleteTrips";
+        public const string ShippingRequestAddedByTms = "App.ShippingRequestAddedByTms";
 
         #region ShippingRequestPostPriceUpdate
 
