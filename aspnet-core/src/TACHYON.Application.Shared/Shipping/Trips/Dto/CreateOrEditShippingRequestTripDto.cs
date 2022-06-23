@@ -3,6 +3,7 @@ using Abp.Extensions;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -44,6 +45,8 @@ namespace TACHYON.Shipping.Trips.Dto
 
         public CreateOrEditDocumentFileDto CreateOrEditDocumentFileDto { get; set; }
 
+        [JsonIgnore]
+        public int TenantId { get; set; }
         public void AddValidationErrors(CustomValidationContext context)
         {
             //document validation

@@ -18,6 +18,9 @@ namespace TACHYON.EntityTemplates
         
         public int TenantId { get; set; }
 
+        /// the tenant id of the tenant that create template instead of entity owner
+        /// in our case the CreatorTenantId is the Tachyon dealer tenant id 
+        public int? CreatorTenantId { get; set; }
         public SavedEntityType EntityType { get; set; }
     }
 }

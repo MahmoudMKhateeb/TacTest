@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Validation;
@@ -16,6 +17,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Dto;
+using TACHYON.Features;
 
 namespace TACHYON.EntityTemplates
 {
@@ -53,6 +55,9 @@ namespace TACHYON.EntityTemplates
 
         public async Task<string> CreateOrEdit(CreateOrEditEntityTemplateInputDto input)
         {
+
+            _templateManager.AbpSession = AbpSession;
+            
             await CheckDuplicatedTemplateName(input);
             if (input.Id.HasValue)
                 return await Update(input);
@@ -62,7 +67,13 @@ namespace TACHYON.EntityTemplates
 
         public async Task<EntityTemplateForViewDto> GetForView(EntityDto<long> input)
         {
+            var isTachyonDealer = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
+            
+            if (isTachyonDealer)
+                CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant);
+            
             var template = await _templateRepository.GetAll().AsNoTracking()
+                .WhereIf(isTachyonDealer,x=> x.CreatorTenantId == AbpSession.TenantId)
                 .FirstOrDefaultAsync(x => x.Id == input.Id);
 
             if (template == null)
@@ -73,7 +84,14 @@ namespace TACHYON.EntityTemplates
 
         public async Task<List<SelectItemDto>> GetAllForDropdown(GetAllTemplateForDropdownInputDto input)
         {
-            var templates = _templateRepository.GetAll().AsNoTracking().Where(x => x.EntityType == input.Type);
+            var isTachyonDealer = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
+            
+            if (isTachyonDealer)
+                CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant);
+            
+            var templates = _templateRepository.GetAll().AsNoTracking()
+                .Where(x => x.EntityType == input.Type)
+                .WhereIf(isTachyonDealer,x=> x.CreatorTenantId == AbpSession.TenantId);
 
             switch (input.Type)
             {
