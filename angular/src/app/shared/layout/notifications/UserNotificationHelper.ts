@@ -1,6 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { EntityDtoOfGuid, NotificationServiceProxy } from '@shared/service-proxies/service-proxies';
+import { EntityDtoOfGuid, NotificationServiceProxy, PriceOfferChannel } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import * as Push from 'push.js'; // if using ES6
 import { NotificationSettingsModalComponent } from './notification-settings-modal.component';
@@ -87,7 +87,7 @@ export class UserNotificationHelper extends AppComponentBase {
       case 'App.PendingOffer':
         return `/app/main/offers/list?id=${userNotification.notification.data.properties.id}`;
       case 'App.RejectedOffer':
-        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}&offerid=${userNotification.notification.data.properties.offerid}`;
+        return this.getRejectedOfferUrl(userNotification);
       case 'App.SendDriectRequest':
         return `/app/main/directrequest/list?id=${userNotification.notification.data.properties.id}`;
       case 'App.ShipperAcceptedOffer':
@@ -290,5 +290,21 @@ export class UserNotificationHelper extends AppComponentBase {
 
   openSettingsModal(): void {
     this.settingsModal.show();
+  }
+
+  getRejectedOfferUrl(userNotification): string {
+    switch (userNotification.notification.data.properties.channel) {
+      case PriceOfferChannel.MarketPlace:
+        return `/app/main/marketplace/list?srId=${userNotification.notification.data.properties.srId}`;
+      case PriceOfferChannel.DirectRequest:
+        return `app/main/directrequest/list?srId=${userNotification.notification.data.properties.srId}`;
+      case PriceOfferChannel.TachyonManageService:
+        if (this.isTachyonDealer) {
+          return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
+        }
+        return `/app/main/marketplace/list?srId=${userNotification.notification.data.properties.srId}`;
+    }
+
+    return '';
   }
 }
