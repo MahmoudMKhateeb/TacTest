@@ -187,13 +187,14 @@ namespace TACHYON.Authorization
 
                  var ShippingRequestAndTripNotes = pages.CreateChildPermission(
                 AppPermissions.Pages_ShippingRequestAndTripNotes, L("ShippingRequestAndTripNotes"),
-                multiTenancySides: MultiTenancySides.Tenant);
+                multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
             ShippingRequestAndTripNotes.CreateChildPermission(
                 AppPermissions.Pages_ShippingRequestAndTripNotes_Create,
-                L("ShippingRequestAndTripNotes_CreateOrEdit"), multiTenancySides: MultiTenancySides.Tenant);
+                L("ShippingRequestAndTripNotes_CreateOrEdit"), multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
             ShippingRequestAndTripNotes.CreateChildPermission(
                 AppPermissions.Pages_ShippingRequestAndTripNotes_Edit,
-                L("ShippingRequestAndTripNotes_Edit"), multiTenancySides: MultiTenancySides.Tenant);
+                L("ShippingRequestAndTripNotes_Edit"), multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
+
             shippingRequestTripAccidentComments.CreateChildPermission(
                 AppPermissions.Pages_ShippingRequestAndTripNotes_Delete,
                 L("ShippingRequestAndTripNotes_Delete"), multiTenancySides: MultiTenancySides.Tenant);

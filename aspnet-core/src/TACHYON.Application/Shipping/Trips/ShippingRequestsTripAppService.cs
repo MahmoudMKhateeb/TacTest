@@ -752,8 +752,10 @@ namespace TACHYON.Shipping.Trips
         private async Task<ShippingRequest> GetShippingRequestByPermission(long shippingRequestId)
         {
             var request = await _shippingRequestRepository.GetAll()
-                .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
-                .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
+                .WhereIf(AbpSession.TenantId==null, x=> true)
                 .FirstOrDefaultAsync(x => x.Id == shippingRequestId);
             if (request == null)
             {
