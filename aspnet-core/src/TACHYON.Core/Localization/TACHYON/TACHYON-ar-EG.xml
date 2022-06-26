@@ -2301,7 +2301,7 @@
 	<text name="ResetReceiverCode">إعادة تعيين رمز مستلم الشحنة</text>
 		<text name="CompanyDescriptionHint">يجب ألا يزيد وصف الشركة عن 500 حرف</text>
 		<text name="SelectAnEmailTemplateType">أختر نوع قالب البريد الإلكتروني</text>
-		<text name="AllowedWeightShouldBeMaximum">يجب أن يكون الوزن المسموح به الحد الأقصى</text>
+		<text name="AllowedWeightShouldBeMaximum">يجب أن يكو(الوزن المسموح به * الكمية )الحد الأقصى</text>
 		<text name="RemainingAllowedWeight">الوزن المتبقي المسموح به</text>
 		<text name="ShipperNumberOfCompletedTripsWidget">عدد الرحلات المكتملة</text>
 		<text name="ShipperAcceptedVsRejectedRequestsWidget">طلبات الشحن المقبولة مقابل المرفوضة</text>
