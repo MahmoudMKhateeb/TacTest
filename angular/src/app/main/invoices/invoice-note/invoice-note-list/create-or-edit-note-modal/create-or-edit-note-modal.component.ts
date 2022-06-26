@@ -12,7 +12,6 @@ import {
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { finalize } from 'rxjs/operators';
-import { timeStamp } from 'console';
 
 @Component({
   selector: 'create-or-edit-note-modal',
@@ -32,10 +31,12 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
   allCompanies: CompayForDropDownDto[];
   allInvoices: InvoiceRefreanceNumberDto[];
   allWaybills: GetAllInvoiceItemDto[] = [];
-  selectedWaybills: GetAllInvoiceItemDto[] = [];
+  AllItemsWithoutInvoice: GetAllInvoiceItemDto[] = [];
+  selectedWaybills: any[] = [];
   saving: boolean;
   manualInvoiceNoteIsEnabled = true;
   waybillsLoading = false;
+  newAttribute: any = {};
 
   constructor(inject: Injector, private _invoiceNoteServiceProxy: InvoiceNoteServiceProxy, private enumToArray: EnumToArrayPipe) {
     super(inject);
@@ -59,9 +60,26 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
     // console.log(this.form);
     this.saving = true;
     //this.selectedWaybills=this.allWaybills.filter(item => { return item.checked; })
-    this.form.invoiceItems = this.selectedWaybills.filter((item) => {
-      return item.checked;
-    });
+    // console.log(this.selectedWaybills);
+    //JSON.stringify(this.selectedWaybills);
+    this.form.invoiceItems = this.selectedWaybills
+      .filter((item) => {
+        return item.checked;
+      })
+      .map(
+        (it) =>
+          new GetAllInvoiceItemDto({
+            checked: it.checked,
+            id: it.id,
+            price: it.price,
+            vatAmount: it.vatAmount,
+            totalAmount: it.totalAmount,
+            taxVat: it.taxVat,
+            tripId: it.tripId,
+            tripVasId: it.tripVasId,
+            waybillNumber: it.wayBillNumber,
+          })
+      );
     this._invoiceNoteServiceProxy
       .createOrEdit(this.form)
       .pipe(
@@ -91,6 +109,9 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
       this._invoiceNoteServiceProxy.getInvoiceNoteForEdit(id).subscribe((res) => {
         this.form = res;
         this.selectedWaybills = res.invoiceItems;
+        if (res.invoiceItems.filter((x) => x.waybillNumber)) {
+          this.AllItemsWithoutInvoice = res.invoiceItems;
+        }
         this.getAllInvoicesByCompanyId();
       });
     } else {
@@ -103,6 +124,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
   close() {
     this.active = false;
     this.selectedWaybills = null;
+    this.AllItemsWithoutInvoice = null;
     this.manualInvoiceNoteIsEnabled = true;
     this.form = undefined;
     this.allWaybills = undefined;
@@ -133,6 +155,10 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
       return;
     }
 
+    if (!id) {
+      this.AllItemsWithoutInvoice = this.form.invoiceItems;
+    }
+
     //show
     this.waybillsLoading = true;
     if (this.form.id) this.form.invoiceItems = [];
@@ -161,14 +187,44 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
       return item.checked;
     });
     //this.allWaybills.push();
+    // var sumAllPrice = this.selectedWaybills.reduce((prev, next) => prev + next.price, 0);
+    // this.form.price = sumAllPrice;
+    // var allVatAmount = this.selectedWaybills.reduce((prev, next) => prev + next.vatAmount, 0);
+    // this.form.vatAmount = allVatAmount;
+    // this.form.totalValue = sumAllPrice + allVatAmount;
+    this.calculateTotalPrice();
+  }
+
+  // CalculateTotalPrice(): void {
+  //   this.form.totalValue = this.form.price + this.form.vatAmount;
+  // }
+
+  addFieldValue() {
+    this.newAttribute.checked = true;
+    this.AllItemsWithoutInvoice.push(this.newAttribute);
+    this.newAttribute = {};
+    this.calculateTotalPrice();
+  }
+
+  deleteFieldValue(index) {
+    this.AllItemsWithoutInvoice.splice(index, 1);
+    this.calculateTotalPrice();
+  }
+
+  calculatePrice(newPrice: number): void {
+    var newVatAmount: number;
+    newVatAmount = (newPrice * 15) / 100;
+    this.newAttribute.vatAmount = newVatAmount;
+    var newTotalAmount = newPrice + newVatAmount;
+    this.newAttribute.totalAmount = newTotalAmount;
+    this.selectedWaybills = this.AllItemsWithoutInvoice;
+  }
+
+  calculateTotalPrice() {
     var sumAllPrice = this.selectedWaybills.reduce((prev, next) => prev + next.price, 0);
     this.form.price = sumAllPrice;
     var allVatAmount = this.selectedWaybills.reduce((prev, next) => prev + next.vatAmount, 0);
     this.form.vatAmount = allVatAmount;
     this.form.totalValue = sumAllPrice + allVatAmount;
-  }
-
-  CalculateTotalPrice(): void {
-    this.form.totalValue = this.form.price + this.form.vatAmount;
   }
 }

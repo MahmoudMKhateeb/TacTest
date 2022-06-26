@@ -20,5 +20,7 @@ namespace TACHYON.Invoices.InoviceNote.Dto
         public decimal TotalValue { get; set; }
         public string VoidType { get; set; }
         public string Remarks { get; set; }
+        public long? InvoiceNumber { get; set; }
+        public string ReferanceNumber { get; set; }
     }
 }

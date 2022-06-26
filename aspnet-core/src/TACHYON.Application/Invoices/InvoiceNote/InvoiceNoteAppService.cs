@@ -81,7 +81,7 @@ namespace TACHYON.Invoices.InvoiceNotes
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
 
             //Check duplication in waybills
-            if(input.InvoiceItems.GroupBy(x => x.WaybillNumber)
+            if(input.InvoiceItems.Where(x=>x.WaybillNumber!=null).GroupBy(x => x.WaybillNumber)
                 .Any(group => group.Count() > 1))
             {
                 throw new UserFriendlyException(L("WaybillsShouldnotBeDuplicated"));
@@ -362,15 +362,16 @@ namespace TACHYON.Invoices.InvoiceNotes
             }
             else
             {
-                if (input.Price <= 0)
-                    throw new UserFriendlyException(L("PriceMustGreaterThanZero"));
-                input.TotalValue = input.Price + input.VatAmount;
+                //if (input.Price <= 0)
+                //    throw new UserFriendlyException(L("PriceMustGreaterThanZero"));
+                //input.TotalValue = input.Price + input.VatAmount;
+                throw new UserFriendlyException(L("YouMustEnterInvoiceItems"));
             }
 
-            if(input.InvoiceNumber!=null && input.InvoiceItems.Count() == 0)
-            {
-                throw new UserFriendlyException(L("YouMustSelectWaybills"));
-            }
+            //if(input.InvoiceNumber!=null && input.InvoiceItems.Count() == 0)
+            //{
+            //    throw new UserFriendlyException(L("YouMustSelectWaybills"));
+            //}
 
 
             var invoiceNote = ObjectMapper.Map<InvoiceNote>(input);
@@ -526,15 +527,15 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             var admin = AsyncHelper.RunSync(() => _userManager.GetAdminByTenantIdAsync(invoiceNote.TenantId));
             var invoice = AsyncHelper.RunSync(() => _invoiceReposity.FirstOrDefaultAsync(x => x.InvoiceNumber == invoiceNote.InvoiceNumber));
+            var submitInvoice = AsyncHelper.RunSync(() => _submitInvoiceReposity.FirstOrDefaultAsync(x => x.ReferencNumber == invoiceNote.InvoiceNumber));
 
             invoiceNoteDto.Email = admin.EmailAddress;
             invoiceNoteDto.Attn = admin.FullName;
 
             if (invoice != null)
                 invoiceNoteDto.ReInvoiceDate = invoice.CreationTime.ToString("dd/mm/yyyy mm:hh");
-            else
+            else if(submitInvoice!=null)
             {
-                var submitInvoice = AsyncHelper.RunSync(() => _submitInvoiceReposity.FirstOrDefaultAsync(x => x.ReferencNumber == invoiceNote.InvoiceNumber));
                 invoiceNoteDto.ReInvoiceDate = submitInvoice.CreationTime.ToString("dd/mm/yyyy mm:hh");
             }
             var document = AsyncHelper.RunSync(() => _documentFileRepository
@@ -583,10 +584,10 @@ namespace TACHYON.Invoices.InvoiceNotes
                                 //    ? trip.ShippingRequestTripFK.TotalAmount.Value
                                 //    : trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
                                 invoiceItem.TotalAmount,
-                        WayBillNumber = invoiceItem.ShippingRequestTripFK.WaybillNumber.ToString(),
+                        WayBillNumber = invoiceItem.ShippingRequestTripFK?.WaybillNumber.ToString(),
                         Date =
-                            invoiceItem.ShippingRequestTripFK.EndTripDate.HasValue
-                                ? invoiceItem.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy")
+                            invoiceItem.ShippingRequestTripFK!=null && invoiceItem.ShippingRequestTripFK.EndTripDate.HasValue
+                                ? invoiceItem.ShippingRequestTripFK?.ActualDeliveryDate.Value.ToString("dd/MM/yyyy")
                                 : invoiceItem.InvoiceNoteFK.CreationTime.ToString("dd/MM/yyyy")
                     });
                     Sequence++;
