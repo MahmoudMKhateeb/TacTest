@@ -62,5 +62,8 @@ namespace TACHYON.EntityTemplates
 
         // step 4
         public List<CreateOrEditShippingRequestVasListDto> ShippingRequestVasList { get; set; }
+        
+        [JsonIgnore]
+        public int TenantId { get; set; }
     }
 }

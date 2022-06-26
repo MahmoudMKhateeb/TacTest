@@ -1,7 +1,10 @@
-﻿using Abp.Collections.Extensions;
+﻿using Abp.Application.Features;
+using Abp.Collections.Extensions;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
+using Abp.Runtime.Session;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +12,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.Dto;
+using TACHYON.Features;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
@@ -30,19 +33,24 @@ namespace TACHYON.EntityTemplates
         private readonly IRepository<ShippingRequestTrip> _tripRepository;
         private readonly IRepository<Facility,long> _facilityRepository;
         private readonly IRepository<GoodCategory> _goodsCategoryRepository;
+        private readonly IFeatureChecker _featureChecker;
+        public IAbpSession AbpSession { get; set; }
 
         public EntityTemplateManager(
             IRepository<EntityTemplate, long> templateRepository,
             IRepository<ShippingRequest, long> shippingRequestRepository,
             IRepository<ShippingRequestTrip> tripRepository,
             IRepository<Facility, long> facilityRepository,
-            IRepository<GoodCategory> goodsCategoryRepository)
+            IRepository<GoodCategory> goodsCategoryRepository,
+            IFeatureChecker featureChecker)
         {
             _templateRepository = templateRepository;
             _shippingRequestRepository = shippingRequestRepository;
             _tripRepository = tripRepository;
             _facilityRepository = facilityRepository;
             _goodsCategoryRepository = goodsCategoryRepository;
+            _featureChecker = featureChecker;
+            AbpSession = NullAbpSession.Instance;
         }
 
 
@@ -59,7 +67,8 @@ namespace TACHYON.EntityTemplates
         {
             if (!input.Id.HasValue)
                 throw new AbpValidationException(L("IdCanNotBeNullWhenUpdateEntity"));
-            
+
+            await DisableTenancyFilterIfTms();
             
             var oldEntityTemplate = await GetById(input.Id.Value);
 
@@ -87,6 +96,8 @@ namespace TACHYON.EntityTemplates
         {
             if (template.SavedEntityId.IsNullOrEmpty()) return;
 
+            await DisableTenancyFilterIfTms();
+            
             var isExist = await _templateRepository.GetAll()
                 .Where(x => x.EntityType == template.EntityType)
                 .AnyAsync(x => x.SavedEntityId.Equals(template.SavedEntityId));
@@ -112,20 +123,31 @@ namespace TACHYON.EntityTemplates
                 throw new EntityNotFoundException(L("EntityWithIdXIsNotFound",template.SavedEntityId));
 
             template.SavedEntity = SerializeEntityWithFormatting(savedEntity,template.EntityType);
+            if (!await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer)) return;
+            template.TenantId = savedEntity.As<dynamic>().TenantId;
+            template.CreatorTenantId = AbpSession.TenantId;
         }
 
         private async Task<CreateOrEditShippingRequestTripDto> GetTrip(string savedEntityId)
         {
+            await DisableTenancyFilterIfTms();
+            
             var trip = await _tripRepository.GetAll().AsNoTracking()
                 .Include(x=> x.RoutPoints).ThenInclude(x=> x.GoodsDetails)
                 .Include(x=> x.RoutPoints).ThenInclude(x=> x.FacilityFk)
                 .Include(x=> x.ShippingRequestTripVases)
+                .Include(x=> x.ShippingRequestFk)
                 .FirstOrDefaultAsync(x => x.Id.ToString().Equals(savedEntityId));
-           return ObjectMapper.Map<CreateOrEditShippingRequestTripDto>(trip);
+           var tripDto = ObjectMapper.Map<CreateOrEditShippingRequestTripDto>(trip);
+           tripDto.TenantId = trip.ShippingRequestFk.TenantId;
+
+           return tripDto;
         }
 
         private async Task<CreateOrEditShippingRequestTemplateInputDto> GetShippingRequest(string savedEntityId)
         {
+            await DisableTenancyFilterIfTms();
+            
             var shippingRequest = await _shippingRequestRepository.GetAllIncluding(x=> x.ShippingRequestVases,x=> x.OriginCityFk,x=> x.DestinationCityFk)
                 .AsNoTracking().FirstOrDefaultAsync(x => x.Id.ToString().Equals(savedEntityId));
             return ObjectMapper.Map<CreateOrEditShippingRequestTemplateInputDto>(shippingRequest);
@@ -224,6 +246,12 @@ namespace TACHYON.EntityTemplates
             return templatesList;
         }
 
+        private async Task DisableTenancyFilterIfTms()
+        {
+            if (await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+                CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant);
+        }
+        
         #endregion
     }
 }
