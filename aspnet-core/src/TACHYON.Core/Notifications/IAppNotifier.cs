@@ -240,5 +240,6 @@ namespace TACHYON.Notifications
         Task NotifyOfferOwnerWhenDirectRequestSrUpdated(long srId, string referenceNumber, params int[] tenantsIds);
 
         Task NotifyShipperWhenSrAddedByTms(long srId, string referenceNumber, int shipperId);
+        Task NotifyTmsWhenCancellationRequestedByShipper(string referenceNumber,string tripWaybillNumber, string companyName,long srId);
     }
 }

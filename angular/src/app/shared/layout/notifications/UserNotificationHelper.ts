@@ -153,7 +153,7 @@ export class UserNotificationHelper extends AppComponentBase {
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
 
       case 'App.ShippingRequest.ShippingRequestTripCanceled':
-        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.ReqId}`;
       case 'App.ShippingRequest.ShippingRequestTripRejectCancelByTachyonDealer':
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
       case 'App.ShippingRequest.ShippingRequestTripNeedsCancelApproval':
@@ -180,6 +180,8 @@ export class UserNotificationHelper extends AppComponentBase {
       case 'App.RejectedPostPriceOffer':
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
       case 'App.ShippingRequestAddedByTms':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
+      case 'App.ShippingRequest.CancellationRequestedByShipper':
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
     }
 
