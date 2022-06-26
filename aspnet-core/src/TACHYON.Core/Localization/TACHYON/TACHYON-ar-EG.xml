@@ -2765,6 +2765,7 @@
 		<text name="NoCurrentLoads">لا توجد حمولات حالية</text>
 		<text name="NoUpcomingLoads">لا توجد حمولات قادمة</text>
 		<text name="NoPastLoad">لا توجد حمولات سابقة</text>
+		<text name="EnglishLettersWithUnderscoreOnly">أحرف إنجليزية مع شرطة سفلية فقط</text>
         
 	</texts>
 </localizationDictionary>
