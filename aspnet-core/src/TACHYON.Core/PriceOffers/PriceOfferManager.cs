@@ -122,8 +122,7 @@ namespace TACHYON.PriceOffers
                     .GetAll()
                     .Include(x => x.Tenant)
                     .Include(x => x.ShippingRequestVases)
-                    .WhereIf(!input.IsPostPrice,r=> (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice ||
-                                                     r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier) )
+                    .WhereIf(input.IsPostPrice,r=> (r.Status == ShippingRequestStatus.PostPrice || r.Status == ShippingRequestStatus.Completed))
                     .FirstOrDefaultAsync(r => r.Id == input.ShippingRequestId);
                 if (shippingRequest == null) throw new UserFriendlyException(L("TheShippingRequestNotFound"));
 
@@ -201,6 +200,7 @@ namespace TACHYON.PriceOffers
             if (!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
             {
                 await TachyonAcceptOffer(offer);
+                await _appNotifier.TMSAcceptedOffer(offer);
                 return offer.Status;
             }
 
@@ -243,8 +243,12 @@ namespace TACHYON.PriceOffers
                 }
 
                 if (parentOffer != null && parentOffer.Channel == PriceOfferChannel.DirectRequest)
+                {
                     await ChangeDirectRequestStatus(parentOffer.SourceId.Value,
                         ShippingRequestDirectRequestStatus.Accepted);
+                    parentOffer.Status = PriceOfferStatus.Accepted;
+                }
+
                 if (offer.Channel == PriceOfferChannel.DirectRequest)
                     await ChangeDirectRequestStatus(offer.SourceId.Value, ShippingRequestDirectRequestStatus.Accepted);
 
@@ -672,7 +676,7 @@ namespace TACHYON.PriceOffers
             if (offer.ParentId != null) offer.Status = PriceOfferStatus.AcceptedAndWaitingForShipper;
             await _appNotifier.ShippingRequestSendOfferWhenAddPrice(offer, GetCurrentTenant(_abpSession).Name);
 
-            await _appNotifier.NotifyShipperWhenSendPriceOffer(shippingRequest.TenantId, offer.Id);
+            await _appNotifier.NotifyShipperWhenSendPriceOffer(shippingRequest.TenantId, offer.Id,offer.ShippingRequestId);
 
 
             await CurrentUnitOfWork.SaveChangesAsync();

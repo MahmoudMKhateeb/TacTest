@@ -1492,7 +1492,7 @@ namespace TACHYON.Notifications
         #endregion
 
         #region PriceOffer
-        public async Task NotifyShipperWhenSendPriceOffer(int teanatId, long offerId)
+        public async Task NotifyShipperWhenSendPriceOffer(int teanatId, long offerId, long shippingRequestId)
         {
             var tenantAdmin = await GetTenantAdminUser(teanatId);
 
@@ -1502,6 +1502,7 @@ namespace TACHYON.Notifications
 
                 TACHYONConsts.LocalizationSourceName));
             notificationData["offerId"] = offerId;
+            notificationData["id"] = shippingRequestId;
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.SendPriceOfferToShipper, notificationData, userIds: new[] { tenantAdmin });
         }

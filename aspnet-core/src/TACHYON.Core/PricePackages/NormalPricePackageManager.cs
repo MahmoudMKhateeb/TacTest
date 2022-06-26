@@ -166,6 +166,7 @@ namespace TACHYON.PricePackages
             if (directRequest.ShippingRequestFK.IsTachyonDeal)
             {
                 await AcceptTMSOffer(pricePackageOffer, directRequest);
+                await _appNotifier.CarrierAcceptPricePackageOffer(directRequest.TenantId, directRequest.Carrier.Name, directRequest.ShippingRequestFK.ReferenceNumber, directRequest.ShippingRequestId);
                 return directRequest.Status;
             }
 
@@ -261,6 +262,8 @@ namespace TACHYON.PricePackages
 
             priceOffer.Status = accepted ? PriceOfferStatus.New : PriceOfferStatus.Pending;
             directRequest.ShippingRequestFK.Status = ShippingRequestStatus.NeedsAction;
+            priceOffer.Channel = PriceOfferChannel.DirectRequest;
+            priceOffer.SourceId = directRequest.Id;
             await _priceOfferRepository.InsertAndGetIdAsync(priceOffer);
 
             await HandleTachyonDealerOffer(priceOffer);
