@@ -318,7 +318,8 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditTermAndConditionDto, TermAndCondition>().ReverseMap();
             configuration.CreateMap<CreateOrEditCapacityDto, Capacity>().ReverseMap();
             configuration.CreateMap<CapacityDto, Capacity>().ReverseMap();
-            configuration.CreateMap<CreateOrEditTransportTypeDto, TransportType>().ReverseMap();
+            configuration.CreateMap<CreateOrEditTransportTypeDto, TransportType>()
+                .ForMember(x=> x.Key,x=> x.MapFrom(i=> i.DisplayName)).ReverseMap();
             configuration.CreateMap<TransportTypeDto, TransportType>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentTypeTranslationDto, DocumentTypeTranslation>().ReverseMap();
             configuration.CreateMap<DocumentTypeTranslationDto, DocumentTypeTranslation>().ReverseMap();
