@@ -11,6 +11,7 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <RootNamespace>TACHYON</RootNamespace>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Invoices\Reports\Dedicated_Invoice.rdlc" />
