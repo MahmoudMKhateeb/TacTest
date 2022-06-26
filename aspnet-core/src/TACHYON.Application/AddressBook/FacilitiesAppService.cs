@@ -39,6 +39,8 @@ namespace TACHYON.AddressBook
 
         public async Task<PagedResultDto<GetFacilityForViewOutput>> GetAll(GetAllFacilitiesInput input)
         {
+            DisableTenancyFiltersIfHost();
+            
             var filteredFacilities = _facilityRepository.GetAll()
                 .Include(e => e.CityFk)
                 .ThenInclude(c => c.CountyFk)

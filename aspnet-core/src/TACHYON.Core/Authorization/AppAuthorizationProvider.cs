@@ -262,9 +262,9 @@ namespace TACHYON.Authorization
                 multiTenancySides: MultiTenancySides.Host);
 
             var facilities = pages.CreateChildPermission(AppPermissions.Pages_Facilities, L("Facilities"));
-            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Create, L("CreateNewFacility"));
-            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Edit, L("EditFacility"));
-            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Delete, L("DeleteFacility"));
+            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Create, L("CreateNewFacility"),multiTenancySides: MultiTenancySides.Tenant);
+            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Edit, L("EditFacility"),multiTenancySides: MultiTenancySides.Tenant);
+            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Delete, L("DeleteFacility"),multiTenancySides: MultiTenancySides.Tenant);
 
             var shipper = pages.CreateChildPermission(AppPermissions.App_Shipper, L("Shipper"));
             var carrier = pages.CreateChildPermission(AppPermissions.App_Carrier, L("Carrier"));
