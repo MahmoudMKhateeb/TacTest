@@ -457,7 +457,7 @@ namespace TACHYON.Tracking
             trip.Status = ShippingRequestTripStatus.InTransit;
             trip.StartTripDate = Clock.Now;
 
-            await StartTransition(routeStart, new Point(Input.lat, Input.lng));
+            await StartTransition(routeStart, new Point(Input.lng, Input.lat));
             // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
         }
 
