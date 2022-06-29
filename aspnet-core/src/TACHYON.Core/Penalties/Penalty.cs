@@ -6,17 +6,18 @@ using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
 using TACHYON.Routs.RoutPoints;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Penalties
 {
     [Table("Penalties")]
-    public class Penalty : FullAuditedEntity , IMustHaveTenant
+    public class Penalty : FullAuditedEntity , IMustHaveTenant, IHasIsDrafted
     {
-        public Penalty()
-        {
-            Status = PenaltyStatus.New;
-        }
+        //public Penalty()
+        //{
+        //    Status = PenaltyStatus.New;
+        //}
         public string PenaltyName { get; set; }
         public string PenaltyDescrption { get; set; }
         public PenaltyType Type { get; set; }
@@ -25,7 +26,7 @@ namespace TACHYON.Penalties
         public int TenantId { get; set; }
         [ForeignKey(nameof(TenantId))]
         public Tenant Tenant { get; set; }
-        public int DestinationTenantId { get; set; }
+        public int? DestinationTenantId { get; set; }
         [ForeignKey(nameof(DestinationTenantId))]
         public Tenant DestinationTenantFK { get; set; }
         public int? ShippingRequestTripId { get; set; }
@@ -52,5 +53,7 @@ namespace TACHYON.Penalties
         public decimal VatPostCommestion { get; set; }
         public decimal TotalAmount { get; set; }
         public decimal ItmePrice { get; set; }
+        public bool IsDrafted { get; set; }
+        public decimal CommissionPercentageOrAddValue { get; set; }
     }
 }

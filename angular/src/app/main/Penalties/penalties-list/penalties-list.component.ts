@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
-import { CommonLookupServiceProxy, ISelectItemDto, PenaltiesServiceProxy, PenaltyType } from '@shared/service-proxies/service-proxies';
+import { CommonLookupServiceProxy, ISelectItemDto, PenaltiesServiceProxy, PenaltyStatus, PenaltyType } from '@shared/service-proxies/service-proxies';
 import { DxDataGridComponent } from 'devextreme-angular';
 import CustomStore from 'devextreme/data/custom_store';
 import { LoadOptions } from 'devextreme/data/load_options';
@@ -17,6 +17,7 @@ export class PenaltiesListComponent extends AppComponentBase implements OnInit {
   Tenants: ISelectItemDto[];
   dataSource: any = {};
   PenaltyType: any;
+  PenaltyTypeEnum = PenaltyStatus;
   advancedFiltersAreShown = false;
   constructor(
     injector: Injector,
@@ -77,6 +78,23 @@ export class PenaltiesListComponent extends AppComponentBase implements OnInit {
           )
           .subscribe((result) => {
             this.notify.info(this.l('SuccessfullyCanceld'));
+          });
+      }
+    });
+  }
+
+  Confirm(id: number): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._PenaltiesServiceProxy
+          .confirmPenalty(id)
+          .pipe(
+            finalize(() => {
+              this.refreshDataGrid();
+            })
+          )
+          .subscribe((result) => {
+            this.notify.info(this.l('SuccessfullyConfirmed'));
           });
       }
     });

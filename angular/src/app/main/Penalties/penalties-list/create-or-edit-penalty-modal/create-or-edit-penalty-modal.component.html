@@ -36,12 +36,13 @@
                   [styleClass]="'CompanyInput'"
                   class="form-control"
                   required
+                  (onChange)="GetWaybillsByCompany()"
                 >
                 </p-dropdown>
               </div>
             </div>
             <div class="col-lg-12 mt-4">
-              <label>{{ l('DestinationCompany') }} <span class="required-fileds">*</span></label>
+              <label>{{ l('DestinationCompany') }}</label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
                 <p-dropdown
                   #Company="ngModel"
@@ -56,7 +57,27 @@
                   optionValue="id"
                   [styleClass]="'CompanyInput'"
                   class="form-control"
-                  required
+                  (onChange)="Calculator()"
+                >
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="col-lg-12 mt-4">
+              <label>{{ l('Waybill') }}</label>
+              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
+                <p-dropdown
+                  #Waybill="ngModel"
+                  name="wabills"
+                  [options]="Allwaybills"
+                  [(ngModel)]="form.shippingRequestTripId"
+                  optionLabel="waybillNumber"
+                  [filter]="true"
+                  filterBy="waybillNumber"
+                  [showClear]="true"
+                  placeholder="{{ l('SelectWaybill') }}"
+                  optionValue="id"
+                  [styleClass]="'CompanyInput'"
+                  class="form-control"
                 >
                 </p-dropdown>
               </div>
@@ -75,7 +96,7 @@
               />
             </div>
             <div class="col-lg-12 mt-4">
-              <label>{{ l('PenaltyDescrption') }} <span class="required-fileds">*</span></label>
+              <label>{{ l('PenaltyDescription') }} <span class="required-fileds">*</span></label>
               <input
                 #penaltyDescrption="ngModel"
                 type="text"
@@ -86,34 +107,122 @@
                 [class.is-invalid]="penaltyDescrption.invalid && (penaltyDescrption.dirty || penaltyDescrption.touched)"
               />
             </div>
-            <div class="col-lg-12 mt-4">
-              <label>{{ l('Amount') }} <span class="required-fileds">*</span></label>
+            <div class="col-lg-6 mt-4">
+              <label>{{ l('Price') }} <span class="required-fileds">*</span></label>
               <input
-                #totalAmount="ngModel"
+                #ItmePrice="ngModel"
                 type="number"
                 class="form-control"
-                [(ngModel)]="form.totalAmount"
-                name="totalAmount"
-                [class.is-valid]="totalAmount.valid && (totalAmount.dirty || totalAmount.touched)"
-                [class.is-invalid]="totalAmount.invalid && (totalAmount.dirty || totalAmount.touched)"
+                [(ngModel)]="form.itmePrice"
+                name="ItmePrice"
+                [class.is-valid]="ItmePrice.valid && (ItmePrice.dirty || ItmePrice.touched)"
+                [class.is-invalid]="ItmePrice.invalid && (ItmePrice.dirty || ItmePrice.touched)"
+                (change)="Calculator()"
+                min="1"
+                required
               />
             </div>
-            <div class="col-lg-12 mt-4" *ngIf="!feature.isEnabled('App.Carrier')">
+            <div class="col-lg-6 mt-4" *ngIf="!feature.isEnabled('App.Carrier')">
               <label>{{ l('commissionType') }}:</label>
-              <select class="form-control" name="CommissionType" [(ngModel)]="form.commissionType">
+              <select class="form-control" name="CommissionType" [(ngModel)]="form.commissionType" (change)="Calculator()">
                 <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
               </select>
             </div>
-            <div class="col-lg-12 mt-4" *ngIf="!feature.isEnabled('App.Carrier')">
+            <div class="col-lg-6 mt-4" *ngIf="!feature.isEnabled('App.Carrier')">
               <label>{{ l('commissionTypeValue') }}:</label>
               <input
                 type="number"
+                #commissionPercentageOrAddValue1="ngModel"
                 min="1"
+                required
                 class="form-control"
                 placeholder="Value"
+                (change)="Calculator()"
                 name="commissionPercentageOrAddValue"
                 [(ngModel)]="form.commissionPercentageOrAddValue"
+                [class.is-valid]="
+                  commissionPercentageOrAddValue1.valid && (commissionPercentageOrAddValue1.dirty || commissionPercentageOrAddValue1.touched)
+                "
+                [class.is-invalid]="
+                  commissionPercentageOrAddValue1.invalid && (commissionPercentageOrAddValue1.dirty || commissionPercentageOrAddValue1.touched)
+                "
               />
+            </div>
+            <div class="col-lg-6 mt-4" *ngIf="!feature.isEnabled('App.Carrier')">
+              <label>{{ l('commissionAmount') }}:</label>
+              <input type="number" min="1" class="form-control" name="commissionAmount" [(ngModel)]="CommissionAmount" disabled />
+            </div>
+            <div class="col-lg-12 mt-4">
+              <table class="table">
+                <thead>
+                  <tr class="table-active">
+                    <th></th>
+                    <th scope="col">{{ l('Price') }}</th>
+                    <th scope="col">{{ l('VatAmount') }}</th>
+                    <th scope="col">{{ l('TotalAmount') }}</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{ l('Company') }}</td>
+                    <td><input [(ngModel)]="CompanyPrice" disabled class="form-control" type="number" name="CompanyPrice" id="CompanyPrice" /></td>
+                    <td>
+                      <input
+                        [(ngModel)]="CompanyVatAmount"
+                        disabled
+                        class="form-control"
+                        type="number"
+                        name="CompanyVatAmount"
+                        id="CompanyVatAmount"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        [(ngModel)]="TotalCompanyPrice"
+                        class="form-control"
+                        type="number"
+                        name="CompanyTotalAmount"
+                        id="CompanyTotalAmount"
+                        disabled
+                      />
+                    </td>
+                  </tr>
+                  <tr *ngIf="form.destinationTenantId">
+                    <td>{{ l('DestinationCompany') }}</td>
+                    <td>
+                      <input
+                        [(ngModel)]="DestinationCompanyPrice"
+                        disabled
+                        class="form-control"
+                        type="number"
+                        name="DestinationCompanyPrice"
+                        id="DestinationCompanyPrice"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        [(ngModel)]="DestinationCompanyVatAmount"
+                        disabled
+                        class="form-control"
+                        type="number"
+                        name="DestinationCompanyVatAmount"
+                        id="DestinationCompanyVatAmount"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        [(ngModel)]="TotalDestinationCompanyPrice"
+                        class="form-control"
+                        type="number"
+                        name="DestinationCompanyTotalAmount"
+                        id="DestinationCompanyTotalAmount"
+                        disabled
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <!--  end :: Body-->
           </div>

@@ -114,6 +114,11 @@ namespace TACHYON
         {
             CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
         }
+
+        protected virtual void DisableDraftedFilter()
+        {
+            CurrentUnitOfWork.DisableFilter("IHasIsDrafted");
+        }
         protected virtual async Task DisableTenancyFilterIfTachyonDealerOrHost() 
         {
             if (!AbpSession.TenantId.HasValue || await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))

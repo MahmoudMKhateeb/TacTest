@@ -14,5 +14,6 @@ namespace TACHYON.Penalties
         Task<LoadResult> GetAll(LoadOptionsInput input);
         Task CreateOrEdit(CreateOrEditPenaltyDto input);
         Task<CreateOrEditPenaltyDto> GetPenaltyForEditDto(long Id);
+        Task ConfirmPenalty(long id);
     }
 }

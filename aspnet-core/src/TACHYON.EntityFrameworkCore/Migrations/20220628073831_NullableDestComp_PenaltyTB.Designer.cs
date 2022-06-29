@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220628073831_NullableDestComp_PenaltyTB")]
+    partial class NullableDestComp_PenaltyTB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4309,9 +4311,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("AmountPreCommestion")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("CommissionPercentageOrAddValue")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<byte>("CommissionType")

@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -16,6 +17,7 @@ using TACHYON.Configuration;
 using TACHYON.Features;
 using TACHYON.MultiTenancy;
 using TACHYON.Penalties.Dto;
+using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Penalties
 {
@@ -26,18 +28,24 @@ namespace TACHYON.Penalties
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly PenaltyManager _penaltyManager;
         private readonly ISettingManager _settingManager;
-        public PenaltiesAppService(IRepository<Penalty> penaltyRepository, IRepository<Tenant> tenantRepository, IRepository<PenaltyComplaint> penaltyComplaintRepository, PenaltyManager penaltyManager, ISettingManager settingManager)
+        private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
+        public PenaltiesAppService(IRepository<Penalty> penaltyRepository, IRepository<Tenant> tenantRepository, IRepository<PenaltyComplaint> penaltyComplaintRepository, PenaltyManager penaltyManager, ISettingManager settingManager, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
         {
             _penaltyRepository = penaltyRepository;
             _tenantRepository = tenantRepository;
             _penaltyComplaintRepository = penaltyComplaintRepository;
             _penaltyManager = penaltyManager;
             _settingManager = settingManager;
+            _shippingRequestTripRepository = shippingRequestTripRepository;
         }
 
         #region MainFunctions
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
         {
+            if(await IsTachyonDealer())
+            {
+                DisableDraftedFilter();
+            }
             var query = _penaltyRepository
                            .GetAll()
                            .Include(x=> x.ShippingRequestTripFK)
@@ -68,15 +76,38 @@ namespace TACHYON.Penalties
         public async Task<CreateOrEditPenaltyDto> GetPenaltyForEditDto(long Id)
         {
             DisableTenancyFilters();
-            var penalty = await _penaltyRepository.FirstOrDefaultAsync(x => x.Id == Id);
+            if(await IsTachyonDealer())
+            {
+                DisableDraftedFilter();
+            }
+            var penalty = await _penaltyRepository.FirstOrDefaultAsync(x => x.Id == Id && x.Status==PenaltyStatus.Draft);
 
             if (penalty == null)
                 throw new UserFriendlyException("ThePenaltyDoseNotFounded");
 
             return ObjectMapper.Map<CreateOrEditPenaltyDto>(penalty);
         }
+
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        public async Task ConfirmPenalty(long id)
+        {
+            DisableDraftedFilter();
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            var penalty = await _penaltyRepository.FirstOrDefaultAsync(x => x.Id == id && x.Status==PenaltyStatus.Draft);
+            if(penalty== null)
+            {
+                throw new UserFriendlyException(L("PenaltyNotFound"));
+            }
+            penalty.Status = PenaltyStatus.Confirmed;
+            penalty.IsDrafted = false;
+        }
+
         public async Task<PenaltyComplaintDto> GetPenaltyComplaintForView(int id)
         {
+            if(await IsTachyonDealer())
+            {
+                DisableDraftedFilter();
+            }
             var penaltyComplaint = await _penaltyComplaintRepository.FirstOrDefaultAsync(x => x.PenaltyId == id);
 
             if (penaltyComplaint == null)
@@ -84,6 +115,7 @@ namespace TACHYON.Penalties
 
             return ObjectMapper.Map<PenaltyComplaintDto>(penaltyComplaint);
         }
+
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task AcceptComplaint(int id)
         {
@@ -98,6 +130,7 @@ namespace TACHYON.Penalties
             penalty.Status = PenaltyStatus.Canceled;
             penalty.PenaltyComplaintFK.Status = ComplaintStatus.Accepted;
         }
+
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task RejectComplaint(RejectComplaintDto input)
         {
@@ -115,21 +148,34 @@ namespace TACHYON.Penalties
             var penaltyComplaint = ObjectMapper.Map<PenaltyComplaint>(input);
             await _penaltyComplaintRepository.InsertAsync(penaltyComplaint);
         }
+
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task CancelPenalty(int id)
         {
             DisableTenancyFilters();
+            DisableDraftedFilter();
+
             var penalty = await _penaltyRepository
                .GetAllIncluding(x => x.PenaltyComplaintFK)
-               .Where(x => x.Id == id).FirstOrDefaultAsync();
+               .Where(x => x.Id == id && x.IsDrafted==true && x.Status != PenaltyStatus.Canceled)
+               .FirstOrDefaultAsync();
 
             if (penalty == null)
-                throw new UserFriendlyException("ThePenaltyDoseNotFounded");
+                throw new UserFriendlyException("ThePenaltyDoesNotFounded");
 
-            if (penalty.Status == PenaltyStatus.Canceled)
-                throw new UserFriendlyException("ThePenaltyAlreadyCanceled");
 
             penalty.Status = PenaltyStatus.Canceled;
+        }
+
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        public async Task<List<GetAllWaybillsDto>> GetAllWaybillsByCompany(int companyTenantId, int? destinationCompanyTenantId)
+        {
+            DisableTenancyFilters();
+            var trips= await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.ShippingRequestFk.TenantId == companyTenantId)
+                .WhereIf(destinationCompanyTenantId != null, x => x.ShippingRequestFk.CarrierTenantId == destinationCompanyTenantId)
+                .ToListAsync();
+            return ObjectMapper.Map<List<GetAllWaybillsDto>>(trips);
         }
         #endregion
 
@@ -150,13 +196,16 @@ namespace TACHYON.Penalties
             var value = model.CommissionPercentageOrAddValue;
             var taxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
             var commestion =  _penaltyManager.CalculateValues(model.TotalAmount, model.CommissionType, value, value, value, taxVat);
-            var mapper = ObjectMapper.Map(commestion,peanlty);
-            await _penaltyRepository.InsertAsync(mapper);
+            var penalty = ObjectMapper.Map(commestion,peanlty);
+            penalty.IsDrafted = true;
+            await _penaltyRepository.InsertAsync(penalty);
         }
         private async Task Update(CreateOrEditPenaltyDto model)
         {
             DisableTenancyFilters();
-            var pnealty = await _penaltyRepository.FirstOrDefaultAsync(x => x.Id == model.Id.Value);
+            DisableDraftedFilter();
+
+            var pnealty = await _penaltyRepository.FirstOrDefaultAsync(x => x.Id == model.Id.Value && x.IsDrafted == true);
             ObjectMapper.Map(model, pnealty);
         }
         #endregion
