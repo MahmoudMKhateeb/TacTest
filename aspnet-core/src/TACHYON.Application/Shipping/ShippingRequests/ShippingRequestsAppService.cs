@@ -929,7 +929,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 return null;
             }
 
-            GetShippingRequestForEditOutput output = new GetShippingRequestForEditOutput { ShippingRequest = Request };
+            GetShippingRequestForEditOutput output = new GetShippingRequestForEditOutput { ShippingRequest = Request,TotalOffers = shippingRequest.TotalOffers};
             return output;
             // }
         }
