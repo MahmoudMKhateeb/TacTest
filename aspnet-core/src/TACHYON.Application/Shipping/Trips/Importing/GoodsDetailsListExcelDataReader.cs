@@ -82,7 +82,7 @@ namespace TACHYON.Shipping.Trips.Importing
                 //2
                 var GoodsSubCategory = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                    row, 2, "Goods Sub Category*", exceptionMessage);
-                goodsDetail.GoodsSubCategory = GoodsSubCategory;
+                goodsDetail.GoodsSubCategory = GoodsSubCategory.Trim();
 
                 var GoodsCategoryId=GetGoodsCategoryId(GoodsSubCategory, exceptionMessage);
                 if (GoodsCategoryId != null)
