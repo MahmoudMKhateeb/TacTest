@@ -55,9 +55,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   pickUpPointSender: string;
   activeTripId: any;
   type = 'Trip';
-
   shippingRequestTripStatusEnum = ShippingRequestTripStatus;
   expectedDeliveryTime: moment.Moment;
+  expectedDeliveryTimeLoading: boolean;
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -228,10 +228,12 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   updateTripExpectedDeliveryTime() {
     if (!isNotNullOrUndefined(this.currentTripId)) return;
     // console.log('Trip Expected Delivery time Was Updated');
+    this.expectedDeliveryTimeLoading = true;
     let body = new UpdateExpectedDeliveryTimeInput();
     body.id = this.currentTripId;
     body.expectedDeliveryTime = this.expectedDeliveryTime;
     this._shippingRequestTripsService.updateExpectedDeliveryTimeForTrip(body).subscribe((res) => {
+      this.expectedDeliveryTimeLoading = false;
       this.notify.success(this.l('TripExpectedDateWasUpdated'));
     });
   }
