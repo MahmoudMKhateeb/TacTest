@@ -94,7 +94,7 @@
             <div class="row col-lg-12 mt-4">
               <div class="col-sm-12">
                 <!-- *ngIf="allWaybills.length > 0" -->
-                <table *ngIf="form.invoiceNumber" class="table" [busyIf]="waybillsLoading">
+                <table *ngIf="allWaybills.length > 0" class="table" [busyIf]="waybillsLoading">
                   <thead>
                     <tr class="table-active">
                       <th scope="col" width="20%">{{ l('WaybillNumber') }}</th>
@@ -159,7 +159,7 @@
                     </tr>
                   </tbody>
                 </table>
-                <table *ngIf="!form.invoiceNumber" class="table">
+                <table *ngIf="allWaybills == null || allWaybills.length == 0" class="table">
                   <thead>
                     <tr class="table-active">
                       <th scope="col">{{ l('Price') }}</th>
@@ -294,7 +294,7 @@
                 id="totalValue"
                 class="form-control"
                 [required]="!selectedWaybills"
-                [disabled]="selectedWaybills"
+                disabled
                 [class.is-valid]="totalValue.valid && (totalValue.dirty || totalValue.touched)"
                 [class.is-invalid]="totalValue.invalid && (totalValue.dirty || totalValue.touched)"
                 [(ngModel)]="form.totalValue"

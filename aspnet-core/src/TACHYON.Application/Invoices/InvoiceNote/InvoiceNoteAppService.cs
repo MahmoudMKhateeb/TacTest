@@ -257,7 +257,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         {
             DisableTenancyFilters();
             var invoiceTenant = await _invoiceReposity.FirstOrDefaultAsync(x => x.Id == id);
-            if (invoiceTenant != null)
+            if (invoiceTenant != null )
             {
                 return await _invoiveTripRepository.GetAll()
                .Where(x => x.InvoiceId == id)

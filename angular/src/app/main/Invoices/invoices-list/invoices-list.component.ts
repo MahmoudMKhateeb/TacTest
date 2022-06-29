@@ -4,6 +4,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   CommonLookupServiceProxy,
   InvoiceAccountType,
+  InvoiceChannel,
   InvoiceFilterInput,
   InvoiceReportServiceServiceProxy,
   InvoiceServiceProxy,
@@ -40,6 +41,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   toDate: moment.Moment | null | undefined;
   dueFromDate: moment.Moment | null | undefined;
   dueToDate: moment.Moment | null | undefined;
+  InvoiceChannelEnum = InvoiceChannel;
 
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive = false;
