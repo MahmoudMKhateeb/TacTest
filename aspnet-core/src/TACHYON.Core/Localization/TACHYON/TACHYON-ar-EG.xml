@@ -2765,6 +2765,10 @@
 		<text name="NoCurrentLoads">لا توجد حمولات حالية</text>
 		<text name="NoUpcomingLoads">لا توجد حمولات قادمة</text>
 		<text name="NoPastLoad">لا توجد حمولات سابقة</text>
-        
+		<text name="ExpectedDeliveryTime">وقت التسليم المتوقع</text>
+		<text name="DeliveryStatus">حالة التسليم</text>
+		<text name="Delayed">متأخر</text>
+		<text name="OnTime">في الوقت المحدد</text>
+		<text name="Unknown">غير معروف</text>
 	</texts>
 </localizationDictionary>

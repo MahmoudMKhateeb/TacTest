@@ -70,7 +70,7 @@
               </div>
               <div class="col-md-2">
                 <div class="form-group">
-                  <label for="originCity">{{ l('originCity') }}</label>
+                  <label for="originCity">{{ l('OriginCity') }}</label>
                   <select name="originCity" id="originCity" [(ngModel)]="cityFillter" class="form-control" (change)="getTableRecords()">
                     <option value="" selected>
                       {{ 'All' | localize }}
@@ -83,7 +83,7 @@
               </div>
               <div class="col-md-2">
                 <div class="form-group">
-                  <label for="destCity">{{ l('destinationCity') }}</label>
+                  <label for="destCity">{{ l('DestinationCity') }}</label>
                   <select name="destCity" id="destCity" [(ngModel)]="destCityFilter" class="form-control" (change)="getTableRecords()">
                     <option value="" selected>
                       {{ 'All' | localize }}
@@ -96,7 +96,7 @@
               </div>
               <div class="col-md-2">
                 <div class="form-group">
-                  <label for="waybill">{{ l('waybill') }}</label>
+                  <label for="waybill">{{ l('WaybillNumber') }}</label>
                   <input type="text" class="form-control" id="waybill" name="waybill" [(ngModel)]="waybillNumber" (change)="getTableRecords()" />
                 </div>
               </div>
@@ -155,15 +155,15 @@
           <ng-template pTemplate="header">
             <tr>
               <th pSortableColumn="Source">
-                {{ l('originCity') }}
+                {{ l('OriginCity') }}
                 <p-sortIcon field="Source"></p-sortIcon>
               </th>
               <th pSortableColumn="Destination">
-                {{ l('destinationCity') }}
+                {{ l('DestinationCity') }}
                 <p-sortIcon field="Destination"></p-sortIcon>
               </th>
               <th pSortableColumn="waybillNumber">
-                {{ l('waybillNumber') }}
+                {{ l('WaybillNumber') }}
                 <p-sortIcon field="waybillNumber"></p-sortIcon>
               </th>
               <th pSortableColumn="truckType">
@@ -171,14 +171,14 @@
                 <p-sortIcon field="truckType"></p-sortIcon>
               </th>
               <th pSortableColumn="driverName">
-                {{ l('driverName') }}
+                {{ l('DriverName') }}
                 <p-sortIcon field="driverName"></p-sortIcon>
               </th>
               <th>
-                {{ l('deliveryStatus') }}
+                {{ l('DeliveryStatus') }}
               </th>
               <th>
-                {{ l('expectedDeliveryTime') }}
+                {{ l('ExpectedDeliveryTime') }}
               </th>
               <th>{{ l('Show') }}</th>
               <!--            <th>{{ l('tag') }}</th>-->
@@ -211,9 +211,9 @@
                 <span
                   class="label label-xl label-inline mr-2"
                   [ngClass]="{
-                    'label-danger': isTripDelayed(record.trackingMapDto.expectedDeliveryTime) === 'Delayed',
-                    'label-success': isTripDelayed(record.trackingMapDto.expectedDeliveryTime) === 'OnTime',
-                    'label-warning': isTripDelayed(record.trackingMapDto.expectedDeliveryTime) === 'Unknown'
+                    'label-danger': isTripDelayed(record.trackingMapDto.expectedDeliveryTime) === l('Delayed'),
+                    'label-success': isTripDelayed(record.trackingMapDto.expectedDeliveryTime) === l('OnTime'),
+                    'label-warning': isTripDelayed(record.trackingMapDto.expectedDeliveryTime) === l('Unknown')
                   }"
                   >{{ isTripDelayed(record.trackingMapDto.expectedDeliveryTime) }}</span
                 >

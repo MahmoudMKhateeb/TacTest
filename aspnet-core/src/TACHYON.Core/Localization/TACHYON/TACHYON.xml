@@ -3016,5 +3016,12 @@
 		<text name="NoUpcomingLoads">No upcoming loads</text>
 		<text name="NoPastLoad">No past loads</text>
 		<text name="EntityWithIdXIsNotFound">The entity with id {0} is not found</text>
+		<text name="ExpectedDeliveryTime">Expected Delivery Time</text>
+		<text name="DeliveryStatus">Delivery Status</text>
+		<text name="Delayed">Delayed</text>
+		<text name="OnTime">On Time</text>
+		<text name="Unknown">Unknown</text>
+
+		
 	</texts>
 </localizationDictionary>
