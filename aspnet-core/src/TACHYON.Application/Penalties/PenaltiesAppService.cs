@@ -5,12 +5,15 @@ using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TACHYON.Common;
 using TACHYON.Configuration;
@@ -40,20 +43,24 @@ namespace TACHYON.Penalties
         #region MainFunctions
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
         {
-            if(await IsTachyonDealer())
+            var isTms = await IsEnabledAsync(AppFeatures.TachyonDealer);
+            
+            if (!AbpSession.TenantId.HasValue || isTms)
             {
-                DisableDraftedFilter();
+                DisableTenancyFilters();
+                if (isTms)
+                    DisableDraftedFilter();
             }
-            var query = _penaltyRepository
+            var options = JsonConvert.DeserializeObject<DataSourceLoadOptionsBase>(input.LoadOptions);
+
+            var query = await _penaltyRepository
                            .GetAll()
                            .Include(x=> x.ShippingRequestTripFK)
                            .ProjectTo<GetAllPenaltiesDto>(AutoMapperConfigurationProvider)
-                           .AsNoTracking();
-            if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
-            {
-                DisableTenancyFilters();
-            }
-            return await LoadResultAsync<GetAllPenaltiesDto>(query, input.LoadOptions);
+                           .Skip(options.Skip).Take(options.Take)
+                           .AsNoTracking().ToListAsync();
+
+            return LoadResult(query, input.LoadOptions);
         }
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task CreateOrEdit(CreateOrEditPenaltyDto input)
