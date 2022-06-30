@@ -13,5 +13,6 @@ namespace TACHYON.Dashboards.Carrier
         Task<ActivityItemsDto> GetTrucksActivity();
         Task<List<MostTenantWorksListDto>> GetMostWorkedWithShippers();
         Task<List<ChartCategoryPairedValuesDto>> GetMostVasesUsedByShippers();
+        Task<List<ChartCategoryPairedValuesDto>> GetMostPricePackageByShippers();
     }
 }
