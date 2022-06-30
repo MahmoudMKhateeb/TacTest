@@ -731,6 +731,24 @@ namespace TACHYON.Notifications
                 notificationData, userIds: tenantsAdmin);
         }
 
+        public async Task NotifyHostAndTmsWhenPenaltyComplaintAdded(int tenantId, int penaltyId)
+        {
+            var tms = await GetAdminTachyonDealerAsync();
+            var host = await GetTenantAdminUser(null);
+            var companyName = await GetCompanyName(tenantId);
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("PenaltyComplaintAddedMsg",companyName),
+                    TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "penaltyId", penaltyId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.PenaltyComplaintAdded,
+                notificationData, userIds: new []{tms,host});
+        }
+
         public async Task NotfiyCarrierWhenReceiveBidPricePackage(int carrierTenantId, string SenderTenantName, string pricePackageId, long directRequestId, string referanceNumber)
         {
 
@@ -1519,9 +1537,15 @@ namespace TACHYON.Notifications
 
             return identifier;
         }
+        
+        private async Task<string> GetCompanyName(int tenantId)
+        {
+            return await _tenantsRepository.GetAll().Where(x=> x.Id == tenantId)
+                 .Select(x=> x.companyName).FirstOrDefaultAsync();
+        }
 
         [UnitOfWork]
-        protected virtual async Task<UserIdentifier> GetTenantAdminUser(int tenantId)
+        protected virtual async Task<UserIdentifier> GetTenantAdminUser(int? tenantId)
         {
             DisableTenancyFilters();
 

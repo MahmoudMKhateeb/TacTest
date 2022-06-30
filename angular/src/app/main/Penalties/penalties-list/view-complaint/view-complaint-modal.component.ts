@@ -15,7 +15,7 @@ export class ViewComplaintModalComponent extends AppComponentBase {
   active = false;
   saving: boolean;
   needEnterRejectReason: boolean;
-  penaltyComplaint: PenaltyComplaintDto;
+  penaltyComplaint = new PenaltyComplaintDto();
   rejectComplaint: RejectComplaintDto;
 
   constructor(inject: Injector, private _PenaltiesServiceProxy: PenaltiesServiceProxy) {
@@ -60,8 +60,8 @@ export class ViewComplaintModalComponent extends AppComponentBase {
     this.rejectComplaint.id = id;
     this._PenaltiesServiceProxy.getPenaltyComplaintForView(id).subscribe((result) => {
       this.penaltyComplaint = result;
+      this.modal.show();
     });
-    this.modal.show();
   }
 
   close() {

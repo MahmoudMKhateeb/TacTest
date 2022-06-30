@@ -2765,6 +2765,6 @@
 		<text name="NoCurrentLoads">لا توجد حمولات حالية</text>
 		<text name="NoUpcomingLoads">لا توجد حمولات قادمة</text>
 		<text name="NoPastLoad">لا توجد حمولات سابقة</text>
-        
+		<text name="PenaltyComplaintAddedMsg">أضاف {0} شكوى إلى العقوبة. انقر هنا لمزيد من التفاصيل</text>
 	</texts>
 </localizationDictionary>

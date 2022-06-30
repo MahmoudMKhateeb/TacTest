@@ -1,5 +1,4 @@
 ﻿using Abp.Application.Features;
-using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
@@ -9,16 +8,14 @@ using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using TACHYON.Common;
 using TACHYON.Configuration;
 using TACHYON.Features;
 using TACHYON.MultiTenancy;
+using TACHYON.Notifications;
 using TACHYON.Penalties.Dto;
 using TACHYON.Shipping.ShippingRequestTrips;
 
@@ -31,13 +28,15 @@ namespace TACHYON.Penalties
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly PenaltyManager _penaltyManager;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
-        public PenaltiesAppService(IRepository<Penalty> penaltyRepository, IRepository<Tenant> tenantRepository, IRepository<PenaltyComplaint> penaltyComplaintRepository, PenaltyManager penaltyManager,IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+        private readonly IAppNotifier _appNotifier;
+        public PenaltiesAppService(IRepository<Penalty> penaltyRepository, IRepository<Tenant> tenantRepository, IRepository<PenaltyComplaint> penaltyComplaintRepository, PenaltyManager penaltyManager,IRepository<ShippingRequestTrip> shippingRequestTripRepository, IAppNotifier appNotifier)
         {
             _penaltyRepository = penaltyRepository;
             _tenantRepository = tenantRepository;
             _penaltyComplaintRepository = penaltyComplaintRepository;
             _penaltyManager = penaltyManager;
             _shippingRequestTripRepository = shippingRequestTripRepository;
+            _appNotifier = appNotifier;
         }
 
         #region MainFunctions
@@ -153,6 +152,9 @@ namespace TACHYON.Penalties
             var penaltyComplaint = ObjectMapper.Map<PenaltyComplaint>(input);
             var complaintId = await _penaltyComplaintRepository.InsertAndGetIdAsync(penaltyComplaint);
             _penaltyRepository.Update(input.PenaltyId,x=> x.PenaltyComplaintId = complaintId);
+            
+            if (AbpSession.TenantId.HasValue)
+                await _appNotifier.NotifyHostAndTmsWhenPenaltyComplaintAdded(AbpSession.TenantId.Value, input.PenaltyId);
         }
 
         [RequiresFeature(AppFeatures.TachyonDealer)]

@@ -3015,5 +3015,6 @@
 		<text name="NoCurrentLoads">No current loads</text>
 		<text name="NoUpcomingLoads">No upcoming loads</text>
 		<text name="NoPastLoad">No past loads</text>
+		<text name="PenaltyComplaintAddedMsg">{0} has added a complaint to the penalty. Click here for more details</text>
 	</texts>
 </localizationDictionary>
