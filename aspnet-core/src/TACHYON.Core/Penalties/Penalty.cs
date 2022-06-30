@@ -43,6 +43,9 @@ namespace TACHYON.Penalties
         public long? SubmitInvoiceId {get; set; }
         [ForeignKey(nameof(SubmitInvoiceId))]
         public SubmitInvoice Submitinvoice { get; set; }
+        public int? PenaltyComplaintId { get; set; }
+        
+        [ForeignKey(nameof(PenaltyComplaintId))]
         public PenaltyComplaint PenaltyComplaintFK { get; set; }
         public decimal CommissionValue { get; set; }
         public PriceOfferCommissionType CommissionType { get; set; }

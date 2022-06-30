@@ -27,11 +27,11 @@ export class RegisterComplaintModalComponent extends AppComponentBase {
       .pipe(
         finalize(() => {
           this.saving = false;
-          this.notify.success('SavedSuccessfully');
-          this.modalSave.emit();
         })
       )
       .subscribe(() => {
+        this.notify.success('SavedSuccessfully');
+        this.modalSave.emit();
         this.close();
       });
   }

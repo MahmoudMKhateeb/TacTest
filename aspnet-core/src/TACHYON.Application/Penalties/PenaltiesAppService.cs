@@ -27,15 +27,13 @@ namespace TACHYON.Penalties
         private readonly IRepository<PenaltyComplaint> _penaltyComplaintRepository;
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly PenaltyManager _penaltyManager;
-        private readonly ISettingManager _settingManager;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
-        public PenaltiesAppService(IRepository<Penalty> penaltyRepository, IRepository<Tenant> tenantRepository, IRepository<PenaltyComplaint> penaltyComplaintRepository, PenaltyManager penaltyManager, ISettingManager settingManager, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+        public PenaltiesAppService(IRepository<Penalty> penaltyRepository, IRepository<Tenant> tenantRepository, IRepository<PenaltyComplaint> penaltyComplaintRepository, PenaltyManager penaltyManager,IRepository<ShippingRequestTrip> shippingRequestTripRepository)
         {
             _penaltyRepository = penaltyRepository;
             _tenantRepository = tenantRepository;
             _penaltyComplaintRepository = penaltyComplaintRepository;
             _penaltyManager = penaltyManager;
-            _settingManager = settingManager;
             _shippingRequestTripRepository = shippingRequestTripRepository;
         }
 
@@ -146,7 +144,8 @@ namespace TACHYON.Penalties
                 throw new UserFriendlyException(L(""));
 
             var penaltyComplaint = ObjectMapper.Map<PenaltyComplaint>(input);
-            await _penaltyComplaintRepository.InsertAsync(penaltyComplaint);
+            var complaintId = await _penaltyComplaintRepository.InsertAndGetIdAsync(penaltyComplaint);
+            _penaltyRepository.Update(input.PenaltyId,x=> x.PenaltyComplaintId = complaintId);
         }
 
         [RequiresFeature(AppFeatures.TachyonDealer)]
@@ -194,7 +193,7 @@ namespace TACHYON.Penalties
             var peanlty = ObjectMapper.Map<Penalty>(model);
             peanlty.CommissionType = PriceOffers.PriceOfferCommissionType.CommissionValue;
             var value = model.CommissionPercentageOrAddValue;
-            var taxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
+            var taxVat = SettingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
             var commestion =  _penaltyManager.CalculateValues(model.TotalAmount, model.CommissionType, value, value, value, taxVat);
             var penalty = ObjectMapper.Map(commestion,peanlty);
             penalty.IsDrafted = true;
