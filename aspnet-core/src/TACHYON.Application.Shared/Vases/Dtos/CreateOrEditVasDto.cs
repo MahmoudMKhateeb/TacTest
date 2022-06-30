@@ -13,6 +13,7 @@ namespace TACHYON.Vases.Dtos
         public string Key { get; set; }
         public bool HasAmount { get; set; }
         public bool HasCount { get; set; }
+        public bool IsAppearAmount { get; set; }
 
     }
 }

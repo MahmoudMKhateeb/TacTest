@@ -36,6 +36,7 @@ namespace TACHYON.AutoMapper.PriceOffers
                 .ForMember(dst => dst.ItemName, opt => opt.MapFrom(src => src.VasFk.Key))
                 .ForMember(dst => dst.PriceType, opt => opt.MapFrom(src => PriceOfferType.Vas))
                 .ForMember(dst => dst.Quantity, opt => opt.MapFrom(src => src.RequestMaxCount >= 1 ? src.RequestMaxCount : 1))
+                .ForMember(dst => dst.IsAppearAmount, opt => opt.MapFrom(src => src.VasFk.IsAppearAmount))
                 .ForMember(dst => dst.Amount, opt => opt.MapFrom(src => src.RequestMaxAmount >= 1 ? src.RequestMaxAmount : 1));
 
             CreateMap<ShippingRequest, GetShippingRequestForPriceOfferListDto>()

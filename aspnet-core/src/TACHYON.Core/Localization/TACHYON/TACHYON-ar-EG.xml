@@ -2761,6 +2761,7 @@
 		<text name="ViewAccidentDetails">عرض تفاصيل الحادث</text>
 		<text name="TripIncidentComments">تعليقات حادث الرحلة</text>
 		<text name="AddComment">إضافة تعليق</text>
+		<text name="AppearAmount">عرض القيمة</text>
         
 	</texts>
 </localizationDictionary>
