@@ -71,12 +71,23 @@
               <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"></dxi-column>
               <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"></dxi-column>
               <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('Status') }}"></dxi-column>
-
+              <dxi-column dataField="channel" cellTemplate="cellTemplate_Channel" caption="{{ l('label') }}"></dxi-column>
               <div *dxTemplate="let options of 'cellTemplate_isPaid'">
                 <span *ngIf="options.data.isPaid" class="badge badge-success badge-inline">{{ 'Paid' | localize }}</span>
                 <span *ngIf="!options.data.isPaid" class="badge badge-danger badge-inline">{{ 'UnPaid' | localize }}</span>
               </div>
-
+              <div *dxTemplate="let options of 'cellTemplate_Channel'">
+                <span style="width: 137px; text-align: center"
+                  ><span
+                    class="badge badge-inline"
+                    [ngClass]="{
+                      'badge-primary': options.data.channel == InvoiceChannelEnum.Trip,
+                      'badge-warning': options.data.channel == InvoiceChannelEnum.Penalty
+                    }"
+                    >{{ l(options.data.invoiceChannelTitle) }}</span
+                  ></span
+                >
+              </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
                   <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
