@@ -25,6 +25,7 @@ using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
+using TACHYON.PricePackages;
 using TACHYON.Routs.RoutTypes;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -36,7 +37,7 @@ using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Dashboards.Carrier
 {
-    [AbpAuthorize(AppPermissions.Pages_CarrierDashboard)]
+    //[AbpAuthorize(AppPermissions.Pages_CarrierDashboard)]
     public class CarrierDashboardAppService : TACHYONAppServiceBase, ICarrierDashboardAppService
     {
 
@@ -47,6 +48,7 @@ namespace TACHYON.Dashboards.Carrier
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IRepository<SubmitInvoice, long> _submitInvoiceRepository;
+        private readonly IRepository<NormalPricePackage> _pricePackageRepository;
 
         public CarrierDashboardAppService(
              IRepository<User, long> usersRepository,
@@ -55,7 +57,8 @@ namespace TACHYON.Dashboards.Carrier
              IRepository<ShippingRequestTrip> shippingRequestTripRepository,
              IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
              IRepository<PriceOffer, long> priceOfferRepository,
-             IRepository<SubmitInvoice, long> submitInvoiceRepository)
+             IRepository<SubmitInvoice, long> submitInvoiceRepository,
+             IRepository<NormalPricePackage> pricePackageRepository)
         {
             _usersRepository = usersRepository;
             _trucksRepository = trucksRepository;
@@ -64,6 +67,7 @@ namespace TACHYON.Dashboards.Carrier
             _shippingRequestVasRepository = shippingRequestVasRepository;
             _priceOfferRepository = priceOfferRepository;
             _submitInvoiceRepository = submitInvoiceRepository;
+            _pricePackageRepository = pricePackageRepository;
         }
 
 
@@ -376,6 +380,25 @@ namespace TACHYON.Dashboards.Carrier
         }
 
 
+        public async Task<List<ChartCategoryPairedValuesDto>> GetMostPricePackageByShippers()
+        {
+            //DisableTenancyFilters();
+
+            return (await _pricePackageRepository
+                    .GetAll()
+                    .AsNoTracking()
+                    //.Include(r => r.Tenant)
+                    .ToListAsync())
+                .GroupBy(r => new { r.DisplayName })
+                .Select(vas => new ChartCategoryPairedValuesDto()
+                {
+                    X = vas.Key.DisplayName,
+                    Y = vas.Count()
+                }).Distinct()
+                .OrderByDescending(r => r.Y)
+                .Take(5)
+                .ToList();
+        }
 
 
 
