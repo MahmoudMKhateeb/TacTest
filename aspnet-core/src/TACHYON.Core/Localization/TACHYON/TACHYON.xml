@@ -3018,5 +3018,6 @@
 		<text name="ShippingRequestAddedByTms">There's a new shipping request with reference number {0} added by the tachyon dealer</text>
 	<text name="CancellationRequestedByShipper">{0} request cancellation on a trip with waybill number {1} for request with reference number {2}</text>
 		<text name="EntityWithIdXIsNotFound">The entity with id {0} is not found</text>
+		<text name="EnglishLettersWithUnderscoreOnly">English letters with underscore only</text>
 	</texts>
 </localizationDictionary>
