@@ -151,7 +151,7 @@
                         </select>
                         <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
                       </div>
-                      <div class="col-lg-3">
+                      <div *ngIf="shippingRequestType == 'bidding'" class="col-lg-3">
                         <div class="form-group">
                           <hijri-gregorian-datepicker-test
                             [parentForm]="parentForm"
@@ -160,7 +160,7 @@
                             [readonly]="true"
                             [isRequired]="this.shippingRequestType == 'bidding'"
                             [minHijri]="todayHijri"
-                            [disabled]="shippingRequestType != 'bidding' || shippingRequest.id"
+                            [disabled]="totalOffers > 0"
                             [minGreg]="todayGregorian"
                             [selectedDate]="startBiddate"
                             (selectedDateChange)="validateBiddingDates($event, 'biddingStartDate')"
@@ -168,7 +168,7 @@
                           <span class="form-text text-muted">{{ l('SetBiddingStartDate') }}</span>
                         </div>
                       </div>
-                      <div class="col-lg-3">
+                      <div *ngIf="shippingRequestType == 'bidding'" class="col-lg-3">
                         <hijri-gregorian-datepicker-test
                           [parentForm]="parentForm"
                           [label]="l('BiddingEndDate')"

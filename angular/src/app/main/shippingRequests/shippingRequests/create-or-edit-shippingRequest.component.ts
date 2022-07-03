@@ -41,6 +41,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     // new BreadcrumbItem(this.l('Entity_Name_Plural_Here') + '' + this.l('Details')),
   ];
 
+  totalOffers: number;
   active = false;
   saving = false;
   shippingRequest: CreateOrEditShippingRequestDto = new CreateOrEditShippingRequestDto();
@@ -133,6 +134,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           console.log(this.selectedVases);
           this.selectedRouteType = result.shippingRequest.routeTypeId;
           this.active = true;
+          this.totalOffers = result.totalOffers;
         });
     }
   }
