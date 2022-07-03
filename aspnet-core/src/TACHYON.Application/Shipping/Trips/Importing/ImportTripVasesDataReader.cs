@@ -56,7 +56,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
                 var VasName = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                             row, 1, "Vas Name*", exceptionMessage);
-                TripVas.VasName = VasName;
+                TripVas.VasName = VasName.Trim();
                 var vasId = GetVasId(VasName, exceptionMessage);
                 if (vasId != null)
                 {
@@ -77,6 +77,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
         private long? GetVasId(string vasName, StringBuilder exceptionMessage)
         {
+            if(!string.IsNullOrEmpty(vasName)) vasName = vasName.Trim();
             var vasId= _shippingRequestVasRepository.GetAll().Where(x => x.ShippingRequestId == shippingRequestId &&
             (x.VasFk.Name.ToLower() == vasName.ToLower() ||
             x.VasFk.Translations.Any(x => x.DisplayName.ToLower() == vasName.ToLower())

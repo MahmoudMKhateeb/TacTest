@@ -95,19 +95,19 @@ namespace TACHYON.Shipping.Trips.Importing
 
                 var originFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 7, "Original Facility*", exceptionMessage);
-                trip.OriginalFacility = originFacility;
+                trip.OriginalFacility = originFacility.Trim();
                 trip.OriginFacilityId = GetFacilityId(originFacility, exceptionMessage);
 
                 var destinationFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                    row, 8, "Destination Facility*", exceptionMessage);
-                trip.DestinationFacility = destinationFacility;
+                trip.DestinationFacility = destinationFacility.Trim();
                 trip.DestinationFacilityId = GetFacilityId(destinationFacility, exceptionMessage);
 
                 if (IsSingleDropRequest)
                 {
                     var sender = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 9, "Sender*", exceptionMessage);
-                    trip.sender = sender;
+                    trip.sender = sender.Trim();
                     if (trip.OriginFacilityId != null)
                     {
                         trip.SenderId = GetReceiverId(sender, exceptionMessage, trip.OriginFacilityId.Value);
@@ -115,7 +115,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
                     var receiver = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 10, "Receiver*", exceptionMessage);
-                    trip.Receiver = receiver;
+                    trip.Receiver = receiver.Trim();
                     if (trip.DestinationFacilityId != null)
                     {
                         trip.ReceiverId = GetReceiverId(receiver, exceptionMessage, trip.DestinationFacilityId.Value);
@@ -144,6 +144,7 @@ namespace TACHYON.Shipping.Trips.Importing
                     _tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Facility"));
                 return null;
             }
+            text = text.Trim();
 
             var facility = _shippingRequestTripManager.GetFacilityByPermission(text, ShippingRequestId);
             //_facilityRepository.FirstOrDefault(x => x.Name == text);
@@ -163,6 +164,7 @@ namespace TACHYON.Shipping.Trips.Importing
                 return null;
             }
 
+            text = text.Trim();
             var receiver = _shippingRequestTripManager.GetReceiverByPermissionAndFacility(text, ShippingRequestId, facilityId);
             //_receiverRepository.FirstOrDefault(x => x.FullName == text);
             if (receiver != null)

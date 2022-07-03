@@ -64,7 +64,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
                 var facility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 3, "Facility*", exceptionMessage);
-                point.Facility = facility;
+                point.Facility = facility.Trim();
                 var facilityId = GetFacilityId(facility, exceptionMessage);
                 if (facilityId != null)
                 {
@@ -73,7 +73,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
                 var receiver = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                 row, 4, "Agent*", exceptionMessage);
-                point.Receiver = receiver;
+                point.Receiver = receiver.Trim();
                 var receiverId = GetReceiverId(receiver, exceptionMessage,facilityId.Value);
                 if (receiverId != null)
                 {
@@ -116,7 +116,7 @@ namespace TACHYON.Shipping.Trips.Importing
                     _tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Facility"));
                 return null;
             }
-
+            text = text.Trim();
             var facility = _shippingRequestTripManager.GetFacilityByPermission(text, ShippingRequestId);
                 //_facilityRepository.FirstOrDefault(x => x.Name == text);
             if (facility != null)
@@ -134,7 +134,7 @@ namespace TACHYON.Shipping.Trips.Importing
                     _tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Receiver"));
                 return null;
             }
-
+            text = text.Trim();
             var receiver = _shippingRequestTripManager.GetReceiverByPermissionAndFacility(text, ShippingRequestId, facilityId);
                 //_receiverRepository.FirstOrDefault(x => x.FullName == text);
             if (receiver != null)
