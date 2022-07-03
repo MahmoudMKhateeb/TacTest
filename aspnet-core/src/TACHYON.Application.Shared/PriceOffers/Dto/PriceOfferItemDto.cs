@@ -13,5 +13,6 @@
         public int Quantity { get; set; }
         public int Amount { get; set; }
         public int NumberOfTrips { get; set; }
+        public bool IsAppearAmount { get; set; }
     }
 }
