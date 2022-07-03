@@ -2769,6 +2769,7 @@
 		<text name="CancellationRequestedByShipper">قام الشاحن {0} بطلب الغاء رحلة برقم بوليصة الشحن {1} لطلب الشحن برقم مرجعي {2}</text>
 		<text name="EnglishLettersWithUnderscoreOnly">أحرف إنجليزية مع شرطة سفلية فقط</text>
 		<text name="AppearAmount">عرض القيمة</text>
+		<text name="PenaltyComplaintAddedMsg">أضاف {0} شكوى إلى العقوبة. انقر هنا لمزيد من التفاصيل</text>
         
 	</texts>
 </localizationDictionary>

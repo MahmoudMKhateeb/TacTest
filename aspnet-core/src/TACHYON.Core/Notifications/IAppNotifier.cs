@@ -241,5 +241,7 @@ namespace TACHYON.Notifications
 
         Task NotifyShipperWhenSrAddedByTms(long srId, string referenceNumber, int shipperId);
         Task NotifyTmsWhenCancellationRequestedByShipper(string referenceNumber,string tripWaybillNumber, string companyName,long srId);
+
+        Task NotifyHostAndTmsWhenPenaltyComplaintAdded(int tenantId,int penaltyId);
     }
 }

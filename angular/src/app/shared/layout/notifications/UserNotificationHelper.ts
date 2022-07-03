@@ -190,6 +190,8 @@ export class UserNotificationHelper extends AppComponentBase {
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
       case 'App.ShippingRequest.CancellationRequestedByShipper':
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
+      case 'App.PenaltyComplaintAdded':
+        return `app/main/penalties/view?id=${userNotification.notification.data.properties.penaltyId}`;
     }
 
     //No url for this notification

@@ -3020,5 +3020,6 @@
 		<text name="EntityWithIdXIsNotFound">The entity with id {0} is not found</text>
 		<text name="EnglishLettersWithUnderscoreOnly">English letters with underscore only</text>
     <text name="AppearAmount">Appear Amount</text>
+		<text name="PenaltyComplaintAddedMsg">{0} has added a complaint to the penalty. Click here for more details</text>
 	</texts>
 </localizationDictionary>

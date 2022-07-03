@@ -13,13 +13,15 @@ namespace TACHYON.Penalties.Dto
         public string PenaltyName { get; set; }
         public string PenaltyDescrption { get; set; }
         [Required]
+        public decimal ItmePrice { get; set; }
         public decimal TotalAmount { get; set; }
         [Required]
         public int TenantId { get; set; }
-        [Required]
-        public int DestinationTenantId { get; set; }
+        public int? DestinationTenantId { get; set; }
         public PenaltyType Type { get; set; }
         public PriceOfferCommissionType CommissionType { get; set; }
         public decimal CommissionPercentageOrAddValue { get; set; }
+        public PenaltyStatus Status { get; set; }
+        public int? ShippingRequestTripId { get; set; }
     }
 }

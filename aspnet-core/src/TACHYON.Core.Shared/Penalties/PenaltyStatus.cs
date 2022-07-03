@@ -6,8 +6,9 @@ namespace TACHYON.Penalties
 {
     public enum PenaltyStatus
     {
-        New = 1,
+        Draft=0,
+        Confirmed = 1,
         Paid = 2,
-        Canceled = 3
+        Canceled = 3,
     }
 }
