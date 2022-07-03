@@ -47,16 +47,27 @@ namespace TACHYON.Penalties
         
         [ForeignKey(nameof(PenaltyComplaintId))]
         public PenaltyComplaint PenaltyComplaintFK { get; set; }
+        #region prices
         public decimal CommissionValue { get; set; }
         public PriceOfferCommissionType CommissionType { get; set; }
         public decimal AmountPreCommestion { get; set; }
         public decimal AmountPostCommestion { get; set; }
+        public decimal TaxVat { get; set; }
+        /// <summary>
+        /// vat amount (price*taxVat)
+        /// </summary>
         public decimal VatAmount { get; set; }
-        public decimal VatPreCommestion { get; set; }
+        //public decimal VatPreCommestion { get; set; }
         public decimal VatPostCommestion { get; set; }
+        /// <summary>
+        /// Total amount with commission + vat with commission
+        /// </summary>
         public decimal TotalAmount { get; set; }
         public decimal ItmePrice { get; set; }
-        public bool IsDrafted { get; set; }
         public decimal CommissionPercentageOrAddValue { get; set; }
+        #endregion
+
+        public bool IsDrafted { get; set; }
+
     }
 }

@@ -34,6 +34,7 @@ export class CreateOrEditPenaltyModalComponent extends AppComponentBase implemen
   TotalDestinationCompanyPrice: number;
   CommissionAmount: number;
   Allwaybills: GetAllWaybillsDto[] = [];
+  TaxVat: number;
 
   constructor(inject: Injector, private _PenaltiesServiceProxy: PenaltiesServiceProxy, private enumToArray: EnumToArrayPipe) {
     super(inject);
@@ -91,21 +92,25 @@ export class CreateOrEditPenaltyModalComponent extends AppComponentBase implemen
   }
 
   Calculator() {
+    this._PenaltiesServiceProxy.getTaxVat().subscribe((res) => {
+      this.TaxVat = res / 100;
+    });
+
     if (this.form.commissionType == PriceOfferCommissionType.CommissionPercentage) {
       this.CommissionAmount = (this.form.itmePrice * this.form.commissionPercentageOrAddValue) / 100;
     } else if (this.form.commissionType == PriceOfferCommissionType.CommissionValue) {
-      this.CommissionAmount = this.form.itmePrice + this.form.commissionPercentageOrAddValue;
+      this.CommissionAmount = this.form.commissionPercentageOrAddValue;
     } else if (this.form.commissionType == PriceOfferCommissionType.CommissionMinimumValue) {
-      this.CommissionAmount = this.form.itmePrice + this.form.commissionPercentageOrAddValue;
+      this.CommissionAmount = this.form.commissionPercentageOrAddValue;
     }
 
     this.CompanyPrice = this.form.itmePrice + this.CommissionAmount;
-    this.CompanyVatAmount = (this.CompanyPrice * 15) / 100;
+    this.CompanyVatAmount = this.CompanyPrice * this.TaxVat;
     this.TotalCompanyPrice = this.CompanyPrice + this.CompanyVatAmount;
 
     if (this.form.destinationTenantId) {
       this.DestinationCompanyPrice = this.form.itmePrice;
-      this.DestinationCompanyVatAmount = (this.DestinationCompanyPrice * 15) / 100;
+      this.DestinationCompanyVatAmount = this.DestinationCompanyPrice * this.TaxVat;
       this.TotalDestinationCompanyPrice = this.DestinationCompanyPrice + this.DestinationCompanyVatAmount;
     }
 

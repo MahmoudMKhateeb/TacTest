@@ -29,7 +29,8 @@ namespace TACHYON.Penalties
         private readonly PenaltyManager _penaltyManager;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IAppNotifier _appNotifier;
-        public PenaltiesAppService(IRepository<Penalty> penaltyRepository, IRepository<Tenant> tenantRepository, IRepository<PenaltyComplaint> penaltyComplaintRepository, PenaltyManager penaltyManager,IRepository<ShippingRequestTrip> shippingRequestTripRepository, IAppNotifier appNotifier)
+        private readonly ISettingManager _settingManager;
+        public PenaltiesAppService(IRepository<Penalty> penaltyRepository, IRepository<Tenant> tenantRepository, IRepository<PenaltyComplaint> penaltyComplaintRepository, PenaltyManager penaltyManager, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IAppNotifier appNotifier, ISettingManager settingManager)
         {
             _penaltyRepository = penaltyRepository;
             _tenantRepository = tenantRepository;
@@ -37,6 +38,7 @@ namespace TACHYON.Penalties
             _penaltyManager = penaltyManager;
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _appNotifier = appNotifier;
+            _settingManager = settingManager;
         }
 
         #region MainFunctions
@@ -185,6 +187,12 @@ namespace TACHYON.Penalties
                 .ToListAsync();
             return ObjectMapper.Map<List<GetAllWaybillsDto>>(trips);
         }
+
+
+        public decimal GetTaxVat()
+        {
+            return _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
+        }
         #endregion
 
         #region Lookups
@@ -202,10 +210,11 @@ namespace TACHYON.Penalties
             var peanlty = ObjectMapper.Map<Penalty>(model);
             peanlty.CommissionType = PriceOffers.PriceOfferCommissionType.CommissionValue;
             var value = model.CommissionPercentageOrAddValue;
-            var taxVat = SettingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
-            var commestion =  _penaltyManager.CalculateValues(model.TotalAmount, model.CommissionType, value, value, value, taxVat);
+            var taxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
+            var commestion =  _penaltyManager.CalculateValues(model.ItmePrice, model.CommissionType, value, value, value, taxVat);
             var penalty = ObjectMapper.Map(commestion,peanlty);
             penalty.IsDrafted = true;
+            penalty.TaxVat = taxVat;
             await _penaltyRepository.InsertAsync(penalty);
         }
         private async Task Update(CreateOrEditPenaltyDto model)
@@ -213,8 +222,13 @@ namespace TACHYON.Penalties
             DisableTenancyFilters();
             DisableDraftedFilter();
 
-            var pnealty = await _penaltyRepository.FirstOrDefaultAsync(x => x.Id == model.Id.Value && x.IsDrafted == true);
-            ObjectMapper.Map(model, pnealty);
+            var penalty = await _penaltyRepository.FirstOrDefaultAsync(x => x.Id == model.Id.Value && x.IsDrafted == true);
+            var output = ObjectMapper.Map(model, penalty);
+            var value = output.CommissionPercentageOrAddValue;
+            var taxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
+            var commestion = _penaltyManager.CalculateValues(output.ItmePrice, output.CommissionType, value, value, value, taxVat);
+             ObjectMapper.Map(commestion, output);
+           // ObjectMapper.Map(output, penalty);
         }
         #endregion
 

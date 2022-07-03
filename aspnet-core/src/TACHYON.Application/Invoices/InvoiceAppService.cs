@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Threading;
@@ -53,6 +54,7 @@ namespace TACHYON.Invoices
         private readonly IExcelExporterManager<InvoiceItemDto> _excelExporterInvoiceItemManager;
         private readonly IWebUrlService _webUrlService;
         private readonly PdfExporterBase _pdfExporterBase;
+        private readonly ISettingManager _settingManager;
 
 
         public InvoiceAppService(
@@ -66,7 +68,7 @@ namespace TACHYON.Invoices
             IRepository<ShippingRequestVas, long> shippingRequestVasesRepository,
             IRepository<DocumentFile, Guid> documentFileRepository,
             IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager,
-             IWebUrlService webUrlService, PdfExporterBase pdfExporterBase)
+             IWebUrlService webUrlService, PdfExporterBase pdfExporterBase, ISettingManager settingManager)
 
         {
             _invoiceRepository = invoiceRepository;
@@ -81,6 +83,7 @@ namespace TACHYON.Invoices
             _excelExporterInvoiceItemManager = excelExporterInvoiceItemManager;
             _webUrlService = webUrlService;
             _pdfExporterBase = pdfExporterBase;
+            _settingManager = settingManager;
         }
 
 
@@ -380,7 +383,7 @@ namespace TACHYON.Invoices
             var invoiceDto = ObjectMapper.Map<InvoiceInfoDto>(invoice);
 
             var admin = AsyncHelper.RunSync(() => _userManager.GetAdminByTenantIdAsync(invoice.TenantId));
-
+            invoiceDto.TaxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
             invoiceDto.Phone = admin.PhoneNumber;
             invoiceDto.Email = admin.EmailAddress;
             invoiceDto.Attn = admin.FullName;
@@ -508,19 +511,20 @@ namespace TACHYON.Invoices
                 Items.Add(new PeanltyInvoiceItemDto
                 {
                     Sequence = $"{Sequence}/{TotalItem}",
-                    VatAmount = penalty.VatAmount,
+                    PenaltyName=penalty.PenaltyName,
+                    VatAmount = penalty.VatPostCommestion,
                     TotalAmount = penalty.TotalAmount,
                     Date = penalty.CreationTime.ToString("dd/MM/yyyy"),
                     ContainerNumber = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.AssignedTruckFk.PlateNumber : "-",
                     WayBillNumber = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.WaybillNumber.ToString() : "-" ,
-                    ItmePrice = penalty.ItmePrice,
+                    ItmePrice = penalty.AmountPostCommestion,
                     Remarks = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId ==
                               Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops
                         ? L("TotalOfDrop", penalty.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops)
                         : "" : ""
                 });
                 Sequence++;
-            });;
+            });
             return Items;
         }
 

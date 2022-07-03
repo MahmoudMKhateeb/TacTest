@@ -178,34 +178,32 @@ namespace TACHYON.Penalties
             var res = new PenaltyCommestionDto();
             res.AmountPreCommestion = amount;
             res.CommissionType = commestionType;
-            res.VatPreCommestion = Calculate.CalculateVat(res.AmountPreCommestion, taxVat);
-
+            res.VatAmount = Calculate.CalculateVat(res.AmountPreCommestion, taxVat);
+            res.TaxVat = taxVat;
+            
             switch (commestionType)
             {
                 case PriceOfferCommissionType.CommissionPercentage:
                     res.CommissionValue = amount * (commestionPercentage / 100);
-                    amount += res.CommissionValue;
-                    var vatCommestion = res.VatPreCommestion * (commestionPercentage / 100);
-                    res.VatPostCommestion = vatCommestion + res.VatPreCommestion;
-                    amount += res.VatPostCommestion;
+                    amount += res.CommissionValue;                    
+                    
                     break;
 
                 case PriceOfferCommissionType.CommissionValue:
                     res.CommissionValue = commestionValue;
                     amount += commestionValue;
-                    res.VatPostCommestion += res.CommissionValue;
                     break;
 
                 case PriceOfferCommissionType.CommissionMinimumValue:
                     res.CommissionValue = commestionMinValue;
                     amount += commestionMinValue;
-                    res.VatPostCommestion += commestionMinValue;
                     break;
 
                 default:
                     break;
             }
             res.AmountPostCommestion = amount;
+            res.VatPostCommestion = Calculate.CalculateVat(res.AmountPostCommestion, taxVat);
 
             return res;
         }
@@ -228,10 +226,11 @@ namespace TACHYON.Penalties
                 AmountPreCommestion = commestion.AmountPreCommestion,
                 AmountPostCommestion = commestion.AmountPostCommestion,
                 CommissionValue = commestion.CommissionValue,
-                VatAmount = commestion.VatAmount(),
+                VatAmount = commestion.VatAmount,
                 VatPostCommestion = commestion.VatPostCommestion,
-                VatPreCommestion = commestion.VatPreCommestion,
-                ItmePrice = commestion.ItemPrice
+                //VatPreCommestion = commestion.VatPreCommestion,
+                ItmePrice = commestion.ItemPrice,
+                TaxVat=commestion.TaxVat
             };
 
             await _penaltyRepository.InsertAsync(penalty);

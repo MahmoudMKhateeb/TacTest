@@ -171,14 +171,18 @@
           <DataField>Date</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ItemPrice">
-          <DataField>ItemPrice</DataField>
+        <Field Name="ItmePrice">
+          <DataField>ItmePrice</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PenaltyName">
+          <DataField>PenaltyName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>GetInvoicePenaltiseInvoiceReportInfo</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\pc\source\repos\tachyon-core\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoicePenaltiseInvoiceReportInfo.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core2\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoicePenaltiseInvoiceReportInfo.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
@@ -1826,28 +1830,31 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.73221cm</Width>
+                  <Width>1.49585cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.93803cm</Width>
+                  <Width>1.89078cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.28049cm</Width>
+                  <Width>1.70167cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.77098cm</Width>
+                  <Width>2.04413cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.35676cm</Width>
+                  <Width>2.53462cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.85125cm</Width>
+                  <Width>2.1204cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.86194cm</Width>
+                  <Width>2.61489cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.99672cm</Width>
+                  <Width>2.62558cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.76036cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -1863,7 +1870,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Sqe</Value>
+                                  <Value>Seq</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -1893,6 +1900,44 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox234</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BackgroundColor>#d82631</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox8">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Description</Value>
+                                  <Style>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox8</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2031,7 +2076,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Detintion Fees</Value>
+                                  <Value>Penalty Fees</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2073,6 +2118,22 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
                                   <Value>VAT Amount</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
@@ -2089,7 +2150,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>نوع الشاحنة</Value>
+                                  <Value />
                                   <Style>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -2376,6 +2437,46 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="PenaltyName">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!PenaltyName.Value</Value>
+                                  <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>#181818</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>PenaltyName</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BackgroundColor>White</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="Textbox112">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -2457,14 +2558,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox32">
+                        <Textbox Name="ItmePrice">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ItemPrice.Value</Value>
+                                  <Value>=Fields!ItmePrice.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2477,7 +2578,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox32</rd:DefaultName>
+                          <rd:DefaultName>ItmePrice</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2660,6 +2761,7 @@
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -2679,7 +2781,7 @@
             <Top>3.88245cm</Top>
             <Left>1.26891cm</Left>
             <Height>1.87638cm</Height>
-            <Width>18.78838cm</Width>
+            <Width>18.78828cm</Width>
             <ZIndex>5</ZIndex>
             <ToolTip>=iif(RowNumber(Nothing) Mod 2, "LightGrey", "White")</ToolTip>
             <Style>

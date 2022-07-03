@@ -293,7 +293,9 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             private global::System.Data.DataColumn columnDate;
             
-            private global::System.Data.DataColumn columnItemPrice;
+            private global::System.Data.DataColumn columnItmePrice;
+            
+            private global::System.Data.DataColumn columnPenaltyName;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
@@ -386,9 +388,17 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ItemPriceColumn {
+            public global::System.Data.DataColumn ItmePriceColumn {
                 get {
-                    return this.columnItemPrice;
+                    return this.columnItmePrice;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn PenaltyNameColumn {
+                get {
+                    return this.columnPenaltyName;
                 }
             }
             
@@ -429,7 +439,7 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public DataTable1Row AddDataTable1Row(string Sequence, string WayBillNumber, string VatAmount, string TotalAmount, string Remarks, string ContainerNumber, string Date, string ItemPrice) {
+            public DataTable1Row AddDataTable1Row(string Sequence, string WayBillNumber, string VatAmount, string TotalAmount, string Remarks, string ContainerNumber, string Date, string ItmePrice, string PenaltyName) {
                 DataTable1Row rowDataTable1Row = ((DataTable1Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Sequence,
@@ -439,7 +449,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         Remarks,
                         ContainerNumber,
                         Date,
-                        ItemPrice};
+                        ItmePrice,
+                        PenaltyName};
                 rowDataTable1Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTable1Row);
                 return rowDataTable1Row;
@@ -469,7 +480,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 this.columnRemarks = base.Columns["Remarks"];
                 this.columnContainerNumber = base.Columns["ContainerNumber"];
                 this.columnDate = base.Columns["Date"];
-                this.columnItemPrice = base.Columns["ItemPrice"];
+                this.columnItmePrice = base.Columns["ItmePrice"];
+                this.columnPenaltyName = base.Columns["PenaltyName"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -489,8 +501,10 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 base.Columns.Add(this.columnContainerNumber);
                 this.columnDate = new global::System.Data.DataColumn("Date", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnDate);
-                this.columnItemPrice = new global::System.Data.DataColumn("ItemPrice", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnItemPrice);
+                this.columnItmePrice = new global::System.Data.DataColumn("ItmePrice", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnItmePrice);
+                this.columnPenaltyName = new global::System.Data.DataColumn("PenaltyName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPenaltyName);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -745,17 +759,33 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ItemPrice {
+            public string ItmePrice {
                 get {
                     try {
-                        return ((string)(this[this.tableDataTable1.ItemPriceColumn]));
+                        return ((string)(this[this.tableDataTable1.ItmePriceColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ItemPrice\' in table \'DataTable1\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'ItmePrice\' in table \'DataTable1\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableDataTable1.ItemPriceColumn] = value;
+                    this[this.tableDataTable1.ItmePriceColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string PenaltyName {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.PenaltyNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PenaltyName\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.PenaltyNameColumn] = value;
                 }
             }
             
@@ -845,14 +875,26 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsItemPriceNull() {
-                return this.IsNull(this.tableDataTable1.ItemPriceColumn);
+            public bool IsItmePriceNull() {
+                return this.IsNull(this.tableDataTable1.ItmePriceColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetItemPriceNull() {
-                this[this.tableDataTable1.ItemPriceColumn] = global::System.Convert.DBNull;
+            public void SetItmePriceNull() {
+                this[this.tableDataTable1.ItmePriceColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsPenaltyNameNull() {
+                return this.IsNull(this.tableDataTable1.PenaltyNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetPenaltyNameNull() {
+                this[this.tableDataTable1.PenaltyNameColumn] = global::System.Convert.DBNull;
             }
         }
         
