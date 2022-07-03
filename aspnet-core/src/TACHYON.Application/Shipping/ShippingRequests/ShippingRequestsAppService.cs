@@ -411,7 +411,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task PublishShippingRequest(long id)
         {
-            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            var isTachyonDealer = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
+            if (isTachyonDealer)
             {
                 DisableTenancyFilters();
             }
@@ -434,7 +435,11 @@ namespace TACHYON.Shipping.ShippingRequests
             // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
             shippingRequest.IsDrafted = false;
             //to make SR to non drafted .. 
-            //CurrentUnitOfWork.SaveChanges();
+            if (isTachyonDealer && shippingRequest.CreatedByTachyonDealer)
+                await _appNotifier.NotifyShipperWhenSrAddedByTms
+                    (shippingRequest.Id, shippingRequest.ReferenceNumber, shippingRequest.TenantId);
+            
+            
             if (!shippingRequest.IsSaas())
             {
                 await SendtoCarrierIfShippingRequestIsDirectRequest(shippingRequest);
@@ -1731,7 +1736,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .FirstOrDefaultAsync(input.GoodCategoryId.Value);
 
                 if (goodCategory.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) &&
-                    input.OtherGoodsCategoryName.Trim().IsNullOrEmpty())
+                    input.OtherGoodsCategoryName.IsNullOrEmpty())
                     throw new UserFriendlyException(L("GoodCategoryCanNotBeOtherAndEmptyAtSameTime"));
             }
 
@@ -1745,7 +1750,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .FirstOrDefaultAsync(input.TransportTypeId.Value);
 
                 if (transportType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) &&
-                    input.OtherTransportTypeName.Trim().IsNullOrEmpty())
+                    input.OtherTransportTypeName.IsNullOrEmpty())
                     throw new UserFriendlyException(L("TransportTypeCanNotBeOtherAndEmptyAtSameTime"));
             }
 
@@ -1758,7 +1763,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .FirstOrDefaultAsync(input.TrucksTypeId);
 
             if (trucksType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) &&
-                input.OtherTrucksTypeName.Trim().IsNullOrEmpty())
+                input.OtherTrucksTypeName.IsNullOrEmpty())
                 throw new UserFriendlyException(L("TrucksTypeCanNotBeOtherAndEmptyAtSameTime"));
 
             #endregion
@@ -1769,7 +1774,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .FirstOrDefaultAsync(input.PackingTypeId);
 
             if (packingType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) &&
-                input.OtherPackingTypeName.Trim().IsNullOrEmpty())
+                input.OtherPackingTypeName.IsNullOrEmpty())
                 throw new UserFriendlyException(L("PackingTypeCanNotBeOtherAndEmptyAtSameTime"));
 
             #endregion

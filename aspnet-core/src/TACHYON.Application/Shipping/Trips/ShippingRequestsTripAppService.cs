@@ -884,16 +884,20 @@ namespace TACHYON.Shipping.Trips
                     userIdentifiers.Add(carrierIdent);
                 }
                 userIdentifiers.Add(await _userManager.GetTachyonDealerUserIdentifierAsync());
+                var shipperTenant = await _tenantManager.GetByIdAsync(trip.ShippingRequestFk.TenantId);
 
                 if (!trip.ShippingRequestFk.IsTachyonDeal)
                 {
                     trip.Status = ShippingRequestTripStatus.Canceled;
                     trip.CancelStatus = ShippingRequestTripCancelStatus.Canceled;
-                    await _appNotifier.ShippingRequestTripCanceled(userIdentifiers, trip, (await _tenantManager.GetByIdAsync(trip.ShippingRequestFk.TenantId)).TenancyName);
+                    await _appNotifier.ShippingRequestTripCanceled(userIdentifiers, trip, shipperTenant.TenancyName);
                 }
                 else
                 {
                     trip.CancelStatus = ShippingRequestTripCancelStatus.WaitingForTMSApproval;
+                    await _appNotifier.NotifyTmsWhenCancellationRequestedByShipper(
+                        trip.ShippingRequestFk.ReferenceNumber, trip.WaybillNumber.ToString(),
+                        shipperTenant.TenancyName,trip.ShippingRequestId);
                 }
             }
             else if (IsEnabled(AppFeatures.Carrier))
@@ -925,7 +929,9 @@ namespace TACHYON.Shipping.Trips
                     {
                         userIdentifiers.Add(await GetAdminTenant((int)trip.ShippingRequestFk.CarrierTenantId));
                     }
-                    userIdentifiers.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId, (long)trip.ShippingRequestFk.CreatorUserId));
+                    
+                    var shipperAdmin = await UserManager.GetAdminByTenantIdAsync(trip.ShippingRequestFk.TenantId);
+                    userIdentifiers.Add(shipperAdmin.ToUserIdentifier());
                     await _appNotifier.ShippingRequestTripCanceled(userIdentifiers, trip, (await _tenantManager.GetByIdAsync(TMSIdent.TenantId.Value)).TenancyName);
                 }
                 else

@@ -731,6 +731,38 @@ namespace TACHYON.Notifications
                 notificationData, userIds: tenantsAdmin);
         }
 
+        public async Task NotifyShipperWhenSrAddedByTms(long srId, string referenceNumber,int shipperId)
+        {
+            var tenantsAdmin = await GetTenantsAdminUsers(shipperId);
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShippingRequestAddedByTms",referenceNumber),
+                    TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "srId", srId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestAddedByTms,
+                notificationData, userIds: tenantsAdmin);
+        }
+
+        public async Task NotifyTmsWhenCancellationRequestedByShipper(string referenceNumber,string tripWaybillNumber, string companyName,long srId)
+        {
+            var tachyonDealer = await GetAdminTachyonDealerAsync();
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("CancellationRequestedByShipper", companyName,tripWaybillNumber,referenceNumber),
+                    TACHYONConsts.LocalizationSourceName))
+            {
+                Properties = new Dictionary<string, object>() { { "srId", srId } }
+            };
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.CancellationRequestedByShipper,
+                notificationData, userIds: new []{tachyonDealer});
+        }
+
         public async Task NotfiyCarrierWhenReceiveBidPricePackage(int carrierTenantId, string SenderTenantName, string pricePackageId, long directRequestId, string referanceNumber)
         {
 
@@ -1417,8 +1449,9 @@ namespace TACHYON.Notifications
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(L("RejectedOffer"),
                     TACHYONConsts.LocalizationSourceName));
-            notificationData["id"] = offer.Id;
-            //notificationData["id"] = offer.ShippingRequestId;
+            notificationData["offerId"] = offer.Id;
+            notificationData["channel"] = offer.Channel;
+            notificationData["srId"] = offer.ShippingRequestId;
             notificationData["reason"] = offer.RejectedReason;
             notificationData["rejectedby"] = RejectedBy;
             List<UserIdentifier> users = new List<UserIdentifier>();
