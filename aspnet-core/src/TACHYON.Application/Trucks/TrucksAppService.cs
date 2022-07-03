@@ -113,6 +113,7 @@ namespace TACHYON.Trucks
             var documentQuery = _documentFileRepository.GetAll()
                                                .Where(x => x.DocumentTypeFk.SpecialConstant == TACHYONConsts.TruckIstimaraDocumentTypeSpecialConstant.ToLower());
             var query = from truck in _truckRepository.GetAll()
+                                               .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer), r => r.TenantId == AbpSession.TenantId)
                         join tenant in _lookupTenantRepository.GetAll() on truck.TenantId equals tenant.Id
                         join document in documentQuery on truck.Id equals document.TruckId
 
