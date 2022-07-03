@@ -221,13 +221,13 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   /**
    * check if trip Delayed or on time
    */
-  isTripDelayed(tripExpectedArrivalDate): 'Delayed' | 'OnTime' | 'Unknown' {
-    if (tripExpectedArrivalDate == '') return 'Unknown';
+  isTripDelayed(tripExpectedArrivalDate): string {
+    if (tripExpectedArrivalDate == '') return this.l('Unknown');
     let todayMoment = this.dateFormatterService.NgbDateStructToMoment(this.dateFormatterService.GetTodayGregorian());
     if (_moment(tripExpectedArrivalDate) >= todayMoment) {
-      return 'OnTime';
+      return this.l('OnTime');
     } else if (_moment(tripExpectedArrivalDate) < todayMoment) {
-      return 'Delayed';
+      return this.l('Delayed');
     }
   }
   getRandomColor(): string {

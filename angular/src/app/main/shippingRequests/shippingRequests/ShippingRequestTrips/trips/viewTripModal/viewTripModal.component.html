@@ -155,23 +155,15 @@
               </button>
             </div>
             <div class="col-lg-6">
-              <label>{{ l('tripExpectedDeliveryTime') }}</label>
-              <div class="form-group">
-                <!--                expected trip Delivery Date-->
-                <input
-                  id="tripExpectedDeliveryTime"
-                  type="text"
-                  class="form-control"
-                  name="tripStartDate"
-                  bsDatepicker
-                  datePickerMomentModifier
-                  [(date)]="expectedDeliveryTime"
-                  (dateChange)="updateTripExpectedDeliveryTime()"
-                  [bsConfig]="{ adaptivePosition: true }"
-                  [minDate]="trip.startTripDate"
-                  readonly="readonly"
-                  required
-                />
+              <label>{{ l('expectedDeliveryTime') }}</label>
+              <div class="form-group" [busyIf]="expectedDeliveryTimeLoading">
+                <dx-date-box
+                  [(value)]="expectedDeliveryTime"
+                  (onValueChanged)="updateTripExpectedDeliveryTime()"
+                  type="datetime"
+                  [min]="trip.startTripDate"
+                >
+                </dx-date-box>
               </div>
             </div>
           </ng-container>

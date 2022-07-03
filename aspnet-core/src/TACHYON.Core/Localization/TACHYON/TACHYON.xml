@@ -3021,5 +3021,12 @@
 		<text name="EnglishLettersWithUnderscoreOnly">English letters with underscore only</text>
     <text name="AppearAmount">Appear Amount</text>
 		<text name="PenaltyComplaintAddedMsg">{0} has added a complaint to the penalty. Click here for more details</text>
+		<text name="ExpectedDeliveryTime">Expected Delivery Time</text>
+		<text name="DeliveryStatus">Delivery Status</text>
+		<text name="Delayed">Delayed</text>
+		<text name="OnTime">On Time</text>
+		<text name="Unknown">Unknown</text>
+
+		
 	</texts>
 </localizationDictionary>

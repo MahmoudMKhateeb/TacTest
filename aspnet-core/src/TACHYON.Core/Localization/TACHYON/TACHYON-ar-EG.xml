@@ -2770,6 +2770,11 @@
 		<text name="EnglishLettersWithUnderscoreOnly">أحرف إنجليزية مع شرطة سفلية فقط</text>
 		<text name="AppearAmount">عرض القيمة</text>
 		<text name="PenaltyComplaintAddedMsg">أضاف {0} شكوى إلى العقوبة. انقر هنا لمزيد من التفاصيل</text>
+		<text name="ExpectedDeliveryTime">وقت التسليم المتوقع</text>
+		<text name="DeliveryStatus">حالة التسليم</text>
+		<text name="Delayed">متأخر</text>
+		<text name="OnTime">في الوقت المحدد</text>
+		<text name="Unknown">غير معروف</text>
         
 	</texts>
 </localizationDictionary>
