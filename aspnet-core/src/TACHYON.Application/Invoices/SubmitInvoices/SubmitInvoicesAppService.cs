@@ -169,7 +169,7 @@ namespace TACHYON.Invoices.Groups
             }
         }
 
-
+        [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_SubmitInvoices_Rejected)]
         public async Task Rejected(SubmitInvoiceRejectedInput Input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
