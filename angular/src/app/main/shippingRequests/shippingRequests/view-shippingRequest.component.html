@@ -7,12 +7,27 @@
       <!--          <i class="fa fa-money-bill"></i> {{ l('sendPricingOfferToShipper') }}-->
       <!--        </button>-->
       <!--      </div>-->
-      <div role="actions">
+      <div role="actions" style="display: contents">
         <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ l('ActivityLog') }} </a>
         <ng-container *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid">
           <a class="btn btn-outline-success" (click)="scrollToDirectRequests()">{{ l('SendDirectRequests') }}</a>
-          <a class="btn btn-outline-success" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">{{ l('StartBidding') }}</a>
+          <a class="btn btn-outline-success margin-right-5" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">{{
+            l('StartBidding')
+          }}</a>
         </ng-container>
+
+        <div *ngIf="feature.isEnabled('App.TachyonDealer')" class="input-group margin-left-5" style="display: contents">
+          <div class="input-group-prepend">
+            <button (click)="updateShippingRequestInvoiceFlag()" class="btn btn-primary" type="button">save</button>
+          </div>
+          <input
+            [(ngModel)]="shippingRequestforView.shippingRequest.splitInvoiceFlag"
+            style="width: 250px"
+            type="text"
+            class="form-control"
+            placeholder="invoice flag"
+          />
+        </div>
       </div>
     </sub-header>
 
@@ -20,6 +35,7 @@
       <!--  start:: PriceOfferingSection -->
       <ng-template [ngIf]="canSeePriceOffers()">
         <shipping-request-offers-list
+          [shippingRequestId]="activeShippingRequestId"
           [shippingRequestId]="activeShippingRequestId"
           [isTachyonDeal]="shippingRequestforView.shippingRequest.isTachyonDeal"
           [Channel]="shippingRequestforView.shippingRequest.isBid ? 1 : 2"

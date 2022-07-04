@@ -62,5 +62,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// shipper
         /// </summary>
         public int TenantId { get; set; }
+
+
+       
     }
 }

@@ -37,5 +37,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public long? WaybillNumber { get; set; }
 
         public ShippingRequestTripStatus Status { get; set; }
+
+        public string SplitInvoiceFlag { get; set; }
     }
 }

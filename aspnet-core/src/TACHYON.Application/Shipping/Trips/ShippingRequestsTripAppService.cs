@@ -631,6 +631,14 @@ namespace TACHYON.Shipping.Trips
             //await _shippingRequestRepository.DeleteAsync(input.Id);
         }
 
+        public async Task UpdateTripInvoiceFlag(int shippingRequesTripId, string invoiceFlag)
+        {
+            DisableTenancyFilters();
+            var trip = await _shippingRequestTripRepository.GetAsync(shippingRequesTripId);
+            trip.SplitInvoiceFlag = invoiceFlag?.Trim();
+
+        }
+
         #region Heleper
 
         /// <summary>
