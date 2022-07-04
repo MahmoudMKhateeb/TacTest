@@ -54,10 +54,14 @@ namespace TACHYON.Shipping.Trips.Importing
                 trip.BulkUploadRef = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 0, "Reference No", exceptionMessage);
                 //1
-                var startDate = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                var startDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
                     row, 1, "Trip Pick up Date Start *", exceptionMessage);
                 var startTripDate = GetDateTimeValueFromTextOrNull(startDate);
-                if(startDate!=null && (startTripDate == null || startTripDate == default(DateTime)))
+                if(startTripDate == null)
+                {
+                    startTripDate = _shippingRequestTripManager.GetShippingRequestById(trip.ShippingRequestId).StartTripDate;
+                }
+                if((startTripDate == null || startTripDate == default(DateTime)))
                 {
                     exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("StartTripDate"));
                 }
