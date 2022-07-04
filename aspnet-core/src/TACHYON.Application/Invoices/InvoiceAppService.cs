@@ -32,6 +32,8 @@ using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Transactions;
 using TACHYON.Penalties;
+using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using TACHYON.Url;
@@ -53,6 +55,7 @@ namespace TACHYON.Invoices
         private readonly IExcelExporterManager<InvoiceItemDto> _excelExporterInvoiceItemManager;
         private readonly IWebUrlService _webUrlService;
         private readonly PdfExporterBase _pdfExporterBase;
+        private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
 
 
         public InvoiceAppService(
@@ -66,7 +69,7 @@ namespace TACHYON.Invoices
             IRepository<ShippingRequestVas, long> shippingRequestVasesRepository,
             IRepository<DocumentFile, Guid> documentFileRepository,
             IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager,
-             IWebUrlService webUrlService, PdfExporterBase pdfExporterBase)
+             IWebUrlService webUrlService, PdfExporterBase pdfExporterBase, IRepository<ShippingRequestTrip> shippingRequestTripRepository)
 
         {
             _invoiceRepository = invoiceRepository;
@@ -81,6 +84,7 @@ namespace TACHYON.Invoices
             _excelExporterInvoiceItemManager = excelExporterInvoiceItemManager;
             _webUrlService = webUrlService;
             _pdfExporterBase = pdfExporterBase;
+            _shippingRequestTripRepository = shippingRequestTripRepository;
         }
 
 
@@ -337,14 +341,28 @@ namespace TACHYON.Invoices
                 Invoice.IsPaid = false;
             }
         }
-        public async Task OnDemand(int Id)
+        public async Task OnDemand(int Id, List<SelectItemDto> waybills)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
             DisableTenancyFilters();
             var tenant = await TenantManager.GetByIdAsync(Id);
 
             // if (tenant == null || tenant.Name == AppConsts.ShipperEditionName) throw new UserFriendlyException(L("TheTenantSelectedIsNotShipper"));
-            await _invoiceManager.GenertateInvoiceOnDeman(tenant);
+            await _invoiceManager.GenertateInvoiceOnDeman(tenant, waybills.Select(x=>x.Id).Select(int.Parse).ToList());
+        }
+
+        public async Task<List<SelectItemDto>> GetUnInvoicedWaybillsByTenant(int tenantId)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            return await _shippingRequestTripRepository.GetAll()
+                .Where(
+                x =>(x.ShippingRequestFk.TenantId == tenantId && !x.IsShipperHaveInvoice) &&
+                (x.Status == ShippingRequestTripStatus.Delivered ||
+                    x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
+                )
+                .Select(x=> new SelectItemDto { DisplayName=x.WaybillNumber.ToString(), Id=x.Id.ToString()})
+                .ToListAsync();
+           
         }
 
         [AbpAllowAnonymous]
