@@ -122,7 +122,15 @@ namespace TACHYON.Shipping.Trips
         public async Task<PagedResultDto<ShippingRequestsTripListDto>> GetAll(ShippingRequestTripFilterInput input)
         {
             DisableTenancyFilters();
-            var request = await GetShippingRequestByPermission(input.RequestId);
+            var request = await _shippingRequestRepository.GetAll()
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier),
+                    x => x.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper),
+                    x => x.TenantId == AbpSession.TenantId)
+                .FirstOrDefaultAsync(x => x.Id == input.RequestId);
+            if (request == null)
+                throw new UserFriendlyException(L("ShippingRequestIsNotFound"));
+            
             var query = _shippingRequestTripRepository
                 .GetAll()
                 .AsNoTracking()
@@ -776,7 +784,15 @@ namespace TACHYON.Shipping.Trips
         {
             DisableTenancyFilters();
             var trip = await GetTrip(id);
-            await GetShippingRequestByPermission(trip.ShippingRequestId);
+            var userHasAccess = await _shippingRequestRepository.GetAll()
+                .Where(x => x.Id == trip.ShippingRequestId)
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper),
+                    x => x.TenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier),
+                    x => x.CarrierTenantId == AbpSession.TenantId)
+                .AnyAsync();
+
+            if (!userHasAccess) throw new UserFriendlyException(L("YouDoNotHaveAccess"));
 
             return ObjectMapper.Map<T>(trip);
         }
