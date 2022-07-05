@@ -211,13 +211,14 @@ namespace TACHYON.Shipping.SrPostPriceUpdates
 
             // check for added vases 
 
-            foreach (var vas in updatedSrDto.ShippingRequestVasList)
+            var addedVases = (from vas in updatedSrDto.ShippingRequestVasList
+                where shippingRequest.ShippingRequestVases.All(x => x.Id != vas.Id)
+                select ObjectMapper.Map<ShippingRequestVas>(vas));
+            
+            foreach (ShippingRequestVas createdVas in addedVases)
             {
-                if (shippingRequest.ShippingRequestVases.All(x => x.Id != vas.Id))
-                {
-                    var createdVas = ObjectMapper.Map<ShippingRequestVas>(vas);
-                    await _shippingRequestVasRepository.InsertAsync(createdVas);
-                }
+                createdVas.ShippingRequestId = shippingRequest.Id;
+                await _shippingRequestVasRepository.InsertAsync(createdVas);
             }
         }
         
