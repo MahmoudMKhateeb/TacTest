@@ -12,7 +12,7 @@ using TACHYON.Shipping.ShippingRequestTrips;
 namespace TACHYON.Penalties
 {
     [Table("Penalties")]
-    public class Penalty : FullAuditedEntity , IMustHaveTenant, IHasIsDrafted
+    public class Penalty : FullAuditedEntity , IMustHaveTenant
     {
         //public Penalty()
         //{
@@ -67,7 +67,6 @@ namespace TACHYON.Penalties
         public decimal CommissionPercentageOrAddValue { get; set; }
         #endregion
 
-        public bool IsDrafted { get; set; }
 
     }
 }

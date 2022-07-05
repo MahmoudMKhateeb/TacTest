@@ -300,7 +300,7 @@ namespace TACHYON.Invoices
                  .ThenInclude(x => x.ShippingRequestFk)
                  .Where(x => x.DestinationTenantId == tenant.Id) // destination  company
                  .Where(x => !x.SubmitInvoiceId.HasValue && x.Status != PenaltyStatus.Canceled &&
-                 x.IsDrafted==false).ToListAsync();
+                 x.Status!=PenaltyStatus.Draft).ToListAsync();
 
             if (penalties.Any())
                 await GeneratePenaltySubmitInvoice(tenant, penalties, period);
