@@ -7,11 +7,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Invoices
 {
     [Table("InvoiceNotes")]
-    public class InvoiceNote : FullAuditedEntity<long>, IMustHaveTenant
+    public class InvoiceNote : FullAuditedEntity<long>, IMustHaveTenant, IHasIsDrafted
     {
         public int TenantId { get; set; }
         [ForeignKey("TenantId")]
@@ -32,5 +33,6 @@ namespace TACHYON.Invoices
         public string Note { get; set; }
         #endregion
         public List<InvoiceNoteItem> InvoiceItems { get; set; }
+        public bool IsDrafted { get; set; }
     }
 }

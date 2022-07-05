@@ -66,14 +66,16 @@ namespace TACHYON.Invoices.InvoiceNotes
         [AbpAuthorize(AppPermissions.Pages_InvoiceNote_View)]
         public async Task<LoadResult> GetAllInoviceNote(LoadOptionsInput input)
         {
+            if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                DisableTenancyFilters();
+                DisableDraftedFilter();
+            }
             var query = _invoiceNoteRepository.GetAll()
                .AsNoTracking()
                .ProjectTo<GetInvoiceNoteDto>(AutoMapperConfigurationProvider);
 
-            if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
-            {
-                DisableTenancyFilters();
-            }
+
             return await LoadResultAsync<GetInvoiceNoteDto>(query, input.LoadOptions);
         }
         public async Task CreateOrEdit(CreateOrEditInvoiceNoteDto input)
@@ -131,6 +133,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             var invoiceNote = await _invoiceNoteRepository.GetAll()
+                .Where(x=>x.Status==NoteStatus.Draft)
                 .Include(x => x.InvoiceItems)
                 .ThenInclude(t => t.ShippingRequestTripFK)
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -142,38 +145,13 @@ namespace TACHYON.Invoices.InvoiceNotes
             list.InvoiceItems.ForEach(x => x.Checked = true);
             return list;
         }
-        public async Task GenrateFullVoidInvoiceNote(long id)
-        {
-            await DisableTenancyFilterIfTachyonDealerOrHost();
-            var invoiceTenant = await _invoiceReposity.FirstOrDefaultAsync(x => x.Id == id);
-            if (invoiceTenant != null)
-                await FullVoidInvoiceForShipper(id);
-            else
-                await FullVoidSubmitInvoiceForCarrier(id);
-        }
-        public async Task<PartialVoidInvoiceDto> GetInvoiceForPartialVoid(long id)
-        {
-            await DisableTenancyFilterIfTachyonDealerOrHost();
-            var invoiceTenant = await _invoiceReposity.FirstOrDefaultAsync(x => x.Id == id);
-            if (invoiceTenant != null)
-            {
-                var invoice = await _invoiceReposity.GetAll()
-                .Include(x => x.Trips)
-                .ThenInclude(x => x.ShippingRequestTripFK)
-                .FirstOrDefaultAsync(x => x.Id == id);
-                return ObjectMapper.Map<PartialVoidInvoiceDto>(invoice);
-            }
-            var submitInvoice = await _submitInvoiceReposity.GetAll()
-              .Include(x => x.Trips)
-              .ThenInclude(x => x.ShippingRequestTripFK)
-              .FirstOrDefaultAsync(x => x.Id == id);
-            return ObjectMapper.Map<PartialVoidInvoiceDto>(submitInvoice);
-        }
+        
 
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task Canacel(int invoiceId)
         {
             DisableTenancyFilters();
+            DisableDraftedFilter();
             var invoiceNote = await _invoiceNoteRepository.FirstOrDefaultAsync(x=>x.Id==invoiceId && x.Status == NoteStatus.Draft);
 
             if (invoiceNote == null)
@@ -181,6 +159,8 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             invoiceNote.Status = NoteStatus.Canceled;
         }
+
+        #region Note
         [AbpAuthorize(AppPermissions.Pages_InvoiceNote_Create)]
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task AddNote(NoteInputDto input)
@@ -202,6 +182,38 @@ namespace TACHYON.Invoices.InvoiceNotes
                       CanBePrinted = y.CanBePrinted
                   }).FirstOrDefaultAsync(x => x.Id == tripId);
         }
+        #endregion
+
+        #region Void
+        public async Task GenrateFullVoidInvoiceNote(long id)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            var invoiceTenant = await _invoiceReposity.FirstOrDefaultAsync(x => x.Id == id);
+            if (invoiceTenant != null)
+                await FullVoidInvoiceForShipper(id);
+            else
+                await FullVoidSubmitInvoiceForCarrier(id);
+        }
+
+        public async Task<PartialVoidInvoiceDto> GetInvoiceForPartialVoid(long id)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            var invoiceTenant = await _invoiceReposity.FirstOrDefaultAsync(x => x.Id == id);
+            if (invoiceTenant != null)
+            {
+                var invoice = await _invoiceReposity.GetAll()
+                .Include(x => x.Trips)
+                .ThenInclude(x => x.ShippingRequestTripFK)
+                .FirstOrDefaultAsync(x => x.Id == id);
+                return ObjectMapper.Map<PartialVoidInvoiceDto>(invoice);
+            }
+            var submitInvoice = await _submitInvoiceReposity.GetAll()
+              .Include(x => x.Trips)
+              .ThenInclude(x => x.ShippingRequestTripFK)
+              .FirstOrDefaultAsync(x => x.Id == id);
+            return ObjectMapper.Map<PartialVoidInvoiceDto>(submitInvoice);
+        }
+
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task GeneratePartialInvoiceNote(CreateOrEditInvoiceNoteDto input)
         {
@@ -213,6 +225,8 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             invoiceNote.ReferanceNumber = GenerateInvoiceNoteReferanceNumber(invoiceNoteId, invoiceNote.NoteType);
         }
+        #endregion
+
         #endregion
 
         #region LookUps
@@ -362,20 +376,12 @@ namespace TACHYON.Invoices.InvoiceNotes
             }
             else
             {
-                //if (input.Price <= 0)
-                //    throw new UserFriendlyException(L("PriceMustGreaterThanZero"));
-                //input.TotalValue = input.Price + input.VatAmount;
                 throw new UserFriendlyException(L("YouMustEnterInvoiceItems"));
             }
 
-            //if(input.InvoiceNumber!=null && input.InvoiceItems.Count() == 0)
-            //{
-            //    throw new UserFriendlyException(L("YouMustSelectWaybills"));
-            //}
-
 
             var invoiceNote = ObjectMapper.Map<InvoiceNote>(input);
-            
+            invoiceNote.IsDrafted = true;
             var invoiceNoteId = await _invoiceNoteRepository.InsertAndGetIdAsync(invoiceNote);
 
             invoiceNote.ReferanceNumber = GenerateInvoiceNoteReferanceNumber(invoiceNoteId, invoiceNote.NoteType);
@@ -387,7 +393,11 @@ namespace TACHYON.Invoices.InvoiceNotes
         private async Task Update(CreateOrEditInvoiceNoteDto model)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
-            var inoviceNote = await _invoiceNoteRepository.GetAllIncluding(x => x.InvoiceItems).FirstOrDefaultAsync(x => x.Id == model.Id.Value);
+            DisableDraftedFilter();
+            var inoviceNote = await _invoiceNoteRepository
+                .GetAllIncluding(x => x.InvoiceItems)
+                .FirstOrDefaultAsync(x => x.Id == model.Id.Value &&
+                x.Status==NoteStatus.Draft);
 
             if (inoviceNote == null)
                 throw new UserFriendlyException(L("Theinvoicedoesnotfound"));
