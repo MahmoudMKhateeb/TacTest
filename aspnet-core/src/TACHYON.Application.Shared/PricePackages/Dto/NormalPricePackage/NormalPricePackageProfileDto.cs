@@ -12,5 +12,9 @@ namespace TACHYON.PricePackages.Dto.NormalPricePackage
         public string TruckType { get; set; }
         public string Origin { get; set; }
         public string Destination { get; set; }
+        public decimal DirectRequestPrice { get; set; }
+        public decimal MarcketPlaceRequestPrice { get; set; }
+        public decimal TachyonMSRequestPrice { get; set; }
+        public int TenantId { get; set; }
     }
 }

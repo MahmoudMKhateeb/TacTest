@@ -276,6 +276,22 @@ namespace TACHYON.Notifications
                 userIds: new[] { argsUser });
         }
 
+        public async Task ShippingRequestAddedByTMSToTenant(int TenantId, long shippingRequestId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShippingRequestAddedByTMSNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            var argsUser = await GetAdminUser(TenantId);
+
+            notificationData["shippingRequestId"] = shippingRequestId;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyShipperWhenTMSAddedShippingRequest, notificationData,
+                userIds: new[] { argsUser });
+        }
+
         public Task SomeTrucksCouldntBeImported(UserIdentifier user,
             string fileToken,
             string fileType,

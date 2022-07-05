@@ -180,6 +180,10 @@ export class UserNotificationHelper extends AppComponentBase {
         );
       case 'App.PricePackageOfferWasCreated':
         return `/app/main/directrequest/list?directRequestId=${userNotification.notification.data.properties.directRequestId}`;
+      case 'App.CarrierAcceptPricePackageOffer':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.shippingRequestId}`;
+      case 'App.NotifyShipperWhenTMSAddedShippingRequest':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.shippingRequestId}`;
       case 'App.ShippingRequestAsBidWithSameTruck':
         return `/app/main/marketplace/list?srId=${userNotification.notification.data.properties.shippingRequestId}`;
       case 'App.Trip.Accident.Resolved':

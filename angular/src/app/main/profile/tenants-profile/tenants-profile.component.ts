@@ -60,7 +60,7 @@ export class TenantsProfileComponent extends AppComponentBase implements OnInit 
     return this.feature.isEnabled('App.Shipper');
   }
   get isTMS(): boolean {
-    return !this.isCarrier && !this.isShipper;
+    return this.feature.isEnabled('App.TachyonDealer');
   }
 
   ngOnInit(): void {

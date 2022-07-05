@@ -3016,5 +3016,6 @@
 		<text name="NoUpcomingLoads">No upcoming loads</text>
 		<text name="NoPastLoad">No past loads</text>
 		<text name="EntityWithIdXIsNotFound">The entity with id {0} is not found</text>
+		<text name="ShippingRequestAddedByTMSNotificationMessage">Shipping Request Added for you By Tachyon Manage Service</text>
 	</texts>
 </localizationDictionary>

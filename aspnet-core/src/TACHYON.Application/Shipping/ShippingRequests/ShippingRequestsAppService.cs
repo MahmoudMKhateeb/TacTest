@@ -489,6 +489,11 @@ namespace TACHYON.Shipping.ShippingRequests
                 await _priceOfferRepository.InsertAsync(offer);
 
             }
+
+            if (shippingRequest.IsTachyonDeal && await IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                await SendNotificationToAssignedTenant(shippingRequest);
+            }
         }
 
 
@@ -974,6 +979,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 //Notify Carrier with the same Truck type
                 await SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
             }
+            
         }
 
         /// <summary>
@@ -1019,6 +1025,11 @@ namespace TACHYON.Shipping.ShippingRequests
                 var carriers = await _normalPricePackageManager.GetCarriersMatchingPricePackages(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId);
                 await _appNotifier.ShippingRequestAsBidWithMatchingPricePackage(carriers, shippingRequest.ReferenceNumber, shippingRequest.Id);
             }
+        }
+
+        private async Task SendNotificationToAssignedTenant(ShippingRequest shippingRequest)
+        {
+            await _appNotifier.ShippingRequestAddedByTMSToTenant(shippingRequest.TenantId, shippingRequest.Id);
         }
 
 

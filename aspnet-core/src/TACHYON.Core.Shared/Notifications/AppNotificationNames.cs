@@ -145,6 +145,7 @@ namespace TACHYON.Notifications
         public const string NotifyShipperBeforApplyDetention = "App.NotifyShipperBeforApplyDetention";
         public const string NotifyShipperWhenApplyDetention = "App.NotifyShipperWhenApplyDetention";
 
+        public const string NotifyShipperWhenTMSAddedShippingRequest = "App.NotifyShipperWhenTMSAddedShippingRequest";
         #endregion
     }
 }

@@ -37,10 +37,7 @@
       <profile-shipper-invoicing *ngIf="giveUserEditionType == 2 && (isTMS || isShipper)" [giverUserId]="givenId"></profile-shipper-invoicing>
     </div>
     <!--  section Carrier Vases    -->
-    <profile-carrier-normal-price-package
-      *ngIf="giveUserEditionType == 3 && (isTMS || isCarrier)"
-      [giverUserId]="givenId"
-    ></profile-carrier-normal-price-package>
+    <profile-carrier-normal-price-package [giverUserId]="givenId"></profile-carrier-normal-price-package>
 
     <!--  section Carrier Vases    -->
     <profile-carrier-vases *ngIf="giveUserEditionType == 3 && (isTMS || isCarrier)" [giverUserId]="givenId"></profile-carrier-vases>
