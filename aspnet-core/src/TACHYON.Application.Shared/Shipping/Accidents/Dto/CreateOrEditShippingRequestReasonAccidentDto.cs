@@ -8,8 +8,6 @@ namespace TACHYON.Shipping.Accidents.Dto
 {
     public class CreateOrEditShippingRequestReasonAccidentDto : EntityDto
     {
-        [Required]
-        [StringLength(60, MinimumLength = 3)]
         public string Key { get; set; }
         public ICollection<ShippingRequestReasonAccidentTranslationDto> Translations { get; set; }
     }

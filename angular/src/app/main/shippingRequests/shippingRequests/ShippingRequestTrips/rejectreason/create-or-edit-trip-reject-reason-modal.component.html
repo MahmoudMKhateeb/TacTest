@@ -21,6 +21,21 @@
           </button>
         </div>
         <div class="modal-body">
+          <div class="form-group col-md-12">
+            <label>{{ l('Key') }} <span class="required-fileds">*</span></label>
+            <input
+              #Key="ngModel"
+              type="text"
+              class="form-control"
+              [(ngModel)]="reason.key"
+              name="Key"
+              minlength="3"
+              maxlength="256"
+              [class.is-invalid]="Form.submitted && !Key.valid"
+              [class.is-valid]="Form.submitted && Key.valid"
+              required
+            />
+          </div>
           <div class="row" *ngFor="let t of Translations; let i = index">
             <div class="form-group col-md-6">
               <span class="symbol symbol-20 mr-3">
@@ -32,8 +47,21 @@
             </div>
 
             <div class="form-group col-md-6">
-              <label>{{ 'Name' | localize }}</label>
-              <input #nameInput class="form-control" type="text" [name]="'name' + i" [(ngModel)]="t.name" required minLength="3" maxlength="250" />
+              <label>{{ 'Name' | localize }} <span class="text-danger">*</span></label>
+              <input
+                #nameInput="ngModel"
+                [ngClass]="{
+                  'is-valid': Form.submitted && nameInput.valid,
+                  'is-invalid': Form.submitted && !nameInput.valid
+                }"
+                class="form-control"
+                type="text"
+                [name]="'name' + i"
+                [(ngModel)]="t.name"
+                required
+                minLength="3"
+                maxlength="250"
+              />
             </div>
           </div>
         </div>
