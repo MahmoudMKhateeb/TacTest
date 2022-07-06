@@ -80,7 +80,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             var SR = GetShippingRequestByPermission(importTripDto.ShippingRequestId);
 
             //StringBuilder exceptionMessage = new StringBuilder();
-
+            if(importTripDto.StartTripDate?.Date == null)
+            {
+                importTripDto.StartTripDate = GetShippingRequestById(importTripDto.ShippingRequestId).StartTripDate;
+            }
             if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
             {
                 exceptionMessage.Append("The start date must be or equal to end date." + "; ");
@@ -200,6 +203,14 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public List<ShippingRequestTrip> GetShippingRequestTripsIdByBulkRefs(List<string> references)
         {
             return _shippingRequestTripRepository.GetAll().Where(x => references.Contains(x.BulkUploadRef)).ToList();
+        }
+
+        public ShippingRequest GetShippingRequestById(long id)
+        {
+            return _shippingRequestRepository.GetAll()
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
+                .FirstOrDefault(x => x.Id == id);
         }
 
         //goods details validation

@@ -36,6 +36,7 @@ namespace TACHYON.DataExporting.Excel.NPOI
         {
             try
             {
+                if (text == null) text = "no";
                 return text.ToLower() == "yes" || text == "نعم";
             }
             catch
