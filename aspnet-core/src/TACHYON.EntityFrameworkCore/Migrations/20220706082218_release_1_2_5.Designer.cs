@@ -11,8 +11,8 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    [Migration("20220705111804_AddIsDraftedFilter_InvoiceNoteTB")]
-    partial class AddIsDraftedFilter_InvoiceNoteTB
+    [Migration("20220706082218_release_1_2_5")]
+    partial class release_1_2_5
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -4349,9 +4349,6 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDrafted")
-                        .HasColumnType("bit");
-
                     b.Property<decimal>("ItmePrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -4388,6 +4385,9 @@ namespace TACHYON.Migrations
                     b.Property<long?>("SubmitInvoiceId")
                         .HasColumnType("bigint");
 
+                    b.Property<decimal>("TaxVat")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
@@ -4401,9 +4401,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("VatPostCommestion")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("VatPreCommestion")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -6241,6 +6238,11 @@ namespace TACHYON.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(60)")
+                        .HasMaxLength(60);
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
