@@ -891,6 +891,21 @@
               </div>
               <span *ngIf="ignoredOtpNumbers.invalid" class="form-text text-danger">{{ l('IgnoredOtpNumbersPatternMsg') }}</span>
             </tab>
+            <tab class="p-5" heading="{{ 'RatingSettings' | localize }}">
+              <h5>{{ 'TenantRatingSettings' | localize }}</h5>
+              <div class="form-group">
+                <label for="TenantRatingMinNumber">{{ 'TenantRatingMinNumber' | localize }}</label>
+                <input
+                  id="TenantRatingMinNumber"
+                  type="text"
+                  #ignoredOtpNumbers="ngModel"
+                  name="TenantRatingMinNumber"
+                  class="form-control"
+                  [pattern]="pattern"
+                  [(ngModel)]="hostSettings.tenantRatingMinNumber.rateMinNumber"
+                />
+              </div>
+            </tab>
           </tabset>
         </div>
       </div>

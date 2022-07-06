@@ -184,7 +184,10 @@ namespace TACHYON.Configuration
                 new SettingDefinition(AppSettings.Mobile.IgnoredOtpNumbers,
                     GetFromAppSettings(AppSettings.Mobile.IgnoredOtpNumbers, ""),
                     isVisibleToClients: true,
-                    scopes: SettingScopes.Application)
+                    scopes: SettingScopes.Application),
+
+                new SettingDefinition(AppSettings.Rating.TenantRatingMinNumber,
+                    GetFromAppSettings(AppSettings.Rating.TenantRatingMinNumber, "10")),
             };
         }
 
