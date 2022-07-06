@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.Core.Invoices.Jobs;
+using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Groups;
@@ -550,7 +551,7 @@ namespace TACHYON.Invoices
         }
 
 
-        public async Task GenertateInvoiceOnDeman(Tenant tenant)
+        public async Task GenertateInvoiceOnDeman(Tenant tenant, List<int> tripIdsList)
         {
             InvoicePeriod period = await _periodRepository.FirstOrDefaultAsync(x =>
                 x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
@@ -559,8 +560,15 @@ namespace TACHYON.Invoices
             if (period.PeriodType != InvoicePeriodType.PayuponDelivery &&
                 period.PeriodType != InvoicePeriodType.PayInAdvance)
             {
-                var trips = _shippingRequestTrip.GetAll().Include(x => x.ShippingRequestFk).Include(x => x.ShippingRequestTripVases).Where(x => x.ShippingRequestFk.TenantId == tenant.Id && !x.IsShipperHaveInvoice
-                 && (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered || x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced));
+                var trips = _shippingRequestTrip.GetAll()
+                    .Include(x => x.ShippingRequestFk)
+                    .Include(x => x.ShippingRequestTripVases)
+                    .Where(x => x.ShippingRequestFk.TenantId == tenant.Id &&
+                    tripIdsList.Contains(x.Id) &&
+                    !x.IsShipperHaveInvoice &&
+                    //waybills.Contains(x.Id) &&
+                    (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
+                    x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced));
                 if (trips != null && trips.Count() > 0)
                 {
                     await GenerateShipperInvoice(tenant, trips.ToList(), period);

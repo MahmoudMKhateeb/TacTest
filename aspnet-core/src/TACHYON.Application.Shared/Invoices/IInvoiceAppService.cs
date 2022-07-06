@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using DevExtreme.AspNet.Data.ResponseModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Dto;
 using TACHYON.Invoices.Dto;
@@ -16,7 +17,7 @@ namespace TACHYON.Invoices
         Task<bool> MakePaid(long InvoiceId);
         Task MakeUnPaid(long InvoiceId);
 
-        Task OnDemand(int Id);
+        Task OnDemand(int Id, List<SelectItemDto> waybills);
 
         Task<FileDto> Exports(InvoiceFilterInput input);
         Task<FileDto> ExportItems(long id);
