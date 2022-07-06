@@ -211,7 +211,9 @@ namespace TACHYON.Shipping.Trips.Importing
                 PickingType = PickingType.Pickup,
                 ReceiverId = trip.SenderId,
                 FacilityId = trip.OriginFacilityId.Value,
-                ShippingRequestTripId = trip.Id
+                ShippingRequestTripId = trip.Id,
+                WorkFlowVersion = TACHYONConsts.PickUpRoutPointWorkflowVersion,
+                Code = (new Random().Next(100000, 999999)).ToString(),
             };
             await _routPointRepository.InsertAsync(pickup);
 
@@ -220,7 +222,11 @@ namespace TACHYON.Shipping.Trips.Importing
                 PickingType = PickingType.Dropoff,
                 ReceiverId = trip.ReceiverId,
                 FacilityId = trip.DestinationFacilityId.Value,
-                ShippingRequestTripId = trip.Id
+                ShippingRequestTripId = trip.Id,
+                Code = (new Random().Next(100000, 999999)).ToString(),
+                WorkFlowVersion = trip.NeedsDeliveryNote
+                    ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
+                    : TACHYONConsts.DropOfRoutPointWorkflowVersion
             };
             await _routPointRepository.InsertAsync(dropPoint);
         }
