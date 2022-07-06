@@ -301,7 +301,7 @@ namespace TACHYON.Invoices
                  .ThenInclude(x => x.ShippingRequestFk)
                  .Where(x => x.DestinationTenantId == tenant.Id) // destination  company
                  .Where(x => !x.SubmitInvoiceId.HasValue && x.Status != PenaltyStatus.Canceled &&
-                 x.IsDrafted==false).ToListAsync();
+                 x.Status!=PenaltyStatus.Draft).ToListAsync();
 
             if (penalties.Any())
                 await GeneratePenaltySubmitInvoice(tenant, penalties, period);
@@ -462,8 +462,8 @@ namespace TACHYON.Invoices
         public async Task GeneratePenaltyInvoice(Tenant tenant, List<Penalty> penalties, InvoicePeriod period)
         {
             decimal totalAmount = penalties.Sum(r => r.TotalAmount);
-            decimal vatAmount = penalties.Sum(r => r.VatAmount);
-            decimal subTotalAmount = penalties.Sum(r =>r.AmountPreCommestion + r.VatPreCommestion);
+            decimal vatAmount = penalties.Sum(r => r.VatPostCommestion);
+            decimal subTotalAmount = penalties.Sum(r =>r.AmountPostCommestion);
 
             DateTime dueDate = Clock.Now;
 
@@ -506,9 +506,9 @@ namespace TACHYON.Invoices
         }
         public async Task GeneratePenaltySubmitInvoice(Tenant tenant, List<Penalty> penalties, InvoicePeriod period)
         {
-            decimal totalAmount = penalties.Sum(r => r.TotalAmount);
             decimal vatAmount = penalties.Sum(r => r.VatAmount);
-            decimal subTotalAmount = penalties.Sum(r =>r.AmountPreCommestion + r.VatPreCommestion);
+            decimal subTotalAmount = penalties.Sum(r =>r.AmountPreCommestion);
+            decimal totalAmount = penalties.Sum(r => r.AmountPreCommestion + r.VatAmount);
 
 
             var submitInvoice = new SubmitInvoice

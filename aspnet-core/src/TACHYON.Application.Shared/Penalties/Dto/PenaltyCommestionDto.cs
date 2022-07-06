@@ -11,14 +11,19 @@ namespace TACHYON.Penalties.Dto
         public PriceOfferCommissionType CommissionType { get; set; }
         public decimal AmountPreCommestion { get; set; }
         public decimal AmountPostCommestion { get; set; }
-        public decimal VatPreCommestion { get; set; }
+        /// <summary>
+        /// vat amount without commission
+        /// </summary>
+        public decimal VatAmount { get; set; }
         public decimal VatPostCommestion { get; set; }
         public decimal ItemPrice { get; set; }
+        public decimal TaxVat { get; set; }
 
-        public decimal VatAmount()
-        {
-            return VatPostCommestion - VatPreCommestion;
-        }
+        //public decimal VatAmount()
+        //{
+        //    return VatPostCommestion - VatPreCommestion;
+        //   // return VatPostCommestion;
+        //}
         public decimal TotalAmount()
         {
             return AmountPostCommestion + VatPostCommestion;

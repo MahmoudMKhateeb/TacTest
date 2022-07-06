@@ -113,7 +113,13 @@
                         >{{ l('Confirm') }}</a
                       >
                     </li>
-                    <li *ngIf="!options.data.penaltyComplaintId && appSession.tenantId == options.data.tenantId">
+                    <li
+                      *ngIf="
+                        !options.data.penaltyComplaintId &&
+                        appSession.tenantId == options.data.tenantId &&
+                        options.data.status == PenaltyTypeEnum.Draft
+                      "
+                    >
                       <a class="dropdown-item" (click)="registerAComplaint.show(options.data.id)">{{ l('RegisteraComplaint') }}</a>
                     </li>
                     <li *ngIf="options.data.penaltyComplaintId">

@@ -11,6 +11,7 @@ namespace TACHYON.Invoices.SubmitInvoices.Dto
         public string Period { get; set; }
         public int PeriodId { get; set; }
         public SubmitInvoiceStatus Status { get; set; }
+        public InvoiceChannel Channel { get; set; }
         public string StatusTitle { get { return Status.GetEnumDescription(); } }
         public Guid? DocumentId { get; set; }
         public string DocumentName { get; set; }
@@ -18,5 +19,6 @@ namespace TACHYON.Invoices.SubmitInvoices.Dto
         public DateTime CreationTime { get; set; }
         public DateTime? DueDate { get; set; }
         public decimal TotalAmount { get; set; }
+        public string InvoiceChannelTitle { get { return Channel.GetEnumDescription(); } }
     }
 }

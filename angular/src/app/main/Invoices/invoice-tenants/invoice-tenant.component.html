@@ -61,7 +61,7 @@
               <dxi-column cellTemplate="statusCellTemplate" dataField="status" caption=" {{ l('Status') }}">
                 <dxo-lookup [dataSource]="SubmitStatus" displayExpr="value" valueExpr="key"></dxo-lookup>
               </dxi-column>
-
+              <dxi-column dataField="channel" cellTemplate="channelCellTemplate" caption="{{ l('Type') }}"></dxi-column>
               <dxo-master-detail [enabled]="true" template="detail"></dxo-master-detail>
               <div *dxTemplate="let options of 'detail'">
                 <app-invoice-tenant-item [Id]="options.data.id"></app-invoice-tenant-item>
@@ -82,7 +82,18 @@
                   ></span
                 >
               </div>
-
+              <div *dxTemplate="let options of 'channelCellTemplate'">
+                <span style="width: 137px"
+                  ><span
+                    class="badge badge-inline"
+                    [ngClass]="{
+                      'badge-danger': options.data.channel == 3,
+                      'badge-primary': options.data.channel != 3
+                    }"
+                    >{{ l(options.data.invoiceChannelTitle) }}</span
+                  ></span
+                >
+              </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
                   <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
