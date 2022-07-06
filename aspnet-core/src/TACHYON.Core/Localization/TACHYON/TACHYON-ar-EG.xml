@@ -2776,6 +2776,7 @@
 		<text name="OnTime">في الوقت المحدد</text>
 		<text name="Unknown">غير معروف</text>
 		<text name="ShippingRequestAddedByTMSNotificationMessage">تم إضافة طلب الشحن لك بواسطة خدمة إدارة Tachyon</text>
+		<text name="Financials">المالية</text>
 
 	</texts>
 </localizationDictionary>
