@@ -243,5 +243,6 @@ namespace TACHYON.Notifications
         Task NotifyTmsWhenCancellationRequestedByShipper(string referenceNumber,string tripWaybillNumber, string companyName,long srId);
 
         Task NotifyHostAndTmsWhenPenaltyComplaintAdded(int tenantId,int penaltyId);
+        Task ShippingRequestAddedByTMSToTenant(int TenantId, long shippingRequestBidId);
     }
 }

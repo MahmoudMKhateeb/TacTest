@@ -33,6 +33,9 @@
               <th>{{ l('TruckType') }}</th>
               <th>{{ l('Origin') }}</th>
               <th>{{ l('Destination') }}</th>
+              <th>{{ l('DirectRequestPrice') }}</th>
+              <th>{{ l('MarcketPlaceRequestPrice') }}</th>
+              <th>{{ l('TachyonMSRequestPrice') }}</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-normalPricePackage>
@@ -42,6 +45,13 @@
               <td>{{ normalPricePackage.truckType }}</td>
               <td>{{ normalPricePackage.origin }}</td>
               <td>{{ normalPricePackage.destination }}</td>
+              <td>{{ normalPricePackage.directRequestPrice }}</td>
+              <td>{{ normalPricePackage.marcketPlaceRequestPrice }}</td>
+              <td>
+                <span *ngIf="isTachyonDealer || normalPricePackage.tenantId == appSession.tenantId"
+                  >{{ normalPricePackage.tachyonMSRequestPrice }}
+                </span>
+              </td>
             </tr>
           </ng-template>
         </p-table>

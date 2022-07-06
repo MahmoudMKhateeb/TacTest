@@ -3026,7 +3026,7 @@
 		<text name="Delayed">Delayed</text>
 		<text name="OnTime">On Time</text>
 		<text name="Unknown">Unknown</text>
-
+		<text name="ShippingRequestAddedByTMSNotificationMessage">Shipping Request Added for you By Tachyon Manage Service</text>
 		
 	</texts>
 </localizationDictionary>
