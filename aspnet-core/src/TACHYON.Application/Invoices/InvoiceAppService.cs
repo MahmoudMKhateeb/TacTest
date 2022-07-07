@@ -534,7 +534,7 @@ namespace TACHYON.Invoices
                     VatAmount = penalty.VatPostCommestion,
                     TotalAmount = penalty.TotalAmount,
                     Date = penalty.CreationTime.ToString("dd/MM/yyyy"),
-                    ContainerNumber = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.AssignedTruckFk.PlateNumber : "-",
+                    ContainerNumber = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.AssignedTruckFk?.PlateNumber : "-",
                     WayBillNumber = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.WaybillNumber.ToString() : "-" ,
                     ItmePrice = penalty.AmountPostCommestion,
                     Remarks = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId ==
