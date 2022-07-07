@@ -65,7 +65,7 @@ namespace TACHYON.Shipping.ShippingRequests.ShippingRequestAndTripNotes
                     x => x.TenantId == AbpSession.TenantId ||
                     (x.TenantId != AbpSession.TenantId && (x.Visibility == VisibilityNotes.ShipperOnly || x.Visibility == VisibilityNotes.Internal)))
                 .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier),
-                    x => (x.ShippingRequestFK.CarrierTenantId == AbpSession.TenantId &&
+                    x => ((x.ShippingRequestFK.CarrierTenantId == AbpSession.TenantId || x.ShippingRequestFK.CarrierTenantIdForDirectRequest == AbpSession.TenantId) &&
                     (x.Visibility == VisibilityNotes.Internal ||
                     x.Visibility == VisibilityNotes.CarrierOnly ||
                     x.Visibility == VisibilityNotes.TMSAndCarrier)) ||
@@ -107,20 +107,21 @@ namespace TACHYON.Shipping.ShippingRequests.ShippingRequestAndTripNotes
                 .Include(r => r.ShippingRequestFK)
                 .Include(r => r.TenantFK)
                 .Include(r => r.TripFK)
+                .ThenInclude(r => r.ShippingRequestFk)
                 .Include(r => r.DocumentFiles)
                 .Where(x => x.TripId != null && x.TripId == Input.TripId)
                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper),
                     x => x.TenantId == AbpSession.TenantId ||
                     (x.TenantId != AbpSession.TenantId && (x.Visibility == VisibilityNotes.ShipperOnly || x.Visibility == VisibilityNotes.Internal)))
                 .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier),
-                    x => (x.ShippingRequestFK.CarrierTenantId == AbpSession.TenantId &&
+                    x => ((x.TripFK.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.TripFK.ShippingRequestFk.CarrierTenantIdForDirectRequest == AbpSession.TenantId) &&
                     (x.Visibility == VisibilityNotes.Internal ||
                     x.Visibility == VisibilityNotes.CarrierOnly ||
                     x.Visibility == VisibilityNotes.TMSAndCarrier)) ||
                     (x.TenantId == AbpSession.TenantId)
                     )
               .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.TachyonDealer),
-                    x => (x.ShippingRequestFK.IsTachyonDeal &&
+                    x => (x.TripFK.ShippingRequestFk.IsTachyonDeal &&
                    (x.Visibility == VisibilityNotes.TMSOnly
                    || x.Visibility == VisibilityNotes.TMSAndCarrier)) ||
                    (x.TenantId == AbpSession.TenantId)

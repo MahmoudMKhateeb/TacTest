@@ -1,4 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   PagedResultDtoOfShippingRequestAndTripNotesDto,
@@ -15,9 +17,10 @@ import { finalize } from 'rxjs/operators';
   selector: 'app-notes',
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.css'],
+  animations: [appModuleAnimation()],
 })
 export class NotesComponent extends AppComponentBase implements OnInit {
-  @ViewChild('AddNewNoteModal', { static: true }) modal: ModalDirective;
+  @ViewChild('AddNewNoteModal', { static: false }) modal: ModalDirective;
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
 
@@ -26,6 +29,7 @@ export class NotesComponent extends AppComponentBase implements OnInit {
   @Input() type: string;
   totalCount = 0;
   items: PagedResultDtoOfShippingRequestAndTripNotesDto;
+  avatar = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
 
   constructor(
     injector: Injector,

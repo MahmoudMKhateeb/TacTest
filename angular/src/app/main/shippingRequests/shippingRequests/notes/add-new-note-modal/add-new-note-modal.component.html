@@ -143,7 +143,7 @@
           <button
             type="submit"
             [buttonBusy]="saving"
-            [disabled]="saving || !addNewNoteModal.form.valid || !isFileInputValid"
+            [disabled]="saving || !addNewNoteModal.form.valid || (!isFileInputValid && !item.noteId)"
             class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
           >
             {{ item.noteId > 0 ? l('UpdateNote') : l('AddNote') }}

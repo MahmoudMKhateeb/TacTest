@@ -35,6 +35,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   @Input() isTMS: boolean = false;
   @Input() Title: string;
   @Input() ShippingRequestId: number | null | undefined = undefined;
+  type = 'ShippingRequest';
   origin: any;
   destination: any;
   direction = 'ltr';

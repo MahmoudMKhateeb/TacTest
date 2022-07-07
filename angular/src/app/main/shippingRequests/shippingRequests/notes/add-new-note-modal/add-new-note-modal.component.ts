@@ -194,5 +194,6 @@ export class AddNewNoteModalComponent extends AppComponentBase implements OnInit
   removeFile(name1: string) {
     let index = this.files.findIndex((r) => r.name.includes(name1));
     this.files.splice(index, 1);
+    if (this.files.length == 0) this.docProgress = undefined;
   }
 }
