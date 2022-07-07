@@ -79,7 +79,7 @@ namespace TACHYON.Invoices.Reports
 
         private string GetInvoiceNumberFromNote(long invoiceNoteId)
         {
-            return _invoiceNoteRepository.FirstOrDefault(invoiceNoteId)?.InvoiceNumber.ToString();
+            return _invoiceNoteRepository.FirstOrDefault(invoiceNoteId)?.ReferanceNumber.ToString();
         }
     }
 }
