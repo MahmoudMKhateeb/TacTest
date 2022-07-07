@@ -294,7 +294,7 @@ namespace TACHYON.Dashboards.Shipper
                     .Select(g => new MostUsedOriginsDto()
                     {
                         CityName = g.Key,
-                        NumberOfRequests = g.Count()
+                        NumberOfRequests = g.Count()  //number of trips
                     })
                     .OrderByDescending(r => r.NumberOfRequests)
                     .Take(5)
@@ -319,7 +319,7 @@ namespace TACHYON.Dashboards.Shipper
                     .Select(g => new MostUsedOriginsDto()
                     {
                         CityName = g.Key,
-                        NumberOfRequests = g.Count()
+                        NumberOfRequests = g.Count() //number of trips
                     })
                     .OrderByDescending(r => r.NumberOfRequests)
                     .Take(5)

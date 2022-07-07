@@ -1287,7 +1287,7 @@
 		<text name="NumberMinDigits">Number min digits</text>
 		<text name="NumberOfDrops">Number of drops</text>
 		<text name="NumberOfPacking">Number of packing type</text>
-		<text name="NumberOfTrips">Number of trips</text>
+		<text name="NumberOfTrips">Number of Trips</text>
 		<text name="SourceAndDestinationCantBeTheSame">Source and destination can't be the same</text>
 		<text name="TotalBids">Total bids</text>
 		<text name="NumbersOnly">Numbers only</text>
