@@ -121,7 +121,6 @@ namespace TACHYON.Penalties
             if (penalty == null)
                 throw new UserFriendlyException("ThePenaltyDoseNotFounded");
 
-            penalty.Status = PenaltyStatus.Canceled;
             penalty.PenaltyComplaintFK.Status = ComplaintStatus.Accepted;
         }
 

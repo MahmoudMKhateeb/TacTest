@@ -119,12 +119,24 @@ namespace TACHYON
         {
             CurrentUnitOfWork.DisableFilter("IHasIsDrafted");
         }
+
         protected virtual async Task DisableTenancyFilterIfTachyonDealerOrHost() 
         {
             if (!AbpSession.TenantId.HasValue || await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
             {
                 DisableTenancyFilters();
                
+            }
+
+        }
+
+
+        protected virtual async Task DisableDraftedFilterIfTachyonDealerOrHost()
+        {
+            if (!AbpSession.TenantId.HasValue || await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                DisableDraftedFilter();
+
             }
 
         }

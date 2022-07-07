@@ -15,6 +15,7 @@ namespace TACHYON.Invoices.InoviceNote.Dto
         public string WaybillNumber { get; set; }
         public decimal Price { get; set; }
         public decimal TotalValue { get; set; }
+        public bool IsDrafted { get; set; }
         //public bool IsManual { get; set; }
         public List<GetAllInvoiceItemDto> InvoiceItems { get; set; }
     }

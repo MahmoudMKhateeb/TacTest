@@ -110,7 +110,7 @@
                     >
                       <a class="dropdown-item" (click)="createOrEditNoteModalComponent.show(options.data.id)">{{ l('EditNote') }}</a>
                     </li>
-                    <li>
+                    <li *ngIf="options.data.status != NoteStatusesEnum.Draft">
                       <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('downloadNote') }}</a>
                     </li>
                     <li>

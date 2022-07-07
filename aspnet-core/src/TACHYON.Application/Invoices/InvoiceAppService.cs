@@ -390,6 +390,7 @@ namespace TACHYON.Invoices
             var bankNameEnglish = SettingManager.GetSettingValue(AppSettings.Invoice.BankNameEnglish);
 
             DisableTenancyFilters();
+            DisableDraftedFilter();
             var invoice = _invoiceRepository
                 .GetAll()
                 .Include(i => i.InvoicePeriodsFK)
