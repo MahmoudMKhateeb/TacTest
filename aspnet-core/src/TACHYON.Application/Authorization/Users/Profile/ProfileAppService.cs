@@ -228,6 +228,17 @@ namespace TACHYON.Authorization.Users.Profile
                 .Select(x => x.DisplayName).FirstOrDefaultAsync();
             profileForView.CityName = await GetCityNameAsync(profile.CityId);
             profileForView.CountryName = await GetCountryNameAsync(profile.CountryId);
+            if (profile.EditionId == ShipperEditionId)
+            {
+                var facilities = await _lookupFacilityRepository.GetAll()
+                    .Where(x=>x.TenantId==tenantId && x.Rate!=0)
+                    .Select(x=>x.Rate)
+                    .ToListAsync();
+                if (facilities.Count() > 0)
+                {
+                    profileForView.FacilitiesRating = facilities.Average();
+                }
+            }
             return profileForView;
         }
 
