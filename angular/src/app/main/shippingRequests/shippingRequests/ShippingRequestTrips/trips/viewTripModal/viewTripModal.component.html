@@ -101,7 +101,7 @@
           <!--  end:: Trip start&End Dates-->
 
           <!-- StartOf::Driver&Truck -->
-          <ng-container *ngIf="feature.isEnabled('App.Carrier') && trip.status !== shippingRequestTripStatusEnum.Delivered">
+          <ng-container *ngIf="(feature.isEnabled('App.Carrier') || isTachyonDealer) && trip.status !== shippingRequestTripStatusEnum.Delivered">
             <div class="form-group col-lg-6">
               <label>{{ l('Driver') }}</label>
               <select

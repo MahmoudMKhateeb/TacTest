@@ -1,18 +1,17 @@
-import { Component, ViewChild, Injector, OnInit, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
+  AssignDriverAndTruckToShippmentByCarrierInput,
+  CreateOrEditShippingRequestTripVasDto,
   FacilityForDropdownDto,
   RoutStepsServiceProxy,
-  ShippingRequestsTripServiceProxy,
-  CreateOrEditShippingRequestTripVasDto,
+  SelectItemDto,
+  ShippingRequestDriverServiceProxy,
   ShippingRequestsTripForViewDto,
+  ShippingRequestsTripServiceProxy,
+  ShippingRequestTripStatus,
   TrucksServiceProxy,
   WaybillsServiceProxy,
-  SelectItemDto,
-  AssignDriverAndTruckToShippmentByCarrierInput,
-  ShippingRequestDriverServiceProxy,
-  GetShippingRequestForViewOutput,
-  ShippingRequestTripStatus,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -20,7 +19,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import Swal from 'sweetalert2';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
@@ -84,7 +83,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this.currentTripId = id;
     //update the active trip id in TripsService
     this._TripService.updateActiveTripId(id);
-    if (this.feature.isEnabled('App.Carrier')) {
+    if (this.feature.isEnabled('App.Carrier') || this.isTachyonDealer) {
       this.getAllTrucks(this.TruckTypeId);
       this.getAllDrivers();
     }
@@ -150,22 +149,18 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Carriers Drivers For DD
    */
   getAllDrivers() {
-    if (this.feature.isEnabled('App.Carrier')) {
-      this._trucksServiceProxy.getAllDriversForDropDown().subscribe((res) => {
-        this.allDrivers = res;
-      });
-    }
+    this._trucksServiceProxy.getAllDriversForDropDown(this.activeTripId).subscribe((res) => {
+      this.allDrivers = res;
+    });
   }
 
   /**
    * this method is for Getting All Carriers Trucks For DD
    */
   getAllTrucks(truckTypeId) {
-    if (this.feature.isEnabled('App.Carrier')) {
-      this._trucksServiceProxy.getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId).subscribe((res) => {
-        this.allTrucks = res;
-      });
-    }
+    this._trucksServiceProxy.getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId, this.activeTripId).subscribe((res) => {
+      this.allTrucks = res;
+    });
   }
 
   /**
