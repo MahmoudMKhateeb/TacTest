@@ -54,8 +54,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Input() shippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
-  fromTime: string;
-  toTime: string;
   startTripdate: any;
   endTripdate: any;
   minTripDate: any;
@@ -197,8 +195,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.updateActiveTripId(this.activeTripId);
       this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
-        this.fromTime = res.supposedPickupDateFrom ? res.supposedPickupDateFrom.format('HH:mm') : undefined;
-        this.toTime = res.supposedPickupDateTo ? res.supposedPickupDateTo.format('HH:mm') : undefined;
         //this.startTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.startTripDate);
         if (res.endTripDate != null && res.endTripDate != undefined)
           this.endTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.endTripDate);
@@ -254,8 +250,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.pickupPointSenderId = undefined;
     this._TripService.updateSourceFacility(null);
     this._TripService.updateDestFacility(null);
-    this.fromTime = undefined;
-    this.toTime = undefined;
   }
 
   createOrEditTrip() {
@@ -272,8 +266,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         this.GetSelectedstartDateChange(this.endTripdate, 'end');
       }
 
-      this.trip.supposedPickupDateFrom = moment(this.trip.startTripDate.format('YYYY-MM-DD') + ' ' + this.fromTime, 'YYYY-MM-DD hh:mm');
-      this.trip.supposedPickupDateTo = moment(this.trip.startTripDate.format('YYYY-MM-DD') + ' ' + this.toTime, 'YYYY-MM-DD hh:mm');
       this._shippingRequestTripsService
         .createOrEdit(this.trip)
         .pipe(
