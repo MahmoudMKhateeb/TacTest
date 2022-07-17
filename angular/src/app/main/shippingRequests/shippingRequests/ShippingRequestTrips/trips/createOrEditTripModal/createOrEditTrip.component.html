@@ -143,11 +143,29 @@
             <div class="col-lg-6 form-group d-inline-flex">
               <div class="input-group d-inline-block">
                 <label> {{ l('supposedPickupTimeFrom') }} <span class="required-fileds">*</span></label>
-                <input name="fromTime" class="form-control" type="time" required [(ngModel)]="fromTime" />
+                <dx-date-box
+                  name="supposedPickupDateFrom"
+                  [(value)]="trip.supposedPickupDateFrom"
+                  type="time"
+                  pickerType="list"
+                  openOnFieldClick="true"
+                  [interval]="20"
+                  required
+                >
+                </dx-date-box>
               </div>
               <div class="input-group d-inline-block">
                 <label> {{ l('supposedPickupTimeTo') }} <span class="required-fileds">*</span></label>
-                <input name="toTime" required class="form-control" type="time" [(ngModel)]="toTime" />
+                <dx-date-box
+                  name="supposedPickupDateTo"
+                  [(value)]="trip.supposedPickupDateTo"
+                  type="time"
+                  pickerType="list"
+                  openOnFieldClick="true"
+                  [interval]="20"
+                  required
+                >
+                </dx-date-box>
               </div>
             </div>
             <!--  begin:: Trip start&End Dates-->
@@ -190,21 +208,17 @@
             <div class="col-lg-6">
               <div class="form-group">
                 <!--                expected trip Delivery Date-->
-                <input
+                <label>{{ l('expectedDeliveryTime') }}</label>
+                <dx-date-box
                   id="tripExpectedDeliveryTime"
-                  [formControl]="tripExpectedDeliveryTime"
-                  type="text"
-                  class="form-control"
                   name="tripStartDate"
-                  bsDatepicker
-                  datePickerMomentModifier
-                  [class.is-valid]="tripExpectedDeliveryTime.valid && tripExpectedDeliveryTime.value"
-                  [(date)]="trip.expectedDeliveryTime"
-                  [minDate]="shippingRequest.startTripDate"
-                  [bsConfig]="{ adaptivePosition: true }"
-                  readonly="readonly"
-                  required
-                />
+                  [(value)]="trip.expectedDeliveryTime"
+                  type="datetime"
+                  [min]="trip.startTripDate"
+                  openOnFieldClick="true"
+                  [disabled]="!trip.startTripDate"
+                >
+                </dx-date-box>
               </div>
             </div>
             <!--  end:: Trip start&End Dates-->
