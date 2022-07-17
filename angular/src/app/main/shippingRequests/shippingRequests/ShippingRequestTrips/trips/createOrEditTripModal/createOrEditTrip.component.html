@@ -22,7 +22,7 @@
               #dropdownAddPage="bs-dropdown"
               [dropup]="false"
               [insideClick]="true"
-              *ngIf="!trip.id && (isShipper || isTachyonDealer)"
+              *ngIf="!trip.id && (isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas'))"
             >
               <button
                 dropdownToggle

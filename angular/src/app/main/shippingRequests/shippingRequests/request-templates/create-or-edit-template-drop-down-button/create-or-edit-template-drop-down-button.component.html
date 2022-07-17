@@ -4,7 +4,7 @@
   #dropdownAddPage="bs-dropdown"
   [dropup]="dropDirection == 'up'"
   [insideClick]="true"
-  *ngIf="isShipper || isTachyonDealer"
+  *ngIf="isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas')"
   [autoClose]="true"
 >
   <button

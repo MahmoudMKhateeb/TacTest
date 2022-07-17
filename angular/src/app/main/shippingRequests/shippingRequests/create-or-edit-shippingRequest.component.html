@@ -5,7 +5,11 @@
     <sub-header [title]="shippingRequest.id ? ('ShippingRequestsEdit' | localize) : ('ShippingRequestsCreate' | localize)"> </sub-header>
 
     <div [class]="containerClass">
-      <div *ngIf="shippingRequest.carrierTenantId" class="alert alert-custom alert-light-warning fade show mb-5" role="alert">
+      <div
+        *ngIf="shippingRequest.carrierTenantId && shippingRequest.carrierTenantId != shippingRequest.tenantId"
+        class="alert alert-custom alert-light-warning fade show mb-5"
+        role="alert"
+      >
         <div class="alert-icon"><i class="flaticon-warning"></i></div>
         <div class="alert-text">{{ l('PostPriceUpdateWarningMsg') }}</div>
       </div>

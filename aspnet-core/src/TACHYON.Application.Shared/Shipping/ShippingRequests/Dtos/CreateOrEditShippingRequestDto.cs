@@ -35,6 +35,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// if assigned to carrier
         /// </summary>
         public int? CarrierTenantId { get; set; }
+        
+        public int? TenantId { get; set; }
 
         public virtual int? TransportTypeId { get; set; }
 

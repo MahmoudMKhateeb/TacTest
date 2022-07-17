@@ -659,7 +659,7 @@ namespace TACHYON.Authorization
             cities.CreateChildPermission(AppPermissions.Pages_Administration_PolygonsImport, L("PolygonsImport"), multiTenancySides: MultiTenancySides.Host);
 
             var templateFeatureDependency =
-                new SimpleFeatureDependency(false, AppFeatures.Shipper, AppFeatures.TachyonDealer);
+                new SimpleFeatureDependency(false, AppFeatures.Shipper, AppFeatures.TachyonDealer,AppFeatures.CarrierAsASaas);
             // this permission has no restriction with scope or feature to provide an ability for host to view templates
             var entityTemplate = pages.CreateChildPermission(AppPermissions.Pages_EntityTemplate,
                 L("EntityTemplate")); 
