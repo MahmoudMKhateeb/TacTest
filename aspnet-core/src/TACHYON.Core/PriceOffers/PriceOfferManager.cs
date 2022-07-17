@@ -200,6 +200,8 @@ namespace TACHYON.PriceOffers
             if (!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
             {
                 await TachyonAcceptOffer(offer);
+                if (!(offer.ShippingRequestFk.RequestType == ShippingRequestType.TachyonManageService &&
+                      offer.Channel == PriceOfferChannel.DirectRequest))
                 await _appNotifier.TMSAcceptedOffer(offer);
                 return offer.Status;
             }
@@ -341,6 +343,8 @@ namespace TACHYON.PriceOffers
                             ShippingRequestDirectRequestStatus.Pending);
                     }
 
+                    if (!(offer.ShippingRequestFk.RequestType == ShippingRequestType.TachyonManageService &&
+                          offer.Channel == PriceOfferChannel.DirectRequest))
                     await _appNotifier.PendingOffer(offer);
                 }
             }
@@ -676,7 +680,8 @@ namespace TACHYON.PriceOffers
             if (offer.ParentId != null) offer.Status = PriceOfferStatus.AcceptedAndWaitingForShipper;
             await _appNotifier.ShippingRequestSendOfferWhenAddPrice(offer, GetCurrentTenant(_abpSession).Name);
 
-            await _appNotifier.NotifyShipperWhenSendPriceOffer(shippingRequest.TenantId, offer.Id,offer.ShippingRequestId);
+            if (!(shippingRequest.RequestType == ShippingRequestType.TachyonManageService && offer.Channel == PriceOfferChannel.DirectRequest)) 
+                await _appNotifier.NotifyShipperWhenSendPriceOffer(shippingRequest.TenantId, offer.Id,offer.ShippingRequestId);
 
 
             await CurrentUnitOfWork.SaveChangesAsync();
