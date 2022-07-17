@@ -112,7 +112,7 @@ namespace TACHYON.Invoices.InvoiceNotes
                 case NoteStatus.Draft:
                     invoiceNote.Status = NoteStatus.Confirm;
                     invoiceNote.IsDrafted = false;
-                    invoiceNote.ReferanceNumber = GenerateInvoiceNoteReferanceNumber(invoiceNote.Id, invoiceNote.NoteType);
+                    invoiceNote.ReferanceNumber = GenerateInvoiceNoteReferanceNumber(invoiceNote);
                     await _appNotifier.NewCreditOrDebitNoteAdded(invoiceNote);
                     break;
                 case NoteStatus.Confirm:
@@ -604,10 +604,19 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             return invoiceNote;
         }
-        private string GenerateInvoiceNoteReferanceNumber(long id, NoteType noteType)
+        private string GenerateInvoiceNoteReferanceNumber(InvoiceNote invoiceNote)
         {
-            string noteFormat = noteType == NoteType.Debit ? "TDN" : "TCN";
-            var referanceId = id + 10000;
+            string noteFormat = invoiceNote.NoteType == NoteType.Debit ? "TDN" : "TCN";
+            var lastItemReference=_invoiceNoteRepository.GetAll()
+                .Where(x => x.ReferanceNumber.Contains(noteFormat))
+                .OrderByDescending(y => y.ReferanceNumber)
+                .Select(x=>x.ReferanceNumber)
+                .FirstOrDefault();
+            long referanceId= 10001;
+            if (lastItemReference !=null)
+            {
+                referanceId = Convert.ToInt64(lastItemReference.Split(noteFormat+"-")[1]) + 1;
+            }
             var referanceNumber = "{0}-{1}";
             return string.Format(referanceNumber, noteFormat, referanceId);
         }

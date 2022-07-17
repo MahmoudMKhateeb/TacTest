@@ -319,7 +319,7 @@
           <button
             type="submit"
             class="btn btn-primary"
-            [disabled]="!Form.form.valid || selectedWaybills.length == 0"
+            [disabled]="!Form.form.valid || selectedWaybills.length == null || selectedWaybills.length == 0"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot' | localize)"
             (click)="save()"
