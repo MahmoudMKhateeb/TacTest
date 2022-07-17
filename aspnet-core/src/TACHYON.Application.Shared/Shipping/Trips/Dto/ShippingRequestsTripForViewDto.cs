@@ -40,5 +40,6 @@ namespace TACHYON.Shipping.Trips.Dto
         public ShippingRequestTripStatus Status { get; set; }
         public DateTime? SupposedPickupDateFrom { get; set; }
         public DateTime? SupposedPickupDateTo { get; set; }
+        public int NotesCount { get; set; }
     }
 }

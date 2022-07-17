@@ -2,7 +2,9 @@
   <div class="card-header">
     <div class="card-title">
       <h3 class="card-label">{{ 'Notes' | localize }}</h3>
-      <button class="btn btn-primary float-left" (click)="AddNewNoteModal.show()"><i class="flaticon-plus"></i> {{ 'AddNote' | localize }}</button>
+      <button *ngIf="appSession.tenantId" class="btn btn-primary float-left" (click)="AddNewNoteModal.show()">
+        <i class="flaticon-plus"></i> {{ 'AddNote' | localize }}
+      </button>
     </div>
   </div>
   <div class="card-body">
@@ -36,7 +38,7 @@
                       title="{{ record.tenantName }}"
                       data-bs-original-title="record.tenantName"
                     >
-                      <img src="{{ record.tenantImage }}" alt="img" />
+                      <img src="{{ record.tenantImage ? record.tenantImage : avatar }}" alt="img" />
                     </div>
                   </span>
                 </div>
@@ -68,9 +70,13 @@
                   <p class="p-0 mrbm-0">{{ record.note }}</p>
                   <div class="d-flex align-items-center mt-1 fs-6">
                     <div class="text-muted me-2 fs-7">
-                      {{ 'AddedAt' | localize }} {{ record.creationTime | momentFormat: 'YYYY-MM-DD HH:mm:ss a' }}
-                      <br />
-                      <div class="text-muted me-2 fs-7" *ngIf="record.lastModifierUserId != 0">
+                      <span *ngIf="record.lastModifierUserName == ''">
+                        By {{ record.tenantName }} <br />
+                        {{ 'AddedAt' | localize }} {{ record.creationTime | momentFormat: 'YYYY-MM-DD HH:mm:ss a' }}
+                        <br />
+                      </span>
+                      <div class="text-muted me-2 fs-7" *ngIf="record.lastModifierUserId != ''">
+                        <span>By {{ record.tenantName }} </span><br />
                         {{ 'LastModifiedAt' | localize }} {{ record.lastModificationTime | momentFormat: 'YYYY-MM-DD HH:mm:ss a' }}
                         <span> {{ 'by' | localize }} {{ record.lastModifierUserName }}</span>
                         <!-- <div class="symbol symbol-circle symbol-25px" data-bs-toggle="tooltip" data-bs-boundary="window"

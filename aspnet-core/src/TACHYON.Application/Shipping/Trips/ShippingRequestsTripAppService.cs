@@ -46,6 +46,8 @@ using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Shipping.Trips.RejectReasons.Dtos;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.Storage;
+using TACHYON.Shipping.ShippingRequestAndTripNotes;
+using TACHYON.Shipping.Notes;
 
 namespace TACHYON.Shipping.Trips
 {
@@ -72,6 +74,7 @@ namespace TACHYON.Shipping.Trips
         private readonly PenaltyManager _penaltyManager;
         private readonly ShippingRequestTripManager _shippingRequestTripManager;
         private readonly TenantManager _tenantManager;
+        private readonly IRepository<ShippingRequestAndTripNote> _ShippingRequestAndTripNoteRepository;
 
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
@@ -93,7 +96,8 @@ namespace TACHYON.Shipping.Trips
             IEntityChangeSetReasonProvider reasonProvider,
             PenaltyManager penaltyManager,
             ShippingRequestTripManager shippingRequestTripManager,
-            TenantManager tenantManager
+            TenantManager tenantManager,
+            IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository
             )
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
@@ -116,6 +120,7 @@ namespace TACHYON.Shipping.Trips
             _penaltyManager = penaltyManager;
             _shippingRequestTripManager = shippingRequestTripManager;
             _tenantManager = tenantManager;
+            _ShippingRequestAndTripNoteRepository = ShippingRequestAndTripNoteRepository;
         }
 
 
@@ -169,6 +174,11 @@ namespace TACHYON.Shipping.Trips
             });
 
             var pageResult = ObjectMapper.Map<List<ShippingRequestsTripListDto>>(resultPage);
+            foreach(var r in pageResult)
+            {
+                r.NotesCount = await GetTripNotesCount(r.Id);
+            }
+            
             if (!input.Sorting.IsNullOrEmpty() && input.Sorting.Contains("Facility"))
                 pageResult = SortByFacility(input.Sorting, pageResult);
 
@@ -222,7 +232,7 @@ namespace TACHYON.Shipping.Trips
                     shippingRequestTrip.DocumentFile = ObjectMapper.Map<DocumentFileDto>(documentFile);
                 }
             }
-
+            shippingRequestTrip.NotesCount = await GetTripNotesCount(id);
             return shippingRequestTrip;
         }
 
@@ -549,6 +559,35 @@ namespace TACHYON.Shipping.Trips
                             : TACHYONConsts.DropOfRoutPointWorkflowVersion;
                 }
             }
+        }
+
+        private async Task<int> GetTripNotesCount(long TripId)
+        {
+            DisableTenancyFilters();
+            return await _ShippingRequestAndTripNoteRepository
+                .GetAll()
+                .Include(r=>r.TripFK)
+                .ThenInclude(r => r.ShippingRequestFk)
+                 //.WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
+                 //.WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.TenantId == AbpSession.TenantId)
+                 //.WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.TenantId == AbpSession.TenantId)
+                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper),
+                    x => x.TenantId == AbpSession.TenantId ||
+                    (x.TenantId != AbpSession.TenantId && (x.Visibility == VisibilityNotes.ShipperOnly || x.Visibility == VisibilityNotes.Internal)))
+                .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier),
+                    x => ((x.TripFK.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.TripFK.ShippingRequestFk.CarrierTenantIdForDirectRequest == AbpSession.TenantId) &&
+                    (x.Visibility == VisibilityNotes.Internal ||
+                    x.Visibility == VisibilityNotes.CarrierOnly ||
+                    x.Visibility == VisibilityNotes.TMSAndCarrier)) ||
+                    (x.TenantId == AbpSession.TenantId)
+                    )
+              .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.TachyonDealer),
+                    x => (x.TripFK.ShippingRequestFk.IsTachyonDeal &&
+                   (x.Visibility == VisibilityNotes.TMSOnly
+                   || x.Visibility == VisibilityNotes.TMSAndCarrier)) ||
+                   (x.TenantId == AbpSession.TenantId)
+                   )
+                .CountAsync(x => x.TripId == TripId);
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Edit)]

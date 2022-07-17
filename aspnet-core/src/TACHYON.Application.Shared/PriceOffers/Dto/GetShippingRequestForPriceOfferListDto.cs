@@ -58,6 +58,7 @@ namespace TACHYON.PriceOffers.Dto
         public string requestTypeTitle { get { return requestType.GetEnumDescription(); } }
 
         public bool IsDrafted { get; set; }
+        public int NotesCount { get; set; }
 
         /// <summary>
         /// shipper Id 

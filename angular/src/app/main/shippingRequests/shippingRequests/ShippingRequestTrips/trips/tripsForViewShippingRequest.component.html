@@ -215,6 +215,10 @@
                 {{ l('DriverStatus') }}
                 <p-sortIcon field="driverStatusTitle"></p-sortIcon>
               </th>
+              <th pSortableColumn="notesCount">
+                {{ l('Notes') }}
+                <p-sortIcon field="notesCount"></p-sortIcon>
+              </th>
               <th pSortableColumn="status">
                 {{ l('TripStatus') }}
                 <p-sortIcon field="status"></p-sortIcon>
@@ -266,7 +270,12 @@
                 <span class="ui-column-title"> {{ l('driverStatus') }}</span>
                 {{ l(record.driverStatusTitle) }}
               </td>
-
+              <td>
+                <span class="ui-column-title"> {{ l('notes') }}</span>
+                <span class="hasNote" *ngIf="record.notesCount > 0">
+                  {{ record.notesCount }} &nbsp; <span> {{ record.notesCount == 1 ? l('note') : l('notes') }} </span></span
+                >
+              </td>
               <td>
                 <span class="ui-column-title"> {{ l('tripStatus') }}</span>
                 <span class="noPadding" *ngIf="record.status != ShippingRequestTripStatusEnum.Canceled">

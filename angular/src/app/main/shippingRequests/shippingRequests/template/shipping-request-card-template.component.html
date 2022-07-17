@@ -70,6 +70,9 @@
               <b *ngIf="!Channel && item.statusTitle" class="infoHighLight green stautsTruck">
                 {{ l(item.statusTitle) }}
               </b>
+              <b *ngIf="item.notesCount > 0" class="infoHighLight blue stautsTruck">
+                {{ item.notesCount }} &nbsp; <span> {{ item.notesCount == 1 ? l('note') : l('notes') }} </span>
+              </b>
               <b *ngIf="item.isSaas" class="infoHighLight green stautsTruck">
                 {{ l('saas') }}
               </b>
@@ -260,7 +263,11 @@
                     </shipping-request-offers-list>
                   </div>
 
-                  <div *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
+                  <div>
+                    <app-notes #NotesComponent [shippingRequestId]="item.id" [type]="type"> </app-notes>
+                  </div>
+
+                  <div *ngIf="feature.isEnabled('App.Shipper') || (feature.isEnabled('App.TachyonDealer') && item.isTachyonDeal)">
                     <TripsForViewShippingRequest
                       *ngIf="item.id && bidsloading == false"
                       [ShippingRequest]="item"
@@ -268,7 +275,7 @@
                     ></TripsForViewShippingRequest>
                   </div>
 
-                  <div class="col-lg-12">
+                  <div>
                     <agm-map
                       minZoom="5"
                       style="height: 300px"

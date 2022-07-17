@@ -37,6 +37,9 @@ using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.Vases;
+using TACHYON.Shipping.ShippingRequestAndTripNotes;
+using Abp.Collections.Extensions;
+using TACHYON.Shipping.Notes;
 
 namespace TACHYON.PriceOffers
 {
@@ -56,7 +59,7 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<SrPostPriceUpdate, long> _srPostPriceUpdateRepository;
         private readonly IRepository<Facility, long> _facilityRepository;
         private readonly ShippingRequestUpdateManager _srUpdateManager;
-
+        private readonly IRepository<ShippingRequestAndTripNote> _ShippingRequestAndTripNoteRepository;
 
         private IRepository<VasPrice> _vasPriceRepository;
 
@@ -73,7 +76,9 @@ namespace TACHYON.PriceOffers
             NormalPricePackageManager normalPricePackageManager,
             IRepository<Facility, long> facilityRepository,
             IRepository<SrPostPriceUpdate, long> srPostPriceUpdateRepository,
-            ShippingRequestUpdateManager srUpdateManager)
+            ShippingRequestUpdateManager srUpdateManager,
+            IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository
+            )
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -90,6 +95,7 @@ namespace TACHYON.PriceOffers
             _srPostPriceUpdateRepository = srPostPriceUpdateRepository;
             _facilityRepository = facilityRepository;
             _srUpdateManager = srUpdateManager;
+            _ShippingRequestAndTripNoteRepository = ShippingRequestAndTripNoteRepository;
         }
         #region Services
 
@@ -725,6 +731,7 @@ namespace TACHYON.PriceOffers
                 dto.GoodCategoryId = request.ShippingRequestFK.GoodCategoryId;
                 dto.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.OriginCityFk).DisplayName;
                 dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.DestinationCityFk).DisplayName;
+                dto.NotesCount = await GetRequestNotesCount(request.Id);
 
                 ShippingRequestForPriceOfferList.Add(dto);
 
@@ -803,6 +810,7 @@ namespace TACHYON.PriceOffers
                 dto.Latitude = (request.DestinationCityFk != null ? (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.Y : 0) : 0);
                 dto.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.OriginCityFk).DisplayName;
                 dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.DestinationCityFk).DisplayName;
+                dto.NotesCount = await GetRequestNotesCount(request.Id);
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }
@@ -874,6 +882,7 @@ namespace TACHYON.PriceOffers
 
                 dto.Longitude = (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.X : 0);
                 dto.Latitude = (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.Y : 0);
+                dto.NotesCount = await GetRequestNotesCount(request.Id);
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }
@@ -958,7 +967,7 @@ namespace TACHYON.PriceOffers
                 dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFk.TrucksTypeFk).TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFk.GoodCategoryFk).DisplayName;
                 dto.GoodCategoryId = request.ShippingRequestFk.GoodCategoryId;
-
+                dto.NotesCount = await GetRequestNotesCount(request.Id);
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }
@@ -970,6 +979,29 @@ namespace TACHYON.PriceOffers
         private async Task<int> getCompletedRequestTripsCount(ShippingRequest request)
         {
             return await _shippingRequestTripRepository.CountAsync(x => x.ShippingRequestId == request.Id && x.Status == ShippingRequestTripStatus.Delivered);
+        }
+
+        private async Task<int> GetRequestNotesCount(long SRId)
+        {
+            DisableTenancyFilters();
+            return await _ShippingRequestAndTripNoteRepository.GetAll()
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper),
+                    x => x.TenantId == AbpSession.TenantId ||
+                    (x.TenantId != AbpSession.TenantId && (x.Visibility == VisibilityNotes.ShipperOnly || x.Visibility == VisibilityNotes.Internal)))
+                .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier),
+                    x => ((x.ShippingRequestFK.CarrierTenantId == AbpSession.TenantId || x.ShippingRequestFK.CarrierTenantIdForDirectRequest == AbpSession.TenantId) && 
+                    (x.Visibility == VisibilityNotes.Internal ||
+                    x.Visibility == VisibilityNotes.CarrierOnly ||
+                    x.Visibility == VisibilityNotes.TMSAndCarrier)) ||
+                    (x.TenantId == AbpSession.TenantId)
+                    )
+              .WhereIf(AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.TachyonDealer),
+                    x => (x.ShippingRequestFK.IsTachyonDeal &&
+                   (x.Visibility == VisibilityNotes.TMSOnly
+                   || x.Visibility == VisibilityNotes.TMSAndCarrier)) ||
+                   (x.TenantId == AbpSession.TenantId)
+                   )
+                .CountAsync(x => x.ShippingRequetId == SRId);
         }
 
         private async Task CancelTrips(long Id)
