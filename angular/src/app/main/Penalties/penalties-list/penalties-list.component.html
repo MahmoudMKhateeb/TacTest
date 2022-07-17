@@ -69,7 +69,7 @@
                 dataType="date"
               >
               </dxi-column>
-              <dxi-column cellTemplate="TypeCellTemplate" dataField="Type" caption=" {{ l('Type') }}"></dxi-column>
+              <dxi-column *ngIf="isTachyonDealerOrHost" cellTemplate="TypeCellTemplate" dataField="Type" caption=" {{ l('Type') }}"></dxi-column>
               <dxi-column dataField="invoiceNumber" caption=" {{ l('InvoiceNo') }}" dataType="text"></dxi-column>
               <dxi-column dataField="generationDate" caption="{{ l('GenerationDate') }}" dataType="date"></dxi-column>
               <div *dxTemplate="let options of 'TypeCellTemplate'">

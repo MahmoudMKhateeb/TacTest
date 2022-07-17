@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Common;
 using TACHYON.Configuration;
+using TACHYON.Extension;
 using TACHYON.Features;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
@@ -53,6 +54,10 @@ namespace TACHYON.Penalties
 
             var query = _penaltyRepository
                            .GetAll()
+                           .WhereIf(!(await IsTachyonDealer()) && AbpSession.TenantId.HasValue,
+                           x => x.Status == PenaltyStatus.Paid || x.Status== PenaltyStatus.Confirmed || 
+                           (x.Status==PenaltyStatus.Draft && x.Type==PenaltyType.NotLogged) ||
+                           (x.Status == PenaltyStatus.Canceled && x.Type == PenaltyType.NotLogged))
                            .Include(x => x.ShippingRequestTripFK)
                            .ProjectTo<GetAllPenaltiesDto>(AutoMapperConfigurationProvider)
                            .AsNoTracking();
