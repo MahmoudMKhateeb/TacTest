@@ -91,20 +91,18 @@ namespace TACHYON.Shipping.Trips.Importing
                 trip.Note= _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
                     row, 4, "Notes to Carrier", exceptionMessage);
                 //5
-                trip.NeedsDeliveryNote= GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                trip.NeedsDeliveryNote= GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
                     row, 5, "Needs Delivery Note ?*", exceptionMessage));
                 //6
-                trip.HasAttachment = GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                trip.HasAttachment = GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
                     row, 6, "Has Attachment ?*", exceptionMessage));
 
                 var originFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 7, "Original Facility*", exceptionMessage);
-                trip.OriginalFacility = originFacility.Trim();
                 trip.OriginFacilityId = GetFacilityId(originFacility, exceptionMessage);
 
                 var destinationFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                    row, 8, "Destination Facility*", exceptionMessage);
-                trip.DestinationFacility = destinationFacility.Trim();
                 trip.DestinationFacilityId = GetFacilityId(destinationFacility, exceptionMessage);
 
                 if (IsSingleDropRequest)

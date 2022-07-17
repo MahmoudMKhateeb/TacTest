@@ -50,6 +50,7 @@ namespace TACHYON.Shipping.Trips.Importing
         #region ImportTrips
         public async Task<List<ImportTripDto>> ImportShipmentFromExcel(ImportShipmentFromExcelInput importShipmentFromExcelInput)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(importShipmentFromExcelInput.ShippingRequestId);
             var trips = await GetShipmentListFromExcelOrNull(importShipmentFromExcelInput, IsSingleDropRequest(request));
 
@@ -60,6 +61,7 @@ namespace TACHYON.Shipping.Trips.Importing
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
         public async Task CreateShipmentsFromDto(List<ImportTripDto> importTripDtoList)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(importTripDtoList.First().ShippingRequestId);
 
             List<ImportTripDto> SuccessImportTripDtoList = new List<ImportTripDto>();
