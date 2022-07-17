@@ -37,7 +37,7 @@
             </div>
           </div>
           <div class="table-responsive">
-            <table class="table table-sm table-bordered rounded">
+            <table class="table table-sm table-bordered rounded" *ngIf="feature.isEnabled('App.TachyonDealer')">
               <thead>
                 <tr class="table-active">
                   <th style="width: 200px"></th>
@@ -61,7 +61,7 @@
             </table>
           </div>
 
-          <div class="table-responsive" *ngIf="Items.length">
+          <div class="table-responsive" *ngIf="Items.length && feature.isEnabled('App.TachyonDealer')">
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
@@ -87,7 +87,7 @@
           </div>
 
           <div class="table-responsive">
-            <table class="table table-sm table-bordered rounded">
+            <table class="table table-sm table-bordered rounded" *ngIf="feature.isEnabled('App.TachyonDealer')">
               <thead>
                 <tr class="table-active">
                   <th style="width: 200px">field</th>
@@ -117,7 +117,34 @@
             </table>
           </div>
 
-          <div class="table-responsive">
+          <div class="table-responsive" style="width: 85% !important">
+            <br />
+            <table class="table table-sm table-bordered rounded" *ngIf="!feature.isEnabled('App.TachyonDealer')">
+              <thead>
+                <tr class="table-active"></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="table-active">Price</td>
+                  <td>{{offer.subTotalAmountWithCommission}}</td>
+                </tr>
+                <tr>
+                  <td class="table-active">total VAT for Trip</td>
+                  <td>{{offer.itemsTotalVatPostCommission}}</td>
+                </tr>
+                <tr>
+                  <td class="table-active">total VAT for VAS</td>
+                  <td>{{offer.detailsTotalVatPostCommission}}</td>
+                </tr>
+                <tr>
+                  <td class="table-active">Total Price Post Vat</td>
+                  <td>{{offer.totalAmountWithCommission}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-responsive" *ngIf="feature.isEnabled('App.TachyonDealer')">
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
@@ -146,7 +173,7 @@
             </table>
           </div>
 
-          <div class="table-responsive">
+          <div class="table-responsive" *ngIf="feature.isEnabled('App.TachyonDealer')">
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
