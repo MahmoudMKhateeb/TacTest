@@ -769,7 +769,8 @@ namespace TACHYON
             .ForMember(dto => dto.WaybillNumber, options => options.MapFrom(entity => entity.ShippingRequestTripFK.WaybillNumber))
             .ForMember(dto => dto.DestinationCompanyName, options => options.MapFrom(entity => entity.DestinationTenantFK.companyName))
             .ForMember(dto => dto.PenaltyComplaintId, options => options.MapFrom(entity => entity.PenaltyComplaintFK.Id))
-            .ForMember(dto => dto.InvoiceNumber, options => options.MapFrom(entity => entity.InvoiceFK.InvoiceNumber));
+            .ForMember(dto => dto.InvoiceNumber, options => options.MapFrom(entity => entity.InvoiceFK.InvoiceNumber))
+            .ForMember(dto => dto.GenerationDate, options => options.MapFrom(entity => entity.CreationTime));
 
             configuration.CreateMap<ShippingRequestTrip, GetAllWaybillsDto>();
 

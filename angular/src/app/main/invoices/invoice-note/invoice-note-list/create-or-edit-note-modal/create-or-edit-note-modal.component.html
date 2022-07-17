@@ -40,7 +40,6 @@
                   class="form-control"
                   [(ngModel)]="form.noteType"
                   name="noteType"
-                  [disabled]="form.id"
                   [class.is-valid]="NoteType.valid && (NoteType.dirty || NoteType.touched)"
                   [class.is-invalid]="NoteType.invalid && (NoteType.dirty || NoteType.touched)"
                   required
@@ -320,7 +319,7 @@
           <button
             type="submit"
             class="btn btn-primary"
-            [disabled]="!Form.form.valid || selectedWaybills.length == 0"
+            [disabled]="!Form.form.valid || selectedWaybills.length == null || selectedWaybills.length == 0"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot' | localize)"
             (click)="save()"

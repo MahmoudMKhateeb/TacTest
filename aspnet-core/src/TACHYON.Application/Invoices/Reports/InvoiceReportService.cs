@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Abp.Domain.Repositories;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,14 @@ namespace TACHYON.Invoices.Reports
         private readonly InvoiceAppService _invoiceAppService;
         private readonly PdfExporterBase _pdfExporterBase;
         private readonly IInvoiceNoteAppService _InvoiceNoteAppService;
+        private readonly IRepository<InvoiceNote, long> _invoiceNoteRepository;
 
-        public InvoiceReportService(InvoiceAppService invoiceAppService, PdfExporterBase pdfExporterBase, IInvoiceNoteAppService invoiceNoteAppService)
+        public InvoiceReportService(InvoiceAppService invoiceAppService, PdfExporterBase pdfExporterBase, IInvoiceNoteAppService invoiceNoteAppService, IRepository<InvoiceNote, long> invoiceNoteRepository)
         {
             _invoiceAppService = invoiceAppService;
             _pdfExporterBase = pdfExporterBase;
             _InvoiceNoteAppService = invoiceNoteAppService;
+            _invoiceNoteRepository = invoiceNoteRepository;
         }
 
         public FileDto DownloadInvoiceReportPdf(long invoiceId)
@@ -35,8 +38,7 @@ namespace TACHYON.Invoices.Reports
 
             names.Add("GetInvoiceShippingRequestsReportInfoDataset");
             data.Add(_invoiceAppService.GetInvoiceShippingRequestsReportInfo(invoiceId));
-            var number = invoice.FirstOrDefault()?.InvoiceNumber.ToString();
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList(number, reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetInvoiceNumber(invoiceId), reportPath, names, data);
         }
         public FileDto DonwloadPenaltyInvoice(long invoiceId)
         {
@@ -44,15 +46,15 @@ namespace TACHYON.Invoices.Reports
 
             ArrayList names = new ArrayList();
             ArrayList data = new ArrayList();
-
             names.Add("GetInvoiceReportInfoDataset");
             data.Add(_invoiceAppService.GetInvoiceReportInfo(invoiceId));
 
             names.Add("GetInvoicePenaltiseInvoiceReportInfo");
             data.Add(_invoiceAppService.GetInvoicePenaltiseInvoiceReportInfo(invoiceId));
 
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList("Invoice", reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetInvoiceNumber(invoiceId), reportPath, names, data);
         }
+
         public FileDto DownloadInvoiceNoteReportPdf(long invoiceNoteId)
         {
             var reportPath = "/Invoices/Reports/InvoiceNote.rdlc";
@@ -66,7 +68,18 @@ namespace TACHYON.Invoices.Reports
             names.Add("GetInvoiceNoteItemReportInfoDataset");
             data.Add(_InvoiceNoteAppService.GetInvoiceNoteItemReportInfo(invoiceNoteId));
 
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList("InvoiceNote", reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetInvoiceNumberFromNote(invoiceNoteId), reportPath, names, data);
+        }
+
+        private string GetInvoiceNumber(long invoiceId)
+        {
+            var invoice = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
+            return invoice.FirstOrDefault()?.InvoiceNumber.ToString();
+        }
+
+        private string GetInvoiceNumberFromNote(long invoiceNoteId)
+        {
+            return _invoiceNoteRepository.FirstOrDefault(invoiceNoteId)?.ReferanceNumber.ToString();
         }
     }
 }

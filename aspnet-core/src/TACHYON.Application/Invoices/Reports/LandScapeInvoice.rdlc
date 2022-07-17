@@ -1955,7 +1955,7 @@
             <DataSetName>GetInvoiceReportInfoDataset</DataSetName>
             <Top>0.17639cm</Top>
             <Left>0.56761cm</Left>
-            <Height>3.3601cm</Height>
+            <Height>3.36011cm</Height>
             <Width>28.28757cm</Width>
             <Style>
               <Border>
@@ -3922,7 +3922,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox92</rd:DefaultName>
-            <Top>6.36478cm</Top>
+            <Top>6.99978cm</Top>
             <Left>5.90715cm</Left>
             <Height>2.06457cm</Height>
             <Width>11.4832cm</Width>
@@ -3957,7 +3957,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox93</rd:DefaultName>
-            <Top>6.36478cm</Top>
+            <Top>6.99978cm</Top>
             <Left>5.92315cm</Left>
             <Height>0.6cm</Height>
             <Width>1.57971cm</Width>
@@ -4688,7 +4688,7 @@
             <Source>Embedded</Source>
             <Value>ID154405</Value>
             <Sizing>FitProportional</Sizing>
-            <Top>6.3295cm</Top>
+            <Top>6.9645cm</Top>
             <Left>0.56761cm</Left>
             <Height>2.06458cm</Height>
             <Width>5.19843cm</Width>
