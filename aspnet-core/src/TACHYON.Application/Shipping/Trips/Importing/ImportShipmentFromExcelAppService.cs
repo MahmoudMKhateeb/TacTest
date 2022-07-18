@@ -102,6 +102,7 @@ namespace TACHYON.Shipping.Trips.Importing
         #region ImportPoints
         public async Task<List<ImportRoutePointDto>> ImportRoutePointsFromExcel(ImportPointsFromExcelInput importPointFromExcelInput)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(importPointFromExcelInput.ShippingRequestId);
             if (request == null)
                 throw new UserFriendlyException(L("InvalidShippingRequest"));
@@ -117,6 +118,7 @@ namespace TACHYON.Shipping.Trips.Importing
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
         public async Task CreatePointsFromDto(List<ImportRoutePointDto> importRoutePointDtoList)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(importRoutePointDtoList.First().ShippingRequestTripId);
 
             if (request == null)
@@ -141,6 +143,7 @@ namespace TACHYON.Shipping.Trips.Importing
         #region GoodsDetails
         public async Task<List<ImportGoodsDetailsDto>> ImportGoodsDetailsFromExcel(ImportGoodsDetailsFromExcelInput input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(input.ShippingRequestId);
             var goodsDetails = await GetGoodsDetailsListFromExcelOrNull(input, request.GoodCategoryId.Value,IsSingleDropRequest(request));
             BindTripIdFromReference(goodsDetails, request);
@@ -151,6 +154,7 @@ namespace TACHYON.Shipping.Trips.Importing
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
         public async Task CreateGoodsDetailsFromDto(List<ImportGoodsDetailsDto> importGoodsDetailsDtoList)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(importGoodsDetailsDtoList.First().ShippingRequestTripId);
             try
             {
@@ -170,6 +174,7 @@ namespace TACHYON.Shipping.Trips.Importing
         #region Vases
         public async Task<List<ImportTripVasesDto>> ImportTripVasesFromExcel(ImportTripVasesFromExcelInput input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(input.ShippingRequestId);
             var tripVases = await GetTripVasListFromExcelOrNull(input, request.Id);
             await ValidateTripVases(request.Id, tripVases);
@@ -179,6 +184,7 @@ namespace TACHYON.Shipping.Trips.Importing
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
         public async Task CreateTripVasesFromDto(List<ImportTripVasesDto> importTripVasesDtoList)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(importTripVasesDtoList.First().ShippingRequestId);
             importTripVasesDtoList.ForEach(x => x.Exception = "");
             await ValidateTripVases(request.Id, importTripVasesDtoList);
@@ -529,7 +535,7 @@ namespace TACHYON.Shipping.Trips.Importing
             if (goodsDetailsExistsForTrip)
             {
                 tripGoodsDetails.importGoodsDetailsDtoList.ForEach(x =>
-                x.Exception = L("DropGoodsDetailsMustBeEmptyForTrip") + " " + tripGoodsDetails.tripRef + ";");
+                x.Exception = L("GoodsDetailsAlreadyExistsForTrip") + " " + tripGoodsDetails.tripRef + ";");
             }
         }
 
