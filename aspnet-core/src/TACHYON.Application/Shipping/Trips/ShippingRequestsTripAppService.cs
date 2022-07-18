@@ -173,11 +173,16 @@ namespace TACHYON.Shipping.Trips
                 pageResult = SortByFacility(input.Sorting, pageResult);
 
             var totalCount = await query.CountAsync();
-            var output = ObjectMapper.Map<List<ShippingRequestsTripListDto>>(resultPage);
 
             var allRatingLogList = await _ratingLogManager.GetAllRatingByUserAsync(await IsShipper() ? RateType.CarrierByShipper : RateType.ShipperByCarrier,
                 request.TenantId, request.CarrierTenantId, null);
-            foreach (var x in output)
+            
+            var canTripsCreateTemplate = (from trip in pageResult
+                    select (trip.Id,_routPointRepository.GetAllIncluding(x => x.GoodsDetails)
+                        .Where(x => x.ShippingRequestTripId == trip.Id && x.PickingType == PickingType.Dropoff)
+                        .All(x => x.GoodsDetails != null && x.GoodsDetails.Any()))).ToList();
+
+            foreach (var x in pageResult)
             {
                 //x.IsTripRateBefore = await _ratingLogManager.IsRateDoneBefore(new RatingLog
                 //{
@@ -187,6 +192,7 @@ namespace TACHYON.Shipping.Trips
                 //    TripId = x.Id
                 //});
                 x.IsTripRateBefore = allRatingLogList.Any(x => x.TripId == x.Id);
+                x.CanCreateTemplate = canTripsCreateTemplate.FirstOrDefault(i => i.Id == x.Id).Item2 ;
             }
 
             return new PagedResultDto<ShippingRequestsTripListDto>(

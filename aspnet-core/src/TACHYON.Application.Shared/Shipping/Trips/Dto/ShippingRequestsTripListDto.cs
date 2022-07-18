@@ -41,6 +41,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public string RejectedReason { get; set; }
         public long? WaybillNumber { get; set; }
         public bool IsTripRateBefore { get; set; }
+        public bool CanCreateTemplate { get; set; }
 
         public DateTime? SupposedPickupDateFrom { get; set; }
         public DateTime? SupposedPickupDateTo { get; set; }

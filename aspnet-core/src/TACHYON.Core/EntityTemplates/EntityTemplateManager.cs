@@ -212,6 +212,7 @@ namespace TACHYON.EntityTemplates
                         where subGoodCategory != null select subGoodCategory)
                         .All(g => g.FatherId == shippingRequest.GoodCategoryId)) select item);
 
+            await DisableTenancyFilterIfTms(); // to skip join tenancy filter for tms
             var matchesOriginAndDestinationItems = (from template in filteredByGoodsCategoryItems
                 join originFacility in _facilityRepository.GetAll().AsNoTracking()
                     on template.Trip.OriginFacilityId equals originFacility.Id
