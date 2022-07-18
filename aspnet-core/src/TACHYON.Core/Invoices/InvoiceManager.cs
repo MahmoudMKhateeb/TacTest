@@ -518,7 +518,7 @@ namespace TACHYON.Invoices
                 TotalAmount = totalAmount,
                 VatAmount = vatAmount,
                 SubTotalAmount = subTotalAmount,
-                TaxVat = 123,
+                TaxVat = penalties.Where(x => x.TaxVat >0).FirstOrDefault().TaxVat,
                 Channel = InvoiceChannel.Penalty,
                 Penalties = penalties
             };
