@@ -261,6 +261,9 @@ export abstract class AppComponentBase {
   get isTachyonDealerOrHost(): boolean {
     return this.isTachyonDealer || !this.appSession.tenantId;
   }
+  get isCarrierSaas(): boolean {
+    return this.feature.isEnabled('App.CarrierAsASaas');
+  }
 
   IfOther(items: any, id: any) {
     // id return string or number

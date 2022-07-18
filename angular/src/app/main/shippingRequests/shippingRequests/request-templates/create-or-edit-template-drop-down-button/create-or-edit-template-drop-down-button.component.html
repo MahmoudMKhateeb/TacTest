@@ -1,12 +1,4 @@
-<div
-  class="btn-group"
-  dropdown
-  #dropdownAddPage="bs-dropdown"
-  [dropup]="dropDirection == 'up'"
-  [insideClick]="true"
-  *ngIf="isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas')"
-  [autoClose]="true"
->
+<div class="btn-group" dropdown #dropdownAddPage="bs-dropdown" [dropup]="dropDirection == 'up'" [insideClick]="true" [autoClose]="true">
   <button
     dropdownToggle
     type="button"
