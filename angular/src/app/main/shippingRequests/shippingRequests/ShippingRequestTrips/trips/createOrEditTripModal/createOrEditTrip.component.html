@@ -6,7 +6,7 @@
   tabindex="-1"
   aria-labelledby="createOrEditModal"
   aria-hidden="true"
-  [config]="{ backdrop: 'static' }"
+  [config]="{ backdrop: 'static', keyboard: false }"
 >
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
@@ -216,7 +216,6 @@
                   type="datetime"
                   [min]="trip.startTripDate"
                   openOnFieldClick="true"
-                  [disabled]="!trip.startTripDate"
                 >
                 </dx-date-box>
               </div>
