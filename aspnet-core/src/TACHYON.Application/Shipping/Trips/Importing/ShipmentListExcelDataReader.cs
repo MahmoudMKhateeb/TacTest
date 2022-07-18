@@ -148,8 +148,6 @@ namespace TACHYON.Shipping.Trips.Importing
                     _tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Facility"));
                 return null;
             }
-            text = text.Trim();
-
             var facility = _shippingRequestTripManager.GetFacilityByPermission(text, ShippingRequestId);
             //_facilityRepository.FirstOrDefault(x => x.Name == text);
             if (facility != null)
@@ -168,7 +166,6 @@ namespace TACHYON.Shipping.Trips.Importing
                 return null;
             }
 
-            text = text.Trim();
             var receiver = _shippingRequestTripManager.GetReceiverByPermissionAndFacility(text, ShippingRequestId, facilityId);
             //_receiverRepository.FirstOrDefault(x => x.FullName == text);
             if (receiver != null)

@@ -93,7 +93,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
             //save
             await CreateShipments(SuccessImportTripDtoList, IsSingleDropRequest(request));
-            request.TotalsTripsAddByShippier += 1;
+            request.TotalsTripsAddByShippier += SuccessImportTripDtoList.Count;
 
 
         }
