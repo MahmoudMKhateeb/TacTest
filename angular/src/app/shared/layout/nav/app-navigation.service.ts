@@ -45,17 +45,17 @@ export class AppNavigationService {
             () => !this.isEnabled('App.Shipper') || !this._appSessionService.tenantId
           ),
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking'),
-          // new AppMenuItem(
-          //   'ShipmentHistory',
-          //   'Pages.ShippingRequests',
-          //   '',
-          //   '/app/main/shippingRequests/ShipmentHistory',
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   () => this.isEnabled('App.TachyonDealer')
-          // ),
+          new AppMenuItem(
+            'SavedTemplates',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/requestsTemplates',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.TachyonDealer')
+          ),
           new AppMenuItem('Requests', 'Pages', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
             'DirectShippingRequests',
@@ -129,7 +129,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this.isEnabled('App.Shipper') || this.isEnabled('App.TachyonDealer') || this.isEnabled('App.Shipper.Saas')
+            () => this.isEnabled('App.Shipper') || this.isEnabled('App.TachyonDealer') || this.isEnabled('App.CarrierAsASaas')
           ),
           new AppMenuItem('DirectShippingRequests', '', '', '/app/main/directrequest/list', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Carrier')
@@ -186,17 +186,17 @@ export class AppNavigationService {
             undefined,
             () => !this.isEnabled('App.Shipper')
           ),
-          // new AppMenuItem(
-          //   'ShipmentHistory',
-          //   'Pages',
-          //   '',
-          //   '/app/main/shippingRequests/ShipmentHistory',
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   () => this.isEnabled('App.Carrier')
-          // ),
+          new AppMenuItem(
+            'SavedTemplates',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/requestsTemplates',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.CarrierAsASaas')
+          ),
 
           new AppMenuItem(
             'DirectShippingRequests',

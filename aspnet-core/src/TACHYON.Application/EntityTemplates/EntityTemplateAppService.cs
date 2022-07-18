@@ -37,9 +37,13 @@ namespace TACHYON.EntityTemplates
 
         public async Task<PagedResultDto<EntityTemplateListDto>> GetAll(GetEntityTemplateInputDto input)
         {
+            var isTachyonDealer = await IsEnabledAsync(AppFeatures.TachyonDealer);
+            if (isTachyonDealer) DisableTenancyFilters();
+            
             var templates =  _templateRepository.GetAll().AsNoTracking()
                 .WhereIf(input.Type.HasValue,x => x.EntityType == input.Type)
                 .WhereIf(!input.Filter.IsNullOrEmpty(), x => x.TemplateName.Contains(input.Filter))
+                .WhereIf(isTachyonDealer, x => x.CreatorTenantId == AbpSession.TenantId)
                 .OrderBy(input.Sorting??"Id desc")
                 .ProjectTo<EntityTemplateListDto>(AutoMapperConfigurationProvider);
 

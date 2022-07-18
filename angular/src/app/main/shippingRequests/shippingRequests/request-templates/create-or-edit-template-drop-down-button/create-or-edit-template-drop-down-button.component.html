@@ -1,12 +1,4 @@
-<div
-  class="btn-group"
-  dropdown
-  #dropdownAddPage="bs-dropdown"
-  [dropup]="dropDirection == 'up'"
-  [insideClick]="true"
-  *ngIf="isShipper || isTachyonDealer"
-  [autoClose]="true"
->
+<div class="btn-group" dropdown #dropdownAddPage="bs-dropdown" [dropup]="dropDirection == 'up'" [insideClick]="true" [autoClose]="true">
   <button
     dropdownToggle
     type="button"

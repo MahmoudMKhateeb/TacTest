@@ -409,6 +409,8 @@ namespace TACHYON
             //configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
 
             configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
+                .ForMember(x=> x.CarrierTenantId,x=> x.Ignore())
+                .ForMember(x=> x.TenantId,x=> x.Ignore())
                 .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequest)
                 .ReverseMap();

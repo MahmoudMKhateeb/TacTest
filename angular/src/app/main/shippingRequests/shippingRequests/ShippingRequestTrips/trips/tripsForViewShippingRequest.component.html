@@ -387,7 +387,11 @@
                     >
                       <a class="dropdown-item" (click)="AddNewTripModal.deleteTrip(record.id)">{{ l('Delete') }}</a>
                     </li>
-                    <li *ngIf="isShipper || isTachyonDealer">
+                    <li
+                      *ngIf="
+                        record.canCreateTemplate && (isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestForView.shippingRequest.isSaas))
+                      "
+                    >
                       <a class="dropdown-item" (click)="saveAsTemplateModal.show(record.id)">{{ l('SaveAsTemplate') }}</a>
                     </li>
                     <li>
