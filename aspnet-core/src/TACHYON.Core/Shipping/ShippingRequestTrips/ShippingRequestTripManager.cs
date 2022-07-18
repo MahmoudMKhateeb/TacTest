@@ -181,6 +181,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             return _facilityRepository.GetAll()
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer),x=>x.TenantId==request.TenantId )
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.CarrierAsASaas), x => x.TenantId == _AbpSession.TenantId)
                 .FirstOrDefault(x => x.Name == name);
         }
 
@@ -191,6 +192,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                 .Where(x=>x.FacilityId==facilityId)
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x => x.TenantId == request.TenantId)
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.CarrierAsASaas), x => x.TenantId == _AbpSession.TenantId)
                 .FirstOrDefault(x => x.FullName == name);
         }
 
@@ -210,6 +212,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             return _shippingRequestRepository.GetAll()
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.CarrierAsASaas), x => x.TenantId == _AbpSession.TenantId)
                 .FirstOrDefault(x => x.Id == id);
         }
 

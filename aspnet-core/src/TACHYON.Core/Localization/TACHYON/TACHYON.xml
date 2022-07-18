@@ -1454,7 +1454,7 @@
 		<text name="Pink">Pink</text>
 		<text name="Place">Send</text>
 		<text name="PlateNumber">Plate number</text>
-    <text name="DropGoodsDetailsMustBeEmptyForTrip">Drop goods details must Be empty for trip</text>
+    <text name="GoodsDetailsAlreadyExistsForTrip">Goods details Already Exists For Trip</text>
     <text name="PlateType">Plate type</text>
 		<text name="PlateTypeId">Plate type id</text>
 		<text name="PlateTypes">Plate types</text>

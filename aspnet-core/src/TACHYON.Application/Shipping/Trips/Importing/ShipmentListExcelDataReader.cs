@@ -99,10 +99,12 @@ namespace TACHYON.Shipping.Trips.Importing
 
                 var originFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                     row, 7, "Original Facility*", exceptionMessage);
+                trip.OriginalFacility = originFacility;
                 trip.OriginFacilityId = GetFacilityId(originFacility, exceptionMessage);
 
                 var destinationFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                    row, 8, "Destination Facility*", exceptionMessage);
+                trip.DestinationFacility = destinationFacility;
                 trip.DestinationFacilityId = GetFacilityId(destinationFacility, exceptionMessage);
 
                 if (IsSingleDropRequest)

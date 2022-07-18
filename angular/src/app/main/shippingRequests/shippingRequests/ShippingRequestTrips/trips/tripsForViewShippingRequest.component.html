@@ -38,6 +38,7 @@
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          *ngIf="ShippingRequest.canAddTrip"
         >
           <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
         </button>

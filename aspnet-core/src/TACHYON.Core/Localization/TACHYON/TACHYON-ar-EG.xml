@@ -2659,7 +2659,7 @@
     <text name="NumberOfTripsWtihValue">عدد الرحلات ({0})</text>
     <text name="PostPriceUpdateWarningMsg">أنت تقوم بالتعديل في مرحلة ما بعد التسعير، اي تغيير تقوم به لن يأخد تأثير على الفور، تحتاج الى إنتظار إجراء الناقل لمزيد من التفاصيل انتقل إلى تحديثات طلب الشحن</text>
     
-    <text name="DropGoodsDetailsMustBeEmptyForTrip">بيانات البضاعة لبعض النقاط موجودة مسبقاً</text>
+    <text name="GoodsDetailsAlreadyExistsForTrip">بيانات البضاعة لبعض النقاط موجودة مسبقاً</text>
     <text name="invalidShippingRequest">طلب الشحن غير صالح</text>
     <text name="RequestShouldnotBeSingleDrop">طلب الشحن يجب أن لا تكون ذهاب فقط</text>
     <text name="DuplicatedReference">الرقم مكرر</text>
