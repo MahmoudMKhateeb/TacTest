@@ -66,6 +66,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         [AbpAuthorize(AppPermissions.Pages_InvoiceNote_View)]
         public async Task<LoadResult> GetAllInoviceNote(LoadOptionsInput input)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             await DisableDraftedFilterIfTachyonDealerOrHost();
             var query = _invoiceNoteRepository.GetAll()
                .AsNoTracking()
@@ -166,6 +167,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         public async Task AddNote(NoteInputDto input)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
+            await DisableDraftedFilterIfTachyonDealerOrHost();
             var invoiceNote = await _invoiceNoteRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Id == input.Id);
             invoiceNote.Note = input.Note;
@@ -174,6 +176,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         public async Task<NoteInputDto> GetNote(int tripId)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
+            await DisableDraftedFilterIfTachyonDealerOrHost();
             return await _invoiceNoteRepository.GetAll()
                   .Select(y => new NoteInputDto()
                   {
