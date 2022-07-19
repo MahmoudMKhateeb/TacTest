@@ -273,7 +273,7 @@
                 <option [ngValue]="null">{{ l('SelectPlateType') }}</option>
                 <option
                   *ngFor="let item of allPlateTypes"
-                  value="{{ item.id }}"
+                  [value]="item.id"
                   [selected]="item.isDefault && (!truck.plateTypeId || truck.plateTypeId == item.id)"
                 >
                   {{ item.displayName }}
