@@ -132,6 +132,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     return this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto.name ? true : false) : true;
   }
   get tripAsJson(): string {
+    this.trip.shippingRequestId = this.shippingRequest.id;
     return JSON.stringify(this.trip);
   }
   ngOnInit() {

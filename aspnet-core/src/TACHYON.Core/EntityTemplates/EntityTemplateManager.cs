@@ -4,6 +4,7 @@ using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
+using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Abp.Runtime.Validation;
 using Abp.UI;
@@ -12,6 +13,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TACHYON.AddressBook;
@@ -73,6 +75,8 @@ namespace TACHYON.EntityTemplates
             var oldEntityTemplate = await GetById(input.Id.Value);
 
             var updatedEntityTemplate = ObjectMapper.Map(input, oldEntityTemplate);
+            
+            await CheckIfAlreadyExist(updatedEntityTemplate);
 
             await SetSavedEntity(updatedEntityTemplate);
             
@@ -96,10 +100,13 @@ namespace TACHYON.EntityTemplates
         {
             if (template.SavedEntityId.IsNullOrEmpty()) return;
 
-            await DisableTenancyFilterIfTms();
+            var isTms = await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
+            
+            if (isTms) DisableTenancyFilters();
             
             var isExist = await _templateRepository.GetAll()
                 .Where(x => x.EntityType == template.EntityType)
+                .WhereIf(isTms,x=> x.CreatorTenantId == AbpSession.TenantId)
                 .AnyAsync(x => x.SavedEntityId.Equals(template.SavedEntityId));
 
             if (isExist)
@@ -109,7 +116,16 @@ namespace TACHYON.EntityTemplates
 
         private async Task SetSavedEntity(EntityTemplate template)
         {
-            if (template.SavedEntityId.IsNullOrEmpty() || !template.SavedEntity.IsNullOrEmpty()) return;
+            if (template.SavedEntityId.IsNullOrEmpty() || !template.SavedEntity.IsNullOrEmpty())
+            {
+                if (!template.SavedEntity.IsNullOrEmpty() && template.EntityType == SavedEntityType.TripTemplate)
+                {
+                    var tripJson =
+                        JsonConvert.DeserializeObject<CreateOrEditShippingRequestTripDto>(template.SavedEntity);
+                    await BindRealTenantIdIfTms(template, tripJson);
+                }
+                return;
+            }
 
             CurrentUnitOfWork.DisableFilter(nameof(IHasIsDrafted));
             
@@ -123,9 +139,26 @@ namespace TACHYON.EntityTemplates
                 throw new EntityNotFoundException(L("EntityWithIdXIsNotFound",template.SavedEntityId));
 
             template.SavedEntity = SerializeEntityWithFormatting(savedEntity,template.EntityType);
+            await BindRealTenantIdIfTms(template, savedEntity);
+        }
+
+        private async Task BindRealTenantIdIfTms(EntityTemplate template, object savedEntity)
+        {
             if (!await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer)) return;
-            template.TenantId = savedEntity.As<dynamic>().TenantId;
+
             template.CreatorTenantId = AbpSession.TenantId;
+
+            if (template.EntityType == SavedEntityType.ShippingRequestTemplate)
+            {
+                template.TenantId = savedEntity.As<dynamic>().TenantId;
+                return;
+            }
+
+            DisableTenancyFilters();
+            template.TenantId = await _shippingRequestRepository.GetAll()
+                .Where(x => x.Id == savedEntity.As<CreateOrEditShippingRequestTripDto>().ShippingRequestId)
+                .Select(x => x.TenantId)
+                .FirstOrDefaultAsync();
         }
 
         private async Task<CreateOrEditShippingRequestTripDto> GetTrip(string savedEntityId)
@@ -213,6 +246,7 @@ namespace TACHYON.EntityTemplates
                         .All(g => g.FatherId == shippingRequest.GoodCategoryId)) select item);
 
             await DisableTenancyFilterIfTms(); // to skip join tenancy filter for tms
+            
             var matchesOriginAndDestinationItems = (from template in filteredByGoodsCategoryItems
                 join originFacility in _facilityRepository.GetAll().AsNoTracking()
                     on template.Trip.OriginFacilityId equals originFacility.Id
