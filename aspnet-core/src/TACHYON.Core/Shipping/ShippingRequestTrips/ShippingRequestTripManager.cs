@@ -182,7 +182,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer),x=>x.TenantId==request.TenantId )
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.CarrierAsASaas), x => x.TenantId == _AbpSession.TenantId)
-                .FirstOrDefault(x => x.Name == name);
+                .FirstOrDefault(x => x.Name.Trim() == name.Trim());
         }
 
         public Receiver GetReceiverByPermissionAndFacility(string name, long shippingRequestId, long facilityId)
@@ -193,7 +193,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x => x.TenantId == request.TenantId)
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.CarrierAsASaas), x => x.TenantId == _AbpSession.TenantId)
-                .FirstOrDefault(x => x.FullName == name);
+                .FirstOrDefault(x => x.FullName.Trim() == name.Trim());
         }
 
 
