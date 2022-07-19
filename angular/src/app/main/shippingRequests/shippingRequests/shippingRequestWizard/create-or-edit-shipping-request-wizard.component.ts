@@ -554,7 +554,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         type === 'source' ? (this.sourceCities = res) : (this.destinationCities = res);
         if (this.step1Dto.shippingTypeId == 2) {
           this.sourceCities = this.destinationCities = res;
-          this.step2Dto.originCityId = this.step2Dto.destinationCityId = null;
+          // this.step2Dto.originCityId = this.step2Dto.destinationCityId = null;
         }
       });
   }

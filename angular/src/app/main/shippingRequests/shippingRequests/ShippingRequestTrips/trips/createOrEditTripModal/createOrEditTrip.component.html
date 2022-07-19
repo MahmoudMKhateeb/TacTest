@@ -77,7 +77,7 @@
                   (change)="SyncFacilitiesWithService(); loadReceivers(trip.originFacilityId)"
                   required
                 >
-                  <option value="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
+                  <option [ngValue]="undefined" selected>{{ l('SelectaFacility') }}</option>
                   <option *ngFor="let item of _TripService.currentSourceFacilitiesItems" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <div *ngIf="this.feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas')" class="input-group-btn">
@@ -129,7 +129,7 @@
                   (change)="SyncFacilitiesWithService()"
                   required
                 >
-                  <option value="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
+                  <option [ngValue]="undefined" selected>{{ l('SelectaFacility') }}</option>
                   <option *ngFor="let item of _TripService.currentDestinationFacilitiesItems" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <div *ngIf="this.feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas')" class="input-group-btn">
@@ -352,7 +352,7 @@
               </div>
             </div>
             <!--  start:: RouteSteps -->
-            <PointsComponent #PointsComponent (SelectedWayPointsFromChild)="trip.routPoints = $event" [usedIn]="'createOrEdit'"></PointsComponent>
+            <PointsComponent #PointsComponent (SelectedWayPointsFromChild)="trip.routPoints = $event"></PointsComponent>
             <!--  end:: RouteSteps -->
             <!--end::Body-->
           </div>
@@ -368,7 +368,7 @@
               [jsonData]="tripAsJson"
               [dropDirection]="'up'"
               [customClass]="'btn btn-light-danger font-weight-bold  dropdown-toggle btn-elevate-hover mx-2'"
-              [disabled]="PointsAreInValid() || !shippingRequestTripsForm.form.valid"
+              [disabled]="!CanCreateTemplate() || !shippingRequestTripsForm.form.valid"
             ></create-or-edit-template-drop-down-button>
             <button
               type="submit"

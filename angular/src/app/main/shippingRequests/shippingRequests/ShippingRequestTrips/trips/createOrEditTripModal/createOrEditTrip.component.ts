@@ -132,6 +132,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     return this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto.name ? true : false) : true;
   }
   get tripAsJson(): string {
+    if (this.trip) this.trip.shippingRequestId = this.shippingRequest.id;
     return JSON.stringify(this.trip);
   }
   ngOnInit() {
@@ -149,12 +150,14 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   ValidateTripFacilities() {
     //prevent the user from selecting same facilty
-    if (this.trip.originFacilityId == this.trip.destinationFacilityId) {
-      this.shippingRequestTripsForm.controls['sourceFacility'].setErrors({ invalid: true });
-      this.shippingRequestTripsForm.controls['destFacility'].setErrors({ invalid: true });
-    } else {
-      this.shippingRequestTripsForm.controls['sourceFacility'].setErrors(null);
-      this.shippingRequestTripsForm.controls['destFacility'].setErrors(null);
+    if (this.trip.originFacilityId != undefined && this.trip.destinationFacilityId != undefined) {
+      if (this.trip.originFacilityId == this.trip.destinationFacilityId) {
+        this.shippingRequestTripsForm.controls['sourceFacility'].setErrors({ invalid: true });
+        this.shippingRequestTripsForm.controls['destFacility'].setErrors({ invalid: true });
+      } else {
+        this.shippingRequestTripsForm.controls['sourceFacility'].setErrors(null);
+        this.shippingRequestTripsForm.controls['destFacility'].setErrors(null);
+      }
     }
   }
   /**
@@ -224,7 +227,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       });
       this.loading = false;
     }
-
+    this._PointsService.updateCurrentUsedIn('createOrEdit');
     this.active = true;
     this.modal.show();
     this.initDocsUploader();
@@ -498,12 +501,15 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     //if trip Drop Points is less than number of drops Prevent Adding Trip
     if (this.trip.routPoints.find((x) => x.pickingType == PickingType.Dropoff && !x.goodsDetailListDto)) {
       console.log('first Condition Fired');
-      Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseAddAllTheDropPoints'), 'warning');
+      Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseCompleteAllDropPoints'), 'warning');
       return false;
       //if the routetype is single drop and the Drop point setup is not completed prevent adding trip
     } else if (this.shippingRequest.routeTypeId === this.RouteTypes.SingleDrop && !this.trip.routPoints[1].goodsDetailListDto) {
       console.log('Secound Condition Fired');
       Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseCompleteTheDropPointSetup'), 'warning');
+      return false;
+    } else if (this.trip.routPoints.length < this.shippingRequest.numberOfDrops + 1) {
+      Swal.fire(this.l('inCompletePointDetails'), this.l('PleaseAddAllTheDropPoints'), 'warning');
       return false;
     } else {
       return true;
@@ -514,18 +520,17 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * Validates Shipping Request Trip Before Create Template
    * @private
    */
-  public PointsAreInValid(): boolean {
+  public CanCreateTemplate(): boolean {
     //if there is no routePoints
     if (!isNotNullOrUndefined(this.trip.routPoints)) {
+      return false;
+    } else if (this.trip.routPoints.find((x) => x.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x.goodsDetailListDto))) {
+      return false;
+    } else if (this.trip.routPoints.length < this.shippingRequest.numberOfDrops + 1) {
+      return false;
+    } else {
       return true;
     }
-    //if there is route points check for good details
-    //if there is no good details return false
-    if (this.trip.routPoints.find((x) => x.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x.goodsDetailListDto))) {
-      return true;
-    }
-    //else return false
-    return false;
   }
   /**
    * load Trip Templates For Drop Down
@@ -546,10 +551,21 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this._templates.getForView(this.selectedTemplate).subscribe((res) => {
       jsonObject = JSON.parse(res.savedEntity);
       this.trip = jsonObject;
-      this.trip.id = undefined;
+      this.removeIdsFromTripTemplate(this.trip);
       this.loadReceivers(this.trip.originFacilityId);
       this.pickupPointSenderId = this.trip.routPoints[0].receiverId;
       this._PointsService.updateWayPoints(this.trip.routPoints);
     });
+  }
+
+  private removeIdsFromTripTemplate(trip: CreateOrEditShippingRequestTripDto) {
+    this.trip.id = undefined;
+    this.trip.routPoints.map((x) => {
+      x.goodsDetailListDto.map((y) => {
+        return (y.id = undefined);
+      });
+      return (x.id = undefined);
+    });
+    return this.trip;
   }
 }
