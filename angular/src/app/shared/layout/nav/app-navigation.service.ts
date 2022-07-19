@@ -344,7 +344,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this.isEnabled('App.CarrierAsASaas') || this.isEnabled('App.TachyonDealer')
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
           ),
 
           // new AppMenuItem(

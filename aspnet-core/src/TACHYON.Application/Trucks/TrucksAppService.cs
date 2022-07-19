@@ -22,6 +22,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
@@ -37,6 +38,7 @@ using TACHYON.Features;
 using TACHYON.Integration.WaslIntegration;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
+using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Storage;
 using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
@@ -75,6 +77,7 @@ namespace TACHYON.Trucks
         private readonly IRepository<PlateType> _plateTypesRepository;
         private readonly WaslIntegrationManager _waslIntegrationManager;
         private readonly IRepository<Tenant> _lookupTenantRepository;
+        private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
 
 
 
@@ -86,7 +89,8 @@ namespace TACHYON.Trucks
             IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService,
             IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository,
             IRepository<PlateType> PlateTypesRepository, IRepository<Tenant> lookupTenantRepository,
-            WaslIntegrationManager waslIntegrationManager)
+            WaslIntegrationManager waslIntegrationManager,
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -104,6 +108,7 @@ namespace TACHYON.Trucks
             _plateTypesRepository = PlateTypesRepository;
             _lookupTenantRepository = lookupTenantRepository;
             _waslIntegrationManager = waslIntegrationManager;
+            _shippingRequestTripRepository = shippingRequestTripRepository;
         }
 
         public async Task<LoadResult> GetAll(GetAllTrucksInput input)
@@ -457,22 +462,43 @@ namespace TACHYON.Trucks
             }).ToListAsync();
         }
 
-        public async Task<List<SelectItemDto>> GetAllCarrierTrucksByTruckTypeForDropDown(long truckTypeId)
+        public async Task<List<SelectItemDto>> GetAllCarrierTrucksByTruckTypeForDropDown(long truckTypeId, long tripId)
         {
-            return await _truckRepository.GetAll()
-                .Where(x => x.TrucksTypeId == truckTypeId)
-                .Select(x => new SelectItemDto
-                {
-                    DisplayName = x.GetDisplayName(),
-                    Id = x.Id.ToString()
-                }).ToListAsync();
+
+            var carrierTenantId = _shippingRequestTripRepository.GetAll()
+                .Where(x => x.Id == tripId)
+                .Select(x => x.ShippingRequestFk.CarrierTenantId)
+                .FirstOrDefault();
+
+            using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
+            {
+                return await _truckRepository.GetAll()
+               .Where(x => x.TrucksTypeId == truckTypeId)
+               .Select(x => new SelectItemDto
+               {
+                   DisplayName = x.GetDisplayName(),
+                   Id = x.Id.ToString()
+               }).ToListAsync();
+            }
+
+
         }
 
-        public async Task<List<SelectItemDto>> GetAllDriversForDropDown()
+        public async Task<List<SelectItemDto>> GetAllDriversForDropDown(long tripId)
         {
-            return await _lookup_userRepository.GetAll().Where(e => e.IsDriver == true)
-                .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
-                .ToListAsync();
+            var carrierTenantId = _shippingRequestTripRepository.GetAll()
+                            .Where(x => x.Id == tripId)
+                            .Select(x => x.ShippingRequestFk.CarrierTenantId)
+                            .FirstOrDefault();
+
+            using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
+            {
+                return await _lookup_userRepository.GetAll().Where(e => e.IsDriver == true)
+                  .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
+                  .ToListAsync();
+            }
+
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
