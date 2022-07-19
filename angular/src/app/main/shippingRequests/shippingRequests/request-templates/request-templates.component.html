@@ -114,7 +114,7 @@
                           <!--                          <li>-->
                           <!--                            <a href="javascript:;" class="dropdown-item" (click)="editTemplate(record)">{{ l('Edit') }}</a>-->
                           <!--                          </li>-->
-                          <li>
+                          <li *ngIf="!isTachyonDealerOrHost">
                             <a href="javascript:;" class="dropdown-item" (click)="deleteTemplate(record.id)">{{ l('Delete') }}</a>
                           </li>
                         </ul>

@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -139,10 +140,14 @@ namespace TACHYON.EntityTemplates
         
         private async Task CheckDuplicatedTemplateName(CreateOrEditEntityTemplateInputDto input)
         {
+            var isTms = await IsEnabledAsync(AppFeatures.TachyonDealer);
+            if (isTms) DisableTenancyFilters(); 
             
            var isDuplicated = await _templateRepository.GetAll()
                .WhereIf(input.Id.HasValue, x => x.Id != input.Id)
+               .WhereIf(isTms,x=> x.CreatorTenantId == AbpSession.TenantId)
                 .AnyAsync(x => x.TemplateName.ToLower().Equals(input.TemplateName.ToLower()));
+           
            if (isDuplicated)
                throw new AbpValidationException(L("TemplateNameAlreadyUsed"));
         }
