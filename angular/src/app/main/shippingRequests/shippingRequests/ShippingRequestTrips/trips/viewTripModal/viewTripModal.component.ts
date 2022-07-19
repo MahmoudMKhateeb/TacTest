@@ -108,6 +108,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this.toTime = res.supposedPickupDateTo?.format('HH:mm');
         //Get The Points From The View Service and send them to the Points Service To Draw Them
         this._PointsService.updateWayPoints(this.trip.routPoints);
+        this._PointsService.updateCurrentUsedIn('view');
         this.pickUpPointSender = res.routPoints[0].senderOrReceiverContactName;
         this.assignDriverAndTruck.assignedTruckId = this.trip.assignedTruckId;
         this.assignDriverAndTruck.assignedDriverUserId = this.trip.assignedDriverUserId;

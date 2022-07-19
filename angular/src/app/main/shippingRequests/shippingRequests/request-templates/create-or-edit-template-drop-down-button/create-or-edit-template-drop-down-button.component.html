@@ -26,7 +26,7 @@
         />
       </div>
       <validation-messages [formCtrl]="templateNameInput"></validation-messages>
-      <button role="menuitem" [disabled]="!templateNameInput.valid" class="btn btn-sm btn-block btn-info" (click)="SaveAsTemplate()">
+      <button role="menuitem" [disabled]="!templateNameInput.valid || disabled" class="btn btn-sm btn-block btn-info" (click)="SaveAsTemplate()">
         {{ (templateIdForEdit ? 'Update' : 'Save') | localize }}
       </button>
     </li>

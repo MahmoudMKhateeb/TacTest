@@ -41,7 +41,6 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
   // @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
-  @Input() usedIn: 'view' | 'createOrEdit';
   @Output() SelectedWayPointsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
 
   MainGoodsCategory: number;
@@ -73,6 +72,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   private tripDestFacilitySub$: Subscription;
   private tripSourceFacilitySub$: Subscription;
   private currentActiveTripSubs$: Subscription;
+  usedIn: 'view' | 'createOrEdit';
 
   ngOnDestroy() {
     this.pointsServiceSubscription$.unsubscribe();
@@ -98,8 +98,6 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         Swal.fire(this.l('Done'), this.l('AllDropPointsAddedSuccessfully'), 'success');
       }
     });
-    //Tell the Service Where this Component is Being Used
-    this._PointsService.updateCurrentUsedIn(this.usedIn);
     //if action is edit trip get active Trip id
     this.currentActiveTripSubs$ = this._tripService.currentActiveTripId.subscribe((res) => (this.activeTripId = res));
     //get some Stuff from ShippingRequest Dto
@@ -128,7 +126,9 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         }
       });
     }
-
+    this._PointsService.currentUsedIn.subscribe((res) => {
+      this.usedIn = res;
+    });
     // setInterval(() => {
     //   console.log(this.wayPointsList);
     // }, 1000);
