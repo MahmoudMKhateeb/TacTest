@@ -561,7 +561,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   private removeIdsFromTripTemplate(trip: CreateOrEditShippingRequestTripDto) {
     this.trip.id = undefined;
     this.trip.routPoints.map((x) => {
-      x.goodsDetailListDto.map((y) => {
+      x.goodsDetailListDto?.map((y) => {
         return (y.id = undefined);
       });
       return (x.id = undefined);

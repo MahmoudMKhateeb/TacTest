@@ -36,8 +36,6 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
-  fromTime: string;
-  toTime: string;
   Vases: CreateOrEditShippingRequestTripVasDto[];
   selectedVases: CreateOrEditShippingRequestTripVasDto[];
   allFacilities: FacilityForDropdownDto[];
@@ -104,8 +102,6 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
       )
       .subscribe((res) => {
         this.trip = res;
-        this.fromTime = res.supposedPickupDateFrom?.format('HH:mm');
-        this.toTime = res.supposedPickupDateTo?.format('HH:mm');
         //Get The Points From The View Service and send them to the Points Service To Draw Them
         this._PointsService.updateWayPoints(this.trip.routPoints);
         this._PointsService.updateCurrentUsedIn('view');

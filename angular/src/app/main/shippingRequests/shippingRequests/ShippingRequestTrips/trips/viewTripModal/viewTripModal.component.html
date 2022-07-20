@@ -60,12 +60,14 @@
           </div>
           <div class="col-lg-6 form-group d-inline-flex">
             <div class="input-group d-inline-block">
-              <label> {{ l('supposedPickupDateFrom') }}</label>
-              <input name="fromTime" class="form-control" type="time" disabled [(ngModel)]="fromTime" />
+              <label> {{ l('supposedPickupTimeFrom') }}</label>
+              <dx-date-box name="supposedPickupDateFrom" [(value)]="trip.supposedPickupDateFrom" type="time" pickerType="list" [disabled]="true">
+              </dx-date-box>
             </div>
             <div class="input-group d-inline-block">
-              <label> {{ l('supposedPickupDateTo') }}</label>
-              <input name="toTime" class="form-control" type="time" disabled [(ngModel)]="toTime" />
+              <label> {{ l('supposedPickupTimeTo') }}</label>
+              <dx-date-box name="supposedPickupDateTo" [(value)]="trip.supposedPickupDateTo" type="time" pickerType="list" [disabled]="true">
+              </dx-date-box>
             </div>
           </div>
 
