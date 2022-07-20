@@ -464,11 +464,16 @@ namespace TACHYON.Trucks
 
         public async Task<List<SelectItemDto>> GetAllCarrierTrucksByTruckTypeForDropDown(long truckTypeId, long tripId)
         {
-
-            var carrierTenantId = _shippingRequestTripRepository.GetAll()
+            int? carrierTenantId;
+            using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                carrierTenantId = _shippingRequestTripRepository.GetAll()
                 .Where(x => x.Id == tripId)
                 .Select(x => x.ShippingRequestFk.CarrierTenantId)
                 .FirstOrDefault();
+            }
+
+
 
             using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
             {
@@ -486,10 +491,15 @@ namespace TACHYON.Trucks
 
         public async Task<List<SelectItemDto>> GetAllDriversForDropDown(long tripId)
         {
-            var carrierTenantId = _shippingRequestTripRepository.GetAll()
-                            .Where(x => x.Id == tripId)
-                            .Select(x => x.ShippingRequestFk.CarrierTenantId)
-                            .FirstOrDefault();
+            int? carrierTenantId;
+            using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                 carrierTenantId = _shippingRequestTripRepository.GetAll()
+                           .Where(x => x.Id == tripId)
+                           .Select(x => x.ShippingRequestFk.CarrierTenantId)
+                           .FirstOrDefault();
+            }
+
 
             using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
             {

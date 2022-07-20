@@ -69,7 +69,6 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this._TripService.currentShippingRequest.subscribe((res) => {
       this.TruckTypeId = res.truckTypeId;
     });
-    this.activeTripId = this._Router.snapshot.queryParams['tripId'];
   }
 
   ngAfterViewInit() {
@@ -149,7 +148,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Carriers Drivers For DD
    */
   getAllDrivers() {
-    this._trucksServiceProxy.getAllDriversForDropDown(this.activeTripId).subscribe((res) => {
+    this._trucksServiceProxy.getAllDriversForDropDown(this.currentTripId).subscribe((res) => {
       this.allDrivers = res;
     });
   }
@@ -158,7 +157,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Carriers Trucks For DD
    */
   getAllTrucks(truckTypeId) {
-    this._trucksServiceProxy.getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId, this.activeTripId).subscribe((res) => {
+    this._trucksServiceProxy.getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId, this.currentTripId).subscribe((res) => {
       this.allTrucks = res;
     });
   }
