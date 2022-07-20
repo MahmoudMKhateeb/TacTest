@@ -393,7 +393,7 @@
                               required
                             >
                               <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>
-                              <option *ngFor="let item of sourceCities" value="{{ item.id }}">{{ item.displayName }}</option>
+                              <option *ngFor="let originCity of sourceCities" [ngValue]="Number(originCity.id)">{{ originCity.displayName }}</option>
                             </select>
                           </div>
 
@@ -422,7 +422,7 @@
                               required
                             >
                               <option [ngValue]="null" disabled selected>{{ l('SelectanDestinationCity') }}</option>
-                              <option *ngFor="let item of destinationCities" value="{{ item.id }}">{{ item.displayName }}</option>
+                              <option *ngFor="let city of destinationCities" [ngValue]="Number(city.id)">{{ city.displayName }}</option>
                             </select>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
                           </div>

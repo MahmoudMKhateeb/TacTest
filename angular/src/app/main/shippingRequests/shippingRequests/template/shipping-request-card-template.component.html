@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
     <sub-header [title]="Title | localize" [description]="'' | localize">
-      <div role="actions">
+      <div role="actions" *ngIf="isShipper || isTachyonDealer || isCarrierSaas">
         <div class="btn-group mr-2" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true">
           <button dropdownToggle type="button" class="btn btn-success" aria-controls="dropdown-basic">
             <i class="fas fa-plus"></i> {{ 'CreateNewRequest' | localize }}<span class="caret"></span>
@@ -14,11 +14,7 @@
               </button>
             </li>
             <li role="menuitem">
-              <button
-                (click)="loadEntityTemplateModal.show(1)"
-                *ngIf="isShipper || isTachyonDealer"
-                class="btn btn-outline-info btn-elevate-hover mt-2 w-100"
-              >
+              <button (click)="loadEntityTemplateModal.show(1)" class="btn btn-outline-info btn-elevate-hover mt-2 w-100">
                 <i class="fas fa-list"></i> {{ l('FromTemplate') }}
               </button>
             </li>

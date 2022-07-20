@@ -885,11 +885,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.step1Dto.isTachyonDeal ? (this.shippingRequestType = 'tachyondeal') : '';
     this.step1Dto.isDirectRequest ? (this.shippingRequestType = 'directrequest') : '';
     this.step1Dto.endTripDate = this.step1Dto.startTripDate = this.step1Dto.bidStartDate = this.step1Dto.bidEndDate = null; //empty Shipping Request Dates
-    this.step2Dto.init(pharsedJson);
     this.originCountry = pharsedJson.originCountryId;
     this.destinationCountry = pharsedJson.destinationCountryId;
     this.loadCitiesByCountryId(this.originCountry, 'source');
     this.loadCitiesByCountryId(this.destinationCountry, 'destination');
+    this.step2Dto.init(pharsedJson);
     this.step3Dto.init(pharsedJson);
     this.loadTruckandCapacityForEdit();
     this.step4Dto.init(pharsedJson);
