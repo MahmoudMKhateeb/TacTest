@@ -301,7 +301,7 @@ export class AppNavigationService {
         [
           new AppMenuItem('PenaltiesList', 'Pages.Invoices', '', '/app/main/penalties/view'),
 
-          new AppMenuItem('InvoicesNoteList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
+          new AppMenuItem('InvoicesNotesList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
 
           new AppMenuItem(
             'InvoicesList',

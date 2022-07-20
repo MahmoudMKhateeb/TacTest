@@ -3028,6 +3028,14 @@
 		<text name="Unknown">Unknown</text>
 		<text name="ShippingRequestAddedByTMSNotificationMessage">Shipping Request Added for you By Tachyon Manage Service</text>
 		<text name="Financials">Financials</text>
+
+		<text name="DestinationCompanyName">Destination Company Name</text>
+		<text name="PenaltiesList">Penalties List</text>
+		<text name="InvoicesNotesList">Invoices Notes List</text>
+		<text name="PenaltyComplaint">Penalty Complaint</text>
+		<text name="ComplaintDescription">Complaint Description</text>
+		<text name="ComplaintRejectReason">Complaint Reject Reason</text>
+
 		
 	</texts>
 </localizationDictionary>
