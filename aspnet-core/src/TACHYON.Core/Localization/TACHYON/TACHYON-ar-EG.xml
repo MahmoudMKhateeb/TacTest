@@ -2777,6 +2777,15 @@
 		<text name="Unknown">غير معروف</text>
 		<text name="ShippingRequestAddedByTMSNotificationMessage">تم إضافة طلب الشحن لك بواسطة خدمة إدارة Tachyon</text>
 		<text name="Financials">المالية</text>
+		<text name="PenaltyName">اسم العقوبة</text>
+		<text name="DestinationCompanyName">اسم الشركة المقصودة</text>
+		<text name="ApplyNotLoggedPenalty">تطبيق عقوبة غير مسجلة</text>
+		<text name="PenaltiesList">قائمة العقوبات</text>
+		<text name="InvoicesNotesList">قائمة ملاحظات الفواتير</text>
+		<text name="ViewComplaint">عرض الاحتجاج</text>
+		<text name="PenaltyComplaint">اعتراض العقوبة</text>
+		<text name="ComplaintDescription">وصف الاعتراض</text>
+		<text name="ComplaintRejectReason">سبب رفض الاعتراض</text>
 
 	</texts>
 </localizationDictionary>
