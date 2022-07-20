@@ -365,83 +365,99 @@ namespace TACHYON.Shipping.Trips
                     .FirstOrDefaultAsync();
             }
 
-            if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
+            var carrierTenantId = trip.ShippingRequestFk.CarrierTenantId;
 
-            if (trip.Status == ShippingRequestTripStatus.InTransit && await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
-                throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
-
-            long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
-            long? oldAssignedTruckId = trip.AssignedTruckId;
-            trip.AssignedDriverUserId = input.AssignedDriverUserId;
-            trip.AssignedTruckId = input.AssignedTruckId;
-            bool isTruckChanged = oldAssignedTruckId != input.AssignedTruckId;
-
-            //reset driver status when change 
-            if (trip.DriverStatus != ShippingRequestTripDriverStatus.None)
+            using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
             {
-                trip.DriverStatus = ShippingRequestTripDriverStatus.None;
-                trip.RejectedReason = string.Empty;
-                trip.RejectReasonId = default(int?);
-            }
 
-            if (oldAssignedDriverUserId != trip.AssignedDriverUserId)
-            {
-                trip.AssignedDriverTime = Clock.Now;
-                // Send Notification To New Driver
-                if (oldAssignedDriverUserId.HasValue)
+
+
+                if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
+
+                if (trip.Status == ShippingRequestTripStatus.InTransit && await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
+                    throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
+
+                long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
+                long? oldAssignedTruckId = trip.AssignedTruckId;
+                trip.AssignedDriverUserId = input.AssignedDriverUserId;
+                trip.AssignedTruckId = input.AssignedTruckId;
+                bool isTruckChanged = oldAssignedTruckId != input.AssignedTruckId;
+
+                //reset driver status when change 
+                if (trip.DriverStatus != ShippingRequestTripDriverStatus.None)
                 {
-                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id, trip.WaybillNumber.ToString(),
-                        new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value));
-
-                    await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
-                    isDriverChanged = true;
+                    trip.DriverStatus = ShippingRequestTripDriverStatus.None;
+                    trip.RejectedReason = string.Empty;
+                    trip.RejectReasonId = default(int?);
                 }
-            }
 
-            #region SetUpdateReason
-
-            string reason;
-
-            switch (isDriverChanged)
-            {
-                case true when isTruckChanged:
-                    reason = nameof(RoutPointAction4);
-                    break;
-                case true:
-                    reason = nameof(RoutPointAction1);
-                    break;
-                case false when isTruckChanged:
-                    reason = nameof(RoutPointAction2);
-                    break;
-                default: return;
-            }
-
-            _reasonProvider.Use(reason);
-            #endregion
-
-            await UserManager.UpdateUserDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
-
-            if (oldAssignedTruckId != trip.AssignedTruckId && trip.ShippingRequestFk.CarrierTenantId != null)
-            {
-                var driver = await _userManager.GetUserByIdAsync(trip.AssignedDriverUserId.Value);
-                var notifyTripInput = new NotifyTripUpdatedInput()
+                if (oldAssignedDriverUserId != trip.AssignedDriverUserId)
                 {
-                    CarrierTenantId = trip.ShippingRequestFk.CarrierTenantId.Value,
-                    TripId = trip.Id,
-                    WaybillNumber = trip.WaybillNumber.ToString(),
-                    DriverIdentifier = new UserIdentifier(driver.TenantId, trip.AssignedDriverUserId.Value)
-                };
+                    trip.AssignedDriverTime = Clock.Now;
+                    // Send Notification To New Driver
+                    if (oldAssignedDriverUserId.HasValue)
+                    {
+                        await _appNotifier.NotifyDriverWhenUnassignedTrip
+                        (
+                            trip.Id,
+                            trip.WaybillNumber.ToString(),
+                            new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value)
+                        );
 
-                await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
+                        await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
+                        isDriverChanged = true;
+                    }
+                }
+
+                #region SetUpdateReason
+
+                string reason;
+
+                switch (isDriverChanged)
+                {
+                    case true when isTruckChanged:
+                        reason = nameof(RoutPointAction4);
+                        break;
+                    case true:
+                        reason = nameof(RoutPointAction1);
+                        break;
+                    case false when isTruckChanged:
+                        reason = nameof(RoutPointAction2);
+                        break;
+                    default: return;
+                }
+
+                _reasonProvider.Use(reason);
+
+                #endregion
+
+                await UserManager.UpdateUserDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
+
+                if (oldAssignedTruckId != trip.AssignedTruckId && trip.ShippingRequestFk.CarrierTenantId != null)
+                {
+                    var driver = await _userManager.GetUserByIdAsync(trip.AssignedDriverUserId.Value);
+                    var notifyTripInput = new NotifyTripUpdatedInput()
+                    {
+                        CarrierTenantId = trip.ShippingRequestFk.CarrierTenantId.Value,
+                        TripId = trip.Id,
+                        WaybillNumber = trip.WaybillNumber.ToString(),
+                        DriverIdentifier = new UserIdentifier(driver.TenantId, trip.AssignedDriverUserId.Value)
+                    };
+
+                    await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
+                }
+
+                // Send Notification To New Driver
+                await _appNotifier.NotifyDriverWhenAssignTrip
+                (
+                    trip.Id,
+                    new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value)
+                );
+
+
+
+                await CurrentUnitOfWork.SaveChangesAsync();
             }
-
-            // Send Notification To New Driver
-            await _appNotifier.NotifyDriverWhenAssignTrip(trip.Id,
-                new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value));
-
-
-
-            await CurrentUnitOfWork.SaveChangesAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
