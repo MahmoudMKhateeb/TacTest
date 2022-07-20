@@ -207,12 +207,12 @@ namespace TACHYON.Shipping.Trips.Importing
                 if (isSingleDropRequest)
                 {
                     //create points
-                    await CreatePointsFromSingleDropTrip(trip);
+                     CreatePointsFromSingleDropTrip(trip);
                 }
             }
         }
 
-        private async Task CreatePointsFromSingleDropTrip(ImportTripDto trip)
+        private void CreatePointsFromSingleDropTrip(ImportTripDto trip)
         {
             var pickup = new RoutPoint
             {
@@ -223,7 +223,7 @@ namespace TACHYON.Shipping.Trips.Importing
                 WorkFlowVersion = TACHYONConsts.PickUpRoutPointWorkflowVersion,
                 Code = (new Random().Next(100000, 999999)).ToString(),
             };
-            await _routPointRepository.InsertAsync(pickup);
+           _routPointRepository.Insert(pickup); //await is removed because of picking type order
 
             var dropPoint = new RoutPoint
             {
@@ -236,7 +236,7 @@ namespace TACHYON.Shipping.Trips.Importing
                     ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
                     : TACHYONConsts.DropOfRoutPointWorkflowVersion
             };
-            await _routPointRepository.InsertAsync(dropPoint);
+            _routPointRepository.Insert(dropPoint);
         }
 
         private async Task<long> CreatePointAsync(ImportRoutePointDto input)
