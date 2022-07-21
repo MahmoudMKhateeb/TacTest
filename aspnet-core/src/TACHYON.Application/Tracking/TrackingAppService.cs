@@ -193,6 +193,7 @@ namespace TACHYON.Tracking
                             a.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
                             a.Status),
                 }).ToListAsync();
+            mappedTrip.RoutPoints = mappedTrip.RoutPoints.OrderBy(x => x.PickingType).ToList();
             return mappedTrip;
         }
         public async Task Accept(int id)
