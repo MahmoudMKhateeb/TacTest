@@ -177,16 +177,18 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     return true;
   }
   canSeePricePackages() {
+    let isNotMarketPlaceRequest = this.shippingRequestforView.shippingRequest.requestType !== ShippingRequestType.Marketplace;
+    let isRequestStatusPrePrice = this.shippingRequestforView.shippingRequest.status === ShippingRequestStatus.PrePrice;
+    let isRequestStatusNeedsAction = this.shippingRequestforView.shippingRequest.status === ShippingRequestStatus.NeedsAction;
+    let isRequestTypeDirectRequest = this.shippingRequestforView.shippingRequest.requestType === ShippingRequestType.DirectRequest;
+    let isRequestTypeTachyonManageService = this.shippingRequestforView.shippingRequest.requestType === ShippingRequestType.TachyonManageService;
     // if the user is carrier
     if (
-      !this.feature.isEnabled('App.Carrier') &&
-      this.shippingRequestforView.shippingRequest.requestType != ShippingRequestType.Marketplace &&
-      (this.shippingRequestforView.shippingRequest.status == ShippingRequestStatus.PrePrice ||
-        (this.shippingRequestforView.shippingRequest.status == ShippingRequestStatus.NeedsAction &&
-          this.feature.isEnabled('App.Shipper') &&
-          this.shippingRequestforView.shippingRequest.requestType == ShippingRequestType.DirectRequest) ||
-        (this.feature.isEnabled('App.TachyonDealer') &&
-          this.shippingRequestforView.shippingRequest.requestType == ShippingRequestType.TachyonManageService))
+      !this.isCarrier &&
+      isNotMarketPlaceRequest &&
+      (isRequestStatusPrePrice ||
+        (isRequestStatusNeedsAction && isRequestTypeDirectRequest) ||
+        (this.isTachyonDealer && isRequestTypeTachyonManageService))
     ) {
       return true;
     }
