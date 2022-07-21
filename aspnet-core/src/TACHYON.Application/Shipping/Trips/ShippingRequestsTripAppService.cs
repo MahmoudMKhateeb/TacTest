@@ -238,6 +238,7 @@ namespace TACHYON.Shipping.Trips
                     shippingRequestTrip.DocumentFile = ObjectMapper.Map<DocumentFileDto>(documentFile);
                 }
             }
+            shippingRequestTrip.RoutPoints = shippingRequestTrip.RoutPoints.OrderBy(x => x.PickingType).ToList();
             shippingRequestTrip.NotesCount = await GetTripNotesCount(id);
             return shippingRequestTrip;
         }
@@ -792,6 +793,7 @@ namespace TACHYON.Shipping.Trips
                     .ThenInclude(v => v.VasFk)
                     .WhereIf(requestId.HasValue, x => x.ShippingRequestId == requestId)
                     .FirstOrDefaultAsync(x => x.Id == tripid);
+                trip.RoutPoints = trip.RoutPoints.OrderBy(x => x.PickingType).ToList();
                 if (trip == null) throw new UserFriendlyException(L("ShippingRequestTripIsNotFound"));
                 return trip;
             }
