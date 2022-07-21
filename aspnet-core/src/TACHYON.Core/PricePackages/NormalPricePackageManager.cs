@@ -141,7 +141,23 @@ namespace TACHYON.PricePackages
 
             pricePackageOfferDto.HasDirectRequest = await _directShippingRequestRepository.GetAll()
                 .AnyAsync(x => x.CarrierTenantId == pricePackageOfferDto.TenantId && x.ShippingRequestId == shippingRequestId);
-
+            if (await _featureChecker.IsEnabledAsync(AppFeatures.Carrier) || await _featureChecker.IsEnabledAsync(AppFeatures.CarrierAsASaas))
+            {
+                pricePackageOfferDto.CommissionAmount = pricePackageOfferDto.CommissionPercentageOrAddValue
+                = pricePackageOfferDto.ItemCommissionAmount = pricePackageOfferDto.VatAmountWithCommission
+                = pricePackageOfferDto.ItemVatAmountWithCommission = pricePackageOfferDto.ItemTotalAmountWithCommission 
+                = pricePackageOfferDto.TotalAmountWithCommission = pricePackageOfferDto.ItemSubTotalAmountWithCommission
+                = pricePackageOfferDto.SubTotalAmountWithCommission = pricePackageOfferDto.DetailsTotalPricePostCommissionPreVat
+                =pricePackageOfferDto.DetailsTotalVatPostCommission = pricePackageOfferDto.ItemsTotalPricePostCommissionPreVat
+                =pricePackageOfferDto.ItemsTotalVatPostCommission
+                = 0;
+            }
+            else if(await _featureChecker.IsEnabledAsync(AppFeatures.Shipper))
+            {
+                pricePackageOfferDto.ItemPrice = pricePackageOfferDto.DetailsTotalPricePreCommissionPreVat
+                = pricePackageOfferDto.DetailsTotalVatAmountPreCommission = pricePackageOfferDto.ItemsTotalPricePreCommissionPreVat
+                = pricePackageOfferDto.ItemsTotalVatAmountPreCommission = 0;
+            }
             return pricePackageOfferDto;
         }
 

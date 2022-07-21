@@ -116,7 +116,6 @@
               </tbody>
             </table>
           </div>
-
           <div *ngIf="!feature.isEnabled('App.TachyonDealer')">
             <!-- region trips-->
             <div class="table-responsive">
@@ -133,12 +132,12 @@
                   <tr>
                     <td>Trip</td>
                     <td>{{offer.quantity}}</td>
-                    <td>{{offer.itemSubTotalAmountWithCommission}}</td>
-                    <td>{{offer.itemsTotalPricePostCommissionPreVat}}</td>
+                    <td>{{isCarrier? offer.itemPrice :offer.itemSubTotalAmountWithCommission}}</td>
+                    <td>{{isCarrier? offer.itemsTotalPricePreCommissionPreVat :offer.itemsTotalPricePostCommissionPreVat}}</td>
                   </tr>
                   <tr>
                     <td colspan="3"></td>
-                    <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                    <td>{{isCarrier? offer.itemsTotalPricePreCommissionPreVat :offer.itemsTotalPricePostCommissionPreVat}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -159,18 +158,18 @@
                   <tr *ngFor="let item of Items; let i = index">
                     <td>{{item.itemName}}</td>
                     <td>{{item.quantity}}</td>
-                    <td>{{item.itemSubTotalAmountWithCommission}}</td>
-                    <td>{{item.itemsTotalPricePostCommissionPreVat}}</td>
+                    <td>{{isCarrier? item.itemPrice :item.itemSubTotalAmountWithCommission}}</td>
+                    <td>{{isCarrier? item.itemsTotalPricePreCommissionPreVat :item.itemsTotalPricePostCommissionPreVat}}</td>
                   </tr>
                   <tr>
                     <td colspan="3"></td>
-                    <td>{{offer.detailsTotalPricePostCommissionPreVat}}</td>
+                    <td>{{isCarrier? offer.detailsTotalPricePreCommissionPreVat :offer.detailsTotalPricePostCommissionPreVat}}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
-            <!-- total calculations -->
+            <!-- vat calculations -->
             <div class="table-responsive">
               <br />
               <table class="table table-sm table-bordered rounded">
@@ -183,16 +182,16 @@
                 <tbody>
                   <tr>
                     <td>{{l('total VAT for Trip')}}</td>
-                    <td>{{offer.itemsTotalVatPostCommission}}</td>
+                    <td>{{isCarrier? offer.itemsTotalVatAmountPreCommission :offer.itemsTotalVatPostCommission}}</td>
                   </tr>
                   <tr>
                     <td>total VAT for VAS</td>
-                    <td>{{offer.detailsTotalVatPostCommission}}</td>
+                    <td>{{isCarrier?offer.detailsTotalVatPostCommission : offer.detailsTotalVatAmountPreCommission}}</td>
                   </tr>
                   <tr>
                     <td></td>
 
-                    <td class="table-primary">{{offer.vatAmountWithCommission}}</td>
+                    <td class="table-primary">{{isCarrier? offer.vatAmount :offer.vatAmountWithCommission }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -241,13 +240,13 @@
                 <tr>
                   <td></td>
                   <td></td>
-                  <td class="table-primary">{{offer.totalAmountWithCommission}}</td>
+                  <td class="table-primary">{{isCarrier?offer.totalAmount : offer.totalAmountWithCommission}}</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div class="sendOffer">
+          <div class="table-responsive" *ngIf="feature.isEnabled('App.TachyonDealer')">
             <button
               *ngIf="!isCarrier && !offer.hasDirectRequest"
               type="submit"
