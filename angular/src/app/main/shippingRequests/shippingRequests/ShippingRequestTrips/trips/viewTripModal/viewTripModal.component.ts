@@ -24,6 +24,7 @@ import { TripService } from '@app/main/shippingRequests/shippingRequests/Shippin
 import { ActivatedRoute, Router } from '@angular/router';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
+import { Moment } from '@node_modules/moment';
 
 @Component({
   selector: 'viewTripModal',
@@ -55,6 +56,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   type = 'Trip';
   shippingRequestTripStatusEnum = ShippingRequestTripStatus;
   expectedDeliveryTime: moment.Moment;
+  originalExpectedDeliveryTime: Moment;
   expectedDeliveryTimeLoading: boolean;
   constructor(
     injector: Injector,
@@ -109,6 +111,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this.assignDriverAndTruck.assignedTruckId = this.trip.assignedTruckId;
         this.assignDriverAndTruck.assignedDriverUserId = this.trip.assignedDriverUserId;
         this.expectedDeliveryTime = this.trip.expectedDeliveryTime;
+        this.originalExpectedDeliveryTime = this.expectedDeliveryTime;
       });
 
     this.modal.show();
@@ -224,6 +227,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    */
   updateTripExpectedDeliveryTime() {
     if (!isNotNullOrUndefined(this.currentTripId)) return;
+    if (this.expectedDeliveryTime === this.originalExpectedDeliveryTime) return;
     // console.log('Trip Expected Delivery time Was Updated');
     this.expectedDeliveryTimeLoading = true;
     let body = new UpdateExpectedDeliveryTimeInput();
