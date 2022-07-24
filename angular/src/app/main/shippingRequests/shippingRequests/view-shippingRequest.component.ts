@@ -185,6 +185,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     // if the user is carrier
     if (
       !this.isCarrier &&
+      !this.isShipper &&
       isNotMarketPlaceRequest &&
       (isRequestStatusPrePrice ||
         (isRequestStatusNeedsAction && isRequestTypeDirectRequest) ||
