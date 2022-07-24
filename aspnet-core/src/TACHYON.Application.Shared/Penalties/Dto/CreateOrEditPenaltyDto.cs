@@ -11,6 +11,7 @@ namespace TACHYON.Penalties.Dto
     {
         [Required]
         public string PenaltyName { get; set; }
+        public string ReferenceNumber { get; set; }
         public string PenaltyDescrption { get; set; }
         [Required]
         public decimal ItmePrice { get; set; }

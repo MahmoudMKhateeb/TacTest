@@ -82,6 +82,11 @@
                 </p-dropdown>
               </div>
             </div>
+
+            <div class="col-lg-12 mt-4">
+              <label>{{ l('ReferenceNo') }} <span class="required-fileds">*</span></label>
+              <input #penaltyName="ngModel" type="text" class="form-control" [(ngModel)]="form.referenceNumber" name="penaltyName" />
+            </div>
             <div class="col-lg-12 mt-4">
               <label>{{ l('PenaltyName') }} <span class="required-fileds">*</span></label>
               <input

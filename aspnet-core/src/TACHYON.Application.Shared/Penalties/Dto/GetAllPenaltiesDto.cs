@@ -7,6 +7,7 @@ namespace TACHYON.Penalties.Dto
 {
    public class GetAllPenaltiesDto : EntityDto
     {
+        public string ReferenceNumber { get; set; }
         public string PenaltyName { get; set; }
         public string PenaltyDescrption { get; set; }
         public decimal TotalAmount { get; set; }

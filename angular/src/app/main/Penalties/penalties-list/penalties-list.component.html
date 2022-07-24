@@ -42,7 +42,7 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
-
+              <dxi-column dataField="referenceNumber" caption="{{ l('ReferenceNo') }}"> </dxi-column>
               <dxi-column dataField="penaltyName" caption="{{ l('PenaltyName') }}"> </dxi-column>
               <dxi-column width="6%" dataField="totalAmount" caption="{{ l('Amount') }}"> </dxi-column>
               <dxi-column cellTemplate="statusCellTemplate" dataField="penaltyStatusTitle" caption="{{ l('Status') }}"> </dxi-column>

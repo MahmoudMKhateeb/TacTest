@@ -14,10 +14,7 @@ namespace TACHYON.Penalties
     [Table("Penalties")]
     public class Penalty : FullAuditedEntity , IMustHaveTenant
     {
-        //public Penalty()
-        //{
-        //    Status = PenaltyStatus.New;
-        //}
+        public string ReferenceNumber { get; set; }
         public string PenaltyName { get; set; }
         public string PenaltyDescrption { get; set; }
         public PenaltyType Type { get; set; }
@@ -50,6 +47,9 @@ namespace TACHYON.Penalties
         #region prices
         public decimal CommissionValue { get; set; }
         public PriceOfferCommissionType CommissionType { get; set; }
+        /// <summary>
+        /// == ItemPrice
+        /// </summary>
         public decimal AmountPreCommestion { get; set; }
         public decimal AmountPostCommestion { get; set; }
         public decimal TaxVat { get; set; }
