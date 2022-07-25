@@ -1,8 +1,8 @@
 ﻿using Abp.Authorization;
 using Abp.Domain.Repositories;
-using Abp.Threading;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using NUglify.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -603,22 +603,18 @@ namespace TACHYON.Shipping.Trips.Importing
 
         private void ValidateDuplicatedVas(List<ImportTripVasesDto> tripVases)
         {
-            var groupedTrips = tripVases
-                .GroupBy(x => x.TripReference,
-                x => x.VasName,
-                (k, g) => new
-                {
-                    key = k,
-                    count = g.Count()
-                }).ToList();
 
-            if (groupedTrips.Any(x => x.count > 1))
+            var duplicatedVases = tripVases
+                .GroupBy(x => new {x.TripReference, x.VasName})
+                .Where(x=> x.Skip(1).Any())
+                .Select(x=> x.Key).ToList();
+
+            if (duplicatedVases.Any())
             {
-                foreach (var item in groupedTrips)
+                duplicatedVases.ForEach(dv =>
                 {
-                    tripVases.Where(x => x.VasName == item.key || x.TripReference == item.key).ToList().ForEach(x =>
-                       x.Exception = L("DuplicatedVas")+";");
-                }
+                    tripVases.Where(x=> x.TripReference.Equals(dv.TripReference) && x.VasName.Equals(dv.VasName)).ForEach(x=> x.Exception = L("DuplicatedVas")+";");
+                }); 
             }
         }
 
