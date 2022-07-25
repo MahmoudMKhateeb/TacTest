@@ -23,7 +23,7 @@
         <div class="modal-body">
           <div class="form-group">
             <div class="col-md-6">
-              <label>{{ l('bayanIntegrationId') }}</label>
+              <label>{{ l('bayanIntegrationId') }} <span class="text-danger">*</span></label>
               <input
                 class="form-control"
                 type="text"
@@ -35,7 +35,7 @@
               />
             </div>
             <div class="col-md-6">
-              <label>{{ l('name') }}</label>
+              <label>{{ l('name') }} <span class="text-danger">*</span></label>
               <input class="form-control" type="text" name="plateType.name" [(ngModel)]="plateType.name" required minLength="3" maxlength="250" />
             </div>
 

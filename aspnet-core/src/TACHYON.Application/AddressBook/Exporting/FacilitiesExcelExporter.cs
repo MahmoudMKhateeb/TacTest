@@ -37,7 +37,9 @@ namespace TACHYON.AddressBook.Exporting
                         L("Address"),
                         L("Longitude"),
                         L("latitude"),
-                        (L("City")) + L("DisplayName")
+                        ((L("City")) + L("DisplayName")),
+                        L("WorkingDaysHours")
+
                     );
 
                     AddObjects(
@@ -46,7 +48,8 @@ namespace TACHYON.AddressBook.Exporting
                         _ => _.Facility.Address,
                         _ => _.Facility.Longitude,
                         _ => _.Facility.Latitude,
-                        _ => _.CityDisplayName
+                        _ => _.CityDisplayName,
+                        _ => _.Facility.FacilityWorkingHours
                     );
                 });
         }

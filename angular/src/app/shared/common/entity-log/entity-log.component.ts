@@ -22,7 +22,7 @@ export class EntityLogComponent extends AppComponentBase implements OnInit {
   active = false;
   isCollapsed: boolean;
   activeId: number;
-
+  loading = false;
   constructor(injector: Injector, private _entityLogService: EntityLogServiceProxy) {
     super(injector);
   }
@@ -34,27 +34,39 @@ export class EntityLogComponent extends AppComponentBase implements OnInit {
   /**
    * opens the modal
    */
-  show() {
+  show(id = null) {
     this.modal.show();
     this.active = true;
-    this.getEntityLogs();
+    this.loading = true;
+    this.getEntityLogs(id);
   }
 
   /**
    * closes the modal
    */
   close() {
-    this.active = false;
     this.entityLogs = [];
     this.modal.hide();
   }
 
-  getEntityLogs() {
-    this._entityLogService.getAllEntityLogs(this.entityType, this.entityId.toString(), '', 10, 0).subscribe((result) => {
-      for (let dto of result.items) {
-        this.entityLogs.push(this.toEntityLogForView(dto));
-      }
-    });
+  getEntityLogs(id) {
+    let entutyId = id != null ? id : this.entityId.toString();
+    let entityType = id != null ? EntityLogType.ShippingRequestPriceOffer : this.entityType;
+    if (id != null) {
+      this._entityLogService.getEntityLog(entutyId).subscribe((result) => {
+        this.entityLogs.push(this.toEntityLogForView(result));
+        this.loading = false;
+        this.active = true;
+      });
+    } else {
+      this._entityLogService.getAllEntityLogs(entityType, entutyId, '', 10, 0).subscribe((result) => {
+        for (let dto of result.items) {
+          this.entityLogs.push(this.toEntityLogForView(dto));
+        }
+        this.loading = false;
+        this.active = true;
+      });
+    }
   }
 
   formatEntityLog(jsonData: string): LogChangeItem[] {

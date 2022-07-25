@@ -3,6 +3,7 @@ using Abp.Extensions;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,21 +15,20 @@ using TACHYON.ShippingRequestTripVases.Dtos;
 
 namespace TACHYON.Shipping.Trips.Dto
 {
-    public class CreateOrEditShippingRequestTripDto : EntityDto<int?>, ICustomValidate, IShouldNormalize
+    public class CreateOrEditShippingRequestTripDto : EntityDto<int?>, ICreateOrEditTripDtoBase, ICustomValidate, IShouldNormalize
     {
         [Required] public DateTime? StartTripDate { get; set; }
 
         public DateTime? EndTripDate { get; set; }
 
 
-        //public long? AssignedDriverUserId { get; set; }
-        //public long? AssignedTruckId { get; set; }
         public long ShippingRequestId { get; set; }
 
         public bool HasAttachment { get; set; }
 
         public bool NeedsDeliveryNote { get; set; }
 
+        public DateTime? ExpectedDeliveryTime { get; set; }
         //Facility
         public virtual long? OriginFacilityId { get; set; }
 
@@ -37,12 +37,16 @@ namespace TACHYON.Shipping.Trips.Dto
 
         [StringLength(ShippingRequestTripConsts.MaxNoteLength)]
         public string Note { get; set; }
+        public DateTime? SupposedPickupDateFrom { get; set; }
+        public DateTime? SupposedPickupDateTo { get; set; }
 
         public List<CreateOrEditRoutPointDto> RoutPoints { get; set; }
         public List<CreateOrEditShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }
 
         public CreateOrEditDocumentFileDto CreateOrEditDocumentFileDto { get; set; }
 
+        [JsonIgnore]
+        public int TenantId { get; set; }
         public void AddValidationErrors(CustomValidationContext context)
         {
             //document validation
@@ -60,7 +64,6 @@ namespace TACHYON.Shipping.Trips.Dto
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));
             }
 
-
             var dropPoints = RoutPoints.Where(x => x.PickingType == PickingType.Dropoff);
             foreach (var drop in dropPoints)
             {
@@ -68,7 +71,6 @@ namespace TACHYON.Shipping.Trips.Dto
                     (string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
                      string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
                 {
-                    //throw new UserFriendlyException(L("YouMustEnterReceiver"));
                     throw new UserFriendlyException("YouMustEnterReceiver");
                 }
             }

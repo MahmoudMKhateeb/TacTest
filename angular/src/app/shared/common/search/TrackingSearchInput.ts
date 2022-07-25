@@ -13,4 +13,5 @@ export class TrackingSearchInput {
   pickupToDate!: moment.Moment | undefined;
   routeTypeId!: ShippingRequestRouteType;
   status!: ShippingRequestTripStatus;
+  shippingRequestReferance!: string;
 }

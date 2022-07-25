@@ -1,8 +1,10 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using TACHYON.Authorization.Permissions.Shipping.Trips;
+using TACHYON.Features;
 
 namespace TACHYON.Authorization
 {
@@ -54,9 +56,9 @@ namespace TACHYON.Authorization
             var CarrierDashboard = pages.CreateChildPermission(AppPermissions.Pages_CarrierDashboard, L("CarrierDashboard"), multiTenancySides: MultiTenancySides.Tenant);
 
             var receivers = pages.CreateChildPermission(AppPermissions.Pages_Receivers, L("Receivers"));
-            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Create, L("CreateNewReceiver"));
-            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Edit, L("EditReceiver"));
-            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Delete, L("DeleteReceiver"));
+            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Create, L("CreateNewReceiver"), multiTenancySides: MultiTenancySides.Tenant);
+            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Edit, L("EditReceiver"), multiTenancySides: MultiTenancySides.Tenant);
+            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Delete, L("DeleteReceiver"), multiTenancySides: MultiTenancySides.Tenant);
 
             var citiesTranslations = pages.CreateChildPermission(AppPermissions.Pages_CitiesTranslations,
                 L("CitiesTranslations"), multiTenancySides: MultiTenancySides.Host);
@@ -183,6 +185,19 @@ namespace TACHYON.Authorization
                 AppPermissions.Pages_ShippingRequest_Accidents_Comments_Delete,
                 L("ShippingRequest_Accidents_Comments_Delete"), multiTenancySides: MultiTenancySides.Tenant);
 
+                 var ShippingRequestAndTripNotes = pages.CreateChildPermission(
+                AppPermissions.Pages_ShippingRequestAndTripNotes, L("ShippingRequestAndTripNotes"),
+                multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
+            ShippingRequestAndTripNotes.CreateChildPermission(
+                AppPermissions.Pages_ShippingRequestAndTripNotes_Create,
+                L("ShippingRequestAndTripNotes_CreateOrEdit"), multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
+            ShippingRequestAndTripNotes.CreateChildPermission(
+                AppPermissions.Pages_ShippingRequestAndTripNotes_Edit,
+                L("ShippingRequestAndTripNotes_Edit"), multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
+
+            shippingRequestTripAccidentComments.CreateChildPermission(
+                AppPermissions.Pages_ShippingRequestAndTripNotes_Delete,
+                L("ShippingRequestAndTripNotes_Delete"), multiTenancySides: MultiTenancySides.Tenant);
             var vasPrices = pages.CreateChildPermission(AppPermissions.Pages_VasPrices, L("VasPrices"),
                 multiTenancySides: MultiTenancySides.Tenant);
             vasPrices.CreateChildPermission(AppPermissions.Pages_VasPrices_Create, L("CreateNewVasPrice"),
@@ -247,9 +262,9 @@ namespace TACHYON.Authorization
                 multiTenancySides: MultiTenancySides.Host);
 
             var facilities = pages.CreateChildPermission(AppPermissions.Pages_Facilities, L("Facilities"));
-            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Create, L("CreateNewFacility"));
-            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Edit, L("EditFacility"));
-            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Delete, L("DeleteFacility"));
+            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Create, L("CreateNewFacility"),multiTenancySides: MultiTenancySides.Tenant);
+            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Edit, L("EditFacility"),multiTenancySides: MultiTenancySides.Tenant);
+            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Delete, L("DeleteFacility"),multiTenancySides: MultiTenancySides.Tenant);
 
             var shipper = pages.CreateChildPermission(AppPermissions.App_Shipper, L("Shipper"));
             var carrier = pages.CreateChildPermission(AppPermissions.App_Carrier, L("Carrier"));
@@ -275,7 +290,7 @@ namespace TACHYON.Authorization
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Delete, L("DeleteShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
 
             // new AppAuthorizationTripsProvider(pages);
-
+   
             var ShippingRequestBis = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids,
                 L("ShippingRerquestBids"), multiTenancySides: MultiTenancySides.Tenant);
             ShippingRequestBis.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids_Create,
@@ -643,12 +658,67 @@ namespace TACHYON.Authorization
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Dashboard, L("Dashboard"), multiTenancySides: MultiTenancySides.Host);
             cities.CreateChildPermission(AppPermissions.Pages_Administration_PolygonsImport, L("PolygonsImport"), multiTenancySides: MultiTenancySides.Host);
 
+            var templateFeatureDependency =
+                new SimpleFeatureDependency(false, AppFeatures.Shipper, AppFeatures.TachyonDealer,AppFeatures.CarrierAsASaas);
+            // this permission has no restriction with scope or feature to provide an ability for host to view templates
+            var entityTemplate = pages.CreateChildPermission(AppPermissions.Pages_EntityTemplate,
+                L("EntityTemplate")); 
+            
+            entityTemplate.CreateChildPermission(AppPermissions.Pages_EntityTemplate_Create,
+                L("CreateEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant
+                ,featureDependency: templateFeatureDependency);
+            entityTemplate.CreateChildPermission(AppPermissions.Pages_EntityTemplate_Update,
+                L("UpdateEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant
+                ,featureDependency: templateFeatureDependency);
+            entityTemplate.CreateChildPermission(AppPermissions.Pages_EntityTemplate_Delete,
+                L("DeleteEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant
+                ,featureDependency: templateFeatureDependency);
 
 
+            var normalPricePackage = pages.CreateChildPermission(AppPermissions.Pages_NormalPricePackages, L("NormalPricePackages"));
+            normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Create, L("CreateNewNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
+            normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Edit, L("EditNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
+            normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Delete, L("DeleteNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
 
 
+            #region SrPostPricePermissions
+
+            
+           var srPostPrice = context.CreatePermission(AppPermissions.Pages_SrPostPriceUpdate, L("SrPostPriceUpdates"),
+                multiTenancySides: MultiTenancySides.Tenant);
+
+           srPostPrice.CreateChildPermission(AppPermissions.Pages_SrPostPriceUpdate_CreateAction,
+               L("SrPostPriceUpdateAction"), multiTenancySides: MultiTenancySides.Tenant,
+               featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier));
+
+           srPostPrice.CreateChildPermission(AppPermissions.Pages_SrPostPriceUpdate_CreateOfferAction,
+               L("SrPostPriceUpdateOfferAction"), multiTenancySides: MultiTenancySides.Tenant,
+               featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper));
+
+           #endregion
 
 
+           var InvoiceNotes = pages.CreateChildPermission(AppPermissions.Pages_Invoices_InvoiceNote, L("InvoiceNotes"));
+           InvoiceNotes.CreateChildPermission(AppPermissions.Pages_InvoiceNote_Create, L("CreateNewInvoiceNote"));
+           InvoiceNotes.CreateChildPermission(AppPermissions.Pages_InvoiceNote_Edit, L("EditInvoiceNote"));
+           InvoiceNotes.CreateChildPermission(AppPermissions.Pages_InvoiceNote_View, L("ViewInvoiceNote"));
+
+           var srUpdateFeatureDependency = new SimpleFeatureDependency(false, AppFeatures.Carrier, AppFeatures.TachyonDealer);
+
+           var srUpdate = pages.CreateChildPermission
+           (
+               AppPermissions.Pages_ShippingRequestUpdates,
+               L("ShippingRequestUpdate"),
+               multiTenancySides: MultiTenancySides.Tenant,
+               featureDependency: srUpdateFeatureDependency
+           );
+           srUpdate.CreateChildPermission
+           (
+               AppPermissions.Pages_ShippingRequestUpdates_TakeAction,
+               L("ShippingRequestUpdateAction"),
+               multiTenancySides: MultiTenancySides.Tenant,
+               featureDependency: srUpdateFeatureDependency
+           );
         }
 
         private static ILocalizableString L(string name)

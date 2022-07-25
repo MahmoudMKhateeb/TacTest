@@ -242,6 +242,13 @@ export abstract class AppComponentBase {
 
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
+
+  checkImportedList(ImportedVasesList) {
+    return ImportedVasesList
+      ? ImportedVasesList.filter((e) => e.exception != undefined && e.exception != null && e.exception != '').length > 0
+      : false;
+  }
+
   get isCarrier(): boolean {
     return this.feature.isEnabled('App.Carrier');
   }
@@ -253,6 +260,9 @@ export abstract class AppComponentBase {
   }
   get isTachyonDealerOrHost(): boolean {
     return this.isTachyonDealer || !this.appSession.tenantId;
+  }
+  get isCarrierSaas(): boolean {
+    return this.feature.isEnabled('App.CarrierAsASaas');
   }
 
   IfOther(items: any, id: any) {

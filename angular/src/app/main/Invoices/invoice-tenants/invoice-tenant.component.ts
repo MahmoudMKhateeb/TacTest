@@ -11,6 +11,7 @@ import {
   CommonLookupServiceProxy,
   SubmitInvoiceFilterInput,
   SubmitInvoiceStatus,
+  InvoiceChannel,
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -20,6 +21,7 @@ import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
+import { VoidInvoiceNoteModalComponent } from '@app/main/invoices/invoice-note/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
 
 @Component({
   templateUrl: './invoice-tenant.component.html',
@@ -31,6 +33,7 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
+  @ViewChild('voidModal', { static: true }) voidModal: VoidInvoiceNoteModalComponent;
 
   SubmitStatus: any;
   IsStartSearch = false;
@@ -43,7 +46,7 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
 
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive = false;
-
+  InvoiceChannelEnum: InvoiceChannel;
   inputSearch: SubmitInvoiceFilterInput = new SubmitInvoiceFilterInput();
   dataSource: any = {};
   constructor(

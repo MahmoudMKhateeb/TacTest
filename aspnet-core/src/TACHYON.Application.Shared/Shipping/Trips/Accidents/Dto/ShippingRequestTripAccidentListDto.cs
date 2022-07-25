@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using System;
+using System.ComponentModel;
 
 namespace TACHYON.Shipping.Trips.Accidents.Dto
 {
@@ -15,6 +16,9 @@ namespace TACHYON.Shipping.Trips.Accidents.Dto
         public Guid? DocumentId { get; set; }
         public string DocumentName { get; set; }
         public string DocumentContentType { get; set; }
+
+        public TripAccidentResolveListDto ResolveListDto { get; set; }
+        
 
         public DateTime CreationTime { get; set; }
     }

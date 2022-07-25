@@ -118,7 +118,10 @@ namespace TACHYON.MultiTenancy
                         input.ConnectionString.IsNullOrWhiteSpace()
                             ? null
                             : SimpleStringCipher.Instance.Encrypt(input.ConnectionString),
-                    MoiNumber = input.MoiNumber
+                    MoiNumber = input.MoiNumber,
+                    FinancialEmail = input.FinancialEmail,
+                    FinancialName = input.FinancialName,
+                    FinancialPhone = input.FinancialPhone
                 };
 
                 try

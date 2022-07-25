@@ -1,6 +1,8 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Dependency;
 using Abp.MultiTenancy;
+using TACHYON.Features;
 
 namespace TACHYON.Authorization.Permissions.Shipping.Trips
 {
@@ -12,14 +14,14 @@ namespace TACHYON.Authorization.Permissions.Shipping.Trips
                         context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
             var shippingRequestTrips =
-                pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips, L("ShippingRequests"));
+                pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips, L("ShippingRequestTrips"));
             shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Create,
                 L("CreateNewShippingRequestTrip"), multiTenancySides: MultiTenancySides.Tenant);
             shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Edit,
                 L("EditShippingRequestTrip"), multiTenancySides: MultiTenancySides.Tenant);
             shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Delete,
                 L("DeleteShippingRequestTrip"), multiTenancySides: MultiTenancySides.Tenant);
-            shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Acident_Cancel,
+            shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Cancel,
                 L("CancelTrip"), multiTenancySides: MultiTenancySides.Tenant);
 
             var ResoneAccident = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestResoneAccidents,
@@ -31,17 +33,35 @@ namespace TACHYON.Authorization.Permissions.Shipping.Trips
             ResoneAccident.CreateChildPermission(AppPermissions.Pages_ShippingRequestResoneAccidents_Delete,
                 L("DeleteResoneAccident"), multiTenancySides: MultiTenancySides.Host);
 
+            var accidentFeatureDependency = new SimpleFeatureDependency(AppFeatures.TachyonDealer);
 
-            var Accident = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents,
+            var accident = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents,
                 L("ShippingRequestsTripsAccident"), multiTenancySides: MultiTenancySides.Tenant);
-            Accident.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Create,
+            accident.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Create,
                 L("CreateNewShippingRequestTripAccident"), multiTenancySides: MultiTenancySides.Tenant);
-            Accident.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Edit,
-                L("EditShippingRequestTripAccident"), multiTenancySides: MultiTenancySides.Tenant);
-            Accident.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Resolve_Create,
-                L("CreateNewShippingRequestTripAccidentResolve"), multiTenancySides: MultiTenancySides.Tenant);
-            Accident.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Resolve_Edit,
-                L("EditShippingRequestTripAccidentResolve"), multiTenancySides: MultiTenancySides.Tenant);
+            accident.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Edit,
+                L("EditShippingRequestTripAccident"),
+                multiTenancySides: MultiTenancySides.Tenant,
+                featureDependency: accidentFeatureDependency);
+            
+            accident.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Resolve_Create,
+                L("CreateNewShippingRequestTripAccidentResolve"),
+                multiTenancySides: MultiTenancySides.Tenant,
+                featureDependency: accidentFeatureDependency);
+            accident.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Resolve_Edit,
+                L("EditShippingRequestTripAccidentResolve"),
+                multiTenancySides: MultiTenancySides.Tenant,
+                featureDependency: accidentFeatureDependency);
+            
+            accident.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Resolve_ApproveChange,
+                L("ApproveChangeTripAccidentResolve"),
+                multiTenancySides: MultiTenancySides.Tenant,
+                featureDependency:  new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.Carrier));
+
+            accident.CreateChildPermission(AppPermissions.Pages_ShippingRequest_Accidents_Resolve_EnforceChange,
+                L("EnforceChangeTripAccidentResolve"),
+                multiTenancySides: MultiTenancySides.Tenant,
+                featureDependency: accidentFeatureDependency);
 
             var RejectReason = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Reject_Reason,
                 L("ShippingRequestsTripsRejectReason"), multiTenancySides: MultiTenancySides.Host);

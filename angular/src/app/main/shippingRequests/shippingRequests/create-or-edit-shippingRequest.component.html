@@ -5,6 +5,15 @@
     <sub-header [title]="shippingRequest.id ? ('ShippingRequestsEdit' | localize) : ('ShippingRequestsCreate' | localize)"> </sub-header>
 
     <div [class]="containerClass">
+      <div
+        *ngIf="shippingRequest.carrierTenantId && shippingRequest.carrierTenantId != shippingRequest.tenantId"
+        class="alert alert-custom alert-light-warning fade show mb-5"
+        role="alert"
+      >
+        <div class="alert-icon"><i class="flaticon-warning"></i></div>
+        <div class="alert-text">{{ l('PostPriceUpdateWarningMsg') }}</div>
+      </div>
+
       <form *ngIf="active" #shippingRequestForm="ngForm" autocomplete="off" novalidate>
         <div class="card card-custom gutter-b">
           <!--  start of card::form-->
@@ -146,7 +155,7 @@
                         </select>
                         <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
                       </div>
-                      <div class="col-lg-3">
+                      <div *ngIf="shippingRequestType == 'bidding'" class="col-lg-3">
                         <div class="form-group">
                           <hijri-gregorian-datepicker-test
                             [parentForm]="parentForm"
@@ -155,7 +164,7 @@
                             [readonly]="true"
                             [isRequired]="this.shippingRequestType == 'bidding'"
                             [minHijri]="todayHijri"
-                            [disabled]="shippingRequestType != 'bidding' || shippingRequest.id"
+                            [disabled]="totalOffers > 0"
                             [minGreg]="todayGregorian"
                             [selectedDate]="startBiddate"
                             (selectedDateChange)="validateBiddingDates($event, 'biddingStartDate')"
@@ -163,7 +172,7 @@
                           <span class="form-text text-muted">{{ l('SetBiddingStartDate') }}</span>
                         </div>
                       </div>
-                      <div class="col-lg-3">
+                      <div *ngIf="shippingRequestType == 'bidding'" class="col-lg-3">
                         <hijri-gregorian-datepicker-test
                           [parentForm]="parentForm"
                           [label]="l('BiddingEndDate')"

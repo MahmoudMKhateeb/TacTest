@@ -1,0 +1,110 @@
+<div
+  bsModal
+  #viewSrUpdateModal="bs-modal"
+  class="modal fade"
+  id="viewSrUpdateModal"
+  data-backdrop="static"
+  tabindex="-2"
+  role="dialog"
+  aria-labelledby="staticBackdrop"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div *ngIf="active" class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ l('ViewShippingRequestUpdate') }}</h5>
+        <button (click)="close()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i aria-hidden="true" class="ki ki-close"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card">
+          <div class="row">
+            <div class="col-lg-6 mt-4">
+              <label> {{ l('UpdateAdditionDate') }}</label>
+              <div
+                [ngClass]="{
+                  'spinner spinner-success spinner-right mr-1 ml-1': loading
+                }"
+              >
+                <input [value]="(srUpdateDto?.creationTime?.toDate() | date: 'dd-MM-yyyy h:mm a') ?? ''" class="form-control" disabled />
+              </div>
+            </div>
+            <div class="col-lg-6 mt-4">
+              <label> {{ l('UpdateAction') }}</label>
+              <div
+                [ngClass]="{
+                  'spinner spinner-success spinner-right mr-1 ml-1': loading
+                }"
+              >
+                <input [value]="srUpdateDto.actionTitle ? l(srUpdateDto.actionTitle) : ''" class="form-control" disabled />
+              </div>
+            </div>
+
+            <div class="col-lg-6 mt-4">
+              <label> {{ l('IsUpdateApplied') }}</label>
+              <div
+                [ngClass]="{
+                  'spinner spinner-success spinner-right mr-1 ml-1': loading
+                }"
+              >
+                <input
+                  [value]="srUpdateDto.isApplied === true ? l('Applied') : srUpdateDto.isApplied === false ? l('NotApplied') : ''"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-6 mt-4" *ngIf="srUpdateDto.action === rejectAction">
+              <label> {{ l('RejectionReason') }}</label>
+              <div
+                [ngClass]="{
+                  'spinner spinner-success spinner-right mr-1 ml-1': loading
+                }"
+              >
+                <input [value]="srUpdateDto.rejectionReason ?? ''" class="form-control" disabled />
+              </div>
+            </div>
+            <div class="col-lg-6 mt-4" *ngIf="srUpdateDto.priceOfferId">
+              <label> {{ l('PriceOfferStatus') }}</label>
+              <div
+                [ngClass]="{
+                  'spinner spinner-success spinner-right mr-1 ml-1': loading
+                }"
+              >
+                <input [value]="l(srUpdateDto.offerStatusTitle)" class="form-control" disabled />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-8 mt-6">
+            <span class="font-weight-bolder text-dark">{{ l('UpdateChangesDetails') }}</span>
+            <div class="mt-5">
+              <table class="table">
+                <thead class="thead-light">
+                  <tr>
+                    <th>#</th>
+                    <th>{{ 'ChangeName' | localize }}</th>
+                    <th>{{ 'ChangeDetails' | localize }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of srUpdateDto.changes; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.changeName }}</td>
+                    <td>{{ item.changeMsg }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal" (click)="close()">{{ l('Close') }}</button>
+      </div>
+    </div>
+  </div>
+</div>

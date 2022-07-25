@@ -3,6 +3,7 @@
     public enum InvoiceChannel : byte
     {
         Trip = 1,
-        Dedicated = 2
+        Dedicated = 2,
+        Penalty = 3,
     }
 }

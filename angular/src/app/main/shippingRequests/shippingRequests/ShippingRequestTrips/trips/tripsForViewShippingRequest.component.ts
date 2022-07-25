@@ -1,4 +1,15 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Injector,
+  Input,
+  OnChanges,
+  Output,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
@@ -6,42 +17,89 @@ import { LazyLoadEvent } from 'primeng/api';
 
 import {
   GetShippingRequestVasForViewDto,
+  ImportGoodsDetailsDto,
+  ImportRoutePointDto,
+  ImportTripDto,
+  ImportTripVasesFromExcelInput,
   ShippingRequestDto,
+  ShippingRequestRouteType,
   ShippingRequestsServiceProxy,
+  ShippingRequestStatus,
   ShippingRequestsTripServiceProxy,
+  ShippingRequestTripCancelStatus,
   ShippingRequestTripStatus,
 } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
 import { TripService } from '../trip.service';
 import { AddNewRemarksTripModalComponent } from './add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
+import { finalize } from 'rxjs/operators';
+import { AppConsts } from '@shared/AppConsts';
+import { FileUpload } from 'primeng/fileupload';
+import { HttpClient } from '@angular/common/http';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'TripsForViewShippingRequest',
   templateUrl: './tripsForViewShippingRequest.component.html',
   styleUrls: ['./tripsForViewShippingRequest.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TripsForViewShippingRequestComponent extends AppComponentBase implements AfterViewInit, OnChanges {
   @ViewChild('dataTablechild', { static: false }) dataTable: Table;
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
-  @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: CreateOrEditTripComponent;
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
   @ViewChild('AddRemarksModal', { static: false }) AddRemarksModal: AddNewRemarksTripModalComponent;
+  @ViewChild('saveAsTemplateModal', { static: false }) saveAsTemplateModal: ViewTripModalComponent;
 
+  @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
+  @ViewChild('PointExcelFileUpload', { static: false }) PointExcelFileUpload: FileUpload;
+  @ViewChild('GoodDetailsExcelFileUpload', { static: false }) GoodDetailsExcelFileUpload: FileUpload;
+  @ViewChild('ViewImportedTripsModal', { static: false }) modal: ModalDirective;
+  @ViewChild('ViewImportedPointsModal', { static: false }) pointModal: ModalDirective;
+  @ViewChild('ViewImportedGoodDetailsModal', { static: false }) goodDetailsModal: ModalDirective;
+  @ViewChild('VasesExcelFileUpload', { static: false }) VasesExcelFileUpload: FileUpload;
+  @ViewChild('ViewImportedVasesModal', { static: false }) VasesModal: ModalDirective;
+
+  @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() shippingRequestForView: any;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled = false;
-  saving = false;
   ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
+  ShippingRequestStatusEnum = ShippingRequestStatus;
+  ShippingRequestTripCancelStatusEnum = ShippingRequestTripCancelStatus;
+  @Output() incidentResolved: EventEmitter<void>;
+  saving = false;
+  uploadUrl: string;
+  uploadPointUrl: string;
+  tripVases: string;
+  isArabic = false;
+  active = false;
+  list: ImportTripDto;
+  pointsList: ImportRoutePointDto;
+  goodDetailsList: ImportGoodsDetailsDto;
+  vasesList: ImportTripVasesFromExcelInput;
+  loading = false;
+  uploadGoodDetailsUrl: string;
+  ShippingRequestRouteTypeEnum = ShippingRequestRouteType;
+
+  type = 'Trip';
+  ShippingRequestTripStatus = ShippingRequestTripStatus;
   constructor(
     injector: Injector,
     private _TripService: TripService,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private changeDetectorRef: ChangeDetectorRef,
-    private _shippingRequestTripsService: ShippingRequestsTripServiceProxy
+    private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
+    private _httpClient: HttpClient
   ) {
     super(injector);
+    this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportShipmentsFromExcel';
+    this.uploadPointUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportPointsFromExcel';
+    this.uploadGoodDetailsUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportGoodsDetailsFromExcel';
+    this.tripVases = AppConsts.remoteServiceBaseUrl + '/Helper/ImportTripVasesFromExcel';
+    this.incidentResolved = new EventEmitter<void>();
   }
 
   /**
@@ -94,6 +152,9 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   //     } //end of if
   //   });
   // }
+  refreshWhenIncidentResolved() {
+    this.incidentResolved.emit();
+  }
 
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
@@ -114,6 +175,122 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     });
   }
 
+  uploadExcel(data: { files: File }): void {
+    const formData: FormData = new FormData();
+    const file = data.files[0];
+    this.loading = true;
+    formData.append('file', file, file.name);
+    formData.append('ShippingRequestId', this.ShippingRequest.id.toString());
+    this._httpClient
+      .post<any>(this.uploadUrl, formData)
+      .pipe(
+        finalize(() => {
+          this.excelFileUpload.clear();
+        })
+      )
+      .subscribe((response) => {
+        if (response.success) {
+          this.list = response.result.importShipmentListDto;
+          this.loading = false;
+          this.notify.success(this.l('ImportProcessStart'));
+          this.saving = true;
+          this.modal.show();
+        } else if (response.error != null) {
+          this.loading = false;
+          //this.notify.error(this.l('ImportFailed'));
+          this.notify.error(response.error.message);
+        }
+      });
+  }
+
+  uploadPointsExcel(data: { files: File }): void {
+    const formData: FormData = new FormData();
+    const file = data.files[0];
+    this.loading = true;
+    formData.append('file', file, file.name);
+    formData.append('ShippingRequestId', this.ShippingRequest.id.toString());
+    this._httpClient
+      .post<any>(this.uploadPointUrl, formData)
+      .pipe(
+        finalize(() => {
+          this.PointExcelFileUpload.clear();
+        })
+      )
+      .subscribe((response) => {
+        if (response.success) {
+          this.pointsList = response.result.importPointListDto;
+          this.loading = false;
+          this.notify.success(this.l('ImportProcessStart'));
+          this.saving = true;
+          this.pointModal.show();
+        } else if (response.error != null) {
+          this.loading = false;
+          // this.notify.error(this.l('ImportFailed'));
+          this.notify.error(response.error.message);
+        }
+      });
+  }
+
+  uploadGoodDetailsExcel(data: { files: File }): void {
+    const formData: FormData = new FormData();
+    const file = data.files[0];
+    this.loading = true;
+    formData.append('file', file, file.name);
+    formData.append('ShippingRequestId', this.ShippingRequest.id.toString());
+    this._httpClient
+      .post<any>(this.uploadGoodDetailsUrl, formData)
+      .pipe(
+        finalize(() => {
+          this.GoodDetailsExcelFileUpload.clear();
+        })
+      )
+      .subscribe((response) => {
+        if (response.success) {
+          this.goodDetailsList = response.result.importGoodsDetaiListDto;
+          this.loading = false;
+          this.notify.success(this.l('ImportProcessStart'));
+          this.saving = true;
+          this.goodDetailsModal.show();
+        } else if (response.error != null) {
+          this.loading = false;
+          // this.notify.error(this.l('ImportFailed'));
+          this.notify.error(response.error.message);
+        }
+      });
+  }
+
+  uploadVasesExcel(data: { files: File }): void {
+    const formData: FormData = new FormData();
+    const file = data.files[0];
+    this.loading = true;
+    formData.append('file', file, file.name);
+    formData.append('ShippingRequestId', this.ShippingRequest.id.toString());
+    this._httpClient
+      .post<any>(this.tripVases, formData)
+      .pipe(
+        finalize(() => {
+          this.VasesExcelFileUpload.clear();
+        })
+      )
+      .subscribe((response) => {
+        if (response.success) {
+          this.vasesList = response.result.importTripVasesListDto;
+          this.loading = false;
+          this.notify.success(this.l('ImportProcessStart'));
+          this.saving = true;
+          this.VasesModal.show();
+        } else if (response.error != null) {
+          this.loading = false;
+          // this.notify.error(this.l('ImportFailed'));
+          this.notify.error(response.error.message);
+        }
+      });
+  }
+
+  onUploadExcelError(): void {
+    this.notify.error(this.l('ImportUploadFailed'));
+  }
+
   /**
    * check if user can reset a trip
    * if user is Carrier/TMS and the Trip Status is not new/Delivered
@@ -128,5 +305,12 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   }
   ngOnChanges() {
     this.reloadPage();
+  }
+  getCancelStatus(statusId) {
+    if (statusId == this.ShippingRequestTripCancelStatusEnum.Canceled) {
+      return this.l('CanceledTrip');
+    } else if (statusId == this.ShippingRequestTripCancelStatusEnum.Rejected) return this.l('RejectedTripCancelation');
+    else if (statusId == this.ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval) return this.l('WaitingCancelApproveFromTMS');
+    else return this.l('None');
   }
 }

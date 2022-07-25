@@ -115,6 +115,34 @@ namespace TACHYON
             CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
         }
 
+        protected virtual void DisableDraftedFilter()
+        {
+            CurrentUnitOfWork.DisableFilter("IHasIsDrafted");
+        }
+
+        protected virtual async Task DisableTenancyFilterIfTachyonDealerOrHost() 
+        {
+            if (!AbpSession.TenantId.HasValue || await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                DisableTenancyFilters();
+               
+            }
+
+        }
+
+
+        protected virtual async Task DisableDraftedFilterIfTachyonDealerOrHost()
+        {
+            if (!AbpSession.TenantId.HasValue || await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                DisableDraftedFilter();
+
+            }
+
+        }
+
+
+
 
         /// <summary>
         /// Because host need to access the service by services
@@ -137,6 +165,12 @@ namespace TACHYON
             return await DataSourceLoader.LoadAsync(query, dataSourceLoadOptionsBase);
         }
 
+        protected virtual LoadResult LoadResult<T>(IEnumerable<T> query, string filter)
+        {
+            DataSourceLoadOptionsBase dataSourceLoadOptionsBase =
+                JsonConvert.DeserializeObject<DataSourceLoadOptionsBase>(filter);
+            return DataSourceLoader.Load(query, dataSourceLoadOptionsBase);
+        }
 
         /// <summary>
         /// Take all data with 0 Skip 

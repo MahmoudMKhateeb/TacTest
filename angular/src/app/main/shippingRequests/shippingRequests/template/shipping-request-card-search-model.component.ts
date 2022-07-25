@@ -13,6 +13,7 @@ import {
   ShippingRequestType,
 } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   templateUrl: './shipping-request-card-search-model.component.html',
@@ -28,6 +29,7 @@ export class ShippingRequestCardSearchModelComponent extends AppComponentBase im
   isLoad: boolean = false;
   active = false;
   saving = false;
+  isDataLoading = false;
   input: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
   direction: string;
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
@@ -51,20 +53,24 @@ export class ShippingRequestCardSearchModelComponent extends AppComponentBase im
   getData() {
     if (this.isLoad) return;
     this.isLoad = true;
-    this._currentSrv.getAllListForSearch().subscribe((result) => {
-      this.cites = result.cities.map((x) => {
-        let item: ComboboxItemDto = new ComboboxItemDto();
-        item.displayText = x.displayName;
-        item.value = x.id.toString();
-        return item;
+    this.isDataLoading = true;
+    this._currentSrv
+      .getAllListForSearch()
+      .pipe(finalize(() => (this.isDataLoading = false)))
+      .subscribe((result) => {
+        this.cites = result.cities.map((x) => {
+          let item: ComboboxItemDto = new ComboboxItemDto();
+          item.displayText = x.displayName;
+          item.value = x.id.toString();
+          return item;
+        });
+        this.truckTypes = result.trucksTypes.map((x) => {
+          let item: ComboboxItemDto = new ComboboxItemDto();
+          item.displayText = x.translatedDisplayName;
+          item.value = x.id.toString();
+          return item;
+        });
       });
-      this.truckTypes = result.trucksTypes.map((x) => {
-        let item: ComboboxItemDto = new ComboboxItemDto();
-        item.displayText = x.translatedDisplayName;
-        item.value = x.id.toString();
-        return item;
-      });
-    });
   }
   show(Input: ShippingRequestForPriceOfferGetAllInput): void {
     this.input = Input;

@@ -150,8 +150,10 @@ namespace TACHYON.DashboardCustomization.Definitions
             //var carrierNextInvoiceFrequenctEndDateWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierNextInvoiceFrequenctEndDateWidget, "CarrierNextInvoiceFrequenctEndDateWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var carrierDueDateInDaysWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierDueDateInDaysWidget, "CarrierDueDateInDaysWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var carrierTrackingMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierTrackingMapWidget, "CarrierTrackingMapWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
+            var CarrierMostUsedPPWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierMostUsedPPWidget, "CarrierMostUsedPPWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
 
-           
+
+
 
 
             WidgetDefinitions.Add(carrierDriversActivityWidget);
@@ -165,6 +167,7 @@ namespace TACHYON.DashboardCustomization.Definitions
             //WidgetDefinitions.Add(carrierNextInvoiceFrequenctEndDateWidget);
             WidgetDefinitions.Add(carrierDueDateInDaysWidget);
             WidgetDefinitions.Add(carrierTrackingMapWidget);
+            WidgetDefinitions.Add(CarrierMostUsedPPWidget);
 
             #endregion
 
@@ -245,6 +248,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     //carrierNextInvoiceFrequenctEndDateWidget.Id,
                     carrierDueDateInDaysWidget.Id,
                     carrierTrackingMapWidget.Id,
+                    CarrierMostUsedPPWidget.Id
                 });
             DashboardDefinitions.Add(defaultCarrierDashboard);
 

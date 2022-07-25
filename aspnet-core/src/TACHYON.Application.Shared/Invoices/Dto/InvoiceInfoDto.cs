@@ -29,6 +29,10 @@ namespace TACHYON.Invoices.Dto
         public decimal VatAmount { get; set; }
         public decimal TaxVat { get; set; }
         public long InvoiceNumber { get; set; }
+        public string FinancialName { get; set; }
+        public string FinancialPhone { get; set; }
+        public string FinancialEmail { get; set; }
+        public string QRCode { get; set; }
         public List<InvoiceItemDto> Items { get; set; }
 
         /// <summary>

@@ -105,7 +105,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
   truckModelMaxYear = new Date();
   //truckModelMinYear = new Date();
-
+  get defaultPlateType(): string {
+    if (this.allPlateTypes) {
+      return this.allPlateTypes.find((x) => x.isDefault).id;
+    }
+  }
   constructor(
     injector: Injector,
     private _trucksServiceProxy: TrucksServiceProxy,
@@ -131,7 +135,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.truck.trucksTypeId = null;
       this.truck.trucksTypeId = null;
       this.truck.capacityId = null;
-      this.truck.plateTypeId = null;
+      this.truck.plateTypeId = Number(this.defaultPlateType);
       this.truck.capacity = null;
       this.truck.otherTransportTypeName = null;
       this.truck.otherTrucksTypeName = null;

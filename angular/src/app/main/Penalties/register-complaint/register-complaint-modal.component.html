@@ -1,0 +1,55 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="save()">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            {{ l('PenaltyComplaint') }}
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!--  begin :: Body-->
+            <div class="col-lg-12 mt-4">
+              <label>{{ l('Complaint') }} <span class="required-fileds">*</span></label>
+              <textarea
+                #description="ngModel"
+                type="text"
+                class="form-control"
+                [(ngModel)]="form.description"
+                name="description"
+                [class.is-valid]="description.valid && (description.dirty || description.touched)"
+                [class.is-invalid]="description.invalid && (description.dirty || description.touched)"
+                required
+              ></textarea>
+            </div>
+
+            <!--  end :: Body-->
+          </div>
+        </div>
+        <!-- end::Body-->
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!Form.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot' | localize)"
+          >
+            <i class="fa fa-save"></i> <span>{{ 'Submit' | localize }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

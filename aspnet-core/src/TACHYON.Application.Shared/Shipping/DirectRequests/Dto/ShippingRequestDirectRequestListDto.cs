@@ -17,5 +17,8 @@ namespace TACHYON.Shipping.DirectRequests.Dto
         public ShippingRequestDirectRequestStatus Status { get; set; }
         public string StatusTitle { get { return Status.GetEnumDescription(); } }
         public string RejetcReason { get; set; }
+        public long? PricePackageOfferId { get; set; }
+        public long ShippingRequestId { get; set; }
+
     }
 }

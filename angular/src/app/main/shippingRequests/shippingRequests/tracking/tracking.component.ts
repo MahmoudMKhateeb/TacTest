@@ -3,7 +3,9 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   ShippingRequestDriverServiceProxy,
   ShippingRequestRouteType,
+  ShippingRequestStatus,
   ShippingRequestsTripListDto,
+  ShippingRequestTripCancelStatus,
   ShippingRequestTripDriverRoutePointDto,
   ShippingRequestTripDriverStatus,
   ShippingRequestTripStatus,
@@ -48,7 +50,9 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   activePanelId: number;
   routeTypeEnum = ShippingRequestRouteType;
   ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
+  ShippingRequestStatusEnum = ShippingRequestStatus;
   DriverStatusEnum = ShippingRequestTripDriverStatus;
+  ShippingRequestTripCancelStatusEnum = ShippingRequestTripCancelStatus;
   ShippingRequestTypeEnum = ShippingRequestType;
   downloadingForItem: number;
   defaultProfilePic = AppConsts.appBaseUrl + '/assets/common/images/carrier-default-pic.jpg';
@@ -85,6 +89,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         this.searchInput.pickupToDate,
         this.searchInput.fromDate,
         this.searchInput.toDate,
+        this.searchInput.shippingRequestReferance,
         this.searchInput.routeTypeId,
         '',
         this.skipCount,

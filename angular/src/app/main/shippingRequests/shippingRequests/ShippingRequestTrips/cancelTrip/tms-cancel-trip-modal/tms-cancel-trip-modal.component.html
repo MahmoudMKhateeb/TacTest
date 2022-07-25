@@ -1,0 +1,71 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{ l('CancelTrip') }}</span>
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button [disabled]="saving" type="button" class="btn btn-danger" (click)="toggleRejectCancelModal()">
+          {{ l('RejectedTripCancelation') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          [disabled]="rejectForm"
+          [buttonBusy]="saving"
+          [busyText]="l('SavingWithThreeDot' | localize)"
+          (click)="cancelTripByTMS()"
+        >
+          <i class="fa fa-save"></i> <span> {{ 'ApproveCancelTrip' | localize }}</span>
+        </button>
+      </div>
+
+      <form *ngIf="active && rejectForm" #Form="ngForm" novalidate (ngSubmit)="rejectCancel()">
+        <div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>{{ 'RejectedReasonName' | localize }} <span class="required-fileds">*</span></label>
+              <textarea
+                *ngIf="isTachyonDealer"
+                name="reason.rejectedCancelingReason"
+                rows="4"
+                [(ngModel)]="reason.rejectedCancelingReason"
+                class="form-control"
+                required
+                minLength="3"
+                maxlength="150"
+              ></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ l('close') }}</button>
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="!Form.form.valid"
+              [buttonBusy]="saving"
+              [busyText]="l('SavingWithThreeDot' | localize)"
+            >
+              <i class="fa fa-save"></i> <span> {{ 'RejectedTripCancelation' | localize }}</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

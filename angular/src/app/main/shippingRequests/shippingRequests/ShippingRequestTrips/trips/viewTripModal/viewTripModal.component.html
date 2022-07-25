@@ -15,7 +15,9 @@
         </p>
         <div class="card-toolbar">
           <button
-            *ngIf="feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer')"
+            *ngIf="
+              trip.status != shippingRequestTripStatusEnum.Canceled && (feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer'))
+            "
             type="button"
             class="btn btn-primary blue"
             (click)="ResetTrip(currentTripId)"
@@ -27,6 +29,10 @@
           <button class="btn btn-primary" (click)="DownloadSingleDropWaybillPdf(currentTripId)" [buttonBusy]="wayBillIsDownloading">
             <i class="fa flaticon2-print"></i>
             {{ l('PrintWaybill') }}
+          </button>
+          <button class="btn btn-primary" (click)="getNotes()">
+            <i class="fa fa-list"></i>
+            {{ l('Notes') }}
           </button>
         </div>
       </div>
@@ -52,7 +58,18 @@
               <input type="text" class="form-control" name="destinationFacility" [(ngModel)]="trip.destinationFacility" disabled />
             </div>
           </div>
-          <div class="col-lg-6"></div>
+          <div class="col-lg-6 form-group d-inline-flex">
+            <div class="input-group d-inline-block">
+              <label> {{ l('supposedPickupTimeFrom') }}</label>
+              <dx-date-box name="supposedPickupDateFrom" [(value)]="trip.supposedPickupDateFrom" type="time" pickerType="list" [disabled]="true">
+              </dx-date-box>
+            </div>
+            <div class="input-group d-inline-block">
+              <label> {{ l('supposedPickupTimeTo') }}</label>
+              <dx-date-box name="supposedPickupDateTo" [(value)]="trip.supposedPickupDateTo" type="time" pickerType="list" [disabled]="true">
+              </dx-date-box>
+            </div>
+          </div>
 
           <!--  end:: Source Dest Facilitys  -->
           <!--  begin:: Trip start&End Dates-->
@@ -108,7 +125,7 @@
                 name="driver"
                 type="text"
                 [(ngModel)]="assignDriverAndTruck.assignedDriverUserId"
-                (click)="checkData()"
+                (click)="checkData('driver')"
                 class="form-control"
                 [disabled]="saving"
               >
@@ -116,13 +133,13 @@
                 <option *ngFor="let item of allDrivers" [value]="item.id">{{ item.displayName }}</option>
               </select>
             </div>
-            <div class="form-group col-lg-{{ trip.driverStatus == 0 ? 5 : 6 }}">
+            <div class="form-group col-lg-5">
               <label>{{ l('Truck') }}</label>
               <select
                 name="truck"
                 type="text"
                 [(ngModel)]="assignDriverAndTruck.assignedTruckId"
-                (click)="checkData()"
+                (click)="checkData('truck')"
                 class="form-control"
                 [disabled]="saving"
               >
@@ -138,6 +155,19 @@
               >
                 {{ l('Save') }}
               </button>
+            </div>
+            <div class="col-lg-6">
+              <label>{{ l('expectedDeliveryTime') }}</label>
+              <div class="form-group" [busyIf]="expectedDeliveryTimeLoading">
+                <dx-date-box
+                  [(value)]="expectedDeliveryTime"
+                  (onValueChanged)="updateTripExpectedDeliveryTime()"
+                  type="datetime"
+                  [min]="trip.startTripDate"
+                  openOnFieldClick="true"
+                >
+                </dx-date-box>
+              </div>
             </div>
           </ng-container>
 
@@ -222,7 +252,7 @@
 
           <!--      end:Vas's      -->
           <!--  start:: RouteSteps -->
-          <PointsComponent [usedIn]="'view'"></PointsComponent>
+          <PointsComponent></PointsComponent>
           <!--  end:: RouteSteps -->
           <!--end::Body-->
         </div>
@@ -239,3 +269,5 @@
   </div>
 </div>
 <shared-file-viewer #fileViwerComponent></shared-file-viewer>
+
+<app-trip-notes-modal #TripNotesModal [tripId]="currentTripId" [type]="type"> </app-trip-notes-modal>

@@ -50,7 +50,7 @@ namespace TACHYON.Authorization.Permissions.Invoice
                 multiTenancySides: MultiTenancySides.Host);
             GroupPeriods.CreateChildPermission(
                 AppPermissions.Pages_Administration_Host_Invoices_SubmitInvoices_Rejected, L("RejectedSubmitInvoices"),
-                multiTenancySides: MultiTenancySides.Host);
+                multiTenancySides: MultiTenancySides.Host | MultiTenancySides.Tenant );
             Invoices.CreateChildPermission(AppPermissions.Pages_Invoices_Transaction, L("Transaction"));
 
 

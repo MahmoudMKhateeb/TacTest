@@ -12,7 +12,7 @@ Preparation:
     - Stop-WebSite 'test' ## stopping FrontEnd Website
     - Stop-WebSite 'test-back' ## stopping Backend Website
   only:
-    - test
+    - develop
 ### end of Preparation
 ### starting Build
 Project:
@@ -24,7 +24,7 @@ Project:
     - cd ./aspnet-core/build
     - ./build-with-ng.ps1
   only:
-    - test
+    - develop
 ## end of build
 ### start of release
 release:

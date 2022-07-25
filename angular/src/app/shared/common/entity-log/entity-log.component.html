@@ -20,7 +20,7 @@
       </div>
 
       <div class="modal-body">
-        <div class="" *ngIf="active">
+        <div class="" [busyIf]="!active">
           <div class="timeline timeline-3">
             <div class="timeline-items">
               <div class="timeline-item" *ngFor="let log of entityLogs">
@@ -63,7 +63,7 @@
                     <!--                    <h5>{{ log.transaction }}</h5>-->
                     <!--                    <a class="text-success font-weight-bold"></a>-->
                     <div class="d-flex flex-column flex-grow-1 py-2">
-                      <div #collapse="ngbCollapse" [(ngbCollapse)]="!active" *ngIf="isTachyonDealerOrHost">
+                      <div #collapse="ngbCollapse" [(ngbCollapse)]="!active" *ngIf="isTachyonDealerOrHost || entityType === 4">
                         <div *ngFor="let z of log.changesData | keyvalue">
                           <p class="font-weight-bold mt-2" *ngIf="!z.key.includes('LastModifi')">
                             <a class="text-primary font-weight-bold">{{ z.key }}</a> :

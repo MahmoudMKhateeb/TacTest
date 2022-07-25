@@ -299,7 +299,7 @@ namespace TACHYON.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<AuthenticateResultModel> OTPAuthenticate([FromBody] AuthenticateMobileModel model)
+        public async Task<IActionResult> OTPAuthenticate([FromBody] AuthenticateMobileModel model)
         {
             if (string.IsNullOrEmpty(model.Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             string tenancyName = null;
@@ -311,8 +311,27 @@ namespace TACHYON.Web.Controllers
                 throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             }
 
+            if (await _userManager.IsLockedOutAsync(user))
+            {
+                var lockedOutDate = await _userManager.GetLockoutEndDateAsync(user);
+                if (lockedOutDate.HasValue)
+                {
+                    var remaining =  lockedOutDate.Value - DateTimeOffset.Now;
+                
+                    return Unauthorized($"{remaining.Days}:{remaining.Hours}:{remaining.Minutes}:{remaining.Seconds}");
+                }
+            }
+            
             if (!_testMobiles.Contains(model.Username))
-                await _mobileManager.OTPValidate(user.Id, model.OTP);
+                try
+                {
+                    await _mobileManager.OTPValidate(user.Id, model.OTP);
+                }
+                catch (AbpAuthorizationException e)
+                {
+                    await UserAccessFailed(user);
+                    return Unauthorized(e.Message);
+                }
 
             //  get tenantId from UserName
 
@@ -379,8 +398,10 @@ namespace TACHYON.Web.Controllers
                     UserId = loginResult.User.Id
                 });
             }
+            //AuthenticateResultModel
+            
 
-            return new AuthenticateResultModel
+            return Ok(new AuthenticateResultModel
             {
                 AccessToken = accessToken,
                 ExpireInSeconds = (int)_configuration.AccessTokenExpiration.TotalSeconds,
@@ -391,7 +412,21 @@ namespace TACHYON.Web.Controllers
                 TripDto = await _workFlowProvider.GetCurrentDriverTrip(loginResult.User.Id),
                 DriverName = user.FullName,
                 TenantId = user.TenantId
-            };
+            });
+        }
+
+        private async Task UserAccessFailed(User user)
+        {
+            var lockoutTime =
+                await _settingManager.GetSettingValueAsync(AbpZeroSettingNames.UserManagement.UserLockOut
+                    .DefaultAccountLockoutSeconds);
+            var failedAccessAttempts = await _settingManager.GetSettingValueAsync(AbpZeroSettingNames.UserManagement
+                .UserLockOut.MaxFailedAccessAttemptsBeforeLockout);
+            
+            _userManager.Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(Int32.Parse(lockoutTime));
+            _userManager.Options.Lockout.MaxFailedAccessAttempts = Int32.Parse(failedAccessAttempts);
+
+            await _userManager.AccessFailedAsync(user);
         }
 
         [HttpPost]

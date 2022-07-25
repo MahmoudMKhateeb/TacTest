@@ -13,6 +13,7 @@ using TACHYON.Trailers;
 using TACHYON.Trucks;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.ShippingRequestAndTripNotes;
 
 namespace TACHYON.Documents.DocumentFiles
 {
@@ -66,6 +67,8 @@ namespace TACHYON.Documents.DocumentFiles
 
         public virtual long? RoutStepId { get; set; }
 
+        public virtual int? NoteId { get; set; }
+        [ForeignKey("NoteId")] public ShippingRequestAndTripNote NoteFk { get; set; }
         [ForeignKey("RoutStepId")] public RoutStep RoutStepFk { get; set; }
 
         public virtual int? ShippingRequestTripId { get; set; }

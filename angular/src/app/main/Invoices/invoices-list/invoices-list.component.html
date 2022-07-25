@@ -38,10 +38,10 @@
               <dxo-scrolling mode="virtual"></dxo-scrolling>
               <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"></dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
-                <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
+                <dxi-group-item column="id" summaryType="count"></dxi-group-item>
               </dxo-summary>
 
               <dxi-column
@@ -52,7 +52,7 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
-              <dxi-column dataField="invoiceNumber" caption="{{ l('InvoiceNumber') }}"> </dxi-column>
+              <dxi-column dataField="invoiceNumber" caption="{{ l('InvoiceNumber') }}"></dxi-column>
               <dxi-column
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
                 dataField="tenantName"
@@ -68,15 +68,26 @@
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
               >
               </dxi-column>
-              <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"> </dxi-column>
-              <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"> </dxi-column>
-              <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('Status') }}"> </dxi-column>
-
+              <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"></dxi-column>
+              <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"></dxi-column>
+              <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('Status') }}"></dxi-column>
+              <dxi-column dataField="channel" cellTemplate="cellTemplate_Channel" caption="{{ l('label') }}"></dxi-column>
               <div *dxTemplate="let options of 'cellTemplate_isPaid'">
                 <span *ngIf="options.data.isPaid" class="badge badge-success badge-inline">{{ 'Paid' | localize }}</span>
                 <span *ngIf="!options.data.isPaid" class="badge badge-danger badge-inline">{{ 'UnPaid' | localize }}</span>
               </div>
-
+              <div *dxTemplate="let options of 'cellTemplate_Channel'">
+                <span style="width: 137px; text-align: center"
+                  ><span
+                    class="badge badge-inline"
+                    [ngClass]="{
+                      'badge-primary': options.data.channel == InvoiceChannelEnum.Trip,
+                      'badge-warning': options.data.channel == InvoiceChannelEnum.Penalty
+                    }"
+                    >{{ l(options.data.invoiceChannelTitle) }}</span
+                  ></span
+                >
+              </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
                   <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
@@ -98,7 +109,14 @@
                       <a class="dropdown-item" (click)="details(options.data)">{{ l('Detail') }}</a>
                     </li>
                     <li>
-                      <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('DownloadInvoice') }}</a>
+                      <a class="dropdown-item" *ngIf="options.data.channel != 3" (click)="downloadReport(options.data.id)">{{
+                        l('downloadInvoice')
+                      }}</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" *ngIf="options.data.channel == 3" (click)="downloadPenaltyReport(options.data.id)">{{
+                        l('downloadPenaltyInvoice')
+                      }}</a>
                     </li>
                     <li *ngIf="!options.data.isPaid">
                       <a
@@ -118,6 +136,15 @@
                         >{{ l('MakeUnPaid') }}</a
                       >
                     </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="javascript:;"
+                        (click)="voidModal.show(options.data.id)"
+                        *ngIf="!feature.isEnabled('App.Carrier') && !feature.isEnabled('App.Shipper')"
+                        >{{ l('Void') }}</a
+                      >
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -130,3 +157,4 @@
 </div>
 <invoices-ondeman-model (modalSave)="reloadPage()" #OndemandModel></invoices-ondeman-model>
 <invoice-tenant-items-details #InvoiceDetailsModel></invoice-tenant-items-details>
+<void-invoice-note-modal #voidModal></void-invoice-note-modal>

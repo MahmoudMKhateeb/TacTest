@@ -44,7 +44,10 @@ import { TermAndConditionRegistrationViewModalComponent } from './register/term-
 import { SafePipe } from './register/safe.pipe';
 import { TermAndConditionRegistrationComponent } from './register/term-and-condition-registration/term-and-condition-registration.component';
 import { DevExtremeModule } from '@node_modules/devextreme-angular';
+import { TrackingOutsidePlatformComponent } from './tracking-outside-platform/tracking-outside-platform.component';
+import { TableModule } from '@node_modules/primeng/table';
 
+import { InvoiceOutsideComponent } from '@account/invoice-outside/invoice-outside.component';
 export function getRecaptchaLanguage(): string {
   return new LocaleMappingService().map('recaptcha', abp.localization.currentLanguage.name);
 }
@@ -65,6 +68,7 @@ export function getRecaptchaLanguage(): string {
     PasswordModule,
     AppBsModalModule,
     DevExtremeModule,
+    TableModule,
   ],
   declarations: [
     SafePipe,
@@ -94,6 +98,8 @@ export function getRecaptchaLanguage(): string {
     PaymentCompletedComponent,
     SessionLockScreenComponent,
     TermAndConditionRegistrationComponent,
+    TrackingOutsidePlatformComponent,
+    InvoiceOutsideComponent,
   ],
   providers: [LoginService, TenantRegistrationHelperService, PaymentHelperService, AccountRouteGuard],
 })

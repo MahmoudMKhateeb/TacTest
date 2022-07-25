@@ -1,0 +1,70 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{ l('HeaderNormalPricePackageDetails') }}</span>
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6 mb-3">
+            <h6>{{ l('PricePackageName') }}:</h6>
+            {{ normalPricePackage.displayName }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('reference') }}:</h6>
+            {{ normalPricePackage.pricePackageId }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('truckType') }} :</h6>
+            {{ normalPricePackage.truckType }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('routeType') }} :</h6>
+            {{ normalPricePackage.isMultiDrop ? l('MultipleDrop') : l('SingleDrop') }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('DirectRequestPrice') }}:</h6>
+            {{ normalPricePackage.directRequestPrice }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('TachyonMSRequestPrice') }}:</h6>
+            {{ normalPricePackage.tachyonMSRequestPrice }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('MarcketPlaceRequestPrice') }}:</h6>
+            {{ normalPricePackage.marcketPlaceRequestPrice }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('PricePerExtraDrop') }}:</h6>
+            {{ normalPricePackage.pricePerExtraDrop }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('origin') }}:</h6>
+            {{ normalPricePackage.origin }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('destination') }}:</h6>
+            {{ normalPricePackage.destination }}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button [disabled]="saving" type="button" class="btn btn-primary blue" (click)="close()">{{ l('Close') }}</button>
+      </div>
+    </div>
+  </div>
+</div>

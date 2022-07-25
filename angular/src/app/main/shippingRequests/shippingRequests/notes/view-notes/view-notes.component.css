@@ -1,0 +1,20 @@
+span > svg {
+  color: #dc2c34 !important;
+}
+.border-dash {
+  border-style: dashed !important;
+}
+
+.border-left-style {
+  border-left-style: dashed !important;
+}
+.mrbm-0 {
+  margin-bottom: 0 !important;
+}
+.timeline-item {
+  margin-bottom: 1% !important;
+}
+.timeline-media {
+  left: -10px !important;
+  border: 2px dashed #cdc8c8 !important;
+}

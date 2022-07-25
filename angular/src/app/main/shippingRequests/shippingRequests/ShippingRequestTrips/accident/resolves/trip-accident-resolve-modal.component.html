@@ -1,0 +1,99 @@
+<div
+  bsModal
+  #resolveModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="save()">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{ viewModeEnabled ? l('ViewResolve') : l('CreateResolve') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group" *ngIf="isDriverRequired()">
+            <label for="driversDropDownList"> {{ l('ChangeDriver') }}<span class="text-danger">*</span></label>
+
+            <div
+              [ngClass]="{
+                'spinner spinner-success spinner-right mr-1 ml-1': driversLoading
+              }"
+            >
+              <select
+                [disabled]="driversLoading || viewModeEnabled"
+                [required]="isDriverRequired()"
+                [(ngModel)]="resolve.driverId"
+                name="driverId"
+                class="form-control"
+                id="driversDropDownList"
+              >
+                <option [value]="undefined" selected disabled>{{ l('SelectADriver') }}</option>
+                <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.displayName }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="isTruckRequired()">
+            <label for="trucksDropDownList"> {{ l('ChangeTruck') }}<span class="text-danger">*</span></label>
+            <div
+              [ngClass]="{
+                'spinner spinner-success spinner-right mr-1 ml-1': trucksLoading
+              }"
+            >
+              <select
+                [disabled]="trucksLoading || viewModeEnabled"
+                [required]="isTruckRequired()"
+                [(ngModel)]="resolve.truckId"
+                name="truckId"
+                class="form-control"
+                id="trucksDropDownList"
+              >
+                <option [value]="undefined" selected disabled>{{ l('SelectATruck') }}</option>
+                <option *ngFor="let truck of trucks" [value]="truck.id">{{ truck.displayName }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="closeModal()">{{ 'Cancel' | localize }}</button>
+          <button
+            *ngIf="!viewModeEnabled"
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!Form.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot' | localize)"
+          >
+            <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
+          </button>
+
+          <button
+            *ngIf="
+              viewModeEnabled &&
+              !accident.isResolve &&
+              accident.resolveListDto.id &&
+              !accident.resolveListDto.isAppliedResolve &&
+              ((isShipper && !accident.resolveListDto.approvedByShipper) || (isCarrier && !accident.resolveListDto.approvedByCarrier))
+            "
+            type="button"
+            class="btn btn-primary"
+            (click)="approveResolve(accident)"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot' | localize)"
+          >
+            <i class="fa fa-save"></i> <span>{{ 'ApproveChange' | localize }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -271,6 +271,11 @@ import { RatingModule } from '@node_modules/primeng/rating';
 import { StepsModule } from '@node_modules/primeng/steps';
 import { ViewRatingComponent } from '@app/main/shippingRequests/shippingRequests/rating/view-rating/view-rating.component';
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
+import { InvoiceNoteListComponent } from './invoices/invoice-note/invoice-note-list/invoice-note-list.component';
+import { InoviceNoteModalComponent } from './invoices/invoice-note/invoice-note-list/inovice-note-modal/inovice-note-modal.component';
+import { CreateOrEditNoteModalComponent } from './invoices/invoice-note/invoice-note-list/create-or-edit-note-modal/create-or-edit-note-modal.component';
+import { VoidInvoiceNoteModalComponent } from './invoices/invoice-note/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
+import { NoteModalComponent } from './invoices/invoice-note/invoice-note-list/note-modal/note-modal.component';
 import { TrackingModule } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.module';
 import { EmailEditorModule } from '@node_modules/angular-email-editor';
 import { EmailTemplateTranslationTemplateComponent } from './emailTemplates/emailTemplates/email-template-translation-template.component';
@@ -280,7 +285,32 @@ import { ToggleButtonModule } from '@node_modules/primeng/togglebutton';
 import { AddNewRemarksTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
 import { QuartzCronModule } from '@node_modules/@sbzen/ng-cron';
 import { DriverLicenseTypeTranslationsComponent } from './driverLicenseTypes/driverLicenseTypeTranslations/driver-license-type-translations/driver-license-type-translations.component';
+import { RequestTemplatesComponent } from './shippingRequests/shippingRequests/request-templates/request-templates.component';
+import { CreateNewEntityTemplateModalComponent } from './shippingRequests/shippingRequests/request-templates/create-new-entity-template-modal/create-new-entity-template-modal.component';
+import { CreateOrEditTemplateDropDownButtonComponent } from './shippingRequests/shippingRequests/request-templates/create-or-edit-template-drop-down-button/create-or-edit-template-drop-down-button.component';
+import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
+import { NormalPricePackagesList } from '@app/main/shippingRequests/shippingRequests/normal-price-packages/normal-price-packages-list.component';
+import { NormalPricePackageCalculationComponent } from '@app/main/shippingRequests/shippingRequests/normal-price-packages/normal-price-package-calculation/normal-price-package-calculation-component';
+import { SrPostPriceUpdateComponent } from './shippingRequests/shippingRequests/srpost-price-update/sr-post-price-update.component';
+import { ViewSrPostPriceUpdateModalComponent } from './shippingRequests/shippingRequests/srpost-price-update/view-sr-post-price-update-modal/view-sr-post-price-update-modal.component';
+import { CardModule } from '@node_modules/primeng/card';
+import { RejectPostPriceUpdateComponent } from './shippingRequests/shippingRequests/srpost-price-update/reject-post-price-update/reject-post-price-update.component';
+import { ViewImportedTripsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
+import { ViewImportedPointsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-points-from-excel-modal/view-imported-points-from-excel-modal.component';
+import { ViewImportedGoodDetailsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-good-details-from-excel-modal/view-imported-good-details-from-excel-modal.component';
+import { ViewImportVasesFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-import-vases-from-excel-modal/view-import-vases-from-excel-modal.component';
+import { ViewNotesComponent } from './shippingRequests/shippingRequests/notes/view-notes/view-notes.component';
+import { AddNewNoteModalComponent } from './shippingRequests/shippingRequests/notes/add-new-note-modal/add-new-note-modal.component';
+import { NotesComponent } from './shippingRequests/shippingRequests/notes/notes.component';
+import { TripNotesModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/trip-notes-modal/trip-notes-modal.component';
 
+import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
+import { CreateOrEditPenaltyModalComponent } from './Penalties/penalties-list/create-or-edit-penalty-modal/create-or-edit-penalty-modal.component';
+import { RegisterComplaintModalComponent } from './Penalties/register-complaint/register-complaint-modal.component';
+import { ViewComplaintModalComponent } from './Penalties/penalties-list/view-complaint/view-complaint-modal.component';
+import { CancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/cancel-trip-modal/cancel-trip-modal.component';
+import { TmsCancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/tms-cancel-trip-modal/tms-cancel-trip-modal.component';
+import { ViewCancelReasonModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/view-cancel-reason-modal/view-cancel-reason-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -367,6 +397,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewCountriesTranslationModalComponent,
     CreateOrEditCountriesTranslationModalComponent,
     PlateTypesComponent,
+    CreateOrEditPenaltyModalComponent,
     ViewPlateTypeModalComponent,
     CreateOrEditPlateTypeModalComponent,
     NationalitiesComponent,
@@ -386,6 +417,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewVasPriceModalComponent,
     CreateOrEditVasPriceModalComponent,
     ReceiversComponent,
+    InvoiceNoteListComponent,
     ViewReceiverModalComponent,
     CreateOrEditReceiverModalComponent,
     TermAndConditionsComponent,
@@ -508,7 +540,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AppLocalizationComponent,
     ApplocalizationModalComponent,
     ViewApplocalizationModalComponent,
-
+    CreateOrEditNoteModalComponent,
     CreateOrEditShippingRequestWizardComponent,
     ShippingrequestsDetailsModelComponent,
     ComingSoonComponent,
@@ -525,6 +557,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     TrucksTypeTranslationTemplateComponent,
     ViewGoodDetailsComponent,
     ViewPointModalComponent,
+    InoviceNoteModalComponent,
     DangerousCoodTypesTranslationsComponent,
     ShippingRequestRatingModalComponent,
     ViewRatingComponent,
@@ -534,6 +567,31 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ImportCitiesPolygonsModalComponent,
     AddNewRemarksTripModalComponent,
     DriverLicenseTypeTranslationsComponent,
+    RequestTemplatesComponent,
+    CreateNewEntityTemplateModalComponent,
+    CreateOrEditTemplateDropDownButtonComponent,
+    LoadEntityTemplateModalComponent,
+    PenaltiesListComponent,
+    RegisterComplaintModalComponent,
+    ViewComplaintModalComponent,
+    NormalPricePackagesList,
+    NormalPricePackageCalculationComponent,
+    SrPostPriceUpdateComponent,
+    ViewSrPostPriceUpdateModalComponent,
+    RejectPostPriceUpdateComponent,
+    ViewImportedTripsFromExcelModalComponent,
+    ViewImportedPointsFromExcelModalComponent,
+    ViewImportedGoodDetailsFromExcelModalComponent,
+    ViewImportVasesFromExcelModalComponent,
+    CancelTripModalComponent,
+    TmsCancelTripModalComponent,
+    ViewCancelReasonModalComponent,
+    VoidInvoiceNoteModalComponent,
+    NoteModalComponent,
+    ViewNotesComponent,
+    AddNewNoteModalComponent,
+    NotesComponent,
+    TripNotesModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

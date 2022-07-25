@@ -1,9 +1,10 @@
 ﻿using Abp.Application.Services.Dto;
 using System.ComponentModel.DataAnnotations;
+using TACHYON.Goods.Dtos;
 
 namespace TACHYON.Goods.GoodsDetails.Dtos
 {
-    public class CreateOrEditGoodsDetailDto : EntityDto<long?>
+    public class CreateOrEditGoodsDetailDto : EntityDto<long?>, ICreateOrEditGoodsDetailDtoBase
     {
         [Required]
         [StringLength(GoodsDetailConsts.MaxDescriptionLength, MinimumLength = GoodsDetailConsts.MinDescriptionLength)]
@@ -32,6 +33,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         [Required] public int UnitOfMeasureId { get; set; }
         public string OtherUnitOfMeasureName { get; set; }
 
-        public long? RoutPointId { get; set; }
+        public long RoutPointId { get; set; }
+        public string Exception { get; set; }
     }
 }
