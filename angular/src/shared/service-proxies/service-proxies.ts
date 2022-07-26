@@ -40120,6 +40120,70 @@ export class ShippingRequestsServiceProxy {
   }
 
   /**
+   * @param shippingRequestId (optional)
+   * @param invoiceFlag (optional)
+   * @return Success
+   */
+  updateShippingRequestInvoiceFlag(shippingRequestId: number | undefined, invoiceFlag: string | null | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/UpdateShippingRequestInvoiceFlag?';
+    if (shippingRequestId === null) throw new Error("The parameter 'shippingRequestId' cannot be null.");
+    else if (shippingRequestId !== undefined) url_ += 'shippingRequestId=' + encodeURIComponent('' + shippingRequestId) + '&';
+    if (invoiceFlag !== undefined && invoiceFlag !== null) url_ += 'invoiceFlag=' + encodeURIComponent('' + invoiceFlag) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('put', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processUpdateShippingRequestInvoiceFlag(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processUpdateShippingRequestInvoiceFlag(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processUpdateShippingRequestInvoiceFlag(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
    * @return Success
    */
   getAllUnitOfMeasuresForDropdown(): Observable<GetAllUnitOfMeasureForDropDownOutput[]> {
@@ -41484,6 +41548,70 @@ export class ShippingRequestsTripServiceProxy {
   }
 
   protected processCancelByAccident(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param shippingRequesTripId (optional)
+   * @param invoiceFlag (optional)
+   * @return Success
+   */
+  updateTripInvoiceFlag(shippingRequesTripId: number | undefined, invoiceFlag: string | null | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequestsTrip/UpdateTripInvoiceFlag?';
+    if (shippingRequesTripId === null) throw new Error("The parameter 'shippingRequesTripId' cannot be null.");
+    else if (shippingRequesTripId !== undefined) url_ += 'shippingRequesTripId=' + encodeURIComponent('' + shippingRequesTripId) + '&';
+    if (invoiceFlag !== undefined && invoiceFlag !== null) url_ += 'invoiceFlag=' + encodeURIComponent('' + invoiceFlag) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('put', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processUpdateTripInvoiceFlag(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processUpdateTripInvoiceFlag(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processUpdateTripInvoiceFlag(response: HttpResponseBase): Observable<void> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -53427,12 +53555,15 @@ export class TrucksServiceProxy {
 
   /**
    * @param truckTypeId (optional)
+   * @param tripId (optional)
    * @return Success
    */
-  getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId: number | undefined): Observable<SelectItemDto[]> {
+  getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId: number | undefined, tripId: number | undefined): Observable<SelectItemDto[]> {
     let url_ = this.baseUrl + '/api/services/app/Trucks/GetAllCarrierTrucksByTruckTypeForDropDown?';
     if (truckTypeId === null) throw new Error("The parameter 'truckTypeId' cannot be null.");
     else if (truckTypeId !== undefined) url_ += 'truckTypeId=' + encodeURIComponent('' + truckTypeId) + '&';
+    if (tripId === null) throw new Error("The parameter 'tripId' cannot be null.");
+    else if (tripId !== undefined) url_ += 'tripId=' + encodeURIComponent('' + tripId) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -53498,10 +53629,13 @@ export class TrucksServiceProxy {
   }
 
   /**
+   * @param tripId (optional)
    * @return Success
    */
-  getAllDriversForDropDown(): Observable<SelectItemDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/Trucks/GetAllDriversForDropDown';
+  getAllDriversForDropDown(tripId: number | undefined): Observable<SelectItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/Trucks/GetAllDriversForDropDown?';
+    if (tripId === null) throw new Error("The parameter 'tripId' cannot be null.");
+    else if (tripId !== undefined) url_ += 'tripId=' + encodeURIComponent('' + tripId) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -86581,6 +86715,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
   shipperReference!: string | undefined;
   shipperInvoiceNo!: string | undefined;
   isSaas!: boolean;
+  splitInvoiceFlag!: string | undefined;
   readonly statusTitle!: string | undefined;
   readonly bidStatusTitle!: string | undefined;
   id!: number;
@@ -86627,6 +86762,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
       this.shipperReference = _data['shipperReference'];
       this.shipperInvoiceNo = _data['shipperInvoiceNo'];
       this.isSaas = _data['isSaas'];
+      this.splitInvoiceFlag = _data['splitInvoiceFlag'];
       (<any>this).statusTitle = _data['statusTitle'];
       (<any>this).bidStatusTitle = _data['bidStatusTitle'];
       this.id = _data['id'];
@@ -86674,6 +86810,7 @@ export class ShippingRequestDto implements IShippingRequestDto {
     data['shipperReference'] = this.shipperReference;
     data['shipperInvoiceNo'] = this.shipperInvoiceNo;
     data['isSaas'] = this.isSaas;
+    data['splitInvoiceFlag'] = this.splitInvoiceFlag;
     data['statusTitle'] = this.statusTitle;
     data['bidStatusTitle'] = this.bidStatusTitle;
     data['id'] = this.id;
@@ -86714,6 +86851,7 @@ export interface IShippingRequestDto {
   shipperReference: string | undefined;
   shipperInvoiceNo: string | undefined;
   isSaas: boolean;
+  splitInvoiceFlag: string | undefined;
   statusTitle: string | undefined;
   bidStatusTitle: string | undefined;
   id: number;
@@ -89143,6 +89281,7 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
   note!: string | undefined;
   waybillNumber!: number | undefined;
   status!: ShippingRequestTripStatus;
+  splitInvoiceFlag!: string | undefined;
 
   constructor(data?: IShippingRequestsTripForViewDto) {
     if (data) {
@@ -89184,6 +89323,7 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
       this.note = _data['note'];
       this.waybillNumber = _data['waybillNumber'];
       this.status = _data['status'];
+      this.splitInvoiceFlag = _data['splitInvoiceFlag'];
     }
   }
 
@@ -89226,6 +89366,7 @@ export class ShippingRequestsTripForViewDto implements IShippingRequestsTripForV
     data['note'] = this.note;
     data['waybillNumber'] = this.waybillNumber;
     data['status'] = this.status;
+    data['splitInvoiceFlag'] = this.splitInvoiceFlag;
     return data;
   }
 }
@@ -89255,6 +89396,7 @@ export interface IShippingRequestsTripForViewDto {
   note: string | undefined;
   waybillNumber: number | undefined;
   status: ShippingRequestTripStatus;
+  splitInvoiceFlag: string | undefined;
 }
 
 export class CreateOrEditShippingRequestTripVasDto implements ICreateOrEditShippingRequestTripVasDto {
