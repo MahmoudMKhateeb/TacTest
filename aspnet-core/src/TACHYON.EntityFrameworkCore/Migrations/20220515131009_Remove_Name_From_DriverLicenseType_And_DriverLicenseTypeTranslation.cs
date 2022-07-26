@@ -6,28 +6,28 @@ namespace TACHYON.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Name",
-                table: "DriverLicenseTypeTranslations");
+            //migrationBuilder.DropColumn(
+            //    name: "Name",
+            //    table: "DriverLicenseTypeTranslations");
 
-            migrationBuilder.DropColumn(
-                name: "Name",
-                table: "DriverLicenseTypes");
+            //migrationBuilder.DropColumn(
+            //    name: "Name",
+            //    table: "DriverLicenseTypes");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Name",
-                table: "DriverLicenseTypeTranslations",
-                type: "nvarchar(max)",
-                nullable: true);
+            //migrationBuilder.AddColumn<string>(
+            //    name: "Name",
+            //    table: "DriverLicenseTypeTranslations",
+            //    type: "nvarchar(max)",
+            //    nullable: true);
 
-            migrationBuilder.AddColumn<string>(
-                name: "Name",
-                table: "DriverLicenseTypes",
-                type: "nvarchar(max)",
-                nullable: true);
+            //migrationBuilder.AddColumn<string>(
+            //    name: "Name",
+            //    table: "DriverLicenseTypes",
+            //    type: "nvarchar(max)",
+            //    nullable: true);
         }
     }
 }

@@ -247,27 +247,31 @@ namespace TACHYON.Invoices
                 || trip.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
                 .ToList();
 
-            foreach (ShippingRequestTrip trip in trips.ToList())
+            var tripsGroups = trips.GroupBy(x => x.ShippingRequestFk.SplitInvoiceFlag);
+            foreach (IGrouping<string, ShippingRequestTrip> group in tripsGroups)
             {
-                var shipperId = trip.ShippingRequestFk.TenantId;
-                var carrierId = trip.ShippingRequestFk.CarrierTenantId;
-
-                if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
+                foreach (ShippingRequestTrip trip in group.ToList().ToList())
                 {
-                    continue;
+
+                    var shipperId = trip.ShippingRequestFk.TenantId;
+                    var carrierId = trip.ShippingRequestFk.CarrierTenantId;
+                    if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
+                    {
+                        continue;
+                    }
+                    var relatedCarrierId = int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
+                    if (carrierId == relatedCarrierId)
+                    {
+                        group.ToList().Remove(trip);
+                    }
                 }
 
-                var relatedCarrierId =
-                    int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
-                if (carrierId == relatedCarrierId)
-                {
-                    trips.Remove(trip);
-                }
-
+                if (group.ToList().Any())
+                    await GenerateShipperInvoice(tenant, group.ToList(), period);
             }
 
-            if (trips.Any())
-                await GenerateShipperInvoice(tenant, trips, period);
+            
+
         }
 
 

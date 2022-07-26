@@ -6,17 +6,17 @@ namespace TACHYON.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "DisplayName",
-                table: "DriverLicenseTypeTranslations",
-                nullable: true);
+            //migrationBuilder.AddColumn<string>(
+            //    name: "DisplayName",
+            //    table: "DriverLicenseTypeTranslations",
+            //    nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "DisplayName",
-                table: "DriverLicenseTypeTranslations");
+            //migrationBuilder.DropColumn(
+            //    name: "DisplayName",
+            //    table: "DriverLicenseTypeTranslations");
         }
     }
 }

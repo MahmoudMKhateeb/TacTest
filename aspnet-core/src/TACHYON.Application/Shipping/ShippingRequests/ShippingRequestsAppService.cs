@@ -1527,6 +1527,15 @@ namespace TACHYON.Shipping.ShippingRequests
             return "";
         }
 
+
+        public async Task UpdateShippingRequestInvoiceFlag(long shippingRequestId, string invoiceFlag)
+        {
+            DisableTenancyFilters();
+            var Sr = await _shippingRequestRepository.GetAsync(shippingRequestId);
+            Sr.SplitInvoiceFlag = invoiceFlag?.Trim();
+            
+        }
+
         // convert date time from UTC to client date time
         private string NormalizeDateTimeToClientTime(DateTime? serverDateTime)
         {

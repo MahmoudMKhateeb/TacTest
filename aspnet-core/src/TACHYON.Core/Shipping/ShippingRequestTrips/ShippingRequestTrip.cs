@@ -118,5 +118,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public string RoundTrip { get; set; }
         public string ContainerNumber { get; set; }
         #endregion
+        public string SplitInvoiceFlag { get; set; }
+
     }
 }
