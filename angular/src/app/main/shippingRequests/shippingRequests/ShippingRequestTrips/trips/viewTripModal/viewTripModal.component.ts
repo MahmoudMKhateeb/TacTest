@@ -12,11 +12,6 @@ import {
   ShippingRequestTripStatus,
   TrucksServiceProxy,
   WaybillsServiceProxy,
-  SelectItemDto,
-  AssignDriverAndTruckToShippmentByCarrierInput,
-  ShippingRequestDriverServiceProxy,
-  GetShippingRequestForViewOutput,
-  ShippingRequestTripStatus,
   UpdateExpectedDeliveryTimeInput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
