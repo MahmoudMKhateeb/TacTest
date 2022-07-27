@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
@@ -26,6 +27,7 @@ namespace TACHYON.Penalties
         public int? DestinationTenantId { get; set; }
         [ForeignKey(nameof(DestinationTenantId))]
         public Tenant DestinationTenantFK { get; set; }
+        //todo should be removed after transfer data to penaltyItem
         public int? ShippingRequestTripId { get; set; }
         [ForeignKey(nameof(ShippingRequestTripId))]
 
@@ -67,6 +69,6 @@ namespace TACHYON.Penalties
         public decimal CommissionPercentageOrAddValue { get; set; }
         #endregion
 
-
+        public ICollection<PenaltyItem> PenaltyItems { get; set; }
     }
 }

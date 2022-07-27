@@ -13,7 +13,9 @@ namespace TACHYON.Penalties.Dto
         public string PenaltyName { get; set; }
         public string ReferenceNumber { get; set; }
         public string PenaltyDescrption { get; set; }
-        [Required]
+        /// <summary>
+        /// Total price for items
+        /// </summary>
         public decimal ItmePrice { get; set; }
         public decimal TotalAmount { get; set; }
         [Required]
@@ -24,5 +26,6 @@ namespace TACHYON.Penalties.Dto
         public decimal CommissionPercentageOrAddValue { get; set; }
         public PenaltyStatus Status { get; set; }
         public int? ShippingRequestTripId { get; set; }
+        public List<PenaltyItemDto> PenaltyItems { get; set; }
     }
 }

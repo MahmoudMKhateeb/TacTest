@@ -211,6 +211,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
         public virtual DbSet<Penalty> Penalties { get; set; }
+        public virtual DbSet<PenaltyItem> PenaltyItems { get; set; }
         public virtual DbSet<PenaltyComplaint> PenaltyComplaints { get; set; }
 
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
