@@ -15,13 +15,18 @@
   <ItemGroup>
     <None Remove="Invoices\Reports\Dedicated_Invoice.rdlc" />
     <None Remove="Invoices\Reports\Invoice.rdlc" />
+    <None Remove="Invoices\Reports\InvoiceNote.rdlc" />
     <None Remove="Invoices\Reports\LandScapeInvoice.rdlc" />
+    <None Remove="Invoices\Reports\PenaltyInvoice.rdlc" />
     <None Remove="Waybills\Reports\Master_Waybill.rdlc" />
     <None Remove="Waybills\Reports\Multiple_Drop_Waybill.rdlc" />
     <None Remove="Waybills\Reports\Single_Drop_Waybill.rdlc" />
     <None Remove="Shipping\Trips\ShippingRequestsTripManager.cs.orig" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Invoices\Reports\InvoiceNote.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\LandScapeInvoice.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -29,6 +34,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\Dedicated_Invoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Invoices\Reports\PenaltyInvoice.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Waybills\Reports\Master_Waybill.rdlc">
