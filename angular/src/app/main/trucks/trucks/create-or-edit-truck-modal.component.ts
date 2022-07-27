@@ -108,7 +108,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   //truckModelMinYear = new Date();
   get defaultPlateType(): string {
     if (this.allPlateTypes) {
-      return this.allPlateTypes.find((x) => x.isDefault).id;
+      return this.allPlateTypes.find((x) => x.isDefault)?.id || null;
     }
   }
   constructor(
