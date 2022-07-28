@@ -246,7 +246,8 @@
             </table>
           </div>
 
-          <div class="table-responsive" *ngIf="feature.isEnabled('App.TachyonDealer')">
+          <div class="table-responsive">
+            <!-- if TMS or shipper, can send PP offer -->
             <button
               *ngIf="!isCarrier && !offer.hasDirectRequest"
               type="submit"
@@ -258,8 +259,9 @@
               <i class="fa fa-save"></i> <span>{{ 'SendPricePackageOffer' | localize }}</span>
             </button>
 
+            <!-- carrier or carrier saas can accept PP offer -->
             <button
-              *ngIf="isCarrier && directRequestStatus == 0 && !isBid && !isTachyonDeal"
+              *ngIf="(isCarrier || isCarrierSaas) && directRequestStatus == 0 && !isBid && !isTachyonDeal"
               class="btn btn-primary"
               (click)="accept(pricePackageId)"
               [buttonBusy]="saving"
@@ -268,8 +270,9 @@
               <i class="fa fa-save"></i> <span>{{ 'AcceptPrice' | localize }}</span>
             </button>
 
+            <!-- if carrier or carrier saas, can send offer by PP offer -->
             <button
-              *ngIf="isCarrier && canSendPriceOfferByPricePackage()"
+              *ngIf="(isCarrier || isCarrierSaas) && canSendPriceOfferByPricePackage()"
               class="btn btn-primary"
               (click)="sendPriceOfferByPricePackage()"
               [buttonBusy]="saving"

@@ -60,7 +60,7 @@ export class NormalPricePackageCalculationComponent extends AppComponentBase {
     this.modal.hide();
   }
 
-  Preview(id: number, pricePackageId: number | undefined = undefined): void {
+  Preview(id: number, pricePackageId: number | undefined = undefined, requestStatus: ShippingRequestStatus): void {
     this.shippingRequestId = id;
     this.pricePackageId = pricePackageId;
     this._CurrentServ.getPricePackageOffer(pricePackageId, id).subscribe((result) => {
@@ -68,17 +68,18 @@ export class NormalPricePackageCalculationComponent extends AppComponentBase {
       this.Items = this.offer.items;
       this.active = true;
       this.modal.show();
+      this.requestStatus = requestStatus;
     });
   }
 
   canSendPriceOfferByPricePackage(): boolean {
-    if (
-      this.isBid &&
-      (this.requestStatus === ShippingRequestStatus.PrePrice || this.requestStatus === ShippingRequestStatus.NeedsAction) &&
-      this.bidStatus === ShippingRequestBidStatus.OnGoing &&
-      this.channel == PriceOfferChannel.MarketPlace
-    ) {
-      return true;
+    if (this.requestStatus === ShippingRequestStatus.PrePrice || this.requestStatus === ShippingRequestStatus.NeedsAction) {
+      if (!this.isTachyonDeal && this.isBid && this.bidStatus === ShippingRequestBidStatus.OnGoing && this.channel == PriceOfferChannel.MarketPlace) {
+        return true;
+      } else if (this.isTachyonDeal && this.pricePackageId == null) {
+        return true;
+      }
+      return false;
     }
     return false;
   }
@@ -139,8 +140,5 @@ export class NormalPricePackageCalculationComponent extends AppComponentBase {
         this.close();
         this.modalSave.emit(result);
       });
-  }
-  get isCarrier(): boolean {
-    return this.feature.isEnabled('App.Carrier');
   }
 }
