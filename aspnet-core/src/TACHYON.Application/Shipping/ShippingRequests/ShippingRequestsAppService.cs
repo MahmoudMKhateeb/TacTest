@@ -565,7 +565,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.BidStatus = shippingRequest.BidStartDate.Value.Date == Clock.Now.Date
                     ? ShippingRequestBidStatus.OnGoing
                     : ShippingRequestBidStatus.StandBy;
-                await SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
+                await _normalPricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
             }
         }
 
@@ -982,7 +982,7 @@ namespace TACHYON.Shipping.ShippingRequests
             if (shippingRequest.IsBid)
             {
                 //Notify Carrier with the same Truck type
-                await SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
+                await _normalPricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
             }
             
         }
@@ -1016,19 +1016,6 @@ namespace TACHYON.Shipping.ShippingRequests
                 var goodCategory = await _lookup_goodCategoryRepository.GetAsync(input.GoodCategoryId.Value);
                 if (goodCategory.FatherId != null)
                     throw new UserFriendlyException(L("GoodsCategoryMustBeMainNotSub"));
-            }
-        }
-
-        private async Task SendNotificationToCarriersWithTheSameTrucks(ShippingRequest shippingRequest)
-        {
-            if (shippingRequest.BidStatus == ShippingRequestBidStatus.OnGoing)
-            {
-                UserIdentifier[] users =
-                    await _bidDomainService.GetCarriersByTruckTypeArrayAsync(shippingRequest.TrucksTypeId.Value);
-                await _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, shippingRequest.Id);
-
-                var carriers = await _normalPricePackageManager.GetCarriersMatchingPricePackages(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId);
-                await _appNotifier.ShippingRequestAsBidWithMatchingPricePackage(carriers, shippingRequest.ReferenceNumber, shippingRequest.Id);
             }
         }
 
