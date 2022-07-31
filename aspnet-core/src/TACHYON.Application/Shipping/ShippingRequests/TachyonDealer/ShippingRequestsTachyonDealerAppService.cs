@@ -4,6 +4,7 @@ using Abp.Timing;
 using Abp.UI;
 using System.Threading.Tasks;
 using TACHYON.Features;
+using TACHYON.PricePackages;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
@@ -12,12 +13,14 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
         IShippingRequestsTachyonDealerAppService
     {
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
+        private readonly NormalPricePackageManager _normalPricePackageManager;
 
         public ShippingRequestsTachyonDealerAppService(
             IRepository<ShippingRequest, long> shippingRequestRepository
-        )
+, NormalPricePackageManager normalPricePackageManager)
         {
             _shippingRequestRepository = shippingRequestRepository;
+            _normalPricePackageManager = normalPricePackageManager;
         }
 
         [RequiresFeature(AppFeatures.TachyonDealer)]
@@ -46,6 +49,8 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
             {
                 throw new UserFriendlyException(L("NoShippingRequest"));
             }
+
+            await _normalPricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
         }
     }
 }
