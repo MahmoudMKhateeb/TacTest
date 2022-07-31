@@ -85,7 +85,6 @@ export class CreateOrEditPenaltyModalComponent extends AppComponentBase implemen
       .pipe(
         finalize(() => {
           this.saving = false;
-          this.notify.success('SavedSuccessfully');
         })
       )
       .subscribe(() => {
@@ -240,16 +239,15 @@ export class CreateOrEditPenaltyModalComponent extends AppComponentBase implemen
       return false;
     }
     return (
-      this.FilteredWaybills.filter(
-        (item) => waybillnumberAutoComplete.value && item.waybillNumber !== Number(waybillnumberAutoComplete.value?.waybillNumber)
-      ).length > 0
+      this.FilteredWaybills.filter((item) => waybillnumberAutoComplete.value && item.waybillNumber !== waybillnumberAutoComplete.value?.waybillNumber)
+        .length > 0
     );
   }
 
   isValidAutoComplete(waybillnumberAutoComplete: NgModel) {
     return (
       this.FilteredWaybills.filter(
-        (item) => waybillnumberAutoComplete.value == '' || item.waybillNumber === Number(waybillnumberAutoComplete.value?.wayBillNumber)
+        (item) => waybillnumberAutoComplete.value == '' || item.waybillNumber === waybillnumberAutoComplete.value?.wayBillNumber
       ).length > 0
     );
   }

@@ -70,7 +70,7 @@ namespace TACHYON.Penalties
         {
             if (input.TenantId == input.DestinationTenantId)
                 throw new UserFriendlyException(L("DestinationCompanyShouldNotBeSourceCompany"));
-
+            await ValidateWaybills(input);
             if (!input.Id.HasValue)
             {
                 await Create(input);
@@ -80,6 +80,8 @@ namespace TACHYON.Penalties
                 await Update(input);
             }
         }
+
+
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task<CreateOrEditPenaltyDto> GetPenaltyForEditDto(long Id)
         {
@@ -233,6 +235,17 @@ namespace TACHYON.Penalties
             var commestion = _penaltyManager.CalculateValues( output.CommissionType, value, value, value, taxVat, model.PenaltyItems);
              ObjectMapper.Map(commestion, output);
            // ObjectMapper.Map(output, penalty);
+        }
+
+        private async Task ValidateWaybills(CreateOrEditPenaltyDto input)
+        {
+            var waybillsList = await GetAllWaybillsByCompany(input.TenantId, input.DestinationTenantId);
+            var inputWaybills = input.PenaltyItems.Where(x => x.WaybillNumber != null);
+
+            if (inputWaybills.Where(p => waybillsList.All(x => x.WaybillNumber != p.WaybillNumber)).Any())
+            {
+                throw new UserFriendlyException(L("SomeWaybillsNoAreInvalid"));
+            }
         }
         #endregion
 
