@@ -1028,11 +1028,6 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-        private async Task SendNotificationToAssignedTenant(ShippingRequest shippingRequest)
-        {
-            await _appNotifier.ShippingRequestAddedByTMSToTenant(shippingRequest.TenantId, shippingRequest.Id);
-        }
-
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)
         {
