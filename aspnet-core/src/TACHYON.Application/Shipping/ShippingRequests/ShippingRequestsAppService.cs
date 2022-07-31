@@ -494,11 +494,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 await _priceOfferRepository.InsertAsync(offer);
 
             }
-
-            if (shippingRequest.IsTachyonDeal && await IsEnabledAsync(AppFeatures.TachyonDealer))
-            {
-                await SendNotificationToAssignedTenant(shippingRequest);
-            }
+            
         }
 
 
@@ -565,7 +561,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.BidStatus = shippingRequest.BidStartDate.Value.Date == Clock.Now.Date
                     ? ShippingRequestBidStatus.OnGoing
                     : ShippingRequestBidStatus.StandBy;
-                await SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
+                await _normalPricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
             }
         }
 
@@ -982,7 +978,7 @@ namespace TACHYON.Shipping.ShippingRequests
             if (shippingRequest.IsBid)
             {
                 //Notify Carrier with the same Truck type
-                await SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
+                await _normalPricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
             }
             
         }
@@ -1036,7 +1032,6 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             await _appNotifier.ShippingRequestAddedByTMSToTenant(shippingRequest.TenantId, shippingRequest.Id);
         }
-
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)

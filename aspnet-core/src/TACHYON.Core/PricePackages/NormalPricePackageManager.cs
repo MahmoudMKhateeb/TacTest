@@ -1,4 +1,5 @@
-﻿using Abp.Application.Features;
+﻿using Abp;
+using Abp.Application.Features;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
@@ -17,6 +18,7 @@ using TACHYON.PriceOffers.Dto;
 using TACHYON.PricePackages.Dto.NormalPricePackage;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.DirectRequests.Dto;
+using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Vases;
@@ -37,6 +39,9 @@ namespace TACHYON.PricePackages
         private readonly PriceOfferManager _priceOfferManager;
         private readonly IRepository<PricePackageOffer, long> _pricePackageOfferRepository;
         private readonly BalanceManager _balanceManager;
+        private readonly BidDomainService _bidDomainService;
+
+
 
 
         public NormalPricePackageManager(
@@ -51,7 +56,8 @@ namespace TACHYON.PricePackages
             IRepository<PriceOffer, long> priceOfferRepository,
             IAppNotifier appNotifier,
             IFeatureChecker featureChecker,
-            IAbpSession abpSession)
+            IAbpSession abpSession,
+            BidDomainService bidDomainService)
         {
             _normalPricePackageRepository = normalPricePackageRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -65,6 +71,7 @@ namespace TACHYON.PricePackages
             _appNotifier = appNotifier;
             _featureChecker = featureChecker;
             _abpSession = abpSession;
+            _bidDomainService = bidDomainService;
         }
 
         #region Main Functions
@@ -233,6 +240,19 @@ namespace TACHYON.PricePackages
                   .ThenInclude(x => x.Items)
                   .Where(x => x.ShippingRequestId == shippingRequestId && x.Status == ShippingRequestDirectRequestStatus.Accepted)
                   .Select(x => x.PricePackageOfferFK).FirstOrDefaultAsync();
+        }
+
+        public async Task SendNotificationToCarriersWithTheSameTrucks(ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.BidStatus == ShippingRequestBidStatus.OnGoing)
+            {
+                UserIdentifier[] users =
+                    await _bidDomainService.GetCarriersByTruckTypeArrayAsync(shippingRequest.TrucksTypeId.Value);
+                await _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, shippingRequest.Id);
+
+                var carriers = await GetCarriersMatchingPricePackages(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId);
+                await _appNotifier.ShippingRequestAsBidWithMatchingPricePackage(carriers, shippingRequest.ReferenceNumber, shippingRequest.Id);
+            }
         }
         #endregion
 

@@ -514,16 +514,18 @@ namespace TACHYON.PriceOffers
             {
                 if (!_priceOfferManager.CheckCarrierIsPricing(input.Id))
                 {
-                    if (shippingRequest.IsBid && input.Channel == PriceOfferChannel.MarketPlace)
-                    {
-                        if (shippingRequest.BidStatus != ShippingRequestBidStatus.OnGoing) throw new UserFriendlyException(L("The Bid must be Ongoing"));
-                        matchingPricePackageId = await _normalPricePackageManager.GetMatchingPricePackageId(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId, AbpSession.TenantId);
-                    }
-                    else
+                    //show matching PP only if the request is TMS or bidding
+                    if(shippingRequest.IsTachyonDeal || (shippingRequest.IsBid && input.Channel == PriceOfferChannel.MarketPlace))
                     {
                         var _directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.CarrierTenantId == AbpSession.TenantId.Value && x.ShippingRequestId == input.Id && x.Status != ShippingRequestDirectRequestStatus.Declined);
                         if (_directRequest == null) throw new UserFriendlyException(L("YouDoNotHaveDirectRequest"));
                         pricePackageOfferId = _directRequest.PricePackageOfferId;
+
+                        if (pricePackageOfferId == null)
+                        {
+                            matchingPricePackageId = await _normalPricePackageManager.GetMatchingPricePackageId(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId, AbpSession.TenantId);
+                        }
+
                     }
                 }
 
