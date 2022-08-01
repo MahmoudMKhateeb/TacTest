@@ -299,7 +299,17 @@ export class AppNavigationService {
         '',
         [],
         [
-          new AppMenuItem('PenaltiesList', 'Pages.Invoices', '', '/app/main/penalties/view'),
+          new AppMenuItem(
+            'PenaltiesList',
+            'Pages.Invoices',
+            '',
+            '/app/main/penalties/view',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.TachyonDealer') || !isNotNullOrUndefined(this._appSessionService.tenantId)
+          ),
 
           new AppMenuItem('InvoicesNotesList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
 
