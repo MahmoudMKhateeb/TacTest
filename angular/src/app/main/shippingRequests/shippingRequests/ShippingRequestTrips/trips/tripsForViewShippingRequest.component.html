@@ -232,7 +232,7 @@
             <tr
               [ngClass]="{
                 'table-warning': record.hasAccident || record.cancelStatus == ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval,
-                'bg-danger':
+                'bg-info':
                   record.cancelStatus == ShippingRequestTripCancelStatusEnum.Rejected ||
                   record.cancelStatus == ShippingRequestTripCancelStatusEnum.Canceled
               }"
