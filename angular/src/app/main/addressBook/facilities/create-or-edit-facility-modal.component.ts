@@ -49,6 +49,8 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   polygonStyle = styleObject;
   days = WeekDay;
   FacilityWorkingHours: any[];
+  mapCenterLat: number;
+  mapCenterLng: number;
 
   constructor(
     injector: Injector,
@@ -197,6 +199,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
           let lat: number = x[1];
           Bounds.extend(new google.maps.LatLng(lat, lng, false));
         });
+        this.getMapCenter();
       }
       this.Bounds = Bounds;
       let options = {
@@ -316,5 +319,20 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     }
     // Load Map Api
     this.loadMapApi();
+  }
+
+  /**
+   * gets map center from polygons json
+   * @private
+   */
+  private getMapCenter() {
+    if (typeof this.selectedCityJson.geometry.coordinates[0][0][0] === 'number') {
+      this.mapCenterLng = this.selectedCityJson.geometry.coordinates[0][0][0];
+      this.mapCenterLat = this.selectedCityJson.geometry.coordinates[0][0][1];
+    } else {
+      this.mapCenterLng = this.selectedCityJson.geometry.coordinates[0][0][0][0];
+      this.mapCenterLat = this.selectedCityJson.geometry.coordinates[0][0][0][1];
+    }
+    this.zoom = 10;
   }
 }
