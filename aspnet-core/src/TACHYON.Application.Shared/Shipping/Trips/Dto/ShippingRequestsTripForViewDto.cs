@@ -25,6 +25,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public string DestinationFacility { get; set; }
         public DocumentFileDto DocumentFile { get; set; }
 
+        public DateTime? ExpectedDeliveryTime { get; set; }
         public ICollection<RoutPointDto> RoutPoints { get; set; }
         public ICollection<ShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }
 
@@ -39,5 +40,8 @@ namespace TACHYON.Shipping.Trips.Dto
         public ShippingRequestTripStatus Status { get; set; }
 
         public string SplitInvoiceFlag { get; set; }
+        public DateTime? SupposedPickupDateFrom { get; set; }
+        public DateTime? SupposedPickupDateTo { get; set; }
+        public int NotesCount { get; set; }
     }
 }

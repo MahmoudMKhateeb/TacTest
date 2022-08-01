@@ -6,6 +6,7 @@ import {
   ShippingRequestsServiceProxy,
   ShippingRequestStatus,
   ShippingRequestType,
+  SavedEntityType,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
@@ -15,7 +16,9 @@ import { filter } from '@node_modules/rxjs/internal/operators';
 import { DOCUMENT } from '@angular/common';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { DirectRequestComponent } from '@app/main/shippingRequests/shippingRequests/directrequest/direct-request.component';
-import { retry } from 'rxjs/operators';
+import { finalize, retry } from 'rxjs/operators';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { NotesComponent } from './notes/notes.component';
 
 @Component({
   templateUrl: './view-shippingRequest.component.html',
@@ -24,6 +27,7 @@ import { retry } from 'rxjs/operators';
 })
 export class ViewShippingRequestComponent extends AppComponentBase implements OnInit, AfterViewChecked {
   @ViewChild('directRequestComponent') public directRequestComponent: DirectRequestComponent;
+  @ViewChild('NotesComponent') public NotesComponent: NotesComponent;
   active = false;
   saving = false;
   loading = true;
@@ -31,7 +35,8 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   vases: GetShippingRequestVasForViewDto[];
   activeShippingRequestId: number;
   bidsloading = false;
-
+  entityTypes = SavedEntityType;
+  type = 'ShippingRequest';
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequests'), '/app/main/shippingRequests/shippingRequests')];
 
   constructor(
@@ -104,6 +109,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       return false;
     }
   }
+
   /**
    * Binds the Value if Shipping Request Type in View Shipping Request Base on User Feature
    */
@@ -126,12 +132,16 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   canSeeShippingRequestTrips() {
     //if there is no carrierTenantId  and the current user in not a carrier Hide Trips Section
     if (this.feature.isEnabled('App.Carrier') && !this.shippingRequestforView.shippingRequest.carrierTenantId) {
+      console.log('false');
       return false;
     } else if (this.feature.isEnabled('App.TachyonDealer')) {
       //if Tachyon Dealer
+      console.log('true');
+
       return true;
     }
     //By Default
+    // console.log('true');
     return true;
   }
 
@@ -139,7 +149,9 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
    * this function validates who Can See And Access the DirectRequests List in ViewShippingRequest
    */
   canSeeDirectRequests() {
-    if (!this.feature.isEnabled('App.SendDirectRequest')) return false;
+    if (!this.feature.isEnabled('App.SendDirectRequest')) {
+      return false;
+    }
     if (this.feature.isEnabled('App.TachyonDealer') && this.shippingRequestforView.shippingRequest.isTachyonDeal) {
       return true;
     }
@@ -164,14 +176,33 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     }
     return true;
   }
-  /* canSeePriceOffers() {
+  canSeePricePackages() {
+    let isNotMarketPlaceRequest = this.shippingRequestforView.shippingRequest.requestType !== ShippingRequestType.Marketplace;
+    let isRequestStatusPrePrice = this.shippingRequestforView.shippingRequest.status === ShippingRequestStatus.PrePrice;
+    let isRequestStatusNeedsAction = this.shippingRequestforView.shippingRequest.status === ShippingRequestStatus.NeedsAction;
+    let isRequestTypeDirectRequest = this.shippingRequestforView.shippingRequest.requestType === ShippingRequestType.DirectRequest;
+    let isRequestTypeTachyonManageService = this.shippingRequestforView.shippingRequest.requestType === ShippingRequestType.TachyonManageService;
     // if the user is carrier
-    if (this.feature.isEnabled('App.Carrier') || this.shippingRequestforView.shippingRequest.price) {
-      return false;
+    if (
+      !this.isCarrier &&
+      !this.isShipper &&
+      isNotMarketPlaceRequest &&
+      (isRequestStatusPrePrice ||
+        (isRequestStatusNeedsAction && isRequestTypeDirectRequest) ||
+        (this.isTachyonDealer && isRequestTypeTachyonManageService))
+    ) {
+      return true;
     }
-    return true;
+    return false;
   }
-  */
+  /* canSeePriceOffers() {
+      // if the user is carrier
+      if (this.feature.isEnabled('App.Carrier') || this.shippingRequestforView.shippingRequest.price) {
+        return false;
+      }
+      return true;
+    }
+    */
   /**
    * this function scrolls to a the direct Requests table and opens up the Send Direct Requests Modal for Tachyon Dealer
    */

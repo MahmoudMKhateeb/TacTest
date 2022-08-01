@@ -1,7 +1,11 @@
 ﻿using Abp.AspNetZeroCore.Net;
 using Abp.Dependency;
 using Microsoft.Reporting.NETCore;
+using QRCoder;
+using System;
 using System.Collections;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using TACHYON.Dto;
@@ -44,6 +48,24 @@ namespace TACHYON.DataExporting
                 report.DataSources.Add(new ReportDataSource((string)dsNameArray[i], (IEnumerable)DTArray[i]));
 
             return report.Render("PDF");
+        }
+
+        public string GenerateQrCode(string link)
+        {
+            QRCodeGenerator QrGenerator = new QRCodeGenerator();
+            QRCodeData QrCodeInfo = QrGenerator.CreateQrCode(link, QRCodeGenerator.ECCLevel.Q);
+            QRCode QrCode = new QRCode(QrCodeInfo);
+            Bitmap QrBitmap = QrCode.GetGraphic(6);
+            byte[] BitmapArray = BitmapToByteArray(QrBitmap);
+            return Convert.ToBase64String(BitmapArray);
+        }
+        private static byte[] BitmapToByteArray(Bitmap bitmap)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Jpeg);
+                return ms.ToArray();
+            }
         }
     }
 }

@@ -1,46 +1,79 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
+import { AppComponentBase } from '@shared/common/app-component-base';
+import { CarrierDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-most-usedpp',
   templateUrl: './most-usedpp.component.html',
   styleUrls: ['./most-usedpp.component.css'],
 })
-export class MostUsedppComponent implements OnInit {
-  constructor() {}
-
+export class MostUsedppComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptionsBars>;
+  loading = false;
+
+  constructor(private injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy) {
+    super(injector);
+  }
 
   ngOnInit() {
-    this.chartOptions = {
-      series: [
-        {
-          name: 'UseCount',
-          data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
-          color: 'rgba(187, 41, 41, 0.847)',
-        },
-      ],
-      chart: {
-        type: 'bar',
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '55%',
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent'],
-      },
+    this.getData();
+  }
 
-      fill: {
-        opacity: 1,
-      },
-    };
+  getData() {
+    this.loading = true;
+    this._carrierDashboardServiceProxy
+      .getMostPricePackageByShippers()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.chartOptions = {
+          series: [
+            {
+              name: 'Count',
+              data: result,
+              color: 'rgba(187, 41, 41, 0.847)',
+            },
+          ],
+          chart: {
+            type: 'bar',
+            width: 450,
+            height: 200,
+          },
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              columnWidth: '55%',
+            },
+          },
+          xaxis: {
+            type: 'category',
+            axisTicks: {
+              show: false,
+            },
+          },
+          stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent'],
+          },
+          yaxis: {
+            labels: {
+              show: false,
+            },
+          },
+          tooltip: {
+            enabled: false,
+          },
+          fill: {
+            opacity: 1,
+          },
+        };
+        this.loading = false;
+      });
   }
 }

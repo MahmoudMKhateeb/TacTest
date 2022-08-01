@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.Core.Invoices.Jobs;
+using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Groups;
@@ -23,7 +24,7 @@ using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.Invoices.Transactions;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
-using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Penalties;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 
@@ -50,6 +51,7 @@ namespace TACHYON.Invoices
         private readonly IFeatureChecker _featureChecker;
         private readonly BalanceManager _balanceManager;
         private readonly TransactionManager _transactionManager;
+        private readonly IRepository<Penalty> _penaltyRepository;
 
         #endregion
 
@@ -69,7 +71,8 @@ namespace TACHYON.Invoices
             TransactionManager transactionManager,
             IRepository<ShippingRequestTrip> shippingRequestTrip,
             IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository,
-            IRepository<SubmitInvoice, long> submitInvoiceRepository)
+            IRepository<SubmitInvoice, long> submitInvoiceRepository,
+            IRepository<Penalty> penaltyRepository)
         {
             _periodRepository = periodRepository;
             _invoiceRepository = invoiceRepository;
@@ -87,6 +90,7 @@ namespace TACHYON.Invoices
             _shippingRequestTrip = shippingRequestTrip;
             _invoicePaymentMethodRepository = invoicePaymentMethodRepository;
             _submitInvoiceRepository = submitInvoiceRepository;
+            _penaltyRepository = penaltyRepository;
         }
 
 
@@ -190,11 +194,13 @@ namespace TACHYON.Invoices
                 if (await _featureChecker.IsEnabledAsync(AppFeatures.Pay))
                 {
                     await CollectTripsForShipper(tenant, period);
-
+                    await PenaltyCollectorForPayTenants(tenant, period);
                 }
                 if (await _featureChecker.IsEnabledAsync(AppFeatures.Receipt))
                 {
                     await BuildCarrierSubmitInvoice(tenant, period);
+                    await PenaltyCollectorForReceiptTenants(tenant, period);
+
 
                 }
 
@@ -273,6 +279,38 @@ namespace TACHYON.Invoices
             
 
         }
+
+        private async Task PenaltyCollectorForPayTenants(Tenant tenant, InvoicePeriod period)
+        {
+           DisableTenancyFilters();    
+           var penalties = await _penaltyRepository.GetAll()
+                .Include(x=>x.ShippingRequestTripFK)
+                .ThenInclude(x=>x.ShippingRequestFk)
+                .Where(x=> x.TenantId == tenant.Id) // source company
+                .Where(x => !x.InvoiceId.HasValue && 
+                x.Status != PenaltyStatus.Canceled &&
+                x.Status != PenaltyStatus.Draft)
+                .ToListAsync();
+
+            if (penalties.Any())
+                await GeneratePenaltyInvoice(tenant, penalties, period);
+        }
+        
+
+        private async Task PenaltyCollectorForReceiptTenants(Tenant tenant, InvoicePeriod period)
+        {
+            DisableTenancyFilters();
+            var penalties = await _penaltyRepository.GetAll()
+                 .Include(x => x.ShippingRequestTripFK)
+                 .ThenInclude(x => x.ShippingRequestFk)
+                 .Where(x => x.DestinationTenantId == tenant.Id) // destination  company
+                 .Where(x => !x.SubmitInvoiceId.HasValue && x.Status != PenaltyStatus.Canceled &&
+                 x.Status!=PenaltyStatus.Draft).ToListAsync();
+
+            if (penalties.Any())
+                await GeneratePenaltySubmitInvoice(tenant, penalties, period);
+        }
+
 
 
         /// <summary>
@@ -390,8 +428,6 @@ namespace TACHYON.Invoices
                     dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);
                 }
             }
-
-
             var invoice = new Invoice
             {
                 TenantId = tenant.Id,
@@ -404,7 +440,7 @@ namespace TACHYON.Invoices
                 TaxVat = trips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
                 AccountType = InvoiceAccountType.AccountReceivable,
                 Channel = InvoiceChannel.Trip,
-                Trips = trips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList()
+                Trips = trips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
             };
             invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
 
@@ -426,6 +462,74 @@ namespace TACHYON.Invoices
 
             await _balanceManager.CheckShipperOverLimit(tenant);
             await _appNotifier.NewInvoiceShipperGenerated(invoice);
+        }
+        public async Task GeneratePenaltyInvoice(Tenant tenant, List<Penalty> penalties, InvoicePeriod period)
+        {
+            decimal totalAmount = penalties.Sum(r => r.TotalAmount);
+            decimal vatAmount = penalties.Sum(r => r.VatPostCommestion);
+            decimal subTotalAmount = penalties.Sum(r =>r.AmountPostCommestion);
+
+            DateTime dueDate = Clock.Now;
+
+            if (period.PeriodType != InvoicePeriodType.PayInAdvance)
+            {
+                var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync(x =>
+                    x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.InvoicePaymentMethod)));
+                if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
+                {
+                    dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);
+                }
+            }
+            var invoice = new Invoice
+            {
+                TenantId = tenant.Id,
+                PeriodId = period.Id,
+                DueDate = dueDate,
+                IsPaid = period.PeriodType == InvoicePeriodType.PayInAdvance,
+                TotalAmount = totalAmount,
+                VatAmount = vatAmount,
+                SubTotalAmount = subTotalAmount,
+                AccountType = InvoiceAccountType.AccountReceivable,
+                Channel = InvoiceChannel.Penalty,
+                Penalties = penalties
+            };
+             await _invoiceRepository.InsertAsync(invoice);
+
+            if (period.PeriodType == InvoicePeriodType.PayInAdvance)
+            {
+                tenant.Balance -= totalAmount;
+                tenant.ReservedBalance -= totalAmount;
+            }
+            else
+            {
+                tenant.CreditBalance -= totalAmount;
+            }
+
+
+            await _balanceManager.CheckShipperOverLimit(tenant);
+        }
+        public async Task GeneratePenaltySubmitInvoice(Tenant tenant, List<Penalty> penalties, InvoicePeriod period)
+        {
+            decimal vatAmount = penalties.Sum(r => r.VatAmount);
+            decimal subTotalAmount = penalties.Sum(r =>r.AmountPreCommestion);
+            decimal totalAmount = penalties.Sum(r => r.AmountPreCommestion + r.VatAmount);
+
+
+            var submitInvoice = new SubmitInvoice
+            {
+                TenantId = tenant.Id,
+                PeriodId = period.Id,
+                TotalAmount = totalAmount,
+                VatAmount = vatAmount,
+                SubTotalAmount = subTotalAmount,
+                TaxVat = penalties.Where(x => x.TaxVat >0).FirstOrDefault().TaxVat,
+                Channel = InvoiceChannel.Penalty,
+                Penalties = penalties
+            };
+            submitInvoice.Id = await _submitInvoiceRepository.InsertAndGetIdAsync(submitInvoice);
+
+
+
         }
 
         /// <summary>
@@ -451,7 +555,7 @@ namespace TACHYON.Invoices
         }
 
 
-        public async Task GenertateInvoiceOnDeman(Tenant tenant)
+        public async Task GenertateInvoiceOnDeman(Tenant tenant, List<int> tripIdsList)
         {
             InvoicePeriod period = await _periodRepository.FirstOrDefaultAsync(x =>
                 x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
@@ -460,8 +564,15 @@ namespace TACHYON.Invoices
             if (period.PeriodType != InvoicePeriodType.PayuponDelivery &&
                 period.PeriodType != InvoicePeriodType.PayInAdvance)
             {
-                var trips = _shippingRequestTrip.GetAll().Include(x => x.ShippingRequestFk).Include(x => x.ShippingRequestTripVases).Where(x => x.ShippingRequestFk.TenantId == tenant.Id && !x.IsShipperHaveInvoice
-                 && (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered || x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced));
+                var trips = _shippingRequestTrip.GetAll()
+                    .Include(x => x.ShippingRequestFk)
+                    .Include(x => x.ShippingRequestTripVases)
+                    .Where(x => x.ShippingRequestFk.TenantId == tenant.Id &&
+                    tripIdsList.Contains(x.Id) &&
+                    !x.IsShipperHaveInvoice &&
+                    //waybills.Contains(x.Id) &&
+                    (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
+                    x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced));
                 if (trips != null && trips.Count() > 0)
                 {
                     await GenerateShipperInvoice(tenant, trips.ToList(), period);

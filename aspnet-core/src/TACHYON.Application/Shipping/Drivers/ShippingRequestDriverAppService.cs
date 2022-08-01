@@ -14,6 +14,7 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using NUglify.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -62,13 +63,11 @@ namespace TACHYON.Shipping.Drivers
         private readonly IRepository<ShippingRequestTripTransition> _shippingRequestTripTransitionRepository;
         private readonly IRepository<ShippingRequestTripAccident> _shippingRequestTripAccidentRepository;
         private readonly ShippingRequestDriverManager _shippingRequestDriverManager;
-        private readonly ShippingRequestManager _shippingRequestManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<UserOTP> _userOtpRepository;
         private readonly RatingLogManager _ratingLogManager;
         private readonly IRepository<DriverLocationLog, long> _driverLocationLogRepository;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
-        private readonly ITempFileCacheManager _tempFileCacheManager;
 
         private readonly IRepository<User, long> _userRepository;
         public ShippingRequestDriverAppService(
@@ -76,24 +75,18 @@ namespace TACHYON.Shipping.Drivers
             IRepository<RoutPoint, long> RoutPointRepository,
             IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository,
             ShippingRequestDriverManager shippingRequestDriverManager,
-            ShippingRequestManager shippingRequestManager,
             IAppNotifier appNotifier,
             IRepository<UserOTP> userOtpRepository,
             IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository,
             RatingLogManager ratingLogManager,
             IRepository<DriverLocationLog, long> driverLocationLogRepository,
-            EntityLogManager logManager,
-            IFirebaseNotifier firebaseNotifier,
             ShippingRequestPointWorkFlowProvider workFlowProvider,
-            IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository,
-            ITempFileCacheManager tempFileCacheManager,
-            IRepository<User, long> userRepository)
+            IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
             _shippingRequestTripTransitionRepository = shippingRequestTripTransitionRepository;
             _shippingRequestDriverManager = shippingRequestDriverManager;
-            _shippingRequestManager = shippingRequestManager;
             _appNotifier = appNotifier;
             _userOtpRepository = userOtpRepository;
             _shippingRequestTripAccidentRepository = shippingRequestTripAccidentRepository;
@@ -101,8 +94,6 @@ namespace TACHYON.Shipping.Drivers
             _driverLocationLogRepository = driverLocationLogRepository;
             _workFlowProvider = workFlowProvider;
             _routPointStatusTransitionRepository = routPointStatusTransitionRepository;
-            _tempFileCacheManager = tempFileCacheManager;
-            _userRepository = userRepository;
         }
         /// <summary>
         /// list all trips realted with drivers
@@ -298,6 +289,13 @@ namespace TACHYON.Shipping.Drivers
 
             //return good category name automatic from default language
             tripDto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk).DisplayName;
+
+            if (trip.Status == ShippingRequestTripStatus.New &&
+                trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
+                tripDto.StatusTitle = L("StandBy");
+
+            else tripDto.StatusTitle = L(Enum.GetName(typeof(ShippingRequestTripStatus), trip.Status));
+
             return tripDto;
         }
 
@@ -336,7 +334,7 @@ namespace TACHYON.Shipping.Drivers
                  AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
              }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
-            routes.ForEach(x => x.StatusTitle = L(x.Status.ToString()));
+            routes.ForEach(x => x.StatusTitle = x.Status == RoutePointStatus.StandBy ? L("PointStandBy") : L(x.Status.ToString()));
             var trip = _ShippingRequestTrip.Get(id);
             var mapper = ObjectMapper.Map<DriverRoutPointDto>(trip);
             mapper.RoutPoint = routes;
@@ -409,7 +407,9 @@ namespace TACHYON.Shipping.Drivers
         [RequiresFeature(AppFeatures.Carrier)]
         public async Task SetRating(long pointId, int rate, string note)
         {
-            await CheckCurrentUserIsDriver();
+           var isCurrentUserDriver = AbpSession.UserId.HasValue && await _shippingRequestDriverManager.IsCurrentUserDriver(AbpSession.UserId.Value);
+            if (!isCurrentUserDriver)
+                throw new AbpValidationException(L("YouMustBeDriverToRateFacility"));
 
             var ratingLog = new RatingLog() { PointId = pointId, Rate = rate, Note = note };
             var pointFacilityId = await _RoutPointRepository.GetAll().AsNoTracking()
@@ -422,13 +422,7 @@ namespace TACHYON.Shipping.Drivers
             await _ratingLogManager.CreateRating(ratingLog);
         }
 
-        private async Task CheckCurrentUserIsDriver()
-        {
-            bool isCurrentUserDriver = await _userRepository.GetAll().AsNoTracking()
-                .AnyAsync(x => x.IsDriver && x.Id == AbpSession.UserId);
-            if (!isCurrentUserDriver)
-                throw new AbpValidationException(L("YouMustBeDriverToRateFacility"));
-        }
+
 
         /// <summary>
         /// The driver rate shipping Experience after trip delivered
@@ -436,7 +430,10 @@ namespace TACHYON.Shipping.Drivers
         [RequiresFeature(AppFeatures.Carrier)]
         public async Task SetShippingExpRating(int tripId, int rate, string note)
         {
-            await CheckCurrentUserIsDriver();
+            var isCurrentUserDriver = AbpSession.UserId.HasValue && await _shippingRequestDriverManager.IsCurrentUserDriver(AbpSession.UserId.Value);
+            if (!isCurrentUserDriver)
+                throw new AbpValidationException(L("YouMustBeDriverToRateFacility"));
+            
             var input = new RatingLog() { TripId = tripId, RateType = RateType.SEByDriver, Rate = rate, Note = note, DriverId = AbpSession.UserId };
             await _ratingLogManager.CreateRating(input);
         }
@@ -514,6 +511,7 @@ namespace TACHYON.Shipping.Drivers
                 .ThenInclude(x => x.RatingLogs)
                  .Include(x => x.RoutPoints)
                 .ThenInclude(x => x.RoutPointStatusTransitions)
+                .Where(x => x.Status != ShippingRequestTripStatus.Canceled)
                 .FirstOrDefaultAsync(x => x.Id == TripId);
             await ResetTripStatus(trip);
 
@@ -544,9 +542,12 @@ namespace TACHYON.Shipping.Drivers
                 .Include(x => x.RoutPoints)
                 .ThenInclude(x => x.RatingLogs)
                 .Include(x => x.RatingLogs)
+                .Where(x => x.Status != ShippingRequestTripStatus.Canceled)
                 .FirstOrDefaultAsync(x => x.Id == TripId);
 
-            await ResetTripStatus(trip);
+
+                await ResetTripStatus(trip);
+            
         }
         private async Task ResetTripStatus(ShippingRequestTrip trip)
         {

@@ -28,10 +28,147 @@
       >
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
       </button>
+      &nbsp; &nbsp;
+      <!-- <div role="actions"> -->
+      <div class="btn-group" dropdown [busyIf]="loading">
+        <button
+          dropdownToggle
+          type="button"
+          class="btn btn-outline-success dropdown-toggle mr-1"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          *ngIf="ShippingRequest.canAddTrip"
+        >
+          <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
+        </button>
+        <div class="dropdown-menu dropdown-menu-right dropdown-excel-operations" *dropdownMenu>
+          <!-- *ngIf="'Pages.ShippingRequestTrips.Create' | permission" -->
+          <div class="no-padding">
+            <span class="fileinput-button">
+              <p-fileUpload
+                customUpload="true"
+                name="ExcelFileUpload"
+                #ExcelFileUpload
+                maxFileSize="10000000"
+                auto="auto"
+                accept=".csv,.xls,.xlsx"
+                (uploadHandler)="uploadExcel($event)"
+                (onError)="onUploadExcelError()"
+                chooseLabel="{{ 'ImportTripFromExcel' | localize }}"
+                [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
+              >
+              </p-fileUpload>
+              <span class="dropdown-item-text text-muted pl-3" href="#">
+                <small
+                  *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
+                  [innerHTML]="
+                    l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/Import_trip_details.xlsx>' + l('ClickHere') + '</a>')
+                  "
+                ></small>
+
+                <small
+                  *ngIf="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+                  [innerHTML]="
+                    l(
+                      'ImportToExcelSampleFileDownloadInfo',
+                      '<a href=/assets/sampleFiles/Import_trip_details_single_drop.xlsx>' + l('ClickHere') + '</a>'
+                    )
+                  "
+                ></small>
+              </span>
+            </span>
+          </div>
+
+          <div class="no-padding">
+            <span class="fileinput-button" *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop">
+              <p-fileUpload
+                customUpload="true"
+                name="PointExcelFileUpload"
+                #PointExcelFileUpload
+                maxFileSize="10000000"
+                auto="auto"
+                accept=".csv,.xls,.xlsx"
+                (uploadHandler)="uploadPointsExcel($event)"
+                (onError)="onUploadExcelError()"
+                chooseLabel="{{ 'ImportPointFromExcel' | localize }}"
+                [disabled]="primengTableHelper.totalRecordsCount == 0"
+              >
+              </p-fileUpload>
+              <span class="dropdown-item-text text-muted pl-3" href="#">
+                <small
+                  [innerHTML]="
+                    l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/Import_trip_points.xlsx>' + l('ClickHere') + '</a>')
+                  "
+                ></small>
+              </span>
+            </span>
+          </div>
+
+          <div class="no-padding">
+            <span class="fileinput-button">
+              <p-fileUpload
+                customUpload="true"
+                name="GoodDetailsExcelFileUpload"
+                #GoodDetailsExcelFileUpload
+                maxFileSize="10000000"
+                auto="auto"
+                accept=".csv,.xls,.xlsx"
+                (uploadHandler)="uploadGoodDetailsExcel($event)"
+                (onError)="onUploadExcelError()"
+                chooseLabel="{{ 'ImportGoodDetailsFromExcel' | localize }}"
+                [disabled]="primengTableHelper.totalRecordsCount == 0"
+              >
+              </p-fileUpload>
+              <span class="dropdown-item-text text-muted pl-3" href="#">
+                <small
+                  *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
+                  [innerHTML]="
+                    l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/Import_goods_details.xlsx>' + l('ClickHere') + '</a>')
+                  "
+                ></small>
+
+                <small
+                  *ngIf="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+                  [innerHTML]="
+                    l(
+                      'ImportToExcelSampleFileDownloadInfo',
+                      '<a href=/assets/sampleFiles/Import_goods_details_single_drop.xlsx>' + l('ClickHere') + '</a>'
+                    )
+                  "
+                ></small>
+              </span>
+            </span>
+          </div>
+
+          <div class="no-padding">
+            <span class="fileinput-button">
+              <p-fileUpload
+                customUpload="true"
+                name="VasesExcelFileUpload"
+                #VasesExcelFileUpload
+                maxFileSize="10000000"
+                auto="auto"
+                accept=".csv,.xls,.xlsx"
+                (uploadHandler)="uploadVasesExcel($event)"
+                (onError)="onUploadExcelError()"
+                chooseLabel="{{ 'ImportVasesFromExcel' | localize }}"
+                [disabled]="primengTableHelper.totalRecordsCount == 0 || VasListFromFather.length == 0"
+              >
+              </p-fileUpload>
+              <span class="dropdown-item-text text-muted pl-3" href="#">
+                <small
+                  [innerHTML]="
+                    l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/Import_trip_vases.xlsx>' + l('ClickHere') + '</a>')
+                  "
+                ></small>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <!--begin::card-body-->
-  <div class="card-body">
+    <!--begin::card-body-->
     <div class="row align-items-center">
       <!--<Primeng-Datatable-Start>-->
       <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
@@ -49,6 +186,10 @@
         >
           <ng-template pTemplate="header">
             <tr>
+              <th pSortableColumn="TripReferenceID">
+                {{ l('ReferenceID') }}
+                <p-sortIcon field="TripReferenceID"></p-sortIcon>
+              </th>
               <th pSortableColumn="startTripDate">
                 {{ l('StartDate') }}
                 <p-sortIcon field="startTripDate"></p-sortIcon>
@@ -69,6 +210,10 @@
                 {{ l('DriverStatus') }}
                 <p-sortIcon field="driverStatusTitle"></p-sortIcon>
               </th>
+              <th pSortableColumn="notesCount">
+                {{ l('Notes') }}
+                <p-sortIcon field="notesCount"></p-sortIcon>
+              </th>
               <th pSortableColumn="status">
                 {{ l('TripStatus') }}
                 <p-sortIcon field="status"></p-sortIcon>
@@ -84,11 +229,22 @@
             </tr>
           </ng-template>
           <ng-template let-record="$implicit" pTemplate="body">
-            <tr [ngClass]="record.hasAccident ? 'table-warning' : ''">
+            <tr
+              [ngClass]="{
+                'table-warning': record.hasAccident || record.cancelStatus == ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval,
+                'bg-info':
+                  record.cancelStatus == ShippingRequestTripCancelStatusEnum.Rejected ||
+                  record.cancelStatus == ShippingRequestTripCancelStatusEnum.Canceled
+              }"
+            >
               <!-- <td style="width: 50px;">
                   <span class="ui-column-title"> {{ l('id') }}</span>
                   {{ record.id }}
                 </td> -->
+              <td>
+                <span class="ui-column-title"> {{ l('bulkUploadReference') }}</span>
+                {{ record.bulkUploadRef }}
+              </td>
               <td>
                 <span class="ui-column-title"> {{ l('startTripDate') }}</span>
                 {{ record.startTripDate | momentFormat: 'L' }}
@@ -109,11 +265,54 @@
                 <span class="ui-column-title"> {{ l('driverStatus') }}</span>
                 {{ l(record.driverStatusTitle) }}
               </td>
-
+              <td>
+                <span class="ui-column-title"> {{ l('notes') }}</span>
+                <span class="hasNote" *ngIf="record.notesCount > 0">
+                  {{ record.notesCount }} &nbsp; <span> {{ record.notesCount == 1 ? l('note') : l('notes') }} </span></span
+                >
+              </td>
               <td>
                 <span class="ui-column-title"> {{ l('tripStatus') }}</span>
-                {{ l(record.statusTitle) }}
-                <a (click)="ViewTripAccidentModal.getAll(record)" *ngIf="record.hasAccident"><i class="flaticon-warning text-danger"></i></a>
+                <span class="noPadding" *ngIf="record.status != ShippingRequestTripStatusEnum.Canceled">
+                  {{ l(record.statusTitle) }}
+                  <a
+                    class="noPadding noColor"
+                    (click)="ViewCancelReasonModal.show(record.status, record.canceledReason, record.rejectedCancelingReason, record.cancelStatus)"
+                  >
+                    <span
+                      class="cancelLink"
+                      *ngIf="
+                        record.cancelStatus !== ShippingRequestTripCancelStatusEnum.Canceled &&
+                        record.cancelStatus !== ShippingRequestTripCancelStatusEnum.None
+                      "
+                    >
+                      - {{ getCancelStatus(record.cancelStatus) }}
+                    </span>
+                  </a>
+                </span>
+
+                <a
+                  class="noPadding noColor"
+                  *ngIf="record.status == ShippingRequestTripStatusEnum.Canceled"
+                  (click)="ViewCancelReasonModal.show(record.status, record.canceledReason, record.rejectedCancelingReason, record.cancelStatus)"
+                >
+                  <span class="cancelLink" *ngIf="record.cancelStatus == ShippingRequestTripCancelStatusEnum.Canceled">
+                    {{ l(record.statusTitle) }}
+                  </span>
+
+                  <span
+                    *ngIf="
+                      record.cancelStatus !== ShippingRequestTripCancelStatusEnum.Canceled &&
+                      record.cancelStatus !== ShippingRequestTripCancelStatusEnum.None
+                    "
+                  >
+                    - {{ getCancelStatus(record.cancelStatus) }}
+                  </span>
+                </a>
+
+                <span>
+                  <a (click)="ViewTripAccidentModal.getAll(record)" *ngIf="record.hasAccident"><i class="flaticon-warning text-danger"></i> </a>
+                </span>
               </td>
               <td>
                 <span class="ui-column-title"> {{ l('waybillNumber') }}</span>
@@ -130,6 +329,7 @@
                     <li *ngIf="record.status == 0 && CanEditTrip">
                       <a class="dropdown-item" (click)="AddNewTripModal.show(record)">{{ l('Edit') }}</a>
                     </li>
+
                     <li>
                       <a class="dropdown-item" (click)="ViewTripModal.show(record.id)">{{ isCarrier ? l('ViewOrAssignDriver') : l('View') }}</a>
                     </li>
@@ -146,8 +346,47 @@
                     <li *ngIf="canResetTrip(record)">
                       <a class="dropdown-item" (click)="ViewTripModal.ResetTrip(record.id)">{{ l('Reset') }}</a>
                     </li>
-                    <li *ngIf="record.status != 0 && record.status != 6 && record.status != 7">
+                    <li *ngIf="record.status != ShippingRequestTripStatusEnum.New">
                       <a class="dropdown-item" (click)="TripAccidentModal.show(record.id, null)">{{ l('CreateAccident') }}</a>
+                    </li>
+                    <li
+                      *ngIf="
+                        ShippingRequest.status == ShippingRequestStatusEnum.PrePrice &&
+                        record.status == ShippingRequestTripStatusEnum.New &&
+                        ((!feature.isEnabled('App.TachyonDealer') && record.cancelStatus == ShippingRequestTripCancelStatusEnum.None) ||
+                          (feature.isEnabled('App.TachyonDealer') &&
+                            (record.cancelStatus == ShippingRequestTripCancelStatusEnum.None ||
+                              record.cancelStatus == ShippingRequestTripCancelStatusEnum.Rejected)))
+                      "
+                    >
+                      <a class="dropdown-item" (click)="CancelTripModal.show(record.id, record.requestType)">
+                        {{ l('Cancel') }}
+                      </a>
+                    </li>
+                    <li
+                      *ngIf="
+                        ShippingRequest.status == ShippingRequestStatusEnum.PrePrice &&
+                        feature.isEnabled('App.TachyonDealer') &&
+                        record.cancelStatus == ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval
+                      "
+                    >
+                      <a class="dropdown-item" (click)="TmsCancelTripModal.ApplyCancel(record.id)">{{ l('ApplyCancel') }}</a>
+                    </li>
+                    <li
+                      *ngIf="
+                        permission.isGranted('Pages.ShippingRequestTrips.Delete') &&
+                        feature.isEnabled('App.Shipper') &&
+                        record.status == ShippingRequestTripStatusEnum.New
+                      "
+                    >
+                      <a class="dropdown-item" (click)="AddNewTripModal.deleteTrip(record.id)">{{ l('Delete') }}</a>
+                    </li>
+                    <li
+                      *ngIf="
+                        record.canCreateTemplate && (isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestForView.shippingRequest.isSaas))
+                      "
+                    >
+                      <a class="dropdown-item" (click)="saveAsTemplateModal.show(record.id)">{{ l('SaveAsTemplate') }}</a>
                     </li>
                     <li>
                       <a class="dropdown-item" (click)="AddRemarksModal.show(record.id)">{{ l('Remarks') }}</a>
@@ -176,20 +415,53 @@
       </div>
       <!--<Primeng-Datatable-End>-->
     </div>
+    <!--end::card-body-->
   </div>
-  <!--end::card-body-->
+
+  <!-- <AddNewTripModal
+    *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')"
+    #AddNewTripModal
+    (modalSave)="reloadPage()"
+    [shippingRequest]="ShippingRequest"
+    [VasListFromFather]="VasListFromFather"
+  ></AddNewTripModal> -->
+  <app-view-imported-trips-from-excel-modal
+    [ImportedTripsList]="list"
+    [isSingleDdrop]="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+    #ViewImportedTripsModal
+    (modalSave)="reloadPage()"
+  ></app-view-imported-trips-from-excel-modal>
+  <app-view-imported-points-from-excel-modal
+    [ImportedPointsList]="pointsList"
+    #ViewImportedPointsModal
+    (modalSave)="reloadPage()"
+  ></app-view-imported-points-from-excel-modal>
+  <app-view-imported-good-details-from-excel-modal
+    [ImportedGoodDetailsList]="goodDetailsList"
+    #ViewImportedGoodDetailsModal
+    (modalSave)="reloadPage()"
+  >
+  </app-view-imported-good-details-from-excel-modal>
+  <app-view-import-vases-from-excel-modal [ImportedVasesList]="vasesList" #ViewImportedVasesModal (modalSave)="reloadPage()">
+  </app-view-import-vases-from-excel-modal>
+  <viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
+  <trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
+  <view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>
+  <app-shipping-request-rating-modal #shippingRequestRatingModal></app-shipping-request-rating-modal>
 </div>
 
 <AddNewTripModal
-  *ngIf="ShippingRequest.canAddTrip && primengTableHelper.totalRecordsCount <= ShippingRequest.numberOfTrips"
   #AddNewTripModal
   (modalSave)="reloadPage()"
   [shippingRequest]="ShippingRequest"
   [VasListFromFather]="VasListFromFather"
->
-</AddNewTripModal>
+></AddNewTripModal>
+<app-view-cancel-reason-modal #ViewCancelReasonModal></app-view-cancel-reason-modal>
+<app-cancel-trip-modal #CancelTripModal (modalSave)="reloadPage()"></app-cancel-trip-modal>
+<app-tms-cancel-trip-modal #TmsCancelTripModal (modalSave)="reloadPage()"></app-tms-cancel-trip-modal>
 <viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
 <trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
-<view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>
+<view-trip-accident-modal #ViewTripAccidentModal (incidentResolved)="refreshWhenIncidentResolved()"></view-trip-accident-modal>
 <app-add-new-remarks-trip-modal #AddRemarksModal></app-add-new-remarks-trip-modal>
 <app-shipping-request-rating-modal #shippingRequestRatingModal></app-shipping-request-rating-modal>
+<create-new-entity-template-modal #saveAsTemplateModal></create-new-entity-template-modal>

@@ -1,0 +1,85 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="reject()">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            {{ l('PenaltyComplaint') }}
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!--  begin :: Body-->
+            <div class="col-lg-12 mt-4">
+              <span>{{ l('ComplaintDescription') }}</span>
+              <P>{{ penaltyComplaint.description }}</P>
+            </div>
+
+            <div *ngIf="penaltyComplaint.rejectReason && penaltyComplaint.status == 3" class="col-lg-12 mt-4">
+              <span>{{ l('ComplaintRejectReason') }}</span>
+              <P>{{ penaltyComplaint.rejectReason }}</P>
+            </div>
+            <!--  end :: Body-->
+          </div>
+          <div *ngIf="isTachyonDealerOrHost && penaltyComplaint.status == 1" class="row">
+            <div class="checkbox-inline">
+              <label for="needEnterRejectReason" class="checkbox">
+                <input id="needEnterRejectReason" type="checkbox" name="needEnterRejectReason" [(ngModel)]="needEnterRejectReason" />
+                <span> </span>
+                {{ 'EnterRejectReason' }}
+              </label>
+            </div>
+
+            <div *ngIf="needEnterRejectReason" class="col-lg-12 mt-4">
+              <label>{{ l('RejectReason') }} <span class="required-fileds">*</span></label>
+              <textarea
+                #rejectReason="ngModel"
+                type="text"
+                class="form-control"
+                [(ngModel)]="rejectComplaint.rejectReason"
+                name="rejectReason"
+                [class.is-valid]="rejectReason.valid && (rejectReason.dirty || rejectReason.touched)"
+                [class.is-invalid]="rejectReason.invalid && (rejectReason.dirty || rejectReason.touched)"
+                required
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- end::Body-->
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
+
+          <button
+            *ngIf="penaltyComplaint.status == 1 && isTachyonDealerOrHost"
+            type="submit"
+            class="btn btn-info"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot' | localize)"
+            [disabled]="!needEnterRejectReason"
+          >
+            {{ 'Reject' | localize }}
+          </button>
+
+          <button
+            *ngIf="penaltyComplaint.status == 1 && isTachyonDealerOrHost"
+            class="btn btn-success"
+            [disabled]="needEnterRejectReason"
+            (click)="accept(penaltyComplaint.id)"
+          >
+            <i class="fa fa-save"></i> <span>{{ 'Accept' | localize }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

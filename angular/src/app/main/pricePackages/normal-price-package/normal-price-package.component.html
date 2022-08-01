@@ -1,0 +1,116 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <!-- [description]="'TrucksHeaderInfo' | localize" -->
+    <sub-header [title]="'NormalPricePackages' | localize">
+      <div role="actions">
+        <button *ngIf="isGranted('Pages.NormalPricePackages.Create') && isCarrier" (click)="createNormalPricePackage()" class="btn btn-primary blue">
+          <i class="fa fa-plus"></i> {{ l('CreateNormalPricePackage') }}
+        </button>
+      </div>
+    </sub-header>
+
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <dx-data-grid
+              style="height: 45vw"
+              #grid
+              id="dataGrid"
+              [dataSource]="dataSource"
+              [remoteOperations]="true"
+              [showColumnLines]="true"
+              [showRowLines]="false"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              keyExpr="id"
+              [wordWrapEnabled]="true"
+            >
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+              <dxo-filter-builder-popup></dxo-filter-builder-popup>
+              <dxo-scrolling mode="virtual"></dxo-scrolling>
+              <dxo-group-panel [visible]="false"></dxo-group-panel>
+              <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
+              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="false"> </dxo-remote-operations>
+              <dxo-paging [pageSize]="20"></dxo-paging>
+
+              <dxi-column
+                cellTemplate="cellTemplateActions"
+                [allowFiltering]="false"
+                [allowSorting]="false"
+                [allowEditing]="false"
+                [editorOptions]="{ visible: false }"
+                [width]="50"
+              ></dxi-column>
+              <dxi-column dataField="pricePackageId" caption="{{ l('Reference') }}"> </dxi-column>
+              <dxi-column dataField="displayName" caption="{{ l('PricePackageName') }}"> </dxi-column>
+              <dxi-column
+                dataField="tenantName"
+                caption="{{ l('Carrier') }} "
+                *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
+              ></dxi-column>
+              <dxi-column dataField="truckType" caption="{{ l('TruckType') }}"> </dxi-column>
+              <dxi-column dataField="directRequestPrice" caption="{{ l('DirectRequestPrice') }}"> </dxi-column>
+              <dxi-column dataField="marcketPlaceRequestPrice" caption="{{ l('MarcketPlaceRequestPrice') }}"> </dxi-column>
+              <dxi-column dataField="tachyonMSRequestPrice" caption="{{ l('TachyonMSRequestPrice') }}"> </dxi-column>
+              <dxi-column dataField="pricePerExtraDrop" caption="{{ l('PricePerExtraDrop') }}"> </dxi-column>
+              <dxi-column dataField="isMultiDrop" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"> </dxi-column>
+              <dxi-column dataField="origin" caption="{{ l('Origin') }}"> </dxi-column>
+              <dxi-column dataField="destination" caption="{{ l('Destination') }}"> </dxi-column>
+
+              <div *dxTemplate="let options of 'cellTemplate_RoutType'">
+                <span *ngIf="options.data.isMultiDrop" class="badge badge-success badge-inline">{{ 'MultipleDrop' | localize }}</span>
+                <span *ngIf="!options.data.isMultiDrop" class="badge badge-danger badge-inline">{{ 'SingleDrop' | localize }}</span>
+              </div>
+
+              <div *dxTemplate="let options of 'cellTemplateActions'">
+                <div class="btn-group dropdown" dropdown container="body">
+                  <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
+                    <span class="svg-icon svg-icon-md">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        width="24px"
+                        height="24px"
+                        viewBox="0 0 24 24"
+                        version="1.1"
+                      >
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <rect x="0" y="0" width="24" height="24"></rect>
+                          <path
+                            d="M5,8.6862915 L5,5 L8.6862915,5 L11.5857864,2.10050506 L14.4852814,5 L19,5 L19,9.51471863 L21.4852814,12 L19,14.4852814 L19,19 L14.4852814,19 L11.5857864,21.8994949 L8.6862915,19 L5,19 L5,15.3137085 L1.6862915,12 L5,8.6862915 Z M12,15 C13.6568542,15 15,13.6568542 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,13.6568542 10.3431458,15 12,15 Z"
+                            fill="#000000"
+                          ></path>
+                        </g>
+                      </svg>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu" *dropdownMenu>
+                    <li>
+                      <a href="javascript:;" class="dropdown-item" (click)="viewNormalPricePackageModal.show(options.data.id)">{{ l('View') }}</a>
+                    </li>
+                    <li *ngIf="isGranted('Pages.NormalPricePackages.Edit') && isCarrier">
+                      <a href="javascript:;" class="dropdown-item" (click)="createOrEditNormalPricePackageModal.show(options.data.id)">{{
+                        l('Edit')
+                      }}</a>
+                    </li>
+                    <li *ngIf="isGranted('Pages.NormalPricePackages.Delete') && isCarrier">
+                      <a class="dropdown-item" href="javascript:;" (click)="deleteNormalPricePackage(options.data.id)">{{ l('Delete') }}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </dx-data-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+    <createOrEditNormalPricePackageModal
+      #createOrEditNormalPricePackageModal
+      (modalSave)="getAllNormalPricePackages()"
+    ></createOrEditNormalPricePackageModal>
+    <viewNormalPricePackageModal #viewNormalPricePackageModal></viewNormalPricePackageModal>
+  </div>
+</div>

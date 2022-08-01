@@ -102,12 +102,56 @@
         public const string SaasRelatedCarrier = "App.Shipper.SaaSCarrier";
         public const string Saas = "App.Shipper.Saas";
 
+        public const string NormalPricePackages = "App.NormalPricePackage";
         #endregion
 
         public const string Bidding = "App.Pay.Bidding";
         public const string CreateDirectRequest = "App.Pay.CreateDirectRequest";
         public const string CreateTmsRequest = "App.Pay.CreateTmsRequest";
         public const string PayPeriod = "App.Pay.PayPeriod";
+
+        public const string Penalties = "App.Penalties";
+
+        public const string TripCancelation = "App.Penalties.TripCancelation";
+        public const string TripCancelationCommissionType = "App.Penalties.TripCancelation.CommissionType";
+        public const string TripCancelationCommissionMinValue = "App.Penalties.TripCancelation.CommissionMinValue";
+        public const string TripCancelationCommissionValue = "App.Penalties.TripCancelation.CommissionValue";
+        public const string TripCancelationCommissionPercentage = "App.Penalties.TripCancelation.TripCancelationCommissionPercentage";
+
+   
+        public const string NotAssignTruckAndDriverStartDate = "App.Penalties.NotAssignTruckAndDriverStartDate";
+        public const string NotAssignTruckAndDriverStartDate_NumberOfUnitsOfMeasure = "App.Penalties.NotAssignTruckAndDriverStartDate.NumberOfUnitsOfMeasure";
+        public const string NotAssignTruckAndDriverStartDate_UnitsOfMeasure = "App.Penalties.NotAssignTruckAndDriverStartDate.UnitsOfMeasure";
+        public const string NotAssignTruckAndDriverStartDate_Amount = "App.Penalties.NotAssignTruckAndDriverStartDate.Amount";
+        public const string NotAssignTruckAndDriverStartDate_StartingAmount = "App.Penalties.NotAssignTruckAndDriverStartDate.StartingAmount";
+        public const string NotAssignTruckAndDriverStartDate_MaximumAmount = "App.Penalties.NotAssignTruckAndDriverStartDate.MaximumAmount";
+        public const string NotAssignTruckAndDriverStartDate_CommissionType = "App.Penalties.NotAssignTruckAndDriverStartDate.CommissionType";
+        public const string NotAssignTruckAndDriverStartDate_CommissionMinValue = "App.Penalties.NotAssignTruckAndDriverStartDate.CommissionMinValue";
+        public const string NotAssignTruckAndDriverStartDate_CommissionValue = "App.Penalties.NotAssignTruckAndDriverStartDate.CommissionValue";
+        public const string NotAssignTruckAndDriverStartDate_CommissionPercentage = "App.Penalties.NotAssignTruckAndDriverStartDate.CommissionPercentage";
+
+        public const string NotDeliveringAllDropsBeforeEndDate = "App.Penalties.NotDeliveringAllDropsBeforeEndDate";
+        public const string NotDeliveringAllDropsBeforeEndDate_NumberOfUnitsOfMeasure = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.NumberOfUnitsOfMeasure";
+        public const string NotDeliveringAllDropsBeforeEndDate_UnitsOfMeasure = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.UnitsOfMeasure";
+        public const string NotDeliveringAllDropsBeforeEndDate_Amount = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.Amount";
+        public const string NotDeliveringAllDropsBeforeEndDate_StartingAmount = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.StartingAmount";
+        public const string NotDeliveringAllDropsBeforeEndDate_MaximumAmount = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.MaximumAmount";
+        public const string NotDeliveringAllDropsBeforeEndDate_CommissionType = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.CommissionType";
+        public const string NotDeliveringAllDropsBeforeEndDate_CommissionMinValue = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.CommissionMinValue";
+        public const string NotDeliveringAllDropsBeforeEndDate_CommissionValue = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.CommissionValue";
+        public const string NotDeliveringAllDropsBeforeEndDate_CommissionPercentage = "App.Penalties.NotDeliveringAllDropsBeforeEndDate.CommissionPercentage";
+
+
+
+        public const string Detention = "App.Penalties.Detention";
+        public const string MaxDetentionFeesAmount = "App.Penalties.Detention.MaxDetentionFeesAmount";
+        public const string BaseDetentionFeesAmount = "App.Penalties.Detention.BaseDetentionFeesAmount";
+        public const string DetentionFeesIncreaseRate = "App.Penalties.Detention.DetentionFeesIncreaseRate";
+        public const string AllowedDetentionPeriod = "App.Penalties.Detention.AllowedDetentionPeriod";
+        public const string DetentionCommissionType = "App.Penalties.Detention.CommissionType";
+        public const string DetentionCommissionMinValue = "App.Penalties.Detention.CommissionMinValue";
+        public const string DetentionCommissionValue = "App.Penalties.Detention.CommissionValue";
+        public const string DetentionCommissionPercentage = "App.Penalties.Detention.CommissionPercentage";
 
     }
 }

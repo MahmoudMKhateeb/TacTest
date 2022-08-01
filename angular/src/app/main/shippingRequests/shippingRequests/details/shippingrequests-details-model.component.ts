@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ChangeDetectorRef, EventEmitter, Injector, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -11,7 +11,17 @@ import {
   PriceOfferServiceProxy,
   ShippingRequestBidStatus,
   ShippingRequestStatus,
+  ShippingRequestDirectRequestStatus,
+  ShippingRequestUpdateStatus,
+  ShippingRequestUpdateServiceProxy,
+  CreateSrUpdateActionInputDto,
+  CreateOrEditPriceOfferInput,
 } from '@shared/service-proxies/service-proxies';
+import { LazyLoadEvent } from 'primeng/api';
+import { Table } from '@node_modules/primeng/table';
+import { Paginator } from '@node_modules/primeng/paginator';
+import { PrimengTableHelper } from '@shared/helpers/PrimengTableHelper';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   templateUrl: './shippingrequests-details-model.component.html',
@@ -23,7 +33,13 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
   @Input() Channel: PriceOfferChannel | null | undefined;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('modal', { static: false }) modal: ModalDirective;
-
+  @ViewChild('dataTable', { static: false }) dataTable: Table;
+  @ViewChild('paginator', { static: false }) paginator: Paginator;
+  rows = 5;
+  ShippingRequestUpdateStatusEnum = ShippingRequestUpdateStatus;
+  primengTableHelperEntityChanges = new PrimengTableHelper();
+  CreateSrUpdateActionInput = new CreateSrUpdateActionInputDto();
+  priceOfferInput: CreateOrEditPriceOfferInput;
   active = false;
   saving = false;
   request: GetShippingRequestForPricingOutput = new GetShippingRequestForPricingOutput();
@@ -34,7 +50,12 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
   direction: string;
   Items: PriceOfferItemDto[] = [];
   shippingrequest: GetShippingRequestForPriceOfferListDto = new GetShippingRequestForPriceOfferListDto();
-  constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy) {
+  constructor(
+    injector: Injector,
+    private changeDetectorRef: ChangeDetectorRef,
+    private _CurrentServ: PriceOfferServiceProxy,
+    private _srUpdateService: ShippingRequestUpdateServiceProxy
+  ) {
     super(injector);
   }
 
@@ -59,6 +80,14 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
     this.shippingrequest.offerId = offerId;
     this.shippingrequest.isPriced = true;
   }
+  markAsPriced(offerId: number) {
+    this.shippingrequest.isPriced = true;
+    if (this.shippingrequest.isBid) {
+      this.shippingrequest.offerId = offerId;
+    } else {
+      this.shippingrequest.directRequestStatus = ShippingRequestDirectRequestStatus.Accepted;
+    }
+  }
   delete() {
     this.shippingrequest.offerId = undefined;
     this.shippingrequest.isPriced = false;
@@ -68,7 +97,10 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
    */
   canSetPrice(): boolean {
     if (!this.Channel) return false;
+    if (this.shippingrequest.status != ShippingRequestStatus.PrePrice && this.shippingrequest.status != ShippingRequestStatus.NeedsAction)
+      return false;
     if (this.shippingrequest.isPriced) return false;
+    if (this.shippingrequest.directRequestStatus != ShippingRequestDirectRequestStatus.New) return false;
     if (this.request.status != ShippingRequestStatus.NeedsAction && this.request.status != ShippingRequestStatus.PrePrice) return false;
     if (this.Channel == PriceOfferChannel.MarketPlace && this.request.bidStatus != ShippingRequestBidStatus.OnGoing) return false;
     if (this.feature.isEnabled('App.Shipper')) return false;
@@ -76,6 +108,7 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
     if (this.feature.isEnabled('App.TachyonDealer') && !this.request.isTachyonDeal) return true;
     return false;
   }
+
   /**
    * Get City Cordinates By Providing its name
    * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace
@@ -129,5 +162,89 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
         this.duration = response.rows[0].elements[0].duration.text;
       }
     );
+  }
+
+  showSrUpdates(id: number, offerId: number) {
+    this._srUpdateService.getAll(offerId, id, null, 0, 10).subscribe((result) => {
+      console.log(result);
+      abp.notify.info('GetAll ShippingRequestUpdates Successfully');
+    });
+  }
+
+  getAll(offerId, event?: LazyLoadEvent): void {
+    if (this.primengTableHelper.shouldResetPaging(event)) {
+      this.paginator.changePage(0);
+      return;
+    }
+    this.changeDetectorRef.detectChanges();
+    this.primengTableHelper.defaultRecordsCountPerPage = 5;
+
+    this.primengTableHelper.showLoadingIndicator();
+    this._srUpdateService
+      .getAll(
+        offerId,
+        this.shippingrequest.id,
+        this.primengTableHelper.getSorting(this.dataTable),
+        this.primengTableHelper.getSkipCount(this.paginator, event),
+        this.rows
+      )
+      .subscribe((result) => {
+        this.primengTableHelper.totalRecordsCount = result.totalCount;
+        this.primengTableHelper.records = result.items;
+        this.primengTableHelper.hideLoadingIndicator();
+      });
+  }
+
+  KeepSamePrice(offerId, id) {
+    this.CreateSrUpdateActionInput.status = ShippingRequestUpdateStatus.KeepSamePrice;
+    this.CreateSrUpdateActionInput.id = id;
+    this.primengTableHelper.showLoadingIndicator();
+
+    this._srUpdateService
+      .takeAction(this.CreateSrUpdateActionInput)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.primengTableHelper.hideLoadingIndicator();
+        })
+      )
+      .subscribe(() => {
+        this.notify.info(this.l('SuccessfullySaved'));
+        this.getAll(offerId);
+      });
+  }
+
+  DismissOffer(offerId, id, request) {
+    this.CreateSrUpdateActionInput.status = ShippingRequestUpdateStatus.Dismissed;
+    this.CreateSrUpdateActionInput.id = id;
+    this.primengTableHelper.showLoadingIndicator();
+    this._srUpdateService
+      .takeAction(this.CreateSrUpdateActionInput)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.primengTableHelper.hideLoadingIndicator();
+        })
+      )
+      .subscribe(() => {
+        this.close();
+        this.notify.info(this.l('SuccessfullySaved'));
+      });
+  }
+
+  ngAfterViewInit(): void {
+    this.changeDetectorRef.detectChanges();
+    this.primengTableHelper.adjustScroll(this.dataTable);
+  }
+
+  onRepriceOffer() {
+    this._CurrentServ.getShippingRequestForPricing(this.Channel, this.shippingrequest.id).subscribe((result) => {
+      this.request = result;
+      this.Items = this.request.items;
+      this.shippingrequest.offerId = result.offerId;
+    });
+  }
+  reloadPage(): void {
+    this.paginator.changePage(this.paginator.getPage());
   }
 }

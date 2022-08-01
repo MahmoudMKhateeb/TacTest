@@ -38,6 +38,9 @@ namespace TACHYON.Receivers
 
         public async Task<PagedResultDto<GetReceiverForViewDto>> GetAll(GetAllReceiversInput input)
         {
+
+            DisableTenancyFiltersIfHost();
+            
             var filteredReceivers = _receiverRepository.GetAll()
                 .Include(e => e.FacilityFk)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,

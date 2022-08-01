@@ -71,8 +71,8 @@
                   [class.is-valid]="city.touched && city.valid"
                   (change)="handleCityPolygon()"
                 >
-                  <option value="undefined" selected disabled>{{ l('SelectaCity') }}</option>
-                  <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" value="{{ item.id }}">
+                  <option [value]="undefined" disabled>{{ l('SelectaCity') }}</option>
+                  <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" [value]="Number(item.id)">
                     {{ item.displayName }}
                   </option>
                 </select>
@@ -130,14 +130,16 @@
                 required
               />
             </div>
+
             <!-- CreateNewFacilityMap -->
             <div class="form-group col-md-12" [ngClass]="{ preventClick: !facility.cityId }">
               <agm-map
                 class="map"
                 [zoom]="zoom"
-                [longitude]="facility.longitude || Bounds?.getCenter().lng()"
-                [latitude]="facility.latitude || Bounds?.getCenter().lat()"
+                [longitude]="mapCenterLng || facility.longitude"
+                [latitude]="mapCenterLat || facility.latitude"
                 (mapClick)="mapClicked($event)"
+                [busyIf]="citiesLoading"
               >
                 <agm-marker
                   *ngIf="facility.latitude && facility.longitude"
@@ -152,6 +154,15 @@
                   [style]="polygonStyle"
                 ></agm-data-layer>
               </agm-map>
+            </div>
+
+            <div class="col-md-6">
+              <app-create-or-edit-working-hours
+                #CreateOrEditWorkingHoursComponent
+                [FacilityWorkingHoursInput]="FacilityWorkingHours"
+                [parentForm]="createFacilityForm"
+              >
+              </app-create-or-edit-working-hours>
             </div>
           </div>
         </div>

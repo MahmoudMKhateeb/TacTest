@@ -7,14 +7,26 @@
       <!--          <i class="fa fa-money-bill"></i> {{ l('sendPricingOfferToShipper') }}-->
       <!--        </button>-->
       <!--      </div>-->
-      <div role="actions" style="display: contents">
-        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ l('ActivityLog') }} </a>
+      <div role="actions">
+        <create-or-edit-template-drop-down-button
+          *ngIf="isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestforView.shippingRequest.isSaas)"
+          [entityType]="entityTypes.ShippingRequestTemplate"
+          [sourceEntityId]="activeShippingRequestId"
+        ></create-or-edit-template-drop-down-button>
+        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'Activity Log' }} </a>
         <ng-container *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid">
           <a class="btn btn-outline-success" (click)="scrollToDirectRequests()">{{ l('SendDirectRequests') }}</a>
           <a class="btn btn-outline-success margin-right-5" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">{{
             l('StartBidding')
           }}</a>
         </ng-container>
+        <a
+          class="btn btn-outline-primary"
+          *ngIf="!shippingRequestforView.shippingRequest.isSaas"
+          (click)="srPostPriceUpdatesModal.show(activeShippingRequestId)"
+        >
+          <i class="flaticon-edit-1"></i> {{ l('ShippingRequestUpdates') }}
+        </a>
 
         <div *ngIf="feature.isEnabled('App.TachyonDealer')" class="input-group margin-left-5" style="display: contents">
           <div class="input-group-prepend">
@@ -42,6 +54,12 @@
         ></shipping-request-offers-list>
       </ng-template>
       <!--  end:: PricOfferingSection -->
+
+      <!--  start:: NormalPricePackageSection -->
+      <ng-template [ngIf]="canSeePricePackages()">
+        <normal-price-packages-list [shippingRequestId]="activeShippingRequestId"></normal-price-packages-list>
+      </ng-template>
+      <!--  end:: NormalPricePackageSection -->
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->
         <div class="card-header">
@@ -97,7 +115,7 @@
                 <div class="mb-2">
                   <div class="form-group row fv-plugins-icon-container">
                     <div class="col-lg-6">
-                      <label><span class="required-fileds"></span> {{ l('ShippingRequestType') }}</label>
+                      <label><span class="required-fileds"></span> {{ l('ShippingRequestType') }} </label>
                       <input class="form-control" type="text" name="ShippingRequestType" [value]="shipppingRequestType()" disabled />
                     </div>
                     <!--  Start::Shipping Type                 -->
@@ -201,7 +219,7 @@
                 <div class="mb-2">
                   <div class="row">
                     <div class="col-lg-6">
-                      <label><span class="required-fileds"></span> {{ l('MainGoodCategory') }}</label>
+                      <label><span class="required-fileds"></span> {{ l('MainGoodCategory') }} </label>
                       <input class="form-control" type="text" name="MainGoodCategory" [value]="shippingRequestforView.goodsCategoryName" disabled />
                     </div>
                     <div class="col-lg-6">
@@ -337,7 +355,7 @@
                     </div>
                     <div class="col-lg-3">
                       <div class="form-group">
-                        <label><span class="required-fileds"></span> {{ l('NumberOfDrops') }}</label>
+                        <label><span class="required-fileds"></span> {{ l('NumberOfDrops') }} </label>
                         <input
                           class="form-control"
                           type="number"
@@ -380,6 +398,9 @@
       </ng-template>
       <!--  end:: DirectOffers        -->
 
+      <div>
+        <app-notes #NotesComponent [shippingRequestId]="activeShippingRequestId" [type]="type"> </app-notes>
+      </div>
       <!--   Start::Trips Section     -->
       <!--        !feature.isEnabled('App.TachyonDealer') || -->
       <ng-template [ngIf]="canSeeShippingRequestTrips()">
@@ -388,6 +409,7 @@
           [ShippingRequest]="shippingRequestforView.shippingRequest"
           [shippingRequestForView]="shippingRequestforView"
           [VasListFromFather]="shippingRequestforView.shippingRequestVasDtoList"
+          (incidentResolved)="reloadCurrentPage()"
         ></TripsForViewShippingRequest>
       </ng-template>
 
@@ -399,4 +421,5 @@
   </div>
   <!--  <sendDirectRequestsModal #sendDirectRequestsModal [shippingRequestId]="activeShippingRequestId"></sendDirectRequestsModal>-->
   <tachyonDealToBiddingModal #tachyonDealToBiddingModal (modalsave)="reloadCurrentPage()"></tachyonDealToBiddingModal>
+  <SrPostPriceUpdatesModal #srPostPriceUpdatesModal></SrPostPriceUpdatesModal>
 </div>

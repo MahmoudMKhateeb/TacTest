@@ -89,9 +89,10 @@ namespace TACHYON.DataExporting.Excel
 
         public string GetLocalizedExceptionMessagePart(string parameter)
         {
-            return _localizationSource.GetString("{0}IsInvalid", _localizationSource.GetString(parameter)) + "; ";
+            return _localizationSource.GetString("{0}IsInvalid", _localizationSource.GetString(Filter(parameter))) + "; ";
         }
 
+       
         public bool IsRowEmpty(ISheet worksheet, int row)
         {
             var cell = worksheet.GetRow(row)?.Cells.FirstOrDefault();
@@ -160,5 +161,12 @@ namespace TACHYON.DataExporting.Excel
             // null or blank cell, or unknown cell type
             return string.Empty;
         }
+
+        private string Filter(string str)
+        {
+            List<char> charsToRemove = new List<char>() { '*', '?', ' ' };
+            return String.Concat(str.Split(charsToRemove.ToArray()));
+        }
+
     }
 }

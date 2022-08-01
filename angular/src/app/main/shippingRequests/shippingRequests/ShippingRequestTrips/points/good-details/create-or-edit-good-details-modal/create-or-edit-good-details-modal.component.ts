@@ -30,7 +30,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
 
   active = false;
   // singleWayPoint: CreateOrEditRoutPointDto;
-  goodsDetail: CreateOrEditGoodsDetailDto = new GoodsDetailDto();
+  goodsDetail: CreateOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
   myGoodsDetailList: CreateOrEditGoodsDetailDto[] = [];
   allUnitOfMeasure: GetAllUnitOfMeasureForDropDownOutput[];
   GoodCategory: number;
@@ -91,7 +91,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   show(id?) {
     this.active = true;
     // console.log('this is a Good Details Edit OutSide Of Edit....', id, this.myGoodsDetailList);
-    this.goodsDetail = new GoodsDetailDto();
+    this.goodsDetail = new CreateOrEditGoodsDetailDto();
     //if there is an id this is an edit
     if (typeof id !== 'undefined') {
       // console.log('this is a Good Details Edit ....', id);

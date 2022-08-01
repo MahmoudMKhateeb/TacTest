@@ -3,7 +3,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
-import { InvoiceServiceProxy, CommonLookupServiceProxy, ISelectItemDto } from '@shared/service-proxies/service-proxies';
+import { InvoiceServiceProxy, CommonLookupServiceProxy, ISelectItemDto, SelectItemDto } from '@shared/service-proxies/service-proxies';
 @Component({
   selector: 'invoices-ondeman-model',
   templateUrl: './invoices-ondeman-model.component.html',
@@ -16,12 +16,16 @@ export class InvoiceDemandModelComponent extends AppComponentBase {
   saving = false;
   Tenant: ISelectItemDto;
   Tenants: ISelectItemDto[];
+  Waybills: SelectItemDto[];
+  SelectedWaybills: SelectItemDto[];
   constructor(injector: Injector, private _currentSrv: InvoiceServiceProxy, private _CommonServ: CommonLookupServiceProxy) {
     super(injector);
   }
 
   show(): void {
     this.Tenant = undefined;
+    this.Waybills = undefined;
+    this.SelectedWaybills = undefined;
     this.active = true;
     this.modal.show();
   }
@@ -36,7 +40,7 @@ export class InvoiceDemandModelComponent extends AppComponentBase {
     if (!this.Tenant?.id) return;
 
     this._currentSrv
-      .onDemand(parseInt(this.Tenant.id))
+      .onDemand(parseInt(this.Tenant.id), this.SelectedWaybills)
       .pipe(
         finalize(() => {
           this.saving = false;
@@ -57,6 +61,12 @@ export class InvoiceDemandModelComponent extends AppComponentBase {
   search(event) {
     this._CommonServ.getAutoCompleteTenants(event.query, 'shipper').subscribe((result) => {
       this.Tenants = result;
+    });
+  }
+
+  LoadWaybills(event): void {
+    this._currentSrv.getUnInvoicedWaybillsByTenant(parseInt(this.Tenant.id)).subscribe((res) => {
+      this.Waybills = res;
     });
   }
 }

@@ -15,5 +15,6 @@ namespace TACHYON.AddressBook.Dtos
         public double Latitude { get; set; }
 
         public int CityId { get; set; }
+        public string FacilityWorkingHours { get; set; }
     }
 }

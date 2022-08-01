@@ -194,5 +194,10 @@
         {
             public const string IgnoredOtpNumbers = "App.Mobile.IgnoredOtpNumbers";
         }
+
+        public static class Rating
+        {
+            public const string TenantRatingMinNumber = "App.Rating.TenantRatingMinNumber";
+        }
     }
 }

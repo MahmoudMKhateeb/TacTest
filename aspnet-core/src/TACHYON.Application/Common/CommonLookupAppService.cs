@@ -126,13 +126,13 @@ namespace TACHYON.Common
             return query;
         }
 
-        public Task<List<ShippingRequestAccidentReasonLookupDto>> GetAccidentReason()
+        public async Task<List<ShippingRequestAccidentReasonLookupDto>> GetAccidentReason()
         {
-            var query = _ReasonAccidentRepository
+            var query = await _ReasonAccidentRepository
                 .GetAllIncluding(x => x.Translations)
-                .AsNoTracking();
-            return Task.FromResult(ObjectMapper.Map<List<ShippingRequestReasonAccidentListDto>>(query).Select(t =>
-                new ShippingRequestAccidentReasonLookupDto { DisplayName = t.Name, Id = t.Id, Key = t.Key }).ToList());
+                .AsNoTracking().ToListAsync();
+            return ObjectMapper.Map<List<ShippingRequestAccidentReasonLookupDto>>(query);
+            
         }
     }
 }

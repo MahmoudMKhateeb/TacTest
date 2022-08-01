@@ -110,7 +110,7 @@
               <!-- <dxi-column dataField="emailAddress" caption="{{ 'Email' | localize }}"></dxi-column> -->
               <dxi-column dataField="accountNumber" caption="{{ 'UserID' | localize }}"></dxi-column>
               <dxi-column cellTemplate="cellRatingTemplate" dataField="rate" dataType="string" caption="{{ 'rating' | localize }}"></dxi-column>
-              <dxi-column dataField="isActive" caption="{{ 'Status' | localize }}"></dxi-column>
+              <dxi-column cellTemplate="cellTemplate_IsActive" dataField="isActive" caption="{{ 'Status' | localize }}"></dxi-column>
               <dxi-column dataField="creationTime" caption="{{ 'DriverCreationDateAndTime' | localize }}" dataType="datetime"></dxi-column>
               <dxi-column dataField="companyName" caption="{{ l('companyName') }}"> </dxi-column>
               <dxi-column dataField="nationality" caption="{{ l('Nationality') }}"> </dxi-column>
@@ -126,8 +126,8 @@
                 [allowSorting]="false"
               ></dxi-column>
               <div *dxTemplate="let options of 'cellTemplate_IsActive'">
-                <span *ngIf="options.data.isActive" class="badge badge-success badge-inline">{{ 'Yes' | localize }}</span>
-                <span *ngIf="!options.data.isActive" class="badge badge-dark badge-inline">{{ 'No' | localize }}</span>
+                <span *ngIf="options.data.isActive" class="badge badge-success badge-inline">{{ 'Active' | localize }}</span>
+                <span *ngIf="!options.data.isActive" class="badge badge-dark badge-inline">{{ 'InActive' | localize }}</span>
               </div>
 
               <div *dxTemplate="let options of 'cellTemplateActions'">

@@ -104,7 +104,9 @@
                                 >
                               </li>
                               <li>
-                                <a class="dropdown-item" [hidden]="usedIn !== 'view'" (click)="viewPointDetailsModal.show(record)">{{ l('View') }}</a>
+                                <a class="dropdown-item" [hidden]="usedIn == 'createOrEdit'" (click)="viewPointDetailsModal.show(record)">{{
+                                  l('View')
+                                }}</a>
                               </li>
                             </ng-template>
                             <li>

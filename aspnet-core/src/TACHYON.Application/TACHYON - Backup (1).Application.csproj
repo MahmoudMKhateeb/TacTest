@@ -1,0 +1,170 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\common.props"></Import>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+    <AssemblyName>TACHYON.Application</AssemblyName>
+    <PackageId>TACHYON.Application</PackageId>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <RootNamespace>TACHYON</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Invoices\Reports\Dedicated_Invoice.rdlc" />
+    <None Remove="Invoices\Reports\Invoice.rdlc" />
+    <None Remove="Invoices\Reports\LandScapeInvoice.rdlc" />
+    <None Remove="Waybills\Reports\Master_Waybill.rdlc" />
+    <None Remove="Waybills\Reports\Multiple_Drop_Waybill.rdlc" />
+    <None Remove="Waybills\Reports\Single_Drop_Waybill.rdlc" />
+    <None Remove="Shipping\Trips\ShippingRequestsTripManager.cs.orig" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Invoices\Reports\LandScapeInvoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Invoices\Reports\Invoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Invoices\Reports\Dedicated_Invoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Waybills\Reports\Master_Waybill.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Waybills\Reports\Single_Drop_Waybill.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Waybills\Reports\Multiple_Drop_Waybill.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Abp.AspNetCore.SignalR" Version="5.10.1" />
+    <PackageReference Include="Abp.EntityFrameworkCore.EFPlus" Version="5.10.1" />
+    <PackageReference Include="KubernetesClient" Version="1.6.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="3.1.3" />
+    <PackageReference Include="NPOI" Version="2.5.1" />
+    <PackageReference Include="ReportViewerCore.NETCore" Version="15.1.15" />
+    <PackageReference Include="System.CodeDom" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TACHYON.Application.Shared\TACHYON.Application.Shared.csproj" />
+    <ProjectReference Include="..\TACHYON.Core\TACHYON.Core.csproj" />
+    <ProjectReference Include="..\TACHYON.EntityFrameworkCore\TACHYON.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Invoices\Reports\Datasets\GetInvoiceNoteItemReportInfoDataset.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetInvoiceNoteItemReportInfoDataset.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetInvoiceReportInfoDataset.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Invoices\Reports\Datasets\GetInvoiceShippingRequestsReportInfoDataset.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetInvoiceShippingRequestsReportInfoDataset.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Waybills\Reports\DataSet1.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Waybills\Reports\GetDropDetailsDS.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetDropDetailsDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Waybills\Reports\MultipleDropDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MultipleDropDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Waybills\Reports\MultipleDropsGoodsDetailsDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MultipleDropsGoodsDetailsDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Waybills\Reports\MultipleDropsVasDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MultipleDropsVasDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Waybills\Reports\SingleDropDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SingleDropDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Waybills\Reports\SingleDropGoodsDetailsDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SingleDropGoodsDetailsDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Waybills\Reports\SingleDropVasDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SingleDropVasDataSet.xsd</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Invoices\Reports\Datasets\GetInvoiceNoteItemReportInfoDataset.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetInvoiceNoteItemReportInfoDataset.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Invoices\Reports\Datasets\GetInvoiceNoteReportInfoDataset.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Update="Invoices\Reports\Datasets\GetInvoicePenaltiseInvoiceReportInfo.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Update="Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetInvoiceReportInfoDataset.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Invoices\Reports\Datasets\GetInvoiceShippingRequestsReportInfoDataset.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetInvoiceShippingRequestsReportInfoDataset.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\DataSet1.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\GetDropDetailsDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetDropDetailsDS.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\MultipleDropDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MultipleDropDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\MultipleDropsGoodsDetailsDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MultipleDropsGoodsDetailsDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\MultipleDropsVasDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MultipleDropsVasDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\SingleDropDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SingleDropDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\SingleDropGoodsDetailsDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SingleDropGoodsDetailsDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\SingleDropVasDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SingleDropVasDataSet.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Invoices\Exporting\" />
+  </ItemGroup>
+</Project>

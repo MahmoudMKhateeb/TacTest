@@ -33,6 +33,7 @@ import * as moment from '@node_modules/moment';
 import { RequiredDocumentFormChildComponent } from '@app/shared/common/required-document-form-child/required-document-form-child.component';
 import { NgForm } from '@angular/forms';
 import { formatDate } from '@angular/common';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'createOrEditTruckModal',
@@ -89,7 +90,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   fileFormateIsInvalideIndexList: boolean[] = [];
   carriers: CarriersForDropDownDto[] = [];
   truckTypeLoading: boolean;
-
+  plateTypesLoading: boolean;
   selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
   selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
   private dataTable: Table;
@@ -105,7 +106,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
   truckModelMaxYear = new Date();
   //truckModelMinYear = new Date();
-
+  get defaultPlateType(): string {
+    if (this.allPlateTypes) {
+      return this.allPlateTypes.find((x) => x.isDefault)?.id || null;
+    }
+  }
   constructor(
     injector: Injector,
     private _trucksServiceProxy: TrucksServiceProxy,
@@ -117,10 +122,23 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     private _shippingRequestsService: ShippingRequestsServiceProxy
   ) {
     super(injector);
+    this.plateTypesLoading = false;
   }
 
   show(truckId?: number): void {
     this.truck = new CreateOrEditTruckDto();
+    this.truck.plateTypeId = null;
+    this.plateTypesLoading = true;
+    this._trucksServiceProxy
+      .getAllPlateTypeIdForDropdown()
+      .pipe(finalize(() => (this.plateTypesLoading = false)))
+      .subscribe((result) => {
+        this.allPlateTypes = result;
+        if (isNotNullOrUndefined(this.defaultPlateType)) {
+          this.truck.plateTypeId = Number(this.defaultPlateType);
+        }
+      });
+
     if (!truckId) {
       //initlaize truck type values
       this.truck.id = truckId;
@@ -131,7 +149,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.truck.trucksTypeId = null;
       this.truck.trucksTypeId = null;
       this.truck.capacityId = null;
-      this.truck.plateTypeId = null;
       this.truck.capacity = null;
       this.truck.otherTransportTypeName = null;
       this.truck.otherTrucksTypeName = null;
@@ -143,10 +160,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       if (this.isTruckTenantRequired) {
         this._shippingRequestsService.getAllCarriersForDropDown().subscribe((result) => (this.carriers = result));
       }
-
-      this._trucksServiceProxy.getAllPlateTypeIdForDropdown().subscribe((result) => {
-        this.allPlateTypes = result;
-      });
 
       //RequiredDocuments
       this._documentFilesServiceProxy.getTruckRequiredDocumentFiles('').subscribe((result) => {
@@ -168,9 +181,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
           this.allTransportTypes = result;
         });
-        this._trucksServiceProxy.getAllPlateTypeIdForDropdown().subscribe((result) => {
-          this.allPlateTypes = result;
-        });
+
         this._trucksServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(this.truck.transportTypeId).subscribe((result) => {
           this.allTruckTypesByTransportType = result;
           if (this.IfOther(this.allTruckTypesByTransportType, this.truck.trucksTypeId)) {

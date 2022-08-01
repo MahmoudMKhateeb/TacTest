@@ -80,7 +80,7 @@ namespace TACHYON.Rating
             driverByReceiverRating.ReceiverId = point.ReceiverId;
             driverByReceiverRating.PointId = point.Id;
             driverByReceiverRating.DriverId = point.DriverId;
-            driverByReceiverRating.TripId = point.TripId;
+            //driverByReceiverRating.TripId = point.TripId;
             driverByReceiverRating.RateType = RateType.DriverByReceiver;
 
             await _ratingLogManager.CreateRating(driverByReceiverRating);
@@ -94,7 +94,7 @@ namespace TACHYON.Rating
             deliveryRatingByReceiver.ReceiverId = point.ReceiverId;
             deliveryRatingByReceiver.PointId = point.Id;
             deliveryRatingByReceiver.DriverId = point.DriverId;
-            deliveryRatingByReceiver.TripId = point.TripId;
+            //deliveryRatingByReceiver.TripId = point.TripId;
             deliveryRatingByReceiver.RateType = RateType.DEByReceiver;
             await _ratingLogManager.CreateRating(deliveryRatingByReceiver);
 

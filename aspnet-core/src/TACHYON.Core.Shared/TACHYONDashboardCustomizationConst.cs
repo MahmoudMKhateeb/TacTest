@@ -77,6 +77,8 @@
 
                 public const string CarrierDueDateInDaysWidget = "Widgets_Tenant_carrier_DueDateInDaysWidget";
                 public const string CarrierTrackingMapWidget = "Widgets_Tenant_carrier_TrackingMapWidget";
+                public const string CarrierMostUsedPPWidget = "Widgets_Tenant_carrier_MostUsedPPWidget";
+
             }
 
             public class TachyonDealer

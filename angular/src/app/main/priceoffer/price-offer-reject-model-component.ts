@@ -11,9 +11,11 @@ import { finalize } from 'rxjs/operators';
 export class PriceOfferRejectModelComponent extends AppComponentBase implements OnInit {
   @ViewChild('carrierResponceModalChild', { static: false }) modal: ModalDirective;
   @Output() modalsave: EventEmitter<any> = new EventEmitter<any>();
+  @Output() postPriceOfferReject = new EventEmitter<string>();
   rejectInput: RejectPriceOfferInput = new RejectPriceOfferInput();
   saving = false;
   loading = true;
+  isPostPriceEnabled: boolean;
 
   constructor(injector: Injector, private _currentServ: PriceOfferServiceProxy) {
     super(injector);
@@ -21,7 +23,8 @@ export class PriceOfferRejectModelComponent extends AppComponentBase implements 
 
   ngOnInit() {}
 
-  show(id): void {
+  show(id, isPostPrice: boolean = false): void {
+    this.isPostPriceEnabled = isPostPrice;
     this.rejectInput.id = id;
     this.modal.show();
   }
@@ -32,6 +35,12 @@ export class PriceOfferRejectModelComponent extends AppComponentBase implements 
   }
 
   send() {
+    if (this.isPostPriceEnabled) {
+      this.postPriceOfferReject.emit(this.rejectInput.reason);
+      this.close();
+      return;
+    }
+
     this.saving = true;
     this._currentServ
       .reject(this.rejectInput)

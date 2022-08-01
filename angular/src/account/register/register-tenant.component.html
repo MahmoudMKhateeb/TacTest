@@ -34,7 +34,7 @@
           />
           <div>
             <validation-messages [formCtrl]="tenancyName"></validation-messages>
-            <span class="form-text text-muted">{{ l('EnglishLettersOnly') }}</span>
+            <span class="form-text text-muted">{{ l('EnglishLettersWithUnderscoreOnly') }}</span>
             <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger text-left"
               >{{ 'CompanyUniqueName' | localize }} {{ 'AlreadyTaken' | localize }}</span
             >
@@ -137,6 +137,71 @@
           <div>
             <validation-messages [formCtrl]="addressInput"></validation-messages>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <h5 style="text-align: center" class="mt-2">
+      {{ 'FinancialDepartmentDetails' | localize }}
+    </h5>
+    <br />
+    <div class="row text-left">
+      <div class="col-6">
+        <div class="form-group">
+          <label>{{ 'Name' | localize }}</label>
+          <input
+            #financialName="ngModel"
+            class="form-control"
+            type="text"
+            [(ngModel)]="model.financialName"
+            name="financialName"
+            style="width: 100% !important"
+            maxlength="64"
+          />
+          <div>
+            <validation-messages [formCtrl]="financialName"></validation-messages>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <label>{{ 'EmailAddress' | localize }}</label>
+          <input
+            #financialEmailAddressInput="ngModel"
+            class="form-control"
+            type="email"
+            [(ngModel)]="model.financialEmail"
+            name="financialEmail"
+            (change)="removeWhiteSpacesFromEmail()"
+            maxlength="256"
+            email
+          />
+          <div>
+            <validation-messages [formCtrl]="financialEmailAddressInput"></validation-messages>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label>{{ 'MobileNo' | localize }}</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">+966</span>
+            </div>
+            <input
+              style="text-align: left !important"
+              id="financialPhone"
+              #financialPhone="ngModel"
+              name="financialPhone"
+              pattern="\b5\d{8}\b"
+              maxlength="9"
+              placeholder="{{ '5XXXXXXXX' | localize }}"
+              type="tel"
+              class="form-control"
+              [(ngModel)]="model.financialPhone"
+            />
+          </div>
+          <validation-messages [formCtrl]="financialPhone"></validation-messages>
         </div>
       </div>
     </div>

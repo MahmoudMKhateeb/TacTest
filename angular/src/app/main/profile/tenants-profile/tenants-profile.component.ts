@@ -5,6 +5,7 @@ import {
   PagedResultDtoOfAvailableVasDto,
   PagedResultDtoOfFacilityLocationListDto,
   ProfileServiceProxy,
+  TenantProfileInformationForViewDto,
 } from '@shared/service-proxies/service-proxies';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Table } from '@node_modules/primeng/table';
@@ -39,6 +40,7 @@ export class TenantsProfileComponent extends AppComponentBase implements OnInit 
   longitude: number;
   facilite: PagedResultDtoOfFacilityLocationListDto;
   giveUserEditionType: number;
+  tenantProfileInformation: TenantProfileInformationForViewDto;
 
   constructor(
     injector: Injector,
@@ -48,6 +50,7 @@ export class TenantsProfileComponent extends AppComponentBase implements OnInit 
   ) {
     super(injector);
     this.givenId = parseInt(this._Activatedroute.parent.snapshot.paramMap.get('id'));
+    this.tenantProfileInformation = new TenantProfileInformationForViewDto();
   }
   /**
    * This One is to Determine the User Type Who Viewing the profile
@@ -60,7 +63,7 @@ export class TenantsProfileComponent extends AppComponentBase implements OnInit 
     return this.feature.isEnabled('App.Shipper');
   }
   get isTMS(): boolean {
-    return !this.isCarrier && !this.isShipper;
+    return this.feature.isEnabled('App.TachyonDealer');
   }
 
   ngOnInit(): void {
@@ -73,6 +76,7 @@ export class TenantsProfileComponent extends AppComponentBase implements OnInit 
   getGiverUserEditionType() {
     this._profileServiceProxy.getTenantProfileInformationForView(this.givenId).subscribe((result) => {
       this.giveUserEditionType = result.editionId;
+      this.tenantProfileInformation = result;
     });
   }
 

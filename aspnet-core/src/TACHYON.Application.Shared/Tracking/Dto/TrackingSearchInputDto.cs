@@ -24,7 +24,7 @@ namespace TACHYON.Tracking.Dto
         public DateTime? FromDate { get; set; }
 
         public DateTime? ToDate { get; set; }
-
+        public string ReferenceNumber { get; set; }
         public ShippingRequestRouteType? RouteTypeId { get; set; }
     }
 }

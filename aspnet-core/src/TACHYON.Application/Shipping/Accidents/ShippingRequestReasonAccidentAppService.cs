@@ -65,7 +65,7 @@ namespace TACHYON.Shipping.Accidents
         private async Task Create(CreateOrEditShippingRequestReasonAccidentDto input)
         {
             var CauseAccident = ObjectMapper.Map<ShippingRequestReasonAccident>(input);
-
+            
             await _ShippingRequestReasonAccidentRepository.InsertAsync(CauseAccident);
         }
 

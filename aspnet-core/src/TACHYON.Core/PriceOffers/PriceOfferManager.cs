@@ -1,10 +1,12 @@
 ﻿using Abp;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
 using Abp.Extensions;
+using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -71,7 +73,7 @@ namespace TACHYON.PriceOffers
                                         .Include(x => x.ShippingRequestVases)
                                         .FirstOrDefaultAsync(r => r.Id == input.ShippingRequestId);
 
-            if (!shippingRequest.Status.IsIn(ShippingRequestStatus.NeedsAction, ShippingRequestStatus.PrePrice, ShippingRequestStatus.AcceptedAndWaitingCarrier))
+            if (!input.IsPostPrice && !shippingRequest.Status.IsIn(ShippingRequestStatus.NeedsAction, ShippingRequestStatus.PrePrice, ShippingRequestStatus.AcceptedAndWaitingCarrier))
             {
                 throw new UserFriendlyException(L("TheShippingRequestNotFound"));
             }
@@ -82,7 +84,7 @@ namespace TACHYON.PriceOffers
                 input.Channel = PriceOfferChannel.TachyonManageService;
             }
 
-            if (input.Channel == PriceOfferChannel.MarketPlace)
+            if (input.Channel == PriceOfferChannel.MarketPlace && !input.IsPostPrice)
             {
                 MarketPlaceCanAccess(input, shippingRequest);
             }
@@ -92,12 +94,14 @@ namespace TACHYON.PriceOffers
                 input.Channel = PriceOfferChannel.TachyonManageService;
             }
 
-            if (input.Channel == PriceOfferChannel.DirectRequest)
+            if (input.Channel == PriceOfferChannel.DirectRequest && !input.IsPostPrice)
             {
                 await DirectRequestCanAccess(input, shippingRequest);
             }
 
-            var offer = GetCarrierPricingOrNull(input.ShippingRequestId);
+            PriceOffer offer = null;
+            if (!input.IsPostPrice && !input.IgnoreExistingOffer) 
+                offer = GetCarrierPricingOrNull(input.ShippingRequestId);
 
             if (offer == null || offer.Status == PriceOfferStatus.Rejected)
             {
@@ -118,11 +122,8 @@ namespace TACHYON.PriceOffers
                     .GetAll()
                     .Include(x => x.Tenant)
                     .Include(x => x.ShippingRequestVases)
-                    .FirstOrDefaultAsync
-                    (
-                        r => r.Id == input.ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice ||
-                                                                 r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier)
-                    );
+                    .WhereIf(input.IsPostPrice,r=> (r.Status == ShippingRequestStatus.PostPrice || r.Status == ShippingRequestStatus.Completed))
+                    .FirstOrDefaultAsync(r => r.Id == input.ShippingRequestId);
                 if (shippingRequest == null) throw new UserFriendlyException(L("TheShippingRequestNotFound"));
 
                 if (await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
@@ -144,7 +145,7 @@ namespace TACHYON.PriceOffers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task Delete(EntityDto input)
+        public async Task Delete(EntityDto<long> input)
         {
             DisableTenancyFilters();
             var pricing = await _priceOfferRepository
@@ -160,7 +161,7 @@ namespace TACHYON.PriceOffers
             {
                 if (pricing.ShippingRequestFk.BidStatus != ShippingRequestBidStatus.OnGoing)
                     throw new UserFriendlyException(L("TheRecordNotFound"));
-                request.TotalOffers -= 1;
+                
             }
             else if (pricing.Channel == PriceOfferChannel.DirectRequest)
             {
@@ -175,6 +176,7 @@ namespace TACHYON.PriceOffers
                 request.Status = ShippingRequestStatus.PrePrice;
             }
 
+            request.TotalOffers -= 1;
             await _priceOfferRepository.DeleteAsync(pricing);
         }
 
@@ -198,6 +200,9 @@ namespace TACHYON.PriceOffers
             if (!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
             {
                 await TachyonAcceptOffer(offer);
+                if (!(offer.ShippingRequestFk.RequestType == ShippingRequestType.TachyonManageService &&
+                      offer.Channel == PriceOfferChannel.DirectRequest))
+                await _appNotifier.TMSAcceptedOffer(offer);
                 return offer.Status;
             }
 
@@ -205,7 +210,7 @@ namespace TACHYON.PriceOffers
 
             PriceOffer parentOffer = default;
             //Check if shipper have enough balance to pay 
-            await _balanceManager.ShipperCanAcceptOffer(offer);
+            await _balanceManager.ShipperCanAcceptOffer(offer, offer.TaxVat, offer.ShippingRequestId);
 
             /// Check if the offer send by TAD on market place
             if (offer.Tenant.EditionId == TachyonEditionId && !offer.ShippingRequestFk.IsTachyonDeal)
@@ -240,8 +245,12 @@ namespace TACHYON.PriceOffers
                 }
 
                 if (parentOffer != null && parentOffer.Channel == PriceOfferChannel.DirectRequest)
+                {
                     await ChangeDirectRequestStatus(parentOffer.SourceId.Value,
                         ShippingRequestDirectRequestStatus.Accepted);
+                    parentOffer.Status = PriceOfferStatus.Accepted;
+                }
+
                 if (offer.Channel == PriceOfferChannel.DirectRequest)
                     await ChangeDirectRequestStatus(offer.SourceId.Value, ShippingRequestDirectRequestStatus.Accepted);
 
@@ -334,6 +343,8 @@ namespace TACHYON.PriceOffers
                             ShippingRequestDirectRequestStatus.Pending);
                     }
 
+                    if (!(offer.ShippingRequestFk.RequestType == ShippingRequestType.TachyonManageService &&
+                          offer.Channel == PriceOfferChannel.DirectRequest))
                     await _appNotifier.PendingOffer(offer);
                 }
             }
@@ -344,7 +355,7 @@ namespace TACHYON.PriceOffers
         /// </summary>
         /// <param name="tmsTotalAmount"></param>
         /// <param name="carrierTotalAmount"></param>
-        private void CheckIfPriceLowerThanSendByTms(decimal tmsTotalAmount, decimal carrierTotalAmount)
+        public void CheckIfPriceLowerThanSendByTms(decimal tmsTotalAmount, decimal carrierTotalAmount)
         {
             if (tmsTotalAmount < carrierTotalAmount)
                 throw new UserFriendlyException(L("YouCannotAcceptLowerThanPriceSentToShipper"));
@@ -373,6 +384,24 @@ namespace TACHYON.PriceOffers
             }
 
             await _appNotifier.RejectedOffer(offer, input.RejectBy);
+        }
+
+        [RequiresFeature(AppFeatures.Shipper)]
+        public async Task RejectPostPriceOffer(long offerId,string reason)
+        {
+            CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
+            
+             var result = await _priceOfferRepository.GetAllIncluding(x=> x.Tenant)
+                .Select(x=> new {Offer = x,TenantName = x.Tenant.Name})
+                .SingleAsync(x => x.Offer.Id == offerId);
+
+            if (result.Offer.Status != PriceOfferStatus.New && result.Offer.Status != PriceOfferStatus.AcceptedAndWaitingForShipper)
+                throw new UserFriendlyException(L("OfferActionHasAlreadyTaken"));
+
+            result.Offer.Status = PriceOfferStatus.Rejected;
+            result.Offer.RejectedReason = reason;
+
+            await _appNotifier.RejectedPostPriceOffer(result.Offer, result.TenantName);
         }
 
         private async Task<PriceOffer> GetOffer(long id)
@@ -651,7 +680,8 @@ namespace TACHYON.PriceOffers
             if (offer.ParentId != null) offer.Status = PriceOfferStatus.AcceptedAndWaitingForShipper;
             await _appNotifier.ShippingRequestSendOfferWhenAddPrice(offer, GetCurrentTenant(_abpSession).Name);
 
-            await _appNotifier.NotifyShipperWhenSendPriceOffer(shippingRequest.TenantId, offer.Id);
+            if (!(shippingRequest.RequestType == ShippingRequestType.TachyonManageService && offer.Channel == PriceOfferChannel.DirectRequest)) 
+                await _appNotifier.NotifyShipperWhenSendPriceOffer(shippingRequest.TenantId, offer.Id,offer.ShippingRequestId);
 
 
             await CurrentUnitOfWork.SaveChangesAsync();
@@ -705,6 +735,8 @@ namespace TACHYON.PriceOffers
             ShippingRequest shippingRequest)
         {
             List<PriceOfferDetail> shippingRequestVasesPricing = new List<PriceOfferDetail>();
+            input.ItemDetails ??= new List<PriceOfferDetailDto>();
+            
             if (input.ItemDetails.Count != shippingRequest.ShippingRequestVases.Count)
             {
                 throw new UserFriendlyException(L("YouShouldAddPricesForAllVases"));
@@ -870,7 +902,7 @@ namespace TACHYON.PriceOffers
             offer.Quantity = shippingRequest.NumberOfTrips;
 
             // TMS user can overwrite default commissions settings 
-            if (_featureChecker.IsEnabled(AppFeatures.TachyonDealer))
+            if (_featureChecker.IsEnabled(AppFeatures.TachyonDealer) && (input.VasCommissionType.HasValue || input.VasCommissionPercentageOrAddValue.HasValue))
             {
                 if (input.VasCommissionType != null)
                 {

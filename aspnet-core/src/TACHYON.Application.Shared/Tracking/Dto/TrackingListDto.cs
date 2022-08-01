@@ -11,6 +11,7 @@ namespace TACHYON.Tracking.Dto
         public ShippingRequestTripStatus Status { get; set; }
         public string StatusTitle { get { return Status.GetEnumDescription(); } set { } }
         public string Driver { get; set; }
+        public ShippingRequestTripCancelStatus CancelStatus { get; set; }
         public decimal DriverRate { get; set; }
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
         public string DriverStatusTitle { get { return DriverStatus.GetEnumDescription(); } set { } }
@@ -37,6 +38,8 @@ namespace TACHYON.Tracking.Dto
         public bool isApproveCancledByShipper { get; set; }
         public bool IsApproveCancledByTachyonDealer { get; set; }
         public bool IsForcedCanceledByTachyonDealer { get; set; }
+        public string CanceledReason { get; set; }
+
         public long? WaybillNumber { get; set; }
         public bool IsSass { get; set; }
         public string ReferenceNumber { get; set; }
@@ -45,5 +48,7 @@ namespace TACHYON.Tracking.Dto
         /// shipper Id
         /// </summary>
         public int TenantId { get; set; }
+        public ShippingRequestStatus shippingRequestStatus { get; set; }
+        public bool? IsPrePayedShippingRequest { get; set; }
     }
 }

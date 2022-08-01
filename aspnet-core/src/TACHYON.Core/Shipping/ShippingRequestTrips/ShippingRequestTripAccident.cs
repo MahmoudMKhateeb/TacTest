@@ -32,6 +32,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public string DocumentName { get; set; }
         public string DocumentContentType { get; set; }
 
+        public long ShippingRequestId { get; set; }
         public Point Location { get; set; }
     }
 }

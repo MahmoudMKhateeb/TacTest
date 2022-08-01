@@ -1,6 +1,7 @@
 ﻿using System;
 using Abp.Application.Services.Dto;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace TACHYON.AddressBook.Dtos
 {
@@ -21,5 +22,7 @@ namespace TACHYON.AddressBook.Dtos
         public double Latitude { get; set; }
 
         public int CityId { get; set; }
+        [Required]
+        public List<CreateOrEditFacilityWorkingHourDto> FacilityWorkingHours { get; set; }
     }
 }

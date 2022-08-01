@@ -77,6 +77,8 @@ import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
 import { PriceSARComponent } from './price-sar/price-sar.component';
 import { FileViwerComponent } from './file-viwer/file-viwer.component';
 import { PdfJsViewerModule } from '@node_modules/ng2-pdfjs-viewer';
+import { CreateOrEditWorkingHoursComponent } from './workingHours/create-or-edit-working-hours/create-or-edit-working-hours.component';
+import { ViewWorkingHoursComponent } from './workingHours/view-working-hours/view-working-hours.component';
 // import { FileUploadModule } from '@node_modules/primeng';
 
 @NgModule({
@@ -148,6 +150,8 @@ import { PdfJsViewerModule } from '@node_modules/ng2-pdfjs-viewer';
     EntityLogComponent,
     PriceSARComponent,
     FileViwerComponent,
+    CreateOrEditWorkingHoursComponent,
+    ViewWorkingHoursComponent,
   ],
   exports: [
     TimeZoneComboComponent,
@@ -173,6 +177,8 @@ import { PdfJsViewerModule } from '@node_modules/ng2-pdfjs-viewer';
     EntityLogComponent,
     PriceSARComponent,
     FileViwerComponent,
+    CreateOrEditWorkingHoursComponent,
+    ViewWorkingHoursComponent,
   ],
   providers: [
     DateTimeService,

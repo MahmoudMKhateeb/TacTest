@@ -36,7 +36,7 @@
     <text name="InvoiceDueDateIn6Days">invoices that will be due within a week</text>
     <text name="RequestsInMarketPlace">Requests In MarketPlace</text>
     <text name="MostUsedOrigins">Most Used Origins</text>
-    <text name="CompletedTripsvsPod">Completed Trips vs Proof of delivary</text>
+    <text name="CompletedTripsvsPod">Completed Trips vs Proof of delivery</text>
     <text name="MostUsedDestantions">Most Used Destantions</text>
     <text name="InvoicesVsPaidInvoices">Invoices Vs Paid Invoices</text>
     <text name="{0}IsInvalid">"{0}" is invalid</text>
@@ -226,7 +226,7 @@
 		<text name="CancelMyBid">Cancel my bid</text>
 		<text name="CancelShipment">The shipment has been canceled by {cancelby}</text>
 		<text name="CancelTrip">Cancel trip</text>
-		<text name="Cancled">Cancled</text>
+		<text name="Cancled">Canceled</text>
 		<text name="CancledReason">Cancelled reason</text>
 		<text name="CanNotChangeAdminUserName">Can not change admin user name</text>
 		<text name="CanNotEditOrDeleteDefaultLanguages">Can not edit or delete default languages. You can only edit or delete the languages you added. But you can change texts of all languages.</text>
@@ -319,6 +319,7 @@
 		<text name="Clone">Clone</text>
 		<text name="Close">Close</text>
 		<text name="Code">Code</text>
+		<text name="Complaint">Complaint</text>
 		<text name="Collapse">Collapse</text>
 		<text name="Commission">Commission</text>
 		<text name="CommissionAmount">Commission amount</text>
@@ -424,7 +425,7 @@
 		<text name="CreateNewVas">Add new VAS</text>
 		<text name="CreateNewVasPrice">Add new VAS price</text>
 		<text name="CreateReason">Add reason</text>
-		<text name="CreateResolve">Create resolve</text>
+		<text name="CreateResolve">Create Resolve</text>
 		<text name="CreateShippingRequest">Create new shipping request</text>
 		<text name="CreateUserFirstName">First name</text>
 		<text name="CreateUserLastName">Last name</text>
@@ -440,6 +441,7 @@
 		<text name="CreatingWebhooks">Creating new webhook</text>
 		<text name="CreationDate">Creation date</text>
 		<text name="CreationTime">Creation date</text>
+		<text name="CreateNewInvoiceNote">Create New Invoice Note</text>
 		<text name="Current">Current</text>
 		<text name="CurrentLanguage">Current language</text>
 		<text name="CurrentPassword">Current password</text>
@@ -535,6 +537,7 @@
 		<text name="DeleteShippingRequestStatus">Delete shipping request status</text>
 		<text name="DeleteShippingRequestVas">Delete VAS for the shipping request</text>
 		<text name="DeleteTermAndConditionTranslation">Delete Terms and Conditions translation</text>
+		<text name="DestinationCompany">Destination Company</text>
 		<text name="DeleteTrailer">Delete trailer</text>
 		<text name="DeleteTrailerStatus">Delete trailer status</text>
 		<text name="DeleteTrailerType">Delete trailer type</text>
@@ -588,6 +591,7 @@
 		<text name="DirectRequest">Direct request</text>
 		<text name="DirectShippingRequests">Direct Shipping Requests</text>
 		<text name="Disable">Disable</text>
+		<text name="ExceedMaximumAllowedTime">Exceed Maximum Allowed Time</text>
 		<text name="Disabled">Disabled</text>
 		<text name="DisableRecurringPayments">Don't bill my account automatically</text>
 		<text name="DisplayName">Display Name</text>
@@ -616,6 +620,7 @@
 		<text name="DocumentTypeTranslations">Document type translation</text>
 		<text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
 		<text name="DomainName">Domain name</text>
+		<text name="downloadNote">Download Note</text>
 		<text name="DoNotAllow">Do not allow</text>
 		<text name="DontHaveAnAccount">Don't have an account</text>
 		<text name="DontHaveAnAccountYet">Don't have an account yet</text>
@@ -834,6 +839,7 @@
 		<text name="ExpiringTenantsHelpText">First {1} clients expiring in {0} days...</text>
 		<text name="ExportToExcel">Export to excel</text>
 		<text name="Extend">Extend</text>
+		<text name="EditNote">Edit Note</text>
 		<text name="Extend_Edition_Description">Extend {0} subscription type</text>
 		<text name="ExtendedEdition">Extended {0} subscription type</text>
 		<text name="ExternalLoginSettings">External login settings</text>
@@ -863,6 +869,7 @@
 		<text name="FilterByRole">Filter by role</text>
 		<text name="FilterDateRangePicker">Date range</text>
 		<text name="FilterOrAddUser">Filter/Add user</text>
+		<text name="FullVoid">Full Void</text>
 		<text name="FinalPrice">Final price</text>
 		<text name="FinancialTransActionMenu">Financial Transactions History</text>
 		<text name="FirstName">First name</text>
@@ -990,6 +997,7 @@
 		<text name="InvoiceNumber">Invoice No.</text>
 		<text name="Invoices">Invoices</text>
 		<text name="InvoicesList">List of Invoices</text>
+		<text name="InvoicesNoteList">Invoice Note List</text>
 		<text name="InvoicesProformas">Invoices proformas</text>
 		<text name="InvoiceSubTotal">Invoice sub total</text>
 		<text name="InvoiceTo">Invoice to</text>
@@ -997,6 +1005,7 @@
 		<text name="InvoiceVasRemarksAmount">Amount:{0}</text>
 		<text name="InvoiceVasRemarksCount">Count:{0}</text>
 		<text name="InvoiceVasType">Type:{0}</text>
+		<text name="InvoiceNote">Invoice Note</text>
 		<text name="IpAddress">IP address</text>
 		<text name="IsAccepted">Is accepted</text>
 		<text name="IsActive">Is Active</text>
@@ -1028,6 +1037,7 @@
 		<text name="IsTachyonDeal">Is Tachyon Deal</text>
 		<text name="Istimara">Istimara</text>
 		<text name="IsTrialActive">Is trial active</text>
+		<text name="InvoiceReferenceNumber">Invoice Reference Number</text>
 		<text name="IsTwoFactorEnabled">Two factor authentication enabled</text>
 		<text name="IsVented">Is vented</text>
 		<text name="Item">Item</text>
@@ -1214,7 +1224,12 @@
 		<text name="NewTermAndCondition">New Terms and Conditions</text>
 		<text name="NewTransportType">New transport type</text>
 		<text name="NewTripAssign">The new trip has assign to you.</text>
+		<text name="NewCreaditOrDebitNoteGenerated">A {0} Was assigned to you by Tachyon platform, click to view the details.</text>
 
+		<text name="NotLogged">Not Logged</text>
+		<text name="TruckAndDriverLateAssigned">Truck And Driver Late Assigned</text>
+		<text name="DropsDeliveringAfterTripEndDate">Drops Delivering After Trip End Date</text>
+		<text name="ApplyNotLoggedPenalty">Apply Not Logged Penalty</text>
 		<text name="TrucktDocuments">Truckt Documents</text>
 
 		<text name="CreateNewTruck">Add new truck</text>
@@ -1223,6 +1238,7 @@
 		<text name="NewUserRegisteredNotificationDefinition">On a new user registered to the system</text>
 		<text name="NewUserRegisteredNotificationMessage">A new user registered to the platform User name: {userName}, Email address: {emailAddress}.</text>
 		<text name="NewValue">New value</text>
+		<text name="NoteDetails">Note Details</text>
 		<text name="Next">Next</text>
 		<text name="No">No</text>
 		<text name="No.">No.</text>
@@ -1271,7 +1287,7 @@
 		<text name="NumberMinDigits">Number min digits</text>
 		<text name="NumberOfDrops">Number of drops</text>
 		<text name="NumberOfPacking">Number of packing type</text>
-		<text name="NumberOfTrips">Number of trips</text>
+		<text name="NumberOfTrips">Number of Trips</text>
 		<text name="SourceAndDestinationCantBeTheSame">Source and destination can't be the same</text>
 		<text name="TotalBids">Total bids</text>
 		<text name="NumbersOnly">Numbers only</text>
@@ -1438,7 +1454,8 @@
 		<text name="Pink">Pink</text>
 		<text name="Place">Send</text>
 		<text name="PlateNumber">Plate number</text>
-		<text name="PlateType">Plate type</text>
+    <text name="GoodsDetailsAlreadyExistsForTrip">Goods details Already Exists For Trip</text>
+    <text name="PlateType">Plate type</text>
 		<text name="PlateTypeId">Plate type id</text>
 		<text name="PlateTypes">Plate types</text>
 		<text name="PlateTypesHeaderInfo">Plate Types header info</text>
@@ -1472,10 +1489,12 @@
 		<text name="PODProofOfDelivery">POD Proof of delivery</text>
 		<text name="PointsLimitReached">Points limit reached</text>
 		<text name="Port">Port</text>
+		<text name="PenaltyName">Penalty Name</text>
 		<text name="Ports">Ports</text>
 		<text name="PortsHeaderInfo">Ports header info</text>
 		<text name="PostedData">Posted data</text>
 		<text name="PostedValue">Posted value</text>
+		<text name="PenaltyDescrption">Penalty Descrption</text>
 		<text name="PostPrice">Confirmed</text>
 		<text name="PrePrice">New</text>
 		<text name="PreviewOffer">Preview offer</text>
@@ -1542,6 +1561,7 @@
 		<text name="RejectShippingRequestNotificationMessage">Shipping Request is canceled</text>
 		<text name="RejectTheTrip">Reject the trip</text>
 		<text name="RejectThisTrip">Reject This Trip!</text>
+		<text name="RegisteraComplaint">Register a Complaint</text>
 		<text name="RemainingDay">Remaining day</text>
 		<text name="RemainingDays">Remaining days</text>
 		<text name="RemainingTime">Remaining time</text>
@@ -1658,7 +1678,9 @@
 		<text name="SelectDate">Select date</text>
 		<text name="SelectFile">Select document</text>
 		<text name="SelectPermissions">Select permissions</text>
+		<text name="SelectInvoiceReference">Select Invoice Reference</text>
 		<text name="SelectReason">Select reason</text>
+		<text name="SelectNoteType">Select Note Type</text>
 		<text name="SelectRoles">Select roles</text>
 		<text name="SelectRouteType">Select route type</text>
 		<text name="SelectTransportTypeToOpenTrucksType">Select transport type to open trucks types list</text>
@@ -1715,8 +1737,8 @@
 		<text name="ShipperReminderToCompleteTrips">You have a shipment that has not completed its journeys</text>
 		<text name="ShipperShippingRequestFinishNotificationMessage">all shippments are completed for shipping request</text>
 		<text name="ShippingNote">Shipper notes</text>
-		<text name="ShippingRequest">Shipping Request</text>
-		<text name="ShippingRequestAccidentsOccure">There has been an accident for shipment No.: {id}.</text>
+		<text name="ShippingRequest">Shipping request</text>
+		<text name="ShippingRequestAccidentsOccure">An incident occurred on the trip number {0} of the Request with the reference number {1}</text>
 		<text name="ShippingRequestAsBidWithSameTruckNotificationMessage">Shipping request with your same trucks is created in marketplace</text>
 		<text name="ShippingRequestCancelTripByAccidents">The shipment No.:{id} cancled by incident.</text>
 		<text name="ShippingRequestDetails">Shipping request details</text>
@@ -2003,6 +2025,7 @@
 		<text name="ThisWebSiteRootAddress">Web site root address</text>
 		<text name="ThisWebSiteRootAddress_Hint">It will be used when building links to this web site. It's needed for some tasks like building password reset links. Ex: http://mydomain.com/</text>
 		<text name="Time">Time</text>
+		<text name="TotalValue">Total Value</text>
 		<text name="TimeoutPleaseTryAgain">Timeout! Please try again.</text>
 		<text name="Timezone">Time zone</text>
 		<text name="TimeZoneSettingChangedRefreshPageNotification">Time zone setting changed. Click OK button to refresh page and changes to take effect.</text>
@@ -2031,6 +2054,7 @@
 		<text name="KG">KG</text>
 		<text name="Trailer">Trailer</text>
 		<text name="TrailerCode">Trailer Code</text>
+		<text name="TripCancelation">Trip Cancelation</text>
 		<text name="Trailers">Trailers</text>
 		<text name="TrailersHeaderInfo">Trailers header info</text>
 		<text name="TrailerStatus">Trailer status</text>
@@ -2064,7 +2088,7 @@
 		<text name="TripDetails">Trip Details</text>
 		<text name="TripEndDate">Trip end date</text>
 		<text name="TripFinishedSuccessfully">Your trip has been completed successfully</text>
-		<text name="TripIncident">Trip incident</text>
+		<text name="TripIncident">Trip incidents</text>
 		<text name="TripInfo">Trip Info</text>
 		<text name="TripRejectReason">Trip reject reason</text>
 		<text name="TripsEndDate">Trip pickup date end</text>
@@ -2116,6 +2140,8 @@
 		<text name="TypeAMessageHere">Type your message here...</text>
 		<text name="TypeTitle">Type</text>
 		<text name="thereisanewpriceoffer">There is a new price offer</text>
+		<text name="TheInvoiceNotFound">The Invoice Not Found</text>
+		<text name="Theinvoicedoesnotfound">The inovice note does not found </text>
 		<text name="UiCustomization_AllowAsideHiding">Allow aside hiding</text>
 		<text name="UiCustomization_AllowAsideMinimizing">Allow aside minimizing</text>
 		<text name="UiCustomization_Boxed">Boxed</text>
@@ -2274,6 +2300,7 @@
 		<text name="VeryStrong">Very Strong</text>
 		<text name="VeryWeak">Very Weak</text>
 		<text name="View">View</text>
+		<text name="ViewComplaint">View Complaint</text>
 		<text name="ViewCarrierResponse">View carrier response</text>
 		<text name="ViewDetails">View details</text>
 		<text name="ViewDocuments">View documents</text>
@@ -2333,6 +2360,7 @@
 		<text name="WidgetSubscriptionExpiringTenants">Subscription Expiring Tenants</text>
 		<text name="WidgetTopStats">General Summary</text>
 		<text name="Width">Width</text>
+		<text name="WaitingtobePaid">Waiting Paid</text>
 		<text name="WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices">Will be shown on all official documents like waybills and invoices</text>
 		<text name="WriteIncidentReport">Please Write The Incident Report</text>
 		<text name="WriteRejectReason">Please Write The Rejection Reason</text>
@@ -2381,6 +2409,7 @@
 		<text name="YourSessionIsAboutToExpire">Your session is about to expire</text>
 		<text name="YourSessionIsLocked">Your session is locked</text>
 		<text name="Youruseridentifier">Your user identifier</text>
+		<text name="YouCanNotChangeInvoiceNoteStatus">You Can Not Change InvoiceNote Status</text>
 		<text name="Youruserprofileinformation(firstname,lastname,etc.)">Your user profile information (first name, last name, etc.)</text>
 	    <text name="TrucksSubmittedDocuments">Trucks Documents</text>
 	    <text name="DriversSubmittedDocuments">Drivers Documents</text>
@@ -2427,6 +2456,9 @@
 	 	<text name="TripDataChanged">You Have Trip With Waybill No {0} Changed Please Review All Of Trip Changes</text> 
 		<text name="ShipperTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="NewBalanceAddedToShippper">New Balance Added Value {0}</text>
+		<text name="CreaditOrDebitNoteAdded">A {0} Was assigned to you by Tachyon platform, click to view the details.</text>
+		<text name="TheCreaditOrDebitNotePaid">The {0} was Paid</text>
+
 		<text name="CarrierTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="TachyonDealerTripUpdatedNotificationMessage">There are some changes on trip with waybill No {0} . For more details please click here</text>
 		<text name="NotSet">Not Set</text>
@@ -2453,7 +2485,7 @@
 		<text name="TruckIsChanged">Truck Is Changed</text>
 		<text name="IncidentHappened">Incident Happened</text>
 		
-		<text name="MoiNumber">Moi Number</text>
+		<text name="MoiNumber">MOI Number</text>
 		<text name="ViewTenantProfile">View Tenant Profile</text>
 		<text name="NumberOfVases">Number of Vases</text>
 		<text name="NameOfVas">Vas Name</text>
@@ -2477,7 +2509,10 @@
 		<text name="CreatedTripsFromTotal">Created Trips / No of Trips</text>
 		<text name="RateForDriver">Rate for Driver</text>
 		<text name="RateForExperience">Rate for Experience</text>
-		
+		<text name="ComanyName">Comany Name</text>
+		<text name="GenerationDate">Generation Date</text>
+		<text name="VoidInvoice">Void Invoice</text>
+		<text name="PartiallyVoid">Partially Void</text>
 		<text name="NotAttached">Not uploaded yet</text>
 		<text name="CardNumberId">Receiver ID</text>
 		<text name="AdditionalReceiver">Additional Receiver</text>
@@ -2508,9 +2543,10 @@
 	<text name="NoMatchingDrivers">There is no Drivers</text>
     <text name="ResetReceiverCode">Reset shipment receiver code</text>
     <text name="ReceiverCodeConfirmationMsg">Are you sure you want to reset the receiver code for this shipment?</text>
+
 	<text name="CompanyDescriptionHint">Company description must be at most 500 characters</text>
 	<text name="SelectAnEmailTemplateType">Select an email template type</text>
-		<text name="AllowedWeightShouldBeMaximum">Allowed Weight Should Be Maximum</text>
+		<text name="AllowedWeightShouldBeMaximum">Allowed (Weight*Quantity) Should Be Maximum</text>
 		<text name="RemainingAllowedWeight">Remaining Allowed Weight</text>
 	<text name="ShipperNumberOfCompletedTripsWidget">Number of completed trips</text>
 	<text name="ShipperAcceptedVsRejectedRequestsWidget">Accepted vs rejected requests</text>
@@ -2582,13 +2618,13 @@
 	<text name="Avatar">Avatar</text>
 	<text name="DriverLicenceType">Driver licence types</text>
 	<text name="DangerousGoodTypes">Dangerous goods types</text>
+	<text name="InCorrectWaybillNumber">Waybill number does not match any active waybill number in the platform</text>
+	<text name="DropOffStatus">Drop-off status</text>
+	<text name="SubWaybill">Sub waybill</text>
+		<text name="MasterWaybillNumber">Master waybill number</text>
+		<text name="DropOffDate">Drop-off date</text>
+		<text name="waybillSearch">waybill...</text>
 
-
-    
-    
-		
-		
-		
 
     <text name="DocumentTypeName">Document type</text>
     <text name="submitterTenatTenancyName">Submitter company</text>
@@ -2758,5 +2794,248 @@
 		<text name="ThereAre">There are</text>
 		<text name="OtherUnitOfMeasure">Other Unit Of Measure</text>
 		<text name="OtherUnitOfMeasureHint">Enter the name of other unit of measure as a plain text</text>
+		<text name="TripTemplates">Trip templates</text>
+		<text name="SelectATripTemplate">Select a trip template</text>
+		<text name="Load">load</text>
+		<text name="SaveAsTemplate">Save as template</text>
+		<text name="NewTemplate">New template</text>
+		<text name="TemplateName">Template name</text>
+		<text name="TemplateSavedSuccessfully">Template saved successfully</text>
+		<text name="CreateNewTemplate">Create new template</text>
+		<text name="TemplateType">Template type</text>
+		<text name="TemplateReference">Template reference</text>
+		<text name="Template">Template</text>
+		<text name="TemplateImportedSuccessfully">Template imported successfully</text>
+		<text name="NotSupportedEntityType">Not supported entity type</text>
+		<text name="TemplateNameAlreadyUsed">Template name already used</text>
+		<text name="SavedTemplates">Saved Templates</text>
+		<text name="CreateEntityTemplate"> Create entity template</text>
+		<text name="UpdateEntityTemplate">Update entity template</text>
+		<text name="DeleteEntityTemplate">Delete entity template</text>
+		<text name="TemplateWithIdXIsNotFound">Template is not found !</text>
+		<text name="ShippingRequestTemplate">Shipping request template</text>
+		<text name="TripTemplate">Trip template</text>
+		<text name="UseTemplate">Use template</text>
+		<text name="TripTemplateUsageMsg">A trip template can be used while creating a new trip only</text>
+        	<text name="NotifyShipperBeforApplyDetention">15 minutes left until the Allowed Detention time ends for the Trip {0}. </text>
+	<text name="YouCanNotChangeTheStatusMultipleTimes">You can't change the status multiple time quickly</text>
+	<text name="NotifyShipperWhenApplyDetention">
+		The Allowed Detention time policy in the Facility {0} was violated on the Trip {1} and according to Tachyon’s policies you will be charged {2}. Please Contact Tachyon platform administration for any Inquiries.
+	</text>
+	<text name="NormalPricePackages">price packages</text>
+	<text name="PricePackages">Price Packages</text>
+	<text name="DirectRequestPrice">Direct request price</text>
+	<text name="TachyonMSRequestPrice">Tachyon MS request price</text>
+	<text name="MarcketPlaceRequestPrice">Marcket place request price</text>
+	<text name="PricePerExtraDrop">Price per extra drop</text>
+	<text name="IsMultiDrop">Is multi drop</text>
+	<text name="CreateNormalPricePackage">Create price package</text>
+	<text name="PricePackageName">Price package name </text>
+	<text name="SelectATransportType">Select a transport type</text>
+	<text name="SelectATruckType">Select a truck type</text>
+	<text name="SelectADestination ">Select a destination </text>
+	<text name="HeaderNormalPricePackageDetails"> price package details</text>
+	<text name="EditNormalPricePackage">Edit price package</text>
+	<text name="MultipleDrop">Multiple drop</text>
+	<text name="BidNormalPricePackageWasCreated">{0} choose your PP with Ref {1} to handel his request with number {2}</text>
+	<text name="PreviewPricePackageOffer">Preview Price Package Offer</text>
+	<text name="CarrierAcceptPricePackageOffer">{0} Accept your price package offer on request {1}</text>
+	<text name="ShippingRequestAsBidWithMatchingPricePackage">Shipping Request {0} that matches You Price Package {1}, click to view details</text>
+	<text name="ThePricePackageWasNotExists">The Price Package Was Not Exists</text>
+	<text name="ThePricePackageNameIsExists">The Price Package Name Is Exists</text>
+	<text name="TheShippingRequestDoesNotExist">The Shipping Request Does Not Exist</text>
+	<text name="ThePricePackageOfferDoesNotExist">The Price Package Offer Does Not Exist</text>
+	<text name="TheDirectRequestDoesNotExist">The Direct Request Does Not Exist</text>
+	<text name="YouCannotAcceptTheOffer">You Can't Accept The Offer</text>
+    <text name="PreviewMatchingPricePackage">Preview Matching Price Package</text>
+	<text name="VatNotIncluded">Vat not included</text>
+	<text name="MatchingPricePackages">Matching price packages</text>
+	<text name="CarrierRate">Carrier rate</text>
+	<text name="SendPricePackageOffer">Send price package offer</text>
+		
+    <text name="PostPriceSrUpdatedMsg">A Change was made on the details of request with the reference Number {0}.</text>
+    <text name="PostPriceSrUpdateActionMsg">The Change That you made in the Request with the reference number {0} was {1}</text>
+    <text name="PostPriceSrUpdateChangeInPriceRequestedMsg">The Change That you made in the Request with the reference number {0} was Accepted with a change in price.</text>
+	<text name="PostPriceUpdateWaitingForCarrierAction">Pending carrier action</text>
+	<text name="AcceptedPostPriceUpdateByCarrier">Accept Change</text>
+	<text name="ChangePriceRequestedForPostPriceUpdate">Accept with reprice</text>
+	<text name="RejectedPostPriceUpdateByCarrier">Reject Change</text>
+	<text name="OfferRejected">Offer Rejected</text>
+	<text name="OfferAccepted">Offer Accepted</text>
+	<text name="PendingShipperAction">Pending Shipper Action</text>
+	<text name="NoActionYet">No action yet</text>
+	<text name="VasRemoved">Vas removed</text>
+
+  <text name="ChangedFromTo">Changed from ({0}) to ({1})</text>
+	<text name="MaxAmountChangedFromTo">Max amount changed from {0} to {1}</text>
+  <text name="MaxCountChangedFromTo">Max count changed from {0} to {1}</text>
+  <text name="NumberOfTripsChangedFromTo">Number of trips changed from {0} to {1}</text>
+  
+	
+	<text name="ShippingRequestUpdates">Shipping Request Updates</text>
+	<text name="ViewShippingRequestUpdate">View Shipping Request Update</text>
+    
+	<text name="Applied">Applied</text>
+	<text name="NotApplied">Not applied</text>
+    
+	<text name="UpdateAdditionDate">Update addition date</text>
+	<text name="UpdateAction">Update action</text>
+	<text name="IsUpdateApplied">Is update applied</text>
+	<text name="UpdateChangesDetails">Update changes details</text>
+	<text name="ChangeName">Change name</text>
+	<text name="ChangeDetails">Change details</text>
+    
+	<text name="RejectUpdate">Reject Update</text>
+	<text name="UpdateRejectionReason">Update rejection reason</text>
+  <text name="RejectedSuccessfully">Rejected successfully</text>
+  <text name="PriceOfferStatus">Price offer status</text>
+  <text name="NewVasAdded">New vas added</text>
+    
+  <text name="MaxCountWithValue">Max count ({0})</text>
+  <text name="MaxAmountWithValue">Max amount ({0})</text>
+  <text name="NumberOfTripsWtihValue">number of trips ({0})</text>
+  <text name="PostPriceUpdateWarningMsg">You are doing changes in post pricing stage, Any change you are adding will not take effect immediately, You need to wait for carrier action for more details go to shipping request updates </text>
+	
+    <text name="ImportProcessStart">Import process start</text>
+    <text name="invalidShippingRequest">Invalid shipping request</text>
+    <text name="DataMustBeValid">Data must be valid</text>
+    <text name="RequestShouldnotBeSingleDrop">Request should not be single drop</text>
+    <text name="DuplicatedReference">Duplicated reference</text>
+    <text name="DuplicatedPointReference">Duplicated point reference</text>
+    <text name="SomePointsAlreadyAddedToTrip">Some points already added to trip</text>
+    <text name="InvalidTrip">Invalid trip</text>
+    <text name="ImportUploadFailed">Import upload failed</text>
+    <text name="GoodsSubCategory">Goods sub category</text>
+    <text name="DangerousGoodsType">Dangerous Goods Type</text>
+    <text name="otherGoodsCategoryName">Other Goods category name</text>
+    <text name="TripReferenceID">Trip reference</text>
+    <text name="PointReferenceID">Point reference</text>
+    <text name="PointType">Point type</text>
+    <text name="Agent">Agent</text>
+    <text name="totalValue">Total Value</text>
+    <text name="bulkUploadReference">Reference No</text>
+    <text name="The number of trips ">The number of trips </text>
+    <text name="AllDropsMustHaveGoodsDetails">All drops must have goods details</text>
+		<text name="ImportedGoodDetails">Imported Good Details</text>
+		<text name="ImportedPoints">Imported Points</text>
+		<text name="ImportedTrips">Imported Trips</text>
+		<text name="ImportTripFromExcel">Import Trip From Excel</text>
+		<text name="ImportPointFromExcel">Import Point From Excel</text>
+		<text name="ImportGoodDetailsFromExcel">Import Good Details From Excel</text>
+    <text name="otherUnitOfMeasure">Other Unit Of Measure</text>
+    <text name="ImportedVasesDetails">Imported Vases Details</text>
+	<text name="ImportVasesFromExcel">Import Vases From Excel</text>
+    <text name="SomeTripVasesAlreadyExists">Some trip vases already exists</text>
+    <text name="DuplicatedVas">Duplicated vas</text>
+    <text name="PickupPointFacilityMustBeSameToOriginalTripFacility">Pickup point facility must be same to original trip facility</text>
+    <text name="TheBulkReferenceIsAlreadyExists">The bulk reference is already exists</text>
+    <text name="TheTripDateRangeMustBetweenShippingRequestRangeDate">The trip date range must between shipping request range date</text>
+    <text name="OriginalFacility">Pickup facility</text>
+    <text name="TripPickupDateStart">Trip pickup start date</text>
+    <text name="ShippingRequestTripCanceled">
+      {0} has performed a cancelation on the trip
+      with the waybill number {1} from the request {2}
+    </text>
+    <text name="ShippingRequestTripRejectCancelByTachyonDealer"></text>
+    <text name="ShippingRequestTripNeedsCancelApproval"></text>
+    <text name="YouMustEnterRejectedReason">Rejected reason is required!</text>
+    <text name="CanceledReasonIsRequired">Canceled reason in required!</text>
+    <text name="TripNotFound">Trip not found</text>
+	<text name="RejectCancel">Reject Cancel Trip</text>
+	<text name="CancelReasonName">Cancelation Reason</text>
+	<text name="WaitingCancelApproveFromTMS">Waiting TMS cancel Approve</text>
+    <text name="RejectedReasonName">Rejected Reason Name</text>
+    <text name="ApproveCancelTrip">Approve Cancel Trip</text>
+	<text name="ApplyCancel">Apply Cancel</text>
+	<text name="CanceledTrip">Canceled Trip</text>
+	<text name="RejectedTripCancelation">Rejected Trip Cancelation</text>
+	<text name="ViewCancelReasonTrip">View Cancel Reason Trip</text>
+	<text name="SuccessfullyRejectCancelation">Successfully Reject Cancelation</text>
+    <text name="TotalPrice">Total price</text>
+    <text name="TotalVatAmount">Total Vat Amount</text>
+    <text name="supposedPickupTimeFrom">Supposed Pickup Time From</text>
+	<text name="supposedPickupTimeTo">Supposed Pickup Time To</text>
+		<text name="FinancialDepartmentDetails">Financial department details</text>
+	<text name="DeleteWarningMessage">Warning Message For Delete</text>
+	<text name="AddNote">Add Note</text>
+	<text name="Internal">Internal</text>
+	<text name="IsPrintedByWabillInvoice">Print to Waybill Invoice</text>
+	<text name="Attachments">Attachments</text>
+	<text name="TMSAndCarrier">Tachyon Manage Service and Carrier</text>
+	<text name="CarrierOnly">Carrier Only</text>
+	<text name="TMSOnly">Tachyon Manage Service Only</text>
+	<text name="ShipperOnly">Shipper Only</text>
+	<text name="AddedAt">Added at</text>
+	<text name="LastModifiedAt">Last Modified at</text>
+	<text name="by">by</text>
+	<text name="ViewNote">View Note</text>
+	<text name="UpdateNote">Update Note</text>
+        <text name="SrUpdatedMsgForOfferOwner">A Change was made on the details of request with the reference Number {0}.</text>
+    <text name="PendingUpdate">Pending Update</text>
+    <text name="RepricedShippingRequestUpdateAction">The PriceOffer is Repriced</text>
+    <text name="KeepSamePriceShippingRequestUpdateAction">PriceOffer keeped same price</text>
+    <text name="DismissedShippingRequestUpdateAction">PriceOffer is Dismissed</text>
+    <text name="ShippingRequestsUpdates">Shipping Requests Updates</text>
+    <text name="Reprice">Reprice</text>
+    <text name="KeepSamePrice">Keep same price</text>
+    <text name="DismissRequest">Dismiss request</text>
+    
+	<text name="WorkingDaysHours">Working Hours</text>
+	<text name="PleaseEnterfacilityWorkingHours">Please Enter Working Hours</text>
+	<text name="PleaseEnterCity">Please Enter City</text>
+		<text name="InvoiceDate">Invoice date</text>
+		<text name="VatNumber">Vat number</text>
+		<text name="TaxInvoice">Tax Invoice</text>
+        	<text name="TripAccidentResolvedMsg">The incident that occurred on the trip number {0} of the Request with the reference number {1} was resolved by {2}</text>
+	<text name="ResolveApplied"> Resolve applied</text>
+	<text name="ResolveNotApplied"> Resolve not applied</text>
+	<text name="WaitAcceptanceFromShipper">Waiting for shipper approval</text>
+	<text name="WaitAcceptanceFromCarrier">Waiting for carrier approval</text>
+	<text name="NoResolveYet">No resolve yet</text>
+	<text name="ResolveActions">Resolve actions</text>
+	<text name="Comments">Comments</text>
+	<text name="ChangeDriverResolve">Change driver</text>
+	<text name="ChangeTruckResolve">Change truck</text>
+	<text name="ChangeDriverAndTruckResolve">Change driver and truck</text>
+	<text name="NoActionNeededResolve">No action needed</text>
+	<text name="ApproveResolve">Approve resolve</text>
+	<text name="ViewResolve">View resolve</text>
+	<text name="EnforceChange">Enforce change</text>
+	<text name="ApproveChange">Approve change</text>
+	<text name="EditAccident">Edit Accident</text>
+	<text name="EditResolve">Edit Resolve</text>
+	<text name="ChangeDriver">Change driver</text>
+	<text name="ChangeTruck">Change truck</text>
+	<text name="SelectADriver">Select a driver</text>
+	<text name="SelectATruck">Select a truck</text>
+	<text name="ViewAccidentDetails">View Accident Details</text>
+	<text name="TripIncidentComments">Trip Incident Comments</text>
+	<text name="AddComment">Add comment</text>
+		<text name="PointStandBy">Stand By</text>
+		<text name="NoCurrentLoads">No current loads</text>
+		<text name="NoUpcomingLoads">No upcoming loads</text>
+		<text name="NoPastLoad">No past loads</text>
+		<text name="ShippingRequestAddedByTms">There's a new shipping request with reference number {0} added by the tachyon dealer</text>
+	<text name="CancellationRequestedByShipper">{0} request cancellation on a trip with waybill number {1} for request with reference number {2}</text>
+		<text name="EntityWithIdXIsNotFound">The entity with id {0} is not found</text>
+		<text name="EnglishLettersWithUnderscoreOnly">English letters with underscore only</text>
+    <text name="AppearAmount">Appear Amount</text>
+		<text name="PenaltyComplaintAddedMsg">{0} has added a complaint to the penalty. Click here for more details</text>
+		<text name="ExpectedDeliveryTime">Expected Delivery Time</text>
+		<text name="DeliveryStatus">Delivery Status</text>
+		<text name="Delayed">Delayed</text>
+		<text name="OnTime">On Time</text>
+		<text name="Unknown">Unknown</text>
+		<text name="ShippingRequestAddedByTMSNotificationMessage">Shipping Request Added for you By Tachyon Manage Service</text>
+		<text name="Financials">Financials</text>
+
+		<text name="DestinationCompanyName">Destination Company Name</text>
+		<text name="PenaltiesList">Penalties List</text>
+		<text name="InvoicesNotesList">Invoices Notes List</text>
+		<text name="PenaltyComplaint">Penalty Complaint</text>
+		<text name="ComplaintDescription">Complaint Description</text>
+		<text name="ComplaintRejectReason">Complaint Reject Reason</text>
+
+		
 	</texts>
 </localizationDictionary>

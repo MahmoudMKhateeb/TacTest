@@ -59,15 +59,28 @@
               </td>
 
               <td style="width: 150px">
-                <div *ngIf="record.status == 0 || record.status == 5" class="btn-group dropdown" dropdown container="body">
+                <div
+                  *ngIf="record.status == 0 || record.status == 5 || record.pricePackageOfferId"
+                  class="btn-group dropdown"
+                  dropdown
+                  container="body"
+                >
                   <div class="row ml-1">
                     <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                       <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                     </button>
                   </div>
                   <ul class="dropdown-menu" *dropdownMenu>
-                    <li>
+                    <li *ngIf="record.status == 0 || record.status == 5">
                       <a class="dropdown-item" href="javascript:;" (click)="delete(record)">{{ l('Delete') }}</a>
+                    </li>
+                    <li *ngIf="record.pricePackageOfferId">
+                      <a
+                        class="dropdown-item"
+                        href="javascript:;"
+                        (click)="ModelPriceCalculation.Preview(record.shippingRequestId, record.pricePackageOfferId)"
+                        >{{ l('PricePackageOffer') }}</a
+                      >
                     </li>
                   </ul>
                 </div>
@@ -102,3 +115,4 @@
   (directRequestSent)="reloadPage()"
   [shippingRequestId]="shippingRequestId"
 ></direct-request-tenant-model>
+<normal-price-package-calculation #ModelPriceCalculation></normal-price-package-calculation>

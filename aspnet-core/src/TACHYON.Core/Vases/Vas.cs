@@ -21,5 +21,8 @@ namespace TACHYON.Vases
         public virtual bool HasCount { get; set; }
 
         public ICollection<VasTranslation> Translations { get; set; }
+        // For show or hide RequestMaxAmount of vas in price offer
+        public bool IsAppearAmount { get; set; }
+
     }
 }

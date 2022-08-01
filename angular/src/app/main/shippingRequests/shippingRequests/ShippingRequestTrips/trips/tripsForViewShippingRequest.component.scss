@@ -1,6 +1,3 @@
-a{
-    cursor:pointer;
-}
 ::ng-deep .p-togglebutton {
     background-color: #d82631 !important;
     border-color: #d82631 !important;
@@ -9,4 +6,44 @@ a{
 }
 .pi-lock:before{
     color : white!important;
+}
+
+.p-button.p-fileupload-choose{
+    width: -webkit-fill-available !important;
+}
+.p-button-label{
+    text-align: start;
+}
+.dropdown-menu{
+  min-width: 19rem !important;
+}
+.p-fileupload-content{
+    padding: 0 !important;
+    border: 0 !important;
+}
+.dropdown-item-text{
+    padding: 0 !important;
+    margin-left: 5%;
+}
+.p-button{
+    font-size: 12px;
+}
+.p-fileupload .p-fileupload-buttonbar .p-button {
+    margin-right: 0 !important;
+}
+.p-fileupload .p-fileupload-buttonbar{
+    padding: 7px !important;
+}
+.cancelLink{
+  color: #3699ff !important;
+}
+.noPadding{
+    padding: 0 !important;
+}
+.noColor{
+    color: unset !important;
+}
+.hasNote{
+    font-weight: bold;
+    color: #d82631 !important;
 }

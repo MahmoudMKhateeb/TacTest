@@ -169,7 +169,7 @@ namespace TACHYON.Invoices.Groups
             }
         }
 
-
+        [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_SubmitInvoices_Rejected)]
         public async Task Rejected(SubmitInvoiceRejectedInput Input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
@@ -328,7 +328,7 @@ namespace TACHYON.Invoices.Groups
         private async Task<SubmitInvoice> GetSubmitInvoiceInfo(long id)
         {
             DisableTenancyFilters();
-
+            //todo this needs enhancement to get item as IQuerable, then fill as anynomous fields without all includes
             var SubmitInvoice = await _SubmitInvoiceRepository
                 .GetAll()
                 .AsNoTracking()
@@ -357,6 +357,21 @@ namespace TACHYON.Invoices.Groups
                 .ThenInclude(r => r.TrucksTypeFk)
                 .ThenInclude(r => r.Translations)
                 .Include(i => i.Trips)
+                .Include(r=>r.Penalties)
+                .ThenInclude(r=>r.ShippingRequestTripFK)
+                .ThenInclude(i => i.ShippingRequestFk)
+                .ThenInclude(r => r.OriginCityFk)
+                .ThenInclude(r => r.Translations)
+                .Include(r => r.Penalties)
+                .ThenInclude(r => r.ShippingRequestTripFK)
+                .ThenInclude(i => i.ShippingRequestFk)
+                .ThenInclude(r => r.DestinationCityFk)
+                .ThenInclude(r => r.Translations)
+                .Include(r => r.Penalties)
+                .ThenInclude(r => r.ShippingRequestTripFK)
+                .ThenInclude(r => r.AssignedTruckFk)
+                .ThenInclude(r => r.TrucksTypeFk)
+                .ThenInclude(r => r.Translations)
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer),
                     i => i.TenantId == AbpSession.TenantId.Value)
                 .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), i => true)
@@ -367,6 +382,10 @@ namespace TACHYON.Invoices.Groups
 
         private List<InvoiceItemDto> GetInvoiceItems(SubmitInvoice SubmitInvoice)
         {
+            if(SubmitInvoice.Channel== InvoiceChannel.Penalty)
+            {
+                return GetPenaltyInvoiceItems(SubmitInvoice);
+            }
             var TotalItem = SubmitInvoice.Trips.Count +
                             SubmitInvoice.Trips.Sum(v => v.ShippingRequestTripFK.ShippingRequestTripVases.Count);
             int Sequence = 1;
@@ -427,6 +446,43 @@ namespace TACHYON.Invoices.Groups
 
                     Sequence++;
                 }
+            });
+            return Items;
+        }
+
+        private List<InvoiceItemDto> GetPenaltyInvoiceItems(SubmitInvoice submitInvoice)
+        {
+            var TotalItem = submitInvoice.Penalties.Count;
+
+            int Sequence = 1;
+            List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
+            submitInvoice.Penalties.ToList().ForEach(penalty =>
+            {
+                Items.Add(new InvoiceItemDto
+                {
+                    Sequence = $"{Sequence}/{TotalItem}",
+                    SubTotalAmount = penalty.AmountPreCommestion,
+                    VatAmount = penalty.VatAmount,
+                    TotalAmount = penalty.AmountPreCommestion+penalty.VatAmount,
+                    WayBillNumber = penalty.ShippingRequestTripFK?.WaybillNumber.ToString(),
+                    TruckType = penalty.ShippingRequestTripId !=null && penalty.ShippingRequestTripFK.AssignedTruckId  !=null
+                    ? ObjectMapper.Map<TrucksTypeDto>(penalty.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName
+                    : "-",
+                    Source = penalty.ShippingRequestTripId != null 
+                    ? ObjectMapper.Map<CityDto>(penalty.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? penalty.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName
+                    : "-",
+                    Destination = penalty.ShippingRequestTripId != null 
+                    ? ObjectMapper.Map<CityDto>(penalty.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? penalty.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName
+                    : "-",
+                    DateWork = penalty.ShippingRequestTripId != null 
+                    ? penalty.ShippingRequestTripFK.EndWorking.HasValue ? penalty.ShippingRequestTripFK.EndWorking.Value.ToString("dd MMM, yyyy") : ""
+                    : "-",
+                    Remarks = penalty.ShippingRequestTripId != null  
+                    ? penalty.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
+                    L("TotalOfDrop", penalty.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : ""
+                    : "-"
+                });
+                Sequence++;
             });
             return Items;
         }

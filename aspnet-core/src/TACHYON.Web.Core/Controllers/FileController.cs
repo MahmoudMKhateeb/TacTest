@@ -84,6 +84,7 @@ namespace TACHYON.Web.Controllers
             string contentType,
             string fileName)
         {
+            DisableTenancyFilters();
             var fileObject = await _binaryObjectManager.GetOrNullAsync(id);
             if (fileObject == null)
             {
