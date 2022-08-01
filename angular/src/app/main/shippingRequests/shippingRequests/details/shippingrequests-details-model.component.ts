@@ -101,8 +101,7 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
       return false;
     if (this.shippingrequest.isPriced) return false;
     if (this.shippingrequest.directRequestStatus != ShippingRequestDirectRequestStatus.New) return false;
-    //duplicated
-    // if (this.request.status != ShippingRequestStatus.NeedsAction && this.request.status != ShippingRequestStatus.PrePrice) return false;
+    if (this.request.status != ShippingRequestStatus.NeedsAction && this.request.status != ShippingRequestStatus.PrePrice) return false;
     if (this.Channel == PriceOfferChannel.MarketPlace && this.request.bidStatus != ShippingRequestBidStatus.OnGoing) return false;
     if (this.feature.isEnabled('App.Shipper')) return false;
     if (this.feature.isEnabled('App.Carrier')) return true;
@@ -110,14 +109,6 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
     return false;
   }
 
-  CanRespondToMatchingOffer() {
-    if (this.shippingrequest.status == ShippingRequestStatus.PrePrice || this.shippingrequest.status == ShippingRequestStatus.NeedsAction) {
-      if (!this.shippingrequest.isTachyonDeal && !this.shippingrequest.isBid) {
-        return false;
-      }
-      return true;
-    } else return false;
-  }
   /**
    * Get City Cordinates By Providing its name
    * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace
