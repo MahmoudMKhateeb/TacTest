@@ -725,7 +725,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           )
           .subscribe((res) => {
             this.notify.success(this.l('Success'));
-            this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
+            this._router.navigate(['/app/main/shippingRequests/shippingRequestWizard']);
+            this.activeShippingRequestId = undefined;
+            this.wizard.goTo(1);
+            this.step1Dto = new CreateOrEditShippingRequestStep1Dto();
+            this.step2Dto = new EditShippingRequestStep2Dto();
+            this.step3Dto = new EditShippingRequestStep3Dto();
+            this.step4Dto = new EditShippingRequestStep4Dto();
           });
       }
     });
