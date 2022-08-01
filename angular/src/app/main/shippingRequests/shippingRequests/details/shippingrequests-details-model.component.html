@@ -269,10 +269,10 @@
               <div class="divirCard"></div>
             </ng-template>
 
-            <ng-template [ngIf]="request.pricePackageOfferId && CanRespondToMatchingOffer()">
+            <ng-template [ngIf]="request.pricePackageOfferId && !shippingrequest.isBid">
               <div class="divirCard"></div>
               <div class="setPrice">
-                <button type="button" (click)="ModelPriceCalculation.Preview(request.id, request.pricePackageOfferId, request.status)">
+                <button type="button" (click)="ModelPriceCalculation.Preview(request.id, request.pricePackageOfferId)">
                   {{ l('PreviewPricePackageOffer') }}
                 </button>
               </div>

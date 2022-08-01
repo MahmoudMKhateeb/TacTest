@@ -71,8 +71,8 @@
                   [class.is-valid]="city.touched && city.valid"
                   (change)="handleCityPolygon()"
                 >
-                  <option value="undefined" selected disabled>{{ l('SelectaCity') }}</option>
-                  <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" value="{{ item.id }}">
+                  <option [value]="undefined" disabled>{{ l('SelectaCity') }}</option>
+                  <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" [value]="Number(item.id)">
                     {{ item.displayName }}
                   </option>
                 </select>
@@ -136,9 +136,10 @@
               <agm-map
                 class="map"
                 [zoom]="zoom"
-                [longitude]="facility.longitude || Bounds?.getCenter().lng()"
-                [latitude]="facility.latitude || Bounds?.getCenter().lat()"
+                [longitude]="mapCenterLng || facility.longitude"
+                [latitude]="mapCenterLat || facility.latitude"
                 (mapClick)="mapClicked($event)"
+                [busyIf]="citiesLoading"
               >
                 <agm-marker
                   *ngIf="facility.latitude && facility.longitude"

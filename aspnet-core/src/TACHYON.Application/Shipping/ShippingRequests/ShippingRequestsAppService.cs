@@ -678,7 +678,7 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Delete)]
-        [RequiresFeature(AppFeatures.ShippingRequest)]
+        [RequiresFeature(AppFeatures.ShippingRequest, AppFeatures.CarrierAsASaas)]
         public async Task Delete(EntityDto<long> input)
         {
             //Disable Tenancy filter to allow to Tachyon Dealer to delete the Drafted Requests | TAC-2331
