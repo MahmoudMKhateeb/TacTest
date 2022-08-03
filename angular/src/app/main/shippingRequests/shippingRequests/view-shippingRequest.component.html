@@ -27,23 +27,22 @@
         >
           <i class="flaticon-edit-1"></i> {{ l('ShippingRequestUpdates') }}
         </a>
-
-        <div *ngIf="feature.isEnabled('App.TachyonDealer')" class="input-group margin-left-5" style="display: contents">
-          <div class="input-group-prepend">
-            <button (click)="updateShippingRequestInvoiceFlag()" class="btn btn-primary" type="button">save</button>
-          </div>
-          <input
-            [(ngModel)]="shippingRequestforView.shippingRequest.splitInvoiceFlag"
-            style="width: 250px"
-            type="text"
-            class="form-control"
-            placeholder="invoice flag"
-          />
-        </div>
       </div>
     </sub-header>
 
     <div [class]="containerClass">
+      <div *ngIf="feature.isEnabled('App.TachyonDealer')" class="input-group margin-bottom-10 margin-left-5" style="width: 300px">
+        <div class="input-group-prepend">
+          <button (click)="updateShippingRequestInvoiceFlag()" class="btn btn-primary" type="button">save</button>
+        </div>
+        <input
+          [(ngModel)]="shippingRequestforView.shippingRequest.splitInvoiceFlag"
+          style="width: 200px"
+          type="text"
+          class="form-control"
+          placeholder="invoice flag"
+        />
+      </div>
       <!--  start:: PriceOfferingSection -->
       <ng-template [ngIf]="canSeePriceOffers()">
         <shipping-request-offers-list

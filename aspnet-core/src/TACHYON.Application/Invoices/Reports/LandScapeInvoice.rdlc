@@ -4736,26 +4736,25 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>Invoice </Value>
+                      <Value>Tax Invoice</Value>
                       <Style>
-                        <FontFamily>Open Sans</FontFamily>
+                        <FontStyle>Normal</FontStyle>
+                        <FontFamily>open Sans</FontFamily>
                         <FontSize>11pt</FontSize>
                         <FontWeight>Bold</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                     <TextRun>
-                      <Value>| </Value>
+                      <Value>| فاتورة ضريبية</Value>
                       <Style>
+                        <FontStyle>Normal</FontStyle>
+                        <FontFamily>arial</FontFamily>
                         <FontSize>11pt</FontSize>
                         <FontWeight>Bold</FontWeight>
-                      </Style>
-                    </TextRun>
-                    <TextRun>
-                      <Value>فاتورة </Value>
-                      <Style>
-                        <FontFamily>Cairo</FontFamily>
-                        <FontSize>11pt</FontSize>
-                        <FontWeight>Bold</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4766,9 +4765,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox3</rd:DefaultName>
               <Top>0.47181cm</Top>
-              <Left>12.21121cm</Left>
+              <Left>11.64899cm</Left>
               <Height>1.1073cm</Height>
-              <Width>4.17181cm</Width>
+              <Width>5.36903cm</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>
