@@ -17,7 +17,14 @@
             <ng-template #t let-fill="fill">
               <span class="star p-0" [class.full]="fill === 100"> <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;</span>
             </ng-template>
-            <ngb-rating [(rate)]="sideProfileUserInfo.rating" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>
+            <ngb-rating [(rate)]="sideProfileUserInfo.rating" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>({{
+              sideProfileUserInfo.rateNumber
+            }})
+            <div *ngIf="sideProfileUserInfo.editionId == 2">
+              <ngb-rating [(rate)]="sideProfileUserInfo.facilitiesRating" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>({{
+                l('Facilities')
+              }})
+            </div>
           </div>
         </div>
       </div>

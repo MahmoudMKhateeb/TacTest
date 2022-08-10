@@ -26,7 +26,10 @@ using TACHYON.Firebases;
 using TACHYON.Invoices;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
+using TACHYON.Penalties;
 using TACHYON.PriceOffers;
+using TACHYON.PriceOffers.Base;
+using TACHYON.PricePackages;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.RoutPointSmartEnum;
 using TACHYON.Shipping.Drivers.Dto;
@@ -52,8 +55,10 @@ namespace TACHYON.Tracking
     {
         public List<WorkFlow<PointTransactionArgs, RoutePointStatus>> Flows { get; set; }
         private readonly IRepository<RoutPoint, long> _routPointRepository;
+        private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly PriceOfferManager _priceOfferManager;
+        private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFeatureChecker _featureChecker;
         private readonly IAbpSession _abpSession;
@@ -69,6 +74,7 @@ namespace TACHYON.Tracking
         private readonly IPermissionChecker _permissionChecker;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
         private readonly ITempFileCacheManager _tempFileCacheManager;
+        private readonly PenaltyManager _penaltyManager;
 
 
         #region Constractor
@@ -90,7 +96,10 @@ namespace TACHYON.Tracking
             IWebUrlService webUrlService,
             IPermissionChecker permissionChecker,
             IEntityChangeSetReasonProvider reasonProvider,
-            ITempFileCacheManager tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager,
+            IRepository<ShippingRequest, long> shippingRequestRepository, 
+            PenaltyManager penaltyManager,
+            NormalPricePackageManager normalPricePackageManager)
         {
             _routPointRepository = routPointRepository;
             _shippingRequestTripRepository = shippingRequestTrip;
@@ -110,6 +119,7 @@ namespace TACHYON.Tracking
             _permissionChecker = permissionChecker;
             _reasonProvider = reasonProvider;
             _tempFileCacheManager = tempFileCacheManager;
+            _shippingRequestRepository = shippingRequestRepository;
             Flows = new List<WorkFlow<PointTransactionArgs, RoutePointStatus>>
             {
                 // Pick up workflow 
@@ -367,6 +377,8 @@ namespace TACHYON.Tracking
                     },
                 },
             };
+            _penaltyManager = penaltyManager;
+            _normalPricePackageManager = normalPricePackageManager;
         }
 
         #endregion
@@ -398,7 +410,10 @@ namespace TACHYON.Tracking
                 .Where(x => !statuses.Any(c => c == x.ToStatus) && x.FromStatus == status)
                 .Select(x => new PointTransactionDto
                 {
-                    Action = x.Action, Name = L(x.Name), FromStatus = x.FromStatus, ToStatus = x.ToStatus
+                    Action = x.Action,
+                    Name = L(x.Name),
+                    FromStatus = x.FromStatus,
+                    ToStatus = x.ToStatus
                 }).ToList();
         }
 
@@ -442,7 +457,7 @@ namespace TACHYON.Tracking
             trip.Status = ShippingRequestTripStatus.InTransit;
             trip.StartTripDate = Clock.Now;
 
-            await StartTransition(routeStart, new Point(Input.lat, Input.lng));
+            await StartTransition(routeStart, new Point(Input.lng, Input.lat));
             // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
         }
 
@@ -459,6 +474,8 @@ namespace TACHYON.Tracking
                 (transaction.Features.Any() && transaction.Features.Any(x => _featureChecker.IsEnabled(x))))
                 throw new AbpAuthorizationException("You are not authorized to " + transaction.Name);
 
+            await CheckIfLessThanMinutelastStatus(args.PointId);
+
             var reason = await transaction.Func(args);
             _reasonProvider.Use(reason);
 
@@ -466,6 +483,23 @@ namespace TACHYON.Tracking
             await NotificationWhenPointChanged(point);
             //we need to use save changes in invoke to save the reason in entity change set its does not take it when complete uow transuction
             await CurrentUnitOfWork.SaveChangesAsync(); // need to get alternative 
+        }
+
+        private async Task CheckIfLessThanMinutelastStatus(long pointId)
+        {
+            var lastTranstion = await _routPointStatusTransitionRepository
+                .GetAll()
+                .OrderByDescending(x => x.CreationTime)
+                .FirstOrDefaultAsync(x => !x.IsReset && x.PointId == pointId);
+
+
+            if (lastTranstion != null)
+            {
+                var minutes = (Clock.Now - lastTranstion.CreationTime).TotalMinutes;
+                if (minutes < 1)
+                    throw new UserFriendlyException(L("YouCanNotChangeTheStatusMultipleTimes"));
+            }
+            
         }
 
         public async Task GoToNextLocation(long nextPointId)
@@ -572,10 +606,13 @@ namespace TACHYON.Tracking
         private async Task<string> ArriveToLoadingLocation(PointTransactionArgs args)
         {
             var status = RoutePointStatus.ArriveToLoadingLocation;
-            var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
+            var point = await _routPointRepository
+                .GetAll().Include(x => x.ShippingRequestTripFk)
+                .ThenInclude(c => c.ShippingRequestFk)
                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
+            await _penaltyManager.NotficationBeforeViolateDetention(point.ShippingRequestTripFk.ShippingRequestFk.TenantId, args.PointId);
             return nameof(RoutPointPickUpStep2);
         }
 
@@ -592,16 +629,33 @@ namespace TACHYON.Tracking
         private async Task<string> FinishLoading(PointTransactionArgs args)
         {
             var status = RoutePointStatus.FinishLoading;
-            var point = await _routPointRepository.GetAll()
+            var point = await _routPointRepository
+                .GetAll()
                 .Include(x => x.ShippingRequestTripFk)
-                .ThenInclude(x => x.ShippingRequestFk)
+                .ThenInclude(c => c.ShippingRequestFk)
+                .Include(x=> x.FacilityFk)
                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
+
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
             point.IsComplete = true;
             point.EndTime = Clock.Now;
             point.ActualPickupOrDeliveryDate = point.ShippingRequestTripFk.ActualPickupDate = Clock.Now;
             point.CanGoToNextLocation = true;
+            var shippingRequest = point.ShippingRequestTripFk.ShippingRequestFk;
+
+            var arrviceTime = await _routPointStatusTransitionRepository.GetAll()
+                .Where(x => x.PointId == args.PointId && !x.IsReset
+                 && x.Status == RoutePointStatus.ArriveToLoadingLocation)
+                .Select(x => x.CreationTime)
+                .FirstOrDefaultAsync();
+
+            await _penaltyManager.ApplyDetentionPenalty(shippingRequest.TenantId,
+                shippingRequest.CarrierTenantId.Value,
+                arrviceTime, point.ShippingRequestTripId,
+                point.FacilityFk.Name,
+                point.ShippingRequestTripFk.WaybillNumber);
+
             await SendSmsToReceivers(point.ShippingRequestTripId, point.ShippingRequestTripFk.WaybillNumber, point.ShippingRequestTripFk.ShippingRequestFk.RouteTypeId);
             return nameof(RoutPointPickUpStep4);
         }
@@ -619,10 +673,15 @@ namespace TACHYON.Tracking
         private async Task<string> ArrivedToDestination(PointTransactionArgs args)
         {
             var status = RoutePointStatus.ArrivedToDestination;
-            var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
-                .FirstOrDefaultAsync(x => x.Id == args.PointId);
+            var point = await _routPointRepository
+              .GetAll().Include(x => x.ShippingRequestTripFk)
+              .ThenInclude(c => c.ShippingRequestFk)
+              .FirstOrDefaultAsync(x => x.Id == args.PointId);
+
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
+
+            await _penaltyManager.NotficationBeforeViolateDetention(point.ShippingRequestTripFk.ShippingRequestFk.TenantId, args.PointId);
             return nameof(RoutPointDropOffStep2);
         }
 
@@ -639,8 +698,15 @@ namespace TACHYON.Tracking
         private async Task<string> FinishOffLoadShipment(PointTransactionArgs args)
         {
             var status = RoutePointStatus.FinishOffLoadShipment;
-            var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
-                .FirstOrDefaultAsync(x => x.Id == args.PointId);
+            var point = await _routPointRepository
+               .GetAll()
+               .Include(x => x.ShippingRequestTripFk)
+               .ThenInclude(c => c.ShippingRequestFk)
+               .Include(x=> x.FacilityFk)
+               .FirstOrDefaultAsync(x => x.Id == args.PointId);
+
+            var shippingRequest = point.ShippingRequestTripFk.ShippingRequestFk;
+
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
             point.ActualPickupOrDeliveryDate = Clock.Now;
@@ -659,6 +725,25 @@ namespace TACHYON.Tracking
 
             if (otherPoints.All(x => x.IsResolve))
                 point.ShippingRequestTripFk.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
+
+
+            var arrviceTime = await _routPointStatusTransitionRepository.GetAll()
+               .Where(x => x.PointId == args.PointId && !x.IsReset
+                && x.Status == RoutePointStatus.ArrivedToDestination)
+               .Select(x => x.CreationTime)
+               .FirstOrDefaultAsync();
+
+            await _penaltyManager.ApplyDetentionPenalty(shippingRequest.TenantId,
+                shippingRequest.CarrierTenantId.Value,
+                arrviceTime, point.ShippingRequestTripId,
+                point.FacilityFk.Name,
+                point.ShippingRequestTripFk.WaybillNumber);
+
+            if (point.ShippingRequestTripFk.EndTripDate.HasValue)
+                await _penaltyManager.ApplyNotDeliveringAllDropsPenalty(shippingRequest.CarrierTenantId.Value,
+                    shippingRequest.TenantId,
+                    point.ShippingRequestTripFk.EndTripDate.Value,
+                    point.ShippingRequestTripId);
 
             return nameof(RoutPointDropOffStep4);
         }
@@ -798,8 +883,24 @@ namespace TACHYON.Tracking
         private async Task TransferPricesToTrip(ShippingRequestTrip trip)
         {
             DisableTenancyFilters();
-            var offer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId);
 
+            var priceOffer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId);
+            if (priceOffer != null)
+            {
+                var items = ObjectMapper.Map<List<PricePackageOfferItem>>(priceOffer.PriceOfferDetails);
+                TransferPrices(trip, priceOffer, items, priceOffer.TaxVat);
+            }
+            else
+            {
+                var pricePackageOffer = await _normalPricePackageManager.GetOfferByShippingRequestId(trip.ShippingRequestId);
+                TransferPrices(trip, pricePackageOffer, pricePackageOffer.Items, pricePackageOffer.TaxVat);
+            }
+        }
+        /// <summary>
+        /// Transfer the prices from price offer to trip
+        /// </summary>
+        private void TransferPrices(ShippingRequestTrip trip, PriceOfferBase offer, List<PricePackageOfferItem> items, decimal taxVat)
+        {
             trip.CommissionType = offer.CommissionType;
             trip.SubTotalAmount = offer.ItemPrice;
             trip.VatAmount = offer.ItemVatAmount;
@@ -809,12 +910,12 @@ namespace TACHYON.Tracking
             trip.TotalAmountWithCommission = offer.ItemTotalAmountWithCommission;
             trip.CommissionAmount = offer.ItemCommissionAmount;
             trip.CommissionPercentageOrAddValue = offer.CommissionPercentageOrAddValue;
-            trip.TaxVat = offer.TaxVat;
+            trip.TaxVat = taxVat;
             if (trip.ShippingRequestTripVases == null || trip.ShippingRequestTripVases.Count == 0) return;
+
             foreach (var vas in trip.ShippingRequestTripVases)
             {
-                var item = offer.PriceOfferDetails.FirstOrDefault(x =>
-                    x.SourceId == vas.ShippingRequestVasId && x.PriceType == PriceOfferType.Vas);
+                var item = items.FirstOrDefault(x => x.SourceId == vas.ShippingRequestVasId && x.PriceType == PriceOfferType.Vas);
                 vas.CommissionType = item.CommissionType;
                 vas.SubTotalAmount = item.ItemPrice;
                 vas.VatAmount = item.ItemVatAmount;
@@ -827,7 +928,6 @@ namespace TACHYON.Tracking
                 vas.Quantity = 1;
             }
         }
-
         /// <summary>
         /// Check If user Can Start the trip
         /// </summary>
@@ -1000,7 +1100,9 @@ namespace TACHYON.Tracking
             fromLocation.SRID = 4326;
             ShippingRequestTripTransition tripTransition = new ShippingRequestTripTransition
             {
-                FromLocation = fromLocation, ToPointId = routPoint.Id, ToLocation = routPoint.FacilityFk.Location
+                FromLocation = fromLocation,
+                ToPointId = routPoint.Id,
+                ToLocation = routPoint.FacilityFk.Location
             };
             await _shippingRequestTripTransitionRepository.InsertAsync(tripTransition);
             await SetRoutStatusTransitionLog(routPoint);
@@ -1100,7 +1202,8 @@ namespace TACHYON.Tracking
         {
             await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition
             {
-                PointId = routPoint.Id, Status = routPoint.Status
+                PointId = routPoint.Id,
+                Status = routPoint.Status
             });
         }
 
@@ -1113,6 +1216,16 @@ namespace TACHYON.Tracking
             if (user == null)
                 throw new Exception("There is no current user!");
             return user;
+        }
+        public async Task<List<ShippingRequestFilterListDto>> GetRequestReferancesList()
+        {
+            DisableTenancyFilters();
+            var tenantId = _abpSession.TenantId;
+            return await _shippingRequestRepository.GetAll()
+                        .Where(x=> x.CarrierTenantId.HasValue)
+                        .WhereIf(tenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == tenantId.Value)
+                        .WhereIf(tenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == tenantId.Value)
+                        .Select(x => new ShippingRequestFilterListDto { ReferenceNumber = x.ReferenceNumber, Id = x.Id}).ToListAsync();
         }
 
         #endregion

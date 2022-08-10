@@ -45,17 +45,17 @@ export class AppNavigationService {
             () => !this.isEnabled('App.Shipper') || !this._appSessionService.tenantId
           ),
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking'),
-          // new AppMenuItem(
-          //   'ShipmentHistory',
-          //   'Pages.ShippingRequests',
-          //   '',
-          //   '/app/main/shippingRequests/ShipmentHistory',
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   () => this.isEnabled('App.TachyonDealer')
-          // ),
+          new AppMenuItem(
+            'SavedTemplates',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/requestsTemplates',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.TachyonDealer')
+          ),
           new AppMenuItem('Requests', 'Pages', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
             'DirectShippingRequests',
@@ -96,6 +96,7 @@ export class AppNavigationService {
             undefined,
             () => this.isEnabled('App.Shipper')
           ),
+
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           // new AppMenuItem(
           //   'ShipmentHistory',
@@ -118,6 +119,17 @@ export class AppNavigationService {
             undefined,
             undefined,
             () => !this.isEnabled('App.Shipper')
+          ),
+          new AppMenuItem(
+            'SavedTemplates',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/requestsTemplates',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Shipper') || this.isEnabled('App.TachyonDealer') || this.isEnabled('App.CarrierAsASaas')
           ),
           new AppMenuItem('DirectShippingRequests', '', '', '/app/main/directrequest/list', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Carrier')
@@ -174,17 +186,17 @@ export class AppNavigationService {
             undefined,
             () => !this.isEnabled('App.Shipper')
           ),
-          // new AppMenuItem(
-          //   'ShipmentHistory',
-          //   'Pages',
-          //   '',
-          //   '/app/main/shippingRequests/ShipmentHistory',
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   () => this.isEnabled('App.Carrier')
-          // ),
+          new AppMenuItem(
+            'SavedTemplates',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/requestsTemplates',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.CarrierAsASaas')
+          ),
 
           new AppMenuItem(
             'DirectShippingRequests',
@@ -217,6 +229,20 @@ export class AppNavigationService {
         undefined,
         () => this.isEnabled('App.Carrier')
       ),
+
+      new AppMenuItem(
+        'PricePackages',
+        '',
+        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        '',
+        [],
+        [new AppMenuItem('PricePackages', 'Pages.NormalPricePackages', '', '/app/main/pricePackages/normalPricePackages')],
+        //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
+        undefined,
+        undefined,
+        () => (this.isEnabled('App.TachyonDealer') || this.isEnabled('App.Carrier')) && this.isEnabled('App.NormalPricePackage')
+      ),
+
       // end carrier menu
 
       //end of requests
@@ -273,6 +299,20 @@ export class AppNavigationService {
         '',
         [],
         [
+          new AppMenuItem(
+            'PenaltiesList',
+            'Pages.Invoices',
+            '',
+            '/app/main/penalties/view',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.TachyonDealer') || !isNotNullOrUndefined(this._appSessionService.tenantId)
+          ),
+
+          new AppMenuItem('InvoicesNotesList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
+
           new AppMenuItem(
             'InvoicesList',
             'Pages.Invoices',

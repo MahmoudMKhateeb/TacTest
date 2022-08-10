@@ -66,7 +66,8 @@ namespace TACHYON.Configuration.Host
                 ExternalLoginProviderSettings = await GetExternalLoginProviderSettings(),
                 SmsSettings = await GetSmsSettingsAsync(),
                 EditionSettings = await GetEditionsSettingsAsync(),
-                OtpNumbersSettings = await GetOtpNumberSettingsAsync()
+                OtpNumbersSettings = await GetOtpNumberSettingsAsync(),
+                TenantRatingMinNumber=await GetTenantRatingMinNumberAsync()
             };
         }
 
@@ -378,7 +379,16 @@ namespace TACHYON.Configuration.Host
             };
             return otpNumbersSettings;
         }
-        
+
+        private async Task<TenantRatingMinNumberDto> GetTenantRatingMinNumberAsync()
+        {
+            var tenantRating= new TenantRatingMinNumberDto()
+            {
+                RateMinNumber =
+            await SettingManager.GetSettingValueAsync(AppSettings.Rating.TenantRatingMinNumber) };
+            return tenantRating;
+        }
+
         #endregion
 
         #endregion
@@ -398,6 +408,7 @@ namespace TACHYON.Configuration.Host
             await UpdateSmsSettingsAsync(input.SmsSettings);
             await UpdateEditionsSettingsAsync(input.EditionSettings);
             await UpdateOtpNumberSettingsAsync(input.OtpNumbersSettings);
+            await UpdateTenantRatingSettingsAsync(input.TenantRatingMinNumber);
         }
 
         private async Task UpdateOtherSettingsAsync(OtherSettingsEditDto input)
@@ -729,6 +740,14 @@ namespace TACHYON.Configuration.Host
             await SettingManager.ChangeSettingForApplicationAsync(
                 AppSettings.Mobile.IgnoredOtpNumbers,
                 input.IgnoredOtpNumbers
+            );
+        }
+
+        private async Task UpdateTenantRatingSettingsAsync(TenantRatingMinNumberDto input)
+        {
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.Rating.TenantRatingMinNumber,
+                input.RateMinNumber
             );
         }
 

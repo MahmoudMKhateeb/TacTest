@@ -57,6 +57,22 @@
                 </label>
               </span>
             </div>
+
+            <label for="vas_HasAmount" class="col-4 col-form-label">{{ l('AppearAmount') }}</label>
+            <div class="col-2">
+              <span class="switch switch-sm switch-icon">
+                <label>
+                  <input
+                    #vas_isAppearAmount="ngModel"
+                    id="vas_isAppearAmount"
+                    type="checkbox"
+                    name="isAppearAmount"
+                    [(ngModel)]="vas.isAppearAmount"
+                  />
+                  <span></span>
+                </label>
+              </span>
+            </div>
           </div>
           <!-- </div> -->
         </div>

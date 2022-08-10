@@ -1,0 +1,7 @@
+::ng-deep .CompanyInput {
+  width: 100% !important;
+  height: 27px !important;
+  border: none;
+  padding: 0 !important;
+  box-shadow: none !important;
+}

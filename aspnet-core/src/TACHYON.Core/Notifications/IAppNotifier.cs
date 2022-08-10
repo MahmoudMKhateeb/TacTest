@@ -10,9 +10,12 @@ using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
+using TACHYON.PricePackages.Dto.NormalPricePackage;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.SrPostPriceUpdates;
+using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.TachyonPriceOffers;
 
@@ -43,10 +46,16 @@ namespace TACHYON.Notifications
             string fileType,
             string fileName);
 
+        Task SomeShipmentsCouldntBeImported(UserIdentifier user,
+            string fileToken,
+            string fileType,
+            string fileName);
+
         Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
         Task UpdateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
         Task TenantDocumentFileUpdate(DocumentFile documentFile);
-
+        Task NewCreditOrDebitNoteAdded(InvoiceNote Note);
+        Task TheCreaditOrDebitNotePaid(InvoiceNote Note);
         Task CancelBidRequest(UserIdentifier argsUser,
             long shippingRequestId,
             long shippingRequestBidId);
@@ -61,6 +70,7 @@ namespace TACHYON.Notifications
         Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request);
 
         #region Trips
+
 
         Task NotifyDriverWhenAssignTrip(int tripId, params UserIdentifier[] drivers);
 
@@ -85,12 +95,11 @@ namespace TACHYON.Notifications
 
         #region Accident
 
-        Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data);
-
-        Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users,
-            ShippingRequestTrip trip,
-            User UserCancel);
-
+        Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data,string waybillNumber, string referenceNumber);
+        Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users, ShippingRequestTrip trip, User UserCancel);
+        Task ShippingRequestTripCanceled(List<UserIdentifier> Users, ShippingRequestTrip trip, string tenantName);
+        Task ShippingRequestTripRejectCancelByTachyonDealer(List<UserIdentifier> Users, ShippingRequest request);
+        Task TripAccidentResolved(ShippingRequest request, string waybillNum, TripAccidentResolveType resolveType);
         #endregion
 
         #region ShippingRequest
@@ -99,7 +108,7 @@ namespace TACHYON.Notifications
 
         Task ShippingRequestSendOfferWhenAddPrice(PriceOffer offer, string carrier);
         Task ShippingRequestSendOfferWhenUpdatePrice(PriceOffer offer, string carrier);
-        Task NotifyShipperWhenSendPriceOffer(int teanatId, long offerId);
+        Task NotifyShipperWhenSendPriceOffer(int teanatId, long offerId, long shippingRequestId);
         Task ShipperAcceptedOffer(PriceOffer offer);
         Task TMSAcceptedOffer(PriceOffer offer);
         Task RejectedOffer(PriceOffer offer, string RejectedBy);
@@ -199,5 +208,40 @@ namespace TACHYON.Notifications
         Task NotifyDriverOnlyWhenTripUpdated(int tripId,
             string waybillNumber,
             params UserIdentifier[] drivers);
+
+        Task NotifyShipperBeforApplyDetention(int? shipperTenantId, string waybillNumber, int tripId);
+        Task NotifyShipperWhenApplyDetention(int? shipperTenantId, string facilityName, string waybillNumber, decimal amount, int tripId);
+        Task NotfiyCarrierWhenReceiveBidPricePackage(int carrierTenantId, string SenderTenantName, string pricePackageId, long directRequestId, string referanceNumber);
+        Task CarrierAcceptPricePackageOffer(int tenantId, string carrierTenantName, string requestReferance, long shippingRequestId);
+        Task ShippingRequestAsBidWithMatchingPricePackage(List<CarrierPricePackageDto> carriers, string shippingRequestReferance, long shippingRequestId);
+
+        #region ShippingRequestPostPriceUpdate
+
+        Task NotifyCarrierWhenPostPriceSrUpdated(long srId, string referenceNumber, int carrierTenantId);
+
+        /// <summary>
+        /// This method <b>used only for (Accept or Reject) </b>shipping request post price update <br/>
+        /// Note: don't use it when carrier request a change in price
+        /// and use this method when change in price requested <see cref="NotifyShipperWhenRequestChangePrice"/>
+        /// </summary>
+        /// <param name="srId"></param>
+        /// <param name="tenantId"></param>
+        /// <param name="referenceNumber"></param>
+        /// <param name="action"></param>
+        Task NotifyShipperForPostPriceSrUpdateAction(long srId,int tenantId,string referenceNumber,SrPostPriceUpdateAction action);
+
+        Task NotifyShipperWhenRequestChangePrice(long srId, int tenantId, string referenceNumber);
+
+        Task RejectedPostPriceOffer(PriceOffer offer, string rejectedBy);
+        #endregion
+
+
+        Task NotifyOfferOwnerWhenMarketplaceSrUpdated(long srId,string referenceNumber, params int[] tenantsIds);
+        Task NotifyOfferOwnerWhenDirectRequestSrUpdated(long srId, string referenceNumber, params int[] tenantsIds);
+
+        Task NotifyShipperWhenSrAddedByTms(long srId, string referenceNumber, int shipperId);
+        Task NotifyTmsWhenCancellationRequestedByShipper(string referenceNumber,string tripWaybillNumber, string companyName,long srId);
+
+        Task NotifyHostAndTmsWhenPenaltyComplaintAdded(int tenantId,int penaltyId);
     }
 }

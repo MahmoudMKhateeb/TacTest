@@ -9,5 +9,7 @@ namespace TACHYON.Shipping.Accidents.Dto
     {
         public string DisplayName { get; set; }
         public string Key { get; set; }
+        public bool IsOther { get; set; }
+
     }
 }

@@ -23,14 +23,15 @@ import {
   EditShippingRequestStep2Dto,
   EditShippingRequestStep3Dto,
   EditShippingRequestStep4Dto,
+  EntityTemplateServiceProxy,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
   GetAllGoodsCategoriesForDropDownOutput,
   GetShippingRequestForViewOutput,
   GoodsDetailsServiceProxy,
   ISelectItemDto,
-  RoutStepCityLookupTableDto,
   RoutStepsServiceProxy,
+  SavedEntityType,
   SelectItemDto,
   ShippersForDropDownDto,
   ShippingRequestRouteType,
@@ -51,6 +52,8 @@ import * as moment from '@node_modules/moment';
 import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import Swal from 'sweetalert2';
 
 @Component({
   templateUrl: './create-or-edit-shipping-request-wizard.component.html',
@@ -86,6 +89,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   capacityLoading: boolean;
   today = new Date();
   activeShippingRequestId: number = this._activatedRoute.snapshot.queryParams['id'];
+  templateId: number = this._activatedRoute.snapshot.queryParams['templateId'];
   stepToCompleteFrom: number = this._activatedRoute.snapshot.queryParams['completedSteps'];
   selectedDateType: DateType = DateType.Hijri; // or DateType.Gregorian
   @Input() parentForm: NgForm;
@@ -121,6 +125,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   allCountries: CountyDto[];
   originCountry: number;
   destinationCountry: number;
+  entityType = SavedEntityType;
 
   constructor(
     injector: Injector,
@@ -135,7 +140,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private enumToArray: EnumToArrayPipe,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private _templateService: EntityTemplateServiceProxy
   ) {
     super(injector);
   }
@@ -189,6 +195,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.loadAllDropDownLists();
     this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
     this.isCarrierSass = this.feature.isEnabled('App.CarrierAsASaas');
+    this.useShippingRequestTemplate();
   }
 
   ngOnDestroy() {
@@ -547,14 +554,14 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         type === 'source' ? (this.sourceCities = res) : (this.destinationCities = res);
         if (this.step1Dto.shippingTypeId == 2) {
           this.sourceCities = this.destinationCities = res;
-          this.step2Dto.originCityId = this.step2Dto.destinationCityId = null;
+          // this.step2Dto.originCityId = this.step2Dto.destinationCityId = null;
         }
       });
   }
 
   loadTruckandCapacityForEdit() {
     //Get these DD in Edit Only
-    if (this.activeShippingRequestId && this.step3Dto.transportTypeId) {
+    if (this.step3Dto.transportTypeId) {
       this.capacityLoading = true;
       this.truckTypeLoading = true;
       this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(this.step3Dto.transportTypeId).subscribe((result) => {
@@ -640,6 +647,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         id: shippingRequestId,
         completedSteps: Step || 1,
       },
+      queryParamsHandling: 'merge',
     });
     this.activeStep = Step;
   }
@@ -717,7 +725,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           )
           .subscribe((res) => {
             this.notify.success(this.l('Success'));
-            this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
+            this._router.navigate(['/app/main/shippingRequests/shippingRequestWizard']);
+            this.activeShippingRequestId = undefined;
+            this.wizard.goTo(1);
+            this.step1Dto = new CreateOrEditShippingRequestStep1Dto();
+            this.step2Dto = new EditShippingRequestStep2Dto();
+            this.step3Dto = new EditShippingRequestStep3Dto();
+            this.step4Dto = new EditShippingRequestStep4Dto();
           });
       }
     });
@@ -841,5 +855,63 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     }
     this.step3Form?.controls?.otherTrucksTypeName?.updateValueAndValidity();
     return r;
+  }
+
+  /**
+   * get Shipping Request Template by TemplateId
+   * then pass the res to parseJsonToDtoData to fill the data
+   * @private
+   */
+  private useShippingRequestTemplate() {
+    if (isNotNullOrUndefined(this.templateId)) {
+      this.loading = true;
+      this._templateService
+        .getForView(this.templateId)
+        .pipe(
+          finalize(() => {
+            this.loading = false;
+          })
+        )
+        .subscribe((res) => {
+          // this.templateName = res.templateName;
+          this.parseJsonToDtoData(res.savedEntity);
+        });
+    }
+  }
+
+  /**
+   * convert Fill the Dto From The Json Data
+   * @param savedEntityJsonString
+   * @private
+   */
+  private parseJsonToDtoData(savedEntityJsonString: string): void {
+    let pharsedJson = JSON.parse(savedEntityJsonString);
+    this.step1Dto.init(pharsedJson);
+    this.step1Dto.isBid ? (this.shippingRequestType = 'bidding') : '';
+    this.step1Dto.isTachyonDeal ? (this.shippingRequestType = 'tachyondeal') : '';
+    this.step1Dto.isDirectRequest ? (this.shippingRequestType = 'directrequest') : '';
+    this.step1Dto.endTripDate = this.step1Dto.startTripDate = this.step1Dto.bidStartDate = this.step1Dto.bidEndDate = null; //empty Shipping Request Dates
+    this.originCountry = pharsedJson.originCountryId;
+    this.destinationCountry = pharsedJson.destinationCountryId;
+    this.loadCitiesByCountryId(this.originCountry, 'source');
+    this.loadCitiesByCountryId(this.destinationCountry, 'destination');
+    this.step2Dto.init(pharsedJson);
+    this.step3Dto.init(pharsedJson);
+    this.loadTruckandCapacityForEdit();
+    this.step4Dto.init(pharsedJson);
+    Swal.fire({
+      icon: 'success',
+      title: this.l('TemplateImportedSuccessfully'),
+      showConfirmButton: false,
+      timer: 2000,
+    });
+
+    this._router.navigate([], {
+      queryParams: {
+        templateName: null,
+        templateId: null,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 }

@@ -1,0 +1,120 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">{{ 'Notes' | localize }}</h3>
+      <button *ngIf="appSession.tenantId" class="btn btn-primary float-left" (click)="AddNewNoteModal.show()">
+        <i class="flaticon-plus"></i> {{ 'AddNote' | localize }}
+      </button>
+    </div>
+  </div>
+  <div class="card-body">
+    <!--begin::Timeline-->
+    <div class="timeline timeline-3">
+      <div class="timeline-items">
+        <p-table
+          #dataTableAuditLogs
+          sortMode="multiple"
+          [busyIf]="primengTableHelper.isLoading"
+          (onLazyLoad)="getData($event)"
+          [value]="primengTableHelper.records"
+          rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+          [paginator]="false"
+          [lazy]="true"
+          scrollable="true"
+          ScrollWidth="100%"
+          responsive="primengTableHelper.isResponsive"
+          resizableColumns="primengTableHelper.resizableColumns"
+        >
+          <ng-template pTemplate="body" let-record="$implicit">
+            <tr>
+              <div class="timeline-item border-left-style col-lg-11">
+                <div class="timeline-media border-dash">
+                  <span class="svg-icon svg-icon-2 svg-icon-gray-500">
+                    <div
+                      class="symbol symbol-circle symbol-25px"
+                      data-bs-toggle="tooltip"
+                      data-bs-boundary="window"
+                      data-bs-placement="top"
+                      title="{{ record.tenantName }}"
+                      data-bs-original-title="record.tenantName"
+                    >
+                      <img src="{{ record.tenantImage ? record.tenantImage : avatar }}" alt="img" />
+                    </div>
+                  </span>
+                </div>
+                <div class="timeline-content">
+                  <div class="d-flex align-items-center float-right justify-content-between mb-3">
+                    <div class="mr-2">
+                      <div class="btn-group dropdown" container="body" dropdown>
+                        <a dropdownToggle>
+                          <i class="ki ki-more-hor font-size-lg text-primary"></i>
+                        </a>
+                        <ul *dropdownMenu class="dropdown-menu">
+                          <li>
+                            <a class="dropdown-item" *ngIf="record.tenantId == appSession.tenantId" (click)="AddNewNoteModal.show(record.id)">
+                              {{ 'Edit' | localize }}</a
+                            >
+                          </li>
+                          <li>
+                            <a class="dropdown-item" (click)="ViewNotesModal.show(record.id)">{{ 'View' | localize }}</a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" *ngIf="record.tenantId == appSession.tenantId" (click)="deleteNote(record.id)">
+                              {{ 'Delete' | localize }}</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="p-0 mrbm-0">{{ record.note }}</p>
+                  <div class="d-flex align-items-center mt-1 fs-6">
+                    <div class="text-muted me-2 fs-7">
+                      <span *ngIf="record.lastModifierUserName == ''">
+                        By {{ record.tenantName }} <br />
+                        {{ 'AddedAt' | localize }} {{ record.creationTime | momentFormat: 'YYYY-MM-DD HH:mm:ss a' }}
+                        <br />
+                      </span>
+                      <div class="text-muted me-2 fs-7" *ngIf="record.lastModifierUserId != ''">
+                        <span>By {{ record.tenantName }} </span><br />
+                        {{ 'LastModifiedAt' | localize }} {{ record.lastModificationTime | momentFormat: 'YYYY-MM-DD HH:mm:ss a' }}
+                        <span> {{ 'by' | localize }} {{ record.lastModifierUserName }}</span>
+                        <!-- <div class="symbol symbol-circle symbol-25px" data-bs-toggle="tooltip" data-bs-boundary="window"
+                              data-bs-placement="top" title={{record.lastModifierUserName}} data-bs-original-title="record.lastModifierUserName">
+                              <img src={{record.lastModifierUserImage}} alt="img">
+                            </div> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+          {{ 'NoData' | localize }}
+        </div>
+        <div class="primeng-paging-container">
+          <p-paginator
+            [hidden]="primengTableHelper.totalRecordsCount == 0"
+            [rows]="primengTableHelper.defaultRecordsCountPerPage"
+            #paginator
+            (onPageChange)="getData($event)"
+            [totalRecords]="primengTableHelper.totalRecordsCount"
+            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+          >
+          </p-paginator>
+          <span class="total-records-count" [hidden]="primengTableHelper.totalRecordsCount == 0">
+            {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+          </span>
+        </div>
+      </div>
+      <!--end::Timeline-->
+    </div>
+  </div>
+
+  <app-add-new-note-modal (modalSave)="getData($event)" #AddNewNoteModal [shippingRequestId]="shippingRequestId" [tripId]="tripId">
+  </app-add-new-note-modal>
+
+  <app-view-notes #ViewNotesModal [shippingRequestId]="shippingRequestId" [tripId]="tripId" [type]="type"> </app-view-notes>
+</div>

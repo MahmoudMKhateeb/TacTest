@@ -10,6 +10,7 @@ using TACHYON.Mobile;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.Drivers.Dto;
+using TACHYON.Shipping.Trips.Importing.Dto;
 
 namespace TACHYON.AutoMapper.Shipping.Trips
 {
@@ -53,6 +54,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     opt => opt.MapFrom(src =>
                         src.DangerousGoodTypeFk != null ? src.DangerousGoodTypeFk.Name : string.Empty));
             //.ForPath(dest => dest.GoodCategory, opt => opt.MapFrom(src => src.GoodCategoryFk != null ? src.GoodCategoryFk.DisplayName : string.Empty));
+
+            CreateMap<ImportRoutePointDto, RoutPoint>();
         }
     }
 }

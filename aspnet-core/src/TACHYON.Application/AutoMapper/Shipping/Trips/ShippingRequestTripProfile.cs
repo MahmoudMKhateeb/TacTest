@@ -7,6 +7,8 @@ using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
+using TACHYON.Shipping.Trips.Importing.Dto;
+using TACHYON.ShippingRequestTripVases;
 using TACHYON.Tracking;
 
 namespace TACHYON.AutoMapper.Shipping.Trips
@@ -127,6 +129,11 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     opt => opt.MapFrom(src => src.ShippingRequestTripVases));
 
             CreateMap<ShippingRequestTrip, ShippingRequestTripDto>().ReverseMap();
+            
+            CreateMap<ImportTripDto,ShippingRequestTrip>()
+                .ReverseMap();
+
+            CreateMap<ImportTripVasesDto, ShippingRequestTripVas>();
         }
 
         private static ShippingRequestTripDriverLoadStatusDto GetMobileTripStatus(ShippingRequestTrip trip)

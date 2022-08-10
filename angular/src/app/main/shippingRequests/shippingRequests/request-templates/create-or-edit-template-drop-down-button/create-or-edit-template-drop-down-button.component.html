@@ -1,0 +1,34 @@
+<div class="btn-group" dropdown #dropdownAddPage="bs-dropdown" [dropup]="dropDirection == 'up'" [insideClick]="true" [autoClose]="true">
+  <button
+    dropdownToggle
+    type="button"
+    class="{{ customClass ? customClass : 'btn btn-outline-danger dropdown-toggle btn-elevate-hover mr-2' }}"
+    aria-controls="dropdown-basic"
+    [disabled]="disabled"
+  >
+    <i class="fa fa-plus"></i> {{ 'SaveAsTemplate' | localize }}<span class="caret"></span>
+  </button>
+  <ul *dropdownMenu class="dropdown-menu p-2" role="menu" aria-labelledby="button-basic">
+    <li role="menuitem">
+      <div class="form-group mb-1">
+        <input
+          #templateNameInput="ngModel"
+          name="templateName"
+          type="text"
+          class="form-control"
+          placeholder="{{ l('TemplateName') }}"
+          maxlength="50"
+          minlength="3"
+          [class.is-valid]="templateNameInput.touched && templateNameInput.valid"
+          [class.is-invalid]="templateNameInput.touched && !templateNameInput.valid"
+          [(ngModel)]="templateName"
+          required
+        />
+      </div>
+      <validation-messages [formCtrl]="templateNameInput"></validation-messages>
+      <button role="menuitem" [disabled]="!templateNameInput.valid || disabled" class="btn btn-sm btn-block btn-info" (click)="SaveAsTemplate()">
+        {{ (templateIdForEdit ? 'Update' : 'Save') | localize }}
+      </button>
+    </li>
+  </ul>
+</div>

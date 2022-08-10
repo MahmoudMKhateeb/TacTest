@@ -12,6 +12,7 @@ namespace TACHYON.PriceOffers.Dto
     {
         public long? DirectRequestId { get; set; }
         public long? OfferId { get; set; }
+        public long? BidNormalPricePackageId { get; set; }
         public int? GoodCategoryId { get; set; }
         public string Name { get; set; }
         public decimal ShipperRating { get; set; }
@@ -22,6 +23,7 @@ namespace TACHYON.PriceOffers.Dto
         public double Latitude { get; set; }
         public DateTime? CreationTime { get; set; }
         public bool IsTachyonDeal { get; set; }
+        public bool IsBid { get; set; }
         public bool CreatedByTachyonDealer { get; set; }
         public string OriginCity { get; set; }
         public string DestinationCity { get; set; }
@@ -56,6 +58,7 @@ namespace TACHYON.PriceOffers.Dto
         public string requestTypeTitle { get { return requestType.GetEnumDescription(); } }
 
         public bool IsDrafted { get; set; }
+        public int NotesCount { get; set; }
 
         /// <summary>
         /// shipper Id 

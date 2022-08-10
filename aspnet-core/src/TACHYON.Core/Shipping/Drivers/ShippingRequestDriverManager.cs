@@ -3,6 +3,7 @@ using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
+using Abp.Runtime.Validation;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly IAppNotifier _appNotifier;
         private readonly IAbpSession _abpSession;
         private readonly IRepository<ShippingRequestTripTransition> _shippingRequestTripTransitionRepository;
+        private readonly IRepository<User, long> _userRepository;
 
         public ShippingRequestDriverManager(IRepository<ShippingRequestTrip> ShippingRequestTrip,
             IRepository<RoutPoint, long> RoutPointRepository,
@@ -44,7 +46,8 @@ namespace TACHYON.Shipping.Drivers
             UserManager userManager,
             IAppNotifier appNotifier,
             IAbpSession abpSession,
-            IRepository<RoutPointDocument, long> routPointDocumentRepository)
+            IRepository<RoutPointDocument, long> routPointDocumentRepository,
+            IRepository<User, long> userRepository)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _ShippingRequestRepository = ShippingRequestRepository;
@@ -56,6 +59,7 @@ namespace TACHYON.Shipping.Drivers
             _appNotifier = appNotifier;
             _abpSession = abpSession;
             _routPointDocumentRepository = routPointDocumentRepository;
+            _userRepository = userRepository;
         }
 
 
@@ -75,5 +79,10 @@ namespace TACHYON.Shipping.Drivers
             await _appNotifier.NotifyCarrierWithDriverGpsOff(new UserIdentifier(user.TenantId, carrierAdminUser.Id),
                 user);
         }
+
+        public async Task<bool> IsCurrentUserDriver(long userId)
+            => await _userRepository.GetAll().AsNoTracking()
+                .AnyAsync(x => x.IsDriver && x.Id == userId);
+        
     }
 }

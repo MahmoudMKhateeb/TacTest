@@ -12,6 +12,8 @@ namespace TACHYON.Invoices.Dto
         public DateTime DueDate { get; set; }
         public bool IsPaid { get; set; }
         public InvoiceAccountType AccountType { get; set; }
+        public InvoiceChannel Channel { get; set; }
+        public string InvoiceChannelTitle { get { return Channel.GetEnumDescription(); } }
         public string AccountTypeTitle { get { return AccountType.GetEnumDescription(); } }
         public decimal TotalAmount { get; set; }
     }

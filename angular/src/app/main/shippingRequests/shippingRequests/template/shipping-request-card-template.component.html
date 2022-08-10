@@ -2,10 +2,24 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
     <sub-header [title]="Title | localize" [description]="'' | localize">
-      <div role="actions">
-        <button [hidden]="(isCarrier && !isSaaS) || !appSession.tenantId" (click)="createNewRequest()" class="btn btn-success">
-          <i class="fas fa-plus"></i> {{ l('CreateNewRequest') }}
-        </button>
+      <div role="actions" *ngIf="isShipper || isTachyonDealer || isCarrierSaas">
+        <div class="btn-group mr-2" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true">
+          <button dropdownToggle type="button" class="btn btn-success" aria-controls="dropdown-basic">
+            <i class="fas fa-plus"></i> {{ 'CreateNewRequest' | localize }}<span class="caret"></span>
+          </button>
+          <ul *dropdownMenu class="dropdown-menu p-2 w-100" role="menu" aria-labelledby="button-basic">
+            <li role="menuitem">
+              <button (click)="createNewRequest()" class="btn btn-outline-success btn-elevate-hover w-100">
+                <i class="fas fa-plus"></i> {{ l('New') }}
+              </button>
+            </li>
+            <li role="menuitem">
+              <button (click)="loadEntityTemplateModal.show(1)" class="btn btn-outline-info btn-elevate-hover mt-2 w-100">
+                <i class="fas fa-list"></i> {{ l('FromTemplate') }}
+              </button>
+            </li>
+          </ul>
+        </div>
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>
@@ -51,6 +65,9 @@
               <!--              <b *ngIf="item.numberOfCompletedTrips < item.numberOfTrips" class="infoHighLight red stautsTruck">{{ l('Trips:InProgress') }}</b>-->
               <b *ngIf="!Channel && item.statusTitle" class="infoHighLight green stautsTruck">
                 {{ l(item.statusTitle) }}
+              </b>
+              <b *ngIf="item.notesCount > 0" class="infoHighLight blue stautsTruck">
+                {{ item.notesCount }} &nbsp; <span> {{ item.notesCount == 1 ? l('note') : l('notes') }} </span>
               </b>
               <b *ngIf="item.isSaas" class="infoHighLight green stautsTruck">
                 {{ l('saas') }}
@@ -232,7 +249,7 @@
             <div *ngIf="openCardId == item.id">
               <!--  start of ShippingRequestType::Details-->
               <div class="mb-2">
-                <div class="form-group row fv-plugins-icon-container">
+                <div class="form-group fv-plugins-icon-container">
                   <div *ngIf="!this.feature.isEnabled('App.Carrier')">
                     <shipping-request-offers-list
                       [shippingRequestId]="item.id"
@@ -242,7 +259,11 @@
                     </shipping-request-offers-list>
                   </div>
 
-                  <div *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
+                  <div>
+                    <app-notes #NotesComponent [shippingRequestId]="item.id" [type]="type"> </app-notes>
+                  </div>
+
+                  <div *ngIf="feature.isEnabled('App.Shipper') || (feature.isEnabled('App.TachyonDealer') && item.isTachyonDeal)">
                     <TripsForViewShippingRequest
                       *ngIf="item.id && bidsloading == false"
                       [ShippingRequest]="item"
@@ -250,7 +271,7 @@
                     ></TripsForViewShippingRequest>
                   </div>
 
-                  <div class="col-lg-12">
+                  <div>
                     <agm-map
                       minZoom="5"
                       style="height: 300px"
@@ -284,3 +305,4 @@
 <shipping-request-card-search-model #ModelSearch (modalsearch)="search()"></shipping-request-card-search-model>
 <shipping-request-card-cancel-model #ModelCancel></shipping-request-card-cancel-model>
 <price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search()"></price-offer-view-model>
+<load-entity-template-modal #loadEntityTemplateModal></load-entity-template-modal>

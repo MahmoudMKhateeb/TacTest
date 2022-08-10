@@ -58,7 +58,11 @@
         public const string Pages_PlateTypes_Create = "Pages.PlateTypes.Create";
         public const string Pages_PlateTypes_Edit = "Pages.PlateTypes.Edit";
         public const string Pages_PlateTypes_Delete = "Pages.PlateTypes.Delete";
-
+        
+        public const string Pages_ShippingRequestAndTripNotes = "Pages.ShippingRequestAndTripNotes";
+        public const string Pages_ShippingRequestAndTripNotes_Create = "Pages.ShippingRequestAndTripNotes_Create.Create";
+        public const string Pages_ShippingRequestAndTripNotes_Edit = "Pages.ShippingRequestAndTripNotes_Create.Edit";
+        public const string Pages_ShippingRequestAndTripNotes_Delete = "Pages.ShippingRequestAndTripNotes_Create.Delete";
         #region Shipping Request
 
         #region Trip
@@ -68,7 +72,7 @@
         public const string Pages_ShippingRequestTrips_Edit = "Pages.ShippingRequestTrips.Edit";
         public const string Pages_ShippingRequestTrips_Delete = "Pages.ShippingRequestTrips.Delete";
         public const string Pages_ShippingRequestTrips_Acident_Cancel = "Pages.ShippingRequestTrips.Accident.Cancel";
-
+        public const string Pages_ShippingRequestTrips_Cancel = "Pages.ShippingRequestTrips.Cancel";
         #region Accident
 
         public const string Pages_ShippingRequestResoneAccidents = "Pages.ShippingRequestResoneAccidents";
@@ -86,6 +90,8 @@
 
         public const string Pages_ShippingRequest_Accidents_Resolve_Edit =
             "Pages.ShippingRequest.Accidents.Resolve.Edit";
+        public const string Pages_ShippingRequest_Accidents_Resolve_ApproveChange = "Pages.ShippingRequest.Accidents.Resolve.ApproveChange";
+        public const string Pages_ShippingRequest_Accidents_Resolve_EnforceChange = "Pages.ShippingRequest.Accidents.Resolve.EnforceChange";
 
         public const string Pages_ShippingRequestTrip_Accident_Comments = "Pages.ShippingRequestTrip.Accident.Comments";
 
@@ -501,6 +507,7 @@
         public const string Pages_Administration_PolygonsImport = "Pages.Administration.PolygonsImport";
 
         /*Invoices */
+        #region Invoices
         public const string Pages_Administration_Host_Invoices_Periods = "Pages.Administration.Host.Invoices.Periods";
 
         public const string Pages_Administration_Host_Invoices_Period_Create =
@@ -549,6 +556,7 @@
 
 
         public const string Pages_Invoices_SubmitInvoices = "Pages.Invoices.SubmitInvoices";
+
         public const string Pages_Invoices_SubmitInvoices_Claim = "Pages.Invoices.SubmitInvoices.Claim";
 
         public const string Pages_Administration_Host_Invoices_SubmitInvoices_Delete =
@@ -561,12 +569,44 @@
             "Pages.Administration.Host.Invoices.SubmitInvoices.Rejected";
 
         public const string Pages_Invoices_Transaction = "Pages.Invoices.Transaction";
+        
+        public const string Pages_EntityTemplate = "Pages.EntityTemplate";
+        public const string Pages_EntityTemplate_Create = "Pages.EntityTemplate.Create";
+        public const string Pages_EntityTemplate_Update = "Pages.EntityTemplate.Update";
+        public const string Pages_EntityTemplate_Delete = "Pages.EntityTemplate.Delete";
+
+
+        public const string Pages_NormalPricePackages = "Pages.NormalPricePackages";
+        public const string Pages_NormalPricePackages_Create = "Pages.NormalPricePackages.Create";
+        public const string Pages_NormalPricePackages_Edit = "Pages.NormalPricePackages.Edit";
+        public const string Pages_NormalPricePackages_Delete = "Pages.NormalPricePackages.Delete";
+
+        #region ShippingRequestPostPriceUpdate
+
+        public const string Pages_SrPostPriceUpdate = "Pages.SrPostPriceUpdate";
+        public const string Pages_SrPostPriceUpdate_CreateAction = "Pages.SrPostPriceUpdate.CreateAction";
+        public const string Pages_SrPostPriceUpdate_CreateOfferAction = "Pages.SrPostPriceUpdate.CreateOfferAction";
+
+        #endregion
+        
+        
+        public const string Pages_Invoices_InvoiceNote = "Pages.Invoices.InvoiceNote";
+        public const string Pages_InvoiceNote_Create = "Pages.InvoiceNotes.Create";
+        public const string Pages_InvoiceNote_Edit = "Pages.InvoiceNotes.Edit";
+        public const string Pages_InvoiceNote_View = "Pages.InvoiceNotes.View";
+        #endregion
+
+
+
 
         #region shpping
 
         public const string Pages_Tracking = "Pages.shipment.Tracking";
         public const string Pages_Tracking_ReceiverCode = "Pages.Shipment.Tracking.ReceiverCode";
         public const string Pages_Tracking_ResetPointReceiverCode = "Pages.Shipment.Tracking.ResetPointReceiverCode";
+        
+        public const string Pages_ShippingRequestUpdates = "Pages.ShippingRequestUpdates";
+        public const string Pages_ShippingRequestUpdates_TakeAction = "Pages.ShippingRequestUpdates.TakeAction";
 
         #endregion
     }

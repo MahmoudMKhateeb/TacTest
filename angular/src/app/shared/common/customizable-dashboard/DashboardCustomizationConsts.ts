@@ -38,6 +38,7 @@ export class DashboardCustomizationConst {
       CarrierNextInvoiceFrequenctEndDateWidget: 'Widgets_Tenant_carrier_NextInvoiceFrequenctEndDateWidget',
       CarrierDueDateInDaysWidget: 'Widgets_Tenant_carrier_DueDateInDaysWidget',
       CarrierTrackingMapWidget: 'Widgets_Tenant_carrier_TrackingMapWidget',
+      CarrierMostUsedPPWidget: 'Widgets_Tenant_carrier_MostUsedPPWidget',
     },
     //TachyonDealer Only Widgets
     TachyonDealer: {

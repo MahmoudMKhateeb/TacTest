@@ -26,6 +26,7 @@ namespace TACHYON.Notifications
         public const string RejectShippingRequest = "App.RejectShippingRequest";
         public const string AcceptShippingRequestBid = "App.AcceptShippingRequestBid";
         public const string ShippingRequestAsBidWithSameTruck = "App.ShippingRequestAsBidWithSameTruck";
+        public const string ShippingRequestAsBidWithMatchingPricePackage = "App.ShippingRequestAsBidWithMatchingPricePackage";
         public const string CreateShippingRequestBid = "app.CreateShippingRequestBid";
         public const string UpdateShippingRequestBid = "app.UpdateShippingRequestBid";
         public const string CancelShippingRequestBid = "app.CancelShippingRequestBid";
@@ -41,6 +42,7 @@ namespace TACHYON.Notifications
         public const string SubmitInvoiceOnAccepted = "App.SubmitInvoiceOnAccepted";
         public const string SubmitInvoiceOnRejected = "App.SubmitInvoiceOnRejected";
         public const string NewBalanceAddedToShippper = "App.NewBalanceAddedToShippper";
+        public const string NewCreaditOrDebitNoteGenerated = "App.CreaditOrDebitNoteGenerated";
 
         public const string ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage =
             "App.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage";
@@ -49,6 +51,8 @@ namespace TACHYON.Notifications
 
         public const string ShipperShippingRequestFinish = "App.Shipper.ShippingRequest.Finish";
         public const string DriverGpsOff = "App.DriverGpsOff";
+        public const string PricePackageOfferWasCreated = "App.PricePackageOfferWasCreated";
+        public const string CarrierAcceptPricePackageOffer = "App.CarrierAcceptPricePackageOffer";
 
         #region Trip
 
@@ -68,6 +72,13 @@ namespace TACHYON.Notifications
         public const string NotifyShipperWhenTripUpdated = "App.NotifyShipperWhenTripUpdated";
         public const string NotifyCarrierWhenTripUpdated = "App.NotifyCarrierWhenTripUpdated";
         public const string NotifyTachyonDealWhenTripUpdated = "App.NotifyTachyonDealWhenTripUpdated";
+        public const string ShippingRequestTripCanceled = "App.ShippingRequest.ShippingRequestTripCanceled";
+        public const string CancellationRequestedByShipper = "App.ShippingRequest.CancellationRequestedByShipper";
+        public const string ShippingRequestTripRejectCancelByTachyonDealer = "App.ShippingRequest.ShippingRequestTripRejectCancelByTachyonDealer";
+        public const string ShippingRequestTripNeedsCancelApproval = "App.ShippingRequest.ShippingRequestTripNeedsCancelApproval";
+        
+        public const string NotifyOfferOwnerWhenMarketplaceSrUpdated = "App.NotifyOfferOwnerWhenMarketplaceShippingRequestUpdated";
+        public const string NotifyOfferOwnerWhenDirectRequestSrUpdated = "App.NotifyOfferOwnerWhenDirectRequestShippingRequestUpdated";
 
         #endregion
 
@@ -75,6 +86,7 @@ namespace TACHYON.Notifications
 
         public const string ShippingRequestAccidents = "App.ShippingRequest.Accident";
         public const string ShippingRequestCancelByTripAccidents = "App.ShippingRequest.trip.Accident.Cancel";
+        public const string TripAccidentResolved = "App.Trip.Accident.Resolved";
 
         #endregion
 
@@ -94,6 +106,16 @@ namespace TACHYON.Notifications
             "App.ShippingRequestNotifyCarrirerWhenShipperAccepted";
 
         public const string ShipperReminderToCompleteTrips = "App.ShipperReminderToCompleteTrips";
+        public const string ShippingRequestAddedByTms = "App.ShippingRequestAddedByTms";
+
+        #region ShippingRequestPostPriceUpdate
+
+        public const string NotifyCarrierWhenPostPriceSrUpdated = "App.NotifyCarrierWhenPostPriceSrUpdated";
+        public const string NotifyShipperForPostPriceSrUpdateAction = "App.NotifyShipperForPostPriceSrUpdateAction";
+        public const string NotifyShipperWhenRequestChangePrice = "App.NotifyShipperWhenRequestChangePrice";
+        public const string RejectedPostPriceOffer = "App.RejectedPostPriceOffer";
+
+        #endregion
 
         #region Offer
 
@@ -122,6 +144,11 @@ namespace TACHYON.Notifications
 
         #endregion
 
+        public const string NotifyShipperBeforApplyDetention = "App.NotifyShipperBeforApplyDetention";
+        public const string NotifyShipperWhenApplyDetention = "App.NotifyShipperWhenApplyDetention";
+        public const string PenaltyComplaintAdded = "App.PenaltyComplaintAdded";
+
+        public const string NotifyShipperWhenTMSAddedShippingRequest = "App.NotifyShipperWhenTMSAddedShippingRequest";
         #endregion
     }
 }

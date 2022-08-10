@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TACHYON.AddressBook.Dtos;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Profile.Dto;
+using TACHYON.PricePackages.Dto.NormalPricePackage;
 using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Authorization.Users.Profile
@@ -53,5 +54,7 @@ namespace TACHYON.Authorization.Users.Profile
         Task<FleetInformationDto> GetFleetInformation(GetFleetInformationInputDto input);
 
         Task<PagedResultDto<AvailableVasDto>> GetAvailableVases(GetAvailableVasesInputDto input);
+
+        Task<PagedResultDto<NormalPricePackageProfileDto>> GetNormalPricePackages(GetNormalPricePackagesForProfileInputDto input);
     }
 }

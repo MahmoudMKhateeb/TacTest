@@ -14,17 +14,19 @@ import {
 import * as _ from 'lodash';
 import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
 import { ShippingRequestForPriceOfferGetAllInput } from '../../../../shared/common/search/ShippingRequestForPriceOfferGetAllInput';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ShippingrequestsDetailsModelComponent } from '../details/shippingrequests-details-model.component';
+import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
-  // styleUrls: ['/assets/custom/css/style.scss'],
   selector: 'shipping-request-card-template',
   animations: [appModuleAnimation()],
 })
 export class ShippingRequestCardTemplateComponent extends ScrollPagnationComponentBase implements OnInit {
   @ViewChild('Model', { static: false }) modalMore: ShippingrequestsDetailsModelComponent;
+  @ViewChild('loadEntityTemplateModal', { static: false }) loadEntityTemplateModal: LoadEntityTemplateModalComponent;
   shippingRequestforView: GetShippingRequestForViewOutput;
 
   Items: GetShippingRequestForPriceOfferListDto[] = [];
@@ -33,6 +35,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   @Input() isTMS: boolean = false;
   @Input() Title: string;
   @Input() ShippingRequestId: number | null | undefined = undefined;
+  type = 'ShippingRequest';
   origin: any;
   destination: any;
   direction = 'ltr';
@@ -41,13 +44,18 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   zoom: Number = 13; //map zoom
   lat: Number = 24.717942;
   lng: Number = 46.675761;
+  directRequestId!: number;
+  activeShippingRequestId!: number;
   constructor(
     injector: Injector,
     private _currentServ: PriceOfferServiceProxy,
     private _directRequestSrv: ShippingRequestDirectRequestServiceProxy,
+    private _activatedRoute: ActivatedRoute,
     private router: Router
   ) {
     super(injector);
+    this.directRequestId = this._activatedRoute.snapshot.queryParams['directRequestId'];
+    this.activeShippingRequestId = this._activatedRoute.snapshot.queryParams['srId'];
   }
   ngOnInit(): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
@@ -57,6 +65,10 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
       this.searchInput.requestType = ShippingRequestType.TachyonManageService;
       this.searchInput.isTMS = true;
     }
+    this.searchInput.directRequestId = this.directRequestId;
+    if (isNotNullOrUndefined(this.activeShippingRequestId)) {
+      this.searchInput.shippingRequestId = this.activeShippingRequestId;
+    }
     this.LoadData();
   }
   LoadData() {
@@ -65,6 +77,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         this.searchInput.filter,
         this.searchInput.carrier,
         this.searchInput.shippingRequestId,
+        this.searchInput.directRequestId,
         this.searchInput.channel,
         this.searchInput.requestType,
         this.searchInput.truckTypeId,
@@ -99,13 +112,20 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
             this.destination = this.destination;
           }
           if (this.feature.isEnabled('App.Shipper')) {
-            if (r.requestTypeTitle == 'TachyonManageService' && r.statusTitle == 'NeedsAction') {
-              r.statusTitle = 'New';
+            if (r.requestType == ShippingRequestType.TachyonManageService && r.status == ShippingRequestStatus.NeedsAction) {
+              r.statusTitle = this.l('New');
             }
+          }
+          // only in this case i need to use double equal not triple (type is difference)
+          if (
+            (this.directRequestId && r.directRequestId == this.directRequestId) ||
+            (this.activeShippingRequestId && r.id == this.activeShippingRequestId)
+          ) {
+            this.moreRedirectTo(r);
+            this.directRequestId = undefined;
           }
         });
         this.Items.push(...result.items);
-        console.log('LoadingMore Date .....');
       });
   }
   canDeleteDirectRequest(input: GetShippingRequestForPriceOfferListDto) {

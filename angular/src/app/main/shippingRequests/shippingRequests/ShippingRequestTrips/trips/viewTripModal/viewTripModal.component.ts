@@ -13,6 +13,7 @@ import {
   ShippingRequestDriverServiceProxy,
   GetShippingRequestForViewOutput,
   ShippingRequestTripStatus,
+  UpdateExpectedDeliveryTimeInput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -23,13 +24,16 @@ import { TripService } from '@app/main/shippingRequests/shippingRequests/Shippin
 import { ActivatedRoute, Router } from '@angular/router';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
+import { Moment } from '@node_modules/moment';
 
 @Component({
   selector: 'viewTripModal',
   templateUrl: './viewTripModal.component.html',
+  styleUrls: ['./viewTripModal.component.scss'],
 })
 export class ViewTripModalComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('viewTripDetails', { static: false }) modal: ModalDirective;
+  @ViewChild('TripNotesModal', { static: false }) TripNotesModal: ModalDirective;
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
@@ -49,8 +53,11 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   private TruckTypeId: number;
   pickUpPointSender: string;
   activeTripId: any;
-
+  type = 'Trip';
   shippingRequestTripStatusEnum = ShippingRequestTripStatus;
+  expectedDeliveryTime: moment.Moment;
+  originalExpectedDeliveryTime: Moment;
+  expectedDeliveryTimeLoading: boolean;
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -99,9 +106,12 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this.trip = res;
         //Get The Points From The View Service and send them to the Points Service To Draw Them
         this._PointsService.updateWayPoints(this.trip.routPoints);
+        this._PointsService.updateCurrentUsedIn('view');
         this.pickUpPointSender = res.routPoints[0].senderOrReceiverContactName;
         this.assignDriverAndTruck.assignedTruckId = this.trip.assignedTruckId;
         this.assignDriverAndTruck.assignedDriverUserId = this.trip.assignedDriverUserId;
+        this.expectedDeliveryTime = this.trip.expectedDeliveryTime;
+        this.originalExpectedDeliveryTime = this.expectedDeliveryTime;
       });
 
     this.modal.show();
@@ -116,9 +126,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this.modal.hide();
   }
 
-  checkData() {
-    if (this.allTrucks.length == 0) this.getAlert(this.l('NoMatchingTrucks'));
-    if (this.allDrivers.length == 0) this.getAlert(this.l('NoMatchingDrivers'));
+  checkData(category) {
+    if (category == 'truck' && this.allTrucks.length == 0) this.getAlert(this.l('NoMatchingTrucks'));
+    if (category == 'driver' && this.allDrivers.length == 0) this.getAlert(this.l('NoMatchingDrivers'));
   }
 
   getAlert(msg: string) {
@@ -168,6 +178,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     }
   }
 
+  getNotes() {
+    this.TripNotesModal.show();
+  }
   /**
    * this function is to assign Driver And Truck To shipping Request Trip
    */
@@ -206,6 +219,23 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
           this.modalSave.emit('');
         });
       } //end of if
+    });
+  }
+
+  /**
+   * update the expected Delivery Time Of the Trip
+   */
+  updateTripExpectedDeliveryTime() {
+    if (!isNotNullOrUndefined(this.currentTripId)) return;
+    if (this.expectedDeliveryTime === this.originalExpectedDeliveryTime) return;
+    // console.log('Trip Expected Delivery time Was Updated');
+    this.expectedDeliveryTimeLoading = true;
+    let body = new UpdateExpectedDeliveryTimeInput();
+    body.id = this.currentTripId;
+    body.expectedDeliveryTime = this.expectedDeliveryTime;
+    this._shippingRequestTripsService.updateExpectedDeliveryTimeForTrip(body).subscribe((res) => {
+      this.expectedDeliveryTimeLoading = false;
+      this.notify.success(this.l('TripExpectedDateWasUpdated'));
     });
   }
 }

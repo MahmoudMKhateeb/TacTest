@@ -1,4 +1,4 @@
-﻿<div
+<div
   bsModal
   #createOrEditModal="bs-modal"
   class="modal fade"
@@ -65,10 +65,10 @@
                 type="text"
                 class="form-control"
                 id="DocumentNumber"
+                (keypress)="numberOnly($event)"
                 name="documentNumber"
                 [required]="documentFile.documentTypeDto.isRequiredNumber"
                 [(ngModel)]="documentFile.number"
-                type="text"
                 [pattern]="'[0-9]{' + documentFile.documentTypeDto.numberMinDigits + ',' + documentFile.documentTypeDto.numberMaxDigits + '}'"
                 [ngClass]="{
                   'is-valid': inputDocumentNumber.valid,

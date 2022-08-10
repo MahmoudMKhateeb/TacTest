@@ -1,0 +1,45 @@
+<div class="card card-custom card-stretch gutter-b">
+  <div class="card-header border-0">
+    <h3 class="card-title font-weight-bolder text-dark">{{ l('WorkingDaysHours') }}</h3>
+  </div>
+  <div class="card-body pt-2">
+    <div *ngFor="let item of FacilityWorkingHoursInput; index as i" class="d-flex align-items-center mb-2">
+      <span class="bullet bullet-bar bg-danger align-self-stretch"></span>
+      <label class="checkbox checkbox-lg checkbox-light-danger checkbox-single flex-shrink-0 m-0 mx-4">
+        <input #hasTime="ngModel" id="hasTime{{ i }}" name="hasTime{{ i }}" [(ngModel)]="item.hasTime" type="checkbox" />
+        <span></span>
+      </label>
+      <div class="d-inline-flex">
+        <a class="text-dark-75 text-hover-primary font-weight-bold font-size-lg mb-1 cursor-pointer pd-2">
+          {{ item.name }}
+        </a>
+        <div class="d-inline-flex" *ngIf="item.hasTime">
+          <input
+            type="time"
+            title="From Time"
+            #FromTimeInput="ngModel"
+            id="FromTimeInput{{ i }}"
+            [(ngModel)]="item.startTime"
+            required
+            class="form-control m-input"
+            name="FromTimeInput{{ i }}"
+            [class.is-invalid]="FromTimeInput.touched && !FromTimeInput.valid"
+            [class.is-valid]="FromTimeInput.touched && FromTimeInput.valid"
+          />&nbsp;
+          <input
+            type="time"
+            title="To Time"
+            #ToTimeInput="ngModel"
+            id="ToTimeInput{{ i }}"
+            [(ngModel)]="item.endTime"
+            required
+            class="form-control m-input"
+            name="ToTimeInput{{ i }}"
+            [class.is-invalid]="ToTimeInput.touched && !ToTimeInput.valid"
+            [class.is-valid]="ToTimeInput.touched && ToTimeInput.valid"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

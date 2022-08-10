@@ -27,7 +27,7 @@
   <div class="row">
     <!--    section Facilities Table - 6-->
     <profile-shipper-facilities
-      *ngIf="giveUserEditionType == 2 && (isTMS || isShipper)"
+      *ngIf="giveUserEditionType == 2 && (isTachyonDealerOrHost || isShipper)"
       [giverUserId]="givenId"
       (emitFacilityCordinates)="drawCoordinates($event)"
     ></profile-shipper-facilities>
@@ -36,6 +36,11 @@
     <div class="col-lg-12">
       <profile-shipper-invoicing *ngIf="giveUserEditionType == 2 && (isTMS || isShipper)" [giverUserId]="givenId"></profile-shipper-invoicing>
     </div>
+    <!--  section Carrier Vases    -->
+    <profile-carrier-normal-price-package
+      *ngIf="tenantProfileInformation.tenancyName == 'carrier' && (isTachyonDealerOrHost || (isCarrier && givenId == appSession.tenantId))"
+      [giverUserId]="givenId"
+    ></profile-carrier-normal-price-package>
 
     <!--  section Carrier Vases    -->
     <profile-carrier-vases *ngIf="giveUserEditionType == 3 && (isTMS || isCarrier)" [giverUserId]="givenId"></profile-carrier-vases>

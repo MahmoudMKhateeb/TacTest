@@ -3,6 +3,7 @@ using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Net.Mail;
 using Abp.UI;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
@@ -13,6 +14,8 @@ using TACHYON.MultiTenancy;
 using TACHYON.Net.Emailing;
 using TACHYON.Notifications;
 using TACHYON.PriceOffers;
+using TACHYON.PriceOffers.Base;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Invoices.Balances
 {
@@ -25,6 +28,7 @@ namespace TACHYON.Invoices.Balances
         private readonly IAppNotifier _appNotifier;
         private readonly IEmailTemplateProvider _emailTemplateProvider;
         private readonly IEmailSender _emailSender;
+        private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<InvoiceProforma, long> _InvoicesProformarepository;
         private readonly IRepository<InvoicePeriod> _invoicePeriodRepository;
         private readonly UserManager _userManager;
@@ -39,7 +43,8 @@ namespace TACHYON.Invoices.Balances
             IEmailSender emailSender,
             IRepository<InvoiceProforma, long> InvoicesProformarepository,
             UserManager userManager,
-            IRepository<InvoicePeriod> invoicePeriodRepository)
+            IRepository<InvoicePeriod> invoicePeriodRepository,
+            IRepository<ShippingRequest, long> shippingRequestRepository)
         {
             _settingManager = settingManager;
             _Tenant = Tenant;
@@ -51,6 +56,7 @@ namespace TACHYON.Invoices.Balances
             _InvoicesProformarepository = InvoicesProformarepository;
             _userManager = userManager;
             _invoicePeriodRepository = invoicePeriodRepository;
+            _shippingRequestRepository = shippingRequestRepository;
         }
 
         #region Shipper
@@ -60,19 +66,20 @@ namespace TACHYON.Invoices.Balances
         /// </summary>
         /// <param name="offer"> price offer entity</param>
         /// <returns></returns>
-        public async Task ShipperCanAcceptOffer(PriceOffer offer)
+        public async Task ShipperCanAcceptOffer(PriceOfferBase offer, decimal taxVat, long shippingRequestId)
         {
-            InvoicePeriodType periodType = await GetTenantPeriodType(offer.ShippingRequestFk.TenantId);
-            var tenant = offer.ShippingRequestFk.Tenant;
+            var shippingRequest = await _shippingRequestRepository.GetAllIncluding(x => x.Tenant).FirstOrDefaultAsync(x => x.Id == shippingRequestId);
+            InvoicePeriodType periodType = await GetTenantPeriodType(shippingRequest.TenantId);
+            var tenant = shippingRequest.Tenant;
             if (periodType == InvoicePeriodType.PayInAdvance)
             {
-                if (!await CheckShipperCanPaidFromBalance(offer.ShippingRequestFk.TenantId, offer.TotalAmountWithCommission)) throw new UserFriendlyException(L("NoEnoughBalance"));
-                await ShipperWhenCanAcceptPrice(offer, periodType);
+                if (!await CheckShipperCanPaidFromBalance(shippingRequest.TenantId, offer.TotalAmount)) throw new UserFriendlyException(L("NoEnoughBalance"));
+                await ShipperWhenCanAcceptPrice(offer, shippingRequest, taxVat, periodType);
             }
             else
             {
-                decimal creditLimit = decimal.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFk.TenantId, AppFeatures.ShipperCreditLimit)) * -1;
-                decimal creditBalance = tenant.CreditBalance - offer.TotalAmountWithCommission;
+                decimal creditLimit = decimal.Parse(await _featureChecker.GetValueAsync(shippingRequest.TenantId, AppFeatures.ShipperCreditLimit)) * -1;
+                decimal creditBalance = tenant.CreditBalance - offer.TotalAmount;
                 if (!(creditBalance > creditLimit)) throw new UserFriendlyException(L("YouDoNotHaveEnoughCreditInYourCreditCard"));
             }
         }
@@ -92,21 +99,21 @@ namespace TACHYON.Invoices.Balances
         /// <param name="offer"></param>
         /// <param name="periodType"></param>
         /// <returns></returns>
-        private async Task ShipperWhenCanAcceptPrice(PriceOffer offer, InvoicePeriodType periodType)
+        private async Task ShipperWhenCanAcceptPrice(PriceOfferBase offer, ShippingRequest shippingRequest, decimal taxVat, InvoicePeriodType periodType)
         {
-            var Tenant = offer.ShippingRequestFk.Tenant;
+            var Tenant = shippingRequest.Tenant;
 
             if (periodType == InvoicePeriodType.PayInAdvance)
             {
-                offer.ShippingRequestFk.IsPrePayed = true;
+                shippingRequest.IsPrePayed = true;
                 await _InvoicesProformarepository.InsertAsync(new InvoiceProforma // Generate Invoice proforma when the shipper billing interval is pay in advance
                 {
                     TenantId = Tenant.Id,
                     Amount = offer.SubTotalAmountWithCommission,
                     TotalAmount = offer.TotalAmountWithCommission,
                     VatAmount = offer.VatAmountWithCommission,
-                    TaxVat = offer.TaxVat,
-                    RequestId = offer.ShippingRequestId
+                    TaxVat = taxVat,
+                    RequestId = shippingRequest.Id
                 });
                 Tenant.ReservedBalance += offer.TotalAmountWithCommission;
             }

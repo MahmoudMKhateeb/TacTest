@@ -1,0 +1,126 @@
+<div
+  bsModal
+  #srUpdateModal="bs-modal"
+  class="modal fade"
+  id="srUpdateModal"
+  data-backdrop="static"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="staticBackdrop"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+  style="min-height: 300px"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{ l('ShippingRequestUpdates') }}</h5>
+        <button (click)="close()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i aria-hidden="true" class="ki ki-close"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card" [busyIf]="loading">
+          <p-table
+            #UpdatesTable
+            [value]="updates"
+            (onLazyLoad)="getSrUpdates($event)"
+            [lazy]="true"
+            [totalRecords]="primengTableHelper?.totalRecordsCount"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ l('Actions') }}</th>
+                <th pSortableColumn="creationTime">{{ l('CreationTime') }} <p-sortIcon field="code"></p-sortIcon></th>
+                <th pSortableColumn="action">{{ l('UpdateAction') }} <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="isApplied">{{ l('Status') }} <p-sortIcon field="category"></p-sortIcon></th>
+                <th pSortableColumn="rejectionReason">{{ l('UpdateRejectionReason') }}<p-sortIcon field="quantity"></p-sortIcon></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-update>
+              <tr>
+                <td>
+                  <div class="dropdown" dropdown>
+                    <button
+                      class="btn btn-danger dropdown-toggle"
+                      type="button"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      dropdownToggle
+                    >
+                      {{ l('Actions') }}
+                    </button>
+                    <div *ngIf="isCarrier">
+                      <div class="dropdown-menu" *dropdownMenu>
+                        <a class="dropdown-item" (click)="ViewSrUpdateModal.show(update.id)">{{ l('View') }}</a>
+                        <a class="dropdown-item" *ngIf="update.action == 1" (click)="acceptChanges(update.id)">{{
+                          l('AcceptedPostPriceUpdateByCarrier')
+                        }}</a>
+                        <a class="dropdown-item" (click)="acceptChangesWithReprice(update)" *ngIf="update.action == 1">{{
+                          l('ChangePriceRequestedForPostPriceUpdate')
+                        }}</a>
+                        <a class="dropdown-item" (click)="RejectSrUpdateModal.show(update.id)" *ngIf="update.action == 1">{{
+                          l('RejectedPostPriceUpdateByCarrier')
+                        }}</a>
+                      </div>
+                    </div>
+                    <div *ngIf="isShipper">
+                      <div class="dropdown-menu" *dropdownMenu>
+                        <a class="dropdown-item" (click)="ViewSrUpdateModal.show(update.id)">{{ l('View') }}</a>
+                        <a
+                          *ngIf="isUpdateHasOffer(update)"
+                          class="dropdown-item"
+                          (click)="ViewPriceOfferModal.show(shippingRequestId, update.priceOfferId, true); setActiveId(update.id)"
+                          >{{ l('ViewOffer') }}</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ update.creationTime | date: 'mediumDate' }}</td>
+                <td>
+                  <span
+                    class="label label-inline font-weight-bold"
+                    [class]="{
+                      'label-light-success': update.action == 2,
+                      'label-light-warning': update.action == 3,
+                      'label-light-danger': update.action == 4
+                    }"
+                  >
+                    {{ l(update.actionTitle) }}
+                  </span>
+                </td>
+                <td>{{ getUpdateStatus(update) }}</td>
+                <td>{{ update.rejectionReason }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <div *ngIf="primengTableHelper.totalRecordsCount == 0" class="primeng-no-data d-flex justify-content-center p-10">
+            {{ l('NoData') }}
+          </div>
+          <div class="primeng-paging-container">
+            <p-paginator
+              #Paginator
+              (onPageChange)="getSrUpdates($event)"
+              [rows]="primengTableHelper.predefinedRecordsCountPerPage[0]"
+              [totalRecords]="primengTableHelper?.totalRecordsCount"
+              [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+            >
+            </p-paginator>
+            <span class="total-records-count">
+              {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal" (click)="close()">{{ l('Close') }}</button>
+      </div>
+    </div>
+  </div>
+  <ViewSrPostPriceUpdatesModal #ViewSrUpdateModal></ViewSrPostPriceUpdatesModal>
+  <price-offer-model #PriceOfferModal (postPriceOfferSubmitted)="sendPostPriceOffer($event)"></price-offer-model>
+  <price-offer-view-model #ViewPriceOfferModal (modalPostPriceResoponse)="takeOfferAction($event)"></price-offer-view-model>
+  <RejectSrPostPriceUpdateModal #RejectSrUpdateModal></RejectSrPostPriceUpdateModal>
+</div>

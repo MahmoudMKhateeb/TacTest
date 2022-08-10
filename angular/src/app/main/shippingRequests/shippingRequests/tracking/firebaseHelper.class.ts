@@ -14,8 +14,8 @@ export const trackingIconsList = {
   truckIcon: {
     url: 'https://img.icons8.com/external-justicon-flat-justicon/64/000000/external-truck-transportation-justicon-flat-justicon.png',
     scaledSize: {
-      width: 40,
-      height: 40,
+      width: 45,
+      height: 45,
     },
   },
   offlineDriverIcon: {
@@ -25,16 +25,33 @@ export const trackingIconsList = {
       height: 40,
     },
   },
+  issueIcon: {
+    url: 'https://img.icons8.com/external-flaticons-flat-flat-icons/344/external-warning-100-most-used-icons-flaticons-flat-flat-icons.png',
+    scaledSize: {
+      width: 50,
+      height: 50,
+    },
+  },
+  delayIcon: {
+    url: 'https://img.icons8.com/external-flaticons-flat-flat-icons/344/external-delay-modern-dating-flaticons-flat-flat-icons-2.png',
+    scaledSize: {
+      width: 50,
+      height: 50,
+    },
+  },
 };
 
 export interface DriverLocation {
   lng: number;
   lat: number;
 }
-
+export interface Database {
+  driverDatabase: string;
+  liveTripDatabase: string;
+}
 export class FirebaseHelperClass {
   private fireDB: AngularFireList<unknown>;
-  private database: { driverDatabase: string; liveTripDatabase: string } = { driverDatabase: 'maps', liveTripDatabase: 'livetrip' };
+  private database: Database = { driverDatabase: 'maps', liveTripDatabase: 'livetrip' };
 
   constructor(private _db: AngularFireDatabase) {
     this.envDetector();
@@ -130,7 +147,7 @@ export class FirebaseHelperClass {
         break;
       }
       default: {
-        this.database.driverDatabase = 'map'; //toBeChanged
+        this.database.driverDatabase = 'maps'; //toBeChanged
         this.database.liveTripDatabase = 'livetrip'; //toBeChanged
         break;
       }

@@ -1,0 +1,8 @@
+th,
+td {
+  width: 20%;
+}
+
+.customAlert {
+  background-color: #bbf9b3 !important;
+}

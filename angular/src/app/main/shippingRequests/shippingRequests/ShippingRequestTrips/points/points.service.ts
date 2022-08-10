@@ -6,6 +6,7 @@ import {
   GetAllGoodsCategoriesForDropDownOutput,
   GoodsDetailDto,
   GoodsDetailsServiceProxy,
+  RoutPointDto,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 
@@ -17,7 +18,7 @@ export class PointsService {
 
   private singleWayPoint = new BehaviorSubject<CreateOrEditRoutPointDto>(new CreateOrEditRoutPointDto());
   currentSingleWayPoint = this.singleWayPoint.asObservable();
-  private wayPointsList = new BehaviorSubject<CreateOrEditRoutPointDto[]>([]);
+  private wayPointsList = new BehaviorSubject<any[]>([]);
   currentWayPointsList = this.wayPointsList.asObservable();
   private goodDetail = new BehaviorSubject<GoodsDetailDto>(new GoodsDetailDto());
   CurrentGoodDetail = this.goodDetail.asObservable();
@@ -38,7 +39,7 @@ export class PointsService {
    * updates Service WayPoints List
    * @param incomingWayPointsList
    */
-  updateWayPoints(incomingWayPointsList: CreateOrEditRoutPointDto[]) {
+  updateWayPoints(incomingWayPointsList: CreateOrEditRoutPointDto[] | RoutPointDto[]) {
     this.wayPointsList.next(incomingWayPointsList);
   }
 

@@ -16,9 +16,6 @@ namespace TACHYON.TermsAndConditions
         [StringLength(TermAndConditionConsts.MaxTitleLength, MinimumLength = TermAndConditionConsts.MinTitleLength)]
         public virtual string Title { get; set; }
 
-        //[Required]
-        //public virtual string Content { get; set; }
-
         public virtual double Version { get; set; }
 
         public virtual int? EditionId { get; set; }

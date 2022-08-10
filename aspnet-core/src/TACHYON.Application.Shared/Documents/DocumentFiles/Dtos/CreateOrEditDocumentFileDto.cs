@@ -67,6 +67,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public long? TrailerId { get; set; }
 
         public long? UserId { get; set; }
+        public int? NoteId { get; set; }
 
         public long? RoutStepId { get; set; }
 

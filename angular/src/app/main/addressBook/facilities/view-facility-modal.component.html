@@ -43,6 +43,9 @@
           </div>
         </div>
       </div>
+      <div class="row col-md-6">
+        <app-view-working-hours #ViewWorkingHoursComponent [FacilityWorkingHoursInput]="FacilityWorkingHours"> </app-view-working-hours>
+      </div>
       <div class="modal-footer">
         <button [disabled]="saving" type="button" class="btn btn-primary blue" (click)="close()">{{ l('Close') }}</button>
       </div>

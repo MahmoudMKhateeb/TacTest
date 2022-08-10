@@ -117,6 +117,7 @@ namespace TACHYON.Trucks.TrucksTypes
         protected virtual async Task Create(CreateOrEditTrucksTypeDto input)
         {
             var trucksType = ObjectMapper.Map<TrucksType>(input);
+            trucksType.Key = input.DisplayName;
             await _trucksTypeRepository.InsertAsync(trucksType);
         }
 
@@ -174,6 +175,7 @@ namespace TACHYON.Trucks.TrucksTypes
                 }
 
                 var createdTranslation = ObjectMapper.Map<TrucksTypesTranslation>(input);
+                createdTranslation.DisplayName = input.TranslatedDisplayName;
                 await _trucksTypeTranslationRepository.InsertAsync(createdTranslation);
             }
             else

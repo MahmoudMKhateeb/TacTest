@@ -25,6 +25,7 @@ using TACHYON.DriverLocationLogs;
 using TACHYON.Editions;
 using TACHYON.EmailTemplates;
 using TACHYON.EntityLogs;
+using TACHYON.EntityTemplates;
 using TACHYON.Friendships;
 using TACHYON.Goods;
 using TACHYON.Goods.GoodCategories;
@@ -45,6 +46,7 @@ using TACHYON.Nationalities.NationalitiesTranslation;
 using TACHYON.Offers;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.PriceOffers;
+using TACHYON.PricePackages;
 using TACHYON.Rating;
 using TACHYON.Receivers;
 using TACHYON.Routs;
@@ -59,7 +61,9 @@ using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.ShippingRequestUpdates;
 using TACHYON.Shipping.ShippingTypes;
+using TACHYON.Shipping.SrPostPriceUpdates;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.ShippingRequestVases;
 using TACHYON.SmartEnums;
@@ -81,6 +85,8 @@ using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.UnitOfMeasures;
 using TACHYON.Vases;
+using TACHYON.Penalties;
+using TACHYON.Shipping.ShippingRequestAndTripNotes;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -120,6 +126,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<ShippingRequestTripTransition> ShippingRequestTripTransitions { get; set; }
         public virtual DbSet<ShippingRequestTrip> ShippingRequestTrips { get; set; }
+        public virtual DbSet<ShippingRequestAndTripNote> ShippingRequestAndTripNotes { get; set; }
 
         public virtual DbSet<ShippingRequestReasonAccident> ShippingRequestReasonAccidents { get; set; }
         public DbSet<ShippingRequestReasonAccidentTranslation> ShippingRequestReasonAccidentTranslations { get; set; }
@@ -196,10 +203,12 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<UnitOfMeasureTranslation> UnitOfMeasureTranslations { get; set; }
 
         public virtual DbSet<Facility> Facilities { get; set; }
-
+        public virtual DbSet<FacilityWorkingHour> FacilityWorkingHours { get; set; }
         public virtual DbSet<DocumentFile> DocumentFiles { get; set; }
 
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
+        public virtual DbSet<Penalty> Penalties { get; set; }
+        public virtual DbSet<PenaltyComplaint> PenaltyComplaints { get; set; }
 
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
         public DbSet<ShippingRequestDirectRequest> ShippingRequestDirectRequests { get; set; }
@@ -246,7 +255,8 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<GroupShippingRequests> GroupShippingRequests { get; set; }
         public virtual DbSet<GroupPeriodInvoice> GroupPeriodInvoice { get; set; }
         public DbSet<InvoicePaymentMethod> InvoicePaymentMethods { get; set; }
-
+        public DbSet<InvoiceNote> InvoiceNotes { get; set; }
+        public DbSet<InvoiceNoteItem> InvoiceNoteItems { get; set; }
         public DbSet<SubmitInvoice> SubmitInvoices { get; set; }
         public DbSet<SubmitInvoiceTrip> SubmitInvoiceTrips { get; set; }
         public virtual DbSet<BalanceRecharge> BalanceRecharge { get; set; }
@@ -285,6 +295,15 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<DriverLocationLog> DriverLocationLogs { get; set; }
 
         public DbSet<EntityLog> EntityLogs { get; set; }
+        
+        public DbSet<EntityTemplate> EntityTemplates { get; set; }
+        public DbSet<NormalPricePackage> NormalPricePackages { get; set; }
+        public DbSet<PricePackageOffer> PricePackageOffers { get; set; }
+        public DbSet<PricePackageOfferItem> PricePackageOfferItems { get; set; }
+        
+        public DbSet<ShippingRequestUpdate> ShippingRequestUpdates { get; set; }
+
+        public DbSet<SrPostPriceUpdate> PostPriceUpdates { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;
@@ -389,6 +408,10 @@ namespace TACHYON.EntityFrameworkCore
             {
                 s.HasIndex(e => new { e.TenantId });
             });
+
+            modelBuilder.Entity<Penalty>()
+            .HasOne(a => a.PenaltyComplaintFK).WithOne(b => b.PenaltyFK)
+            .HasForeignKey<PenaltyComplaint>(e => e.PenaltyId);
 
             modelBuilder.Entity<Offer>(o =>
             {

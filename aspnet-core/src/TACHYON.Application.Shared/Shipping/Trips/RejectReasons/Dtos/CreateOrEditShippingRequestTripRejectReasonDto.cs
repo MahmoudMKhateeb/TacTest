@@ -8,6 +8,8 @@ namespace TACHYON.Shipping.Trips.RejectReasons.Dtos
 {
     public class CreateOrEditShippingRequestTripRejectReasonDto : EntityDto
     {
+        public string Key { get; set; }
+
         public ICollection<ShippingRequestTripRejectReasonTranslationDto> Translations { get; set; }
     }
 }

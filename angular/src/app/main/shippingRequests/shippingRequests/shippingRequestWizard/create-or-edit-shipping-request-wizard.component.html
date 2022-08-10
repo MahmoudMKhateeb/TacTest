@@ -91,7 +91,7 @@
                           (change)="shippingRequestType = 'tachyondeal'"
                           required
                         >
-                          <option [value]="undefined">{{ l('SelectShipper') }}</option>
+                          <option [value]="undefined" disabled>{{ l('SelectShipper') }}</option>
                           <option *ngFor="let item of AllShippers" value="{{ item.id }}">{{ item.displayName }}</option>
                         </select>
                       </div>
@@ -118,7 +118,7 @@
                         readonly="readonly"
                         [attr.disabled]="step1Dto.shipperId > 0 ? true : null"
                       >
-                        <option value="undefined" selected>{{ l('Select') }}</option>
+                        <option value="undefined" selected disabled>{{ l('Select') }}</option>
                         <option *ngIf="feature.isEnabled('App.MarketPlace')" [value]="'bidding'">{{ l('Marketplace') }}</option>
                         <option [value]="'tachyondeal'">{{ l('TachyonManageService') }}</option>
                         <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">
@@ -128,7 +128,7 @@
                       <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
                     </div>
                     <div class="form-group" [hidden]="shippingRequestType !== 'directrequest' || isCarrierSass">
-                      <label>{{ l('SelectCarriers') }} <span class="required-fileds">*</span></label>
+                      <label>{{ l('SelectCarriers') }} </label>
                       <div
                         [ngClass]="{
                           'spinner spinner-success spinner-right mr-1 ml-1': !allCarriers
@@ -393,7 +393,7 @@
                               required
                             >
                               <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>
-                              <option *ngFor="let item of sourceCities" value="{{ item.id }}">{{ item.displayName }}</option>
+                              <option *ngFor="let originCity of sourceCities" [ngValue]="Number(originCity.id)">{{ originCity.displayName }}</option>
                             </select>
                           </div>
 
@@ -422,7 +422,7 @@
                               required
                             >
                               <option [ngValue]="null" disabled selected>{{ l('SelectanDestinationCity') }}</option>
-                              <option *ngFor="let item of destinationCities" value="{{ item.id }}">{{ item.displayName }}</option>
+                              <option *ngFor="let city of destinationCities" [ngValue]="Number(city.id)">{{ city.displayName }}</option>
                             </select>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
                           </div>
@@ -1018,6 +1018,12 @@
                       </div>
                     </div>
                     <div>
+                      <create-or-edit-template-drop-down-button
+                        *ngIf="activeStep == 4 && (isShipper || isTachyonDealer || isCarrierSaas)"
+                        [entityType]="entityType.ShippingRequestTemplate"
+                        [sourceEntityId]="activeShippingRequestId"
+                        [customClass]="'btn btn-light-danger font-weight-bold px-9 py-4 dropdown-toggle btn-elevate-hover mr-2'"
+                      ></create-or-edit-template-drop-down-button>
                       <button (click)="onSubmit()" class="btn btn-success font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-submit">
                         {{ l('Publish') }}
                       </button>
