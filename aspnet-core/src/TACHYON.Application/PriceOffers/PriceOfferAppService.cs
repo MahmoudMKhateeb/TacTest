@@ -210,18 +210,10 @@ namespace TACHYON.PriceOffers
         public async Task<PriceOfferDto> GetPriceOfferForCreateOrEdit(long id, long? OfferId)
         {
             DisableTenancyFilters();
-
-            var hasPostPriceUpdate = await _srPostPriceUpdateRepository.GetAll()
-                .AnyAsync(x => x.ShippingRequestId == id && x.Action == SrPostPriceUpdateAction.Pending);
-
             var shippingRequest = await _shippingRequestsRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
-                .ThenInclude(v => v.VasFk)
-                .WhereIf(!hasPostPriceUpdate, x => (x.Status ==
-                ShippingRequestStatus.PrePrice ||
-                x.Status == ShippingRequestStatus.NeedsAction ||
-                x.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier))
-                .FirstOrDefaultAsync(x => x.Id == id);
+                  .ThenInclude(v => v.VasFk)
+                .FirstOrDefaultAsync(x => x.Id == id && (x.Status == ShippingRequestStatus.PrePrice || x.Status == ShippingRequestStatus.NeedsAction || x.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier));
 
             if (shippingRequest == null) throw new UserFriendlyException(L("TheRecordIsNotFound"));
 
@@ -240,7 +232,6 @@ namespace TACHYON.PriceOffers
             if (offer != null)
             {
                 priceOfferDto = ObjectMapper.Map<PriceOfferDto>(offer);
-                priceOfferDto.Items = GetVases(shippingRequest);
                 foreach (var item in priceOfferDto.Items)
                 {
                     item.ItemName = shippingRequest.ShippingRequestVases.FirstOrDefault(x => x.Id == item.SourceId)?.VasFk.Key;
