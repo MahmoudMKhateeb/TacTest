@@ -79,7 +79,6 @@ export class CreateOrEditPenaltyModalComponent extends AppComponentBase implemen
         })
     );
     this.saving = true;
-    console.log(this.form.penaltyItems);
     this._PenaltiesServiceProxy
       .createOrEdit(this.form)
       .pipe(
@@ -105,7 +104,6 @@ export class CreateOrEditPenaltyModalComponent extends AppComponentBase implemen
       });
     }
     this.modal.show();
-    console.log(this.form);
   }
   close() {
     this.active = false;
@@ -124,44 +122,7 @@ export class CreateOrEditPenaltyModalComponent extends AppComponentBase implemen
     this.newAttribute = {};
   }
 
-  // Calculator() {
-  //   // this._PenaltiesServiceProxy
-  //   //   .getTaxVat()
-  //   //   .pipe(
-  //   //     finalize(() => {
-  //   //       this.CalculatePrices();
-  //   //     })
-  //   //   )
-  //   //   .subscribe((res) => {
-  //   //     this.TaxVat = res / 100;
-  //   //   });
-  //   this.CalculatePrices();
-  // }
-
-  // calculateItemPrice(itemPrice:number, index:number){
-  //   console.log(this.TaxVat);
-  //   var vatAmount=itemPrice*this.TaxVat;
-  //   this.Allwaybills[index].vatAmount=vatAmount;
-  //   this.Allwaybills[index].itemTotalAmountPostVat=itemPrice+vatAmount;
-  //   this.CalculatePrices();
-  // }
-
-  // Calculator(){
-  //   if(this.TaxVat==null){
-  //     this._PenaltiesServiceProxy
-  //     .getTaxVat().pipe(finalize(()=> {
-  //       this.CalculatePrices();
-  //     }))
-  //     .subscribe((res) => {
-  //       this.TaxVat = res / 100;
-  //     });
-  // }
-  //   }
-
   CalculatePrices() {
-    // this.SelectedWaybills = this.Allwaybills.filter((item) => {
-    //   return item.checked; });
-
     this.form.itmePrice = this.SelectedWaybills.reduce((prev, next) => prev + next.itemPrice, 0);
 
     //calculate commission if there is destination company
@@ -188,8 +149,6 @@ export class CreateOrEditPenaltyModalComponent extends AppComponentBase implemen
       this.DestinationCompanyVatAmount = this.DestinationCompanyPrice * this.TaxVat;
       this.TotalDestinationCompanyPrice = this.DestinationCompanyPrice + this.DestinationCompanyVatAmount;
     }
-
-    // this.GetWaybillsByCompany();
   }
 
   GetWaybillsByCompany() {
@@ -198,18 +157,15 @@ export class CreateOrEditPenaltyModalComponent extends AppComponentBase implemen
       this.Allwaybills = res;
       this.waybillsLoading = false;
     });
-    console.log(this.Allwaybills);
     this.CalculatePrices();
   }
 
   addFieldValue() {
-    //this.newAttribute.checked = true;
     if (this.newAttribute.penaltyItemDto != null) {
       this.newAttribute.shippingRequestTripId = this.newAttribute.penaltyItemDto.shippingRequestTripId;
       this.newAttribute.waybillNumber = this.newAttribute.penaltyItemDto.waybillNumber;
     }
     this.SelectedWaybills.push(this.newAttribute);
-    console.log('selecteWaybills', this.SelectedWaybills);
     this.newAttribute = {};
     this.CalculatePrices();
   }
@@ -237,18 +193,15 @@ export class CreateOrEditPenaltyModalComponent extends AppComponentBase implemen
   isInvalidAutoComplete(waybillnumberAutoComplete: NgModel) {
     if (!waybillnumberAutoComplete.value) {
       return false;
+    } else {
+      return !this.FilteredWaybills.map(({ waybillNumber }) => waybillNumber).includes(waybillnumberAutoComplete.value.waybillNumber);
     }
-    return (
-      this.FilteredWaybills.filter((item) => waybillnumberAutoComplete.value && item.waybillNumber !== waybillnumberAutoComplete.value?.waybillNumber)
-        .length > 0
-    );
   }
 
-  isValidAutoComplete(waybillnumberAutoComplete: NgModel) {
-    return (
-      this.FilteredWaybills.filter(
-        (item) => waybillnumberAutoComplete.value == '' || item.waybillNumber === waybillnumberAutoComplete.value?.wayBillNumber
-      ).length > 0
-    );
+  isValidAutoComplete(waybillnumberAutoComplete: NgModel): boolean {
+    if (!isNotNullOrUndefined(waybillnumberAutoComplete.value) || waybillnumberAutoComplete.value == '') return true;
+    else if (waybillnumberAutoComplete.value)
+      var isExists = this.FilteredWaybills.filter((item) => item.waybillNumber == waybillnumberAutoComplete.value.waybillNumber).length > 0;
+    return isExists;
   }
 }

@@ -63,76 +63,6 @@
               </div>
             </div>
 
-            <!-- <div class="row col-lg-12 mt-4">
-              <div class="col-sm-12">
-                <table *ngIf="Allwaybills.length > 0" class="table" [busyIf]="waybillsLoading">
-                  <thead>
-                    <tr class="table-active">
-                      <th scope="col" width="20%">{{ l('WaybillNumber') }}</th>
-                      <th scope="col">{{ l('Price') }}</th>
-                      <th scope="col">{{ l('VatAmount') }}</th>
-                      <th scope="col">{{ l('TotalAmount') }}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let item of Allwaybills; index as i">
-                      <td>
-                        <input type="hidden" [(ngModel)]="item.id" name="id" id="id" />
-
-                        <input
-                          (change)="calculateItemPrice(item.itemPrice, i)"
-                          type="checkbox"
-                          [(ngModel)]="item.checked"
-                          name="waybill{{ i }}"
-                          id="waybill{{ i }}"
-                          [value]="item.checked"
-                        />
-                        {{ item.waybillNumber }}
-                      </td>
-                      <td>
-                        <input
-                          type="number"
-                          #PenaltyPrice="ngModel"
-                          id="PenaltyPrice{{ i }}"
-                          [(ngModel)]="item.itemPrice"
-                          (change)="calculateItemPrice(item.itemPrice, i)"
-                          (keypress)="numberOnly($event)"
-                          [required]="true"
-                          class="form-control"
-                          name="PenaltyPrice{{ i }}"
-                          min="0"
-                          [class.is-invalid]="PenaltyPrice.touched && item.waybillNumber <= 0"
-                          [class.is-valid]="PenaltyPrice.touched && PenaltyPrice.valid && item.waybillNumber > 0"
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="number"
-                          #VatAmount2="ngModel"
-                          id="VatAmount2{{ i }}"
-                          [(ngModel)]="item.vatAmount"
-                          class="form-control"
-                          name="VatAmount2{{ i }}"
-                          disabled
-                        />
-                      </td>
-                      <td>
-                        <input
-                          #totalAmount="ngModel"
-                          type="number"
-                          id="TotalAmount{{ i }}"
-                          [(ngModel)]="item.itemTotalAmountPostVat"
-                          class="form-control"
-                          name="TotalAmount{{ i }}"
-                          disabled
-                        />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div> -->
-
             <div class="col-lg-12 mt-4">
               <label>{{ l('ReferenceNo') }} </label>
               <input #penaltyName="ngModel" type="text" class="form-control" [(ngModel)]="form.referenceNumber" name="penaltyName" />
@@ -162,21 +92,7 @@
                 [class.is-invalid]="penaltyDescrption.invalid && (penaltyDescrption.dirty || penaltyDescrption.touched)"
               />
             </div>
-            <!-- <div class="col-lg-6 mt-4">
-              <label>{{ l('Price') }} <span class="required-fileds">*</span></label>
-              <input
-                #ItmePrice="ngModel"
-                type="number"
-                class="form-control"
-                [(ngModel)]="form.itmePrice"
-                name="ItmePrice"
-                [class.is-valid]="ItmePrice.valid && (ItmePrice.dirty || ItmePrice.touched)"
-                [class.is-invalid]="ItmePrice.invalid && (ItmePrice.dirty || ItmePrice.touched)"
-                (change)="Calculator()"
-                min="1"
-                required
-              />
-            </div> -->
+
             <div *ngIf="form.destinationTenantId" class="col-lg-6 mt-4">
               <label>{{ l('commissionType') }}:</label>
               <select class="form-control" name="CommissionType" [(ngModel)]="form.commissionType" (change)="CalculatePrices()">
@@ -273,16 +189,6 @@
                     </tr>
                     <tr>
                       <td>
-                        <!-- <input
-                          class="form-control"
-                          type="number"
-                          (keypress)="numberOnly($event)"
-                          id="newAttributeWaybill"
-                          [(ngModel)]="newAttribute.waybillNumber"
-                          (change)="calculateNewPrice(newAttribute.itemPrice)"
-                          name="newAttributeWaybill"
-                          width=""
-                        /> -->
                         <p-autoComplete
                           [(ngModel)]="newAttribute.penaltyItemDto"
                           [suggestions]="FilteredWaybills"
@@ -294,8 +200,8 @@
                           #waybillnumberAutoComplete="ngModel"
                           inputStyleClass="form-control"
                           styleClass="width-percent-100"
-                          [class.ng-valid]="isValidAutoComplete(waybillnumberAutoComplete)"
-                          [class.ng-invalid]="isInvalidAutoComplete(waybillnumberAutoComplete)"
+                          [class.ng-valid]="isValidAutoComplete(waybillnumberAutoComplete) && waybillnumberAutoComplete.touched"
+                          [class.ng-invalid]="isInvalidAutoComplete(waybillnumberAutoComplete) && waybillnumberAutoComplete.touched"
                         >
                         </p-autoComplete>
                       </td>
