@@ -382,6 +382,11 @@ namespace TACHYON.Invoices
             return invoiceDto;
         }
 
+        public async Task CorrectShipperInvoice(int invoiceId)
+        {
+          await  _invoiceManager.CorrectShipperInvoice(invoiceId);
+        }
+
         #region Reports
 
         public IEnumerable<InvoiceInfoDto> GetInvoiceReportInfo(long invoiceId)
