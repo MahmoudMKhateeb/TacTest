@@ -3035,6 +3035,7 @@
 		<text name="PenaltyComplaint">Penalty Complaint</text>
 		<text name="ComplaintDescription">Complaint Description</text>
 		<text name="ComplaintRejectReason">Complaint Reject Reason</text>
+		<text name="locationPermissionMessage">Tachyon collects location data to enable to calculate the traveled distance and measure the price based on this distance traveled even when the app is closed or not in use &#xA;- Tachyon collects location data to enable tracking the driver from Tachyon platform and see trip details</text>
 
 		
 	</texts>

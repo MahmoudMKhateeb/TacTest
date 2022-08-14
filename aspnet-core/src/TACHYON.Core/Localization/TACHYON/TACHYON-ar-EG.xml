@@ -2786,6 +2786,6 @@
 		<text name="PenaltyComplaint">اعتراض العقوبة</text>
 		<text name="ComplaintDescription">وصف الاعتراض</text>
 		<text name="ComplaintRejectReason">سبب رفض الاعتراض</text>
-
+		<text name="locationPermissionMessage">يجمع تاكيون بيانات الموقع لتمكينه من حساب المسافة المقطوعة وقياس السعر بناءً على هذه المسافة المقطوعة حتى عندما يكون التطبيق مغلقًا أو غير مستخدم &#xA; يجمع تاكيون بيانات الموقع لتمكين تتبع السائف من منصة تاكيون والاطلاع على تفاصيل الرحلة</text>
 	</texts>
 </localizationDictionary>
