@@ -140,10 +140,10 @@ namespace TACHYON.Invoices.Balances
                 if (percentge > 70)
                 {
                     var user = await _userManager.GetAdminByTenantIdAsync(Tenant.Id);
-                    await _appNotifier.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(Tenant.Id, percentge);
-                    await _emailSender.SendAsync(user.EmailAddress, L("EmailSubjectShipperCreditLimit"),
-                        _emailTemplateProvider.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(Tenant.Id,
-                            percentge), true);
+                    //await _appNotifier.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(Tenant.Id, percentge);
+                    //await _emailSender.SendAsync(user.EmailAddress, L("EmailSubjectShipperCreditLimit"),
+                    //    _emailTemplateProvider.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(Tenant.Id,
+                    //        percentge), true);
                 }
             }
         }

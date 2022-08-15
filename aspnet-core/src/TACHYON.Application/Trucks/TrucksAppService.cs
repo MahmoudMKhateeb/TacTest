@@ -331,7 +331,12 @@ namespace TACHYON.Trucks
 
 
             //Wasl Integration
-            await _waslIntegrationManager.QueueVehicleRegistrationJob(truck.Id);
+
+            if (await FeatureChecker.IsEnabledAsync(truck.TenantId, AppFeatures.IntegrationWslVehicleRegistration))
+            {
+                await _waslIntegrationManager.QueueVehicleRegistrationJob(truck.Id);
+
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
@@ -351,7 +356,11 @@ namespace TACHYON.Trucks
             ObjectMapper.Map(input, truck);
 
             //Wasl Integration
-            await _waslIntegrationManager.QueueVehicleRegistrationJob(truck.Id);
+            if (await FeatureChecker.IsEnabledAsync(truck.TenantId, AppFeatures.IntegrationWslVehicleRegistration))
+            {
+                  await _waslIntegrationManager.QueueVehicleRegistrationJob(truck.Id);
+
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Delete)]
@@ -361,7 +370,13 @@ namespace TACHYON.Trucks
             await _truckRepository.DeleteAsync(input.Id);
 
             //Wasl Integration
-            await _waslIntegrationManager.QueueVehicleDeleteJob(truck);
+            if (await FeatureChecker.IsEnabledAsync(truck.TenantId, AppFeatures.IntegrationWslVehicleRegistration))
+            {
+                 await _waslIntegrationManager.QueueVehicleDeleteJob(truck);
+
+            }
+      
+           
         }
 
         public async Task<FileDto> GetTrucksToExcel(GetAllTrucksForExcelInput input)
