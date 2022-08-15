@@ -99,6 +99,11 @@
         #endregion
 
         public const string BayanIntegration = "App.BayanIntegration";
+        public const string IntegrationWsl = "App.Integration.Wsl";
+        public const string IntegrationWslVehicleRegistration = "App.Integration.Wsl.VehicleRegistration";
+        public const string IntegrationWslDriverRegistration = "App.Integration.Wsl.DriverRegistration";
+        public const string IntegrationWslTripRegistration = "App.Integration.Wsl.TripRegistration";
+
         public const string SaasRelatedCarrier = "App.Shipper.SaaSCarrier";
         public const string Saas = "App.Shipper.Saas";
 

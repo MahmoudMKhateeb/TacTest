@@ -386,8 +386,13 @@ namespace TACHYON.Authorization.Users
             else user = await UserManager.GetUserByIdAsync(input.Id);
 
             CheckErrors(await UserManager.DeleteAsync(user));
+          
             //Wasl integration 
-            await _waslIntegrationManager.QueueDriverDeleteJob(user);
+            if (user.TenantId != null && await FeatureChecker.IsEnabledAsync(user.TenantId.Value, AppFeatures.IntegrationWslDriverRegistration))
+            {
+                await _waslIntegrationManager.QueueDriverDeleteJob(user);
+
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Unlock)]
@@ -441,7 +446,10 @@ namespace TACHYON.Authorization.Users
             }
 
             //Wasl Integration
-            await _waslIntegrationManager.QueueDriverRegistrationJob(user.Id);
+            if (user.TenantId != null && await FeatureChecker.IsEnabledAsync(user.TenantId.Value, AppFeatures.IntegrationWslDriverRegistration))
+            {
+                await _waslIntegrationManager.QueueDriverRegistrationJob(user.Id);
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create)]
@@ -557,8 +565,12 @@ namespace TACHYON.Authorization.Users
             }
 
 
+
             //Wasl Integration
-            await _waslIntegrationManager.QueueDriverRegistrationJob(user.Id);
+            if (user.TenantId != null && await FeatureChecker.IsEnabledAsync(user.TenantId.Value, AppFeatures.IntegrationWslDriverRegistration))
+            {
+                await _waslIntegrationManager.QueueDriverRegistrationJob(user.Id);
+            }
         }
 
 
