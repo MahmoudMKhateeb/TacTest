@@ -1,4 +1,4 @@
-﻿using Abp.Application.Features;
+using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
@@ -588,6 +588,7 @@ namespace TACHYON.Invoices
                 Penalties = penalties
             };
             await _invoiceRepository.InsertAsync(invoice);
+             invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
 
             if (period.PeriodType == InvoicePeriodType.PayInAdvance)
             {

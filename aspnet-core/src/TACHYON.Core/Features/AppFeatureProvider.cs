@@ -116,7 +116,7 @@ namespace TACHYON.Features
 
 
 
-           
+
 
             var broker = context.Create(
                 AppFeatures.Broker,
@@ -562,6 +562,39 @@ namespace TACHYON.Features
                 L("BayanIntegration"),
                 inputType: new CheckboxInputType()
             );
+
+            var IntegrationWsl = context.Create
+            (
+                AppFeatures.IntegrationWsl,
+                "true",
+                L("IntegrationWsl"),
+                inputType: new CheckboxInputType()
+            );
+
+            IntegrationWsl.CreateChildFeature
+            (
+                AppFeatures.IntegrationWslVehicleRegistration,
+                "true",
+                L("IntegrationWslVehicleRegistration"),
+                inputType: new CheckboxInputType()
+            );
+
+            IntegrationWsl.CreateChildFeature
+            (
+                AppFeatures.IntegrationWslDriverRegistration,
+                "true",
+                L("IntegrationWslDriverRegistration"),
+                inputType: new CheckboxInputType()
+            );
+
+            IntegrationWsl.CreateChildFeature
+            (
+                AppFeatures.IntegrationWslTripRegistration,
+                "true",
+                L("IntegrationWslTripRegistration"),
+                inputType: new CheckboxInputType()
+            );
+
 
             var chatFeature = context.Create(
                 AppFeatures.ChatFeature,

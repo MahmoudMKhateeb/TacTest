@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
+using TACHYON.Features;
 using TACHYON.Trucks;
 
 namespace TACHYON.Integration.WaslIntegration
@@ -37,7 +38,13 @@ namespace TACHYON.Integration.WaslIntegration
             DisableTenancyFiltersIfHost();
 
             var truck = await _truckRepository.GetAsync(truckId);
-            await _manager.QueueVehicleDeleteJob(truck);
+
+            if (await FeatureChecker.IsEnabledAsync(truck.TenantId, AppFeatures.IntegrationWslVehicleRegistration))
+            {
+                 await _manager.QueueVehicleDeleteJob(truck);
+
+            }
+           
         }
         public async Task DriverRegistration(long driverId)
         {
@@ -77,7 +84,13 @@ namespace TACHYON.Integration.WaslIntegration
 
             foreach (var truck in trucks)
             {
-                await _manager.QueueVehicleRegistrationJob(truck.Id);
+                //Wasl integration 
+                if ( await FeatureChecker.IsEnabledAsync(truck.TenantId, AppFeatures.IntegrationWslVehicleRegistration))
+                {
+                    await _manager.QueueVehicleRegistrationJob(truck.Id);
+
+                }
+
             }
         }
 
@@ -93,7 +106,11 @@ namespace TACHYON.Integration.WaslIntegration
 
             foreach (var driver in drivers)
             {
-                await _manager.QueueDriverRegistrationJob(driver.Id);
+                if (driver.TenantId != null && await FeatureChecker.IsEnabledAsync(driver.TenantId.Value, AppFeatures.IntegrationWslVehicleRegistration))
+                {
+                     await _manager.QueueDriverRegistrationJob(driver.Id);
+                }
+               
             }
         }
 
