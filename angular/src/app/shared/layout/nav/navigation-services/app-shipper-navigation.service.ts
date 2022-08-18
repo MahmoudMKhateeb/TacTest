@@ -50,7 +50,17 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
           ),
 
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
-
+          new AppMenuItem(
+            'SavedTemplates',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/requestsTemplates',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Shipper')
+          ),
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Shipper')
           ),
@@ -89,6 +99,8 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
         '',
         [],
         [
+          new AppMenuItem('PenaltiesList', 'Pages.Invoices', '', '/app/main/penalties/view'),
+          new AppMenuItem('InvoicesNoteList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
           new AppMenuItem(
             'SubmitInvoice',
             'Pages.Invoices',
@@ -109,6 +121,32 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
       ),
       //end of  Invoices
       //  ---------------------------------------------------------------------------------------------------------------------
+      //start of Documents
+      new AppMenuItem(
+        'DocumentManagement',
+        '',
+        'interaction, interact, preferences, preformance, customer, rating, rate, questions.svg',
+        '',
+        [],
+        [
+          //TODO: the contracts subMenu Need Permission and Route
+          new AppMenuItem(
+            'NonMandatoryDocuments',
+            'Pages.DocumentFiles',
+            '',
+            '/tenantNotRequiredDocuments/tenantNotRequiredDocuments',
+            [],
+            undefined,
+            undefined,
+            undefined
+          ),
+          new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', '', '/app/main/documentFiles/documentFiles'),
+        ],
+        undefined,
+        undefined
+      ),
+      //end of Documents
+      // ---------------------------------------------------------------------------------------------------------------------
       //start of Settings
       new AppMenuItem(
         'Settings',

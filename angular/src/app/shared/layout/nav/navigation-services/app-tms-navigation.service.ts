@@ -27,6 +27,47 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
         '/app/main/dashboard'
       ),
       //  ---------------------------------------------------------------------------------------------------------------------
+      // start of Invoices
+      new AppMenuItem(
+        'Financials',
+        'Pages.Invoices',
+        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        '',
+        [],
+        [
+          //  todo: add Shipper Invoices and Carrier Invoices menu items
+          new AppMenuItem('PenaltiesList', 'Pages.Invoices', '', '/app/main/penalties/view'),
+          new AppMenuItem('InvoicesNoteList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
+          new AppMenuItem(
+            'InvoicesList',
+            'Pages.Invoices',
+            '',
+            '/app/main/invoices/view',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () =>
+              this.isEnabled('App.Shipper') ||
+              this.isEnabled('App.TachyonDealer') ||
+              this.isEnabled('App.CarrierAsASaas') ||
+              !isNotNullOrUndefined(this._appSessionService.tenantId)
+          ),
+          new AppMenuItem(
+            'SubmitInvoiceForHost',
+            //TODO make it Pages.Administration.invoices
+            '',
+            '',
+            '/app/main/invoices/submitinvoice',
+            undefined,
+            undefined,
+            undefined,
+            undefined
+          ),
+        ]
+      ),
+      // end of  Invoices
+      //  ---------------------------------------------------------------------------------------------------------------------
       // start of Documents
       new AppMenuItem(
         'DocumentManagement',
@@ -52,34 +93,6 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       ),
       // end of Documents
       //  ---------------------------------------------------------------------------------------------------------------------
-      // start of Invoices
-      new AppMenuItem(
-        'Financials',
-        'Pages.Invoices',
-        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
-        '',
-        [],
-        [
-          //  todo: add Shipper Invoices and Carrier Invoices menu items
-          new AppMenuItem(
-            'InvoicesList',
-            'Pages.Invoices',
-            '',
-            '/app/main/invoices/view',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () =>
-              this.isEnabled('App.Shipper') ||
-              this.isEnabled('App.TachyonDealer') ||
-              this.isEnabled('App.CarrierAsASaas') ||
-              !isNotNullOrUndefined(this._appSessionService.tenantId)
-          ),
-        ]
-      ),
-      // end of  Invoices
-      //  ---------------------------------------------------------------------------------------------------------------------
       // start of Administration
       new AppMenuItem(
         'Administration',
@@ -88,7 +101,7 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
         '',
         [],
         [
-          //  new AppMenuItem('Tenants', 'Pages.Tenants', '', '/app/admin/tenants'),
+          new AppMenuItem('Tenants', '', '', '/app/admin/tenants'),
           //  new AppMenuItem('Editions', 'Pages.Editions', '', '/app/admin/editions'),
         ]
       ),
@@ -104,6 +117,17 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
         [
           new AppMenuItem('TachyonManageService', 'Pages', '', '/app/main/tms/shippingRequests'),
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking'),
+          new AppMenuItem(
+            'SavedTemplates',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/requestsTemplates',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.TachyonDealer')
+          ),
           new AppMenuItem('Requests', 'Pages', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
             'Marketplace',
@@ -116,17 +140,6 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
             //  () => !this.isEnabled('App.Shipper') || !this._appSessionService.tenantId
           ),
 
-          //  new AppMenuItem(
-          //    'SavedTemplates',
-          //    'Pages.ShippingRequests',
-          //    '',
-          //    '/app/main/shippingRequests/requestsTemplates',
-          //    undefined,
-          //    undefined,
-          //    undefined,
-          //    undefined,
-          //    () => this.isEnabled('App.TachyonDealer')
-          //  ),
           //  new AppMenuItem(
           //    'DirectShippingRequests',
           //    'Pages',
@@ -145,6 +158,21 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       ),
       // end of operations
       //  ---------------------------------------------------------------------------------------------------------------------
+      // start of PricePackages
+      new AppMenuItem(
+        'PricePackages',
+        '',
+        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        '',
+        [],
+        [new AppMenuItem('PricePackages', 'Pages.NormalPricePackages', '', '/app/main/pricePackages/normalPricePackages')],
+        //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
+        undefined,
+        undefined,
+        () => (this.isEnabled('App.TachyonDealer') || this.isEnabled('App.Carrier')) && this.isEnabled('App.NormalPricePackage')
+      ),
+      // end of PricePackages
+      // ---------------------------------------------------------------------------------------------------------------------
       // start of TMSSettings
       // for host only
       new AppMenuItem(
@@ -181,6 +209,17 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       //  ---------------------------------------------------------------------------------------------------------------------
       //  todo: add Information Hub menu item
       //  ---------------------------------------------------------------------------------------------------------------------
+      // start of Settings
+      new AppMenuItem(
+        'Settings',
+        'Pages.Administration.Tenant.Settings',
+        'user, interface, agent, usability, settings, options, preferences, gears.svg',
+        '',
+        [],
+        [new AppMenuItem('GeneralSettings', 'Pages.Administration.Tenant.Settings', '', '/app/admin/tenantSettings')]
+      ),
+      // end of Settings
+      //  ---------------------------------------------------------------------------------------------------------------------
       // Start Of User Manegment
 
       new AppMenuItem(
@@ -196,17 +235,6 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       ),
 
       // End Of User Manegment
-      //  ---------------------------------------------------------------------------------------------------------------------
-      // start of Settings
-      new AppMenuItem(
-        'Settings',
-        'Pages.Administration.Tenant.Settings',
-        'user, interface, agent, usability, settings, options, preferences, gears.svg',
-        '',
-        [],
-        [new AppMenuItem('GeneralSettings', 'Pages.Administration.Tenant.Settings', '', '/app/admin/tenantSettings')]
-      ),
-      // end of Settings
       //  ---------------------------------------------------------------------------------------------------------------------
     ]);
     return menu;

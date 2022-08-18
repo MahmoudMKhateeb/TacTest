@@ -28,6 +28,140 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       ),
       // ! host item with shared Sub-menu
       // ---------------------------------------------------------------------------------------------------------------------
+      //start of reports
+      //for host only
+      // ---------------------------------------------------------------------------------------------------------------------
+      //TODO: Need Permission
+      new AppMenuItem(
+        'Reports',
+        'Pages.Administration.Host.Dashboard',
+
+        'warning, signs, sign, alert, truck.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('AccidentReason', 'Pages.ShippingRequestResoneAccidents', '', '/app/main/accidents/reasons'),
+          new AppMenuItem('TripRejectReason', 'Pages.ShippingRequestTrips.Reject.Reason', '', '/app/main/trip/reject/reasons'),
+        ]
+        // undefined,
+        // undefined,
+        // () => !this.isEnabled('App.TachyonDealer')
+      ),
+      //end of report
+      // ---------------------------------------------------------------------------------------------------------------------
+      //start of Invoices
+      new AppMenuItem(
+        'Financials',
+        'Pages.Invoices',
+        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        '',
+        [],
+        [
+          // TODO: add shipper and carrier invoices menu item
+          new AppMenuItem('PenaltiesList', 'Pages.Invoices', '', '/app/main/penalties/view'),
+          new AppMenuItem('InvoicesNoteList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
+          new AppMenuItem(
+            'InvoicesList',
+            'Pages.Invoices',
+            '',
+            '/app/main/invoices/view',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () =>
+              this.isEnabled('App.Shipper') ||
+              this.isEnabled('App.TachyonDealer') ||
+              this.isEnabled('App.CarrierAsASaas') ||
+              !isNotNullOrUndefined(this._appSessionService.tenantId)
+          ),
+          new AppMenuItem(
+            'SubmitInvoiceForHost',
+            //TODO make it Pages.Administration.invoices
+            '',
+            '',
+            '/app/main/invoices/submitinvoice',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => !this._appSessionService.tenantId
+          ),
+
+          new AppMenuItem(
+            'InvoicingFrequency',
+            'Pages.Invoices',
+            '',
+            '/app/main/invoices/periods',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+          ),
+          new AppMenuItem(
+            'PaymentMethods',
+            'Pages.Invoices',
+            '',
+            '/app/main/invoices/paymentlist',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+          ),
+
+          // TODO: Payment Due menu item
+
+          new AppMenuItem(
+            'BalnaceRecharges',
+            'Pages.Invoices',
+            '',
+            '/app/main/invoices/balnacerecharges',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+          ),
+
+          new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', '', '/app/main/invoices/transaction'),
+
+          // new AppMenuItem('PenaltiesList', 'Pages.Invoices', '', '/app/main/penalties/view'),
+
+          // new AppMenuItem('InvoicesNoteList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
+
+          // new AppMenuItem(
+          //   'SubmitInvoice',
+          //   'Pages.Invoices',
+
+          //   '',
+          //   '/app/main/invoices/submitinvoice',
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
+          // ),
+
+          // // new AppMenuItem(
+          // //   'InvoicesProformas',
+          // //   'Pages.Invoices',
+          // //   '',
+          // //   '/app/main/invoices/proformas',
+          // //   undefined,
+          // //   undefined,
+          // //   undefined,
+          // //   undefined,
+          // //   () => this.isEnabled('App.Shipper') || this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+          // // ),
+        ]
+        // undefined,
+        // undefined,
+        // () => !this.isEnabled('App.TachyonDealer')
+      ),
+      //end of  Invoices
+      // ---------------------------------------------------------------------------------------------------------------------
       //start of Documents
       new AppMenuItem(
         'DocumentManagement',
@@ -92,138 +226,6 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       ),
       //end of Documents
       // ---------------------------------------------------------------------------------------------------------------------
-      //start of reports
-      //for host only
-      // ---------------------------------------------------------------------------------------------------------------------
-      //TODO: Need Permission
-      new AppMenuItem(
-        'Reports',
-        'Pages.Administration.Host.Dashboard',
-
-        'warning, signs, sign, alert, truck.svg',
-        '',
-        [],
-        [
-          new AppMenuItem('AccidentReason', 'Pages.ShippingRequestResoneAccidents', '', '/app/main/accidents/reasons'),
-          new AppMenuItem('TripRejectReason', 'Pages.ShippingRequestTrips.Reject.Reason', '', '/app/main/trip/reject/reasons'),
-        ]
-        // undefined,
-        // undefined,
-        // () => !this.isEnabled('App.TachyonDealer')
-      ),
-      //end of report
-      // ---------------------------------------------------------------------------------------------------------------------
-      //start of Invoices
-      new AppMenuItem(
-        'Financials',
-        'Pages.Invoices',
-        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
-        '',
-        [],
-        [
-          // TODO: add shipper and carrier invoices menu item
-          new AppMenuItem(
-            'InvoicesList',
-            'Pages.Invoices',
-            '',
-            '/app/main/invoices/view',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () =>
-              this.isEnabled('App.Shipper') ||
-              this.isEnabled('App.TachyonDealer') ||
-              this.isEnabled('App.CarrierAsASaas') ||
-              !isNotNullOrUndefined(this._appSessionService.tenantId)
-          ),
-          new AppMenuItem(
-            'InvoicingFrequency',
-            'Pages.Invoices',
-            '',
-            '/app/main/invoices/periods',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
-          ),
-          new AppMenuItem(
-            'PaymentMethods',
-            'Pages.Invoices',
-            '',
-            '/app/main/invoices/paymentlist',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
-          ),
-
-          // TODO: Payment Due menu item
-
-          new AppMenuItem(
-            'BalnaceRecharges',
-            'Pages.Invoices',
-            '',
-            '/app/main/invoices/balnacerecharges',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
-          ),
-
-          new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', '', '/app/main/invoices/transaction'),
-
-          // new AppMenuItem('PenaltiesList', 'Pages.Invoices', '', '/app/main/penalties/view'),
-
-          // new AppMenuItem('InvoicesNoteList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
-
-          // new AppMenuItem(
-          //   'SubmitInvoiceForHost',
-          //   //TODO make it Pages.Administration.invoices
-          //   '',
-          //   '',
-          //   '/app/main/invoices/submitinvoice',
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   () => !this._appSessionService.tenantId
-          // ),
-
-          // new AppMenuItem(
-          //   'SubmitInvoice',
-          //   'Pages.Invoices',
-
-          //   '',
-          //   '/app/main/invoices/submitinvoice',
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
-          // ),
-
-          // // new AppMenuItem(
-          // //   'InvoicesProformas',
-          // //   'Pages.Invoices',
-          // //   '',
-          // //   '/app/main/invoices/proformas',
-          // //   undefined,
-          // //   undefined,
-          // //   undefined,
-          // //   undefined,
-          // //   () => this.isEnabled('App.Shipper') || this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
-          // // ),
-        ]
-        // undefined,
-        // undefined,
-        // () => !this.isEnabled('App.TachyonDealer')
-      ),
-      //end of  Invoices
-      // ---------------------------------------------------------------------------------------------------------------------
       //start of Administration
       new AppMenuItem(
         'Administration',
@@ -237,10 +239,10 @@ export class AppHostNavigationService extends AppBaseNavigationService {
           new AppMenuItem('Editions', 'Pages.Editions', '', '/app/admin/editions'),
         ]
       ),
-      //end of Administration
+      // end of Administration
       // ---------------------------------------------------------------------------------------------------------------------
-      //TODO: the operations menu and subMenus Need Permission !important
-      //start of operations
+      // TODO: the operations menu and subMenus Need Permission !important
+      // start of operations
       new AppMenuItem(
         'Operations',
         'Pages',
@@ -288,7 +290,22 @@ export class AppHostNavigationService extends AppBaseNavigationService {
         undefined,
         () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
       ),
-      //end of operations
+      // end of operations
+      // ---------------------------------------------------------------------------------------------------------------------
+      //start of PricePackages
+      new AppMenuItem(
+        'PricePackages',
+        '',
+        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        '',
+        [],
+        [new AppMenuItem('PricePackages', 'Pages.NormalPricePackages', '', '/app/main/pricePackages/normalPricePackages')],
+        //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
+        undefined,
+        undefined,
+        () => (this.isEnabled('App.TachyonDealer') || this.isEnabled('App.Carrier')) && this.isEnabled('App.NormalPricePackage')
+      ),
+      //end of PricePackages
       // ---------------------------------------------------------------------------------------------------------------------
       //start of TMSSettings
       //for host only
@@ -355,20 +372,6 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       // ---------------------------------------------------------------------------------------------------------------------
       // TODO: add Information Hub menu item
       // ---------------------------------------------------------------------------------------------------------------------
-      //Start Of User Manegment
-      new AppMenuItem(
-        'UserManagement',
-        '',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
-        '',
-        [],
-        [
-          new AppMenuItem('Roles', 'Pages.Administration.Roles', '', '/app/admin/roles'),
-          new AppMenuItem('Users', 'Pages.Administration.Users', '', '/app/admin/users'),
-        ]
-      ),
-      //End Of User Manegment
-      // ---------------------------------------------------------------------------------------------------------------------
       //host
       //start of Settings
       new AppMenuItem(
@@ -434,6 +437,22 @@ export class AppHostNavigationService extends AppBaseNavigationService {
         ]
       ),
       //end of Settings
+
+      // ---------------------------------------------------------------------------------------------------------------------
+      //Start Of User Manegment
+      new AppMenuItem(
+        'UserManagement',
+        '',
+        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('Roles', 'Pages.Administration.Roles', '', '/app/admin/roles'),
+          new AppMenuItem('Users', 'Pages.Administration.Users', '', '/app/admin/users'),
+        ]
+      ),
+      //End Of User Manegment
+      // ---------------------------------------------------------------------------------------------------------------------
 
       // //start of requests
       // //start shipper menu
