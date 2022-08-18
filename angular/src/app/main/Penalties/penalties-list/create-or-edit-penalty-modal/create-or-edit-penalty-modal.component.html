@@ -20,7 +20,7 @@
           <div class="row">
             <!--  begin :: Body-->
             <div class="col-lg-12 mt-4">
-              <label>{{ l('Company') }} <span class="required-fileds">*</span></label>
+              <label>{{ l('Company') }} </label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
                 <p-dropdown
                   #Company="ngModel"
@@ -35,12 +35,12 @@
                   optionValue="id"
                   [styleClass]="'CompanyInput'"
                   class="form-control"
-                  required
                   (onChange)="GetWaybillsByCompany()"
                 >
                 </p-dropdown>
               </div>
             </div>
+
             <div class="col-lg-12 mt-4">
               <label>{{ l('DestinationCompany') }}</label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
@@ -63,6 +63,9 @@
               </div>
             </div>
 
+            <div>
+              <small *ngIf="form.tenantId == null && form.destinationTenantId == null" class="text-danger">{{ l('OneCompanyMustBeSelected') }}</small>
+            </div>
             <div class="col-lg-12 mt-4">
               <label>{{ l('ReferenceNo') }} </label>
               <input #penaltyName="ngModel" type="text" class="form-control" [(ngModel)]="form.referenceNumber" name="penaltyName" />
@@ -93,13 +96,13 @@
               />
             </div>
 
-            <div *ngIf="form.destinationTenantId" class="col-lg-6 mt-4">
+            <div *ngIf="form.tenantId && form.destinationTenantId" class="col-lg-6 mt-4">
               <label>{{ l('commissionType') }}:</label>
               <select class="form-control" name="CommissionType" [(ngModel)]="form.commissionType" (change)="CalculatePrices()">
                 <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
               </select>
             </div>
-            <div *ngIf="form.destinationTenantId" class="col-lg-6 mt-4">
+            <div *ngIf="form.tenantId && form.destinationTenantId" class="col-lg-6 mt-4">
               <label>{{ l('commissionTypeValue') }}:</label>
               <input
                 type="number"
@@ -119,7 +122,7 @@
                 "
               />
             </div>
-            <div class="col-lg-6 mt-4" *ngIf="form.destinationTenantId">
+            <div class="col-lg-6 mt-4" *ngIf="form.tenantId && form.destinationTenantId">
               <label>{{ l('commissionAmount') }}:</label>
               <input type="number" min="0" class="form-control" name="commissionAmount" [(ngModel)]="CommissionAmount" disabled />
             </div>
@@ -261,7 +264,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr let item in sel>
+                  <tr *ngIf="form.tenantId" let item in sel>
                     <td>{{ l('Company') }}</td>
                     <td><input [(ngModel)]="CompanyPrice" disabled class="form-control" type="number" name="CompanyPrice" id="CompanyPrice" /></td>
                     <td>
@@ -330,7 +333,7 @@
           <button
             type="submit"
             class="btn btn-primary"
-            [disabled]="!Form.form.valid"
+            [disabled]="!Form.form.valid || (form.tenantId == null && form.destinationTenantId == null)"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot' | localize)"
             (click)="save()"

@@ -13,7 +13,7 @@ using TACHYON.Shipping.ShippingRequestTrips;
 namespace TACHYON.Penalties
 {
     [Table("Penalties")]
-    public class Penalty : FullAuditedEntity , IMustHaveTenant
+    public class Penalty : FullAuditedEntity , IMayHaveTenant
     {
         public string ReferenceNumber { get; set; }
         public string PenaltyName { get; set; }
@@ -21,7 +21,7 @@ namespace TACHYON.Penalties
         public PenaltyType Type { get; set; }
         public PenaltyStatus Status { get; set; }
         public string SourceFeature { get; set; }
-        public int TenantId { get; set; }
+        public int? TenantId { get; set; }
         [ForeignKey(nameof(TenantId))]
         public Tenant Tenant { get; set; }
         public int? DestinationTenantId { get; set; }

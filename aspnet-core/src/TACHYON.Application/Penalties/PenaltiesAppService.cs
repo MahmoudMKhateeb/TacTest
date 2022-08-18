@@ -68,8 +68,6 @@ namespace TACHYON.Penalties
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task CreateOrEdit(CreateOrEditPenaltyDto input)
         {
-            if (input.TenantId == input.DestinationTenantId)
-                throw new UserFriendlyException(L("DestinationCompanyShouldNotBeSourceCompany"));
             await ValidateWaybills(input);
             if (!input.Id.HasValue)
             {
@@ -179,12 +177,12 @@ namespace TACHYON.Penalties
         }
 
         [RequiresFeature(AppFeatures.TachyonDealer)]
-        public async Task<List<PenaltyItemDto>> GetAllWaybillsByCompany(int companyTenantId, int? destinationCompanyTenantId)
+        public async Task<List<PenaltyItemDto>> GetAllWaybillsByCompany(int? companyTenantId, int? destinationCompanyTenantId)
         {
             DisableTenancyFilters();
             var trips= await _shippingRequestTripRepository.GetAll()
-                .Where(x => x.ShippingRequestFk.TenantId == companyTenantId)
-                .WhereIf(destinationCompanyTenantId != null, x => x.ShippingRequestFk.CarrierTenantId == destinationCompanyTenantId)
+                .WhereIf(companyTenantId!=null, x => x.ShippingRequestFk.TenantId == companyTenantId || x.ShippingRequestFk.CarrierTenantId == companyTenantId)
+                .WhereIf(destinationCompanyTenantId != null, x => x.ShippingRequestFk.CarrierTenantId == destinationCompanyTenantId || x.ShippingRequestFk.TenantId == destinationCompanyTenantId)
                 .ToListAsync();
             return trips.Select(x => new PenaltyItemDto
             {
