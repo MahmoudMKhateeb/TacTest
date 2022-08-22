@@ -46,6 +46,7 @@ namespace TACHYON.Penalties
         
         [ForeignKey(nameof(PenaltyComplaintId))]
         public PenaltyComplaint PenaltyComplaintFK { get; set; }
+        public string InvoiceFlag { get; set; }
         #region prices
         public decimal CommissionValue { get; set; }
         public PriceOfferCommissionType CommissionType { get; set; }

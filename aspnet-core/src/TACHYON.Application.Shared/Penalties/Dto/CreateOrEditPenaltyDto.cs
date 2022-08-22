@@ -26,6 +26,7 @@ namespace TACHYON.Penalties.Dto
         public decimal CommissionPercentageOrAddValue { get; set; }
         public PenaltyStatus Status { get; set; }
         public int? ShippingRequestTripId { get; set; }
+        public string InvoiceFlag { get; set; }
         public List<PenaltyItemDto> PenaltyItems { get; set; }
 
         public void AddValidationErrors(CustomValidationContext context)
