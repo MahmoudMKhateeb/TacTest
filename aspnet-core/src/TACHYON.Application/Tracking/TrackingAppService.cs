@@ -125,7 +125,10 @@ namespace TACHYON.Tracking
             DisableTenancyFilters();
             var query =  await _RoutPointRepository
              .GetAll().AsNoTracking()
-             .Where(x => x.ShippingRequestTripFk.WaybillNumber == waybillNumber)
+             .Where(x =>x.ShippingRequestTripFk.WaybillNumber == waybillNumber ||
+             (x.WaybillNumber==waybillNumber && 
+             x.ShippingRequestTripFk.ShippingRequestFk.RouteTypeId==ShippingRequestRouteType.MultipleDrops &&
+             x.PickingType == PickingType.Dropoff))
              .ProjectTo<TrackingByWaybillDto>(AutoMapperConfigurationProvider).ToListAsync();
             if (!query.Any()) throw new UserFriendlyException(L("InCorrectWaybillNumber"));
 
