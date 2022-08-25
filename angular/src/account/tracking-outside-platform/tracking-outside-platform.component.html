@@ -7,7 +7,7 @@
             <input
               type="number"
               [(ngModel)]="waybillNumber"
-              class="form-control"
+              class="form-control search-box-custom"
               placeholder="{{ l('waybillSearch') }}"
               id="kt_datatable_search_query"
             />
@@ -37,16 +37,16 @@
         <th>{{ l('Carrier') }}</th>
         <th>{{ l('Status') }}</th>
         <th>{{ l('DropOffStatus') }}</th>
-        <th>{{ l('SubWaybill') }}</th>
+        <th *ngIf="dropPoints.length > 2">{{ l('SubWaybill') }}</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-trip let-expanded="expanded">
-      <tr [pRowToggler]="trip" (click)="trackSubWaybill(trip.waybillNumber)">
+      <tr [pRowToggler]="dropPoints.length > 2 ? trip : null" (click)="dropPoints.length > 2 ? trackSubWaybill(trip.waybillNumber) : null">
         <td>{{ trip.shipperName }}</td>
         <td>{{ trip.carrierName }}</td>
         <td>{{ l(trip.tripStatus) }}</td>
-        <td>{{ trip.dropOffStatus }}</td>
-        <td>{{ trip.waybillNumber }}</td>
+        <td>{{ l(trip.dropOffStatus) }}</td>
+        <td *ngIf="dropPoints.length > 2">{{ trip.waybillNumber }}</td>
       </tr>
     </ng-template>
     <ng-template pTemplate="rowexpansion" let-subWaybill>
