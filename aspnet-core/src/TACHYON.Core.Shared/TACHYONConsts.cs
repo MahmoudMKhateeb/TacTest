@@ -89,9 +89,9 @@
         #region Mobile
 
         public const string AndroidAppLink =
-            "https://play.google.com/store/apps/details?id=com.trustangle.tachyondriver";
+            "https://play.google.com/store/apps/details?id=com.tachyonhub.tachyondriverapp";
 
-        public const string IOSAppLink = "https://apps.apple.com/us/app/tachyon-driver/id1561722003";
+        public const string IOSAppLink = "https://apps.apple.com/us/app/tachyon-driver/id1617802156";
 
         #endregion
 
