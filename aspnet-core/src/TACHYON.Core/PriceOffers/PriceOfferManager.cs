@@ -514,9 +514,19 @@ namespace TACHYON.PriceOffers
         /// <returns></returns>
         public async Task<PriceOffer> GetOfferAcceptedByShippingRequestId(long id)
         {
-            return (await _priceOfferRepository
-                .GetAllIncluding(x => x.PriceOfferDetails)
-                .FirstOrDefaultAsync(x => x.ShippingRequestId == id && x.Status == PriceOfferStatus.Accepted));
+            var offers =( await _priceOfferRepository
+                        .GetAllIncluding(x => x.PriceOfferDetails)
+                        .Where(x => x.ShippingRequestId == id && x.Status == PriceOfferStatus.Accepted).ToListAsync());
+
+            if (offers.Count > 1) // dont take carrier offer if there is more than one accepted offer
+            {
+                return offers.FirstOrDefault(x => x.ParentId != null);
+            }
+            else // take shipper accepted offer 
+            {
+                return offers.FirstOrDefault();
+            }
+          
         }
 
         /// <summary>
