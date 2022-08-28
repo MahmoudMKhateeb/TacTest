@@ -254,7 +254,6 @@ import { ShippingTypesTranslationsComponent } from './shippingTypes/shipping-typ
 import { TrucksTypeTranslationTemplateComponent } from './trucksTypes/trucksTypes/trucks-type-translation-template/trucks-type-translation-template.component';
 import { ProfileModule } from '@app/main/profile/profile.module';
 import { ViewGoodDetailsComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/view-good-details/view-good-details.component';
-import { ViewPointModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/view-point-modal/view-point-modal.component';
 import { DangerousCoodTypesTranslationsComponent } from './goods/dangerous-cood-types-translations/dangerous-cood-types-translations.component';
 import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
 import { NgxSkeletonLoaderModule } from '@node_modules/ngx-skeleton-loader';
@@ -556,7 +555,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ShippingTypesTranslationsComponent,
     TrucksTypeTranslationTemplateComponent,
     ViewGoodDetailsComponent,
-    ViewPointModalComponent,
     InoviceNoteModalComponent,
     DangerousCoodTypesTranslationsComponent,
     ShippingRequestRatingModalComponent,

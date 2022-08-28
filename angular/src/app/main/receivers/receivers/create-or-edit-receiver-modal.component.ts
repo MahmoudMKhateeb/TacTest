@@ -26,7 +26,8 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     super(injector);
   }
 
-  show(receiverId?: number): void {
+  show(receiverId?: number, facilityIdFromTrip?: number): void {
+    this.facilityIdFromTrips = facilityIdFromTrip;
     if (!receiverId) {
       this.receiver = new CreateOrEditReceiverDto();
       this.receiver.id = receiverId;
@@ -56,7 +57,7 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
       .subscribe(() => {
         this.notify.info(this.l('SavedSuccessfully'));
         this.close();
-        this.modalSave.emit(null);
+        this.modalSave.emit(this.facilityIdFromTrips);
       });
   }
 

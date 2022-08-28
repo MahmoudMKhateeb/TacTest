@@ -2786,6 +2786,11 @@
 		<text name="PenaltyComplaint">اعتراض العقوبة</text>
 		<text name="ComplaintDescription">وصف الاعتراض</text>
 		<text name="ComplaintRejectReason">سبب رفض الاعتراض</text>
+		<text name="IncompleteTripPoint">نقاط الرحلة غير مكتملة</text>
+		<text name="PleaseCompleteAllDropPointDetails">الرجاء اكمال تفاصيل نقاط التنزيل</text>
+		<text name="PleaseCompletePicKupPointDetails">الرجاء اكمال تفاصيل نقاط التحميل</text>
+		<text name="Contact">جهة الاتصال</text>
+		<text name="Attachment">مرفق</text>
 
 	</texts>
 </localizationDictionary>

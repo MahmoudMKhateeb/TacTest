@@ -2,93 +2,13 @@
 <div class="modal fade" bsModal #createRouteStepModal="bs-modal" [config]="{ backdrop: 'static' }" role="dialog" aria-labelledby="dialog-static-name">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">
-          {{ l('CreateOrEditPoint') }}
-        </h4>
-      </div>
       <form *ngIf="active" #createOrEditPintForm="ngForm" novalidate autocomplete="off">
         <div class="modal-body">
-          <div class="row mb-4">
-            <!-- start:: map that draws the RouteStep::Route in CreateOrEditRouteStep-->
-            <div class="col-lg-12">
-              <agm-map [latitude]="Point.latitude || lat" [longitude]="Point.longitude || lng" [zoom]="zoom">
-                <agm-marker [latitude]="Point.latitude" [longitude]="Point.longitude"></agm-marker>
-              </agm-map>
-            </div>
-            <!-- END::map that draws the RouteStep::Route in CreateOrEditRouteStep-->
-          </div>
+          <div class="row mb-4"></div>
           <div class="row p-0 mt-4">
             <div class="col-lg-12 row">
-              <div class="form-group col-lg-{{ this.RouteType == RouteTypes.SingleDrop ? 12 : 6 }}" *ngIf="RouteType !== RouteTypes.SingleDrop">
-                <label>{{ l('Facility') }}</label>
-                <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': facilityLoading }">
-                  <div class="input-group">
-                    <select
-                      #pointFacility="ngModel"
-                      name="facility"
-                      class="form-control"
-                      [(ngModel)]="Point.facilityId"
-                      [disabled]="facilityLoading || this.RouteType == RouteTypes.SingleDrop"
-                      (change)="RouteStepCordSetter(); loadReceivers(Point.facilityId)"
-                      [class.is-valid]="pointFacility.touched && pointFacility.valid && Point.facilityId != undefined"
-                      [class.is-invalid]="(pointFacility.touched && !pointFacility.valid) || Point.facilityId == undefined"
-                      [required]="RouteType == RouteTypes.MultipleDrops"
-                    >
-                      <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
-                      <option *ngFor="let item of allFacilities" [value]="item.id" [disabled]="item.id == wayPointsList[0].facilityId">
-                        {{ item.displayName }}
-                      </option>
-                    </select>
-                    <div class="input-group-btn">
-                      <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
-                        <i class="flaticon-plus"></i>{{ l('New') }}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
               <!-- StartOf::Receiver -->
-              <div class="form-group col-lg-{{ this.RouteType == RouteTypes.SingleDrop ? 12 : 6 }}">
-                <label>{{ l('Receiver') }}</label>
-                <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': receiversLoading }">
-                  <div class="input-group">
-                    <select
-                      #receiver="ngModel"
-                      name="receiver"
-                      class="form-control"
-                      [(ngModel)]="Point.receiverId"
-                      [class.is-valid]="receiver.touched && receiver.valid"
-                      [class.is-invalid]="receiver.touched && !receiver.valid && !isAdditionalReceiverEnabled"
-                      [disabled]="receiversLoading || !Point.facilityId"
-                      [required]="!isAdditionalReceiverEnabled"
-                    >
-                      <option [ngValue]="null" selected>{{ l('PickAReceiver') }}</option>
-                      <option *ngFor="let item of allReceivers" [ngValue]="item.id">{{ item.displayName }}</option>
-                    </select>
-                    <div class="input-group-btn">
-                      <button class="btn btn-primary" [disabled]="receiversLoading" (click)="createOrEditReceiverModal.show()">
-                        <i class="flaticon-plus"></i>{{ l('New') }}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group col-lg-12">
-                <div class="checkbox-inline">
-                  <label class="checkbox checkbox-danger">
-                    <input
-                      type="checkbox"
-                      name="isAdditionalReceiverEnabled"
-                      [(ngModel)]="isAdditionalReceiverEnabled"
-                      (ngModelChange)="resetAdditionalReviverFields()"
-                    />
-                    <span></span>
-                    {{ l('SetUpAdditionalReceiver') }}
-                  </label>
-                </div>
-              </div>
-              <ng-template [ngIf]="isAdditionalReceiverEnabled">
+              <ng-container *ngIf="modalOpenedFor == 'receiver'">
                 <div class="form-group col-lg-6">
                   <label>{{ l('ReceiverFullName') }}</label>
                   <input
@@ -98,7 +18,7 @@
                     [(ngModel)]="Point.receiverFullName"
                     class="form-control"
                     minlength="3"
-                    [required]="isAdditionalReceiverEnabled"
+                    required
                     [ngClass]="{
                       'is-valid': receiverFullName.touched && receiverFullName.valid,
                       'is-invalid': receiverFullName.touched && receiverFullName.value && !receiverFullName.valid
@@ -141,7 +61,7 @@
                       type="tel"
                       class="form-control"
                       [(ngModel)]="Point.receiverPhoneNumber"
-                      [required]="isAdditionalReceiverEnabled"
+                      required
                       [ngClass]="{
                         'is-valid': userPhoneInput.touched && userPhoneInput.valid,
                         'is-invalid': userPhoneInput.touched && userPhoneInput.value && !userPhoneInput.valid
@@ -175,47 +95,37 @@
                     />
                   </div>
                 </div>
-              </ng-template>
+              </ng-container>
 
-              <div class="form-group col-lg-12">
-                <label>{{ l('Notes') }}</label>
-                <div class="input-group">
-                  <textarea
-                    #notes="ngModel"
-                    name="notes"
-                    class="form-control"
-                    [(ngModel)]="Point.note"
-                    [class.is-valid]="notes.touched && notes.value && !notes.valid"
-                  ></textarea>
+              <ng-container *ngIf="modalOpenedFor === 'note'">
+                <div class="form-group col-lg-12">
+                  <label>{{ l('Notes') }}</label>
+                  <div class="input-group">
+                    <textarea
+                      #notes="ngModel"
+                      name="notes"
+                      class="form-control"
+                      [(ngModel)]="Point.note"
+                      [class.is-valid]="notes.touched && notes.value && !notes.valid"
+                    ></textarea>
+                  </div>
                 </div>
-              </div>
+              </ng-container>
               <!--   EndOf::receiver -->
               <!--   Start::GoodDetails           -->
-              <PointGoodDetailsComponent></PointGoodDetailsComponent>
+              <PointGoodDetailsComponent
+                *ngIf="modalOpenedFor === 'goodDetails'"
+                [goodDetailsListForView]="this.goodDetailsListForView"
+              ></PointGoodDetailsComponent>
               <!--   End::GoodDetails           -->
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="close()">{{ l('Cancel') }}</button>
-          <button
-            type="submit"
-            class="btn btn-primary blue"
-            (click)="AddRouteStep()"
-            [disabled]="!Point.goodsDetailListDto || Point.goodsDetailListDto?.length == 0 || !createOrEditPintForm.valid"
-          >
-            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-          </button>
+          <button type="button" class="btn btn-secondary" (click)="close()">{{ l('Close') }}</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 <!--end::Create::RouteStepModal-->
-<!--begin::CreateOrEditFacilityModal-->
-<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="loadFacilities(); Point.receiverId = null"></createOrEditFacilityModal>
-<!--End::CreateOrEditFacilityModal-->
-<!-- begin::CreateOrEditReceiver -->
-<createOrEditReceiverModal #createOrEditReceiverModal [facilityIdFromTrips]="Point.facilityId" (modalSave)="loadReceivers(Point.facilityId)">
-</createOrEditReceiverModal>
-<!--End::CreateOrEditReceiver-->

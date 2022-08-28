@@ -3035,7 +3035,9 @@
 		<text name="PenaltyComplaint">Penalty Complaint</text>
 		<text name="ComplaintDescription">Complaint Description</text>
 		<text name="ComplaintRejectReason">Complaint Reject Reason</text>
+		<text name="IncompleteTripPoint">Incomplete Trip Point Details</text>
+		<text name="PleaseCompleteAllDropPointDetails">Please Complete All Drop Points Details</text>
+		<text name="PleaseCompletePicKupPointDetails">Please Complete All Pickup Points Details</text>
 
-		
 	</texts>
 </localizationDictionary>

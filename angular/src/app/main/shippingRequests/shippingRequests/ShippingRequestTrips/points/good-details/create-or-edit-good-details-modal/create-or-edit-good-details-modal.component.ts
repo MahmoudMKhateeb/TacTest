@@ -7,7 +7,6 @@ import {
   DangerousGoodTypesServiceProxy,
   GetAllGoodsCategoriesForDropDownOutput,
   GetAllUnitOfMeasureForDropDownOutput,
-  GoodsDetailDto,
   GoodsDetailsServiceProxy,
   PickingType,
   SelectItemDto,
@@ -67,14 +66,12 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   AllowedWeight: number;
   ngOnDestroy() {
     this.tripServiceSubs$.unsubscribe();
-    // this.pointServiceSubs$.unsubscribe();
   }
   ngOnInit(): void {
     this.myGoodsDetailList = this.GoodDetailsListInput || [];
     //take the current Active WayPoint From the Shared Service
     this.tripServiceSubs$ = this._TripService.currentShippingRequest.subscribe((res) => (this.GoodCategory = res.shippingRequest.goodCategoryId));
     //sync the singleWayPoint From the Service
-    // this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => (this.singleWayPoint = res));
     this.loadAllDropDowns();
   }
   /**
@@ -90,12 +87,9 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
 
   show(id?) {
     this.active = true;
-    // console.log('this is a Good Details Edit OutSide Of Edit....', id, this.myGoodsDetailList);
     this.goodsDetail = new CreateOrEditGoodsDetailDto();
     //if there is an id this is an edit
     if (typeof id !== 'undefined') {
-      // console.log('this is a Good Details Edit ....', id);
-      // console.log(this.myGoodsDetailList);
       this.activeEditId = id;
       this.goodCategoryId = this.myGoodsDetailList[id].goodCategoryId;
       this.weight = this.myGoodsDetailList[id].weight;
@@ -112,7 +106,6 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.createOrEditGoodDetail.show();
     } else {
       this.active = false;
-      // this.notify.info('YouCantAddMoreGoodsLimitReached');
       Swal.fire({
         icon: 'error',
         title: 'Oops...',

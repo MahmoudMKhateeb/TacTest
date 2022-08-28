@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, ViewChild, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, Injector, OnDestroy, Input } from '@angular/core';
 import {
   CreateOrEditGoodsDetailDto,
   CreateOrEditRoutPointDto,
@@ -48,7 +48,6 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
 
   ngOnInit(): void {
     this.usedInSubs$ = this._PointsService.currentUsedIn.subscribe((res) => (this.usedIn = res));
-    console.log(' this.usedIn:   ', this.usedIn);
     if (this.usedIn !== 'view') {
       //take the Good Category From the Shared Service and bind it
       this.tripServiceSubs$ = this._TripService.currentShippingRequest.pipe(first()).subscribe((res) => {
