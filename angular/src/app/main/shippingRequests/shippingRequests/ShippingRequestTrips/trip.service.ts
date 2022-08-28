@@ -58,36 +58,6 @@ export class TripService {
   updateDestFacility(id: number) {
     this.destFacility.next(id);
   }
-  //Loads All facilities
-  GetOrRefreshFacilities(shippingRequestId: number) {
-    this.facilitiesLodaing = true;
-    if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.TachyonDealer') || this.feature.isEnabled('App.CarrierAsASaas')) {
-      if (shippingRequestId != null && shippingRequestId != undefined) {
-        this.currentShippingRequest.subscribe((res) => {
-          this.citySourceId = res.originalCityId;
-          this.cityDestenationId = res.destinationCityId;
-          this.shippingTypeId = res.shippingRequest.shippingTypeId;
-          this.routeTypeId = res.shippingRequest.routeTypeId;
-        });
-        this._routStepsServiceProxy.getAllFacilitiesByCityAndTenantForDropdown(shippingRequestId).subscribe((result) => {
-          if (this.shippingTypeId == 1) {
-            //inside city
-            this.currentSourceFacilitiesItems = this.currentDestinationFacilitiesItems = result;
-          } else {
-            //outside side
-            this.currentSourceFacilitiesItems = result.filter((r) => r.cityId == this.citySourceId);
-            this.currentDestinationFacilitiesItems = result.filter((r) => r.cityId == this.cityDestenationId);
-          }
-          this.facilitiesLodaing = false;
-        });
-      } else {
-        this._routStepsServiceProxy.getAllFacilitiesForDropdown(shippingRequestId).subscribe((result) => {
-          this.currentSourceFacilitiesItems = this.currentDestinationFacilitiesItems = result;
-          this.facilitiesLodaing = false;
-        });
-      }
-    }
-  }
 }
 
 export interface DropDownMenu {
