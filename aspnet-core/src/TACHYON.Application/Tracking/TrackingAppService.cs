@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.EntityHistory;
 using Abp.Linq.Extensions;
 using Abp.Timing;
@@ -30,6 +31,7 @@ using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
+using TACHYON.Authorization.Users;
 
 namespace TACHYON.Tracking
 {
@@ -39,15 +41,17 @@ namespace TACHYON.Tracking
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
+        private readonly IRepository<User, long> _userRepository;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
         private readonly ProfileAppService _ProfileAppService;
 
-        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ProfileAppService profileAppService, IRepository<RoutPoint, long> routPointRepository)
+        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ProfileAppService profileAppService, IRepository<RoutPoint, long> routPointRepository, IRepository<User, long> userRepository)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _workFlowProvider = workFlowProvider;
             _ProfileAppService = profileAppService;
             _RoutPointRepository = routPointRepository;
+            _userRepository = userRepository;
         }
         public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
         {
@@ -108,10 +112,12 @@ namespace TACHYON.Tracking
                 .PageBy(input).ToList();
 
             List<TrackingListDto> trackingLists = new List<TrackingListDto>();
-            query.ForEach(r =>
+            
+            foreach (ShippingRequestTrip trip in query)
             {
-                trackingLists.Add(GetMap(r));
-            });
+                var mappedDto = await GetMap(trip);
+                trackingLists.Add(mappedDto);
+            }
 
             return new PagedResultDto<TrackingListDto>(
                 query.Count,
@@ -243,12 +249,19 @@ namespace TACHYON.Tracking
 
 
         #region Helper
-        private TrackingListDto GetMap(ShippingRequestTrip trip)
+        private async Task<TrackingListDto> GetMap(ShippingRequestTrip trip)
         {
             var dto = ObjectMapper.Map<TrackingListDto>(trip);
 
-            var date64 = _ProfileAppService.GetProfilePictureByUser((long)trip.CreatorUserId).Result.ProfilePicture;
-            dto.TenantPhoto = String.IsNullOrEmpty(date64) ? null : date64;
+
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                var isTripCreatorUserExist = await _userRepository.GetAll().AnyAsync(x => x.Id == trip.CreatorUserId);
+                if (trip.CreatorUserId.HasValue && isTripCreatorUserExist)
+                    dto.TenantPhoto = (await _ProfileAppService.GetProfilePictureByUser((long)trip.CreatorUserId))
+                        .ProfilePicture;
+            }
+            
             dto.NumberOfDrops = trip.ShippingRequestFk.NumberOfDrops;
             if (trip.AssignedTruckFk != null) dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk)?.TranslatedDisplayName ?? "";
             dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk)?.DisplayName;
@@ -257,7 +270,7 @@ namespace TACHYON.Tracking
                 dto.Reason = ObjectMapper.Map<ShippingRequestTripRejectReasonListDto>(trip.ShippingRequestTripRejectReason).Name ?? "";
             }
             var tenantId = AbpSession.TenantId;
-            if (!tenantId.HasValue || (tenantId.HasValue && !IsEnabled(AppFeatures.Shipper)))
+            if (!tenantId.HasValue || (tenantId.HasValue && !await IsEnabledAsync(AppFeatures.Shipper)))
             {
                 dto.Name = tenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestFk.Tenant.Name : dto.Name = $"{trip.ShippingRequestFk?.Tenant?.Name}-{trip.ShippingRequestFk?.CarrierTenantFk?.Name}";
                 dto.IsAssign = true;
