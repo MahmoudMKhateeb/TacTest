@@ -3035,6 +3035,7 @@
 		<text name="PenaltyComplaint">Penalty Complaint</text>
 		<text name="ComplaintDescription">Complaint Description</text>
 		<text name="ComplaintRejectReason">Complaint Reject Reason</text>
+		<text name="CarrierAsSaaS">Carrier As SAAS</text>
 
 		
 	</texts>

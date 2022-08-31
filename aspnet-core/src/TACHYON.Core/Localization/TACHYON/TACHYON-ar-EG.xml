@@ -2786,6 +2786,8 @@
 		<text name="PenaltyComplaint">اعتراض العقوبة</text>
 		<text name="ComplaintDescription">وصف الاعتراض</text>
 		<text name="ComplaintRejectReason">سبب رفض الاعتراض</text>
-
+		<text name="Attachment">مرفق</text>
+		<text name="CarrierAsSaaS">ناقل SaaS</text>
+		
 	</texts>
 </localizationDictionary>
