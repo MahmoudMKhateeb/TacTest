@@ -138,6 +138,17 @@ namespace TACHYON.DynamicInvoices
 
         }
 
+        /// <summary>
+        /// the input is numbers start of waybill number 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<List<long>> SearchByWaybillNumber(string input)
+        {
+           return await _tripRepository.GetAll().Where(x => x.WaybillNumber.HasValue && x.WaybillNumber.ToString().StartsWith(input))
+                .Select(x=> x.WaybillNumber.Value).Take(15).ToListAsync();
+        }
+
         [AbpAuthorize(AppPermissions.Pages_DynamicInvoices_Delete)]
         public async Task Delete(long dynamicInvoiceId)
         {
