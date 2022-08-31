@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Configuration;
 using TACHYON.DynamicInvoices.Dto;
 using TACHYON.DynamicInvoices.DynamicInvoiceItems;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -40,7 +42,6 @@ namespace TACHYON.DynamicInvoices
             DisableTenancyFilters();
             
             var dynamicInvoices = _dynamicInvoiceRepository.GetAll()
-                .WhereIf(input.WaybillNumber.HasValue, x => x.Trip.WaybillNumber == input.WaybillNumber)
                 .WhereIf(!input.Filter.IsNullOrEmpty(),
                     x => x.DebitTenant.Name.Contains(input.Filter) || x.DebitTenant.companyName.Contains(input.Filter))
                 .WhereIf(!input.Filter.IsNullOrEmpty(),
@@ -85,21 +86,29 @@ namespace TACHYON.DynamicInvoices
         [AbpAuthorize(AppPermissions.Pages_DynamicInvoices_Create)]
         protected virtual async Task Create(CreateOrEditDynamicInvoiceDto input)
         {
-            var tripId = await _tripRepository.GetAll().Where(x => x.WaybillNumber == input.WaybillNumber)
-                .Select(x => x.Id).FirstOrDefaultAsync();
-
-            if (tripId == default)
-                throw new UserFriendlyException(L("TripWithWaybillNumberNotFound", input.WaybillNumber));
             var createdDynamicInvoice = ObjectMapper.Map<DynamicInvoice>(input);
-            createdDynamicInvoice.TripId = tripId;
-            
-          var dynamicInvoiceId =  await _dynamicInvoiceRepository.InsertAndGetIdAsync(createdDynamicInvoice);
 
-          foreach (var item in createdDynamicInvoice.Items)
-          {
-              item.DynamicInvoiceId = dynamicInvoiceId;
-              await _dynamicInvoiceItemRepository.InsertAsync(item);
-          }
+            var taxVat = await SettingManager.GetSettingValueAsync<decimal>(AppSettings.HostManagement.TaxVat);
+            createdDynamicInvoice.SubTotalAmount = createdDynamicInvoice.Items.Sum(x => x.Price);
+            createdDynamicInvoice.VatAmount = createdDynamicInvoice.SubTotalAmount * taxVat;
+            createdDynamicInvoice.TotalAmount = createdDynamicInvoice.SubTotalAmount + createdDynamicInvoice.VatAmount;
+            
+            
+            var dynamicInvoiceId = await _dynamicInvoiceRepository.InsertAndGetIdAsync(createdDynamicInvoice);
+
+            var itemsList = (from item in input.Items
+                from trip in _tripRepository.GetAll().Where(x=> x.WaybillNumber == item.WaybillNumber).DefaultIfEmpty()
+                select new {item.WaybillNumber, TripId = trip?.Id}).ToList();
+
+            foreach (var item in input.Items)
+            {
+                var createdItem = ObjectMapper.Map<DynamicInvoiceItem>(item);
+                createdItem.DynamicInvoiceId = dynamicInvoiceId;
+                if (item.WaybillNumber.HasValue) 
+                    createdItem.TripId = itemsList.FirstOrDefault(x=> x.WaybillNumber == item.WaybillNumber)?.TripId
+                                         ?? throw new UserFriendlyException(L("TripWithWaybillNumberNotFound", item.WaybillNumber)); 
+                await _dynamicInvoiceItemRepository.InsertAsync(createdItem);
+            }
         }
         
         [AbpAuthorize(AppPermissions.Pages_DynamicInvoices_Update)]
@@ -120,6 +129,11 @@ namespace TACHYON.DynamicInvoices
                 await _dynamicInvoiceItemRepository.DeleteAsync(deletedItem);
 
             ObjectMapper.Map(input, dynamicInvoice);
+            
+            var taxVat = await SettingManager.GetSettingValueAsync<decimal>(AppSettings.HostManagement.TaxVat);
+            dynamicInvoice.SubTotalAmount = dynamicInvoice.Items.Sum(x => x.Price);
+            dynamicInvoice.VatAmount = dynamicInvoice.SubTotalAmount * taxVat;
+            dynamicInvoice.TotalAmount = dynamicInvoice.SubTotalAmount + dynamicInvoice.VatAmount;
 
         }
 

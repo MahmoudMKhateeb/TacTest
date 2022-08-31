@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.DynamicInvoices.DynamicInvoiceItems;
+using TACHYON.Invoices;
+using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
-using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.DynamicInvoices
 {
@@ -27,12 +28,35 @@ namespace TACHYON.DynamicInvoices
 
         [ForeignKey(nameof(DebitTenantId))]
         public Tenant DebitTenant { get; set; }
-        public int TripId { get; set; }
 
-        [ForeignKey(nameof(TripId))]
-        public ShippingRequestTrip Trip { get; set; }
+        public long? InvoiceId { get; set; }
+        
+        [ForeignKey(nameof(InvoiceId))]
+        public Invoice Invoice { get; set; }
+        
+        public string Notes { get; set; }
+        
+        public long? SubmitInvoiceId {get; set; }
+        
+        [ForeignKey(nameof(SubmitInvoiceId))]
+        public SubmitInvoice SubmitInvoice { get; set; }
 
-       
+        
+        /// <summary>
+        /// Total of Items Prices
+        /// </summary>
+        public decimal SubTotalAmount { get; set; }
+        
+        /// <summary>
+        /// VatAmount = VatTax * SubTotalAmount
+        /// </summary>
+        public decimal VatAmount { get; set; }
+
+        /// <summary>
+        /// TotalAmount = VatAmount + SubTotalAmount
+        /// </summary>
+        public decimal TotalAmount { get; set; }
+        
         public List<DynamicInvoiceItem> Items { get; set; }
     }
 }

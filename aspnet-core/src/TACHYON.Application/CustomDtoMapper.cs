@@ -1011,14 +1011,14 @@ namespace TACHYON
             configuration.CreateMap<DynamicInvoice, DynamicInvoiceListDto>()
                 .ForMember(x => x.CreditCompanyName, x => x.MapFrom(i => i.CreditTenant.companyName))
                 .ForMember(x => x.DebitCompanyName, x => x.MapFrom(i => i.DebitTenant.companyName))
-                .ForMember(x => x.WaybillNumber, x => x.MapFrom(i => i.Trip.WaybillNumber));
+                .ForMember(x => x.InvoiceNumber, x => x.MapFrom(i => i.InvoiceId.HasValue ? i.Invoice.InvoiceNumber: (i.SubmitInvoiceId.HasValue?i.SubmitInvoice.ReferencNumber: null)));
 
             configuration.CreateMap<DynamicInvoiceItem, DynamicInvoiceItemDto>();
 
             configuration.CreateMap<DynamicInvoice, DynamicInvoiceForViewDto>()
                 .ForMember(x => x.CreditCompany, x => x.MapFrom(i => i.CreditTenant.companyName))
                 .ForMember(x => x.DebitCompany, x => x.MapFrom(i => i.DebitTenant.companyName))
-                .ForMember(x => x.WaybillNumber, x => x.MapFrom(i => i.Trip.WaybillNumber))
+                .ForMember(x => x.InvoiceNumber, x => x.MapFrom(i => i.InvoiceId.HasValue ? i.Invoice.InvoiceNumber: (i.SubmitInvoiceId.HasValue?i.SubmitInvoice.ReferencNumber: null)))
                 .ForMember(x => x.Items, x => x.MapFrom(i => i.Items));
 
             configuration.CreateMap<CreateOrEditDynamicInvoiceItemDto, DynamicInvoiceItem>();

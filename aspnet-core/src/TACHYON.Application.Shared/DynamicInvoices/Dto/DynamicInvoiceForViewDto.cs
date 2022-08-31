@@ -9,8 +9,10 @@ namespace TACHYON.DynamicInvoices.Dto
         public string CreditCompany { get; set; }
         
         public string DebitCompany { get; set; }
-
-        public long WaybillNumber { get; set; }
+        
+        public string Notes { get; set; }
+        
+        public long? InvoiceNumber { get; set; }
 
         public List<DynamicInvoiceItemDto> Items { get; set; }
     }
