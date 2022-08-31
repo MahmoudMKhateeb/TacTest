@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using TACHYON.DynamicInvoices;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy;
 using TACHYON.Penalties;
@@ -29,6 +30,7 @@ namespace TACHYON.Invoices
         public InvoiceAccountType AccountType { get; set; }
         public ICollection<InvoiceTrip> Trips { get; set; }
         public ICollection<Penalty> Penalties { get; set; }
+
         public Invoice()
         {
             Trips = new List<InvoiceTrip>();

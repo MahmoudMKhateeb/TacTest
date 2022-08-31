@@ -93,7 +93,7 @@ namespace TACHYON.DynamicInvoices
             createdDynamicInvoice.Items.Clear();
             var taxVat = await SettingManager.GetSettingValueAsync<decimal>(AppSettings.HostManagement.TaxVat);
             createdDynamicInvoice.SubTotalAmount = createdDynamicInvoice.Items.Sum(x => x.Price);
-            createdDynamicInvoice.VatAmount = createdDynamicInvoice.SubTotalAmount * taxVat;
+            createdDynamicInvoice.VatAmount = createdDynamicInvoice.SubTotalAmount * taxVat/100;
             createdDynamicInvoice.TotalAmount = createdDynamicInvoice.SubTotalAmount + createdDynamicInvoice.VatAmount;
             
             
@@ -106,6 +106,8 @@ namespace TACHYON.DynamicInvoices
             foreach (var item in input.Items)
             {
                 var createdItem = ObjectMapper.Map<DynamicInvoiceItem>(item);
+                createdItem.VatAmount = Convert.ToDecimal(.15)  * createdItem.Price;
+                createdItem.TotalAmount = createdItem.Price + createdItem.VatAmount;
                 createdItem.DynamicInvoiceId = dynamicInvoiceId;
                 if (item.WaybillNumber.HasValue) 
                     createdItem.TripId = itemsList.FirstOrDefault(x=> x.WaybillNumber == item.WaybillNumber)?.TripId
