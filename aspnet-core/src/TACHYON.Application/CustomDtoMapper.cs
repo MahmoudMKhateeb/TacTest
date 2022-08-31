@@ -1013,7 +1013,8 @@ namespace TACHYON
                 .ForMember(x => x.DebitCompanyName, x => x.MapFrom(i => i.DebitTenant.companyName))
                 .ForMember(x => x.InvoiceNumber, x => x.MapFrom(i => i.InvoiceId.HasValue ? i.Invoice.InvoiceNumber: (i.SubmitInvoiceId.HasValue?i.SubmitInvoice.ReferencNumber: null)));
 
-            configuration.CreateMap<DynamicInvoiceItem, DynamicInvoiceItemDto>();
+            configuration.CreateMap<DynamicInvoiceItem, DynamicInvoiceItemDto>()
+                .ForMember(x=> x.WaybillNumber,x=> x.MapFrom(i=> i.ShippingRequestTrip.WaybillNumber));
 
             configuration.CreateMap<DynamicInvoice, DynamicInvoiceForViewDto>()
                 .ForMember(x => x.CreditCompany, x => x.MapFrom(i => i.CreditTenant.companyName))
@@ -1024,7 +1025,7 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditDynamicInvoiceItemDto, DynamicInvoiceItem>();
             
            configuration.CreateMap<CreateOrEditDynamicInvoiceDto, DynamicInvoice>()
-                .ForMember(x => x.Items, x => x.Ignore())
+                .ForMember(x => x.Items, x => x.MapFrom(i=> i.Items))
                 .AfterMap(((dto, invoice) =>
                 {
                     foreach (var itemDto in dto.Items)

@@ -88,6 +88,7 @@ namespace TACHYON.DynamicInvoices
         {
             var createdDynamicInvoice = ObjectMapper.Map<DynamicInvoice>(input);
 
+            createdDynamicInvoice.Items.Clear();
             var taxVat = await SettingManager.GetSettingValueAsync<decimal>(AppSettings.HostManagement.TaxVat);
             createdDynamicInvoice.SubTotalAmount = createdDynamicInvoice.Items.Sum(x => x.Price);
             createdDynamicInvoice.VatAmount = createdDynamicInvoice.SubTotalAmount * taxVat;
