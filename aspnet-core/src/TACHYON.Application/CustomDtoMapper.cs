@@ -859,6 +859,11 @@ namespace TACHYON
 
             configuration.CreateMap<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>, PointTransactionDto>();
 
+                configuration.CreateMap<UnitOfMeasure,GetAllUnitOfMeasureForDropDownOutput>()
+                    .ForMember(x => x.DisplayName,
+                        x => x.MapFrom(i =>
+                            i.GetTranslatedDisplayName<UnitOfMeasure, UnitOfMeasureTranslation>()))
+                    .ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
 
 
 
@@ -994,10 +999,8 @@ namespace TACHYON
             //    CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GoodCategoryDto>(context);
             configuration.
                 CreateMultiLingualMap<UnitOfMeasure, UnitOfMeasureTranslation, UnitOfMeasureDto>(context);
-            configuration.
-                CreateMultiLingualMap<UnitOfMeasure, UnitOfMeasureTranslation, GetAllUnitOfMeasureForDropDownOutput>(context)
-                .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
-            configuration.CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, DriverLicenseTypeDto>(context)
+            
+                configuration.CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, DriverLicenseTypeDto>(context)
                 .EntityMap.ForMember(x=> x.Key, x=> x.MapFrom(i=> GetDriverLicenseTypeDisplayName(i)))
                 .AfterMap((src, dest, otp) => dest.Name = dest.Key);;
             configuration.
