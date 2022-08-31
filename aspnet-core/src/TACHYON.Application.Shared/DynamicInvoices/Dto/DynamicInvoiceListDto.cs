@@ -1,0 +1,13 @@
+﻿using Abp.Application.Services.Dto;
+
+namespace TACHYON.DynamicInvoices.Dto
+{
+    public class DynamicInvoiceListDto : EntityDto<long>
+    {
+        public string CreditCompanyName { get; set; }
+
+        public string DebitCompanyName { get; set; }
+
+        public long WaybillNumber { get; set; }
+    }
+}

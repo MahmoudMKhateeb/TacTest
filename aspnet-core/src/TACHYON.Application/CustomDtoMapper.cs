@@ -57,6 +57,9 @@ using TACHYON.DriverLicenseTypes;
 using TACHYON.DriverLicenseTypes.Dtos;
 using TACHYON.Drivers.importing.Dto;
 using TACHYON.DynamicEntityParameters.Dto;
+using TACHYON.DynamicInvoices;
+using TACHYON.DynamicInvoices.Dto;
+using TACHYON.DynamicInvoices.DynamicInvoiceItems;
 using TACHYON.Editions;
 using TACHYON.Editions.Dto;
 using TACHYON.EmailTemplates;
@@ -1004,6 +1007,40 @@ namespace TACHYON
                 CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, GetLicenseTypeForDropDownOutput>(context)
                 .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
                 .ForMember(x=> x.Name, x=> x.MapFrom(i=> GetDriverLicenseTypeDisplayName(i)));
+            
+            configuration.CreateMap<DynamicInvoice, DynamicInvoiceListDto>()
+                .ForMember(x => x.CreditCompanyName, x => x.MapFrom(i => i.CreditTenant.companyName))
+                .ForMember(x => x.DebitCompanyName, x => x.MapFrom(i => i.DebitTenant.companyName))
+                .ForMember(x => x.WaybillNumber, x => x.MapFrom(i => i.Trip.WaybillNumber));
+
+            configuration.CreateMap<DynamicInvoiceItem, DynamicInvoiceItemDto>();
+
+            configuration.CreateMap<DynamicInvoice, DynamicInvoiceForViewDto>()
+                .ForMember(x => x.CreditCompany, x => x.MapFrom(i => i.CreditTenant.companyName))
+                .ForMember(x => x.DebitCompany, x => x.MapFrom(i => i.DebitTenant.companyName))
+                .ForMember(x => x.WaybillNumber, x => x.MapFrom(i => i.Trip.WaybillNumber))
+                .ForMember(x => x.Items, x => x.MapFrom(i => i.Items));
+
+            configuration.CreateMap<CreateOrEditDynamicInvoiceItemDto, DynamicInvoiceItem>();
+            
+           configuration.CreateMap<CreateOrEditDynamicInvoiceDto, DynamicInvoice>()
+                .ForMember(x => x.Items, x => x.Ignore())
+                .AfterMap(((dto, invoice) =>
+                {
+                    foreach (var itemDto in dto.Items)
+                    {
+                        if (!itemDto.Id.HasValue) {
+                            invoice.Items.Add(_Mapper.Map<DynamicInvoiceItem>(itemDto));
+                            continue;
+                        }
+
+                        var invoiceItem = invoice.Items.FirstOrDefault(x => x.Id == itemDto.Id);
+                        if (invoiceItem != null)
+                            _Mapper.Map(itemDto, invoiceItem);
+                    }
+                }));
+            
+            
         }
         
         private static string GetCityDisplayName(City city)
