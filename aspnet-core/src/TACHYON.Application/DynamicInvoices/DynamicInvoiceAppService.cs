@@ -8,6 +8,8 @@ using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -136,6 +138,17 @@ namespace TACHYON.DynamicInvoices
             dynamicInvoice.VatAmount = dynamicInvoice.SubTotalAmount * taxVat;
             dynamicInvoice.TotalAmount = dynamicInvoice.SubTotalAmount + dynamicInvoice.VatAmount;
 
+        }
+
+        /// <summary>
+        /// the input is numbers start of waybill number 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<List<long>> SearchByWaybillNumber(string input)
+        {
+           return await _tripRepository.GetAll().Where(x => x.WaybillNumber.HasValue && x.WaybillNumber.ToString().StartsWith(input))
+                .Select(x=> x.WaybillNumber.Value).Take(15).ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_DynamicInvoices_Delete)]
