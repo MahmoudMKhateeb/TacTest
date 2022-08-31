@@ -45,7 +45,7 @@ namespace TACHYON.AutoMapper.PriceOffers
                 .ForMember(dst => dst.ShipperRatingNumber, opt => opt.MapFrom(src => src.Tenant.RateNumber))
                 .ForMember(dst => dst.Carrier, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
                 .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
-                .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
+                //.ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
                 .ForMember(dst => dst.BidStatusTitle, opt => opt.MapFrom(src => src.BidStatus.GetEnumDescription()))
                 .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
                 .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => "0"))

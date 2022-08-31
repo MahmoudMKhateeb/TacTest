@@ -143,8 +143,8 @@ namespace TACHYON.Invoices
                 .Include(i => i.Trips)
                 .ThenInclude(r => r.ShippingRequestTripFK)
                 .ThenInclude(i => i.ShippingRequestFk)
-                .ThenInclude(r => r.DestinationCityFk)
-                .ThenInclude(r => r.Translations)
+                //.ThenInclude(r => r.DestinationCityFk)
+                //.ThenInclude(r => r.Translations)
                 .Include(i => i.Trips)
                 .ThenInclude(r => r.ShippingRequestTripFK)
                 .ThenInclude(r => r.AssignedTruckFk)
@@ -209,10 +209,10 @@ namespace TACHYON.Invoices
                         ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)
                             ?.TranslatedDisplayName ??
                         trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
-                    Destination =
-                        ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)
-                            ?.TranslatedDisplayName ??
-                        trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
+                    //Destination =
+                    //    ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)
+                    //        ?.TranslatedDisplayName ??
+                    //    trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
                     DateWork =
                         trip.ShippingRequestTripFK.ShippingRequestFk.EndTripDate.HasValue
                             ? trip.ShippingRequestTripFK.ShippingRequestFk.EndTripDate.Value.ToString(
@@ -448,7 +448,7 @@ namespace TACHYON.Invoices
                     WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
                     TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName,
                     Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
-                    Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
+                   // Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
                     DateWork = trip.ShippingRequestTripFK.EndTripDate.HasValue ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.InvoiceFK.CreationTime.ToString("dd/MM/yyyy"),
                     Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
                         L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : "",

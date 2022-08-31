@@ -415,6 +415,14 @@ namespace TACHYON
                 .AfterMap(AddOrUpdateShippingRequest)
                 .ReverseMap();
 
+            configuration.CreateMap<EditShippingRequestStep2Dto, ShippingRequest>()
+               .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
+               .ForMember(dest => dest.DraftStep, opt => opt.Ignore())
+               .ForMember(d => d.ShippingRequestDestinationCities, opt => opt.Ignore())
+               .AfterMap(AddOrUpdateShippingRequestDestinationCities);
+
+            configuration.CreateMap<ShippingRequest, EditShippingRequestStep2Dto>();
+
             configuration.CreateMap<EditShippingRequestStep4Dto, ShippingRequest>()
                 .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
                 .ForMember(dest => dest.DraftStep, opt => opt.Ignore())
@@ -748,9 +756,9 @@ namespace TACHYON
                 .ForMember(dto => dto.CreationTime,
                     options => options.MapFrom(entity => entity.ShippingRequests.CreationTime))
                 .ForMember(dto => dto.Source,
-                    options => options.MapFrom(entity => entity.ShippingRequests.OriginCityFk.DisplayName))
-                .ForMember(dto => dto.Destination,
-                    options => options.MapFrom(entity => entity.ShippingRequests.DestinationCityFk));
+                    options => options.MapFrom(entity => entity.ShippingRequests.OriginCityFk.DisplayName));
+                //.ForMember(dto => dto.Destination,
+                //    options => options.MapFrom(entity => entity.ShippingRequests.DestinationCityFk));
 
             configuration.CreateMap<BalanceRecharge, BalanceRechargeListDto>()
                 .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name));
@@ -835,9 +843,9 @@ namespace TACHYON
                 .ForMember(dto => dto.CreationTime,
                     options => options.MapFrom(entity => entity.ShippingRequests.CreationTime))
                 .ForMember(dto => dto.Source,
-                    options => options.MapFrom(entity => entity.ShippingRequests.OriginCityFk.DisplayName))
-                .ForMember(dto => dto.Destination,
-                    options => options.MapFrom(entity => entity.ShippingRequests.DestinationCityFk));
+                    options => options.MapFrom(entity => entity.ShippingRequests.OriginCityFk.DisplayName));
+                //.ForMember(dto => dto.Destination,
+                //    options => options.MapFrom(entity => entity.ShippingRequests.DestinationCityFk));
 
             configuration.CreateMap<ShippingRequest, ShipmentHistoryDto>()
                 .ForMember(x => x.ShipperName, z => z.MapFrom(x => x.Tenant.Name))
@@ -1051,6 +1059,22 @@ namespace TACHYON
                 else
                 {
                     _Mapper.Map(vas, Request.ShippingRequestVases.SingleOrDefault(c => c.Id == vas.Id));
+                }
+            }
+        }
+
+        private static void AddOrUpdateShippingRequestDestinationCities(EditShippingRequestStep2Dto dto, ShippingRequest Request)
+        {
+            Request.ShippingRequestDestinationCities ??= new Collection<ShippingRequestDestinationCity>();
+            foreach (var city in dto.ShippingRequestDestinationCities)
+            {
+                if (!city.Id.HasValue)
+                {
+                    Request.ShippingRequestDestinationCities.Add(_Mapper.Map<ShippingRequestDestinationCity>(city));
+                }
+                else
+                {
+                    _Mapper.Map(city, Request.ShippingRequestDestinationCities.SingleOrDefault(c => c.Id == city.Id));
                 }
             }
         }

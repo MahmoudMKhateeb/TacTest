@@ -404,11 +404,11 @@
                         <div class="form-group">
                           <label> {{ l('DestinationCity') }}<span class="required-fileds">*</span></label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
-                            <select
+                            <!-- <select
                               class="form-control"
                               name="destinationCity"
                               formControlName="destinationCity"
-                              [(ngModel)]="step2Dto.destinationCityId"
+                              [(ngModel)]="step2Dto.cities.destinationCityId"
                               [class.is-valid]="
                                 step2Form.get('destinationCity').valid &&
                                 (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
@@ -423,7 +423,31 @@
                             >
                               <option [ngValue]="null" disabled selected>{{ l('SelectanDestinationCity') }}</option>
                               <option *ngFor="let city of destinationCities" [ngValue]="Number(city.id)">{{ city.displayName }}</option>
-                            </select>
+                            </select> -->
+                            <p-multiSelect
+                              name="destinationCity"
+                              [options]="destinationCities"
+                              [(ngModel)]="step2Dto.shippingRequestDestinationCities"
+                              optionLabel="displayName"
+                              formControlName="destinationCity"
+                              [class.is-valid]="
+                                step2Form.get('destinationCity').valid &&
+                                (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
+                              "
+                              [class.is-invalid]="
+                                step2Form.get('destinationCity').invalid &&
+                                (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
+                              "
+                              [attr.disabled]="step1Dto.shippingTypeId == 1 || !step2Dto.originCityId ? true : null"
+                              [selectedItemsLabel]="'{0} items selected'"
+                              (ngModelChange)="validateShippingRequestType()"
+                              [style]="{ width: '100%' }"
+                              styleClass="form-control pt-1"
+                              [dataKey]="'cityId'"
+                              required
+                            >
+                              <!-- <option [ngValue]="null" disabled selected>{{ l('SelectanDestinationCity') }}</option> -->
+                            </p-multiSelect>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
                           </div>
                           <span class="form-text text-muted">{{ l('SelectaCity') }}</span>

@@ -250,8 +250,8 @@ namespace TACHYON.PricePackages
                     await _bidDomainService.GetCarriersByTruckTypeArrayAsync(shippingRequest.TrucksTypeId.Value);
                 await _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, shippingRequest.Id);
 
-                var carriers = await GetCarriersMatchingPricePackages(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId);
-                await _appNotifier.ShippingRequestAsBidWithMatchingPricePackage(carriers, shippingRequest.ReferenceNumber, shippingRequest.Id);
+                //var carriers = await GetCarriersMatchingPricePackages(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId);
+                //await _appNotifier.ShippingRequestAsBidWithMatchingPricePackage(carriers, shippingRequest.ReferenceNumber, shippingRequest.Id);
             }
         }
         #endregion

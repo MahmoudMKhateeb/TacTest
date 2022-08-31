@@ -244,7 +244,7 @@ namespace TACHYON.PriceOffers
                     request.BidStatus = ShippingRequestBidStatus.Closed;
                 }
 
-                await ChangeDirectRequestStatus(parentOffer.SourceId.Value, ShippingRequestDirectRequestStatus.Accepted);
+                //await ChangeDirectRequestStatus(parentOffer.SourceId.Value, ShippingRequestDirectRequestStatus.Accepted);
 
 
                 if (offer.Channel == PriceOfferChannel.DirectRequest)

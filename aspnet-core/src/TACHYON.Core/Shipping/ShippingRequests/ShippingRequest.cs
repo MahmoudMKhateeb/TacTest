@@ -80,9 +80,9 @@ namespace TACHYON.Shipping.ShippingRequests
 
         [ForeignKey("OriginCityId")] public City OriginCityFk { get; set; }
 
-        public virtual int? DestinationCityId { get; set; }
+        //public virtual int? DestinationCityId { get; set; }
 
-        [ForeignKey("DestinationCityId")] public City DestinationCityFk { get; set; }
+        //[ForeignKey("DestinationCityId")] public City DestinationCityFk { get; set; }
 
         /// <summary>
         /// The type of shipping request
@@ -244,6 +244,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
         //trips collection
         public ICollection<ShippingRequestTrip> ShippingRequestTrips { get; set; }
+        //citites
+        public ICollection<ShippingRequestDestinationCity> ShippingRequestDestinationCities { get; set; }
 
         #endregion
 

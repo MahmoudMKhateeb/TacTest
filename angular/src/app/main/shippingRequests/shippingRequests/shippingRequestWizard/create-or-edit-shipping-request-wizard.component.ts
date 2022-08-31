@@ -34,6 +34,7 @@ import {
   SavedEntityType,
   SelectItemDto,
   ShippersForDropDownDto,
+  ShippingRequestDestinationCitiesDto,
   ShippingRequestRouteType,
   ShippingRequestsServiceProxy,
   ShippingRequestVasListOutput,
@@ -746,12 +747,17 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       //local inside city
       this.destinationCountry = this.originCountry;
       this.destinationCities = this.sourceCities;
-      this.step2Dto.destinationCityId = this.step2Dto.originCityId;
+      this.step2Dto.shippingRequestDestinationCities = new ShippingRequestDestinationCitiesDto[this.step2Dto.originCityId]();
     } else if (this.step1Dto.shippingTypeId == 2) {
       // if route type is local betwenn cities check if user select same city in source and destination
       // this.destinationCities = this.sourceCities;
       this.destinationCountry = this.originCountry;
-      if (this.step2Dto.originCityId == this.step2Dto.destinationCityId) {
+
+      //if destination city one item selected and equals to origin, while shipping type is between cities
+      if (
+        this.step2Dto.shippingRequestDestinationCities.length == 1 &&
+        this.step2Dto.shippingRequestDestinationCities.filter((c) => c.cityId == this.step2Dto.originCityId)
+      ) {
         this.step2Form.controls['destinationCity'].setErrors({ invalid: true });
         this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
       } else if (this.originCountry !== this.destinationCountry) {
@@ -786,7 +792,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    * resets step2 inputs if the Route Type Change
    */
   resetStep2Inputs() {
-    this.step2Dto.destinationCityId = this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
+    this.step2Dto.shippingRequestDestinationCities = [];
+    this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
     this.clearValidation('originCity');
     this.clearValidation('destinationCity');
     this.clearValidation('originCountry');

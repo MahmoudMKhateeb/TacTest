@@ -95,7 +95,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     if (this.shippingRequestId != null) {
       this._tripService.currentShippingRequest.subscribe((res) => {
         this.citySourceId = res.originalCityId;
-        this.cityDestId = res.destinationCityId;
+        //this.cityDestId = res.destinationCityId;
         this.pointsCount = res.shippingRequest.numberOfDrops;
         this.shippingType = res.shippingRequest.shippingTypeId;
       });
@@ -200,7 +200,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         this.NumberOfDrops = res.shippingRequest.numberOfDrops;
         this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
         this.shippingRequestId = res.shippingRequest.id;
-        this.SRDestionationCity = res.destinationCityId;
+        //this.SRDestionationCity = res.destinationCityId;
       }
     });
 

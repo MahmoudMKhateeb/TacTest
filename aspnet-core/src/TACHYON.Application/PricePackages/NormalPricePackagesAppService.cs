@@ -203,7 +203,7 @@ namespace TACHYON.PricePackages
                 .WhereIf(input.CarrierId.HasValue, x => x.TenantId == input.CarrierId)
                 .Where(p => p.TrucksTypeId == shippingRequest.TrucksTypeId
                 && p.OriginCityId == shippingRequest.OriginCityId
-                && p.DestinationCityId == shippingRequest.DestinationCityId);
+                && shippingRequest.ShippingRequestDestinationCities.Any(x=>x.CityId == p.DestinationCityId));
 
             var pagedAndFilteredPricePackages = filteredPricePackages
                 .OrderBy(input.Sorting ?? "id desc")

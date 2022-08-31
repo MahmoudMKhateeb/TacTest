@@ -392,7 +392,7 @@ namespace TACHYON.Routs.RoutSteps
                 .GetAll()
                 .AsNoTracking()
                 .WhereIf(shippingRequest.ShippingTypeId == 1, x => x.CityId == shippingRequest.OriginCityId) //inside city
-                .WhereIf(shippingRequest.ShippingTypeId == 2, x => x.CityId == shippingRequest.OriginCityId || x.CityId == shippingRequest.DestinationCityId); //between city
+                .WhereIf(shippingRequest.ShippingTypeId == 2, x => x.CityId == shippingRequest.OriginCityId ); //between city
                 query = query.Where(x => x.TenantId == shippingRequest.TenantId);
                 var result = await query.Select(x => new FacilityForDropdownDto
                 {

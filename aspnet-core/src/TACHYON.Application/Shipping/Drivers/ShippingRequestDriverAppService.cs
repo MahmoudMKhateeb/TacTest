@@ -109,7 +109,7 @@ namespace TACHYON.Shipping.Drivers
         .GetAll()
         .AsNoTracking()
         .Include(i => i.ShippingRequestFk)
-             .ThenInclude(r => r.DestinationCityFk)
+             .ThenInclude(r => r.ShippingRequestDestinationCities)
        .Include(i => i.ShippingRequestFk)
               .ThenInclude(r => r.OriginCityFk)
        .Include(i => i.OriginFacilityFk)
@@ -186,7 +186,7 @@ namespace TACHYON.Shipping.Drivers
             DisableTenancyFilters();
             var trip = await _ShippingRequestTrip.GetAll()
             .Include(i => i.ShippingRequestFk)
-               .ThenInclude(r => r.DestinationCityFk)
+               .ThenInclude(r => r.ShippingRequestDestinationCities)
            .Include(i => i.ShippingRequestFk)
                .ThenInclude(r => r.OriginCityFk)
            .Include(i => i.ShippingRequestFk)

@@ -43,6 +43,7 @@ namespace TACHYON.Dashboards.Host
         private readonly IRepository<Truck, long> _trucksRepository;
         private readonly IRepository<GoodCategory> _goodTypesRepository;
         private readonly IRepository<Invoice, long> _invoicesRepository;
+        private readonly IRepository<ShippingRequestDestinationCity> _shippingRequestCityRepository;
 
         public HostDashboardAppService(
              IRepository<ShippingRequest, long> shippingRequestRepository,
@@ -52,8 +53,8 @@ namespace TACHYON.Dashboards.Host
              IRepository<Tenant> tenantRepository,
              IRepository<Truck, long> trucksRepository,
              IRepository<GoodCategory> goodTypesRepository,
-             IRepository<Invoice, long> invoicesRepository
-
+             IRepository<Invoice, long> invoicesRepository,
+             IRepository<ShippingRequestDestinationCity> shippingRequestCityRepository
             )
         {
             _lookup_trucksTypeRepository = lookup_trucksTypeRepository;
@@ -64,6 +65,7 @@ namespace TACHYON.Dashboards.Host
             _trucksRepository = trucksRepository;
             _goodTypesRepository = goodTypesRepository;
             _invoicesRepository = invoicesRepository;
+            _shippingRequestCityRepository = shippingRequestCityRepository;
         }
 
         public async Task<List<TruckTypeAvailableTrucksDto>> GetTrucksTypeCount()
@@ -322,16 +324,17 @@ namespace TACHYON.Dashboards.Host
 
         public async Task<List<ListRequestsByCityDto>> GetNumberOfRequestsForEachCity()
         {
+            //todo needs test after update and transfer data
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
-            var requests = await _shippingRequestRepository
+            var requests = await _shippingRequestCityRepository
                 .GetAll()
-                .Include(r => r.DestinationCityFk).AsNoTracking().Where(r => r.CreationTime.Year == DateTime.Now.Year).ToListAsync();
+                .Include(r => r.CityFk).AsNoTracking().Where(r => r.CreationTime.Year == DateTime.Now.Year).ToListAsync();
             var groupedCities = requests
-                    .GroupBy(r => new { r.DestinationCityId })
+                    .GroupBy(r => new { r.CityId })
                     .Select((c,k) => new
                     {
-                        key = c.Key.DestinationCityId,
+                        key = c.Key.CityId,
                         list = c.ToList()
                     }).ToList();
 
@@ -339,7 +342,7 @@ namespace TACHYON.Dashboards.Host
              {
                  Id = g.key,
                  NumberOfRequests = g.list.Count(),
-                 CityName = g.list.Select(r=>r.DestinationCityFk.DisplayName).FirstOrDefault()
+                 CityName = g.list.Select(r=>r.CityFk.DisplayName).FirstOrDefault()
              }).OrderBy(r => r.Id).ToList();
 
             result.ForEach(x =>
