@@ -136,6 +136,8 @@ namespace TACHYON.DynamicInvoices
                 if (item.WaybillNumber.HasValue) 
                     createdItem.TripId = itemsList.FirstOrDefault(x=> x.WaybillNumber == item.WaybillNumber)?.TripId
                                          ?? throw new UserFriendlyException(L("TripWithWaybillNumberNotFound", item.WaybillNumber));
+                createdItem.VatAmount = Convert.ToDecimal(.15)  * createdItem.Price;
+                createdItem.TotalAmount = createdItem.Price + createdItem.VatAmount;
                 dynamicInvoice.Items.Add(createdItem);
             }
             

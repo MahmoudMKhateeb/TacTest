@@ -5,6 +5,6 @@ namespace TACHYON.DynamicInvoices
 {
     public interface IDynamicInvoiceManager : IDomainService
     {
-        Task CalculatePrice(DynamicInvoice dynamicInvoice);
+        Task CalculatePrice(long dynamicInvoiceId);
     }
 }
