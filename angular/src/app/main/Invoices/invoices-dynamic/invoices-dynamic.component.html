@@ -1,0 +1,76 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'DynamicInvoices' | localize" [description]="'' | localize">
+      <div role="actions">
+        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <!--        <button-->
+        <!--          *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId"-->
+        <!--          (click)="InvoicesDynamicModal.show()"-->
+        <!--          type="button"-->
+        <!--          class="btn btn-default"-->
+        <!--        >-->
+        <!--          {{ l('OnDemand') }}-->
+        <!--        </button>-->
+        <p-splitButton
+          #splitButton
+          (onClick)="splitButton.onDropdownButtonClick(null)"
+          [label]="'Add' | localize"
+          [model]="items"
+          styleClass="p-button-raised"
+        ></p-splitButton>
+      </div>
+    </sub-header>
+
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <dx-data-grid
+              style="height: 45vw"
+              #dataGrid
+              id="dataGrid"
+              [dataSource]="dataSource"
+              [remoteOperations]="true"
+              [showColumnLines]="true"
+              [showRowLines]="false"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              keyExpr="id"
+              [wordWrapEnabled]="true"
+              (onEditingStart)="editRow($event)"
+            >
+              <!--                            (onRowRemoving)="deleteRow($event)"-->
+              <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+              <dxo-filter-builder-popup></dxo-filter-builder-popup>
+              <dxo-scrolling mode="virtual"></dxo-scrolling>
+              <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
+              <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
+              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"></dxo-remote-operations>
+              <dxo-paging [pageSize]="20"></dxo-paging>
+              <dxo-summary>
+                <dxi-group-item column="id" summaryType="count"></dxi-group-item>
+              </dxo-summary>
+
+              <!--              <dxi-column-->
+              <!--                cellTemplate="cellTemplateActions"-->
+              <!--                [allowFiltering]="false"-->
+              <!--                [allowSorting]="false"-->
+              <!--                [allowEditing]="false"-->
+              <!--                [editorOptions]="{ visible: false }"-->
+              <!--                [width]="50"-->
+              <!--              ></dxi-column>-->
+              <dxi-column dataField="invoiceNumber" caption="{{ l('InvoiceNumber') }}"></dxi-column>
+              <dxi-column caption="{{ l('CompanyName') }}" [calculateCellValue]="getCompanyName"></dxi-column>
+              <dxi-column dataField="notes" caption="{{ l('Notes') }}"></dxi-column>
+            </dx-data-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<invoices-dynamic-modal (modalSave)="reloadPage()" #InvoicesDynamicModal></invoices-dynamic-modal>
+<invoices-dynamic-items-modal #InvoiceDetailsModel></invoices-dynamic-items-modal>

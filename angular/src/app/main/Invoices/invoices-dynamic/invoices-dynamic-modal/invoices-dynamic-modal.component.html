@@ -1,0 +1,275 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-xl custom-xl">
+    <div class="modal-content">
+      <form *ngIf="active" #Form="ngForm" novalidate autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{ l('AddNew') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group m-form__group">
+            <label class="form-label" for="Tenant">{{ l('Tenant') }}</label>
+            <p-autoComplete
+              class="p-0"
+              styleClass="w-100"
+              inputStyleClass="form-control"
+              name="Tenant"
+              id="Tenant"
+              [(ngModel)]="Tenant"
+              [suggestions]="Tenants"
+              (completeMethod)="search($event)"
+              field="displayName"
+              [forceSelection]="true"
+              required
+              (keydown.enter)="$event.preventDefault(); $event.stopPropagation()"
+            ></p-autoComplete>
+          </div>
+          <div class="form-group m-form__group">
+            <label class="form-label mr-2" for="notes">{{ l('Notes') }}</label>
+            <textarea class="form-control" name="notes" id="notes" [(ngModel)]="notes" rows="5" cols="30" pInputTextarea></textarea>
+          </div>
+          <!--                    <div class="form-group m-form__group">-->
+          <!--                        <label class="mr-2" for="waybills">{{ l('Waybills') }}</label>-->
+          <!--                        <p-multiSelect [options]="Waybills" name="waybills" id="waybills" [(ngModel)]="SelectedWaybills"-->
+          <!--                                       optionLabel="displayName"></p-multiSelect>-->
+          <!--                    </div>-->
+
+          <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-sm btn-success" (click)="addNew()">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </button>
+          </div>
+          <table class="table">
+            <tr>
+              <th>{{ l('WaybillNumber') }}</th>
+              <th>{{ l('Price') }}</th>
+              <th>{{ l('Description') }}</th>
+              <th>{{ l('OriginCity') }}</th>
+              <th>{{ l('DestinationCity') }}</th>
+              <th>{{ l('TruckType') }}</th>
+              <th>{{ l('Date') }}</th>
+              <th>{{ l('Quantity') }}</th>
+              <th>{{ l('PlateNumber') }}</th>
+              <th>{{ l('ContainerNumber') }}</th>
+              <th style="width: 8rem"></th>
+            </tr>
+            <tr *ngFor="let row of root.items; let i = index">
+              <td>{{ row.waybillNumber }}</td>
+              <td>{{ row.price }}</td>
+              <td>{{ row.description }}</td>
+              <td>{{ getCityToDisplay(row.originCityId) }}</td>
+              <td>{{ getCityToDisplay(row.destinationCityId) }}</td>
+              <td>{{ getTruckToDisplay(row.truckTypeId) }}</td>
+              <td>{{ getWorkDate(row.workDate) | date }}</td>
+              <td>{{ row.quantity }}</td>
+              <td>{{ row.plateNumber }}</td>
+              <td>{{ row.containerNumber }}</td>
+              <td>
+                <div class="d-flex">
+                  <button class="btn btn-xs btn-info" (click)="dataSourceForEdit = row">
+                    <i class="fa fa-edit" aria-hidden="true"></i>
+                  </button>
+                  <button class="btn btn-xs btn-danger" (click)="deleteRow(i)">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <!--                        <tbody>-->
+            <!--                        </tbody>-->
+          </table>
+          <div class="row" *ngIf="!!dataSourceForEdit">
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="waybillNumber">
+                  {{ l('WaybillNumber') }}
+                </label>
+                <p-autoComplete
+                  class="p-0"
+                  styleClass="w-100"
+                  inputStyleClass="form-control"
+                  name="waybillNumber"
+                  id="waybillNumber"
+                  [(ngModel)]="dataSourceForEdit.waybillNumber"
+                  [suggestions]="Waybills"
+                  (completeMethod)="searchForWaybills($event)"
+                  [forceSelection]="true"
+                ></p-autoComplete>
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="date">
+                  {{ l('Date') }}
+                </label>
+                <p-calendar
+                  [disabled]="!!dataSourceForEdit.waybillNumber"
+                  class="p-0"
+                  styleClass="w-100"
+                  inputStyleClass="form-control"
+                  name="date"
+                  id="date"
+                  [(ngModel)]="dataSourceForEdit.workDate"
+                ></p-calendar>
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="price">
+                  {{ l('Price') }}
+                </label>
+                <input type="number" class="form-control" name="price" id="price" [(ngModel)]="dataSourceForEdit.price" />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="description">
+                  {{ l('Description') }}
+                </label>
+                <input class="form-control" name="description" id="description" [(ngModel)]="dataSourceForEdit.description" />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="truckType">
+                  {{ l('TruckType') }}
+                </label>
+                <p-autoComplete
+                  [disabled]="!!dataSourceForEdit.waybillNumber"
+                  class="p-0"
+                  styleClass="w-100"
+                  inputStyleClass="form-control"
+                  name="truckType"
+                  id="truckType"
+                  [(ngModel)]="dataSourceForEdit.truckTypeId"
+                  [suggestions]="trucksFiltered"
+                  field="displayName"
+                  (completeMethod)="filterTrucks($event)"
+                ></p-autoComplete>
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="plateNumber">
+                  {{ l('PlateNumber') }}
+                </label>
+                <input
+                  [disabled]="!!dataSourceForEdit.waybillNumber"
+                  class="form-control"
+                  name="plateNumber"
+                  id="plateNumber"
+                  pattern="^\d{4}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}$"
+                  [(ngModel)]="dataSourceForEdit.plateNumber"
+                />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="quantity">
+                  {{ l('Quantity') }}
+                </label>
+                <input
+                  [disabled]="!!dataSourceForEdit.waybillNumber"
+                  class="form-control"
+                  name="quantity"
+                  id="quantity"
+                  type="number"
+                  [(ngModel)]="dataSourceForEdit.quantity"
+                />
+              </div>
+            </div>
+
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="containerNumber">
+                  {{ l('ContainerNumber') }}
+                </label>
+                <input
+                  type="number"
+                  [disabled]="!!dataSourceForEdit.waybillNumber"
+                  class="form-control"
+                  name="containerNumber"
+                  id="containerNumber"
+                  [(ngModel)]="dataSourceForEdit.containerNumber"
+                />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="originCity">
+                  {{ l('OriginCity') }}
+                </label>
+                <p-autoComplete
+                  [disabled]="!!dataSourceForEdit.waybillNumber"
+                  class="p-0"
+                  styleClass="w-100"
+                  inputStyleClass="form-control"
+                  name="originCity"
+                  id="originCity"
+                  [(ngModel)]="dataSourceForEdit.originCityId"
+                  [suggestions]="originCitiesFiltered"
+                  field="displayName"
+                  (completeMethod)="filterCity($event, 1)"
+                ></p-autoComplete>
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="destinationCity">
+                  {{ l('DestinationCity') }}
+                </label>
+                <p-autoComplete
+                  [disabled]="!!dataSourceForEdit.waybillNumber"
+                  class="p-0"
+                  styleClass="w-100"
+                  inputStyleClass="form-control"
+                  name="destinationCity"
+                  id="destinationCity"
+                  [(ngModel)]="dataSourceForEdit.destinationCityId"
+                  [suggestions]="destCitiesFiltered"
+                  field="displayName"
+                  (completeMethod)="filterCity($event, 2)"
+                ></p-autoComplete>
+              </div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-end">
+              <button class="btn btn-sm btn-success" (click)="dataSourceForEdit = null">
+                {{ l('Cancel') }}
+              </button>
+              <button class="btn btn-sm btn-success" (click)="saveToArray()">
+                {{ !!dataSourceForEdit.id ? l('Save') : l('Add') }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-save blue"
+            [disabled]="Form.invalid || (Form.valid && !!root && !!root.items && root.items.length === 0) || !!dataSourceForEdit"
+            [buttonBusy]="Form.valid && saving"
+            [busyText]="l('SavingWithThreeDot')"
+            (click)="save()"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
