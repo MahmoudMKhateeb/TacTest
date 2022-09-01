@@ -51,6 +51,7 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   trucksFiltered: TrucksTypeSelectItemDto[] = [];
   originCitiesFiltered: TenantCityLookupTableDto[] = [];
   destCitiesFiltered: TenantCityLookupTableDto[] = [];
+  activeIndex: number;
 
   constructor(
     injector: Injector,
@@ -133,20 +134,19 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     });
     this._DynamicInvoiceServiceProxy.createOrEdit(body).subscribe(
       (result) => {
-        console.log('res', result);
         this.notify.info(this.l('SavedSuccessfully'));
         this.close();
         this.modalSave.emit(null);
         this.saving = false;
       },
       (error) => {
-        console.log('error', error);
         this.saving = false;
       },
       () => {
         this.saving = false;
       }
     );
+    this.activeIndex = null;
     // this._currentSrv
     //     .onDemand(parseInt(this.Tenant.id), this.SelectedWaybills)
     //     .pipe(
@@ -171,6 +171,7 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     this.notes = null;
     this.trucks = [];
     this.cities = [];
+    this.activeIndex = null;
   }
 
   search(event, initValue = false) {
@@ -192,7 +193,6 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   }
 
   searchForWaybills(event): void {
-    console.log('event', event);
     this._DynamicInvoiceServiceProxy.searchByWaybillNumber(event.query).subscribe((res) => {
       this.Waybills = res;
     });
@@ -200,7 +200,6 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
 
   logEvent(eventName) {
     // this.events.unshift(eventName);
-    console.log('event', eventName);
   }
 
   private getForView(id: number) {
@@ -240,7 +239,7 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
 
   addNew() {
     this.dataSourceForEdit = new DynamicInvoiceItemDto();
-    this.dataSource.push(new DynamicInvoiceItemDto());
+    // this.dataSource.push(new DynamicInvoiceItemDto());
   }
 
   saveToArray() {
@@ -262,18 +261,18 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     if (
       !isNotNullOrUndefined(this.dataSourceForEdit.id) &&
       isNotNullOrUndefined(this.dataSourceForEdit.price) &&
-      isNotNullOrUndefined(this.dataSourceForEdit.description)
+      isNotNullOrUndefined(this.dataSourceForEdit.description) &&
+      !isNotNullOrUndefined(this.activeIndex)
     ) {
       this.root.items.push(this.dataSourceForEdit);
       this.dataSourceForEdit = null;
-      console.log('this.root', this.root);
       return;
     }
-    const index = this.root.items.findIndex((item) => item.id === this.dataSourceForEdit.id);
-    if (index > -1 && isNotNullOrUndefined(this.dataSourceForEdit.price) && isNotNullOrUndefined(this.dataSourceForEdit.description)) {
-      this.root.items[index] = this.dataSourceForEdit;
-    }
-    console.log('this.root', this.root);
+    this.root.items[this.activeIndex] = this.dataSourceForEdit;
+    // const index = this.root.items.findIndex((item) => item.id === this.dataSourceForEdit.id);
+    // if (index > -1 && isNotNullOrUndefined(this.dataSourceForEdit.price) && isNotNullOrUndefined(this.dataSourceForEdit.description)) {
+    // }
+    this.activeIndex = null;
     this.dataSourceForEdit = null;
   }
 
@@ -282,26 +281,41 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   }
 
   filterCity(event: any, src: number) {
-    console.log('e', event);
     const filteredCities = this.cities.filter((city) => city.displayName.toLowerCase().search(event.query.toLowerCase()) > -1);
     src === 1 ? (this.originCitiesFiltered = [...filteredCities]) : (this.destCitiesFiltered = [...filteredCities]);
   }
 
   filterTrucks(event: any) {
-    console.log('e', event);
     const filteredTrucks = this.trucks.filter((city) => city.displayName.toLowerCase().search(event.query.toLowerCase()) > -1);
     this.trucksFiltered = [...filteredTrucks];
   }
 
   getCityToDisplay(originCityId) {
-    return !!originCityId ? this.cities.find((city) => Number(city.id) === Number('' + originCityId)).displayName : '';
+    if (isNaN(originCityId)) {
+      return;
+    }
+    return !!originCityId && this.cities.length > 0 ? this.cities.find((city) => Number(city.id) === Number('' + originCityId)).displayName : '';
   }
 
-  getTruckToDisplay(truckTypeId) {
-    return !!truckTypeId ? this.cities.find((city) => Number(city.id) === Number('' + truckTypeId)).displayName : '';
-  }
+  // getTruckToDisplay(truckTypeId) {
+  //   return !!truckTypeId ? this.cities.find((city) => Number(city.id) === Number('' + truckTypeId)).displayName : '';
+  // }
 
   getWorkDate(workDate): string {
     return this._DateFormatterService.ToString(this._DateFormatterService.MomentToNgbDateStruct(workDate));
+  }
+
+  clearOnSelect() {
+    this.dataSourceForEdit.destinationCityId = null;
+    this.dataSourceForEdit.workDate = null;
+    this.dataSourceForEdit.containerNumber = null;
+    this.dataSourceForEdit.quantity = null;
+    this.dataSourceForEdit.originCityId = null;
+    this.dataSourceForEdit.destinationCityId = null;
+  }
+
+  editRow(i: number, row) {
+    this.dataSourceForEdit = row;
+    this.activeIndex = i;
   }
 }

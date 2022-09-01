@@ -130,7 +130,6 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
 
   exportToExcel(): void {
     let data: InvoiceFilterInput = new InvoiceFilterInput();
-    console.log(this.accountType);
     data.tenantId = this.Tenant ? parseInt(this.Tenant.id) : undefined;
     data.periodId = this.periodId;
     data.isPaid = this.PaidStatus;
@@ -172,7 +171,6 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
-        console.log(JSON.stringify(loadOptions));
         return self._DynamicInvoiceServiceProxy
           .getAll(loadOptions.filter, '', 6, 0)
           .toPromise()
@@ -185,12 +183,10 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
             };
           })
           .catch((error) => {
-            console.log(error);
             throw new Error('Data Loading Error');
           });
       },
       remove: (data) => {
-        console.log('data', data);
         return this._DynamicInvoiceServiceProxy
           .delete(data.id)
           .toPromise()
@@ -198,7 +194,6 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
             this.notify.info(this.l('SuccessfullyDeleted'));
           })
           .catch((error) => {
-            console.log(error);
             throw new Error('Data Deletion Error');
           });
         // return self._dangerousGoodTypesServiceProxy.deleteTranslation(key).toPromise();
@@ -223,7 +218,6 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
 
   editRow(event) {
     event.cancel = true;
-    console.log('event', event);
     const forWho = !!event.data.creditCompanyName ? 1 : 2;
     this.InvoicesDynamicModal.show(forWho, event.data.id);
     return false;
@@ -231,14 +225,12 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
 
   deleteRow(event) {
     // event.cancel = true;
-    console.log('event', event);
     // this._DynamicInvoiceServiceProxy.delete(event.data.id).subscribe((res) => {
     //     this.notify.info(this.l('DeletedSuccessfully'));
     // });
   }
 
   dynamicInvoiceOnDemand(id) {
-    console.log('id', id);
     Swal.fire({
       title: this.l('AreYouSure'),
       icon: 'question',
