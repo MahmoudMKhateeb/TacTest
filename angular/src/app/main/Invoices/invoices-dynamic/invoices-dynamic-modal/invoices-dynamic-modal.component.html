@@ -59,23 +59,29 @@
               <th>{{ l('Description') }}</th>
               <th>{{ l('OriginCity') }}</th>
               <th>{{ l('DestinationCity') }}</th>
-              <th>{{ l('TruckType') }}</th>
+              <!--              <th>{{ l('TruckType') }}</th>-->
               <th>{{ l('Date') }}</th>
               <th>{{ l('Quantity') }}</th>
-              <th>{{ l('PlateNumber') }}</th>
+              <!--              <th>{{ l('PlateNumber') }}</th>-->
               <th>{{ l('ContainerNumber') }}</th>
               <th style="width: 8rem"></th>
             </tr>
             <tr *ngFor="let row of root.items; let i = index">
               <td>{{ row.waybillNumber }}</td>
-              <td>{{ row.price }}</td>
+              <td>
+                {{ row.price }}
+                <br />
+                <span> {{ l('TaxVat') }}: {{ row.price * 0.15 }} </span>
+                <br />
+                <span> {{ l('Total') }}: {{ row.price + row.price * 0.15 }} </span>
+              </td>
               <td>{{ row.description }}</td>
               <td>{{ getCityToDisplay(row.originCityId) }}</td>
               <td>{{ getCityToDisplay(row.destinationCityId) }}</td>
-              <td>{{ getTruckToDisplay(row.truckTypeId) }}</td>
+              <!--              <td>{{ getTruckToDisplay(row.truckTypeId) }}</td>-->
               <td>{{ getWorkDate(row.workDate) | date }}</td>
               <td>{{ row.quantity }}</td>
-              <td>{{ row.plateNumber }}</td>
+              <!--              <td>{{ row.plateNumber }}</td>-->
               <td>{{ row.containerNumber }}</td>
               <td>
                 <div class="d-flex">
@@ -142,40 +148,40 @@
                 <input class="form-control" name="description" id="description" [(ngModel)]="dataSourceForEdit.description" />
               </div>
             </div>
-            <div class="col-6 mb-4">
-              <div>
-                <label class="form-label" for="truckType">
-                  {{ l('TruckType') }}
-                </label>
-                <p-autoComplete
-                  [disabled]="!!dataSourceForEdit.waybillNumber"
-                  class="p-0"
-                  styleClass="w-100"
-                  inputStyleClass="form-control"
-                  name="truckType"
-                  id="truckType"
-                  [(ngModel)]="dataSourceForEdit.truckTypeId"
-                  [suggestions]="trucksFiltered"
-                  field="displayName"
-                  (completeMethod)="filterTrucks($event)"
-                ></p-autoComplete>
-              </div>
-            </div>
-            <div class="col-6 mb-4">
-              <div>
-                <label class="form-label" for="plateNumber">
-                  {{ l('PlateNumber') }}
-                </label>
-                <input
-                  [disabled]="!!dataSourceForEdit.waybillNumber"
-                  class="form-control"
-                  name="plateNumber"
-                  id="plateNumber"
-                  pattern="^\d{4}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}$"
-                  [(ngModel)]="dataSourceForEdit.plateNumber"
-                />
-              </div>
-            </div>
+            <!--            <div class="col-6 mb-4">-->
+            <!--              <div>-->
+            <!--                <label class="form-label" for="truckType">-->
+            <!--                  {{ l('TruckType') }}-->
+            <!--                </label>-->
+            <!--                <p-autoComplete-->
+            <!--                  [disabled]="!!dataSourceForEdit.waybillNumber"-->
+            <!--                  class="p-0"-->
+            <!--                  styleClass="w-100"-->
+            <!--                  inputStyleClass="form-control"-->
+            <!--                  name="truckType"-->
+            <!--                  id="truckType"-->
+            <!--                  [(ngModel)]="dataSourceForEdit.truckTypeId"-->
+            <!--                  [suggestions]="trucksFiltered"-->
+            <!--                  field="displayName"-->
+            <!--                  (completeMethod)="filterTrucks($event)"-->
+            <!--                ></p-autoComplete>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <!--            <div class="col-6 mb-4">-->
+            <!--              <div>-->
+            <!--                <label class="form-label" for="plateNumber">-->
+            <!--                  {{ l('PlateNumber') }}-->
+            <!--                </label>-->
+            <!--                <input-->
+            <!--                  [disabled]="!!dataSourceForEdit.waybillNumber"-->
+            <!--                  class="form-control"-->
+            <!--                  name="plateNumber"-->
+            <!--                  id="plateNumber"-->
+            <!--                  pattern="^\d{4}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}$"-->
+            <!--                  [(ngModel)]="dataSourceForEdit.plateNumber"-->
+            <!--                />-->
+            <!--              </div>-->
+            <!--            </div>-->
             <div class="col-6 mb-4">
               <div>
                 <label class="form-label" for="quantity">

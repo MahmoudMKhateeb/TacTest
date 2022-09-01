@@ -19,6 +19,7 @@ import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import { InvoiceDynamicModalComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic-modal/invoices-dynamic-modal.component';
+import Swal from 'sweetalert2';
 
 @Component({
   templateUrl: './invoices-dynamic.component.html',
@@ -233,6 +234,40 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
     console.log('event', event);
     // this._DynamicInvoiceServiceProxy.delete(event.data.id).subscribe((res) => {
     //     this.notify.info(this.l('DeletedSuccessfully'));
+    // });
+  }
+
+  dynamicInvoiceOnDemand(id) {
+    console.log('id', id);
+    Swal.fire({
+      title: this.l('AreYouSure'),
+      icon: 'question',
+      iconHtml: '؟',
+      confirmButtonText: this.l('Yes'),
+      cancelButtonText: this.l('No'),
+      showCancelButton: true,
+      showCloseButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._InvoiceServiceProxy.dynamicInvoiceOnDemand(id).subscribe((res) => {
+          this.notify.info(this.l('SubmitInvoiceGenerated'));
+        });
+      }
+    });
+
+    // Swal.fire(this.l('AreYouSure'), this.l('GenerateDynamicInvoiceConfirmationMsg'), 'info').then(succes => {
+    // });
+    // const state = confirm(this.l('AreYouSure'));
+    // if (state) {
+    // }
+
+    // this.confirmationService.confirm({
+    //     message: this.l('AreYouSure'),
+    //     accept: () => {
+    //         //Actual logic to perform a confirmation
+    //         this._InvoiceServiceProxy.dynamicInvoiceOnDemand(id).subscribe(res => {
+    //             this.notify.info(this.l('SubmitInvoiceGenerated'));
+    //         });
     // });
   }
 }

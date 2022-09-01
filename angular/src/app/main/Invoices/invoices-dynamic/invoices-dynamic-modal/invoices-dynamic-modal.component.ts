@@ -137,9 +137,11 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
         this.notify.info(this.l('SavedSuccessfully'));
         this.close();
         this.modalSave.emit(null);
+        this.saving = false;
       },
       (error) => {
         console.log('error', error);
+        this.saving = false;
       },
       () => {
         this.saving = false;
@@ -205,11 +207,12 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     this._DynamicInvoiceServiceProxy.getForView(id).subscribe(
       (data) => {
         this.root = data;
+        this.notes = this.root.notes;
         this.search({ query: this.isForShipper ? data.creditCompany : data.debitCompany }, true);
         this.dataSource = this.root.items;
         if (this.root.items.length > 0) {
           this.root.items.map((item) => {
-            item.workDate = moment(item.workDate);
+            item.workDate = !!item.waybillNumber ? null : moment(item.workDate);
           });
         }
       },
@@ -241,6 +244,9 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   }
 
   saveToArray() {
+    if (!isNotNullOrUndefined(this.root.items)) {
+      this.root.items = [];
+    }
     if (isNotNullOrUndefined(this.dataSourceForEdit.workDate)) {
       this.dataSourceForEdit.workDate = moment(this.dataSourceForEdit.workDate);
     }
@@ -250,9 +256,9 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     if (isNotNullOrUndefined(this.dataSourceForEdit.destinationCityId) && (this.dataSourceForEdit.destinationCityId as any) instanceof Object) {
       this.dataSourceForEdit.destinationCityId = (this.dataSourceForEdit.destinationCityId as any).id;
     }
-    if (isNotNullOrUndefined(this.dataSourceForEdit.truckTypeId) && (this.dataSourceForEdit.truckTypeId as any) instanceof Object) {
-      this.dataSourceForEdit.truckTypeId = (this.dataSourceForEdit.truckTypeId as any).id;
-    }
+    // if (isNotNullOrUndefined(this.dataSourceForEdit.truckTypeId) && (this.dataSourceForEdit.truckTypeId as any) instanceof Object) {
+    //     this.dataSourceForEdit.truckTypeId = (this.dataSourceForEdit.truckTypeId as any).id;
+    // }
     if (
       !isNotNullOrUndefined(this.dataSourceForEdit.id) &&
       isNotNullOrUndefined(this.dataSourceForEdit.price) &&
