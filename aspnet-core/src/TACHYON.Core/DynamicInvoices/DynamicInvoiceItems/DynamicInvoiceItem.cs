@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Cities;
 using TACHYON.Shipping.ShippingRequestTrips;
-using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Trucks;
 
 namespace TACHYON.DynamicInvoices.DynamicInvoiceItems
 {
@@ -30,17 +30,15 @@ namespace TACHYON.DynamicInvoices.DynamicInvoiceItems
         [ForeignKey(nameof(DestinationCityId))]
         public City DestinationCity { get; set; }
 
-        public long? TruckTypeId { get; set; }
+        public long? TruckId { set; get; }
 
-        [ForeignKey(nameof(TruckTypeId))]
-        public TrucksType TruckType { get; set; }
+        [ForeignKey(nameof(TruckId))]
+        public Truck Truck { get; set; }
 
         public DateTime? WorkDate { get; set; }
 
         public int? Quantity { get; set; }
 
-        public string PlateNumber { get; set; }
-        
         public string ContainerNumber { get; set; }
         
 

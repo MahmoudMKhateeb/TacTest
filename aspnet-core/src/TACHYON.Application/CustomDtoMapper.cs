@@ -1025,19 +1025,19 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditDynamicInvoiceItemDto, DynamicInvoiceItem>();
             
            configuration.CreateMap<CreateOrEditDynamicInvoiceDto, DynamicInvoice>()
-                .ForMember(x => x.Items, x => x.MapFrom(i=> i.Items))
+               .ForMember(x => x.Items, x => x.Ignore())
                 .AfterMap(((dto, invoice) =>
                 {
+                    if (!dto.Id.HasValue) return;
+                    
                     foreach (var itemDto in dto.Items)
                     {
-                        if (!itemDto.Id.HasValue) {
-                            invoice.Items.Add(_Mapper.Map<DynamicInvoiceItem>(itemDto));
-                            continue;
-                        }
-
+                        if (!itemDto.Id.HasValue) continue;
                         var invoiceItem = invoice.Items.FirstOrDefault(x => x.Id == itemDto.Id);
-                        if (invoiceItem != null)
-                            _Mapper.Map(itemDto, invoiceItem);
+                        if (invoiceItem == null) continue;
+                        _Mapper.Map(itemDto, invoiceItem);
+                        invoiceItem.VatAmount = 0.15m * invoiceItem.Price;
+                        invoiceItem.TotalAmount = invoiceItem.Price + invoiceItem.VatAmount;
                     }
                 }));
             
