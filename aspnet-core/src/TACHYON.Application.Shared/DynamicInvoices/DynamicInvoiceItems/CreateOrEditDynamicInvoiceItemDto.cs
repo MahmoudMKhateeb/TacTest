@@ -34,7 +34,8 @@ namespace TACHYON.DynamicInvoices.DynamicInvoiceItems
 
         public string ContainerNumber { get; set; }
 
-
+        public decimal VatAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public void AddValidationErrors(CustomValidationContext context)
         {
             if (WaybillNumber.HasValue && IsAnyFieldHasValue())

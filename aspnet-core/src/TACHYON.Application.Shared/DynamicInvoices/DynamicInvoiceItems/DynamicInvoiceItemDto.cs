@@ -24,6 +24,8 @@ namespace TACHYON.DynamicInvoices.DynamicInvoiceItems
         public string PlateNumber { get; set; }
         
         public string ContainerNumber { get; set; }
+        public decimal VatAmount { get; set; }
+        public decimal TotalAmount { get; set; }
 
 
     }

@@ -52,6 +52,8 @@ namespace TACHYON.DynamicInvoices.DynamicInvoiceItems
 
         [ForeignKey(nameof(DynamicInvoiceId))]
         public DynamicInvoice DynamicInvoice { get; set; }
-        
+        public decimal VatAmount { get; set; }
+        public decimal TotalAmount { get; set; }
+
     }
 }

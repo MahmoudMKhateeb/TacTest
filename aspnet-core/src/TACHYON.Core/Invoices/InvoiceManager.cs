@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.Core.Invoices.Jobs;
 using TACHYON.Dto;
+using TACHYON.DynamicInvoices;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Groups;
@@ -586,6 +587,49 @@ namespace TACHYON.Invoices
             await _invoiceRepository.InsertAsync(invoice);
              invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
 
+            if (period.PeriodType == InvoicePeriodType.PayInAdvance)
+            {
+                tenant.Balance -= totalAmount;
+                tenant.ReservedBalance -= totalAmount;
+            }
+            else
+            {
+                tenant.CreditBalance -= totalAmount;
+            }
+
+
+            await _balanceManager.CheckShipperOverLimit(tenant);
+        }
+
+        public async Task GenerateDynamicInvoice(Tenant tenant, DynamicInvoice dynamicInvoice)
+        {
+            InvoicePeriod period = await _periodRepository.FirstOrDefaultAsync(x =>
+                x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods))); 
+
+            decimal subTotalAmount = dynamicInvoice.Items.Sum(r => r.Price);
+            var tax = GetTax();
+
+            decimal vatAmount = subTotalAmount * tax/100;//dynamicInvoice.Items.Sum(r => r.va);
+            decimal totalAmount = subTotalAmount + vatAmount;
+
+            DateTime dueDate = Clock.Now;
+
+            var invoice = new Invoice
+            {
+                TenantId = tenant.Id,
+                PeriodId = period.Id,
+                DueDate = dueDate,
+                IsPaid = false,
+                TotalAmount = totalAmount,
+                VatAmount = vatAmount,
+                SubTotalAmount = subTotalAmount,
+                AccountType = InvoiceAccountType.AccountReceivable,
+                Channel = InvoiceChannel.DynamicInvoice,
+                Note=dynamicInvoice.Notes.ToString()
+            };
+            //await _invoiceRepository.InsertAsync(invoice);
+            invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
+            dynamicInvoice.InvoiceId=invoice.Id;
             if (period.PeriodType == InvoicePeriodType.PayInAdvance)
             {
                 tenant.Balance -= totalAmount;
