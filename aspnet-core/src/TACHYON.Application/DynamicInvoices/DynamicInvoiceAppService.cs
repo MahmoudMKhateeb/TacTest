@@ -89,16 +89,7 @@ namespace TACHYON.DynamicInvoices
         protected virtual async Task Create(CreateOrEditDynamicInvoiceDto input)
         {
             var createdDynamicInvoice = ObjectMapper.Map<DynamicInvoice>(input);
-
-            createdDynamicInvoice.Items.Clear();
-            var taxVat = await SettingManager.GetSettingValueAsync<decimal>(AppSettings.HostManagement.TaxVat);
-            createdDynamicInvoice.SubTotalAmount = createdDynamicInvoice.Items.Sum(x => x.Price);
-            createdDynamicInvoice.VatAmount = createdDynamicInvoice.SubTotalAmount * taxVat/100;
-            createdDynamicInvoice.TotalAmount = createdDynamicInvoice.SubTotalAmount + createdDynamicInvoice.VatAmount;
-            
-            
-            var dynamicInvoiceId = await _dynamicInvoiceRepository.InsertAndGetIdAsync(createdDynamicInvoice);
-
+            createdDynamicInvoice.Items = new List<DynamicInvoiceItem>();
             var itemsList = (from item in input.Items
                 from trip in _tripRepository.GetAll().Where(x=> x.WaybillNumber == item.WaybillNumber).DefaultIfEmpty()
                 select new {item.WaybillNumber, TripId = trip?.Id}).ToList();
@@ -108,12 +99,13 @@ namespace TACHYON.DynamicInvoices
                 var createdItem = ObjectMapper.Map<DynamicInvoiceItem>(item);
                 createdItem.VatAmount = Convert.ToDecimal(.15)  * createdItem.Price;
                 createdItem.TotalAmount = createdItem.Price + createdItem.VatAmount;
-                createdItem.DynamicInvoiceId = dynamicInvoiceId;
                 if (item.WaybillNumber.HasValue) 
                     createdItem.TripId = itemsList.FirstOrDefault(x=> x.WaybillNumber == item.WaybillNumber)?.TripId
-                                         ?? throw new UserFriendlyException(L("TripWithWaybillNumberNotFound", item.WaybillNumber)); 
-                await _dynamicInvoiceItemRepository.InsertAsync(createdItem);
+                                         ?? throw new UserFriendlyException(L("TripWithWaybillNumberNotFound", item.WaybillNumber));
+                createdDynamicInvoice.Items.Add(createdItem);
             }
+
+            await _dynamicInvoiceRepository.InsertAsync(createdDynamicInvoice);
         }
         
         [AbpAuthorize(AppPermissions.Pages_DynamicInvoices_Update)]
@@ -123,23 +115,34 @@ namespace TACHYON.DynamicInvoices
             // that's mean you can't change trip id of Dynamic invoice
             
             if (!input.Id.HasValue) throw new UserFriendlyException(L("IdCanNotBeEmpty"));
-            
             var dynamicInvoice = await _dynamicInvoiceRepository.GetAllIncluding(x=> x.Items)
                 .SingleAsync(x => x.Id == input.Id);
-
             var deletedItems = dynamicInvoice.Items
-                .Where(x => input.Items.All(i => i.Id != x.Id));
+                .Where(x => input.Items.All(i => i.Id != x.Id))
+                .ToList();
+            
+            foreach (DynamicInvoiceItem deletedItem in deletedItems)
+                await _dynamicInvoiceItemRepository.DeleteAsync(deletedItem);
+            
+            var addedItems = input.Items
+                .Where(x => !x.Id.HasValue);
+            var itemsList = (from item in input.Items
+                from trip in _tripRepository.GetAll().Where(x=> x.WaybillNumber == item.WaybillNumber).DefaultIfEmpty()
+                select new {item.WaybillNumber, TripId = trip?.Id}).ToList();
+            
+            foreach (var item in addedItems)
+            {
+                var createdItem = ObjectMapper.Map<DynamicInvoiceItem>(item);
+                if (item.WaybillNumber.HasValue) 
+                    createdItem.TripId = itemsList.FirstOrDefault(x=> x.WaybillNumber == item.WaybillNumber)?.TripId
+                                         ?? throw new UserFriendlyException(L("TripWithWaybillNumberNotFound", item.WaybillNumber));
+                dynamicInvoice.Items.Add(createdItem);
+            }
             
             foreach (DynamicInvoiceItem deletedItem in deletedItems)
                 await _dynamicInvoiceItemRepository.DeleteAsync(deletedItem);
 
             ObjectMapper.Map(input, dynamicInvoice);
-            
-            var taxVat = await SettingManager.GetSettingValueAsync<decimal>(AppSettings.HostManagement.TaxVat);
-            dynamicInvoice.SubTotalAmount = dynamicInvoice.Items.Sum(x => x.Price);
-            dynamicInvoice.VatAmount = dynamicInvoice.SubTotalAmount * taxVat;
-            dynamicInvoice.TotalAmount = dynamicInvoice.SubTotalAmount + dynamicInvoice.VatAmount;
-
         }
 
         /// <summary>

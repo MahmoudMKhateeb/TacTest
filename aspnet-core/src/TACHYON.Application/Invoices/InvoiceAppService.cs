@@ -208,7 +208,7 @@ namespace TACHYON.Invoices
                 .Include(i => i.Items)
                 .ThenInclude(x => x.DestinationCity)
                 .Include(i => i.Items)
-                .ThenInclude(x => x.TruckType)
+                .ThenInclude(x => x.Truck).ThenInclude(x=> x.TrucksTypeFk) // todo review this with Tasneem 
                 .FirstOrDefaultAsync(i => i.InvoiceId == invoiceId);
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
@@ -635,7 +635,7 @@ namespace TACHYON.Invoices
                     TotalAmount = item.TotalAmount,
                     WayBillNumber = item.ShippingRequestTrip!=null ?item.ShippingRequestTrip.WaybillNumber.ToString() :"",
                     TruckType = item.ShippingRequestTrip!=null ? ObjectMapper.Map<TrucksTypeDto>(item.ShippingRequestTrip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName
-                    : ObjectMapper.Map<TrucksTypeDto>(item.TruckType).TranslatedDisplayName,
+                    : ObjectMapper.Map<TrucksTypeDto>(item.Truck.TrucksTypeFk).TranslatedDisplayName,
                     Source = item.ShippingRequestTrip != null ?ObjectMapper.Map<CityDto>(item.ShippingRequestTrip.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName 
                     ?? item.ShippingRequestTrip.ShippingRequestFk.OriginCityFk.DisplayName 
                     : ObjectMapper.Map<CityDto>(item.OriginCity)?.TranslatedDisplayName ?? item.OriginCity.DisplayName,

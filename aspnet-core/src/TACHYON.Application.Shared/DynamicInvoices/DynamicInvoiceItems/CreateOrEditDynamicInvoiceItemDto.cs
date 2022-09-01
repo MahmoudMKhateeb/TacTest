@@ -3,7 +3,6 @@ using Abp.Runtime.Validation;
 using Castle.Core.Internal;
 using System;
 using System.ComponentModel.DataAnnotations;
-using TACHYON.Trucks;
 
 namespace TACHYON.DynamicInvoices.DynamicInvoiceItems
 {
@@ -22,13 +21,10 @@ namespace TACHYON.DynamicInvoices.DynamicInvoiceItems
 
         public int? DestinationCityId { get; set; }
 
-        public long? TruckTypeId { get; set; }
+        public long? TruckId { get; set; }
 
         public DateTime? WorkDate { get; set; }
-
-        [StringLength(TruckConsts.MaxPlateNumberLength, MinimumLength = TruckConsts.MinPlateNumberLength)]
-        [RegularExpression(TruckConsts.PlateNumberRegularExpression)]
-        public string PlateNumber { get; set; }
+        
 
         public int? Quantity { get; set; }
 
@@ -44,8 +40,8 @@ namespace TACHYON.DynamicInvoices.DynamicInvoiceItems
 
         private bool IsAnyFieldHasValue()
         {
-            return !ContainerNumber.IsNullOrEmpty() || !PlateNumber.IsNullOrEmpty() || Quantity.HasValue
-                   || TruckTypeId.HasValue || OriginCityId.HasValue || DestinationCityId.HasValue || WorkDate.HasValue;
+            return !ContainerNumber.IsNullOrEmpty() || Quantity.HasValue || TruckId.HasValue
+                   || OriginCityId.HasValue || DestinationCityId.HasValue || WorkDate.HasValue;
         }
     }
 }
