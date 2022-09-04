@@ -3,6 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   CommonLookupServiceProxy,
+  DynamicInvoiceServiceProxy,
   InvoiceAccountType,
   InvoiceChannel,
   InvoiceFilterInput,
@@ -17,18 +18,19 @@ import { Router } from '@angular/router';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
-import { VoidInvoiceNoteModalComponent } from '../invoice-note/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
+import { InvoiceDynamicModalComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic-modal/invoices-dynamic-modal.component';
+import Swal from 'sweetalert2';
 
 @Component({
-  templateUrl: './invoices-list.component.html',
+  templateUrl: './invoices-dynamic.component.html',
   encapsulation: ViewEncapsulation.None,
-
+  styleUrls: ['./invoices-dynamic.component.css'],
   animations: [appModuleAnimation()],
 })
-export class InvoicesListComponent extends AppComponentBase implements OnInit {
+export class InvoicesDynamicComponent extends AppComponentBase implements OnInit {
   @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
+  @ViewChild('InvoicesDynamicModal', { static: true }) InvoicesDynamicModal: InvoiceDynamicModalComponent;
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
-  @ViewChild('voidModal', { static: true }) voidModal: VoidInvoiceNoteModalComponent;
 
   IsStartSearch = false;
   PaidStatus: boolean | null | undefined;
@@ -51,9 +53,27 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   accountType: InvoiceAccountType | undefined = undefined;
   dataSource: any = {};
 
+  items = [
+    {
+      label: 'For Shipper',
+      icon: '',
+      command: () => {
+        this.InvoicesDynamicModal.show(1);
+      },
+    },
+    {
+      label: 'For Carrier',
+      icon: '',
+      command: () => {
+        this.InvoicesDynamicModal.show(2);
+      },
+    },
+  ];
+
   constructor(
     injector: Injector,
     private _InvoiceServiceProxy: InvoiceServiceProxy,
+    private _DynamicInvoiceServiceProxy: DynamicInvoiceServiceProxy,
     private _InvoiceReportServiceProxy: InvoiceReportServiceServiceProxy,
     private _CommonServ: CommonLookupServiceProxy,
     private _fileDownloadService: FileDownloadService,
@@ -63,12 +83,12 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit() {
-    if (this.appSession.tenantId) {
-      this.advancedFiltersAreShown = true;
-    }
-    this._CommonServ.getPeriods().subscribe((result) => {
-      this.Periods = result;
-    });
+    // if (this.appSession.tenantId) {
+    //     this.advancedFiltersAreShown = true;
+    // }
+    // this._CommonServ.getPeriods().subscribe((result) => {
+    //     this.Periods = result;
+    // });
     this.getAllInvoices();
   }
 
@@ -110,7 +130,6 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
 
   exportToExcel(): void {
     let data: InvoiceFilterInput = new InvoiceFilterInput();
-    console.log(this.accountType);
     data.tenantId = this.Tenant ? parseInt(this.Tenant.id) : undefined;
     data.periodId = this.periodId;
     data.isPaid = this.PaidStatus;
@@ -129,17 +148,13 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       this._fileDownloadService.downloadTempFile(result);
     });
   }
+
   downloadPenaltyReport(id: number) {
     this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
   }
 
-  downloadDynamicReport(id: number) {
-    this._InvoiceReportServiceProxy.downloadDynamicInvoice(id).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-    });
-  }
   details(invoice: any): void {
     if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
       this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
@@ -156,22 +171,32 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
-        console.log(JSON.stringify(loadOptions));
-        return self._InvoiceServiceProxy
-          .getAll(JSON.stringify(loadOptions))
+        return self._DynamicInvoiceServiceProxy
+          .getAll(loadOptions.filter, '', 6, 0)
           .toPromise()
           .then((response) => {
             return {
-              data: response.data,
+              data: response.items,
               totalCount: response.totalCount,
-              summary: response.summary,
-              groupCount: response.groupCount,
+              // summary: response.summary,
+              // groupCount: response.groupCount,
             };
           })
           .catch((error) => {
-            console.log(error);
             throw new Error('Data Loading Error');
           });
+      },
+      remove: (data) => {
+        return this._DynamicInvoiceServiceProxy
+          .delete(data.id)
+          .toPromise()
+          .then((res) => {
+            this.notify.info(this.l('SuccessfullyDeleted'));
+          })
+          .catch((error) => {
+            throw new Error('Data Deletion Error');
+          });
+        // return self._dangerousGoodTypesServiceProxy.deleteTranslation(key).toPromise();
       },
     });
   }
@@ -185,5 +210,56 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       .catch(function (error) {
         // ...
       });
+  }
+
+  getCompanyName(data) {
+    return !!data.creditCompanyName ? data.creditCompanyName : data.debitCompanyName;
+  }
+
+  editRow(event) {
+    event.cancel = true;
+    const forWho = !!event.data.creditCompanyName ? 1 : 2;
+    this.InvoicesDynamicModal.show(forWho, event.data.id);
+    return false;
+  }
+
+  deleteRow(event) {
+    // event.cancel = true;
+    // this._DynamicInvoiceServiceProxy.delete(event.data.id).subscribe((res) => {
+    //     this.notify.info(this.l('DeletedSuccessfully'));
+    // });
+  }
+
+  dynamicInvoiceOnDemand(id) {
+    Swal.fire({
+      title: this.l('AreYouSure'),
+      icon: 'question',
+      iconHtml: '؟',
+      confirmButtonText: this.l('Yes'),
+      cancelButtonText: this.l('No'),
+      showCancelButton: true,
+      showCloseButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._InvoiceServiceProxy.dynamicInvoiceOnDemand(id).subscribe((res) => {
+          this.notify.info(this.l('SubmitInvoiceGenerated'));
+        });
+      }
+    });
+
+    // Swal.fire(this.l('AreYouSure'), this.l('GenerateDynamicInvoiceConfirmationMsg'), 'info').then(succes => {
+    // });
+    // const state = confirm(this.l('AreYouSure'));
+    // if (state) {
+    // }
+
+    // this.confirmationService.confirm({
+    //     message: this.l('AreYouSure'),
+    //     accept: () => {
+    //         //Actual logic to perform a confirmation
+    //         this._InvoiceServiceProxy.dynamicInvoiceOnDemand(id).subscribe(res => {
+    //             this.notify.info(this.l('SubmitInvoiceGenerated'));
+    //         });
+    // });
   }
 }

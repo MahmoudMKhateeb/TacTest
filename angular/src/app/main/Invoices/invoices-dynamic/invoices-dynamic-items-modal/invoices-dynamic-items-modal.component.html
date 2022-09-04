@@ -1,0 +1,126 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade modalSetPrice tachyonDialer {{ direction == 'rtl' ? ' rtl' : '' }}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close closeModal" data-dismiss="modal" (click)="close()" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+        <ng-template [ngIf]="Data">
+          <div class="contentSetPrice">
+            <div class="table-sendOffer">
+              <table>
+                <thead>
+                  <tr>
+                    <th>
+                      {{ l('Sequence') }}
+                    </th>
+                    <th>
+                      {{ l('Date') }}
+                    </th>
+                    <th>
+                      {{ l('WaybillNumber') }}
+                    </th>
+                    <th>
+                      {{ l('CityOrigin') }}
+                    </th>
+                    <th>
+                      {{ l('DestinationDelivery') }}
+                    </th>
+                    <th>
+                      {{ l('TruckType') }}
+                    </th>
+                    <th>{{ l('Price') }} {{ l('SAR') }}</th>
+                    <th>({{ l('Vat') }} {{ Data.taxVat }}%)</th>
+                    <th>
+                      {{ l('Total') }}
+                    </th>
+                    <th>
+                      {{ l('Quantity') }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of Items">
+                    <td>
+                      {{ item.sequence }}
+                    </td>
+                    <td>
+                      {{ item.dateWork }}
+                    </td>
+                    <td>
+                      {{ item.wayBillNumber }}
+                    </td>
+                    <td>
+                      {{ item.source }}
+                    </td>
+                    <td>
+                      {{ item.destination }}
+                    </td>
+                    <td>
+                      {{ item.truckType }}
+                    </td>
+                    <td>
+                      {{ item.subTotalAmount | number }}
+                    </td>
+                    <td>
+                      {{ item.vatAmount | number }}
+                    </td>
+                    <td>
+                      {{ item.totalAmount | number }}
+                    </td>
+                    <td>
+                      {{ item.remarks }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="divirCard"></div>
+            <div class="resultPrice">
+              <div>
+                <p>
+                  {{ l('SubTotalAmount') }}
+                </p>
+                <p>
+                  <span>{{ Data.subTotalAmount | number }}</span>
+                  <span>{{ l('SAR') }}</span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  {{ l('VatAmount') }}
+                </p>
+                <p>
+                  <span>{{ Data.vatAmount | number }}</span>
+                  <span>{{ l('SAR') }}</span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  {{ l('TotalAmount') }}
+                </p>
+                <p>
+                  <span>{{ Data.totalAmount | number }}</span>
+                  <span>{{ l('SAR') }}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+      <div class="modal-footer">
+        <button (click)="exportToExcel()" class="btn btn-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+      </div>
+    </div>
+  </div>
+</div>
