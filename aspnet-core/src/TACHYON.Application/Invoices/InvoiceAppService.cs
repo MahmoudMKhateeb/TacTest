@@ -414,6 +414,7 @@ namespace TACHYON.Invoices
             {
                 //generate submit invoice
                 tenant = dynamicInvoice.DebitTenant;
+                await _invoiceManager.GenerateSubmitDynamicInvoice(tenant, dynamicInvoice);
             }
 
         }

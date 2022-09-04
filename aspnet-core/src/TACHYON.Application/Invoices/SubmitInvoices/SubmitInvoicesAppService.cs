@@ -22,6 +22,7 @@ using TACHYON.Cities.Dtos;
 using TACHYON.Common;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
+using TACHYON.DynamicInvoices;
 using TACHYON.Exporting;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
@@ -55,7 +56,7 @@ namespace TACHYON.Invoices.Groups
         private readonly IExcelExporterManager<InvoiceItemDto> _excelExporterInvoiceItemManager;
         private readonly BalanceManager _balanceManager;
         private readonly TransactionManager _transactionManager;
-
+        private readonly IRepository<DynamicInvoice, long> _DynamicInvoiceRepository;
 
 
         public SubmitInvoicesAppService(
@@ -68,7 +69,7 @@ namespace TACHYON.Invoices.Groups
             IAppNotifier appNotifier,
             InvoiceManager invoiceManager,
             IExcelExporterManager<SubmitInvoiceListDto> excelExporterManager,
-            IRepository<DocumentFile, Guid> documentFileRepository, IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository, IFeatureChecker featureChecker, BalanceManager balanceManager, TransactionManager transactionManager)
+            IRepository<DocumentFile, Guid> documentFileRepository, IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository, IFeatureChecker featureChecker, BalanceManager balanceManager, TransactionManager transactionManager, IRepository<DynamicInvoice, long> dynamicInvoiceRepository)
         {
             _PeriodRepository = PeriodRepository;
             _SubmitInvoiceRepository = SubmitInvoiceRepository;
@@ -84,6 +85,7 @@ namespace TACHYON.Invoices.Groups
             _featureChecker = featureChecker;
             _balanceManager = balanceManager;
             _transactionManager = transactionManager;
+            _DynamicInvoiceRepository = dynamicInvoiceRepository;
         }
 
 
@@ -386,6 +388,11 @@ namespace TACHYON.Invoices.Groups
             {
                 return GetPenaltyInvoiceItems(SubmitInvoice);
             }
+
+            else if (SubmitInvoice.Channel == InvoiceChannel.DynamicInvoice)
+            {
+                return GetDynamicInvoiceItems(SubmitInvoice);
+            }
             var TotalItem = SubmitInvoice.Trips.Count +
                             SubmitInvoice.Trips.Sum(v => v.ShippingRequestTripFK.ShippingRequestTripVases.Count);
             int Sequence = 1;
@@ -481,6 +488,65 @@ namespace TACHYON.Invoices.Groups
                     ? penalty.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
                     L("TotalOfDrop", penalty.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : ""
                     : "-"
+                });
+                Sequence++;
+            });
+            return Items;
+        }
+
+
+        private List<InvoiceItemDto> GetDynamicInvoiceItems(SubmitInvoice submitInvoice)
+        {
+            var dynamicInvoice = _DynamicInvoiceRepository.GetAll()
+                .Include(x => x.Items)
+                .ThenInclude(x=>x.Truck)
+                .ThenInclude(x=>x.TrucksTypeFk)
+                .Include(x => x.Items)
+                .ThenInclude(x=>x.ShippingRequestTrip)
+                .ThenInclude(x=>x.AssignedTruckFk)
+                .ThenInclude(x=>x.TrucksTypeFk)
+                .ThenInclude(x=>x.Translations)
+                .Include(x => x.Items)
+                .ThenInclude(x => x.ShippingRequestTrip)
+                .ThenInclude(x=>x.ShippingRequestFk)
+                .ThenInclude(x=>x.OriginCityFk)
+                .ThenInclude(x=>x.Translations)
+                .Include(x => x.Items)
+                .ThenInclude(x => x.ShippingRequestTrip)
+                .ThenInclude(x => x.ShippingRequestFk)
+                .ThenInclude(x => x.DestinationCityFk)
+                .ThenInclude(x => x.Translations)
+                .FirstOrDefault(x => x.SubmitInvoiceId == submitInvoice.Id);
+
+            var TotalItem = dynamicInvoice.Items.Count;
+
+            int Sequence = 1;
+            List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
+            dynamicInvoice.Items.ToList().ForEach(item =>
+            {
+                Items.Add(new InvoiceItemDto
+                {
+                    Sequence = $"{Sequence}/{TotalItem}",
+                    SubTotalAmount = item.Price,
+                    VatAmount = item.VatAmount,
+                    TotalAmount = item.TotalAmount,
+                    WayBillNumber = item.ShippingRequestTrip?.WaybillNumber.ToString(),
+                    //TruckType = item.ShippingRequestTrip != null
+                    //? ObjectMapper.Map<TrucksTypeDto>(item.ShippingRequestTrip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName ?? item.ShippingRequestTrip.ShippingRequestFk.AssignedTruckFk.TrucksTypeFk.DisplayName
+                    //: ObjectMapper.Map<TrucksTypeDto>(item.Truck?.TrucksTypeFk).TranslatedDisplayName ?? item.Truck?.TrucksTypeFk.DisplayName,
+                    Source = item.ShippingRequestTrip != null
+                    ? ObjectMapper.Map<CityDto>(item.ShippingRequestTrip.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? item.ShippingRequestTrip.ShippingRequestFk.OriginCityFk.DisplayName
+                    : ObjectMapper.Map<CityDto>(item.OriginCity)?.TranslatedDisplayName ?? item.OriginCity?.DisplayName,
+                    Destination = item.ShippingRequestTrip!= null
+                    ? ObjectMapper.Map<CityDto>(item.ShippingRequestTrip.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? item.ShippingRequestTrip.ShippingRequestFk.DestinationCityFk.DisplayName
+                    : ObjectMapper.Map<CityDto>(item.DestinationCity)?.TranslatedDisplayName ?? item.DestinationCity?.DisplayName,
+                    DateWork = item.ShippingRequestTrip != null
+                    ? item.ShippingRequestTrip.EndWorking.HasValue ? item.ShippingRequestTrip.EndWorking.Value.ToString("dd MMM, yyyy") : ""
+                    : item.WorkDate!=null ?item.WorkDate.Value.ToString("dd MMM, yyyy") :"",
+                    Remarks = item.ShippingRequestTrip != null
+                    ? item.ShippingRequestTrip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops ?
+                    L("TotalOfDrop", item.ShippingRequestTrip.ShippingRequestFk.NumberOfDrops) : "-"
+                    : L("TotalOfDrop", item.Quantity?.ToString())
                 });
                 Sequence++;
             });
