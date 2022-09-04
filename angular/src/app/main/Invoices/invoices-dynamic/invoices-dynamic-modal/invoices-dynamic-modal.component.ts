@@ -73,16 +73,6 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     }
     this.getAllTrucksTypeForTableDropdown();
     this.GetAllCitiesForTableDropdown();
-    this.modal.onHidden.subscribe(() => {
-      this.Tenants = [];
-      this.Waybills = [];
-      this.SelectedWaybills = [];
-      this.dataSource = [];
-      this.notes = null;
-      this.root = null;
-      this.trucks = [];
-      this.cities = [];
-    });
   }
 
   show(forWho: number, id?: number): void {
