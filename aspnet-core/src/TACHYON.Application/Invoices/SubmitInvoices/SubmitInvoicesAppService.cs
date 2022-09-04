@@ -516,6 +516,12 @@ namespace TACHYON.Invoices.Groups
                 .ThenInclude(x => x.ShippingRequestFk)
                 .ThenInclude(x => x.DestinationCityFk)
                 .ThenInclude(x => x.Translations)
+                .Include(x => x.Items)
+                .ThenInclude(x => x.OriginCity)
+                .ThenInclude(x => x.Translations)
+                .Include(x => x.Items)
+                .ThenInclude(x => x.DestinationCity)
+                .ThenInclude(x => x.Translations)
                 .FirstOrDefault(x => x.SubmitInvoiceId == submitInvoice.Id);
 
             var TotalItem = dynamicInvoice.Items.Count;
