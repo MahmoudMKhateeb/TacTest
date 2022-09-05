@@ -20,6 +20,7 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import { InvoiceDynamicModalComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic-modal/invoices-dynamic-modal.component';
 import Swal from 'sweetalert2';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './invoices-dynamic.component.html',
@@ -143,18 +144,6 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
     });
   }
 
-  downloadReport(id: number) {
-    this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(id).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-    });
-  }
-
-  downloadPenaltyReport(id: number) {
-    this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(id).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-    });
-  }
-
   details(invoice: any): void {
     if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
       this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
@@ -223,43 +212,30 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
     return false;
   }
 
-  deleteRow(event) {
-    // event.cancel = true;
-    // this._DynamicInvoiceServiceProxy.delete(event.data.id).subscribe((res) => {
-    //     this.notify.info(this.l('DeletedSuccessfully'));
-    // });
-  }
-
-  dynamicInvoiceOnDemand(id) {
+  dynamicInvoiceOnDemand(item) {
+    if (isNotNullOrUndefined(item.invoiceNumber)) {
+      Swal.fire({
+        title: `${this.l('InvoiceNumber')} ${item.invoiceNumber}`,
+        icon: 'warning',
+        showCloseButton: true,
+      });
+      return;
+    }
     Swal.fire({
       title: this.l('AreYouSure'),
       icon: 'question',
-      iconHtml: '؟',
+      // iconHtml: '؟',
       confirmButtonText: this.l('Yes'),
       cancelButtonText: this.l('No'),
       showCancelButton: true,
       showCloseButton: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this._InvoiceServiceProxy.dynamicInvoiceOnDemand(id).subscribe((res) => {
+        this._InvoiceServiceProxy.dynamicInvoiceOnDemand(item.id).subscribe((res) => {
           this.notify.info(this.l('SubmitInvoiceGenerated'));
+          this.refreshDataGrid();
         });
       }
     });
-
-    // Swal.fire(this.l('AreYouSure'), this.l('GenerateDynamicInvoiceConfirmationMsg'), 'info').then(succes => {
-    // });
-    // const state = confirm(this.l('AreYouSure'));
-    // if (state) {
-    // }
-
-    // this.confirmationService.confirm({
-    //     message: this.l('AreYouSure'),
-    //     accept: () => {
-    //         //Actual logic to perform a confirmation
-    //         this._InvoiceServiceProxy.dynamicInvoiceOnDemand(id).subscribe(res => {
-    //             this.notify.info(this.l('SubmitInvoiceGenerated'));
-    //         });
-    // });
   }
 }

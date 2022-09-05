@@ -3,14 +3,6 @@
     <sub-header [title]="'DynamicInvoices' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
-        <!--        <button-->
-        <!--          *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId"-->
-        <!--          (click)="InvoicesDynamicModal.show()"-->
-        <!--          type="button"-->
-        <!--          class="btn btn-default"-->
-        <!--        >-->
-        <!--          {{ l('OnDemand') }}-->
-        <!--        </button>-->
         <p-splitButton
           #splitButton
           (onClick)="splitButton.onDropdownButtonClick(null)"
@@ -25,12 +17,12 @@
       <div class="card card-custom gutter-b">
         <div class="card-body">
           <div class="row align-items-center">
+            <!--              [remoteOperations]="true"-->
             <dx-data-grid
               style="height: 45vw"
               #dataGrid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -39,29 +31,20 @@
               [wordWrapEnabled]="true"
               (onEditingStart)="editRow($event)"
             >
-              <!--                            (onRowRemoving)="deleteRow($event)"-->
               <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true"></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
-              <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
-              <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"></dxo-remote-operations>
+              <!--              <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>-->
+              <!--              <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>-->
+              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="false"></dxo-remote-operations>
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
                 <dxi-group-item column="id" summaryType="count"></dxi-group-item>
               </dxo-summary>
 
-              <!--              <dxi-column-->
-              <!--                cellTemplate="cellTemplateActions"-->
-              <!--                [allowFiltering]="false"-->
-              <!--                [allowSorting]="false"-->
-              <!--                [allowEditing]="false"-->
-              <!--                [editorOptions]="{ visible: false }"-->
-              <!--                [width]="50"-->
-              <!--              ></dxi-column>-->
               <dxi-column
                 cellTemplate="cellTemplateActions"
                 [allowFiltering]="false"
@@ -91,54 +74,8 @@
 
                   <ul class="dropdown-menu" *dropdownMenu>
                     <li>
-                      <a class="dropdown-item" (click)="details(options.data)">{{ l('Detail') }}</a>
+                      <a class="dropdown-item" (click)="dynamicInvoiceOnDemand(options.data)">{{ l('OnDemandInvoice') }}</a>
                     </li>
-                    <li>
-                      <a class="dropdown-item" *ngIf="options.data.channel == 1" (click)="downloadReport(options.data.id)">{{
-                        l('downloadInvoice')
-                      }}</a>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" (click)="dynamicInvoiceOnDemand(options.data.id)">{{ l('OndemandInvoice') }}</a>
-                    </li>
-
-                    <!--                            <li>-->
-                    <!--                                <a class="dropdown-item" *ngIf="options.data.channel == 3" (click)="downloadPenaltyReport(options.data.id)">{{-->
-                    <!--                                    l('downloadPenaltyInvoice')-->
-                    <!--                                    }}</a>-->
-                    <!--                            </li>-->
-                    <!--                            <li>-->
-                    <!--                                <a class="dropdown-item" *ngIf="options.data.channel == 4" (click)="downloadDynamicReport(options.data.id)">{{-->
-                    <!--                                    l('downloadDynamicInvoice')-->
-                    <!--                                    }}</a>-->
-                    <!--                            </li>-->
-                    <!--                            <li *ngIf="!options.data.isPaid">-->
-                    <!--                                <a-->
-                    <!--                                    class="dropdown-item"-->
-                    <!--                                    href="javascript:;"-->
-                    <!--                                    *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId"-->
-                    <!--                                    (click)="MakePaid(options.data)"-->
-                    <!--                                >{{ l('MakePaid') }}</a-->
-                    <!--                                >-->
-                    <!--                            </li>-->
-                    <!--                            <li *ngIf="options.data.isPaid">-->
-                    <!--                                <a-->
-                    <!--                                    class="dropdown-item"-->
-                    <!--                                    href="javascript:;"-->
-                    <!--                                    *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId"-->
-                    <!--                                    (click)="MakeUnPaid(options.data)"-->
-                    <!--                                >{{ l('MakeUnPaid') }}</a-->
-                    <!--                                >-->
-                    <!--                            </li>-->
-                    <!--                            <li>-->
-                    <!--                                <a-->
-                    <!--                                    class="dropdown-item"-->
-                    <!--                                    href="javascript:;"-->
-                    <!--                                    (click)="voidModal.show(options.data.id)"-->
-                    <!--                                    *ngIf="!feature.isEnabled('App.Carrier') && !feature.isEnabled('App.Shipper')"-->
-                    <!--                                >{{ l('Void') }}</a-->
-                    <!--                                >-->
-                    <!--                            </li>-->
                   </ul>
                 </div>
               </div>
