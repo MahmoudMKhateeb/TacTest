@@ -67,7 +67,8 @@ namespace TACHYON.Configuration.Host
                 SmsSettings = await GetSmsSettingsAsync(),
                 EditionSettings = await GetEditionsSettingsAsync(),
                 OtpNumbersSettings = await GetOtpNumberSettingsAsync(),
-                TenantRatingMinNumber=await GetTenantRatingMinNumberAsync()
+                TenantRatingMinNumber=await GetTenantRatingMinNumberAsync(),
+                AppLinksSettingDto = await GetMobileAppLinkSettingsAsync()
             };
         }
 
@@ -389,6 +390,17 @@ namespace TACHYON.Configuration.Host
             return tenantRating;
         }
 
+        private async Task<MobileAppLinksSettingDto> GetMobileAppLinkSettingsAsync()
+        {
+            var mobileAppLinks = new MobileAppLinksSettingDto()
+            {
+                IosAppLink = 
+                    await SettingManager.GetSettingValueAsync(AppSettings.Links.IosAppLink),
+                AndroidAppLink = await SettingManager.GetSettingValueAsync(AppSettings.Links.AndroidAppLink)
+            };
+            return mobileAppLinks;
+        }
+        
         #endregion
 
         #endregion
@@ -409,6 +421,7 @@ namespace TACHYON.Configuration.Host
             await UpdateEditionsSettingsAsync(input.EditionSettings);
             await UpdateOtpNumberSettingsAsync(input.OtpNumbersSettings);
             await UpdateTenantRatingSettingsAsync(input.TenantRatingMinNumber);
+            await UpdateMobileAppLinkSettingAsync(input.AppLinksSettingDto);
         }
 
         private async Task UpdateOtherSettingsAsync(OtherSettingsEditDto input)
@@ -751,6 +764,18 @@ namespace TACHYON.Configuration.Host
             );
         }
 
+        private async Task UpdateMobileAppLinkSettingAsync(MobileAppLinksSettingDto input)
+        {
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.Links.AndroidAppLink,
+                input.AndroidAppLink
+            );
+            
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.Links.IosAppLink,
+                input.IosAppLink
+            );
+        }
 
         public async Task<bool> TestUnifonicSms(TestUnifonicSmsInput testUnifonicSmsInput)
         {

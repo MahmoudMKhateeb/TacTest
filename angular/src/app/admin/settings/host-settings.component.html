@@ -890,6 +890,39 @@
                 />
               </div>
               <span *ngIf="ignoredOtpNumbers.invalid" class="form-text text-danger">{{ l('IgnoredOtpNumbersPatternMsg') }}</span>
+              <div class="form-group">
+                <label for="androidAppLink">{{ 'AndroidAppLink' | localize }}</label>
+                <input
+                  id="androidAppLink"
+                  type="text"
+                  #androidAppLink="ngModel"
+                  name="androidAppLink"
+                  [pattern]="linkPattern"
+                  class="form-control"
+                  required
+                  [(ngModel)]="hostSettings.appLinksSettingDto.androidAppLink"
+                  [class.is-valid]="androidAppLink.touched && androidAppLink.valid"
+                  [class.is-invalid]="androidAppLink.touched && androidAppLink.invalid"
+                />
+                <validation-messages [formCtrl]="androidAppLink"></validation-messages>
+              </div>
+
+              <div class="form-group">
+                <label for="iosAppLink">{{ 'IosAppLink' | localize }}</label>
+                <input
+                  id="iosAppLink"
+                  type="text"
+                  #iosAppLink="ngModel"
+                  name="iosAppLink"
+                  [pattern]="linkPattern"
+                  class="form-control"
+                  required
+                  [(ngModel)]="hostSettings.appLinksSettingDto.iosAppLink"
+                  [class.is-valid]="iosAppLink.touched && iosAppLink.valid"
+                  [class.is-invalid]="iosAppLink.touched && iosAppLink.invalid"
+                />
+                <validation-messages [formCtrl]="iosAppLink"></validation-messages>
+              </div>
             </tab>
             <tab class="p-5" heading="{{ 'RatingSettings' | localize }}">
               <h5>{{ 'TenantRatingSettings' | localize }}</h5>
