@@ -15,9 +15,11 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Configuration;
+using TACHYON.Dto;
 using TACHYON.DynamicInvoices.Dto;
 using TACHYON.DynamicInvoices.DynamicInvoiceItems;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Trucks;
 
 namespace TACHYON.DynamicInvoices
 {
@@ -27,16 +29,19 @@ namespace TACHYON.DynamicInvoices
     {
         private readonly IRepository<DynamicInvoice,long> _dynamicInvoiceRepository;
         private readonly IRepository<DynamicInvoiceItem,long> _dynamicInvoiceItemRepository;
+        private readonly IRepository<Truck,long> _truckRepository;
         private readonly IRepository<ShippingRequestTrip> _tripRepository;
 
         public DynamicInvoiceAppService(
             IRepository<DynamicInvoice,long> dynamicInvoiceRepository,
             IRepository<DynamicInvoiceItem, long> dynamicInvoiceItemRepository,
-            IRepository<ShippingRequestTrip> tripRepository)
+            IRepository<ShippingRequestTrip> tripRepository,
+            IRepository<Truck, long> truckRepository)
         {
             _dynamicInvoiceRepository = dynamicInvoiceRepository;
             _dynamicInvoiceItemRepository = dynamicInvoiceItemRepository;
             _tripRepository = tripRepository;
+            _truckRepository = truckRepository;
         }
 
         public async Task<PagedResultDto<DynamicInvoiceListDto>> GetAll(GetDynamicInvoicesInput input)
@@ -156,6 +161,17 @@ namespace TACHYON.DynamicInvoices
         {
            return await _tripRepository.GetAll().Where(x => x.WaybillNumber.HasValue && x.WaybillNumber.ToString().StartsWith(input))
                 .Select(x=> x.WaybillNumber.Value).Take(15).ToListAsync();
+        }
+
+        public async Task<ListResultDto<SelectItemDto>> GetAllTrucks()
+        {
+            DisableTenancyFilters();
+            var trucks = await _truckRepository.GetAll().Select(x => new SelectItemDto()
+            {
+                DisplayName = x.PlateNumber.ToString(), Id = x.Id.ToString()
+            }).ToListAsync();
+
+            return new ListResultDto<SelectItemDto>() {Items = trucks};
         }
 
         [AbpAuthorize(AppPermissions.Pages_DynamicInvoices_Delete)]
