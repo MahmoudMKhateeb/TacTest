@@ -686,8 +686,8 @@ namespace TACHYON.PriceOffers
             if (offer.ParentId != null) offer.Status = PriceOfferStatus.AcceptedAndWaitingForShipper;
             await _appNotifier.ShippingRequestSendOfferWhenAddPrice(offer, GetCurrentTenant(_abpSession).Name);
 
-            if (!(shippingRequest.RequestType == ShippingRequestType.TachyonManageService && offer.Channel == PriceOfferChannel.DirectRequest))
-                await _appNotifier.NotifyShipperWhenSendPriceOffer(shippingRequest.TenantId, offer.Id, offer.ShippingRequestId);
+            //if (!(shippingRequest.RequestType == ShippingRequestType.TachyonManageService && offer.Channel == PriceOfferChannel.DirectRequest)) 
+            //    await _appNotifier.NotifyShipperWhenSendPriceOffer(shippingRequest.TenantId, offer.Id,offer.ShippingRequestId);
 
 
             await CurrentUnitOfWork.SaveChangesAsync();
