@@ -31,7 +31,7 @@
               [wordWrapEnabled]="true"
               (onEditingStart)="editRow($event)"
             >
-              <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+              <!--              <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>-->
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true"></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
@@ -75,6 +75,12 @@
                   <ul class="dropdown-menu" *dropdownMenu>
                     <li>
                       <a class="dropdown-item" (click)="dynamicInvoiceOnDemand(options.data)">{{ l('OnDemandInvoice') }}</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" (click)="editRow(options.data)">{{ l('Edit') }}</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" (click)="deleteItem(options.data.id)">{{ l('Delete') }}</a>
                     </li>
                   </ul>
                 </div>
