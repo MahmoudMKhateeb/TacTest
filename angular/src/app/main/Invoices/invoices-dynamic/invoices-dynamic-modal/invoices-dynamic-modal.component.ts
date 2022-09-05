@@ -25,6 +25,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 import * as moment from 'moment';
 import { DateTimeService } from '@app/shared/common/timing/date-time.service';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'invoices-dynamic-modal',
@@ -234,6 +235,19 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   }
 
   saveToArray() {
+    if (
+      !isNotNullOrUndefined(this.dataSourceForEdit) ||
+      !isNotNullOrUndefined(this.dataSourceForEdit.price) ||
+      !isNotNullOrUndefined(this.dataSourceForEdit.description) ||
+      ('' + this.dataSourceForEdit.description).length === 0
+    ) {
+      Swal.fire({
+        title: this.l('FormIsNotValidMessage'),
+        icon: 'warning',
+        showCloseButton: true,
+      });
+      return;
+    }
     if (!isNotNullOrUndefined(this.root.items)) {
       this.root.items = [];
     }
@@ -312,7 +326,7 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   editRow(i: number, row: DynamicInvoiceItemDto) {
     this.dataSourceForEdit = DynamicInvoiceItemDto.fromJS(row.toJSON());
     this.activeIndex = i;
-    (this.dataSourceForEdit.workDate as any) = moment(moment(row.workDate).format('yyyy-MM-DD')).toDate();
+    (this.dataSourceForEdit.workDate as any) = !!row.workDate ? moment(moment(row.workDate).format('yyyy-MM-DD')).toDate() : null;
     (this.dataSourceForEdit.truckId as any) = this.trucks.find((truck) => Number(truck.id) === this.dataSourceForEdit.truckId);
     (this.dataSourceForEdit.originCityId as any) = this.cities.find((city) => Number(city.id) === this.dataSourceForEdit.originCityId);
     (this.dataSourceForEdit.destinationCityId as any) = this.cities.find((city) => Number(city.id) === this.dataSourceForEdit.destinationCityId);

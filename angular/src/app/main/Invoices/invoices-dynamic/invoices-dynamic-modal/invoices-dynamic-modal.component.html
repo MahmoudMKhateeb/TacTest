@@ -21,7 +21,10 @@
         </div>
         <div class="modal-body">
           <div class="form-group m-form__group">
-            <label class="form-label" for="Tenant">{{ l('Tenant') }}</label>
+            <label class="form-label" for="Tenant">
+              {{ l('Tenant') }}
+              <span class="required-fileds"> *</span>
+            </label>
             <p-autoComplete
               class="p-0"
               styleClass="w-100"
@@ -39,7 +42,7 @@
           </div>
           <div class="form-group m-form__group">
             <label class="form-label mr-2" for="notes">{{ l('Notes') }}</label>
-            <textarea class="form-control" name="notes" id="notes" [(ngModel)]="notes" rows="5" cols="30" pInputTextarea></textarea>
+            <textarea class="form-control" name="notes" id="notes" [(ngModel)]="notes" rows="4" cols="30" maxlength="500" pInputTextarea></textarea>
           </div>
           <!--                    <div class="form-group m-form__group">-->
           <!--                        <label class="mr-2" for="waybills">{{ l('Waybills') }}</label>-->
@@ -48,7 +51,7 @@
           <!--                    </div>-->
 
           <div class="d-flex justify-content-end mb-2">
-            <button *ngIf="dataSourceForEdit" type="button" class="btn btn-sm btn-danger" (click)="cancelAddToArray()">{{ l('Cancel') }}</button>
+            <!--            <button *ngIf="dataSourceForEdit" type="button" class="btn btn-sm btn-danger" (click)="cancelAddToArray()">{{ l('Cancel') }}</button>-->
             <button *ngIf="!dataSourceForEdit" class="btn btn-sm btn-success" (click)="addNew()">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
@@ -147,6 +150,7 @@
               <div>
                 <label class="form-label" for="price">
                   {{ l('Price') }}
+                  <span class="required-fileds"> *</span>
                 </label>
                 <input required type="number" class="form-control" name="price" id="price" [(ngModel)]="dataSourceForEdit.price" />
               </div>
@@ -155,6 +159,7 @@
               <div>
                 <label class="form-label" for="description">
                   {{ l('Description') }}
+                  <span class="required-fileds"> *</span>
                 </label>
                 <input required class="form-control" name="description" id="description" [(ngModel)]="dataSourceForEdit.description" />
               </div>
@@ -265,7 +270,12 @@
           <button
             type="submit"
             class="btn btn-save blue"
-            [disabled]="Form.invalid || (Form.valid && !!root && !!root.items && root.items.length === 0) || !!dataSourceForEdit"
+            [disabled]="
+              Form.invalid ||
+              (Form.valid && !!root && !!root.items && root.items.length === 0) ||
+              !!dataSourceForEdit ||
+              (!!root && !!root.items && root.items.length === 0)
+            "
             [buttonBusy]="Form.valid && saving"
             [busyText]="l('SavingWithThreeDot')"
             (click)="save()"

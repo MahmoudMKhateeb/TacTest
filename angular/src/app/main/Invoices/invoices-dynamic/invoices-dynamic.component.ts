@@ -212,10 +212,16 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
       showCloseButton: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this._InvoiceServiceProxy.dynamicInvoiceOnDemand(id).subscribe((res) => {
-          this.notify.info(this.l('SubmitInvoiceGenerated'));
-          this.refreshDataGrid();
-        });
+        this._DynamicInvoiceServiceProxy
+          .delete(id)
+          .toPromise()
+          .then((res) => {
+            this.notify.info(this.l('SuccessfullyDeleted'));
+            this.refreshDataGrid();
+          })
+          .catch((error) => {
+            throw new Error('Data Deletion Error');
+          });
       }
     });
   }
