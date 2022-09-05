@@ -14,6 +14,7 @@ import {
   UpdateDocumentFileInput,
   WaybillsServiceProxy,
   FileDto,
+  ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -89,6 +90,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   private PickingType = PickingType;
   private tripServiceShippingRequestSub: Subscription;
   private getTripForEditSub: Subscription;
+  RouteTypesEnum = ShippingRequestRouteType;
 
   constructor(
     injector: Injector,
@@ -442,6 +444,12 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * @private
    */
   private validatePointsBeforeAddTrip() {
+    let isSingleDropTrip = this.shippingRequest.routeTypeId === this.RouteTypesEnum.SingleDrop;
+    let isFacilitiesTheSame = this.trip.routPoints[0].facilityId === this.trip.routPoints[1].facilityId;
+    if (isSingleDropTrip && isFacilitiesTheSame) {
+      Swal.fire(this.l('ValidationError'), this.l('SourcePickUpFacilityAndDropOffFacilityCantBeTheSame'), 'error');
+      return false;
+    }
     //trip Details Validation
     for (const point of this.trip.routPoints) {
       if (point.pickingType === this.PickingType.Pickup && (!point.facilityId || !point.receiverId)) {

@@ -4,6 +4,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CreateOrEditRoutPointDto,
   FacilityForDropdownDto,
+  GetShippingRequestForViewOutput,
   PickingType,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
@@ -21,17 +22,13 @@ import { finalize } from '@node_modules/rxjs/operators';
   styleUrls: ['./points.component.scss'],
 })
 export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy {
-  shippingRequestId: number;
   cityDestId: number;
-  SRDestionationCity: number;
   allFacilities: FacilityForDropdownDto[];
   pickupFacilities: FacilityForDropdownDto[];
   dropFacilities: FacilityForDropdownDto[];
   allPointsSendersAndREcivers: ReceiverFacilityLookupTableDto[][] = [];
   receiverLoading: boolean;
-  private shippingType: number;
-  private citySourceId: number;
-  private pointsCount: number;
+  shippingRequestForView: GetShippingRequestForViewOutput;
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -41,10 +38,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   ) {
     super(injector);
   }
-  MainGoodsCategory: number;
-  NumberOfDrops: number;
   activeTripId: number;
-  RouteType: number;
   RouteTypes = ShippingRequestRouteType;
   wayPointsList: CreateOrEditRoutPointDto[] = [];
 
@@ -91,17 +85,14 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
    * loads Facilities with validation on it related to source and destination in SR
    */
   loadFacilities() {
-    if (!this.shippingRequestId) return;
-    if (this.shippingRequestId != null) {
+    if (!this.shippingRequestForView.shippingRequest.id) return;
+    if (this.shippingRequestForView.shippingRequest.id != null) {
       this._tripService.currentShippingRequest.subscribe((res) => {
-        this.citySourceId = res.originalCityId;
-        this.cityDestId = res.destinationCityId;
-        this.pointsCount = res.shippingRequest.numberOfDrops;
-        this.shippingType = res.shippingRequest.shippingTypeId;
+        this.shippingRequestForView = res;
       });
     }
     this._routStepsServiceProxy
-      .getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestId)
+      .getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestForView.shippingRequest.id)
       .pipe(
         finalize(() => {
           this.facilityLoading = false;
@@ -109,8 +100,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       )
       .subscribe((result) => {
         this.allFacilities = result;
-        this.pickupFacilities = result.filter((r) => r.cityId == this.citySourceId);
-        this.dropFacilities = result.filter((r) => r.cityId == this.cityDestId);
+        this.pickupFacilities = result.filter((r) => r.cityId == this.shippingRequestForView.originalCityId);
+        this.dropFacilities = result.filter((r) => r.cityId == this.shippingRequestForView.destinationCityId);
       });
   }
 
@@ -169,7 +160,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
    * creates empty points for the trip based on number of drops
    */
   createEmptyPoints() {
-    let numberOfDrops = this.NumberOfDrops;
+    let numberOfDrops = this.shippingRequestForView.shippingRequest.numberOfDrops;
     //if there is already wayPoints Dont Create Empty Once
     if (this.wayPointsList.length == numberOfDrops + 1) return;
     for (let i = 0; i <= numberOfDrops; i++) {
@@ -196,11 +187,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     //get some Stuff from ShippingRequest Dto
     this.tripSourceFacilitySub$ = this._tripService.currentShippingRequest.subscribe((res) => {
       if (res.shippingRequest) {
-        this.RouteType = res.shippingRequest.routeTypeId;
-        this.NumberOfDrops = res.shippingRequest.numberOfDrops;
-        this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
-        this.shippingRequestId = res.shippingRequest.id;
-        this.SRDestionationCity = res.destinationCityId;
+        this.shippingRequestForView = res;
       }
     });
 
