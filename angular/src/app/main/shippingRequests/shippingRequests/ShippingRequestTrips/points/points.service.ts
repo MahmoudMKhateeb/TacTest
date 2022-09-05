@@ -1,13 +1,6 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import {
-  CreateOrEditGoodsDetailDto,
-  CreateOrEditRoutPointDto,
-  GetAllGoodsCategoriesForDropDownOutput,
-  GoodsDetailDto,
-  GoodsDetailsServiceProxy,
-  RoutPointDto,
-} from '@shared/service-proxies/service-proxies';
+import { CreateOrEditRoutPointDto, RoutPointDto } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 
 @Injectable({
@@ -20,8 +13,6 @@ export class PointsService {
   currentSingleWayPoint = this.singleWayPoint.asObservable();
   private wayPointsList = new BehaviorSubject<any[]>([]);
   currentWayPointsList = this.wayPointsList.asObservable();
-  private goodDetail = new BehaviorSubject<GoodsDetailDto>(new GoodsDetailDto());
-  CurrentGoodDetail = this.goodDetail.asObservable();
 
   private usedIn = new BehaviorSubject<any>('view');
   currentUsedIn = this.usedIn.asObservable();

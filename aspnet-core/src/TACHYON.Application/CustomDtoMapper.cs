@@ -57,6 +57,9 @@ using TACHYON.DriverLicenseTypes;
 using TACHYON.DriverLicenseTypes.Dtos;
 using TACHYON.Drivers.importing.Dto;
 using TACHYON.DynamicEntityParameters.Dto;
+using TACHYON.DynamicInvoices;
+using TACHYON.DynamicInvoices.Dto;
+using TACHYON.DynamicInvoices.DynamicInvoiceItems;
 using TACHYON.Editions;
 using TACHYON.Editions.Dto;
 using TACHYON.EmailTemplates;
@@ -859,6 +862,11 @@ namespace TACHYON
 
             configuration.CreateMap<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>, PointTransactionDto>();
 
+                configuration.CreateMap<UnitOfMeasure,GetAllUnitOfMeasureForDropDownOutput>()
+                    .ForMember(x => x.DisplayName,
+                        x => x.MapFrom(i =>
+                            i.GetTranslatedDisplayName<UnitOfMeasure, UnitOfMeasureTranslation>()))
+                    .ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
 
 
 
@@ -994,16 +1002,49 @@ namespace TACHYON
             //    CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GoodCategoryDto>(context);
             configuration.
                 CreateMultiLingualMap<UnitOfMeasure, UnitOfMeasureTranslation, UnitOfMeasureDto>(context);
-            configuration.
-                CreateMultiLingualMap<UnitOfMeasure, UnitOfMeasureTranslation, GetAllUnitOfMeasureForDropDownOutput>(context)
-                .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
-            configuration.CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, DriverLicenseTypeDto>(context)
+            
+                configuration.CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, DriverLicenseTypeDto>(context)
                 .EntityMap.ForMember(x=> x.Key, x=> x.MapFrom(i=> GetDriverLicenseTypeDisplayName(i)))
                 .AfterMap((src, dest, otp) => dest.Name = dest.Key);;
             configuration.
                 CreateMultiLingualMap<DriverLicenseType, DriverLicenseTypeTranslation, GetLicenseTypeForDropDownOutput>(context)
                 .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()))
                 .ForMember(x=> x.Name, x=> x.MapFrom(i=> GetDriverLicenseTypeDisplayName(i)));
+            
+            configuration.CreateMap<DynamicInvoice, DynamicInvoiceListDto>()
+                .ForMember(x => x.CreditCompanyName, x => x.MapFrom(i => i.CreditTenant.companyName))
+                .ForMember(x => x.DebitCompanyName, x => x.MapFrom(i => i.DebitTenant.companyName))
+                .ForMember(x => x.InvoiceNumber, x => x.MapFrom(i => i.InvoiceId.HasValue ? i.Invoice.InvoiceNumber: (i.SubmitInvoiceId.HasValue?i.SubmitInvoice.ReferencNumber: null)));
+
+            configuration.CreateMap<DynamicInvoiceItem, DynamicInvoiceItemDto>()
+                .ForMember(x=> x.WaybillNumber,x=> x.MapFrom(i=> i.ShippingRequestTrip.WaybillNumber));
+
+            configuration.CreateMap<DynamicInvoice, DynamicInvoiceForViewDto>()
+                .ForMember(x => x.CreditCompany, x => x.MapFrom(i => i.CreditTenant.companyName))
+                .ForMember(x => x.DebitCompany, x => x.MapFrom(i => i.DebitTenant.companyName))
+                .ForMember(x => x.InvoiceNumber, x => x.MapFrom(i => i.InvoiceId.HasValue ? i.Invoice.InvoiceNumber: (i.SubmitInvoiceId.HasValue?i.SubmitInvoice.ReferencNumber: null)))
+                .ForMember(x => x.Items, x => x.MapFrom(i => i.Items));
+
+            configuration.CreateMap<CreateOrEditDynamicInvoiceItemDto, DynamicInvoiceItem>();
+            
+           configuration.CreateMap<CreateOrEditDynamicInvoiceDto, DynamicInvoice>()
+               .ForMember(x => x.Items, x => x.Ignore())
+                .AfterMap(((dto, invoice) =>
+                {
+                    if (!dto.Id.HasValue) return;
+                    
+                    foreach (var itemDto in dto.Items)
+                    {
+                        if (!itemDto.Id.HasValue) continue;
+                        var invoiceItem = invoice.Items.FirstOrDefault(x => x.Id == itemDto.Id);
+                        if (invoiceItem == null) continue;
+                        _Mapper.Map(itemDto, invoiceItem);
+                        invoiceItem.VatAmount = 0.15m * invoiceItem.Price;
+                        invoiceItem.TotalAmount = invoiceItem.Price + invoiceItem.VatAmount;
+                    }
+                }));
+            
+            
         }
         
         private static string GetCityDisplayName(City city)

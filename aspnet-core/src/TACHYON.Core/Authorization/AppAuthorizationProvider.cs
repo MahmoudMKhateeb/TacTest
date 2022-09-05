@@ -3,6 +3,7 @@ using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Localization;
 using Abp.MultiTenancy;
+using System.Collections.Generic;
 using TACHYON.Authorization.Permissions.Shipping.Trips;
 using TACHYON.Features;
 
@@ -719,6 +720,30 @@ namespace TACHYON.Authorization
                multiTenancySides: MultiTenancySides.Tenant,
                featureDependency: srUpdateFeatureDependency
            );
+
+           #region Dynamic Invoices
+
+           var tmsFeatureDependency = new SimpleFeatureDependency(AppFeatures.TachyonDealer);
+           
+            // this permission for host and tachyon dealer only ...
+           var dynamicInvoicePermission = pages.CreateChildPermission(AppPermissions.Pages_DynamicInvoices,
+               L("DynamicInvoicePermission"),
+               L("DynamicInvoicePermissionDescription"),
+               featureDependency: tmsFeatureDependency);
+
+           dynamicInvoicePermission.CreateChildPermission(AppPermissions.Pages_DynamicInvoices_Create,
+               L("CreateDynamicInvoicePermission"),
+               featureDependency: tmsFeatureDependency);
+           
+           dynamicInvoicePermission.CreateChildPermission(AppPermissions.Pages_DynamicInvoices_Update,
+               L("UpdateDynamicInvoicePermission"),
+               featureDependency: tmsFeatureDependency);
+           
+           dynamicInvoicePermission.CreateChildPermission(AppPermissions.Pages_DynamicInvoices_Delete,
+               L("DeleteDynamicInvoicePermission"),
+               featureDependency: tmsFeatureDependency);
+
+           #endregion
         }
 
         private static ILocalizableString L(string name)

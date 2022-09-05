@@ -1,44 +1,8 @@
 <div>
-  <div class="card card-custom">
-    <div class="card-header">
-      <h3 class="card-title">
-        {{ l('Waypoints') }}
-      </h3>
-      <!-- if the user us shipper and this is create trip not edit and the route Type is not single Drop show the toolbar       -->
-      <div
-        class="card-toolbar"
-        *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer') || this.feature.isEnabled('App.CarrierAsASaas')"
-      >
-        <button
-          type="button"
-          class="btn btn-primary blue"
-          [disabled]="(RouteType == 1 && wayPointsList.length < 2) || wayPointsList.length === 0"
-          [hidden]="activeTripId"
-          (click)="createOrEditPointModal.show(RouteType == 1 ? 1 : undefined)"
-        >
-          <i class="fa fa-plus"></i>
-
-          {{ RouteType == 1 ? l('CompleteDropPointSetup') : l('AddDrop') }}
-        </button>
-      </div>
-    </div>
+  <div class="card card-custom p-0">
     <!--begin::Form-->
     <form class="form">
-      <div class="card-body m-0">
-        <!--  Start::forViewAllRouteStepsMap (WayPoints)-->
-        <div class="col-lg-12">
-          <agm-map [zoom]="13" [latitude]="wayPointMapSource?.lat || lat" [longitude]="wayPointMapSource?.lng || lng">
-            <agm-marker *ngIf="!wayPointsList[1]" [longitude]="wayPointMapSource?.lng" [latitude]="wayPointMapSource?.lat"></agm-marker>
-            <agm-direction
-              *ngIf="wayPointMapDest && wayPointMapSource"
-              [origin]="wayPointMapSource"
-              [destination]="wayPointMapDest"
-              [waypoints]="wayPoints"
-              [travelMode]="'DRIVING'"
-            ></agm-direction>
-          </agm-map>
-        </div>
-        <!--   End::forViewAllRouteStepsMap  -->
+      <div class="card-body m-0 p-0">
         <!--  begin::Table -->
         <div class="row">
           <div class="col-lg-6"></div>
@@ -57,90 +21,171 @@
                 >
                   <ng-template pTemplate="header">
                     <tr>
+                      <!--                      <th>-->
+                      <!--                        {{ l('Actions') }}-->
+                      <!--                      </th>-->
                       <th>
-                        {{ l('Actions') }}
+                        {{ l('DatatablePickingType') }}
                       </th>
                       <th>
                         {{ l('Facility') }}
                       </th>
                       <th>
-                        {{ l('FacilityRating') }}
+                        {{ l('Contact') }}
                       </th>
                       <th>
-                        {{ l('DatatablePickingType') }}
+                        {{ l('GoodDetails') }}
+                      </th>
+                      <th>
+                        {{ l('AdditionalReceiver') }}
+                      </th>
+                      <th>
+                        {{ l('Notes') }}
                       </th>
                     </tr>
                   </ng-template>
                   <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
                     <tr>
                       <td>
-                        <div class="btn-group dropdown" container="body" dropdown>
-                          <a
-                            class="dropdown-toggle btn btn-sm btn-primary"
-                            dropdownToggle
-                            [class.disabled]="record.pickingType == PickingType.Pickup"
+                        <span *ngIf="record.pickingType === PickingType.Pickup" class="label label-success label-dot mr-2"></span>
+                        <span *ngIf="record.pickingType === PickingType.Pickup" class="font-weight-bold text-success">{{ l('Pickup') }}</span>
+                        <span *ngIf="record.pickingType === PickingType.Dropoff" class="label label-danger label-dot mr-2"></span>
+                        <span *ngIf="record.pickingType === PickingType.Dropoff" class="font-weight-bold text-danger">{{ l('DropOff') }}</span>
+                      </td>
+                      <td>
+                        <span *ngIf="this.usedIn != 'createOrEdit'"> {{ record.facility }}</span>
+                        <div *ngIf="this.usedIn == 'createOrEdit'" class="input-group">
+                          <select
+                            #pointFacility="ngModel"
+                            name="facility{{ i }}"
+                            class="form-control"
+                            [(ngModel)]="wayPointsList[i].facilityId"
+                            (change)="
+                              RouteStepCordSetter(i, wayPointsList[i].facilityId);
+                              wayPointsSetter();
+                              loadReceivers(wayPointsList[i].facilityId);
+                              wayPointsList[i].receiverId = null
+                            "
+                            [class.is-valid]="pointFacility.touched && wayPointsList[i].facilityId && pointFacility.valid"
+                            [class.is-invalid]="pointFacility.touched && !wayPointsList[i].facilityId && !pointFacility.valid"
                           >
-                            <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                          </a>
-                          <ul *dropdownMenu class="dropdown-menu">
-                            <ng-template [ngIf]="record.pickingType == PickingType.Dropoff">
-                              <li>
-                                <!--                                  AddRouteStep(i)-->
-                                <a
-                                  class="dropdown-item"
-                                  [hidden]="usedIn == 'view'"
-                                  *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas')"
-                                  (click)="createOrEditPointModal.show(i)"
-                                  >{{ l('Edit') }}</a
-                                >
-                              </li>
-                              <li>
-                                <a
-                                  class="dropdown-item"
-                                  [hidden]="usedIn == 'view'"
-                                  (click)="delete(i)"
-                                  *ngIf="feature.isEnabled('App.Shipper') && record.pickingType == PickingType.Dropoff && !activeTripId"
-                                  >{{ l('Delete') }}</a
-                                >
-                              </li>
-                              <li>
-                                <a class="dropdown-item" [hidden]="usedIn == 'createOrEdit'" (click)="viewPointDetailsModal.show(record)">{{
-                                  l('View')
-                                }}</a>
-                              </li>
-                            </ng-template>
-                            <li>
-                              <a
-                                class="dropdown-item"
-                                *ngIf="RouteType !== RouteTypes.SingleDrop && record.pickingType == PickingType.Dropoff && record.id"
-                                (click)="downloadDropWayBill(record.id)"
-                                >{{ l('DownloadDropWaybill') }}</a
-                              >
-                            </li>
-                          </ul>
+                            <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
+                            <option
+                              *ngFor="let item of record.pickingType === PickingType.Pickup ? pickupFacilities : dropFacilities"
+                              [value]="item.id"
+                            >
+                              {{ item.displayName }}
+                            </option>
+                          </select>
+                          <div *ngIf="isShipper || isCarrierSaas" class="input-group-btn">
+                            <button class="btn btn-light-danger" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
+                              <i class="flaticon2-add"></i>
+                            </button>
+                          </div>
                         </div>
                       </td>
                       <td>
-                        <span class="ui-column-title"> {{ l('facilityName') }}</span>
-                        {{ record.facility ? record.facility : getFacilityNameByid(record.facilityId) }}
-                        <br />
-                        <!-- I don't need to show rate number so (Rate Number) equals 0-->
+                        <span *ngIf="this.usedIn != 'createOrEdit'"> {{ record.senderOrReceiverContactName }}</span>
+                        <div *ngIf="this.usedIn == 'createOrEdit'" class="input-group">
+                          <select
+                            #pointReciver="ngModel"
+                            name="reciver{{ i }}"
+                            class="form-control"
+                            [(ngModel)]="wayPointsList[i].receiverId"
+                            [disabled]="!wayPointsList[i].facilityId"
+                            [busyIf]="receiverLoading"
+                            [class.is-valid]="pointReciver.touched && wayPointsList[i].receiverId && pointReciver.valid"
+                            [class.is-invalid]="pointReciver.touched && !wayPointsList[i].receiverId && !pointReciver.valid"
+                          >
+                            <option value="">{{ l('SelectContact') }}</option>
+                            <option *ngFor="let item of allPointsSendersAndREcivers[wayPointsList[i].facilityId] ?? []" [ngValue]="item.id">
+                              {{ item.displayName }}
+                            </option>
+                          </select>
+                          <div *ngIf="isShipper || isCarrierSaas" class="input-group-btn">
+                            <button
+                              class="btn btn-light-danger"
+                              data-toggle="tooltip"
+                              data-placement="top"
+                              title="Tooltip on top"
+                              [disabled]="!wayPointsList[i].facilityId"
+                              (click)="createOrEditReceiverModal.show(null, wayPointsList[i].facilityId)"
+                            >
+                              <i class="flaticon2-add"></i>
+                            </button>
+                          </div>
+                        </div>
                       </td>
                       <td>
-                        <app-view-rating [max]="5" [rate]="record.facilityRate" [rateNumber]="0"></app-view-rating>
+                        <!--      td good Details -->
+                        <a
+                          *ngIf="record.pickingType === PickingType.Dropoff"
+                          (click)="createOrEditPointModal.show(i, 'goodDetails', record.goodsDetailListDto)"
+                          class="btn btn-sm mr-3"
+                          [ngClass]="{
+                            'btn-light-danger': !wayPointsList[i].goodsDetailListDto?.length,
+                            'btn-light-success': wayPointsList[i].goodsDetailListDto?.length
+                          }"
+                        >
+                          <i
+                            [ngClass]="{
+                              'flaticon2-open-box': this.usedIn != 'createOrEdit',
+                              'flaticon2-check-mark': wayPointsList[i].goodsDetailListDto?.length,
+                              'flaticon2-plus-1': !wayPointsList[i].goodsDetailListDto?.length
+                            }"
+                          ></i>
+                          <span *ngIf="this.usedIn != 'createOrEdit'">{{ l('Show') }} - </span> {{ wayPointsList[i].goodsDetailListDto?.length }}</a
+                        >
                       </td>
+                      <td>
+                        <!--      td Additional reciver -->
+                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.receiverFullName }} - {{ record.receiverPhoneNumber }}</span>
+                        <a
+                          *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff"
+                          (click)="createOrEditPointModal.show(i, 'receiver')"
+                          class="btn btn-sm mr-3"
+                          [ngClass]="{
+                            'btn-light-danger': !wayPointsList[i].receiverFullName,
+                            'btn-light-success': wayPointsList[i].receiverFullName
+                          }"
+                        >
+                          <i
+                            [ngClass]="{
+                              'flaticon2-check-mark': wayPointsList[i].receiverFullName,
+                              'flaticon2-plus-1': !wayPointsList[i].receiverFullName
+                            }"
+                          ></i
+                          >{{ wayPointsList[i].receiverFullName }}</a
+                        >
+                      </td>
+                      <td>
+                        <!--      td trip notes     -->
 
-                      <td>
-                        <span *ngIf="record.pickingType == 1" class="label label-success label-dot mr-2"></span>
-                        <span *ngIf="record.pickingType == 1" class="font-weight-bold text-success">{{ l('Pickup') }}</span>
-                        <span *ngIf="record.pickingType != 1" class="label label-danger label-dot mr-2"></span>
-                        <span *ngIf="record.pickingType != 1" class="font-weight-bold text-danger">{{ l('DropOff') }}</span>
+                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.note ?? '-' }}</span>
+                        <a
+                          *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff"
+                          (click)="createOrEditPointModal.show(i, 'note')"
+                          [ngClass]="{
+                            'btn-light-danger': !wayPointsList[i].note,
+                            'btn-light-success': wayPointsList[i].note
+                          }"
+                          class="btn btn-sm mr-3"
+                        >
+                          <i
+                            [ngClass]="{
+                              'flaticon2-check-mark': wayPointsList[i].note,
+                              'flaticon2-plus-1': !wayPointsList[i].note
+                            }"
+                          ></i>
+                          {{ wayPointsList[i]?.note?.length > 18 ? (wayPointsList[i].note | slice: 0:18) + ' ....' : wayPointsList[i].note }}
+                        </a>
                       </td>
                     </tr>
                   </ng-template>
                 </p-table>
                 <div *ngIf="wayPointsList.length == 0" class="primeng-no-data">
-                  {{ l('NoData') }}
+                  <!--                  {{ l('NoData') }}-->
+                  <ngx-skeleton-loader count="2" [animation]="'pulse'" [theme]="{ height: '40px' }"></ngx-skeleton-loader>
                 </div>
               </div>
               <!--<Primeng-Datatable-End>-->
@@ -148,6 +193,24 @@
           </div>
         </div>
         <!--  end::table  -->
+        <!--  Start::forViewAllRouteStepsMap (WayPoints)-->
+        <div class="col-lg-12 p-0 mt-2">
+          <agm-map [zoom]="13" [latitude]="wayPointMapSource?.lat || lat" [longitude]="wayPointMapSource?.lng || lng">
+            <agm-marker
+              *ngIf="!wayPointsList[1]?.longitude"
+              [longitude]="this.wayPointsList[0]?.longitude"
+              [latitude]="this.wayPointsList[0]?.latitude"
+            ></agm-marker>
+            <agm-direction
+              *ngIf="wayPointMapDest && wayPointMapSource"
+              [origin]="wayPointMapSource"
+              [destination]="wayPointMapDest"
+              [waypoints]="wayPoints"
+              [travelMode]="'DRIVING'"
+            ></agm-direction>
+          </agm-map>
+        </div>
+        <!--   End::forViewAllRouteStepsMap  -->
       </div>
     </form>
     <!--end::Form-->
@@ -155,16 +218,11 @@
   <!--Create/Edit Point Modal-->
   <createOrEditPointModal #createOrEditPointModal></createOrEditPointModal>
   <!--END::Create/Edit Point Modal-->
-  <!--  View Point Modal  -->
-  <view-point-details-modal #viewPointDetailsModal></view-point-details-modal>
-  <!--End :: ViewPointModal    -->
 </div>
 
 <!--begin::CreateOrEditFacilityModal -->
-<createOrEditFacilityModal
-  #createOrEditFacilityModal
-  *ngIf="feature.isEnabled('App.Shipper')"
-  (modalSave)="loadFacilities()"
-></createOrEditFacilityModal>
+<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="loadFacilities()"></createOrEditFacilityModal>
 <!-- End::CreateOrEditFacilityModal -->
-<shared-file-viewer #fileViwerComponent></shared-file-viewer>
+<!-- begin::CreateOrEditReceiver -->
+<createOrEditReceiverModal #createOrEditReceiverModal (modalSave)="loadReceivers($event)"> </createOrEditReceiverModal>
+<!--End::CreateOrEditReceiver-->

@@ -254,7 +254,6 @@ import { ShippingTypesTranslationsComponent } from './shippingTypes/shipping-typ
 import { TrucksTypeTranslationTemplateComponent } from './trucksTypes/trucksTypes/trucks-type-translation-template/trucks-type-translation-template.component';
 import { ProfileModule } from '@app/main/profile/profile.module';
 import { ViewGoodDetailsComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/view-good-details/view-good-details.component';
-import { ViewPointModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/view-point-modal/view-point-modal.component';
 import { DangerousCoodTypesTranslationsComponent } from './goods/dangerous-cood-types-translations/dangerous-cood-types-translations.component';
 import { CollapseModule } from '@node_modules/ngx-bootstrap/collapse';
 import { NgxSkeletonLoaderModule } from '@node_modules/ngx-skeleton-loader';
@@ -311,7 +310,12 @@ import { ViewComplaintModalComponent } from './Penalties/penalties-list/view-com
 import { CancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/cancel-trip-modal/cancel-trip-modal.component';
 import { TmsCancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/tms-cancel-trip-modal/tms-cancel-trip-modal.component';
 import { ViewCancelReasonModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/view-cancel-reason-modal/view-cancel-reason-modal.component';
+import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic.component';
+import { InvoiceDynamicModalComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic-modal/invoices-dynamic-modal.component';
+import { DynamicInvoiceItemsDetailsComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic-items-modal/invoices-dynamic-items-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { CalendarModule } from '@node_modules/primeng/calendar';
 
 @NgModule({
   imports: [
@@ -369,6 +373,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ToggleButtonModule,
     TrackingModule,
     QuartzCronModule,
+    SplitButtonModule,
+    CalendarModule,
   ],
   declarations: [
     EmailTemplatesComponent,
@@ -507,6 +513,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     InvoicePeriodsListComponent,
     InvoicePeriodsModalComponent,
     InvoicesListComponent,
+    InvoicesDynamicComponent,
     BalancesListComponent,
     DemanModelComponent,
     BalanceRechargeModelComponent,
@@ -520,6 +527,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     InvoicePaymentMethodComponent,
     InvoicePaymentMethodModelComponent,
     InvoiceDemandModelComponent,
+    InvoiceDynamicModalComponent,
+    DynamicInvoiceItemsDetailsComponent,
     InvoiceTemplateComponent,
     ProformaListComponent,
     PointsComponent,
@@ -556,7 +565,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ShippingTypesTranslationsComponent,
     TrucksTypeTranslationTemplateComponent,
     ViewGoodDetailsComponent,
-    ViewPointModalComponent,
     InoviceNoteModalComponent,
     DangerousCoodTypesTranslationsComponent,
     ShippingRequestRatingModalComponent,

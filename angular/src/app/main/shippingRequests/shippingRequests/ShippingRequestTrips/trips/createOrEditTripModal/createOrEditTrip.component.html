@@ -62,112 +62,7 @@
           <div class="row">
             <!--begin::Body-->
             <!--  begin:: Source Dest Facilitys  -->
-            <div class="col-lg-6 form-group">
-              <label>{{ l('SourceFacility') }} <span class="required-fileds">*</span></label>
-              <div class="input-group">
-                <select
-                  #sourceFacility="ngModel"
-                  name="sourceFacility"
-                  class="form-control"
-                  [disabled]="facilityLoading"
-                  [(ngModel)]="trip.originFacilityId"
-                  [class.is-invalid]="sourceFacility.touched && !sourceFacility.valid"
-                  [class.is-valid]="sourceFacility.touched && sourceFacility.valid"
-                  (ngModelChange)="ValidateTripFacilities()"
-                  (change)="SyncFacilitiesWithService(); loadReceivers(trip.originFacilityId)"
-                  required
-                >
-                  <option [ngValue]="undefined" selected>{{ l('SelectaFacility') }}</option>
-                  <option *ngFor="let item of _TripService.currentSourceFacilitiesItems" value="{{ item.id }}">{{ item.displayName }}</option>
-                </select>
-                <div *ngIf="this.feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas')" class="input-group-btn">
-                  <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
-                    <i class="flaticon-plus"></i>{{ l('AddNew') }}
-                  </button>
-                </div>
-              </div>
-            </div>
-            <!-- StartOf::sender -->
-            <div class="form-group col-lg-6">
-              <label>{{ l('Sender') }}</label>
-              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': receiversLoading }">
-                <div class="input-group">
-                  <select
-                    #receiver="ngModel"
-                    name="receiver"
-                    class="form-control"
-                    [(ngModel)]="pickupPointSenderId"
-                    [class.is-valid]="receiver.touched && receiver.valid"
-                    [class.is-invalid]="receiver.touched && !receiver.valid"
-                    [disabled]="receiversLoading || !trip.originFacilityId"
-                    required
-                  >
-                    <option [ngValue]="undefined" selected>{{ l('SelectAPickUpAgent') }}</option>
-                    <option *ngFor="let item of allReceivers" [ngValue]="item.id">{{ item.displayName }}</option>
-                  </select>
-                  <div *ngIf="this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.CarrierAsASaas')" class="input-group-btn">
-                    <button class="btn btn-primary" [disabled]="receiversLoading" (click)="createOrEditReceiverModal.show()">
-                      <i class="flaticon-plus"></i>{{ l('New') }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- EndOf::sender -->
-            <div class="col-lg-6 form-group">
-              <label> {{ l('DestFacility') }} <span class="required-fileds">*</span></label>
-              <div class="input-group">
-                <select
-                  #destFacility="ngModel"
-                  name="destFacility"
-                  class="form-control"
-                  [disabled]="facilityLoading"
-                  [(ngModel)]="trip.destinationFacilityId"
-                  [class.is-invalid]="destFacility.touched && !destFacility.valid"
-                  [class.is-valid]="destFacility.touched && destFacility.valid"
-                  (ngModelChange)="ValidateTripFacilities()"
-                  (change)="SyncFacilitiesWithService()"
-                  required
-                >
-                  <option [ngValue]="undefined" selected>{{ l('SelectaFacility') }}</option>
-                  <option *ngFor="let item of _TripService.currentDestinationFacilitiesItems" value="{{ item.id }}">{{ item.displayName }}</option>
-                </select>
-                <div *ngIf="this.feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas')" class="input-group-btn">
-                  <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
-                    <i class="flaticon-plus"></i>{{ l('AddNew') }}
-                  </button>
-                </div>
-                <div class="invalid-feedback">{{ l('PickupFacilityAndDropOffFacilityCantBeTheSame') }}</div>
-              </div>
-            </div>
-            <div class="col-lg-6 form-group d-inline-flex">
-              <div class="input-group d-inline-block">
-                <label> {{ l('supposedPickupTimeFrom') }} <span class="required-fileds">*</span></label>
-                <dx-date-box
-                  name="supposedPickupDateFrom"
-                  [(value)]="trip.supposedPickupDateFrom"
-                  type="time"
-                  pickerType="list"
-                  openOnFieldClick="true"
-                  [interval]="20"
-                  required
-                >
-                </dx-date-box>
-              </div>
-              <div class="input-group d-inline-block">
-                <label> {{ l('supposedPickupTimeTo') }} <span class="required-fileds">*</span></label>
-                <dx-date-box
-                  name="supposedPickupDateTo"
-                  [(value)]="trip.supposedPickupDateTo"
-                  type="time"
-                  pickerType="list"
-                  openOnFieldClick="true"
-                  [interval]="20"
-                  required
-                >
-                </dx-date-box>
-              </div>
-            </div>
+
             <!--  begin:: Trip start&End Dates-->
             <div class="col-lg-6">
               <div class="form-group">
@@ -205,10 +100,38 @@
                 </hijri-gregorian-datepicker-test>
               </div>
             </div>
+            <div class="col-lg-6 form-group d-inline-flex">
+              <div class="input-group d-inline-block">
+                <label> {{ l('supposedPickupTimeFrom') }} <span class="required-fileds">*</span></label>
+                <dx-date-box
+                  name="supposedPickupDateFrom"
+                  [(value)]="trip.supposedPickupDateFrom"
+                  type="time"
+                  pickerType="list"
+                  openOnFieldClick="true"
+                  [interval]="20"
+                  required
+                >
+                </dx-date-box>
+              </div>
+              <div class="input-group d-inline-block">
+                <label> {{ l('supposedPickupTimeTo') }} <span class="required-fileds">*</span></label>
+                <dx-date-box
+                  name="supposedPickupDateTo"
+                  [(value)]="trip.supposedPickupDateTo"
+                  type="time"
+                  pickerType="list"
+                  openOnFieldClick="true"
+                  [interval]="20"
+                  required
+                >
+                </dx-date-box>
+              </div>
+            </div>
             <div class="col-lg-6">
               <div class="form-group">
                 <!--                expected trip Delivery Date-->
-                <label>{{ l('expectedDeliveryTime') }}</label>
+                <label>{{ l('ExpectedDeliveryTime') }}</label>
                 <dx-date-box
                   id="tripExpectedDeliveryTime"
                   name="tripStartDate"
@@ -243,7 +166,7 @@
             <!--      end:Vas's      -->
 
             <!--  begin::Trip Goods Approximate Value -->
-            <div class="col-lg-6">
+            <div class="col-lg-6 mt-3">
               <div class="form-group">
                 <label>{{ l('ApproximateTripGoodsValue') }} <span class="required-fileds" *ngIf="isApproximateValueRequired">*</span></label>
                 <div class="input-group date">
@@ -268,8 +191,27 @@
               </div>
             </div>
             <!--  end::Trip Goods Approximate Value -->
+            <div class="col-lg-6">
+              <div class="form-group row">
+                <div class="col-6 col-form-label">
+                  <label for="DeliveryNote"> {{ l('NeedsDeliveryNote') }} </label>
+                  <select #DeliveryNote="ngModel" name="DeliveryNote" id="DeliveryNote" [(ngModel)]="trip.needsDeliveryNote" class="form-control">
+                    <option [ngValue]="true">{{ l('Yes') }}</option>
+                    <option [ngValue]="false">{{ l('No') }}</option>
+                  </select>
+                </div>
+                <div class="col-6 col-form-label">
+                  <label for="Attachment"> {{ l('Attachment') }} </label>
+                  <select #Attachment="ngModel" name="Attachment" id="Attachment" [(ngModel)]="trip.hasAttachment" class="form-control">
+                    <option [ngValue]="true">{{ l('Yes') }}</option>
+                    <option [ngValue]="false">{{ l('No') }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
             <!--       start:: Notes       -->
-            <div class="col-lg-12">
+            <div class="col-lg-6">
               <label>{{ l('Notes') }}</label>
               <div class="input-group">
                 <textarea
@@ -284,29 +226,7 @@
               </div>
             </div>
             <!--End :: notes-->
-            <div class="col-lg-6 mt-4">
-              <div class="form-group row">
-                <div class="col-6 col-form-label">
-                  <div class="checkbox-inline">
-                    <label class="checkbox checkbox-danger">
-                      <input type="checkbox" name="trip.needsDeliveryNote" [(ngModel)]="trip.needsDeliveryNote" />
-                      <span></span>
-                      {{ l('NeedsDeliveryNote') }}
-                    </label>
-                  </div>
-                </div>
-                <div class="col-6 col-form-label">
-                  <div class="checkbox-inline float-right">
-                    <label class="checkbox checkbox-danger">
-                      <input type="checkbox" name="trip.hasAttachment" [(ngModel)]="trip.hasAttachment" />
-                      <span></span>
-                      {{ l('HasAttachment') }}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="trip.hasAttachment" class="col-lg-6 mt-4">
+            <div *ngIf="trip.hasAttachment" class="col-lg-6">
               <label>{{ l('SelectFile') }} {{ fileToken }} </label>
               <div class="custom-file">
                 <input
@@ -352,8 +272,9 @@
               </div>
             </div>
             <!--  start:: RouteSteps -->
-            <PointsComponent #PointsComponent (SelectedWayPointsFromChild)="trip.routPoints = $event"></PointsComponent>
+            <PointsComponent #PointsComponent></PointsComponent>
             <!--  end:: RouteSteps -->
+
             <!--end::Body-->
           </div>
           <div class="modal-footer">
@@ -385,15 +306,3 @@
     </div>
   </div>
 </div>
-<!-- begin::CreateOrEditFacility -->
-<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshOrGetFacilities($event)"> </createOrEditFacilityModal>
-<!-- end::CreateOrEditFacility -->
-<!-- begin::CreateOrEditReceiver -->
-<createOrEditReceiverModal
-  #createOrEditReceiverModal
-  [facilityIdFromTrips]="trip.originFacilityId"
-  [agentType]="'sender'"
-  (modalSave)="loadReceivers(trip.originFacilityId)"
->
-</createOrEditReceiverModal>
-<!--End::CreateOrEditReceiver-->

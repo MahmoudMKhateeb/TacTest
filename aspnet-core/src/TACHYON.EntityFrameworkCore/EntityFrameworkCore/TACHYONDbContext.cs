@@ -22,6 +22,8 @@ using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypeTranslations;
 using TACHYON.DriverLicenseTypes;
 using TACHYON.DriverLocationLogs;
+using TACHYON.DynamicInvoices;
+using TACHYON.DynamicInvoices.DynamicInvoiceItems;
 using TACHYON.Editions;
 using TACHYON.EmailTemplates;
 using TACHYON.EntityLogs;
@@ -304,6 +306,10 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<ShippingRequestUpdate> ShippingRequestUpdates { get; set; }
 
         public DbSet<SrPostPriceUpdate> PostPriceUpdates { get; set; }
+
+        public DbSet<DynamicInvoice> DynamicInvoices { get; set; }
+
+        public DbSet<DynamicInvoiceItem> DynamicInvoiceItems { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;
