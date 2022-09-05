@@ -72,7 +72,7 @@
                   (change)="handleCityPolygon()"
                 >
                   <option [value]="undefined" disabled>{{ l('SelectaCity') }}</option>
-                  <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" [value]="Number(item.id)">
+                  <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" [ngValue]="Number(item.id)">
                     {{ item.displayName }}
                   </option>
                 </select>

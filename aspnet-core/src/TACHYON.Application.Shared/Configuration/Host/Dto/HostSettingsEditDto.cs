@@ -27,5 +27,8 @@ namespace TACHYON.Configuration.Host.Dto
         
         [Required] public OtpNumbersSettingsDto OtpNumbersSettings { get; set; }
         public TenantRatingMinNumberDto TenantRatingMinNumber { get; set; }
+
+        [Required]
+        public MobileAppLinksSettingDto AppLinksSettingDto { get; set; }
     }
 }

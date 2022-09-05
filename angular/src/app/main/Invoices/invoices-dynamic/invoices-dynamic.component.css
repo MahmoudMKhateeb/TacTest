@@ -8,3 +8,10 @@
   line-height: 1.5;
   border-radius: 0.42rem;
 }
+
+[dir='rtl'] .p-splitbutton .p-splitbutton-menubutton {
+  border-radius: 3px 0 0 3px !important;
+}
+[dir='rtl'] .p-splitbutton .p-splitbutton-defaultbutton {
+  border-radius: 0 3px 3px 0 !important;
+}

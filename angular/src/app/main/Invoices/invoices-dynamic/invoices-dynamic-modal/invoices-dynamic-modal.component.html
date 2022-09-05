@@ -48,7 +48,8 @@
           <!--                    </div>-->
 
           <div class="d-flex justify-content-end mb-2">
-            <button class="btn btn-sm btn-success" (click)="addNew()">
+            <button *ngIf="dataSourceForEdit" type="button" class="btn btn-sm btn-danger" (click)="cancelAddToArray()">{{ l('Cancel') }}</button>
+            <button *ngIf="!dataSourceForEdit" class="btn btn-sm btn-success" (click)="addNew()">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
           </div>
@@ -69,6 +70,7 @@
               <th>{{ l('Quantity') }}</th>
               <!--              <th>{{ l('PlateNumber') }}</th>-->
               <th>{{ l('ContainerNumber') }}</th>
+              <th>{{ l('Trucks') }}</th>
               <th style="width: 8rem"></th>
             </tr>
             <tr *ngFor="let row of root.items; let i = index">
@@ -90,6 +92,7 @@
               <td>{{ row.quantity }}</td>
               <!--              <td>{{ row.plateNumber }}</td>-->
               <td>{{ row.containerNumber }}</td>
+              <td>{{ getTruckToDisplay(row.truckId) }}</td>
               <td>
                 <div class="d-flex">
                   <button class="btn btn-xs btn-info" (click)="editRow(i, row)">
@@ -156,40 +159,6 @@
                 <input required class="form-control" name="description" id="description" [(ngModel)]="dataSourceForEdit.description" />
               </div>
             </div>
-            <!--            <div class="col-6 mb-4">-->
-            <!--              <div>-->
-            <!--                <label class="form-label" for="truckType">-->
-            <!--                  {{ l('TruckType') }}-->
-            <!--                </label>-->
-            <!--                <p-autoComplete-->
-            <!--                  [disabled]="!!dataSourceForEdit.waybillNumber"-->
-            <!--                  class="p-0"-->
-            <!--                  styleClass="w-100"-->
-            <!--                  inputStyleClass="form-control"-->
-            <!--                  name="truckType"-->
-            <!--                  id="truckType"-->
-            <!--                  [(ngModel)]="dataSourceForEdit.truckTypeId"-->
-            <!--                  [suggestions]="trucksFiltered"-->
-            <!--                  field="displayName"-->
-            <!--                  (completeMethod)="filterTrucks($event)"-->
-            <!--                ></p-autoComplete>-->
-            <!--              </div>-->
-            <!--            </div>-->
-            <!--            <div class="col-6 mb-4">-->
-            <!--              <div>-->
-            <!--                <label class="form-label" for="plateNumber">-->
-            <!--                  {{ l('PlateNumber') }}-->
-            <!--                </label>-->
-            <!--                <input-->
-            <!--                  [disabled]="!!dataSourceForEdit.waybillNumber"-->
-            <!--                  class="form-control"-->
-            <!--                  name="plateNumber"-->
-            <!--                  id="plateNumber"-->
-            <!--                  pattern="^\d{4}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}$"-->
-            <!--                  [(ngModel)]="dataSourceForEdit.plateNumber"-->
-            <!--                />-->
-            <!--              </div>-->
-            <!--            </div>-->
             <div class="col-6 mb-4">
               <div>
                 <label class="form-label" for="quantity">
@@ -236,6 +205,7 @@
                   [suggestions]="originCitiesFiltered"
                   field="displayName"
                   (completeMethod)="filterCity($event, 1)"
+                  [dropdown]="true"
                 ></p-autoComplete>
               </div>
             </div>
@@ -255,12 +225,33 @@
                   [suggestions]="destCitiesFiltered"
                   field="displayName"
                   (completeMethod)="filterCity($event, 2)"
+                  [dropdown]="true"
+                ></p-autoComplete>
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="destinationCity">
+                  {{ l('Trucks') }}
+                </label>
+                <p-autoComplete
+                  [disabled]="!!dataSourceForEdit.waybillNumber"
+                  class="p-0"
+                  styleClass="w-100"
+                  inputStyleClass="form-control"
+                  name="truck"
+                  id="truck"
+                  [(ngModel)]="dataSourceForEdit.truckId"
+                  [suggestions]="trucksFiltered"
+                  field="displayName"
+                  (completeMethod)="filterTrucks($event)"
+                  [dropdown]="true"
                 ></p-autoComplete>
               </div>
             </div>
 
             <div class="col-12 d-flex justify-content-end">
-              <button class="btn btn-sm btn-success" (click)="dataSourceForEdit = null; activeIndex = null">
+              <button class="btn btn-sm btn-danger" (click)="cancelAddToArray()">
                 {{ l('Cancel') }}
               </button>
               <button class="btn btn-sm btn-success" (click)="saveToArray()">
@@ -279,7 +270,7 @@
             [busyText]="l('SavingWithThreeDot')"
             (click)="save()"
           >
-            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+            <i class="fa fa-save"></i> <span class="text-white">{{ l('Save') }}</span>
           </button>
         </div>
       </form>

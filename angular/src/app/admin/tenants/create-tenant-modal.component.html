@@ -44,10 +44,11 @@
                   {{ l('CompanyNamePatternError') }}
                 </div>
 
-                <validation-messages *ngIf="!companyName.errors?.pattern" [formCtrl]="companyName"></validation-messages>
+                <validation-messages *ngIf="isCompanyNameAvailable && !companyName.errors?.pattern" [formCtrl]="companyName"></validation-messages>
+                <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger"
+                  >{{ l('CompanyUniqueName') }} {{ 'AlreadyTaken' | localize }}</span
+                >
                 <span class="form-text text-muted">{{ l('Enter') }} {{ l('companyName') }}</span>
-                <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger">{{ l('CompanyName') }} {{ 'AlreadyTaken' | localize }}</span>
-                <validation-messages [formCtrl]="companyName"></validation-messages>
               </div>
             </div>
 
@@ -467,7 +468,8 @@
               !isEmailValid ||
               !isEmailAvailable ||
               citySelect.value == -2 ||
-              countrySelect.value == -2
+              countrySelect.value == -2 ||
+              !isCompanyNameAvailable
             "
           >
             <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
