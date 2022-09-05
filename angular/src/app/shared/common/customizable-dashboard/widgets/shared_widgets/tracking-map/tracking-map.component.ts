@@ -222,11 +222,14 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
    * check if trip Delayed or on time
    */
   isTripDelayed(tripExpectedArrivalDate): string {
-    if (tripExpectedArrivalDate == '') return this.l('Unknown');
-    let todayMoment = this.dateFormatterService.NgbDateStructToMoment(this.dateFormatterService.GetTodayGregorian());
-    if (_moment(tripExpectedArrivalDate) >= todayMoment) {
+    if (tripExpectedArrivalDate === '') {
+      return this.l('Unknown');
+    }
+    const todayMoment = _moment();
+    const momentExpected = _moment(tripExpectedArrivalDate);
+    if (momentExpected.isSameOrAfter(todayMoment)) {
       return this.l('OnTime');
-    } else if (_moment(tripExpectedArrivalDate) < todayMoment) {
+    } else if (momentExpected.isBefore(todayMoment)) {
       return this.l('Delayed');
     }
   }
@@ -238,6 +241,10 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+  }
+
+  getDate(date): Date {
+    return !!date ? _moment(date).toDate() : null;
   }
 }
 export interface Direction {
