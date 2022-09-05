@@ -66,7 +66,8 @@
                               loadReceivers(wayPointsList[i].facilityId);
                               wayPointsList[i].receiverId = null
                             "
-                            [required]="RouteType == RouteTypes.MultipleDrops"
+                            [class.is-valid]="pointFacility.touched && wayPointsList[i].facilityId && pointFacility.valid"
+                            [class.is-invalid]="pointFacility.touched && !wayPointsList[i].facilityId && !pointFacility.valid"
                           >
                             <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
                             <option
@@ -93,6 +94,8 @@
                             [(ngModel)]="wayPointsList[i].receiverId"
                             [disabled]="!wayPointsList[i].facilityId"
                             [busyIf]="receiverLoading"
+                            [class.is-valid]="pointReciver.touched && wayPointsList[i].receiverId && pointReciver.valid"
+                            [class.is-invalid]="pointReciver.touched && !wayPointsList[i].receiverId && !pointReciver.valid"
                           >
                             <option value="">{{ l('SelectContact') }}</option>
                             <option *ngFor="let item of allPointsSendersAndREcivers[wayPointsList[i].facilityId] ?? []" [ngValue]="item.id">
@@ -181,7 +184,8 @@
                   </ng-template>
                 </p-table>
                 <div *ngIf="wayPointsList.length == 0" class="primeng-no-data">
-                  {{ l('NoData') }}
+                  <!--                  {{ l('NoData') }}-->
+                  <ngx-skeleton-loader count="2" [animation]="'pulse'" [theme]="{ height: '40px' }"></ngx-skeleton-loader>
                 </div>
               </div>
               <!--<Primeng-Datatable-End>-->
