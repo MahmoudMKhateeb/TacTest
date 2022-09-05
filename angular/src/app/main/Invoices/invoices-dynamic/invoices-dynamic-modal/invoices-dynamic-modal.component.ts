@@ -19,6 +19,7 @@ import {
   NormalPricePackagesServiceProxy,
   CreateOrEditDynamicInvoiceDto,
   CreateOrEditDynamicInvoiceItemDto,
+  ListResultDtoOfSelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import * as moment from 'moment';
@@ -46,12 +47,12 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   dataSourceForEdit: DynamicInvoiceItemDto;
   notes: any;
   root: DynamicInvoiceForViewDto = new DynamicInvoiceForViewDto();
-  trucks: TrucksTypeSelectItemDto[] = [];
+  trucks: SelectItemDto[] = [];
   cities: TenantCityLookupTableDto[] = [];
-  trucksFiltered: TrucksTypeSelectItemDto[] = [];
+  trucksFiltered: SelectItemDto[] = [];
   originCitiesFiltered: TenantCityLookupTableDto[] = [];
   destCitiesFiltered: TenantCityLookupTableDto[] = [];
-  activeIndex: number;
+  activeIndex: number = null;
 
   constructor(
     injector: Injector,
@@ -90,8 +91,8 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   }
 
   getAllTrucksTypeForTableDropdown() {
-    this._ShippingRequestsServiceProxy.getAllTrucksTypeForTableDropdown().subscribe(
-      (response) => (this.trucks = response),
+    this._DynamicInvoiceServiceProxy.getAllTrucks().subscribe(
+      (response) => (this.trucks = response.items),
       (error) => {}
     );
   }
@@ -245,6 +246,9 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     if (isNotNullOrUndefined(this.dataSourceForEdit.destinationCityId) && (this.dataSourceForEdit.destinationCityId as any) instanceof Object) {
       this.dataSourceForEdit.destinationCityId = (this.dataSourceForEdit.destinationCityId as any).id;
     }
+    if (isNotNullOrUndefined(this.dataSourceForEdit.truckId) && (this.dataSourceForEdit.truckId as any) instanceof Object) {
+      this.dataSourceForEdit.truckId = (this.dataSourceForEdit.truckId as any).id;
+    }
     // if (isNotNullOrUndefined(this.dataSourceForEdit.truckTypeId) && (this.dataSourceForEdit.truckTypeId as any) instanceof Object) {
     //     this.dataSourceForEdit.truckTypeId = (this.dataSourceForEdit.truckTypeId as any).id;
     // }
@@ -276,7 +280,7 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   }
 
   filterTrucks(event: any) {
-    const filteredTrucks = this.trucks.filter((city) => city.displayName.toLowerCase().search(event.query.toLowerCase()) > -1);
+    const filteredTrucks = this.trucks.filter((truck) => truck.displayName.toLowerCase().search(event.query.toLowerCase()) > -1);
     this.trucksFiltered = [...filteredTrucks];
   }
 
@@ -302,10 +306,24 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     this.dataSourceForEdit.quantity = null;
     this.dataSourceForEdit.originCityId = null;
     this.dataSourceForEdit.destinationCityId = null;
+    this.dataSourceForEdit.truckId = null;
   }
 
-  editRow(i: number, row) {
-    this.dataSourceForEdit = row;
+  editRow(i: number, row: DynamicInvoiceItemDto) {
+    this.dataSourceForEdit = DynamicInvoiceItemDto.fromJS(row.toJSON());
     this.activeIndex = i;
+    (this.dataSourceForEdit.workDate as any) = moment(moment(row.workDate).format('yyyy-MM-DD')).toDate();
+    (this.dataSourceForEdit.truckId as any) = this.trucks.find((truck) => Number(truck.id) === this.dataSourceForEdit.truckId);
+    (this.dataSourceForEdit.originCityId as any) = this.cities.find((city) => Number(city.id) === this.dataSourceForEdit.originCityId);
+    (this.dataSourceForEdit.destinationCityId as any) = this.cities.find((city) => Number(city.id) === this.dataSourceForEdit.destinationCityId);
+  }
+
+  cancelAddToArray() {
+    this.dataSourceForEdit = null;
+    this.activeIndex = null;
+  }
+
+  getTruckToDisplay(truckId: number) {
+    return !!truckId && this.trucks.length > 0 ? this.trucks.find((truck) => Number(truck.id) === Number('' + truckId)).displayName : '';
   }
 }

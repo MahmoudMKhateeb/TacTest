@@ -282,7 +282,7 @@ import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/in
           { path: 'trucks/trucks', component: TrucksComponent, data: { permission: 'Pages.Trucks' } },
           { path: 'trucksTypes/trucksTypes', component: TrucksTypesComponent, data: { permission: 'Pages.TrucksTypes' } },
           { path: 'invoices/view', component: InvoicesListComponent, data: { permission: 'Pages.Invoices' } },
-          { path: 'invoices/dynamic', component: InvoicesDynamicComponent, data: { permission: 'Pages.Invoices' } },
+          { path: 'invoices/dynamic', component: InvoicesDynamicComponent, data: { permission: 'Pages.DynamicInvoices' } },
           { path: 'penalties/view', component: PenaltiesListComponent, data: { permission: 'Pages.Invoices' } },
 
           { path: 'invoicenote/view', component: InvoiceNoteListComponent, data: { permission: 'Pages.Invoices' } },
