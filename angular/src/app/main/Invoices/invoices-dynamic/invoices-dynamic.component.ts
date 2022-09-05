@@ -201,15 +201,34 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
       });
   }
 
+  deleteItem(id) {
+    Swal.fire({
+      title: this.l('AreYouSure'),
+      icon: 'question',
+      // iconHtml: '؟',
+      confirmButtonText: this.l('Yes'),
+      cancelButtonText: this.l('Cancel'),
+      showCancelButton: true,
+      showCloseButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._InvoiceServiceProxy.dynamicInvoiceOnDemand(id).subscribe((res) => {
+          this.notify.info(this.l('SubmitInvoiceGenerated'));
+          this.refreshDataGrid();
+        });
+      }
+    });
+  }
+
   getCompanyName(data) {
     return !!data.creditCompanyName ? data.creditCompanyName : data.debitCompanyName;
   }
 
-  editRow(event) {
-    event.cancel = true;
-    const forWho = !!event.data.creditCompanyName ? 1 : 2;
-    this.InvoicesDynamicModal.show(forWho, event.data.id);
-    return false;
+  editRow(item) {
+    // event.cancel = true;
+    const forWho = !!item.creditCompanyName ? 1 : 2;
+    this.InvoicesDynamicModal.show(forWho, item.id);
+    // return false;
   }
 
   dynamicInvoiceOnDemand(item) {

@@ -312,7 +312,6 @@ import { TmsCancelTripModalComponent } from './shippingRequests/shippingRequests
 import { ViewCancelReasonModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/view-cancel-reason-modal/view-cancel-reason-modal.component';
 import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic.component';
 import { InvoiceDynamicModalComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic-modal/invoices-dynamic-modal.component';
-import { DynamicInvoiceItemsDetailsComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic-items-modal/invoices-dynamic-items-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { CalendarModule } from '@node_modules/primeng/calendar';
@@ -528,7 +527,6 @@ import { CalendarModule } from '@node_modules/primeng/calendar';
     InvoicePaymentMethodModelComponent,
     InvoiceDemandModelComponent,
     InvoiceDynamicModalComponent,
-    DynamicInvoiceItemsDetailsComponent,
     InvoiceTemplateComponent,
     ProformaListComponent,
     PointsComponent,
