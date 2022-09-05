@@ -220,7 +220,7 @@
               </td>
               <td>
                 <span class="ui-column-title"> {{ l('expectedDeliveryTime') }}</span>
-                {{ record.trackingMapDto.expectedDeliveryTime | date }}
+                {{ getDate(record.trackingMapDto.expectedDeliveryTime) | date: 'MMM d, y h:mm a' }}
               </td>
               <td>
                 <span class="switch switch-sm">
