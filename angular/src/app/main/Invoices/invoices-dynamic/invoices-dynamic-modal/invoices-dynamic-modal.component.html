@@ -13,7 +13,7 @@
       <form *ngIf="active" #Form="ngForm" novalidate autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span>{{ l('AddNew') }}</span>
+            <span>{{ !isView ? l('AddNew') : l('View') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -23,7 +23,7 @@
           <div class="form-group m-form__group">
             <label class="form-label" for="Tenant">
               {{ l('Tenant') }}
-              <span class="required-fileds"> *</span>
+              <span *ngIf="!isView" class="required-fileds"> *</span>
             </label>
             <p-autoComplete
               class="p-0"
@@ -38,11 +38,22 @@
               [forceSelection]="true"
               required
               (keydown.enter)="$event.preventDefault(); $event.stopPropagation()"
+              [disabled]="isView"
             ></p-autoComplete>
           </div>
           <div class="form-group m-form__group">
             <label class="form-label mr-2" for="notes">{{ l('Notes') }}</label>
-            <textarea class="form-control" name="notes" id="notes" [(ngModel)]="notes" rows="4" cols="30" maxlength="500" pInputTextarea></textarea>
+            <textarea
+              [disabled]="isView"
+              class="form-control"
+              name="notes"
+              id="notes"
+              [(ngModel)]="notes"
+              rows="4"
+              cols="30"
+              maxlength="500"
+              pInputTextarea
+            ></textarea>
           </div>
           <!--                    <div class="form-group m-form__group">-->
           <!--                        <label class="mr-2" for="waybills">{{ l('Waybills') }}</label>-->
@@ -52,7 +63,7 @@
 
           <div class="d-flex justify-content-end mb-2">
             <!--            <button *ngIf="dataSourceForEdit" type="button" class="btn btn-sm btn-danger" (click)="cancelAddToArray()">{{ l('Cancel') }}</button>-->
-            <button *ngIf="!dataSourceForEdit" class="btn btn-sm btn-success" (click)="addNew()">
+            <button *ngIf="!isView && !dataSourceForEdit" class="btn btn-sm btn-success" (click)="addNew()">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
           </div>
@@ -97,7 +108,7 @@
               <td>{{ row.containerNumber }}</td>
               <td>{{ getTruckToDisplay(row.truckId) }}</td>
               <td>
-                <div class="d-flex">
+                <div *ngIf="!isView" class="d-flex">
                   <button class="btn btn-xs btn-info" (click)="editRow(i, row)">
                     <i class="fa fa-edit" aria-hidden="true"></i>
                   </button>
@@ -127,6 +138,7 @@
                   (completeMethod)="searchForWaybills($event)"
                   [forceSelection]="true"
                   (onSelect)="clearOnSelect()"
+                  [disabled]="isView"
                 ></p-autoComplete>
               </div>
             </div>
@@ -135,15 +147,28 @@
                 <label class="form-label" for="date">
                   {{ l('Date') }}
                 </label>
-                <p-calendar
+                <!--                <p-calendar-->
+                <!--                  [disabled]="!!dataSourceForEdit.waybillNumber"-->
+                <!--                  class="p-0"-->
+                <!--                  styleClass="w-100"-->
+                <!--                  inputStyleClass="form-control"-->
+                <!--                  name="date"-->
+                <!--                  id="date"-->
+                <!--                  [(ngModel)]="dataSourceForEdit.workDate"-->
+                <!--                  [dateFormat]=""-->
+                <!--                ></p-calendar>-->
+                <input
                   [disabled]="!!dataSourceForEdit.waybillNumber"
-                  class="p-0"
-                  styleClass="w-100"
-                  inputStyleClass="form-control"
-                  name="date"
+                  #modelYear="bsDatepicker"
                   id="date"
+                  name="date"
+                  type="text"
                   [(ngModel)]="dataSourceForEdit.workDate"
-                ></p-calendar>
+                  [bsConfig]="{ isAnimated: true }"
+                  bsDatepicker
+                  (keydown)="(false)"
+                  class="form-control"
+                />
               </div>
             </div>
             <div class="col-6 mb-4">
@@ -266,8 +291,10 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button *ngIf="isView" type="button" class="btn btn-default" (click)="close()">{{ l('Close') }}</button>
+          <button *ngIf="!isView" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
           <button
+            *ngIf="!isView"
             type="submit"
             class="btn btn-save blue"
             [disabled]="
