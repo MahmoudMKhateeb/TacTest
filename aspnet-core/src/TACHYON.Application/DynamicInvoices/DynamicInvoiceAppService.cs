@@ -176,6 +176,7 @@ namespace TACHYON.DynamicInvoices
                     PlateNumber = trip.AssignedTruckFk != null ? trip.AssignedTruckFk.PlateNumber : string.Empty,
                     DestinationCityName = trip.DestinationFacilityFk != null ? trip.DestinationFacilityFk.CityFk.DisplayName : string.Empty,
                     OriginCityName = trip.OriginFacilityFk != null? trip.OriginFacilityFk.CityFk.DisplayName: string.Empty,
+                    ContainerNumber = trip.ContainerNumber,
                 }).FirstOrDefaultAsync();
 
             if (dto == null)

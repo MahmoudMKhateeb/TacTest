@@ -471,13 +471,17 @@ namespace TACHYON.Invoices
 
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
+            string financialEmail = invoice.Tenant?.FinancialEmail;
+            string financialName = invoice.Tenant?.FinancialName;
+            string financialPhone = invoice.Tenant?.FinancialPhone;
+            
             var invoiceDto = ObjectMapper.Map<InvoiceInfoDto>(invoice);
 
             var admin = AsyncHelper.RunSync(() => _userManager.GetAdminByTenantIdAsync(invoice.TenantId));
             invoiceDto.TaxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
-            invoiceDto.Phone = admin.PhoneNumber;
-            invoiceDto.Email = admin.EmailAddress;
-            invoiceDto.Attn = admin.FullName;
+            invoiceDto.Phone = financialPhone ?? admin.PhoneNumber;
+            invoiceDto.Email = financialEmail ?? admin.EmailAddress;
+            invoiceDto.Attn = financialName ?? admin.FullName;
             invoiceDto.BankNameArabic = bankNameArabic;
             invoiceDto.BankNameEnglish = bankNameEnglish;
             var document = AsyncHelper.RunSync(() =>
