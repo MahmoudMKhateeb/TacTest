@@ -33,6 +33,8 @@ namespace TACHYON.Invoices.Dto
         public string FinancialPhone { get; set; }
         public string FinancialEmail { get; set; }
         public string QRCode { get; set; }
+        public InvoiceChannel Channel { get; set; }
+
         public List<InvoiceItemDto> Items { get; set; }
 
         /// <summary>
@@ -44,5 +46,6 @@ namespace TACHYON.Invoices.Dto
         /// Shown in PDF 
         /// </summary>
         public string BankNameEnglish { get; set; }
+
     }
 }

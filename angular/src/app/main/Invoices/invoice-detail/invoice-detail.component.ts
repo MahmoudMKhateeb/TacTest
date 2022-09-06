@@ -1,9 +1,14 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, ViewChild } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { InvoiceInfoDto, InvoiceServiceProxy, InvoiceItemDto, InvoiceReportServiceServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  InvoiceChannel,
+  InvoiceInfoDto,
+  InvoiceItemDto,
+  InvoiceReportServiceServiceProxy,
+  InvoiceServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
@@ -29,14 +34,25 @@ export class InvoiceDetailComponent extends AppComponentBase {
     this.Items = this.Data.items;
 
     console.log(this.Items);
-    this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(this.Data.id).subscribe((result) => {
-      let url = this._fileDownloadService.GetTempFileUrl(result);
-      this.downloadFile(url).subscribe((res) => {
-        this.pdfViewerAutoLoad.pdfSrc = res;
-        this.pdfViewerAutoLoad.refresh();
-        console.log('res', res);
+    if (this.Data.channel === InvoiceChannel.DynamicInvoice) {
+      this._InvoiceReportServiceProxy.downloadDynamicInvoice(this.Data.id).subscribe((result) => {
+        let url = this._fileDownloadService.GetTempFileUrl(result);
+        this.downloadFile(url).subscribe((res) => {
+          this.pdfViewerAutoLoad.pdfSrc = res;
+          this.pdfViewerAutoLoad.refresh();
+          console.log('res', res);
+        });
       });
-    });
+    } else {
+      this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(this.Data.id).subscribe((result) => {
+        let url = this._fileDownloadService.GetTempFileUrl(result);
+        this.downloadFile(url).subscribe((res) => {
+          this.pdfViewerAutoLoad.pdfSrc = res;
+          this.pdfViewerAutoLoad.refresh();
+          console.log('res', res);
+        });
+      });
+    }
   }
 
   MakePaid(): void {

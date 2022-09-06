@@ -3362,7 +3362,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>التاريخ هو تاريخ تسليم الشحنة الفعلي</Value>
+                    <Value />
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Cairo</FontFamily>
@@ -3373,8 +3373,6 @@
                     </Style>
                   </TextRun>
                 </TextRuns>
-                <ListStyle>Bulleted</ListStyle>
-                <ListLevel>1</ListLevel>
                 <Style>
                   <TextAlign>Right</TextAlign>
                 </Style>
@@ -4768,7 +4766,7 @@
             </Style>
           </Image>
         </ReportItems>
-        <Height>11.81418cm</Height>
+        <Height>16cm</Height>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4776,10 +4774,10 @@
           <BackgroundColor>White</BackgroundColor>
         </Style>
       </Body>
-      <Width>31.35516cm</Width>
+      <Width>29.7cm</Width>
       <Page>
         <PageHeader>
-          <Height>2.24874cm</Height>
+          <Height>2.3cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -4905,7 +4903,7 @@
           </Style>
         </PageHeader>
         <PageFooter>
-          <Height>2.58555cm</Height>
+          <Height>2.6cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
