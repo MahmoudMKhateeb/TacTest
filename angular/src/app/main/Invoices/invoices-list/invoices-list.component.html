@@ -120,9 +120,12 @@
                       }}</a>
                     </li>
                     <li>
-                      <a class="dropdown-item" *ngIf="options.data.channel == 4" (click)="downloadDynamicReport(options.data.id)">{{
-                        l('downloadDynamicInvoice')
-                      }}</a>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="options.data.channel == InvoiceChannelEnum.DynamicInvoice"
+                        (click)="downloadDynamicReport(options.data.id)"
+                        >{{ l('downloadDynamicInvoice') }}</a
+                      >
                     </li>
                     <li *ngIf="!options.data.isPaid">
                       <a
