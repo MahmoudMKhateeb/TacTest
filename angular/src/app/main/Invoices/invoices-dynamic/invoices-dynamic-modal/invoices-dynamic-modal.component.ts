@@ -25,6 +25,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 import * as moment from 'moment';
 import { DateTimeService } from '@app/shared/common/timing/date-time.service';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'invoices-dynamic-modal',
@@ -53,6 +54,7 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   originCitiesFiltered: TenantCityLookupTableDto[] = [];
   destCitiesFiltered: TenantCityLookupTableDto[] = [];
   activeIndex: number = null;
+  isView: boolean;
 
   constructor(
     injector: Injector,
@@ -76,7 +78,8 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     this.GetAllCitiesForTableDropdown();
   }
 
-  show(forWho: number, id?: number): void {
+  show(forWho: number, id?: number, isView = false): void {
+    this.isView = isView;
     this.getAllTrucksTypeForTableDropdown();
     this.GetAllCitiesForTableDropdown();
     if (isNotNullOrUndefined(id)) {
@@ -116,12 +119,23 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     if (!this.Tenant?.id) {
       return;
     }
+    const items = [...this.root.items];
+    items.map((item) => {
+      if (isNotNullOrUndefined(item.waybillNumber)) {
+        item.truckId = null;
+        item.workDate = null;
+        item.quantity = null;
+        item.destinationCityId = null;
+        item.originCityId = null;
+        item.containerNumber = null;
+      }
+    });
     const body = new CreateOrEditDynamicInvoiceDto({
       id: isNotNullOrUndefined(this.root.id) ? this.root.id : null,
       creditTenantId: this.isForShipper ? Number(this.Tenant.id) : null,
       debitTenantId: !this.isForShipper ? Number(this.Tenant.id) : null,
       notes: this.notes,
-      items: this.root.items,
+      items: items,
     });
     this._DynamicInvoiceServiceProxy.createOrEdit(body).subscribe(
       (result) => {
@@ -203,6 +217,9 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
         if (this.root.items.length > 0) {
           this.root.items.map((item) => {
             item.workDate = !!item.waybillNumber ? null : moment(item.workDate);
+            if (isNotNullOrUndefined(item.waybillNumber)) {
+              this.fillDynamicInvoicItem(Number(item.waybillNumber), item);
+            }
           });
         }
       },
@@ -234,6 +251,19 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   }
 
   saveToArray() {
+    if (
+      !isNotNullOrUndefined(this.dataSourceForEdit) ||
+      !isNotNullOrUndefined(this.dataSourceForEdit.price) ||
+      !isNotNullOrUndefined(this.dataSourceForEdit.description) ||
+      ('' + this.dataSourceForEdit.description).length === 0
+    ) {
+      Swal.fire({
+        title: this.l('FormIsNotValidMessage'),
+        icon: 'warning',
+        showCloseButton: true,
+      });
+      return;
+    }
     if (!isNotNullOrUndefined(this.root.items)) {
       this.root.items = [];
     }
@@ -284,11 +314,10 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     this.trucksFiltered = [...filteredTrucks];
   }
 
-  getCityToDisplay(originCityId) {
-    if (isNaN(originCityId)) {
-      return;
-    }
-    return !!originCityId && this.cities.length > 0 ? this.cities.find((city) => Number(city.id) === Number('' + originCityId)).displayName : '';
+  getCityToDisplay(cityId) {
+    const id = cityId instanceof Object ? cityId.id : cityId;
+    const foundCity = !!cityId && this.cities.length > 0 ? this.cities.find((city) => Number(city.id) === Number('' + id)).displayName : '';
+    return foundCity;
   }
 
   // getTruckToDisplay(truckTypeId) {
@@ -305,17 +334,39 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     this.dataSourceForEdit.containerNumber = null;
     this.dataSourceForEdit.quantity = null;
     this.dataSourceForEdit.originCityId = null;
-    this.dataSourceForEdit.destinationCityId = null;
     this.dataSourceForEdit.truckId = null;
+    this.fillDynamicInvoicItem(Number(this.dataSourceForEdit.waybillNumber), this.dataSourceForEdit);
+  }
+
+  private fillDynamicInvoicItem(waybillNumber: number, destItem: DynamicInvoiceItemDto) {
+    this._DynamicInvoiceServiceProxy.getDynamicInvoiceItemInfo(waybillNumber).subscribe((res) => {
+      (destItem.destinationCityId as any) = this.cities.find((city) => city.displayName.toLowerCase() === res.destinationCityName.toLowerCase());
+      (destItem.originCityId as any) = this.cities.find((city) => city.displayName.toLowerCase() === res.originCityName.toLowerCase());
+      (destItem.truckId as any) = this.trucks.find((truck) => truck.displayName === res.plateNumber);
+      (destItem.workDate as any) = !!res.workDate ? moment(moment(res.workDate).format('yyyy-MM-DD')).toDate() : null;
+      destItem.containerNumber = res.containerNumber;
+      destItem.quantity = res.quantity;
+    });
   }
 
   editRow(i: number, row: DynamicInvoiceItemDto) {
+    console.log('row', row);
     this.dataSourceForEdit = DynamicInvoiceItemDto.fromJS(row.toJSON());
     this.activeIndex = i;
-    (this.dataSourceForEdit.workDate as any) = moment(moment(row.workDate).format('yyyy-MM-DD')).toDate();
-    (this.dataSourceForEdit.truckId as any) = this.trucks.find((truck) => Number(truck.id) === this.dataSourceForEdit.truckId);
-    (this.dataSourceForEdit.originCityId as any) = this.cities.find((city) => Number(city.id) === this.dataSourceForEdit.originCityId);
-    (this.dataSourceForEdit.destinationCityId as any) = this.cities.find((city) => Number(city.id) === this.dataSourceForEdit.destinationCityId);
+    (this.dataSourceForEdit.workDate as any) = !!row.workDate ? moment(moment(row.workDate).format('yyyy-MM-DD')).toDate() : null;
+    (this.dataSourceForEdit.truckId as any) = !((row.truckId as any) instanceof Object)
+      ? this.trucks.find((truck) => Number(truck.id) === Number(row.truckId))
+      : row.truckId;
+    (this.dataSourceForEdit.originCityId as any) = !((row.originCityId as any) instanceof Object)
+      ? this.cities.find((city) => Number(city.id) === Number(row.originCityId))
+      : row.originCityId;
+    (this.dataSourceForEdit.destinationCityId as any) = !((row.destinationCityId as any) instanceof Object)
+      ? this.cities.find((city) => Number(city.id) === Number(row.destinationCityId))
+      : row.destinationCityId;
+    // this.filterCity({query: (row.originCityId as any).displayName} , 1);
+    // this.filterCity({query: (row.destinationCityId as any).displayName} , 2);
+    // this.filterTrucks({query: (row.truckId as any).displayName});
+    console.log('this.dataSourceForEdit', this.dataSourceForEdit);
   }
 
   cancelAddToArray() {
@@ -323,7 +374,8 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     this.activeIndex = null;
   }
 
-  getTruckToDisplay(truckId: number) {
-    return !!truckId && this.trucks.length > 0 ? this.trucks.find((truck) => Number(truck.id) === Number('' + truckId)).displayName : '';
+  getTruckToDisplay(truckId) {
+    const id = truckId instanceof Object ? truckId.id : truckId;
+    return !!truckId && this.trucks.length > 0 ? this.trucks.find((truck) => Number(truck.id) === Number('' + id)).displayName : '';
   }
 }

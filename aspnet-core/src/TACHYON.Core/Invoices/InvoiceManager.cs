@@ -625,7 +625,7 @@ namespace TACHYON.Invoices
                 SubTotalAmount = subTotalAmount,
                 AccountType = InvoiceAccountType.AccountReceivable,
                 Channel = InvoiceChannel.DynamicInvoice,
-                Note=dynamicInvoice.Notes.ToString()
+                Note=dynamicInvoice.Notes
             };
             //await _invoiceRepository.InsertAsync(invoice);
             invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
