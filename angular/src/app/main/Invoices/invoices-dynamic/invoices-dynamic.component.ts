@@ -212,10 +212,16 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
       showCloseButton: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this._InvoiceServiceProxy.dynamicInvoiceOnDemand(id).subscribe((res) => {
-          this.notify.info(this.l('SubmitInvoiceGenerated'));
-          this.refreshDataGrid();
-        });
+        this._DynamicInvoiceServiceProxy
+          .delete(id)
+          .toPromise()
+          .then((res) => {
+            this.notify.info(this.l('SuccessfullyDeleted'));
+            this.refreshDataGrid();
+          })
+          .catch((error) => {
+            throw new Error('Data Deletion Error');
+          });
       }
     });
   }
@@ -224,10 +230,10 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
     return !!data.creditCompanyName ? data.creditCompanyName : data.debitCompanyName;
   }
 
-  editRow(item) {
+  editRow(item, isView = false) {
     // event.cancel = true;
     const forWho = !!item.creditCompanyName ? 1 : 2;
-    this.InvoicesDynamicModal.show(forWho, item.id);
+    this.InvoicesDynamicModal.show(forWho, item.id, isView);
     // return false;
   }
 

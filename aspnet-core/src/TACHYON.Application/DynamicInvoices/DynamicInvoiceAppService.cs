@@ -18,6 +18,7 @@ using TACHYON.Configuration;
 using TACHYON.Dto;
 using TACHYON.DynamicInvoices.Dto;
 using TACHYON.DynamicInvoices.DynamicInvoiceItems;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Trucks;
 
@@ -161,6 +162,26 @@ namespace TACHYON.DynamicInvoices
         {
            return await _tripRepository.GetAll().Where(x => x.WaybillNumber.HasValue && x.WaybillNumber.ToString().StartsWith(input))
                 .Select(x=> x.WaybillNumber.Value).Take(15).ToListAsync();
+        }
+
+        public async Task<DynamicInvoiceItemLookupDto> GetDynamicInvoiceItemInfo(long waybillNumber)
+        {
+            DisableTenancyFilters();
+            var dto = await (from trip in _tripRepository.GetAll()
+                where trip.WaybillNumber == waybillNumber
+                select new DynamicInvoiceItemLookupDto()
+                {
+                    Quantity = trip.ShippingRequestFk.NumberOfDrops,
+                    WorkDate = trip.EndTripDate,
+                    PlateNumber = trip.AssignedTruckFk != null ? trip.AssignedTruckFk.PlateNumber : string.Empty,
+                    DestinationCityName = trip.DestinationFacilityFk != null ? trip.DestinationFacilityFk.CityFk.DisplayName : string.Empty,
+                    OriginCityName = trip.OriginFacilityFk != null? trip.OriginFacilityFk.CityFk.DisplayName: string.Empty,
+                }).FirstOrDefaultAsync();
+
+            if (dto == null)
+                throw new UserFriendlyException(L("TripWithWaybillNumberIsNotFound"));
+            
+            return dto;
         }
 
         public async Task<ListResultDto<SelectItemDto>> GetAllTrucks()

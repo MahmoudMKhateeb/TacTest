@@ -74,10 +74,15 @@
 
                   <ul class="dropdown-menu" *dropdownMenu>
                     <li>
-                      <a class="dropdown-item" (click)="dynamicInvoiceOnDemand(options.data)">{{ l('OnDemandInvoice') }}</a>
+                      <a class="dropdown-item" *ngIf="!options.data.invoiceNumber" (click)="dynamicInvoiceOnDemand(options.data)">{{
+                        l('OnDemandInvoice')
+                      }}</a>
                     </li>
                     <li>
-                      <a class="dropdown-item" (click)="editRow(options.data)">{{ l('Edit') }}</a>
+                      <a class="dropdown-item" *ngIf="!options.data.invoiceNumber" (click)="editRow(options.data)">{{ l('Edit') }}</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" *ngIf="options.data.invoiceNumber" (click)="editRow(options.data, true)">{{ l('View') }}</a>
                     </li>
                     <li>
                       <a class="dropdown-item" (click)="deleteItem(options.data.id)">{{ l('Delete') }}</a>
