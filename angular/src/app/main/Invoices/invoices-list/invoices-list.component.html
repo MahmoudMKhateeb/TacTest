@@ -77,7 +77,9 @@
                 <span *ngIf="!options.data.isPaid" class="badge badge-danger badge-inline">{{ 'UnPaid' | localize }}</span>
               </div>
               <div *dxTemplate="let options of 'cellTemplate_Channel'">
-                <span style="width: 137px; text-align: center"
+                <span
+                  style="width: 137px; text-align: center"
+                  *ngIf="!(options.data.channel == InvoiceChannelEnum.DynamicInvoice && !isTachyonDealerOrHost)"
                   ><span
                     class="badge badge-inline"
                     [ngClass]="{

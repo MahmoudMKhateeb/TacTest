@@ -56,14 +56,14 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
 
   items = [
     {
-      label: 'For Shipper',
+      label: this.l('ForShipper'),
       icon: '',
       command: () => {
         this.InvoicesDynamicModal.show(1);
       },
     },
     {
-      label: 'For Carrier',
+      label: this.l('ForCarrier'),
       icon: '',
       command: () => {
         this.InvoicesDynamicModal.show(2);
