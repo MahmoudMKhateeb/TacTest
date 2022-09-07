@@ -123,6 +123,10 @@ namespace TACHYON.DynamicInvoices
             if (!input.Id.HasValue) throw new UserFriendlyException(L("IdCanNotBeEmpty"));
             var dynamicInvoice = await _dynamicInvoiceRepository.GetAllIncluding(x=> x.Items)
                 .SingleAsync(x => x.Id == input.Id);
+            
+            if (dynamicInvoice.InvoiceId.HasValue || dynamicInvoice.SubmitInvoiceId.HasValue)
+                throw new UserFriendlyException(L("YouCanNotEditAfterTheInvoiceIsGenerated"));
+            
             var deletedItems = dynamicInvoice.Items
                 .Where(x => input.Items.All(i => i.Id != x.Id))
                 .ToList();

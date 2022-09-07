@@ -2791,6 +2791,12 @@
 		<text name="PleaseCompletePicKupPointDetails">الرجاء اكمال تفاصيل نقاط التحميل</text>
 		<text name="Contact">جهة الاتصال</text>
 		<text name="Attachment">مرفق</text>
+		<text name="CreateDynamicInvoice">إنشاء فاتورة ديناميكية</text>
+		<text name="UpdateDynamicInvoice">تعديل فاتورة ديناميكية</text>
+		<text name="GenerateInvoice">إصدار فاتورة</text>
+		<text name="DynamicInvoice">الفواتير الديناميكية</text>
+		<text name="ForShipper">للشاحن</text>
+		<text name="ForCarrier">للناقل</text>
 
 	</texts>
 </localizationDictionary>

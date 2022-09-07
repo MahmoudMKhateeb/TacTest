@@ -13,7 +13,7 @@
       <form *ngIf="active" #Form="ngForm" novalidate autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span>{{ !isView ? l('AddNew') : l('View') }}</span>
+            <span>{{ !isView ? (!root.id ? l('CreateDynamicInvoice') : l('UpdateDynamicInvoice')) : l('View') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -297,12 +297,7 @@
             *ngIf="!isView"
             type="submit"
             class="btn btn-save blue"
-            [disabled]="
-              Form.invalid ||
-              (Form.valid && !!root && !!root.items && root.items.length === 0) ||
-              !!dataSourceForEdit ||
-              (!!root && !!root.items && root.items.length === 0)
-            "
+            [disabled]="isFormInvalid(Form)"
             [buttonBusy]="Form.valid && saving"
             [busyText]="l('SavingWithThreeDot')"
             (click)="save()"
