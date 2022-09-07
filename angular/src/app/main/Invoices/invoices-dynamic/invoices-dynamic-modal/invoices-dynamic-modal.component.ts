@@ -26,6 +26,7 @@ import * as moment from 'moment';
 import { DateTimeService } from '@app/shared/common/timing/date-time.service';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import Swal from 'sweetalert2';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'invoices-dynamic-modal',
@@ -377,5 +378,9 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   getTruckToDisplay(truckId) {
     const id = truckId instanceof Object ? truckId.id : truckId;
     return !!truckId && this.trucks.length > 0 ? this.trucks.find((truck) => Number(truck.id) === Number('' + id)).displayName : '';
+  }
+
+  isFormInvalid(Form: NgForm): boolean {
+    return Form.invalid || !this.root.items || this.root.items.length === 0 || isNotNullOrUndefined(this.dataSourceForEdit);
   }
 }

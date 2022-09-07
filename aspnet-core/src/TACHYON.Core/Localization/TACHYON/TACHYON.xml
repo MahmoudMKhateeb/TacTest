@@ -3039,6 +3039,12 @@
 		<text name="PleaseCompleteAllDropPointDetails">Please Complete All Drop Points Details</text>
 		<text name="PleaseCompletePicKupPointDetails">Please Complete All Pickup Points Details</text>
 		<text name="CarrierAsSaaS">Carrier As SAAS</text>
+		<text name="CreateDynamicInvoice">Create Dynamic Invoice</text>
+		<text name="UpdateDynamicInvoice">Update Dynamic Invoice</text>
+		<text name="GenerateInvoice">Generate an invoice</text>
+		<text name="DynamicInvoice">Dynamic Invoices</text>
+		<text name="ForShipper">For a shipper</text>
+		<text name="ForCarrier">For a carrier</text>
 
 	</texts>
 </localizationDictionary>

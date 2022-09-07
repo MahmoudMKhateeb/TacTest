@@ -404,6 +404,9 @@ namespace TACHYON.Invoices
                 .Include(x => x.DebitTenant)
                 .SingleAsync(x => x.Id == dynamicInvoiceId);
 
+            if (dynamicInvoice.InvoiceId.HasValue || dynamicInvoice.SubmitInvoiceId.HasValue)
+                throw new UserFriendlyException(L("ThisInvoiceAlreadyGenerated"));
+            
             var tenant = default(Tenant);
             if (dynamicInvoice.CreditTenantId != null)
             {

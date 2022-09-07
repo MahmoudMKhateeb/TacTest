@@ -329,7 +329,7 @@ export class AppNavigationService {
               !isNotNullOrUndefined(this._appSessionService.tenantId)
           ),
           new AppMenuItem(
-            'DynamicInvoices',
+            'DynamicInvoice',
             'Pages.DynamicInvoices',
             '',
             '/app/main/invoices/dynamic',
