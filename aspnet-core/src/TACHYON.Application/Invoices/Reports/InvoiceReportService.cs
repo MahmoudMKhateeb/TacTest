@@ -55,6 +55,21 @@ namespace TACHYON.Invoices.Reports
             return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetInvoiceNumber(invoiceId), reportPath, names, data);
         }
 
+        public FileDto DownloadDynamicInvoice(long invoiceId)
+        {
+            var reportPath = "/Invoices/Reports/DynamicInvoice.rdlc";
+
+            ArrayList names = new ArrayList();
+            ArrayList data = new ArrayList();
+            names.Add("GetInvoiceReportInfoDataset");
+            data.Add(_invoiceAppService.GetInvoiceReportInfo(invoiceId));
+
+            names.Add("GetInvoiceShippingRequestsReportInfoDataset");
+            data.Add(_invoiceAppService.GetDynamicInvoiceItemsReportInfo(invoiceId));
+
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetInvoiceNumber(invoiceId), reportPath, names, data);
+        }
+
         public FileDto DownloadInvoiceNoteReportPdf(long invoiceNoteId)
         {
             var reportPath = "/Invoices/Reports/InvoiceNote.rdlc";

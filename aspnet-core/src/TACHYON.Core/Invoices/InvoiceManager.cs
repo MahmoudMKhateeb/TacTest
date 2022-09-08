@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.Core.Invoices.Jobs;
 using TACHYON.Dto;
+using TACHYON.DynamicInvoices;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Groups;
@@ -602,6 +603,79 @@ namespace TACHYON.Invoices
 
 
             await _balanceManager.CheckShipperOverLimit(tenant);
+        }
+
+        public async Task GenerateDynamicInvoice(Tenant tenant, DynamicInvoice dynamicInvoice)
+        {
+            InvoicePeriod period = await _periodRepository.FirstOrDefaultAsync(x =>
+                x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods))); 
+
+            decimal subTotalAmount = dynamicInvoice.Items.Sum(r => r.Price);
+            var tax = GetTax();
+
+            decimal vatAmount = subTotalAmount * tax/100;//dynamicInvoice.Items.Sum(r => r.va);
+            decimal totalAmount = subTotalAmount + vatAmount;
+
+            DateTime dueDate = Clock.Now;
+
+            var invoice = new Invoice
+            {
+                TenantId = tenant.Id,
+                PeriodId = period.Id,
+                DueDate = dueDate,
+                IsPaid = false,
+                TotalAmount = totalAmount,
+                VatAmount = vatAmount,
+                SubTotalAmount = subTotalAmount,
+                AccountType = InvoiceAccountType.AccountReceivable,
+                Channel = InvoiceChannel.DynamicInvoice,
+                Note=dynamicInvoice.Notes
+            };
+            //await _invoiceRepository.InsertAsync(invoice);
+            invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
+            dynamicInvoice.InvoiceId=invoice.Id;
+            if (period.PeriodType == InvoicePeriodType.PayInAdvance)
+            {
+                tenant.Balance -= totalAmount;
+                tenant.ReservedBalance -= totalAmount;
+            }
+            else
+            {
+                tenant.CreditBalance -= totalAmount;
+            }
+
+
+            await _balanceManager.CheckShipperOverLimit(tenant);
+        }
+
+        public async Task GenerateSubmitDynamicInvoice(Tenant tenant, DynamicInvoice dynamicInvoice)
+        {
+
+            InvoicePeriod period = await _periodRepository.FirstOrDefaultAsync(x =>
+                 x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
+
+            decimal subTotalAmount = dynamicInvoice.Items.Sum(r => r.Price);
+            var tax = GetTax();
+
+            decimal vatAmount = subTotalAmount * tax / 100;//dynamicInvoice.Items.Sum(r => r.va);
+            decimal totalAmount = subTotalAmount + vatAmount;
+
+            DateTime dueDate = Clock.Now;
+
+            var submitInvoice = new SubmitInvoice
+            {
+                TenantId = tenant.Id,
+                PeriodId = period.Id,
+                TotalAmount = totalAmount,
+                VatAmount = vatAmount,
+                SubTotalAmount = subTotalAmount,
+                TaxVat = tax,
+                Channel = InvoiceChannel.DynamicInvoice,
+                
+            };
+            submitInvoice.Id = await _submitInvoiceRepository.InsertAndGetIdAsync(submitInvoice);
+            dynamicInvoice.SubmitInvoiceId=submitInvoice.Id;
+
         }
         public async Task GeneratePenaltySubmitInvoice(Tenant tenant, List<Penalty> penalties, InvoicePeriod period)
         {

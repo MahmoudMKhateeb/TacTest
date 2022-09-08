@@ -6,6 +6,7 @@ import {
   Injector,
   Input,
   OnChanges,
+  OnInit,
   Output,
   ViewChild,
   ViewEncapsulation,
@@ -45,7 +46,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
   styleUrls: ['./tripsForViewShippingRequest.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TripsForViewShippingRequestComponent extends AppComponentBase implements AfterViewInit, OnChanges {
+export class TripsForViewShippingRequestComponent extends AppComponentBase implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('dataTablechild', { static: false }) dataTable: Table;
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
@@ -100,6 +101,18 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     this.uploadGoodDetailsUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportGoodsDetailsFromExcel';
     this.tripVases = AppConsts.remoteServiceBaseUrl + '/Helper/ImportTripVasesFromExcel';
     this.incidentResolved = new EventEmitter<void>();
+  }
+
+  ngOnInit() {
+    // update Trip Service and send vases list to trip component
+    this._shippingRequestsServiceProxy.getShippingRequestForView(this.ShippingRequest.id).subscribe((result) => {
+      this.shippingRequestForView = result;
+      this.ShippingRequest = result.shippingRequest;
+      this.VasListFromFather = result.shippingRequestVasDtoList;
+      this.tripsByTmsEnabled = true;
+      this._TripService.updateShippingRequest(result);
+      console.log(result);
+    });
   }
 
   /**
@@ -160,13 +173,6 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     this.paginator.changePage(this.paginator.getPage());
   }
   ngAfterViewInit(): void {
-    // update Trip Service and send vases list to trip component
-    this._shippingRequestsServiceProxy.getShippingRequestForView(this.ShippingRequest.id).subscribe((result) => {
-      this.VasListFromFather = result.shippingRequestVasDtoList;
-      this.tripsByTmsEnabled = true;
-      this._TripService.updateShippingRequest(result);
-    });
-
     this.primengTableHelper.adjustScroll(this.dataTable);
     abp.event.on('ShippingRequestTripCreatedEvent', (args) => {
       this._shippingRequestsServiceProxy.canAddTripForShippingRequest(this.ShippingRequest.id).subscribe((result) => {

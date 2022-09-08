@@ -265,6 +265,7 @@
 
                   <div *ngIf="feature.isEnabled('App.Shipper') || (feature.isEnabled('App.TachyonDealer') && item.isTachyonDeal)">
                     <TripsForViewShippingRequest
+                      #tripsForViewShippingRequest
                       *ngIf="item.id && bidsloading == false"
                       [ShippingRequest]="item"
                       [VasListFromFather]="undefined"

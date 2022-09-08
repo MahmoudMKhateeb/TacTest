@@ -39,40 +39,6 @@
       <div class="modal-body" [busyIf]="loading">
         <div class="row">
           <!--begin::Body-->
-          <!--  begin:: Source Dest Facilitys  -->
-          <div class="col-lg-6 form-group">
-            <label>{{ l('SourceFacility') }}</label>
-            <div class="input-group">
-              <input type="text" class="form-control" name="originFacility" [(ngModel)]="trip.originFacility" disabled />
-            </div>
-          </div>
-          <div class="col-lg-6 form-group">
-            <label>{{ l('Sender') }}</label>
-            <div class="input-group">
-              <input type="text" class="form-control" name="originFacility" [(ngModel)]="pickUpPointSender" disabled />
-            </div>
-          </div>
-          <div class="col-lg-6 form-group">
-            <label>{{ l('DestFacility') }}</label>
-            <div class="input-group">
-              <input type="text" class="form-control" name="destinationFacility" [(ngModel)]="trip.destinationFacility" disabled />
-            </div>
-          </div>
-          <div class="col-lg-6 form-group d-inline-flex">
-            <div class="input-group d-inline-block">
-              <label> {{ l('supposedPickupTimeFrom') }}</label>
-              <dx-date-box name="supposedPickupDateFrom" [(value)]="trip.supposedPickupDateFrom" type="time" pickerType="list" [disabled]="true">
-              </dx-date-box>
-            </div>
-            <div class="input-group d-inline-block">
-              <label> {{ l('supposedPickupTimeTo') }}</label>
-              <dx-date-box name="supposedPickupDateTo" [(value)]="trip.supposedPickupDateTo" type="time" pickerType="list" [disabled]="true">
-              </dx-date-box>
-            </div>
-          </div>
-
-          <!--  end:: Source Dest Facilitys  -->
-          <!--  begin:: Trip start&End Dates-->
           <div class="col-lg-6">
             <div class="form-group">
               <label>{{ l('Trip_StartDate') }} </label>
@@ -115,7 +81,72 @@
               </div>
             </div>
           </div>
-          <!--  end:: Trip start&End Dates-->
+          <div class="col-lg-6 form-group d-inline-flex">
+            <div class="input-group d-inline-block">
+              <label> {{ l('supposedPickupTimeFrom') }}</label>
+              <dx-date-box name="supposedPickupDateFrom" [(value)]="trip.supposedPickupDateFrom" type="time" pickerType="list" [disabled]="true">
+              </dx-date-box>
+            </div>
+            <div class="input-group d-inline-block">
+              <label> {{ l('supposedPickupTimeTo') }}</label>
+              <dx-date-box name="supposedPickupDateTo" [(value)]="trip.supposedPickupDateTo" type="time" pickerType="list" [disabled]="true">
+              </dx-date-box>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <label>{{ l('ExpectedDeliveryTime') }}</label>
+            <div class="form-group" [busyIf]="expectedDeliveryTimeLoading">
+              <dx-date-box
+                [(value)]="expectedDeliveryTime"
+                (onValueChanged)="updateTripExpectedDeliveryTime()"
+                type="datetime"
+                [min]="trip.startTripDate"
+                openOnFieldClick="true"
+              >
+              </dx-date-box>
+            </div>
+          </div>
+          <!--  begin::Trip Goods Approximate Value -->
+          <div class="col-lg-6 mt-2">
+            <div class="form-group">
+              <label>{{ l('ApproximateTripGoodsValue') }} </label>
+              <div class="input-group date">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="approximateGoodsTotalValue"
+                  (keypress)="numberOnly($event)"
+                  [(ngModel)]="trip.totalValue"
+                  placeholder="{{ l('ApproximateTripGoodsValue') }}"
+                  disabled
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    {{ l('SAR') }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--  end::Trip Goods Approximate Value -->
+          <div class="col-lg-6">
+            <div class="form-group row">
+              <div class="col-6 col-form-label">
+                <label for="DeliveryNote"> {{ l('DeliveryNote') }} </label>
+                <select name="DeliveryNote" id="DeliveryNote" [(ngModel)]="trip.needsDeliveryNote" class="form-control" disabled>
+                  <option [ngValue]="true">{{ l('Yes') }}</option>
+                  <option [ngValue]="false">{{ l('No') }}</option>
+                </select>
+              </div>
+              <div class="col-6 col-form-label">
+                <label for="Attachment"> {{ l('Attachment') }} </label>
+                <select name="Attachment" id="Attachment" [(ngModel)]="trip.hasAttachment" class="form-control" disabled>
+                  <option [ngValue]="true">{{ l('Yes') }}</option>
+                  <option [ngValue]="false">{{ l('No') }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
 
           <!-- StartOf::Driver&Truck -->
           <ng-container *ngIf="(feature.isEnabled('App.Carrier') || isTachyonDealer) && trip.status !== shippingRequestTripStatusEnum.Delivered">
@@ -156,83 +187,18 @@
                 {{ l('Save') }}
               </button>
             </div>
-            <div class="col-lg-6">
-              <label>{{ l('expectedDeliveryTime') }}</label>
-              <div class="form-group" [busyIf]="expectedDeliveryTimeLoading">
-                <dx-date-box
-                  [(value)]="expectedDeliveryTime"
-                  (onValueChanged)="updateTripExpectedDeliveryTime()"
-                  type="datetime"
-                  [min]="trip.startTripDate"
-                  openOnFieldClick="true"
-                >
-                </dx-date-box>
-              </div>
-            </div>
           </ng-container>
 
           <!--   EndOf::Driver&Truck -->
           <!--  start:: Notes-->
 
-          <div class="col-lg-12">
+          <div class="col-lg-12" *ngIf="trip.note">
             <label>{{ l('Notes') }}</label>
             <div class="input-group">
               <textarea name="notes" class="form-control" [(ngModel)]="trip.note" disabled></textarea>
             </div>
           </div>
           <!--  end:: Notes-->
-          <!--  begin::Trip Goods Approximate Value -->
-          <div class="col-lg-6 mt-6">
-            <div class="form-group">
-              <label>{{ l('ApproximateTripGoodsValue') }} </label>
-              <div class="input-group date">
-                <input
-                  type="text"
-                  class="form-control"
-                  name="approximateGoodsTotalValue"
-                  (keypress)="numberOnly($event)"
-                  [(ngModel)]="trip.totalValue"
-                  placeholder="{{ l('ApproximateTripGoodsValue') }}"
-                  disabled
-                />
-                <div class="input-group-append">
-                  <span class="input-group-text">
-                    {{ l('SAR') }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!--  end::Trip Goods Approximate Value -->
-          <div class="col-lg-6 mt-4">
-            <div class="form-group row">
-              <div class="col-6 col-form-label mt-10">
-                <div class="checkbox-inline mt-3">
-                  <label class="checkbox checkbox-danger">
-                    <input type="checkbox" name="trip.needsDeliveryNote" [(ngModel)]="trip.needsDeliveryNote" disabled />
-                    <span></span>
-                    {{ l('NeedsDeliveryNote') }}
-                  </label>
-                </div>
-              </div>
-              <div class="col-6 col-form-label mt-10">
-                <div class="checkbox-inline float-right">
-                  <label class="checkbox checkbox-danger">
-                    <input type="checkbox" name="trip.hasAttachment" [(ngModel)]="trip.hasAttachment" disabled />
-                    <span></span>
-                    {{ l('HasAttachment') }}
-                    <a
-                      (click)="downloadAttachment(currentTripId)"
-                      class="btn btn-icon btn-circle btn-outline-danger btn-sm ml-2"
-                      *ngIf="trip.hasAttachment"
-                    >
-                      <i class="fas fa-long-arrow-alt-down"></i>
-                    </a>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <!-- begin::Vas's  -->
           <!--          <div class="col-lg-6" *ngIf="VasListFromFather.length > 0">-->

@@ -1,34 +1,19 @@
 <div class="card card-custom">
   <div class="card-header">
-    <h3 class="card-title">
-      {{ l('ShippingRequestTrips') }}
-    </h3>
-    <div
-      class="card-toolbar"
-      *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer') || feature.isEnabled('App.CarrierAsASaas')"
-    >
-      <!--      <p-toggleButton-->
-      <!--        onLabel="{{ l('EnableAddTripsByTms') }}"-->
-      <!--        offLabel="{{ l('DisableAddTripsByTms') }}"-->
-      <!--        [(ngModel)]="tripsByTmsEnabled"-->
-      <!--        [style]="{ width: '14em' }"-->
-      <!--        onIcon="pi pi-lock-open"-->
-      <!--        offIcon="pi pi-lock"-->
-      <!--        *ngIf="ShippingRequest.isTachyonDeal && feature.isEnabled('App.Shipper')"-->
-      <!--        (click)="updateAddTripsByTmsFeature()"-->
-      <!--        [busyIf]="saving"-->
-      <!--      >-->
-      <!--      </p-toggleButton>-->
-
+    <div class="card-title">
+      <h3 class="card-label">
+        {{ l('ShippingRequestTrips') }}
+      </h3>
+    </div>
+    <div class="card-toolbar" *ngIf="isShipper || isTachyonDealer || isCarrierSaas">
       <button
-        class="btn btn-primary"
+        class="btn btn-primary mr-2"
         (click)="AddNewTripModal.show()"
         [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
         *ngIf="ShippingRequest.canAddTrip"
       >
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
       </button>
-      &nbsp; &nbsp;
       <!-- <div role="actions"> -->
       <div class="btn-group" dropdown [busyIf]="loading">
         <button
@@ -168,6 +153,8 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="card-body">
     <!--begin::card-body-->
     <div class="row align-items-center">
       <!--<Primeng-Datatable-Start>-->
@@ -238,9 +225,9 @@
               }"
             >
               <!-- <td style="width: 50px;">
-                  <span class="ui-column-title"> {{ l('id') }}</span>
-                  {{ record.id }}
-                </td> -->
+                                <span class="ui-column-title"> {{ l('id') }}</span>
+                                {{ record.id }}
+                              </td> -->
               <td>
                 <span class="ui-column-title"> {{ l('bulkUploadReference') }}</span>
                 {{ record.bulkUploadRef }}
@@ -374,9 +361,10 @@
                     </li>
                     <li
                       *ngIf="
-                        permission.isGranted('Pages.ShippingRequestTrips.Delete') &&
-                        feature.isEnabled('App.Shipper') &&
-                        record.status == ShippingRequestTripStatusEnum.New
+                        (permission.isGranted('Pages.ShippingRequestTrips.Delete') &&
+                          feature.isEnabled('App.Shipper') &&
+                          record.status == ShippingRequestTripStatusEnum.New) ||
+                        (isCarrierSaas && record.status == ShippingRequestTripStatusEnum.New)
                       "
                     >
                       <a class="dropdown-item" (click)="AddNewTripModal.deleteTrip(record.id)">{{ l('Delete') }}</a>

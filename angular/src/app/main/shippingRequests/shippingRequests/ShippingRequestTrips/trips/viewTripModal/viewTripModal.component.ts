@@ -1,14 +1,9 @@
 import { AfterViewInit, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
-  AssignDriverAndTruckToShippmentByCarrierInput,
-  CreateOrEditShippingRequestTripVasDto,
-  FacilityForDropdownDto,
   RoutStepsServiceProxy,
   SelectItemDto,
   ShippingRequestDriverServiceProxy,
-  ShippingRequestsTripForViewDto,
-  ShippingRequestsTripServiceProxy,
   ShippingRequestTripStatus,
   TrucksServiceProxy,
   WaybillsServiceProxy,
@@ -37,11 +32,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
   Vases: CreateOrEditShippingRequestTripVasDto[];
-  selectedVases: CreateOrEditShippingRequestTripVasDto[];
-  allFacilities: FacilityForDropdownDto[];
   trip: ShippingRequestsTripForViewDto = new ShippingRequestsTripForViewDto();
   assignDriverAndTruck: AssignDriverAndTruckToShippmentByCarrierInput = new AssignDriverAndTruckToShippmentByCarrierInput();
-  facilityLoading = false;
   allDrivers: SelectItemDto[] = [];
   allTrucks: SelectItemDto[] = [];
   saving = false;
@@ -121,6 +113,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this.allDrivers = [];
     this.allTrucks = [];
     this.loading = true;
+    this._PointsService.updateWayPoints([]);
     this.modal.hide();
   }
 
@@ -134,13 +127,6 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
       title: msg,
       icon: 'warning',
       confirmButtonText: this.l('Ok'),
-    });
-  }
-
-  downloadAttachment(id: number) {
-    this._shippingRequestTripsService.getTripAttachmentFileDto(id).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'img');
     });
   }
 

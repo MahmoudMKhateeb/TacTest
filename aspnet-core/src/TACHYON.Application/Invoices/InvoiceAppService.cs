@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Threading;
 using Abp.UI;
@@ -9,6 +10,7 @@ using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using NPOI.SS.Formula.Functions;
 using QRCoder;
 using System;
 using System.Collections.Generic;
@@ -26,13 +28,17 @@ using TACHYON.Configuration;
 using TACHYON.DataExporting;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
+using TACHYON.DynamicInvoices;
+using TACHYON.DynamicInvoices.DynamicInvoiceItems;
 using TACHYON.Exporting;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Transactions;
+using TACHYON.MultiTenancy;
 using TACHYON.Penalties;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.ShippingRequestVases;
@@ -58,6 +64,7 @@ namespace TACHYON.Invoices
         private readonly PdfExporterBase _pdfExporterBase;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly ISettingManager _settingManager;
+        private readonly IRepository<DynamicInvoice, long> _dynamicInvoiceRepository;
 
 
         public InvoiceAppService(
@@ -71,7 +78,7 @@ namespace TACHYON.Invoices
             IRepository<ShippingRequestVas, long> shippingRequestVasesRepository,
             IRepository<DocumentFile, Guid> documentFileRepository,
             IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager,
-             IWebUrlService webUrlService, PdfExporterBase pdfExporterBase, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ISettingManager settingManager)
+             IWebUrlService webUrlService, PdfExporterBase pdfExporterBase, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ISettingManager settingManager, IRepository<DynamicInvoice, long> dynamicInvoiceRepository)
 
         {
             _invoiceRepository = invoiceRepository;
@@ -88,6 +95,7 @@ namespace TACHYON.Invoices
             _pdfExporterBase = pdfExporterBase;
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _settingManager = settingManager;
+            _dynamicInvoiceRepository = dynamicInvoiceRepository;
         }
 
 
@@ -160,19 +168,50 @@ namespace TACHYON.Invoices
             return invoice;
         }
 
-        private async Task<Invoice> GetPenaltyInvoiceInfo(long penaltyInvoiceId) 
+        private async Task<Invoice> GetPenaltyInvoiceInfo(long penaltyInvoiceId)
         {
             DisableTenancyFilters();
             var invoice = await _invoiceRepository
                 .GetAll()
                 .Include(i => i.Tenant)
                 .Include(i => i.Penalties)
-                .ThenInclude(x=>x.ShippingRequestTripFK)
-                .ThenInclude(x=>x.ShippingRequestFk)
-                .Include(x=>x.Penalties)
-                .ThenInclude(x=>x.ShippingRequestTripFK)
+                .ThenInclude(x => x.ShippingRequestTripFK)
+                .ThenInclude(x => x.ShippingRequestFk)
+                .Include(x => x.Penalties)
+                .ThenInclude(x => x.ShippingRequestTripFK)
                 .ThenInclude(x => x.AssignedTruckFk)
                 .FirstOrDefaultAsync(i => i.Id == penaltyInvoiceId);
+            if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+
+            return invoice;
+        }
+
+        private async Task<DynamicInvoice> GetDynamicInvoiceInfo(long invoiceId)
+        {
+            DisableTenancyFilters();
+            var invoice = await _dynamicInvoiceRepository
+                .GetAll()
+                .Include(i => i.CreditTenant)
+                .Include(i => i.DebitTenant)
+                .Include(i => i.Items)
+                .ThenInclude(x => x.ShippingRequestTrip)
+                .ThenInclude(x => x.ShippingRequestFk)
+                .ThenInclude(x => x.OriginCityFk)
+                .Include(i => i.Items)
+                .ThenInclude(x => x.ShippingRequestTrip)
+                .ThenInclude(x => x.ShippingRequestFk)
+                .ThenInclude(x => x.DestinationCityFk)
+                .Include(i => i.Items)
+                .ThenInclude(x => x.ShippingRequestTrip)
+                .ThenInclude(x => x.AssignedTruckFk)
+                .ThenInclude(x => x.TrucksTypeFk)
+                .Include(i => i.Items)
+                .ThenInclude(x => x.OriginCity)
+                .Include(i => i.Items)
+                .ThenInclude(x => x.DestinationCity)
+                .Include(i => i.Items)
+                .ThenInclude(x => x.Truck).ThenInclude(x => x.TrucksTypeFk) // todo review this with Tasneem 
+                .FirstOrDefaultAsync(i => i.InvoiceId == invoiceId);
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
             return invoice;
@@ -351,7 +390,38 @@ namespace TACHYON.Invoices
             var tenant = await TenantManager.GetByIdAsync(Id);
 
             // if (tenant == null || tenant.Name == AppConsts.ShipperEditionName) throw new UserFriendlyException(L("TheTenantSelectedIsNotShipper"));
-            await _invoiceManager.GenertateInvoiceOnDeman(tenant, waybills.Select(x=>x.Id).Select(int.Parse).ToList());
+            await _invoiceManager.GenertateInvoiceOnDeman(tenant, waybills.Select(x => x.Id).Select(int.Parse).ToList());
+        }
+
+        public async Task DynamicInvoiceOnDemand(long dynamicInvoiceId)
+        {
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
+            DisableTenancyFilters();
+
+            var dynamicInvoice = await _dynamicInvoiceRepository.GetAll()
+                .Include(x => x.Items)
+                .Include(x => x.CreditTenant)
+                .Include(x => x.DebitTenant)
+                .SingleAsync(x => x.Id == dynamicInvoiceId);
+
+            if (dynamicInvoice.InvoiceId.HasValue || dynamicInvoice.SubmitInvoiceId.HasValue)
+                throw new UserFriendlyException(L("ThisInvoiceAlreadyGenerated"));
+            
+            var tenant = default(Tenant);
+            if (dynamicInvoice.CreditTenantId != null)
+            {
+                //generate invoice
+                tenant = dynamicInvoice.CreditTenant;
+
+                await _invoiceManager.GenerateDynamicInvoice(tenant, dynamicInvoice);
+            }
+            else if (dynamicInvoice.DebitTenantId != null)
+            {
+                //generate submit invoice
+                tenant = dynamicInvoice.DebitTenant;
+                await _invoiceManager.GenerateSubmitDynamicInvoice(tenant, dynamicInvoice);
+            }
+
         }
 
         public async Task<List<SelectItemDto>> GetUnInvoicedWaybillsByTenant(int tenantId)
@@ -359,13 +429,13 @@ namespace TACHYON.Invoices
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _shippingRequestTripRepository.GetAll()
                 .Where(
-                x =>(x.ShippingRequestFk.TenantId == tenantId && !x.IsShipperHaveInvoice) &&
+                x => (x.ShippingRequestFk.TenantId == tenantId && !x.IsShipperHaveInvoice) &&
                 (x.Status == ShippingRequestTripStatus.Delivered ||
                     x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
                 )
-                .Select(x=> new SelectItemDto { DisplayName=x.WaybillNumber.ToString(), Id=x.Id.ToString()})
+                .Select(x => new SelectItemDto { DisplayName = x.WaybillNumber.ToString(), Id = x.Id.ToString() })
                 .ToListAsync();
-           
+
         }
 
         [AbpAllowAnonymous]
@@ -384,7 +454,7 @@ namespace TACHYON.Invoices
 
         public async Task CorrectShipperInvoice(int invoiceId)
         {
-          await  _invoiceManager.CorrectShipperInvoice(invoiceId);
+            await _invoiceManager.CorrectShipperInvoice(invoiceId);
         }
 
         #region Reports
@@ -404,13 +474,17 @@ namespace TACHYON.Invoices
 
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
+            string financialEmail = invoice.Tenant?.FinancialEmail;
+            string financialName = invoice.Tenant?.FinancialName;
+            string financialPhone = invoice.Tenant?.FinancialPhone;
+            
             var invoiceDto = ObjectMapper.Map<InvoiceInfoDto>(invoice);
 
             var admin = AsyncHelper.RunSync(() => _userManager.GetAdminByTenantIdAsync(invoice.TenantId));
             invoiceDto.TaxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
-            invoiceDto.Phone = admin.PhoneNumber;
-            invoiceDto.Email = admin.EmailAddress;
-            invoiceDto.Attn = admin.FullName;
+            invoiceDto.Phone = financialPhone ?? admin.PhoneNumber;
+            invoiceDto.Email = financialEmail ?? admin.EmailAddress;
+            invoiceDto.Attn = financialName ?? admin.FullName;
             invoiceDto.BankNameArabic = bankNameArabic;
             invoiceDto.BankNameEnglish = bankNameEnglish;
             var document = AsyncHelper.RunSync(() =>
@@ -423,6 +497,7 @@ namespace TACHYON.Invoices
             if (document != null) invoiceDto.TenantVatNumber = documentVat.Number;
             var link = $"{_webUrlService.WebSiteRootAddressFormat }account/outsideInvoice?id={invoiceId}";
             invoiceDto.QRCode = _pdfExporterBase.GenerateQrCode(link);
+            invoiceDto.Note = invoice.Note;
             return new List<InvoiceInfoDto>() { invoiceDto };
         }
 
@@ -535,12 +610,12 @@ namespace TACHYON.Invoices
                 Items.Add(new PeanltyInvoiceItemDto
                 {
                     Sequence = $"{Sequence}/{TotalItem}",
-                    PenaltyName=penalty.PenaltyName,
+                    PenaltyName = penalty.PenaltyName,
                     VatAmount = penalty.VatPostCommestion,
                     TotalAmount = penalty.TotalAmount,
                     Date = penalty.CreationTime.ToString("dd/MM/yyyy"),
                     ContainerNumber = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.AssignedTruckFk?.PlateNumber : "-",
-                    WayBillNumber = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.WaybillNumber.ToString() : "-" ,
+                    WayBillNumber = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.WaybillNumber.ToString() : "-",
                     ItmePrice = penalty.AmountPostCommestion,
                     Remarks = penalty.ShippingRequestTripFK != null ? penalty.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId ==
                               Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops
@@ -551,6 +626,161 @@ namespace TACHYON.Invoices
             });
             return Items;
         }
+
+        public IEnumerable<InvoiceItemDto> GetDynamicInvoiceItemsReportInfo(long invoiceId)
+        {
+            var dynamicInvoice = AsyncHelper.RunSync(() => GetDynamicInvoiceInfo(invoiceId));
+
+            if (dynamicInvoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+            var TotalItem = dynamicInvoice.Items.Count();
+            int Sequence = 1;
+            List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
+            List<DynamicInvoiceItem> dynamicInvoiceItems = dynamicInvoice.Items.ToList();
+
+            foreach (var item in dynamicInvoiceItems)
+            {
+                InvoiceItemDto invoiceItemDto = new InvoiceItemDto
+                {
+                    Sequence = $"{Sequence}/{TotalItem}",
+                    SubTotalAmount = item.Price,
+                    VatAmount = item.VatAmount,
+                    TotalAmount = item.TotalAmount,
+                    RoundTrip = item.Description,
+
+                };
+
+                //WayBillNumber
+                if (item.ShippingRequestTrip != null)
+                {
+                    invoiceItemDto.WayBillNumber = item.ShippingRequestTrip.WaybillNumber.ToString();
+                }
+                else
+                {
+                    invoiceItemDto.WayBillNumber = "";
+                }
+
+                //TruckType
+                if (item.ShippingRequestTrip != null)
+                {
+                    invoiceItemDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(item.ShippingRequestTrip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;
+                }
+                else
+                {
+                    if (item.Truck != null)
+                    {
+                        invoiceItemDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(item.Truck.TrucksTypeFk).TranslatedDisplayName;
+                    }
+                }
+
+                //Source
+                if (item.ShippingRequestTrip != null)
+                {
+                    var cityDto = ObjectMapper.Map<CityDto>(item.ShippingRequestTrip.ShippingRequestFk.OriginCityFk);
+
+                    if (cityDto != null)
+                    {
+                        invoiceItemDto.Source = cityDto.NormalizedDisplayName;
+
+                    }
+
+                }
+                else
+                {
+                    if (item.OriginCity != null)
+                    {
+                        CityDto cityDto = ObjectMapper.Map<CityDto>(item.OriginCity);
+                        invoiceItemDto.Source = cityDto.NormalizedDisplayName;
+                    }
+                }
+
+                //Destination
+                if (item.ShippingRequestTrip != null)
+                {
+                    CityDto cityDto = ObjectMapper.Map<CityDto>(item.ShippingRequestTrip.ShippingRequestFk.DestinationCityFk);
+                    invoiceItemDto.Destination = cityDto.NormalizedDisplayName;
+
+                }
+                else
+                {
+                    if (item.DestinationCity != null)
+                    {
+                        CityDto cityDto = ObjectMapper.Map<CityDto>(item.DestinationCity);
+                        invoiceItemDto.Destination = cityDto.NormalizedDisplayName;
+                    }
+                }
+
+                //DateWork
+                if (item.ShippingRequestTrip != null)
+                {
+                    if (item.ShippingRequestTrip.EndTripDate.HasValue)
+                    {
+                        invoiceItemDto.DateWork = item.ShippingRequestTrip.EndTripDate.Value.Date.ToString("dd/MM/yyyy");
+                    }
+                    else
+                    {
+                        if (item.WorkDate != null)
+                        {
+                            invoiceItemDto.DateWork = item.WorkDate.Value.Date.ToString("dd/MM/yyyy");
+                        }
+                    }
+                }
+                else
+                {
+                    if (item.WorkDate != null)
+                    {
+                        invoiceItemDto.DateWork = item.WorkDate.Value.ToString("dd/MM/yyyy");
+                    }
+                }
+
+
+                //Remarks
+                if (item.ShippingRequestTrip != null)
+                {
+                    int numberOfDrops = item.ShippingRequestTrip.ShippingRequestFk.NumberOfDrops;
+                    if (numberOfDrops > 1)
+                    {
+                        invoiceItemDto.Remarks = L("TotalOfDrop", numberOfDrops);
+                    }
+                    else
+                    {
+                        invoiceItemDto.Remarks = "";
+                    }
+                    
+                }
+                else
+                {
+                    if (item.Quantity != null)
+                    {
+                        invoiceItemDto.Remarks = item.Quantity.Value.ToString();
+                    }
+                }
+
+                //ContainerNumber
+                if (item.ShippingRequestTrip != null)
+                {
+                    invoiceItemDto.ContainerNumber = item.ShippingRequestTrip.ContainerNumber;
+                }
+                else
+                {
+                    invoiceItemDto.ContainerNumber = item.ContainerNumber;
+                }
+
+                // PlateNumber
+                if (item.ShippingRequestTrip != null)
+                {
+                    invoiceItemDto.PlateNumber = item.ShippingRequestTrip.AssignedTruckFk.PlateNumber;
+                }
+
+
+
+                Items.Add(invoiceItemDto);
+
+                Sequence++;
+            }
+
+            return Items;
+        }
+
 
         //public IEnumerable<GetInvoiceReportInfoOutput> GetInvoiceReportInfo(long invoiceId)
         //{

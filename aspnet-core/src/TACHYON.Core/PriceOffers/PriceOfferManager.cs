@@ -244,13 +244,25 @@ namespace TACHYON.PriceOffers
                     request.BidStatus = ShippingRequestBidStatus.Closed;
                 }
 
-                await ChangeDirectRequestStatus(parentOffer.SourceId.Value, ShippingRequestDirectRequestStatus.Accepted);
+                if (parentOffer != null)
+                {
+                    if (parentOffer.SourceId != null)
+                    {
+                        await ChangeDirectRequestStatus(parentOffer.SourceId.Value,
+                            ShippingRequestDirectRequestStatus.Accepted);
+                    }
 
-
+                    await _appNotifier.TMSAcceptedOffer(parentOffer);
+                }
+                
                 if (offer.Channel == PriceOfferChannel.DirectRequest)
-                    await ChangeDirectRequestStatus(offer.SourceId.Value, ShippingRequestDirectRequestStatus.Accepted);
-
-                if (parentOffer != null) await _appNotifier.TMSAcceptedOffer(parentOffer);
+                {
+                    if (offer.SourceId != null)
+                    {
+                        await ChangeDirectRequestStatus(offer.SourceId.Value,
+                            ShippingRequestDirectRequestStatus.Accepted);
+                    }
+                }
             }
             else //TAD still need to find carrier to assign to shipping request
             {
@@ -686,8 +698,8 @@ namespace TACHYON.PriceOffers
             if (offer.ParentId != null) offer.Status = PriceOfferStatus.AcceptedAndWaitingForShipper;
             await _appNotifier.ShippingRequestSendOfferWhenAddPrice(offer, GetCurrentTenant(_abpSession).Name);
 
-            if (!(shippingRequest.RequestType == ShippingRequestType.TachyonManageService && offer.Channel == PriceOfferChannel.DirectRequest))
-                await _appNotifier.NotifyShipperWhenSendPriceOffer(shippingRequest.TenantId, offer.Id, offer.ShippingRequestId);
+            //if (!(shippingRequest.RequestType == ShippingRequestType.TachyonManageService && offer.Channel == PriceOfferChannel.DirectRequest)) 
+            //    await _appNotifier.NotifyShipperWhenSendPriceOffer(shippingRequest.TenantId, offer.Id,offer.ShippingRequestId);
 
 
             await CurrentUnitOfWork.SaveChangesAsync();

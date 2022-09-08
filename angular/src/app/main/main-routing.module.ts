@@ -71,6 +71,7 @@ import { RequestTemplatesComponent } from '@app/main/shippingRequests/shippingRe
 import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
 import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
 import { InvoiceNoteListComponent } from './invoices/invoice-note/invoice-note-list/invoice-note-list.component';
+import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic.component';
 
 @NgModule({
   imports: [
@@ -281,6 +282,7 @@ import { InvoiceNoteListComponent } from './invoices/invoice-note/invoice-note-l
           { path: 'trucks/trucks', component: TrucksComponent, data: { permission: 'Pages.Trucks' } },
           { path: 'trucksTypes/trucksTypes', component: TrucksTypesComponent, data: { permission: 'Pages.TrucksTypes' } },
           { path: 'invoices/view', component: InvoicesListComponent, data: { permission: 'Pages.Invoices' } },
+          { path: 'invoices/dynamic', component: InvoicesDynamicComponent, data: { permission: 'Pages.DynamicInvoices' } },
           { path: 'penalties/view', component: PenaltiesListComponent, data: { permission: 'Pages.Invoices' } },
 
           { path: 'invoicenote/view', component: InvoiceNoteListComponent, data: { permission: 'Pages.Invoices' } },

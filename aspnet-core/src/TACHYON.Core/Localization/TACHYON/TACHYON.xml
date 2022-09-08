@@ -3036,8 +3036,16 @@
 		<text name="ComplaintDescription">Complaint Description</text>
 		<text name="ComplaintRejectReason">Complaint Reject Reason</text>
 		<text name="locationPermissionMessage">Tachyon collects location data to enable to calculate the traveled distance and measure the price based on this distance traveled even when the app is closed or not in use &#xA;- Tachyon collects location data to enable tracking the driver from Tachyon platform and see trip details</text>
+		<text name="IncompleteTripPoint">Incomplete Trip Point Details</text>
+		<text name="PleaseCompleteAllDropPointDetails">Please Complete All Drop Points Details</text>
+		<text name="PleaseCompletePicKupPointDetails">Please Complete All Pickup Points Details</text>
 		<text name="CarrierAsSaaS">Carrier As SAAS</text>
+		<text name="CreateDynamicInvoice">Create Dynamic Invoice</text>
+		<text name="UpdateDynamicInvoice">Update Dynamic Invoice</text>
+		<text name="GenerateInvoice">Generate an invoice</text>
+		<text name="DynamicInvoice">Dynamic Invoices</text>
+		<text name="ForShipper">For a shipper</text>
+		<text name="ForCarrier">For a carrier</text>
 
-		
 	</texts>
 </localizationDictionary>

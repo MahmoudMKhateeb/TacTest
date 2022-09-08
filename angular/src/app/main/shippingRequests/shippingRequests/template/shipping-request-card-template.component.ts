@@ -18,6 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ShippingrequestsDetailsModelComponent } from '../details/shippingrequests-details-model.component';
 import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/tripsForViewShippingRequest.component';
 
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
@@ -27,6 +28,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 export class ShippingRequestCardTemplateComponent extends ScrollPagnationComponentBase implements OnInit {
   @ViewChild('Model', { static: false }) modalMore: ShippingrequestsDetailsModelComponent;
   @ViewChild('loadEntityTemplateModal', { static: false }) loadEntityTemplateModal: LoadEntityTemplateModalComponent;
+  @ViewChild('tripsForViewShippingRequest', { static: true }) tripsForViewShippingRequest: TripsForViewShippingRequestComponent;
   shippingRequestforView: GetShippingRequestForViewOutput;
 
   Items: GetShippingRequestForPriceOfferListDto[] = [];

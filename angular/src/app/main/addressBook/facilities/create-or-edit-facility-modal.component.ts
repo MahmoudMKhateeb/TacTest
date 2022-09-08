@@ -179,7 +179,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   }
 
   close(): void {
-    this.facility = null;
+    this.facility = new CreateOrEditFacilityDto();
     this.FacilityWorkingHours = null;
     this.active = false;
     this.modal.hide();

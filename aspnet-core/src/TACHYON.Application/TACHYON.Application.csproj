@@ -14,6 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Invoices\Reports\Dedicated_Invoice.rdlc" />
+    <None Remove="Invoices\Reports\DynamicInvoice.rdlc" />
     <None Remove="Invoices\Reports\Invoice.rdlc" />
     <None Remove="Invoices\Reports\InvoiceNote.rdlc" />
     <None Remove="Invoices\Reports\LandScapeInvoice.rdlc" />
@@ -25,6 +26,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Invoices\Reports\InvoiceNote.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Invoices\Reports\DynamicInvoice.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\LandScapeInvoice.rdlc">

@@ -77,12 +77,15 @@
                 <span *ngIf="!options.data.isPaid" class="badge badge-danger badge-inline">{{ 'UnPaid' | localize }}</span>
               </div>
               <div *dxTemplate="let options of 'cellTemplate_Channel'">
-                <span style="width: 137px; text-align: center"
+                <span
+                  style="width: 137px; text-align: center"
+                  *ngIf="!(options.data.channel == InvoiceChannelEnum.DynamicInvoice && !isTachyonDealerOrHost)"
                   ><span
                     class="badge badge-inline"
                     [ngClass]="{
                       'badge-primary': options.data.channel == InvoiceChannelEnum.Trip,
-                      'badge-warning': options.data.channel == InvoiceChannelEnum.Penalty
+                      'badge-warning': options.data.channel == InvoiceChannelEnum.Penalty,
+                      'badge-success': options.data.channel == InvoiceChannelEnum.DynamicInvoice
                     }"
                     >{{ l(options.data.invoiceChannelTitle) }}</span
                   ></span
@@ -109,7 +112,7 @@
                       <a class="dropdown-item" (click)="details(options.data)">{{ l('Detail') }}</a>
                     </li>
                     <li>
-                      <a class="dropdown-item" *ngIf="options.data.channel != 3" (click)="downloadReport(options.data.id)">{{
+                      <a class="dropdown-item" *ngIf="options.data.channel == 1" (click)="downloadReport(options.data.id)">{{
                         l('downloadInvoice')
                       }}</a>
                     </li>
@@ -117,6 +120,14 @@
                       <a class="dropdown-item" *ngIf="options.data.channel == 3" (click)="downloadPenaltyReport(options.data.id)">{{
                         l('downloadPenaltyInvoice')
                       }}</a>
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="options.data.channel == InvoiceChannelEnum.DynamicInvoice"
+                        (click)="downloadDynamicReport(options.data.id)"
+                        >{{ l('downloadDynamicInvoice') }}</a
+                      >
                     </li>
                     <li *ngIf="!options.data.isPaid">
                       <a

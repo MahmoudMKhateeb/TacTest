@@ -1,22 +1,20 @@
 /* tslint:disable:triple-equals */
-import { Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   CreateOrEditRoutPointDto,
-  FacilitiesServiceProxy,
+  FacilityForDropdownDto,
+  GetShippingRequestForViewOutput,
   PickingType,
-  RoutesServiceProxy,
+  ReceiverFacilityLookupTableDto,
+  ReceiversServiceProxy,
   RoutStepsServiceProxy,
   ShippingRequestRouteType,
-  WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
-import Swal from 'sweetalert2';
-import { FileDownloadService } from '@shared/utils/file-download.service';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { Subscription } from 'rxjs';
-import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'PointsComponent',
@@ -24,35 +22,26 @@ import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.com
   styleUrls: ['./points.component.scss'],
 })
 export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy {
+  cityDestId: number;
+  allFacilities: FacilityForDropdownDto[];
+  pickupFacilities: FacilityForDropdownDto[];
+  dropFacilities: FacilityForDropdownDto[];
+  allPointsSendersAndREcivers: ReceiverFacilityLookupTableDto[][] = [];
+  receiverLoading: boolean;
+  shippingRequestForView: GetShippingRequestForViewOutput;
   constructor(
     injector: Injector,
-    private _routesServiceProxy: RoutesServiceProxy,
-    private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
-    private _fileDownloadService: FileDownloadService,
-    private _waybillsServiceProxy: WaybillsServiceProxy,
+    private _receiversServiceProxy: ReceiversServiceProxy,
     public _tripService: TripService,
     private _PointsService: PointsService
   ) {
     super(injector);
   }
-  @ViewChild('createOrEditFacilityModal') public createOrEditFacilityModal: ModalDirective;
-  @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
-  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
-
-  // @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
-  @Output() SelectedWayPointsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
-
-  MainGoodsCategory: number;
-  NumberOfDrops: number;
-  sourceFacility: number;
-  destFacility: number;
   activeTripId: number;
-  RouteType: number;
   RouteTypes = ShippingRequestRouteType;
   wayPointsList: CreateOrEditRoutPointDto[] = [];
 
-  //allFacilities: FacilityForDropdownDto[];
   PickingType = PickingType;
   active = false;
   saving = false;
@@ -73,126 +62,70 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   private tripSourceFacilitySub$: Subscription;
   private currentActiveTripSubs$: Subscription;
   usedIn: 'view' | 'createOrEdit';
+  @Output() SelectedWayPointsFromChild = this.wayPointsList;
 
   ngOnDestroy() {
-    this.pointsServiceSubscription$.unsubscribe();
+    this.pointsServiceSubscription$?.unsubscribe();
     this.tripDestFacilitySub$?.unsubscribe();
-    this.tripSourceFacilitySub$.unsubscribe();
-    this.currentActiveTripSubs$.unsubscribe();
+    this.tripSourceFacilitySub$?.unsubscribe();
+    this.currentActiveTripSubs$?.unsubscribe();
     console.log('Unsubscribed/Destroid from  Point Component');
   }
 
   ngOnInit() {
+    this.loadSharedServices();
     this.loadDropDowns();
-    //in case of edit trip
-    //and found that already there is a way point
-    //and the way Points count is greater than 0
-    //Draw on map wayPointsSetter()
-    this.pointsServiceSubscription$ = this._PointsService.currentWayPointsList.subscribe((res) => {
-      this.wayPointsList = res;
-      if (res.length > 0) {
-        this.wayPointsSetter();
-      }
-      //validate if point Limit Reached For Multible Drops And Show Success Message
-      if (!this.activeTripId && this.RouteType == ShippingRequestRouteType.MultipleDrops && res.length - 1 == this.NumberOfDrops) {
-        Swal.fire(this.l('Done'), this.l('AllDropPointsAddedSuccessfully'), 'success');
-      }
-    });
-    //if action is edit trip get active Trip id
-    this.currentActiveTripSubs$ = this._tripService.currentActiveTripId.subscribe((res) => (this.activeTripId = res));
-    //get some Stuff from ShippingRequest Dto
-    this.tripSourceFacilitySub$ = this._tripService.currentShippingRequest.subscribe((res) => {
-      if (res.shippingRequest) {
-        this.RouteType = res.shippingRequest.routeTypeId;
-        this.NumberOfDrops = res.shippingRequest.numberOfDrops;
-        this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
-      }
-    });
-    //Take Trip Source Facility From Trip Service
-    this.tripSourceFacilitySub$ = this._tripService.currentSourceFacility.subscribe((res) => {
-      this.sourceFacility = res;
-      if (this.sourceFacility) {
-        this.drawPointForSingleDropTrip('pickup');
-      }
-    });
+  }
 
-    //in case of the Shipping Request Route Type is Single Drop -- Create the Drop Point From Dest Trip Facility
-    if (this.RouteType == ShippingRequestRouteType.SingleDrop) {
-      //Take Trip Dest Facility From Trip Service
-      this.tripDestFacilitySub$ = this._tripService.currentDestFacility.subscribe((res) => {
-        this.destFacility = res;
-        if (this.destFacility) {
-          this.drawPointForSingleDropTrip('drop');
-        }
+  loadDropDowns() {
+    this.loadFacilities();
+  }
+
+  /**
+   * loads Facilities with validation on it related to source and destination in SR
+   */
+  loadFacilities() {
+    if (!this.shippingRequestForView.shippingRequest.id) return;
+    if (this.shippingRequestForView.shippingRequest.id != null) {
+      this._tripService.currentShippingRequest.subscribe((res) => {
+        this.shippingRequestForView = res;
       });
     }
-    this._PointsService.currentUsedIn.subscribe((res) => {
-      this.usedIn = res;
-    });
-    // setInterval(() => {
-    //   console.log(this.wayPointsList);
-    // }, 1000);
+    this._routStepsServiceProxy
+      .getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestForView.shippingRequest.id)
+      .pipe(
+        finalize(() => {
+          this.facilityLoading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.allFacilities = result;
+        this.pickupFacilities = result.filter((r) => r.cityId == this.shippingRequestForView.originalCityId);
+        this.dropFacilities = result.filter((r) => r.cityId == this.shippingRequestForView.destinationCityId);
+      });
   }
 
-  //Load DropDowns For Shipper Only
-  loadDropDowns() {
-    this.feature.isEnabled('App.Shipper') ? this.loadFacilities() : 0;
-  }
-  //for SingleDrop Trip Only
-  //draws the points and sets them
-  drawPointForSingleDropTrip(pointType: 'pickup' | 'drop') {
-    console.log('Before From the Points Component:', this.wayPointsList);
-    //if create Make New Dto
-    if (!this.activeTripId) {
-      //this is for create Trip
-      this.Point = new CreateOrEditRoutPointDto();
-    } else {
-      //if edit
-      this.Point = pointType == 'drop' ? this.wayPointsList[1] : this.wayPointsList[0];
+  /**
+   * loads a list of Receivers by facility Id
+   * @param facilityId
+   */
+  loadReceivers(facilityId, bulkload?: boolean) {
+    this.receiverLoading = true;
+    if (facilityId) {
+      this._receiversServiceProxy.getAllReceiversByFacilityForTableDropdown(facilityId).subscribe((result) => {
+        this.allPointsSendersAndREcivers[facilityId] = result;
+      });
     }
-    this.Point.pickingType = pointType == 'drop' ? PickingType.Dropoff : PickingType.Pickup;
-    this.Point.facilityId = pointType == 'drop' ? this.destFacility : this.sourceFacility;
-    // this.Point.latitude = this.allFacilities.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))?.lat;
-    // this.Point.longitude = this.allFacilities.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))?.long;
-    this.Point.latitude =
-      this._tripService.currentSourceFacilitiesItems.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))
-        ?.lat == null
-        ? this._tripService.currentDestinationFacilitiesItems.find((x) =>
-            pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility
-          )?.lat
-        : this._tripService.currentSourceFacilitiesItems.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))
-            ?.lat;
-    this.Point.longitude =
-      this._tripService.currentSourceFacilitiesItems.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))
-        ?.long == null
-        ? this._tripService.currentDestinationFacilitiesItems.find((x) =>
-            pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility
-          )?.long
-        : this._tripService.currentSourceFacilitiesItems.find((x) => (pointType == 'drop' ? x.id == this.destFacility : x.id == this.sourceFacility))
-            ?.long;
-    //sets the long and lat of the point
-    this.wayPointsList[pointType == 'drop' ? 1 : 0] = this.Point;
-    //sync points list with the cloud
-    this._PointsService.updateWayPoints(this.wayPointsList);
-    //Points Drawer
-    this.wayPointsSetter();
-    console.log('after:', this.wayPointsList);
-  }
 
-  delete(index: number) {
-    this.wayPointsList.splice(index, 1);
-    this.notify.info(this.l('SuccessfullyDeleted'));
-  }
-
-  loadFacilities() {
-    console.log('Facilites Loaded From Points');
-    this.facilityLoading = true;
-  }
-
-  getFacilityNameByid(id: number) {
-    return this._tripService.currentSourceFacilitiesItems?.find((x) => x.id == id) == null
-      ? this._tripService.currentDestinationFacilitiesItems?.find((x) => x.id == id)?.displayName
-      : this._tripService.currentSourceFacilitiesItems?.find((x) => x.id == id)?.displayName;
+    if (bulkload) {
+      this.wayPointsList.forEach((x) => {
+        let id = x.facilityId;
+        this._receiversServiceProxy.getAllReceiversByFacilityForTableDropdown(id).subscribe((result) => {
+          this.allPointsSendersAndREcivers[id] = result;
+        });
+      });
+    }
+    this.receiverLoading = false;
   }
 
   wayPointsSetter() {
@@ -223,13 +156,52 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     }
   }
 
-  downloadDropWayBill(i: number) {
-    this.id = i;
-    this.loading = true;
-    this._waybillsServiceProxy.getMultipleDropWaybillPdf(i).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-      this.loading = false;
-      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
+  /**
+   * creates empty points for the trip based on number of drops
+   */
+  createEmptyPoints() {
+    let numberOfDrops = this.shippingRequestForView.shippingRequest.numberOfDrops;
+    //if there is already wayPoints Dont Create Empty Once
+    if (this.wayPointsList.length == numberOfDrops + 1) return;
+    for (let i = 0; i <= numberOfDrops; i++) {
+      let point = new CreateOrEditRoutPointDto();
+      //pickup Point
+      if (i === 0) {
+        point.pickingType = this.PickingType.Pickup;
+      } else {
+        point.pickingType = this.PickingType.Dropoff;
+      }
+      this.wayPointsList.push(point);
+    } //end of for
+  }
+
+  private loadSharedServices() {
+    this.pointsServiceSubscription$ = this._PointsService.currentWayPointsList.subscribe((res) => {
+      this.wayPointsList = res;
+      if (res.length > 0) {
+        this.wayPointsSetter();
+      }
     });
+    //if action is edit trip get active Trip id
+    this.currentActiveTripSubs$ = this._tripService.currentActiveTripId.subscribe((res) => (this.activeTripId = res));
+    //get some Stuff from ShippingRequest Dto
+    this.tripSourceFacilitySub$ = this._tripService.currentShippingRequest.subscribe((res) => {
+      if (res.shippingRequest) {
+        this.shippingRequestForView = res;
+      }
+    });
+
+    this._PointsService.currentUsedIn.subscribe((res) => {
+      this.usedIn = res;
+    });
+    this.createEmptyPoints();
+  }
+
+  /**
+   * Extracts Facility Coordinates for single Point (Map Drawing)
+   */
+  RouteStepCordSetter(pointIndex: number, facilityId: number) {
+    this.wayPointsList[pointIndex].latitude = this.allFacilities.find((x) => x.id == facilityId)?.lat;
+    this.wayPointsList[pointIndex].longitude = this.allFacilities.find((x) => x.id == facilityId)?.long;
   }
 }

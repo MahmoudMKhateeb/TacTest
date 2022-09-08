@@ -597,6 +597,14 @@
         #endregion
 
 
+        #region Dynamic Invoices
+
+        public const string Pages_DynamicInvoices = "Pages.DynamicInvoices";
+        public const string Pages_DynamicInvoices_Create = "Pages.DynamicInvoices.Create";
+        public const string Pages_DynamicInvoices_Update = "Pages.DynamicInvoices.Update";
+        public const string Pages_DynamicInvoices_Delete = "Pages.DynamicInvoices.Delete";
+
+        #endregion
 
 
         #region shpping
