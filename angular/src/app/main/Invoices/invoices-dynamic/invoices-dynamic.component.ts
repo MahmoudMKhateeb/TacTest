@@ -161,7 +161,7 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
         return self._DynamicInvoiceServiceProxy
-          .getAll(loadOptions.filter, '', 6, 0)
+          .getAll(loadOptions.filter, loadOptions.sort, loadOptions.take, loadOptions.skip)
           .toPromise()
           .then((response) => {
             return {
