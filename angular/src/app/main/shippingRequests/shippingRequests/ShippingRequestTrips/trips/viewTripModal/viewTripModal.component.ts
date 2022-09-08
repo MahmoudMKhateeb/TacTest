@@ -8,6 +8,10 @@ import {
   TrucksServiceProxy,
   WaybillsServiceProxy,
   UpdateExpectedDeliveryTimeInput,
+  CreateOrEditShippingRequestTripVasDto,
+  ShippingRequestsTripForViewDto,
+  AssignDriverAndTruckToShippmentByCarrierInput,
+  ShippingRequestsTripServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
