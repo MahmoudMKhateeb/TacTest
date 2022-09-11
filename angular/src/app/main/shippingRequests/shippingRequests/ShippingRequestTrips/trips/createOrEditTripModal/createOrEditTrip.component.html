@@ -10,7 +10,7 @@
 >
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
-      <form *ngIf="active" #shippingRequestTripsForm="ngForm" novalidate autocomplete="off">
+      <form *ngIf="active" #shippingRequestTripsForm="ngForm" novalidate autocomplete="off" (submit)="createOrEditTrip()">
         <div class="modal-header">
           <p class="modal-title">
             <span>{{ l('TripDetails') }}</span>
@@ -101,7 +101,7 @@
               </div>
             </div>
             <div class="col-lg-6 form-group d-inline-flex">
-              <div class="input-group d-inline-block">
+              <div class="input-group d-inline-block mr-8">
                 <label> {{ l('supposedPickupTimeFrom') }} <span class="required-fileds">*</span></label>
                 <dx-date-box
                   name="supposedPickupDateFrom"
@@ -112,6 +112,9 @@
                   [interval]="20"
                   required
                 >
+                  <dx-validator>
+                    <dxi-validation-rule type="required" message="{{ l('supposedPickupTimeFrom') }} is required"></dxi-validation-rule>
+                  </dx-validator>
                 </dx-date-box>
               </div>
               <div class="input-group d-inline-block">
@@ -125,6 +128,9 @@
                   [interval]="20"
                   required
                 >
+                  <dx-validator>
+                    <dxi-validation-rule type="required" message="{{ l('supposedPickupTimeTo') }} is required"></dxi-validation-rule>
+                  </dx-validator>
                 </dx-date-box>
               </div>
             </div>
@@ -271,6 +277,9 @@
                 </div>
               </div>
             </div>
+            <div class="col-lg-12">
+              <dx-validation-summary id="summary"></dx-validation-summary>
+            </div>
             <!--  start:: RouteSteps -->
             <PointsComponent #PointsComponent></PointsComponent>
             <!--  end:: RouteSteps -->
@@ -291,14 +300,23 @@
               [customClass]="'btn btn-light-danger font-weight-bold  dropdown-toggle btn-elevate-hover mx-2'"
               [disabled]="!CanCreateTemplate() || !shippingRequestTripsForm.form.valid"
             ></create-or-edit-template-drop-down-button>
-            <button
+
+            <dx-button
               type="submit"
+              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
               [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"
-              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
-              (click)="createOrEditTrip()"
+              text="{{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}"
+              [useSubmitBehavior]="true"
             >
-              {{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}
-            </button>
+            </dx-button>
+            <!--            <button-->
+            <!--              type="submit"-->
+            <!--              [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"-->
+            <!--              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"-->
+            <!--              (click)="createOrEditTrip()"-->
+            <!--            >-->
+            <!--              {{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}-->
+            <!--            </button>-->
             <!--end::Buttons-->
           </div>
         </div>

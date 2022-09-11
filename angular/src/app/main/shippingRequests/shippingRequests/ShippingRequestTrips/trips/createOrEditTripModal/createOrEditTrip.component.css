@@ -2,6 +2,14 @@ input[type='time'] {
   width: auto;
 }
 
+::ng-deep .no-padding-custom .dx-button-content {
+  padding: 0 !important;
+}
+
+::ng-deep .no-padding-custom .dx-button-content {
+  padding: 0 !important;
+}
+
 @media (min-width: 1400px) {
   .modal-dialog.modal-xl {
     max-width: 1400px !important;

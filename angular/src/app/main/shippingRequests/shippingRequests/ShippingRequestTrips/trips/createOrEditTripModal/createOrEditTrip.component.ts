@@ -432,6 +432,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this._TripService.updateShippingRequest(null);
 
     this.TripsServiceSubscription.unsubscribe();
+    // this.tripServiceShippingRequestSub?.unsubscribe();
     this.tripServiceShippingRequestSub?.unsubscribe();
     this.getTripForEditSub?.unsubscribe();
     this.docProgress = undefined;
