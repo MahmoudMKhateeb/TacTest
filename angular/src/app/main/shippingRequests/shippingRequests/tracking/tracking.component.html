@@ -3,7 +3,18 @@
     <!--begin::Subheader-->
     <sub-header [title]="'ShipmentTracking' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+        <div class="btn-group">
+          <div *ngIf="permission.isGranted('Pages.Shipment.Tracking.BulkDeliverTrip')" class="mr-2">
+            <div ngbDropdown placement="bottom" class="d-inline-block">
+              <button class="btn btn-outline-success" id="dropdownBasic2" ngbDropdownToggle>{{ l('BulkDeliverTrips') }}</button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+                <a href="assets/sampleFiles/BulkDeliveryTripsSampleFile.xlsx" class="dropdown-item">{{ l('DownloadFileTemplate') }}</a>
+                <button (click)="ForceDeliverTripModal.show()" class="dropdown-item">{{ l('UploadFile') }}</button>
+              </div>
+            </div>
+          </div>
+          <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+        </div>
       </div>
     </sub-header>
     <!--end::Subheader-->
@@ -278,3 +289,4 @@
 <view-trip-accident-modal #ModelIncident></view-trip-accident-modal>
 <trip-accident-modal #TripAccidentModal></trip-accident-modal>
 <shared-file-viewer #fileViwerComponent></shared-file-viewer>
+<app-tracking-force-deliver-trip #ForceDeliverTripModal></app-tracking-force-deliver-trip>
