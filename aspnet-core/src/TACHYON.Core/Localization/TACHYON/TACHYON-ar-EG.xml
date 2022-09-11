@@ -2797,6 +2797,9 @@
 		<text name="DynamicInvoice">الفواتير الديناميكية</text>
 		<text name="ForShipper">للشاحن</text>
 		<text name="ForCarrier">للناقل</text>
+		<text name="BulkDeliverTrips">حزمة توصيل الرحلات</text>
+		<text name="DownloadFileTemplate">تنزيل نموذج الملف</text>
+		<text name="UploadFile">تحميل ملف</text>
 
 	</texts>
 </localizationDictionary>

@@ -149,6 +149,7 @@ namespace TACHYON.Notifications
         public const string PenaltyComplaintAdded = "App.PenaltyComplaintAdded";
 
         public const string NotifyShipperWhenTMSAddedShippingRequest = "App.NotifyShipperWhenTMSAddedShippingRequest";
+        public const string NotifyUserWhenBulkDeliverySucceeded = "App.NotifyUserWhenBulkDeliverySucceeded";
         #endregion
     }
 }

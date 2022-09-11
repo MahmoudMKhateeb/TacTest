@@ -1,5 +1,6 @@
 ﻿using Abp.AspNetCore.Mvc.Authorization;
 using Abp.AspNetZeroCore.Net;
+using Abp.Authorization;
 using Abp.BackgroundJobs;
 using Abp.Extensions;
 using Abp.IO.Extensions;
@@ -260,6 +261,46 @@ namespace TACHYON.Web.Controllers
             }
         }
 
+        [HttpPost]
+        [AbpMvcAuthorize(AppPermissions.Pages_Tracking_BulkDeliverTrip)]
+        public async Task<JsonResult> BulkDeliverTripFromExcel()
+        {
+            if (!AbpSession.UserId.HasValue) throw new AbpAuthorizationException();
+            try
+            {
+                var uploadedFile = Request.Form.Files.First();
+
+                if (uploadedFile is null) 
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                
+                // File Size limit => 100 MB
+                if (uploadedFile.Length > _100Megabyte) 
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+
+                byte[] fileBytes;
+                await using (var streamReader = uploadedFile.OpenReadStream())
+                {
+                    fileBytes = streamReader.GetAllBytes();
+                }
+
+                var fileBinaryObject = new BinaryObject(AbpSession.TenantId, fileBytes); 
+                
+                await BinaryObjectManager.SaveAsync(fileBinaryObject); 
+                
+                await BackgroundJobManager.EnqueueAsync<ForceDeliverTripJob, ForceDeliverTripJobArgs>(new ForceDeliverTripJobArgs()
+                {
+                    BinaryObjectId = fileBinaryObject.Id,
+                    RequestedByTenantId = AbpSession.TenantId,
+                    RequestedByUserId = AbpSession.UserId.Value
+                });
+
+                return Json(new AjaxResponse(new { }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
 
         [HttpPost]
         [AbpMvcAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]

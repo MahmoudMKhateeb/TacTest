@@ -3045,6 +3045,10 @@
 		<text name="DynamicInvoice">Dynamic Invoices</text>
 		<text name="ForShipper">For a shipper</text>
 		<text name="ForCarrier">For a carrier</text>
+		<text name="BulkDeliverTrips">Bulk Deliver Trips</text>
+		<text name="DownloadFileTemplate">Download File Template</text>
+		<text name="UploadFile">Upload File</text>
+		<text name="BulkDeliveryTripSucceededMsg">Bulk Delivery Trip/s process is completed successfully</text>
 
 	</texts>
 </localizationDictionary>

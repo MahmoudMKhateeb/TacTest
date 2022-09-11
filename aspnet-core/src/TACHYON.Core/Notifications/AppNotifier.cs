@@ -1561,6 +1561,21 @@ namespace TACHYON.Notifications
         }
         #endregion
 
+        #region BulkDeliverTrips
+
+        public async Task NotifyUserWhenBulkDeliverySucceeded(UserIdentifier user)
+        {
+
+            var notificationData =
+                new LocalizableMessageNotificationData( new LocalizableString("BulkDeliveryTripSucceededMsg",
+                    TACHYONConsts.LocalizationSourceName));
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyUserWhenBulkDeliverySucceeded,
+                notificationData, userIds: new[] {user});
+        }
+
+        #endregion
+        
         #endregion
 
         #region Helper
