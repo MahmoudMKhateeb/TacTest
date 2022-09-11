@@ -2791,6 +2791,9 @@
 		<text name="PleaseCompletePicKupPointDetails">الرجاء اكمال تفاصيل نقاط التحميل</text>
 		<text name="Contact">جهة الاتصال</text>
 		<text name="Attachment">مرفق</text>
+		<text name="BulkDeliverTrips">حزمة توصيل الرحلات</text>
+		<text name="DownloadFileTemplate">تنزيل نموذج الملف</text>
+		<text name="UploadFile">تحميل ملف</text>
 
 	</texts>
 </localizationDictionary>

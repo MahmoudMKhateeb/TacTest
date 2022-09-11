@@ -1,0 +1,46 @@
+<div
+  bsModal
+  #DeliverTripModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="save()">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span></span>
+          </h4>
+          <button type="button" class="close" (click)="close()" style="position: relative; z-index: 99999" aria-label="Close">
+            <span aria-hidden="false">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="deliverTripFileUpdate">{{ l('ForceDeliverTripFile') }}</label>
+            <p-fileUpload
+              id="deliverTripFileUpdate"
+              customUpload="true"
+              name="FileUpload"
+              #DeliverTripFileUpdate
+              maxFileSize="10000000"
+              accept=".xlsx"
+              (uploadHandler)="upload($event)"
+              (onError)="onUploadError()"
+              chooseLabel="{{ 'ImportFile' | localize }}"
+              uploadLabel="{{ 'Upload' | localize }}"
+              cancelLabel="{{ 'Cancel' | localize }}"
+              [busyIf]="loading"
+              multiple="multiple"
+            >
+            </p-fileUpload>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

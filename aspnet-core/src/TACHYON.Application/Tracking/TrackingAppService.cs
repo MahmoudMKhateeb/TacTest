@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.EntityHistory;
 using Abp.Linq.Extensions;
 using Abp.Timing;
@@ -30,6 +31,8 @@ using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
+using Nito.AsyncEx;
+using System.Threading;
 
 namespace TACHYON.Tracking
 {
@@ -41,13 +44,15 @@ namespace TACHYON.Tracking
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
         private readonly ProfileAppService _ProfileAppService;
+        private readonly ForceDeliverTripExcelExporter _deliverTripExcelExporter;
 
-        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ProfileAppService profileAppService, IRepository<RoutPoint, long> routPointRepository)
+        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ProfileAppService profileAppService, IRepository<RoutPoint, long> routPointRepository, ForceDeliverTripExcelExporter deliverTripExcelExporter)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _workFlowProvider = workFlowProvider;
             _ProfileAppService = profileAppService;
             _RoutPointRepository = routPointRepository;
+            _deliverTripExcelExporter = deliverTripExcelExporter;
         }
         public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
         {
@@ -196,6 +201,25 @@ namespace TACHYON.Tracking
             mappedTrip.RoutPoints = mappedTrip.RoutPoints.OrderBy(x => x.PickingType).ToList();
             return mappedTrip;
         }
+
+        public async Task<FileDto> GetForceDeliverTripExcelFile(int tripId)
+        {
+            DisableTenancyFilters();
+            var tripPoints = await _RoutPointRepository.GetAll()
+                .Where(x=> x.ShippingRequestTripId == tripId)
+                .Select(x => new ExportPointExcelDto() {Id = x.Id, PickingType = x.PickingType, WorkFlowVersion = x.WorkFlowVersion})
+                .ToListAsync();
+            
+            tripPoints.ForEach(point =>
+            {
+                point.Transactions = _workFlowProvider.Flows.Where(x => x.Version == point.WorkFlowVersion)
+                    .SelectMany(x => x.Transactions).GroupBy(x=> x.ToStatus)
+                    .Select(x => L(x.Key.ToString())).ToList();
+            });
+
+            return _deliverTripExcelExporter.ExportToFile(tripPoints);
+        }
+
         public async Task Accept(int id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);

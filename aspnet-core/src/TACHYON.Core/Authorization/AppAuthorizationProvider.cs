@@ -433,6 +433,8 @@ namespace TACHYON.Authorization
                 multiTenancySides: MultiTenancySides.Host);
             pages.CreateChildPermission(AppPermissions.Pages_Tracking_ResetPointReceiverCode, L("ResetReceiverCode"),
                 multiTenancySides: MultiTenancySides.Host);
+            pages.CreateChildPermission(AppPermissions.Pages_Tracking_BulkDeliverTrip, L("BulkDeliverTrip"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer));
 
             var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("Administration"));
 

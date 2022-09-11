@@ -3039,6 +3039,10 @@
 		<text name="PleaseCompleteAllDropPointDetails">Please Complete All Drop Points Details</text>
 		<text name="PleaseCompletePicKupPointDetails">Please Complete All Pickup Points Details</text>
 		<text name="CarrierAsSaaS">Carrier As SAAS</text>
+		<text name="BulkDeliverTrips">Bulk Deliver Trips</text>
+		<text name="DownloadFileTemplate">Download File Template</text>
+		<text name="UploadFile">Upload File</text>
+		<text name="BulkDeliveryTripSucceededMsg">Bulk Delivery Trip/s process is completed successfully</text>
 
 	</texts>
 </localizationDictionary>
