@@ -599,7 +599,16 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.truckTypeLoading = true;
       this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(transportTypeId).subscribe((result) => {
         this.allTrucksTypes = result;
-        this.step3Dto.trucksTypeId = null;
+        const selectedTransportType = this.allTransportTypes.find((item) => Number(item.id) === Number(transportTypeId));
+        if (
+          result.length > 0 &&
+          (selectedTransportType.displayName.toLowerCase() === 'other' || selectedTransportType.displayName.toLowerCase() === 'others')
+        ) {
+          this.step3Dto.trucksTypeId = Number(result[0].id);
+          this.trucksTypeSelectChange(this.step3Dto.trucksTypeId);
+        } else {
+          this.step3Dto.trucksTypeId = null;
+        }
         this.truckTypeLoading = false;
       });
     } else {

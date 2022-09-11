@@ -492,6 +492,7 @@
                             id="numberOfTrips"
                             formControlName="NumberOfTrips"
                             [(ngModel)]="step2Dto.numberOfTrips"
+                            [min]="1"
                             (keypress)="numberOnly($event)"
                             [class.is-valid]="
                               step2Form.get('NumberOfTrips').valid && (step2Form.get('NumberOfTrips').dirty || step2Form.get('NumberOfTrips').touched)
@@ -548,6 +549,7 @@
                               name="weight"
                               formControlName="weight"
                               class="form-control"
+                              [min]="1"
                               [(ngModel)]="step3Dto.totalWeight"
                               [class.is-valid]="step3Form.get('weight').valid && (step3Form.get('weight').dirty || step3Form.get('weight').touched)"
                               [class.is-invalid]="
@@ -571,6 +573,7 @@
                               class="form-control"
                               (change)="isOthersGoodCategoryId(step3Dto.goodCategoryId)"
                               [(ngModel)]="step3Dto.otherGoodsCategoryName"
+                              [min]="1"
                               [class.is-valid]="
                                 step3Form.get('otherGoodsCategoryName').valid &&
                                 cannotContainSpace(step3Dto.otherGoodsCategoryName) &&
@@ -627,6 +630,7 @@
                             id="numberOfPacking"
                             formControlName="numberOfPacking"
                             [(ngModel)]="step3Dto.numberOfPacking"
+                            [min]="1"
                             [class.is-valid]="
                               step3Form.get('numberOfPacking').valid &&
                               (step3Form.get('numberOfPacking').dirty || step3Form.get('numberOfPacking').touched)
@@ -691,7 +695,7 @@
                         </div>
                         <span class="form-text text-muted">{{ l('SelectaTransportType') }}</span>
 
-                        <div class="form-group" [hidden]="!IfOther(allTransportTypes, step3Dto.transportTypeId)">
+                        <div class="mt-4 form-group" [hidden]="!IfOther(allTransportTypes, step3Dto.transportTypeId)">
                           <label>{{ l('OtherTransportType') }} <span class="required-fileds">*</span></label>
                           <div>
                             <div class="input-group">

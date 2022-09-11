@@ -36,20 +36,20 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
         this.chartOptions = {
           series: [
             {
-              name: 'total',
+              name: this.l('Total'),
               data: result.total,
               color: 'rgba(187, 41, 41, 0.847)',
             },
             {
-              name: 'Paid',
+              name: this.l('Paid'),
               data: result.paidInvoices,
             },
             {
-              name: 'new',
+              name: this.l('New'),
               data: result.newInvoices,
             },
             {
-              name: 'claimed',
+              name: this.l('Claimed'),
               data: result.claimed,
             },
           ],
@@ -62,6 +62,18 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
             type: 'category',
           },
         };
+        (this.chartOptions.chart.locales as any[]) = [
+          {
+            name: 'en',
+            options: {
+              toolbar: {
+                exportToPNG: this.l('Download') + ' PNG',
+                exportToSVG: this.l('Download') + ' SVG',
+                exportToCSV: this.l('Download') + ' CSV',
+              },
+            },
+          },
+        ];
         this.loading = false;
       });
   }

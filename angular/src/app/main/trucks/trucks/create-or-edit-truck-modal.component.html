@@ -65,7 +65,7 @@
                   <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <validation-messages [formCtrl]="transportTypeId"></validation-messages>
-                <span class="form-text text-muted">{{ l('SelectTransportType') }} </span>
+                <span class="form-text text-muted">{{ l('SelectaTransportType') }} </span>
               </div>
 
               <div class="form-group m-form__group" [hidden]="!IfOther(allTransportTypes, truck.transportTypeId)">
@@ -252,7 +252,7 @@
                 }"
               >
                 <option [ngValue]="null">{{ l('Select') }} {{ l('TruckStatus') }}</option>
-                <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ item.displayName }}</option>
+                <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ l(item.displayName) }}</option>
               </select>
               <validation-messages [formCtrl]="TruckStatus"></validation-messages>
             </div>
