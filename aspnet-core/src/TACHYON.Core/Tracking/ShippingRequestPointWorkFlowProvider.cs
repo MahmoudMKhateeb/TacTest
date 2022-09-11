@@ -474,8 +474,6 @@ namespace TACHYON.Tracking
                 (transaction.Features.Any() && transaction.Features.Any(x => _featureChecker.IsEnabled(x))))
                 throw new AbpAuthorizationException("You are not authorized to " + transaction.Name);
 
-             // await CheckIfLessThanMinutelastStatus(args.PointId); // todo get workaround for this issue 
-
             var reason = await transaction.Func(args);
             _reasonProvider.Use(reason);
 
