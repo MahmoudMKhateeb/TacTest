@@ -150,6 +150,7 @@ namespace TACHYON.Notifications
 
         public const string NotifyShipperWhenTMSAddedShippingRequest = "App.NotifyShipperWhenTMSAddedShippingRequest";
         public const string NotifyUserWhenBulkDeliverySucceeded = "App.NotifyUserWhenBulkDeliverySucceeded";
+        public const string NotifyUserWhenBulkDeliveryFailed = "App.NotifyUserWhenBulkDeliveryFailed";
         #endregion
     }
 }
