@@ -11837,6 +11837,493 @@ export class DynamicEntityParameterDefinitionServiceProxy {
 }
 
 @Injectable()
+export class DynamicInvoiceServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param filter (optional)
+   * @param sorting (optional)
+   * @param maxResultCount (optional)
+   * @param skipCount (optional)
+   * @return Success
+   */
+  getAll(
+    filter: string | null | undefined,
+    sorting: string | null | undefined,
+    maxResultCount: number | undefined,
+    skipCount: number | undefined
+  ): Observable<PagedResultDtoOfDynamicInvoiceListDto> {
+    let url_ = this.baseUrl + '/api/services/app/DynamicInvoice/GetAll?';
+    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfDynamicInvoiceListDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfDynamicInvoiceListDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfDynamicInvoiceListDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfDynamicInvoiceListDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfDynamicInvoiceListDto>(<any>null);
+  }
+
+  /**
+   * @param dynamicInvoiceId (optional)
+   * @return Success
+   */
+  getForView(dynamicInvoiceId: number | undefined): Observable<DynamicInvoiceForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/DynamicInvoice/GetForView?';
+    if (dynamicInvoiceId === null) throw new Error("The parameter 'dynamicInvoiceId' cannot be null.");
+    else if (dynamicInvoiceId !== undefined) url_ += 'dynamicInvoiceId=' + encodeURIComponent('' + dynamicInvoiceId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetForView(<any>response_);
+            } catch (e) {
+              return <Observable<DynamicInvoiceForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<DynamicInvoiceForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetForView(response: HttpResponseBase): Observable<DynamicInvoiceForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = DynamicInvoiceForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<DynamicInvoiceForViewDto>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditDynamicInvoiceDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/DynamicInvoice/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param input (optional)
+   * @return Success
+   */
+  searchByWaybillNumber(input: string | null | undefined): Observable<number[]> {
+    let url_ = this.baseUrl + '/api/services/app/DynamicInvoice/SearchByWaybillNumber?';
+    if (input !== undefined && input !== null) url_ += 'input=' + encodeURIComponent('' + input) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processSearchByWaybillNumber(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processSearchByWaybillNumber(<any>response_);
+            } catch (e) {
+              return <Observable<number[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<number[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processSearchByWaybillNumber(response: HttpResponseBase): Observable<number[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(item);
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<number[]>(<any>null);
+  }
+
+  /**
+   * @param waybillNumber (optional)
+   * @return Success
+   */
+  getDynamicInvoiceItemInfo(waybillNumber: number | undefined): Observable<DynamicInvoiceItemLookupDto> {
+    let url_ = this.baseUrl + '/api/services/app/DynamicInvoice/GetDynamicInvoiceItemInfo?';
+    if (waybillNumber === null) throw new Error("The parameter 'waybillNumber' cannot be null.");
+    else if (waybillNumber !== undefined) url_ += 'waybillNumber=' + encodeURIComponent('' + waybillNumber) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetDynamicInvoiceItemInfo(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetDynamicInvoiceItemInfo(<any>response_);
+            } catch (e) {
+              return <Observable<DynamicInvoiceItemLookupDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<DynamicInvoiceItemLookupDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetDynamicInvoiceItemInfo(response: HttpResponseBase): Observable<DynamicInvoiceItemLookupDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = DynamicInvoiceItemLookupDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<DynamicInvoiceItemLookupDto>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllTrucks(): Observable<ListResultDtoOfSelectItemDto> {
+    let url_ = this.baseUrl + '/api/services/app/DynamicInvoice/GetAllTrucks';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTrucks(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTrucks(<any>response_);
+            } catch (e) {
+              return <Observable<ListResultDtoOfSelectItemDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ListResultDtoOfSelectItemDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTrucks(response: HttpResponseBase): Observable<ListResultDtoOfSelectItemDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = ListResultDtoOfSelectItemDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ListResultDtoOfSelectItemDto>(<any>null);
+  }
+
+  /**
+   * @param dynamicInvoiceId (optional)
+   * @return Success
+   */
+  delete(dynamicInvoiceId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/DynamicInvoice/Delete?';
+    if (dynamicInvoiceId === null) throw new Error("The parameter 'dynamicInvoiceId' cannot be null.");
+    else if (dynamicInvoiceId !== undefined) url_ += 'dynamicInvoiceId=' + encodeURIComponent('' + dynamicInvoiceId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+}
+
+@Injectable()
 export class DynamicParameterServiceProxy {
   private http: HttpClient;
   private baseUrl: string;
@@ -22592,6 +23079,68 @@ export class InvoiceServiceProxy {
   }
 
   /**
+   * @param dynamicInvoiceId (optional)
+   * @return Success
+   */
+  dynamicInvoiceOnDemand(dynamicInvoiceId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Invoice/DynamicInvoiceOnDemand?';
+    if (dynamicInvoiceId === null) throw new Error("The parameter 'dynamicInvoiceId' cannot be null.");
+    else if (dynamicInvoiceId !== undefined) url_ += 'dynamicInvoiceId=' + encodeURIComponent('' + dynamicInvoiceId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDynamicInvoiceOnDemand(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDynamicInvoiceOnDemand(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDynamicInvoiceOnDemand(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
    * @param tenantId (optional)
    * @return Success
    */
@@ -22728,6 +23277,68 @@ export class InvoiceServiceProxy {
       );
     }
     return _observableOf<InvoiceOutSideDto>(<any>null);
+  }
+
+  /**
+   * @param invoiceId (optional)
+   * @return Success
+   */
+  correctShipperInvoice(invoiceId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Invoice/CorrectShipperInvoice?';
+    if (invoiceId === null) throw new Error("The parameter 'invoiceId' cannot be null.");
+    else if (invoiceId !== undefined) url_ += 'invoiceId=' + encodeURIComponent('' + invoiceId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCorrectShipperInvoice(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCorrectShipperInvoice(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCorrectShipperInvoice(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
   }
 
   /**
@@ -22944,6 +23555,78 @@ export class InvoiceServiceProxy {
       );
     }
     return _observableOf<PeanltyInvoiceItemDto[]>(<any>null);
+  }
+
+  /**
+   * @param invoiceId (optional)
+   * @return Success
+   */
+  getDynamicInvoiceItemsReportInfo(invoiceId: number | undefined): Observable<InvoiceItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/Invoice/GetDynamicInvoiceItemsReportInfo?';
+    if (invoiceId === null) throw new Error("The parameter 'invoiceId' cannot be null.");
+    else if (invoiceId !== undefined) url_ += 'invoiceId=' + encodeURIComponent('' + invoiceId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetDynamicInvoiceItemsReportInfo(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetDynamicInvoiceItemsReportInfo(<any>response_);
+            } catch (e) {
+              return <Observable<InvoiceItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<InvoiceItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetDynamicInvoiceItemsReportInfo(response: HttpResponseBase): Observable<InvoiceItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(InvoiceItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<InvoiceItemDto[]>(<any>null);
   }
 
   /**
@@ -24973,6 +25656,73 @@ export class InvoiceReportServiceServiceProxy {
   }
 
   protected processDonwloadPenaltyInvoice(response: HttpResponseBase): Observable<FileDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = FileDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<FileDto>(<any>null);
+  }
+
+  /**
+   * @param invoiceId (optional)
+   * @return Success
+   */
+  downloadDynamicInvoice(invoiceId: number | undefined): Observable<FileDto> {
+    let url_ = this.baseUrl + '/api/services/app/InvoiceReportService/DownloadDynamicInvoice?';
+    if (invoiceId === null) throw new Error("The parameter 'invoiceId' cannot be null.");
+    else if (invoiceId !== undefined) url_ += 'invoiceId=' + encodeURIComponent('' + invoiceId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDownloadDynamicInvoice(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDownloadDynamicInvoice(<any>response_);
+            } catch (e) {
+              return <Observable<FileDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<FileDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDownloadDynamicInvoice(response: HttpResponseBase): Observable<FileDto> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -54464,7 +55214,7 @@ export class TokenAuthServiceProxy {
    * @param body (optional)
    * @return Success
    */
-  oTPAuthenticate(body: AuthenticateMobileModel | undefined): Observable<void> {
+  oTPAuthenticate(body: AuthenticateMobileModel | undefined): Observable<AuthenticateResultModel> {
     let url_ = this.baseUrl + '/api/TokenAuth/OTPAuthenticate';
     url_ = url_.replace(/[?&]$/, '');
 
@@ -54476,6 +55226,7 @@ export class TokenAuthServiceProxy {
       responseType: 'blob',
       headers: new HttpHeaders({
         'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
       }),
     };
 
@@ -54492,14 +55243,14 @@ export class TokenAuthServiceProxy {
             try {
               return this.processOTPAuthenticate(<any>response_);
             } catch (e) {
-              return <Observable<void>>(<any>_observableThrow(e));
+              return <Observable<AuthenticateResultModel>>(<any>_observableThrow(e));
             }
-          } else return <Observable<void>>(<any>_observableThrow(response_));
+          } else return <Observable<AuthenticateResultModel>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processOTPAuthenticate(response: HttpResponseBase): Observable<void> {
+  protected processOTPAuthenticate(response: HttpResponseBase): Observable<AuthenticateResultModel> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -54512,7 +55263,10 @@ export class TokenAuthServiceProxy {
     if (status === 200) {
       return blobToText(responseBlob).pipe(
         _observableMergeMap((_responseText) => {
-          return _observableOf<void>(<any>null);
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = AuthenticateResultModel.fromJS(resultData200);
+          return _observableOf(result200);
         })
       );
     } else if (status !== 200 && status !== 204) {
@@ -54522,7 +55276,7 @@ export class TokenAuthServiceProxy {
         })
       );
     }
-    return _observableOf<void>(<any>null);
+    return _observableOf<AuthenticateResultModel>(<any>null);
   }
 
   /**
@@ -70408,6 +71162,7 @@ export class CityDto implements ICityDto {
   countyId!: number;
   isActive!: boolean;
   translatedDisplayName!: string | undefined;
+  readonly normalizedDisplayName!: string | undefined;
   id!: number;
 
   constructor(data?: ICityDto) {
@@ -70428,6 +71183,7 @@ export class CityDto implements ICityDto {
       this.countyId = _data['countyId'];
       this.isActive = _data['isActive'];
       this.translatedDisplayName = _data['translatedDisplayName'];
+      (<any>this).normalizedDisplayName = _data['normalizedDisplayName'];
       this.id = _data['id'];
     }
   }
@@ -70449,6 +71205,7 @@ export class CityDto implements ICityDto {
     data['countyId'] = this.countyId;
     data['isActive'] = this.isActive;
     data['translatedDisplayName'] = this.translatedDisplayName;
+    data['normalizedDisplayName'] = this.normalizedDisplayName;
     data['id'] = this.id;
     return data;
   }
@@ -70463,6 +71220,7 @@ export interface ICityDto {
   countyId: number;
   isActive: boolean;
   translatedDisplayName: string | undefined;
+  normalizedDisplayName: string | undefined;
   id: number;
 }
 
@@ -74151,6 +74909,474 @@ export interface IDriverLicenseTypeTranslationDto {
   language: string;
   coreId: number;
   id: number;
+}
+
+export class DynamicInvoiceListDto implements IDynamicInvoiceListDto {
+  creditCompanyName!: string | undefined;
+  debitCompanyName!: string | undefined;
+  invoiceNumber!: number | undefined;
+  notes!: string | undefined;
+  id!: number;
+
+  constructor(data?: IDynamicInvoiceListDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.creditCompanyName = _data['creditCompanyName'];
+      this.debitCompanyName = _data['debitCompanyName'];
+      this.invoiceNumber = _data['invoiceNumber'];
+      this.notes = _data['notes'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): DynamicInvoiceListDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DynamicInvoiceListDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['creditCompanyName'] = this.creditCompanyName;
+    data['debitCompanyName'] = this.debitCompanyName;
+    data['invoiceNumber'] = this.invoiceNumber;
+    data['notes'] = this.notes;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IDynamicInvoiceListDto {
+  creditCompanyName: string | undefined;
+  debitCompanyName: string | undefined;
+  invoiceNumber: number | undefined;
+  notes: string | undefined;
+  id: number;
+}
+
+export class PagedResultDtoOfDynamicInvoiceListDto implements IPagedResultDtoOfDynamicInvoiceListDto {
+  totalCount!: number;
+  items!: DynamicInvoiceListDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfDynamicInvoiceListDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(DynamicInvoiceListDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfDynamicInvoiceListDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfDynamicInvoiceListDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfDynamicInvoiceListDto {
+  totalCount: number;
+  items: DynamicInvoiceListDto[] | undefined;
+}
+
+export class DynamicInvoiceItemDto implements IDynamicInvoiceItemDto {
+  description!: string | undefined;
+  price!: number;
+  waybillNumber!: number | undefined;
+  originCityId!: number | undefined;
+  destinationCityId!: number | undefined;
+  workDate!: moment.Moment | undefined;
+  quantity!: number | undefined;
+  truckId!: number | undefined;
+  containerNumber!: string | undefined;
+  vatAmount!: number;
+  totalAmount!: number;
+  id!: number;
+
+  constructor(data?: IDynamicInvoiceItemDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.description = _data['description'];
+      this.price = _data['price'];
+      this.waybillNumber = _data['waybillNumber'];
+      this.originCityId = _data['originCityId'];
+      this.destinationCityId = _data['destinationCityId'];
+      this.workDate = _data['workDate'] ? moment(_data['workDate'].toString()) : <any>undefined;
+      this.quantity = _data['quantity'];
+      this.truckId = _data['truckId'];
+      this.containerNumber = _data['containerNumber'];
+      this.vatAmount = _data['vatAmount'];
+      this.totalAmount = _data['totalAmount'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): DynamicInvoiceItemDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DynamicInvoiceItemDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['description'] = this.description;
+    data['price'] = this.price;
+    data['waybillNumber'] = this.waybillNumber;
+    data['originCityId'] = this.originCityId;
+    data['destinationCityId'] = this.destinationCityId;
+    data['workDate'] = this.workDate ? this.workDate.toISOString() : <any>undefined;
+    data['quantity'] = this.quantity;
+    data['truckId'] = this.truckId;
+    data['containerNumber'] = this.containerNumber;
+    data['vatAmount'] = this.vatAmount;
+    data['totalAmount'] = this.totalAmount;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IDynamicInvoiceItemDto {
+  description: string | undefined;
+  price: number;
+  waybillNumber: number | undefined;
+  originCityId: number | undefined;
+  destinationCityId: number | undefined;
+  workDate: moment.Moment | undefined;
+  quantity: number | undefined;
+  truckId: number | undefined;
+  containerNumber: string | undefined;
+  vatAmount: number;
+  totalAmount: number;
+  id: number;
+}
+
+export class DynamicInvoiceForViewDto implements IDynamicInvoiceForViewDto {
+  creditCompany!: string | undefined;
+  debitCompany!: string | undefined;
+  notes!: string | undefined;
+  invoiceNumber!: number | undefined;
+  items!: DynamicInvoiceItemDto[] | undefined;
+  id!: number;
+
+  constructor(data?: IDynamicInvoiceForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.creditCompany = _data['creditCompany'];
+      this.debitCompany = _data['debitCompany'];
+      this.notes = _data['notes'];
+      this.invoiceNumber = _data['invoiceNumber'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(DynamicInvoiceItemDto.fromJS(item));
+      }
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): DynamicInvoiceForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DynamicInvoiceForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['creditCompany'] = this.creditCompany;
+    data['debitCompany'] = this.debitCompany;
+    data['notes'] = this.notes;
+    data['invoiceNumber'] = this.invoiceNumber;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IDynamicInvoiceForViewDto {
+  creditCompany: string | undefined;
+  debitCompany: string | undefined;
+  notes: string | undefined;
+  invoiceNumber: number | undefined;
+  items: DynamicInvoiceItemDto[] | undefined;
+  id: number;
+}
+
+export class CreateOrEditDynamicInvoiceItemDto implements ICreateOrEditDynamicInvoiceItemDto {
+  description!: string;
+  price!: number;
+  waybillNumber!: number | undefined;
+  originCityId!: number | undefined;
+  destinationCityId!: number | undefined;
+  truckId!: number | undefined;
+  workDate!: moment.Moment | undefined;
+  quantity!: number | undefined;
+  containerNumber!: string | undefined;
+  vatAmount!: number;
+  totalAmount!: number;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditDynamicInvoiceItemDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.description = _data['description'];
+      this.price = _data['price'];
+      this.waybillNumber = _data['waybillNumber'];
+      this.originCityId = _data['originCityId'];
+      this.destinationCityId = _data['destinationCityId'];
+      this.truckId = _data['truckId'];
+      this.workDate = _data['workDate'] ? moment(_data['workDate'].toString()) : <any>undefined;
+      this.quantity = _data['quantity'];
+      this.containerNumber = _data['containerNumber'];
+      this.vatAmount = _data['vatAmount'];
+      this.totalAmount = _data['totalAmount'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditDynamicInvoiceItemDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditDynamicInvoiceItemDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['description'] = this.description;
+    data['price'] = this.price;
+    data['waybillNumber'] = this.waybillNumber;
+    data['originCityId'] = this.originCityId;
+    data['destinationCityId'] = this.destinationCityId;
+    data['truckId'] = this.truckId;
+    data['workDate'] = this.workDate ? this.workDate.toISOString() : <any>undefined;
+    data['quantity'] = this.quantity;
+    data['containerNumber'] = this.containerNumber;
+    data['vatAmount'] = this.vatAmount;
+    data['totalAmount'] = this.totalAmount;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditDynamicInvoiceItemDto {
+  description: string;
+  price: number;
+  waybillNumber: number | undefined;
+  originCityId: number | undefined;
+  destinationCityId: number | undefined;
+  truckId: number | undefined;
+  workDate: moment.Moment | undefined;
+  quantity: number | undefined;
+  containerNumber: string | undefined;
+  vatAmount: number;
+  totalAmount: number;
+  id: number | undefined;
+}
+
+export class CreateOrEditDynamicInvoiceDto implements ICreateOrEditDynamicInvoiceDto {
+  creditTenantId!: number | undefined;
+  debitTenantId!: number | undefined;
+  notes!: string | undefined;
+  items!: CreateOrEditDynamicInvoiceItemDto[] | undefined;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditDynamicInvoiceDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.creditTenantId = _data['creditTenantId'];
+      this.debitTenantId = _data['debitTenantId'];
+      this.notes = _data['notes'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(CreateOrEditDynamicInvoiceItemDto.fromJS(item));
+      }
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditDynamicInvoiceDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditDynamicInvoiceDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['creditTenantId'] = this.creditTenantId;
+    data['debitTenantId'] = this.debitTenantId;
+    data['notes'] = this.notes;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditDynamicInvoiceDto {
+  creditTenantId: number | undefined;
+  debitTenantId: number | undefined;
+  notes: string | undefined;
+  items: CreateOrEditDynamicInvoiceItemDto[] | undefined;
+  id: number | undefined;
+}
+
+export class DynamicInvoiceItemLookupDto implements IDynamicInvoiceItemLookupDto {
+  originCityName!: string | undefined;
+  destinationCityName!: string | undefined;
+  workDate!: moment.Moment | undefined;
+  quantity!: number | undefined;
+  plateNumber!: string | undefined;
+  containerNumber!: string | undefined;
+
+  constructor(data?: IDynamicInvoiceItemLookupDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.originCityName = _data['originCityName'];
+      this.destinationCityName = _data['destinationCityName'];
+      this.workDate = _data['workDate'] ? moment(_data['workDate'].toString()) : <any>undefined;
+      this.quantity = _data['quantity'];
+      this.plateNumber = _data['plateNumber'];
+      this.containerNumber = _data['containerNumber'];
+    }
+  }
+
+  static fromJS(data: any): DynamicInvoiceItemLookupDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DynamicInvoiceItemLookupDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['originCityName'] = this.originCityName;
+    data['destinationCityName'] = this.destinationCityName;
+    data['workDate'] = this.workDate ? this.workDate.toISOString() : <any>undefined;
+    data['quantity'] = this.quantity;
+    data['plateNumber'] = this.plateNumber;
+    data['containerNumber'] = this.containerNumber;
+    return data;
+  }
+}
+
+export interface IDynamicInvoiceItemLookupDto {
+  originCityName: string | undefined;
+  destinationCityName: string | undefined;
+  workDate: moment.Moment | undefined;
+  quantity: number | undefined;
+  plateNumber: string | undefined;
+  containerNumber: string | undefined;
+}
+
+export class ListResultDtoOfSelectItemDto implements IListResultDtoOfSelectItemDto {
+  items!: SelectItemDto[] | undefined;
+
+  constructor(data?: IListResultDtoOfSelectItemDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(SelectItemDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): ListResultDtoOfSelectItemDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ListResultDtoOfSelectItemDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IListResultDtoOfSelectItemDto {
+  items: SelectItemDto[] | undefined;
 }
 
 export class DynamicParameterDto implements IDynamicParameterDto {
@@ -79443,6 +80669,45 @@ export interface ITenantRatingMinNumberDto {
   rateMinNumber: string | undefined;
 }
 
+export class MobileAppLinksSettingDto implements IMobileAppLinksSettingDto {
+  iosAppLink!: string;
+  androidAppLink!: string;
+
+  constructor(data?: IMobileAppLinksSettingDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.iosAppLink = _data['iosAppLink'];
+      this.androidAppLink = _data['androidAppLink'];
+    }
+  }
+
+  static fromJS(data: any): MobileAppLinksSettingDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new MobileAppLinksSettingDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['iosAppLink'] = this.iosAppLink;
+    data['androidAppLink'] = this.androidAppLink;
+    return data;
+  }
+}
+
+export interface IMobileAppLinksSettingDto {
+  iosAppLink: string;
+  androidAppLink: string;
+}
+
 export class HostSettingsEditDto implements IHostSettingsEditDto {
   general!: GeneralSettingsEditDto;
   userManagement!: HostUserManagementSettingsEditDto;
@@ -79456,6 +80721,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
   editionSettings!: EditionSettingsDto;
   otpNumbersSettings!: OtpNumbersSettingsDto;
   tenantRatingMinNumber!: TenantRatingMinNumberDto;
+  appLinksSettingDto!: MobileAppLinksSettingDto;
 
   constructor(data?: IHostSettingsEditDto) {
     if (data) {
@@ -79472,6 +80738,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
       this.smsSettings = new SmsSettingsEditDto();
       this.editionSettings = new EditionSettingsDto();
       this.otpNumbersSettings = new OtpNumbersSettingsDto();
+      this.appLinksSettingDto = new MobileAppLinksSettingDto();
     }
   }
 
@@ -79495,6 +80762,9 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
       this.editionSettings = _data['editionSettings'] ? EditionSettingsDto.fromJS(_data['editionSettings']) : new EditionSettingsDto();
       this.otpNumbersSettings = _data['otpNumbersSettings'] ? OtpNumbersSettingsDto.fromJS(_data['otpNumbersSettings']) : new OtpNumbersSettingsDto();
       this.tenantRatingMinNumber = _data['tenantRatingMinNumber'] ? TenantRatingMinNumberDto.fromJS(_data['tenantRatingMinNumber']) : <any>undefined;
+      this.appLinksSettingDto = _data['appLinksSettingDto']
+        ? MobileAppLinksSettingDto.fromJS(_data['appLinksSettingDto'])
+        : new MobileAppLinksSettingDto();
     }
   }
 
@@ -79519,6 +80789,7 @@ export class HostSettingsEditDto implements IHostSettingsEditDto {
     data['editionSettings'] = this.editionSettings ? this.editionSettings.toJSON() : <any>undefined;
     data['otpNumbersSettings'] = this.otpNumbersSettings ? this.otpNumbersSettings.toJSON() : <any>undefined;
     data['tenantRatingMinNumber'] = this.tenantRatingMinNumber ? this.tenantRatingMinNumber.toJSON() : <any>undefined;
+    data['appLinksSettingDto'] = this.appLinksSettingDto ? this.appLinksSettingDto.toJSON() : <any>undefined;
     return data;
   }
 }
@@ -79536,6 +80807,7 @@ export interface IHostSettingsEditDto {
   editionSettings: EditionSettingsDto;
   otpNumbersSettings: OtpNumbersSettingsDto;
   tenantRatingMinNumber: TenantRatingMinNumberDto;
+  appLinksSettingDto: MobileAppLinksSettingDto;
 }
 
 export class TestUnifonicSmsInput implements ITestUnifonicSmsInput {
@@ -80483,6 +81755,13 @@ export enum InvoiceAccountType {
   AccountPayable = 2,
 }
 
+export enum InvoiceChannel {
+  Trip = 1,
+  Dedicated = 2,
+  Penalty = 3,
+  DynamicInvoice = 4,
+}
+
 export class InvoiceItemDto implements IInvoiceItemDto {
   sequence!: string | undefined;
   wayBillNumber!: string | undefined;
@@ -80496,6 +81775,7 @@ export class InvoiceItemDto implements IInvoiceItemDto {
   remarks!: string | undefined;
   roundTrip!: string | undefined;
   containerNumber!: string | undefined;
+  plateNumber!: string | undefined;
 
   constructor(data?: IInvoiceItemDto) {
     if (data) {
@@ -80519,6 +81799,7 @@ export class InvoiceItemDto implements IInvoiceItemDto {
       this.remarks = _data['remarks'];
       this.roundTrip = _data['roundTrip'];
       this.containerNumber = _data['containerNumber'];
+      this.plateNumber = _data['plateNumber'];
     }
   }
 
@@ -80543,6 +81824,7 @@ export class InvoiceItemDto implements IInvoiceItemDto {
     data['remarks'] = this.remarks;
     data['roundTrip'] = this.roundTrip;
     data['containerNumber'] = this.containerNumber;
+    data['plateNumber'] = this.plateNumber;
     return data;
   }
 }
@@ -80560,6 +81842,7 @@ export interface IInvoiceItemDto {
   remarks: string | undefined;
   roundTrip: string | undefined;
   containerNumber: string | undefined;
+  plateNumber: string | undefined;
 }
 
 export class InvoiceInfoDto implements IInvoiceInfoDto {
@@ -80588,6 +81871,7 @@ export class InvoiceInfoDto implements IInvoiceInfoDto {
   financialPhone!: string | undefined;
   financialEmail!: string | undefined;
   qrCode!: string | undefined;
+  channel!: InvoiceChannel;
   items!: InvoiceItemDto[] | undefined;
   bankNameArabic!: string | undefined;
   bankNameEnglish!: string | undefined;
@@ -80628,6 +81912,7 @@ export class InvoiceInfoDto implements IInvoiceInfoDto {
       this.financialPhone = _data['financialPhone'];
       this.financialEmail = _data['financialEmail'];
       this.qrCode = _data['qrCode'];
+      this.channel = _data['channel'];
       if (Array.isArray(_data['items'])) {
         this.items = [] as any;
         for (let item of _data['items']) this.items!.push(InvoiceItemDto.fromJS(item));
@@ -80672,6 +81957,7 @@ export class InvoiceInfoDto implements IInvoiceInfoDto {
     data['financialPhone'] = this.financialPhone;
     data['financialEmail'] = this.financialEmail;
     data['qrCode'] = this.qrCode;
+    data['channel'] = this.channel;
     if (Array.isArray(this.items)) {
       data['items'] = [];
       for (let item of this.items) data['items'].push(item.toJSON());
@@ -80709,6 +81995,7 @@ export interface IInvoiceInfoDto {
   financialPhone: string | undefined;
   financialEmail: string | undefined;
   qrCode: string | undefined;
+  channel: InvoiceChannel;
   items: InvoiceItemDto[] | undefined;
   bankNameArabic: string | undefined;
   bankNameEnglish: string | undefined;
@@ -80780,12 +82067,6 @@ export interface IInvoiceOutSideDto {
   vatAmount: number;
   tenantId: number;
   id: number;
-}
-
-export enum InvoiceChannel {
-  Trip = 1,
-  Dedicated = 2,
-  Penalty = 3,
 }
 
 export class PeanltyInvoiceItemDto implements IPeanltyInvoiceItemDto {
@@ -100839,9 +102120,6 @@ export class CreateTenantInput implements ICreateTenantInput {
   userAdminFirstName!: string;
   userAdminSurname!: string;
   moiNumber!: string;
-  financialName!: string | undefined;
-  financialPhone!: string | undefined;
-  financialEmail!: string | undefined;
 
   constructor(data?: ICreateTenantInput) {
     if (data) {
@@ -100872,9 +102150,6 @@ export class CreateTenantInput implements ICreateTenantInput {
       this.userAdminFirstName = _data['userAdminFirstName'];
       this.userAdminSurname = _data['userAdminSurname'];
       this.moiNumber = _data['moiNumber'];
-      this.financialName = _data['financialName'];
-      this.financialPhone = _data['financialPhone'];
-      this.financialEmail = _data['financialEmail'];
     }
   }
 
@@ -100906,9 +102181,6 @@ export class CreateTenantInput implements ICreateTenantInput {
     data['userAdminFirstName'] = this.userAdminFirstName;
     data['userAdminSurname'] = this.userAdminSurname;
     data['moiNumber'] = this.moiNumber;
-    data['financialName'] = this.financialName;
-    data['financialPhone'] = this.financialPhone;
-    data['financialEmail'] = this.financialEmail;
     return data;
   }
 }
@@ -100933,9 +102205,6 @@ export interface ICreateTenantInput {
   userAdminFirstName: string;
   userAdminSurname: string;
   moiNumber: string;
-  financialName: string | undefined;
-  financialPhone: string | undefined;
-  financialEmail: string | undefined;
 }
 
 export class TenantEditDto implements ITenantEditDto {
@@ -101959,9 +103228,6 @@ export class RegisterTenantInput implements IRegisterTenantInput {
   userAdminFirstName!: string;
   userAdminSurname!: string;
   moiNumber!: string;
-  financialName!: string | undefined;
-  financialPhone!: string | undefined;
-  financialEmail!: string | undefined;
 
   constructor(data?: IRegisterTenantInput) {
     if (data) {
@@ -101988,9 +103254,6 @@ export class RegisterTenantInput implements IRegisterTenantInput {
       this.userAdminFirstName = _data['userAdminFirstName'];
       this.userAdminSurname = _data['userAdminSurname'];
       this.moiNumber = _data['moiNumber'];
-      this.financialName = _data['financialName'];
-      this.financialPhone = _data['financialPhone'];
-      this.financialEmail = _data['financialEmail'];
     }
   }
 
@@ -102018,9 +103281,6 @@ export class RegisterTenantInput implements IRegisterTenantInput {
     data['userAdminFirstName'] = this.userAdminFirstName;
     data['userAdminSurname'] = this.userAdminSurname;
     data['moiNumber'] = this.moiNumber;
-    data['financialName'] = this.financialName;
-    data['financialPhone'] = this.financialPhone;
-    data['financialEmail'] = this.financialEmail;
     return data;
   }
 }
@@ -102041,9 +103301,6 @@ export interface IRegisterTenantInput {
   userAdminFirstName: string;
   userAdminSurname: string;
   moiNumber: string;
-  financialName: string | undefined;
-  financialPhone: string | undefined;
-  financialEmail: string | undefined;
 }
 
 export class RegisterTenantOutput implements IRegisterTenantOutput {
