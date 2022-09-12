@@ -519,10 +519,10 @@ namespace TACHYON.Invoices.InvoiceNotes
             invoiceNoteDto.Attn = admin.FullName;
 
             if (invoice != null)
-                invoiceNoteDto.ReInvoiceDate = invoice.CreationTime.ToString("dd/mm/yyyy mm:hh");
+                invoiceNoteDto.ReInvoiceDate = invoice.CreationTime.ToString("dd/MM/yyyy mm:hh");
             else if(submitInvoice!=null)
             {
-                invoiceNoteDto.ReInvoiceDate = submitInvoice.CreationTime.ToString("dd/mm/yyyy mm:hh");
+                invoiceNoteDto.ReInvoiceDate = submitInvoice.CreationTime.ToString("dd/MM/yyyy mm:hh");
             }
             var document = AsyncHelper.RunSync(() => _documentFileRepository
             .FirstOrDefaultAsync(x => x.TenantId == invoiceNote.TenantId && x.DocumentTypeId == 14));
