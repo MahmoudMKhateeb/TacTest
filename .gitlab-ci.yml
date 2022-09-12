@@ -1,39 +1,15 @@
 stages:
-  - preparation
-  - Build
-  - release
-
-### start of Preparation
-Preparation:
-  stage: preparation
-  tags:
-    - test-runner
-  script:
-    - Stop-WebSite 'test' ## stopping FrontEnd Website
-    - Stop-WebSite 'test-back' ## stopping Backend Website
-  only:
-    - develop
-### end of Preparation
+  - Build & Publish
 ### starting Build
 Project:
-  stage: Build
+  stage: Build & Publish
   tags:
-    - test-runner
+    - production-runner
   script:
-    - Remove-Item 'C:\inetpub\wwwroot\Tachyon\Develop' -Force -Recurse
     - cd ./aspnet-core/build
-    - ./build-with-ng.ps1
+    - ./build-with-ng-production.ps1
   only:
-    - develop
+    - main-ci-test
+    - main
+  when: manual
 ## end of build
-### start of release
-release:
-  stage: release
-  tags:
-    - test-runner
-  script:
-    - dir
-    - Start-WebSite 'test' ##start Backend Site
-    - Start-WebSite 'test-back' ##start fronend Site
-  only:
-    - test
