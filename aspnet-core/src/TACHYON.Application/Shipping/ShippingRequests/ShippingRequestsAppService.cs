@@ -105,7 +105,8 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<PriceOffer, long> priceOfferRepository,
             IEntityChangeSetReasonProvider reasonProvider,
             NormalPricePackageManager normalPricePackageManager,
-            SrPostPriceUpdateManager postPriceUpdateManager)
+            SrPostPriceUpdateManager postPriceUpdateManager,
+            IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -136,6 +137,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _reasonProvider = reasonProvider;
             _normalPricePackageManager = normalPricePackageManager;
             _postPriceUpdateManager = postPriceUpdateManager;
+            _shippingRequestDestinationCityRepository = shippingRequestDestinationCityRepository;
         }
 
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
@@ -167,6 +169,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
         private readonly NormalPricePackageManager _normalPricePackageManager;
+        private readonly IRepository<ShippingRequestDestinationCity> _shippingRequestDestinationCityRepository;
 
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
@@ -312,12 +315,18 @@ namespace TACHYON.Shipping.ShippingRequests
             }
 
             var shippingRequest = await GetDraftedShippingRequest(input.Id);
+
+            //if request between cities and single drop
+            ValidateDestinationCities(input, shippingRequest);
+
             if (shippingRequest.DraftStep < 2)
             {
                 shippingRequest.DraftStep = 2;
             }
 
             ObjectMapper.Map(input, shippingRequest);
+            //add new or remove destinaton cities
+            await AddOrRemoveDestinationCities(input, shippingRequest);
         }
 
         public async Task<EditShippingRequestStep2Dto> GetStep2ForEdit(EntityDto<long> entity)
@@ -504,6 +513,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 DisableTenancyFilters();
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                    .Include(x=>x.ShippingRequestDestinationCities)
                     .WhereIf(await IsTachyonDealer(), x => x.IsTachyonDeal == true)
                   .Where(x => x.Id == id && x.IsDrafted == true)
                   .FirstOrDefaultAsync();
@@ -1794,6 +1804,38 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Select(x => x.FacilityFk)
                 .FirstOrDefault();
             return pickupFacility;
+        }
+
+        private async Task AddOrRemoveDestinationCities(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
+        {
+            foreach (var destinationCity in input.ShippingRequestDestinationCities)
+            {
+                destinationCity.ShippingRequestId = shippingRequest.Id;
+                var exists = await _shippingRequestDestinationCityRepository.GetAll().AnyAsync(c => c.CityId == destinationCity.CityId &&
+                c.ShippingRequestId == destinationCity.ShippingRequestId);
+
+                if (!exists)
+                {
+                    if (shippingRequest.ShippingRequestDestinationCities == null) shippingRequest.ShippingRequestDestinationCities = new List<ShippingRequestDestinationCity>();
+                    shippingRequest.ShippingRequestDestinationCities.Add(ObjectMapper.Map<ShippingRequestDestinationCity>(destinationCity));
+                }
+            }
+            //remove uncoming destination cities
+            foreach (var destinationCity in shippingRequest.ShippingRequestDestinationCities)
+            {
+                if (!input.ShippingRequestDestinationCities.Any(x => x.CityId == destinationCity.CityId))
+                {
+                    await _shippingRequestDestinationCityRepository.DeleteAsync(destinationCity);
+                }
+            }
+        }
+
+        private void ValidateDestinationCities(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.ShippingTypeId == 2 && input.RouteTypeId == ShippingRequestRouteType.SingleDrop && input.ShippingRequestDestinationCities.Count > 1)
+            {
+                throw new UserFriendlyException(L("OneDestinationCityAllowed"));
+            }
         }
     }
 }

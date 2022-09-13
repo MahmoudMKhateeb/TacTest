@@ -312,6 +312,37 @@
                   <div class="pb-5" [formGroup]="step2Form" data-wizard-type="step-content">
                     <div class="row">
                       <!-- Start of Select Source -->
+
+                      <!-- Route type -->
+                      <div class="col-lg-6">
+                        <label> {{ l('RouteType') }} <span class="required-fileds">*</span></label>
+                        <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allRoutTypes }">
+                          <select
+                            class="form-control"
+                            name="routeType"
+                            #routeType
+                            formControlName="routeType"
+                            [attr.disabled]="allRoutTypes ? null : true"
+                            [(ngModel)]="step2Dto.routeTypeId"
+                            [class.is-valid]="
+                              step2Form.get('routeType').valid && (step2Form.get('routeType').dirty || step2Form.get('routeType').touched)
+                            "
+                            [class.is-invalid]="
+                              step2Form.get('routeType').invalid && (step2Form.get('routeType').dirty || step2Form.get('routeType').touched)
+                            "
+                            (change)="routeTypeChanged()"
+                            required
+                          >
+                            <option [ngValue]="null" disabled selected>{{ l('SelectRouteType') }}</option>
+                            <option [value]="code.key" *ngFor="let code of allRoutTypes">
+                              {{ l(code.value) }}
+                            </option>
+                            <!--<option *ngFor="let item of allRoutTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                          </select>
+                        </div>
+                        <span class="form-text text-muted">{{ l('PickaRouteType') }}</span>
+                      </div>
+
                       <!--    Countries    -->
                       <div class="col-lg-6">
                         <div class="form-group">
@@ -372,6 +403,7 @@
                           <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
                         </div>
                       </div>
+
                       <!--    Cities        -->
                       <div class="col-lg-6">
                         <div class="form-group">
@@ -404,31 +436,11 @@
                         <div class="form-group">
                           <label> {{ l('DestinationCity') }}<span class="required-fileds">*</span></label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
-                            <!-- <select
-                              class="form-control"
-                              name="destinationCity"
-                              formControlName="destinationCity"
-                              [(ngModel)]="step2Dto.cities.destinationCityId"
-                              [class.is-valid]="
-                                step2Form.get('destinationCity').valid &&
-                                (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
-                              "
-                              [class.is-invalid]="
-                                step2Form.get('destinationCity').invalid &&
-                                (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
-                              "
-                              [attr.disabled]="step1Dto.shippingTypeId == 1 || !step2Dto.originCityId ? true : null"
-                              (ngModelChange)="validateShippingRequestType()"
-                              required
-                            >
-                              <option [ngValue]="null" disabled selected>{{ l('SelectanDestinationCity') }}</option>
-                              <option *ngFor="let city of destinationCities" [ngValue]="Number(city.id)">{{ city.displayName }}</option>
-                            </select> -->
                             <p-multiSelect
                               name="destinationCity"
                               [options]="destinationCities"
                               [(ngModel)]="step2Dto.shippingRequestDestinationCities"
-                              optionLabel="displayName"
+                              optionLabel="cityName"
                               formControlName="destinationCity"
                               [class.is-valid]="
                                 step2Form.get('destinationCity').valid &&
@@ -438,48 +450,21 @@
                                 step2Form.get('destinationCity').invalid &&
                                 (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
                               "
-                              [attr.disabled]="step1Dto.shippingTypeId == 1 || !step2Dto.originCityId ? true : null"
+                              [disabled]="step1Dto.shippingTypeId == 1 || !step2Dto.originCityId ? true : null || step2Dto.routeTypeId == null"
                               [selectedItemsLabel]="'{0} items selected'"
                               (ngModelChange)="validateShippingRequestType()"
                               [style]="{ width: '100%' }"
                               styleClass="form-control pt-1"
                               [dataKey]="'cityId'"
-                              required
+                              [selectionLimit]="step2Dto.routeTypeId == 1 ? 1 : 10"
                             >
-                              <!-- <option [ngValue]="null" disabled selected>{{ l('SelectanDestinationCity') }}</option> -->
                             </p-multiSelect>
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
                           </div>
                           <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
                         </div>
                       </div>
-                      <div class="col-lg-6">
-                        <label> {{ l('RouteType') }} <span class="required-fileds">*</span></label>
-                        <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allRoutTypes }">
-                          <select
-                            class="form-control"
-                            name="routeType"
-                            formControlName="routeType"
-                            [attr.disabled]="allRoutTypes ? null : true"
-                            [(ngModel)]="step2Dto.routeTypeId"
-                            [class.is-valid]="
-                              step2Form.get('routeType').valid && (step2Form.get('routeType').dirty || step2Form.get('routeType').touched)
-                            "
-                            [class.is-invalid]="
-                              step2Form.get('routeType').invalid && (step2Form.get('routeType').dirty || step2Form.get('routeType').touched)
-                            "
-                            (change)="step2Dto.numberOfDrops = undefined"
-                            required
-                          >
-                            <option [ngValue]="null" disabled selected>{{ l('SelectRouteType') }}</option>
-                            <option [value]="code.key" *ngFor="let code of allRoutTypes">
-                              {{ l(code.value) }}
-                            </option>
-                            <!--<option *ngFor="let item of allRoutTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
-                          </select>
-                        </div>
-                        <span class="form-text text-muted">{{ l('PickaRouteType') }}</span>
-                      </div>
+
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label>{{ l('NumberOfDrops') }} <span class="required-fileds">*</span></label>
@@ -506,7 +491,7 @@
                           <span class="form-text text-muted">{{ l('NumberOfDrops') }} </span>
                         </div>
                       </div>
-                      <div class="col-lg-12">
+                      <div class="col-lg-6">
                         <div class="form-group">
                           <label>{{ l('NumberOfTrips') }} <span class="required-fileds">*</span></label>
                           <input

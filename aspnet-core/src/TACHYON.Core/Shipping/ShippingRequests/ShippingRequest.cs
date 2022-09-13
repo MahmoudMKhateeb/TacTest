@@ -80,9 +80,10 @@ namespace TACHYON.Shipping.ShippingRequests
 
         [ForeignKey("OriginCityId")] public City OriginCityFk { get; set; }
 
-        //public virtual int? DestinationCityId { get; set; }
+        //todo will be removed after transfer data
+        public virtual int? DestinationCityId { get; set; }
 
-        //[ForeignKey("DestinationCityId")] public City DestinationCityFk { get; set; }
+        [ForeignKey("DestinationCityId")] public City DestinationCityFk { get; set; }
 
         /// <summary>
         /// The type of shipping request

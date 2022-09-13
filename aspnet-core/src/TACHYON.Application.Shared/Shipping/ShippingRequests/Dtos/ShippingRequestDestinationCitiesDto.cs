@@ -7,8 +7,9 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class ShippingRequestDestinationCitiesDto : EntityDto<int?>
+    public class ShippingRequestDestinationCitiesDto :EntityDto<int?>
     {
+        public long ShippingRequestId { get; set; }
         public int CityId { get; set; }
         /// <summary>
         /// Front helper

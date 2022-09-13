@@ -2791,6 +2791,6 @@
 		<text name="PleaseCompletePicKupPointDetails">الرجاء اكمال تفاصيل نقاط التحميل</text>
 		<text name="Contact">جهة الاتصال</text>
 		<text name="Attachment">مرفق</text>
-
+    <text name="OneDestinationCityAllowed">الرجاء إدخال مدينة وصول واحدة</text>
 	</texts>
 </localizationDictionary>

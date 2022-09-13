@@ -418,8 +418,7 @@ namespace TACHYON
             configuration.CreateMap<EditShippingRequestStep2Dto, ShippingRequest>()
                .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
                .ForMember(dest => dest.DraftStep, opt => opt.Ignore())
-               .ForMember(d => d.ShippingRequestDestinationCities, opt => opt.Ignore())
-               .AfterMap(AddOrUpdateShippingRequestDestinationCities);
+               .ForMember(d => d.ShippingRequestDestinationCities, opt => opt.Ignore());
 
             configuration.CreateMap<ShippingRequest, EditShippingRequestStep2Dto>();
 
@@ -1063,21 +1062,6 @@ namespace TACHYON
             }
         }
 
-        private static void AddOrUpdateShippingRequestDestinationCities(EditShippingRequestStep2Dto dto, ShippingRequest Request)
-        {
-            Request.ShippingRequestDestinationCities ??= new Collection<ShippingRequestDestinationCity>();
-            foreach (var city in dto.ShippingRequestDestinationCities)
-            {
-                if (!city.Id.HasValue)
-                {
-                    Request.ShippingRequestDestinationCities.Add(_Mapper.Map<ShippingRequestDestinationCity>(city));
-                }
-                else
-                {
-                    _Mapper.Map(city, Request.ShippingRequestDestinationCities.SingleOrDefault(c => c.Id == city.Id));
-                }
-            }
-        }
 
         private static void AddOrUpdateShippingRequestTrip(CreateOrEditShippingRequestTripDto dto,
             ShippingRequestTrip trip)

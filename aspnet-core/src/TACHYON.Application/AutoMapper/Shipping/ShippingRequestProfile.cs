@@ -68,8 +68,9 @@ namespace TACHYON.AutoMapper.Shipping
             CreateMap<ShippingRequest, EditShippingRequestStep3Dto>();
 
             CreateMap<ShippingRequestDestinationCity, ShippingRequestDestinationCitiesDto>()
-                .ForMember(dst => dst.CityName, opt => opt.MapFrom(src => src.CityFk.DisplayName))
-                .ReverseMap();
+                .ForMember(dst => dst.CityName, opt => opt.MapFrom(src => src.CityFk.DisplayName));
+
+            CreateMap<ShippingRequestDestinationCitiesDto, ShippingRequestDestinationCity>();
             //EditShippingRequestStep4Dto in CustomDtoMapper
         }
 

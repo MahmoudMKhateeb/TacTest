@@ -3038,6 +3038,7 @@
 		<text name="IncompleteTripPoint">Incomplete Trip Point Details</text>
 		<text name="PleaseCompleteAllDropPointDetails">Please Complete All Drop Points Details</text>
 		<text name="PleaseCompletePicKupPointDetails">Please Complete All Pickup Points Details</text>
+    <text name="OneDestinationCityAllowed">One Destination City Allowed</text>
 
 	</texts>
 </localizationDictionary>

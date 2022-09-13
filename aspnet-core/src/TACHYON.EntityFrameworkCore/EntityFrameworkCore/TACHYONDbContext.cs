@@ -211,6 +211,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<PenaltyComplaint> PenaltyComplaints { get; set; }
 
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
+        public virtual DbSet<ShippingRequestDestinationCity> ShippingRequestDestinationCities { get; set; }
         public DbSet<ShippingRequestDirectRequest> ShippingRequestDirectRequests { get; set; }
 
         public virtual DbSet<GoodsDetail> GoodsDetails { get; set; }
