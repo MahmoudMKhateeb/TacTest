@@ -22,7 +22,7 @@ import { finalize } from '@node_modules/rxjs/operators';
 })
 export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy {
   shippingRequestId: number;
-  cityDestId: number;
+  cityDestIds: number[];
   SRDestionationCity: number;
   allFacilities: FacilityForDropdownDto[];
   pickupFacilities: FacilityForDropdownDto[];
@@ -96,6 +96,9 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       this._tripService.currentShippingRequest.subscribe((res) => {
         this.citySourceId = res.originalCityId;
         //this.cityDestId = res.destinationCityId;
+        this.cityDestIds = res.destinationCitiesDtos.map(function (a) {
+          return a.cityId;
+        });
         this.pointsCount = res.shippingRequest.numberOfDrops;
         this.shippingType = res.shippingRequest.shippingTypeId;
       });
@@ -110,7 +113,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       .subscribe((result) => {
         this.allFacilities = result;
         this.pickupFacilities = result.filter((r) => r.cityId == this.citySourceId);
-        this.dropFacilities = result.filter((r) => r.cityId == this.cityDestId);
+        this.dropFacilities = result.filter((r) => this.cityDestIds.filter((y) => r.cityId));
       });
   }
 
