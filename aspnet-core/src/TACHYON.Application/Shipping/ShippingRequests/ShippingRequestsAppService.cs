@@ -26,6 +26,7 @@ using TACHYON.AddressBook;
 using TACHYON.AddressBook.Ports;
 using TACHYON.Authorization;
 using TACHYON.Cities;
+using TACHYON.Cities.Dtos;
 using TACHYON.Common;
 using TACHYON.Documents;
 using TACHYON.Dto;
@@ -786,6 +787,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .ThenInclude(v => v.Translations)
                     .Include(e => e.CarrierTenantFk)
                     .Include(x=>x.ShippingRequestDestinationCities)
+                    .ThenInclude(x=>x.CityFk)
                     .FirstOrDefaultAsync();
 
                 bool isShipper = await IsEnabledAsync(AppFeatures.Shipper);
@@ -867,6 +869,18 @@ namespace TACHYON.Shipping.ShippingRequests
                 output.GoodsCategoryName =
                     ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
 
+
+                //fill dest city list
+                var index = 1;
+                foreach(var destCity in shippingRequest.ShippingRequestDestinationCities)
+                {
+                    if (index == 1)
+                    {
+                        output.DestinationCityName = destCity.CityFk.DisplayName;
+                    }
+                    output.DestinationCityName= output.DestinationCityName+ ", " + destCity.CityFk.DisplayName;
+                    index++;
+                }
 
 
                 //return translated Packing Type name by current language

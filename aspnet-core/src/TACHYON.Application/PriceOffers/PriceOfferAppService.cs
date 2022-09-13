@@ -397,6 +397,18 @@ namespace TACHYON.PriceOffers
             {
                 query = await GetFromOffers(input);
             }
+            foreach(var request in query)
+            {
+                var index = 1;
+                foreach(var destCity in request.destinationCities)
+                {
+                    if (index == 1)
+                        request.DestinationCity = destCity.CityName;
+                    else
+                        request.DestinationCity = request.DestinationCity + ", " + destCity.CityName;
+                    index++;
+                }
+            }
             return new ListResultDto<GetShippingRequestForPriceOfferListDto>(query);
         }
 
@@ -651,6 +663,7 @@ namespace TACHYON.PriceOffers
                                   .ThenInclude(x => x.Translations)
                             .Include(r => r.ShippingRequestFK)
                                 .ThenInclude(dc => dc.ShippingRequestDestinationCities)
+                                .ThenInclude(x=>x.CityFk)
                             .Include(r => r.ShippingRequestFK)
                                 .ThenInclude(c => c.GoodCategoryFk)
                                     .ThenInclude(x => x.Translations)
@@ -744,6 +757,7 @@ namespace TACHYON.PriceOffers
                     .Include(oc => oc.OriginCityFk)
                      .ThenInclude(x => x.Translations)
                     .Include(dc => dc.ShippingRequestDestinationCities)
+                    .ThenInclude(x=>x.CityFk)
                     .Include(c => c.GoodCategoryFk)
                      .ThenInclude(x => x.Translations)
                     .Include(t => t.TrucksTypeFk)
@@ -817,6 +831,7 @@ namespace TACHYON.PriceOffers
                 .Include(c => c.CarrierTenantFk)
                 .Include(oc => oc.OriginCityFk)
                 .Include(dc => dc.ShippingRequestDestinationCities)
+                .ThenInclude(x=>x.CityFk)
                 .Include(c => c.GoodCategoryFk)
                  .ThenInclude(x => x.Translations)
                 .Include(t => t.TrucksTypeFk)
@@ -890,6 +905,7 @@ namespace TACHYON.PriceOffers
                                 .ThenInclude(oc => oc.OriginCityFk)
                             .Include(r => r.ShippingRequestFk)
                                 .ThenInclude(dc => dc.ShippingRequestDestinationCities)
+                                .ThenInclude(x=>x.CityFk)
                             .Include(r => r.ShippingRequestFk)
                                 .ThenInclude(c => c.GoodCategoryFk)
                                     .ThenInclude(x => x.Translations)
