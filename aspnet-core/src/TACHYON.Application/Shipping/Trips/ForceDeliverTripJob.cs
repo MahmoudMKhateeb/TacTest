@@ -2,9 +2,9 @@
 using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
-using Abp.Timing;
-using NUglify.Helpers;
-using System;
+using Castle.Core.Internal;
+using Hangfire;
+using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Notifications;
 using TACHYON.Shipping.Trips.Importing;
@@ -40,10 +40,28 @@ namespace TACHYON.Shipping.Trips
             
             _workFlowProvider.AbpSession.Use(args.RequestedByTenantId,args.RequestedByUserId);
             var binaryObject = await _binaryObjectManager.GetOrNullAsync(args.BinaryObjectId);
-            var importedTripDeliveryDetails = _excelDataReader.GetTripDeliveryDetails(binaryObject.Bytes);
-            importedTripDeliveryDetails.ForEach(_workFlowProvider.ForceDeliverTrip);
-            await _appNotifier.NotifyUserWhenBulkDeliverySucceeded(new UserIdentifier(args.RequestedByTenantId,
-                args.RequestedByUserId));
+            var importedTripDeliveryDetails = _excelDataReader.GetTripDeliveryDetails(binaryObject.Bytes).ToList();
+            var userIdentifier = new UserIdentifier(args.RequestedByTenantId,
+                args.RequestedByUserId);
+            if (!importedTripDeliveryDetails.IsNullOrEmpty() &&
+                importedTripDeliveryDetails.All(x => string.IsNullOrEmpty(x.Exception)))
+            {
+                importedTripDeliveryDetails.ForEach(_workFlowProvider.ForceDeliverTrip);
+                await _appNotifier.NotifyUserWhenBulkDeliverySucceeded(userIdentifier);
+                return;
+            }
+
+            string errorMsg = string.Empty;
+            if (importedTripDeliveryDetails.IsNullOrEmpty())
+                errorMsg = L("EmptyFileError");
+            else
+            {
+                importedTripDeliveryDetails.Where(x=> !string.IsNullOrEmpty(x.Exception))
+                    .Select(x => x.Exception + "\n")
+                    .ToList().ForEach(i => errorMsg += i);
+            }
+            await _appNotifier.NotifyUserWhenBulkDeliveryFailed(userIdentifier, errorMsg);
+
         }
         
         

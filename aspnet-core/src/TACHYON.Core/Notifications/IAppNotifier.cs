@@ -244,5 +244,7 @@ namespace TACHYON.Notifications
 
         Task NotifyHostAndTmsWhenPenaltyComplaintAdded(int tenantId,int penaltyId);
         Task NotifyUserWhenBulkDeliverySucceeded(UserIdentifier user);
+
+        Task NotifyUserWhenBulkDeliveryFailed(UserIdentifier user, string errorMsg);
     }
 }

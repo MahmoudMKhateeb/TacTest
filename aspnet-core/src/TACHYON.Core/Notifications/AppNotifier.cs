@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using NUglify.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
@@ -1571,6 +1572,16 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName));
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyUserWhenBulkDeliverySucceeded,
+                notificationData, userIds: new[] {user});
+        }
+        
+        public async Task NotifyUserWhenBulkDeliveryFailed(UserIdentifier user, string errorMsg)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(L("BulkDeliveryTripFailedMsg",CultureInfo.CurrentUICulture,errorMsg)
+                    ,TACHYONConsts.LocalizationSourceName));
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyUserWhenBulkDeliveryFailed,
                 notificationData, userIds: new[] {user});
         }
 
