@@ -807,7 +807,7 @@ namespace TACHYON
                 .ForMember(dto => dto.ClientId, options => options.MapFrom(entity => entity.TenantId))
                 .ForMember(dto => dto.Notes , options=>  options.Ignore())
                 .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
-                .ForMember(dto => dto.CreationTime, options => options.MapFrom(entity => entity.CreationTime.ToString("dd/mm/yyyy mm:hh")))
+                .ForMember(dto => dto.CreationTime, options => options.MapFrom(entity => entity.CreationTime.ToString("dd/MM/yyyy mm:hh")))
                 .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber));
 
 
