@@ -1,5 +1,5 @@
 /* tslint:disable:triple-equals */
-import { Component, Injector, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, OnDestroy, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CreateOrEditRoutPointDto,
@@ -22,6 +22,9 @@ import { finalize } from '@node_modules/rxjs/operators';
   styleUrls: ['./points.component.scss'],
 })
 export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy {
+  // @Output() SelectedWayPointsFromChild = this.wayPointsList;
+  @Output() wayPointsListChanged: EventEmitter<any> = new EventEmitter<any>();
+
   cityDestId: number;
   allFacilities: FacilityForDropdownDto[];
   pickupFacilities: FacilityForDropdownDto[];
@@ -29,15 +32,6 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   allPointsSendersAndREcivers: ReceiverFacilityLookupTableDto[][] = [];
   receiverLoading: boolean;
   shippingRequestForView: GetShippingRequestForViewOutput;
-  constructor(
-    injector: Injector,
-    private _routStepsServiceProxy: RoutStepsServiceProxy,
-    private _receiversServiceProxy: ReceiversServiceProxy,
-    public _tripService: TripService,
-    private _PointsService: PointsService
-  ) {
-    super(injector);
-  }
   activeTripId: number;
   RouteTypes = ShippingRequestRouteType;
   wayPointsList: CreateOrEditRoutPointDto[] = [];
@@ -61,20 +55,25 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   private tripDestFacilitySub$: Subscription;
   private tripSourceFacilitySub$: Subscription;
   private currentActiveTripSubs$: Subscription;
+  private pointServiceSubs$: Subscription;
   usedIn: 'view' | 'createOrEdit';
-  @Output() SelectedWayPointsFromChild = this.wayPointsList;
 
-  ngOnDestroy() {
-    this.pointsServiceSubscription$?.unsubscribe();
-    this.tripDestFacilitySub$?.unsubscribe();
-    this.tripSourceFacilitySub$?.unsubscribe();
-    this.currentActiveTripSubs$?.unsubscribe();
-    console.log('Unsubscribed/Destroid from  Point Component');
+  constructor(
+    injector: Injector,
+    private _routStepsServiceProxy: RoutStepsServiceProxy,
+    private _receiversServiceProxy: ReceiversServiceProxy,
+    public _tripService: TripService,
+    private _PointsService: PointsService
+  ) {
+    super(injector);
   }
 
   ngOnInit() {
     this.loadSharedServices();
     this.loadDropDowns();
+    this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => {
+      this.onChangedWayPointsList();
+    });
   }
 
   loadDropDowns() {
@@ -85,7 +84,9 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
    * loads Facilities with validation on it related to source and destination in SR
    */
   loadFacilities() {
-    if (!this.shippingRequestForView.shippingRequest.id) return;
+    if (!this.shippingRequestForView.shippingRequest.id) {
+      return;
+    }
     if (this.shippingRequestForView.shippingRequest.id != null) {
       this._tripService.currentShippingRequest.subscribe((res) => {
         this.shippingRequestForView = res;
@@ -156,6 +157,10 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     }
   }
 
+  onChangedWayPointsList() {
+    this.wayPointsListChanged.emit(null);
+  }
+
   /**
    * creates empty points for the trip based on number of drops
    */
@@ -203,5 +208,13 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   RouteStepCordSetter(pointIndex: number, facilityId: number) {
     this.wayPointsList[pointIndex].latitude = this.allFacilities.find((x) => x.id == facilityId)?.lat;
     this.wayPointsList[pointIndex].longitude = this.allFacilities.find((x) => x.id == facilityId)?.long;
+  }
+
+  ngOnDestroy() {
+    this.pointServiceSubs$?.unsubscribe();
+    this.pointsServiceSubscription$?.unsubscribe();
+    this.tripDestFacilitySub$?.unsubscribe();
+    this.tripSourceFacilitySub$?.unsubscribe();
+    this.currentActiveTripSubs$?.unsubscribe();
   }
 }

@@ -52,6 +52,18 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   mapCenterLat: number;
   mapCenterLng: number;
 
+  callbacks: any[] = [];
+  adapterConfig = {
+    getValue: () => {
+      return this.validateWorkingHours();
+    },
+    applyValidationResults: (e) => {
+      this.isWorkingHoursInvalid = !e.isValid;
+    },
+    validationRequestsCallbacks: this.callbacks,
+  };
+  isWorkingHoursInvalid = false;
+
   constructor(
     injector: Injector,
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
@@ -135,6 +147,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    * CreateOrUpdate Facility
    */
   save(): void {
+    this.revalidateWorkingHours();
     this.saving = true;
     this.facility.facilityWorkingHours = this.FacilityWorkingHours.filter((r) => r.startTime && r.endTime && r.hasTime).map(
       (fh) =>
@@ -180,7 +193,9 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
 
   close(): void {
     this.facility = new CreateOrEditFacilityDto();
+    this.selectedCountryId = null;
     this.FacilityWorkingHours = null;
+    this.isWorkingHoursInvalid = false;
     this.active = false;
     this.modal.hide();
   }
@@ -256,7 +271,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   mapClicked($event) {
     let position;
     if (isNotNullOrUndefined(this.selectedCityJson)) {
-      position = { lat: $event.latLng.lat(), lng: $event.latLng.lng() };
+      position = { lat: $event?.latLng?.lat(), lng: $event?.latLng?.lng() };
     } else {
       position = { lat: $event.coords.lat, lng: $event.coords.lng };
     }
@@ -309,6 +324,9 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    * Gets the Selected City Polygons
    */
   handleCityPolygon() {
+    if (!isNotNullOrUndefined(this.facility.cityId)) {
+      return;
+    }
     let Json = this.allCities[this.allCities.findIndex((x) => x.id === this.facility.cityId.toString())].polygon;
     this.selectedCityJson = JSON.parse(Json);
     //empty old address
@@ -334,5 +352,19 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
       this.mapCenterLat = this.selectedCityJson.geometry.coordinates[0][0][0][1];
     }
     this.zoom = 10;
+  }
+
+  private validateWorkingHours() {
+    const facilityWorkingHours = this.FacilityWorkingHours.filter((r) => r.startTime && r.endTime && r.hasTime);
+    if (facilityWorkingHours.length === 0) {
+      return false;
+    }
+    return true;
+  }
+
+  revalidateWorkingHours() {
+    this.callbacks.forEach((func) => {
+      func();
+    });
   }
 }

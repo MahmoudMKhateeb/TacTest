@@ -10,9 +10,10 @@ import { ShippingRequestsServiceProxy } from '@shared/service-proxies/service-pr
 })
 export class ViewGoodDetailsComponent extends AppComponentBase {
   @ViewChild('viewGoodDetail', { static: false }) public modal: ModalDirective;
+  @Input() allSubGoodCategorys: any;
   active = false;
   goodDetails: any;
-  @Input() allSubGoodCategorys: any;
+
   constructor(injector: Injector, private _shippingRequest: ShippingRequestsServiceProxy) {
     super(injector);
   }

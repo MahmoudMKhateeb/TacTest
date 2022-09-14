@@ -10,6 +10,10 @@ input[type='time'] {
   padding: 0 !important;
 }
 
+::ng-deep .invalid-trip-points .trip-points-table .p-datatable {
+  border: 1px solid red !important;
+}
+
 @media (min-width: 1400px) {
   .modal-dialog.modal-xl {
     max-width: 1400px !important;

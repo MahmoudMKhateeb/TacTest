@@ -7,6 +7,7 @@
   aria-labelledby="createOrEditModal"
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
+  (keydown.escape)="close(); $event.stopPropagation()"
 >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -46,7 +47,7 @@
                   <!--                    valueExpr="id"-->
                   <!--                    displayExpr="displayName"-->
                   <dx-validator [validationGroup]="'receiverGroup'">
-                    <dxi-validation-rule type="required" message="{{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
+                    <dxi-validation-rule type="required" message="{{ l('Facility') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
                   </dx-validator>
                 </dx-select-box>
               </div>
@@ -74,16 +75,19 @@
                   maxLength="256"
                 >
                   <dx-validator [validationGroup]="'receiverGroup'">
-                    <dxi-validation-rule type="required" message="{{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="required"
+                      message="{{ l('ReciverName') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                    ></dxi-validation-rule>
                     <dxi-validation-rule
                       type="stringLength"
                       [min]="0"
-                      message="{{ 'PleaseEnterAtLeastNCharacter' | localize }}"
+                      message="{{ l('ReciverName') }}: {{ 'PleaseEnterAtLeastNCharacter' | localize }}"
                     ></dxi-validation-rule>
                     <dxi-validation-rule
                       type="stringLength"
                       [max]="256"
-                      message="{{ 'PleaseEnterNoMoreThanNCharacter' | localize }}"
+                      message="{{ l('ReciverName') }}: {{ 'PleaseEnterNoMoreThanNCharacter' | localize }}"
                     ></dxi-validation-rule>
                   </dx-validator>
                 </dx-text-box>
@@ -105,11 +109,15 @@
                 <!--              <validation-messages [formCtrl]="Receiver_Email"></validation-messages>-->
                 <dx-text-box id="Receiver_Email" [(ngModel)]="receiver.email" name="Email" minLength="0" maxLength="256">
                   <dx-validator [validationGroup]="'receiverGroup'">
-                    <dxi-validation-rule type="stringLength" [min]="0" message="{{ l('PleaseEnterAtLeastNCharacter', 0) }}"></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="stringLength"
+                      [min]="0"
+                      message="{{ l('Email') }}: {{ l('PleaseEnterAtLeastNCharacter', 0) }}"
+                    ></dxi-validation-rule>
                     <dxi-validation-rule
                       type="stringLength"
                       [max]="256"
-                      message="{{ l('PleaseEnterNoMoreThanNCharacter', 256) }}"
+                      message="{{ l('Email') }}: {{ l('PleaseEnterNoMoreThanNCharacter', 256) }}"
                     ></dxi-validation-rule>
                   </dx-validator>
                 </dx-text-box>
@@ -154,14 +162,25 @@
                       (onValueChanged)="CheckIfReciverPhoneNumberIsValid(Receiver_PhoneNumber.value, receiver.id)"
                     >
                       <dx-validator [validationGroup]="'receiverGroup'">
-                        <dxi-validation-rule type="required" message="{{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
-                        <dxi-validation-rule type="stringLength" [min]="0" message="{{ l('PleaseEnterAtLeastNCharacter', 0) }}"></dxi-validation-rule>
+                        <dxi-validation-rule
+                          type="required"
+                          message="{{ l('PhoneNumber') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                        ></dxi-validation-rule>
+                        <dxi-validation-rule
+                          type="stringLength"
+                          [min]="0"
+                          message="{{ l('PhoneNumber') }}: {{ l('PleaseEnterAtLeastNCharacter', 0) }}"
+                        ></dxi-validation-rule>
                         <dxi-validation-rule
                           type="stringLength"
                           [max]="9"
-                          message="{{ l('PleaseEnterNoMoreThanNCharacter', 9) }}"
+                          message="{{ l('PhoneNumber') }}: {{ l('PleaseEnterNoMoreThanNCharacter', 9) }}"
                         ></dxi-validation-rule>
-                        <dxi-validation-rule type="pattern" pattern="^\d{9}$" message="{{ 'InvalidPattern' | localize }}"></dxi-validation-rule>
+                        <dxi-validation-rule
+                          type="pattern"
+                          pattern="^\d{9}$"
+                          message="{{ l('PhoneNumber') }}: {{ 'InvalidPattern' | localize }}"
+                        ></dxi-validation-rule>
                       </dx-validator>
                     </dx-text-box>
                   </span>
