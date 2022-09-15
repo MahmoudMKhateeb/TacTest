@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using System.Linq;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 
@@ -12,7 +13,7 @@ namespace TACHYON.AutoMapper.Shipping
             CreateMap<ShippingRequest, ShippingRequestListDto>()
                 .ForMember(dst => dst.Tenant, opt => opt.MapFrom(src => src.Tenant.Name))
                 .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
-                //.ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
+                .ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities.First().CityFk.DisplayName))
                 .ForMember(dst => dst.RouteType,
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestRouteType), src.RouteTypeId)));
 
@@ -48,7 +49,7 @@ namespace TACHYON.AutoMapper.Shipping
             CreateMap<ShippingRequest, GetShippingRequestForPricingOutput>()
                 .ForMember(dst => dst.Shipper, opt => opt.MapFrom(src => src.Tenant.Name))
                 .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
-                //.ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
+                .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities.First().CityFk.DisplayName))
                 .ForMember(dst => dst.RangeDate,
                     opt => opt.MapFrom(src => GetDateRange(src.StartTripDate, src.EndTripDate)));
 

@@ -68,7 +68,7 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
       this.Items = this.request.items;
       this.active = true;
       this.getCordinatesByCityName(this.request.originCity, 'source');
-      //this.getCordinatesByCityName(this.request.destinationCity, 'destanation');
+      this.getCordinatesByCityName(this.request.destinationCity, 'destanation');
       this.modal.show();
     });
   }

@@ -8,6 +8,7 @@ import {
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
+  ShippingRequestDestinationCitiesDto,
   ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
@@ -22,7 +23,7 @@ import { finalize } from '@node_modules/rxjs/operators';
 })
 export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy {
   shippingRequestId: number;
-  cityDestIds: number[];
+  DestCitiesDtos: ShippingRequestDestinationCitiesDto[];
   SRDestionationCity: number;
   allFacilities: FacilityForDropdownDto[];
   pickupFacilities: FacilityForDropdownDto[];
@@ -95,10 +96,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     if (this.shippingRequestId != null) {
       this._tripService.currentShippingRequest.subscribe((res) => {
         this.citySourceId = res.originalCityId;
-        //this.cityDestId = res.destinationCityId;
-        this.cityDestIds = res.destinationCitiesDtos.map(function (a) {
-          return a.cityId;
-        });
+        this.DestCitiesDtos = res.destinationCitiesDtos;
         this.pointsCount = res.shippingRequest.numberOfDrops;
         this.shippingType = res.shippingRequest.shippingTypeId;
       });
@@ -113,7 +111,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       .subscribe((result) => {
         this.allFacilities = result;
         this.pickupFacilities = result.filter((r) => r.cityId == this.citySourceId);
-        this.dropFacilities = result.filter((r) => this.cityDestIds.filter((y) => r.cityId));
+        this.dropFacilities = result.filter((r) => this.DestCitiesDtos.some((y) => y.cityId == r.cityId));
       });
   }
 

@@ -500,6 +500,7 @@ namespace TACHYON.PriceOffers
                             .Include(oc => oc.OriginCityFk)
                              .ThenInclude(x => x.Translations)
                             .Include(dc => dc.ShippingRequestDestinationCities)
+                            .ThenInclude(x=>x.CityFk)
                             .Include(v => v.ShippingRequestVases)
                              .ThenInclude(v => v.VasFk)
                             .Include(c => c.GoodCategoryFk)

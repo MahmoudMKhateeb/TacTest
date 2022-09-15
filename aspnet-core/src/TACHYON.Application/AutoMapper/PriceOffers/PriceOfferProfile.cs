@@ -1,6 +1,7 @@
 ﻿using Abp.Timing;
 using AutoMapper;
 using System;
+using System.Linq;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.Shipping.ShippingRequests;
@@ -46,7 +47,7 @@ namespace TACHYON.AutoMapper.PriceOffers
                 .ForMember(dst => dst.Carrier, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
                 .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
                 .ForMember(dst => dst.destinationCities, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities))
-                //.ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
+                //.ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities.First().CityFk.DisplayName))
                 .ForMember(dst => dst.BidStatusTitle, opt => opt.MapFrom(src => src.BidStatus.GetEnumDescription()))
                 .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
                 .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => "0"))

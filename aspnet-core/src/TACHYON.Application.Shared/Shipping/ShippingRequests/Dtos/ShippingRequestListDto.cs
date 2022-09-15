@@ -26,7 +26,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         }
 
         public string Origin { get; set; }
-        //public string Destination { get; set; }
+        public string Destination { get; set; }
 
         public string RouteType { get; set; }
         public bool IsDrafted { get; set; }

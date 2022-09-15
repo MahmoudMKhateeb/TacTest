@@ -370,6 +370,14 @@ namespace TACHYON.Invoices.Groups
                 .ThenInclude(r => r.AssignedTruckFk)
                 .ThenInclude(r => r.TrucksTypeFk)
                 .ThenInclude(r => r.Translations)
+                .Include(i => i.Trips)
+                .ThenInclude(r => r.ShippingRequestTripFK)
+                .ThenInclude(r=>r.DestinationFacilityFk)
+                .ThenInclude(r=>r.CityFk)
+                .Include(i => i.Penalties)
+                .ThenInclude(r => r.ShippingRequestTripFK)
+                .ThenInclude(r => r.DestinationFacilityFk)
+                .ThenInclude(r => r.CityFk)
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer),
                     i => i.TenantId == AbpSession.TenantId.Value)
                 .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), i => true)
@@ -401,6 +409,7 @@ namespace TACHYON.Invoices.Groups
                     TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName,
                     Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
                     //Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
+                    Destination = trip.ShippingRequestTripFK.DestinationFacilityFk.CityFk.DisplayName,
                     DateWork = trip.ShippingRequestTripFK.EndWorking.HasValue ? trip.ShippingRequestTripFK.EndWorking.Value.ToString("dd MMM, yyyy") : "",
                     Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
                     L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : ""
@@ -469,9 +478,9 @@ namespace TACHYON.Invoices.Groups
                     Source = penalty.ShippingRequestTripId != null 
                     ? ObjectMapper.Map<CityDto>(penalty.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? penalty.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName
                     : "-",
-                    //Destination = penalty.ShippingRequestTripId != null 
-                    //? ObjectMapper.Map<CityDto>(penalty.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? penalty.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName
-                    //: "-",
+                    Destination = penalty.ShippingRequestTripId != null
+                    ? penalty.ShippingRequestTripFK.DestinationFacilityFk.CityFk.DisplayName
+                    : "-",
                     DateWork = penalty.ShippingRequestTripId != null 
                     ? penalty.ShippingRequestTripFK.EndWorking.HasValue ? penalty.ShippingRequestTripFK.EndWorking.Value.ToString("dd MMM, yyyy") : ""
                     : "-",

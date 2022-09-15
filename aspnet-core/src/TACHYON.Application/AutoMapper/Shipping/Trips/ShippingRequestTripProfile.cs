@@ -54,7 +54,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                         $"{src.ShippingRequestFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
                 .ForMember(dst => dst.Distination,
                     opt => opt.MapFrom(src =>
-                        src.DestinationFacilityFk.Address))
+                        //src.DestinationFacilityFk.Address))
+                        $"{src.ShippingRequestFk.ShippingRequestDestinationCities.First().CityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
                 .ForMember(dst => dst.RouteTypeId, opt => opt.MapFrom(src => src.ShippingRequestFk.RouteTypeId))
                 .ForMember(dst => dst.StartDate, opt => opt.MapFrom(src => src.StartTripDate))
                 .ForMember(dst => dst.EndDate, opt => opt.MapFrom(src => src.EndTripDate))
@@ -75,7 +76,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     opt => opt.MapFrom(src => src.OriginFacilityFk.RateNumber))
                 .ForMember(dst => dst.Distination,
                     opt => opt.MapFrom(src =>
-                        src.DestinationFacilityFk.Address))
+                        //src.DestinationFacilityFk.Address))
+                        $"{src.ShippingRequestFk.ShippingRequestDestinationCities.First().CityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
                 .ForMember(dst => dst.DestinationFacilityRating,
                     opt => opt.MapFrom(src => src.DestinationFacilityFk.Rate))
                 .ForMember(dst => dst.DestinationFacilityRatingNumber,

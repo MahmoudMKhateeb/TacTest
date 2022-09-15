@@ -183,6 +183,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Include(t => t.Tenant)
                 .Include(x => x.OriginCityFk)
                 .Include(x => x.ShippingRequestDestinationCities)
+                .ThenInclude(x=>x.CityFk)
                 .WhereIf(Input.IsBid.HasValue, e => e.IsBid == Input.IsBid.Value)
                 .WhereIf(Input.Status.HasValue, e => e.Status == Input.Status.Value)
                 .WhereIf(Input.IsPricedWihtoutTrips.HasValue,
@@ -432,6 +433,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 shippingRequest = await _shippingRequestRepository.GetAll()
                     .Include(x => x.ShippingRequestVases)
+                    .Include(x=>x.ShippingRequestDestinationCities)
                  .Where(x => x.Id == id && x.IsDrafted == true)
                  .FirstOrDefaultAsync();
             }
@@ -878,7 +880,10 @@ namespace TACHYON.Shipping.ShippingRequests
                     {
                         output.DestinationCityName = destCity.CityFk.DisplayName;
                     }
-                    output.DestinationCityName= output.DestinationCityName+ ", " + destCity.CityFk.DisplayName;
+                    else
+                    {
+                        output.DestinationCityName = output.DestinationCityName + ", " + destCity.CityFk.DisplayName;
+                    }
                     index++;
                 }
 
@@ -1039,18 +1044,6 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-        private async Task SendNotificationToCarriersWithTheSameTrucks(ShippingRequest shippingRequest)
-        {
-            if (shippingRequest.BidStatus == ShippingRequestBidStatus.OnGoing)
-            {
-                UserIdentifier[] users =
-                    await _bidDomainService.GetCarriersByTruckTypeArrayAsync(shippingRequest.TrucksTypeId.Value);
-                await _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, shippingRequest.Id);
-
-                //var carriers = await _normalPricePackageManager.GetCarriersMatchingPricePackages(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId);
-                //await _appNotifier.ShippingRequestAsBidWithMatchingPricePackage(carriers, shippingRequest.ReferenceNumber, shippingRequest.Id);
-            }
-        }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)
