@@ -6,8 +6,14 @@
                     <div>
                         <div class="row align-items-center">
                             <div class="col-xl-12">
-                                {{Filter_Form_Group_Before_V110000_Here}}
-                                {{Filter_Form_Group_After_V110000_Here}}
+                                <div class="form-group m-form__group align-items-center">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                        <span class="input-group-btn">
+                                            <button (click)="get{{Entity_Name_Plural_Here}}()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 						 <div class="row" [hidden]="!advancedFiltersAreShown">
@@ -15,10 +21,7 @@
 						         {{Seperator_Div_Here}}
 						     </div>
 
-{{Property_Filter_Template_Before_V110000_Here}}
-{{Property_Filter_Template_After_V110000_Here}}
-{{NP_Filter_Template_Before_V110000_Here}}
-{{NP_Filter_Template_After_V110000_Here}}
+{{Property_Filter_Template_Here}}{{NP_Filter_Template_Here}}
 
                         </div>
                         <div class="row mb-2">

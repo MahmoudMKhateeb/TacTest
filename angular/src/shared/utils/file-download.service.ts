@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
-import { FileDto } from '@shared/service-proxies/service-proxies';
-import { GetAllUploadedFileDto } from '@shared/service-proxies/service-proxies';
+import { FileDto, GetAllUploadedFileDto } from '@shared/service-proxies/service-proxies';
 
 @Injectable()
 export class FileDownloadService {

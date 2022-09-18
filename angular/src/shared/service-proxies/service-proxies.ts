@@ -2367,6 +2367,541 @@ export class BalanceRechargeServiceProxy {
 }
 
 @Injectable()
+export class BayanIntegrationResultsServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param filter (optional)
+   * @param actionNameFilter (optional)
+   * @param inputJsonFilter (optional)
+   * @param responseJsonFilter (optional)
+   * @param versionFilter (optional)
+   * @param shippingRequestTripContainerNumberFilter (optional)
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getAll(
+    filter: string | null | undefined,
+    actionNameFilter: string | null | undefined,
+    inputJsonFilter: string | null | undefined,
+    responseJsonFilter: string | null | undefined,
+    versionFilter: string | null | undefined,
+    shippingRequestTripContainerNumberFilter: string | null | undefined,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfGetBayanIntegrationResultForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/BayanIntegrationResults/GetAll?';
+    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (actionNameFilter !== undefined && actionNameFilter !== null) url_ += 'ActionNameFilter=' + encodeURIComponent('' + actionNameFilter) + '&';
+    if (inputJsonFilter !== undefined && inputJsonFilter !== null) url_ += 'InputJsonFilter=' + encodeURIComponent('' + inputJsonFilter) + '&';
+    if (responseJsonFilter !== undefined && responseJsonFilter !== null)
+      url_ += 'ResponseJsonFilter=' + encodeURIComponent('' + responseJsonFilter) + '&';
+    if (versionFilter !== undefined && versionFilter !== null) url_ += 'VersionFilter=' + encodeURIComponent('' + versionFilter) + '&';
+    if (shippingRequestTripContainerNumberFilter !== undefined && shippingRequestTripContainerNumberFilter !== null)
+      url_ += 'ShippingRequestTripContainerNumberFilter=' + encodeURIComponent('' + shippingRequestTripContainerNumberFilter) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfGetBayanIntegrationResultForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfGetBayanIntegrationResultForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetBayanIntegrationResultForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfGetBayanIntegrationResultForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfGetBayanIntegrationResultForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getBayanIntegrationResultForView(id: number | undefined): Observable<GetBayanIntegrationResultForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/BayanIntegrationResults/GetBayanIntegrationResultForView?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetBayanIntegrationResultForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetBayanIntegrationResultForView(<any>response_);
+            } catch (e) {
+              return <Observable<GetBayanIntegrationResultForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetBayanIntegrationResultForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetBayanIntegrationResultForView(response: HttpResponseBase): Observable<GetBayanIntegrationResultForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetBayanIntegrationResultForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetBayanIntegrationResultForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getBayanIntegrationResultForEdit(id: number | undefined): Observable<GetBayanIntegrationResultForEditOutput> {
+    let url_ = this.baseUrl + '/api/services/app/BayanIntegrationResults/GetBayanIntegrationResultForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetBayanIntegrationResultForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetBayanIntegrationResultForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<GetBayanIntegrationResultForEditOutput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetBayanIntegrationResultForEditOutput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetBayanIntegrationResultForEdit(response: HttpResponseBase): Observable<GetBayanIntegrationResultForEditOutput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetBayanIntegrationResultForEditOutput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetBayanIntegrationResultForEditOutput>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditBayanIntegrationResultDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/BayanIntegrationResults/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  delete(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/BayanIntegrationResults/Delete?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param filter (optional)
+   * @param actionNameFilter (optional)
+   * @param inputJsonFilter (optional)
+   * @param responseJsonFilter (optional)
+   * @param versionFilter (optional)
+   * @param shippingRequestTripContainerNumberFilter (optional)
+   * @return Success
+   */
+  getBayanIntegrationResultsToExcel(
+    filter: string | null | undefined,
+    actionNameFilter: string | null | undefined,
+    inputJsonFilter: string | null | undefined,
+    responseJsonFilter: string | null | undefined,
+    versionFilter: string | null | undefined,
+    shippingRequestTripContainerNumberFilter: string | null | undefined
+  ): Observable<FileDto> {
+    let url_ = this.baseUrl + '/api/services/app/BayanIntegrationResults/GetBayanIntegrationResultsToExcel?';
+    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (actionNameFilter !== undefined && actionNameFilter !== null) url_ += 'ActionNameFilter=' + encodeURIComponent('' + actionNameFilter) + '&';
+    if (inputJsonFilter !== undefined && inputJsonFilter !== null) url_ += 'InputJsonFilter=' + encodeURIComponent('' + inputJsonFilter) + '&';
+    if (responseJsonFilter !== undefined && responseJsonFilter !== null)
+      url_ += 'ResponseJsonFilter=' + encodeURIComponent('' + responseJsonFilter) + '&';
+    if (versionFilter !== undefined && versionFilter !== null) url_ += 'VersionFilter=' + encodeURIComponent('' + versionFilter) + '&';
+    if (shippingRequestTripContainerNumberFilter !== undefined && shippingRequestTripContainerNumberFilter !== null)
+      url_ += 'ShippingRequestTripContainerNumberFilter=' + encodeURIComponent('' + shippingRequestTripContainerNumberFilter) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetBayanIntegrationResultsToExcel(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetBayanIntegrationResultsToExcel(<any>response_);
+            } catch (e) {
+              return <Observable<FileDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<FileDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetBayanIntegrationResultsToExcel(response: HttpResponseBase): Observable<FileDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = FileDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<FileDto>(<any>null);
+  }
+
+  /**
+   * @param filter (optional)
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getAllShippingRequestTripForLookupTable(
+    filter: string | null | undefined,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfBayanIntegrationResultShippingRequestTripLookupTableDto> {
+    let url_ = this.baseUrl + '/api/services/app/BayanIntegrationResults/GetAllShippingRequestTripForLookupTable?';
+    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllShippingRequestTripForLookupTable(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllShippingRequestTripForLookupTable(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfBayanIntegrationResultShippingRequestTripLookupTableDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfBayanIntegrationResultShippingRequestTripLookupTableDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllShippingRequestTripForLookupTable(
+    response: HttpResponseBase
+  ): Observable<PagedResultDtoOfBayanIntegrationResultShippingRequestTripLookupTableDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfBayanIntegrationResultShippingRequestTripLookupTableDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfBayanIntegrationResultShippingRequestTripLookupTableDto>(<any>null);
+  }
+}
+
+@Injectable()
 export class CachingServiceProxy {
   private http: HttpClient;
   private baseUrl: string;
@@ -4250,6 +4785,75 @@ export class CitiesServiceProxy {
       );
     }
     return _observableOf<CityCountyLookupTableDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllRegionsForTableDropdown(): Observable<SelectItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/Cities/GetAllRegionsForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllRegionsForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllRegionsForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<SelectItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<SelectItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllRegionsForTableDropdown(response: HttpResponseBase): Observable<SelectItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(SelectItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<SelectItemDto[]>(<any>null);
   }
 }
 
@@ -38640,6 +39244,442 @@ export class ReceiversServiceProxy {
 }
 
 @Injectable()
+export class RegionsServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
+
+  /**
+   * @param filter (optional)
+   * @param nameFilter (optional)
+   * @param maxBayanIntegrationIdFilter (optional)
+   * @param minBayanIntegrationIdFilter (optional)
+   * @param countyDisplayNameFilter (optional)
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getAll(
+    filter: string | null | undefined,
+    nameFilter: string | null | undefined,
+    maxBayanIntegrationIdFilter: number | null | undefined,
+    minBayanIntegrationIdFilter: number | null | undefined,
+    countyDisplayNameFilter: string | null | undefined,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfGetRegionForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/Regions/GetAll?';
+    if (filter !== undefined && filter !== null) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (nameFilter !== undefined && nameFilter !== null) url_ += 'NameFilter=' + encodeURIComponent('' + nameFilter) + '&';
+    if (maxBayanIntegrationIdFilter !== undefined && maxBayanIntegrationIdFilter !== null)
+      url_ += 'MaxBayanIntegrationIdFilter=' + encodeURIComponent('' + maxBayanIntegrationIdFilter) + '&';
+    if (minBayanIntegrationIdFilter !== undefined && minBayanIntegrationIdFilter !== null)
+      url_ += 'MinBayanIntegrationIdFilter=' + encodeURIComponent('' + minBayanIntegrationIdFilter) + '&';
+    if (countyDisplayNameFilter !== undefined && countyDisplayNameFilter !== null)
+      url_ += 'CountyDisplayNameFilter=' + encodeURIComponent('' + countyDisplayNameFilter) + '&';
+    if (sorting !== undefined && sorting !== null) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfGetRegionForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfGetRegionForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetRegionForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfGetRegionForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfGetRegionForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getRegionForView(id: number | undefined): Observable<GetRegionForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/Regions/GetRegionForView?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetRegionForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetRegionForView(<any>response_);
+            } catch (e) {
+              return <Observable<GetRegionForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetRegionForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetRegionForView(response: HttpResponseBase): Observable<GetRegionForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetRegionForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetRegionForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getRegionForEdit(id: number | undefined): Observable<GetRegionForEditOutput> {
+    let url_ = this.baseUrl + '/api/services/app/Regions/GetRegionForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetRegionForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetRegionForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<GetRegionForEditOutput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetRegionForEditOutput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetRegionForEdit(response: HttpResponseBase): Observable<GetRegionForEditOutput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetRegionForEditOutput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetRegionForEditOutput>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditRegionDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Regions/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  delete(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Regions/Delete?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllCountyForTableDropdown(): Observable<RegionCountyLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/Regions/GetAllCountyForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllCountyForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllCountyForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<RegionCountyLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<RegionCountyLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllCountyForTableDropdown(response: HttpResponseBase): Observable<RegionCountyLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(RegionCountyLookupTableDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<RegionCountyLookupTableDto[]>(<any>null);
+  }
+}
+
+@Injectable()
 export class RoleServiceProxy {
   private http: HttpClient;
   private baseUrl: string;
@@ -47427,6 +48467,135 @@ export class ShippingRequestsTripServiceProxy {
       );
     }
     return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param tripId (optional)
+   * @return Success
+   */
+  createBayanIntegrationTrip(tripId: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequestsTrip/CreateBayanIntegrationTrip?';
+    if (tripId === null) throw new Error("The parameter 'tripId' cannot be null.");
+    else if (tripId !== undefined) url_ += 'tripId=' + encodeURIComponent('' + tripId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateBayanIntegrationTrip(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateBayanIntegrationTrip(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateBayanIntegrationTrip(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param tripId (optional)
+   * @return Success
+   */
+  printBayanIntegrationTrip(tripId: number | undefined): Observable<string> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequestsTrip/PrintBayanIntegrationTrip?';
+    if (tripId === null) throw new Error("The parameter 'tripId' cannot be null.");
+    else if (tripId !== undefined) url_ += 'tripId=' + encodeURIComponent('' + tripId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processPrintBayanIntegrationTrip(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processPrintBayanIntegrationTrip(<any>response_);
+            } catch (e) {
+              return <Observable<string>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<string>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processPrintBayanIntegrationTrip(response: HttpResponseBase): Observable<string> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = resultData200 !== undefined ? resultData200 : <any>null;
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<string>(<any>null);
   }
 }
 
@@ -70208,6 +71377,329 @@ export interface IGetAllBalanceRechargeInput {
   loadOptions: string | undefined;
 }
 
+export class BayanIntegrationResultDto implements IBayanIntegrationResultDto {
+  actionName!: string | undefined;
+  inputJson!: string | undefined;
+  responseJson!: string | undefined;
+  version!: string | undefined;
+  shippingRequestTripId!: number;
+  id!: number;
+
+  constructor(data?: IBayanIntegrationResultDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.actionName = _data['actionName'];
+      this.inputJson = _data['inputJson'];
+      this.responseJson = _data['responseJson'];
+      this.version = _data['version'];
+      this.shippingRequestTripId = _data['shippingRequestTripId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): BayanIntegrationResultDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new BayanIntegrationResultDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['actionName'] = this.actionName;
+    data['inputJson'] = this.inputJson;
+    data['responseJson'] = this.responseJson;
+    data['version'] = this.version;
+    data['shippingRequestTripId'] = this.shippingRequestTripId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IBayanIntegrationResultDto {
+  actionName: string | undefined;
+  inputJson: string | undefined;
+  responseJson: string | undefined;
+  version: string | undefined;
+  shippingRequestTripId: number;
+  id: number;
+}
+
+export class GetBayanIntegrationResultForViewDto implements IGetBayanIntegrationResultForViewDto {
+  bayanIntegrationResult!: BayanIntegrationResultDto;
+  shippingRequestTripContainerNumber!: string | undefined;
+
+  constructor(data?: IGetBayanIntegrationResultForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.bayanIntegrationResult = _data['bayanIntegrationResult']
+        ? BayanIntegrationResultDto.fromJS(_data['bayanIntegrationResult'])
+        : <any>undefined;
+      this.shippingRequestTripContainerNumber = _data['shippingRequestTripContainerNumber'];
+    }
+  }
+
+  static fromJS(data: any): GetBayanIntegrationResultForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetBayanIntegrationResultForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['bayanIntegrationResult'] = this.bayanIntegrationResult ? this.bayanIntegrationResult.toJSON() : <any>undefined;
+    data['shippingRequestTripContainerNumber'] = this.shippingRequestTripContainerNumber;
+    return data;
+  }
+}
+
+export interface IGetBayanIntegrationResultForViewDto {
+  bayanIntegrationResult: BayanIntegrationResultDto;
+  shippingRequestTripContainerNumber: string | undefined;
+}
+
+export class PagedResultDtoOfGetBayanIntegrationResultForViewDto implements IPagedResultDtoOfGetBayanIntegrationResultForViewDto {
+  totalCount!: number;
+  items!: GetBayanIntegrationResultForViewDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfGetBayanIntegrationResultForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(GetBayanIntegrationResultForViewDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfGetBayanIntegrationResultForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfGetBayanIntegrationResultForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfGetBayanIntegrationResultForViewDto {
+  totalCount: number;
+  items: GetBayanIntegrationResultForViewDto[] | undefined;
+}
+
+export class CreateOrEditBayanIntegrationResultDto implements ICreateOrEditBayanIntegrationResultDto {
+  actionName!: string;
+  inputJson!: string;
+  responseJson!: string | undefined;
+  version!: string | undefined;
+  shippingRequestTripId!: number;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditBayanIntegrationResultDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.actionName = _data['actionName'];
+      this.inputJson = _data['inputJson'];
+      this.responseJson = _data['responseJson'];
+      this.version = _data['version'];
+      this.shippingRequestTripId = _data['shippingRequestTripId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditBayanIntegrationResultDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditBayanIntegrationResultDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['actionName'] = this.actionName;
+    data['inputJson'] = this.inputJson;
+    data['responseJson'] = this.responseJson;
+    data['version'] = this.version;
+    data['shippingRequestTripId'] = this.shippingRequestTripId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditBayanIntegrationResultDto {
+  actionName: string;
+  inputJson: string;
+  responseJson: string | undefined;
+  version: string | undefined;
+  shippingRequestTripId: number;
+  id: number | undefined;
+}
+
+export class GetBayanIntegrationResultForEditOutput implements IGetBayanIntegrationResultForEditOutput {
+  bayanIntegrationResult!: CreateOrEditBayanIntegrationResultDto;
+  shippingRequestTripContainerNumber!: string | undefined;
+
+  constructor(data?: IGetBayanIntegrationResultForEditOutput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.bayanIntegrationResult = _data['bayanIntegrationResult']
+        ? CreateOrEditBayanIntegrationResultDto.fromJS(_data['bayanIntegrationResult'])
+        : <any>undefined;
+      this.shippingRequestTripContainerNumber = _data['shippingRequestTripContainerNumber'];
+    }
+  }
+
+  static fromJS(data: any): GetBayanIntegrationResultForEditOutput {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetBayanIntegrationResultForEditOutput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['bayanIntegrationResult'] = this.bayanIntegrationResult ? this.bayanIntegrationResult.toJSON() : <any>undefined;
+    data['shippingRequestTripContainerNumber'] = this.shippingRequestTripContainerNumber;
+    return data;
+  }
+}
+
+export interface IGetBayanIntegrationResultForEditOutput {
+  bayanIntegrationResult: CreateOrEditBayanIntegrationResultDto;
+  shippingRequestTripContainerNumber: string | undefined;
+}
+
+export class BayanIntegrationResultShippingRequestTripLookupTableDto implements IBayanIntegrationResultShippingRequestTripLookupTableDto {
+  id!: number;
+  displayName!: string | undefined;
+
+  constructor(data?: IBayanIntegrationResultShippingRequestTripLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): BayanIntegrationResultShippingRequestTripLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new BayanIntegrationResultShippingRequestTripLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface IBayanIntegrationResultShippingRequestTripLookupTableDto {
+  id: number;
+  displayName: string | undefined;
+}
+
+export class PagedResultDtoOfBayanIntegrationResultShippingRequestTripLookupTableDto
+  implements IPagedResultDtoOfBayanIntegrationResultShippingRequestTripLookupTableDto
+{
+  totalCount!: number;
+  items!: BayanIntegrationResultShippingRequestTripLookupTableDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfBayanIntegrationResultShippingRequestTripLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(BayanIntegrationResultShippingRequestTripLookupTableDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfBayanIntegrationResultShippingRequestTripLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfBayanIntegrationResultShippingRequestTripLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfBayanIntegrationResultShippingRequestTripLookupTableDto {
+  totalCount: number;
+  items: BayanIntegrationResultShippingRequestTripLookupTableDto[] | undefined;
+}
+
 export class CacheDto implements ICacheDto {
   name!: string | undefined;
 
@@ -71163,6 +72655,8 @@ export class CityDto implements ICityDto {
   isActive!: boolean;
   translatedDisplayName!: string | undefined;
   readonly normalizedDisplayName!: string | undefined;
+  bayanIntegrationId!: number | undefined;
+  regionId!: number | undefined;
   id!: number;
 
   constructor(data?: ICityDto) {
@@ -71184,6 +72678,8 @@ export class CityDto implements ICityDto {
       this.isActive = _data['isActive'];
       this.translatedDisplayName = _data['translatedDisplayName'];
       (<any>this).normalizedDisplayName = _data['normalizedDisplayName'];
+      this.bayanIntegrationId = _data['bayanIntegrationId'];
+      this.regionId = _data['regionId'];
       this.id = _data['id'];
     }
   }
@@ -71206,6 +72702,8 @@ export class CityDto implements ICityDto {
     data['isActive'] = this.isActive;
     data['translatedDisplayName'] = this.translatedDisplayName;
     data['normalizedDisplayName'] = this.normalizedDisplayName;
+    data['bayanIntegrationId'] = this.bayanIntegrationId;
+    data['regionId'] = this.regionId;
     data['id'] = this.id;
     return data;
   }
@@ -71221,6 +72719,8 @@ export interface ICityDto {
   isActive: boolean;
   translatedDisplayName: string | undefined;
   normalizedDisplayName: string | undefined;
+  bayanIntegrationId: number | undefined;
+  regionId: number | undefined;
   id: number;
 }
 
@@ -71270,6 +72770,8 @@ export class CreateOrEditCityDto implements ICreateOrEditCityDto {
   longitude!: number;
   isActive!: boolean;
   countyId!: number;
+  bayanIntegrationId!: number | undefined;
+  regionId!: number | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditCityDto) {
@@ -71288,6 +72790,8 @@ export class CreateOrEditCityDto implements ICreateOrEditCityDto {
       this.longitude = _data['longitude'];
       this.isActive = _data['isActive'];
       this.countyId = _data['countyId'];
+      this.bayanIntegrationId = _data['bayanIntegrationId'];
+      this.regionId = _data['regionId'];
       this.id = _data['id'];
     }
   }
@@ -71307,6 +72811,8 @@ export class CreateOrEditCityDto implements ICreateOrEditCityDto {
     data['longitude'] = this.longitude;
     data['isActive'] = this.isActive;
     data['countyId'] = this.countyId;
+    data['bayanIntegrationId'] = this.bayanIntegrationId;
+    data['regionId'] = this.regionId;
     data['id'] = this.id;
     return data;
   }
@@ -71319,6 +72825,8 @@ export interface ICreateOrEditCityDto {
   longitude: number;
   isActive: boolean;
   countyId: number;
+  bayanIntegrationId: number | undefined;
+  regionId: number | undefined;
   id: number | undefined;
 }
 
@@ -71397,6 +72905,49 @@ export class CityCountyLookupTableDto implements ICityCountyLookupTableDto {
 
 export interface ICityCountyLookupTableDto {
   id: number;
+  displayName: string | undefined;
+}
+
+export class SelectItemDto implements ISelectItemDto {
+  id!: string | undefined;
+  isOther!: boolean | undefined;
+  displayName!: string | undefined;
+
+  constructor(data?: ISelectItemDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.isOther = _data['isOther'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): SelectItemDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new SelectItemDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['isOther'] = this.isOther;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface ISelectItemDto {
+  id: string | undefined;
+  isOther: boolean | undefined;
   displayName: string | undefined;
 }
 
@@ -71832,49 +73383,6 @@ export class GetDefaultEditionNameOutput implements IGetDefaultEditionNameOutput
 
 export interface IGetDefaultEditionNameOutput {
   name: string | undefined;
-}
-
-export class SelectItemDto implements ISelectItemDto {
-  id!: string | undefined;
-  isOther!: boolean | undefined;
-  displayName!: string | undefined;
-
-  constructor(data?: ISelectItemDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.isOther = _data['isOther'];
-      this.displayName = _data['displayName'];
-    }
-  }
-
-  static fromJS(data: any): SelectItemDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new SelectItemDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['isOther'] = this.isOther;
-    data['displayName'] = this.displayName;
-    return data;
-  }
-}
-
-export interface ISelectItemDto {
-  id: string | undefined;
-  isOther: boolean | undefined;
-  displayName: string | undefined;
 }
 
 export class ShippingRequestAccidentReasonLookupDto implements IShippingRequestAccidentReasonLookupDto {
@@ -92153,6 +93661,262 @@ export interface IReceiverFacilityLookupTableDto {
   displayName: string | undefined;
 }
 
+export class RegionDto implements IRegionDto {
+  name!: string | undefined;
+  bayanIntegrationId!: number;
+  countyId!: number | undefined;
+  id!: number;
+
+  constructor(data?: IRegionDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.bayanIntegrationId = _data['bayanIntegrationId'];
+      this.countyId = _data['countyId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): RegionDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new RegionDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['bayanIntegrationId'] = this.bayanIntegrationId;
+    data['countyId'] = this.countyId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IRegionDto {
+  name: string | undefined;
+  bayanIntegrationId: number;
+  countyId: number | undefined;
+  id: number;
+}
+
+export class GetRegionForViewDto implements IGetRegionForViewDto {
+  region!: RegionDto;
+  countyDisplayName!: string | undefined;
+
+  constructor(data?: IGetRegionForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.region = _data['region'] ? RegionDto.fromJS(_data['region']) : <any>undefined;
+      this.countyDisplayName = _data['countyDisplayName'];
+    }
+  }
+
+  static fromJS(data: any): GetRegionForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetRegionForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['region'] = this.region ? this.region.toJSON() : <any>undefined;
+    data['countyDisplayName'] = this.countyDisplayName;
+    return data;
+  }
+}
+
+export interface IGetRegionForViewDto {
+  region: RegionDto;
+  countyDisplayName: string | undefined;
+}
+
+export class PagedResultDtoOfGetRegionForViewDto implements IPagedResultDtoOfGetRegionForViewDto {
+  totalCount!: number;
+  items!: GetRegionForViewDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfGetRegionForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(GetRegionForViewDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfGetRegionForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfGetRegionForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfGetRegionForViewDto {
+  totalCount: number;
+  items: GetRegionForViewDto[] | undefined;
+}
+
+export class CreateOrEditRegionDto implements ICreateOrEditRegionDto {
+  name!: string;
+  bayanIntegrationId!: number;
+  countyId!: number | undefined;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditRegionDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.bayanIntegrationId = _data['bayanIntegrationId'];
+      this.countyId = _data['countyId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditRegionDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditRegionDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['bayanIntegrationId'] = this.bayanIntegrationId;
+    data['countyId'] = this.countyId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditRegionDto {
+  name: string;
+  bayanIntegrationId: number;
+  countyId: number | undefined;
+  id: number | undefined;
+}
+
+export class GetRegionForEditOutput implements IGetRegionForEditOutput {
+  region!: CreateOrEditRegionDto;
+  countyDisplayName!: string | undefined;
+
+  constructor(data?: IGetRegionForEditOutput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.region = _data['region'] ? CreateOrEditRegionDto.fromJS(_data['region']) : <any>undefined;
+      this.countyDisplayName = _data['countyDisplayName'];
+    }
+  }
+
+  static fromJS(data: any): GetRegionForEditOutput {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetRegionForEditOutput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['region'] = this.region ? this.region.toJSON() : <any>undefined;
+    data['countyDisplayName'] = this.countyDisplayName;
+    return data;
+  }
+}
+
+export interface IGetRegionForEditOutput {
+  region: CreateOrEditRegionDto;
+  countyDisplayName: string | undefined;
+}
+
+export class RegionCountyLookupTableDto implements IRegionCountyLookupTableDto {
+  id!: number;
+  displayName!: string | undefined;
+
+  constructor(data?: IRegionCountyLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): RegionCountyLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new RegionCountyLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface IRegionCountyLookupTableDto {
+  id: number;
+  displayName: string | undefined;
+}
+
 export class RoleListDto implements IRoleListDto {
   name!: string | undefined;
   displayName!: string | undefined;
@@ -99536,6 +101300,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
   supposedPickupDateFrom!: moment.Moment | undefined;
   supposedPickupDateTo!: moment.Moment | undefined;
   notesCount!: number;
+  bayanId!: string | undefined;
   id!: number;
 
   constructor(data?: IShippingRequestsTripListDto) {
@@ -99577,6 +101342,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
       this.supposedPickupDateFrom = _data['supposedPickupDateFrom'] ? moment(_data['supposedPickupDateFrom'].toString()) : <any>undefined;
       this.supposedPickupDateTo = _data['supposedPickupDateTo'] ? moment(_data['supposedPickupDateTo'].toString()) : <any>undefined;
       this.notesCount = _data['notesCount'];
+      this.bayanId = _data['bayanId'];
       this.id = _data['id'];
     }
   }
@@ -99619,6 +101385,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
     data['supposedPickupDateFrom'] = this.supposedPickupDateFrom ? this.supposedPickupDateFrom.toISOString() : <any>undefined;
     data['supposedPickupDateTo'] = this.supposedPickupDateTo ? this.supposedPickupDateTo.toISOString() : <any>undefined;
     data['notesCount'] = this.notesCount;
+    data['bayanId'] = this.bayanId;
     data['id'] = this.id;
     return data;
   }
@@ -99654,6 +101421,7 @@ export interface IShippingRequestsTripListDto {
   supposedPickupDateFrom: moment.Moment | undefined;
   supposedPickupDateTo: moment.Moment | undefined;
   notesCount: number;
+  bayanId: string | undefined;
   id: number;
 }
 
@@ -108609,6 +110377,7 @@ export class UnitOfMeasureDto implements IUnitOfMeasureDto {
   key!: string | undefined;
   displayName!: string | undefined;
   isOther!: boolean;
+  bayanIntegrationId!: number | undefined;
   id!: number;
 
   constructor(data?: IUnitOfMeasureDto) {
@@ -108624,6 +110393,7 @@ export class UnitOfMeasureDto implements IUnitOfMeasureDto {
       this.key = _data['key'];
       this.displayName = _data['displayName'];
       this.isOther = _data['isOther'];
+      this.bayanIntegrationId = _data['bayanIntegrationId'];
       this.id = _data['id'];
     }
   }
@@ -108640,6 +110410,7 @@ export class UnitOfMeasureDto implements IUnitOfMeasureDto {
     data['key'] = this.key;
     data['displayName'] = this.displayName;
     data['isOther'] = this.isOther;
+    data['bayanIntegrationId'] = this.bayanIntegrationId;
     data['id'] = this.id;
     return data;
   }
@@ -108649,6 +110420,7 @@ export interface IUnitOfMeasureDto {
   key: string | undefined;
   displayName: string | undefined;
   isOther: boolean;
+  bayanIntegrationId: number | undefined;
   id: number;
 }
 
@@ -108689,6 +110461,7 @@ export interface IGetUnitOfMeasureForViewDto {
 
 export class CreateOrEditUnitOfMeasureDto implements ICreateOrEditUnitOfMeasureDto {
   key!: string;
+  bayanIntegrationId!: number | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditUnitOfMeasureDto) {
@@ -108702,6 +110475,7 @@ export class CreateOrEditUnitOfMeasureDto implements ICreateOrEditUnitOfMeasureD
   init(_data?: any) {
     if (_data) {
       this.key = _data['key'];
+      this.bayanIntegrationId = _data['bayanIntegrationId'];
       this.id = _data['id'];
     }
   }
@@ -108716,6 +110490,7 @@ export class CreateOrEditUnitOfMeasureDto implements ICreateOrEditUnitOfMeasureD
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['key'] = this.key;
+    data['bayanIntegrationId'] = this.bayanIntegrationId;
     data['id'] = this.id;
     return data;
   }
@@ -108723,6 +110498,7 @@ export class CreateOrEditUnitOfMeasureDto implements ICreateOrEditUnitOfMeasureD
 
 export interface ICreateOrEditUnitOfMeasureDto {
   key: string;
+  bayanIntegrationId: number | undefined;
   id: number | undefined;
 }
 
@@ -109010,6 +110786,7 @@ export class UserEditDto implements IUserEditDto {
   dateOfBirth!: moment.Moment | undefined;
   hijriDateOfBirth!: string | undefined;
   driverLicenseTypeId!: number | undefined;
+  driverIssueNumber!: number | undefined;
 
   constructor(data?: IUserEditDto) {
     if (data) {
@@ -109041,6 +110818,7 @@ export class UserEditDto implements IUserEditDto {
       this.dateOfBirth = _data['dateOfBirth'] ? moment(_data['dateOfBirth'].toString()) : <any>undefined;
       this.hijriDateOfBirth = _data['hijriDateOfBirth'];
       this.driverLicenseTypeId = _data['driverLicenseTypeId'];
+      this.driverIssueNumber = _data['driverIssueNumber'];
     }
   }
 
@@ -109073,6 +110851,7 @@ export class UserEditDto implements IUserEditDto {
     data['dateOfBirth'] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
     data['hijriDateOfBirth'] = this.hijriDateOfBirth;
     data['driverLicenseTypeId'] = this.driverLicenseTypeId;
+    data['driverIssueNumber'] = this.driverIssueNumber;
     return data;
   }
 }
@@ -109098,6 +110877,7 @@ export interface IUserEditDto {
   dateOfBirth: moment.Moment | undefined;
   hijriDateOfBirth: string | undefined;
   driverLicenseTypeId: number | undefined;
+  driverIssueNumber: number | undefined;
 }
 
 export class UserRoleDto implements IUserRoleDto {

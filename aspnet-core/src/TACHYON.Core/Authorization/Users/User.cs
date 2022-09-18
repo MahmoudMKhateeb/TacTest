@@ -59,6 +59,8 @@ namespace TACHYON.Authorization.Users
 
         public int RateNumber { get; set; }
 
+        public int? DriverIssueNumber { get; set; }
+
         public User()
         {
             IsLockoutEnabled = true;

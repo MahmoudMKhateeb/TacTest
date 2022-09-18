@@ -4,7 +4,10 @@ using JetBrains.Annotations;
 using Org.BouncyCastle.Asn1.Microsoft;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Authorization.Users;
+using TACHYON.Cities;
+using TACHYON.Countries;
 using TACHYON.Editions;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy.Payments;
@@ -25,8 +28,12 @@ namespace TACHYON.MultiTenancy
         //Can add application specific tenant properties here
 
         public virtual string Address { get; set; }
-        public virtual int CountryId { get; set; }
-        public virtual int CityId { get; set; }
+        public virtual int? CountryId { get; set; }
+        [ForeignKey("CountryId")] public County CountyFk { get; set; }
+
+        public virtual int? CityId { get; set; }
+        [ForeignKey("CityId")] public City CityFk { get; set; }
+
         public virtual string UserTitle { get; set; }
 
         public virtual string companyName { get; set; }

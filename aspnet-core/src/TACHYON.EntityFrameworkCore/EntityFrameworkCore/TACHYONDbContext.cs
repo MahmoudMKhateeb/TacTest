@@ -1,4 +1,6 @@
-﻿using Abp.Events.Bus.Entities;
+﻿using TACHYON.Integration.BayanIntegration;
+using TACHYON.Regions;
+using Abp.Events.Bus.Entities;
 using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -94,6 +96,10 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<BayanIntegrationResult> BayanIntegrationResults { get; set; }
+
+        public virtual DbSet<Region> Regions { get; set; }
+
         public virtual DbSet<EmailTemplateTranslation> EmailTemplateTranslations { get; set; }
 
         public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
@@ -227,7 +233,6 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<County> Counties { get; set; }
 
-
         public virtual DbSet<GoodCategory> GoodCategories { get; set; }
 
         public virtual DbSet<GoodCategoryTranslation> GoodCategoryTranslations { get; set; }
@@ -251,7 +256,6 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<Invoices.Invoice> Invoice { get; set; }
         public DbSet<InvoiceProforma> InvoiceProforma { get; set; }
 
-
         public virtual DbSet<InvoiceTrip> InvoiceTrips { get; set; }
         public virtual DbSet<GroupPeriod> GroupPeriod { get; set; }
         public virtual DbSet<GroupShippingRequests> GroupShippingRequests { get; set; }
@@ -262,7 +266,6 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<SubmitInvoice> SubmitInvoices { get; set; }
         public DbSet<SubmitInvoiceTrip> SubmitInvoiceTrips { get; set; }
         public virtual DbSet<BalanceRecharge> BalanceRecharge { get; set; }
-
 
         public DbSet<Transaction> Transaction { get; set; }
 
@@ -297,12 +300,12 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<DriverLocationLog> DriverLocationLogs { get; set; }
 
         public DbSet<EntityLog> EntityLogs { get; set; }
-        
+
         public DbSet<EntityTemplate> EntityTemplates { get; set; }
         public DbSet<NormalPricePackage> NormalPricePackages { get; set; }
         public DbSet<PricePackageOffer> PricePackageOffers { get; set; }
         public DbSet<PricePackageOfferItem> PricePackageOfferItems { get; set; }
-        
+
         public DbSet<ShippingRequestUpdate> ShippingRequestUpdates { get; set; }
 
         public DbSet<SrPostPriceUpdate> PostPriceUpdates { get; set; }
@@ -503,7 +506,6 @@ namespace TACHYON.EntityFrameworkCore
                 b.HasIndex(a => a.AccountNumber).IsUnique();
                 b.HasIndex(a => a.ContractNumber).IsUnique();
             });
-
 
             modelBuilder.Entity<RoutPoint>()
                 .HasIndex(e => e.WaybillNumber)

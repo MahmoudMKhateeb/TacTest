@@ -13,6 +13,8 @@ namespace TACHYON.UnitOfMeasures.Dtos
         [StringLength(UnitOfMeasureConsts.MaxDisplayNameLength, MinimumLength = UnitOfMeasureConsts.MinDisplayNameLength)]
         public string Key { get; set; }
 
+         public virtual int? BayanIntegrationId { get; set; }
+
 
     }
 }
