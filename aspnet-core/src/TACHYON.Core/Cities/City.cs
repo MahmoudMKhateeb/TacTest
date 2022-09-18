@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Cities.CitiesTranslations;
 using TACHYON.Countries;
+using TACHYON.Regions;
 
 namespace TACHYON.Cities
 {
@@ -23,13 +24,22 @@ namespace TACHYON.Cities
         public virtual string Code { get; set; }
 
         public string Polygon { get; set; }
-        
+
         [DisableAuditing]
         public Point Location { get; set; }
         public virtual int CountyId { get; set; }
 
         [ForeignKey("CountyId")] public County CountyFk { get; set; }
         public bool IsActive { get; set; } = true;
+
+        public virtual int? BayanIntegrationId { get; set; }
+
+        public virtual int? RegionId { get; set; }
+
+        [ForeignKey("RegionId")]
+        public Region RegionFk { get; set; }
+
+       
 
         public ICollection<CitiesTranslation> Translations { get; set; }
     }

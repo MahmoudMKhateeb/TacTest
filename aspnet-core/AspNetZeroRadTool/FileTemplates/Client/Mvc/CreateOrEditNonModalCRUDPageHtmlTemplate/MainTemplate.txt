@@ -27,10 +27,9 @@
                                 <input type="hidden" name="id" value="@Model.{{Entity_Name_Here}}.Id" />
                             }
 
-				            {{NP_Looped_Template_Before_V110000_Here}}
-                            {{NP_Looped_Template_After_V110000_Here}}
-				            {{Property_Looped_Template_Before_V110000_Here}}
-                            {{Property_Looped_Template_After_V110000_Here}}
+				            {{NP_Looped_Template_Here}}
+
+				            {{Property_Looped_Template_Here}}                   
                     </div>
 			    </div>            
             </div>

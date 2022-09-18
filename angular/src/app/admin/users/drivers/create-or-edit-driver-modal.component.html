@@ -77,24 +77,24 @@
                   </div>
 
                   <div class="row">
-                    <div class="form-group col-6" hidden>
-                      <label for="EmailAddress">{{ 'EmailAddress' | localize }} <span class="required-fileds"> *</span></label>
-                      <input
-                        style="text-align: left !important"
-                        id="EmailAddress"
-                        #emailAddressInput="ngModel"
-                        type="email"
-                        name="EmailAddress"
-                        class="form-control"
-                        [(ngModel)]="user.emailAddress"
-                        (change)="removeWhiteSpacesFromEmail()"
-                        maxlength="256"
-                        email
-                      />
-                      <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('NotValid') }}</span>
-                      <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
-                      <validation-messages [formCtrl]="emailAddressInput"></validation-messages>
-                    </div>
+                    <!--                    <div class="form-group col-6" hidden>-->
+                    <!--                      <label for="EmailAddress">{{ 'EmailAddress' | localize }} <span class="required-fileds"> *</span></label>-->
+                    <!--                      <input-->
+                    <!--                        style="text-align: left !important"-->
+                    <!--                        id="EmailAddress"-->
+                    <!--                        #emailAddressInput="ngModel"-->
+                    <!--                        type="email"-->
+                    <!--                        name="EmailAddress"-->
+                    <!--                        class="form-control"-->
+                    <!--                        [(ngModel)]="user.emailAddress"-->
+                    <!--                        (change)="removeWhiteSpacesFromEmail()"-->
+                    <!--                        maxlength="256"-->
+                    <!--                        email-->
+                    <!--                      />-->
+                    <!--                      <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('NotValid') }}</span>-->
+                    <!--                      <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>-->
+                    <!--                      <validation-messages [formCtrl]="emailAddressInput"></validation-messages>-->
+                    <!--                    </div>-->
 
                     <div class="form-group col-6">
                       <label for="UserName">{{ 'PhoneNumber' | localize }}<span class="text-danger">*</span> </label>
@@ -264,6 +264,20 @@
                       <option *ngFor="let item of driverLicenseTypes" [value]="item.id">{{ item.name }}</option>
                     </select>
                     <validation-messages [formCtrl]="driverLicenseTypeId"></validation-messages>
+                  </div>
+                </div>
+
+                <div class="col-6">
+                  <div class="form-group" *ngIf="user.isDriver">
+                    <label for="DriverIssueNumber">{{ 'DriverIssueNumber' | localize }}</label>
+                    <input
+                      id="DriverIssueNumber"
+                      type="number"
+                      name="DriverIssueNumber"
+                      class="form-control"
+                      [(ngModel)]="user.driverIssueNumber"
+                      min="0"
+                    />
                   </div>
                 </div>
               </div>

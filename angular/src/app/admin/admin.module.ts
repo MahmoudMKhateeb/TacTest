@@ -1,7 +1,16 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { BayanIntegrationResultsComponent } from './bayanIntegration/bayanIntegrationResults/bayanIntegrationResults.component';
+import { ViewBayanIntegrationResultModalComponent } from './bayanIntegration/bayanIntegrationResults/view-bayanIntegrationResult-modal.component';
+import { CreateOrEditBayanIntegrationResultModalComponent } from './bayanIntegration/bayanIntegrationResults/create-or-edit-bayanIntegrationResult-modal.component';
+import { BayanIntegrationResultShippingRequestTripLookupTableModalComponent } from './bayanIntegration/bayanIntegrationResults/bayanIntegrationResult-shippingRequestTrip-lookup-table-modal.component';
+
+import { RegionsComponent } from './regions/regions/regions.component';
+import { ViewRegionModalComponent } from './regions/regions/view-region-modal.component';
+import { CreateOrEditRegionModalComponent } from './regions/regions/create-or-edit-region-modal.component';
+
 import { VasesComponent } from './vases/vases/vases.component';
 import { ViewVasModalComponent } from './vases/vases/view-vas-modal.component';
 import { CreateOrEditVasModalComponent } from './vases/vases/create-or-edit-vas-modal.component';
@@ -188,6 +197,15 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     }),
   ],
   declarations: [
+    BayanIntegrationResultsComponent,
+
+    ViewBayanIntegrationResultModalComponent,
+    CreateOrEditBayanIntegrationResultModalComponent,
+    BayanIntegrationResultShippingRequestTripLookupTableModalComponent,
+    RegionsComponent,
+
+    ViewRegionModalComponent,
+    CreateOrEditRegionModalComponent,
     VasesComponent,
     waybillsComponent,
     ViewVasModalComponent,

@@ -27,7 +27,7 @@
               keyExpr="id"
               (onRowUpdating)="updateRow($event)"
             >
-              <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true"> </dxo-editing>
+              <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true"> </dxo-editing>
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true"></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
@@ -50,8 +50,10 @@
               </dxi-column> -->
 
               <dxi-column dataField="translatedDisplayName" caption="{{ l('CountryName') }}"> </dxi-column>
+              <dxi-column dataField="regionId" caption="{{ l('Region') }}"> </dxi-column>
               <dxi-column dataField="isActive" caption="{{ l('IsActive') }}"></dxi-column>
               <dxi-column dataField="hasPolygon" caption="{{ l('hasPolygon') }}"></dxi-column>
+              <dxi-column dataField="bayanIntegrationId" caption="{{ l('bayanIntegrationId') }}"></dxi-column>
             </dx-data-grid>
           </div>
         </div>

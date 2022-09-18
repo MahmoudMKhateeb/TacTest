@@ -6,6 +6,16 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Administration_BayanIntegrationResults = "Pages.Administration.BayanIntegrationResults";
+        public const string Pages_Administration_BayanIntegrationResults_Create = "Pages.Administration.BayanIntegrationResults.Create";
+        public const string Pages_Administration_BayanIntegrationResults_Edit = "Pages.Administration.BayanIntegrationResults.Edit";
+        public const string Pages_Administration_BayanIntegrationResults_Delete = "Pages.Administration.BayanIntegrationResults.Delete";
+
+        public const string Pages_Administration_Regions = "Pages.Administration.Regions";
+        public const string Pages_Administration_Regions_Create = "Pages.Administration.Regions.Create";
+        public const string Pages_Administration_Regions_Edit = "Pages.Administration.Regions.Edit";
+        public const string Pages_Administration_Regions_Delete = "Pages.Administration.Regions.Delete";
+
         public const string Pages_EmailTemplates = "Pages.EmailTemplates";
         public const string Pages_EmailTemplates_Create = "Pages.EmailTemplates.Create";
         public const string Pages_EmailTemplates_Edit = "Pages.EmailTemplates.Edit";
@@ -58,7 +68,7 @@
         public const string Pages_PlateTypes_Create = "Pages.PlateTypes.Create";
         public const string Pages_PlateTypes_Edit = "Pages.PlateTypes.Edit";
         public const string Pages_PlateTypes_Delete = "Pages.PlateTypes.Delete";
-        
+
         public const string Pages_ShippingRequestAndTripNotes = "Pages.ShippingRequestAndTripNotes";
         public const string Pages_ShippingRequestAndTripNotes_Create = "Pages.ShippingRequestAndTripNotes_Create.Create";
         public const string Pages_ShippingRequestAndTripNotes_Edit = "Pages.ShippingRequestAndTripNotes_Create.Edit";
@@ -187,7 +197,6 @@
         public const string Pages_ShippingRequestVases_Create = "Pages.ShippingRequestVases.Create";
         public const string Pages_ShippingRequestVases_Edit = "Pages.ShippingRequestVases.Edit";
         public const string Pages_ShippingRequestVases_Delete = "Pages.ShippingRequestVases.Delete";
-
 
         public const string Pages_VasPrices = "Pages.VasPrices";
         public const string Pages_VasPrices_Create = "Pages.VasPrices.Create";
@@ -534,7 +543,6 @@
         public const string Pages_Administration_Host_Invoices_PaymentMethod_Delete =
             "Pages.Administration.Host.Invoices.PaymentMethod.Delete";
 
-
         public const string Pages_Invoices = "Pages.Invoices";
 
         public const string Pages_Administration_Host_Invoices_Delete =
@@ -545,7 +553,6 @@
         public const string Pages_Administration_Host_Invoices_MakeUnPaid =
             "Pages.Administration.Host.Invoices.MakeUnPaid";
 
-
         public const string Pages_Administration_Host_Invoices_Balances = "Pages.Administration.Host.Invoices.Balances";
 
         public const string Pages_Administration_Host_Invoices_Balances_Create =
@@ -553,7 +560,6 @@
 
         public const string Pages_Administration_Host_Invoices_Balances_Delete =
             "Pages.Administration.Host.Invoices_Balances.Delete";
-
 
         public const string Pages_Invoices_SubmitInvoices = "Pages.Invoices.SubmitInvoices";
 
@@ -569,12 +575,11 @@
             "Pages.Administration.Host.Invoices.SubmitInvoices.Rejected";
 
         public const string Pages_Invoices_Transaction = "Pages.Invoices.Transaction";
-        
+
         public const string Pages_EntityTemplate = "Pages.EntityTemplate";
         public const string Pages_EntityTemplate_Create = "Pages.EntityTemplate.Create";
         public const string Pages_EntityTemplate_Update = "Pages.EntityTemplate.Update";
         public const string Pages_EntityTemplate_Delete = "Pages.EntityTemplate.Delete";
-
 
         public const string Pages_NormalPricePackages = "Pages.NormalPricePackages";
         public const string Pages_NormalPricePackages_Create = "Pages.NormalPricePackages.Create";
@@ -588,8 +593,7 @@
         public const string Pages_SrPostPriceUpdate_CreateOfferAction = "Pages.SrPostPriceUpdate.CreateOfferAction";
 
         #endregion
-        
-        
+
         public const string Pages_Invoices_InvoiceNote = "Pages.Invoices.InvoiceNote";
         public const string Pages_InvoiceNote_Create = "Pages.InvoiceNotes.Create";
         public const string Pages_InvoiceNote_Edit = "Pages.InvoiceNotes.Edit";
@@ -612,7 +616,7 @@
         public const string Pages_Tracking = "Pages.shipment.Tracking";
         public const string Pages_Tracking_ReceiverCode = "Pages.Shipment.Tracking.ReceiverCode";
         public const string Pages_Tracking_ResetPointReceiverCode = "Pages.Shipment.Tracking.ResetPointReceiverCode";
-        
+
         public const string Pages_ShippingRequestUpdates = "Pages.ShippingRequestUpdates";
         public const string Pages_ShippingRequestUpdates_TakeAction = "Pages.ShippingRequestUpdates.TakeAction";
 

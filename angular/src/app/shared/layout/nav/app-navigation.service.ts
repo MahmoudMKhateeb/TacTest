@@ -1,4 +1,4 @@
-import { AppSessionService } from '@shared/common/session/app-session.service';
+﻿import { AppSessionService } from '@shared/common/session/app-session.service';
 import { Injectable } from '@angular/core';
 import { AppMenu } from './app-menu';
 import { AppMenuItem } from './app-menu-item';
@@ -599,6 +599,15 @@ export class AppNavigationService {
       //   [
       //     new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
       //     new AppMenuItem('Users', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/users'),
+      new AppMenuItem(
+        'BayanIntegrationResults',
+        'Pages.Administration.BayanIntegrationResults',
+        'flaticon-more',
+        '/app/admin/bayanIntegration/bayanIntegrationResults'
+      ),
+
+      new AppMenuItem('Regions', 'Pages.Administration.Regions', 'flaticon-more', '/app/admin/regions/regions'),
+
       //   ],
       //   undefined,
       //   undefined,

@@ -30,7 +30,6 @@ import {
   ShippingRequestTripCancelStatus,
   ShippingRequestTripStatus,
 } from '@shared/service-proxies/service-proxies';
-import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
 import { TripService } from '../trip.service';
 import { AddNewRemarksTripModalComponent } from './add-new-remarks-trip-modal/add-new-remarks-trip-modal.component';
@@ -318,5 +317,22 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     } else if (statusId == this.ShippingRequestTripCancelStatusEnum.Rejected) return this.l('RejectedTripCancelation');
     else if (statusId == this.ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval) return this.l('WaitingCancelApproveFromTMS');
     else return this.l('None');
+  }
+
+  createBayanTrip(id: any) {
+    this._shippingRequestTripsService.createBayanIntegrationTrip(id).subscribe(() => {});
+  }
+
+  printBayanTrip(id: any) {
+    // this._shippingRequestTripsService.printBayanIntegrationTrip(id).subscribe((result) => {
+    //   console.log(result);
+    //   let file = new Blob([result], { type: 'application/pdf' });
+    //   var fileURL = URL.createObjectURL(file);
+    //   window.open(fileURL);
+    // });
+
+    const url = AppConsts.remoteServiceBaseUrl + '/File/PrintBayanIntegrationTrip?tripId=' + id;
+    location.href = url;
+    return url;
   }
 }

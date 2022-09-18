@@ -14,6 +14,8 @@ using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +35,7 @@ using TACHYON.Firebases;
 using TACHYON.Goods.Dtos;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
+using TACHYON.Integration.BayanIntegration.V3;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Rating;
@@ -75,6 +78,7 @@ namespace TACHYON.Shipping.Trips
         private readonly ShippingRequestTripManager _shippingRequestTripManager;
         private readonly TenantManager _tenantManager;
         private readonly IRepository<ShippingRequestAndTripNote> _ShippingRequestAndTripNoteRepository;
+        private readonly BayanIntegrationManagerV3 _bayanIntegrationManagerV3;
 
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
@@ -97,8 +101,8 @@ namespace TACHYON.Shipping.Trips
             PenaltyManager penaltyManager,
             ShippingRequestTripManager shippingRequestTripManager,
             TenantManager tenantManager,
-            IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository
-            )
+            IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository,
+            BayanIntegrationManagerV3 bayanIntegrationManagerV3)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -121,6 +125,7 @@ namespace TACHYON.Shipping.Trips
             _shippingRequestTripManager = shippingRequestTripManager;
             _tenantManager = tenantManager;
             _ShippingRequestAndTripNoteRepository = ShippingRequestAndTripNoteRepository;
+            _bayanIntegrationManagerV3 = bayanIntegrationManagerV3;
         }
 
 
@@ -203,6 +208,11 @@ namespace TACHYON.Shipping.Trips
                 //});
                 x.IsTripRateBefore = allRatingLogList.Any(x => x.TripId == x.Id);
                 x.CanCreateTemplate = canTripsCreateTemplate.FirstOrDefault(i => i.Id == x.Id).Item2 ;
+                if (!x.BayanId.IsNullOrEmpty())
+                {
+                    dynamic b = JsonConvert.DeserializeObject(x.BayanId);
+                    x.BayanId = b.tripId;
+                }
             }
 
             return new PagedResultDto<ShippingRequestsTripListDto>(
@@ -771,6 +781,18 @@ namespace TACHYON.Shipping.Trips
             var trip = await _shippingRequestTripRepository.GetAsync(shippingRequesTripId);
             trip.SplitInvoiceFlag = invoiceFlag?.Trim();
 
+        }
+
+
+        public async Task CreateBayanIntegrationTrip(int tripId)
+        {
+            await _bayanIntegrationManagerV3.CreateTrip(tripId);
+        }
+
+        public async Task<byte[]> PrintBayanIntegrationTrip(int tripId)
+        {
+          return   await _bayanIntegrationManagerV3.PrintTrip(tripId);
+         
         }
 
         #region Heleper

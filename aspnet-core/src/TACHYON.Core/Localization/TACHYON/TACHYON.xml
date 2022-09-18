@@ -1,6 +1,27 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
-	<texts>
+	<texts>    <text name="BayanIntegration">Bayan integration</text>
+    <text name="BayanIntegrationResult">Bayan integration result</text>
+    <text name="TACHYON.BayanIntegration.BayanIntegrationResult">BayanIntegrationResult</text>
+    <text name="ActionName">Action name</text>
+    <text name="InputJson">Input json</text>
+    <text name="ResponseJson">Response json</text>
+    <text name="BayanIntegrationResultsHeaderInfo">Bayan integration results header info</text>
+    <text name="CreateNewBayanIntegrationResult">Create new bayan integration result</text>
+    <text name="EditBayanIntegrationResult">Edit bayan integration result</text>
+    <text name="DeleteBayanIntegrationResult">Delete bayan integration result</text>
+    <text name="BayanIntegrationResults">Bayan integration results</text>
+    <text name="ShippingRequestTripContainerNumber">Shipping request trip container number</text>
+    <text name="PickShippingRequestTrip">Pick shipping request trip</text>
+    <text name="Regions">Regions</text>
+    <text name="Region">Region</text>
+    <text name="TACHYON.Regions.Region">Region</text>
+    <text name="BayanIntegrationId">Bayan integration id</text>
+    <text name="RegionsHeaderInfo">Regions header info</text>
+    <text name="CreateNewRegion">Create new region</text>
+    <text name="EditRegion">Edit region</text>
+    <text name="DeleteRegion">Delete region</text>
+
     <text name="DriverLicenseTypes">Driver license types</text>
     <text name="DriverLicenseType">Driver license type</text>
     <text name="TACHYON.DriverLicenseTypes.DriverLicenseType">DriverLicenseType</text>

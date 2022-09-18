@@ -22,6 +22,7 @@ using TACHYON.Cities.Exporting;
 using TACHYON.Common;
 using TACHYON.Countries;
 using TACHYON.Dto;
+using TACHYON.Regions;
 
 namespace TACHYON.Cities
 {
@@ -31,15 +32,18 @@ namespace TACHYON.Cities
         private readonly IRepository<City> _cityRepository;
         private readonly ICitiesExcelExporter _citiesExcelExporter;
         private readonly IRepository<County, int> _lookup_countyRepository;
+        private readonly IRepository<Region, int> _regionRepository;
 
 
         public CitiesAppService(IRepository<City> cityRepository,
             ICitiesExcelExporter citiesExcelExporter,
-            IRepository<County, int> lookup_countyRepository)
+            IRepository<County, int> lookup_countyRepository,
+            IRepository<Region, int> regionRepository)
         {
             _cityRepository = cityRepository;
             _citiesExcelExporter = citiesExcelExporter;
             _lookup_countyRepository = lookup_countyRepository;
+            _regionRepository = regionRepository;
         }
 
         public async Task<LoadResult> DxGetAll(LoadOptionsInput input)
@@ -113,7 +117,8 @@ namespace TACHYON.Cities
         protected virtual async Task Create(CreateOrEditCityDto input)
         {
             var point = new Point
-                (input.Longitude, input.Latitude) { SRID = 4326 };
+                (input.Longitude, input.Latitude)
+            { SRID = 4326 };
 
             var city = ObjectMapper.Map<City>(input);
             city.Location = point;
@@ -128,7 +133,8 @@ namespace TACHYON.Cities
             if ((city.Location?.X != input.Longitude || city.Location?.Y != input.Latitude))
             {
                 var point = new Point
-                    (input.Longitude, input.Latitude) { SRID = 4326 };
+                    (input.Longitude, input.Latitude)
+                { SRID = 4326 };
 
                 city.Location = point;
             }
@@ -162,20 +168,20 @@ namespace TACHYON.Cities
                     e => e.CountyFk != null && e.CountyFk.DisplayName == input.CountyDisplayNameFilter);
 
             var query = (from o in filteredCities
-                join o1 in _lookup_countyRepository.GetAll() on o.CountyId equals o1.Id into j1
-                from s1 in j1.DefaultIfEmpty()
-                select new GetCityForViewDto()
-                {
-                    City = new CityDto
-                    {
-                        DisplayName = o.DisplayName,
-                        Code = o.Code,
-                        Latitude = o.Location.Y,
-                        Longitude = o.Location.X,
-                        Id = o.Id
-                    },
-                    CountyDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
-                });
+                         join o1 in _lookup_countyRepository.GetAll() on o.CountyId equals o1.Id into j1
+                         from s1 in j1.DefaultIfEmpty()
+                         select new GetCityForViewDto()
+                         {
+                             City = new CityDto
+                             {
+                                 DisplayName = o.DisplayName,
+                                 Code = o.Code,
+                                 Latitude = o.Location.Y,
+                                 Longitude = o.Location.X,
+                                 Id = o.Id
+                             },
+                             CountyDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
+                         });
 
 
             var cityListDtos = await query.ToListAsync();
@@ -192,6 +198,17 @@ namespace TACHYON.Cities
                 {
                     Id = county.Id,
                     DisplayName = county == null || county.DisplayName == null ? "" : county.DisplayName.ToString()
+                }).ToListAsync();
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_Cities)]
+        public async Task<List<SelectItemDto>> GetAllRegionsForTableDropdown()
+        {
+            return await _regionRepository.GetAll()
+                .Select(x => new SelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x == null || x.Name == null ? "" : x.Name.ToString()
                 }).ToListAsync();
         }
     }

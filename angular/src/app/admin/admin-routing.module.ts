@@ -1,5 +1,7 @@
 ﻿import { NgModule } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { BayanIntegrationResultsComponent } from './bayanIntegration/bayanIntegrationResults/bayanIntegrationResults.component';
+import { RegionsComponent } from './regions/regions/regions.component';
 import { VasesComponent } from './vases/vases/vases.component';
 import { TermAndConditionTranslationsComponent } from './termsAndConditions/termAndConditionTranslations/termAndConditionTranslations.component';
 import { ShippingRequestStatusesComponent } from './shippingRequestStatuses/shippingRequestStatuses/shippingRequestStatuses.component';
@@ -38,6 +40,12 @@ import { waybillsComponent } from './waybills/waybills';
       {
         path: '',
         children: [
+          {
+            path: 'bayanIntegration/bayanIntegrationResults',
+            component: BayanIntegrationResultsComponent,
+            data: { permission: 'Pages.Administration.BayanIntegrationResults' },
+          },
+          { path: 'regions/regions', component: RegionsComponent, data: { permission: 'Pages.Administration.Regions' } },
           { path: 'vases/vases', component: VasesComponent, data: { permission: 'Pages.Administration.Vases' } },
           { path: 'waybills/waybills', component: waybillsComponent, data: { permission: undefined } },
           {
