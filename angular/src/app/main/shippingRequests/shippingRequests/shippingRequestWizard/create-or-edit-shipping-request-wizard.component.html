@@ -249,13 +249,13 @@
                     <div class="row">
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <!-- [minHijri]="todayHijri"
-                            [minGreg]="todayGregorian" -->
                           <hijri-gregorian-datepicker-test
                             [parentForm]="parentForm"
                             [label]="l('TripsStartDate')"
                             class="m-input"
                             [readonly]="true"
+                            [minHijri]="!isTachyonDealer ? todayHijri : ''"
+                            [minGreg]="!isTachyonDealer ? todayGregorian : ''"
                             [selectedDate]="startTripdate"
                             (selectedDateChange)="validateTripsDates($event, 'tripsStartDate')"
                           >
