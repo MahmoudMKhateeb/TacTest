@@ -8,6 +8,9 @@ import {
   CreateOrEditFacilityWorkingHourDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
+  PenaltiesServiceProxy,
+  ShippersForDropDownDto,
+  ShippingRequestsServiceProxy,
   TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
@@ -51,19 +54,22 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   FacilityWorkingHours: any[];
   mapCenterLat: number;
   mapCenterLng: number;
+  AllTenants: ShippersForDropDownDto[];
 
   constructor(
     injector: Injector,
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private _countriesServiceProxy: TenantRegistrationServiceProxy,
     private ngZone: NgZone,
-    private mapsAPILoader: MapsAPILoader
+    private mapsAPILoader: MapsAPILoader,
+    private _penaltiesServiceProxy: PenaltiesServiceProxy
   ) {
     super(injector);
   }
 
   ngOnInit() {
     this.loadAllCountries();
+    this.loadAllCompaniesForDropDown();
   }
 
   private get SelectedCountryCode(): string {
@@ -136,6 +142,8 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    */
   save(): void {
     this.saving = true;
+    console.log(this.facility.shipperId);
+
     this.facility.facilityWorkingHours = this.FacilityWorkingHours.filter((r) => r.startTime && r.endTime && r.hasTime).map(
       (fh) =>
         new CreateOrEditFacilityWorkingHourDto({
@@ -288,6 +296,12 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     this._countriesServiceProxy.getAllCountriesWithCode().subscribe((res) => {
       this.countries = res;
       this.countriesLoading = false;
+    });
+  }
+
+  loadAllCompaniesForDropDown() {
+    this._penaltiesServiceProxy.getAllCompanyForDropDown().subscribe((result) => {
+      this.AllTenants = result;
     });
   }
 

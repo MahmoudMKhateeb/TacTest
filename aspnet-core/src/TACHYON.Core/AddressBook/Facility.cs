@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Entities;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.MultiTenancy;
 using TACHYON.Rating;
 
 namespace TACHYON.AddressBook
@@ -9,7 +10,8 @@ namespace TACHYON.AddressBook
     public class Facility : AddressBaseFullAuditedEntity, IMayHaveTenant, IHasRating
     {
         public int? TenantId { get; set; }
-
+        [ForeignKey("TenantId")]
+        public Tenant Tenant { get; set; }
         public override string Name { get; set; }
 
         /// <summary>
