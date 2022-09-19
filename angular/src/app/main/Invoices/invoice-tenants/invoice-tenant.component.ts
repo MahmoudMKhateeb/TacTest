@@ -12,6 +12,7 @@ import {
   SubmitInvoiceFilterInput,
   SubmitInvoiceStatus,
   InvoiceChannel,
+  SubmitInvoiceChannel,
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -36,6 +37,7 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   @ViewChild('voidModal', { static: true }) voidModal: VoidInvoiceNoteModalComponent;
 
   SubmitStatus: any;
+  SubmitChannel: any;
   IsStartSearch = false;
   advancedFiltersAreShown = false;
   Periods: ISelectItemDto[];
@@ -58,6 +60,7 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   ) {
     super(injector);
     this.SubmitStatus = this.enumToArray.transform(SubmitInvoiceStatus);
+    this.SubmitChannel = this.enumToArray.transform(SubmitInvoiceChannel);
   }
 
   ngOnInit() {

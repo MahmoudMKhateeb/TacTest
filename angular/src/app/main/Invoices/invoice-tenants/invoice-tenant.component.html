@@ -61,7 +61,9 @@
               <dxi-column cellTemplate="statusCellTemplate" dataField="status" caption=" {{ l('Status') }}">
                 <dxo-lookup [dataSource]="SubmitStatus" displayExpr="value" valueExpr="key"></dxo-lookup>
               </dxi-column>
-              <dxi-column dataField="channel" cellTemplate="channelCellTemplate" caption="{{ l('Type') }}"></dxi-column>
+              <dxi-column dataField="channel" cellTemplate="channelCellTemplate" caption="{{ l('Type') }}">
+                <dxo-lookup [dataSource]="SubmitChannel" displayExpr="value" valueExpr="key"></dxo-lookup>
+              </dxi-column>
               <dxo-master-detail [enabled]="true" template="detail"></dxo-master-detail>
               <div *dxTemplate="let options of 'detail'">
                 <app-invoice-tenant-item [Id]="options.data.id"></app-invoice-tenant-item>
@@ -88,7 +90,9 @@
                     class="badge badge-inline"
                     [ngClass]="{
                       'badge-danger': options.data.channel == 3,
-                      'badge-primary': options.data.channel != 3
+                      'badge-primary': options.data.channel == 1,
+                      'badge-warning': options.data.channel == 2,
+                      'badge-info': options.data.channel == 4
                     }"
                     >{{ l(options.data.invoiceChannelTitle) }}</span
                   ></span

@@ -29,6 +29,7 @@ namespace TACHYON.Invoices.SubmitInvoices
         public SubmitInvoiceStatus Status { get; set; }
         public string RejectedReason { get; set; }
         public DateTime? DueDate { get; set; }
+        public DateTime? PaymentDate { get; set; }
         public ICollection<Penalty> Penalties { get; set; }
         public SubmitInvoice()
         {
