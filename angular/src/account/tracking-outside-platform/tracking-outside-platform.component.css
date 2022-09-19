@@ -1,0 +1,11 @@
+/* Chrome, Safari, Edge, Opera */
+input.search-box-custom::-webkit-outer-spin-button,
+input.search-box-custom::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input.search-box-custom[type='number'] {
+  -moz-appearance: textfield;
+}
