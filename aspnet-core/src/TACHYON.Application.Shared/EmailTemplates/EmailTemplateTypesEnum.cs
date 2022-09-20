@@ -16,6 +16,7 @@
         InvoiceDue = 8,
         IssuedInvoice = 9,
         ExpiredDocuments = 10,
+        NotificationEmail = 16,
 
         #endregion
 

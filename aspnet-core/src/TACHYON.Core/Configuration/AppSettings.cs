@@ -114,6 +114,7 @@
                 "App.UserManagement.AllowUsingGravatarProfilePicture";
 
             public const string UseGravatarProfilePicture = "App.UserManagement.UseGravatarProfilePicture";
+            public const string SubscribedNotificationEmails = "App.UserManagement.SubscribedNotificationEmails";
         }
 
         public static class Email

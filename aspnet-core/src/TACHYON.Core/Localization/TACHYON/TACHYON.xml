@@ -634,7 +634,7 @@
 		<text name="UploadInvoiceDocument">Upload the invoice</text>
 		<text name="DriectRequestCarrierRespone">The {clientname} has established a current view of the  shipment No.: {id}.</text>
 		<text name="Driver">Driver</text>
-		<text name="DriverAcceptTrip">The driver {driver} has been accepted the trip from {source} to {destination}</text>
+		<text name="DriverAcceptTrip">The driver {0} has been accepted the trip from {1} to {2}</text>
 		<text name="DriverCreationDateAndTime">Creation date and time</text>
 		<text name="DriverDocuments">Driver documents</text>
 		<text name="DriverInformation">Driver information</text>

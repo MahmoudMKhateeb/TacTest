@@ -24,8 +24,8 @@
             <ng-template pTemplate="header">
               <tr>
                 <th style="min-width: 400px">{{ l('Name') }}</th>
-                <th>{{ l('Email') }}</th>
                 <th>{{ l('Platform') }}</th>
+                <th>{{ l('Email') }}</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-notification>
@@ -46,10 +46,10 @@
                 <td>
                   <label class="checkbox checkbox-lg">
                     <input
-                      id="Notification_{{ notification.name }}"
+                      id="Email_{{ notification.name }}"
                       type="checkbox"
-                      name="Notification_{{ notification.name }}"
-                      [(ngModel)]="notification.isSubscribed"
+                      name="Email_{{ notification.name }}"
+                      [(ngModel)]="notification.isEmailSubscribed"
                       [disabled]="!settings.receiveNotifications"
                     />
                     <span></span>

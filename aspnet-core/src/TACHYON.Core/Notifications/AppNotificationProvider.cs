@@ -4,6 +4,11 @@ using Abp.Localization;
 using Abp.Notifications;
 using TACHYON.Authorization;
 using TACHYON.Features;
+using TACHYON.Invoices;
+using TACHYON.Invoices.SubmitInvoices;
+using TACHYON.PriceOffers;
+using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Notifications
 {
@@ -171,6 +176,66 @@ namespace TACHYON.Notifications
 
             #endregion
 
+            #region Shipping Tracking Notifications
+
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.DriverAcceptTrip,
+                displayName: L("DriverAcceptTrip")
+            ));
+
+            #endregion
+
+            #region Offers Notifications
+
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.TMSAcceptedOffer,
+                displayName: L("TachyonDealerAcceptPriceOffer")));    
+            
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.ShipperAcceptedOffer,
+                displayName: L("ShipperAcceptPriceOffer")));
+            
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.PendingOffer,
+                displayName: L("PendingPriceOfferNotification"),
+                description: L("PendingOffer")));
+            
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.RejectedOffer,
+                displayName: L("RejectedPriceOfferNotification"),
+                description: L("RejectedOffer")));
+            
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.RejectedPostPriceOffer,
+                displayName: L("RejectedPostPriceOfferNotification"),
+                description: L("RejectedOffer")));
+            
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.ShippingRequestSendOfferWhenAddPrice,
+                displayName: L("SendOfferWhenAddPriceNotification"),
+                description: L("ShippingRequestSendOfferWhenAddPrice")));
+            
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.ShippingRequestSendOfferWhenUpdatePrice,
+                 displayName: L("SendOfferWhenUpdatePriceNotification"),
+                description: L("ShippingRequestSendOfferWhenUpdatePrice")));
+
+            #endregion
+
+            #region Invoicing Notifications
+
+            context.Manager.Add(new NotificationDefinition(AppNotificationNames.SubmitInvoiceOnClaim,
+                typeof(SubmitInvoice),L("SubmitInvoiceOnClaim")));
+            
+            context.Manager.Add(new NotificationDefinition(AppNotificationNames.SubmitInvoiceOnAccepted,
+                typeof(SubmitInvoice),L("SubmitInvoiceOnAccepted")));
+            
+            context.Manager.Add(new NotificationDefinition(AppNotificationNames.SubmitInvoiceOnRejected,
+                typeof(SubmitInvoice),L("SubmitInvoiceOnRejected")));
+
+            #endregion
+            
+            
             #endregion
         }
 
