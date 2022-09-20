@@ -22,6 +22,20 @@
 
         <div class="modal-body">
           <div class="row">
+            <div *ngIf="this.feature.isEnabled('App.TachyonDealer')" class="form-group col-md-12">
+              <label>{{ l('Shipper') }} <span class="required-fileds">*</span></label>
+              <div
+                [ngClass]="{
+                  'spinner spinner-success spinner-right mr-1 ml-1': !AllTenants
+                }"
+              >
+                <select class="form-control" name="Shipper" [(ngModel)]="facility.shipperId" required>
+                  <option [value]="undefined" disabled>{{ l('SelectCompany') }}</option>
+                  <option *ngFor="let item of AllTenants" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+              <span class="form-text text-muted">{{ l('SelectCompany') }} {{ facility.shipperId }}</span>
+            </div>
             <div class="form-group col-md-12">
               <label>{{ l('FacilityName') }} <span class="required-fileds">*</span></label>
               <input
