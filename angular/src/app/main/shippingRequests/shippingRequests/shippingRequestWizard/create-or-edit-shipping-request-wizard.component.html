@@ -254,8 +254,8 @@
                             [label]="l('TripsStartDate')"
                             class="m-input"
                             [readonly]="true"
-                            [minHijri]="todayHijri"
-                            [minGreg]="todayGregorian"
+                            [minHijri]="!isTachyonDealer ? todayHijri : ''"
+                            [minGreg]="!isTachyonDealer ? todayGregorian : ''"
                             [selectedDate]="startTripdate"
                             (selectedDateChange)="validateTripsDates($event, 'tripsStartDate')"
                           >

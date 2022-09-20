@@ -282,6 +282,10 @@ namespace TACHYON.Shipping.ShippingRequests
                     throw new UserFriendlyException(L("feature SendDirectRequest not enabled"));
                 }
             }
+            if (!await IsTachyonDealer() && input.StartTripDate.Date < Clock.Now.Date)
+            {
+                throw new UserFriendlyException(L("Start trip date cannot be before today"));
+            }
 
             if (input.Id == null)
             {

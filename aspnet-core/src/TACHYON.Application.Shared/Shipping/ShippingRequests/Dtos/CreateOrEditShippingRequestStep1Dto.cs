@@ -42,10 +42,10 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-            if (this.StartTripDate.Date < Clock.Now.Date)
-            {
-                context.Results.Add(new ValidationResult("Start trip date cannot be before today"));
-            }
+            //if (this.StartTripDate.Date < Clock.Now.Date)
+            //{
+            //    context.Results.Add(new ValidationResult("Start trip date cannot be before today"));
+            //}
 
             if (EndTripDate.HasValue && StartTripDate.Date > EndTripDate.Value.Date)
             {
