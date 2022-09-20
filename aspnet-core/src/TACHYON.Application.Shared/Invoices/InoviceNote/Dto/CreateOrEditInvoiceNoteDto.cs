@@ -11,6 +11,8 @@ namespace TACHYON.Invoices.InoviceNote.Dto
         public NoteType NoteType { get; set; }
         public string Remarks { get; set; }
         public long? InvoiceNumber { get; set; }
+        public long? SubmitInvoiceNumber { get; set; }
+
         public decimal VatAmount { get; set; }
         public string WaybillNumber { get; set; }
         public decimal Price { get; set; }

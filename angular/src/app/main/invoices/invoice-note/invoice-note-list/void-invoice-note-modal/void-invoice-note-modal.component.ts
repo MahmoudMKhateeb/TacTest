@@ -21,6 +21,7 @@ export class VoidInvoiceNoteModalComponent extends AppComponentBase implements O
   sendFullVoidLoading = false;
   invoiceData: PartialVoidInvoiceDto;
   partialLoading = false;
+  invoiceType: number;
 
   constructor(inject: Injector, private _service: InvoiceNoteServiceProxy) {
     super(inject);
@@ -28,7 +29,8 @@ export class VoidInvoiceNoteModalComponent extends AppComponentBase implements O
 
   ngOnInit(): void {}
 
-  show(id?: number) {
+  show(id?: number, invoiceType?: number) {
+    this.invoiceType = invoiceType;
     if (isNotNullOrUndefined(id)) {
       this.invoiceId = id;
     }
@@ -43,25 +45,48 @@ export class VoidInvoiceNoteModalComponent extends AppComponentBase implements O
 
   sendFullVoid() {
     this.sendFullVoidLoading = true;
-    this._service.genrateFullVoidInvoiceNote(this.invoiceId).subscribe((res) => {
-      this.notify.success(this.l('Success'));
-      this.sendFullVoidLoading = false;
-      this.close();
-    });
+    if (this.invoiceType == 1) {
+      this._service.genrateFullVoidInvoiceNote(this.invoiceId).subscribe((res) => {
+        this.notify.success(this.l('Success'));
+        this.sendFullVoidLoading = false;
+        this.close();
+      });
+    } else {
+      this._service.genrateFullVoidSubmitInvoiceNote(this.invoiceId).subscribe((res) => {
+        this.notify.success(this.l('Success'));
+        this.sendFullVoidLoading = false;
+        this.close();
+      });
+    }
   }
 
   getInvoiceForPartialVoid() {
-    this._service.getInvoiceForPartialVoid(this.invoiceId).subscribe((res) => {
-      // this.notify.success(this.l(""))
-      this.invoiceData = res;
-      this.CreateOrEditNoteModalComponent.manualInvoiceNoteIsEnabled = false;
-      this.CreateOrEditNoteModalComponent.form.invoiceNumber = this.invoiceData.invoiceNumber;
-      this.CreateOrEditNoteModalComponent.form.tenantId = this.invoiceData.tenantId;
-      this.CreateOrEditNoteModalComponent.form.invoiceItems = this.invoiceData.invoiceItems;
-      this.CreateOrEditNoteModalComponent.handleCompanyChange();
-      this.CreateOrEditNoteModalComponent.getAllWaybillByInvoiceId();
-      //ls
-    });
+    if (this.invoiceType == 1) {
+      // invoice
+      this._service.getInvoiceForPartialVoid(this.invoiceId).subscribe((res) => {
+        // this.notify.success(this.l(""))
+        this.invoiceData = res;
+        this.CreateOrEditNoteModalComponent.manualInvoiceNoteIsEnabled = false;
+        this.CreateOrEditNoteModalComponent.form.invoiceNumber = this.invoiceData.invoiceNumber;
+        this.CreateOrEditNoteModalComponent.form.tenantId = this.invoiceData.tenantId;
+        this.CreateOrEditNoteModalComponent.form.invoiceItems = this.invoiceData.invoiceItems;
+        this.CreateOrEditNoteModalComponent.handleCompanyChange();
+        this.CreateOrEditNoteModalComponent.getAllWaybillByInvoiceId();
+        //ls
+      });
+    } else {
+      //submit invoice
+      this._service.getSubmitInvoiceForPartialVoid(this.invoiceId).subscribe((res) => {
+        this.invoiceData = res;
+        this.CreateOrEditNoteModalComponent.manualInvoiceNoteIsEnabled = false;
+        this.CreateOrEditNoteModalComponent.form.submitInvoiceNumber = this.invoiceData.invoiceNumber;
+        this.CreateOrEditNoteModalComponent.form.tenantId = this.invoiceData.tenantId;
+        this.CreateOrEditNoteModalComponent.InvoiceType = 2;
+        this.CreateOrEditNoteModalComponent.form.invoiceItems = this.invoiceData.invoiceItems;
+        this.CreateOrEditNoteModalComponent.handleCompanyChange();
+        this.CreateOrEditNoteModalComponent.getAllWaybillByInvoiceId();
+      });
+    }
   }
 
   SendPartiallyVoid() {

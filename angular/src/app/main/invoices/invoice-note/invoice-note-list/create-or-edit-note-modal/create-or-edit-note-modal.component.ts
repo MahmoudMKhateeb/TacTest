@@ -30,6 +30,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
   noteTypes = this.enumToArray.transform(this.noteTypeEnum);
   allCompanies: CompayForDropDownDto[];
   allInvoices: InvoiceRefreanceNumberDto[];
+  allSubmitInvoices: InvoiceRefreanceNumberDto[];
   allWaybills: GetAllInvoiceItemDto[] = [];
   AllItemsWithoutInvoice: GetAllInvoiceItemDto[] = [];
   selectedWaybills: any[] = [];
@@ -37,6 +38,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
   manualInvoiceNoteIsEnabled = true;
   waybillsLoading = false;
   newAttribute: any = {};
+  InvoiceType: number = 1;
 
   constructor(inject: Injector, private _invoiceNoteServiceProxy: InvoiceNoteServiceProxy, private enumToArray: EnumToArrayPipe) {
     super(inject);
@@ -135,18 +137,31 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
     //if (!this.form.isManual) {
     this.getAllInvoicesByCompanyId();
     this.form.invoiceItems = [];
+    if (this.InvoiceType == 2) this.form.invoiceNumber = null;
+    else this.form.submitInvoiceNumber = null;
     //}
   }
 
   getAllInvoicesByCompanyId() {
-    this._invoiceNoteServiceProxy.getAllInvoiceNumberBaseOnCompanyDropDown(this.form.tenantId).subscribe((res) => {
-      this.allInvoices = res;
-      this.getAllWaybillByInvoiceId();
-    });
+    if (this.InvoiceType == 2) {
+      this._invoiceNoteServiceProxy.getAllSubmitInvoiceNumberBaseOnCompanyDropDown(this.form.tenantId).subscribe((res) => {
+        this.allSubmitInvoices = res;
+        this.getAllWaybillByInvoiceId();
+      });
+    } else {
+      this._invoiceNoteServiceProxy.getAllInvoiceNumberBaseOnCompanyDropDown(this.form.tenantId).subscribe((res) => {
+        this.allInvoices = res;
+        this.getAllWaybillByInvoiceId();
+      });
+    }
   }
 
   getAllWaybillByInvoiceId() {
-    let id = this.allInvoices.find((x) => x.refreanceNumber == this.form.invoiceNumber)?.id;
+    let id: number;
+    if (this.InvoiceType == 1) id = this.allInvoices.find((x) => x.refreanceNumber == this.form.invoiceNumber)?.id;
+    else {
+      id = this.allSubmitInvoices.find((x) => x.refreanceNumber == this.form.submitInvoiceNumber)?.id;
+    }
     //var index = this.allInvoices.findIndex((x) => x.refreanceNumber == this.form.invoiceNumber);
     //var id = this.allInvoices[index].id;
     if (!isNotNullOrUndefined(id)) {
@@ -162,22 +177,41 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
     this.waybillsLoading = true;
     if (this.form.id) this.form.invoiceItems = [];
 
-    this._invoiceNoteServiceProxy.getAllInvoicmItemDto(id).subscribe((res) => {
-      this.allWaybills = res;
-      this.waybillsLoading = false;
-      console.log(this.form.invoiceNumber);
-      this.allWaybills.forEach((x) => {
-        let waybill = this.selectedWaybills.find((y) => x.waybillNumber == y.waybillNumber);
+    if (this.InvoiceType == 1) {
+      this._invoiceNoteServiceProxy.getAllInvoicmItemDto(id).subscribe((res) => {
+        this.allWaybills = res;
+        this.waybillsLoading = false;
+        console.log(this.form.invoiceNumber);
+        this.allWaybills.forEach((x) => {
+          let waybill = this.selectedWaybills.find((y) => x.waybillNumber == y.waybillNumber);
 
-        if (waybill != null) {
-          x.id = waybill.id;
-          x.checked = waybill.id != null;
-          x.price = waybill.price;
-          x.vatAmount = waybill.vatAmount;
-          x.totalAmount = waybill.totalAmount;
-        }
+          if (waybill != null) {
+            x.id = waybill.id;
+            x.checked = waybill.id != null;
+            x.price = waybill.price;
+            x.vatAmount = waybill.vatAmount;
+            x.totalAmount = waybill.totalAmount;
+          }
+        });
       });
-    });
+    } else {
+      this._invoiceNoteServiceProxy.getAllSubmitInvoicmItemDto(id).subscribe((res) => {
+        this.allWaybills = res;
+        this.waybillsLoading = false;
+        console.log(this.form.invoiceNumber);
+        this.allWaybills.forEach((x) => {
+          let waybill = this.selectedWaybills.find((y) => x.waybillNumber == y.waybillNumber);
+
+          if (waybill != null) {
+            x.id = waybill.id;
+            x.checked = waybill.id != null;
+            x.price = waybill.price;
+            x.vatAmount = waybill.vatAmount;
+            x.totalAmount = waybill.totalAmount;
+          }
+        });
+      });
+    }
   }
   calculator(price: number, taxVat: number, index: number): void {
     this.allWaybills[index].vatAmount = (price * taxVat) / 100;
@@ -185,12 +219,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
     this.selectedWaybills = this.allWaybills.filter((item) => {
       return item.checked;
     });
-    //this.allWaybills.push();
-    // var sumAllPrice = this.selectedWaybills.reduce((prev, next) => prev + next.price, 0);
-    // this.form.price = sumAllPrice;
-    // var allVatAmount = this.selectedWaybills.reduce((prev, next) => prev + next.vatAmount, 0);
-    // this.form.vatAmount = allVatAmount;
-    // this.form.totalValue = sumAllPrice + allVatAmount;
+
     this.calculateTotalPrice();
   }
 

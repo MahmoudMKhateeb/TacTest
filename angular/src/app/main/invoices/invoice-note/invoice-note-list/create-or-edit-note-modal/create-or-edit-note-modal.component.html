@@ -71,6 +71,16 @@
               </div>
             </div>
             <div class="col-lg-12 mt-4">
+              <label>{{ l('InvoiceType') }} <span class="required-fileds">*</span></label>
+              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
+                <select #invoiceType="ngModel" class="form-control" [(ngModel)]="InvoiceType" name="InvoiceType" (change)="handleCompanyChange()">
+                  <!--                  <option value="">{{ l('SelectInvoiceReference') }}</option>-->
+                  <option value="1">{{ l('Invoice') }}</option>
+                  <option value="2">{{ l('CarrierInvoice') }}</option>
+                </select>
+              </div>
+            </div>
+            <div *ngIf="InvoiceType == 1" class="col-lg-12 mt-4">
               <label>{{ l('InvoiceReferenceNumber') }} </label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
                 <select
@@ -81,11 +91,29 @@
                   [class.is-valid]="invoiceNumber.valid && (invoiceNumber.dirty || invoiceNumber.touched)"
                   [class.is-invalid]="invoiceNumber.invalid && (invoiceNumber.dirty || invoiceNumber.touched)"
                   (change)="getAllWaybillByInvoiceId()"
-                  [attr.disabled]="manualInvoiceNoteIsEnabled ? null : true"
                 >
                   <!--                  <option value="">{{ l('SelectInvoiceReference') }}</option>-->
                   <option [ngValue]="null" disabled selected>{{ l('selectInvoice') }}</option>
                   <option *ngFor="let item of allInvoices" [ngValue]="item.refreanceNumber">{{ item.refreanceNumber }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div *ngIf="InvoiceType == 2" class="col-lg-12 mt-4">
+              <label>{{ l('CarrierInvoiceReferenceNumber') }} </label>
+              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
+                <select
+                  #invoiceNumber="ngModel"
+                  class="form-control"
+                  [(ngModel)]="form.submitInvoiceNumber"
+                  name="invoiceNumber"
+                  [class.is-valid]="invoiceNumber.valid && (invoiceNumber.dirty || invoiceNumber.touched)"
+                  [class.is-invalid]="invoiceNumber.invalid && (invoiceNumber.dirty || invoiceNumber.touched)"
+                  (change)="getAllWaybillByInvoiceId()"
+                >
+                  <!--                  <option value="">{{ l('SelectInvoiceReference') }}</option>-->
+                  <option [ngValue]="null" disabled selected>{{ l('selectInvoice') }}</option>
+                  <option *ngFor="let item of allSubmitInvoices" [ngValue]="item.refreanceNumber">{{ item.refreanceNumber }}</option>
                 </select>
               </div>
             </div>
