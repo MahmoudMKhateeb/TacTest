@@ -210,4 +210,22 @@ export class SideBarMenuComponent extends AppComponentBase implements OnInit, Af
 
     return classes;
   }
+
+  mouseEnterOnItem(e: MouseEvent) {
+    setTimeout(() => {
+      for (let i = 0; i < (e.target as HTMLElement).parentElement.children.length; i++) {
+        const element = (e.target as HTMLElement).parentElement.children[i];
+        if (element.classList.contains('menu-item-open')) {
+          element.classList.remove('menu-item-open');
+        }
+      }
+      (e.target as HTMLElement).classList.add('menu-item-open');
+    }, 100);
+  }
+
+  mouseLeaveOnItem(e: MouseEvent) {
+    setTimeout(() => {
+      (e.target as HTMLElement).classList.remove('menu-item-open');
+    }, 200);
+  }
 }

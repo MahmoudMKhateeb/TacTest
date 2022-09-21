@@ -49,6 +49,8 @@
     [attr.data-ktmenu-submenu-mode]="item.mode"
     [attr.data-ktmenu-dropdown-toggle-class]="item['dropdown-toggle-class']"
     [ngClass]="getItemCssClasses(item)"
+    (mouseenter)="mouseEnterOnItem($event)"
+    (mouseleave)="mouseLeaveOnItem($event)"
     data-placement="right"
   >
     <!-- if menu item hasn't submenu -->
@@ -99,7 +101,7 @@
 
       <!--      <svg-icon *ngIf="item.icon" [src]="'assets/SVG/' + item.icon"></svg-icon>-->
 
-      <img width="35" src="assets/SVG/{{ item.icon }}" alt="" />
+      <img width="40" src="assets/SVG/{{ item.icon }}" alt="" />
 
       <!--end::Svg Icon-->
     </span>
