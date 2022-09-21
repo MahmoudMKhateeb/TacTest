@@ -57,9 +57,9 @@ namespace TACHYON.Authorization
             var CarrierDashboard = pages.CreateChildPermission(AppPermissions.Pages_CarrierDashboard, L("CarrierDashboard"), multiTenancySides: MultiTenancySides.Tenant);
 
             var receivers = pages.CreateChildPermission(AppPermissions.Pages_Receivers, L("Receivers"));
-            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Create, L("CreateNewReceiver"), multiTenancySides: MultiTenancySides.Tenant);
-            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Edit, L("EditReceiver"), multiTenancySides: MultiTenancySides.Tenant);
-            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Delete, L("DeleteReceiver"), multiTenancySides: MultiTenancySides.Tenant);
+            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Create, L("CreateNewReceiver"), multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
+            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Edit, L("EditReceiver"), multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
+            receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Delete, L("DeleteReceiver"), multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host );
 
             var citiesTranslations = pages.CreateChildPermission(AppPermissions.Pages_CitiesTranslations,
                 L("CitiesTranslations"), multiTenancySides: MultiTenancySides.Host);
@@ -263,9 +263,9 @@ namespace TACHYON.Authorization
                 multiTenancySides: MultiTenancySides.Host);
 
             var facilities = pages.CreateChildPermission(AppPermissions.Pages_Facilities, L("Facilities"));
-            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Create, L("CreateNewFacility"),multiTenancySides: MultiTenancySides.Tenant);
-            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Edit, L("EditFacility"),multiTenancySides: MultiTenancySides.Tenant);
-            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Delete, L("DeleteFacility"),multiTenancySides: MultiTenancySides.Tenant);
+            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Create, L("CreateNewFacility"),multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
+            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Edit, L("EditFacility"),multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
+            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Delete, L("DeleteFacility"),multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
 
             var shipper = pages.CreateChildPermission(AppPermissions.App_Shipper, L("Shipper"));
             var carrier = pages.CreateChildPermission(AppPermissions.App_Carrier, L("Carrier"));

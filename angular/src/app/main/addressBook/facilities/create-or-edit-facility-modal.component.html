@@ -22,8 +22,8 @@
 
         <div class="modal-body">
           <div class="row">
-            <div *ngIf="this.feature.isEnabled('App.TachyonDealer')" class="form-group col-md-12">
-              <label>{{ l('Shipper') }} <span class="required-fileds">*</span></label>
+            <div *ngIf="isTachyonDealerOrHost" class="form-group col-md-12">
+              <label>{{ l('Company') }} <span class="required-fileds">*</span></label>
               <div
                 [ngClass]="{
                   'spinner spinner-success spinner-right mr-1 ml-1': !AllTenants
