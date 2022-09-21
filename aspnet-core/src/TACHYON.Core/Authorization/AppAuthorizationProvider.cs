@@ -635,7 +635,7 @@ namespace TACHYON.Authorization
                 L("MoveTenantsToAnotherEdition"), multiTenancySides: MultiTenancySides.Host);
 
             var tenants = pages.CreateChildPermission(AppPermissions.Pages_Tenants, L("Tenants"),
-                multiTenancySides: MultiTenancySides.Host);
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer));
             tenants.CreateChildPermission(AppPermissions.Pages_Tenants_Create, L("CreatingNewTenant"),
                 multiTenancySides: MultiTenancySides.Host);
             tenants.CreateChildPermission(AppPermissions.Pages_Tenants_Edit, L("EditingTenant"),

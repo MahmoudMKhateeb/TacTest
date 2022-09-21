@@ -77,7 +77,7 @@ namespace TACHYON.MultiTenancy
 
         public async Task<LoadResult> GetAllTenants(string loadOptions)
         {
-            DisableTenancyFiltersIfHost();
+            await DisableTenancyFilterIfTachyonDealerOrHost();
 
             IQueryable<TenantListDto> tenantListDtos =
                 TenantManager.Tenants.ProjectTo<TenantListDto>(AutoMapperConfigurationProvider);
