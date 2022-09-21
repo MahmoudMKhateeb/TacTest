@@ -90,13 +90,12 @@ export class AppHostNavigationService extends AppBaseNavigationService {
             'SubmitInvoiceForHost',
             //TODO make it Pages.Administration.invoices
             '',
-            '',
-            '/app/main/invoices/submitinvoice',
+            '/app/main/invoices/dynamic',
             undefined,
             undefined,
             undefined,
             undefined,
-            () => !this._appSessionService.tenantId
+            () => this.isEnabled('App.TachyonDealer') || !isNotNullOrUndefined(this._appSessionService.tenantId)
           ),
           new AppMenuItem(
             'DedicatedInvoice',
