@@ -9,7 +9,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class CreateOrEditShippingRequestStep1Dto : EntityDto<long?>, ICustomValidate
+    public class CreateOrEditShippingRequestStep1Dto : EntityDto<long?>, ICustomValidate, IShouldNormalize
     {
         /// <summary>
         /// TAC-1937
@@ -69,6 +69,12 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
             //{
             //    context.Results.Add(new ValidationResult("You must choose one carrier to send direct request"));
             //}
+        }
+
+        public void Normalize()
+        {
+            // to get date only without time
+            BidStartDate = BidStartDate?.Date;
         }
     }
 }
