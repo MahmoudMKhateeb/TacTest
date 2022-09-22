@@ -183,7 +183,7 @@
                   <tr>
                     <th [hidden]="!isGrantedAny('Pages.Facilities.Edit', 'Pages.Facilities.Delete')">{{ l('Actions') }}</th>
                     <th *ngIf="isTachyonDealerOrHost" pSortableColumn="Tenant.Name">
-                      {{ l('ShipperName') }}
+                      {{ l('CompanyName') }}
                       <p-sortIcon field="CountryDisplayName"></p-sortIcon>
                     </th>
                     <th pSortableColumn="cityFk.CountyFk.displayName">

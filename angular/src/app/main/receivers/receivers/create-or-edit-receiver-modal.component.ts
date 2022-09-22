@@ -1,7 +1,13 @@
 import { Component, ViewChild, Injector, Output, EventEmitter, Input } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { ReceiversServiceProxy, CreateOrEditReceiverDto, ReceiverFacilityLookupTableDto } from '@shared/service-proxies/service-proxies';
+import {
+  ReceiversServiceProxy,
+  CreateOrEditReceiverDto,
+  ReceiverFacilityLookupTableDto,
+  ShippersForDropDownDto,
+  PenaltiesServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
 
@@ -18,11 +24,12 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   saving = false;
   CheckingIfReciverPhoneNumberIsValid = false;
   isPhoneNumberAvilable = true;
+  AllTenants: ShippersForDropDownDto[];
 
   receiver: CreateOrEditReceiverDto = new CreateOrEditReceiverDto();
   // facilityName = '';
   allFacilitys: ReceiverFacilityLookupTableDto[];
-  constructor(injector: Injector, private _receiversServiceProxy: ReceiversServiceProxy) {
+  constructor(injector: Injector, private _receiversServiceProxy: ReceiversServiceProxy, private _penaltiesServiceProxy: PenaltiesServiceProxy) {
     super(injector);
   }
 
@@ -40,6 +47,7 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
       this.allFacilitys = result;
       this.receiver.facilityId = this.facilityIdFromTrips;
     });
+    this.loadAllCompaniesForDropDown();
     this.active = true;
     this.modal.show();
   }
@@ -74,5 +82,11 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
         this.CheckingIfReciverPhoneNumberIsValid = false;
       });
     }
+  }
+
+  loadAllCompaniesForDropDown() {
+    this._penaltiesServiceProxy.getAllCompanyForDropDown().subscribe((result) => {
+      this.AllTenants = result;
+    });
   }
 }
