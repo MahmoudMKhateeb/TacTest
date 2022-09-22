@@ -89,7 +89,7 @@ namespace TACHYON.Invoices.Groups
         }
 
 
-        public async Task<LoadResult> GetAllSubmitInvoices(GetAllSubmitInvoicesInput input)
+        public async Task<LoadResult> GetAllSubmitInvoices(GetAllSubmitInvoicesInput input, GetAllSubmitInvoicesSearchInput searchInput)
         {
             DisableTenancyFilters();
 
@@ -99,6 +99,12 @@ namespace TACHYON.Invoices.Groups
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer),
                     i => i.TenantId == AbpSession.TenantId.Value)
                 .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), i => true)
+                .WhereIf(!string.IsNullOrEmpty(searchInput.AccountNumber), x => x.Tenant.AccountNumber == searchInput.AccountNumber)
+                .WhereIf(!string.IsNullOrEmpty(searchInput.ContainerNumber), x => x.Trips.Any(y => y.ShippingRequestTripFK.ContainerNumber == searchInput.ContainerNumber))
+                .WhereIf(searchInput.WaybillOrSubWaybillNumber != null, x => x.Trips.Any(y => y.ShippingRequestTripFK.WaybillNumber == searchInput.WaybillOrSubWaybillNumber) ||
+                x.Trips.Any(x => x.ShippingRequestTripFK.RoutPoints.Any(x => x.WaybillNumber == searchInput.WaybillOrSubWaybillNumber)) ||
+                x.Penalties.Any(x => x.ShippingRequestTripFK.WaybillNumber == searchInput.WaybillOrSubWaybillNumber) ||
+                x.Penalties.Any(x => x.ShippingRequestTripFK.RoutPoints.Any(y => y.WaybillNumber == searchInput.WaybillOrSubWaybillNumber)))
                 .ProjectTo<SubmitInvoiceListDto>(AutoMapperConfigurationProvider);
 
             return await LoadResultAsync(query, input.LoadData);
@@ -145,6 +151,7 @@ namespace TACHYON.Invoices.Groups
             var document = await _commonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(Input), AbpSession.TenantId);
             submit.Status = SubmitInvoiceStatus.Claim;
             submit.RejectedReason = string.Empty;
+            submit.SubmittedDate = Clock.Now;
             ObjectMapper.Map(document, submit);
 
             var admin = await _userManager.GetAdminHostAsync();
@@ -165,6 +172,7 @@ namespace TACHYON.Invoices.Groups
             if (invoice != null)
             {
                 invoice.Status = SubmitInvoiceStatus.Accepted;
+                invoice.AcceptanceDate = Clock.Now;
                 await _appNotifier.SubmitInvoiceOnAccepted(
                     new UserIdentifier(invoice.TenantId,
                         (await _userManager.GetAdminByTenantIdAsync(invoice.TenantId)).Id), invoice);
@@ -234,7 +242,7 @@ namespace TACHYON.Invoices.Groups
 
             return await _commonManager.ExecuteMethodIfHostOrTenantUsers(async () =>
             {
-                var InvoiceListDto = ObjectMapper.Map<List<SubmitInvoiceListDto>>(await GetSubmitInvoices(input, null));
+                var InvoiceListDto = ObjectMapper.Map<List<SubmitInvoiceListDto>>((await GetSubmitInvoices(input)).ToList());
                 return _excelExporterManager.ExportToFile(InvoiceListDto, "SubmitInvoices", HeaderText,
                     propertySelectors);
             });
@@ -299,7 +307,7 @@ namespace TACHYON.Invoices.Groups
         }
         #region Heleper
 
-        private async Task<IOrderedQueryable<SubmitInvoice>> GetSubmitInvoices(SubmitInvoiceFilterInput input, GetAllSubmitInvoicesSearchInput searchInput)
+        private async Task<IOrderedQueryable<SubmitInvoice>> GetSubmitInvoices(SubmitInvoiceFilterInput input)
         {
             var query = _SubmitInvoiceRepository
                 .GetAll()
@@ -314,14 +322,6 @@ namespace TACHYON.Invoices.Groups
                 .WhereIf(input.PeriodId.HasValue, i => i.PeriodId == input.PeriodId)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,
                     i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate)
-                .WhereIf(searchInput.PaymentDateFrom != null, x => x.PaymentDate >= searchInput.PaymentDateFrom)
-                .WhereIf(searchInput.PaymentDateFrom != null, x => x.PaymentDate <= searchInput.PaymentDateTo)
-                .WhereIf(!string.IsNullOrEmpty(searchInput.AccountNumber), x=>x.Tenant.AccountNumber==searchInput.AccountNumber)
-                .WhereIf(!string.IsNullOrEmpty(searchInput.ContainerNumber), x=>x.Trips.Any(y=>y.ShippingRequestTripFK.ContainerNumber == searchInput.ContainerNumber))
-                .WhereIf(searchInput.WaybillOrSubWaybillNumber !=null, x=>x.Trips.Any(y=>y.ShippingRequestTripFK.WaybillNumber== searchInput.WaybillOrSubWaybillNumber) ||
-                x.Trips.Any(x=>x.ShippingRequestTripFK.RoutPoints.Any(x=>x.WaybillNumber==searchInput.WaybillOrSubWaybillNumber)) || 
-                x.Penalties.Any(x=>x.ShippingRequestTripFK.WaybillNumber==searchInput.WaybillOrSubWaybillNumber) ||
-                x.Penalties.Any(x=>x.ShippingRequestTripFK.RoutPoints.Any(y=>y.WaybillNumber==searchInput.WaybillOrSubWaybillNumber)))
                 .OrderBy(!string.IsNullOrEmpty(input.Sorting) ? input.Sorting : "status asc");
             return query;
         }

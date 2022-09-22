@@ -315,6 +315,7 @@ import { InvoiceDynamicModalComponent } from '@app/main/Invoices/invoices-dynami
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { CalendarModule } from '@node_modules/primeng/calendar';
+import { InvoiceTenantSearchModelComponent } from './Invoices/invoice-tenants/invoice-tenant-search-model/invoice-tenant-search-model.component';
 
 @NgModule({
   imports: [
@@ -598,6 +599,7 @@ import { CalendarModule } from '@node_modules/primeng/calendar';
     AddNewNoteModalComponent,
     NotesComponent,
     TripNotesModalComponent,
+    InvoiceTenantSearchModelComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

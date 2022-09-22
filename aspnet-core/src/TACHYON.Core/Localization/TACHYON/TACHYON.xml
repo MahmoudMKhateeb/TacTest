@@ -3049,6 +3049,9 @@
 		<text name="DownloadFileTemplate">Download File Template</text>
 		<text name="UploadFile">Upload File</text>
 		<text name="BulkDeliveryTripSucceededMsg">Bulk Delivery Trip/s process is completed successfully</text>
+    <text name="PaymentDate">Payment date</text>
+    <text name="SubmittedDate">Submitted date</text>
+    <text name="AcceptanceDate">Acceptance date</text>
 
 	</texts>
 </localizationDictionary>

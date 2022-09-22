@@ -2800,6 +2800,9 @@
 		<text name="BulkDeliverTrips">حزمة توصيل الرحلات</text>
 		<text name="DownloadFileTemplate">تنزيل نموذج الملف</text>
 		<text name="UploadFile">تحميل ملف</text>
+    <text name="PaymentDate">تاريخ الدفع</text>
+    <text name="SubmittedDate">تاريخ الاصدار</text>
+    <text name="AcceptanceDate">تاريخ القبول</text>
 
 	</texts>
 </localizationDictionary>

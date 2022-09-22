@@ -3,6 +3,7 @@
     <sub-header [title]="'Invoices' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>
 
@@ -64,6 +65,9 @@
               <dxi-column dataField="channel" cellTemplate="channelCellTemplate" caption="{{ l('Type') }}">
                 <dxo-lookup [dataSource]="SubmitChannel" displayExpr="value" valueExpr="key"></dxo-lookup>
               </dxi-column>
+              <dxi-column dataField="submittedDate" caption="{{ l('SubmittedDate') }}" dataType="date"> </dxi-column>
+              <dxi-column dataField="acceptanceDate" caption="{{ l('AcceptanceDate') }}" dataType="date"> </dxi-column>
+              <dxi-column dataField="paymentDate" caption="{{ l('PaymentDate') }}" dataType="date"> </dxi-column>
               <dxo-master-detail [enabled]="true" template="detail"></dxo-master-detail>
               <div *dxTemplate="let options of 'detail'">
                 <app-invoice-tenant-item [Id]="options.data.id"></app-invoice-tenant-item>
@@ -177,6 +181,8 @@
     </div>
   </div>
 </div>
+
+<app-invoice-tenant-search-model #ModelSearch (modalsearch)="searchInPage()"></app-invoice-tenant-search-model>
 <deman-model (modalSave)="reloadPage()" #ClaimModel></deman-model>
 <submitinvoice-rejected-modal #RejectedModel (modalSave)="reloadPage()"></submitinvoice-rejected-modal>
 <invoice-tenant-items-details #InvoiceDetailsModel></invoice-tenant-items-details>
