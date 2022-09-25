@@ -5,17 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Actors;
 using TACHYON.DriverLicenseTypes;
 using TACHYON.Integration.WaslIntegration;
 using TACHYON.Nationalities;
 using TACHYON.Rating;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Authorization.Users
 {
     /// <summary>
     /// Represents a user in the system.
     /// </summary>
-    public class User : AbpUser<User>, IWaslIntegrated,IHasRating
+    public class User : AbpUser<User>, IWaslIntegrated,IHasRating, IMayHaveCarrierActor
     {
         [StringLength(12)] public string AccountNumber { get; set; }
         public virtual Guid? ProfilePictureId { get; set; }
@@ -49,6 +51,10 @@ namespace TACHYON.Authorization.Users
 
         public bool IsWaslIntegrated { get; set; }
         public string WaslIntegrationErrorMsg { get; set; }
+        [ForeignKey("CarrierActorId")]
+        public Actor CarrierActorFk { get; set; }
+
+        public int? CarrierActorId { get; set; }
 
 
 

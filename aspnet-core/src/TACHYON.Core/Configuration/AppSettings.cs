@@ -184,10 +184,22 @@
 
         public static class Invoice
         {
+            
             public const string BankNameEnglish = "App.Invoice.BankNameEnglish";
             public const string BankNameArabic = "App.Invoice.BankNameArabic";
             public const string IBAN = "App.Invoice.IBAN";
             public const string Account = "App.Invoice.Account";
+
+            //broker Bank settings for broker internal invoices  
+
+            public const string BrokerBankNameEnglish = "App.Invoice.BrokerBankNameEnglish";
+            public const string BrokerBankNameArabic = "App.Invoice.BrokerBankNameArabic";
+            public const string BrokerBankAccountNumber = "App.Invoice.BrokerBankAccountNumber";
+            public const string BrokerIban = "App.Invoice.BrokerIban";
+            public const string BrokerEmailAddress = "App.Invoice.BrokerEmailAddress";
+            public const string BrokerWebSite = "App.Invoice.BrokerWebSite";
+            public const string BrokerAddress = "App.Invoice.BrokerAddress";
+            public const string BrokerMobile = "App.Invoice.BrokerMobile";
         }
         
         public static class Mobile

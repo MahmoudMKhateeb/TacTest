@@ -20,6 +20,7 @@
     <None Remove="Invoices\Reports\InvoiceNote.rdlc" />
     <None Remove="Invoices\Reports\LandScapeInvoice.rdlc" />
     <None Remove="Invoices\Reports\PenaltyInvoice.rdlc" />
+    <None Remove="Invoices\Reports\LandScapeInvoice_Actor.rdlc" />
     <None Remove="Waybills\Reports\Master_Waybill.rdlc" />
     <None Remove="Waybills\Reports\Multiple_Drop_Waybill.rdlc" />
     <None Remove="Waybills\Reports\Single_Drop_Waybill.rdlc" />
@@ -42,6 +43,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\PenaltyInvoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Invoices\Reports\LandScapeInvoice_Actor.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Waybills\Reports\Master_Waybill.rdlc">

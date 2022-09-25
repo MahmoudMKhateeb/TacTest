@@ -29,5 +29,15 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         /// For view driver documents in all drivers page 
         /// </summary>
         public long? TruckId { get; set; }
+    }   
+    
+    public class GetAllActorsSubmittedDocumentsInput
+    {
+        public string Filter { get; set; }
+
+        /// <summary>
+        /// For view driver documents in all drivers page 
+        /// </summary>
+        public long? ActorId { get; set; }
     }
 }

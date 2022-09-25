@@ -72,6 +72,12 @@
               <b *ngIf="item.isSaas" class="infoHighLight green stautsTruck">
                 {{ l('saas') }}
               </b>
+              <b *ngIf="item.carrierActorId" class="infoHighLight green stautsTruck">
+                {{ l('carrierActor') }}
+              </b>
+              <b *ngIf="item.shipperActorId" class="infoHighLight green stautsTruck">
+                {{ l('shipperActor') }}
+              </b>
             </div>
 
             <div class="detailsRoad">

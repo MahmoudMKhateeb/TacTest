@@ -3,6 +3,7 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Actors;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers.Base;
 using TACHYON.Shipping.ShippingRequests;
@@ -10,7 +11,7 @@ using TACHYON.Shipping.ShippingRequests;
 namespace TACHYON.PriceOffers
 {
     [Table("PriceOffers")]
-    public class PriceOffer : PriceOfferBase, IMustHaveTenant
+    public class PriceOffer : PriceOfferBase, IMustHaveTenant, IMayHaveCarrierActor
     {
         public long? ReferenceNumber { get; set; }
         public long? ParentId { get; set; }
@@ -99,6 +100,10 @@ namespace TACHYON.PriceOffers
         public bool IsView { get; set; }
         public int ApprovingUserId { get; set; }
         public DateTime ApprovingTime { get; set; }
-       
+
+        public int? CarrierActorId { get; set; }
+
+        [ForeignKey("CarrierActorId")]
+        public Actor CarrierActorFk { get; set; }
     }
 }

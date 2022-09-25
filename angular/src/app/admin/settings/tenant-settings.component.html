@@ -20,7 +20,7 @@
                 ></timezone-combo>
               </div>
             </tab>
-            <!-- <tab class="p-5" *ngIf="true" heading="{{ 'Appearance' | localize }}" [active]="activeTabIndex == 1">
+            <tab class="p-5" *ngIf="true" heading="{{ 'Appearance' | localize }}" [active]="activeTabIndex == 1">
               <div class="row m-form">
                 <div class="col-md-6">
                   <h5>{{ 'ApplicationLogo' | localize }}</h5>
@@ -28,7 +28,7 @@
                     <div
                       class="form-group"
                       *ngIf="appSession.tenant.logoId"
-                      style="background: url(/assets/common/images/transparent_background.png); width: 50%; padding: 5px;"
+                      style="background: url(/assets/common/images/transparent_background.png); width: 50%; padding: 5px"
                     >
                       <a [href]="remoteServiceBaseUrl + '/TenantCustomization/GetLogo?tenantId=' + appSession.tenant.id" target="_blank">
                         <img height="38" [src]="remoteServiceBaseUrl + '/TenantCustomization/GetLogo?tenantId=' + appSession.tenant.id" />
@@ -59,13 +59,13 @@
                   </form>
                 </div>
               </div>
-            </tab> -->
+            </tab>
             <tab class="p-5" *ngIf="true" heading="{{ 'UserManagement' | localize }}">
               <div class="form">
                 <h5>{{ 'FormBasedRegistration' | localize }}</h5>
                 <div class="checkbox-list">
                   <div class="form-group">
-                    <label for="Setting_AllowSelfRegistration" class="checkbox" style="margin-bottom: 0;">
+                    <label for="Setting_AllowSelfRegistration" class="checkbox" style="margin-bottom: 0">
                       <input
                         id="Setting_AllowSelfRegistration"
                         class="check"
@@ -79,7 +79,7 @@
                     <span class="form-text text-muted">{{ 'AllowUsersToRegisterThemselves_Hint' | localize }}</span>
                   </div>
                   <div class="form-group" [hidden]="!settings.userManagement.allowSelfRegistration">
-                    <label for="Setting_IsNewRegisteredUserActiveByDefault" class="checkbox" style="margin-bottom: 0;">
+                    <label for="Setting_IsNewRegisteredUserActiveByDefault" class="checkbox" style="margin-bottom: 0">
                       <input
                         id="Setting_IsNewRegisteredUserActiveByDefault"
                         type="checkbox"
@@ -651,6 +651,115 @@
                 />
               </div>
             </tab>
+
+            <tab class="p-5" *ngIf="true" heading="{{ 'BrokerInvoice' | localize }}">
+              <!-- *ngIf="true" is a workaround for https://github.com/valor-software/ng2-bootstrap/issues/823 -->
+              <h5>{{ 'BrokerInvoiceInformation' | localize }}</h5>
+              <div class="form-group">
+                <label for="brokerBankNameEnglish">{{ 'brokerBankNameEnglish' | localize }}</label>
+                <input
+                  id="brokerBankNameEnglish"
+                  type="text"
+                  name="brokerBankNameEnglish"
+                  class="form-control"
+                  [ngClass]="{ edited: settings.brokerInvoiceSettings.brokerBankNameEnglish }"
+                  [(ngModel)]="settings.brokerInvoiceSettings.brokerBankNameEnglish"
+                  maxlength="64"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="brokerBankNameArabic">{{ 'brokerBankNameArabic' | localize }}</label>
+                <input
+                  id="brokerBankNameArabic"
+                  type="text"
+                  name="brokerBankNameArabic"
+                  class="form-control"
+                  [ngClass]="{ edited: settings.brokerInvoiceSettings.brokerBankNameArabic }"
+                  [(ngModel)]="settings.brokerInvoiceSettings.brokerBankNameArabic"
+                  maxlength="64"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="brokerBankAccountNumber">{{ 'brokerBankAccountNumber' | localize }}</label>
+                <input
+                  id="brokerBankAccountNumber"
+                  type="text"
+                  name="brokerBankAccountNumber"
+                  class="form-control"
+                  [ngClass]="{ edited: settings.brokerInvoiceSettings.brokerBankAccountNumber }"
+                  [(ngModel)]="settings.brokerInvoiceSettings.brokerBankAccountNumber"
+                  maxlength="64"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="brokerIban">{{ 'brokerIban' | localize }}</label>
+                <input
+                  id="brokerIban"
+                  type="text"
+                  name="brokerIban"
+                  class="form-control"
+                  [ngClass]="{ edited: settings.brokerInvoiceSettings.brokerIban }"
+                  [(ngModel)]="settings.brokerInvoiceSettings.brokerIban"
+                  maxlength="64"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="brokerEmailAddress">{{ 'brokerEmailAddress' | localize }}</label>
+                <input
+                  id="brokerEmailAddress"
+                  type="text"
+                  name="brokerEmailAddress"
+                  class="form-control"
+                  [ngClass]="{ edited: settings.brokerInvoiceSettings.brokerEmailAddress }"
+                  [(ngModel)]="settings.brokerInvoiceSettings.brokerEmailAddress"
+                  maxlength="64"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="brokerWebSite">{{ 'brokerWebSite' | localize }}</label>
+                <input
+                  id="brokerWebSite"
+                  type="text"
+                  name="brokerWebSite"
+                  class="form-control"
+                  [ngClass]="{ edited: settings.brokerInvoiceSettings.brokerWebSite }"
+                  [(ngModel)]="settings.brokerInvoiceSettings.brokerWebSite"
+                  maxlength="64"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="brokerAddress">{{ 'brokerAddress' | localize }}</label>
+                <input
+                  id="brokerAddress"
+                  type="text"
+                  name="brokerWebSite"
+                  class="form-control"
+                  [ngClass]="{ edited: settings.brokerInvoiceSettings.brokerAddress }"
+                  [(ngModel)]="settings.brokerInvoiceSettings.brokerAddress"
+                  maxlength="64"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="brokerMobile">{{ 'brokerMobile' | localize }}</label>
+                <input
+                  id="brokerMobile"
+                  type="text"
+                  name="brokerWebSite"
+                  class="form-control"
+                  [ngClass]="{ edited: settings.brokerInvoiceSettings.brokerMobile }"
+                  [(ngModel)]="settings.brokerInvoiceSettings.brokerMobile"
+                  maxlength="64"
+                />
+              </div>
+            </tab>
+
             <tab class="p-5" *ngIf="!isMultiTenancyEnabled" heading="{{ 'OtherSettings' | localize }}">
               <div class="checkbox-list">
                 <h5>{{ 'IsQuickThemeSelectEnabled' | localize }}</h5>
@@ -895,7 +1004,7 @@
                       [(ngModel)]="settings.externalLoginProviderSettings.openIdConnect.loginUrl"
                     />
                   </div>
-                  <label for="Setting_OpenIdConnect_ValidateIssuer" class="checkbox mb-3" style="margin-bottom: 0;">
+                  <label for="Setting_OpenIdConnect_ValidateIssuer" class="checkbox mb-3" style="margin-bottom: 0">
                     <input
                       id="Setting_OpenIdConnect_ValidateIssuer"
                       class="check"

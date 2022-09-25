@@ -185,7 +185,7 @@ namespace TACHYON.Authorization.Users
         {
             var ids = pagedResultDto.data.ToDynamicList<DriverListDto>().Select(x => x.Id);
             var documentTypesCount = await _documentTypeRepository.GetAll()
-                .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver)
+                .Where(doc => doc.DocumentsEntityId == DocumentsEntitiesEnum.Driver)
                 .Where(x => x.IsRequired)
                 .CountAsync();
 

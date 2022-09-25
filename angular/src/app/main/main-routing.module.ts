@@ -20,7 +20,6 @@ import { TermAndConditionsComponent } from './termsAndConditions/termAndConditio
 import { CapacitiesComponent } from './truckCapacities/capacities/capacities.component';
 import { TransportTypesComponent } from './transportTypes/transportTypes/transportTypes.component';
 import { DocumentTypeTranslationsComponent } from './documentTypeTranslations/documentTypeTranslations/documentTypeTranslations.component';
-import { DocumentsEntitiesComponent } from './documentsEntities/documentsEntities/documentsEntities.component';
 import { PickingTypesComponent } from './pickingTypes/pickingTypes/pickingTypes.component';
 import { PortsComponent } from './ports/ports/ports.component';
 import { FacilitiesComponent } from './addressBook/facilities/facilities.component';
@@ -72,6 +71,7 @@ import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-lis
 import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
 import { InvoiceNoteListComponent } from './invoices/invoice-note/invoice-note-list/invoice-note-list.component';
 import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic.component';
+import { ActorsSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/actors-submitted-documents/actors-submitted-documents.component';
 
 @NgModule({
   imports: [
@@ -220,7 +220,6 @@ import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/in
             component: DocumentTypeTranslationsComponent,
             data: { permission: 'Pages.DocumentTypeTranslations' },
           },
-          { path: 'documentsEntities/documentsEntities', component: DocumentsEntitiesComponent, data: { permission: 'Pages.DocumentsEntities' } },
           { path: 'ports/ports', component: PortsComponent, data: { permission: 'Pages.Ports' } },
           { path: 'pickingTypes/pickingTypes', component: PickingTypesComponent, data: { permission: 'Pages.PickingTypes' } },
           { path: 'addressBook/facilities', component: FacilitiesComponent, data: { permission: 'Pages.Facilities' } },
@@ -233,6 +232,11 @@ import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/in
           {
             path: 'documentFiles/DriversSubmittedDocuments',
             component: DriversSubmittedDocumentsComponent,
+            data: { permission: 'Pages.DocumentFiles' },
+          },
+          {
+            path: 'documentFiles/ActorsSubmittedDocuments',
+            component: ActorsSubmittedDocumentsComponent,
             data: { permission: 'Pages.DocumentFiles' },
           },
           { path: 'documentTypes/documentTypes', component: DocumentTypesComponent, data: { permission: 'Pages.DocumentTypes' } },

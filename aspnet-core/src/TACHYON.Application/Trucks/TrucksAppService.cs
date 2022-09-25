@@ -152,7 +152,7 @@ namespace TACHYON.Trucks
         {
             var ids = pagedResultDto.data.ToDynamicList<TruckDto>().Select(x => x.Id);
             var documentTypesCount = await _documentTypeRepository.GetAll()
-                .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
+                .Where(doc => doc.DocumentsEntityId == DocumentsEntitiesEnum.Truck)
                 .Where(x => x.IsRequired)
                 .CountAsync();
 

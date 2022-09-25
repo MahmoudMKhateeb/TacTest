@@ -1,31 +1,29 @@
-import { Component, ViewChild, ViewEncapsulation, Injector, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 import { finalize } from 'rxjs/operators';
 import {
-  DocumentTypesServiceProxy,
   CreateOrEditDocumentTypeDto,
   DocumentFilesServiceProxy,
-  SelectItemDto,
+  DocumentsEntitiesEnum,
+  DocumentTypeFlagEnum,
+  DocumentTypesServiceProxy,
   DocumentTypeTranslationsServiceProxy,
-  DocumentTypeTranslationDto,
-  TokenAuthServiceProxy,
   ISelectItemDto,
+  SelectItemDto,
+  TokenAuthServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import * as moment from 'moment';
 import { CreateOrEditDocumentTypeTranslationModalComponent } from '@app/main/documentTypeTranslations/documentTypeTranslations/create-or-edit-documentTypeTranslation-modal.component';
-import { LazyLoadEvent } from 'primeng/api';
 
 import { Paginator } from '@node_modules/primeng/paginator';
 import { Table } from '@node_modules/primeng/table';
 import { IAjaxResponse, NotifyService, TokenService } from '@node_modules/abp-ng2-module';
 import { ActivatedRoute } from '@angular/router';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { id } from '@swimlane/ngx-charts';
 import { AppConsts } from '@shared/AppConsts';
-import FileUploader from 'devextreme/ui/file_uploader';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 const toBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -41,6 +39,7 @@ const toBase64 = (file) =>
   encapsulation: ViewEncapsulation.None,
 
   animations: [appModuleAnimation()],
+  providers: [EnumToArrayPipe],
 })
 export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
@@ -58,7 +57,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   saving = false;
   documentNameisAvaliable = true;
   documentType: CreateOrEditDocumentTypeDto = new CreateOrEditDocumentTypeDto();
-  allDocumentsEntities: SelectItemDto[];
+  allDocumentsEntities: [];
   buttonOptions: any = {
     text: 'Add',
     type: 'success',
@@ -72,6 +71,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   value: File[] = [];
   authorizationToken: string;
   uploadUrl: string;
+  DocumentTypeFlags: any;
 
   constructor(
     private injector: Injector,
@@ -83,7 +83,8 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     private _activatedRoute: ActivatedRoute,
     private _fileDownloadService: FileDownloadService,
     private changeDetectorRef: ChangeDetectorRef,
-    private _tokenService: TokenService
+    private _tokenService: TokenService,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
     this.authorizationToken = 'Bearer ' + this._tokenService.getToken();
@@ -91,9 +92,8 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   }
 
   show(documentTypeId?: number): void {
-    this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
-      this.allDocumentsEntities = result;
-    });
+    this.allDocumentsEntities = this.enumToArray.transform(DocumentsEntitiesEnum);
+    this.DocumentTypeFlags = this.enumToArray.transform(DocumentTypeFlagEnum);
 
     if (!documentTypeId) {
       this.documentType = new CreateOrEditDocumentTypeDto();

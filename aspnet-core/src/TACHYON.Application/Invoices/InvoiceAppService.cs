@@ -27,11 +27,14 @@ using TACHYON.Common;
 using TACHYON.Configuration;
 using TACHYON.DataExporting;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.DynamicInvoices;
 using TACHYON.DynamicInvoices.DynamicInvoiceItems;
 using TACHYON.Exporting;
 using TACHYON.Features;
+using TACHYON.Invoices.ActorInvoices;
+using TACHYON.Invoices.ActorInvoices.Dto;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Periods;
@@ -42,6 +45,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.ShippingRequestVases;
+using TACHYON.Storage;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using TACHYON.Url;
 
@@ -65,6 +69,8 @@ namespace TACHYON.Invoices
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly ISettingManager _settingManager;
         private readonly IRepository<DynamicInvoice, long> _dynamicInvoiceRepository;
+        private readonly IRepository<ActorInvoice, long> _actorInvoiceRepository;
+        private readonly DbBinaryObjectManager _binaryObjectManager;
 
 
         public InvoiceAppService(
@@ -78,7 +84,9 @@ namespace TACHYON.Invoices
             IRepository<ShippingRequestVas, long> shippingRequestVasesRepository,
             IRepository<DocumentFile, Guid> documentFileRepository,
             IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager,
-             IWebUrlService webUrlService, PdfExporterBase pdfExporterBase, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ISettingManager settingManager, IRepository<DynamicInvoice, long> dynamicInvoiceRepository)
+             IWebUrlService webUrlService, PdfExporterBase pdfExporterBase, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ISettingManager settingManager, IRepository<DynamicInvoice, long> dynamicInvoiceRepository,
+            IRepository<ActorInvoice, long> actorInvoiceRepository,
+            DbBinaryObjectManager binaryObjectManager)
 
         {
             _invoiceRepository = invoiceRepository;
@@ -96,6 +104,8 @@ namespace TACHYON.Invoices
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _settingManager = settingManager;
             _dynamicInvoiceRepository = dynamicInvoiceRepository;
+            _actorInvoiceRepository = actorInvoiceRepository;
+            _binaryObjectManager = binaryObjectManager;
         }
 
 
@@ -167,6 +177,41 @@ namespace TACHYON.Invoices
 
             return invoice;
         }
+        private async Task<ActorInvoice> GetActorInvoiceInfo(long actorInvoiceId)
+        {
+            DisableTenancyFilters();
+            var actorInvoice = await _actorInvoiceRepository
+                .GetAll()
+                .Include(i => i.Trips)
+                .ThenInclude(r => r.ShippingRequestTripVases)
+                .ThenInclude(v => v.ShippingRequestVasFk)
+                .ThenInclude(v => v.VasFk)
+                .Include(i => i.Trips)
+                .ThenInclude(r => r.ShippingRequestTripVases)
+                .ThenInclude(r => r.ActorShipperPriceFk)
+                .Include(i => i.Trips)
+                .ThenInclude(i => i.ShippingRequestFk)
+                .ThenInclude(r => r.OriginCityFk)
+                .ThenInclude(r => r.Translations)
+                .Include(i => i.Trips)
+                .ThenInclude(i => i.ShippingRequestFk)
+                .ThenInclude(r => r.DestinationCityFk)
+                .ThenInclude(r => r.Translations)
+                .Include(i => i.Trips)
+                .ThenInclude(r => r.AssignedTruckFk)
+                .Include(i => i.Trips)
+                .ThenInclude(r => r.AssignedTruckFk)
+                .ThenInclude(r => r.TrucksTypeFk)
+                .ThenInclude(r => r.Translations)
+                .Include(i => i.Trips)
+                .ThenInclude(i => i.ActorShipperPriceFk)
+                .FirstOrDefaultAsync(i => i.Id == actorInvoiceId);
+            if (actorInvoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+
+            return actorInvoice;
+        }
+
+
 
         private async Task<Invoice> GetPenaltyInvoiceInfo(long penaltyInvoiceId)
         {
@@ -780,6 +825,162 @@ namespace TACHYON.Invoices
 
             return Items;
         }
+
+
+
+        // Actors invoice
+        public async Task<IEnumerable<ActorInvoiceInfoDto>> GetActorShipperInvoiceReportInfo(long actorInvoiceId)
+        {
+
+            DisableTenancyFilters();
+            var invoice = _actorInvoiceRepository
+                .GetAll()
+                .Include(i => i.ShipperActorFk)
+                .Include(i => i.Tenant)
+                .FirstOrDefault(i => i.Id == actorInvoiceId);
+
+
+
+            if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+
+            // mapping
+            var actorInvoiceDto = ObjectMapper.Map<ActorInvoiceInfoDto>(invoice);
+
+            //logo
+            if (invoice.Tenant.HasLogo())
+            {
+                var logo = await _binaryObjectManager.GetOrNullAsync(invoice.Tenant.LogoId.Value);
+                byte[] logoBytes = logo.Bytes;
+                actorInvoiceDto.Logo = logoBytes;
+            }
+
+
+
+            //broker name 
+
+            actorInvoiceDto.BrokerName = invoice.Tenant.Name;
+
+            //attn info
+
+
+            actorInvoiceDto.Phone = invoice.ShipperActorFk.MobileNumber;
+            actorInvoiceDto.Email = invoice.ShipperActorFk.Email;
+            actorInvoiceDto.Attn = invoice.ShipperActorFk.CompanyName;
+
+            //Broker invoice settings info 
+            actorInvoiceDto.BrokerBankNameArabic = await SettingManager.GetSettingValueForTenantAsync(AppSettings.Invoice.BrokerBankNameArabic, invoice.TenantId);
+            actorInvoiceDto.BrokerBankNameEnglish = await SettingManager.GetSettingValueForTenantAsync(AppSettings.Invoice.BrokerBankNameEnglish, invoice.TenantId);
+            actorInvoiceDto.BrokerBankAccountNumber = await SettingManager.GetSettingValueForTenantAsync(AppSettings.Invoice.BrokerBankAccountNumber, invoice.TenantId);
+            actorInvoiceDto.BrokerIban = await SettingManager.GetSettingValueForTenantAsync(AppSettings.Invoice.BrokerIban, invoice.TenantId);
+            actorInvoiceDto.BrokerEmailAddress = await SettingManager.GetSettingValueForTenantAsync(AppSettings.Invoice.BrokerEmailAddress, invoice.TenantId);
+            actorInvoiceDto.BrokerWebSite = await SettingManager.GetSettingValueForTenantAsync(AppSettings.Invoice.BrokerWebSite, invoice.TenantId);
+            actorInvoiceDto.BrokerAddress = await SettingManager.GetSettingValueForTenantAsync(AppSettings.Invoice.BrokerAddress, invoice.TenantId);
+            actorInvoiceDto.BrokerMobile = await SettingManager.GetSettingValueForTenantAsync(AppSettings.Invoice.BrokerMobile, invoice.TenantId);
+
+            // broker Cr & Vat 
+            var cr = AsyncHelper.RunSync(() =>
+             _documentFileRepository.FirstOrDefaultAsync(x =>
+                 x.TenantId == invoice.TenantId && x.DocumentTypeFk.Flag == DocumentTypeFlagEnum.Cr));
+            if (cr != null) actorInvoiceDto.BrokerCr = cr.Number;
+
+            var vat = AsyncHelper.RunSync(() =>
+                _documentFileRepository.FirstOrDefaultAsync(x =>
+                  x.TenantId == invoice.TenantId && x.DocumentTypeFk.Flag == DocumentTypeFlagEnum.Vat));
+            if (vat != null) actorInvoiceDto.BrokerVat = vat.Number;
+
+
+
+
+
+            //Actor Cr & Vat
+            var document = AsyncHelper.RunSync(() =>
+                _documentFileRepository.FirstOrDefaultAsync(x =>
+                    x.ActorId == invoice.ShipperActorId && x.DocumentTypeFk.Flag == DocumentTypeFlagEnum.Cr));
+            if (document != null) actorInvoiceDto.CR = document.Number;
+
+            var documentVat = AsyncHelper.RunSync(() =>
+                _documentFileRepository.FirstOrDefaultAsync(x =>
+                  x.ActorId == invoice.ShipperActorId && x.DocumentTypeFk.Flag == DocumentTypeFlagEnum.Vat));
+            if (document != null) actorInvoiceDto.TenantVatNumber = documentVat.Number;
+
+            return new List<ActorInvoiceInfoDto>() { actorInvoiceDto };
+        }
+
+
+        public IEnumerable<InvoiceItemDto> GetActorInvoiceShippingRequestsReportInfo(long actorInvoiceId)
+        {
+            DisableTenancyFilters();
+            var actorInvoice = AsyncHelper.RunSync(() => GetActorInvoiceInfo(actorInvoiceId));
+
+            if (actorInvoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+            var totalItem = actorInvoice.Trips.Count + actorInvoice.Trips.SelectMany(v => v.ShippingRequestTripVases).Count();
+            int sequence = 1;
+            List<InvoiceItemDto> items = new List<InvoiceItemDto>();
+            foreach (var trip in actorInvoice.Trips.ToList())
+            {
+                int vasCounter = 0;
+                items.Add(new InvoiceItemDto
+                {
+                    Sequence = $"{sequence}/{totalItem}",
+                    SubTotalAmount = trip.ActorShipperPriceFk.SubTotalAmountWithCommission.Value,
+                    VatAmount = trip.ActorShipperPriceFk.VatAmountWithCommission.Value,
+                    TotalAmount = trip.ActorShipperPriceFk.TotalAmountWithCommission.Value,
+                    WayBillNumber = trip.WaybillNumber.ToString(),
+                    TruckType = trip.AssignedTruckFk != null ? ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName : "",
+                    Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestFk.OriginCityFk.DisplayName,
+                    Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestFk.DestinationCityFk.DisplayName,
+                    DateWork = trip.EndTripDate.HasValue ? trip.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.ActorInvoiceFk.CreationTime.ToString("dd/MM/yyyy"),
+                    Remarks = trip.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
+                       L("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops) : "",
+                    ContainerNumber = trip.CanBePrinted ? trip.ContainerNumber ?? "-" : "-",
+                    RoundTrip = trip.CanBePrinted ? trip.RoundTrip ?? "-" : "-",
+                });
+                sequence++;
+                if (trip.ShippingRequestTripVases != null &&
+                    trip.ShippingRequestTripVases.Count > 1)
+                {
+                    vasCounter = 1;
+                }
+
+
+                foreach (var vas in trip.ShippingRequestTripVases)
+                {
+                    string waybillNumber;
+                    if (vasCounter == 0)
+                    {
+                        waybillNumber = $"{trip.WaybillNumber.ToString()}VAS";
+                    }
+                    else
+                    {
+                        waybillNumber = $"{trip.WaybillNumber.ToString()}VAS{vasCounter}";
+                        vasCounter++;
+                    }
+
+                    trip.WaybillNumber.ToString();
+
+                    var item = new InvoiceItemDto
+                    {
+                        Sequence = $"{sequence}/{totalItem}",
+                        SubTotalAmount = vas.ActorShipperPriceFk.SubTotalAmountWithCommission.Value,
+                        VatAmount = vas.ActorShipperPriceFk.VatAmountWithCommission.Value,
+                        TotalAmount = vas.ActorShipperPriceFk.TotalAmountWithCommission.Value,
+                        WayBillNumber = waybillNumber,
+                        TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Key),
+                        Source = "-",
+                        Destination = "-",
+                        DateWork = "-",
+                        Remarks = vas.Quantity > 1 ? $"{vas.Quantity}" : ""
+                    };
+                    items.Add(item);
+
+                    sequence++;
+                }
+
+            }
+
+            return items;
+        }
+
 
 
         //public IEnumerable<GetInvoiceReportInfoOutput> GetInvoiceReportInfo(long invoiceId)

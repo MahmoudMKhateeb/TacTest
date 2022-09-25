@@ -1,0 +1,191 @@
+<div class="card card-custom gutter-b">
+  <!--  start of card::form-->
+  <div class="card-header">
+    <h3 class="card-title">{{ l('ActorsShipperPrices') }}</h3>
+  </div>
+  <!--  start of card::body-->
+  <form *ngIf="active" #createOrEditShipperPriceForm="ngForm" novalidate autocomplete="off" (ngSubmit)="save()">
+    <div class="card-body">
+      <div class="row">
+        <!--  start of truck::Details-->
+
+        <div class="col-12">
+          <div class="form-group">
+            <label>{{ l('TripVatAmount') }} <span class="text-danger">*</span></label>
+            <input
+              [(ngModel)]="createOrEditActorShipperPriceInput.actorShipperPriceDto.vatAmountWithCommission"
+              required
+              min="0"
+              type="number"
+              class="form-control"
+              name="vatAmountWithCommission"
+              disabled
+            />
+          </div>
+
+          <div class="form-group">
+            <label>{{ l('TripSubTotalAmount') }} <span class="text-danger">*</span></label>
+            <input
+              [(ngModel)]="createOrEditActorShipperPriceInput.actorShipperPriceDto.subTotalAmountWithCommission"
+              min="0"
+              required
+              type="number"
+              class="form-control"
+              name="subTotalAmountWithCommission"
+              (change)="calculatePrices(createOrEditActorShipperPriceInput.actorShipperPriceDto)"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>{{ l('TripTotalAmount') }} <span class="text-danger">*</span></label>
+            <input
+              [(ngModel)]="createOrEditActorShipperPriceInput.actorShipperPriceDto.totalAmountWithCommission"
+              required
+              min="0"
+              type="number"
+              class="form-control"
+              name="totalAmountWithCommission"
+              disabled
+            />
+          </div>
+        </div>
+      </div>
+
+      <div *ngFor="let vas of createOrEditActorShipperPriceInput.vasActorShipperPriceDtoPrices; index as i" class="row">
+        <!--  start of truck::Details-->
+
+        <div class="col-12">
+          <div class="separator separator-dashed my-5"></div>
+          <div class="form-group">
+            <label>{{ vas.vasDisplayName + l('VatAmount') }} <span class="text-danger">*</span></label>
+            <input
+              [(ngModel)]="vas.vatAmountWithCommission"
+              required
+              min="0"
+              type="number"
+              class="form-control"
+              [name]="i + 'vatAmountWithCommission'"
+              disabled
+            />
+          </div>
+
+          <div class="form-group">
+            <label>{{ vas.vasDisplayName + l('SubTotalAmount') }} <span class="text-danger">*</span></label>
+            <input
+              [(ngModel)]="vas.subTotalAmountWithCommission"
+              min="0"
+              required
+              type="number"
+              class="form-control"
+              [name]="i + 'subTotalAmountWithCommission'"
+              (change)="calculatePrices(vas)"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>{{ vas.vasDisplayName + l('TotalAmount') }} <span class="text-danger">*</span></label>
+            <input
+              [(ngModel)]="vas.totalAmountWithCommission"
+              required
+              min="0"
+              type="number"
+              class="form-control"
+              [name]="i + 'totalAmountWithCommission'"
+              disabled
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <button
+        type="submit"
+        class="btn btn-primary blue"
+        [disabled]="!createOrEditShipperPriceForm.form.valid"
+        [buttonBusy]="saving"
+        [busyText]="l('SavingWithThreeDot')"
+      >
+        <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+      </button>
+    </div>
+  </form>
+</div>
+<div class="card card-custom gutter-b">
+  <!--  start of card::form-->
+  <div class="card-header">
+    <h3 class="card-title">{{ l('ActorsCarrierPrices') }}</h3>
+  </div>
+  <!--  start of card::body-->
+  <form *ngIf="active" #createOrEditCarrierPriceForm="ngForm" novalidate autocomplete="off" (ngSubmit)="saveCarrierPrice()">
+    <div class="card-body">
+      <div class="row">
+        <!--  start of truck::Details-->
+        <div class="col-12">
+          <div class="form-group">
+            <label>{{ l('TripVatAmount') }} <span class="text-danger">*</span></label>
+            <input
+              [(ngModel)]="createOrEditActorCarrierPriceInput.actorCarrierPriceDto.vatAmount"
+              required
+              min="0"
+              type="number"
+              class="form-control"
+              name="vatAmount"
+              disabled
+            />
+          </div>
+
+          <div class="form-group">
+            <label>{{ l('TripSubTotalAmount') }} <span class="text-danger">*</span></label>
+            <input
+              [(ngModel)]="createOrEditActorCarrierPriceInput.actorCarrierPriceDto.subTotalAmount"
+              min="0"
+              required
+              type="number"
+              class="form-control"
+              name="subTotalAmount"
+              (change)="calculateCarrierPrices(createOrEditActorCarrierPriceInput.actorCarrierPriceDto)"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div *ngFor="let vas of createOrEditActorCarrierPriceInput.vasActorCarrierPriceDtoPrices; index as i" class="row">
+        <!--  start of truck::Details-->
+
+        <div class="col-12">
+          <div class="separator separator-dashed my-5"></div>
+          <div class="form-group">
+            <label>{{ vas.vasDisplayName + l('VatAmount') }} <span class="text-danger">*</span></label>
+            <input [(ngModel)]="vas.vatAmount" required min="0" type="number" class="form-control" [name]="i + 'vatAmount'" disabled />
+          </div>
+
+          <div class="form-group">
+            <label>{{ vas.vasDisplayName + l('SubTotalAmount') }} <span class="text-danger">*</span></label>
+            <input
+              [(ngModel)]="vas.subTotalAmount"
+              min="0"
+              required
+              type="number"
+              class="form-control"
+              [name]="i + 'subTotalAmount'"
+              (change)="calculateCarrierPrices(vas)"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <button
+        type="submit"
+        class="btn btn-primary blue"
+        [disabled]="!createOrEditCarrierPriceForm.form.valid"
+        [buttonBusy]="saving"
+        [busyText]="l('SavingWithThreeDot')"
+      >
+        <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+      </button>
+    </div>
+  </form>
+</div>

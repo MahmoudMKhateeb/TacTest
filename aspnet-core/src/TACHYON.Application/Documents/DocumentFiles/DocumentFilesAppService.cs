@@ -49,7 +49,7 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
-        private readonly IRepository<DocumentsEntity, int> _documentEntityRepository;
+        //private readonly IRepository<DocumentsEntity, int> _documentEntityRepository;
         private readonly IRepository<Edition, int> _editionRepository;
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly TenantManager _tenantManager;
@@ -72,7 +72,7 @@ namespace TACHYON.Documents.DocumentFiles
             IRepository<DocumentType, long> documentTypeRepository,
             DocumentFilesManager documentFilesManager,
             IRepository<Tenant, int> lookupTenantRepository,
-            IRepository<DocumentsEntity, int> documentEntityRepository,
+            //IRepository<DocumentsEntity, int> documentEntityRepository,
             IAppNotifier appNotifier,
             IUserEmailer userEmailer)
         {
@@ -89,7 +89,7 @@ namespace TACHYON.Documents.DocumentFiles
             _documentTypeRepository = documentTypeRepository;
             _documentFilesManager = documentFilesManager;
             _lookupTenantRepository = lookupTenantRepository;
-            _documentEntityRepository = documentEntityRepository;
+            //_documentEntityRepository = documentEntityRepository;
             _tenantManager = tenantManager;
             _appNotifier = appNotifier;
             _userEmailer = userEmailer;
@@ -102,7 +102,7 @@ namespace TACHYON.Documents.DocumentFiles
             DisableTenancyFiltersIfHost();
 
             var filteredDocumentFiles = _documentFileRepository.GetAll()
-                .Where(e => e.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Tenant)
+                .Where(e => e.DocumentTypeFk.DocumentsEntityId == DocumentsEntitiesEnum.Tenant)
                 .ProjectTo<GetAllTenantsSubmittedDocumentsDto>(AutoMapperConfigurationProvider);
 
             var result = await LoadResultAsync(filteredDocumentFiles, input.Filter);
@@ -114,7 +114,7 @@ namespace TACHYON.Documents.DocumentFiles
             DisableTenancyFiltersIfHost();
 
             var filteredDocumentFiles = _documentFileRepository.GetAll()
-                .Where(e => e.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
+                .Where(e => e.DocumentTypeFk.DocumentsEntityId == DocumentsEntitiesEnum.Truck)
                 .WhereIf(input.TruckId.HasValue, x => x.TruckId == input.TruckId)
                 .ProjectTo<GetAllTrucksSubmittedDocumentsDto>(AutoMapperConfigurationProvider);
 
@@ -128,9 +128,23 @@ namespace TACHYON.Documents.DocumentFiles
             await DisableTenancyFiltersIfTachyonDealer();
 
             var filteredDocumentFiles = _documentFileRepository.GetAll()
-                .Where(e => e.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver)
+                .Where(e => e.DocumentTypeFk.DocumentsEntityId == DocumentsEntitiesEnum.Driver)
                 .WhereIf(input.DriverId.HasValue, x => x.UserId == input.DriverId)
                 .ProjectTo<GetAllDriversSubmittedDocumentsDto>(AutoMapperConfigurationProvider);
+
+            var result = await LoadResultAsync(filteredDocumentFiles, input.Filter);
+
+            return result;
+        }
+        public async Task<LoadResult> GetAllActorsSubmittedDocuments(GetAllActorsSubmittedDocumentsInput input)
+        {
+            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
+
+            var filteredDocumentFiles = _documentFileRepository.GetAll()
+                .Where(e => e.DocumentTypeFk.DocumentsEntityId == DocumentsEntitiesEnum.ActorShipper || e.DocumentTypeFk.DocumentsEntityId == DocumentsEntitiesEnum.ActorCarrier)
+                .WhereIf(input.ActorId.HasValue, x => x.UserId == input.ActorId)
+                .ProjectTo<GetAllActorsSubmittedDocumentsDto>(AutoMapperConfigurationProvider);
 
             var result = await LoadResultAsync(filteredDocumentFiles, input.Filter);
 
@@ -316,7 +330,15 @@ namespace TACHYON.Documents.DocumentFiles
         {
             return await GetRequiredDocumentFileListForCreateOrEdit(DocumentsEntitiesEnum.Driver, userId);
         }
+        public async Task<List<CreateOrEditDocumentFileDto>> GetActorShipperRequiredDocumentFiles(string actorId)
+        {
+            return await GetRequiredDocumentFileListForCreateOrEdit(DocumentsEntitiesEnum.ActorShipper, actorId);
+        }
 
+        public async Task<List<CreateOrEditDocumentFileDto>> GetActorCarrierRequiredDocumentFiles(string actorId)
+        {
+            return await GetRequiredDocumentFileListForCreateOrEdit(DocumentsEntitiesEnum.ActorCarrier, actorId);
+        }
 
         public async Task AddTenantRequiredDocumentFiles(List<CreateOrEditDocumentFileDto> input)
         {
@@ -410,7 +432,7 @@ namespace TACHYON.Documents.DocumentFiles
             {
                 list = await _documentTypeRepository.GetAll()
                     .Include(x => x.Translations)
-                    .Where(x => x.DocumentsEntityId == (int)documentsEntityId)
+                    .Where(x => x.DocumentsEntityId == documentsEntityId)
                     .ToListAsync();
 
                 return list.Select(x => new CreateOrEditDocumentFileDto
@@ -420,9 +442,9 @@ namespace TACHYON.Documents.DocumentFiles
             }
 
             var mainQuery = _documentTypeRepository.GetAll()
-                .Include(ent => ent.DocumentsEntityFk)
+                //.Include(ent => ent.DocumentsEntityFk)
                 .Include(x => x.Translations)
-                .Where(doc => doc.DocumentsEntityId == (int)documentsEntityId);
+                .Where(doc => doc.DocumentsEntityId == documentsEntityId);
 
             if (documentsEntityId == DocumentsEntitiesEnum.Driver)
             {
@@ -455,6 +477,23 @@ namespace TACHYON.Documents.DocumentFiles
                 {
                     DocumentTypeId = x.Id,
                     TruckId = long.Parse(entityId),
+                    DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x)
+                }).ToList();
+            }
+            else if (documentsEntityId == DocumentsEntitiesEnum.ActorShipper)
+            {
+                var query = from o in mainQuery
+                    join o1 in _documentFileRepository.GetAll()
+                        .Where(a => a.ActorId == int.Parse(entityId)) on o.Id equals o1.DocumentTypeId into j1
+                    from s1 in j1.DefaultIfEmpty()
+                    where s1.ActorId == null
+                    select o;
+
+                list = await query.ToListAsync();
+                return list.Select(x => new CreateOrEditDocumentFileDto
+                {
+                    DocumentTypeId = x.Id,
+                    ActorId = int.Parse(entityId),
                     DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x)
                 }).ToList();
             }
@@ -524,7 +563,7 @@ namespace TACHYON.Documents.DocumentFiles
             var docs = await _documentFileRepository.GetAll()
                 .Include(doc => doc.DocumentTypeFk)
                 .ThenInclude(doc => doc.Translations)
-                .Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Tenant &&
+                .Where(x => x.DocumentTypeFk.DocumentsEntityId == DocumentsEntitiesEnum.Tenant &&
                             (x.DocumentTypeFk.DocumentRelatedWithId.HasValue == false ||
                              x.DocumentTypeFk.DocumentRelatedWithId == AbpSession.TenantId))
                 .Where(x => x.DocumentTypeFk.IsRequired == isMandatory)
@@ -586,7 +625,7 @@ namespace TACHYON.Documents.DocumentFiles
 
             var documentFiles = await _documentFileRepository.GetAll()
                 .Include(doc => doc.DocumentTypeFk)
-                .ThenInclude(doc => doc.DocumentsEntityFk)
+                //.ThenInclude(doc => doc.DocumentsEntityFk)
                 .Where(x => x.DocumentTypeFk.IsRequired == isMandatory)
                 .ToListAsync();
 
@@ -624,7 +663,7 @@ namespace TACHYON.Documents.DocumentFiles
                 .Where(x => x.TenantId == tenantId)
                 .Where(x => x.IsAccepted == true)
                 .Include(doc => doc.DocumentTypeFk)
-                .ThenInclude(doc => doc.DocumentsEntityFk)
+                //.ThenInclude(doc => doc.DocumentsEntityFk)
                 .Where(x => x.DocumentTypeFk.IsRequired)
                 .ToListAsync();
 
@@ -649,18 +688,21 @@ namespace TACHYON.Documents.DocumentFiles
             return documentTypes.Count == 0;
         }
 
-        public async Task<List<SelectItemDto>> GetDocumentEntitiesForTableDropdown()
-        {
-            using (this.CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
-            {
-                var entities = await _documentEntityRepository
-                    .GetAll()
-                    .Select(x => new SelectItemDto { DisplayName = x.DisplayName, Id = x.Id.ToString() }
-                    ).ToListAsync();
+        //public async Task<List<SelectItemDto>> GetDocumentEntitiesForTableDropdown()
+        //{
+        //    using (this.CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+        //    {
+        //        var entities = await _documentEntityRepository
+        //            .GetAll()
+        //            .Select(x => new SelectItemDto { DisplayName = x.DisplayName, Id = x.Id.ToString() }
+        //            ).ToListAsync();
 
-                return entities;
-            }
-        }
+        //        return entities;
+        //    }
+
+
+        //    var r = Enum.GetValues(typeof(DocumentsEntitiesEnum))
+        //}
 
         /// <summary>
         /// using the Abpsession in the front end creates issues when using thet Imparsonate Function

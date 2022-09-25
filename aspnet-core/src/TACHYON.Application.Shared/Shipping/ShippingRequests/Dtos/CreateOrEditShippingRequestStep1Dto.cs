@@ -9,7 +9,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class CreateOrEditShippingRequestStep1Dto : EntityDto<long?>, ICustomValidate
+    public class CreateOrEditShippingRequestStep1Dto : EntityDto<long?>, ICustomValidate 
     {
         /// <summary>
         /// TAC-1937
@@ -39,6 +39,11 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string ShipperInvoiceNo { get; set; }
 
         [JsonIgnore] public ShippingRequestType RequestType { get; set; }
+
+            public int? ShipperActorId { get; set; }
+            public int? CarrierActorId { get; set; }
+
+            public bool IsInternalBrokerRequest { get; set; }
 
         public void AddValidationErrors(CustomValidationContext context)
         {

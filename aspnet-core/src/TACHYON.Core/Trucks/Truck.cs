@@ -6,9 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Actors;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Integration.WaslIntegration;
+using TACHYON.Shipping.ShippingRequests;
 //using TACHYON.Authorization.Users;
 using TACHYON.Trucks;
 using TACHYON.Trucks.PlateTypes;
@@ -21,7 +23,7 @@ namespace TACHYON.Trucks
     [Table("Trucks")]
     [Audited]
     [Serializable]
-    public class Truck : FullAuditedEntity<long>, IMustHaveTenant, IWaslIntegrated
+    public class Truck : FullAuditedEntity<long>, IMustHaveTenant, IWaslIntegrated, IMayHaveCarrierActor
     {
         public int TenantId { get; set; }
 
@@ -99,6 +101,10 @@ namespace TACHYON.Trucks
 
         public bool IsWaslIntegrated { get; set; }
         public string WaslIntegrationErrorMsg { get; set; }
+        [ForeignKey("CarrierActorId")]
+        public Actor CarrierActorFk { get; set; }
+
+        public int? CarrierActorId { get; set ; }
 
 
 

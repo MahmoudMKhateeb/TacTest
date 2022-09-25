@@ -62,7 +62,8 @@ namespace TACHYON.Configuration.Tenants
                 Billing = await GetBillingSettingsAsync(),
                 OtherSettings = await GetOtherSettingsAsync(),
                 Email = await GetEmailSettingsAsync(),
-                ExternalLoginProviderSettings = await GetExternalLoginProviderSettings()
+                ExternalLoginProviderSettings = await GetExternalLoginProviderSettings(),
+                BrokerInvoiceSettings = await GetTenantBrokerInvoiceSettingsAsync()
             };
 
             if (!_multiTenancyConfig.IsEnabled || Clock.SupportsMultipleTimezone)
@@ -409,6 +410,21 @@ namespace TACHYON.Configuration.Tenants
             };
         }
 
+        private async Task<TenantBrokerInvoiceSettingsEditDto> GetTenantBrokerInvoiceSettingsAsync()
+        {
+            return new TenantBrokerInvoiceSettingsEditDto
+            {
+                BrokerBankNameEnglish = await SettingManager.GetSettingValueAsync(AppSettings.Invoice.BrokerBankNameEnglish),
+                BrokerBankNameArabic = await SettingManager.GetSettingValueAsync(AppSettings.Invoice.BrokerBankNameArabic),
+                BrokerBankAccountNumber = await SettingManager.GetSettingValueAsync(AppSettings.Invoice.BrokerBankAccountNumber),
+                BrokerIban = await SettingManager.GetSettingValueAsync(AppSettings.Invoice.BrokerIban),
+                BrokerEmailAddress = await SettingManager.GetSettingValueAsync(AppSettings.Invoice.BrokerEmailAddress),
+                BrokerWebSite = await SettingManager.GetSettingValueAsync(AppSettings.Invoice.BrokerWebSite),
+                BrokerAddress = await SettingManager.GetSettingValueAsync(AppSettings.Invoice.BrokerAddress),
+                BrokerMobile = await SettingManager.GetSettingValueAsync(AppSettings.Invoice.BrokerMobile),
+            };
+        }
+
         #endregion
 
         #region Update Settings
@@ -420,6 +436,7 @@ namespace TACHYON.Configuration.Tenants
             await UpdateBillingSettingsAsync(input.Billing);
             await UpdateEmailSettingsAsync(input.Email);
             await UpdateExternalLoginSettingsAsync(input.ExternalLoginProviderSettings);
+            await UpdateBrokerInvoiceSettingsAsync(input.BrokerInvoiceSettings);
 
             //Time Zone
             if (Clock.SupportsMultipleTimezone)
@@ -797,6 +814,21 @@ namespace TACHYON.Configuration.Tenants
             );
 
             ExternalLoginOptionsCacheManager.ClearCache();
+        }
+
+        private async Task UpdateBrokerInvoiceSettingsAsync(TenantBrokerInvoiceSettingsEditDto input)
+        {
+
+
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.Invoice.BrokerBankNameEnglish, input.BrokerBankNameEnglish);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.Invoice.BrokerBankNameArabic, input.BrokerBankNameArabic);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.Invoice.BrokerBankAccountNumber, input.BrokerBankAccountNumber);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.Invoice.BrokerIban, input.BrokerIban);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.Invoice.BrokerEmailAddress, input.BrokerEmailAddress);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.Invoice.BrokerWebSite, input.BrokerWebSite);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.Invoice.BrokerAddress, input.BrokerAddress);
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.Invoice.BrokerMobile, input.BrokerMobile);
+
         }
 
         #endregion

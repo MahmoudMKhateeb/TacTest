@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
-	<texts>
+	<texts>    <text name="Actors">Actors</text>
+    <text name="Actor">Actor</text>
+    <text name="TACHYON.Actors.Actor">Actor</text>
+    <text name="ActorType">Actor type</text>
+    <text name="Logo">Logo</text>
+    <text name="ActorsHeaderInfo">Actors header info</text>
+    <text name="CreateNewActor">Create new actor</text>
+    <text name="EditActor">Edit actor</text>
+    <text name="DeleteActor">Delete actor</text>
+
     <text name="DriverLicenseTypes">Driver license types</text>
     <text name="DriverLicenseType">Driver license type</text>
     <text name="TACHYON.DriverLicenseTypes.DriverLicenseType">DriverLicenseType</text>

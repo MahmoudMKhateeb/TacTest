@@ -1,10 +1,9 @@
-import { AppSessionService } from '@shared/common/session/app-session.service';
+﻿import { AppSessionService } from '@shared/common/session/app-session.service';
 import { Injectable } from '@angular/core';
 import { AppMenu } from './app-menu';
 import { AppMenuItem } from './app-menu-item';
 import { FeatureCheckerService } from '@node_modules/abp-ng2-module';
 import { PermissionCheckerService } from 'abp-ng2-module';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { AppHostNavigationService } from '@app/shared/layout/nav/navigation-services/app-host-navigation.service';
 import { AppCarrierNavigationService } from '@app/shared/layout/nav/navigation-services/app-carrier-navigation.service';
 import { AppShipperNavigationService } from '@app/shared/layout/nav/navigation-services/app-shipper-navigation.service';

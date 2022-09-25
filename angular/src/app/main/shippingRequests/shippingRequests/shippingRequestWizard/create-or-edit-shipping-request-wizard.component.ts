@@ -117,6 +117,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   selectedVasesProperties = [];
   requestType: any;
   AllShippers: ShippersForDropDownDto[];
+  AllActorsShippers: SelectItemDto[];
+  AllActorsCarriers: SelectItemDto[];
   public allCarriers: CarriersForDropDownDto[];
   isCarrierSass = false;
   sourceCities: TenantCityLookupTableDto[];
@@ -144,11 +146,12 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     private _templateService: EntityTemplateServiceProxy
   ) {
     super(injector);
+    this.step1Dto.isInternalBrokerRequest = false;
   }
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests')];
   @ViewChild('wizard', { static: true }) el: ElementRef;
   step1Form = this.fb.group({
-    shippingRequestType: [{ value: '', disabled: false }, this.isCarrierSass ? Validators.required : false],
+    shippingRequestType: [{ value: '', disabled: false }, this.isCarrierSass || this.step1Dto.isInternalBrokerRequest ? Validators.required : false],
     shippingType: [{ value: '', disabled: false }, Validators.required],
     carrier: [{ value: '', disabled: false }],
     tripsStartDate: [''],
@@ -156,8 +159,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     biddingStartDate: [''],
     biddingEndDate: [''],
     Shipper: [''],
+    ActorShipper: [''],
+    ActorCarrier: [''],
     ShipperReference: [''],
     ShipperInvoiceNumber: [''],
+    IsInternalBrokerRequest: [''],
   });
   step2Form = this.fb.group({
     originCountry: ['', Validators.required],
@@ -191,6 +197,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
   origin = { lat: null, lng: null };
   destination = { lat: null, lng: null };
+
   ngOnInit() {
     this.loadAllDropDownLists();
     this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
@@ -334,11 +341,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.step1Dto.id = this.activeShippingRequestId || undefined;
     this.shippingRequestType == 'bidding' ? (this.step1Dto.isBid = true) : (this.step1Dto.isBid = false);
     this.shippingRequestType == 'tachyondeal' ? (this.step1Dto.isTachyonDeal = true) : (this.step1Dto.isTachyonDeal = false);
-    this.shippingRequestType == 'directrequest' || this.isCarrierSass
+    this.shippingRequestType == 'directrequest' || this.isCarrierSass || this.step1Dto.isInternalBrokerRequest
       ? (this.step1Dto.isDirectRequest = true)
       : (this.step1Dto.isDirectRequest = false);
     this.step1Dto.startTripDate == null ? (this.step1Dto.startTripDate = moment(this.today)) : null;
-    if (this.isCarrierSass) {
+    if (this.isCarrierSass || this.step1Dto.isInternalBrokerRequest) {
       this.step1Dto.carrierTenantIdForDirectRequest = this.appSession.tenantId;
     }
     this._shippingRequestsServiceProxy
@@ -514,6 +521,14 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this._shippingRequestsServiceProxy.getAllShippersForDropDown().subscribe((result) => {
       this.AllShippers = result;
     });
+    this._shippingRequestsServiceProxy.getAllCarriersActorsForDropDown().subscribe((result) => {
+      this.AllActorsCarriers = result;
+    });
+
+    this._shippingRequestsServiceProxy.getAllShippersActorsForDropDown().subscribe((result) => {
+      this.AllActorsShippers = result;
+    });
+
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
       this.allGoodCategorys = result;
     });

@@ -84,6 +84,9 @@ namespace TACHYON.PriceOffers.Dto
         public string RejectedReason { get; set; }
 
         public PriceOfferTenantCommissionSettings CommissionSettings { get; set; }
+
+        public int? CarrierActorId { get; set; }
+
     }
 
     public class PriceOfferTenantCommissionSettings

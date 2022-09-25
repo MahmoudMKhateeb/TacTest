@@ -16,9 +16,11 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.AddressBook;
+using TACHYON.Actors;
 using TACHYON.Cities;
 using TACHYON.Cities.Dtos;
 using TACHYON.Configuration;
+using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.MultiTenancy.Dto;
@@ -60,6 +62,7 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<Facility, long> _facilityRepository;
         private readonly ShippingRequestUpdateManager _srUpdateManager;
         private readonly IRepository<ShippingRequestAndTripNote> _ShippingRequestAndTripNoteRepository;
+        private readonly IRepository<Actor> _actorsRepository;
 
         private IRepository<VasPrice> _vasPriceRepository;
 
@@ -77,8 +80,8 @@ namespace TACHYON.PriceOffers
             IRepository<Facility, long> facilityRepository,
             IRepository<SrPostPriceUpdate, long> srPostPriceUpdateRepository,
             ShippingRequestUpdateManager srUpdateManager,
-            IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository
-            )
+            IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository,
+            IRepository<Actor> actorsRepository)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -96,6 +99,7 @@ namespace TACHYON.PriceOffers
             _facilityRepository = facilityRepository;
             _srUpdateManager = srUpdateManager;
             _ShippingRequestAndTripNoteRepository = ShippingRequestAndTripNoteRepository;
+            _actorsRepository = actorsRepository;
         }
         #region Services
 
@@ -206,7 +210,7 @@ namespace TACHYON.PriceOffers
         /// <param name="id"></param>
         /// <returns></returns>
         /// 
-        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier)]
+        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier,AppFeatures.Broker)]
         public async Task<PriceOfferDto> GetPriceOfferForCreateOrEdit(long id, long? OfferId)
         {
             DisableTenancyFilters();
@@ -327,12 +331,12 @@ namespace TACHYON.PriceOffers
         }
 
 
-        [RequiresFeature(AppFeatures.Carrier, AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.TachyonDealer,AppFeatures.Broker)]
         // [AbpAuthorize(AppPermissions.Pages_Offers_Create)]
 
         public async Task<long> CreateOrEdit(CreateOrEditPriceOfferInput Input)
         {
-            if (await IsEnabledAsync(AppFeatures.Carrier))
+            if (await IsEnabledAsync(AppFeatures.Carrier) || await IsEnabledAsync(AppFeatures.Broker))
             {
                 Input.CommissionPercentageOrAddValue = default;
                 Input.CommissionType = default;
@@ -411,7 +415,7 @@ namespace TACHYON.PriceOffers
 
         public async Task<PriceOfferStatus> Accept(long id)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Shipper);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Shipper,AppFeatures.Broker);
             await CheckSrHasBendingUpdates(id);
             return await _priceOfferManager.AcceptOffer(id);
         }
@@ -542,6 +546,17 @@ namespace TACHYON.PriceOffers
 
             return getShippingRequestForPricingOutput;
 
+        }
+
+        public async Task<List<SelectItemDto>> GetAllCarrierActorsForDropDown()
+        {
+            return await _actorsRepository.GetAll()
+                .Where(x=> x.ActorType == ActorTypesEnum.Carrier)
+                   .Select(x => new SelectItemDto()
+                   {
+                       Id = x.Id.ToString(),
+                       DisplayName = x.CompanyName
+                   }).ToListAsync();
         }
 
 

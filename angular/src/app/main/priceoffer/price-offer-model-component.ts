@@ -16,6 +16,7 @@ import {
   PriceOfferTenantCommissionSettings,
   ShippingRequestUpdateServiceProxy,
   ShippingRequestUpdateStatus,
+  SelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
@@ -50,6 +51,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
   type: string;
   priceOfferInput: CreateOrEditPriceOfferInput;
   CreateSrUpdateActionInput: CreateSrUpdateActionInputDto = new CreateSrUpdateActionInputDto();
+  AllActorsCarriers: SelectItemDto[];
 
   constructor(
     injector: Injector,
@@ -75,6 +77,10 @@ export class PriceOfferModelComponent extends AppComponentBase {
   ): void {
     this.isPostPriceOffer = isPostPriceOffer;
 
+    this._CurrentServ.getAllCarrierActorsForDropDown().subscribe((result) => {
+      this.AllActorsCarriers = result;
+    });
+
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this.input.shippingRequestId = id;
     this.type = type;
@@ -89,6 +95,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
       this.modal.show();
       this.input.shippingRequestId = id;
       this.input.channel = this.Channel;
+      this.input.carrierActorId = this.offer.carrierActorId;
       if (!this.feature.isEnabled('App.Carrier') && this.offer.id == 0) {
         this.changeItemComissionValue();
         this.changeVasComissionValue();
@@ -176,6 +183,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.input.commissionType = this.offer.commissionType;
     this.input.vasCommissionPercentageOrAddValue = this.offer.vasCommissionPercentageOrAddValue;
     this.input.vasCommissionType = this.offer.vasCommissionType;
+    this.input.carrierActorId = this.offer.carrierActorId;
 
     if (this.isPostPriceOffer) {
       this.postPriceOfferSubmitted.emit(this.input);

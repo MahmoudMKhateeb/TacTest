@@ -126,7 +126,7 @@ namespace TACHYON.Documents
             {
                 return await _documentFileRepository.GetAll()
                     .Include(doc => doc.DocumentTypeFk)
-                    .Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Tenant)
+                    .Where(x => x.DocumentTypeFk.DocumentsEntityId == DocumentsEntitiesEnum.Tenant)
                     .Where(x => x.TenantId == tenantId)
                     .Where(new ActiveRequiredDocumentSpecification())
                     .ToListAsync();
@@ -147,8 +147,8 @@ namespace TACHYON.Documents
                 .Include(doc => doc.DocumentTypeFk)
                 .Include(doc => doc.TruckFk)
                 .Include(doc => doc.UserFk)
-                .Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver ||
-                            x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
+                .Where(x => x.DocumentTypeFk.DocumentsEntityId == DocumentsEntitiesEnum.Driver ||
+                            x.DocumentTypeFk.DocumentsEntityId == DocumentsEntitiesEnum.Truck)
                 .Where(x => x.TenantId == tenantId)
                 .Where(x => x.DocumentTypeFk.HasExpirationDate &&
                             //get documents that is already expired and will be expired within 2 coming months
@@ -252,7 +252,7 @@ namespace TACHYON.Documents
                 case DocumentsEntitiesEnum.Driver:
                     {
                         var documentTypes = await _documentTypeRepository.GetAll()
-                            .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver)
+                            .Where(doc => doc.DocumentsEntityId == DocumentsEntitiesEnum.Driver)
                             .Where(x => x.IsRequired)
                             .CountAsync();
 
@@ -266,7 +266,7 @@ namespace TACHYON.Documents
                 case DocumentsEntitiesEnum.Truck:
                     {
                         var documentTypes = await _documentTypeRepository.GetAll()
-                            .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
+                            .Where(doc => doc.DocumentsEntityId == DocumentsEntitiesEnum.Truck)
                             .Where(x => x.IsRequired)
                             .CountAsync();
 

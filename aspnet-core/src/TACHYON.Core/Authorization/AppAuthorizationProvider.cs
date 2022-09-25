@@ -45,8 +45,6 @@ namespace TACHYON.Authorization
             driverLicenseTypes.CreateChildPermission(AppPermissions.Pages_DriverLicenseTypes_Edit, L("EditDriverLicenseType"), multiTenancySides: MultiTenancySides.Host);
             driverLicenseTypes.CreateChildPermission(AppPermissions.Pages_DriverLicenseTypes_Delete, L("DeleteDriverLicenseType"), multiTenancySides: MultiTenancySides.Host);
 
-
-
             var dangerousGoodTypes = pages.CreateChildPermission(AppPermissions.Pages_DangerousGoodTypes, L("DangerousGoodTypes"), multiTenancySides: MultiTenancySides.Host);
             dangerousGoodTypes.CreateChildPermission(AppPermissions.Pages_DangerousGoodTypes_Create, L("CreateNewDangerousGoodType"), multiTenancySides: MultiTenancySides.Host);
             dangerousGoodTypes.CreateChildPermission(AppPermissions.Pages_DangerousGoodTypes_Edit, L("EditDangerousGoodType"), multiTenancySides: MultiTenancySides.Host);
@@ -69,7 +67,6 @@ namespace TACHYON.Authorization
                 L("EditCitiesTranslation"), multiTenancySides: MultiTenancySides.Host);
             citiesTranslations.CreateChildPermission(AppPermissions.Pages_CitiesTranslations_Delete,
                 L("DeleteCitiesTranslation"), multiTenancySides: MultiTenancySides.Host);
-
 
             var packingTypes = pages.CreateChildPermission(AppPermissions.Pages_PackingTypes, L("PackingTypes"),
                 multiTenancySides: MultiTenancySides.Host);
@@ -107,7 +104,6 @@ namespace TACHYON.Authorization
                 L("EditTruckStatusesTranslation"), multiTenancySides: MultiTenancySides.Host);
             truckStatusesTranslations.CreateChildPermission(AppPermissions.Pages_TruckStatusesTranslations_Delete,
                 L("DeleteTruckStatusesTranslation"), multiTenancySides: MultiTenancySides.Host);
-
 
             var countriesTranslations = pages.CreateChildPermission(AppPermissions.Pages_CountriesTranslations,
                 L("CountriesTranslations"), multiTenancySides: MultiTenancySides.Host);
@@ -437,6 +433,11 @@ namespace TACHYON.Authorization
                 featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer));
 
             var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("Administration"));
+
+            var actors = administration.CreateChildPermission(AppPermissions.Pages_Administration_Actors, L("Actors"), multiTenancySides: MultiTenancySides.Tenant);
+            actors.CreateChildPermission(AppPermissions.Pages_Administration_Actors_Create, L("CreateNewActor"), multiTenancySides: MultiTenancySides.Tenant);
+            actors.CreateChildPermission(AppPermissions.Pages_Administration_Actors_Edit, L("EditActor"), multiTenancySides: MultiTenancySides.Tenant);
+            actors.CreateChildPermission(AppPermissions.Pages_Administration_Actors_Delete, L("DeleteActor"), multiTenancySides: MultiTenancySides.Tenant);
 
             var vases = administration.CreateChildPermission(AppPermissions.Pages_Administration_Vases, L("Vases"),
                 multiTenancySides: MultiTenancySides.Host);

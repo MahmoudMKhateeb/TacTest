@@ -27,6 +27,8 @@ namespace TACHYON.PriceOffers.Dto
         
         [JsonIgnore]
         public bool IgnoreExistingOffer { get; set; }
+         public int? CarrierActorId { get; set; }
+
         public void AddValidationErrors(CustomValidationContext context)
         {
             if (ItemPrice < 0)

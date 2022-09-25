@@ -98,7 +98,65 @@
                       <span class="form-text text-muted">{{ l('SelectShipper') }} {{ step1Dto.shipperId }}</span>
                     </div>
 
-                    <div *ngIf="!isCarrierSass" class="form-group">
+                    <h2 class="font-size-lg text-dark font-weight-bold mb-6">{{ l('Broker:') }}</h2>
+
+                    <div class="form-group row">
+                      <label class="col-3 col-form-label">{{ l('IsInternalBrokerRequest') }} </label>
+                      <div class="col-3">
+                        <span class="switch switch-icon">
+                          <label>
+                            <input type="checkbox" [(ngModel)]="step1Dto.isInternalBrokerRequest" formControlName="IsInternalBrokerRequest" />
+                            <span></span>
+                          </label>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div *ngIf="this.feature.isEnabled('App.Broker')" class="form-group">
+                      <label>{{ l('ActorShipper') }} <span class="required-fileds">*</span></label>
+                      <div
+                        [ngClass]="{
+                          'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsShippers
+                        }"
+                      >
+                        <select
+                          class="form-control"
+                          name="ActorShipper"
+                          formControlName="ActorShipper"
+                          [(ngModel)]="step1Dto.shipperActorId"
+                          required
+                        >
+                          <option [value]="undefined">{{ l('SelectShipper') }}</option>
+                          <option *ngFor="let item of AllActorsShippers" value="{{ item.id }}">{{ item.displayName }}</option>
+                        </select>
+                      </div>
+                      <span class="form-text text-muted">{{ l('SelectShipperActor') }} {{ step1Dto.shipperActorId }}</span>
+                    </div>
+
+                    <div *ngIf="this.feature.isEnabled('App.Broker') && step1Dto.isInternalBrokerRequest" class="form-group">
+                      <label>{{ l('ActorCarrier') }} <span class="required-fileds">*</span></label>
+                      <div
+                        [ngClass]="{
+                          'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsCarriers
+                        }"
+                      >
+                        <select
+                          class="form-control"
+                          name="ActorCarrier"
+                          formControlName="ActorCarrier"
+                          [(ngModel)]="step1Dto.carrierActorId"
+                          required
+                        >
+                          <option [value]="undefined">{{ l('Select') }}</option>
+                          <option *ngFor="let item of AllActorsCarriers" value="{{ item.id }}">{{ item.displayName }}</option>
+                        </select>
+                      </div>
+                      <span class="form-text text-muted">{{ l('SelectCarrierActor') }} {{ step1Dto.carrierActorId }}</span>
+                    </div>
+
+                    <div class="separator separator-dashed my-5"></div>
+
+                    <div *ngIf="!isCarrierSass" [hidden]="step1Dto.isInternalBrokerRequest" class="form-group">
                       <label>{{ l('ShippingRequestType') }} <span class="required-fileds">*</span></label>
                       <select
                         class="form-control"
@@ -114,7 +172,7 @@
                           step1Form.get('shippingRequestType').invalid &&
                           (step1Form.get('shippingRequestType').dirty || step1Form.get('shippingRequestType').touched)
                         "
-                        required
+                        [required]="!step1Dto.isInternalBrokerRequest"
                         readonly="readonly"
                         [attr.disabled]="step1Dto.shipperId > 0 ? true : null"
                       >

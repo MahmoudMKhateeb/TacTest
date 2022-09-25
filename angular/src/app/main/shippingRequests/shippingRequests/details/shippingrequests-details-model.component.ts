@@ -103,8 +103,8 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
     if (this.shippingrequest.directRequestStatus != ShippingRequestDirectRequestStatus.New) return false;
     if (this.request.status != ShippingRequestStatus.NeedsAction && this.request.status != ShippingRequestStatus.PrePrice) return false;
     if (this.Channel == PriceOfferChannel.MarketPlace && this.request.bidStatus != ShippingRequestBidStatus.OnGoing) return false;
-    if (this.feature.isEnabled('App.Shipper')) return false;
     if (this.feature.isEnabled('App.Carrier')) return true;
+    if (this.feature.isEnabled('App.Broker')) return true;
     if (this.feature.isEnabled('App.TachyonDealer') && !this.request.isTachyonDeal) return true;
     return false;
   }

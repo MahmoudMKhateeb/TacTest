@@ -1,4 +1,5 @@
-﻿using Abp.Events.Bus.Entities;
+﻿using TACHYON.Actors;
+using Abp.Events.Bus.Entities;
 using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,7 @@ using TACHYON.Goods;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Invoices;
+using TACHYON.Invoices.ActorInvoices;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Groups;
 using TACHYON.Invoices.PaymentMethods;
@@ -94,6 +96,12 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<Actor> Actors { get; set; }
+        public virtual DbSet<ActorShipperPrice> ActorShipperPrices { get; set; }
+        public virtual DbSet<ActorCarrierPrice> ActorCarrierPrices { get; set; }
+
+        public virtual DbSet<ActorInvoice> ActorInvoices { get; set; }
+
         public virtual DbSet<EmailTemplateTranslation> EmailTemplateTranslations { get; set; }
 
         public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
@@ -189,7 +197,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<DocumentTypeTranslation> DocumentTypeTranslations { get; set; }
 
-        public virtual DbSet<DocumentsEntity> DocumentsEntities { get; set; }
+        //public virtual DbSet<DocumentsEntity> DocumentsEntities { get; set; }
 
         public virtual DbSet<Shipping.ShippingRequestStatuses.ShippingRequestStatus> ShippingRequestStatuses
         {
@@ -227,7 +235,6 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<County> Counties { get; set; }
 
-
         public virtual DbSet<GoodCategory> GoodCategories { get; set; }
 
         public virtual DbSet<GoodCategoryTranslation> GoodCategoryTranslations { get; set; }
@@ -251,7 +258,6 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<Invoices.Invoice> Invoice { get; set; }
         public DbSet<InvoiceProforma> InvoiceProforma { get; set; }
 
-
         public virtual DbSet<InvoiceTrip> InvoiceTrips { get; set; }
         public virtual DbSet<GroupPeriod> GroupPeriod { get; set; }
         public virtual DbSet<GroupShippingRequests> GroupShippingRequests { get; set; }
@@ -262,7 +268,6 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<SubmitInvoice> SubmitInvoices { get; set; }
         public DbSet<SubmitInvoiceTrip> SubmitInvoiceTrips { get; set; }
         public virtual DbSet<BalanceRecharge> BalanceRecharge { get; set; }
-
 
         public DbSet<Transaction> Transaction { get; set; }
 
@@ -379,14 +384,19 @@ namespace TACHYON.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Actor>(a =>
+            {
+                a.HasIndex(e => new { e.TenantId });
+            });
+
             //modelBuilder.Entity<ShippingRequestVas>(s =>
             //{
             //    s.HasIndex(e => new { e.TenantId });
             //});
             modelBuilder.Entity<VasPrice>(v =>
-            {
-                v.HasIndex(e => new { e.TenantId });
-            });
+             {
+                 v.HasIndex(e => new { e.TenantId });
+             });
             modelBuilder.Entity<Receiver>(r =>
             {
                 r.HasIndex(e => new { e.TenantId });
@@ -503,7 +513,6 @@ namespace TACHYON.EntityFrameworkCore
                 b.HasIndex(a => a.AccountNumber).IsUnique();
                 b.HasIndex(a => a.ContractNumber).IsUnique();
             });
-
 
             modelBuilder.Entity<RoutPoint>()
                 .HasIndex(e => e.WaybillNumber)

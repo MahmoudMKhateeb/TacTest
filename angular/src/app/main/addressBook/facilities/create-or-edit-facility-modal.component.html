@@ -36,6 +36,27 @@
               </div>
               <span class="form-text text-muted">{{ l('SelectCompany') }} {{ facility.shipperId }}</span>
             </div>
+            <div *ngIf="this.feature.isEnabled('App.Broker')" class="form-group col-md-12">
+              <label>{{ l('ActorShipper') }} <span class="required-fileds">*</span></label>
+              <div
+                [ngClass]="{
+                  'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsShippers
+                }"
+              >
+                <select
+                  #ActorShipper="ngModel"
+                  class="form-control"
+                  name="fActorShipper"
+                  required
+                  [(ngModel)]="facility.shipperActorId"
+                  [class.is-invalid]="ActorShipper.touched && !ActorShipper.valid"
+                  [class.is-valid]="ActorShipper.touched && ActorShipper.valid"
+                >
+                  <option [ngValue]="null">{{ l('SelectShipper') }}</option>
+                  <option *ngFor="let item of AllActorsShippers" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
             <div class="form-group col-md-12">
               <label>{{ l('FacilityName') }} <span class="required-fileds">*</span></label>
               <input

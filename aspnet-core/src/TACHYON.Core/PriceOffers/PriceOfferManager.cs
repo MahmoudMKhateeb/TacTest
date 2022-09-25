@@ -239,6 +239,11 @@ namespace TACHYON.PriceOffers
                     request.CarrierTenantId = offer.TenantId;
                 }
 
+                if (offer.CarrierActorId != null)
+                {
+                    request.CarrierActorId = offer.CarrierActorId;
+                }
+
                 if (request.IsBid)
                 {
                     request.BidStatus = ShippingRequestBidStatus.Closed;
@@ -430,7 +435,7 @@ namespace TACHYON.PriceOffers
             }
 
             //Shipper 
-            if (await _featureChecker.IsEnabledAsync(AppFeatures.Shipper))
+            if (await _featureChecker.IsEnabledAsync(AppFeatures.Shipper) || await _featureChecker.IsEnabledAsync(AppFeatures.Broker))
             {
                 //offer status
                 var isAllowedStatus = offer.Status.IsIn(PriceOfferStatus.New, PriceOfferStatus.AcceptedAndWaitingForShipper);
@@ -497,7 +502,7 @@ namespace TACHYON.PriceOffers
                 .GetAll()
                 .Include(r => r.ShippingRequestFk)
                 .Where(x => x.ShippingRequestId == id)
-                .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Shipper),
+                .WhereIf( await _featureChecker.IsEnabledAsync(AppFeatures.Shipper) || await _featureChecker.IsEnabledAsync(AppFeatures.Broker),
                     x => x.ShippingRequestFk.TenantId == _abpSession.TenantId &&
                          x.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier)
                 .WhereIf(
@@ -579,6 +584,7 @@ namespace TACHYON.PriceOffers
             request.VatSetting = offer.TaxVat;
             request.TotalCommission = offer.TotalAmountWithCommission;
             request.CarrierPrice = offer.TotalAmount;
+
 
         }
 

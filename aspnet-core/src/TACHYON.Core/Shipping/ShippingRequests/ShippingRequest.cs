@@ -1,6 +1,7 @@
 ﻿using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Organizations;
 using Abp.Timing;
 using Microsoft.Win32.SafeHandles;
 using System;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading.Tasks;
+using TACHYON.Actors;
 using TACHYON.Authorization.Users;
 using TACHYON.Cities;
 using TACHYON.Configuration;
@@ -37,7 +39,7 @@ using TACHYON.UnitOfMeasures;
 namespace TACHYON.Shipping.ShippingRequests
 {
     [Table("ShippingRequests")]
-    public class ShippingRequest : FullAuditedEntity<long>, IMustHaveTenant, IHasIsDrafted
+    public class ShippingRequest : FullAuditedEntity<long>, IMustHaveTenant, IHasIsDrafted,IMayHaveShipperActor,IMayHaveCarrierActor
     {
         public string ReferenceNumber { get; set; }
 
@@ -303,5 +305,15 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             return TenantId == CarrierTenantId;
         }
+
+        public int? ShipperActorId { get; set; }
+
+        [ForeignKey("ShipperActorId")]
+        public Actor ShipperActorFk { get; set; }
+
+        public int? CarrierActorId { get; set; }
+
+        [ForeignKey("CarrierActorId")]
+        public Actor CarrierActorFk { get; set; }
     }
 }
