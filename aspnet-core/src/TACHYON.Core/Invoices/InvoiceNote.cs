@@ -26,6 +26,7 @@ namespace TACHYON.Invoices
         public decimal TotalValue { get; set; }
         public string ReferanceNumber { get; set; }
         public long? InvoiceNumber { get; set; }
+        public long? SubmitInvoiceNumber { get; set; }
         public VoidType VoidType { get; set; }
         public bool IsManual { get; set; }
         #region Note
