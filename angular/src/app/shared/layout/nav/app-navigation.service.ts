@@ -8,6 +8,7 @@ import { AppHostNavigationService } from '@app/shared/layout/nav/navigation-serv
 import { AppCarrierNavigationService } from '@app/shared/layout/nav/navigation-services/app-carrier-navigation.service';
 import { AppShipperNavigationService } from '@app/shared/layout/nav/navigation-services/app-shipper-navigation.service';
 import { AppTMSNavigationService } from '@app/shared/layout/nav/navigation-services/app-tms-navigation.service';
+import { AppBrokerNavigationService } from '@app/shared/layout/nav/navigation-services/app-broker-navigation.service';
 
 @Injectable()
 export class AppNavigationService {
@@ -18,7 +19,8 @@ export class AppNavigationService {
     private appHostNavService: AppHostNavigationService,
     private appTMSNavService: AppTMSNavigationService,
     private appShipperNavService: AppShipperNavigationService,
-    private appCarrierNavService: AppCarrierNavigationService
+    private appCarrierNavService: AppCarrierNavigationService,
+    private appBrokerNavService: AppBrokerNavigationService
   ) {}
 
   getMenu(): AppMenu {
@@ -26,8 +28,11 @@ export class AppNavigationService {
     const isCarrier = this.isEnabled('App.Carrier') || this.isEnabled('App.CarrierAsASaas');
     const isShipper = this.isEnabled('App.Shipper');
     const isTMS = this.isEnabled('App.TachyonDealer');
+    const isBroker = this.isEnabled('App.Broker');
     let menu = isHost
       ? this.appHostNavService.getMenu()
+      : isBroker
+      ? this.appBrokerNavService.getMenu()
       : isCarrier
       ? this.appCarrierNavService.getMenu()
       : isShipper
