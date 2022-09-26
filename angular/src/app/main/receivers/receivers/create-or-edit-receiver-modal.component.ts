@@ -43,10 +43,12 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
         this.receiver = result.receiver;
       });
     }
-    this._receiversServiceProxy.getAllFacilityForTableDropdown().subscribe((result) => {
-      this.allFacilitys = result;
-      this.receiver.facilityId = this.facilityIdFromTrips;
-    });
+    if (!this.isTachyonDealerOrHost) {
+      this._receiversServiceProxy.getAllFacilityForTableDropdown(this.receiver.tenantId).subscribe((result) => {
+        this.allFacilitys = result;
+        this.receiver.facilityId = this.facilityIdFromTrips;
+      });
+    }
     this.loadAllCompaniesForDropDown();
     this.active = true;
     this.modal.show();
@@ -87,6 +89,13 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   loadAllCompaniesForDropDown() {
     this._penaltiesServiceProxy.getAllCompanyForDropDown().subscribe((result) => {
       this.AllTenants = result;
+    });
+  }
+
+  LoadFacilities() {
+    this._receiversServiceProxy.getAllFacilityForTableDropdown(this.receiver.tenantId).subscribe((result) => {
+      this.allFacilitys = result;
+      this.receiver.facilityId = this.facilityIdFromTrips;
     });
   }
 }
