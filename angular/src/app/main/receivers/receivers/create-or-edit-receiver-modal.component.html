@@ -28,7 +28,7 @@
                 'spinner spinner-success spinner-right mr-1 ml-1': !AllTenants
               }"
             >
-              <select class="form-control" name="Shipper" [(ngModel)]="receiver.tenantId" required>
+              <select class="form-control" name="Shipper" [(ngModel)]="receiver.tenantId" required (change)="LoadFacilities()">
                 <option [value]="undefined" disabled>{{ l('SelectCompany') }}</option>
                 <option *ngFor="let item of AllTenants" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>

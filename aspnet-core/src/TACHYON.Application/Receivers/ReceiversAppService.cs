@@ -203,9 +203,11 @@ namespace TACHYON.Receivers
         }
 
         [AbpAuthorize(AppPermissions.Pages_Receivers)]
-        public async Task<List<ReceiverFacilityLookupTableDto>> GetAllFacilityForTableDropdown()
+        public async Task<List<ReceiverFacilityLookupTableDto>> GetAllFacilityForTableDropdown(int? tenantId)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _lookup_facilityRepository.GetAll()
+                .WhereIf(tenantId!=null, x=>x.TenantId==tenantId)
                 .Select(facility => new ReceiverFacilityLookupTableDto
                 {
                     Id = facility.Id,
