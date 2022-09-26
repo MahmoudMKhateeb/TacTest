@@ -118,16 +118,53 @@ namespace TACHYON.Features
 
 
 
-            var broker = context.Create(
-                AppFeatures.Broker,
+            var CMS = context.Create(
+                AppFeatures.CMS,
                 "false",
                 L("BrokerFeature"), // todo add localization here
                 inputType: new CheckboxInputType()
-            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-            {
-                IsVisibleOnPricingTable = true,
-                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
-            };
+            );
+            //    [FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+            //{
+            //    IsVisibleOnPricingTable = true,
+            //    TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+            //};
+
+           var shipperClients= CMS.CreateChildFeature(
+                AppFeatures.ShipperClients,
+                "false",
+                L("ShipperClients"),
+                inputType: new CheckboxInputType()
+            );
+
+            var carrierClients = CMS.CreateChildFeature(
+                AppFeatures.CarrierClients,
+                "false",
+                L("CarrierClients"),
+                inputType: new CheckboxInputType()
+            );
+
+            var canClientLoginToSystem = CMS.CreateChildFeature(
+                AppFeatures.CanClientLoginToSystem,
+                "false",
+                L("CanClientLoginToSystem"),
+                inputType: new CheckboxInputType()
+            );
+
+            var CreateDirectTrip = CMS.CreateChildFeature(
+                AppFeatures.CreateDirectTrip,
+                "false",
+                L("CreateDirectTrip"),
+                inputType: new CheckboxInputType()
+            );
+
+            var DocumentsManagement = CMS.CreateChildFeature(
+                AppFeatures.DocumentsManagement,
+                "false",
+                L("DocumentsManagement"),
+                inputType: new CheckboxInputType()
+            );
+
 
             var receiver = context.Create(
                 AppFeatures.Receiver,
@@ -871,6 +908,7 @@ namespace TACHYON.Features
             #endregion
 
             #endregion
+
 
         }
 

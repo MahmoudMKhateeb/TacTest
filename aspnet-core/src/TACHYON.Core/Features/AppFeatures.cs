@@ -16,7 +16,12 @@
         public const string Carrier = "App.Carrier";
         public const string Pay = "App.Pay";
         public const string Receipt = "App.Receipt";
-        public const string Broker = "App.Broker";
+        public const string CMS = "App.CMS";
+        public const string ShipperClients = "App.ShipperClients";
+        public const string CarrierClients = "App.CarrierClients";
+        public const string CanClientLoginToSystem = "App.CanClientLoginToSystem";
+        public const string CreateDirectTrip = "App.CreateDirectTrip";
+        public const string DocumentsManagement = "App.DocumentsManagement";
         public const string Receiver = "App.Receiver";
         public const string TachyonDealer = "App.TachyonDealer";
         public const string ShippingRequest = "App.shippingRequest";
