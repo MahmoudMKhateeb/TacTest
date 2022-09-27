@@ -125,14 +125,18 @@
           <div class="form-group">
             <label for="Actor_MobileNumber">{{ l('MobileNumber') }} <span class="required-fileds">*</span></label>
             <input
-              type="number"
+              type="tel"
               #Actor_MobileNumber="ngModel"
               id="Actor_MobileNumber"
               class="form-control"
               [(ngModel)]="actor.mobileNumber"
               name="MobileNumber"
+              pattern="^5\d{8}$"
+              maxlength="9"
               required
+              placeholder="5xxxxxxxx"
             />
+            <span class="text-muted small px-2">{{ 'PhoneNumberPatternMsg' | localize }}</span>
             <validation-messages [formCtrl]="Actor_MobileNumber"></validation-messages>
           </div>
 

@@ -2801,6 +2801,7 @@
 		<text name="DownloadFileTemplate">تنزيل نموذج الملف</text>
 		<text name="UploadFile">تحميل ملف</text>
 		<text name="CmsFeature">ميزة نظام إدارة العملاء</text>
-    <text name="CMS">إدارة العملاء</text>
+		<text name="CMS">إدارة العملاء</text>
+		<text name="PhoneNumberPatternMsg">يجب ان لايكون اطول من 9 ارقام ويبدأ بالرقم 5</text>
 	</texts>
 </localizationDictionary>

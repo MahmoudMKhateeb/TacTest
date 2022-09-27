@@ -3060,7 +3060,8 @@
 		<text name="UploadFile">Upload File</text>
 		<text name="BulkDeliveryTripSucceededMsg">Bulk Delivery Trip/s process is completed successfully</text>
 		<text name="CmsFeature">Clients Management System Feature</text>
-    <text name="CMS">CMS</text>
+		<text name="CMS">CMS</text>
+		<text name="PhoneNumberPatternMsg">Length must be 9 digits and start with 5</text>
 
 	</texts>
 </localizationDictionary>
