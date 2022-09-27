@@ -1,4 +1,4 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, Input } from '@angular/core';
+import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
@@ -8,7 +8,6 @@ import {
   SelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import * as moment from 'moment';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 let that;
@@ -24,7 +23,6 @@ export class CreateOrEditNormalPricePackageModalComponent extends AppComponentBa
   active = false;
   saving = false;
   isNameAvilable = true;
-  isTranspotTypesSelected = true;
   normalPricePackageId: number;
   allCitys: SelectItemDto[];
   allTranspotTypes: SelectItemDto[];
@@ -53,15 +51,9 @@ export class CreateOrEditNormalPricePackageModalComponent extends AppComponentBa
   }
 
   TranspotTypesChanged(event) {
-    console.log('event', event);
     if (!isNotNullOrUndefined(event.selectedItem)) {
       return;
     }
-    // if (event.target.value == -2) {
-    //   this.isTranspotTypesSelected = false;
-    // } else {
-    //   this.isTranspotTypesSelected = true;
-    // }
 
     this._normalPricePackagesServiceProxy.getAllTruckTypesForTableDropdown(Number(event.selectedItem.id)).subscribe((result) => {
       this.allTruckTypes = result.map((item) => {
