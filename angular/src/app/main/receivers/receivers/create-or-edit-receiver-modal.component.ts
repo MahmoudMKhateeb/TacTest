@@ -7,9 +7,12 @@ import {
   ReceiverFacilityLookupTableDto,
   ShippersForDropDownDto,
   PenaltiesServiceProxy,
+  SelectItemDto,
+  ShippingRequestsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'createOrEditReceiverModal',
@@ -29,8 +32,19 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   receiver: CreateOrEditReceiverDto = new CreateOrEditReceiverDto();
   // facilityName = '';
   allFacilitys: ReceiverFacilityLookupTableDto[];
-  constructor(injector: Injector, private _receiversServiceProxy: ReceiversServiceProxy, private _penaltiesServiceProxy: PenaltiesServiceProxy) {
+  isShippersActorsLoading: boolean;
+  isFacilitiesLoading: boolean;
+  shipperActorId: number;
+  shipperActors: SelectItemDto[];
+  constructor(
+    injector: Injector,
+    private _receiversServiceProxy: ReceiversServiceProxy,
+    private _penaltiesServiceProxy: PenaltiesServiceProxy,
+    private _shippingRequestServiceProxy: ShippingRequestsServiceProxy
+  ) {
     super(injector);
+    this.isShippersActorsLoading = false;
+    this.isFacilitiesLoading = false;
   }
 
   show(receiverId?: number, facilityIdFromTrip?: number): void {
@@ -41,12 +55,23 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     } else {
       this._receiversServiceProxy.getReceiverForEdit(receiverId).subscribe((result) => {
         this.receiver = result.receiver;
+        this.shipperActorId = result.shipperActorId;
+        this.loadFacilitiesByActor(this.shipperActorId);
       });
     }
-    this._receiversServiceProxy.getAllFacilityForTableDropdown().subscribe((result) => {
-      this.allFacilitys = result;
-      this.receiver.facilityId = this.facilityIdFromTrips;
-    });
+    if (this.feature.isEnabled('App.ShipperClients')) {
+      this.loadShippersActors();
+    } else {
+      this.isFacilitiesLoading = true;
+      this._receiversServiceProxy
+        .getAllFacilityForTableDropdown()
+        .pipe(finalize(() => (this.isFacilitiesLoading = false)))
+        .subscribe((result) => {
+          this.allFacilitys = result;
+          this.receiver.facilityId = this.facilityIdFromTrips;
+        });
+    }
+
     this.loadAllCompaniesForDropDown();
     this.active = true;
     this.modal.show();
@@ -70,6 +95,9 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   }
 
   close(): void {
+    this.receiver = new CreateOrEditReceiverDto();
+    this.allFacilitys = undefined;
+    this.shipperActors = undefined;
     this.active = false;
     this.modal.hide();
   }
@@ -88,5 +116,31 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     this._penaltiesServiceProxy.getAllCompanyForDropDown().subscribe((result) => {
       this.AllTenants = result;
     });
+  }
+
+  loadShippersActors() {
+    this.isShippersActorsLoading = true;
+    this._shippingRequestServiceProxy
+      .getAllShippersActorsForDropDown()
+      .pipe(
+        finalize(() => {
+          this.isShippersActorsLoading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.shipperActors = result;
+      });
+  }
+
+  loadFacilitiesByActor(actorId) {
+    if (isNotNullOrUndefined(actorId)) {
+      this.isFacilitiesLoading = true;
+      this._receiversServiceProxy
+        .getAllFacilitiesByActorId(actorId)
+        .pipe(finalize(() => (this.isFacilitiesLoading = false)))
+        .subscribe((result) => {
+          this.allFacilitys = result;
+        });
+    }
   }
 }
