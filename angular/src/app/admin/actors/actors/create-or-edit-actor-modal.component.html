@@ -58,6 +58,7 @@
           <div class="form-group">
             <label for="Actor_MoiNumber">{{ l('MoiNumber') }} <span class="required-fileds">*</span></label>
             <input
+              (keypress)="numberOnly($event)"
               type="text"
               #Actor_MoiNumber="ngModel"
               id="Actor_MoiNumber"
@@ -127,6 +128,7 @@
           <div class="form-group">
             <label for="Actor_MobileNumber">{{ l('MobileNumber') }} <span class="required-fileds">*</span></label>
             <input
+              (keypress)="numberOnly($event)"
               type="tel"
               #Actor_MobileNumber="ngModel"
               id="Actor_MobileNumber"
@@ -151,8 +153,9 @@
           <div class="form-group">
             <label for="Actor_Email">{{ l('InvoiceDueDays') }} <span class="required-fileds">*</span></label>
             <input
+              (keypress)="numberOnly($event)"
               type="number"
-              min="0"
+              min="1"
               #Actor_InvoiceDueDays="ngModel"
               id="Actor_InvoiceDueDays"
               class="form-control"

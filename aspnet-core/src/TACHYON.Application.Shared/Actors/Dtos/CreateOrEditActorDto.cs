@@ -32,6 +32,7 @@ namespace TACHYON.Actors.Dtos
         [Required]
         public string Email { get; set; }
 
+        [Range(1,int.MaxValue)]
         public int InvoiceDueDays { get; set; }
 
         /// <summary>
