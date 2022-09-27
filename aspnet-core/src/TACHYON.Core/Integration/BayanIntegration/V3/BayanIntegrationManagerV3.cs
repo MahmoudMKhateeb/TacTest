@@ -297,11 +297,12 @@ namespace TACHYON.Integration.BayanIntegration.V3
                                 cityId = x.DestinationFacilityFk.CityFk.BayanIntegrationId.Value,
                                 address = x.DestinationFacilityFk.Address
                             },
+                            deliverToClient = false,
+
                             items = p.GoodsDetails
                                     .Select(g => new Item
                                     {
                                         unitId = g.UnitOfMeasureFk.BayanIntegrationId, // todo ask
-                                        deliverToClient = false,
                                         valid = true, // todo ask 
                                         quantity = g.Amount,
                                         price = "",

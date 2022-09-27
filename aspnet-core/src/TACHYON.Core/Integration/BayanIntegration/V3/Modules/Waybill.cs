@@ -15,5 +15,6 @@ namespace TACHYON.Integration.BayanIntegration.V3.Modules
         public int? paymentMethodId { get; set; }
         public string paymentComment { get; set; }
         public bool paidBySender { get; set; }
+        public bool deliverToClient { get; set; }
     }
 }

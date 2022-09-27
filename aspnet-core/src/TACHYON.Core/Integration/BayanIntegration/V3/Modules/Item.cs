@@ -6,7 +6,6 @@ namespace TACHYON.Integration.BayanIntegration.V3.Modules
     public class Item
     {
         public int? unitId { get; set; }
-        public bool deliverToClient { get; set; }
         public bool valid { get; set; }
         public int quantity { get; set; }
         public string price { get; set; }
