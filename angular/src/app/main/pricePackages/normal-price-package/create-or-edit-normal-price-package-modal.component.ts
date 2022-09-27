@@ -9,10 +9,13 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
+let that;
 @Component({
   selector: 'createOrEditNormalPricePackageModal',
   templateUrl: './create-or-edit-normal-price-package-modal.component.html',
+  styleUrls: ['./create-or-edit-normal-price-package-modal.component.scss'],
 })
 export class CreateOrEditNormalPricePackageModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
@@ -30,6 +33,7 @@ export class CreateOrEditNormalPricePackageModalComponent extends AppComponentBa
 
   constructor(injector: Injector, private _normalPricePackagesServiceProxy: NormalPricePackagesServiceProxy) {
     super(injector);
+    that = this;
   }
 
   show(normalPricePackageId?: number): void {
@@ -49,14 +53,21 @@ export class CreateOrEditNormalPricePackageModalComponent extends AppComponentBa
   }
 
   TranspotTypesChanged(event) {
-    if (event.target.value == -2) {
-      this.isTranspotTypesSelected = false;
-    } else {
-      this.isTranspotTypesSelected = true;
+    console.log('event', event);
+    if (!isNotNullOrUndefined(event.selectedItem)) {
+      return;
     }
+    // if (event.target.value == -2) {
+    //   this.isTranspotTypesSelected = false;
+    // } else {
+    //   this.isTranspotTypesSelected = true;
+    // }
 
-    this._normalPricePackagesServiceProxy.getAllTruckTypesForTableDropdown(event.target.value).subscribe((result) => {
-      this.allTruckTypes = result;
+    this._normalPricePackagesServiceProxy.getAllTruckTypesForTableDropdown(Number(event.selectedItem.id)).subscribe((result) => {
+      this.allTruckTypes = result.map((item) => {
+        (item.id as any) = Number(item.id);
+        return item;
+      });
     });
   }
   checkPricePerExtraDrop(event) {
@@ -98,22 +109,45 @@ export class CreateOrEditNormalPricePackageModalComponent extends AppComponentBa
   }
   fillAllTruckTypes(transportTypeId: number) {
     this._normalPricePackagesServiceProxy.getAllTruckTypesForTableDropdown(transportTypeId).subscribe((result) => {
-      this.allTruckTypes = result;
+      this.allTruckTypes = result.map((item) => {
+        (item.id as any) = Number(item.id);
+        return item;
+      });
     });
   }
   fillAllCities() {
     this._normalPricePackagesServiceProxy.getAllCitiesForTableDropdown().subscribe((result) => {
-      this.allCitys = result;
+      this.allCitys = result.map((item) => {
+        (item.id as any) = Number(item.id);
+        return item;
+      });
     });
   }
   fillTranspotTypes() {
     this._normalPricePackagesServiceProxy.getAllTranspotTypesForTableDropdown().subscribe((result) => {
-      this.allTranspotTypes = result;
+      this.allTranspotTypes = result.map((item) => {
+        (item.id as any) = Number(item.id);
+        return item;
+      });
     });
   }
   clearListsItems() {
     this.allCitys = [];
     this.allTruckTypes = [];
     this.allTranspotTypes = [];
+  }
+
+  checkIfIsPricePackageUniqueNameAsync(params) {
+    let modal = new CheckIfPricePackageNameAvailableDto();
+    modal.id = that.normalPricePackage.id;
+    modal.name = params.value;
+    return new Promise((resolve) => resolve(that._normalPricePackagesServiceProxy.checkIfPricePackageNameAvailable(modal).toPromise()));
+  }
+
+  minPriceComparison(e) {
+    return new Promise((resolve) => resolve(e.value >= 1));
+  }
+  minPriceComparisonZero(e) {
+    return new Promise((resolve) => resolve(e.value >= 0));
   }
 }
