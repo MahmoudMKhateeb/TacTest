@@ -2803,5 +2803,6 @@
 		<text name="CmsFeature">ميزة نظام إدارة العملاء</text>
 		<text name="CMS">إدارة العملاء</text>
 		<text name="PhoneNumberPatternMsg">يجب ان لايكون اطول من 9 ارقام ويبدأ بالرقم 5</text>
+		<text name="MoiNumberPatternMsg">يجب ان لايكون اطول من 10 ارقام ويبدأ بالرقم 7</text>
 	</texts>
 </localizationDictionary>

@@ -65,8 +65,10 @@
               [(ngModel)]="actor.moiNumber"
               name="MoiNumber"
               pattern="^7\d{9}$"
+              maxlength="10"
               required
             />
+            <span class="text-muted small pt-2">{{ 'MoiNumberPatternMsg' | localize }}</span>
             <validation-messages [formCtrl]="Actor_MoiNumber"></validation-messages>
           </div>
 

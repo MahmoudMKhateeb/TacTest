@@ -3062,6 +3062,7 @@
 		<text name="CmsFeature">Clients Management System Feature</text>
 		<text name="CMS">CMS</text>
 		<text name="PhoneNumberPatternMsg">Length must be 9 digits and start with 5</text>
+		<text name="MoiNumberPatternMsg">Length must be 10 digits and start with 7</text>
 
 	</texts>
 </localizationDictionary>
