@@ -36,7 +36,7 @@
               </div>
               <span class="form-text text-muted">{{ l('SelectCompany') }} {{ facility.shipperId }}</span>
             </div>
-            <div *ngIf="this.feature.isEnabled('App.Broker')" class="form-group col-md-12">
+            <div *ngIf="this.feature.isEnabled('App.ShipperClients')" class="form-group col-md-12">
               <label>{{ l('ActorShipper') }} <span class="required-fileds">*</span></label>
               <div
                 [ngClass]="{

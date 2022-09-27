@@ -112,7 +112,7 @@
                       </div>
                     </div>
 
-                    <div *ngIf="this.feature.isEnabled('App.Broker')" class="form-group">
+                    <div *ngIf="this.feature.isEnabled('App.ShipperClients')" class="form-group">
                       <label>{{ l('ActorShipper') }} <span class="required-fileds">*</span></label>
                       <div
                         [ngClass]="{
@@ -133,7 +133,7 @@
                       <span class="form-text text-muted">{{ l('SelectShipperActor') }} {{ step1Dto.shipperActorId }}</span>
                     </div>
 
-                    <div *ngIf="this.feature.isEnabled('App.Broker') && step1Dto.isInternalBrokerRequest" class="form-group">
+                    <div *ngIf="this.feature.isEnabled('App.CarrierClients') && step1Dto.isInternalBrokerRequest" class="form-group">
                       <label>{{ l('ActorCarrier') }} <span class="required-fileds">*</span></label>
                       <div
                         [ngClass]="{

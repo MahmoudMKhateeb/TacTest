@@ -18,7 +18,7 @@
       </div>
       <div class="modal-body">
         <form #Form="ngForm" novalidate (ngSubmit)="type == 'Reprice' ? Reprice(SRUpdateId) : confirmSendOffer()">
-          <div class="form-group row" *ngIf="this.feature.isEnabled('App.Broker')">
+          <div class="form-group row" *ngIf="this.feature.isEnabled('App.CarrierClients')">
             <div class="col-lg-4">
               <label>{{ l('ActorCarrier') }} <span class="required-fileds">*</span></label>
               <div

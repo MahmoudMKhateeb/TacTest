@@ -435,7 +435,7 @@ namespace TACHYON.PriceOffers
             }
 
             //Shipper 
-            if (await _featureChecker.IsEnabledAsync(AppFeatures.Shipper) || await _featureChecker.IsEnabledAsync(AppFeatures.Broker))
+            if (await _featureChecker.IsEnabledAsync(AppFeatures.Shipper) || await _featureChecker.IsEnabledAsync(AppFeatures.ShipperClients))
             {
                 //offer status
                 var isAllowedStatus = offer.Status.IsIn(PriceOfferStatus.New, PriceOfferStatus.AcceptedAndWaitingForShipper);
@@ -502,7 +502,7 @@ namespace TACHYON.PriceOffers
                 .GetAll()
                 .Include(r => r.ShippingRequestFk)
                 .Where(x => x.ShippingRequestId == id)
-                .WhereIf( await _featureChecker.IsEnabledAsync(AppFeatures.Shipper) || await _featureChecker.IsEnabledAsync(AppFeatures.Broker),
+                .WhereIf( await _featureChecker.IsEnabledAsync(AppFeatures.Shipper) || await _featureChecker.IsEnabledAsync(AppFeatures.ShipperClients),
                     x => x.ShippingRequestFk.TenantId == _abpSession.TenantId &&
                          x.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier)
                 .WhereIf(

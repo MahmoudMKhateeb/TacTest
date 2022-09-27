@@ -73,7 +73,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   ngOnInit() {
     this.loadAllCountries();
     this.loadAllCompaniesForDropDown();
-    if (this.feature.isEnabled('App.Broker')) {
+    if (this.feature.isEnabled('App.ShipperClients')) {
       this._shippingRequestsServiceProxy.getAllShippersActorsForDropDown().subscribe((result) => {
         this.AllActorsShippers = result;
       });

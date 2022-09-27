@@ -210,7 +210,7 @@ namespace TACHYON.PriceOffers
         /// <param name="id"></param>
         /// <returns></returns>
         /// 
-        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier,AppFeatures.Broker)]
+        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier,AppFeatures.CarrierClients)]
         public async Task<PriceOfferDto> GetPriceOfferForCreateOrEdit(long id, long? OfferId)
         {
             DisableTenancyFilters();
@@ -331,12 +331,12 @@ namespace TACHYON.PriceOffers
         }
 
 
-        [RequiresFeature(AppFeatures.Carrier, AppFeatures.TachyonDealer,AppFeatures.Broker)]
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.TachyonDealer,AppFeatures.CarrierClients)]
         // [AbpAuthorize(AppPermissions.Pages_Offers_Create)]
 
         public async Task<long> CreateOrEdit(CreateOrEditPriceOfferInput Input)
         {
-            if (await IsEnabledAsync(AppFeatures.Carrier) || await IsEnabledAsync(AppFeatures.Broker))
+            if (await IsEnabledAsync(AppFeatures.Carrier) || await IsEnabledAsync(AppFeatures.CarrierClients))
             {
                 Input.CommissionPercentageOrAddValue = default;
                 Input.CommissionType = default;
@@ -415,7 +415,7 @@ namespace TACHYON.PriceOffers
 
         public async Task<PriceOfferStatus> Accept(long id)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Shipper,AppFeatures.Broker);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Shipper,AppFeatures.ShipperClients);
             await CheckSrHasBendingUpdates(id);
             return await _priceOfferManager.AcceptOffer(id);
         }

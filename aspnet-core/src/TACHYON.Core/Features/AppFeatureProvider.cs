@@ -118,10 +118,14 @@ namespace TACHYON.Features
 
 
 
-            var CMS = context.Create(
+            // Clients Management System feature: this feature has sub features 
+            // Sub features like : Shipper Clients, Carrier Clients, Client Login to the system, Document Management, and Direct Trip Feature
+            // those feature used by Editions => Broker & Carrier SAAS .. See documentation for more details 
+            
+            var cms = context.Create(
                 AppFeatures.CMS,
                 "false",
-                L("BrokerFeature"), // todo add localization here
+                L("CmsFeature"), 
                 inputType: new CheckboxInputType()
             );
             //    [FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
@@ -130,35 +134,35 @@ namespace TACHYON.Features
             //    TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             //};
 
-           var shipperClients= CMS.CreateChildFeature(
+            cms.CreateChildFeature(
                 AppFeatures.ShipperClients,
                 "false",
                 L("ShipperClients"),
                 inputType: new CheckboxInputType()
             );
 
-            var carrierClients = CMS.CreateChildFeature(
+            cms.CreateChildFeature(
                 AppFeatures.CarrierClients,
                 "false",
                 L("CarrierClients"),
                 inputType: new CheckboxInputType()
             );
 
-            var canClientLoginToSystem = CMS.CreateChildFeature(
+            cms.CreateChildFeature(
                 AppFeatures.CanClientLoginToSystem,
                 "false",
                 L("CanClientLoginToSystem"),
                 inputType: new CheckboxInputType()
             );
 
-            var CreateDirectTrip = CMS.CreateChildFeature(
+            cms.CreateChildFeature(
                 AppFeatures.CreateDirectTrip,
                 "false",
                 L("CreateDirectTrip"),
                 inputType: new CheckboxInputType()
             );
 
-            var DocumentsManagement = CMS.CreateChildFeature(
+            cms.CreateChildFeature(
                 AppFeatures.DocumentsManagement,
                 "false",
                 L("DocumentsManagement"),
