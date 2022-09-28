@@ -2786,6 +2786,7 @@
 		<text name="PenaltyComplaint">اعتراض العقوبة</text>
 		<text name="ComplaintDescription">وصف الاعتراض</text>
 		<text name="ComplaintRejectReason">سبب رفض الاعتراض</text>
+    <text name="OnDemandInvoice">طلب فاتورة</text>
 		<text name="IncompleteTripPoint">نقاط الرحلة غير مكتملة</text>
 		<text name="PleaseCompleteAllDropPointDetails">الرجاء اكمال تفاصيل نقاط التنزيل</text>
 		<text name="PleaseCompletePicKupPointDetails">الرجاء اكمال تفاصيل نقاط التحميل</text>
@@ -2801,5 +2802,5 @@
 		<text name="DownloadFileTemplate">تنزيل نموذج الملف</text>
 		<text name="UploadFile">تحميل ملف</text>
 
-	</texts>
+  </texts>
 </localizationDictionary>
