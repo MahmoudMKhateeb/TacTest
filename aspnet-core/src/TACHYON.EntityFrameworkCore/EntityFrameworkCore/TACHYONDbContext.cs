@@ -88,6 +88,7 @@ using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.UnitOfMeasures;
 using TACHYON.Vases;
 using TACHYON.Penalties;
+using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequestAndTripNotes;
 
 namespace TACHYON.EntityFrameworkCore
@@ -306,6 +307,8 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<ShippingRequestUpdate> ShippingRequestUpdates { get; set; }
 
         public DbSet<SrPostPriceUpdate> PostPriceUpdates { get; set; }
+
+         public DbSet<ServiceArea> ServiceAreas { get; set; }
 
         public DbSet<DynamicInvoice> DynamicInvoices { get; set; }
 

@@ -176,6 +176,7 @@ using TACHYON.WebHooks.Dto;
 using TACHYON.WorkFlows;
 using TACHYON.Penalties;
 using TACHYON.Penalties.Dto;
+using TACHYON.ServiceAreas;
 
 namespace TACHYON
 {
@@ -666,6 +667,8 @@ namespace TACHYON
             configuration.CreateMap<TenantEditDto, Tenant>().ReverseMap();
             configuration.CreateMap<CurrentTenantInfoDto, Tenant>().ReverseMap();
             configuration.CreateMap<RegisterTenantInput, CreateTenantInput>().ReverseMap();
+            configuration.CreateMap<CreateServiceAreaDto, ServiceArea>()
+                .ForMember(x=> x.Id,x=> x.Ignore());
 
             //User
             configuration.CreateMap<User, UserEditDto>()
