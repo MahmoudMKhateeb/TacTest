@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services.Dto;
-using Abp.Runtime.Validation;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TACHYON.ServiceAreas;
 
 namespace TACHYON.Authorization.Users.Profile.Dto
 {
@@ -25,5 +26,7 @@ namespace TACHYON.Authorization.Users.Profile.Dto
         public string FinancialName { get; set; }
         public string FinancialPhone { get; set; }
         public string FinancialEmail { get; set; }
+        public List<CreateServiceAreaDto> CityServiceAreas { get; set; }
+        
     }
 }

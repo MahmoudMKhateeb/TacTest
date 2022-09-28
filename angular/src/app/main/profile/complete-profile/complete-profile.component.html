@@ -65,6 +65,30 @@
             <validation-messages [formCtrl]="companyName"></validation-messages>
           </div>
         </div>
+        <!-- section Service Areas -->
+        <div class="form-group row" *ngIf="isCarrier || isCarrierSaas">
+          <label class="col-xl-3 col-lg-3 col-form-label">{{ l('ServiceAreas') }}</label>
+          <div class="col-lg-9 col-xl-6">
+            <p-multiSelect
+              name="carrierServiceAreas"
+              [options]="allCities"
+              [(ngModel)]="completeFiled.cityServiceAreas"
+              defaultLabel="{{ l('cities') }}"
+              scrollHeight="250px"
+              display="chip"
+              [dataKey]="'displayName'"
+              [optionLabel]="'displayName'"
+              [style]="{ width: '100%' }"
+              styleClass="form-control pt-1"
+              tooltipPositionStyle="dropdown-menu"
+              [filter]="true"
+              [showHeader]="true"
+            >
+            </p-multiSelect>
+            <span class="form-text text-muted">{{ l('CompanyServiceAreas') }}.</span>
+          </div>
+        </div>
+
         <div class="form-group row">
           <label class="col-xl-3 col-lg-3 col-form-label">{{ l('CompanyDescription') }}</label>
           <div class="col-lg-9 col-xl-6">
