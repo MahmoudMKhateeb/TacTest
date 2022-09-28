@@ -782,7 +782,15 @@ namespace TACHYON
 
             configuration.CreateMap<ShippingRequestTrip, GetAllWaybillsDto>();
 
-            configuration.CreateMap<CreateOrEditPenaltyDto, Penalty>().ReverseMap();
+            configuration.CreateMap<CreateOrEditPenaltyDto, Penalty>()
+                .ForMember(dto => dto.PenaltyItems, options => options.Ignore())
+                .AfterMap(AddOrUpdatePenaltyItem)
+                .ReverseMap();
+
+            configuration.CreateMap<PenaltyItemDto,PenaltyItem>();
+
+            configuration.CreateMap<PenaltyItem, PenaltyItemDto>()
+                .ForMember(dto => dto.WaybillNumber, options => options.MapFrom(entity => entity.ShippingRequestTripId!=null ?entity.ShippingRequestTripFK.WaybillNumber.ToString() :""));
 
             configuration.CreateMap<RegisterPenaltyComplaintDto, PenaltyComplaint>().ReverseMap();
             configuration.CreateMap<PenaltyComplaint, PenaltyComplaintDto>();
@@ -1193,6 +1201,22 @@ namespace TACHYON
                 else
                 {
                     _Mapper.Map(workingHour, facility.FacilityWorkingHours.FirstOrDefault(c => c.Id == workingHour.Id));
+                }
+            }
+        }
+
+        private static void AddOrUpdatePenaltyItem(CreateOrEditPenaltyDto dto, Penalty penalty)
+        {
+            if(penalty.PenaltyItems == null) penalty.PenaltyItems=new Collection<PenaltyItem>();
+            foreach(var penaltyItem in dto.PenaltyItems)
+            {
+                if (!penaltyItem.Id.HasValue)
+                {
+                    penalty.PenaltyItems.Add(_Mapper.Map<PenaltyItem>(penaltyItem));
+                }
+                else
+                {
+                    _Mapper.Map(penaltyItem, penalty.PenaltyItems.FirstOrDefault(x => x.Id == penaltyItem.Id));
                 }
             }
         }

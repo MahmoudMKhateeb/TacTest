@@ -571,21 +571,35 @@ namespace TACHYON.Invoices
                     dueDate = Clock.Now.AddDays(paymentType.InvoiceDueDateDays);
                 }
             }
-            var invoice = new Invoice
+
+            //Group penalties invoices by flag
+            var groupedPenalties = penalties.GroupBy(
+                p => p.InvoiceFlag,
+                (k, g) => new
+                {
+                    InvoiceFlag = k,
+                    penaltiesList = g
+                });
+
+            foreach(var group in groupedPenalties)
             {
-                TenantId = tenant.Id,
-                PeriodId = period.Id,
-                DueDate = dueDate,
-                IsPaid = period.PeriodType == InvoicePeriodType.PayInAdvance,
-                TotalAmount = totalAmount,
-                VatAmount = vatAmount,
-                SubTotalAmount = subTotalAmount,
-                AccountType = InvoiceAccountType.AccountReceivable,
-                Channel = InvoiceChannel.Penalty,
-                Penalties = penalties
-            };
-            await _invoiceRepository.InsertAsync(invoice);
-             invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
+                var invoice = new Invoice
+                {
+                    TenantId = tenant.Id,
+                    PeriodId = period.Id,
+                    DueDate = dueDate,
+                    IsPaid = period.PeriodType == InvoicePeriodType.PayInAdvance,
+                    TotalAmount = totalAmount,
+                    VatAmount = vatAmount,
+                    SubTotalAmount = subTotalAmount,
+                    AccountType = InvoiceAccountType.AccountReceivable,
+                    Channel = InvoiceChannel.Penalty,
+                    Penalties = group.penaltiesList.ToList()
+                };
+                invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
+            }
+
+            
 
             if (period.PeriodType == InvoicePeriodType.PayInAdvance)
             {

@@ -42,7 +42,7 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
-
+              <dxi-column dataField="referenceNumber" caption="{{ l('ReferenceNo') }}"> </dxi-column>
               <dxi-column dataField="penaltyName" caption="{{ l('PenaltyName') }}"> </dxi-column>
               <dxi-column width="6%" dataField="totalAmount" caption="{{ l('Amount') }}"> </dxi-column>
               <dxi-column cellTemplate="statusCellTemplate" dataField="penaltyStatusTitle" caption="{{ l('Status') }}"> </dxi-column>
@@ -71,6 +71,7 @@
               </dxi-column>
               <dxi-column *ngIf="isTachyonDealerOrHost" cellTemplate="TypeCellTemplate" dataField="Type" caption=" {{ l('Type') }}"></dxi-column>
               <dxi-column dataField="invoiceNumber" caption=" {{ l('InvoiceNo') }}" dataType="text"></dxi-column>
+              <dxi-column *ngIf="isTachyonDealerOrHost" dataField="invoiceFlag" caption=" {{ l('InvoiceFlag) }}"></dxi-column>
               <dxi-column dataField="generationDate" caption="{{ l('GenerationDate') }}" dataType="date"></dxi-column>
               <div *dxTemplate="let options of 'TypeCellTemplate'">
                 <span style="width: 137px"

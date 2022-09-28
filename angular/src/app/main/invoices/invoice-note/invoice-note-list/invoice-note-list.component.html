@@ -50,6 +50,7 @@
                 [width]="50"
               ></dxi-column>
               <dxi-column dataField="referanceNumber" caption=" {{ l('MemoNo') }}"></dxi-column>
+              <dxi-column dataField="invoiceNoteReferenceNumber" caption=" {{ l('ReferenceNo') }}"></dxi-column>
               <dxi-column
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
                 dataField="comanyName"
