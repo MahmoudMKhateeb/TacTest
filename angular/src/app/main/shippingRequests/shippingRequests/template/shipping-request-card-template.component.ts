@@ -206,6 +206,9 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     return '';
   }
   canSeeTotalOffers(item: GetShippingRequestForPriceOfferListDto) {
+    if (item.price > 0) {
+      return false;
+    }
     if (item.totalOffers > 0 && !this.feature.isEnabled('App.Carrier') && this.Channel != 2 && this.Channel != 10 && item.status == 2) {
       return true;
     }
@@ -273,5 +276,10 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         }
       }
     );
+  }
+
+  refresh() {
+    this.Items = [];
+    this.LoadData();
   }
 }

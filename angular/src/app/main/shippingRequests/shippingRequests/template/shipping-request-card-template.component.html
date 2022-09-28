@@ -179,7 +179,10 @@
                   (click)="ModelViewPrice.show(item.id, item.offerId)"
                   >{{ l('MarketPlacepriced') }}</a
                 >
-                <a *ngIf="item.price && (item.status == 5 || item.status == 1) && Channel != 10" href="javascript:void(0)" class="infoHighLight red"
+                <a
+                  *ngIf="item.price && (item.status == 5 || item.status == 1 || item.price > 0) && Channel != 10"
+                  href="javascript:void(0)"
+                  class="infoHighLight red"
                   >{{ item.price | number }} {{ l('SAR') }}</a
                 >
                 <a *ngIf="Channel == 10" href="javascript:void(0)" class="infoHighLight red">{{ item.price | number }} {{ l('SAR') }}</a>
@@ -302,8 +305,8 @@
   </div>
 </div>
 <shippingrequests-details-model #Model [Channel]="Channel"></shippingrequests-details-model>
-<price-offer-list-model [Channel]="Channel" #ModelOffer></price-offer-list-model>
+<price-offer-list-model [Channel]="Channel" #ModelOffer (valueUpdated)="refresh()"></price-offer-list-model>
 <shipping-request-card-search-model #ModelSearch (modalsearch)="search()"></shipping-request-card-search-model>
 <shipping-request-card-cancel-model #ModelCancel></shipping-request-card-cancel-model>
-<price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search()"></price-offer-view-model>
+<price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search()" (modalRefresh)="LoadData()"></price-offer-view-model>
 <load-entity-template-modal #loadEntityTemplateModal></load-entity-template-modal>
