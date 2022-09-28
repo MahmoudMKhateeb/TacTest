@@ -115,7 +115,8 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
       )
       .subscribe((result) => {
         this.directions = [];
-        result.items.forEach((r) => {
+        for (let i = 0; i < result.items.length; i++) {
+          let r = result.items[i];
           let renderOptions: google.maps.DirectionsRendererOptions = { polylineOptions: { strokeColor: '#344440' } };
           let color = this.getRandomColor();
           let direction: Direction = {
@@ -133,24 +134,72 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
             show: true,
             color: color,
           };
+          for (let j = 0; j < r.routPoints.length; j++) {
+            let x = r.routPoints[j];
+            console.log('a Query Request Was Fired');
+            if (r.routPoints.indexOf(x) === 0) {
+              direction.origin = new google.maps.LatLng(x.latitude, x.longitude);
+            } else if (r.routPoints.indexOf(x) === r.routPoints.length - 1) {
+              direction.destination = new google.maps.LatLng(x.latitude, x.longitude);
+            } else {
+              direction.waypoints.push({
+                location: new google.maps.LatLng(x.latitude, x.longitude),
+              });
+            }
+          }
 
-          r.routPoints.forEach((x) => {
-            setTimeout(() => {
-              console.log('a Query Request Was Fired');
-              if (r.routPoints.indexOf(x) === 0) {
-                direction.origin = new google.maps.LatLng(x.latitude, x.longitude);
-              } else if (r.routPoints.indexOf(x) === r.routPoints.length - 1) {
-                direction.destination = new google.maps.LatLng(x.latitude, x.longitude);
-              } else {
-                direction.waypoints.push({
-                  location: new google.maps.LatLng(x.latitude, x.longitude),
-                });
-              }
-            }, 1000);
-          });
-
+          // r.routPoints.forEach((x) => {
+          //     setTimeout(() => {
+          //         console.log('a Query Request Was Fired');
+          //         if (r.routPoints.indexOf(x) === 0) {
+          //             direction.origin = new google.maps.LatLng(x.latitude, x.longitude);
+          //         } else if (r.routPoints.indexOf(x) === r.routPoints.length - 1) {
+          //             direction.destination = new google.maps.LatLng(x.latitude, x.longitude);
+          //         } else {
+          //             direction.waypoints.push({
+          //                 location: new google.maps.LatLng(x.latitude, x.longitude),
+          //             });
+          //         }
+          //     }, 1000);
+          // });
           this.directions.push(direction);
-        });
+        }
+        // result.items.forEach((r) => {
+        //   let renderOptions: google.maps.DirectionsRendererOptions = { polylineOptions: { strokeColor: '#344440' } };
+        //   let color = this.getRandomColor();
+        //   let direction: Direction = {
+        //     origin: undefined,
+        //     destination: undefined,
+        //     waypoints: [],
+        //     renderOptions: {
+        //       polylineOptions: {
+        //         strokeWeight: 6,
+        //         strokeOpacity: 0.55,
+        //         strokeColor: color,
+        //       },
+        //     },
+        //     trackingMapDto: r,
+        //     show: true,
+        //     color: color,
+        //   };
+        //
+        //   r.routPoints.forEach((x) => {
+        //     setTimeout(() => {
+        //       console.log('a Query Request Was Fired');
+        //       if (r.routPoints.indexOf(x) === 0) {
+        //         direction.origin = new google.maps.LatLng(x.latitude, x.longitude);
+        //       } else if (r.routPoints.indexOf(x) === r.routPoints.length - 1) {
+        //         direction.destination = new google.maps.LatLng(x.latitude, x.longitude);
+        //       } else {
+        //         direction.waypoints.push({
+        //           location: new google.maps.LatLng(x.latitude, x.longitude),
+        //         });
+        //       }
+        //     }, 1000);
+        //   });
+        //
+        //   this.directions.push(direction);
+        // });
 
         this.primengTableHelper.totalRecordsCount = result.totalCount;
         this.primengTableHelper.records = this.directions;

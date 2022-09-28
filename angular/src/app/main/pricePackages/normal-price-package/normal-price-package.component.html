@@ -18,7 +18,7 @@
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ groupPaging: false, sorting: false, filtering: false }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -33,7 +33,7 @@
               <dxo-scrolling mode="virtual"></dxo-scrolling>
               <dxo-group-panel [visible]="false"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="false"> </dxo-remote-operations>
+              <!--              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="false"> </dxo-remote-operations>-->
               <dxo-paging [pageSize]="20"></dxo-paging>
 
               <dxi-column

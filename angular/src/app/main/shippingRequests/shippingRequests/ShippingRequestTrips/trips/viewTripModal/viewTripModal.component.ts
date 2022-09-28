@@ -1,4 +1,4 @@
-import { Component, ViewChild, Injector, OnInit, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, Injector, OnInit, Output, EventEmitter, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   RoutStepsServiceProxy,
@@ -35,6 +35,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
+  fromTime: string;
+  toTime: string;
   Vases: CreateOrEditShippingRequestTripVasDto[];
   trip: ShippingRequestsTripForViewDto = new ShippingRequestsTripForViewDto();
   assignDriverAndTruck: AssignDriverAndTruckToShippmentByCarrierInput = new AssignDriverAndTruckToShippmentByCarrierInput();
@@ -63,7 +65,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
     private _PointsService: PointsService,
     private _TripService: TripService,
-    private _Router: ActivatedRoute
+    private _Router: ActivatedRoute,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     super(injector);
   }
@@ -99,14 +102,16 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
       )
       .subscribe((res) => {
         this.trip = res;
+        this.fromTime = res.supposedPickupDateFrom?.format('HH:mm');
+        this.toTime = res.supposedPickupDateTo?.format('HH:mm');
         //Get The Points From The View Service and send them to the Points Service To Draw Them
         this._PointsService.updateWayPoints(this.trip.routPoints);
         this._PointsService.updateCurrentUsedIn('view');
-        this.pickUpPointSender = res.routPoints[0].senderOrReceiverContactName;
+        this.pickUpPointSender = res.routPoints.length > 0 ? res.routPoints[0].senderOrReceiverContactName : null;
         this.assignDriverAndTruck.assignedTruckId = this.trip.assignedTruckId;
         this.assignDriverAndTruck.assignedDriverUserId = this.trip.assignedDriverUserId;
         this.expectedDeliveryTime = this.trip.expectedDeliveryTime;
-        this.originalExpectedDeliveryTime = this.expectedDeliveryTime;
+        this._changeDetectorRef.detectChanges();
       });
 
     this.modal.show();
@@ -120,11 +125,16 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this.loading = true;
     this._PointsService.updateWayPoints([]);
     this.modal.hide();
+    this._changeDetectorRef.detectChanges();
   }
 
   checkData(category) {
-    if (category == 'truck' && this.allTrucks.length == 0) this.getAlert(this.l('NoMatchingTrucks'));
-    if (category == 'driver' && this.allDrivers.length == 0) this.getAlert(this.l('NoMatchingDrivers'));
+    if (category === 'truck' && this.allTrucks.length === 0) {
+      this.getAlert(this.l('NoMatchingTrucks'));
+    }
+    if (category === 'driver' && this.allDrivers.length === 0) {
+      this.getAlert(this.l('NoMatchingDrivers'));
+    }
   }
 
   getAlert(msg: string) {
@@ -215,7 +225,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * update the expected Delivery Time Of the Trip
    */
   updateTripExpectedDeliveryTime() {
-    if (!isNotNullOrUndefined(this.currentTripId)) return;
+    if (!isNotNullOrUndefined(this.currentTripId)) {
+      return;
+    }
     if (this.expectedDeliveryTime === this.originalExpectedDeliveryTime) return;
     // console.log('Trip Expected Delivery time Was Updated');
     this.expectedDeliveryTimeLoading = true;

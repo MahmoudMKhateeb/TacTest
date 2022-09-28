@@ -28,141 +28,184 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-12 mb-4" *ngFor="let item of Items">
-          <ng-template [ngIf]="!Channel"> </ng-template>
+        <span style="display: none">
+          {{ !!Channel ? Channel.toString() : '' }}
+        </span>
+
+        <div class="col-12 mb-4" *ngFor="let item of items">
+          <ng-template [ngIf]="!Channel"></ng-template>
           <div
-            class="shipCard {{ item.isTachyonDeal ? 'tachyonDialer' : '' }}
-               {{ ((item.isPriced || item.remainingDays == '0') && Channel) || (item.status == 1 && !Channel) ? ' shipCardGray' : '' }}
-               {{ item.status == 5 && !Channel ? ' shipCardGreen' : '' }}
-                {{ (item.status == 3 || item.status == 4) && !Channel ? ' shipCardRed' : '' }}
-               {{ direction == 'rtl' ? ' rtl' : '' }}"
+            [class.tachyonDialer]="item.isTachyonDeal"
+            [class.shipCardGray]="((item.isPriced || item.remainingDays == '0') && Channel) || (item.status == 1 && !Channel)"
+            [class.shipCardGreen]="item.status == 5 && !Channel"
+            [class.shipCardRed]="(item.status == 3 || item.status == 4) && !Channel"
+            [class.rtl]="direction == 'rtl'"
+            class="shipCard card card-custom"
           >
-            <div class="infoBasic">
-              <div class="serialNumber">
-                <a href="javascript:void(0)">{{ item.referenceNumber }}</a>
-              </div>
-              <a
-                href="javascript:void(0)"
-                class="companyName text-hover-primary"
-                [routerLink]="item.isTachyonDeal ? [] : ['/app/main/profile', item.tenantId, 'view']"
-              >
-                {{ setTitle(item) }}
-              </a>
-
-              <span *ngIf="item.remainingDays && item.remainingDays != '0' && Channel == 1" class="remainingTime">
-                <b>{{ item.remainingDays }}</b>
-                {{ getWordTitle(item.remainingDays, 'RemainingDay') }}
-              </span>
-              <b *ngIf="item.remainingDays == '0' && Channel == 1 && item.bidStatusTitle" class="infoHighLight red stautsTruck">
-                {{ l(item.bidStatusTitle) }}
-              </b>
-
-              <b *ngIf="Channel == 2 || Channel == 10" class="infoHighLight red stautsTruck">
-                {{ l(item.directRequestStatusTitle) }}
-              </b>
-
-              <!--              <b *ngIf="item.numberOfCompletedTrips >= item.numberOfTrips" class="infoHighLight green stautsTruck">{{ l('Completed') }}</b>-->
-              <!--              <b *ngIf="item.numberOfCompletedTrips < item.numberOfTrips" class="infoHighLight red stautsTruck">{{ l('Trips:InProgress') }}</b>-->
-              <b *ngIf="!Channel && item.statusTitle" class="infoHighLight green stautsTruck">
-                {{ l(item.statusTitle) }}
-              </b>
-              <b *ngIf="item.notesCount > 0" class="infoHighLight blue stautsTruck">
-                {{ item.notesCount }} &nbsp; <span> {{ item.notesCount == 1 ? l('note') : l('notes') }} </span>
-              </b>
-              <b *ngIf="item.isSaas" class="infoHighLight green stautsTruck">
-                {{ l('saas') }}
-              </b>
-            </div>
-
-            <div class="detailsRoad">
-              <div class="from">
-                <p class="pickup">{{ l('Origin') }}</p>
-                <p>{{ item.originCity }}</p>
-              </div>
-
-              <div class="to">
-                <p class="delivery">{{ l('Destination') }}</p>
-                <p>{{ item.destinationCity }}</p>
-              </div>
-            </div>
-            <div class="divirCard"></div>
-            <div class="moreDetails">
-              <div *ngIf="item.startTripDate" class="dateRange">
-                <p>
-                  {{ l('EstimatedPickUpDate') }}
-                </p>
-                <p>{{ item.startTripDate | momentFormat: 'L' }} {{ item.endTripDate ? '-' : '' }} {{ item.endTripDate | momentFormat: 'L' }}</p>
-              </div>
-
-              <div *ngIf="item.creationTime" class="dateRange">
-                <p>
-                  {{ l('CreationTime') }}
-                </p>
-                <p>
-                  {{ item.creationTime | momentFormat: 'L' }}
-                </p>
-              </div>
-
-              <div class="goodCategory">
-                <p>
-                  {{ l('GoodCategory') }}
-                </p>
-                <p>
-                  {{ item.goodsCategory }}
-                </p>
-              </div>
-              <div class="truckType">
-                <p>
-                  {{ l('TruckType') }}
-                </p>
-                <p>
-                  {{ item.truckType }}
-                </p>
-              </div>
-              <div class="numOfTrips">
-                <p>
-                  {{ l('NoOfTrips') }}
-                </p>
-                <p class="isNum">
-                  {{ item.numberOfTrips }}
-                </p>
-              </div>
-              <div>
-                <p>
-                  {{ l('CompletedTripsFromTotal') }}
-                </p>
-                <p class="isNum">{{ item.numberOfCompletedTrips }}/{{ item.numberOfTrips }}</p>
-              </div>
-              <div>
-                <p>
-                  {{ l('CreatedTripsFromTotal') }}
-                </p>
-                <p class="isNum">{{ item.totalsTripsAddByShippier }}/{{ item.numberOfTrips }}</p>
-              </div>
-              <div class="routeType">
-                <p>
-                  {{ l('RouteType') }}
-                </p>
-                <p>
-                  {{ l(item.routeType) }}
-                </p>
-              </div>
-              <div>
-                <p>
-                  {{ l('Carrier') }}
-                </p>
-                <p>
-                  {{ l(item.carrier) }}
-                </p>
-              </div>
-            </div>
-            <div class="actionsShip">
-              <div>
+            <!--               {{ ((item.isPriced || item.remainingDays == '0') && Channel) || (item.status == 1 && !Channel) ? ' shipCardGray' : '' }}-->
+            <!--               {{ item.status == 5 && !Channel ? ' shipCardGreen' : '' }}-->
+            <!--                {{ (item.status == 3 || item.status == 4) && !Channel ? ' shipCardRed' : '' }}-->
+            <!--               {{ direction == 'rtl' ? ' rtl' : '' }}"-->
+            <div class="card-body">
+              <div class="infoBasic">
                 <a
-                  *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas')"
-                  href="javascript:void(0)"
-                  class="infoHighLight blue"
-                ></a>
+                  *ngIf="setTitle(item).length > 0"
+                  [routerLink]="item.isTachyonDeal ? [] : ['/app/main/profile', item.tenantId, 'view']"
+                  class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3"
+                >
+                  {{ setTitle(item) }} <i class="flaticon2-correct text-success icon-md ml-2"></i>
+                </a>
+                <span
+                  *ngIf="setTitle(item).length === 0"
+                  class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3"
+                ></span>
+                <!--                                <a-->
+                <!--                                    href="javascript:void(0)"-->
+                <!--                                    class="companyName text-hover-primary"-->
+                <!--                                    [routerLink]="item.isTachyonDeal ? [] : ['/app/main/profile', item.tenantId, 'view']"-->
+                <!--                                >-->
+                <!--                                    {{ setTitle(item) }}-->
+                <!--                                    <br>-->
+                <!--                                    <div class="serialNumber">-->
+                <!--                                        <i class="flaticon2-telegram-logo mr-2"></i>-->
+                <!--                                        <a-->
+                <!--                                            [routerLink]="['/app/main/shippingRequests/shippingRequests/view']"-->
+                <!--                                            [queryParams]="{ id: item.referenceNumber }"-->
+                <!--                                            class="font-weight-bold"-->
+                <!--                                        >{{ l('RequestId') }}: {{ item.referenceNumber }}</a-->
+                <!--                                        >-->
+                <!--                                        &lt;!&ndash;                                    <a href="javascript:void(0)">&ndash;&gt;-->
+                <!--                                        &lt;!&ndash;                                        <i class="flaticon2-telegram-logo mr-2"></i>&ndash;&gt;-->
+                <!--                                        &lt;!&ndash;                                        {{ item.referenceNumber }}&ndash;&gt;-->
+                <!--                                        &lt;!&ndash;                                    </a>&ndash;&gt;-->
+                <!--                                    </div>-->
+                <!--                                </a>-->
+
+                <span *ngIf="item.remainingDays && item.remainingDays != '0' && Channel == 1" class="remainingTime">
+                  <b>{{ item.remainingDays }}</b>
+                  {{ getWordTitle(item.remainingDays, 'RemainingDay') }}
+                </span>
+                <div class="info-badges">
+                  <b *ngIf="item.remainingDays == '0' && Channel == 1 && item.bidStatusTitle" class="infoHighLight red stautsTruck">
+                    {{ l(item.bidStatusTitle) }}
+                  </b>
+
+                  <b *ngIf="Channel == 2 || Channel == 10" class="infoHighLight red stautsTruck">
+                    {{ l(item.directRequestStatusTitle) }}
+                  </b>
+
+                  <!--              <b *ngIf="item.numberOfCompletedTrips >= item.numberOfTrips" class="infoHighLight green stautsTruck">{{ l('Completed') }}</b>-->
+                  <!--              <b *ngIf="item.numberOfCompletedTrips < item.numberOfTrips" class="infoHighLight red stautsTruck">{{ l('Trips:InProgress') }}</b>-->
+                  <b *ngIf="!Channel && item.statusTitle" class="infoHighLight green stautsTruck">
+                    {{ l(item.statusTitle) }}
+                  </b>
+                  <b *ngIf="item.isSaas" class="infoHighLight green stautsTruck">
+                    {{ l('saas') }}
+                  </b>
+                </div>
+              </div>
+              <div class="serialNumber">
+                <i class="flaticon2-telegram-logo mr-2"></i>
+                <a
+                  [routerLink]="['/app/main/shippingRequests/shippingRequests/view']"
+                  [queryParams]="{ id: item.referenceNumber }"
+                  class="font-weight-bold"
+                  >{{ l('ReferenceNo') }}: {{ item.referenceNumber }}</a
+                >
+              </div>
+              <div class="detailsRoad text-dark-50">
+                <div class="from flex-row">
+                  <p class="pickup font-weight-bold">{{ l('Origin') }}:</p>
+                  <p class="text-muted">{{ item.originCity }}</p>
+                </div>
+
+                <div class="to flex-row">
+                  <p class="delivery font-weight-bold">{{ l('Destination') }}:</p>
+                  <p class="text-muted">{{ item.destinationCity }}</p>
+                </div>
+              </div>
+
+              <div class="divirCard"></div>
+
+              <div class="moreDetails">
+                <div *ngIf="item.startTripDate" class="dateRange">
+                  <p>
+                    {{ l('EstimatedPickUpDate') }}
+                  </p>
+                  <p>{{ item.startTripDate | momentFormat: 'L' }} {{ item.endTripDate ? '-' : '' }} {{ item.endTripDate | momentFormat: 'L' }}</p>
+                </div>
+
+                <div *ngIf="item.creationTime" class="dateRange">
+                  <p>
+                    {{ l('CreationTime') }}
+                  </p>
+                  <p>
+                    {{ item.creationTime | momentFormat: 'L' }}
+                  </p>
+                </div>
+
+                <div class="goodCategory">
+                  <p>
+                    {{ l('GoodCategory') }}
+                  </p>
+                  <p>
+                    {{ item.goodsCategory }}
+                  </p>
+                </div>
+                <div class="truckType">
+                  <p>
+                    {{ l('TruckType') }}
+                  </p>
+                  <p>
+                    {{ item.truckType }}
+                  </p>
+                </div>
+                <div class="numOfTrips">
+                  <p>
+                    {{ l('NoOfTrips') }}
+                  </p>
+                  <p class="isNum">
+                    {{ item.numberOfTrips }}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    {{ l('CompletedTripsFromTotal') }}
+                  </p>
+                  <p class="isNum">{{ item.numberOfCompletedTrips }}/{{ item.numberOfTrips }}</p>
+                </div>
+                <div>
+                  <p>
+                    {{ l('CreatedTripsFromTotal') }}
+                  </p>
+                  <p class="isNum">{{ item.totalsTripsAddByShippier }}/{{ item.numberOfTrips }}</p>
+                </div>
+                <div class="routeType">
+                  <p>
+                    {{ l('RouteType') }}
+                  </p>
+                  <p>
+                    {{ l(item.routeType) }}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    {{ l('Carrier') }}
+                  </p>
+                  <p>
+                    {{ l(item.carrier) }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="actionsShip"></div>
+
+              <div class="info-badges">
+                <!--                <a-->
+                <!--                  *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas')"-->
+                <!--                  href="javascript:void(0)"-->
+                <!--                  class="infoHighLight blue"-->
+                <!--                ></a>-->
                 <a *ngIf="(!Channel || Channel == 3) && item.createdByTachyonDealer" href="javascript:void(0)" class="infoHighLight blue">
                   {{ l('CreatedByTachyonDealer') }}
                 </a>
@@ -187,26 +230,7 @@
                 >
                 <a *ngIf="Channel == 10" href="javascript:void(0)" class="infoHighLight red">{{ item.price | number }} {{ l('SAR') }}</a>
               </div>
-              <div style="justify-content: center">
-                <button
-                  class="btn"
-                  *ngIf="openCardId != item.id || !openCardId"
-                  (click)="openCardId = item.id"
-                  [attr.aria-expanded]="openCardId == item.id"
-                  aria-controls="collapseExample"
-                >
-                  <i class="fas fa-angle-down fa-2x"></i>
-                </button>
-                <button
-                  class="btn"
-                  *ngIf="openCardId == item.id"
-                  (click)="openCardId = null"
-                  [attr.aria-expanded]="openCardId == item.id"
-                  aria-controls="collapseExample"
-                >
-                  <i class="fas fa-angle-up fa-2x"></i>
-                </button>
-              </div>
+
               <div class="actions">
                 <a *ngIf="canDeleteDirectRequest(item)" href="javascript:void(0)" (click)="delete(item)" class="red">
                   {{ l('Delete') }}
@@ -246,25 +270,27 @@
                   {{ l('Edit') }}
                 </a>
               </div>
-            </div>
-          </div>
-          <div [ngbCollapse]="openCardId == null">
-            <div *ngIf="openCardId == item.id">
-              <!--  start of ShippingRequestType::Details-->
-              <div class="mb-2">
-                <div class="form-group fv-plugins-icon-container">
-                  <div *ngIf="!this.feature.isEnabled('App.Carrier')">
-                    <shipping-request-offers-list
-                      [shippingRequestId]="item.id"
-                      [isTachyonDeal]="item.isTachyonDeal"
-                      [Channel]="item.bidStatus == 0 ? 2 : 1"
-                    >
-                    </shipping-request-offers-list>
-                  </div>
+              <div [ngbCollapse]="openCardId == null">
+                <div *ngIf="openCardId == item.id">
+                  <!--  start of ShippingRequestType::Details-->
+                  <div class="mb-2">
+                    <div class="form-group fv-plugins-icon-container">
+                      <div *ngIf="!this.feature.isEnabled('App.Carrier')">
+                        <shipping-request-offers-list
+                          [shippingRequestId]="item.id"
+                          [isTachyonDeal]="item.isTachyonDeal"
+                          [Channel]="item.bidStatus == 0 ? 2 : 1"
+                        >
+                        </shipping-request-offers-list>
+                      </div>
 
-                  <div>
-                    <app-notes #NotesComponent [shippingRequestId]="item.id" [type]="type"> </app-notes>
-                  </div>
+                      <div *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
+                        <TripsForViewShippingRequest
+                          *ngIf="item.id && bidsLoading == false"
+                          [ShippingRequest]="item"
+                          [VasListFromFather]="undefined"
+                        ></TripsForViewShippingRequest>
+                      </div>
 
                   <div *ngIf="feature.isEnabled('App.Shipper') || (feature.isEnabled('App.TachyonDealer') && item.isTachyonDeal)">
                     <TripsForViewShippingRequest
@@ -274,25 +300,46 @@
                       [VasListFromFather]="undefined"
                     ></TripsForViewShippingRequest>
                   </div>
-
-                  <div>
-                    <agm-map
-                      minZoom="5"
-                      style="height: 300px"
-                      [longitude]="item.longitude || 46.675761"
-                      [latitude]="item.latitude || 24.717942"
-                      [scrollwheel]="false"
-                      (mapReady)="mapReady($event)"
-                    >
-                      <agm-direction [origin]="item.originCity" [destination]="item.destinationCity" [optimizeWaypoints]="false"> </agm-direction>
-                      <ng-container id="markers">
-                        <agm-marker [longitude]="item.longitude" [latitude]="item.longitude"> </agm-marker>
-                      </ng-container>
-                    </agm-map>
+                      <div class="col-lg-12 mt-5 pl-0 pr-0">
+                        <agm-map
+                          minZoom="5"
+                          style="height: 300px"
+                          [longitude]="item.longitude || 46.675761"
+                          [latitude]="item.latitude || 24.717942"
+                          [scrollwheel]="false"
+                          (mapReady)="mapReady($event)"
+                        >
+                          <agm-direction [origin]="item.originCity" [destination]="item.destinationCity" [optimizeWaypoints]="false"></agm-direction>
+                          <ng-container id="markers">
+                            <agm-marker [longitude]="item.longitude" [latitude]="item.longitude"></agm-marker>
+                          </ng-container>
+                        </agm-map>
+                      </div>
+                    </div>
                   </div>
+                  <!--  end::ShippingRequestType::Details-->
                 </div>
               </div>
-              <!--  end::ShippingRequestType::Details-->
+            </div>
+            <div class="expand-to-show-more">
+              <button
+                class="btn"
+                *ngIf="openCardId != item.id || !openCardId"
+                (click)="openCardId = item.id"
+                [attr.aria-expanded]="openCardId == item.id"
+                aria-controls="collapseExample"
+              >
+                <i class="fas fa-angle-down fa-2x"></i>
+              </button>
+              <button
+                class="btn"
+                *ngIf="openCardId == item.id"
+                (click)="openCardId = null"
+                [attr.aria-expanded]="openCardId == item.id"
+                aria-controls="collapseExample"
+              >
+                <i class="fas fa-angle-up fa-2x"></i>
+              </button>
             </div>
           </div>
         </div>

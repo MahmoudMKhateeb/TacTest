@@ -185,7 +185,7 @@
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -200,7 +200,7 @@
               <dxo-scrolling mode="virtual"></dxo-scrolling>
               <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <!--              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>-->
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
                 <dxi-group-item column="id" summaryType="count"> </dxi-group-item>

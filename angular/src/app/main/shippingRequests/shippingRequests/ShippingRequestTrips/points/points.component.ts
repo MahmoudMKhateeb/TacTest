@@ -34,7 +34,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _receiversServiceProxy: ReceiversServiceProxy,
     public _tripService: TripService,
-    private _PointsService: PointsService
+    private _PointsService: PointsService,
+    private cdref: ChangeDetectorRef
   ) {
     super(injector);
   }
@@ -203,5 +204,9 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   RouteStepCordSetter(pointIndex: number, facilityId: number) {
     this.wayPointsList[pointIndex].latitude = this.allFacilities.find((x) => x.id == facilityId)?.lat;
     this.wayPointsList[pointIndex].longitude = this.allFacilities.find((x) => x.id == facilityId)?.long;
+  }
+
+  ngAfterContentChecked() {
+    this.cdref.detectChanges();
   }
 }
