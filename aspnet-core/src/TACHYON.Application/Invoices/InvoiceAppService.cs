@@ -424,6 +424,16 @@ namespace TACHYON.Invoices
 
         }
 
+        public async Task GeneratePenaltyInvoiceOnDemand(int tenantId, int? penaltyId)
+        {
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
+            DisableTenancyFilters();
+            var tenant = await TenantManager.GetByIdAsync(tenantId);
+
+            await _invoiceManager.GeneratePenaltyInvoiceOnDemand(tenant, penaltyId);
+        }
+
+       
         public async Task<List<SelectItemDto>> GetUnInvoicedWaybillsByTenant(int tenantId)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();

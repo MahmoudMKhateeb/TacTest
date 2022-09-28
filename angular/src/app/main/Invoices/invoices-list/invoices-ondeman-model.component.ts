@@ -1,4 +1,4 @@
-import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Injector, Output, EventEmitter, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
@@ -8,7 +8,7 @@ import { InvoiceServiceProxy, CommonLookupServiceProxy, ISelectItemDto, SelectIt
   selector: 'invoices-ondeman-model',
   templateUrl: './invoices-ondeman-model.component.html',
 })
-export class InvoiceDemandModelComponent extends AppComponentBase {
+export class InvoiceDemandModelComponent extends AppComponentBase implements OnInit {
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('modal', { static: false }) modal: ModalDirective;
 
@@ -18,8 +18,18 @@ export class InvoiceDemandModelComponent extends AppComponentBase {
   Tenants: ISelectItemDto[];
   Waybills: SelectItemDto[];
   SelectedWaybills: SelectItemDto[];
+  InvoiceTypeOptions: any[];
+  invoiceTypeValue: number = 1;
+
   constructor(injector: Injector, private _currentSrv: InvoiceServiceProxy, private _CommonServ: CommonLookupServiceProxy) {
     super(injector);
+  }
+  ngOnInit(): void {
+    this.InvoiceTypeOptions = [
+      { label: 'Invoice', value: '1' },
+      { label: 'PenaltyInvoice', value: '2' },
+    ];
+    this.invoiceTypeValue = 1;
   }
 
   show(): void {
@@ -39,18 +49,37 @@ export class InvoiceDemandModelComponent extends AppComponentBase {
     }
     if (!this.Tenant?.id) return;
 
-    this._currentSrv
-      .onDemand(parseInt(this.Tenant.id), this.SelectedWaybills)
-      .pipe(
-        finalize(() => {
-          this.saving = false;
-        })
-      )
-      .subscribe(() => {
-        this.notify.info(this.l('SavedSuccessfully'));
-        this.close();
-        this.modalSave.emit(null);
-      });
+    //check if normal invoice
+    if (this.invoiceTypeValue == 1) {
+      this._currentSrv
+        .onDemand(parseInt(this.Tenant.id), this.SelectedWaybills)
+        .pipe(
+          finalize(() => {
+            this.saving = false;
+          })
+        )
+        .subscribe(() => {
+          this.notify.info(this.l('SavedSuccessfully'));
+          this.close();
+          this.modalSave.emit(null);
+        });
+    }
+
+    //if Penalty invoice
+    else if (this.invoiceTypeValue == 2) {
+      this._currentSrv
+        .generatePenaltyInvoiceOnDemand(parseInt(this.Tenant.id), null)
+        .pipe(
+          finalize(() => {
+            this.saving = false;
+          })
+        )
+        .subscribe(() => {
+          this.notify.info(this.l('SavedSuccessfully'));
+          this.close();
+          this.modalSave.emit(null);
+        });
+    }
   }
 
   close(): void {

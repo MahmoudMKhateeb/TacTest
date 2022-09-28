@@ -114,6 +114,14 @@
                     </li>
                     <li>
                       <a
+                        *ngIf="isTachyonDealerOrHost && options.data.invoiceId == null && options.data.status != PenaltyTypeEnum.Draft"
+                        class="dropdown-item"
+                        (click)="OnDemandInvoice(options.data.tenantId, options.data.id)"
+                        >{{ l('OnDemandInvoice') }}</a
+                      >
+                    </li>
+                    <li>
+                      <a
                         *ngIf="isTachyonDealerOrHost && options.data.status == PenaltyTypeEnum.Draft"
                         class="dropdown-item"
                         (click)="Confirm(options.data.id)"

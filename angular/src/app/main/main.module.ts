@@ -310,6 +310,7 @@ import { ViewComplaintModalComponent } from './Penalties/penalties-list/view-com
 import { CancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/cancel-trip-modal/cancel-trip-modal.component';
 import { TmsCancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/tms-cancel-trip-modal/tms-cancel-trip-modal.component';
 import { ViewCancelReasonModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/view-cancel-reason-modal/view-cancel-reason-modal.component';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic.component';
 import { InvoiceDynamicModalComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic-modal/invoices-dynamic-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
@@ -348,7 +349,7 @@ import { CalendarModule } from '@node_modules/primeng/calendar';
     // ListboxModule,
     AgmDirectionModule,
     // StepsModule,
-    // SelectButtonModule,
+    SelectButtonModule,
     ReactiveFormsModule,
     MultiSelectModule,
     ListboxModule,

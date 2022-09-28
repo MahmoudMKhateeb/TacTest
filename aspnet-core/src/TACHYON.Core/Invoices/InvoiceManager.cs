@@ -722,9 +722,7 @@ namespace TACHYON.Invoices
 
         public async Task GenertateInvoiceOnDeman(Tenant tenant, List<int> tripIdsList)
         {
-            InvoicePeriod period = await _periodRepository.FirstOrDefaultAsync(x =>
-                x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
-
+            InvoicePeriod period = await GetShipperPeriod(tenant);
 
             if (period.PeriodType != InvoicePeriodType.PayuponDelivery &&
                 period.PeriodType != InvoicePeriodType.PayInAdvance)
@@ -742,8 +740,39 @@ namespace TACHYON.Invoices
                 {
                     await GenerateShipperInvoice(tenant, trips.ToList(), period);
                 }
+
             }
         }
+
+       
+
+        public async Task GeneratePenaltyInvoiceOnDemand(Tenant tenant, int? penaltyId)
+        {
+            InvoicePeriod period = await GetShipperPeriod(tenant);
+
+
+            if (period.PeriodType != InvoicePeriodType.PayuponDelivery &&
+                period.PeriodType != InvoicePeriodType.PayInAdvance)
+            {
+                if (penaltyId != null)
+                {
+                    DisableTenancyFilters();
+                    var penalty = await _penaltyRepository.GetAll()
+                         .Include(x => x.ShippingRequestTripFK)
+                         .ThenInclude(x => x.ShippingRequestFk)
+                         .Where(x => !x.InvoiceId.HasValue &&
+                         x.Status != PenaltyStatus.Canceled &&
+                         x.Status != PenaltyStatus.Draft)
+                         .FirstOrDefaultAsync(x=> x.Id==penaltyId);
+                    await GeneratePenaltyInvoice(tenant, new List<Penalty>{penalty}, period);
+                }
+                else
+                {
+                    await PenaltyCollectorForPayTenants(tenant, period);
+                }
+            }
+        }
+
 
         /// <summary>
         /// remove invoice from shipping request when delete invoice
@@ -789,6 +818,12 @@ namespace TACHYON.Invoices
         private decimal GetTax()
         {
             return _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
+        }
+
+        private async Task<InvoicePeriod> GetShipperPeriod(Tenant tenant)
+        {
+            return await _periodRepository.FirstOrDefaultAsync(x =>
+                x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
         }
     }
 }
