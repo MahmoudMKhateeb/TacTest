@@ -16,7 +16,7 @@
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ sorting: true, filtering: true, paging: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -61,7 +61,7 @@
                 </div>
               </div>
 
-              <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
+              <!--              <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>-->
               <dxo-paging [pageSize]="10"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true"></dxo-pager>
               <dxi-column dataField="displayName" caption="{{ l('displayName') }}">></dxi-column>

@@ -1,4 +1,4 @@
-import { Component, Injector, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
@@ -33,7 +33,7 @@ export class SrPostPriceUpdateComponent extends AppComponentBase {
   activeUpdateIdForRepricing: number;
   shippingRequestId: number;
 
-  constructor(private injector: Injector, private _serviceProxy: SrPostPriceUpdateServiceProxy) {
+  constructor(private injector: Injector, private _serviceProxy: SrPostPriceUpdateServiceProxy, private cdref: ChangeDetectorRef) {
     super(injector);
   }
 
@@ -56,7 +56,10 @@ export class SrPostPriceUpdateComponent extends AppComponentBase {
     }
 
     this.loading = true;
-
+    if (!isNotNullOrUndefined(this.shippingRequestId)) {
+      this.loading = false;
+      return;
+    }
     this._serviceProxy
       .getAll(
         this.shippingRequestId,
@@ -143,5 +146,9 @@ export class SrPostPriceUpdateComponent extends AppComponentBase {
       return this.l('PostPriceUpdateWaitingForCarrierAction');
     }
     return update.isApplied ? this.l('Applied') : this.l('NotApplied');
+  }
+
+  ngAfterContentChecked() {
+    this.cdref.detectChanges();
   }
 }

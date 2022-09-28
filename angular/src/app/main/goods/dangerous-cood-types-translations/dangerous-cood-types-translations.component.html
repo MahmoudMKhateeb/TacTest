@@ -2,7 +2,7 @@
   #grid
   id="dataGrid"
   [dataSource]="dataSource"
-  [remoteOperations]="true"
+  [remoteOperations]="{ sorting: true, filtering: true, paging: true }"
   [showColumnLines]="true"
   [showRowLines]="false"
   [showBorders]="true"
@@ -12,7 +12,7 @@
 >
   <dxo-filter-builder-popup></dxo-filter-builder-popup>
   <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"> </dxo-editing>
-  <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
+  <!--  <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>-->
   <dxo-paging [pageSize]="10"></dxo-paging>
   <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
 

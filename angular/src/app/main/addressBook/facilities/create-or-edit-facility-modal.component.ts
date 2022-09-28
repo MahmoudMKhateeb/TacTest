@@ -323,7 +323,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    * Gets the Selected City Polygons
    */
   handleCityPolygon() {
-    let Json = this.allCities[this.allCities.findIndex((x) => x.id === this.facility.cityId.toString())].polygon;
+    let Json = this.allCities[this.allCities.findIndex((x) => !!this.facility && x.id === this.facility.cityId.toString())].polygon;
     this.selectedCityJson = JSON.parse(Json);
     //empty old address
     if (!this.facility.id) {

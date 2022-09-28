@@ -10,7 +10,7 @@
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -23,7 +23,7 @@
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-master-detail [enabled]="false" template="translations"></dxo-master-detail>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <!--              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>-->
               <dxo-paging [pageSize]="5"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
               <dxi-column dataField="requestType" caption="{{ l('ShippingRequestType') }}">

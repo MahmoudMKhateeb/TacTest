@@ -51,10 +51,10 @@
       <ng-container *ngIf="tripsToggle">
         <ng-container *ngFor="let direction of directions">
           <agm-direction
-            *ngIf="direction.show"
-            [origin]="direction.origin"
-            [destination]="direction.destination"
-            [renderOptions]="direction.renderOptions"
+            *ngIf="!!direction && direction.show"
+            [origin]="direction?.origin"
+            [destination]="direction?.destination"
+            [renderOptions]="direction?.renderOptions"
           >
           </agm-direction>
         </ng-container>

@@ -16,8 +16,7 @@ import { filter } from '@node_modules/rxjs/internal/operators';
 import { DOCUMENT } from '@angular/common';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { DirectRequestComponent } from '@app/main/shippingRequests/shippingRequests/directrequest/direct-request.component';
-import { finalize, retry } from 'rxjs/operators';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { retry } from 'rxjs/operators';
 import { NotesComponent } from './notes/notes.component';
 
 @Component({
@@ -49,12 +48,13 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     @Inject(DOCUMENT) private _document: Document
   ) {
     super(injector);
-    this.shippingRequestforView = new GetShippingRequestForViewOutput();
-    this.shippingRequestforView.shippingRequest = new ShippingRequestDto();
-    this.activeShippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
   }
 
   ngOnInit(): void {
+    this.shippingRequestforView = new GetShippingRequestForViewOutput();
+    this.shippingRequestforView.shippingRequest = new ShippingRequestDto();
+    this.shippingRequestforView.shippingRequest.init();
+    this.activeShippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
     this.show(this._activatedRoute.snapshot.queryParams['id']);
     this._router.events.pipe(filter((event: RouterEvent) => event instanceof NavigationEnd)).subscribe(() => {
       this.show(this._activatedRoute.snapshot.queryParams['id']);
@@ -67,6 +67,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     //update the Trips Shared Service With RouteType
     //routeType id is not reterned from backend
     this._trip.updateShippingRequest(this.shippingRequestforView);
+    this.changeDetectorRef.detectChanges();
   }
 
   show(shippingRequestId: number): void {

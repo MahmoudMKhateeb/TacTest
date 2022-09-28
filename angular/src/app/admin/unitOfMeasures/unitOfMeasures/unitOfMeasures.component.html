@@ -10,7 +10,7 @@
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true, paging: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -27,7 +27,7 @@
               <div *dxTemplate="let options of 'translations'">
                 <app-unit-of-measure-translations [CoreId]="options.data.id"></app-unit-of-measure-translations>
               </div>
-              <dxo-remote-operations></dxo-remote-operations>
+              <!--              <dxo-remote-operations></dxo-remote-operations>-->
               <dxo-paging [pageSize]="10"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
 

@@ -18,7 +18,7 @@
             #grid
             id="dataGrid"
             [dataSource]="dataSource"
-            [remoteOperations]="true"
+            [remoteOperations]="{ sorting: true, paging: true, filtering: true }"
             [showColumnLines]="true"
             [showRowLines]="false"
             [showBorders]="true"
@@ -35,7 +35,7 @@
             <div *dxTemplate="let options of 'translations'">
               <app-vases-translations-template [CoreId]="options.data.id"></app-vases-translations-template>
             </div>
-            <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
+            <!--            <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>-->
             <dxo-paging [pageSize]="10"></dxo-paging>
             <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
 

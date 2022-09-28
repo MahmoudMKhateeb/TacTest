@@ -10,7 +10,7 @@
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true, paging: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -27,7 +27,7 @@
               <div *dxTemplate="let options of 'translations'">
                 <trucksType-translationsTemplate [CoreId]="options.data.id"></trucksType-translationsTemplate>
               </div>
-              <dxo-remote-operations></dxo-remote-operations>
+              <!--              <dxo-remote-operations></dxo-remote-operations>-->
               <dxo-paging [pageSize]="10"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true"></dxo-pager>
               <dxi-column dataField="displayName" caption="{{ l('truckType') }}">

@@ -1,0 +1,116 @@
+@import "../../../../../assets/custom/css/style.scss";
+
+.shipCard {
+    padding: 0;
+
+    .infoBasic {
+        margin: 0;
+
+        & > a {
+            flex-direction: row !important;
+        }
+
+        .companyName {
+            flex-direction: column;
+        }
+
+    }
+
+    .detailsRoad {
+        padding: 0;
+        padding-top: 1%;
+
+        & > div:nth-child(1) {
+            margin-bottom: 0;
+        }
+
+        p:nth-child(1) {
+            color: inherit;
+        }
+
+        p:nth-child(2) {
+            margin: 0 1%;
+        }
+    }
+
+    .expand-to-show-more {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        z-index: 0;
+
+        button {
+            margin: 0 auto;
+        }
+    }
+
+    & > div.card-body {
+
+        flex-direction: column;
+
+        * {
+            flex-direction: column;
+            display: flex;
+        }
+
+        .actions,
+        .infoBasic,
+        .moreDetails,
+        .detailsRoad {
+            width: 100%;
+            justify-content: space-between;
+            flex-direction: row;
+
+            & > div {
+                flex-direction: column;
+            }
+        }
+
+        .actions {
+            justify-content: flex-end;
+            z-index: 1;
+        }
+
+    }
+
+    .serialNumber {
+        position: relative;
+        left: 0;
+        top: 0;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .serialNumber,
+    .info-badges {
+        flex-direction: row !important;
+    }
+}
+
+::ng-deep {
+    .card {
+        .card {
+            background: transparent;
+
+            .card-header,
+            .card-body {
+                padding: 0 !important;
+            }
+
+            .p-datatable {
+                .p-datatable-tbody {
+                    & > tr {
+                        background: transparent;
+                    }
+                }
+            }
+
+            .p-paginator {
+                background: transparent;
+            }
+        }
+    }
+
+    //shipping-request-offers-list {
+    //}
+}
