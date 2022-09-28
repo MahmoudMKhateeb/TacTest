@@ -82,7 +82,7 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
         this._CurrentServ.accept(this.offerForEditOutput.priceOfferViewDto.id).subscribe((result) => {
           this.notify.success(this.l('SuccessfullyAccepted'));
           this.offerForEditOutput.priceOfferViewDto.status = result;
-          this.modalRefresh.emit(null);
+          this.modalRefresh.emit(true);
           //this.modalDelete.emit(null);
           this.close();
         });
