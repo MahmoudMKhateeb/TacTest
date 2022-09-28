@@ -56,5 +56,8 @@ namespace TACHYON.Trucks.Dtos
         public string OtherTrucksTypeName { get; set; }
         public string OtherTransportTypeName { get; set; }
 
+        [StringLength(TruckConsts.MaxInternalTruckIdLength)]
+        public string InternalTruckId { get; set; }
+
     }
 }

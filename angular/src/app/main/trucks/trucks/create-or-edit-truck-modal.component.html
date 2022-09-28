@@ -365,6 +365,20 @@
               <!--              <validation-messages [formCtrl]="modelYear"></validation-messages>-->
             </div>
 
+            <div class="form-group col-md-6">
+              <label for="Truck_InternalTruckId"> {{ l('InternalTruckId') }}</label>
+              <input
+                #InternalTruckId="ngModel"
+                id="Truck_InternalTruckId"
+                name="Truck_InternalTruckId"
+                type="text"
+                [(ngModel)]="truck.internalTruckId"
+                class="form-control"
+                maxlength="10"
+              />
+              <validation-messages [formCtrl]="InternalTruckId"></validation-messages>
+            </div>
+
             <div class="form-group col-md-12">
               <label for="Truck_Note">{{ l('Note') }}</label>
               <textarea

@@ -2569,6 +2569,7 @@
 		<text name="inTransitTrucks">الشاحنات قيد النقل</text>
 		<text name="DriverLicenseType">نوع رخصة السائق</text>
 		<text name="SelectALicenseType">أختر نوع رخصة السائق</text>
+		<text name="InternalTruckId">معرف الشاحنة الداخلي</text>
 
     <text name="YouMustEnterRates">يجب عليك إدخال التقييمات</text>
 		<text name="TheNumberInTheTopOfTheCRThatStartsWithSeven">الرقم الموجود أعلى السجل التجاري و الذي يبدأ برقم سبعة</text>
