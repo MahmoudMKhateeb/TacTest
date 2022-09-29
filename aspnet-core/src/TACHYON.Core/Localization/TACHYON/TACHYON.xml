@@ -3049,6 +3049,17 @@
 		<text name="DownloadFileTemplate">Download File Template</text>
 		<text name="UploadFile">Upload File</text>
 		<text name="BulkDeliveryTripSucceededMsg">Bulk Delivery Trip/s process is completed successfully</text>
+		<text name="DriverAcceptTripNotificationDefinition"> Notify me when a driver accept a trip</text>
+		<text name="TachyonDealerAcceptPriceOfferNotificationDefinition"> Notify me when the tachyon dealer accept an offer </text>
+		<text name="ShipperAcceptPriceOfferNotificationDefinition"> Notify me when a shipper accept an offer </text>
+		<text name="PendingPriceOfferNotificationDefinition"> Notify me when an offer is under review (pending offer) </text>
+		<text name="RejectedPriceOfferNotificationDefinition"> Notify me when an offer is rejected</text>
+		<text name="RejectedPostPriceOfferNotificationDefinition"> Notify me when a post price offer is rejected</text>
+		<text name="SendOfferWhenAddPriceNotificationDefinition"> Notify me when a new offer has been added to the shipment</text>
+		<text name="SendOfferWhenUpdatePriceNotificationDefinition"> Notify me when a price has been updated by a carrier</text>
+		<text name="SubmitInvoiceOnClaimNotificationDefinition"> Notify me when a submit invoice has been claimed</text>
+		<text name="SubmitInvoiceOnAcceptedNotificationDefinition"> Notify me when a submit invoice has been accepted</text>
+		<text name="SubmitInvoiceOnRejectedNotificationDefinition"> Notify me when a submit invoice has been rejected</text>
 
 	</texts>
 </localizationDictionary>

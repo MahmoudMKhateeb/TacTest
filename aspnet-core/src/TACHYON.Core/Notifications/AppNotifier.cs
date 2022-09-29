@@ -1720,22 +1720,21 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(notificationName, data, userIds: identifiers);
             
 
-            var notificationEvent = new NotificationPushedEventData()
+            var notificationEvent = new NotificationPushedEventData
             {
                 Name = notificationName,
-                // Message = data.Message.Localize(LocalizationManager, CultureInfo.CurrentUICulture),
                 EventSource = this,
                 UserIdentifiers = identifiers,
-                DisplayName = "Notification by email" // Todo: add localized title for each notification
+                DisplayName = L("TachyonNotification"),
+                Message = data switch
+                {
+                    LocalizableMessageNotificationData localizable => 
+                        localizable.Message.Localize(LocalizationManager, CultureInfo.CurrentUICulture),
+                    MessageNotificationData message => message.Message,
+                    _ => string.Empty
+                }
             };
-            notificationEvent.Message = data switch
-            {
-                LocalizableMessageNotificationData localizable => 
-                    localizable.Message.Localize(LocalizationManager, CultureInfo.CurrentUICulture),
-                MessageNotificationData message => message.Message,
-                _ => string.Empty
-            };
-            
+
             await _jobManager.EnqueueEventAsync(notificationEvent);
         }
 

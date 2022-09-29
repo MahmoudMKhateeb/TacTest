@@ -180,7 +180,8 @@ namespace TACHYON.Notifications
 
             context.Manager.Add(new NotificationDefinition(
                 AppNotificationNames.DriverAcceptTrip,
-                displayName: L("DriverAcceptTrip")
+                displayName: L("DriverAcceptTripNotificationDefinition"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
             ));
 
             #endregion
@@ -189,49 +190,57 @@ namespace TACHYON.Notifications
 
             context.Manager.Add(new NotificationDefinition(
                 AppNotificationNames.TMSAcceptedOffer,
-                displayName: L("TachyonDealerAcceptPriceOffer")));    
+                displayName: L("TachyonDealerAcceptPriceOfferNotificationDefinition")));    
             
             context.Manager.Add(new NotificationDefinition(
                 AppNotificationNames.ShipperAcceptedOffer,
-                displayName: L("ShipperAcceptPriceOffer")));
+                displayName: L("ShipperAcceptPriceOfferNotificationDefinition")));
             
             context.Manager.Add(new NotificationDefinition(
                 AppNotificationNames.PendingOffer,
-                displayName: L("PendingPriceOfferNotification"),
-                description: L("PendingOffer")));
+                displayName: L("PendingPriceOfferNotificationDefinition"),
+                description: L("PendingOffer"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)));
             
             context.Manager.Add(new NotificationDefinition(
                 AppNotificationNames.RejectedOffer,
-                displayName: L("RejectedPriceOfferNotification"),
-                description: L("RejectedOffer")));
+                displayName: L("RejectedPriceOfferNotificationDefinition"),
+                description: L("RejectedOffer"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,AppFeatures.Carrier)));
             
             context.Manager.Add(new NotificationDefinition(
                 AppNotificationNames.RejectedPostPriceOffer,
-                displayName: L("RejectedPostPriceOfferNotification"),
-                description: L("RejectedOffer")));
+                displayName: L("RejectedPostPriceOfferNotificationDefinition"),
+                description: L("RejectedOffer"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)));
             
             context.Manager.Add(new NotificationDefinition(
                 AppNotificationNames.ShippingRequestSendOfferWhenAddPrice,
-                displayName: L("SendOfferWhenAddPriceNotification"),
-                description: L("ShippingRequestSendOfferWhenAddPrice")));
+                displayName: L("SendOfferWhenAddPriceNotificationDefinition"),
+                description: L("ShippingRequestSendOfferWhenAddPrice"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,AppFeatures.Shipper)));
             
             context.Manager.Add(new NotificationDefinition(
                 AppNotificationNames.ShippingRequestSendOfferWhenUpdatePrice,
-                 displayName: L("SendOfferWhenUpdatePriceNotification"),
-                description: L("ShippingRequestSendOfferWhenUpdatePrice")));
+                 displayName: L("SendOfferWhenUpdatePriceNotificationDefinition"),
+                description: L("ShippingRequestSendOfferWhenUpdatePrice"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,AppFeatures.Shipper)));
 
             #endregion
 
             #region Invoicing Notifications
 
             context.Manager.Add(new NotificationDefinition(AppNotificationNames.SubmitInvoiceOnClaim,
-                typeof(SubmitInvoice),L("SubmitInvoiceOnClaim")));
+                 displayName: L("SubmitInvoiceOnClaimNotificationDefinition"),
+                 permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Invoices_SubmitInvoices_Claim)));
             
             context.Manager.Add(new NotificationDefinition(AppNotificationNames.SubmitInvoiceOnAccepted,
-                typeof(SubmitInvoice),L("SubmitInvoiceOnAccepted")));
+                 displayName: L("SubmitInvoiceOnAcceptedNotificationDefinition"),
+                 permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Invoices_SubmitInvoices)));
             
             context.Manager.Add(new NotificationDefinition(AppNotificationNames.SubmitInvoiceOnRejected,
-                typeof(SubmitInvoice),L("SubmitInvoiceOnRejected")));
+                displayName: L("SubmitInvoiceOnRejectedNotificationDefinition"),
+                permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Invoices_SubmitInvoices)));
 
             #endregion
             
