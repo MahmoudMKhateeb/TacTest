@@ -1358,7 +1358,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     Id = x.Id,
                     MasterWaybillNo = x.WaybillNumber.Value,
                     ShippingRequestStatus = x.Status == Trips.ShippingRequestTripStatus.Delivered ? "Final" : "Draft",
-                    ClientName = x.ShippingRequestFk.Tenant.TenancyName,
+                    ClientName = (x.ShippingRequestFk.IsSaas() && x.ShippingRequestFk.ShipperActorId!=null) ?x.ShippingRequestFk.ShipperActorFk.CompanyName :x.ShippingRequestFk.Tenant.TenancyName ,
                     CarrierName = x.ShippingRequestFk.CarrierTenantFk.TenancyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
                     driverUserId = x.AssignedDriverUserId,
