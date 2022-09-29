@@ -88,17 +88,17 @@ export class AppHostNavigationService extends AppBaseNavigationService {
             () => !this._appSessionService.tenantId
           ),
 
-          new AppMenuItem(
-            'InvoicingFrequency',
-            'Pages.Invoices',
-            '',
-            '/app/main/invoices/periods',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
-          ),
+          // new AppMenuItem(
+          //   'InvoicingFrequency',
+          //   'Pages.Invoices',
+          //   '',
+          //   '/app/main/invoices/periods',
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+          // ),
           new AppMenuItem(
             'PaymentMethods',
             'Pages.Invoices',
@@ -110,8 +110,17 @@ export class AppHostNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
           ),
-
-          // TODO: Payment Due menu item
+          new AppMenuItem(
+            'PaymentDue',
+            'Pages.Invoices',
+            '',
+            '/app/main/invoices/periods',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+          ),
 
           new AppMenuItem(
             'BalnaceRecharges',
