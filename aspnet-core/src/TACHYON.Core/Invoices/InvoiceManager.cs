@@ -450,18 +450,21 @@ namespace TACHYON.Invoices
             
         }
 
-        // ToDo: Add Permission for Tms/Host only
+        
         public async Task ConfirmInvoice(long invoiceId)
         {
             DisableTenancyFilters();
+            CurrentUnitOfWork.DisableFilter(TACHYONDataFilters.HaveInvoiceStatus);
 
             Invoice invoice = await _invoiceRepository.GetAll().Include(x => x.InvoicePeriodsFK)
                 .Include(x => x.Tenant)
                 .FirstOrDefaultAsync(x => x.Id == invoiceId);
             
-            // todo add message here
             if (invoice is null) throw new UserFriendlyException(L("InvoiceNotFound"));
 
+            if (invoice.Status == InvoiceStatus.Confirmed)
+                throw new UserFriendlyException(L("InvoiceAlreadyConfirmed"));
+            
             Tenant tenant = invoice.Tenant;
             InvoicePeriod period = invoice.InvoicePeriodsFK;
             decimal totalAmount = invoice.TotalAmount;

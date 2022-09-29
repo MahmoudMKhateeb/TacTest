@@ -395,6 +395,11 @@ namespace TACHYON.Invoices
             await _invoiceManager.GenertateInvoiceOnDeman(tenant, waybills.Select(x => x.Id).Select(int.Parse).ToList());
         }
 
+        [AbpAuthorize(AppPermissions.Pages_Invoices_ConfirmInvoice)]
+        public async Task ConfirmInvoice(long invoiceId)
+        {
+            await _invoiceManager.ConfirmInvoice(invoiceId);
+        }
         public async Task DynamicInvoiceOnDemand(long dynamicInvoiceId)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer);

@@ -746,6 +746,10 @@ namespace TACHYON.Authorization
                featureDependency: tmsFeatureDependency);
 
            #endregion
+
+           // For Host/TMS
+           pages.CreateChildPermission(AppPermissions.Pages_Invoices_ConfirmInvoice, L("ConfirmInvoicePermission"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer));
         }
 
         private static ILocalizableString L(string name)

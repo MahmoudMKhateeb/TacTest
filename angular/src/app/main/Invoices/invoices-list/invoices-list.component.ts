@@ -194,4 +194,11 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     let invoiceStatus = this.invoiceStatusTitles.find((x) => x[0] == status);
     return invoiceStatus[1];
   }
+
+  confirmInvoice(invoice: any) {
+    this._InvoiceServiceProxy.confirmInvoice(invoice.id).subscribe(() => {
+      this.notify.success(this.l('Successfully'));
+      this.getAllInvoices();
+    });
+  }
 }

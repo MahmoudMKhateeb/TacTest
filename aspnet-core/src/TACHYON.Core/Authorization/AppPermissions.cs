@@ -536,6 +536,7 @@
 
 
         public const string Pages_Invoices = "Pages.Invoices";
+        public const string Pages_Invoices_ConfirmInvoice = "Pages.Invoices.ConfirmInvoice";
 
         public const string Pages_Administration_Host_Invoices_Delete =
             "Pages.Administration.Host.Invoices.Invoices.Delete";
