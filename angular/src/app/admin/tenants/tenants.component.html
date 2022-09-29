@@ -43,6 +43,7 @@
               <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
               <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
               <dxi-column
+                *ngIf="!isTachyonDealer"
                 cellTemplate="cellTemplateActions"
                 [allowFiltering]="false"
                 [allowSorting]="false"

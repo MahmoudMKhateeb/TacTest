@@ -96,12 +96,12 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       // start of Administration
       new AppMenuItem(
         'Administration',
-        '',
+        'Pages.Tenants',
         'content marketing, digital marketing, marketing, settings, options, key.svg',
         '',
         [],
         [
-          new AppMenuItem('Tenants', '', '', '/app/admin/tenants'),
+          new AppMenuItem('Tenants', 'Pages.Tenants', '', '/app/admin/tenants'),
           //  new AppMenuItem('Editions', 'Pages.Editions', '', '/app/admin/editions'),
         ]
       ),
