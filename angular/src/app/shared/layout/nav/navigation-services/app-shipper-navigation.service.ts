@@ -106,7 +106,7 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
             'Pages.Invoices',
 
             '',
-            '/app/main/invoices/submitinvoice',
+            '/app/main/invoices/view',
             undefined,
             undefined,
             undefined,

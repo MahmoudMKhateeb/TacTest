@@ -317,7 +317,18 @@ export class AppHostNavigationService extends AppBaseNavigationService {
         [],
         [
           // TODO: add the Registred Trucks and Registred Drivers menu item
-
+          new AppMenuItem(
+            'Trucks',
+            'Pages.Trucks',
+            '',
+            '/app/main/trucks/trucks',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+          ),
+          new AppMenuItem('Drivers', 'Pages.Administration.Users', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
           new AppMenuItem('TransportTypes', 'Pages.TransportTypes', '', '/app/main/transportTypes/transportTypes'),
           new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', '', '/app/main/trucksTypes/trucksTypes'),
           new AppMenuItem('CapacityCategories', 'Pages.Capacities', '', '/app/main/truckCapacities/capacities'),

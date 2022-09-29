@@ -73,7 +73,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
 
   ngOnInit() {
     this._TripService.currentShippingRequest.subscribe((res) => {
-      this.TruckTypeId = res.truckTypeId;
+      this.TruckTypeId = res?.truckTypeId;
     });
     this.activeTripId = this._Router.snapshot.queryParams['tripId'];
   }

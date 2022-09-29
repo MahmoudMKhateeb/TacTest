@@ -63,6 +63,25 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       ),
       // end of Operations
       //  ---------------------------------------------------------------------------------------------------------------------
+      //Start Of AddressBook "Facilities Management"
+      new AppMenuItem(
+        'AddressBook',
+        '',
+        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('FacilitiesSetup', 'Pages.Facilities', '', '/app/main/addressBook/facilities'),
+          //TODO: Missing permission need to give host this permission Pages.Receivers
+          new AppMenuItem('ReceiversSetup', 'Pages.Facilities', '', '/app/main/receivers/receivers', undefined, undefined, undefined, undefined),
+        ],
+        //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
+        undefined,
+        undefined,
+        () => this.isEnabled('App.CarrierAsASaas')
+      ),
+      // end of AddressBook "Facilities Management"
+      //  ---------------------------------------------------------------------------------------------------------------------
       // start of PricePackages
       new AppMenuItem(
         'PricePackages',
