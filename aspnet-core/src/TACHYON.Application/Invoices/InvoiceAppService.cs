@@ -207,8 +207,10 @@ namespace TACHYON.Invoices
                 .ThenInclude(x => x.TrucksTypeFk)
                 .Include(i => i.Items)
                 .ThenInclude(x => x.OriginCity)
+                .ThenInclude(x=> x.Translations)
                 .Include(i => i.Items)
                 .ThenInclude(x => x.DestinationCity)
+                .ThenInclude(x=> x.Translations)
                 .Include(i => i.Items)
                 .ThenInclude(x => x.Truck).ThenInclude(x => x.TrucksTypeFk) // todo review this with Tasneem 
                 .FirstOrDefaultAsync(i => i.InvoiceId == invoiceId);
@@ -663,12 +665,14 @@ namespace TACHYON.Invoices
                 if (item.ShippingRequestTrip != null)
                 {
                     invoiceItemDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(item.ShippingRequestTrip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;
+                    invoiceItemDto.PlateNumber = item.ShippingRequestTrip.AssignedTruckFk.PlateNumber;
                 }
                 else
                 {
                     if (item.Truck != null)
                     {
                         invoiceItemDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(item.Truck.TrucksTypeFk).TranslatedDisplayName;
+                        invoiceItemDto.PlateNumber = item.Truck.PlateNumber;
                     }
                 }
 
