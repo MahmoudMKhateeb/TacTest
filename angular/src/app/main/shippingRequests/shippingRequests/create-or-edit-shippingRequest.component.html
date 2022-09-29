@@ -544,6 +544,7 @@
                   [(ngModel)]="selectedVases"
                   optionLabel="vasName"
                   [dataKey]="'vasId'"
+                  (onClick)="changeVasListSelection($event)"
                 ></p-listbox>
               </div>
               <div class="col-sm-9">
@@ -557,7 +558,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let item of selectedVases; index as i">
+                    <tr *ngFor="let item of selectedVases; index as i; trackBy: trackByFunc">
                       <td>
                         {{ selectedVasesProperties[item.vasId]?.vasName }}
                       </td>
@@ -570,10 +571,10 @@
                           (keypress)="numberOnly($event)"
                           [required]="!selectedVasesProperties[item.vasId]?.vasCountDisabled"
                           class="form-control"
-                          name="Vas-Count{{ i }}"
                           [min]="selectedVasesProperties[item.vasId]?.vasCountDisabled ? 0 : 1"
                           [class.is-valid]="!selectedVasesProperties[item.vasId]?.vasCountDisabled && selectedVases[i].requestMaxCount > 0"
                           [class.is-invalid]="!selectedVasesProperties[item.vasId]?.vasCountDisabled && selectedVases[i].requestMaxCount == 0"
+                          [ngModelOptions]="{ standalone: true }"
                         />
                       </td>
                       <td>
@@ -584,11 +585,11 @@
                           [(ngModel)]="item.requestMaxAmount"
                           (keypress)="numberOnly($event)"
                           class="form-control"
-                          name="VasAmount2{{ i }}"
                           [min]="selectedVasesProperties[item.vasId]?.vasAmountDisabled ? 0 : 1"
                           [required]="!selectedVasesProperties[item.vasId]?.vasAmountDisabled"
                           [class.is-valid]="!selectedVasesProperties[item.vasId]?.vasAmountDisabled && selectedVases[i].requestMaxAmount > 0"
                           [class.is-invalid]="!selectedVasesProperties[item.vasId]?.vasAmountDisabled && selectedVases[i].requestMaxAmount == 0"
+                          [ngModelOptions]="{ standalone: true }"
                         />
                       </td>
                       <td>
@@ -598,11 +599,11 @@
                           [(ngModel)]="item.numberOfTrips"
                           (keypress)="numberOnly($event)"
                           class="form-control"
-                          name="numberOfTrips{{ i }}"
                           [min]="1"
                           [class.is-valid]="selectedVases[i].numberOfTrips <= shippingRequest.numberOfTrips"
                           [class.is-invalid]="!selectedVases[i].numberOfTrips || selectedVases[i].numberOfTrips > shippingRequest.numberOfTrips"
                           [max]="shippingRequest.numberOfTrips"
+                          [ngModelOptions]="{ standalone: true }"
                           required
                         />
                       </td>
