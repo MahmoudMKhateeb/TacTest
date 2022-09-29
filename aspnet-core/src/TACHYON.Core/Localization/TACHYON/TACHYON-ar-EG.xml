@@ -2823,6 +2823,9 @@
 		<text name="FromTemplate">من قالب</text>
 		<text name="SelectATemplate">أختر قالب</text>
     <text name="OneDestinationCityAllowed">الرجاء إدخال مدينة وصول واحدة</text>
-    
+    <text name="PaymentDate">تاريخ الدفع</text>
+    <text name="SubmittedDate">تاريخ الاصدار</text>
+    <text name="AcceptanceDate">تاريخ القبول</text>
+
 	</texts>
 </localizationDictionary>

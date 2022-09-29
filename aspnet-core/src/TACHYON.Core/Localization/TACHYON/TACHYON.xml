@@ -3060,6 +3060,9 @@
 		<text name="FromTemplate">From Template</text>
 		<text name="SelectATemplate">Select a template</text>
     <text name="OneDestinationCityAllowed">One Destination City Allowed</text>
+    <text name="PaymentDate">Payment date</text>
+    <text name="SubmittedDate">Submitted date</text>
+    <text name="AcceptanceDate">Acceptance date</text>
 
 	</texts>
 </localizationDictionary>
