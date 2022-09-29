@@ -1,5 +1,5 @@
 /* tslint:disable:triple-equals */
-import { ChangeDetectorRef, ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterContentChecked, ChangeDetectorRef, Component, EventEmitter, Injector, OnDestroy, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CreateOrEditRoutPointDto,
@@ -22,7 +22,9 @@ import { finalize } from '@node_modules/rxjs/operators';
   templateUrl: './points.component.html',
   styleUrls: ['./points.component.scss'],
 })
-export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy {
+export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy, AfterContentChecked {
+  // @Output() SelectedWayPointsFromChild = this.wayPointsList;
+  @Output() wayPointsListChanged: EventEmitter<any> = new EventEmitter<any>();
   shippingRequestId: number;
   DestCitiesDtos: ShippingRequestDestinationCitiesDto[];
   SRDestionationCity: number;
@@ -32,16 +34,6 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   allPointsSendersAndREcivers: ReceiverFacilityLookupTableDto[][] = [];
   receiverLoading: boolean;
   shippingRequestForView: GetShippingRequestForViewOutput;
-  constructor(
-    injector: Injector,
-    private _routStepsServiceProxy: RoutStepsServiceProxy,
-    private _receiversServiceProxy: ReceiversServiceProxy,
-    public _tripService: TripService,
-    private _PointsService: PointsService,
-    private cdref: ChangeDetectorRef
-  ) {
-    super(injector);
-  }
   activeTripId: number;
   RouteTypes = ShippingRequestRouteType;
   wayPointsList: CreateOrEditRoutPointDto[] = [];
@@ -73,7 +65,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _receiversServiceProxy: ReceiversServiceProxy,
     public _tripService: TripService,
-    private _PointsService: PointsService
+    private _PointsService: PointsService,
+    private cdref: ChangeDetectorRef
   ) {
     super(injector);
   }
@@ -99,10 +92,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     }
     if (this.shippingRequestForView.shippingRequest.id != null) {
       this._tripService.currentShippingRequest.subscribe((res) => {
-        this.citySourceId = res.originalCityId;
+        this.shippingRequestForView = res;
         this.DestCitiesDtos = res.destinationCitiesDtos;
-        this.pointsCount = res.shippingRequest.numberOfDrops;
-        this.shippingType = res.shippingRequest.shippingTypeId;
       });
     }
     this._routStepsServiceProxy
@@ -114,7 +105,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       )
       .subscribe((result) => {
         this.allFacilities = result;
-        this.pickupFacilities = result.filter((r) => r.cityId == this.citySourceId);
+        this.pickupFacilities = result.filter((r) => r.cityId == this.shippingRequestForView.originalCityId);
         this.dropFacilities = result.filter((r) => this.DestCitiesDtos.some((y) => y.cityId == r.cityId));
       });
   }
@@ -205,11 +196,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     //get some Stuff from ShippingRequest Dto
     this.tripSourceFacilitySub$ = this._tripService.currentShippingRequest.subscribe((res) => {
       if (res.shippingRequest) {
-        this.RouteType = res.shippingRequest.routeTypeId;
-        this.NumberOfDrops = res.shippingRequest.numberOfDrops;
-        this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
-        this.shippingRequestId = res.shippingRequest.id;
-        //this.SRDestionationCity = res.destinationCityId;
+        this.shippingRequestForView = res;
       }
     });
 
