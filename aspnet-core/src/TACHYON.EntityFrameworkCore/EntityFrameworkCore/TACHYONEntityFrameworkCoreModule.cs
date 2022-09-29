@@ -6,6 +6,7 @@ using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Zero.EntityFrameworkCore;
 using TACHYON.Configuration;
+using TACHYON.DataFilters;
 using TACHYON.EntityHistory;
 using TACHYON.Migrations.Seed;
 
@@ -45,6 +46,7 @@ namespace TACHYON.EntityFrameworkCore
 
             Configuration.UnitOfWork.RegisterFilter("IHasIsCanceled", true);
             Configuration.UnitOfWork.RegisterFilter("IHasIsDrafted", true);
+            Configuration.UnitOfWork.RegisterFilter(TACHYONDataFilters.HaveInvoiceStatus,true);
 
             // Uncomment below line to write change logs for the entities below:
             Configuration.EntityHistory.Selectors.Add("TACHYONEntities", EntityHistoryHelper.TrackedTypes);

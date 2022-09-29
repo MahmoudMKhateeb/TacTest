@@ -8,6 +8,7 @@ import {
   InvoiceFilterInput,
   InvoiceReportServiceServiceProxy,
   InvoiceServiceProxy,
+  InvoiceStatus,
   ISelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
@@ -45,7 +46,8 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   dueFromDate: moment.Moment | null | undefined;
   dueToDate: moment.Moment | null | undefined;
   InvoiceChannelEnum = InvoiceChannel;
-
+  InvoiceStatusEnum = InvoiceStatus;
+  invoiceStatusTitles = Object.entries(this.InvoiceStatusEnum);
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive = false;
 
@@ -76,6 +78,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       this.Periods = result;
     });
     this.getAllInvoices();
+    console.log(this.invoiceStatusTitles);
   }
 
   reloadPage(): void {
@@ -201,5 +204,10 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       .catch(function (error) {
         // ...
       });
+  }
+
+  getInvoiceStatusTitle(status) {
+    let invoiceStatus = this.invoiceStatusTitles.find((x) => x[0] == status);
+    return invoiceStatus[1];
   }
 }

@@ -71,13 +71,27 @@
               </dxi-column>
               <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"></dxi-column>
               <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"></dxi-column>
-              <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('Status') }}"></dxi-column>
-              <dxi-column dataField="channel" cellTemplate="cellTemplate_Channel" caption="{{ l('label') }}">
-                <dxo-lookup [dataSource]="invoiceChannels" displayExpr="value" valueExpr="key"></dxo-lookup>
-              </dxi-column>
+              <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('PaymentStatus') }}"></dxi-column>
+              <dxi-column
+                *ngIf="isTachyonDealerOrHost"
+                dataField="status"
+                cellTemplate="cellTemplate_status"
+                caption="{{ l('Status') }}"
+              ></dxi-column>
+              <dxi-column dataField="channel" cellTemplate="cellTemplate_Channel" caption="{{ l('label') }}"></dxi-column>
               <div *dxTemplate="let options of 'cellTemplate_isPaid'">
                 <span *ngIf="options.data.isPaid" class="badge badge-success badge-inline">{{ 'Paid' | localize }}</span>
                 <span *ngIf="!options.data.isPaid" class="badge badge-danger badge-inline">{{ 'UnPaid' | localize }}</span>
+              </div>
+              <div *dxTemplate="let options of 'cellTemplate_status'">
+                <span
+                  class="badge badge-inline"
+                  [ngClass]="{
+                    'badge-success': options.data.status == InvoiceStatusEnum.Confirmed,
+                    'badge-secondary': options.data.status == InvoiceStatusEnum.Drafted
+                  }"
+                  >{{ getInvoiceStatusTitle(options.data.status) }}</span
+                >
               </div>
               <div *dxTemplate="let options of 'cellTemplate_Channel'">
                 <span
@@ -111,6 +125,9 @@
                   </a>
 
                   <ul class="dropdown-menu" *dropdownMenu>
+                    <li *ngIf="options.data.status == InvoiceStatusEnum.Drafted">
+                      <a class="dropdown-item" (click)="details(options.data)">{{ l('Confirm') }}</a>
+                    </li>
                     <li>
                       <a class="dropdown-item" (click)="details(options.data)">{{ l('Detail') }}</a>
                     </li>
