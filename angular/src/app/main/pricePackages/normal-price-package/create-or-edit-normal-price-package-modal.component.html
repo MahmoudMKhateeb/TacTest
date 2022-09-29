@@ -24,20 +24,52 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="NormalPricePackage_DisplayName">{{ l('PricePackageName') }} <span class="required-fileds">*</span></label>
-              <input
-                type="text"
-                #NormalPricePackage_DisplayName="ngModel"
+              <!--              <input-->
+              <!--                type="text"-->
+              <!--                #NormalPricePackage_DisplayName="ngModel"-->
+              <!--                id="NormalPricePackage_DisplayName"-->
+              <!--                class="form-control"-->
+              <!--                [(ngModel)]="normalPricePackage.displayName"-->
+              <!--                name="displayName"-->
+              <!--                minlength="3"-->
+              <!--                maxlength="100"-->
+              <!--                required-->
+              <!--                (change)="checkIfIsPricePackageUniqueName()"-->
+              <!--              />-->
+              <!--              <validation-messages [formCtrl]="NormalPricePackage_DisplayName"></validation-messages>-->
+              <!--              <span *ngIf="!isNameAvilable" class="form-text text-danger">{{ l('PricePackageName') }} {{ 'AlreadyTaken' | localize }}</span>-->
+              <dx-text-box
                 id="NormalPricePackage_DisplayName"
-                class="form-control"
-                [(ngModel)]="normalPricePackage.displayName"
                 name="displayName"
+                [(value)]="normalPricePackage.displayName"
+                required
                 minlength="3"
                 maxlength="100"
-                required
-                (change)="checkIfIsPricePackageUniqueName()"
-              />
-              <validation-messages [formCtrl]="NormalPricePackage_DisplayName"></validation-messages>
-              <span *ngIf="!isNameAvilable" class="form-text text-danger">{{ l('PricePackageName') }} {{ 'AlreadyTaken' | localize }}</span>
+                valueChangeEvent="keyup"
+                [inputAttr]="{ autocomplete: 'off' }"
+              >
+                <dx-validator [validationGroup]="'normalPricePackage'">
+                  <dxi-validation-rule
+                    type="required"
+                    message="{{ 'PricePackageName' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                  ></dxi-validation-rule>
+                  <dxi-validation-rule
+                    type="stringLength"
+                    [min]="3"
+                    message="{{ 'PricePackageName' | localize }}: {{ l('PleaseEnterAtLeastNCharacter', 3) }}"
+                  ></dxi-validation-rule>
+                  <dxi-validation-rule
+                    type="stringLength"
+                    [max]="100"
+                    message="{{ 'PricePackageName' | localize }}: {{ l('PleaseEnterNoMoreThanNCharacter', 100) }}"
+                  ></dxi-validation-rule>
+                  <dxi-validation-rule
+                    type="async"
+                    message="{{ 'PricePackageName' | localize }}: {{ 'AlreadyTaken' | localize }}"
+                    [validationCallback]="checkIfIsPricePackageUniqueNameAsync"
+                  ></dxi-validation-rule>
+                </dx-validator>
+              </dx-text-box>
             </div>
             <div class="checkbox-inline">
               <label for="NormalPricePackage_IsMultiDrop" class="checkbox">
@@ -48,66 +80,161 @@
                   name="isMultiDrop"
                   [(ngModel)]="normalPricePackage.isMultiDrop"
                 />
-                <span> </span>
-                {{ l('IsMultiDrop') }}
+                <span class="ml-1 mr-1"></span>
+                {{ 'isMultiDrop ' }}
               </label>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
               <label>{{ l('TransportType') }} <span class="required-fileds">*</span></label>
-              <select
-                name="transpotTypeId"
-                (change)="TranspotTypesChanged($event)"
-                [(ngModel)]="normalPricePackage.transportTypeId"
-                class="form-control"
+              <!--              <select-->
+              <!--                name="transpotTypeId"-->
+              <!--                (change)="TranspotTypesChanged($event)"-->
+              <!--                [(ngModel)]="normalPricePackage.transportTypeId"-->
+              <!--                class="form-control"-->
+              <!--                required-->
+              <!--              >-->
+              <!--                <option value="undefined">{{ l('SelectATranspotType') }}</option>-->
+              <!--                <option *ngFor="let item of allTranspotTypes" [value]="item.id">{{ item.displayName }}</option>-->
+              <!--              </select>-->
+              <dx-select-box
+                id="transportTypeId"
+                name="transportTypeId"
+                [(value)]="normalPricePackage.transportTypeId"
+                [dataSource]="allTranspotTypes"
+                (onSelectionChanged)="TranspotTypesChanged($event)"
+                [searchEnabled]="true"
+                displayExpr="displayName"
+                valueExpr="id"
+                placeholder="{{ l('SelectaTransportType') }}"
                 required
               >
-                <option value="undefined">{{ l('SelectaTransportType') }}</option>
-                <option *ngFor="let item of allTranspotTypes" [value]="item.id">{{ item.displayName }}</option>
-              </select>
+                <dx-validator [validationGroup]="'normalPricePackage'">
+                  <dxi-validation-rule
+                    type="required"
+                    message="{{ 'TransportType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                  ></dxi-validation-rule>
+                </dx-validator>
+              </dx-select-box>
             </div>
             <div class="form-group col-md-6">
               <label>{{ l('TruckType') }} <span class="required-fileds">*</span></label>
-              <select name="trucksTypeId" [(ngModel)]="normalPricePackage.trucksTypeId" class="form-control" required>
-                <option value="undefined">{{ l('SelectaTruckType') }}</option>
-                <option *ngFor="let item of allTruckTypes" [value]="item.id">{{ item.displayName }}</option>
-              </select>
+              <!--              <select name="trucksTypeId" [(ngModel)]="normalPricePackage.trucksTypeId" class="form-control" required>-->
+              <!--                <option value="undefined">{{ l('SelectATruckType') }}</option>-->
+              <!--                <option *ngFor="let item of allTruckTypes" [value]="item.id">{{ item.displayName }}</option>-->
+              <!--              </select>-->
+              <dx-select-box
+                id="trucksTypeId"
+                name="trucksTypeId"
+                [(value)]="normalPricePackage.trucksTypeId"
+                [dataSource]="allTruckTypes"
+                [searchEnabled]="true"
+                displayExpr="displayName"
+                valueExpr="id"
+                placeholder="{{ l('SelectATruckType') }}"
+                required
+              >
+                <dx-validator [validationGroup]="'normalPricePackage'">
+                  <dxi-validation-rule
+                    type="required"
+                    message="{{ 'TruckType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                  ></dxi-validation-rule>
+                </dx-validator>
+              </dx-select-box>
             </div>
           </div>
           <div class="form-row">
             <!-- Start of Select Source -->
             <div class="col-md-6 form-group">
               <label>{{ l('OriginCity') }} <span class="required-fileds">*</span></label>
-              <select class="form-control" name="originCityId" [(ngModel)]="normalPricePackage.originCityId" required>
-                <option value="undefined">{{ l('SelectanOriginCity') }}</option>
-                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
+              <!--              <select class="form-control" name="originCityId" [(ngModel)]="normalPricePackage.originCityId" required>-->
+              <!--                <option value="undefined">{{ l('SelectanOriginCity') }}</option>-->
+              <!--                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+              <!--              </select>-->
+              <dx-select-box
+                id="originCityId"
+                name="originCityId"
+                [(value)]="normalPricePackage.originCityId"
+                [dataSource]="allCitys"
+                [searchEnabled]="true"
+                displayExpr="displayName"
+                valueExpr="id"
+                placeholder="{{ l('SelectanOriginCity') }}"
+                required
+              >
+                <dx-validator [validationGroup]="'normalPricePackage'">
+                  <dxi-validation-rule
+                    type="required"
+                    message="{{ 'OriginCity' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                  ></dxi-validation-rule>
+                </dx-validator>
+              </dx-select-box>
             </div>
             <div class="col-md-6 form-group">
               <label> {{ l('DestinationCity') }} <span class="required-fileds">*</span></label>
-              <select class="form-control" name="destinationCityId" [(ngModel)]="normalPricePackage.destinationCityId" required>
-                <option value="undefined">{{ l('SelectaDestination') }}</option>
-                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-              <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
+              <!--              <select class="form-control" name="destinationCityId" [(ngModel)]="normalPricePackage.destinationCityId" required>-->
+              <!--                <option value="undefined">{{ l('selectaDestination') }}</option>-->
+              <!--                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+              <!--              </select>-->
+              <!--              <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>-->
+              <dx-select-box
+                id="destinationCityId"
+                name="destinationCityId"
+                [(value)]="normalPricePackage.destinationCityId"
+                [dataSource]="allCitys"
+                [searchEnabled]="true"
+                displayExpr="displayName"
+                valueExpr="id"
+                placeholder="{{ l('SelectaDestination') }}"
+                required
+              >
+                <dx-validator [validationGroup]="'normalPricePackage'">
+                  <dxi-validation-rule
+                    type="required"
+                    message="{{ 'DestinationCity' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                  ></dxi-validation-rule>
+                </dx-validator>
+              </dx-select-box>
             </div>
           </div>
           <div class="form-row">
             <div class="col-md-6 form-group">
               <label for="NormalPricePackage_DirectRequestPrice">{{ l('DirectRequestPrice') }} <span class="required-fileds">*</span></label>
               <div class="input-group date">
-                <input
-                  class="form-control"
-                  #NormalPricePackage_DirectRequestPrice="ngModel"
+                <!--                <input-->
+                <!--                  class="form-control"-->
+                <!--                  #NormalPricePackage_DirectRequestPrice="ngModel"-->
+                <!--                  id="NormalPricePackage_DirectRequestPrice"-->
+                <!--                  name="directRequestPrice"-->
+                <!--                  type="number"-->
+                <!--                  step="0.01"-->
+                <!--                  min="1"-->
+                <!--                  [(ngModel)]="normalPricePackage.directRequestPrice"-->
+                <!--                  required-->
+                <!--                />-->
+                <dx-number-box
+                  class="form-control p-0"
                   id="NormalPricePackage_DirectRequestPrice"
                   name="directRequestPrice"
-                  type="number"
+                  [(value)]="normalPricePackage.directRequestPrice"
+                  [showSpinButtons]="true"
                   step="0.01"
                   min="1"
-                  [(ngModel)]="normalPricePackage.directRequestPrice"
                   required
-                />
+                >
+                  <dx-validator [validationGroup]="'normalPricePackage'">
+                    <dxi-validation-rule
+                      type="required"
+                      message="{{ 'DirectRequestPrice' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                    ></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="async"
+                      [validationCallback]="minPriceComparison"
+                      message="{{ 'DirectRequestPrice' | localize }}: {{ 'MinValueMustBeAtLeast{1}' | localize: 1 }}"
+                    ></dxi-validation-rule>
+                  </dx-validator>
+                </dx-number-box>
                 <div class="input-group-append">
                   <span class="input-group-text">
                     {{ l('SAR') }}
@@ -115,21 +242,43 @@
                 </div>
               </div>
               <span class="form-text text-muted">{{ l('VatNotIncluded') }}</span>
-              <validation-messages [formCtrl]="NormalPricePackage_DirectRequestPrice"></validation-messages>
+              <!--              <validation-messages [formCtrl]="NormalPricePackage_DirectRequestPrice"></validation-messages>-->
             </div>
             <div class="col-md-6 form-group">
               <label>{{ l('MarketplaceRequestPrice') }} <span class="required-fileds">*</span></label>
               <div class="input-group date">
-                <input
-                  class="form-control"
-                  type="number"
+                <!--                <input-->
+                <!--                  class="form-control"-->
+                <!--                  type="number"-->
+                <!--                  step="0.01"-->
+                <!--                  min="1"-->
+                <!--                  name="marcketPlaceRequestPrice"-->
+                <!--                  id="marcketPlaceRequestPrice"-->
+                <!--                  [(ngModel)]="normalPricePackage.marcketPlaceRequestPrice"-->
+                <!--                  required-->
+                <!--                />-->
+                <dx-number-box
+                  class="form-control p-0"
+                  id="marcketPlaceRequestPrice"
+                  name="marcketPlaceRequestPrice"
+                  [(value)]="normalPricePackage.marcketPlaceRequestPrice"
+                  [showSpinButtons]="true"
                   step="0.01"
                   min="1"
-                  name="marcketPlaceRequestPrice"
-                  id="marcketPlaceRequestPrice"
-                  [(ngModel)]="normalPricePackage.marcketPlaceRequestPrice"
                   required
-                />
+                >
+                  <dx-validator [validationGroup]="'normalPricePackage'">
+                    <dxi-validation-rule
+                      type="required"
+                      message="{{ 'MarcketPlaceRequestPrice' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                    ></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="async"
+                      [validationCallback]="minPriceComparison"
+                      message="{{ 'MarcketPlaceRequestPrice' | localize }}: {{ 'MinValueMustBeAtLeast{1}' | localize: 1 }}"
+                    ></dxi-validation-rule>
+                  </dx-validator>
+                </dx-number-box>
                 <div class="input-group-append">
                   <span class="input-group-text">
                     {{ l('SAR') }}
@@ -143,16 +292,38 @@
             <div class="col-md-6 form-group">
               <label>{{ l('TachyonMSRequestPrice') }} <span class="required-fileds">*</span></label>
               <div class="input-group date">
-                <input
-                  class="form-control"
-                  name="tachyonMSRequestPrice"
+                <!--                <input-->
+                <!--                  class="form-control"-->
+                <!--                  name="tachyonMSRequestPrice"-->
+                <!--                  id="tachyonMSRequestPrice"-->
+                <!--                  [(ngModel)]="normalPricePackage.tachyonMSRequestPrice"-->
+                <!--                  type="number"-->
+                <!--                  step="0.01"-->
+                <!--                  min="1"-->
+                <!--                  required-->
+                <!--                />-->
+                <dx-number-box
+                  class="form-control p-0"
                   id="tachyonMSRequestPrice"
-                  [(ngModel)]="normalPricePackage.tachyonMSRequestPrice"
-                  type="number"
+                  name="tachyonMSRequestPrice"
+                  [(value)]="normalPricePackage.tachyonMSRequestPrice"
+                  [showSpinButtons]="true"
                   step="0.01"
                   min="1"
                   required
-                />
+                >
+                  <dx-validator [validationGroup]="'normalPricePackage'">
+                    <dxi-validation-rule
+                      type="required"
+                      message="{{ 'TachyonMSRequestPrice' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                    ></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="async"
+                      [validationCallback]="minPriceComparison"
+                      message="{{ 'TachyonMSRequestPrice' | localize }}: {{ 'MinValueMustBeAtLeast{1}' | localize: 1 }}"
+                    ></dxi-validation-rule>
+                  </dx-validator>
+                </dx-number-box>
                 <div class="input-group-append">
                   <span class="input-group-text">
                     {{ l('SAR') }}
@@ -163,19 +334,43 @@
             </div>
             <div class="col-md-6 form-group" *ngIf="normalPricePackage.isMultiDrop">
               <div class="right">
-                <label for="NormalPricePackage_PricePerExtraDrop">{{ 'PricePerExtraDrop' }}<span class="required-fileds"> *</span> </label>
+                <label for="NormalPricePackage_PricePerExtraDrop"
+                  >{{ 'PricePerExtraDrop' }}<span class="required-fileds" *ngIf="normalPricePackage.isMultiDrop"> *</span>
+                </label>
                 <div class="input-group date">
-                  <input
+                  <!--                  <input-->
+                  <!--                    id="NormalPricePackage_PricePerExtraDrop"-->
+                  <!--                    name="pricePerExtraDrop"-->
+                  <!--                    #NormalPricePackage_PricePerExtraDrop="ngModel"-->
+                  <!--                    class="form-control"-->
+                  <!--                    type="number"-->
+                  <!--                    step="0.01"-->
+                  <!--                    min="0"-->
+                  <!--                    [(ngModel)]="normalPricePackage.pricePerExtraDrop"-->
+                  <!--                    [required]="normalPricePackage.isMultiDrop"-->
+                  <!--                  />-->
+                  <dx-number-box
+                    class="form-control p-0"
                     id="NormalPricePackage_PricePerExtraDrop"
                     name="pricePerExtraDrop"
-                    #NormalPricePackage_PricePerExtraDrop="ngModel"
-                    class="form-control"
-                    type="number"
+                    [(value)]="normalPricePackage.pricePerExtraDrop"
+                    [showSpinButtons]="true"
                     step="0.01"
                     min="0"
-                    [(ngModel)]="normalPricePackage.pricePerExtraDrop"
-                    [required]="normalPricePackage.isMultiDrop"
-                  />
+                    [attr.required]="normalPricePackage.isMultiDrop"
+                  >
+                    <dx-validator [validationGroup]="'normalPricePackage'" *ngIf="normalPricePackage.isMultiDrop">
+                      <dxi-validation-rule
+                        type="required"
+                        message="{{ 'PricePerExtraDrop' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                      ></dxi-validation-rule>
+                      <dxi-validation-rule
+                        type="async"
+                        [validationCallback]="minPriceComparisonZero"
+                        message="{{ 'PricePerExtraDrop' | localize }}: {{ 'MinValueMustBeAtLeast{0}' | localize: 0 }}"
+                      ></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-number-box>
                   <div class="input-group-append">
                     <span class="input-group-text">
                       {{ l('SAR') }}
@@ -183,22 +378,37 @@
                   </div>
                 </div>
                 <span class="form-text text-muted">{{ l('VatNotIncluded') }}</span>
-                <validation-messages [formCtrl]="NormalPricePackage_PricePerExtraDrop"></validation-messages>
+                <!--                <validation-messages [formCtrl]="NormalPricePackage_PricePerExtraDrop"></validation-messages>-->
               </div>
             </div>
+          </div>
+          <div class="col-12 pt-4">
+            <dx-validation-summary validationGroup="normalPricePackage" id="normal-price-package"></dx-validation-summary>
           </div>
         </div>
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
-          <button
+          <!--          <button-->
+          <!--            type="submit"-->
+          <!--            class="btn btn-primary blue"-->
+          <!--            [disabled]="!normalPricePackageForm.form.valid"-->
+          <!--            [buttonBusy]="saving"-->
+          <!--            [busyText]="l('SavingWithThreeDot')"-->
+          <!--          >-->
+          <!--            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>-->
+          <!--          </button>-->
+          <dx-button
             type="submit"
-            class="btn btn-primary blue"
-            [disabled]="!normalPricePackageForm.form.valid"
+            class="btn btn-primary blue font-weight-bold py-3 px-3 no-padding-custom"
+            icon="fa fa-save"
+            text="{{ l('Save') }}"
+            [disabled]="saving"
+            [useSubmitBehavior]="true"
+            [validationGroup]="'normalPricePackage'"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >
-            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-          </button>
+          </dx-button>
         </div>
       </form>
     </div>
