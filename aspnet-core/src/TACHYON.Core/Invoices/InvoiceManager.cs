@@ -6,6 +6,7 @@ using Abp.Domain.Uow;
 using Abp.Net.Mail;
 using Abp.Quartz;
 using Abp.Timing;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using Quartz;
 using System;
@@ -437,6 +438,7 @@ namespace TACHYON.Invoices
                 TaxVat = trips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
                 AccountType = InvoiceAccountType.AccountReceivable,
                 Channel = InvoiceChannel.Trip,
+                Status = InvoiceStatus.Drafted,
                 Trips = trips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
             };
             invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
@@ -445,6 +447,24 @@ namespace TACHYON.Invoices
             {
                 trip.IsShipperHaveInvoice = true;
             }
+            
+        }
+
+        // ToDo: Add Permission for Tms/Host only
+        public async Task ConfirmInvoice(long invoiceId)
+        {
+            DisableTenancyFilters();
+
+            Invoice invoice = await _invoiceRepository.GetAll().Include(x => x.InvoicePeriodsFK)
+                .Include(x => x.Tenant)
+                .FirstOrDefaultAsync(x => x.Id == invoiceId);
+            
+            // todo add message here
+            if (invoice is null) throw new UserFriendlyException(L("InvoiceNotFound"));
+
+            Tenant tenant = invoice.Tenant;
+            InvoicePeriod period = invoice.InvoicePeriodsFK;
+            decimal totalAmount = invoice.TotalAmount;
 
             if (period.PeriodType == InvoicePeriodType.PayInAdvance)
             {
@@ -458,9 +478,9 @@ namespace TACHYON.Invoices
 
 
             await _balanceManager.CheckShipperOverLimit(tenant);
+            invoice.Status = InvoiceStatus.Confirmed;
             await _appNotifier.NewInvoiceShipperGenerated(invoice);
         }
-
 
         public async Task CorrectShipperInvoice(int invoiceId)
         {

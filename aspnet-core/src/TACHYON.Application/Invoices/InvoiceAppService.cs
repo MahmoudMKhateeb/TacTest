@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
@@ -26,6 +26,7 @@ using TACHYON.Cities.Dtos;
 using TACHYON.Common;
 using TACHYON.Configuration;
 using TACHYON.DataExporting;
+using TACHYON.DataFilters;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
 using TACHYON.DynamicInvoices;
@@ -109,6 +110,7 @@ namespace TACHYON.Invoices
             if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
             {
                 DisableTenancyFilters();
+                CurrentUnitOfWork.DisableFilter(TACHYONDataFilters.HaveInvoiceStatus);
             }
 
             return await LoadResultAsync<InvoiceListDto>(query, filter);

@@ -16,6 +16,7 @@ using TACHYON.Cities;
 using TACHYON.Cities.CitiesTranslations;
 using TACHYON.Countries;
 using TACHYON.Countries.CountriesTranslations;
+using TACHYON.DataFilters;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
@@ -319,6 +320,8 @@ namespace TACHYON.EntityFrameworkCore
 
         protected virtual bool IsDraftedFilterEnabled =>
             CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsDrafted") == true;
+        protected virtual bool IsInvoiceStatusFilterEnabled =>
+            CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(TACHYONDataFilters.HaveInvoiceStatus) == true;
 
         #region Mobile
 
@@ -345,7 +348,11 @@ namespace TACHYON.EntityFrameworkCore
             {
                 return true;
             }
-            else if (typeof(IHasIsDrafted).IsAssignableFrom(typeof(TEntity)))
+            if (typeof(IHasIsDrafted).IsAssignableFrom(typeof(TEntity)))
+            {
+                return true;
+            }
+            if (typeof(IHaveInvoiceStatus).IsAssignableFrom(typeof(TEntity)))
             {
                 return true;
             }
@@ -370,6 +377,13 @@ namespace TACHYON.EntityFrameworkCore
                     ((IHasIsDrafted)e).IsDrafted == CurrentIsDrafted ||
                     (((IHasIsDrafted)e).IsDrafted == CurrentIsDrafted) == IsDraftedFilterEnabled;
                 expression = expression == null ? mayHaveOUFilter : CombineExpressions(expression, mayHaveOUFilter);
+            }
+            else if (typeof(IHaveInvoiceStatus).IsAssignableFrom(typeof(TEntity)))
+            {
+                Expression<Func<TEntity, bool>> mustHaveInvoiceStatus = e =>
+                    ((IHaveInvoiceStatus)e).Status == InvoiceStatus.Confirmed ||
+                    (((IHaveInvoiceStatus)e).Status == InvoiceStatus.Confirmed) == IsInvoiceStatusFilterEnabled;
+                expression = expression == null ? mustHaveInvoiceStatus : CombineExpressions(expression, mustHaveInvoiceStatus);
             }
 
             return expression;

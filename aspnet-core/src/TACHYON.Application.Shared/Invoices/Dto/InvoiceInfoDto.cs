@@ -35,6 +35,8 @@ namespace TACHYON.Invoices.Dto
         public string QRCode { get; set; }
         public InvoiceChannel Channel { get; set; }
 
+        public InvoiceStatus Status { get; set; }
+
         public List<InvoiceItemDto> Items { get; set; }
 
         /// <summary>
