@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using System.Linq;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 
@@ -12,7 +13,7 @@ namespace TACHYON.AutoMapper.Shipping
             CreateMap<ShippingRequest, ShippingRequestListDto>()
                 .ForMember(dst => dst.Tenant, opt => opt.MapFrom(src => src.Tenant.Name))
                 .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
-                .ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
+                .ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities.First().CityFk.DisplayName))
                 .ForMember(dst => dst.RouteType,
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestRouteType), src.RouteTypeId)));
 
@@ -24,9 +25,9 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dest => dest.VasCount, opt => opt.MapFrom(src => src.ShippingRequestVases.Count))
                 .ForMember(dest => dest.OriginalCityName, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
                 .ForMember(dest => dest.OriginalCityId, opt => opt.MapFrom(src => src.OriginCityFk.Id))
-                .ForMember(dest => dest.DestinationCityName,
-                    opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
-                .ForMember(dest => dest.DestinationCityId, opt => opt.MapFrom(src => src.DestinationCityFk.Id))
+                //.ForMember(dest => dest.DestinationCityName,
+                //    opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
+                .ForMember(dest => dest.DestinationCitiesDtos, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities))
                 .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Name))
                 //.ForMember(dest => dest.GoodsCategoryName, opt => opt.MapFrom(src => src.GoodCategoryFk.DisplayName))
                 .ForMember(dest => dest.RoutTypeName,
@@ -48,7 +49,7 @@ namespace TACHYON.AutoMapper.Shipping
             CreateMap<ShippingRequest, GetShippingRequestForPricingOutput>()
                 .ForMember(dst => dst.Shipper, opt => opt.MapFrom(src => src.Tenant.Name))
                 .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
-                .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
+                .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities.First().CityFk.DisplayName))
                 .ForMember(dst => dst.RangeDate,
                     opt => opt.MapFrom(src => GetDateRange(src.StartTripDate, src.EndTripDate)));
 
@@ -59,11 +60,7 @@ namespace TACHYON.AutoMapper.Shipping
 
             CreateMap<ShippingRequest, CreateOrEditShippingRequestStep1Dto>();
 
-            CreateMap<EditShippingRequestStep2Dto, ShippingRequest>()
-                .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
-                .ForMember(dest => dest.DraftStep, opt => opt.Ignore());
-
-            CreateMap<ShippingRequest, EditShippingRequestStep2Dto>();
+            //EditShippingRequestStep2Dto moved to customDtoMapper due to ShippingRequestCityList
 
             CreateMap<EditShippingRequestStep3Dto, ShippingRequest>()
                 .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
@@ -71,6 +68,10 @@ namespace TACHYON.AutoMapper.Shipping
 
             CreateMap<ShippingRequest, EditShippingRequestStep3Dto>();
 
+            CreateMap<ShippingRequestDestinationCity, ShippingRequestDestinationCitiesDto>()
+                .ForMember(dst => dst.CityName, opt => opt.MapFrom(src => src.CityFk.DisplayName));
+
+            CreateMap<ShippingRequestDestinationCitiesDto, ShippingRequestDestinationCity>();
             //EditShippingRequestStep4Dto in CustomDtoMapper
         }
 

@@ -2822,6 +2822,7 @@
 		<text name="Tracking">تتبع الشحنات</text>
 		<text name="FromTemplate">من قالب</text>
 		<text name="SelectATemplate">أختر قالب</text>
-
-  </texts>
+    <text name="OneDestinationCityAllowed">الرجاء إدخال مدينة وصول واحدة</text>
+    
+	</texts>
 </localizationDictionary>

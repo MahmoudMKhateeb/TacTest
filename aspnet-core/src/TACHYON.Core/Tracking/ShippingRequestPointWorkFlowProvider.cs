@@ -491,12 +491,12 @@ namespace TACHYON.Tracking
                 .FirstOrDefaultAsync(x => !x.IsReset && x.PointId == pointId);
 
 
-            if (lastTranstion != null)
-            {
-                var minutes = (Clock.Now - lastTranstion.CreationTime).TotalMinutes;
-                if (minutes < 1)
-                    throw new UserFriendlyException(L("YouCanNotChangeTheStatusMultipleTimes"));
-            }
+            //if (lastTranstion != null)
+            //{
+            //    var minutes = (Clock.Now - lastTranstion.CreationTime).TotalMinutes;
+            //    if (minutes < 1)
+            //        throw new UserFriendlyException(L("YouCanNotChangeTheStatusMultipleTimes"));
+            //}
             
         }
 

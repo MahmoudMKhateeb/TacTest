@@ -95,7 +95,7 @@ namespace TACHYON.Tracking
                     x => x.StartTripDate >= input.FromDate.Value && x.StartTripDate <= input.ToDate.Value)
                 .WhereIf(input.OriginId.HasValue, x => x.ShippingRequestFk.OriginCityId == input.OriginId)
                 .WhereIf(input.DestinationId.HasValue,
-                    x => x.ShippingRequestFk.DestinationCityId == input.DestinationId)
+                    x => x.ShippingRequestFk.ShippingRequestDestinationCities.Any(y=>y.CityId == input.DestinationId))
                 .WhereIf(input.RouteTypeId.HasValue, x => x.ShippingRequestFk.RouteTypeId == input.RouteTypeId)
                 .WhereIf(input.TruckTypeId.HasValue, x => x.ShippingRequestFk.TrucksTypeId == input.TruckTypeId)
                 .WhereIf(input.Status.HasValue, x => x.Status == input.Status)

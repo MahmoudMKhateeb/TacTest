@@ -9,6 +9,7 @@ import {
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
+  ShippingRequestDestinationCitiesDto,
   ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
@@ -22,10 +23,9 @@ import { finalize } from '@node_modules/rxjs/operators';
   styleUrls: ['./points.component.scss'],
 })
 export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy {
-  // @Output() SelectedWayPointsFromChild = this.wayPointsList;
-  @Output() wayPointsListChanged: EventEmitter<any> = new EventEmitter<any>();
-
-  cityDestId: number;
+  shippingRequestId: number;
+  DestCitiesDtos: ShippingRequestDestinationCitiesDto[];
+  SRDestionationCity: number;
   allFacilities: FacilityForDropdownDto[];
   pickupFacilities: FacilityForDropdownDto[];
   dropFacilities: FacilityForDropdownDto[];
@@ -99,7 +99,10 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     }
     if (this.shippingRequestForView.shippingRequest.id != null) {
       this._tripService.currentShippingRequest.subscribe((res) => {
-        this.shippingRequestForView = res;
+        this.citySourceId = res.originalCityId;
+        this.DestCitiesDtos = res.destinationCitiesDtos;
+        this.pointsCount = res.shippingRequest.numberOfDrops;
+        this.shippingType = res.shippingRequest.shippingTypeId;
       });
     }
     this._routStepsServiceProxy
@@ -111,8 +114,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       )
       .subscribe((result) => {
         this.allFacilities = result;
-        this.pickupFacilities = result.filter((r) => r.cityId == this.shippingRequestForView.originalCityId);
-        this.dropFacilities = result.filter((r) => r.cityId == this.shippingRequestForView.destinationCityId);
+        this.pickupFacilities = result.filter((r) => r.cityId == this.citySourceId);
+        this.dropFacilities = result.filter((r) => this.DestCitiesDtos.some((y) => y.cityId == r.cityId));
       });
   }
 
@@ -202,7 +205,11 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     //get some Stuff from ShippingRequest Dto
     this.tripSourceFacilitySub$ = this._tripService.currentShippingRequest.subscribe((res) => {
       if (res.shippingRequest) {
-        this.shippingRequestForView = res;
+        this.RouteType = res.shippingRequest.routeTypeId;
+        this.NumberOfDrops = res.shippingRequest.numberOfDrops;
+        this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
+        this.shippingRequestId = res.shippingRequest.id;
+        //this.SRDestionationCity = res.destinationCityId;
       }
     });
 

@@ -193,6 +193,7 @@ namespace TACHYON.PricePackages
         {
             DisableTenancyFilters();
             var shippingRequest = await _shippingRequestRepository.GetAll()
+                .Include(x=>x.ShippingRequestDestinationCities)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == input.ShippingRequestId);
 
@@ -202,8 +203,10 @@ namespace TACHYON.PricePackages
                 .GetAll().AsNoTracking()
                 .WhereIf(input.CarrierId.HasValue, x => x.TenantId == input.CarrierId)
                 .Where(p => p.TrucksTypeId == shippingRequest.TrucksTypeId
-                && p.OriginCityId == shippingRequest.OriginCityId
-                && p.DestinationCityId == shippingRequest.DestinationCityId);
+                && p.OriginCityId == shippingRequest.OriginCityId)
+                .WhereIf(shippingRequest.ShippingRequestDestinationCities.Count() == 1, p =>
+                shippingRequest.ShippingRequestDestinationCities.First().CityId == p.DestinationCityId);
+              //  && shippingRequest.ShippingRequestDestinationCities.Any(x=>x.CityId == p.DestinationCityId));
 
             var pagedAndFilteredPricePackages = filteredPricePackages
                 .OrderBy(input.Sorting ?? "id desc")

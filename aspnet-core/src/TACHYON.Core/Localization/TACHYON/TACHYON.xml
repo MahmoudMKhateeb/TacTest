@@ -3059,6 +3059,7 @@
 		<text name="ViewPricePackageDetails">View Price Package Details</text>
 		<text name="FromTemplate">From Template</text>
 		<text name="SelectATemplate">Select a template</text>
+    <text name="OneDestinationCityAllowed">One Destination City Allowed</text>
 
 	</texts>
 </localizationDictionary>

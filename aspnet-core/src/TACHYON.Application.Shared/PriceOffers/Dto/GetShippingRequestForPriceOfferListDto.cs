@@ -1,7 +1,9 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Domain.Entities.Auditing;
 using System;
+using System.Collections.Generic;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequests.Dtos;
 
 namespace TACHYON.PriceOffers.Dto
 {
@@ -59,6 +61,8 @@ namespace TACHYON.PriceOffers.Dto
 
         public bool IsDrafted { get; set; }
         public int NotesCount { get; set; }
+
+        public List<ShippingRequestDestinationCitiesDto> destinationCities { get; set; }
 
         /// <summary>
         /// shipper Id 

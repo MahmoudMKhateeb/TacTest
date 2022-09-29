@@ -26,6 +26,7 @@ using TACHYON.AddressBook;
 using TACHYON.AddressBook.Ports;
 using TACHYON.Authorization;
 using TACHYON.Cities;
+using TACHYON.Cities.Dtos;
 using TACHYON.Common;
 using TACHYON.Documents;
 using TACHYON.Dto;
@@ -105,7 +106,8 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<PriceOffer, long> priceOfferRepository,
             IEntityChangeSetReasonProvider reasonProvider,
             NormalPricePackageManager normalPricePackageManager,
-            SrPostPriceUpdateManager postPriceUpdateManager)
+            SrPostPriceUpdateManager postPriceUpdateManager,
+            IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -136,6 +138,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _reasonProvider = reasonProvider;
             _normalPricePackageManager = normalPricePackageManager;
             _postPriceUpdateManager = postPriceUpdateManager;
+            _shippingRequestDestinationCityRepository = shippingRequestDestinationCityRepository;
         }
 
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
@@ -167,6 +170,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
         private readonly NormalPricePackageManager _normalPricePackageManager;
+        private readonly IRepository<ShippingRequestDestinationCity> _shippingRequestDestinationCityRepository;
 
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
@@ -178,7 +182,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 .AsNoTracking()
                 .Include(t => t.Tenant)
                 .Include(x => x.OriginCityFk)
-                .Include(x => x.DestinationCityFk)
+                .Include(x => x.ShippingRequestDestinationCities)
+                .ThenInclude(x=>x.CityFk)
                 .WhereIf(Input.IsBid.HasValue, e => e.IsBid == Input.IsBid.Value)
                 .WhereIf(Input.Status.HasValue, e => e.Status == Input.Status.Value)
                 .WhereIf(Input.IsPricedWihtoutTrips.HasValue,
@@ -316,12 +321,18 @@ namespace TACHYON.Shipping.ShippingRequests
             }
 
             var shippingRequest = await GetDraftedShippingRequest(input.Id);
+
+            //if request between cities and single drop
+            ValidateDestinationCities(input, shippingRequest);
+
             if (shippingRequest.DraftStep < 2)
             {
                 shippingRequest.DraftStep = 2;
             }
 
             ObjectMapper.Map(input, shippingRequest);
+            //add new or remove destinaton cities
+            await AddOrRemoveDestinationCities(input, shippingRequest);
         }
 
         public async Task<EditShippingRequestStep2Dto> GetStep2ForEdit(EntityDto<long> entity)
@@ -426,6 +437,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 shippingRequest = await _shippingRequestRepository.GetAll()
                     .Include(x => x.ShippingRequestVases)
+                    .Include(x=>x.ShippingRequestDestinationCities)
                  .Where(x => x.Id == id && x.IsDrafted == true)
                  .FirstOrDefaultAsync();
             }
@@ -508,6 +520,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 DisableTenancyFilters();
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                    .Include(x=>x.ShippingRequestDestinationCities)
                     .WhereIf(await IsTachyonDealer(), x => x.IsTachyonDeal == true)
                   .Where(x => x.Id == id && x.IsDrafted == true)
                   .FirstOrDefaultAsync();
@@ -764,7 +777,6 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.Tenant)
                     .Include(e => e.ShippingRequestBids)
                     .Include(e => e.OriginCityFk)
-                    .Include(e => e.DestinationCityFk)
                     .Include(e => e.AssignedDriverUserFk)
                     .Include(e => e.AssignedTruckFk)
                     .ThenInclude(e => e.TrucksTypeFk)
@@ -780,6 +792,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.PackingTypeFk)
                     .ThenInclude(v => v.Translations)
                     .Include(e => e.CarrierTenantFk)
+                    .Include(x=>x.ShippingRequestDestinationCities)
+                    .ThenInclude(x=>x.CityFk)
                     .FirstOrDefaultAsync();
 
                 bool isShipper = await IsEnabledAsync(AppFeatures.Shipper);
@@ -861,6 +875,21 @@ namespace TACHYON.Shipping.ShippingRequests
                 output.GoodsCategoryName =
                     ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
 
+
+                //fill dest city list
+                var index = 1;
+                foreach(var destCity in shippingRequest.ShippingRequestDestinationCities)
+                {
+                    if (index == 1)
+                    {
+                        output.DestinationCityName = destCity.CityFk.DisplayName;
+                    }
+                    else
+                    {
+                        output.DestinationCityName = output.DestinationCityName + ", " + destCity.CityFk.DisplayName;
+                    }
+                    index++;
+                }
 
 
                 //return translated Packing Type name by current language
@@ -1019,18 +1048,6 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-        private async Task SendNotificationToCarriersWithTheSameTrucks(ShippingRequest shippingRequest)
-        {
-            if (shippingRequest.BidStatus == ShippingRequestBidStatus.OnGoing)
-            {
-                UserIdentifier[] users =
-                    await _bidDomainService.GetCarriersByTruckTypeArrayAsync(shippingRequest.TrucksTypeId.Value);
-                await _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, shippingRequest.Id);
-
-                var carriers = await _normalPricePackageManager.GetCarriersMatchingPricePackages(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId);
-                await _appNotifier.ShippingRequestAsBidWithMatchingPricePackage(carriers, shippingRequest.ReferenceNumber, shippingRequest.Id);
-            }
-        }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)
@@ -1798,6 +1815,38 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Select(x => x.FacilityFk)
                 .FirstOrDefault();
             return pickupFacility;
+        }
+
+        private async Task AddOrRemoveDestinationCities(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
+        {
+            foreach (var destinationCity in input.ShippingRequestDestinationCities)
+            {
+                destinationCity.ShippingRequestId = shippingRequest.Id;
+                var exists = await _shippingRequestDestinationCityRepository.GetAll().AnyAsync(c => c.CityId == destinationCity.CityId &&
+                c.ShippingRequestId == destinationCity.ShippingRequestId);
+
+                if (!exists)
+                {
+                    if (shippingRequest.ShippingRequestDestinationCities == null) shippingRequest.ShippingRequestDestinationCities = new List<ShippingRequestDestinationCity>();
+                    shippingRequest.ShippingRequestDestinationCities.Add(ObjectMapper.Map<ShippingRequestDestinationCity>(destinationCity));
+                }
+            }
+            //remove uncoming destination cities
+            foreach (var destinationCity in shippingRequest.ShippingRequestDestinationCities)
+            {
+                if (!input.ShippingRequestDestinationCities.Any(x => x.CityId == destinationCity.CityId))
+                {
+                    await _shippingRequestDestinationCityRepository.DeleteAsync(destinationCity);
+                }
+            }
+        }
+
+        private void ValidateDestinationCities(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.ShippingTypeId == 2 && input.RouteTypeId == ShippingRequestRouteType.SingleDrop && input.ShippingRequestDestinationCities.Count > 1)
+            {
+                throw new UserFriendlyException(L("OneDestinationCityAllowed"));
+            }
         }
     }
 }

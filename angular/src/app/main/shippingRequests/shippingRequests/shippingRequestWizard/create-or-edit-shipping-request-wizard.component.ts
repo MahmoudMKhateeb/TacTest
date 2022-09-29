@@ -34,6 +34,7 @@ import {
   SavedEntityType,
   SelectItemDto,
   ShippersForDropDownDto,
+  ShippingRequestDestinationCitiesDto,
   ShippingRequestRouteType,
   ShippingRequestsServiceProxy,
   ShippingRequestVasListOutput,
@@ -120,7 +121,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   public allCarriers: CarriersForDropDownDto[];
   isCarrierSass = false;
   sourceCities: TenantCityLookupTableDto[];
-  destinationCities: TenantCityLookupTableDto[];
+  destinationCities: ShippingRequestDestinationCitiesDto[] = [];
   citiesLoading = false;
   allCountries: CountyDto[];
   originCountry: number;
@@ -542,6 +543,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
 
   loadCitiesByCountryId(countryId: number, type: 'source' | 'destination') {
+    this.step2Dto.shippingRequestDestinationCities = [];
+    this.destinationCities = [];
     this.citiesLoading = true;
     this._countriesServiceProxy
       .getAllCitiesForTableDropdown(countryId)
@@ -551,12 +554,24 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         })
       )
       .subscribe((res) => {
-        type === 'source' ? (this.sourceCities = res) : (this.destinationCities = res);
+        type === 'source' ? (this.sourceCities = res) : this.loadDestinationCities(res);
         if (this.step1Dto.shippingTypeId == 2) {
-          this.sourceCities = this.destinationCities = res;
+          this.sourceCities = res;
           // this.step2Dto.originCityId = this.step2Dto.destinationCityId = null;
+          this.loadDestinationCities(res);
         }
       });
+  }
+
+  private loadDestinationCities(res: TenantCityLookupTableDto[]) {
+    if (isNotNullOrUndefined(res)) {
+      res.forEach((element) => {
+        var item = new ShippingRequestDestinationCitiesDto();
+        item.cityId = Number(element.id);
+        item.cityName = element.displayName;
+        this.destinationCities.push(item);
+      });
+    }
   }
 
   loadTruckandCapacityForEdit() {
@@ -751,16 +766,25 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    */
   validateShippingRequestType() {
     //check if user choose local-inside city  but the origin&des same
-    if (this.step1Dto.shippingTypeId == 1) {
+    if (this.step2Dto.originCityId != null && this.step1Dto.shippingTypeId == 1) {
+      this.step2Dto.shippingRequestDestinationCities = [];
       //local inside city
       this.destinationCountry = this.originCountry;
-      this.destinationCities = this.sourceCities;
-      this.step2Dto.destinationCityId = this.step2Dto.originCityId;
+      var city = new ShippingRequestDestinationCitiesDto();
+      city.cityId = this.step2Dto.originCityId;
+
+      this.step2Dto.shippingRequestDestinationCities.push(city);
     } else if (this.step1Dto.shippingTypeId == 2) {
       // if route type is local betwenn cities check if user select same city in source and destination
       // this.destinationCities = this.sourceCities;
       this.destinationCountry = this.originCountry;
-      if (this.step2Dto.originCityId == this.step2Dto.destinationCityId) {
+
+      //if destination city one item selected and equals to origin, while shipping type is between cities
+      if (
+        isNotNullOrUndefined(this.step2Dto.shippingRequestDestinationCities) &&
+        this.step2Dto.shippingRequestDestinationCities.length == 1 &&
+        this.step2Dto.shippingRequestDestinationCities.filter((c) => c.cityId == this.step2Dto.originCityId).length > 0
+      ) {
         this.step2Form.controls['destinationCity'].setErrors({ invalid: true });
         this.step2Form.controls['destinationCountry'].setErrors({ invalid: true });
       } else if (this.originCountry !== this.destinationCountry) {
@@ -795,7 +819,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    * resets step2 inputs if the Route Type Change
    */
   resetStep2Inputs() {
-    this.step2Dto.destinationCityId = this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
+    this.step2Dto.shippingRequestDestinationCities = [];
+    this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
     this.clearValidation('originCity');
     this.clearValidation('destinationCity');
     this.clearValidation('originCountry');
@@ -922,5 +947,12 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       },
       queryParamsHandling: 'merge',
     });
+  }
+
+  routeTypeChanged() {
+    if (this.step2Dto.routeTypeId == 1) this.step2Dto.numberOfDrops = 1;
+    else this.step2Dto.numberOfDrops = undefined;
+
+    if (this.step1Dto.shippingTypeId != 1) this.step2Dto.shippingRequestDestinationCities = [];
   }
 }

@@ -24,6 +24,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public bool IsTachyonDeal { get; set; }
         public string OriginCity { get; set; }
         public string DestinationCity { get; set; }
+        public List<ShippingRequestDestinationCitiesDto> DestinationCities { get; set; }
         public string TrukType { get; set; }
         public bool IsPriced { get; set; }
         public string RangeDate { get; set; }
