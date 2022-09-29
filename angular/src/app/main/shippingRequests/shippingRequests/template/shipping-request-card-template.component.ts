@@ -291,7 +291,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   }
 
   refresh() {
-    this.Items = [];
+    this.items = [];
     this.LoadData();
   }
 }

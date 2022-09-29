@@ -284,22 +284,14 @@
                         </shipping-request-offers-list>
                       </div>
 
-                      <div *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
+                      <div *ngIf="feature.isEnabled('App.Shipper') || (feature.isEnabled('App.TachyonDealer') && item.isTachyonDeal)">
                         <TripsForViewShippingRequest
+                          #tripsForViewShippingRequest
                           *ngIf="item.id && bidsLoading == false"
                           [ShippingRequest]="item"
                           [VasListFromFather]="undefined"
                         ></TripsForViewShippingRequest>
                       </div>
-
-                  <div *ngIf="feature.isEnabled('App.Shipper') || (feature.isEnabled('App.TachyonDealer') && item.isTachyonDeal)">
-                    <TripsForViewShippingRequest
-                      #tripsForViewShippingRequest
-                      *ngIf="item.id && bidsloading == false"
-                      [ShippingRequest]="item"
-                      [VasListFromFather]="undefined"
-                    ></TripsForViewShippingRequest>
-                  </div>
                       <div class="col-lg-12 mt-5 pl-0 pr-0">
                         <agm-map
                           minZoom="5"

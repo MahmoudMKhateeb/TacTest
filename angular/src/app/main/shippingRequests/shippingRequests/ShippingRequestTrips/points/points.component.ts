@@ -1,5 +1,5 @@
 /* tslint:disable:triple-equals */
-import { Component, Injector, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CreateOrEditRoutPointDto,

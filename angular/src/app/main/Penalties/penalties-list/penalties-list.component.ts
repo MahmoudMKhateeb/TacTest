@@ -17,11 +17,13 @@ import { ActivatedRoute } from '@angular/router';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ViewComplaintModalComponent } from '@app/main/Penalties/penalties-list/view-complaint/view-complaint-modal.component';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 @Component({
   selector: 'app-penalties-list',
   templateUrl: './penalties-list.component.html',
   providers: [EnumToArrayPipe],
+  animations: [appModuleAnimation()],
 })
 export class PenaltiesListComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
