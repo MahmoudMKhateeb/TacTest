@@ -1,7 +1,7 @@
 ﻿import { Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActorDto, ActorsServiceProxy, ActorTypesEnum, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
-import { NotifyService } from 'abp-ng2-module';
+import { LogService, NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { CreateOrEditActorModalComponent } from './create-or-edit-actor-modal.component';
 
@@ -96,12 +96,37 @@ export class ActorsComponent extends AppComponentBase {
   }
 
   generateInvoice(actor: any) {
+    // abp.event.on('error', (error)=> {
+    //   console.log('hi 1');
+    //   this.notify.error(error.message);
+    // })
+    // abp.event.on('ERROR', (error)=> {
+    //   console.log('hi 2');
+
+    //   this.notify.error(error.message);
+    // })
+
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
-        this._actorsServiceProxy.generateShipperInvoices(actor.id).subscribe(() => {
-          this.reloadPage();
-          this.notify.success(this.l('Success'));
-        });
+        if (actor.actorType == ActorTypesEnum.Shipper) {
+          this._actorsServiceProxy.generateShipperInvoices(actor.id).subscribe((result) => {
+            if (result) {
+              this.reloadPage();
+              this.notify.success(this.l('Success'));
+            } else {
+              this.notify.error(this.l('NoTripsToGenerate'));
+            }
+          });
+        } else {
+          this._actorsServiceProxy.generateCarrierInvoices(actor.id).subscribe((result) => {
+            if (result) {
+              this.reloadPage();
+              this.notify.success(this.l('Success'));
+            } else {
+              this.notify.error(this.l('NoTripsToGenerate'));
+            }
+          });
+        }
       }
     });
   }

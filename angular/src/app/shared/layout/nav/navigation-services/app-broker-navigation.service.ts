@@ -112,6 +112,16 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
           ),
           new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', '', '/app/main/invoices/transaction'),
           new AppMenuItem('ActorInvoicesList', 'Pages.Invoices', '', '/app/admin/actors/invoices', undefined, undefined, undefined, undefined),
+          new AppMenuItem(
+            'ActorCarrierInvoicesList',
+            'Pages.Invoices',
+            '',
+            '/app/admin/actors/carrierInvoices',
+            undefined,
+            undefined,
+            undefined,
+            undefined
+          ),
         ]
       ),
       // end of  Invoices

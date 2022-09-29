@@ -91,6 +91,7 @@ import { DxButtonModule } from '@node_modules/devextreme-angular';
 import { BalanceTopbarComponent } from './shared/layout/topbar/balance-topbar/balance-topbar.component';
 import { RatingPageComponent } from './rating-page/rating-page.component';
 import { RatingModule } from '@node_modules/primeng/rating';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @NgModule({
   declarations: [
@@ -185,6 +186,7 @@ import { RatingModule } from '@node_modules/primeng/rating';
     LinkedAccountService,
     UserNotificationHelper,
     ChatSignalrService,
+    EnumToArrayPipe,
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,

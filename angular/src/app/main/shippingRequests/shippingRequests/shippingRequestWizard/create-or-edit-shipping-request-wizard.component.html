@@ -97,18 +97,19 @@
                       </div>
                       <span class="form-text text-muted">{{ l('SelectShipper') }} {{ step1Dto.shipperId }}</span>
                     </div>
+                    <div *ngIf="this.feature.isEnabled('App.ShipperClients') && this.feature.isEnabled('App.CarrierClients')">
+                      <h2 class="font-size-lg text-dark font-weight-bold mb-6">{{ l('Broker:') }}</h2>
 
-                    <h2 class="font-size-lg text-dark font-weight-bold mb-6">{{ l('Broker:') }}</h2>
-
-                    <div class="form-group row">
-                      <label class="col-3 col-form-label">{{ l('IsInternalBrokerRequest') }} </label>
-                      <div class="col-3">
-                        <span class="switch switch-icon">
-                          <label>
-                            <input type="checkbox" [(ngModel)]="step1Dto.isInternalBrokerRequest" formControlName="IsInternalBrokerRequest" />
-                            <span></span>
-                          </label>
-                        </span>
+                      <div class="form-group row">
+                        <label class="col-3 col-form-label">{{ l('IsInternalBrokerRequest') }} </label>
+                        <div class="col-3">
+                          <span class="switch switch-icon">
+                            <label>
+                              <input type="checkbox" [(ngModel)]="step1Dto.isInternalBrokerRequest" formControlName="IsInternalBrokerRequest" />
+                              <span></span>
+                            </label>
+                          </span>
+                        </div>
                       </div>
                     </div>
 

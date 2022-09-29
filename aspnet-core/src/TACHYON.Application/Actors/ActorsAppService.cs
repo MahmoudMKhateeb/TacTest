@@ -253,9 +253,16 @@ namespace TACHYON.Actors
         }
 
 
-        public async Task GenerateShipperInvoices(int actorId)
+        public async Task<bool> GenerateShipperInvoices(int actorId)
         {
-            await _actorInvoicesManager.BuildActorShipperInvoices(actorId);
+            return await _actorInvoicesManager.BuildActorShipperInvoices(actorId);
+
+        }
+
+
+        public async Task<bool> GenerateCarrierInvoices(int actorId)
+        {
+            return await _actorInvoicesManager.BuildActorCarrierInvoices(actorId);
 
         }
 

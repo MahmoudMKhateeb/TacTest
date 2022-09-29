@@ -48,9 +48,9 @@
               id="Actor_ActorType"
               [(ngModel)]="actor.actorType"
             >
-              <option value="1">{{ l('Shipper') }}</option>
+              <option *ngIf="HaveShipperClients" value="1">{{ l('Shipper') }}</option>
 
-              <option value="2">{{ l('Carrier') }}</option>
+              <option *ngIf="HaveCarrierClients" value="2">{{ l('Carrier') }}</option>
             </select>
             <validation-messages [formCtrl]="Actor_ActorType"></validation-messages>
           </div>

@@ -164,5 +164,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         [ForeignKey("ActorInvoiceId")]
         public ActorInvoice ActorInvoiceFk { get; set; }
+
+        public long? ActorSubmitInvoiceId { get; set; }
+
+        [ForeignKey("ActorSubmitInvoiceId")]
+        public ActorSubmitInvoice ActorSubmitInvoiceFk { get; set; }
     }
 }

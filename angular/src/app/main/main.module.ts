@@ -315,6 +315,7 @@ import { InvoiceDynamicModalComponent } from '@app/main/Invoices/invoices-dynami
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { CalendarModule } from '@node_modules/primeng/calendar';
+import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/actor-submit-invoices.component';
 
 @NgModule({
   imports: [
@@ -599,6 +600,7 @@ import { CalendarModule } from '@node_modules/primeng/calendar';
     ActorsSubmittedDocumentsListComponent,
     CreateOrEditActorsPriceComponent,
     ActorInvoiceListComponent,
+    ActorSubmitInvoicesComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

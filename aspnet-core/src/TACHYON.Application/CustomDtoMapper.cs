@@ -896,6 +896,11 @@ namespace TACHYON
             .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
             .ForMember(dto => dto.ShipperActorName, options => options.MapFrom(entity => entity.ShipperActorFk.CompanyName));
 
+            configuration.CreateMap<ActorSubmitInvoice, ActorSubmitInvoiceListDto>()
+            .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
+            .ForMember(dto => dto.CarrierActorName, options => options.MapFrom(entity => entity.CarrierActorFk.CompanyName))
+            .ForMember(dto => dto.Status, options => options.MapFrom(entity => entity.Status.GetEnumDescription()));
+
 
         }
 

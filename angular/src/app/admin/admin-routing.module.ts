@@ -33,6 +33,7 @@ import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameter
 import { DriversComponent } from '@app/admin/users/drivers/drivers.component';
 import { waybillsComponent } from './waybills/waybills';
 import { ActorInvoiceListComponent } from '@app/main/Invoices/ActorInvoices/actor-invoice-list/actor-invoice-list.component';
+import { ActorSubmitInvoicesComponent } from '@app/main/Invoices/actor-submit-invoices/actor-submit-invoices.component';
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import { ActorInvoiceListComponent } from '@app/main/Invoices/ActorInvoices/acto
         children: [
           { path: 'actors/actors', component: ActorsComponent, data: { permission: 'Pages.Administration.Actors' } },
           { path: 'actors/invoices', component: ActorInvoiceListComponent, data: { permission: 'Pages.Administration.Actors' } },
+          { path: 'actors/carrierInvoices', component: ActorSubmitInvoicesComponent, data: { permission: 'Pages.Administration.Actors' } },
           { path: 'vases/vases', component: VasesComponent, data: { permission: 'Pages.Administration.Vases' } },
           { path: 'waybills/waybills', component: waybillsComponent, data: { permission: undefined } },
           {

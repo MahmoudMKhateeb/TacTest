@@ -38,6 +38,8 @@ export class CreateOrEditActorModalComponent extends AppComponentBase implements
   fileType: string;
   fileName: string;
   hasNewUpload: boolean;
+  HaveShipperClients: boolean;
+  HaveCarrierClients: boolean;
 
   /**
    * DocFileUploader onProgressItem progress
@@ -70,6 +72,8 @@ export class CreateOrEditActorModalComponent extends AppComponentBase implements
       this._documentFilesServiceProxy.getActorShipperRequiredDocumentFiles('').subscribe((result) => {
         this.actor.createOrEditDocumentFileDtos = result;
       });
+      this.HaveShipperClients = this.feature.isEnabled('App.ShipperClients');
+      this.HaveCarrierClients = this.feature.isEnabled('App.CarrierClients');
 
       this.active = true;
       this.modal.show();

@@ -200,7 +200,7 @@ namespace TACHYON.PriceOffers
 
         public async Task CreateOrEditActorCarrierPrice(CreateOrEditActorCarrierPriceInput input)
         {
-
+            input.ActorCarrierPriceDto.TaxVat = 15;
             var shippingRequest = await _shippingRequestRepository.GetAll()
           .Include(x => x.ShippingRequestTrips)
               .ThenInclude(t => t.ShippingRequestTripVases)

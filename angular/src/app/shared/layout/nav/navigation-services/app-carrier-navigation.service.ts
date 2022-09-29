@@ -63,6 +63,24 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       ),
       // end of Operations
       //  ---------------------------------------------------------------------------------------------------------------------
+      //Start Of AddressBook "Facilities Management"
+      new AppMenuItem(
+        'AddressBook',
+        '',
+        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('FacilitiesSetup', 'Pages.Facilities', '', '/app/main/addressBook/facilities'),
+          //TODO: Missing permission need to give host this permission Pages.Receivers
+          new AppMenuItem('ReceiversSetup', 'Pages.Facilities', '', '/app/main/receivers/receivers', undefined, undefined, undefined, undefined),
+        ],
+        //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
+        undefined,
+        undefined,
+        () => this.isEnabled('App.ShipperClients')
+      ),
+      //end  Of AddressBook  "Facilities Management"
       // start of PricePackages
       new AppMenuItem(
         'PricePackages',
@@ -129,6 +147,20 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
             () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
           ),
           new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', '', '/app/main/invoices/transaction'),
+          new AppMenuItem('ActorInvoicesList', 'Pages.Invoices', '', '/app/admin/actors/invoices', undefined, undefined, undefined, undefined, () =>
+            this.isEnabled('App.ShipperClients')
+          ),
+          new AppMenuItem(
+            'ActorCarrierInvoicesList',
+            'Pages.Invoices',
+            '',
+            '/app/admin/actors/invoices',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.CarrierClients')
+          ),
         ]
       ),
       // end of  Invoices
@@ -174,10 +206,34 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
           ),
+          new AppMenuItem(
+            'ActorsSubmittedDocuments',
+            'Pages.DocumentFiles',
+            '',
+            '/app/main/documentFiles/ActorsSubmittedDocuments',
+            [],
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.ShipperClients')
+          ),
         ],
         undefined,
         undefined
       ),
+      /////Start of Actors
+      new AppMenuItem(
+        'Actors',
+        'Pages.Administration.Actors',
+        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
+        '/app/admin/actors/actors',
+        [],
+        [],
+        undefined,
+        undefined,
+        () => this.isEnabled('App.ShipperClients')
+      ),
+      //end of actors
       //end of Documents
       //  ---------------------------------------------------------------------------------------------------------------------
       //start of Settings
