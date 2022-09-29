@@ -253,6 +253,9 @@ namespace TACHYON.Configuration
                     isVisibleToClients: true, scopes: SettingScopes.Application | SettingScopes.Tenant),
                 new SettingDefinition(AppSettings.UserManagement.UseGravatarProfilePicture,
                     GetFromAppSettings(AppSettings.UserManagement.UseGravatarProfilePicture, "false"),
+                    isVisibleToClients: true, scopes: SettingScopes.User),
+                new SettingDefinition(AppSettings.UserManagement.SubscribedNotificationEmails,
+                    GetFromAppSettings(AppSettings.UserManagement.SubscribedNotificationEmails, string.Empty),
                     isVisibleToClients: true, scopes: SettingScopes.User)
             };
         }

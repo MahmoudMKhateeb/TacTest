@@ -4,6 +4,7 @@ using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
+using Abp.Localization;
 using Abp.Net.Mail;
 using Abp.Runtime.Security;
 using Abp.UI;
@@ -103,6 +104,28 @@ namespace TACHYON.Authorization.Users
                 {
                     To = { user.EmailAddress },
                     Subject = L("EmailActivation"),
+                    Body = html,
+                    IsBodyHtml = true
+                });
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message, e);
+            }
+        }
+        
+        public virtual async Task SendNotificationByEmail(string emailAddress, string emailTitle, string notificationContent)
+        {
+            try
+            {
+                string html = await GetContent(EmailTemplateTypesEnum.NotificationEmail);
+                
+                html = html.Replace("{{NotificationContent}}", notificationContent);
+
+                await _emailSender.SendAsync(new MailMessage
+                {
+                    To = { emailAddress },
+                    Subject = emailTitle,
                     Body = html,
                     IsBodyHtml = true
                 });

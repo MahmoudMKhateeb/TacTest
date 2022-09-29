@@ -97,6 +97,8 @@ namespace TACHYON.Authorization.Users
 
         Task SendExpiredDocumentsEmail(int tenantId, params DocumentFile[] documents);
 
+        Task SendNotificationByEmail(string emailAddress, string emailTitle, string notificationContent);
+
         #endregion
 
         #region ABP_Emails

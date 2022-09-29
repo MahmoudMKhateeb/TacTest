@@ -557,7 +557,7 @@
 		<text name="UploadInvoiceDocument">تحميل مستند الفاتورة</text>
 		<text name="DriectRequestCarrierRespone">{clientname} قام بوضع عرض مالي للشحنة رقم: {ShipimentNo}.</text>
 		<text name="Driver">سائق</text>
-		<text name="DriverAcceptTrip">السائق {driver} وافق على الرحلة من {source} إلى {destination}</text>
+		<text name="DriverAcceptTrip">السائق {0} وافق على الرحلة من {1} إلى {2}</text>
 		<text name="DriverCreationDateAndTime">تاريخ و وقت الإنشاء</text>
 		<text name="DriverDocuments">مستندات السائق</text>
 		<text name="DriverInformations">معلومات السائق</text>
@@ -2826,6 +2826,17 @@
     <text name="PaymentDate">تاريخ الدفع</text>
     <text name="SubmittedDate">تاريخ الاصدار</text>
     <text name="AcceptanceDate">تاريخ القبول</text>
+		<text name="DriverAcceptTripNotificationDefinition"> قم بأعلامي عندما يقبل السائق رحلة </text>
+		<text name="TachyonDealerAcceptPriceOfferNotificationDefinition"> قم بأعلامي عندما تقبل خدمات إدارة تاكيون عرض سعر </text>
+		<text name="ShipperAcceptPriceOfferNotificationDefinition">قم بأعلامي عندما يقبل الشاحن عرض سعر</text>
+		<text name="PendingPriceOfferNotificationDefinition">قم بأعلامي عندما يكون عرض سعر قيد المراجعة</text>
+		<text name="RejectedPriceOfferNotificationDefinition">قم بأعلامي عند رفض عرض سعر </text>
+		<text name="RejectedPostPriceOfferNotificationDefinition">قم بأعلامي عند رفض عرض سعر (في مرحلة ما بعد التسعير)</text>
+		<text name="SendOfferWhenAddPriceNotificationDefinition">قم بأعلامي عند اضافة عرض سعر للشحنة</text>
+		<text name="SendOfferWhenUpdatePriceNotificationDefinition">قم بأعلامي عند تعديل عرض السعر من قِبل الناقل</text>
+		<text name="SubmitInvoiceOnClaimNotificationDefinition">قم بأعلامي عند مطالبة الفاتورة المرسلة</text>
+		<text name="SubmitInvoiceOnAcceptedNotificationDefinition">قم بأعلامي عند قبول الفاتورة المرسلة</text>
+		<text name="SubmitInvoiceOnRejectedNotificationDefinition">قم بأعلامي عند رفض الفاتورة المرسلة</text>
 
 	</texts>
 </localizationDictionary>

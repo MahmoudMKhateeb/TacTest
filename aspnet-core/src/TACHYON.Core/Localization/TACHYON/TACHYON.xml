@@ -634,7 +634,7 @@
 		<text name="UploadInvoiceDocument">Upload the invoice</text>
 		<text name="DriectRequestCarrierRespone">The {clientname} has established a current view of the  shipment No.: {id}.</text>
 		<text name="Driver">Driver</text>
-		<text name="DriverAcceptTrip">The driver {driver} has been accepted the trip from {source} to {destination}</text>
+		<text name="DriverAcceptTrip">The driver {0} has been accepted the trip from {1} to {2}</text>
 		<text name="DriverCreationDateAndTime">Creation date and time</text>
 		<text name="DriverDocuments">Driver documents</text>
 		<text name="DriverInformation">Driver information</text>
@@ -3063,6 +3063,17 @@
     <text name="PaymentDate">Payment date</text>
     <text name="SubmittedDate">Submitted date</text>
     <text name="AcceptanceDate">Acceptance date</text>
+		<text name="DriverAcceptTripNotificationDefinition"> Notify me when a driver accept a trip</text>
+		<text name="TachyonDealerAcceptPriceOfferNotificationDefinition"> Notify me when the tachyon dealer accept an offer </text>
+		<text name="ShipperAcceptPriceOfferNotificationDefinition"> Notify me when a shipper accept an offer </text>
+		<text name="PendingPriceOfferNotificationDefinition"> Notify me when an offer is under review (pending offer) </text>
+		<text name="RejectedPriceOfferNotificationDefinition"> Notify me when an offer is rejected</text>
+		<text name="RejectedPostPriceOfferNotificationDefinition"> Notify me when a post price offer is rejected</text>
+		<text name="SendOfferWhenAddPriceNotificationDefinition"> Notify me when a new offer has been added to the shipment</text>
+		<text name="SendOfferWhenUpdatePriceNotificationDefinition"> Notify me when a price has been updated by a carrier</text>
+		<text name="SubmitInvoiceOnClaimNotificationDefinition"> Notify me when a submit invoice has been claimed</text>
+		<text name="SubmitInvoiceOnAcceptedNotificationDefinition"> Notify me when a submit invoice has been accepted</text>
+		<text name="SubmitInvoiceOnRejectedNotificationDefinition"> Notify me when a submit invoice has been rejected</text>
 
 	</texts>
 </localizationDictionary>

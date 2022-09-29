@@ -478,6 +478,14 @@ namespace TACHYON.PriceOffers
 
         #endregion
 
+
+        public async Task SendTestNotification()
+        {
+            var offer = await _priceOfferRepository.FirstOrDefaultAsync(10823);
+
+            await _appNotifier.RejectedPostPriceOffer(offer, "Plus Company");
+        }
+        
         #region Pricing
         /// <summary>
         /// Get shipping request details for pricing
