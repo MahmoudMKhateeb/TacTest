@@ -5,6 +5,7 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Threading;
+using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -99,11 +100,19 @@ namespace TACHYON.Invoices
         }
 
 
-        public async Task<LoadResult> GetAll(string filter)
+        public async Task<LoadResult> GetAll(string filter, InvoiceSearchInputDto input)
 
         {
             var query = _invoiceRepository
                 .GetAll()
+                .WhereIf(!string.IsNullOrWhiteSpace(input.ContainerNumber) , x=>x.Trips.Any(y=>y.ShippingRequestTripFK.ContainerNumber == input.ContainerNumber) ||
+                x.Penalties.Any(y=>y.ShippingRequestTripFK.ContainerNumber == input.ContainerNumber))
+                .WhereIf(input.WaybillOrSubWaybillNumber !=null, x => x.Trips.Any(y => y.ShippingRequestTripFK.WaybillNumber == input.WaybillOrSubWaybillNumber) ||
+                x.Penalties.Any(y => y.ShippingRequestTripFK.WaybillNumber == input.WaybillOrSubWaybillNumber) ||
+                  x.Trips.Any(y => y.ShippingRequestTripFK.RoutPoints.Any(w=>w.WaybillNumber == input.WaybillOrSubWaybillNumber)) ||
+                x.Penalties.Any(y => y.ShippingRequestTripFK.RoutPoints.Any(w=>w.WaybillNumber == input.WaybillOrSubWaybillNumber)))
+                .WhereIf(input.PaymentDate !=null, x=>x.PaymentDate!=null && x.PaymentDate.Value.Date==input.PaymentDate.Value.Date)
+                .WhereIf(! string.IsNullOrWhiteSpace(input.AccountNumber), x=> x.Tenant.AccountNumber == input.AccountNumber)
                 .ProjectTo<InvoiceListDto>(AutoMapperConfigurationProvider)
                 .AsNoTracking();
             if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
@@ -346,6 +355,7 @@ namespace TACHYON.Invoices
                     }
 
                     Invoice.IsPaid = true;
+                    Invoice.PaymentDate = Clock.Now;
                     await _transactionManager.Create(new Transaction
                     {
                         Amount = Invoice.TotalAmount,

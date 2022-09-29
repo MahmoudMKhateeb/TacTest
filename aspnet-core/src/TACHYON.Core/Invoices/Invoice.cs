@@ -22,6 +22,7 @@ namespace TACHYON.Invoices
         public InvoiceChannel Channel { get; set; }
         public DateTime DueDate { get; set; }
         public bool IsPaid { get; set; }
+        public DateTime? PaymentDate { get; set; }
         public string Note { get; set; }
         public decimal SubTotalAmount { get; set; }
         public decimal TotalAmount { get; set; }

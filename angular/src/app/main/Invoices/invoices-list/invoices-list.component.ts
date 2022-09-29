@@ -18,6 +18,8 @@ import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import { VoidInvoiceNoteModalComponent } from '../invoice-note/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
+import { InvoiceSearchInputDto } from './InvoiceSearchInputDto';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   templateUrl: './invoices-list.component.html',
@@ -30,6 +32,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
   @ViewChild('voidModal', { static: true }) voidModal: VoidInvoiceNoteModalComponent;
 
+  searchInput: InvoiceSearchInputDto = new InvoiceSearchInputDto();
   IsStartSearch = false;
   PaidStatus: boolean | null | undefined;
   advancedFiltersAreShown = false;
@@ -50,6 +53,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   duteDateRangeActive = false;
   accountType: InvoiceAccountType | undefined = undefined;
   dataSource: any = {};
+  invoiceChannels: any;
 
   constructor(
     injector: Injector,
@@ -57,9 +61,11 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     private _InvoiceReportServiceProxy: InvoiceReportServiceServiceProxy,
     private _CommonServ: CommonLookupServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private router: Router
+    private router: Router,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
+    this.invoiceChannels = this.enumToArray.transform(InvoiceChannel);
   }
 
   ngOnInit() {
@@ -106,6 +112,10 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     this._CommonServ.getAutoCompleteTenants(event.query, '').subscribe((result) => {
       this.Tenants = result;
     });
+  }
+
+  searchInvoice() {
+    this.getAllInvoices();
   }
 
   exportToExcel(): void {
@@ -158,7 +168,13 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       load(loadOptions: LoadOptions) {
         console.log(JSON.stringify(loadOptions));
         return self._InvoiceServiceProxy
-          .getAll(JSON.stringify(loadOptions))
+          .getAll(
+            JSON.stringify(loadOptions),
+            self.searchInput.paymentDate,
+            self.searchInput.waybillOrSubWaybillNumber,
+            self.searchInput.containerNumber,
+            self.searchInput.accountNumber
+          )
           .toPromise()
           .then((response) => {
             return {

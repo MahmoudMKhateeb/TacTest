@@ -10,7 +10,7 @@ namespace TACHYON.Invoices
 {
     public interface IInvoiceAppService : IApplicationService
     {
-        Task<LoadResult> GetAll(string filter);
+        Task<LoadResult> GetAll(string filter, InvoiceSearchInputDto input);
 
         Task<InvoiceInfoDto> GetById(EntityDto input);
 
