@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -315,6 +315,7 @@ import { InvoiceDynamicModalComponent } from '@app/main/Invoices/invoices-dynami
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { CalendarModule } from '@node_modules/primeng/calendar';
+import { InvoicesSearchModelComponent } from './Invoices/invoices-search-model/invoices-search-model.component';
 
 @NgModule({
   imports: [
@@ -598,6 +599,7 @@ import { CalendarModule } from '@node_modules/primeng/calendar';
     AddNewNoteModalComponent,
     NotesComponent,
     TripNotesModalComponent,
+    InvoicesSearchModelComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

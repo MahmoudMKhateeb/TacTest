@@ -11,6 +11,7 @@
         >
           {{ l('OnDemand') }}
         </button>
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>
 
@@ -71,7 +72,9 @@
               <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"></dxi-column>
               <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"></dxi-column>
               <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('Status') }}"></dxi-column>
-              <dxi-column dataField="channel" cellTemplate="cellTemplate_Channel" caption="{{ l('label') }}"></dxi-column>
+              <dxi-column dataField="channel" cellTemplate="cellTemplate_Channel" caption="{{ l('label') }}">
+                <dxo-lookup [dataSource]="invoiceChannels" displayExpr="value" valueExpr="key"></dxo-lookup>
+              </dxi-column>
               <div *dxTemplate="let options of 'cellTemplate_isPaid'">
                 <span *ngIf="options.data.isPaid" class="badge badge-success badge-inline">{{ 'Paid' | localize }}</span>
                 <span *ngIf="!options.data.isPaid" class="badge badge-danger badge-inline">{{ 'UnPaid' | localize }}</span>
@@ -166,6 +169,7 @@
     </div>
   </div>
 </div>
+<app-invoices-search-model #ModelSearch (modalsearch)="searchInvoice()"></app-invoices-search-model>
 <invoices-ondeman-model (modalSave)="reloadPage()" #OndemandModel></invoices-ondeman-model>
 <invoice-tenant-items-details #InvoiceDetailsModel></invoice-tenant-items-details>
 <void-invoice-note-modal #voidModal></void-invoice-note-modal>
