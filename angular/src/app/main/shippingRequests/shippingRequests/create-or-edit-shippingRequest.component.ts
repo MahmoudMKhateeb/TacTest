@@ -52,6 +52,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allFacilities: FacilityForDropdownDto[];
   allVases: ShippingRequestVasListOutput[];
   selectedVases: CreateOrEditShippingRequestVasListDto[] = [];
+  originallySelectedVases: CreateOrEditShippingRequestVasListDto[] = [];
   isTachyonDeal = false;
   isBid = false;
   shippingRequestType: string;
@@ -109,7 +110,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.active = true;
       this.loadAllDropDownLists();
     } else {
-      console.log('this is edit');
       //this is an edit
       this._shippingRequestsServiceProxy
         .getShippingRequestForEdit(shippingRequestId)
@@ -131,7 +131,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           this.shippingRequestType =
             result.shippingRequest.isBid === true ? 'bidding' : result.shippingRequest.isDirectRequest ? 'directrequest' : 'tachyondeal';
           this.selectedVases = result.shippingRequest.shippingRequestVasList;
-          console.log(this.selectedVases);
+          this.originallySelectedVases = [...this.selectedVases];
           this.selectedRouteType = result.shippingRequest.routeTypeId;
           this.active = true;
           this.totalOffers = result.totalOffers;
@@ -379,5 +379,35 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         this.shippingRequestForm.controls['origin'].setErrors(null);
       }
     }
+  }
+
+  changeVasListSelection(event) {
+    const vasId = event.option.vasId;
+    const index = this.selectedVases.findIndex((item) => vasId === item.vasId);
+    if (index === -1) {
+      return;
+    }
+    const foundIndex = this.originallySelectedVases.findIndex((found) => found.vasId === vasId);
+    if (foundIndex === -1) {
+      return;
+    }
+    const keys = Object.keys(this.originallySelectedVases[foundIndex]);
+    const item = this.selectedVases[index].toJSON();
+    this.selectedVases.splice(index, 1);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const val = this.originallySelectedVases[foundIndex][key];
+      if (val === null || val === undefined) {
+        const cleaned = this.cleanedVases.find((cleanedItem) => cleanedItem.vasId === vasId);
+        item[key] = cleaned[key];
+        continue;
+      }
+      item[key] = val;
+    }
+    this.selectedVases.push(CreateOrEditShippingRequestVasListDto.fromJS(item));
+  }
+
+  trackByFunc(index: number, item: CreateOrEditShippingRequestVasListDto) {
+    return item.vasId;
   }
 }
