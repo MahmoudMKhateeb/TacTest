@@ -1,0 +1,6 @@
+::ng-deep .no-padding-custom .dx-button-content {
+  padding: 0 !important;
+}
+::ng-deep .form-control .dx-texteditor.dx-editor-outlined {
+  border: none !important;
+}

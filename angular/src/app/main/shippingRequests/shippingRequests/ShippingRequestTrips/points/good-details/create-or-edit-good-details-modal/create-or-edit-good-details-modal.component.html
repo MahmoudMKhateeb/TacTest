@@ -8,224 +8,367 @@
   class="modal fade"
   role="dialog"
   tabindex="-10000"
+  (keydown.escape)="close(); $event.stopPropagation()"
 >
   <div class="modal-dialog modal-lg">
     <div *ngIf="active" class="modal-content">
       <form #goodsDetailForm="ngForm" (ngSubmit)="AddOrEditGoodDetail()" autocomplete="off" novalidate>
-        <div class="modal-header">
-          <h4 class="modal-title">
-            <span>{{ l('AddNewGoodDetail') }}</span>
-          </h4>
-          <button (click)="close()" aria-label="Close" class="close" type="button">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <!--<div class="form-group m-form__group">-->
-            <div class="col-12">
-              <div class="form-group row fv-plugins-icon-container">
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label> {{ l('GoodSubCategory') }} <span class="required-fileds">*</span> </label>
-                    <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allSubGoodCategorys }">
-                      <select
-                        #subgoodsDetail="ngModel"
-                        [(ngModel)]="goodCategoryId"
-                        class="form-control"
-                        name="goodsDetail.goodCategoryId"
-                        [disabled]="!allSubGoodCategorys"
-                        required
-                        [class.is-invalid]="subgoodsDetail.touched && !subgoodsDetail.valid"
-                        [class.is-valid]="subgoodsDetail.touched && subgoodsDetail.valid"
-                      >
-                        <option [ngValue]="null" selected>{{ l('SelectAGoodSubCategory') }}</option>
-                        <option *ngFor="let item of allSubGoodCategorys" [value]="item.id">{{ item.displayName }}</option>
-                      </select>
+        <dx-validation-group name="goodsDetailGroup">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <span>{{ l('AddNewGoodDetail') }}</span>
+            </h4>
+            <button (click)="close()" aria-label="Close" class="close" type="button">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <!--<div class="form-group m-form__group">-->
+              <div class="col-12">
+                <div class="form-group row fv-plugins-icon-container">
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label> {{ l('GoodSubCategory') }} <span class="required-fileds">*</span> </label>
+                      <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allSubGoodCategorys }">
+                        <!--                      <select-->
+                        <!--                        #subgoodsDetail="ngModel"-->
+                        <!--                        [(ngModel)]="goodCategoryId"-->
+                        <!--                        class="form-control"-->
+                        <!--                        name="goodsDetail.goodCategoryId"-->
+                        <!--                        [disabled]="!allSubGoodCategorys"-->
+                        <!--                        required-->
+                        <!--                        [class.is-invalid]="subgoodsDetail.touched && !subgoodsDetail.valid"-->
+                        <!--                        [class.is-valid]="subgoodsDetail.touched && subgoodsDetail.valid"-->
+                        <!--                      >-->
+                        <!--                        <option [ngValue]="null" selected>{{ l('SelectAGoodSubCategory') }}</option>-->
+                        <!--                        <option *ngFor="let item of allSubGoodCategorys" [value]="item.id">{{ item.displayName }}</option>-->
+                        <!--                      </select>-->
+                        <dx-select-box
+                          name="goodsDetail.goodCategoryId"
+                          [(value)]="goodCategoryId"
+                          [dataSource]="allSubGoodCategorys"
+                          displayExpr="displayName"
+                          valueExpr="id"
+                          [disabled]="!allSubGoodCategorys"
+                          placeholder="{{ l('SelectAGoodSubCategory') }}"
+                          [showClearButton]="true"
+                          required
+                        >
+                          <dx-validator [validationGroup]="'goodsDetailGroup'">
+                            <dxi-validation-rule
+                              type="required"
+                              message="{{ l('GoodSubCategory') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                            ></dxi-validation-rule>
+                          </dx-validator>
+                        </dx-select-box>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label for="GoodsDetail_Weight">{{ l('Weight') }} <span class="required-fileds">*</span> </label>
-                    <input
-                      #GoodsWeight="ngModel"
-                      [(ngModel)]="weight"
-                      class="form-control"
-                      id="GoodsDetail_Weight"
-                      [maxLength]="7"
-                      [minLength]="1"
-                      [min]="1"
-                      [max]="AllowedWeight / (amount || 1)"
-                      name="Weight"
-                      type="number"
-                      [class.is-invalid]="GoodsWeight.touched && !GoodsWeight.valid"
-                      [class.is-valid]="GoodsWeight.touched && GoodsWeight.valid"
-                      required
-                    />
-                    <a class="text-muted mt-1" *ngIf="weight > 0 && amount > 0 && !(AllowedWeight - (weight || 0) * (amount || 1) < 0)">
-                      {{
-                        l('RemainingAllowedWeight') +
-                          ': ' +
-                          (AllowedWeight - (weight || 0) * (amount || 1) < 0 ? 0 : AllowedWeight - (weight || 0) * (amount || 1))
-                      }}
-                    </a>
-                    <span *ngIf="AllowedWeight - (weight || 0) * (amount || 1) < 0"
-                      >{{ l('AllowedWeightShouldBeMaximum') }} : {{ AllowedWeight }}</span
-                    >
-                  </div>
-                </div>
-
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label for="goodsDetail.amount">{{ l('Quantity') }} <span class="required-fileds">*</span> </label>
-                    <input
-                      #GoodsAmount="ngModel"
-                      [(ngModel)]="amount"
-                      class="form-control"
-                      id="goodsDetail.amount"
-                      name="goodsDetail.amount"
-                      type="number"
-                      [min]="1"
-                      [class.is-invalid]="GoodsAmount.touched && !GoodsAmount.valid"
-                      [class.is-valid]="GoodsAmount.touched && GoodsAmount.valid"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label>{{ l('UnitOfMeasure') }} <span class="required-fileds">*</span> </label>
-                    <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allUnitOfMeasure }">
-                      <select
-                        #GoodsUnitOfMeasure="ngModel"
-                        [(ngModel)]="unitOfMeasureId"
-                        class="form-control"
-                        name="goodsDetail.unitOfMeasureId"
-                        [disabled]="!allUnitOfMeasure"
-                        [class.is-valid]="GoodsUnitOfMeasure.touched && GoodsUnitOfMeasure.valid"
-                        [class.is-invalid]="GoodsUnitOfMeasure.touched && !GoodsUnitOfMeasure.valid"
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_Weight">{{ l('Weight') }} <span class="required-fileds">*</span> </label>
+                      <!--                                  <input-->
+                      <!--                                      #GoodsWeight="ngModel"-->
+                      <!--                                      [(ngModel)]="weight"-->
+                      <!--                                      class="form-control"-->
+                      <!--                                      id="GoodsDetail_Weight"-->
+                      <!--                                      [maxLength]="7"-->
+                      <!--                                      [minLength]="1"-->
+                      <!--                                      [min]="1"-->
+                      <!--                                      [max]="AllowedWeight / (amount || 1)"-->
+                      <!--                                      name="Weight"-->
+                      <!--                                      type="number"-->
+                      <!--                                      [class.is-invalid]="GoodsWeight.touched && !GoodsWeight.valid"-->
+                      <!--                                      [class.is-valid]="GoodsWeight.touched && GoodsWeight.valid"-->
+                      <!--                                      required-->
+                      <!--                                  />-->
+                      <dx-number-box
+                        name="Weight"
+                        id="GoodsDetail_Weight"
+                        maxLength="7"
+                        minLength="1"
+                        [min]="1"
+                        [max]="AllowedWeight / (amount || 1)"
+                        [(value)]="weight"
                         required
                       >
-                        <option [ngValue]="null" selected>{{ l('selectAUnitOfMeasure') }}</option>
-                        <option *ngFor="let item of allUnitOfMeasure" [value]="item.id">{{ item.displayName }}</option>
-                      </select>
+                        <dx-validator [validationGroup]="'goodsDetailGroup'">
+                          <dxi-validation-rule
+                            type="required"
+                            message="{{ l('Weight') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                          ></dxi-validation-rule>
+                          <dxi-validation-rule
+                            type="stringLength"
+                            [min]="0"
+                            message="{{ l('Weight') }}: {{ l('PleaseEnterAtLeastNCharacter', 0) }}"
+                          ></dxi-validation-rule>
+                          <dxi-validation-rule
+                            type="stringLength"
+                            [max]="7"
+                            message="{{ l('Weight') }}: {{ l('PleaseEnterNoMoreThanNCharacter', 7) }}"
+                          ></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-number-box>
+                      <a class="text-muted mt-1" *ngIf="weight > 0 && amount > 0 && !(AllowedWeight - (weight || 0) * (amount || 1) < 0)">
+                        {{
+                          l('RemainingAllowedWeight') +
+                            ': ' +
+                            (AllowedWeight - (weight || 0) * (amount || 1) < 0 ? 0 : AllowedWeight - (weight || 0) * (amount || 1))
+                        }}
+                      </a>
+                      <span *ngIf="AllowedWeight - (weight || 0) * (amount || 1) < 0"
+                        >{{ l('AllowedWeightShouldBeMaximum') }} : {{ AllowedWeight }}</span
+                      >
                     </div>
                   </div>
-                </div>
-                <div class="col-lg-12 mt-4" *ngIf="IfOther(allUnitOfMeasure, unitOfMeasureId)">
-                  <label>{{ l('OtherUnitOfMeasure') }} <span class="required-fileds">*</span></label>
-                  <div>
-                    <div class="input-group">
-                      <input
-                        #otherUnitOfMeasure="ngModel"
+
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="goodsDetail.amount">{{ l('Quantity') }} <span class="required-fileds">*</span> </label>
+                      <!--                                  <input-->
+                      <!--                                      #GoodsAmount="ngModel"-->
+                      <!--                                      [(ngModel)]="amount"-->
+                      <!--                                      class="form-control"-->
+                      <!--                                      id="goodsDetail.amount"-->
+                      <!--                                      name="goodsDetail.amount"-->
+                      <!--                                      type="number"-->
+                      <!--                                      [min]="1"-->
+                      <!--                                      [class.is-invalid]="GoodsAmount.touched && !GoodsAmount.valid"-->
+                      <!--                                      [class.is-valid]="GoodsAmount.touched && GoodsAmount.valid"-->
+                      <!--                                      required-->
+                      <!--                                  />-->
+                      <dx-number-box id="goodsDetail.amount" name="goodsDetail.amount" [(value)]="amount" [min]="1" required>
+                        <dx-validator [validationGroup]="'goodsDetailGroup'">
+                          <dxi-validation-rule
+                            type="required"
+                            message="{{ l('Quantity') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                          ></dxi-validation-rule>
+                          <dxi-validation-rule
+                            type="stringLength"
+                            [min]="1"
+                            message="{{ l('Quantity') }}: {{ l('PleaseEnterAtLeastNCharacter', 1) }}"
+                          ></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-number-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label>{{ l('UnitOfMeasure') }} <span class="required-fileds">*</span> </label>
+                      <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allUnitOfMeasure }">
+                        <!--                                      <select-->
+                        <!--                                          #GoodsUnitOfMeasure="ngModel"-->
+                        <!--                                          [(ngModel)]="unitOfMeasureId"-->
+                        <!--                                          class="form-control"-->
+                        <!--                                          name="goodsDetail.unitOfMeasureId"-->
+                        <!--                                          [disabled]="!allUnitOfMeasure"-->
+                        <!--                                          [class.is-valid]="GoodsUnitOfMeasure.touched && GoodsUnitOfMeasure.valid"-->
+                        <!--                                          [class.is-invalid]="GoodsUnitOfMeasure.touched && !GoodsUnitOfMeasure.valid"-->
+                        <!--                                          required-->
+                        <!--                                      >-->
+                        <!--                                          <option [ngValue]="null" selected>{{ l('selectAUnitOfMeasure') }}</option>-->
+                        <!--                                          <option *ngFor="let item of allUnitOfMeasure" [value]="item.id">{{ item.displayName }}</option>-->
+                        <!--                                      </select>-->
+                        <dx-select-box
+                          name="goodsDetail.unitOfMeasureId"
+                          [(value)]="unitOfMeasureId"
+                          [dataSource]="allUnitOfMeasure"
+                          displayExpr="displayName"
+                          valueExpr="id"
+                          [disabled]="!allUnitOfMeasure"
+                          placeholder="{{ l('SelectAUnitOfMeasure') }}"
+                          [showClearButton]="true"
+                          required
+                        >
+                          <dx-validator [validationGroup]="'goodsDetailGroup'">
+                            <dxi-validation-rule
+                              type="required"
+                              message="{{ l('UnitOfMeasure') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                            ></dxi-validation-rule>
+                          </dx-validator>
+                        </dx-select-box>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-12 mt-4" *ngIf="IfOther(allUnitOfMeasure, unitOfMeasureId)">
+                    <label>{{ l('OtherUnitOfMeasure') }} <span class="required-fileds">*</span></label>
+                    <div class="form-group">
+                      <!--                                      <input-->
+                      <!--                                          #otherUnitOfMeasure="ngModel"-->
+                      <!--                                          id="otherUnitOfMeasure"-->
+                      <!--                                          name="otherUnitOfMeasure"-->
+                      <!--                                          type="text"-->
+                      <!--                                          class="form-control"-->
+                      <!--                                          [(ngModel)]="otherUnitOfMeasureName"-->
+                      <!--                                          [class.is-valid]="otherUnitOfMeasure.touched && otherUnitOfMeasure.valid && cannotContainSpace(otherUnitOfMeasureName)"-->
+                      <!--                                          [class.is-invalid]="-->
+                      <!--                      otherUnitOfMeasure.touched &&-->
+                      <!--                      (!otherUnitOfMeasure.valid || !cannotContainSpace(otherUnitOfMeasureName)) &&-->
+                      <!--                      IfOther(allUnitOfMeasure, unitOfMeasureId)-->
+                      <!--                    "-->
+                      <!--                                          [required]="IfOther(allUnitOfMeasure, unitOfMeasureId)"-->
+                      <!--                                      />-->
+                      <dx-text-box
                         id="otherUnitOfMeasure"
-                        name="otherUnitOfMeasure"
-                        type="text"
-                        class="form-control"
                         [(ngModel)]="otherUnitOfMeasureName"
-                        [class.is-valid]="otherUnitOfMeasure.touched && otherUnitOfMeasure.valid && cannotContainSpace(otherUnitOfMeasureName)"
-                        [class.is-invalid]="
-                          otherUnitOfMeasure.touched &&
-                          (!otherUnitOfMeasure.valid || !cannotContainSpace(otherUnitOfMeasureName)) &&
-                          IfOther(allUnitOfMeasure, unitOfMeasureId)
-                        "
+                        name="otherUnitOfMeasure"
+                        [(value)]="otherUnitOfMeasureName"
                         [required]="IfOther(allUnitOfMeasure, unitOfMeasureId)"
-                      />
+                      >
+                        <dx-validator [validationGroup]="'goodsDetailGroup'">
+                          <dxi-validation-rule
+                            type="required"
+                            message="{{ l('OtherUnitOfMeasure') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                          ></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-text-box>
+                      <span class="form-text text-muted">{{ l('OtherUnitOfMeasureHint') }}</span>
+                    </div>
+                    <br />
+                  </div>
+
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_Description">{{ l('Description') }} <span class="required-fileds">*</span> </label>
+                      <!--                                  <input-->
+                      <!--                                      #Description="ngModel"-->
+                      <!--                                      [(ngModel)]="description"-->
+                      <!--                                      class="form-control"-->
+                      <!--                                      id="GoodsDetail_Description"-->
+                      <!--                                      name="Description"-->
+                      <!--                                      type="text"-->
+                      <!--                                      [class.is-valid]="Description.touched && Description.valid"-->
+                      <!--                                      [class.is-invalid]="Description.touched && !Description.valid"-->
+                      <!--                                      required-->
+                      <!--                                  />-->
+                      <dx-text-box id="GoodsDetail_Description" [(ngModel)]="description" name="Description" [(value)]="description" required>
+                        <dx-validator [validationGroup]="'goodsDetailGroup'">
+                          <dxi-validation-rule
+                            type="required"
+                            message="{{ l('Description') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                          ></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-text-box>
                     </div>
                   </div>
-                  <span class="form-text text-muted">{{ l('OtherUnitOfMeasureHint') }}</span>
-                  <br />
-                </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>
+                      <input [(ngModel)]="dimentions" class="form-control" id="GoodsDetail_Dimentions" name="Dimentions" type="text" />
+                    </div>
+                  </div>
+                  <div class="col-lg-12 mt-10">
+                    <div class="form-group checkbox-inline">
+                      <label class="checkbox checkbox-danger">
+                        <input
+                          #CheckDan="ngModel"
+                          [(ngModel)]="isDangerousGood"
+                          id="GoodsDetail_IsDangerousGood"
+                          name="IsDangerousGood"
+                          type="checkbox"
+                          [class.is-valid]="CheckDan.touched && CheckDan.valid"
+                        />
+                        <span></span>
+                        {{ l('IsDangerousGood') }}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-lg-6" *ngIf="isDangerousGood">
+                    <div class="form-group">
+                      <label> {{ l('DangerousGoodType') }} <span class="required-fileds">*</span> </label>
+                      <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': isDangerousGoodLoading }">
+                        <!--                                      <select-->
+                        <!--                                          #DangerousGoodTypes="ngModel"-->
+                        <!--                                          [(ngModel)]="dangerousGoodsTypeId"-->
+                        <!--                                          class="form-control"-->
+                        <!--                                          name="goodsDetail.dangerousGoodTypeId"-->
+                        <!--                                          [disabled]="!allSubGoodCategorys"-->
+                        <!--                                          [class.is-invalid]="DangerousGoodTypes.touched && (!DangerousGoodTypes.valid || dangerousGoodsTypeId === undefined)"-->
+                        <!--                                          [class.is-valid]="DangerousGoodTypes.touched && DangerousGoodTypes.valid && dangerousGoodsTypeId !== undefined"-->
+                        <!--                                          [required]="isDangerousGood"-->
+                        <!--                                          [disabled]="!isDangerousGood"-->
+                        <!--                                      >-->
+                        <!--                                          <option [ngValue]="null" selected>{{ l('SelectADangeroudGoodType') }}</option>-->
+                        <!--                                          <option *ngFor="let item of allDangerousGoodTypes" [value]="item.id">{{ item.displayName }}</option>-->
+                        <!--                                      </select>-->
+                        <dx-select-box
+                          name="goodsDetail.dangerousGoodTypeId"
+                          [(value)]="dangerousGoodsTypeId"
+                          [dataSource]="allDangerousGoodTypes"
+                          [showClearButton]="true"
+                          [disabled]="!isDangerousGood || !allSubGoodCategorys"
+                          displayExpr="displayName"
+                          valueExpr="id"
+                          placeholder="{{ l('SelectADangeroudGoodType') }}"
+                        >
+                          <dx-validator [validationGroup]="'goodsDetailGroup'">
+                            <dxi-validation-rule
+                              type="required"
+                              message="{{ 'DangerousGoodType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                            ></dxi-validation-rule>
+                          </dx-validator>
+                        </dx-select-box>
+                      </div>
+                    </div>
+                  </div>
 
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label for="GoodsDetail_Description">{{ l('Description') }} <span class="required-fileds">*</span> </label>
-                    <input
-                      #Description="ngModel"
-                      [(ngModel)]="description"
-                      class="form-control"
-                      id="GoodsDetail_Description"
-                      name="Description"
-                      type="text"
-                      [class.is-valid]="Description.touched && Description.valid"
-                      [class.is-invalid]="Description.touched && !Description.valid"
-                      required
-                    />
-                  </div>
-                </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>
-                    <input [(ngModel)]="dimentions" class="form-control" id="GoodsDetail_Dimentions" name="Dimentions" type="text" />
-                  </div>
-                </div>
-                <div class="col-lg-6 mt-10">
-                  <div class="form-group checkbox-inline">
-                    <label class="checkbox checkbox-danger">
-                      <input
-                        #CheckDan="ngModel"
-                        [(ngModel)]="isDangerousGood"
-                        id="GoodsDetail_IsDangerousGood"
-                        name="IsDangerousGood"
-                        type="checkbox"
-                        [class.is-valid]="CheckDan.touched && CheckDan.valid"
-                      />
-                      <span></span>
-                      {{ l('IsDangerousGood') }}
-                    </label>
-                  </div>
-                </div>
-                <div class="col-lg-6" *ngIf="isDangerousGood">
-                  <div class="form-group">
-                    <label> {{ l('DangerousGoodType') }} <span class="required-fileds">*</span> </label>
-                    <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': isDangerousGoodLoading }">
-                      <select
-                        #DangerousGoodTypes="ngModel"
-                        [(ngModel)]="dangerousGoodsTypeId"
-                        class="form-control"
-                        name="goodsDetail.dangerousGoodTypeId"
-                        [disabled]="!allSubGoodCategorys"
-                        [class.is-invalid]="DangerousGoodTypes.touched && (!DangerousGoodTypes.valid || dangerousGoodsTypeId === undefined)"
-                        [class.is-valid]="DangerousGoodTypes.touched && DangerousGoodTypes.valid && dangerousGoodsTypeId !== undefined"
+                  <div class="col-lg-6" *ngIf="isDangerousGood">
+                    <div class="form-group">
+                      <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }} <span class="required-fileds">*</span> </label>
+                      <!--                                  <input-->
+                      <!--                                      #DangerousGoods="ngModel"-->
+                      <!--                                      [(ngModel)]="dangerousGoodsCode"-->
+                      <!--                                      class="form-control"-->
+                      <!--                                      id="GoodsDetail_DangerousGoodsCode"-->
+                      <!--                                      name="DangerousGoodsCode"-->
+                      <!--                                      type="text"-->
+                      <!--                                      [required]="isDangerousGood"-->
+                      <!--                                      [disabled]="!isDangerousGood"-->
+                      <!--                                      [class.is-invalid]="DangerousGoods.touched && !DangerousGoods.valid"-->
+                      <!--                                      [class.is-valid]="DangerousGoods.touched && DangerousGoods.valid"-->
+                      <!--                                  />-->
+                      <dx-text-box
+                        id="GoodsDetail_DangerousGoodsCode"
+                        [(ngModel)]="dangerousGoodsCode"
+                        name="DangerousGoodsCode"
+                        [(value)]="dangerousGoodsCode"
                         [required]="isDangerousGood"
                         [disabled]="!isDangerousGood"
                       >
-                        <option [ngValue]="null" selected>{{ l('SelectADangeroudGoodType') }}</option>
-                        <option *ngFor="let item of allDangerousGoodTypes" [value]="item.id">{{ item.displayName }}</option>
-                      </select>
+                        <dx-validator [validationGroup]="'goodsDetailGroup'">
+                          <dxi-validation-rule
+                            type="required"
+                            message="{{ l('DangerousGoodsCode') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                          ></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-text-box>
                     </div>
-                  </div>
-                </div>
-
-                <div class="col-lg-6" *ngIf="isDangerousGood">
-                  <div class="form-group">
-                    <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }} <span class="required-fileds">*</span> </label>
-                    <input
-                      #DangerousGoods="ngModel"
-                      [(ngModel)]="dangerousGoodsCode"
-                      class="form-control"
-                      id="GoodsDetail_DangerousGoodsCode"
-                      name="DangerousGoodsCode"
-                      type="text"
-                      [required]="isDangerousGood"
-                      [disabled]="!isDangerousGood"
-                      [class.is-invalid]="DangerousGoods.touched && !DangerousGoods.valid"
-                      [class.is-valid]="DangerousGoods.touched && DangerousGoods.valid"
-                    />
                   </div>
                 </div>
               </div>
             </div>
+            <div class="col-lg-12 mt-4 mb-2">
+              <dx-validation-summary validationGroup="goodsDetailGroup" id="goods-detail-summary"></dx-validation-summary>
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button (click)="close()" class="btn btn-secondary" type="button">{{ l('Cancel') }}</button>
-          <button [disabled]="!goodsDetailForm.form.valid" class="btn btn-primary blue" type="submit">
-            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-          </button>
-        </div>
+          <div class="modal-footer">
+            <button (click)="close()" class="btn btn-secondary" type="button">{{ l('Cancel') }}</button>
+            <!--              <button [disabled]="!goodsDetailForm.form.valid" class="btn btn-primary blue" type="submit">-->
+            <!--                  <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>-->
+            <!--              </button>-->
+            <dx-button
+              type="submit"
+              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
+              icon="fa fa-save"
+              text="{{ l('Save') }}"
+              [useSubmitBehavior]="true"
+              [validationGroup]="'goodsDetailGroup'"
+            >
+            </dx-button>
+          </div>
+        </dx-validation-group>
       </form>
     </div>
   </div>

@@ -42,14 +42,17 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   @ViewChild('shippingRequestTripsForm') shippingRequestTripsForm: NgForm;
   @ViewChild('addNewTripsModal', { static: true }) modal: ModalDirective;
   @ViewChild('PointsComponent') PointsComponent: PointsComponent;
-  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  @ViewChild('userForm', { static: false }) userForm: NgForm;
+
   @Input() shippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
+  @Input() parentForm: NgForm;
+
+  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+
   startTripdate: any;
   endTripdate: any;
   endTripDate = new FormControl('');
-  @Input() parentForm: NgForm;
-  @ViewChild('userForm', { static: false }) userForm: NgForm;
   minGreg: NgbDateStruct = { day: 1, month: 1, year: 1900 };
   minHijri: NgbDateStruct = { day: 1, month: 1, year: 1342 };
   todayGregorian = this.dateFormatterService.GetTodayGregorian();
@@ -92,6 +95,33 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   private getTripForEditSub: Subscription;
   RouteTypesEnum = ShippingRequestRouteType;
 
+  TripsServiceSubscription: any;
+  wayBillIsDownloading: boolean;
+  selectedTemplate: number;
+  isTripPointsInvalid = false;
+
+  get isFileInputValid() {
+    return this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto.name ? true : false) : true;
+  }
+
+  get tripAsJson(): string {
+    if (this.trip) this.trip.shippingRequestId = this.shippingRequest.id;
+    return JSON.stringify(this.trip);
+  }
+
+  callbacks: any[] = [];
+
+  adapterConfig = {
+    getValue: () => {
+      return this.validatePointsFromPointsComponent();
+    },
+    applyValidationResults: (e) => {
+      this.isTripPointsInvalid = !e.isValid;
+    },
+    validationRequestsCallbacks: this.callbacks,
+  };
+  isFormSubmitted = false;
+
   constructor(
     injector: Injector,
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
@@ -106,18 +136,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     super(injector);
   }
 
-  TripsServiceSubscription: any;
-  PointsServiceSubscription: any;
-  wayBillIsDownloading: boolean;
-  selectedTemplate: number;
-
-  get isFileInputValid() {
-    return this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto.name ? true : false) : true;
-  }
-  get tripAsJson(): string {
-    if (this.trip) this.trip.shippingRequestId = this.shippingRequest.id;
-    return JSON.stringify(this.trip);
-  }
   ngOnInit() {
     //link the trip from the shared service to the this component
     this.TripsServiceSubscription = this._TripService.currentActiveTrip.subscribe((res) => (this.trip = res));
@@ -205,17 +223,23 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   close(): void {
     this.loading = true;
     this.active = false;
+    this.isFormSubmitted = false;
     this.modal.hide();
     this.trip = new CreateOrEditShippingRequestTripDto();
     this.fileToken = undefined;
     this.hasNewUpload = undefined;
     this._TripService.updateSourceFacility(null);
     this._TripService.updateDestFacility(null);
-    this.PointsComponent.wayPointsList = this.trip.routPoints = [];
+    this.trip.routPoints = [];
+    if (isNotNullOrUndefined(this.PointsComponent)) {
+      this.PointsComponent.wayPointsList = this.trip.routPoints;
+    }
     this._PointsService.updateWayPoints([]);
   }
 
   createOrEditTrip() {
+    this.isFormSubmitted = true;
+    this.revalidatePointsFromPointsComponent();
     //if there is a Validation issue in the Points do Not Proceed
     this.trip.shippingRequestId = this.shippingRequest.id;
     this.trip.routPoints = this.PointsComponent.wayPointsList;
@@ -432,6 +456,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this._TripService.updateShippingRequest(null);
 
     this.TripsServiceSubscription.unsubscribe();
+    // this.tripServiceShippingRequestSub?.unsubscribe();
     this.tripServiceShippingRequestSub?.unsubscribe();
     this.getTripForEditSub?.unsubscribe();
     this.docProgress = undefined;
@@ -445,23 +470,61 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   private validatePointsBeforeAddTrip() {
     let isSingleDropTrip = this.shippingRequest.routeTypeId === this.RouteTypesEnum.SingleDrop;
-    let isFacilitiesTheSame = this.trip.routPoints[0].facilityId === this.trip.routPoints[1].facilityId;
+    let isFacilitiesTheSame = isNotNullOrUndefined(this.trip.routPoints) && this.trip.routPoints[0].facilityId === this.trip.routPoints[1].facilityId;
+    let isFacilitiesEmpty =
+      isNotNullOrUndefined(this.trip.routPoints) &&
+      !isNotNullOrUndefined(this.trip.routPoints[0].facilityId) &&
+      !isNotNullOrUndefined(this.trip.routPoints[1].facilityId);
+    if (isSingleDropTrip && isFacilitiesEmpty) {
+      Swal.fire(this.l('ValidationError'), this.l('SourcePickUpFacilityOrDropOffFacilityCantBeEmpty'), 'error');
+      return false;
+    }
     if (isSingleDropTrip && isFacilitiesTheSame) {
       Swal.fire(this.l('ValidationError'), this.l('SourcePickUpFacilityAndDropOffFacilityCantBeTheSame'), 'error');
       return false;
     }
+    if (!isNotNullOrUndefined(this.trip.routPoints)) {
+      return false;
+    }
     //trip Details Validation
     for (const point of this.trip.routPoints) {
-      if (point.pickingType === this.PickingType.Pickup && (!point.facilityId || !point.receiverId)) {
+      const isFacilityOrReceiverEmpty =
+        !isNotNullOrUndefined(point.facilityId) ||
+        !isNotNullOrUndefined(point.receiverId) ||
+        ('' + point.facilityId).length === 0 ||
+        ('' + point.receiverId).length === 0;
+      if (point.pickingType === this.PickingType.Pickup && isFacilityOrReceiverEmpty) {
         Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseCompletePicKupPointDetails'), 'warning');
         return false;
         break;
       }
       if (point.pickingType === this.PickingType.Dropoff) {
-        if (!point.facilityId || !point.receiverId || !point.goodsDetailListDto) {
+        if (isFacilityOrReceiverEmpty || !isNotNullOrUndefined(point.goodsDetailListDto as any)) {
           Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseCompleteAllDropPointDetails'), 'warning');
           return false;
           break;
+        }
+      }
+    }
+    return true;
+  }
+
+  private validatePointsFromPointsComponent() {
+    if (!isNotNullOrUndefined(this.PointsComponent) || !isNotNullOrUndefined(this.PointsComponent.wayPointsList)) {
+      return false;
+    }
+    for (const point of this.PointsComponent.wayPointsList) {
+      const isFacilityOrReceiverEmpty =
+        !isNotNullOrUndefined(point.facilityId) ||
+        !isNotNullOrUndefined(point.receiverId) ||
+        ('' + point.facilityId).length === 0 ||
+        ('' + point.receiverId).length === 0;
+      if (point.pickingType === this.PickingType.Pickup && isFacilityOrReceiverEmpty) {
+        return false;
+      }
+      if (point.pickingType === this.PickingType.Dropoff) {
+        if (isFacilityOrReceiverEmpty || !isNotNullOrUndefined(point.goodsDetailListDto as any) || point.goodsDetailListDto.length === 0) {
+          return false;
         }
       }
     }
@@ -519,5 +582,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       return (x.id = undefined);
     });
     return this.trip;
+  }
+
+  revalidatePointsFromPointsComponent() {
+    this.callbacks.forEach((func) => {
+      func();
+    });
   }
 }

@@ -19,12 +19,9 @@ import { NgForm } from '@angular/forms';
   templateUrl: './createOrEditPointModal.component.html',
 })
 export class CreateOrEditPointModalComponent extends AppComponentBase implements OnInit, OnDestroy {
-  goodDetailsListForView: any;
-  constructor(injector: Injector, public _tripService: TripService, private _PointService: PointsService) {
-    super(injector);
-  }
   @ViewChild('createRouteStepModal', { static: true }) modal: ModalDirective;
   @ViewChild('createOrEditPintForm') public createOrEditPintForm: NgForm;
+  goodDetailsListForView: any;
   RouteType: number; //filled in onInit from the Trip Shared Service
   PickingType = PickingType;
   RouteTypes = ShippingRequestRouteType;
@@ -45,10 +42,9 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   pointsServiceSubscription$: any;
   usedInSubscription$: any;
   modalOpenedFor: 'note' | 'goodDetails' | 'receiver';
-  ngOnDestroy() {
-    this.tripServiceSubscription$.unsubscribe();
-    this.pointsServiceSubscription$.unsubscribe();
-    this.usedInSubscription$.unsubscribe();
+
+  constructor(injector: Injector, public _tripService: TripService, private _PointService: PointsService) {
+    super(injector);
   }
 
   ngOnInit(): void {
@@ -94,5 +90,11 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     this.isAdditionalReceiverEnabled = false;
     this.active = false;
     this.modal.hide();
+  }
+
+  ngOnDestroy() {
+    this.tripServiceSubscription$.unsubscribe();
+    this.pointsServiceSubscription$.unsubscribe();
+    this.usedInSubscription$.unsubscribe();
   }
 }

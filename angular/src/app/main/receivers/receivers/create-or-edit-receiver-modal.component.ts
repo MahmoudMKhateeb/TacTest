@@ -10,9 +10,11 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'createOrEditReceiverModal',
+  styleUrls: ['./create-or-edit-receiver-modal.component.css'],
   templateUrl: './create-or-edit-receiver-modal.component.html',
 })
 export class CreateOrEditReceiverModalComponent extends AppComponentBase {
@@ -34,8 +36,16 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   }
 
   show(receiverId?: number, facilityIdFromTrip?: number): void {
-    this.facilityIdFromTrips = facilityIdFromTrip;
+    console.log('facilityIdFromTrip', facilityIdFromTrip);
+    this.facilityIdFromTrips = isNotNullOrUndefined(facilityIdFromTrip) ? Number(facilityIdFromTrip) : null;
     if (!receiverId) {
+      //  {
+      //           id: null,
+      //           fullName: '',
+      //           email: '',
+      //           phoneNumber: '',
+      //           facilityId: null
+      //       }
       this.receiver = new CreateOrEditReceiverDto();
       this.receiver.id = receiverId;
     } else {
@@ -76,8 +86,9 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     this.modal.hide();
   }
 
-  CheckIfReciverPhoneNumberIsValid(phoneNumber: string, id: number) {
-    if (phoneNumber.trim().length === 9) {
+  CheckIfReciverPhoneNumberIsValid(phoneNumber, id: number) {
+    console.log('phoneNumber', phoneNumber);
+    if (isNotNullOrUndefined(phoneNumber) && phoneNumber.trim().length === 9) {
       this.CheckingIfReciverPhoneNumberIsValid = true;
       this._receiversServiceProxy.checkIfPhoneNumberValid(phoneNumber, id == null ? 0 : id).subscribe((res) => {
         this.isPhoneNumberAvilable = res;

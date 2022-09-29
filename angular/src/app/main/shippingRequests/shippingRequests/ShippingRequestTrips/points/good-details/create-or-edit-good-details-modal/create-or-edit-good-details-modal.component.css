@@ -1,0 +1,3 @@
+::ng-deep .no-padding-custom .dx-button-content {
+  padding: 0 !important;
+}
