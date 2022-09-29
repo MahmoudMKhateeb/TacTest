@@ -1,6 +1,7 @@
 ﻿using Abp.Timing;
 using AutoMapper;
 using System;
+using System.Globalization;
 using System.Linq;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.Drivers.Dto;
@@ -20,10 +21,16 @@ namespace TACHYON.AutoMapper.Shipping.Trips
             CreateMap<ShippingRequestTrip, ShippingRequestsTripListDto>()
                 .ForMember(dst => dst.OriginCity,
                     opt => opt.MapFrom(src =>
-                        src.OriginFacilityFk != null ? src.OriginFacilityFk.CityFk.DisplayName : ""))
+                        src.OriginFacilityFk.CityFk.Translations
+                            .FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ?
+                            src.OriginFacilityFk.CityFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName
+                            : src.OriginFacilityFk.CityFk.DisplayName))
                 .ForMember(dst => dst.DestinationCity,
                     opt => opt.MapFrom(src =>
-                        src.DestinationFacilityFk != null ? src.DestinationFacilityFk.CityFk.DisplayName : ""))
+                        src.DestinationFacilityFk.CityFk.Translations
+                            .FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ?
+                            src.DestinationFacilityFk.CityFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName 
+                            : src.DestinationFacilityFk.CityFk.DisplayName))
                 .ForMember(dst => dst.Truck,
                     opt => opt.MapFrom(
                         src => src.AssignedTruckFk != null ? src.AssignedTruckFk.ModelName : string.Empty))

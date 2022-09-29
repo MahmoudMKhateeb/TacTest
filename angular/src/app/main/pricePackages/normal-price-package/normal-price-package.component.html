@@ -27,11 +27,11 @@
               [wordWrapEnabled]="true"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
-              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
-              <dxo-group-panel [visible]="false"></dxo-group-panel>
+              <dxo-group-panel [visible]="false" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
               <!--              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="false"> </dxo-remote-operations>-->
               <dxo-paging [pageSize]="20"></dxo-paging>
@@ -53,7 +53,7 @@
               ></dxi-column>
               <dxi-column dataField="truckType" caption="{{ l('TruckType') }}"> </dxi-column>
               <dxi-column dataField="directRequestPrice" caption="{{ l('DirectRequestPrice') }}"> </dxi-column>
-              <dxi-column dataField="marcketPlaceRequestPrice" caption="{{ l('MarcketPlaceRequestPrice') }}"> </dxi-column>
+              <dxi-column dataField="marcketPlaceRequestPrice" caption="{{ l('MarketplaceRequestPrice') }}"> </dxi-column>
               <dxi-column dataField="tachyonMSRequestPrice" caption="{{ l('TachyonMSRequestPrice') }}"> </dxi-column>
               <dxi-column dataField="pricePerExtraDrop" caption="{{ l('PricePerExtraDrop') }}"> </dxi-column>
               <dxi-column dataField="isMultiDrop" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"> </dxi-column>
@@ -61,7 +61,7 @@
               <dxi-column dataField="destination" caption="{{ l('Destination') }}"> </dxi-column>
 
               <div *dxTemplate="let options of 'cellTemplate_RoutType'">
-                <span *ngIf="options.data.isMultiDrop" class="badge badge-success badge-inline">{{ 'MultipleDrop' | localize }}</span>
+                <span *ngIf="options.data.isMultiDrop" class="badge badge-success badge-inline">{{ 'MultipleDrops' | localize }}</span>
                 <span *ngIf="!options.data.isMultiDrop" class="badge badge-danger badge-inline">{{ 'SingleDrop' | localize }}</span>
               </div>
 

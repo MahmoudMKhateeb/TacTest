@@ -100,10 +100,22 @@ export class NumberOfRequestsForEachCityComponent extends AppComponentBase imple
             enabled: false,
           },
           title: {
-            text: 'HeatMap Chart with Color Range',
+            // text: 'HeatMap Chart with Color Range',
           },
         };
         this.loading = false;
+        (this.chartOptions.chart.locales as any[]) = [
+          {
+            name: 'en',
+            options: {
+              toolbar: {
+                exportToPNG: this.l('Download') + ' PNG',
+                exportToSVG: this.l('Download') + ' SVG',
+                exportToCSV: this.l('Download') + ' CSV',
+              },
+            },
+          },
+        ];
       });
   }
 

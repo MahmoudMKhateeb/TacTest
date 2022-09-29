@@ -2504,7 +2504,7 @@
 		<text name="InvoicingFrequency">Invoicing Frequency</text>
 		<text name="InvoicingDuePeriod">Invoicing Due Period</text>
 		<text name="CreditType">Credit Type</text>
-		<text name="ReceiverConfirmed">Receiver conformed</text>
+		<text name="ReceiverConfirmed">Receiver confirmed</text>
 		<text name="CompletedTripsFromTotal">Completed Trips / No of Trips</text>
 		<text name="CreatedTripsFromTotal">Created Trips / No of Trips</text>
 		<text name="RateForDriver">Rate for Driver</text>
@@ -2826,7 +2826,7 @@
 	<text name="PricePackages">Price Packages</text>
 	<text name="DirectRequestPrice">Direct request price</text>
 	<text name="TachyonMSRequestPrice">Tachyon MS request price</text>
-	<text name="MarcketPlaceRequestPrice">Marcket place request price</text>
+	<text name="MarketplaceRequestPrice">Marcket place request price</text>
 	<text name="PricePerExtraDrop">Price per extra drop</text>
 	<text name="IsMultiDrop">Is multi drop</text>
 	<text name="CreateNormalPricePackage">Create price package</text>
@@ -3051,6 +3051,14 @@
 		<text name="UploadFile">Upload File</text>
 		<text name="BulkDeliveryTripSucceededMsg">Bulk Delivery Trip/s process is completed successfully</text>
 		<text name="InternalTruckId">Internal Truck ID</text>
+		<text name="OtherTransportType">Other Transport Type</text>
+		<text name="OtherTransportTypeName">Other Transport Type Name</text>
+		<text name="OtherPackingType">Other Packing Type</text>
+		<text name="OtherPackingTypeName">Other Packing Type Name</text>
+		<text name="OtherGoodCategory">Other Good Category</text>
+		<text name="ViewPricePackageDetails">View Price Package Details</text>
+		<text name="FromTemplate">From Template</text>
+		<text name="SelectATemplate">Select a template</text>
 
 	</texts>
 </localizationDictionary>

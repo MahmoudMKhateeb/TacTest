@@ -49,13 +49,13 @@
                   [(ngModel)]="normalPricePackage.isMultiDrop"
                 />
                 <span> </span>
-                {{ 'isMultiDrop ' }}
+                {{ l('IsMultiDrop') }}
               </label>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label>{{ l('TranspotType') }} <span class="required-fileds">*</span></label>
+              <label>{{ l('TransportType') }} <span class="required-fileds">*</span></label>
               <select
                 name="transpotTypeId"
                 (change)="TranspotTypesChanged($event)"
@@ -63,14 +63,14 @@
                 class="form-control"
                 required
               >
-                <option value="undefined">{{ l('SelectATranspotType') }}</option>
+                <option value="undefined">{{ l('SelectaTransportType') }}</option>
                 <option *ngFor="let item of allTranspotTypes" [value]="item.id">{{ item.displayName }}</option>
               </select>
             </div>
             <div class="form-group col-md-6">
               <label>{{ l('TruckType') }} <span class="required-fileds">*</span></label>
               <select name="trucksTypeId" [(ngModel)]="normalPricePackage.trucksTypeId" class="form-control" required>
-                <option value="undefined">{{ l('SelectATruckType') }}</option>
+                <option value="undefined">{{ l('SelectaTruckType') }}</option>
                 <option *ngFor="let item of allTruckTypes" [value]="item.id">{{ item.displayName }}</option>
               </select>
             </div>
@@ -87,7 +87,7 @@
             <div class="col-md-6 form-group">
               <label> {{ l('DestinationCity') }} <span class="required-fileds">*</span></label>
               <select class="form-control" name="destinationCityId" [(ngModel)]="normalPricePackage.destinationCityId" required>
-                <option value="undefined">{{ l('selectaDestination') }}</option>
+                <option value="undefined">{{ l('SelectaDestination') }}</option>
                 <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
               <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
@@ -118,7 +118,7 @@
               <validation-messages [formCtrl]="NormalPricePackage_DirectRequestPrice"></validation-messages>
             </div>
             <div class="col-md-6 form-group">
-              <label>{{ l('MarcketPlaceRequestPrice') }} <span class="required-fileds">*</span></label>
+              <label>{{ l('MarketplaceRequestPrice') }} <span class="required-fileds">*</span></label>
               <div class="input-group date">
                 <input
                   class="form-control"

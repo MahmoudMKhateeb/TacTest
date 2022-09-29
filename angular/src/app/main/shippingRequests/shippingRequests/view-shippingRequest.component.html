@@ -13,7 +13,7 @@
           [entityType]="entityTypes.ShippingRequestTemplate"
           [sourceEntityId]="activeShippingRequestId"
         ></create-or-edit-template-drop-down-button>
-        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'Activity Log' }} </a>
+        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'ActivityLog' | localize }} </a>
         <ng-container *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid">
           <a class="btn btn-outline-success" (click)="scrollToDirectRequests()">{{ l('SendDirectRequests') }}</a>
           <a class="btn btn-outline-success" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">{{ l('StartBidding') }}</a>

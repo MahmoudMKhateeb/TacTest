@@ -2672,7 +2672,7 @@
     <text name="ImportUploadFailed">فشلت عملية الاستيراد</text>
     <text name="GoodsSubCategory">التصنيف الفرعي للبضاعة</text>
     <text name="DangerousGoodsType">نوع الخطر للبضاعة</text>
-    <text name="otherGoodsCategoryName">اسم التصنيف الفرعي الآخر</text>
+    <text name="otherGoodsCategoryName">اسم صنف البضاعة الآخر</text>
     <text name="TripReferenceID">رقم الرحلة</text>
     <text name="PointReferenceID">رقم النقطة</text>
     <text name="PointType">نوع النقطة</text>
@@ -2802,6 +2802,26 @@
 		<text name="BulkDeliverTrips">حزمة توصيل الرحلات</text>
 		<text name="DownloadFileTemplate">تنزيل نموذج الملف</text>
 		<text name="UploadFile">تحميل ملف</text>
+		<text name="OtherTransportType">نوع نقل آخر</text>
+		<text name="OtherTransportTypeName">أسم نوع النقل الآخر</text>
+		<text name="OtherPackingType">نوع تعبئة آخر</text>
+		<text name="OtherPackingTypeName">أسم نوع التعبئة الآخر</text>
+		<text name="OtherGoodCategory">صنف بضاعة آخر</text>
+		<text name="NormalPricePackages">حزم الاسعار</text>
+		<text name="CreateNormalPricePackage">إضافة حزمة سعر</text>
+		<text name="PricePackageName">أسم حزمة السعر</text>
+		<text name="DirectRequestPrice">سعر الطلب المباشر</text>
+		<text name="MarketplaceRequestPrice">سعر طلب السوق</text>
+		<text name="TachyonMSRequestPrice">سعر طلب خدمات تاكيون</text>
+		<text name="PricePerExtraDrop">السعر لكل تنزيل إضافي</text>
+		<text name="Reference">الرقم المرجعي</text>
+		<text name="ViewPricePackageDetails">عرض تفاصيل حزمة السعر</text>
+		<text name="VATDetails"> تفاصيل ضريبة القيمة المضافة</text>
+		<text name="IsMultiDrop">عدة حمولات / توصيلات</text>
+		<text name="PricePackages">حزم الاسعار</text>
+		<text name="Tracking">تتبع الشحنات</text>
+		<text name="FromTemplate">من قالب</text>
+		<text name="SelectATemplate">أختر قالب</text>
 
   </texts>
 </localizationDictionary>
