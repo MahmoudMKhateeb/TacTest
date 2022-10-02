@@ -101,6 +101,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<ActorCarrierPrice> ActorCarrierPrices { get; set; }
 
         public virtual DbSet<ActorInvoice> ActorInvoices { get; set; }
+        public virtual DbSet<ActorSubmitInvoice> ActorSubmitInvoices { get; set; }
 
         public virtual DbSet<EmailTemplateTranslation> EmailTemplateTranslations { get; set; }
 
