@@ -194,7 +194,12 @@ namespace TACHYON
 
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<CreateOrEditActorDto, Actor>().ReverseMap();
+            configuration.CreateMap<CreateOrEditActorDto, Actor>()
+                .BeforeMap((actorDto, actorEntity) =>
+                {   // We must not change the actor type
+                    if (actorDto.Id.HasValue)
+                        actorDto.ActorType = actorEntity.ActorType;
+                }).ReverseMap();
             configuration.CreateMap<ActorDto, Actor>().ReverseMap();
             configuration.CreateMap<EmailTemplateTranslationDto, EmailTemplateTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditEmailTemplateTranslationDto, EmailTemplateTranslation>().ReverseMap();
@@ -394,6 +399,7 @@ namespace TACHYON
                         ol.DocumentTypeFk.Translations
                             .First(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name)).Name))
                 .ForMember(dto => dto.ActorName, opt => opt.MapFrom(src => src.ActorFk.CompanyName))
+                .ForMember(dto => dto.ActorType, opt => opt.MapFrom(src => src.ActorFk.ActorType))
                 .ReverseMap();
 
             configuration.CreateMap<DocumentFile, GetAllTrucksSubmittedDocumentsDto>()

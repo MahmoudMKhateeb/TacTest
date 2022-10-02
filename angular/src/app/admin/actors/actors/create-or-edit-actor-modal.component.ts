@@ -15,13 +15,14 @@ import { IAjaxResponse, TokenService } from 'abp-ng2-module';
 import { AppConsts } from '@shared/AppConsts';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { RequiredDocumentFormChildComponent } from '@app/shared/common/required-document-form-child/required-document-form-child.component';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'createOrEditActorModal',
   templateUrl: './create-or-edit-actor-modal.component.html',
   providers: [DateFormatterService],
 })
-export class CreateOrEditActorModalComponent extends AppComponentBase implements OnInit {
+export class CreateOrEditActorModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
   @ViewChild('requiredDocumentFormChildComponent', { static: false }) requiredDocumentFormChildComponent: RequiredDocumentFormChildComponent;
 
@@ -61,6 +62,9 @@ export class CreateOrEditActorModalComponent extends AppComponentBase implements
   }
 
   show(actorId?: number): void {
+    this.HaveShipperClients = this.feature.isEnabled('App.ShipperClients');
+    this.HaveCarrierClients = this.feature.isEnabled('App.CarrierClients');
+
     if (!actorId) {
       this.actor = new CreateOrEditActorDto();
       this.actor.createOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
@@ -72,8 +76,6 @@ export class CreateOrEditActorModalComponent extends AppComponentBase implements
       this._documentFilesServiceProxy.getActorShipperRequiredDocumentFiles('').subscribe((result) => {
         this.actor.createOrEditDocumentFileDtos = result;
       });
-      this.HaveShipperClients = this.feature.isEnabled('App.ShipperClients');
-      this.HaveCarrierClients = this.feature.isEnabled('App.CarrierClients');
 
       this.active = true;
       this.modal.show();
@@ -191,8 +193,6 @@ export class CreateOrEditActorModalComponent extends AppComponentBase implements
     );
   }
 
-  ngOnInit(): void {}
-
   save(): void {
     this.saving = true;
 
@@ -205,5 +205,10 @@ export class CreateOrEditActorModalComponent extends AppComponentBase implements
     } else {
       this.createOrEd();
     }
+  }
+
+  isInUpdateStage(): boolean {
+    // in case of the Id have value then we are in update stage
+    return isNotNullOrUndefined(this.actor?.id);
   }
 }

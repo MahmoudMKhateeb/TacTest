@@ -8,6 +8,7 @@ import {
   CreateOrEditActorShipperPriceInput,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-create-or-edit-actors-price',
@@ -23,6 +24,7 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
   }
 
   @Input() shippingRequestId: any;
+  @Input() numberOfCreatedTrips: number;
   createOrEditActorShipperPriceInput: CreateOrEditActorShipperPriceInput = new CreateOrEditActorShipperPriceInput();
   createOrEditActorCarrierPriceInput: CreateOrEditActorCarrierPriceInput = new CreateOrEditActorCarrierPriceInput();
   active = true;
@@ -30,17 +32,19 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
 
   GetCreateOrEditActorShipperPriceInputForCreateOrEdit() {
     this.actorsPriceOffersServiceProxy.getCreateOrEditActorShipperPriceInputForCreateOrEdit(this.shippingRequestId).subscribe((result) => {
-      console.log(result);
       this.createOrEditActorShipperPriceInput = result;
-      this.createOrEditActorShipperPriceInput.actorShipperPriceDto = new ActorShipperPriceDto();
+      if (!isNotNullOrUndefined(this.createOrEditActorShipperPriceInput.actorShipperPriceDto)) {
+        this.createOrEditActorShipperPriceInput.actorShipperPriceDto = new ActorShipperPriceDto();
+      }
     });
   }
 
   GetCreateOrEditActorCarrierPriceInputForCreateOrEdit() {
     this.actorsPriceOffersServiceProxy.getCreateOrEditActorCarrierPriceInputForCreateOrEdit(this.shippingRequestId).subscribe((result) => {
-      console.log(result);
       this.createOrEditActorCarrierPriceInput = result;
-      this.createOrEditActorCarrierPriceInput.actorCarrierPriceDto = new ActorCarrierPriceDto();
+      if (!isNotNullOrUndefined(this.createOrEditActorCarrierPriceInput.actorCarrierPriceDto)) {
+        this.createOrEditActorCarrierPriceInput.actorCarrierPriceDto = new ActorCarrierPriceDto();
+      }
     });
   }
 

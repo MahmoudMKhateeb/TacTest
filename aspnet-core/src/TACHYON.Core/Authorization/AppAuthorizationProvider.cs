@@ -747,6 +747,10 @@ namespace TACHYON.Authorization
                featureDependency: tmsFeatureDependency);
 
            #endregion
+
+           documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Actors, L("ActorDocumentFiles"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
+                   AppFeatures.DocumentsManagement));
         }
 
         private static ILocalizableString L(string name)

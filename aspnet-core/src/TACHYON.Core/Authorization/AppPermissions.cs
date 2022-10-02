@@ -259,6 +259,7 @@
         public const string Pages_DocumentFiles_Create = "Pages.DocumentFiles.Create";
         public const string Pages_DocumentFiles_Edit = "Pages.DocumentFiles.Edit";
         public const string Pages_DocumentFiles_Delete = "Pages.DocumentFiles.Delete";
+        public const string Pages_DocumentFiles_Actors = "Pages.DocumentFiles.Actors";
 
         public const string Pages_DocumentTypes = "Pages.DocumentTypes";
         public const string Pages_DocumentTypes_Create = "Pages.DocumentTypes.Create";

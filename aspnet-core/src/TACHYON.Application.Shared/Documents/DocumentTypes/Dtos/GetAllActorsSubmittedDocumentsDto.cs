@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TACHYON.Actors;
 
 namespace TACHYON.Documents.DocumentTypes.Dtos
 {
@@ -12,6 +13,7 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public string DocumentTypeName { get; set; }
         public int Actor { get; set; }
         public string ActorName { get; set; }
+        public ActorTypesEnum ActorType { get; set; }
         public DateTime CreationTime { get; set; }
         public string Number { get; set; }
         public string Extn { get; set; }

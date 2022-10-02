@@ -3,7 +3,13 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
 import { ViewDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/view-documentFile-modal.component';
-import { DocumentFileDto, DocumentFilesServiceProxy, DocumentsEntitiesEnum, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  ActorTypesEnum,
+  DocumentFileDto,
+  DocumentFilesServiceProxy,
+  DocumentsEntitiesEnum,
+  TokenAuthServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { NotifyService } from '@node_modules/abp-ng2-module';
 import { ActivatedRoute } from '@angular/router';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -34,6 +40,7 @@ export class ActorsSubmittedDocumentsListComponent extends AppComponentBase impl
   todayMoment = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
   statuses: any[];
   items: any[] = [];
+  actorTypes = Object.entries(ActorTypesEnum);
 
   // ADDED DEVEXTREME GRID
   dataSource: any = {};
@@ -147,5 +154,10 @@ export class ActorsSubmittedDocumentsListComponent extends AppComponentBase impl
       this.reloadPage();
       this.notify.success(this.l('SuccessfullyAccepted'));
     });
+  }
+
+  getActorTypeTitle(actorTypeValue) {
+    let actorType = this.actorTypes.find((x) => x[0] == actorTypeValue);
+    return this.l(actorType[1].toString());
   }
 }

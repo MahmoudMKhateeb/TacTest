@@ -638,18 +638,6 @@
                   maxlength="256"
                 ></textarea>
               </div>
-              <div class="form-group">
-                <label for="taxVatNo">{{ 'Tax/VatNo' | localize }}</label>
-                <input
-                  id="taxVatNo"
-                  type="text"
-                  name="taxVatNo"
-                  class="form-control"
-                  [ngClass]="{ edited: settings.billing.taxVatNo }"
-                  [(ngModel)]="settings.billing.taxVatNo"
-                  maxlength="32"
-                />
-              </div>
             </tab>
 
             <tab class="p-5" *ngIf="true" heading="{{ 'BrokerInvoice' | localize }}">

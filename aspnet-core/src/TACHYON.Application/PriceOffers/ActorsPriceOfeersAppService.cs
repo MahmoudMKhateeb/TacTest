@@ -1,4 +1,5 @@
 ﻿using Abp.AutoMapper;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,6 +16,7 @@ using TACHYON.ShippingRequestTripVases;
 namespace TACHYON.PriceOffers
 {
     [AutoMapTo(typeof(ActorShipperPrice))]
+    [AutoMapFrom(typeof(ActorShipperPrice))]
     public class ActorShipperPriceDto
     {
         /// <summary>
@@ -49,6 +51,7 @@ namespace TACHYON.PriceOffers
 
 
     [AutoMapTo(typeof(ActorCarrierPrice))]
+    [AutoMapFrom(typeof(ActorCarrierPrice))]
     public class ActorCarrierPriceDto
     {
 
@@ -86,12 +89,17 @@ namespace TACHYON.PriceOffers
     {
 
         private readonly IRepository<ActorShipperPrice> _actorShipperPriceRepository;
+        private readonly IRepository<ActorCarrierPrice> _actorCarrierPriceRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
 
-        public ActorsPriceOffersAppService(IRepository<ActorShipperPrice> actorShipperPriceRepository, IRepository<ShippingRequest, long> shippingRequestRepository)
+        public ActorsPriceOffersAppService(
+            IRepository<ActorShipperPrice> actorShipperPriceRepository,
+            IRepository<ShippingRequest, long> shippingRequestRepository,
+            IRepository<ActorCarrierPrice> actorCarrierPriceRepository)
         {
             this._actorShipperPriceRepository = actorShipperPriceRepository;
             this._shippingRequestRepository = shippingRequestRepository;
+            _actorCarrierPriceRepository = actorCarrierPriceRepository;
         }
 
 
@@ -100,25 +108,28 @@ namespace TACHYON.PriceOffers
         public async Task<CreateOrEditActorShipperPriceInput> GetCreateOrEditActorShipperPriceInputForCreateOrEdit(long shippingRequestId)
         {
             DisableTenancyFilters();
-            var vasList = (await _shippingRequestRepository
-                    .GetAll()
-                    .Include(x => x.ShippingRequestVases)
-                    .ThenInclude(v => v.VasFk)
-                    .FirstAsync(x => x.Id == shippingRequestId))
-                .ShippingRequestVases;
-               
+            
+            var vasList = (
+                from srVas in _shippingRequestRepository.GetAll().SelectMany(x=> x.ShippingRequestVases)
+                where srVas.ShippingRequestId == shippingRequestId
+                from shipperVasPrice in _actorShipperPriceRepository.GetAll()
+                    .Where(x => x.ShippingRequestTripVasFk.ShippingRequestVasId == srVas.Id).DefaultIfEmpty()
+                select new ActorShipperPriceDto()
+                {
+                    VasDisplayName = srVas.VasFk.Name,
+                    VasId = srVas.VasId,
+                    TotalAmountWithCommission = shipperVasPrice != null? shipperVasPrice.TotalAmountWithCommission: default,
+                    SubTotalAmountWithCommission = shipperVasPrice != null? shipperVasPrice.SubTotalAmountWithCommission: default,
+                    VatAmountWithCommission = shipperVasPrice != null? shipperVasPrice.VatAmountWithCommission: default,
+                    TaxVat = shipperVasPrice != null? shipperVasPrice.TaxVat: default
+                });
 
             var input = new CreateOrEditActorShipperPriceInput();
-            input.VasActorShipperPriceDtoPrices = new List<ActorShipperPriceDto>();
-
-            foreach (var vas in vasList)
-            {
-                input.VasActorShipperPriceDtoPrices.Add(new ActorShipperPriceDto()
-                {
-                    VasDisplayName = vas.VasFk.Name,
-                    VasId = vas.VasFk.Id
-                });
-            }
+            input.VasActorShipperPriceDtoPrices = await vasList.ToListAsync();
+            var tripPrice = await (from shipperTripPrice in _actorShipperPriceRepository.GetAll()
+                where shipperTripPrice.ShippingRequestTripFk.ShippingRequestId == shippingRequestId
+                select shipperTripPrice).FirstOrDefaultAsync();
+            input.ActorShipperPriceDto = ObjectMapper.Map<ActorShipperPriceDto>(tripPrice);
 
             return input;
 
@@ -131,25 +142,28 @@ namespace TACHYON.PriceOffers
         public async Task<CreateOrEditActorCarrierPriceInput> GetCreateOrEditActorCarrierPriceInputForCreateOrEdit(long shippingRequestId)
         {
             DisableTenancyFilters();
-            var vasList = (await _shippingRequestRepository
-                    .GetAll()
-                    .Include(x => x.ShippingRequestVases)
-                    .ThenInclude(v => v.VasFk)
-                    .FirstAsync(x => x.Id == shippingRequestId))
-                .ShippingRequestVases;
-
-
-            var input = new CreateOrEditActorCarrierPriceInput();
-            input.VasActorCarrierPriceDtoPrices = new List<ActorCarrierPriceDto>();
-
-            foreach (var vas in vasList)
-            {
-                input.VasActorCarrierPriceDtoPrices.Add(new ActorCarrierPriceDto()
+            var vasList = (
+                from srVas in _shippingRequestRepository.GetAll().SelectMany(x=> x.ShippingRequestVases)
+                where srVas.ShippingRequestId == shippingRequestId
+                from carrierVasPrice in _actorCarrierPriceRepository.GetAll()
+                    .Where(x => x.ShippingRequestTripVasFk.ShippingRequestVasId == srVas.Id).DefaultIfEmpty()
+                select new ActorCarrierPriceDto()
                 {
-                    VasDisplayName = vas.VasFk.Name,
-                    VasId = vas.VasFk.Id
+                    VasDisplayName = srVas.VasFk.Name,
+                    VasId = srVas.VasId,
+                    SubTotalAmount = carrierVasPrice != null? carrierVasPrice.SubTotalAmount: default,
+                    VatAmount = carrierVasPrice != null? carrierVasPrice.VatAmount: default,
+                    TaxVat = carrierVasPrice != null? carrierVasPrice.TaxVat: default
                 });
-            }
+
+            var input = new CreateOrEditActorCarrierPriceInput
+            {
+                VasActorCarrierPriceDtoPrices = await vasList.ToListAsync()
+            };
+            var tripPrice = await (from carrierTripPrice in _actorCarrierPriceRepository.GetAll()
+                where carrierTripPrice.ShippingRequestTripFk.ShippingRequestId == shippingRequestId
+                select carrierTripPrice).FirstOrDefaultAsync();
+            input.ActorCarrierPriceDto = ObjectMapper.Map<ActorCarrierPriceDto>(tripPrice);
 
             return input;
 
@@ -167,16 +181,26 @@ namespace TACHYON.PriceOffers
 
             var shippingRequest = await _shippingRequestRepository.GetAll()
             .Include(x => x.ShippingRequestTrips)
+                .ThenInclude(t=> t.ShippingRequestTripVases).ThenInclude(v=> v.ActorShipperPriceFk)
+            .Include(x => x.ShippingRequestTrips)
                 .ThenInclude(t=> t.ShippingRequestTripVases)
             .ThenInclude(v=> v.ShippingRequestVasFk)
+            .Include(x => x.ShippingRequestTrips)
+            .ThenInclude(t=> t.ActorShipperPriceFk)
                 .SingleAsync(x => x.Id == input.ShippingRequestId);
 
 
 
             foreach (var shippingRequestTrip in shippingRequest.ShippingRequestTrips)
             {
-                shippingRequestTrip.ActorShipperPriceFk = ObjectMapper.Map<ActorShipperPrice>(input.ActorShipperPriceDto);
-                if (shippingRequestTrip.ShippingRequestTripVases == null)
+                // Start Of Create or Edit Actor Shipper Price 
+                if (shippingRequestTrip.ActorShipperPriceFk != null) 
+                    ObjectMapper.Map(input.ActorShipperPriceDto, shippingRequestTrip.ActorShipperPriceFk);
+                
+                shippingRequestTrip.ActorShipperPriceFk ??= ObjectMapper.Map<ActorShipperPrice>(input.ActorShipperPriceDto);
+                // End Of Create or Edit Actor Shipper Price 
+                
+                if (shippingRequestTrip.ShippingRequestTripVases.IsNullOrEmpty())
                 {
                     continue;
                 }
@@ -185,10 +209,13 @@ namespace TACHYON.PriceOffers
                 {
                     var vasActorShipperPriceDto = input.VasActorShipperPriceDtoPrices.FirstOrDefault(x => x.VasId == shippingRequestTripVase.ShippingRequestVasFk.VasId);
 
-                    if (vasActorShipperPriceDto != null)
-                    {
-                        shippingRequestTripVase.ActorShipperPriceFk = ObjectMapper.Map<ActorShipperPrice>(vasActorShipperPriceDto);
-                    }
+                    if (vasActorShipperPriceDto == null) continue;
+
+                    if (shippingRequestTripVase.ActorShipperPriceFk != null)
+                        ObjectMapper.Map(vasActorShipperPriceDto, shippingRequestTripVase.ActorShipperPriceFk);
+
+                    shippingRequestTripVase.ActorShipperPriceFk ??=
+                        ObjectMapper.Map<ActorShipperPrice>(vasActorShipperPriceDto);
                 }
             }
 
@@ -205,11 +232,17 @@ namespace TACHYON.PriceOffers
           .Include(x => x.ShippingRequestTrips)
               .ThenInclude(t => t.ShippingRequestTripVases)
           .ThenInclude(v => v.ShippingRequestVasFk)
+          .Include(x=> x.ShippingRequestTrips)
+          .ThenInclude(x=> x.ShippingRequestTripVases).ThenInclude(x=> x.ActorCarrierPriceFk)
+          .Include(x=> x.ShippingRequestTrips).ThenInclude(x=> x.ActorCarrierPriceFk)
               .SingleAsync(x => x.Id == input.ShippingRequestId);
 
             foreach (var shippingRequestTrip in shippingRequest.ShippingRequestTrips)
             {
-                shippingRequestTrip.ActorCarrierPriceFk = ObjectMapper.Map<ActorCarrierPrice>(input.ActorCarrierPriceDto);
+                if (shippingRequestTrip.ActorCarrierPriceFk != null)
+                    ObjectMapper.Map(input.ActorCarrierPriceDto, shippingRequestTrip.ActorCarrierPriceFk);
+                
+                shippingRequestTrip.ActorCarrierPriceFk ??= ObjectMapper.Map<ActorCarrierPrice>(input.ActorCarrierPriceDto);
 
                 if (shippingRequestTrip.ShippingRequestTripVases == null)
                 {
@@ -220,10 +253,14 @@ namespace TACHYON.PriceOffers
                 {
                     var vasActorCarrierPriceDto = input.VasActorCarrierPriceDtoPrices.FirstOrDefault(x => x.VasId == shippingRequestTripVase.ShippingRequestVasFk.VasId);
 
-                    if (vasActorCarrierPriceDto != null)
-                    {
-                        shippingRequestTripVase.ActorCarrierPriceFk = ObjectMapper.Map<ActorCarrierPrice>(vasActorCarrierPriceDto);
-                    }
+                    if (vasActorCarrierPriceDto == null) continue;
+
+                    if (shippingRequestTripVase.ActorCarrierPriceFk != null)
+                        ObjectMapper.Map(vasActorCarrierPriceDto, shippingRequestTripVase.ActorCarrierPriceFk);
+
+                    shippingRequestTripVase.ActorCarrierPriceFk ??=
+                        ObjectMapper.Map<ActorCarrierPrice>(vasActorCarrierPriceDto);
+                    
                 }
             }
 

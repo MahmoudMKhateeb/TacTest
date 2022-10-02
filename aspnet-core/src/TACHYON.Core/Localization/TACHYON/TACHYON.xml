@@ -3063,6 +3063,9 @@
 		<text name="CMS">CMS</text>
 		<text name="PhoneNumberPatternMsg">Length must be 9 digits and start with 5</text>
 		<text name="MoiNumberPatternMsg">Length must be 10 digits and start with 7</text>
+		<text name="DisabledActorPricesMsg">You can add a shipper/carrier actor price after adding one trip at least</text>
+		<text name="ActorCarrierInvoicesList">client carrier invoices list</text>
+		<text name="ActorInvoicesList">client invoices list</text>
 
 	</texts>
 </localizationDictionary>

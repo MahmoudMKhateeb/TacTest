@@ -276,8 +276,7 @@ namespace TACHYON.Configuration.Tenants
             {
                 LegalName =
                     await SettingManager.GetSettingValueAsync(AppSettings.TenantManagement.BillingLegalName),
-                Address = await SettingManager.GetSettingValueAsync(AppSettings.TenantManagement.BillingAddress),
-                TaxVatNo = await SettingManager.GetSettingValueAsync(AppSettings.TenantManagement.BillingTaxVatNo)
+                Address = await SettingManager.GetSettingValueAsync(AppSettings.TenantManagement.BillingAddress)
             };
         }
 
@@ -483,8 +482,6 @@ namespace TACHYON.Configuration.Tenants
                 AppSettings.TenantManagement.BillingLegalName, input.LegalName);
             await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
                 AppSettings.TenantManagement.BillingAddress, input.Address);
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
-                AppSettings.TenantManagement.BillingTaxVatNo, input.TaxVatNo);
         }
 
         private async Task UpdateLdapSettingsAsync(LdapSettingsEditDto input)

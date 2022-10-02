@@ -136,6 +136,7 @@ namespace TACHYON.Documents.DocumentFiles
 
             return result;
         }
+        [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Actors)]
         public async Task<LoadResult> GetAllActorsSubmittedDocuments(GetAllActorsSubmittedDocumentsInput input)
         {
             DisableTenancyFiltersIfHost();

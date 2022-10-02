@@ -2804,5 +2804,8 @@
 		<text name="CMS">إدارة العملاء</text>
 		<text name="PhoneNumberPatternMsg">يجب ان لايكون اطول من 9 ارقام ويبدأ بالرقم 5</text>
 		<text name="MoiNumberPatternMsg">يجب ان لايكون اطول من 10 ارقام ويبدأ بالرقم 7</text>
+		<text name="DisabledActorPricesMsg">يمكنك اضافة سعر ممثل الشاحن/الناقل بعد إضافة رحلة واحدة على الأقل</text>
+		<text name="ActorCarrierInvoicesList">قائمة فواتير الناقل للعميل</text>
+		<text name="ActorInvoicesList">قائمة فواتير العميل</text>
 	</texts>
 </localizationDictionary>

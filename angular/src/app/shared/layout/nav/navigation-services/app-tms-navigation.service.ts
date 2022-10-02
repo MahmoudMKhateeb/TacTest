@@ -87,6 +87,16 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
             undefined
           ),
           new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', '', '/app/main/documentFiles/documentFiles'),
+          new AppMenuItem(
+            'ActorsSubmittedDocuments',
+            'Pages.DocumentFiles.Actors',
+            '',
+            '/app/main/documentFiles/ActorsSubmittedDocuments',
+            [],
+            undefined,
+            undefined,
+            undefined
+          ),
         ],
         undefined,
         undefined

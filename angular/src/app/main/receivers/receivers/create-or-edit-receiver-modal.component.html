@@ -21,9 +21,9 @@
           </button>
         </div>
         <div class="modal-body">
-          <div *ngIf="this.feature.isEnabled('App.ShipperClients')" class="form-row">
+          <div *ngIf="this.feature.isEnabled('App.ShipperClients') && !facilityIdFromTrips" class="form-row">
             <div class="form-group col-md-12">
-              <label>{{ l('ActorShipper') }} <span class="required-fileds">*</span></label>
+              <label>{{ l('ActorShipper') }} <span *ngIf="isActorRequired()" class="required-fileds">*</span></label>
               <div
                 [ngClass]="{
                   'spinner spinner-success spinner-right mr-1 ml-1': isShippersActorsLoading
@@ -34,9 +34,9 @@
                   class="form-control"
                   name="shipperActor"
                   (change)="loadFacilitiesByActor(shipperActorId)"
-                  required
+                  [required]="isActorRequired()"
                 >
-                  <option [value]="undefined">{{ l('SelectShipper') }}</option>
+                  <option [ngValue]="undefined" selected disabled>{{ l('SelectShipper') }}</option>
                   <option *ngFor="let item of shipperActors" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>

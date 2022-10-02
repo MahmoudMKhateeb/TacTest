@@ -25,7 +25,8 @@
   </dxo-summary>
 
   <dxi-column cellTemplate="cellTemplateActions" [allowFiltering]="false" [allowSorting]="false" [width]="50"></dxi-column>
-  <dxi-column dataField="driverName" caption="{{ l('DriverName') }}"></dxi-column>
+  <dxi-column dataField="actorName" caption="{{ l('ActorName') }}"></dxi-column>
+  <dxi-column cellTemplate="cellActorType" dataField="actorType" caption="{{ l('ActorType') }}"></dxi-column>
   <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="datetime"></dxi-column>
   <dxi-column dataField="documentTypeName" caption="{{ l('DatatableDocumentName') }}" [allowGrouping]="false"></dxi-column>
   <dxi-column dataField="expirationDate" caption="{{ l('ExpirationDate') }}" dataType="date" cellTemplate="cellTemplateStatus"></dxi-column>
@@ -37,6 +38,9 @@
   <div *dxTemplate="let data of 'cellTemplateStatus'">
     <span *ngIf="data.value <= todayMoment" class="text-warning"> {{ data.value | date }}</span>
     <span *ngIf="data.value > todayMoment"> {{ data.value | date }}</span>
+  </div>
+  <div *dxTemplate="let data of 'cellActorType'">
+    <span class="badge badge-inline badge-primary"> {{ getActorTypeTitle(data.value) }}</span>
   </div>
 
   <div *dxTemplate="let options of 'cellTemplateActions'">

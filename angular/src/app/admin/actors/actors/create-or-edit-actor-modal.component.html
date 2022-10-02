@@ -47,6 +47,7 @@
               name="ActorType"
               id="Actor_ActorType"
               [(ngModel)]="actor.actorType"
+              [disabled]="isInUpdateStage()"
             >
               <option *ngIf="HaveShipperClients" value="1">{{ l('Shipper') }}</option>
 
@@ -77,52 +78,6 @@
             <label for="Actor_Address">{{ l('Address') }} <span class="required-fileds">*</span></label>
             <input type="text" #Actor_Address="ngModel" id="Actor_Address" class="form-control" [(ngModel)]="actor.address" name="Address" required />
             <validation-messages [formCtrl]="Actor_Address"></validation-messages>
-          </div>
-
-          <div class="form-group">
-            <label>{{ l('Logo') }} {{ fileToken }} </label>
-            <div class="custom-file">
-              <input
-                name="file"
-                (change)="DocFileChangeEvent($event, actor.createOrEditDocumentFileDto)"
-                type="file"
-                class="custom-file-input"
-                accept="image/x-png,image/jpeg,application/pdf"
-                required
-              />
-              <label class="custom-file-label text-truncate">
-                {{ actor.createOrEditDocumentFileDto?.name ? actor.createOrEditDocumentFileDto.name : l('SelectFile') }}</label
-              >
-            </div>
-            <div class="margin-top-5">
-              <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
-            </div>
-            <div class="mt-2" *ngIf="actor.createOrEditDocumentFileDto?.name">
-              <div class="d-flex align-items-center flex-wrap mb-8">
-                <!--begin::Symbol-->
-                <div class="symbol symbol-50 symbol-light mr-3 ml-3">
-                  <span class="symbol-label">
-                    <i class="fa-2x fa-file-image fas" style="color: #5cb85c" aria-hidden="true"></i>
-                  </span>
-                </div>
-                <!--end::Symbol-->
-                <!--begin::Text-->
-                <div class="d-flex flex-column flex-grow-1 mr-2">
-                  <a (click)="downloadAttatchment()" class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">
-                    {{ actor.createOrEditDocumentFileDto?.name }}</a
-                  >
-                  <span class="text-muted font-weight-bold">{{ actor.createOrEditDocumentFileDto?.documentTypeDto?.templateContentType }}</span>
-                </div>
-                <!--end::Text-->
-                <a
-                  *ngIf="actor.createOrEditDocumentFileDto?.binaryObjectId"
-                  (click)="downloadAttatchment()"
-                  class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
-                >
-                  <i class="flaticon2-download"></i>
-                </a>
-              </div>
-            </div>
           </div>
 
           <div class="form-group">
@@ -168,7 +123,7 @@
 
           <div *ngIf="actor.createOrEditDocumentFileDtos != undefined ? (actor.createOrEditDocumentFileDtos.length > 0 ? true : false) : false">
             <div class="separator separator-dashed my-5"></div>
-            <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TruckDocuments') }}</h3>
+            <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TenantRequiredDocuments') }}</h3>
             <app-required-document-form-child
               #requiredDocumentFormChildComponent
               [createOrEditDocumentFileDtos]="actor.createOrEditDocumentFileDtos"

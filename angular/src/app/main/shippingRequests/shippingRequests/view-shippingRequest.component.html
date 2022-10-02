@@ -45,7 +45,10 @@
       </ng-template>
       <!--  end:: NormalPricePackageSection -->
 
-      <app-create-or-edit-actors-price [shippingRequestId]="activeShippingRequestId"></app-create-or-edit-actors-price>
+      <app-create-or-edit-actors-price
+        [numberOfCreatedTrips]="shippingRequestforView.totalsTripsAddByShippier"
+        [shippingRequestId]="activeShippingRequestId"
+      ></app-create-or-edit-actors-price>
 
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->

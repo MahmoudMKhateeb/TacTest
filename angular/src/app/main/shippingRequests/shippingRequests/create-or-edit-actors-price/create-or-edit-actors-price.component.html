@@ -1,4 +1,5 @@
-<div class="card card-custom gutter-b">
+<div *ngIf="numberOfCreatedTrips < 1" class="alert alert-primary">{{ 'DisabledActorPricesMsg' | localize }}</div>
+<div class="card card-custom gutter-b" [ngClass]="{ 'div-disabled': numberOfCreatedTrips < 1 }">
   <!--  start of card::form-->
   <div class="card-header">
     <h3 class="card-title">{{ l('ActorsShipperPrices') }}</h3>
@@ -28,6 +29,7 @@
             <input
               [(ngModel)]="createOrEditActorShipperPriceInput.actorShipperPriceDto.subTotalAmountWithCommission"
               min="0"
+              (keypress)="numberOnly($event)"
               required
               type="number"
               class="form-control"
@@ -74,6 +76,7 @@
             <input
               [(ngModel)]="vas.subTotalAmountWithCommission"
               min="0"
+              (keypress)="numberOnly($event)"
               required
               type="number"
               class="form-control"
@@ -111,7 +114,7 @@
     </div>
   </form>
 </div>
-<div class="card card-custom gutter-b">
+<div class="card card-custom gutter-b" [ngClass]="{ 'div-disabled': numberOfCreatedTrips < 1 }">
   <!--  start of card::form-->
   <div class="card-header">
     <h3 class="card-title">{{ l('ActorsCarrierPrices') }}</h3>
@@ -140,6 +143,7 @@
             <input
               [(ngModel)]="createOrEditActorCarrierPriceInput.actorCarrierPriceDto.subTotalAmount"
               min="0"
+              (keypress)="numberOnly($event)"
               required
               type="number"
               class="form-control"
@@ -165,6 +169,7 @@
             <input
               [(ngModel)]="vas.subTotalAmount"
               min="0"
+              (keypress)="numberOnly($event)"
               required
               type="number"
               class="form-control"
@@ -180,7 +185,7 @@
       <button
         type="submit"
         class="btn btn-primary blue"
-        [disabled]="!createOrEditCarrierPriceForm.form.valid"
+        [disabled]="!createOrEditCarrierPriceForm.form.valid || numberOfCreatedTrips < 1"
         [buttonBusy]="saving"
         [busyText]="l('SavingWithThreeDot')"
       >

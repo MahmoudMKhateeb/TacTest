@@ -167,7 +167,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
           ),
           new AppMenuItem(
             'ActorsSubmittedDocuments',
-            'Pages.DocumentFiles',
+            'Pages.DocumentFiles.Actors',
             '',
             '/app/main/documentFiles/ActorsSubmittedDocuments',
             [],
