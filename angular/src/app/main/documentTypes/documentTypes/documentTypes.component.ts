@@ -16,15 +16,16 @@ import { ViewDocumentTypeModalComponent } from './view-documentType-modal.compon
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   templateUrl: './documentTypes.component.html',
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
+  providers: [EnumToArrayPipe],
 })
 export class DocumentTypesComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('createOrEditDocumentTypeModal', { static: true }) createOrEditDocumentTypeModal: CreateOrEditDocumentTypeModalComponent;
@@ -44,7 +45,7 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit, 
 
   // ADDED DEVEXTREME GRID
   dataSource: any = {};
-  popupPosition = { of: window, at: 'top', my: 'top', offset: { y: 10 } };
+  popupPosition: any = { of: window, at: 'top', my: 'top', offset: { y: 10 } };
   createOrEditDocumentTypeDto: CreateOrEditDocumentTypeDto = new CreateOrEditDocumentTypeDto();
 
   constructor(
@@ -53,7 +54,8 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit, 
     private _notifyService: NotifyService,
     private _tokenAuth: TokenAuthServiceProxy,
     private _activatedRoute: ActivatedRoute,
-    private _fileDownloadService: FileDownloadService
+    private _fileDownloadService: FileDownloadService,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
   }
@@ -146,18 +148,16 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit, 
     });
   }
 
-  exportToExcel(): void {
-    this._documentTypesServiceProxy
-      .getDocumentTypesToExcel(this.filterText, this.displayNameFilter, this.isRequiredFilter, this.hasExpirationDateFilter, this.requiredFromFilter)
-      .subscribe((result) => {
-        this._fileDownloadService.downloadTempFile(result);
-      });
-  }
+  // exportToExcel(): void {
+  //   this._documentTypesServiceProxy
+  //     .getDocumentTypesToExcel(this.filterText, this.displayNameFilter, this.isRequiredFilter, this.hasExpirationDateFilter, this.requiredFromFilter)
+  //     .subscribe((result) => {
+  //       this._fileDownloadService.downloadTempFile(result);
+  //     });
+  // }
 
   getDocumentsEntityLookUp() {
-    this._documentTypesServiceProxy.getDocumentEntitiesForTableDropdown().subscribe((result) => {
-      this.entityList = result;
-    });
+    this.entityList = this.enumToArray.transform(DocumentsEntitiesEnum);
   }
 
   getEditionsLookUp() {

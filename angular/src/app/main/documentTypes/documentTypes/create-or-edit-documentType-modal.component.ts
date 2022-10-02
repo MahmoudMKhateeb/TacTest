@@ -17,6 +17,8 @@ import { finalize } from 'rxjs/operators';
 import {
   CreateOrEditDocumentTypeDto,
   DocumentFilesServiceProxy,
+  DocumentsEntitiesEnum,
+  DocumentTypeFlagEnum,
   DocumentTypesServiceProxy,
   DocumentTypeTranslationsServiceProxy,
   ISelectItemDto,
@@ -32,6 +34,7 @@ import { IAjaxResponse, NotifyService, TokenService } from '@node_modules/abp-ng
 import { ActivatedRoute } from '@angular/router';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { AppConsts } from '@shared/AppConsts';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 const toBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -47,6 +50,7 @@ const toBase64 = (file) =>
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [appModuleAnimation()],
+  providers: [EnumToArrayPipe],
 })
 export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase implements OnInit, AfterContentChecked {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
@@ -64,7 +68,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase imp
   saving = false;
   documentNameisAvaliable = true;
   documentType: CreateOrEditDocumentTypeDto = new CreateOrEditDocumentTypeDto();
-  allDocumentsEntities: SelectItemDto[];
+  allDocumentsEntities: [];
   buttonOptions: any = {
     text: 'Add',
     type: 'success',
@@ -77,7 +81,8 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase imp
   Tenants: ISelectItemDto[];
   value: File[] = [];
   authorizationToken: string;
-  uploadUrl: string = AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile';
+  uploadUrl: string;
+  DocumentTypeFlags: any;
 
   constructor(
     private injector: Injector,
@@ -89,7 +94,8 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase imp
     private _activatedRoute: ActivatedRoute,
     private _fileDownloadService: FileDownloadService,
     private changeDetectorRef: ChangeDetectorRef,
-    private _tokenService: TokenService
+    private _tokenService: TokenService,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
   }
@@ -101,9 +107,8 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase imp
   }
 
   show(documentTypeId?: number): void {
-    this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
-      this.allDocumentsEntities = result;
-    });
+    this.allDocumentsEntities = this.enumToArray.transform(DocumentsEntitiesEnum);
+    this.DocumentTypeFlags = this.enumToArray.transform(DocumentTypeFlagEnum);
 
     if (!documentTypeId) {
       this.documentType = new CreateOrEditDocumentTypeDto();

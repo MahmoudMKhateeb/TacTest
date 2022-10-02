@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
 	<texts>
+    <text name="Actors">Actors</text>
+    <text name="Actor">Actor</text>
+    <text name="TACHYON.Actors.Actor">Actor</text>
+    <text name="ActorType">Actor type</text>
+    <text name="Logo">Logo</text>
+    <text name="ActorsHeaderInfo">Actors header info</text>
+    <text name="CreateNewActor">Create new actor</text>
+    <text name="EditActor">Edit actor</text>
+    <text name="DeleteActor">Delete actor</text>
+
     <text name="DriverLicenseTypes">Driver license types</text>
     <text name="DriverLicenseType">Driver license type</text>
     <text name="TACHYON.DriverLicenseTypes.DriverLicenseType">DriverLicenseType</text>
@@ -3074,6 +3084,13 @@
 		<text name="SubmitInvoiceOnClaimNotificationDefinition"> Notify me when a submit invoice has been claimed</text>
 		<text name="SubmitInvoiceOnAcceptedNotificationDefinition"> Notify me when a submit invoice has been accepted</text>
 		<text name="SubmitInvoiceOnRejectedNotificationDefinition"> Notify me when a submit invoice has been rejected</text>
+		<text name="CmsFeature">Clients Management System Feature</text>
+		<text name="CMS">CMS</text>
+		<text name="PhoneNumberPatternMsg">Length must be 9 digits and start with 5</text>
+		<text name="MoiNumberPatternMsg">Length must be 10 digits and start with 7</text>
+		<text name="DisabledActorPricesMsg">You can add a shipper/carrier actor price after adding one trip at least</text>
+		<text name="ActorCarrierInvoicesList">client carrier invoices list</text>
+		<text name="ActorInvoicesList">client invoices list</text>
 
 	</texts>
 </localizationDictionary>

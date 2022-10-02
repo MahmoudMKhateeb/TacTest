@@ -6,6 +6,13 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Administration_Actors = "Pages.Administration.Actors";
+        public const string Pages_Administration_Actors_Create = "Pages.Administration.Actors.Create";
+        public const string Pages_Administration_Actors_Edit = "Pages.Administration.Actors.Edit";
+        public const string Pages_Administration_Actors_Delete = "Pages.Administration.Actors.Delete";
+
+        public const string Pages_Administration_ActorsInvoice = "Pages.Administration.ActorsInvoice";
+
         public const string Pages_EmailTemplates = "Pages.EmailTemplates";
         public const string Pages_EmailTemplates_Create = "Pages.EmailTemplates.Create";
         public const string Pages_EmailTemplates_Edit = "Pages.EmailTemplates.Edit";
@@ -188,7 +195,6 @@
         public const string Pages_ShippingRequestVases_Edit = "Pages.ShippingRequestVases.Edit";
         public const string Pages_ShippingRequestVases_Delete = "Pages.ShippingRequestVases.Delete";
 
-
         public const string Pages_VasPrices = "Pages.VasPrices";
         public const string Pages_VasPrices_Create = "Pages.VasPrices.Create";
         public const string Pages_VasPrices_Edit = "Pages.VasPrices.Edit";
@@ -255,6 +261,7 @@
         public const string Pages_DocumentFiles_Create = "Pages.DocumentFiles.Create";
         public const string Pages_DocumentFiles_Edit = "Pages.DocumentFiles.Edit";
         public const string Pages_DocumentFiles_Delete = "Pages.DocumentFiles.Delete";
+        public const string Pages_DocumentFiles_Actors = "Pages.DocumentFiles.Actors";
 
         public const string Pages_DocumentTypes = "Pages.DocumentTypes";
         public const string Pages_DocumentTypes_Create = "Pages.DocumentTypes.Create";
@@ -534,7 +541,6 @@
         public const string Pages_Administration_Host_Invoices_PaymentMethod_Delete =
             "Pages.Administration.Host.Invoices.PaymentMethod.Delete";
 
-
         public const string Pages_Invoices = "Pages.Invoices";
 
         public const string Pages_Administration_Host_Invoices_Delete =
@@ -545,7 +551,6 @@
         public const string Pages_Administration_Host_Invoices_MakeUnPaid =
             "Pages.Administration.Host.Invoices.MakeUnPaid";
 
-
         public const string Pages_Administration_Host_Invoices_Balances = "Pages.Administration.Host.Invoices.Balances";
 
         public const string Pages_Administration_Host_Invoices_Balances_Create =
@@ -553,7 +558,6 @@
 
         public const string Pages_Administration_Host_Invoices_Balances_Delete =
             "Pages.Administration.Host.Invoices_Balances.Delete";
-
 
         public const string Pages_Invoices_SubmitInvoices = "Pages.Invoices.SubmitInvoices";
 

@@ -10,7 +10,7 @@ namespace TACHYON.PriceOffers.Dto
     /// <summary>
     /// mapped from ShippingRequest
     /// </summary>
-    public class GetShippingRequestForPriceOfferListDto : EntityDto<long>
+    public class GetShippingRequestForPriceOfferListDto : EntityDto<long> 
     {
         public long? DirectRequestId { get; set; }
         public long? OfferId { get; set; }
@@ -64,6 +64,13 @@ namespace TACHYON.PriceOffers.Dto
 
         public List<ShippingRequestDestinationCitiesDto> destinationCities { get; set; }
 
+        public int? ShipperActorId { get; set; }
+
+
+        public int? CarrierActorId { get; set; }
+
+
+
         /// <summary>
         /// shipper Id 
         /// </summary>
@@ -73,6 +80,8 @@ namespace TACHYON.PriceOffers.Dto
         {
             get => TenantId == CarrierTenantId;
 
-        }
+        }  
+        
+
     }
 }

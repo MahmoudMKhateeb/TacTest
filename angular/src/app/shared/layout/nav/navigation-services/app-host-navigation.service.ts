@@ -229,6 +229,16 @@ export class AppHostNavigationService extends AppBaseNavigationService {
           // ),
 
           // new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
+          new AppMenuItem(
+            'ActorsSubmittedDocuments',
+            'Pages.DocumentFiles.Actors',
+            '',
+            '/app/main/documentFiles/ActorsSubmittedDocuments',
+            [],
+            undefined,
+            undefined,
+            undefined
+          ),
         ],
         undefined,
         undefined

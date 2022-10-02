@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using TACHYON.DataExporting;
 using TACHYON.Dto;
 using TACHYON.Invoices.InoviceNote;
@@ -96,5 +97,23 @@ namespace TACHYON.Invoices.Reports
         {
             return _invoiceNoteRepository.FirstOrDefault(invoiceNoteId)?.ReferanceNumber.ToString();
         }
+
+        public async Task<FileDto> DownloadActorShipperInvoiceReportPdf(long actorInvoiceId)
+        {
+            var reportPath = "/Invoices/Reports/LandScapeInvoice_Actor.rdlc";
+
+            ArrayList names = new ArrayList();
+            ArrayList data = new ArrayList();
+
+            var invoice = await _invoiceAppService.GetActorShipperInvoiceReportInfo(actorInvoiceId);
+            names.Add("GetInvoiceReportInfoDataset");
+            data.Add(invoice);
+
+            names.Add("GetInvoiceShippingRequestsReportInfoDataset");
+            data.Add(_invoiceAppService.GetActorInvoiceShippingRequestsReportInfo(actorInvoiceId));
+            var number = invoice.FirstOrDefault()?.InvoiceNumber.ToString();
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(number, reportPath, names, data);
+        }
+
     }
 }

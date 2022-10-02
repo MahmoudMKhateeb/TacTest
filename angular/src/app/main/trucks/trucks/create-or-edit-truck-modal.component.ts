@@ -9,6 +9,7 @@ import {
   DocumentFilesServiceProxy,
   ISelectItemDto,
   PlateTypeSelectItemDto,
+  PriceOfferServiceProxy,
   SelectItemDto,
   ShippingRequestsServiceProxy,
   TrucksServiceProxy,
@@ -91,6 +92,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   carriers: CarriersForDropDownDto[] = [];
   truckTypeLoading: boolean;
   plateTypesLoading: boolean;
+  AllActorsCarriers: SelectItemDto[];
   selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
   selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
   private dataTable: Table;
@@ -119,7 +121,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
     private _fileDownloadService: FileDownloadService,
     private changeDetectorRef: ChangeDetectorRef,
-    private _shippingRequestsService: ShippingRequestsServiceProxy
+    private _shippingRequestsService: ShippingRequestsServiceProxy,
+    private _priceOfferService: PriceOfferServiceProxy
   ) {
     super(injector);
     this.plateTypesLoading = false;
@@ -155,6 +158,10 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.initTransportDropDownList();
       this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
         this.allTruckStatuss = result;
+      });
+
+      this._priceOfferService.getAllCarrierActorsForDropDown().subscribe((result) => {
+        this.AllActorsCarriers = result;
       });
 
       if (this.isTruckTenantRequired) {

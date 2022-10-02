@@ -213,7 +213,35 @@ namespace TACHYON.Configuration
                     GetFromAppSettings(AppSettings.TenantManagement.BillingTaxVatNo, ""), scopes: SettingScopes.Tenant),
                 new SettingDefinition(AppSettings.Email.UseHostDefaultEmailSettings,
                     GetFromAppSettings(AppSettings.Email.UseHostDefaultEmailSettings,
-                        TACHYONConsts.MultiTenancyEnabled ? "true" : "false"), scopes: SettingScopes.Tenant)
+                        TACHYONConsts.MultiTenancyEnabled ? "true" : "false"), scopes: SettingScopes.Tenant),
+
+                // Broker Invoice Settings 
+                new SettingDefinition(AppSettings.Invoice.BrokerBankNameEnglish,
+                    GetFromAppSettings(AppSettings.Invoice.BrokerBankNameEnglish, ""), isVisibleToClients: true,
+                    scopes: SettingScopes.Tenant),
+                new SettingDefinition(AppSettings.Invoice.BrokerBankNameArabic,
+                    GetFromAppSettings(AppSettings.Invoice.BrokerBankNameArabic, ""), isVisibleToClients: true,
+                    scopes: SettingScopes.Tenant),
+                new SettingDefinition(AppSettings.Invoice.BrokerIban,
+                    GetFromAppSettings(AppSettings.Invoice.BrokerIban, ""), isVisibleToClients: true,
+                    scopes: SettingScopes.Tenant),
+                new SettingDefinition(AppSettings.Invoice.BrokerBankAccountNumber,
+                    GetFromAppSettings(AppSettings.Invoice.BrokerBankAccountNumber, ""),
+                    isVisibleToClients: true, scopes: SettingScopes.Tenant),
+               new SettingDefinition(AppSettings.Invoice.BrokerEmailAddress,
+                    GetFromAppSettings(AppSettings.Invoice.BrokerEmailAddress, ""),
+                    isVisibleToClients: true, scopes: SettingScopes.Tenant),
+              new SettingDefinition(AppSettings.Invoice.BrokerWebSite,
+                    GetFromAppSettings(AppSettings.Invoice.BrokerWebSite, ""),
+                    isVisibleToClients: true, scopes: SettingScopes.Tenant),
+                 new SettingDefinition(AppSettings.Invoice.BrokerAddress,
+                    GetFromAppSettings(AppSettings.Invoice.BrokerAddress, ""),
+                    isVisibleToClients: true, scopes: SettingScopes.Tenant),
+
+                  new SettingDefinition(AppSettings.Invoice.BrokerMobile,
+                    GetFromAppSettings(AppSettings.Invoice.BrokerMobile, ""),
+                    isVisibleToClients: true, scopes: SettingScopes.Tenant),
+
             };
         }
 
@@ -820,7 +848,7 @@ namespace TACHYON.Configuration
                                 new Widget
                                 {
                                     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
-                                        .ShipperMostUsedOriginsWidget, 
+                                        .ShipperMostUsedOriginsWidget,
                                     Height = 10,
                                     Width = 12,
                                     PositionX = 0,
@@ -829,7 +857,7 @@ namespace TACHYON.Configuration
                                 new Widget
                                 {
                                     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
-                                        .ShipperMostUsedDestinationsWidget, 
+                                        .ShipperMostUsedDestinationsWidget,
                                     Height = 10,
                                     Width = 12,
                                     PositionX = 12,
@@ -838,7 +866,7 @@ namespace TACHYON.Configuration
                                 new Widget
                                 {
                                     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
-                                        .ShipperMostWorkedWithCarriersWidget, 
+                                        .ShipperMostWorkedWithCarriersWidget,
                                     Height = 8,
                                     Width = 12,
                                     PositionX = 0,
@@ -897,7 +925,7 @@ namespace TACHYON.Configuration
                                     PositionX = 12,
                                     PositionY = 3
                                 },
-                                
+
                             }
                         },
                         new Page
@@ -968,7 +996,8 @@ namespace TACHYON.Configuration
 
             var facebookExternalLoginProviderInfo = new FacebookExternalLoginProviderSettings()
             {
-                AppId = appId, AppSecret = appSecret
+                AppId = appId,
+                AppSecret = appSecret
             };
 
             return new[]
@@ -998,7 +1027,9 @@ namespace TACHYON.Configuration
 
             var googleExternalLoginProviderInfo = new GoogleExternalLoginProviderSettings()
             {
-                ClientId = clientId, ClientSecret = clientSecret, UserInfoEndpoint = userInfoEndPoint
+                ClientId = clientId,
+                ClientSecret = clientSecret,
+                UserInfoEndpoint = userInfoEndPoint
             };
 
             return new[]
@@ -1027,7 +1058,8 @@ namespace TACHYON.Configuration
 
             var twitterExternalLoginProviderInfo = new TwitterExternalLoginProviderSettings()
             {
-                ConsumerKey = consumerKey, ConsumerSecret = consumerSecret
+                ConsumerKey = consumerKey,
+                ConsumerSecret = consumerSecret
             };
 
             return new[]
@@ -1056,7 +1088,8 @@ namespace TACHYON.Configuration
 
             var microsoftExternalLoginProviderInfo = new MicrosoftExternalLoginProviderSettings()
             {
-                ClientId = consumerKey, ClientSecret = consumerSecret
+                ClientId = consumerKey,
+                ClientSecret = consumerSecret
             };
 
 

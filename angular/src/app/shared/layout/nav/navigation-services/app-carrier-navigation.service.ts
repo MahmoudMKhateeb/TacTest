@@ -78,10 +78,9 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
         undefined,
         undefined,
-        () => this.isEnabled('App.CarrierAsASaas')
+        () => this.isEnabled('App.ShipperClients')
       ),
-      // end of AddressBook "Facilities Management"
-      //  ---------------------------------------------------------------------------------------------------------------------
+      //end  Of AddressBook  "Facilities Management"
       // start of PricePackages
       new AppMenuItem(
         'PricePackages',
@@ -148,6 +147,28 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
             () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
           ),
           new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', '', '/app/main/invoices/transaction'),
+          new AppMenuItem(
+            'ActorInvoicesList',
+            'Pages.Administration.ActorsInvoice',
+            '',
+            '/app/admin/actors/invoices',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.ShipperClients')
+          ),
+          new AppMenuItem(
+            'ActorCarrierInvoicesList',
+            'Pages.Administration.ActorsInvoice',
+            '',
+            '/app/admin/actors/invoices',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.CarrierClients')
+          ),
         ]
       ),
       // end of  Invoices
@@ -193,10 +214,34 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
           ),
+          new AppMenuItem(
+            'ActorsSubmittedDocuments',
+            'Pages.DocumentFiles',
+            '',
+            '/app/main/documentFiles/ActorsSubmittedDocuments',
+            [],
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.ShipperClients')
+          ),
         ],
         undefined,
         undefined
       ),
+      /////Start of Actors
+      new AppMenuItem(
+        'Actors',
+        'Pages.Administration.Actors',
+        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
+        '/app/admin/actors/actors',
+        [],
+        [],
+        undefined,
+        undefined,
+        () => this.isEnabled('App.ShipperClients')
+      ),
+      //end of actors
       //end of Documents
       //  ---------------------------------------------------------------------------------------------------------------------
       //start of Settings

@@ -11,6 +11,7 @@ import {
   NationalitiesServiceProxy,
   OrganizationUnitDto,
   PasswordComplexitySetting,
+  PriceOfferServiceProxy,
   ProfileServiceProxy,
   SelectItemDto,
   ShippingRequestsServiceProxy,
@@ -40,7 +41,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
     private _driverLicenseTypesServiceProxy: DriverLicenseTypesServiceProxy,
 
-    private _shippingRequestServiceProxy: ShippingRequestsServiceProxy
+    private _shippingRequestServiceProxy: ShippingRequestsServiceProxy,
+    private _priceOfferService: PriceOfferServiceProxy
   ) {
     super(injector);
     this.getDriverRequiredDocumentFiles();
@@ -81,6 +83,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   CheckingIfDriverPhoneNumberIsValid = false;
 
   driverLicenseTypes: GetLicenseTypeForDropDownOutput[] = [];
+  AllActorsCarriers: SelectItemDto[];
 
   // CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
   //   this.isWaintingUserNameValidation = true;
@@ -132,6 +135,10 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       if (this.isUserTenantRequired) {
         this._shippingRequestServiceProxy.getAllCarriersForDropDown().subscribe((result) => (this.carriers = result));
       }
+
+      this._priceOfferService.getAllCarrierActorsForDropDown().subscribe((result) => {
+        this.AllActorsCarriers = result;
+      });
 
       this._profileService.getPasswordComplexitySetting().subscribe((passwordComplexityResult) => {
         this.passwordComplexitySetting = passwordComplexityResult.setting;

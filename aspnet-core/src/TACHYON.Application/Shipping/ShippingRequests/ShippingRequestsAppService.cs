@@ -22,6 +22,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Actors;
 using TACHYON.AddressBook;
 using TACHYON.AddressBook.Ports;
 using TACHYON.Authorization;
@@ -107,7 +108,8 @@ namespace TACHYON.Shipping.ShippingRequests
             IEntityChangeSetReasonProvider reasonProvider,
             NormalPricePackageManager normalPricePackageManager,
             SrPostPriceUpdateManager postPriceUpdateManager,
-            IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository)
+            IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository,
+            IRepository<Actor> actorsRepository)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -139,6 +141,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _normalPricePackageManager = normalPricePackageManager;
             _postPriceUpdateManager = postPriceUpdateManager;
             _shippingRequestDestinationCityRepository = shippingRequestDestinationCityRepository;
+            _actorsRepository = actorsRepository;
         }
 
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
@@ -172,6 +175,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly IRepository<ShippingRequestDestinationCity> _shippingRequestDestinationCityRepository;
 
+        private readonly IRepository<Actor> _actorsRepository;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
             DisableTenancyFilters();
@@ -536,7 +540,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.TenantId = input.ShipperId.Value;
             }
 
-            if (await IsCarrier() && await IsEnabledAsync(AppFeatures.CarrierAsASaas))
+            var isSaas = await IsCarrier() && await IsEnabledAsync(AppFeatures.CarrierAsASaas);
+            if (isSaas || input.IsInternalBrokerRequest)
             {
                 shippingRequest.TenantId = AbpSession.TenantId.Value;
                 shippingRequest.CarrierTenantId = AbpSession.TenantId.Value;
@@ -800,6 +805,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 bool isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
                 int? abpSessionTenantId = AbpSession.TenantId;
 
+
                 async Task<bool> IsCarrierSaasAndSrOwner()
                 {
                     return await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierAsASaas) &&
@@ -842,13 +848,14 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Select(e =>
                         new GetShippingRequestVasForViewDto
                         {
-                            ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e), VasName = e.VasFk.Key
+                            ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e),
+                            VasName = e.VasFk.Key
                         }).ToListAsync();
 
                 //Bids
                 List<ShippingRequestBidDto> shippingRequestBidDtoList = new List<ShippingRequestBidDto>();
                 //hid bids for shipper if SR IsTachyonDeal 
-                if (isShipper && shippingRequest.IsTachyonDeal)
+                if (await IsEnabledAsync(AppFeatures.Shipper) && shippingRequest.IsTachyonDeal)
                 {
                     // don't fill bids list
                 }
@@ -910,6 +917,47 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 return output;
             }
+        }
+
+        private async Task<bool> CanGetShippingRequestForView(ShippingRequest shippingRequest)
+        {
+
+            var result = false;
+
+            //TMS access
+
+            if ((await IsTachyonDealer()) && shippingRequest.IsTachyonDeal)
+            {
+                result = true;
+
+            }
+
+            // shippers access
+            if (shippingRequest.TenantId == AbpSession.TenantId)
+            {
+                result = true;
+            }
+
+            //carrier access if he is not assigned to the SR
+            else if (shippingRequest.CarrierTenantId != AbpSession.TenantId)
+            {
+                //if PrePrice or NeedsAction
+                if (shippingRequest.Status == ShippingRequestStatus.PrePrice || shippingRequest.Status == ShippingRequestStatus.NeedsAction)
+                {
+                    var carrierHasOffers = _carrierDirectPricingRepository
+                        .GetAll()
+                        .Any(e => e.RequestId == shippingRequest.Id && e.CarrirerTenantId == AbpSession.TenantId);
+
+                    // if carrier has no offers 
+                    if (carrierHasOffers)
+                    {
+                        result = true;
+                    }
+                }
+            }
+
+            return await Task.FromResult(result);
+
         }
 
         public async Task<bool> CanAddTripForShippingRequest(long shippingRequestId)
@@ -1113,22 +1161,22 @@ namespace TACHYON.Shipping.ShippingRequests
             var shippingRequestVases = _shippingRequestVasRepository.GetAll().Include(x => x.VasFk)
                 .Where(z => z.ShippingRequestId == shippingRequestId);
             var result = from o in shippingRequestVases
-                join o1 in _vasPriceRepository.GetAll() on o.VasId equals o1.VasId into j1
-                from s1 in j1.DefaultIfEmpty()
-                select new ShippingRequestVasPriceDto()
-                {
-                    ShippingRequestVas = new ShippingRequestVasListOutput
-                    {
-                        VasName = o.VasFk.Key == null || o.VasFk.Key == null ? "" : o.VasFk.Key,
-                        HasAmount = o.VasFk.HasAmount,
-                        HasCount = o.VasFk.HasCount,
-                        MaxAmount = o.RequestMaxAmount,
-                        MaxCount = o.RequestMaxCount,
-                    },
-                    ActualPrice = s1.Price,
-                    ShippingRequestVasId = o.Id,
-                    DefaultPrice = s1.Price
-                };
+                         join o1 in _vasPriceRepository.GetAll() on o.VasId equals o1.VasId into j1
+                         from s1 in j1.DefaultIfEmpty()
+                         select new ShippingRequestVasPriceDto()
+                         {
+                             ShippingRequestVas = new ShippingRequestVasListOutput
+                             {
+                                 VasName = o.VasFk.Key == null || o.VasFk.Key == null ? "" : o.VasFk.Key,
+                                 HasAmount = o.VasFk.HasAmount,
+                                 HasCount = o.VasFk.HasCount,
+                                 MaxAmount = o.RequestMaxAmount,
+                                 MaxCount = o.RequestMaxCount,
+                             },
+                             ActualPrice = s1.Price,
+                             ShippingRequestVasId = o.Id,
+                             DefaultPrice = s1.Price
+                         };
             return await result.ToListAsync();
         }
 
@@ -1141,14 +1189,16 @@ namespace TACHYON.Shipping.ShippingRequests
             pricedShippingRequest.PricedVasesList = await _shippingRequestVasRepository.GetAll().Include(x => x.VasFk)
                 .Include(s => s.ShippingRequestFk).Where(z => z.ShippingRequestId == shippingRequestId)
                 .Select(x => new ShippingRequestVasPriceDto
+                {
+                    ActualPrice = x.ActualPrice,
+                    ShippingRequestVasId = x.Id,
+                    ShippingRequestVas = new ShippingRequestVasListOutput
                     {
-                        ActualPrice = x.ActualPrice,
-                        ShippingRequestVasId = x.Id,
-                        ShippingRequestVas = new ShippingRequestVasListOutput
-                        {
-                            VasName = x.VasFk.Key, MaxAmount = x.RequestMaxAmount, MaxCount = x.RequestMaxCount,
-                        }
+                        VasName = x.VasFk.Key,
+                        MaxAmount = x.RequestMaxAmount,
+                        MaxCount = x.RequestMaxCount,
                     }
+                }
                 ).ToListAsync();
 
             var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(x => x.Id == shippingRequestId);
@@ -1325,7 +1375,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     Id = x.Id,
                     MasterWaybillNo = x.WaybillNumber.Value,
                     ShippingRequestStatus = x.Status == Trips.ShippingRequestTripStatus.Delivered ? "Final" : "Draft",
-                    ClientName = x.ShippingRequestFk.Tenant.TenancyName,
+                    ClientName = (x.ShippingRequestFk.IsSaas() && x.ShippingRequestFk.ShipperActorId!=null) ?x.ShippingRequestFk.ShipperActorFk.CompanyName :x.ShippingRequestFk.Tenant.TenancyName ,
                     CarrierName = x.ShippingRequestFk.CarrierTenantFk.TenancyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
                     driverUserId = x.AssignedDriverUserId,
@@ -1698,6 +1748,30 @@ namespace TACHYON.Shipping.ShippingRequests
                     IsOther = x.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower())
                 }).ToListAsync());
 
+        }
+
+
+        public async Task<List<SelectItemDto>> GetAllShippersActorsForDropDown()
+        {
+            return await _actorsRepository.GetAll()
+                 .Where(x => x.ActorType == ActorTypesEnum.Shipper)
+                   .Select(x => new SelectItemDto()
+                   {
+                       Id = x.Id.ToString(),
+                       DisplayName = x.CompanyName
+                   }).ToListAsync();
+        }
+        
+
+        public async Task<List<SelectItemDto>> GetAllCarriersActorsForDropDown()
+        {
+            return await _actorsRepository.GetAll()
+                 .Where(x => x.ActorType == ActorTypesEnum.Carrier)
+                   .Select(x => new SelectItemDto()
+                   {
+                       Id = x.Id.ToString(),
+                       DisplayName = x.CompanyName
+                   }).ToListAsync();
         }
         //end Multiple Drops
 

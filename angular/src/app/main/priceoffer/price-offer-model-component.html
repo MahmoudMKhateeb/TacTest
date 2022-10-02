@@ -18,8 +18,24 @@
       </div>
       <div class="modal-body">
         <form #Form="ngForm" novalidate (ngSubmit)="type == 'Reprice' ? Reprice(SRUpdateId) : confirmSendOffer()">
+          <div class="form-group row" *ngIf="this.feature.isEnabled('App.CarrierClients')">
+            <div class="col-lg-4">
+              <label>{{ l('ActorCarrier') }} <span class="required-fileds">*</span></label>
+              <div
+                [ngClass]="{
+                          'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsCarriers
+                        }"
+              >
+                <select class="form-control" name="ActorShipper" formControlName="ActorShipper" [(ngModel)]="offer.carrierActorId" required>
+                  <option [value]="undefined">{{ l('SelectActor') }}</option>
+                  <option *ngFor="let item of AllActorsCarriers" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+              <span class="form-text text-muted">{{ l('SelectActor') }} {{ offer.carrierActorId }}</span>
+            </div>
+          </div>
           <div class="form-group row">
-            <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
+            <div class="col-lg-4" *ngIf="feature.isEnabled('App.TachyonDealer')">
               <label>{{ l('CommissionType') }}:</label>
               <select
                 class="form-control"
@@ -30,7 +46,7 @@
                 <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
               </select>
             </div>
-            <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
+            <div class="col-lg-4" *ngIf="feature.isEnabled('App.TachyonDealer')">
               <label>{{ l('CommissionTypeValue') }}:</label>
               <input
                 type="number"
@@ -43,7 +59,7 @@
             </div>
           </div>
           <div class="form-group row">
-            <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
+            <div class="col-lg-4" *ngIf="feature.isEnabled('App.TachyonDealer')">
               <label>{{ l('VasCommissionType') }}:</label>
 
               <select
@@ -55,7 +71,7 @@
                 <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
               </select>
             </div>
-            <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
+            <div class="col-lg-4" *ngIf="feature.isEnabled('App.TachyonDealer')">
               <label>{{ l('VasCommissionPercentageOrAddValue') }}:</label>
 
               <input

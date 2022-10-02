@@ -7,6 +7,8 @@ import {
   ReceiverFacilityLookupTableDto,
   ShippersForDropDownDto,
   PenaltiesServiceProxy,
+  SelectItemDto,
+  ShippingRequestsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
@@ -31,13 +33,25 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   receiver: CreateOrEditReceiverDto = new CreateOrEditReceiverDto();
   // facilityName = '';
   allFacilitys: ReceiverFacilityLookupTableDto[];
-  constructor(injector: Injector, private _receiversServiceProxy: ReceiversServiceProxy, private _penaltiesServiceProxy: PenaltiesServiceProxy) {
+  isShippersActorsLoading: boolean;
+  isFacilitiesLoading: boolean;
+  shipperActorId: number;
+  shipperActors: SelectItemDto[];
+  canManageShipperClients: boolean;
+  constructor(
+    injector: Injector,
+    private _receiversServiceProxy: ReceiversServiceProxy,
+    private _penaltiesServiceProxy: PenaltiesServiceProxy,
+    private _shippingRequestServiceProxy: ShippingRequestsServiceProxy
+  ) {
     super(injector);
+    this.isShippersActorsLoading = false;
+    this.isFacilitiesLoading = false;
   }
 
   show(receiverId?: number, facilityIdFromTrip?: number): void {
-    console.log('facilityIdFromTrip', facilityIdFromTrip);
     this.facilityIdFromTrips = isNotNullOrUndefined(facilityIdFromTrip) ? Number(facilityIdFromTrip) : null;
+    this.canManageShipperClients = this.feature.isEnabled('App.ShipperClients');
     if (!receiverId) {
       //  {
       //           id: null,
@@ -51,17 +65,43 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     } else {
       this._receiversServiceProxy.getReceiverForEdit(receiverId).subscribe((result) => {
         this.receiver = result.receiver;
+        this.shipperActorId = result.shipperActorId;
+        this.loadFacilitiesByActor(this.shipperActorId);
       });
     }
-    if (!this.isTachyonDealerOrHost) {
-      this._receiversServiceProxy.getAllFacilityForTableDropdown(this.receiver.tenantId).subscribe((result) => {
-        this.allFacilitys = result;
-        this.receiver.facilityId = this.facilityIdFromTrips;
-      });
+    if (this.canManageShipperClients && !facilityIdFromTrip) {
+      this.loadShippersActors();
     }
-    this.loadAllCompaniesForDropDown();
+
+    this.loadAllFacilities();
+    if (this.isTachyonDealerOrHost) {
+      this.loadAllCompaniesForDropDown();
+    }
     this.active = true;
     this.modal.show();
+  }
+
+  private loadAllFacilities() {
+    // Important Note: There's some cases we must not load all facilities
+    // 1- if the user is a broker and he is creating a receiver from the contact management page. hint: not from create trip
+    // 2- if the user is a broker and he is updating an internal receiver (actor has value) from the contact management page
+
+    if (!this.facilityIdFromTrips && this.canManageShipperClients) {
+      if (!this.receiver.id || isNotNullOrUndefined(this.shipperActorId)) {
+        return;
+      }
+    }
+
+    this.isFacilitiesLoading = true;
+    this._receiversServiceProxy
+      .getAllFacilityForTableDropdown()
+      .pipe(finalize(() => (this.isFacilitiesLoading = false)))
+      .subscribe((result) => {
+        this.allFacilitys = result;
+        if (isNotNullOrUndefined(this.facilityIdFromTrips)) {
+          this.receiver.facilityId = this.facilityIdFromTrips;
+        }
+      });
   }
 
   save(): void {
@@ -82,6 +122,10 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   }
 
   close(): void {
+    this.receiver = new CreateOrEditReceiverDto();
+    this.allFacilitys = undefined;
+    this.shipperActors = undefined;
+    this.shipperActorId = undefined;
     this.active = false;
     this.modal.hide();
   }
@@ -103,10 +147,36 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     });
   }
 
-  LoadFacilities() {
-    this._receiversServiceProxy.getAllFacilityForTableDropdown(this.receiver.tenantId).subscribe((result) => {
-      this.allFacilitys = result;
-      this.receiver.facilityId = this.facilityIdFromTrips;
-    });
+  loadShippersActors() {
+    this.isShippersActorsLoading = true;
+    this._shippingRequestServiceProxy
+      .getAllShippersActorsForDropDown()
+      .pipe(
+        finalize(() => {
+          this.isShippersActorsLoading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.shipperActors = result;
+      });
+  }
+
+  loadFacilitiesByActor(actorId) {
+    if (isNotNullOrUndefined(actorId)) {
+      this.isFacilitiesLoading = true;
+      this._receiversServiceProxy
+        .getAllFacilitiesByActorId(actorId)
+        .pipe(finalize(() => (this.isFacilitiesLoading = false)))
+        .subscribe((result) => {
+          this.allFacilitys = result;
+        });
+    } else {
+      this.loadAllFacilities();
+    }
+  }
+
+  isActorRequired(): boolean {
+    // broker in this cases need to fill actor
+    return !this.receiver.id || isNotNullOrUndefined(this.shipperActorId);
   }
 }

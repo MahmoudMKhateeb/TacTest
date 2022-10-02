@@ -118,16 +118,57 @@ namespace TACHYON.Features
 
 
 
-            var broker = context.Create(
-                AppFeatures.Broker,
+            // Clients Management System feature: this feature has sub features 
+            // Sub features like : Shipper Clients, Carrier Clients, Client Login to the system, Document Management, and Direct Trip Feature
+            // those feature used by Editions => Broker & Carrier SAAS .. See documentation for more details 
+            
+            var cms = context.Create(
+                AppFeatures.CMS,
                 "false",
-                L("BrokerFeature"), // todo add localization here
+                L("CmsFeature"), 
                 inputType: new CheckboxInputType()
-            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-            {
-                IsVisibleOnPricingTable = true,
-                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
-            };
+            );
+            //    [FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+            //{
+            //    IsVisibleOnPricingTable = true,
+            //    TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+            //};
+
+            cms.CreateChildFeature(
+                AppFeatures.ShipperClients,
+                "false",
+                L("ShipperClients"),
+                inputType: new CheckboxInputType()
+            );
+
+            cms.CreateChildFeature(
+                AppFeatures.CarrierClients,
+                "false",
+                L("CarrierClients"),
+                inputType: new CheckboxInputType()
+            );
+
+            cms.CreateChildFeature(
+                AppFeatures.CanClientLoginToSystem,
+                "false",
+                L("CanClientLoginToSystem"),
+                inputType: new CheckboxInputType()
+            );
+
+            cms.CreateChildFeature(
+                AppFeatures.CreateDirectTrip,
+                "false",
+                L("CreateDirectTrip"),
+                inputType: new CheckboxInputType()
+            );
+
+            cms.CreateChildFeature(
+                AppFeatures.DocumentsManagement,
+                "false",
+                L("DocumentsManagement"),
+                inputType: new CheckboxInputType()
+            );
+
 
             var receiver = context.Create(
                 AppFeatures.Receiver,
@@ -871,6 +912,7 @@ namespace TACHYON.Features
             #endregion
 
             #endregion
+
 
         }
 

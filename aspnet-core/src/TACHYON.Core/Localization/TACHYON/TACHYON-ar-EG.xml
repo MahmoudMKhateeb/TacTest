@@ -2837,6 +2837,13 @@
 		<text name="SubmitInvoiceOnClaimNotificationDefinition">قم بأعلامي عند مطالبة الفاتورة المرسلة</text>
 		<text name="SubmitInvoiceOnAcceptedNotificationDefinition">قم بأعلامي عند قبول الفاتورة المرسلة</text>
 		<text name="SubmitInvoiceOnRejectedNotificationDefinition">قم بأعلامي عند رفض الفاتورة المرسلة</text>
+		<text name="CmsFeature">ميزة نظام إدارة العملاء</text>
+		<text name="CMS">إدارة العملاء</text>
+		<text name="PhoneNumberPatternMsg">يجب ان لايكون اطول من 9 ارقام ويبدأ بالرقم 5</text>
+		<text name="MoiNumberPatternMsg">يجب ان لايكون اطول من 10 ارقام ويبدأ بالرقم 7</text>
+		<text name="DisabledActorPricesMsg">يمكنك اضافة سعر ممثل الشاحن/الناقل بعد إضافة رحلة واحدة على الأقل</text>
+		<text name="ActorCarrierInvoicesList">قائمة فواتير الناقل للعميل</text>
+		<text name="ActorInvoicesList">قائمة فواتير العميل</text>
 
 	</texts>
 </localizationDictionary>

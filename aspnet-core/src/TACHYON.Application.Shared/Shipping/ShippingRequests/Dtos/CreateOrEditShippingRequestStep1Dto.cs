@@ -40,6 +40,11 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         [JsonIgnore] public ShippingRequestType RequestType { get; set; }
 
+            public int? ShipperActorId { get; set; }
+            public int? CarrierActorId { get; set; }
+
+            public bool IsInternalBrokerRequest { get; set; }
+
         public void AddValidationErrors(CustomValidationContext context)
         {
             //if (this.StartTripDate.Date < Clock.Now.Date)

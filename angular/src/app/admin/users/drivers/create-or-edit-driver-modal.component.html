@@ -163,6 +163,34 @@
                     </select>
                   </div>
                 </div>
+
+                <div class="col-sm-12" *ngIf="this.feature.isEnabled('App.CarrierClients')">
+                  <div class="form-group">
+                    <label>{{ l('ActorCarrier') }} <span class="required-fileds">*</span></label>
+                    <div
+                      [ngClass]="{
+                        'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsCarriers
+                      }"
+                    >
+                      <select
+                        id="carrierActorId"
+                        #carrierActorId="ngModel"
+                        [(ngModel)]="user.carrierActorId"
+                        class="form-control"
+                        name="user.carrierActorId"
+                        required
+                        [ngClass]="{
+                          'is-valid': carrierActorId.valid,
+                          'is-invalid': userForm.submitted && carrierActorId.invalid
+                        }"
+                      >
+                        <option [ngValue]="null">{{ l('Select') }} {{ l('CarrierActor') }}</option>
+                        <option *ngFor="let item of AllActorsCarriers" value="{{ item.id }}">{{ item.displayName }}</option>
+                      </select>
+                      <validation-messages [formCtrl]="carrierActorId"></validation-messages>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div class="row">

@@ -10,7 +10,7 @@
 								{{LocalizationPrepareForEnum}}
 								<div class=\"form-group m-form__group\">
 									<label for=\"{{Entity_Name_Here}}_{{Property_Name_Here}}\">@L(\"{{Property_Name_Here}}\")</label>
-										<select class=\"form-control m-input m-input--square\" name=\"{{property_Name_Here}}\" id=\"{{Entity_Name_Here}}_{{Property_Name_Here}}\" asp-for=\"@Model.{{Entity_Name_Here}}.{{Property_Name_Here}}\" asp-items=\"@selectList{{Property_Name_Here}}\" {{Required}}>
+										<select class=\"form-select m-input m-input--square\" name=\"{{property_Name_Here}}\" id=\"{{Entity_Name_Here}}_{{Property_Name_Here}}\" asp-for=\"@Model.{{Entity_Name_Here}}.{{Property_Name_Here}}\" asp-items=\"@selectList{{Property_Name_Here}}\" {{Required}}>
 									</select>
 								</div>
 					"
@@ -100,7 +100,7 @@
 								{{LocalizationPrepareForEnum}}
 								<div class=\"my-3 m-form__group\">
 									<label class=\"form-label\" for=\"{{Entity_Name_Here}}_{{Property_Name_Here}}\">@L(\"{{Property_Name_Here}}\")</label>
-										<select class=\"form-control m-input m-input--square\" name=\"{{property_Name_Here}}\" id=\"{{Entity_Name_Here}}_{{Property_Name_Here}}\" asp-for=\"@Model.{{Entity_Name_Here}}.{{Property_Name_Here}}\" asp-items=\"@selectList{{Property_Name_Here}}\" {{Required}}>
+										<select class=\"form-select m-input m-input--square\" name=\"{{property_Name_Here}}\" id=\"{{Entity_Name_Here}}_{{Property_Name_Here}}\" asp-for=\"@Model.{{Entity_Name_Here}}.{{Property_Name_Here}}\" asp-items=\"@selectList{{Property_Name_Here}}\" {{Required}}>
 									</select>
 								</div>
 					"
@@ -123,6 +123,7 @@
                                         name=\"{{property_Name_Here}}\"                                        
                                         type=\"checkbox\"
                                         class=\"form-check-input\"
+                                        value=\"true\"
                                         @Html.Raw(Model.{{Entity_Name_Here}}.{{Property_Name_Here}} ?\"checked=\\\"checked\\\"\":\"\") 
                                     />
                                     <span class=\"form-check-label\">

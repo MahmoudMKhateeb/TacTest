@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Integration.WaslIntegration;
+using TACHYON.Invoices.ActorInvoices;
 using TACHYON.Penalties;
 using TACHYON.PriceOffers;
 using TACHYON.Rating;
@@ -151,5 +152,22 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public string RoundTrip { get; set; }
         public string ContainerNumber { get; set; }
         #endregion
+
+        public ActorCarrierPrice ActorCarrierPriceFk { get; set; }
+
+
+
+        public ActorShipperPrice ActorShipperPriceFk { get; set; }
+
+
+        public long? ActorInvoiceId { get; set; }
+
+        [ForeignKey("ActorInvoiceId")]
+        public ActorInvoice ActorInvoiceFk { get; set; }
+
+        public long? ActorSubmitInvoiceId { get; set; }
+
+        [ForeignKey("ActorSubmitInvoiceId")]
+        public ActorSubmitInvoice ActorSubmitInvoiceFk { get; set; }
     }
 }

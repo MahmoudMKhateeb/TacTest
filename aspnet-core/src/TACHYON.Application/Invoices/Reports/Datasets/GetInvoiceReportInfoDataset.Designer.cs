@@ -335,6 +335,30 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             private global::System.Data.DataColumn columnQRCode;
             
+            private global::System.Data.DataColumn columnLogo;
+            
+            private global::System.Data.DataColumn columnBrokerName;
+            
+            private global::System.Data.DataColumn columnBrokerBankNameArabic;
+            
+            private global::System.Data.DataColumn columnBrokerBankNameEnglish;
+            
+            private global::System.Data.DataColumn columnBrokerBankAccountNumber;
+            
+            private global::System.Data.DataColumn columnBrokerIban;
+            
+            private global::System.Data.DataColumn columnBrokerEmailAddress;
+            
+            private global::System.Data.DataColumn columnBrokerWebSite;
+            
+            private global::System.Data.DataColumn columnBrokerAddress;
+            
+            private global::System.Data.DataColumn columnBrokerMobile;
+            
+            private global::System.Data.DataColumn columnBrokerCr;
+            
+            private global::System.Data.DataColumn columnBrokerVat;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public DataTable1DataTable() {
@@ -593,7 +617,103 @@ namespace TACHYON.Invoices.Reports.Datasets {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn LogoColumn {
+                get {
+                    return this.columnLogo;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn BrokerNameColumn {
+                get {
+                    return this.columnBrokerName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn BrokerBankNameArabicColumn {
+                get {
+                    return this.columnBrokerBankNameArabic;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn BrokerBankNameEnglishColumn {
+                get {
+                    return this.columnBrokerBankNameEnglish;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn BrokerBankAccountNumberColumn {
+                get {
+                    return this.columnBrokerBankAccountNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn BrokerIbanColumn {
+                get {
+                    return this.columnBrokerIban;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn BrokerEmailAddressColumn {
+                get {
+                    return this.columnBrokerEmailAddress;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn BrokerWebSiteColumn {
+                get {
+                    return this.columnBrokerWebSite;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn BrokerAddressColumn {
+                get {
+                    return this.columnBrokerAddress;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn BrokerMobileColumn {
+                get {
+                    return this.columnBrokerMobile;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn BrokerCrColumn {
+                get {
+                    return this.columnBrokerCr;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn BrokerVatColumn {
+                get {
+                    return this.columnBrokerVat;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -657,7 +777,19 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         string FinancialName, 
                         string FinancialPhone, 
                         string FinancialEmail, 
-                        string QRCode) {
+                        string QRCode,
+                        byte Logo, 
+                        string BrokerName, 
+                        string BrokerBankNameArabic, 
+                        string BrokerBankNameEnglish, 
+                        string BrokerBankAccountNumber, 
+                        string BrokerIban, 
+                        string BrokerEmailAddress, 
+                        string BrokerWebSite, 
+                        string BrokerAddress, 
+                        string BrokerMobile, 
+                        string BrokerCr, 
+                        string BrokerVat) {
                 DataTable1Row rowDataTable1Row = ((DataTable1Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         InvoiceNumber,
@@ -687,7 +819,20 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         FinancialName,
                         FinancialPhone,
                         FinancialEmail,
-                        QRCode};
+                        QRCode,
+                        TenantVatNumber,
+                        Logo,
+                        BrokerName,
+                        BrokerBankNameArabic,
+                        BrokerBankNameEnglish,
+                        BrokerBankAccountNumber,
+                        BrokerIban,
+                        BrokerEmailAddress,
+                        BrokerWebSite,
+                        BrokerAddress,
+                        BrokerMobile,
+                        BrokerCr,
+                        BrokerVat};
                 rowDataTable1Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTable1Row);
                 return rowDataTable1Row;
@@ -738,6 +883,18 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 this.columnFinancialPhone = base.Columns["FinancialPhone"];
                 this.columnFinancialEmail = base.Columns["FinancialEmail"];
                 this.columnQRCode = base.Columns["QRCode"];
+                this.columnLogo = base.Columns["Logo"];
+                this.columnBrokerName = base.Columns["BrokerName"];
+                this.columnBrokerBankNameArabic = base.Columns["BrokerBankNameArabic"];
+                this.columnBrokerBankNameEnglish = base.Columns["BrokerBankNameEnglish"];
+                this.columnBrokerBankAccountNumber = base.Columns["BrokerBankAccountNumber"];
+                this.columnBrokerIban = base.Columns["BrokerIban"];
+                this.columnBrokerEmailAddress = base.Columns["BrokerEmailAddress"];
+                this.columnBrokerWebSite = base.Columns["BrokerWebSite"];
+                this.columnBrokerAddress = base.Columns["BrokerAddress"];
+                this.columnBrokerMobile = base.Columns["BrokerMobile"];
+                this.columnBrokerCr = base.Columns["BrokerCr"];
+                this.columnBrokerVat = base.Columns["BrokerVat"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -799,6 +956,30 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 base.Columns.Add(this.columnFinancialEmail);
                 this.columnQRCode = new global::System.Data.DataColumn("QRCode", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnQRCode);
+                this.columnLogo = new global::System.Data.DataColumn("Logo", typeof(byte), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLogo);
+                this.columnBrokerName = new global::System.Data.DataColumn("BrokerName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBrokerName);
+                this.columnBrokerBankNameArabic = new global::System.Data.DataColumn("BrokerBankNameArabic", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBrokerBankNameArabic);
+                this.columnBrokerBankNameEnglish = new global::System.Data.DataColumn("BrokerBankNameEnglish", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBrokerBankNameEnglish);
+                this.columnBrokerBankAccountNumber = new global::System.Data.DataColumn("BrokerBankAccountNumber", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBrokerBankAccountNumber);
+                this.columnBrokerIban = new global::System.Data.DataColumn("BrokerIban", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBrokerIban);
+                this.columnBrokerEmailAddress = new global::System.Data.DataColumn("BrokerEmailAddress", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBrokerEmailAddress);
+                this.columnBrokerWebSite = new global::System.Data.DataColumn("BrokerWebSite", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBrokerWebSite);
+                this.columnBrokerAddress = new global::System.Data.DataColumn("BrokerAddress", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBrokerAddress);
+                this.columnBrokerMobile = new global::System.Data.DataColumn("BrokerMobile", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBrokerMobile);
+                this.columnBrokerCr = new global::System.Data.DataColumn("BrokerCr", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBrokerCr);
+                this.columnBrokerVat = new global::System.Data.DataColumn("BrokerVat", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBrokerVat);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1388,7 +1569,199 @@ namespace TACHYON.Invoices.Reports.Datasets {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public byte Logo {
+                get {
+                    try {
+                        return ((byte)(this[this.tableDataTable1.LogoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Logo\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.LogoColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string BrokerName {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.BrokerNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BrokerName\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.BrokerNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string BrokerBankNameArabic {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.BrokerBankNameArabicColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BrokerBankNameArabic\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.BrokerBankNameArabicColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string BrokerBankNameEnglish {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.BrokerBankNameEnglishColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BrokerBankNameEnglish\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.BrokerBankNameEnglishColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string BrokerBankAccountNumber {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.BrokerBankAccountNumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BrokerBankAccountNumber\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.BrokerBankAccountNumberColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string BrokerIban {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.BrokerIbanColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BrokerIban\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.BrokerIbanColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string BrokerEmailAddress {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.BrokerEmailAddressColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BrokerEmailAddress\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.BrokerEmailAddressColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string BrokerWebSite {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.BrokerWebSiteColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BrokerWebSite\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.BrokerWebSiteColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string BrokerAddress {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.BrokerAddressColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BrokerAddress\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.BrokerAddressColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string BrokerMobile {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.BrokerMobileColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BrokerMobile\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.BrokerMobileColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string BrokerCr {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.BrokerCrColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BrokerCr\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.BrokerCrColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string BrokerVat {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.BrokerVatColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BrokerVat\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.BrokerVatColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsInvoiceNumberNull() {
                 return this.IsNull(this.tableDataTable1.InvoiceNumberColumn);
             }
@@ -1721,6 +2094,150 @@ namespace TACHYON.Invoices.Reports.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetQRCodeNull() {
                 this[this.tableDataTable1.QRCodeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsLogoNull() {
+                return this.IsNull(this.tableDataTable1.LogoColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetLogoNull() {
+                this[this.tableDataTable1.LogoColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsBrokerNameNull() {
+                return this.IsNull(this.tableDataTable1.BrokerNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetBrokerNameNull() {
+                this[this.tableDataTable1.BrokerNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsBrokerBankNameArabicNull() {
+                return this.IsNull(this.tableDataTable1.BrokerBankNameArabicColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetBrokerBankNameArabicNull() {
+                this[this.tableDataTable1.BrokerBankNameArabicColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsBrokerBankNameEnglishNull() {
+                return this.IsNull(this.tableDataTable1.BrokerBankNameEnglishColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetBrokerBankNameEnglishNull() {
+                this[this.tableDataTable1.BrokerBankNameEnglishColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsBrokerBankAccountNumberNull() {
+                return this.IsNull(this.tableDataTable1.BrokerBankAccountNumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetBrokerBankAccountNumberNull() {
+                this[this.tableDataTable1.BrokerBankAccountNumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsBrokerIbanNull() {
+                return this.IsNull(this.tableDataTable1.BrokerIbanColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetBrokerIbanNull() {
+                this[this.tableDataTable1.BrokerIbanColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsBrokerEmailAddressNull() {
+                return this.IsNull(this.tableDataTable1.BrokerEmailAddressColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetBrokerEmailAddressNull() {
+                this[this.tableDataTable1.BrokerEmailAddressColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsBrokerWebSiteNull() {
+                return this.IsNull(this.tableDataTable1.BrokerWebSiteColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetBrokerWebSiteNull() {
+                this[this.tableDataTable1.BrokerWebSiteColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsBrokerAddressNull() {
+                return this.IsNull(this.tableDataTable1.BrokerAddressColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetBrokerAddressNull() {
+                this[this.tableDataTable1.BrokerAddressColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsBrokerMobileNull() {
+                return this.IsNull(this.tableDataTable1.BrokerMobileColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetBrokerMobileNull() {
+                this[this.tableDataTable1.BrokerMobileColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsBrokerCrNull() {
+                return this.IsNull(this.tableDataTable1.BrokerCrColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetBrokerCrNull() {
+                this[this.tableDataTable1.BrokerCrColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsBrokerVatNull() {
+                return this.IsNull(this.tableDataTable1.BrokerVatColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetBrokerVatNull() {
+                this[this.tableDataTable1.BrokerVatColumn] = global::System.Convert.DBNull;
             }
         }
         

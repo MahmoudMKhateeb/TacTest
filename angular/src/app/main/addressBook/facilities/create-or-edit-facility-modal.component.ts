@@ -9,6 +9,7 @@ import {
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
   PenaltiesServiceProxy,
+  SelectItemDto,
   ShippersForDropDownDto,
   ShippingRequestsServiceProxy,
   TenantRegistrationServiceProxy,
@@ -50,6 +51,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   countries: CountyDto[];
   private geoCoder: google.maps.Geocoder;
   polygonStyle = styleObject;
+  AllActorsShippers: SelectItemDto[];
   days = WeekDay;
   FacilityWorkingHours: any[];
   mapCenterLat: number;
@@ -73,6 +75,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private _countriesServiceProxy: TenantRegistrationServiceProxy,
     private ngZone: NgZone,
+    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private mapsAPILoader: MapsAPILoader,
     private _penaltiesServiceProxy: PenaltiesServiceProxy
   ) {
@@ -82,6 +85,11 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   ngOnInit() {
     this.loadAllCountries();
     this.loadAllCompaniesForDropDown();
+    if (this.feature.isEnabled('App.ShipperClients')) {
+      this._shippingRequestsServiceProxy.getAllShippersActorsForDropDown().subscribe((result) => {
+        this.AllActorsShippers = result;
+      });
+    }
   }
 
   private get SelectedCountryCode(): string {
@@ -126,6 +134,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
 
   show(facilityId?: number): void {
     this.active = true;
+
     if (!facilityId) {
       this.facility = new CreateOrEditFacilityDto();
       this.facility.id = facilityId;

@@ -1,14 +1,14 @@
-import { AppSessionService } from '@shared/common/session/app-session.service';
+﻿import { AppSessionService } from '@shared/common/session/app-session.service';
 import { Injectable } from '@angular/core';
 import { AppMenu } from './app-menu';
 import { AppMenuItem } from './app-menu-item';
 import { FeatureCheckerService } from '@node_modules/abp-ng2-module';
 import { PermissionCheckerService } from 'abp-ng2-module';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { AppHostNavigationService } from '@app/shared/layout/nav/navigation-services/app-host-navigation.service';
 import { AppCarrierNavigationService } from '@app/shared/layout/nav/navigation-services/app-carrier-navigation.service';
 import { AppShipperNavigationService } from '@app/shared/layout/nav/navigation-services/app-shipper-navigation.service';
 import { AppTMSNavigationService } from '@app/shared/layout/nav/navigation-services/app-tms-navigation.service';
+import { AppBrokerNavigationService } from '@app/shared/layout/nav/navigation-services/app-broker-navigation.service';
 
 @Injectable()
 export class AppNavigationService {
@@ -19,7 +19,8 @@ export class AppNavigationService {
     private appHostNavService: AppHostNavigationService,
     private appTMSNavService: AppTMSNavigationService,
     private appShipperNavService: AppShipperNavigationService,
-    private appCarrierNavService: AppCarrierNavigationService
+    private appCarrierNavService: AppCarrierNavigationService,
+    private appBrokerNavService: AppBrokerNavigationService
   ) {}
 
   getMenu(): AppMenu {
@@ -27,8 +28,11 @@ export class AppNavigationService {
     const isCarrier = this.isEnabled('App.Carrier') || this.isEnabled('App.CarrierAsASaas');
     const isShipper = this.isEnabled('App.Shipper');
     const isTMS = this.isEnabled('App.TachyonDealer');
+    const isBroker = this.isEnabled('App.ShipperClients') && this.isEnabled('App.CarrierClients');
     let menu = isHost
       ? this.appHostNavService.getMenu()
+      : isBroker
+      ? this.appBrokerNavService.getMenu()
       : isCarrier
       ? this.appCarrierNavService.getMenu()
       : isShipper

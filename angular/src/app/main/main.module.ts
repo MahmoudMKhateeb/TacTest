@@ -80,10 +80,6 @@ import { DocumentTypeTranslationsComponent } from './documentTypeTranslations/do
 import { ViewDocumentTypeTranslationModalComponent } from './documentTypeTranslations/documentTypeTranslations/view-documentTypeTranslation-modal.component';
 import { CreateOrEditDocumentTypeTranslationModalComponent } from './documentTypeTranslations/documentTypeTranslations/create-or-edit-documentTypeTranslation-modal.component';
 
-import { DocumentsEntitiesComponent } from './documentsEntities/documentsEntities/documentsEntities.component';
-import { ViewDocumentsEntityModalComponent } from './documentsEntities/documentsEntities/view-documentsEntity-modal.component';
-import { CreateOrEditDocumentsEntityModalComponent } from './documentsEntities/documentsEntities/create-or-edit-documentsEntity-modal.component';
-
 import { PortsComponent } from './ports/ports/ports.component';
 import { ViewPortModalComponent } from './ports/ports/view-port-modal.component';
 import { CreateOrEditPortModalComponent } from './ports/ports/create-or-edit-port-modal.component';
@@ -302,6 +298,10 @@ import { ViewNotesComponent } from './shippingRequests/shippingRequests/notes/vi
 import { AddNewNoteModalComponent } from './shippingRequests/shippingRequests/notes/add-new-note-modal/add-new-note-modal.component';
 import { NotesComponent } from './shippingRequests/shippingRequests/notes/notes.component';
 import { TripNotesModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/trip-notes-modal/trip-notes-modal.component';
+import { ActorsSubmittedDocumentsComponent } from './documentFiles/documentFiles/actors-submitted-documents/actors-submitted-documents.component';
+import { ActorsSubmittedDocumentsListComponent } from './documentFiles/documentFiles/actors-submitted-documents/actors-submitted-documents-list/actors-submitted-documents-list.component';
+import { CreateOrEditActorsPriceComponent } from './shippingRequests/shippingRequests/create-or-edit-actors-price/create-or-edit-actors-price.component';
+import { ActorInvoiceListComponent } from './Invoices/ActorInvoices/actor-invoice-list/actor-invoice-list.component';
 
 import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
 import { CreateOrEditPenaltyModalComponent } from './Penalties/penalties-list/create-or-edit-penalty-modal/create-or-edit-penalty-modal.component';
@@ -318,6 +318,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { CalendarModule } from '@node_modules/primeng/calendar';
 import { InvoicesSearchModelComponent } from './Invoices/invoices-search-model/invoices-search-model.component';
 import { InvoiceTenantSearchModelComponent } from './Invoices/invoice-tenants/invoice-tenant-search-model/invoice-tenant-search-model.component';
+import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/actor-submit-invoices.component';
 
 @NgModule({
   imports: [
@@ -440,9 +441,6 @@ import { InvoiceTenantSearchModelComponent } from './Invoices/invoice-tenants/in
     DocumentTypeTranslationsComponent,
     ViewDocumentTypeTranslationModalComponent,
     CreateOrEditDocumentTypeTranslationModalComponent,
-    DocumentsEntitiesComponent,
-    ViewDocumentsEntityModalComponent,
-    CreateOrEditDocumentsEntityModalComponent,
     PortsComponent,
     ViewPortModalComponent,
     CreateOrEditPortModalComponent,
@@ -603,6 +601,11 @@ import { InvoiceTenantSearchModelComponent } from './Invoices/invoice-tenants/in
     TripNotesModalComponent,
     InvoicesSearchModelComponent,
     InvoiceTenantSearchModelComponent,
+    ActorsSubmittedDocumentsComponent,
+    ActorsSubmittedDocumentsListComponent,
+    CreateOrEditActorsPriceComponent,
+    ActorInvoiceListComponent,
+    ActorSubmitInvoicesComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

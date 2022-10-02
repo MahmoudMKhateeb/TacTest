@@ -9,5 +9,7 @@ namespace TACHYON.Receivers.Dtos
         public CreateOrEditReceiverDto Receiver { get; set; }
 
         public string FacilityName { get; set; }
+
+        public int? ShipperActorId { get; set; }
     }
 }

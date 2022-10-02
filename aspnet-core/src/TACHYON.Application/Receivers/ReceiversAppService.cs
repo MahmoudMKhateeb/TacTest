@@ -113,6 +113,7 @@ namespace TACHYON.Receivers
                 var _lookupFacility =
                     await _lookup_facilityRepository.FirstOrDefaultAsync((int)output.Receiver.FacilityId);
                 output.FacilityName = _lookupFacility?.Name?.ToString();
+                output.ShipperActorId = _lookupFacility?.ShipperActorId;
             }
 
             return output;
@@ -212,6 +213,18 @@ namespace TACHYON.Receivers
                 {
                     Id = facility.Id,
                     DisplayName = facility == null || facility.Name == null ? "" : facility.Name.ToString()
+                }).ToListAsync();
+        }
+        [AbpAuthorize(AppPermissions.Pages_Receivers)]
+        [RequiresFeature(AppFeatures.ShipperClients)]
+        public async Task<List<ReceiverFacilityLookupTableDto>> GetAllFacilitiesByActorId(int actorId)
+        {
+            return await _lookup_facilityRepository.GetAll()
+                .Where(x=> x.ShipperActorId == actorId)
+                .Select(facility => new ReceiverFacilityLookupTableDto
+                {
+                    Id = facility.Id,
+                    DisplayName = facility == null || facility.Name == null ? "" : facility.Name
                 }).ToListAsync();
         }
 

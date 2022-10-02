@@ -1,20 +1,19 @@
-import { Component, Injector, ViewEncapsulation, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentFilesServiceProxy, DocumentFileDto, SelectItemDto, DocumentsEntitiesEnum } from '@shared/service-proxies/service-proxies';
+import { Component, Injector, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { DocumentFileDto, DocumentFilesServiceProxy, DocumentsEntitiesEnum, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import * as _ from 'lodash';
-import * as moment from 'moment';
-import session = abp.session;
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
 import { ViewDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/view-documentFile-modal.component';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import session = abp.session;
 
 @Component({
   selector: 'app-driver-submited-documents-list',
@@ -22,7 +21,7 @@ import { ViewDocumentFileModalComponent } from '@app/main/documentFiles/document
   styleUrls: ['./driver-submited-documents-list.component.css'],
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
-  providers: [DateFormatterService],
+  providers: [DateFormatterService, EnumToArrayPipe],
 })
 export class DriverSubmitedDocumentsListComponent extends AppComponentBase implements OnInit {
   @Input() driverId: any;
@@ -34,7 +33,6 @@ export class DriverSubmitedDocumentsListComponent extends AppComponentBase imple
   isHost = true;
   todayGregorian = this.dateFormatterService.GetTodayGregorian();
   entityType = DocumentsEntitiesEnum.Tenant;
-  entityTypesList: SelectItemDto[] = [];
 
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
   entityHistoryEnabled = false;
@@ -61,10 +59,6 @@ export class DriverSubmitedDocumentsListComponent extends AppComponentBase imple
 
   ngOnInit(): void {
     this.isHost = session.tenantId == null;
-
-    this._documentFilesServiceProxy.getDocumentEntitiesForTableDropdown().subscribe((res) => {
-      this.entityTypesList = res;
-    });
 
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
   }
