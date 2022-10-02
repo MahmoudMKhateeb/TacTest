@@ -439,6 +439,11 @@ namespace TACHYON.Authorization
             actors.CreateChildPermission(AppPermissions.Pages_Administration_Actors_Edit, L("EditActor"), multiTenancySides: MultiTenancySides.Tenant);
             actors.CreateChildPermission(AppPermissions.Pages_Administration_Actors_Delete, L("DeleteActor"), multiTenancySides: MultiTenancySides.Tenant);
 
+
+            var actorInvoices = administration.CreateChildPermission(AppPermissions.Pages_Administration_ActorsInvoice, L("ActorInvoices"),
+                multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host,
+                featureDependency: new SimpleFeatureDependency(AppFeatures.ShipperClients, AppFeatures.TachyonDealer));
+
             var vases = administration.CreateChildPermission(AppPermissions.Pages_Administration_Vases, L("Vases"),
                 multiTenancySides: MultiTenancySides.Host);
             vases.CreateChildPermission(AppPermissions.Pages_Administration_Vases_Create, L("CreateNewVas"),

@@ -11,6 +11,8 @@
         public const string Pages_Administration_Actors_Edit = "Pages.Administration.Actors.Edit";
         public const string Pages_Administration_Actors_Delete = "Pages.Administration.Actors.Delete";
 
+        public const string Pages_Administration_ActorsInvoice = "Pages.Administration.ActorsInvoice";
+
         public const string Pages_EmailTemplates = "Pages.EmailTemplates";
         public const string Pages_EmailTemplates_Create = "Pages.EmailTemplates.Create";
         public const string Pages_EmailTemplates_Edit = "Pages.EmailTemplates.Edit";

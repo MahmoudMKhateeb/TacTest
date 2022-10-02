@@ -101,22 +101,10 @@
                       <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('DownloadInvoice') }}</a>
                     </li>
                     <li *ngIf="!options.data.isPaid">
-                      <a
-                        class="dropdown-item"
-                        href="javascript:;"
-                        *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId"
-                        (click)="MakePaid(options.data)"
-                        >{{ l('MakePaid') }}</a
-                      >
+                      <a class="dropdown-item" href="javascript:;" (click)="MakePaid(options.data)">{{ l('MakePaid') }}</a>
                     </li>
                     <li *ngIf="options.data.isPaid">
-                      <a
-                        class="dropdown-item"
-                        href="javascript:;"
-                        *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId"
-                        (click)="MakeUnPaid(options.data)"
-                        >{{ l('MakeUnPaid') }}</a
-                      >
+                      <a class="dropdown-item" href="javascript:;" (click)="MakeUnPaid(options.data)">{{ l('MakeUnPaid') }}</a>
                     </li>
                   </ul>
                 </div>

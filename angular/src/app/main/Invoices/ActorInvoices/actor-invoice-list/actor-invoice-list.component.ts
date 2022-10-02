@@ -69,29 +69,29 @@ export class ActorInvoiceListComponent extends AppComponentBase implements OnIni
   }
 
   MakePaid(invoice: any): void {
-    // this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-    //   if (isConfirmed) {
-    //     this._InvoiceServiceProxy.makePaid(invoice.id).subscribe((r: boolean) => {
-    //       if (r) {
-    //         this.notify.success(this.l('Successfully'));
-    //         this.reloadPage();
-    //       } else {
-    //         this.message.warn(this.l('NoEnoughBalance'));
-    //       }
-    //     });
-    //   }
-    // });
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._InvoiceServiceProxy.makePaid(invoice.id).subscribe((r: boolean) => {
+          if (r) {
+            this.notify.success(this.l('Successfully'));
+            this.reloadPage();
+          } else {
+            this.message.warn(this.l('[Failed]'));
+          }
+        });
+      }
+    });
   }
 
   MakeUnPaid(invoice: any): void {
-    // this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-    //   if (isConfirmed) {
-    //     this._InvoiceServiceProxy.makeUnPaid(invoice.id).subscribe(() => {
-    //       this.notify.success(this.l('Successfully'));
-    //       this.reloadPage();
-    //     });
-    //   }
-    // });
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._InvoiceServiceProxy.makeUnPaid(invoice.id).subscribe(() => {
+          this.notify.success(this.l('Successfully'));
+          this.reloadPage();
+        });
+      }
+    });
   }
   search(event) {
     this._CommonServ.getAutoCompleteTenants(event.query, '').subscribe((result) => {
