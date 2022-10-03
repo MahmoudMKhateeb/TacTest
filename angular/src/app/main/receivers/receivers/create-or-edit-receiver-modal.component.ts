@@ -94,7 +94,7 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
 
     this.isFacilitiesLoading = true;
     this._receiversServiceProxy
-      .getAllFacilityForTableDropdown()
+      .getAllFacilityForTableDropdown(null)
       .pipe(finalize(() => (this.isFacilitiesLoading = false)))
       .subscribe((result) => {
         this.allFacilitys = result;
