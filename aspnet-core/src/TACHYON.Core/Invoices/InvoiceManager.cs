@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.Core.Invoices.Jobs;
+using TACHYON.DataFilters;
 using TACHYON.Dto;
 using TACHYON.DynamicInvoices;
 using TACHYON.Features;
@@ -450,18 +451,21 @@ namespace TACHYON.Invoices
             
         }
 
-        // ToDo: Add Permission for Tms/Host only
+        
         public async Task ConfirmInvoice(long invoiceId)
         {
             DisableTenancyFilters();
+            CurrentUnitOfWork.DisableFilter(TACHYONDataFilters.HaveInvoiceStatus);
 
             Invoice invoice = await _invoiceRepository.GetAll().Include(x => x.InvoicePeriodsFK)
                 .Include(x => x.Tenant)
                 .FirstOrDefaultAsync(x => x.Id == invoiceId);
             
-            // todo add message here
             if (invoice is null) throw new UserFriendlyException(L("InvoiceNotFound"));
 
+            if (invoice.Status == InvoiceStatus.Confirmed)
+                throw new UserFriendlyException(L("InvoiceAlreadyConfirmed"));
+            
             Tenant tenant = invoice.Tenant;
             InvoicePeriod period = invoice.InvoicePeriodsFK;
             decimal totalAmount = invoice.TotalAmount;
@@ -614,7 +618,8 @@ namespace TACHYON.Invoices
                     SubTotalAmount = subTotalAmount,
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.Penalty,
-                    Penalties = group.penaltiesList.ToList()
+                    Status = InvoiceStatus.Drafted,
+                    Penalties = penalties
                 };
                 invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
             }
@@ -659,23 +664,12 @@ namespace TACHYON.Invoices
                 SubTotalAmount = subTotalAmount,
                 AccountType = InvoiceAccountType.AccountReceivable,
                 Channel = InvoiceChannel.DynamicInvoice,
+                Status = InvoiceStatus.Drafted,
                 Note=dynamicInvoice.Notes
             };
             //await _invoiceRepository.InsertAsync(invoice);
             invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
             dynamicInvoice.InvoiceId=invoice.Id;
-            if (period.PeriodType == InvoicePeriodType.PayInAdvance)
-            {
-                tenant.Balance -= totalAmount;
-                tenant.ReservedBalance -= totalAmount;
-            }
-            else
-            {
-                tenant.CreditBalance -= totalAmount;
-            }
-
-
-            await _balanceManager.CheckShipperOverLimit(tenant);
         }
 
         public async Task GenerateSubmitDynamicInvoice(Tenant tenant, DynamicInvoice dynamicInvoice)

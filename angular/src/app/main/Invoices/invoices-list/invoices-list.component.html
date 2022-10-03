@@ -125,8 +125,8 @@
                   </a>
 
                   <ul class="dropdown-menu" *dropdownMenu>
-                    <li *ngIf="options.data.status == InvoiceStatusEnum.Drafted">
-                      <a class="dropdown-item" (click)="details(options.data)">{{ l('Confirm') }}</a>
+                    <li *ngIf="permission.isGranted('Pages.Invoices.ConfirmInvoice') && options.data.status == InvoiceStatusEnum.Drafted">
+                      <a class="dropdown-item" (click)="confirmInvoice(options.data)">{{ l('Confirm') }}</a>
                     </li>
                     <li>
                       <a class="dropdown-item" (click)="details(options.data)">{{ l('Detail') }}</a>

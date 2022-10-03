@@ -756,6 +756,10 @@ namespace TACHYON.Authorization
            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Actors, L("ActorDocumentFiles"),
                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
                    AppFeatures.DocumentsManagement));
+
+           // For Host/TMS
+           pages.CreateChildPermission(AppPermissions.Pages_Invoices_ConfirmInvoice, L("ConfirmInvoicePermission"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer));
         }
 
         private static ILocalizableString L(string name)
