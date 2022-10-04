@@ -3091,6 +3091,7 @@
 		<text name="DisabledActorPricesMsg">You can add a shipper/carrier actor price after adding one trip at least</text>
 		<text name="ActorCarrierInvoicesList">client carrier invoices list</text>
 		<text name="ActorInvoicesList">client invoices list</text>
+		<text name="DownloadBayanDropWaybill">Download Bayan waybill</text>
 
 	</texts>
 </localizationDictionary>
