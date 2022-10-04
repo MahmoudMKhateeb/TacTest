@@ -48,7 +48,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this.isEnabled('App.Carrier')
+            () => this.isEnabled('App.CarrierAsASaas')
           ),
           new AppMenuItem('DirectShippingRequests', '', '', '/app/main/directrequest/list', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Carrier')
