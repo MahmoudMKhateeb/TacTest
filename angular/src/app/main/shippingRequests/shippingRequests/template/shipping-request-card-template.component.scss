@@ -1,8 +1,10 @@
 @import "../../../../../assets/custom/css/style.scss";
 
 .shipCard {
-    padding: 0;
-
+    padding: 0 0 1em 0;
+    &.expanded {
+        padding: 0 0 2em 0;
+    }
     .infoBasic {
         margin: 0;
 
@@ -85,6 +87,21 @@
     .info-badges {
         flex-direction: row !important;
     }
+
+    .info-badges {
+        justify-content: flex-end;
+    }
+    .buttom-info-badges {
+        &.info-badges {
+            padding: 0rem 2.25rem;
+            z-index: 1;
+        }
+    }
+    .actions {
+        justify-content: flex-end;
+        padding: 0rem 2.25rem;
+        z-index: 1;
+    }
 }
 
 ::ng-deep {
@@ -95,6 +112,7 @@
             .card-header,
             .card-body {
                 padding: 0 !important;
+                margin: 0rem 2.25rem;
             }
 
             .p-datatable {
