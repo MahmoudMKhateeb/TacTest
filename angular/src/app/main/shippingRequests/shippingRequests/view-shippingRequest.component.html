@@ -46,6 +46,7 @@
       <!--  end:: NormalPricePackageSection -->
 
       <app-create-or-edit-actors-price
+        *ngIf="feature.isEnabled('App.CarrierClients') || feature.isEnabled('App.ShipperClients')"
         [numberOfCreatedTrips]="shippingRequestforView.totalsTripsAddByShippier"
         [shippingRequestId]="activeShippingRequestId"
       ></app-create-or-edit-actors-price>

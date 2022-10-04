@@ -21,6 +21,8 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
 
     this.createOrEditActorShipperPriceInput.actorShipperPriceDto = new ActorShipperPriceDto();
     this.createOrEditActorCarrierPriceInput.actorCarrierPriceDto = new ActorCarrierPriceDto();
+    this.shipperSaving = false;
+    this.carrierSaving = false;
   }
 
   @Input() shippingRequestId: any;
@@ -28,7 +30,8 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
   createOrEditActorShipperPriceInput: CreateOrEditActorShipperPriceInput = new CreateOrEditActorShipperPriceInput();
   createOrEditActorCarrierPriceInput: CreateOrEditActorCarrierPriceInput = new CreateOrEditActorCarrierPriceInput();
   active = true;
-  saving: any;
+  shipperSaving: any;
+  carrierSaving: any;
 
   GetCreateOrEditActorShipperPriceInputForCreateOrEdit() {
     this.actorsPriceOffersServiceProxy.getCreateOrEditActorShipperPriceInputForCreateOrEdit(this.shippingRequestId).subscribe((result) => {
@@ -50,12 +53,12 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
 
   save() {
     this.createOrEditActorShipperPriceInput.shippingRequestId = this.shippingRequestId;
-    this.saving = true;
+    this.shipperSaving = true;
     this.actorsPriceOffersServiceProxy
       .createOrEditActorShipperPrice(this.createOrEditActorShipperPriceInput)
       .pipe(
         finalize(() => {
-          this.saving = false;
+          this.shipperSaving = false;
         })
       )
       .subscribe(() => {
@@ -74,12 +77,12 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
 
   saveCarrierPrice() {
     this.createOrEditActorCarrierPriceInput.shippingRequestId = this.shippingRequestId;
-    this.saving = true;
+    this.carrierSaving = true;
     this.actorsPriceOffersServiceProxy
       .createOrEditActorCarrierPrice(this.createOrEditActorCarrierPriceInput)
       .pipe(
         finalize(() => {
-          this.saving = false;
+          this.carrierSaving = false;
         })
       )
       .subscribe(() => {

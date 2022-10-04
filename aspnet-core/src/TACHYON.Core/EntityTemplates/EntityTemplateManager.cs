@@ -218,7 +218,7 @@ namespace TACHYON.EntityTemplates
                     RoutType = x.RouteTypeId, 
                     x.GoodCategoryId,
                     SourceCityId = x.OriginCityId, 
-                    x.ShippingRequestDestinationCities, //@mosa please review this
+                    x.ShippingRequestDestinationCities,
                     x.NumberOfDrops
                 }).FirstOrDefaultAsync();
 
@@ -253,7 +253,7 @@ namespace TACHYON.EntityTemplates
                 join destinationFacility in _facilityRepository.GetAll().AsNoTracking()
                     on template.Trip.DestinationFacilityId equals destinationFacility.Id
                     where originFacility.CityId == shippingRequest.SourceCityId 
-                && shippingRequest.ShippingRequestDestinationCities.Any(x=>x.CityId == destinationFacility.CityId) //@mosa review this
+                && shippingRequest.ShippingRequestDestinationCities.Any(x=>x.CityId == destinationFacility.CityId)
                 select new SelectItemDto() {DisplayName = template.TemplateName, Id = template.Id.ToString()});
             
             return matchesOriginAndDestinationItems.ToList();
