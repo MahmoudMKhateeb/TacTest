@@ -97,9 +97,12 @@ namespace TACHYON.Tracking
                 .WhereIf(input.DestinationId.HasValue,
                     x => x.ShippingRequestFk.ShippingRequestDestinationCities.Any(y=>y.CityId == input.DestinationId))
                 .WhereIf(input.RouteTypeId.HasValue, x => x.ShippingRequestFk.RouteTypeId == input.RouteTypeId)
+                .WhereIf(input.TransportTypeId.HasValue, x=>x.ShippingRequestFk.TransportTypeId == input.TransportTypeId)
                 .WhereIf(input.TruckTypeId.HasValue, x => x.ShippingRequestFk.TrucksTypeId == input.TruckTypeId)
+                .WhereIf(input.TruckCapacityId.HasValue, x => x.ShippingRequestFk.CapacityId == input.TruckCapacityId)
                 .WhereIf(input.Status.HasValue, x => x.Status == input.Status)
-                .WhereIf(input.WaybillNumber.HasValue, x => x.WaybillNumber == input.WaybillNumber)
+                .WhereIf(input.WaybillNumber.HasValue, x => x.WaybillNumber == input.WaybillNumber ||
+                x.RoutPoints.Any(y=>y.WaybillNumber == input.WaybillNumber))
                 .WhereIf(!string.IsNullOrEmpty(input.Shipper),
                     x => x.ShippingRequestFk.Tenant.Name.ToLower().Contains(input.Shipper) ||
                          x.ShippingRequestFk.Tenant.companyName.ToLower().Contains(input.Shipper) ||
@@ -109,6 +112,21 @@ namespace TACHYON.Tracking
                     x => x.ShippingRequestFk.CarrierTenantFk.Name.ToLower().Contains(input.Carrier) ||
                          x.ShippingRequestFk.CarrierTenantFk.companyName.ToLower().Contains(input.Carrier) ||
                          x.ShippingRequestFk.CarrierTenantFk.TenancyName.ToLower().Contains(input.Carrier))
+                .WhereIf(input.PackingTypeId.HasValue, x => x.ShippingRequestFk.PackingTypeId == input.PackingTypeId)
+                .WhereIf(input.GoodsOrSubGoodsCategoryId.HasValue, x => x.ShippingRequestFk.GoodCategoryId == input.GoodsOrSubGoodsCategoryId)
+                .WhereIf(!string.IsNullOrEmpty(input.PlateNumberId), x=>x.ShippingRequestFk.AssignedTruckFk.PlateNumber == input.PlateNumberId)
+                .WhereIf(!string.IsNullOrEmpty(input.DriverNameOrMobile), x => x.ShippingRequestFk.AssignedDriverUserFk.PhoneNumber == input.DriverNameOrMobile ||
+                (x.ShippingRequestFk.AssignedDriverUserFk!=null && 
+                (x.ShippingRequestFk.AssignedDriverUserFk.Name.ToLower().Contains(input.DriverNameOrMobile) ||
+                x.ShippingRequestFk.AssignedDriverUserFk.Surname.ToLower().Contains(input.DriverNameOrMobile))))
+                .WhereIf(input.DeliveryFromDate.HasValue && input.DeliveryToDate.HasValue, x=>x.ShippingRequestFk.ShippingRequestTrips.Any(y=> y.ActualDeliveryDate>= input.DeliveryFromDate &&
+                y.ActualDeliveryDate<= input.DeliveryToDate))
+                .WhereIf(!string.IsNullOrEmpty(input.ContainerNumber), x => x.ShippingRequestFk.ShippingRequestTrips.Any(y=>y.ContainerNumber == input.ContainerNumber))
+                .WhereIf(input.IsInvoiceIssued !=null, x => x.ShippingRequestFk.ShippingRequestTrips.Any(y => y.IsShipperHaveInvoice == input.IsInvoiceIssued))
+                .WhereIf(input.IsSubmittedPOD !=null, x => x.ShippingRequestFk.ShippingRequestTrips.Any(y => y.RoutPoints.Any(x=>x.IsPodUploaded == input.IsSubmittedPOD)))
+                //todo for tasneem will update request type after dediced
+                .WhereIf(input.RequestTypeId ==1, x=>x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId)
+                .WhereIf(input.RequestTypeId == 2, x => x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId)
                 .OrderBy(input.Sorting ?? "id desc")
                 .PageBy(input).ToList();
 
