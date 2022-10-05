@@ -13,7 +13,7 @@ namespace TACHYON.PriceOffers
         Task<ListResultDto<GetShippingRequestForPriceOfferListDto>> GetAllShippingRequest(
             ShippingRequestForPriceOfferGetAllInput input);
 
-        GetShippingRequestSearchListDto GetAllListForSearch();
+        Task<GetShippingRequestSearchListDto> GetAllListForSearch();
 
         Task<long> CreateOrEdit(CreateOrEditPriceOfferInput Input);
         Task<PriceOfferDto> GetPriceOfferForCreateOrEdit(long id, long? OfferId);

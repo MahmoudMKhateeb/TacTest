@@ -42,6 +42,13 @@ using TACHYON.Vases;
 using TACHYON.Shipping.ShippingRequestAndTripNotes;
 using Abp.Collections.Extensions;
 using TACHYON.Shipping.Notes;
+using TACHYON.Trucks.TruckCategories.TransportTypes;
+using TACHYON.Trucks.TruckCategories.TruckCapacities;
+using TACHYON.Goods.GoodCategories;
+using TACHYON.Packing.PackingTypes;
+using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
+using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
+using TACHYON.Packing.PackingTypes.Dtos;
 
 namespace TACHYON.PriceOffers
 {
@@ -63,6 +70,11 @@ namespace TACHYON.PriceOffers
         private readonly ShippingRequestUpdateManager _srUpdateManager;
         private readonly IRepository<ShippingRequestAndTripNote> _ShippingRequestAndTripNoteRepository;
         private readonly IRepository<Actor> _actorsRepository;
+        private readonly IRepository<TransportType> _transportsTypeRepository;
+        private readonly IRepository<Capacity> _capacitiesRepository;
+        private readonly IRepository<GoodCategory> _goodsCategoriesRepository;
+        private readonly IRepository<PackingType> _packingTypesRepository;
+
 
         private IRepository<VasPrice> _vasPriceRepository;
 
@@ -81,7 +93,11 @@ namespace TACHYON.PriceOffers
             IRepository<SrPostPriceUpdate, long> srPostPriceUpdateRepository,
             ShippingRequestUpdateManager srUpdateManager,
             IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository,
-            IRepository<Actor> actorsRepository)
+            IRepository<Actor> actorsRepository,
+            IRepository<TransportType> transportsTypeRepository,
+            IRepository<Capacity> capacitiesRepository,
+            IRepository<GoodCategory> goodsCategoriesRepository,
+            IRepository<PackingType> packingTypesRepository)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -100,6 +116,10 @@ namespace TACHYON.PriceOffers
             _srUpdateManager = srUpdateManager;
             _ShippingRequestAndTripNoteRepository = ShippingRequestAndTripNoteRepository;
             _actorsRepository = actorsRepository;
+            _transportsTypeRepository = transportsTypeRepository;
+            _capacitiesRepository = capacitiesRepository;
+            _goodsCategoriesRepository = goodsCategoriesRepository;
+            _packingTypesRepository = packingTypesRepository;
         }
         #region Services
 
@@ -147,12 +167,16 @@ namespace TACHYON.PriceOffers
                 PriceOfferList
             );
         }
-        public GetShippingRequestSearchListDto GetAllListForSearch()
+        public async Task<GetShippingRequestSearchListDto> GetAllListForSearch()
         {
             var searchList = new GetShippingRequestSearchListDto()
             {
-                Cities = ObjectMapper.Map<List<CityDto>>(_cityRepository.GetAllIncluding(x => x.Translations)),
-                TrucksTypes = ObjectMapper.Map<List<TrucksTypeDto>>(_trucksTypeRepository.GetAllIncluding(x => x.Translations))
+                Cities = ObjectMapper.Map<List<CityDto>>(await _cityRepository.GetAllIncluding(x => x.Translations).ToListAsync()),
+                TrucksTypes = ObjectMapper.Map<List<TrucksTypeDto>>(await _trucksTypeRepository.GetAllIncluding(x => x.Translations).ToListAsync()),
+                TransportTypes = ObjectMapper.Map<List<TransportTypeDto>>(await _transportsTypeRepository.GetAllIncluding(x => x.Translations).ToListAsync()),
+                Capacities = ObjectMapper.Map<List<CapacityDto>>(await _capacitiesRepository.GetAllIncluding(x => x.Translations).ToListAsync()),
+                GoodsCategories= ObjectMapper.Map<List<GoodCategoryDto>>(await _goodsCategoriesRepository.GetAllIncluding(x => x.Translations).ToListAsync()),
+                PackingTypes= ObjectMapper.Map<List<PackingTypeDto>>(await _packingTypesRepository.GetAllIncluding(x => x.Translations).ToListAsync())
             };
 
             return searchList;
