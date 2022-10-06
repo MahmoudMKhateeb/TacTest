@@ -181,6 +181,7 @@ using TACHYON.WorkFlows;
 using TACHYON.Penalties;
 using TACHYON.Penalties.Dto;
 using TACHYON.ServiceAreas;
+using TACHYON.Shipping.ShippingRequests.Dtos.Dedicated;
 
 namespace TACHYON
 {
@@ -444,11 +445,26 @@ namespace TACHYON
 
             configuration.CreateMap<ShippingRequest, EditShippingRequestStep2Dto>();
 
+            configuration.CreateMap<CreateOrEditDedicatedStep1Dto, ShippingRequest>()
+                .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
+                .ForMember(dest => dest.DraftStep, opt => opt.Ignore())
+                .ForMember(d => d.ShippingRequestDestinationCities, opt => opt.Ignore());
+
+            configuration.CreateMap<ShippingRequest, CreateOrEditDedicatedStep1Dto>();
+
             configuration.CreateMap<EditShippingRequestStep4Dto, ShippingRequest>()
                 .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
                 .ForMember(dest => dest.DraftStep, opt => opt.Ignore())
                 .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequest);
+
+            configuration.CreateMap<EditDedicatedStep2Dto, ShippingRequest>()
+                .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
+                .ForMember(dest => dest.DraftStep, opt => opt.Ignore())
+                .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
+                .AfterMap(AddOrUpdateShippingRequest);
+
+            configuration.CreateMap<ShippingRequest, EditDedicatedStep2Dto>();
 
             configuration.CreateMap<ShippingRequest, EditShippingRequestStep4Dto>()
                 .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
@@ -1112,6 +1128,23 @@ namespace TACHYON
         {
             return entity.Translations?.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
                 ?.DisplayName ?? entity.Key;
+        }
+
+        private static void AddOrUpdateShippingRequest(EditVasStepBaseDto dto, ShippingRequest Request)
+        {
+            if (Request.ShippingRequestVases == null)
+                Request.ShippingRequestVases = new Collection<ShippingRequestVas>();
+            foreach (var vas in dto.ShippingRequestVasList)
+            {
+                if (!vas.Id.HasValue)
+                {
+                    Request.ShippingRequestVases.Add(_Mapper.Map<ShippingRequestVas>(vas));
+                }
+                else
+                {
+                    _Mapper.Map(vas, Request.ShippingRequestVases.SingleOrDefault(c => c.Id == vas.Id));
+                }
+            }
         }
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)

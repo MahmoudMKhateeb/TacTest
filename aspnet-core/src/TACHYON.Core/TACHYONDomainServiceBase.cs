@@ -32,6 +32,10 @@ namespace TACHYON
         {
             CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
         }
+        protected virtual void DisableDraftedFilter()
+        {
+            CurrentUnitOfWork.DisableFilter("IHasIsDrafted");
+        }
 
     }
 }

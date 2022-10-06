@@ -15,7 +15,11 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
                 .ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities.First().CityFk.DisplayName))
                 .ForMember(dst => dst.RouteType,
-                    opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestRouteType), src.RouteTypeId)));
+                    opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestRouteType), src.RouteTypeId)))
+                .ForMember(dst => dst.ShippingRequestFlagTitle,
+                    opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
+                .ForMember(dst => dst.RentalDurationUnitTitle,
+                    opt => opt.MapFrom(src => Enum.GetName(typeof(TimeUnit), src.RentalDurationUnit)));
 
             CreateMap<ShippingRequest, GetShippingRequestForViewOutput>()
                 .ForMember(dest => dest.TruckTypeId, opt => opt.MapFrom(x => x.TrucksTypeId))
@@ -43,7 +47,11 @@ namespace TACHYON.AutoMapper.Shipping
                     opt => opt.MapFrom(src => src.ShippingTypeFk.DisplayName))
                 .ForMember(dest => dest.packingTypeDisplayName,
                     opt => opt.MapFrom(src => src.PackingTypeFk.DisplayName))
-                .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.CarrierTenantFk.Name));
+                .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
+                .ForMember(dst => dst.ShippingRequestFlagTitle,
+                    opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
+                .ForMember(dst => dst.RentalDurationUnitTitle,
+                    opt => opt.MapFrom(src => Enum.GetName(typeof(TimeUnit), src.RentalDurationUnit)));
             //.AfterMap(AssignTruckTypeFullName);
 
             CreateMap<ShippingRequest, GetShippingRequestForPricingOutput>()

@@ -169,5 +169,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         [ForeignKey("ActorSubmitInvoiceId")]
         public ActorSubmitInvoice ActorSubmitInvoiceFk { get; set; }
+
+        #region Dedicated
+        public ShippingRequestRouteType? RouteType { get; set; }
+        public int NumberOfDrops { get; set; }
+
+        #endregion
     }
 }

@@ -31,5 +31,19 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string RouteType { get; set; }
         public bool IsDrafted { get; set; }
         public int DraftStep { get; set; }
+        public ShippingRequestFlag ShippingRequestFlag { get; set; }
+        public string ShippingRequestFlagTitle { get; set; }
+
+        #region Dedicated
+        public TimeUnit? RentalDurationUnit { get; set; }
+        public string RentalDurationUnitTitle { get; set; }
+        public int RentalDuration { get; set; }
+        public double ExpectedMileage { get; set; }
+        public string ServiceAreaNotes { get; set; }
+        public DateTime? RentalStartDate { get; set; }
+        public DateTime? RentalEndDate { get; set; }
+        public int NumberOfTrucks { get; set; }
+
+        #endregion
     }
 }

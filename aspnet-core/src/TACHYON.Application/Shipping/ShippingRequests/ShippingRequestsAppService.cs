@@ -109,6 +109,7 @@ namespace TACHYON.Shipping.ShippingRequests
             NormalPricePackageManager normalPricePackageManager,
             SrPostPriceUpdateManager postPriceUpdateManager,
             IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository,
+            ShippingRequestManager shippingRequestManager,
             IRepository<Actor> actorsRepository)
         {
             _vasPriceRepository = vasPriceRepository;
@@ -141,6 +142,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _normalPricePackageManager = normalPricePackageManager;
             _postPriceUpdateManager = postPriceUpdateManager;
             _shippingRequestDestinationCityRepository = shippingRequestDestinationCityRepository;
+            _shippingRequestManager = shippingRequestManager;
             _actorsRepository = actorsRepository;
         }
 
@@ -174,6 +176,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
         private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly IRepository<ShippingRequestDestinationCity> _shippingRequestDestinationCityRepository;
+        private readonly ShippingRequestManager _shippingRequestManager;
 
         private readonly IRepository<Actor> _actorsRepository;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
@@ -277,20 +280,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task<long> CreateOrEditStep1(CreateOrEditShippingRequestStep1Dto input)
         {
-            if (input.IsTachyonDeal)
-            {
-                if (!await IsEnabledAsync(AppFeatures.SendTachyonDealShippingRequest))
-                {
-                    // throw new UserFriendlyException(L("feature SendTachyonDealShippingRequest not enabled"));
-                }
-            }
-            else if (input.IsDirectRequest)
-            {
-                if (!await IsEnabledAsync(AppFeatures.SendDirectRequest) && !await IsEnabledAsync(AppFeatures.CarrierAsASaas))
-                {
-                    throw new UserFriendlyException(L("feature SendDirectRequest not enabled"));
-                }
-            }
+            await _shippingRequestManager.ValidateShippingRequestStep1(input);
             if (!await IsTachyonDealer() && input.StartTripDate.Date < Clock.Now.Date)
             {
                 throw new UserFriendlyException(L("Start trip date cannot be before today"));
@@ -308,7 +298,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<CreateOrEditShippingRequestStep1Dto> GetStep1ForEdit(EntityDto<long> entity)
         {
-            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(entity.Id);
             return ObjectMapper.Map<CreateOrEditShippingRequestStep1Dto>(shippingRequest);
         }
 
@@ -324,7 +314,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 DisableTenancyFilters();
             }
 
-            var shippingRequest = await GetDraftedShippingRequest(input.Id);
+            var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id);
 
             //if request between cities and single drop
             ValidateDestinationCities(input, shippingRequest);
@@ -341,7 +331,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<EditShippingRequestStep2Dto> GetStep2ForEdit(EntityDto<long> entity)
         {
-            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(entity.Id);
             return ObjectMapper.Map<EditShippingRequestStep2Dto>(shippingRequest);
         }
 
@@ -357,9 +347,9 @@ namespace TACHYON.Shipping.ShippingRequests
                 DisableTenancyFilters();
             }
 
-            await OthersNameValidation(input);
+            await _shippingRequestManager.OthersNameValidation(input);
 
-            var shippingRequest = await GetDraftedShippingRequest(input.Id);
+            var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id);
             if (shippingRequest.DraftStep < 3)
             {
                 shippingRequest.DraftStep = 3;
@@ -371,7 +361,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<EditShippingRequestStep3Dto> GetStep3ForEdit(EntityDto<long> entity)
         {
-            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(entity.Id);
             return ObjectMapper.Map<EditShippingRequestStep3Dto>(shippingRequest);
         }
 
@@ -382,35 +372,28 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task EditStep4(EditShippingRequestStep4Dto input)
         {
-            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
+            DisableDraftedFilter();
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
             {
-                if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
-                {
-                    DisableTenancyFilters();
-                }
-
-                ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
-                    .Include(x => x.ShippingRequestVases)
-                    .Where(x => x.Id == input.Id && x.IsDrafted == true)
-                    .FirstOrDefaultAsync();
-
-                await ShippingRequestVasListValidate(input, shippingRequest.NumberOfTrips);
-                //delete vases
-                foreach (var vas in shippingRequest.ShippingRequestVases)
-                {
-                    if (!input.ShippingRequestVasList.Any(x => x.Id == vas.Id))
-                    {
-                        await _shippingRequestVasRepository.DeleteAsync(vas);
-                    }
-                }
-
-                if (shippingRequest.DraftStep < 4)
-                {
-                    shippingRequest.DraftStep = 4;
-                }
-
-                ObjectMapper.Map(input, shippingRequest);
+                DisableTenancyFilters();
             }
+
+            ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                .Include(x => x.ShippingRequestVases)
+                .Where(x => x.Id == input.Id && x.IsDrafted == true)
+                .FirstOrDefaultAsync();
+
+            await ShippingRequestVasListValidate(input, shippingRequest.NumberOfTrips);
+            //delete vases
+            await _shippingRequestManager.EditVasStep(shippingRequest,input);
+
+            if (shippingRequest.DraftStep < 4)
+            {
+                shippingRequest.DraftStep = 4;
+            }
+
+            ObjectMapper.Map(input, shippingRequest);
+            
         }
 
 
@@ -451,140 +434,32 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
             }
 
-            await ValidateShippingRequestBeforePublish(shippingRequest);
+            await _shippingRequestManager.PublishShippingRequestManager(shippingRequest);
             // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
-            shippingRequest.IsDrafted = false;
-            //to make SR to non drafted .. 
-            if (isTachyonDealer && shippingRequest.CreatedByTachyonDealer)
-                await _appNotifier.NotifyShipperWhenSrAddedByTms
-                    (shippingRequest.Id, shippingRequest.ReferenceNumber, shippingRequest.TenantId);
-            
-            
             if (!shippingRequest.IsSaas())
             {
                 await SendtoCarrierIfShippingRequestIsDirectRequest(shippingRequest);
             }
 
-            // handle carrier as saas SR pricing
-            if (shippingRequest.IsSaas())
-            {
-                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(await FeatureChecker.GetValueAsync(shippingRequest.TenantId, AppFeatures.CarrierAsSaasCommissionValue));
-
-
-                var itemDetails = new List<PriceOfferDetailDto>();
-                foreach (ShippingRequestVas vas in shippingRequest.ShippingRequestVases)
-                {
-
-                    itemDetails.Add(new PriceOfferDetailDto
-                    {
-                        ItemId = vas.Id,
-                        Price = 0,
-                        CommissionPercentageOrAddValue = 0,
-                        PriceType = PriceOfferType.Vas,
-                        CommissionType = PriceOfferCommissionType.CommissionValue
-                    }
-                    );
-                }
-
-
-                var input = new CreateOrEditPriceOfferInput
-                {
-                    ShippingRequestId = shippingRequest.Id,
-                    ItemPrice = 0,
-                    Channel = PriceOfferChannel.CarrierAsSaas,
-                    ParentId = null,
-                    PriceType = PriceOfferType.Trip,
-                    //ignor vas's
-                    ItemDetails = itemDetails,
-                    CommissionPercentageOrAddValue = carrierAsSaasCommissionValue,
-                    CommissionType = PriceOfferCommissionType.CommissionValue,
-                    VasCommissionPercentageOrAddValue = 0,
-                    VasCommissionType = PriceOfferCommissionType.CommissionValue,
-                    SourceId = null
-                };
-
-
-                var offer = await _priceOfferManager.InitPriceOffer(input);
-                _priceOfferManager.SetShippingRequestPricing(offer);
-
-                offer.Status = PriceOfferStatus.Accepted;
-
-                shippingRequest.Status = ShippingRequestStatus.PostPrice;
-
-                await _priceOfferRepository.InsertAsync(offer);
-
-            }
-            
         }
 
 
-        private async Task<ShippingRequest> GetDraftedShippingRequest(long id)
-        {
-            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
-            {
-                DisableTenancyFilters();
-                ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
-                    .Include(x=>x.ShippingRequestDestinationCities)
-                    .WhereIf(await IsTachyonDealer(), x => x.IsTachyonDeal == true)
-                  .Where(x => x.Id == id && x.IsDrafted == true)
-                  .FirstOrDefaultAsync();
-                return shippingRequest;
-            }
-        }
+        
 
         private async Task<long> CreateStep1(CreateOrEditShippingRequestStep1Dto input)
         {
             ShippingRequest shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
-            if (input.ShipperId.HasValue)
-            {
-                shippingRequest.TenantId = input.ShipperId.Value;
-            }
-
-            var isSaas = await IsCarrier() && await IsEnabledAsync(AppFeatures.CarrierAsASaas);
-            if (isSaas || input.IsInternalBrokerRequest)
-            {
-                shippingRequest.TenantId = AbpSession.TenantId.Value;
-                shippingRequest.CarrierTenantId = AbpSession.TenantId.Value;
-            }
-
-            //ValidateStep1(shippingRequest);
-            shippingRequest.CreatedByTachyonDealer = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
-            shippingRequest.IsDrafted = true;
-            shippingRequest.DraftStep = 1;
-            await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
-            await CurrentUnitOfWork.SaveChangesAsync();
-            return shippingRequest.Id;
+            await _shippingRequestManager.CreateStep1Manager(shippingRequest,input);
+            
+            return await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
         }
 
         private async Task<long> UpdateStep1(CreateOrEditShippingRequestStep1Dto input)
         {
-            var shippingRequest = await GetDraftedShippingRequest(input.Id.Value);
+            var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id.Value);
 
             ObjectMapper.Map(input, shippingRequest);
             return shippingRequest.Id;
-            // ValidateStep1(shippingRequest);
-        }
-
-
-        private async Task ValidateShippingRequestBeforePublish(ShippingRequest shippingRequest)
-        {
-            // Bid info
-            if (shippingRequest.IsBid)
-            {
-                if (!shippingRequest.BidStartDate.HasValue)
-                {
-                    shippingRequest.BidStartDate = Clock.Now.Date;
-                }
-                else if (shippingRequest.BidStartDate.HasValue && shippingRequest.BidStartDate.Value < Clock.Now.Date)
-                {
-                    throw new UserFriendlyException(L("BidStartDateConnotBeBeforeToday"));
-                }
-
-                shippingRequest.BidStatus = shippingRequest.BidStartDate.Value.Date == Clock.Now.Date
-                    ? ShippingRequestBidStatus.OnGoing
-                    : ShippingRequestBidStatus.StandBy;
-                await _normalPricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
-            }
         }
 
         private async Task SendtoCarrierIfShippingRequestIsDirectRequest(ShippingRequest shippingRequest)
@@ -603,7 +478,7 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.ShippingRequest, AppFeatures.CarrierAsASaas)]
         public async Task CreateOrEdit(CreateOrEditShippingRequestDto input)
         {
-            await OthersNameValidation(input);
+            await _shippingRequestManager.OthersNameValidation(input);
 
             if (input.IsTachyonDeal)
             {
@@ -1810,72 +1685,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-        /// <summary>
-        /// 
-        /// <list type="bullet|number|table">
-        /// <listheader>This Method Used For Validate</listheader>
-        ///    <item>1-OtherGoodsCategoryName</item>
-        ///    <item>2-OtherTransportTypeName</item>
-        ///    <item>3-OtherTrucksTypeName</item>
-        /// </list>
-        /// See <see cref="CreateOrEditShippingRequestDto"/>
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        private async Task OthersNameValidation(IShippingRequestDtoHaveOthersName input)
-        {
-            #region Validate GoodCategory
-
-            if (input.GoodCategoryId != null)
-            {
-                var goodCategory = await _lookup_goodCategoryRepository
-                    .FirstOrDefaultAsync(input.GoodCategoryId.Value);
-
-                if (goodCategory.Key.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) &&
-                    input.OtherGoodsCategoryName.IsNullOrEmpty())
-                    throw new UserFriendlyException(L("GoodCategoryCanNotBeOtherAndEmptyAtSameTime"));
-            }
-
-            #endregion
-
-            #region Validate TransportType
-
-            if (input.TransportTypeId != null)
-            {
-                var transportType = await _transportTypeRepository
-                    .FirstOrDefaultAsync(input.TransportTypeId.Value);
-
-                if (transportType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) &&
-                    input.OtherTransportTypeName.IsNullOrEmpty())
-                    throw new UserFriendlyException(L("TransportTypeCanNotBeOtherAndEmptyAtSameTime"));
-            }
-
-            #endregion
-
-            #region Validate TrucksType
-
-            //? FYI TrucksTypeId Not Nullable 
-            var trucksType = await _lookup_trucksTypeRepository
-                .FirstOrDefaultAsync(input.TrucksTypeId);
-
-            if (trucksType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) &&
-                input.OtherTrucksTypeName.IsNullOrEmpty())
-                throw new UserFriendlyException(L("TrucksTypeCanNotBeOtherAndEmptyAtSameTime"));
-
-            #endregion
-
-            #region Validate PackingType
-
-            var packingType = await _packingTypeRepository
-                .FirstOrDefaultAsync(input.PackingTypeId);
-
-            if (packingType.DisplayName.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) &&
-                input.OtherPackingTypeName.IsNullOrEmpty())
-                throw new UserFriendlyException(L("PackingTypeCanNotBeOtherAndEmptyAtSameTime"));
-
-            #endregion
-
-        }
+       
 
         private Facility GetPickupOrDropPointFacilityForTrip(int id, PickingType type, long? dropOffId = null)
         {
