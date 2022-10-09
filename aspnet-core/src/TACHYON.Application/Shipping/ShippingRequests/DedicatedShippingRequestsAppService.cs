@@ -120,25 +120,24 @@ namespace TACHYON.Shipping.ShippingRequests
             await ValidateTrucksAndDrivers(input, shippingRequest);
 
             var status = shippingRequest.RentalStartDate <= Clock.Now.Date
-                ? DedicatedShippingRequestTruckOrDriverStatus.Busy
-                : DedicatedShippingRequestTruckOrDriverStatus.Active;
+                ? WorkingStatus.Busy
+                : WorkingStatus.Active;
 
             //Add trucks
             var trucksList = new List<DedicatedShippingRequestTruck>();
-            foreach (var id in input.TrucksList)
+            foreach (var truck in input.TrucksList)
             {
-                trucksList.Add(new DedicatedShippingRequestTruck { ShippingRequestId = shippingRequest.Id, TruckId = id, Status = status });
+                trucksList.Add(new DedicatedShippingRequestTruck { ShippingRequestId = shippingRequest.Id, TruckId = truck.Id, Status = status });
             }
             shippingRequest.DedicatedShippingRequestTrucks = trucksList;
 
             //Add drivers
             var driversList = new List<DedicatedShippingRequestDriver>();
-            foreach (var id in input.TrucksList)
+            foreach (var driver in input.TrucksList)
             {
-                driversList.Add(new DedicatedShippingRequestDriver { ShippingRequestId = shippingRequest.Id, DriverUserId = id, Status = status });
+                driversList.Add(new DedicatedShippingRequestDriver { ShippingRequestId = shippingRequest.Id, DriverUserId = driver.Id, Status = status });
             }
             shippingRequest.DedicatedShippingRequestDrivers = driversList;
-
         }
 
       
@@ -226,13 +225,19 @@ namespace TACHYON.Shipping.ShippingRequests
 
             //check if truck is busy
 
-            if (IsAnyTruckBusyDuringRentalDuration(input.TrucksList, shippingRequest)) throw new UserFriendlyException(L("OneOrMoreTrucksAreBusy"));
-            if (IsAnyDriverBusyDuringRentalDuration(input.DriversList, shippingRequest)) throw new UserFriendlyException(L("OneOrMoreDriversAreBusy"));
 
-            if (shippingRequest.RentalStartDate.Value.Date == Clock.Now.Date && 
-                await _shippingRequestManager.CheckIfDriversWorkingOnAnotherTrip(input.DriversList))
+            foreach(var truck in input.TrucksList)
             {
-                throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
+                if (await _shippingRequestManager.CheckIfTruckIsRented(truck.Id))
+                    throw new UserFriendlyException(L(String.Format("The truck {0} is rented", truck.TruckName)));
+
+            }
+
+            foreach (var driver in input.DriversList)
+            {
+                if (await _shippingRequestManager.CheckIfDriverIsRented(driver.Id))
+                    throw new UserFriendlyException(L(String.Format("The driver {0} is rented", driver.DriverName)));
+
             }
 
 

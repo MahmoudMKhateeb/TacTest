@@ -17,6 +17,6 @@ namespace TACHYON.Shipping.Dedicated
         public long DriverUserId { get; set;}
         [ForeignKey("DriverUserId")]
         public User DriverUser { get; set; }
-        public DedicatedShippingRequestTruckOrDriverStatus Status { get; set; }
+        public WorkingStatus Status { get; set; }
     }
 }

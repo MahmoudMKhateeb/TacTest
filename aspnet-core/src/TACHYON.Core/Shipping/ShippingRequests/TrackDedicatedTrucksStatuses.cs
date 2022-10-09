@@ -4,6 +4,7 @@ using Abp.Domain.Uow;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,38 +38,71 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
-                var expiredRentalShippingRequests = _shippingRequestRepository.GetAll()
-                    .Where(x => x.ShippingRequestFlag == ShippingRequestFlag.Dedicated &&
-                     x.RentalEndDate != null && x.RentalEndDate.Value.Date > Clock.Now.Date
-                     && x.Status != ShippingRequestStatus.Expired)
-                    .ToList();
-
-                foreach(var request in expiredRentalShippingRequests)
-                {
-                    request.Status=ShippingRequestStatus.Expired;
-                }
+                ExpiredRentedDedicatedRequests();
 
                 //Track drivers statuses
-                var activeDriversStart = _dedicatedShippingRequestDriver.GetAll()
-                    .Where(x => x.ShippingRequest.RentalStartDate.Value.Date >= Clock.Now.Date &&
-                    x.Status != DedicatedShippingRequestTruckOrDriverStatus.Busy)
-                    .ToList();
-
-                foreach(var driver in activeDriversStart)
-                {
-                    driver.Status = DedicatedShippingRequestTruckOrDriverStatus.Busy;
-                }
+                DriverStartOrEndRentalPeriodStatusesChange();
 
                 //Track trucks statuses
-                var activeTrucksStart = _dedicatedShippingRequestTruck.GetAll()
-                    .Where(x => x.ShippingRequest.RentalStartDate.Value.Date >= Clock.Now.Date &&
-                    x.Status != DedicatedShippingRequestTruckOrDriverStatus.Busy)
-                    .ToList();
+                TrucksStartOrEndRentalPeriodStatusesChange();
+            }
+        }
 
-                foreach (var truck in activeTrucksStart)
-                {
-                    truck.Status = DedicatedShippingRequestTruckOrDriverStatus.Busy;
-                }
+        private void TrucksStartOrEndRentalPeriodStatusesChange()
+        {
+            var trucksList = _dedicatedShippingRequestTruck.GetAll()
+                                .Include(x => x.Truck)
+                                .Include(x => x.ShippingRequest.ReferenceNumber)
+                                .ToList();
+
+            var activeTrucksStart = trucksList.Where(x => x.ShippingRequest.RentalStartDate.Value.Date >= Clock.Now.Date &&
+                x.Status != WorkingStatus.Busy);
+            foreach (var truck in activeTrucksStart)
+            {
+                truck.Status = WorkingStatus.Busy;
+            }
+
+            var busyTrucksEnded = trucksList.Where(x => x.ShippingRequest.RentalEndDate.Value.Date < Clock.Now.Date &&
+                x.Status == WorkingStatus.Busy);
+            foreach (var truck in activeTrucksStart)
+            {
+                truck.Status = WorkingStatus.Active;
+            }
+        }
+
+        private void DriverStartOrEndRentalPeriodStatusesChange()
+        {
+            var driversList = _dedicatedShippingRequestDriver.GetAll()
+                .Include(x => x.DriverUser)
+                .Include(x => x.ShippingRequest.ReferenceNumber)
+                .ToList();
+
+            var activeDriversStart = driversList.Where(x => x.ShippingRequest.RentalStartDate.Value.Date >= Clock.Now.Date &&
+                x.Status != WorkingStatus.Busy);
+            foreach (var driver in activeDriversStart)
+            {
+                driver.Status = WorkingStatus.Busy;
+            }
+
+            var busyDriversEnded = driversList.Where(x => x.ShippingRequest.RentalEndDate.Value.Date < Clock.Now.Date &&
+                x.Status == WorkingStatus.Busy);
+            foreach (var driver in busyDriversEnded)
+            {
+                driver.Status = WorkingStatus.Active;
+            }
+        }
+
+        private void ExpiredRentedDedicatedRequests()
+        {
+            var expiredRentalShippingRequests = _shippingRequestRepository.GetAll()
+                                .Where(x => x.ShippingRequestFlag == ShippingRequestFlag.Dedicated &&
+                                 x.RentalEndDate != null && x.RentalEndDate.Value.Date > Clock.Now.Date
+                                 && x.Status != ShippingRequestStatus.Expired)
+                                .ToList();
+
+            foreach (var request in expiredRentalShippingRequests)
+            {
+                request.Status = ShippingRequestStatus.Expired;
             }
         }
     }

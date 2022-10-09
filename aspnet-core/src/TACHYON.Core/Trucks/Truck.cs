@@ -10,6 +10,7 @@ using TACHYON.Actors;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Integration.WaslIntegration;
+using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequests;
 //using TACHYON.Authorization.Users;
 using TACHYON.Trucks;
@@ -107,8 +108,7 @@ namespace TACHYON.Trucks
         public Actor CarrierActorFk { get; set; }
 
         public int? CarrierActorId { get; set ; }
-
-
+        public ICollection<DedicatedShippingRequestTruck> DedicatedShippingRequestTrucks { get; set; }
 
         #region Helper
 

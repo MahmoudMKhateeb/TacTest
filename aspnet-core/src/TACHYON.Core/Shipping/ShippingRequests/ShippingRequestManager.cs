@@ -33,6 +33,7 @@ using TACHYON.Shipping.DirectRequests.Dto;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Dedicated;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -52,7 +53,8 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly PriceOfferManager _priceOfferManager;
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
-
+        private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
+        private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTrucksRepository;
 
 
         private readonly ISmsSender _smsSender;
@@ -73,7 +75,9 @@ namespace TACHYON.Shipping.ShippingRequests
             NormalPricePackageManager normalPricePackageManager,
             PriceOfferManager priceOfferManager,
             IRepository<PriceOffer, long> priceOfferRepository,
-            IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository,
+            IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
+            IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTrucksRepository)
         {
             _smsSender = smsSender;
             _routPointRepository = routPointRepository;
@@ -91,6 +95,8 @@ namespace TACHYON.Shipping.ShippingRequests
             _priceOfferManager = priceOfferManager;
             _priceOfferRepository = priceOfferRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
+            _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
+            _dedicatedShippingRequestTrucksRepository = dedicatedShippingRequestTrucksRepository;
         }
 
         /// <summary>
@@ -333,6 +339,9 @@ namespace TACHYON.Shipping.ShippingRequests
             DisableTenancyFilters();
             ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                 .Include(x=>x.DedicatedShippingRequestTrucks)
+                .ThenInclude(x=>x.Truck)
+                .Include(x => x.DedicatedShippingRequestDrivers)
+                .ThenInclude(x=>x.DriverUser)
                 //.Where(x=>x.CarrierTenantId == _abpSession.TenantId)
                 .FirstOrDefaultAsync(x => x.Id == id);
             return shippingRequest;
@@ -349,11 +358,24 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<bool> CheckIfDriversWorkingOnAnotherTrip(List<long> assignedDriverUserIds)
         {
             return await _shippingRequestTripRepository.GetAll()
-                .AnyAsync(x => x.AssignedDriverUserId !=null && assignedDriverUserIds.Contains(x.AssignedDriverUserId.Value)
+                .AnyAsync(x => x.AssignedDriverUserId != null && assignedDriverUserIds.Contains(x.AssignedDriverUserId.Value)
                             && x.Status == ShippingRequestTripStatus.InTransit
                             && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted);
         }
 
+        public async Task<bool> CheckIfDriverIsRented(long assignedDriverUserId)
+        {
+            return await _dedicatedShippingRequestDriverRepository.GetAll()
+                .AnyAsync(x => x.DriverUserId == assignedDriverUserId
+                            && x.Status == WorkingStatus.Busy);
+        }
+
+        public async Task<bool> CheckIfTruckIsRented(long assignedTruckId)
+        {
+            return await _dedicatedShippingRequestTrucksRepository.GetAll()
+                .AnyAsync(x => x.TruckId == assignedTruckId
+                            && x.Status == WorkingStatus.Busy);
+        }
 
         /// <summary>
         /// 

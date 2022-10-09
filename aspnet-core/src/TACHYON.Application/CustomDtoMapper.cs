@@ -728,7 +728,7 @@ namespace TACHYON
                 .ForMember(x => x.User, x => x.MapFrom(y => y))
                 .ForPath(x => x.User.NationalityFk.Name, x => x.MapFrom(y => y.Nationality))
                 .ForMember(x => x.CompanyName, x => x.MapFrom(y => y.CompanyName))
-                .ReverseMap();
+             .ReverseMap();
             configuration.CreateMap<User, DriverListDto>();
             configuration.CreateMap<User, ChatUserDto>();
             configuration.CreateMap<User, OrganizationUnitUserListDto>();
@@ -1306,5 +1306,7 @@ namespace TACHYON
         public User User { get; set; }
 
         public string CompanyName { get; set; }
+        public string RentedStatus { get; set; }
+        public string RentedShippingRequestReference { get; set; }
     }
 }

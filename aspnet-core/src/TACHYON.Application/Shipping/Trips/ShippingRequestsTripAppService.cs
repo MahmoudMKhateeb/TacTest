@@ -429,10 +429,10 @@ namespace TACHYON.Shipping.Trips
 
             if (trip.Status == ShippingRequestTripStatus.InTransit && await _shippingRequestManager.CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
                 throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
-            
-            if (await CheckIfDriverIsRented(input.AssignedDriverUserId))
+
+            if (await _shippingRequestManager.CheckIfDriverIsRented(input.AssignedDriverUserId))
                 throw new UserFriendlyException(L("TheDriverAreadyRented"));
-            if (await CheckIfTruckIsRented(input.AssignedTruckId))
+            if (await _shippingRequestManager.CheckIfTruckIsRented(input.AssignedTruckId))
                 throw new UserFriendlyException(L("TheTruckAreadyRented"));
 
             long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
@@ -939,19 +939,7 @@ namespace TACHYON.Shipping.Trips
 
         
 
-        private async Task<bool> CheckIfDriverIsRented(long assignedDriverUserId)
-        {
-            return await _dedicatedShippingRequestDriverRepository.GetAll()
-                .AnyAsync(x => x.DriverUserId == assignedDriverUserId
-                            && x.Status == DedicatedShippingRequestTruckOrDriverStatus.Busy);
-        }
-
-        private async Task<bool> CheckIfTruckIsRented(long assignedTruckId)
-        {
-            return await _dedicatedShippingRequestTrucksRepository.GetAll()
-                .AnyAsync(x => x.TruckId == assignedTruckId
-                            && x.Status == DedicatedShippingRequestTruckOrDriverStatus.Busy);
-        }
+        
 
         private async Task CancelTripAsync(CancelTripInput input, ShippingRequestTrip trip, UserIdentifier carrierIdent)
         {

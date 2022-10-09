@@ -63,5 +63,7 @@ namespace TACHYON.Authorization.Users.Dto
 
         public DateTime? DateOfBirth { get; set; }
         public decimal Rate { get; set; }
+        public string RentedStatus { get; set; }
+        public string RentedShippingRequestReference { get; set; }
     }
 }

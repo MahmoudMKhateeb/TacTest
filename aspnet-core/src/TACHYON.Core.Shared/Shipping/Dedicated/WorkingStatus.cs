@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.Dedicated
 {
-    public enum DedicatedShippingRequestTruckOrDriverStatus:byte
+    public enum WorkingStatus:byte
     {
         Active = 0,
         Busy = 1,
