@@ -6,7 +6,7 @@ namespace TACHYON.Shipping.ShippingRequests
 {
     public enum ShippingRequestFlag: byte
     {
-        Normal = 1,
-        Dedicated = 2
+        Normal = 0,
+        Dedicated = 1,
     }
 }

@@ -31,6 +31,8 @@ using TACHYON.Url;
 using static TACHYON.TACHYONDashboardCustomizationConsts.Widgets;
 using TACHYON.Shipping.DirectRequests.Dto;
 using TACHYON.Shipping.DirectRequests;
+using TACHYON.Shipping.Trips;
+using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -38,6 +40,7 @@ namespace TACHYON.Shipping.ShippingRequests
     {
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
+        private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IFeatureChecker _featureChecker;
         private readonly IAbpSession _abpSession;
         protected readonly IWebUrlService WebUrlService;
@@ -69,7 +72,8 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
             NormalPricePackageManager normalPricePackageManager,
             PriceOfferManager priceOfferManager,
-            IRepository<PriceOffer, long> priceOfferRepository)
+            IRepository<PriceOffer, long> priceOfferRepository,
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository)
         {
             _smsSender = smsSender;
             _routPointRepository = routPointRepository;
@@ -86,6 +90,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _normalPricePackageManager = normalPricePackageManager;
             _priceOfferManager = priceOfferManager;
             _priceOfferRepository = priceOfferRepository;
+            _shippingRequestTripRepository = shippingRequestTripRepository;
         }
 
         /// <summary>
@@ -315,13 +320,40 @@ namespace TACHYON.Shipping.ShippingRequests
             DisableTenancyFilters();
             ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                 .Include(x => x.ShippingRequestDestinationCities)
+                .ThenInclude(x=>x.CityFk)
                 .Include(x=>x.ShippingRequestVases)
                 .WhereIf(await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal == true)
                 .Where(x => x.Id == id)
                 .FirstOrDefaultAsync();
             return shippingRequest;
-            }
-        
+        }
+
+        public async Task<ShippingRequest> GetShippingRequestForAssign(long id)
+        {
+            DisableTenancyFilters();
+            ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                .Include(x=>x.DedicatedShippingRequestTrucks)
+                //.Where(x=>x.CarrierTenantId == _abpSession.TenantId)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            return shippingRequest;
+        }
+
+        public async Task<bool> CheckIfDriverWorkingOnAnotherTrip(long assignedDriverUserId)
+        {
+            return await _shippingRequestTripRepository.GetAll()
+                .AnyAsync(x => x.AssignedDriverUserId == assignedDriverUserId
+                            && x.Status == ShippingRequestTripStatus.InTransit
+                            && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted);
+        }
+
+        public async Task<bool> CheckIfDriversWorkingOnAnotherTrip(List<long> assignedDriverUserIds)
+        {
+            return await _shippingRequestTripRepository.GetAll()
+                .AnyAsync(x => x.AssignedDriverUserId !=null && assignedDriverUserIds.Contains(x.AssignedDriverUserId.Value)
+                            && x.Status == ShippingRequestTripStatus.InTransit
+                            && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted);
+        }
+
 
         /// <summary>
         /// 

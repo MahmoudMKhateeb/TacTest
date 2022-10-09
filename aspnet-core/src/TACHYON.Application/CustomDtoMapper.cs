@@ -450,7 +450,8 @@ namespace TACHYON
                 .ForMember(dest => dest.DraftStep, opt => opt.Ignore())
                 .ForMember(d => d.ShippingRequestDestinationCities, opt => opt.Ignore());
 
-            configuration.CreateMap<ShippingRequest, CreateOrEditDedicatedStep1Dto>();
+            configuration.CreateMap<ShippingRequest, CreateOrEditDedicatedStep1Dto>()
+                .ForMember(dest => dest.CountryId, opt=> opt.MapFrom(src=> src.ShippingRequestDestinationCities.First().CityFk.CountyId));
 
             configuration.CreateMap<EditShippingRequestStep4Dto, ShippingRequest>()
                 .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())

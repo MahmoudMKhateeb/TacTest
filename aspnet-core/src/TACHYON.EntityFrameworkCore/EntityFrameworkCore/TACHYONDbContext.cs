@@ -93,6 +93,7 @@ using TACHYON.Vases;
 using TACHYON.Penalties;
 using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequestAndTripNotes;
+using TACHYON.Shipping.Dedicated;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -225,6 +226,8 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<PenaltyComplaint> PenaltyComplaints { get; set; }
 
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
+        public virtual DbSet<DedicatedShippingRequestDriver> DedicatedShippingRequestDrivers { get; set; }
+        public virtual DbSet<DedicatedShippingRequestTruck> DedicatedShippingRequestTrucks { get; set; }
         public virtual DbSet<ShippingRequestDestinationCity> ShippingRequestDestinationCities { get; set; }
         public DbSet<ShippingRequestDirectRequest> ShippingRequestDirectRequests { get; set; }
 

@@ -48,6 +48,7 @@ using TACHYON.ShippingRequestTripVases;
 using TACHYON.Storage;
 using TACHYON.Shipping.ShippingRequestAndTripNotes;
 using TACHYON.Shipping.Notes;
+using TACHYON.Shipping.Dedicated;
 
 namespace TACHYON.Shipping.Trips
 {
@@ -75,6 +76,8 @@ namespace TACHYON.Shipping.Trips
         private readonly ShippingRequestTripManager _shippingRequestTripManager;
         private readonly TenantManager _tenantManager;
         private readonly IRepository<ShippingRequestAndTripNote> _ShippingRequestAndTripNoteRepository;
+        private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
+        private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTrucksRepository;
 
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
@@ -98,7 +101,9 @@ namespace TACHYON.Shipping.Trips
             ShippingRequestTripManager shippingRequestTripManager,
             TenantManager tenantManager,
             IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository
-            )
+,
+            IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
+            IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTrucksRepository)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -121,6 +126,8 @@ namespace TACHYON.Shipping.Trips
             _shippingRequestTripManager = shippingRequestTripManager;
             _tenantManager = tenantManager;
             _ShippingRequestAndTripNoteRepository = ShippingRequestAndTripNoteRepository;
+            _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
+            _dedicatedShippingRequestTrucksRepository = dedicatedShippingRequestTrucksRepository;
         }
 
 
@@ -420,8 +427,13 @@ namespace TACHYON.Shipping.Trips
 
             if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
 
-            if (trip.Status == ShippingRequestTripStatus.InTransit && await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
+            if (trip.Status == ShippingRequestTripStatus.InTransit && await _shippingRequestManager.CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
                 throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
+            
+            if (await CheckIfDriverIsRented(input.AssignedDriverUserId))
+                throw new UserFriendlyException(L("TheDriverAreadyRented"));
+            if (await CheckIfTruckIsRented(input.AssignedTruckId))
+                throw new UserFriendlyException(L("TheTruckAreadyRented"));
 
             long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
             long? oldAssignedTruckId = trip.AssignedTruckId;
@@ -925,12 +937,20 @@ namespace TACHYON.Shipping.Trips
         //    }
         //}
 
-        private async Task<bool> CheckIfDriverWorkingOnAnotherTrip(long assignedDriverUserId)
+        
+
+        private async Task<bool> CheckIfDriverIsRented(long assignedDriverUserId)
         {
-            return await _shippingRequestTripRepository.GetAll()
-                .AnyAsync(x => x.AssignedDriverUserId == assignedDriverUserId
-                            && x.Status == ShippingRequestTripStatus.InTransit
-                            && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted);
+            return await _dedicatedShippingRequestDriverRepository.GetAll()
+                .AnyAsync(x => x.DriverUserId == assignedDriverUserId
+                            && x.Status == DedicatedShippingRequestTruckOrDriverStatus.Busy);
+        }
+
+        private async Task<bool> CheckIfTruckIsRented(long assignedTruckId)
+        {
+            return await _dedicatedShippingRequestTrucksRepository.GetAll()
+                .AnyAsync(x => x.TruckId == assignedTruckId
+                            && x.Status == DedicatedShippingRequestTruckOrDriverStatus.Busy);
         }
 
         private async Task CancelTripAsync(CancelTripInput input, ShippingRequestTrip trip, UserIdentifier carrierIdent)

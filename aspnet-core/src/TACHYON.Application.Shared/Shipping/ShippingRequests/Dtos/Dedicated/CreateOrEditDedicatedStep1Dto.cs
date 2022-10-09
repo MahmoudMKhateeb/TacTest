@@ -31,6 +31,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos.Dedicated
         public string OtherTransportTypeName { get; set; }
         public string OtherTrucksTypeName { get; set; }
         public string OtherPackingTypeName { get; set; }
+        public int CountryId { get; set; }
         public List<ShippingRequestDestinationCitiesDto> ShippingRequestDestinationCities { get; set; }
 
         public void AddValidationErrors(CustomValidationContext context)

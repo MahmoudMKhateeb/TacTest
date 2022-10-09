@@ -1,15 +1,19 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Timing;
 using Abp.UI;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Features;
+using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.DirectRequests.Dto;
 using TACHYON.Shipping.ShippingRequests.Dtos;
@@ -17,26 +21,32 @@ using TACHYON.Shipping.ShippingRequests.Dtos.Dedicated;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
-    [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
+   // [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
     public class DedicatedShippingRequestsAppService: TACHYONAppServiceBase, IDedicatedShippingRequestsAppService
     {
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly ShippingRequestManager _shippingRequestManager;
         private readonly IRepository<ShippingRequestDestinationCity> _shippingRequestDestinationCityRepository;
         private readonly ShippingRequestDirectRequestAppService _shippingRequestDirectRequestAppService;
-
+        private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTruckRepository;
+        private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
 
         public DedicatedShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository,
             ShippingRequestManager shippingRequestManager,
             IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository,
-            ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService)
+            ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService,
+            IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTruckRepository,
+            IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestManager = shippingRequestManager;
             _shippingRequestDestinationCityRepository = shippingRequestDestinationCityRepository;
             _shippingRequestDirectRequestAppService = shippingRequestDirectRequestAppService;
+            _dedicatedShippingRequestTruckRepository = dedicatedShippingRequestTruckRepository;
+            _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
         }
 
+        #region Wizard
         public async Task<long> CreateOrEditStep1(CreateOrEditDedicatedStep1Dto input)
         {
             await _shippingRequestManager.ValidateShippingRequestStep1(input);
@@ -96,6 +106,44 @@ namespace TACHYON.Shipping.ShippingRequests
             }
 
         }
+
+        #endregion
+
+        #region Assign trucks
+
+        public async Task AssignDedicatedTrucksAndDrivers(AssignDedicatedTrucksAndDriversInput input)
+        {
+            var shippingRequest = await _shippingRequestManager.GetShippingRequestForAssign(input.ShippingRequestId);
+
+            if (shippingRequest is null) throw new UserFriendlyException(L("ShippingRequestNotFound"));
+
+            await ValidateTrucksAndDrivers(input, shippingRequest);
+
+            var status = shippingRequest.RentalStartDate <= Clock.Now.Date
+                ? DedicatedShippingRequestTruckOrDriverStatus.Busy
+                : DedicatedShippingRequestTruckOrDriverStatus.Active;
+
+            //Add trucks
+            var trucksList = new List<DedicatedShippingRequestTruck>();
+            foreach (var id in input.TrucksList)
+            {
+                trucksList.Add(new DedicatedShippingRequestTruck { ShippingRequestId = shippingRequest.Id, TruckId = id, Status = status });
+            }
+            shippingRequest.DedicatedShippingRequestTrucks = trucksList;
+
+            //Add drivers
+            var driversList = new List<DedicatedShippingRequestDriver>();
+            foreach (var id in input.TrucksList)
+            {
+                driversList.Add(new DedicatedShippingRequestDriver { ShippingRequestId = shippingRequest.Id, DriverUserId = id, Status = status });
+            }
+            shippingRequest.DedicatedShippingRequestDrivers = driversList;
+
+        }
+
+      
+
+        #endregion
 
 
         #region Helper
@@ -164,6 +212,48 @@ namespace TACHYON.Shipping.ShippingRequests
                 directRequestInput.ShippingRequestId = shippingRequest.Id;
                 await _shippingRequestDirectRequestAppService.Create(directRequestInput);
             }
+        }
+
+        private async Task ValidateTrucksAndDrivers(AssignDedicatedTrucksAndDriversInput input, ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.DedicatedShippingRequestTrucks.Count() > 0) throw new UserFriendlyException(L("TrucksAndDriversAlreadyAssigned"));
+
+            if (input.TrucksList.Count != input.DriversList.Count || shippingRequest.NumberOfTrucks != input.TrucksList.Count ||
+                shippingRequest.NumberOfTrucks != input.DriversList.Count)
+            {
+                throw new UserFriendlyException(L(String.Format("TrucksAndDriversMustBe {0}", shippingRequest.NumberOfTrucks)));
+            }
+
+            //check if truck is busy
+
+            if (IsAnyTruckBusyDuringRentalDuration(input.TrucksList, shippingRequest)) throw new UserFriendlyException(L("OneOrMoreTrucksAreBusy"));
+            if (IsAnyDriverBusyDuringRentalDuration(input.DriversList, shippingRequest)) throw new UserFriendlyException(L("OneOrMoreDriversAreBusy"));
+
+            if (shippingRequest.RentalStartDate.Value.Date == Clock.Now.Date && 
+                await _shippingRequestManager.CheckIfDriversWorkingOnAnotherTrip(input.DriversList))
+            {
+                throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
+            }
+
+
+        }
+
+        public bool IsAnyTruckBusyDuringRentalDuration(List<long> truckIds, ShippingRequest shippingRequest)
+        {
+            return _dedicatedShippingRequestTruckRepository.GetAll()
+                .Where(x =>  truckIds.Contains(x.TruckId) && x.ShippingRequestId != shippingRequest.Id &&
+                shippingRequest.RentalStartDate.Value.Date < x.ShippingRequest.RentalEndDate.Value.Date &&
+                x.ShippingRequest.RentalStartDate.Value.Date < shippingRequest.RentalEndDate.Value.Date)
+                .Any();
+        }
+
+        public bool IsAnyDriverBusyDuringRentalDuration(List<long> driverIds, ShippingRequest shippingRequest)
+        {
+            return _dedicatedShippingRequestDriverRepository.GetAll()
+                .Where(x => driverIds.Contains(x.DriverUserId) && x.ShippingRequestId != shippingRequest.Id &&
+                shippingRequest.RentalStartDate.Value.Date < x.ShippingRequest.RentalEndDate.Value.Date &&
+                x.ShippingRequest.RentalStartDate.Value.Date < shippingRequest.RentalEndDate.Value.Date)
+                .Any();
         }
         #endregion
     }

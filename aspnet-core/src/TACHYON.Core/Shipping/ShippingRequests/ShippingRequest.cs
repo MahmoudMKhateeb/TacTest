@@ -21,6 +21,7 @@ using TACHYON.PricePackages;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBidStatuses;
 using TACHYON.Shipping.ShippingRequestStatuses;
@@ -248,6 +249,9 @@ namespace TACHYON.Shipping.ShippingRequests
         public ICollection<ShippingRequestTrip> ShippingRequestTrips { get; set; }
         //citites
         public ICollection<ShippingRequestDestinationCity> ShippingRequestDestinationCities { get; set; }
+        public ICollection<DedicatedShippingRequestDriver> DedicatedShippingRequestDrivers { get; set; }
+        public ICollection<DedicatedShippingRequestTruck> DedicatedShippingRequestTrucks { get; set; }
+
 
         #endregion
 
