@@ -260,7 +260,7 @@ namespace TACHYON.PriceOffers
                 priceOfferDto = new PriceOfferDto()
                 {// Set Default data
                     PriceType = PriceOfferType.Trip,
-                    Quantity = shippingRequest.NumberOfTrips,
+                    Quantity = shippingRequest.ShippingRequestFlag==ShippingRequestFlag.Normal ?shippingRequest.NumberOfTrips :shippingRequest.NumberOfTrucks,
                     Items = GetVases(shippingRequest),
                     TaxVat = (decimal)Convert.ChangeType(SettingManager.GetSettingValue(AppSettings.HostManagement.TaxVat), typeof(decimal))
                 };

@@ -923,7 +923,7 @@ namespace TACHYON.PriceOffers
 
 
             decimal vasCommissionPercentageOrAddValue = 0;
-            offer.Quantity = shippingRequest.NumberOfTrips;
+            offer.Quantity = shippingRequest.ShippingRequestFlag==ShippingRequestFlag.Normal ?shippingRequest.NumberOfTrips :shippingRequest.NumberOfTrucks;
 
             // TMS user can overwrite default commissions settings 
             if (_featureChecker.IsEnabled(AppFeatures.TachyonDealer) && (input.VasCommissionType.HasValue || input.VasCommissionPercentageOrAddValue.HasValue))
