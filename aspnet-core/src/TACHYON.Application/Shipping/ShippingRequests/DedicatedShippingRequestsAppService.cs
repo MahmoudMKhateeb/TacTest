@@ -1,27 +1,27 @@
-﻿using Abp.Application.Services.Dto;
+﻿using Abp.Application.Features;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.DirectRequests.Dto;
-using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequests.Dtos.Dedicated;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
-   // [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
+    //[AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
     public class DedicatedShippingRequestsAppService: TACHYONAppServiceBase, IDedicatedShippingRequestsAppService
     {
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
@@ -47,6 +47,29 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
         #region Wizard
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+        public async Task<GetAllTrucksAndDriversForRequestOutput> GetAllTrucksAndDriversForRequest(long shippingRequestId)
+        {
+            DisableTenancyFilters();
+            var drivers = await _dedicatedShippingRequestDriverRepository.GetAll()
+                .Include(x => x.DriverUser)
+                .WhereIf(await IsShipper(), x=>x.ShippingRequest.TenantId == AbpSession.TenantId)
+                .WhereIf(await IsTachyonDealer(), x=> true)
+                .Where(x => x.ShippingRequestId == shippingRequestId)
+                .ToListAsync();
+            var trucks = await _dedicatedShippingRequestTruckRepository.GetAll()
+                .Include(x => x.Truck)
+                .Where(x => x.ShippingRequestId == shippingRequestId)
+                .ToListAsync();
+
+            return new GetAllTrucksAndDriversForRequestOutput
+            {
+                dedicatedShippingRequestDriversDtos = ObjectMapper.Map<List<DedicatedShippingRequestDriversDto>>(drivers),
+                dedicatedShippingRequestTrucksDtos = ObjectMapper.Map<List<DedicatedShippingRequestTrucksDto>>(trucks)
+            };
+        }
+
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         public async Task<long> CreateOrEditStep1(CreateOrEditDedicatedStep1Dto input)
         {
             await _shippingRequestManager.ValidateShippingRequestStep1(input);
@@ -63,16 +86,17 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         public async Task<CreateOrEditDedicatedStep1Dto> GetStep1ForEdit(long id)
         {
-            var shippingRequest=await _shippingRequestManager.GetDraftedShippingRequest(id);
+            var shippingRequest=await GetDraftedDedicatedShippingRequestForStep1(id);
                 return ObjectMapper.Map<CreateOrEditDedicatedStep1Dto>(shippingRequest);
         }
-
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         public async Task EditStep2(EditDedicatedStep2Dto input)
         {
-            ShippingRequest shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id);
-
+            ShippingRequest shippingRequest = await GetDraftedDedicatedShippingRequestForStep2(input.Id);
+            if (shippingRequest == null) throw new UserFriendlyException(L("ShippingRequestNotFound"));
             //delete vases
             await _shippingRequestManager.EditVasStep(shippingRequest, input);
 
@@ -83,18 +107,18 @@ namespace TACHYON.Shipping.ShippingRequests
 
             ObjectMapper.Map(input, shippingRequest);
         }
-
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         public async Task<EditDedicatedStep2Dto> GetStep2ForEdit(long id)
         {
-            var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(id);
+            var shippingRequest = await GetDraftedDedicatedShippingRequestForStep2(id);
             return ObjectMapper.Map<EditDedicatedStep2Dto>(shippingRequest);
         }
 
-
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         public async Task PublishDedicatedShippingRequest(long id)
         {
             ShippingRequest shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(id);
-
+            if (shippingRequest == null) throw new UserFriendlyException(L("ShippingRequestNotFound"));
             if (shippingRequest.DraftStep < 2)
             {
                 throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
@@ -110,7 +134,7 @@ namespace TACHYON.Shipping.ShippingRequests
         #endregion
 
         #region Assign trucks
-
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.CarrierAsASaas)]
         public async Task AssignDedicatedTrucksAndDrivers(AssignDedicatedTrucksAndDriversInput input)
         {
             var shippingRequest = await _shippingRequestManager.GetShippingRequestForAssign(input.ShippingRequestId);
@@ -133,14 +157,41 @@ namespace TACHYON.Shipping.ShippingRequests
 
             //Add drivers
             var driversList = new List<DedicatedShippingRequestDriver>();
-            foreach (var driver in input.TrucksList)
+            foreach (var driver in input.DriversList)
             {
                 driversList.Add(new DedicatedShippingRequestDriver { ShippingRequestId = shippingRequest.Id, DriverUserId = driver.Id, Status = status });
             }
             shippingRequest.DedicatedShippingRequestDrivers = driversList;
         }
+        #endregion
 
-      
+        #region trip
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+        public async Task<List<SelectItemDto>> GetAllDedicatedDriversForDropDown(long shippingRequestId)
+        {
+            return await _dedicatedShippingRequestDriverRepository.GetAll()
+                .Include(x=>x.DriverUser)
+                .WhereIf(await IsShipper(), x=>x.ShippingRequest.TenantId==AbpSession.TenantId)
+                .WhereIf(await IsTachyonDealer(), x=>true)
+                .Where(e => e.ShippingRequestId == shippingRequestId)
+                .Select(x => new SelectItemDto { Id = x.DriverUserId.ToString(), DisplayName = $"{x.DriverUser.Name} {x.DriverUser.Surname}" })
+                .ToListAsync();
+        }
+
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+        public async Task<List<SelectItemDto>> GetAllDedicateTrucksForDropDown(long shippingRequestId)
+        {
+            return await _dedicatedShippingRequestTruckRepository.GetAll()
+                .Include(x=>x.Truck)
+                .WhereIf(await IsShipper(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
+                .WhereIf(await IsTachyonDealer(), x => true)
+                .Where(x => x.ShippingRequestId == shippingRequestId)
+                .Select(x => new SelectItemDto
+                {
+                    DisplayName = x.Truck.GetDisplayName(),
+                    Id = x.TruckId.ToString()
+                }).ToListAsync();
+        }
 
         #endregion
 
@@ -162,8 +213,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private async Task<long> UpdateStep1(CreateOrEditDedicatedStep1Dto input)
         {
-            var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id.Value);
-
+            var shippingRequest = await GetDraftedDedicatedShippingRequestForStep1(input.Id.Value);
+            if (shippingRequest.Status == ShippingRequestStatus.PostPrice) throw new UserFriendlyException(L("UpdateNotAllowed"));
             ObjectMapper.Map(input, shippingRequest);
             await AddOrRemoveDestinationCities(input, shippingRequest);
             return shippingRequest.Id;
@@ -226,39 +277,80 @@ namespace TACHYON.Shipping.ShippingRequests
             //check if truck is busy
 
 
-            foreach(var truck in input.TrucksList)
-            {
-                if (await _shippingRequestManager.CheckIfTruckIsRented(truck.Id))
-                    throw new UserFriendlyException(L(String.Format("The truck {0} is rented", truck.TruckName)));
+            //foreach(var truck in input.TrucksList)
+            //{
+            //    if (await _shippingRequestManager.CheckIfTruckIsRented(truck.Id))
+            //        throw new UserFriendlyException(L(String.Format("The truck {0} is rented", truck.TruckName)));
 
+            //}
+            var RentedTruck =await IsAnyTruckBusyDuringRentalDuration(input.TrucksList.ToList(), shippingRequest);
+            if (RentedTruck !=null)
+            {
+                throw new UserFriendlyException(L(String.Format("The truck {0} is rented", input.TrucksList.Where(x=>x.Id == RentedTruck).First().TruckName)));
             }
 
-            foreach (var driver in input.DriversList)
+            //foreach (var driver in input.DriversList)
+            //{
+            //    if (await _shippingRequestManager.CheckIfDriverIsRented(driver.Id))
+            //        throw new UserFriendlyException(L(String.Format("The driver {0} is rented", driver.DriverName)));
+
+            //}
+            var RentedDriver =await IsAnyDriverBusyDuringRentalDuration(input.DriversList.ToList(), shippingRequest);
+            if (RentedDriver != null)
             {
-                if (await _shippingRequestManager.CheckIfDriverIsRented(driver.Id))
-                    throw new UserFriendlyException(L(String.Format("The driver {0} is rented", driver.DriverName)));
-
+                throw new UserFriendlyException(L(String.Format("The driver {0} is rented", input.DriversList.Where(x => x.Id == RentedDriver).First().DriverName)));
             }
-
-
         }
 
-        public bool IsAnyTruckBusyDuringRentalDuration(List<long> truckIds, ShippingRequest shippingRequest)
+        private async Task<long?> IsAnyTruckBusyDuringRentalDuration(List<DedicatedTruckDto> truckDtos, ShippingRequest shippingRequest)
         {
-            return _dedicatedShippingRequestTruckRepository.GetAll()
-                .Where(x =>  truckIds.Contains(x.TruckId) && x.ShippingRequestId != shippingRequest.Id &&
+            var item = await _dedicatedShippingRequestTruckRepository.GetAll()
+                .Where(x => truckDtos.Select(y=>y.Id).Contains(x.TruckId) && x.ShippingRequestId != shippingRequest.Id &&
                 shippingRequest.RentalStartDate.Value.Date < x.ShippingRequest.RentalEndDate.Value.Date &&
                 x.ShippingRequest.RentalStartDate.Value.Date < shippingRequest.RentalEndDate.Value.Date)
-                .Any();
+                .FirstOrDefaultAsync();
+            if (item != null) return item.Id;
+            return null;
         }
 
-        public bool IsAnyDriverBusyDuringRentalDuration(List<long> driverIds, ShippingRequest shippingRequest)
+        private async Task<long?> IsAnyDriverBusyDuringRentalDuration(List<DedicatedDriversDto> driverDtos, ShippingRequest shippingRequest)
         {
-            return _dedicatedShippingRequestDriverRepository.GetAll()
-                .Where(x => driverIds.Contains(x.DriverUserId) && x.ShippingRequestId != shippingRequest.Id &&
+            var item = await _dedicatedShippingRequestDriverRepository.GetAll()
+                .Where(x => driverDtos.Select(y=>y.Id).Contains(x.DriverUserId) && x.ShippingRequestId != shippingRequest.Id &&
                 shippingRequest.RentalStartDate.Value.Date < x.ShippingRequest.RentalEndDate.Value.Date &&
                 x.ShippingRequest.RentalStartDate.Value.Date < shippingRequest.RentalEndDate.Value.Date)
-                .Any();
+                .FirstOrDefaultAsync();
+            if(item != null) return item.Id;
+            return null;
+        }
+
+        private async Task<ShippingRequest> GetDraftedDedicatedShippingRequestForStep1(long id)
+        {
+            DisableDraftedFilter();
+            if (await IsTachyonDealer())
+                DisableTenancyFilters();
+            ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                .Include(x => x.ShippingRequestDestinationCities)
+                .ThenInclude(x => x.CityFk)
+                .WhereIf(await IsTachyonDealer(), x => true)
+                .WhereIf(await IsShipper(), x=>x.TenantId==AbpSession.TenantId)
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
+            return shippingRequest;
+        }
+
+        private async Task<ShippingRequest> GetDraftedDedicatedShippingRequestForStep2(long id)
+        {
+            DisableDraftedFilter();
+            if (await IsTachyonDealer())
+                DisableTenancyFilters();
+            ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                .Include(x => x.ShippingRequestVases)
+                .WhereIf(await IsTachyonDealer(), x => true)
+                //.WhereIf(await IsShipper(), x => x.TenantId == AbpSession.TenantId)
+                .Where(x => x.Id == id && x.Status!=ShippingRequestStatus.PostPrice)
+                .FirstOrDefaultAsync();
+            return shippingRequest;
         }
         #endregion
     }

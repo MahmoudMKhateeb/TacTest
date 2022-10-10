@@ -329,11 +329,11 @@ namespace TACHYON.Shipping.ShippingRequests
                 .ThenInclude(x=>x.CityFk)
                 .Include(x=>x.ShippingRequestVases)
                 .WhereIf(await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal == true)
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == id && x.IsDrafted==true)
                 .FirstOrDefaultAsync();
             return shippingRequest;
         }
-
+        
         public async Task<ShippingRequest> GetShippingRequestForAssign(long id)
         {
             DisableTenancyFilters();
@@ -342,7 +342,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .ThenInclude(x=>x.Truck)
                 .Include(x => x.DedicatedShippingRequestDrivers)
                 .ThenInclude(x=>x.DriverUser)
-                //.Where(x=>x.CarrierTenantId == _abpSession.TenantId)
+                .Where(x=>x.CarrierTenantId == _abpSession.TenantId && x.Status==ShippingRequestStatus.PostPrice)
                 .FirstOrDefaultAsync(x => x.Id == id);
             return shippingRequest;
         }

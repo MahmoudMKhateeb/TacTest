@@ -182,6 +182,7 @@ using TACHYON.Penalties;
 using TACHYON.Penalties.Dto;
 using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequests.Dtos.Dedicated;
+using TACHYON.Shipping.Dedicated;
 
 namespace TACHYON
 {
@@ -445,13 +446,20 @@ namespace TACHYON
 
             configuration.CreateMap<ShippingRequest, EditShippingRequestStep2Dto>();
 
+            configuration.CreateMap<DedicatedShippingRequestDriver, DedicatedShippingRequestDriversDto>()
+                .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => src.DriverUser.Name));
+
+            configuration.CreateMap<DedicatedShippingRequestTruck, DedicatedShippingRequestTrucksDto>()
+                .ForMember(dest => dest.TruckName, opt => opt.MapFrom(src => src.Truck.GetDisplayName()));
+
             configuration.CreateMap<CreateOrEditDedicatedStep1Dto, ShippingRequest>()
                 .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
                 .ForMember(dest => dest.DraftStep, opt => opt.Ignore())
                 .ForMember(d => d.ShippingRequestDestinationCities, opt => opt.Ignore());
 
             configuration.CreateMap<ShippingRequest, CreateOrEditDedicatedStep1Dto>()
-                .ForMember(dest => dest.CountryId, opt=> opt.MapFrom(src=> src.ShippingRequestDestinationCities.First().CityFk.CountyId));
+                .ForMember(dest => dest.CountryId, opt=> opt.MapFrom(src=> src.ShippingRequestDestinationCities.First().CityFk.CountyId))
+                .ForMember(dest => dest.ShipperId, opt => opt.MapFrom(src => src.TenantId));
 
             configuration.CreateMap<EditShippingRequestStep4Dto, ShippingRequest>()
                 .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
@@ -465,7 +473,8 @@ namespace TACHYON
                 .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequest);
 
-            configuration.CreateMap<ShippingRequest, EditDedicatedStep2Dto>();
+            configuration.CreateMap<ShippingRequest, EditDedicatedStep2Dto>()
+                .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
 
             configuration.CreateMap<ShippingRequest, EditShippingRequestStep4Dto>()
                 .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
