@@ -29,6 +29,7 @@ namespace TACHYON.PriceOffers.Dto
         public bool CreatedByTachyonDealer { get; set; }
         public string OriginCity { get; set; }
         public string DestinationCity { get; set; }
+        public long TrucksTypeId { get; set; }
         public string TruckType { get; set; }
         public bool isPriced { get; set; }
         public string RemainingDays { get; set; }

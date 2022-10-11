@@ -74,13 +74,13 @@
               </p>
               <p>
                 <span>
-                  {{ l('NumberOfTrips') }}
+                  {{ request.shippingRequestFlag == shippingRequestFlagEnum.Normal ? l('NumberOfTrips') : l('NumberOfTrucks') }}
                 </span>
                 <span>
-                  {{ request.numberOfTrips }}
+                  {{ request.shippingRequestFlag == shippingRequestFlagEnum.Normal ? request.numberOfTrips : request.numberOfTrucks }}
                 </span>
               </p>
-              <p>
+              <p *ngIf="request.shippingRequestFlag == shippingRequestFlagEnum.Normal">
                 <span>
                   {{ l('NumberOfDrops') }}
                 </span>
@@ -229,7 +229,7 @@
                         {{ l('Value') }}
                       </th>
                       <th>
-                        {{ l('NumberOfTrips') }}
+                        {{request.shippingRequestFlag == shippingRequestFlagEnum.Normal" ? l('NumberOfTrips') :l('NumberOfTrucks')  }}
                       </th>
                     </tr>
                   </thead>
@@ -245,7 +245,7 @@
                       <td>
                         {{ !item.isAppearAmount ? '' : item.amount }}
                       </td>
-                      <td>{{ item.numberOfTrips }}</td>
+                      <td>{{request.shippingRequestFlag == shippingRequestFlagEnum.Normal" ? item.numberOfTrips :item.numberOfTrucks }}</td>
                     </tr>
                   </tbody>
                 </table>

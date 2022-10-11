@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services;
+using DevExtreme.AspNet.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,8 @@ namespace TACHYON.Shipping.ShippingRequests
 {
     public interface IDedicatedShippingRequestsAppService: IApplicationService
     {
-        Task<GetAllTrucksAndDriversForRequestOutput> GetAllTrucksAndDriversForRequest(long shippingRequestId);
+        Task<LoadResult> GetAllDedicatedTrucks(GetAllDedicatedTrucksInput input);
+        Task<LoadResult> GetAllDedicatedDrivers(GetAllDedicatedDriversInput input);
         Task<long> CreateOrEditStep1(CreateOrEditDedicatedStep1Dto input);
         Task<CreateOrEditDedicatedStep1Dto> GetStep1ForEdit(long id);
         Task EditStep2(EditDedicatedStep2Dto input);

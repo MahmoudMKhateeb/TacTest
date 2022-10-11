@@ -30,11 +30,13 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string RangeDate { get; set; }
         public int NumberOfDrops { get; set; }
         public int NumberOfTrips { get; set; }
+        public int NumberOfTrucks { get; set; }
         public string GoodsCategory { get; set; }
         public double TotalWeight { get; set; }
         public int TotalBids { get; set; }
         public ShippingRequestBidStatus BidStatus { get; set; }
         public ShippingRequestStatus Status { get; set; }
+        public ShippingRequestFlag shippingRequestFlag { get; set; }
         public ICollection<PriceOfferItemDto> Items = new List<PriceOfferItemDto>();
 
         /// <summary>

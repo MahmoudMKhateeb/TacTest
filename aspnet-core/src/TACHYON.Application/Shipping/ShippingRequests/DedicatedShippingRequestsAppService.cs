@@ -6,6 +6,8 @@ using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -48,25 +50,30 @@ namespace TACHYON.Shipping.ShippingRequests
 
         #region Wizard
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
-        public async Task<GetAllTrucksAndDriversForRequestOutput> GetAllTrucksAndDriversForRequest(long shippingRequestId)
+        public async Task<LoadResult> GetAllDedicatedTrucks(GetAllDedicatedTrucksInput input)
         {
             DisableTenancyFilters();
-            var drivers = await _dedicatedShippingRequestDriverRepository.GetAll()
-                .Include(x => x.DriverUser)
-                .WhereIf(await IsShipper(), x=>x.ShippingRequest.TenantId == AbpSession.TenantId)
-                .WhereIf(await IsTachyonDealer(), x=> true)
-                .Where(x => x.ShippingRequestId == shippingRequestId)
-                .ToListAsync();
-            var trucks = await _dedicatedShippingRequestTruckRepository.GetAll()
-                .Include(x => x.Truck)
-                .Where(x => x.ShippingRequestId == shippingRequestId)
-                .ToListAsync();
+            var query = _dedicatedShippingRequestTruckRepository.GetAll()
+                .WhereIf(input.ShippingRequestId != null, x => x.ShippingRequestId == input.ShippingRequestId)
+                .ProjectTo<DedicatedShippingRequestTrucksDto>(AutoMapperConfigurationProvider)
+                .AsNoTracking();
 
-            return new GetAllTrucksAndDriversForRequestOutput
-            {
-                dedicatedShippingRequestDriversDtos = ObjectMapper.Map<List<DedicatedShippingRequestDriversDto>>(drivers),
-                dedicatedShippingRequestTrucksDtos = ObjectMapper.Map<List<DedicatedShippingRequestTrucksDto>>(trucks)
-            };
+            return await LoadResultAsync(query, input.Filter);
+            
+        }
+
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+        public async Task<LoadResult> GetAllDedicatedDrivers(GetAllDedicatedDriversInput input)
+        {
+            DisableTenancyFilters();
+            var query = _dedicatedShippingRequestDriverRepository.GetAll()
+                .WhereIf(await IsShipper(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
+                .WhereIf(await IsTachyonDealer(), x => true)
+                .WhereIf(input.ShippingRequestId != null, x => x.ShippingRequestId == input.ShippingRequestId)
+                .AsNoTracking();
+
+            return await LoadResultAsync(query, input.Filter);
+
         }
 
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
@@ -309,7 +316,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.RentalStartDate.Value.Date < x.ShippingRequest.RentalEndDate.Value.Date &&
                 x.ShippingRequest.RentalStartDate.Value.Date < shippingRequest.RentalEndDate.Value.Date)
                 .FirstOrDefaultAsync();
-            if (item != null) return item.Id;
+            if (item != null) return item.TruckId;
             return null;
         }
 
@@ -320,7 +327,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.RentalStartDate.Value.Date < x.ShippingRequest.RentalEndDate.Value.Date &&
                 x.ShippingRequest.RentalStartDate.Value.Date < shippingRequest.RentalEndDate.Value.Date)
                 .FirstOrDefaultAsync();
-            if(item != null) return item.Id;
+            if(item != null) return item.DriverUserId;
             return null;
         }
 
