@@ -14,6 +14,11 @@
               </button>
             </li>
             <li role="menuitem">
+              <button (click)="createNewDedicatedRequest()" class="btn btn-outline-success btn-elevate-hover mt-2 w-100">
+                <i class="fas fa-plus"></i> {{ l('New') }} Dedicated
+              </button>
+            </li>
+            <li role="menuitem">
               <button (click)="loadEntityTemplateModal.show(1)" class="btn btn-outline-info btn-elevate-hover mt-2 w-100">
                 <i class="fas fa-list"></i> {{ l('FromTemplate') }}
               </button>
@@ -42,6 +47,7 @@
             [class.expanded]="openCardId == item.id"
             [class.rtl]="direction == 'rtl'"
             class="shipCard card card-custom"
+            *ngIf="item.shippingRequestFlag === 0"
           >
             <!--               {{ ((item.isPriced || item.remainingDays == '0') && Channel) || (item.status == 1 && !Channel) ? ' shipCardGray' : '' }}-->
             <!--               {{ item.status == 5 && !Channel ? ' shipCardGreen' : '' }}-->
@@ -348,6 +354,253 @@
               </button>
             </div>
           </div>
+          <div
+            [class.tachyonDialer]="item.isTachyonDeal"
+            [class.expanded]="openCardId == item.id"
+            [class.rtl]="direction == 'rtl'"
+            class="shipCard card card-custom dedicated-sr"
+            *ngIf="item.shippingRequestFlag === 1"
+          >
+            <div class="card-header ribbon ribbon-clip ribbon-left">
+              <div class="ribbon-target" style="top: 5px">
+                <span class="ribbon-inner bg-warning"></span>{{ 'DedicatedShippingRequest' | localize }}
+              </div>
+              <div class="row w-100">
+                <div class="col-md-4 col-lg-2">
+                  <div class="symbol symbol-50 symbol-lg-120">
+                    <img alt="Pic" src="assets/common/images/default-profile-picture.png" />
+                  </div>
+                </div>
+                <div class="col-md-8 col-lg-10 p-0 align-content-end">
+                  <div class="w-100 d-flex p-0 actions justify-content-end">
+                    <a *ngIf="canDeleteDirectRequest(item)" href="javascript:void(0)" (click)="delete(item)" class="red">
+                      {{ l('Delete') }}
+                    </a>
+                    <a
+                      *ngIf="feature.isEnabled('App.Carrier') && Channel == 2 && (item.directRequestStatus == 0 || item.directRequestStatus == 5)"
+                      href="javascript:void(0)"
+                      (click)="decline(item)"
+                      class="red"
+                    >
+                      {{ l('Declined') }}
+                    </a>
+                    <a
+                      *ngIf="feature.isEnabled('App.Carrier') && !Channel"
+                      href="javascript:void(0)"
+                      (click)="assignTrucksAndDrivers(item)"
+                      class="red"
+                    >
+                      {{ l('AssignTrucksAndDrivers') }}
+                    </a>
+                    <a
+                      *ngIf="
+                        (item.status == 0 || item.status == 2) &&
+                        !Channel &&
+                        (feature.isEnabled('App.Shipper') || (item.isTachyonDeal && (feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)))
+                      "
+                      href="javascript:void(0)"
+                      (click)="ModelCancel.show(item)"
+                      class="red"
+                    >
+                      {{ l('Cancel') }}
+                    </a>
+
+                    <a href="javascript:void(0)" (click)="moreRedirectTo(item)" class="red">
+                      {{ l('More') }}
+                    </a>
+                    <a
+                      *ngIf="
+                        permission.isGranted('Pages.ShippingRequests.Edit') &&
+                        !Channel &&
+                        (feature.isEnabled('App.Shipper') || isCarrierOwnRequest(item))
+                      "
+                      [queryParams]="{ id: item.id, completedSteps: 2, isEdit: true }"
+                      [routerLink]="['/app/main/shippingRequests/dedicatedShippingRequestWizard']"
+                      class="red"
+                    >
+                      {{ l('Edit') }}
+                    </a>
+                  </div>
+                  <div class="w-100 row custom-header-details">
+                    <div class="col-4">
+                      <div>
+                        <a
+                          *ngIf="setTitle(item).length > 0"
+                          [routerLink]="item.isTachyonDeal ? [] : ['/app/main/profile', item.tenantId, 'view']"
+                          class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3"
+                        >
+                          {{ setTitle(item) }} <i class="flaticon2-correct text-success icon-md ml-2"></i>
+                        </a>
+                        <a
+                          *ngIf="item?.name?.length > 0"
+                          [routerLink]="item.isTachyonDeal ? [] : ['/app/main/profile', item.tenantId, 'view']"
+                          class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3"
+                        >
+                          {{ item.name }} <i class="flaticon2-correct text-success icon-md ml-2"></i>
+                        </a>
+                        <span
+                          *ngIf="setTitle(item).length === 0"
+                          class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3"
+                        ></span>
+                      </div>
+                      <div class="serialNumber">
+                        <i class="flaticon2-telegram-logo mr-2"></i>
+                        <a href="javascript:void(0)" class="font-weight-bold">{{ l('ReferenceNo') }}: {{ item.referenceNumber }}</a>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <p>
+                        <b>
+                          {{ 'Status' | localize }}:
+                          {{ l(item.statusTitle) }}
+                        </b>
+                      </p>
+                    </div>
+                    <div class="col-4">
+                      <p>
+                        <b>
+                          {{ 'RentedFromFor' | localize }}:
+                          <a *ngIf="feature.isEnabled('App.Shipper')" href="javascript:void(0)">
+                            {{ !item.carrier ? l(item.requestTypeTitle) : item.carrier }}
+                          </a>
+                        </b>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="moreDetails">
+                <div class="row w-100 d-flex flex-row justify-content-around">
+                  <div class="col-3">
+                    <p>
+                      <span class="text-muted">
+                        <i class="flaticon2-hourglass-1 icon-md"></i>
+                        {{ l('RentalDuration') }}:
+                      </span>
+                      &nbsp;
+                      {{ item.rentalDuration }} {{ item.rentalDurationUnitTitle }}
+                    </p>
+                  </div>
+                  <div class="col-3">
+                    <p>
+                      <span class="text-muted">
+                        <i class="flaticon2-delivery-truck icon-md"></i>
+                        {{ l('NumberOfTrucks') }}:
+                      </span>
+                      &nbsp;
+                      {{ item.numberOfTrucks }}
+                    </p>
+                  </div>
+                  <div class="col-3">
+                    <p>
+                      <span class="text-muted">
+                        <i class="fas fa-tachometer-alt"></i>
+                        {{ l('ExpectedMileage') }}:
+                      </span>
+                      &nbsp;
+                      {{ item.expectedMileage }}
+                    </p>
+                  </div>
+                </div>
+                <div class="row w-100 d-flex flex-row justify-content-around">
+                  <div class="col-3">
+                    <p>
+                      <span class="text-muted">
+                        <i class="fa fa-map"></i>
+                        {{ l('ServiceAreas') }}:
+                      </span>
+                      &nbsp;
+                      {{ item.destinationCity }}
+                    </p>
+                  </div>
+                  <div class="col-3">
+                    <p>
+                      <span class="text-muted">
+                        <i class="far fa-clock"></i>
+                        {{ l('RentalFromTo') }}:
+                      </span>
+                      &nbsp;
+                      {{ item.rentalStartDate | momentFormat: 'L' }} {{ item.rentalEndDate ? '-' : '' }} {{ item.rentalEndDate | momentFormat: 'L' }}
+                    </p>
+                  </div>
+                  <div class="col-3 truckType">
+                    <p>
+                      <span class="text-muted">
+                        <i class="flaticon-truck"></i>
+                        {{ l('TruckType') }}:
+                      </span>
+                      &nbsp;
+                      {{ item.truckType }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--                <div [ngbCollapse]="openCardId == null">-->
+            <!--                    <div *ngIf="openCardId == item.id">-->
+            <!--                        &lt;!&ndash;  start of ShippingRequestType::Details&ndash;&gt;-->
+            <!--                        <div class="mb-2">-->
+            <!--                            <div class="form-group fv-plugins-icon-container">-->
+            <!--                                <div *ngIf="!this.feature.isEnabled('App.Carrier')">-->
+            <!--                                    <shipping-request-offers-list-->
+            <!--                                        [shippingRequestId]="item.id"-->
+            <!--                                        [isTachyonDeal]="item.isTachyonDeal"-->
+            <!--                                        [Channel]="item.bidStatus == 0 ? 2 : 1"-->
+            <!--                                    >-->
+            <!--                                    </shipping-request-offers-list>-->
+            <!--                                </div>-->
+            <!--    -->
+            <!--    &lt;!&ndash;                                <div *ngIf="feature.isEnabled('App.Shipper') || (feature.isEnabled('App.TachyonDealer') && item.isTachyonDeal)">&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                    <TripsForViewShippingRequest&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        #tripsForViewShippingRequest&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        *ngIf="item.id && bidsLoading == false"&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        [ShippingRequest]="item"&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        [VasListFromFather]="undefined"&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                    ></TripsForViewShippingRequest>&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                </div>&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                <div class="col-lg-12 mt-5 pl-0 pr-0">&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                    <agm-map&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        minZoom="5"&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        style="height: 300px"&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        [longitude]="item.longitude || 46.675761"&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        [latitude]="item.latitude || 24.717942"&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        [scrollwheel]="false"&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        (mapReady)="mapReady($event)"&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                    >&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        <agm-direction [origin]="item.originCity" [destination]="item.destinationCity" [optimizeWaypoints]="false"></agm-direction>&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        <ng-container id="markers1">&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                            <agm-marker [longitude]="item.longitude" [latitude]="item.longitude"></agm-marker>&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                        </ng-container>&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                    </agm-map>&ndash;&gt;-->
+            <!--    &lt;!&ndash;                                </div>&ndash;&gt;-->
+            <!--                            </div>-->
+            <!--                        </div>-->
+            <!--                        &lt;!&ndash;  end::ShippingRequestType::Details&ndash;&gt;-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--                <div class="expand-to-show-more">-->
+            <!--                    <button-->
+            <!--                        class="btn"-->
+            <!--                        *ngIf="openCardId != item.id || !openCardId"-->
+            <!--                        (click)="openCardId = item.id"-->
+            <!--                        [attr.aria-expanded]="openCardId == item.id"-->
+            <!--                        aria-controls="collapseExample"-->
+            <!--                    >-->
+            <!--                        <i class="fas fa-angle-down fa-2x"></i>-->
+            <!--                    </button>-->
+            <!--                    <button-->
+            <!--                        class="btn"-->
+            <!--                        *ngIf="openCardId == item.id"-->
+            <!--                        (click)="openCardId = null"-->
+            <!--                        [attr.aria-expanded]="openCardId == item.id"-->
+            <!--                        aria-controls="collapseExample"-->
+            <!--                    >-->
+            <!--                        <i class="fas fa-angle-up fa-2x"></i>-->
+            <!--                    </button>-->
+            <!--                </div>-->
+          </div>
         </div>
       </div>
 
@@ -363,3 +616,4 @@
 <shipping-request-card-cancel-model #ModelCancel></shipping-request-card-cancel-model>
 <price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search()" (modalRefresh)="LoadData()"></price-offer-view-model>
 <load-entity-template-modal #loadEntityTemplateModal></load-entity-template-modal>
+<assign-trucks-and-drivers-modal #assignTrucksAndDriversModal></assign-trucks-and-drivers-modal>

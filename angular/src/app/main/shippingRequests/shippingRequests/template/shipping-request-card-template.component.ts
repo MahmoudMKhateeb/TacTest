@@ -19,6 +19,7 @@ import { ShippingrequestsDetailsModelComponent } from '../details/shippingreques
 import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/tripsForViewShippingRequest.component';
+import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
 
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
@@ -29,6 +30,7 @@ import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests
 export class ShippingRequestCardTemplateComponent extends ScrollPagnationComponentBase implements OnInit {
   @ViewChild('Model', { static: false }) modalMore: ShippingrequestsDetailsModelComponent;
   @ViewChild('loadEntityTemplateModal', { static: false }) loadEntityTemplateModal: LoadEntityTemplateModalComponent;
+  @ViewChild('assignTrucksAndDriversModal', { static: false }) assignTrucksAndDriversModal: AssignTrucksAndDriversModalComponent;
   @ViewChild('tripsForViewShippingRequest', { static: true }) tripsForViewShippingRequest: TripsForViewShippingRequestComponent;
   shippingRequestforView: GetShippingRequestForViewOutput;
 
@@ -257,6 +259,10 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     this.router.navigateByUrl('/app/main/shippingRequests/shippingRequestWizard');
   }
 
+  createNewDedicatedRequest() {
+    this.router.navigateByUrl('/app/main/shippingRequests/dedicatedShippingRequestWizard');
+  }
+
   isCarrierOwnRequest(request: GetShippingRequestForPriceOfferListDto): boolean {
     return this.feature.isEnabled('App.CarrierAsASaas') && request.isSaas && this.appSession.tenantId === request.tenantId;
   }
@@ -293,5 +299,9 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   refresh() {
     this.items = [];
     this.LoadData();
+  }
+
+  assignTrucksAndDrivers(item: GetShippingRequestForPriceOfferListDto) {
+    this.assignTrucksAndDriversModal.show(item);
   }
 }

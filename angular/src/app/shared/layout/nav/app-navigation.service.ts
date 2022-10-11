@@ -29,6 +29,11 @@ export class AppNavigationService {
     const isShipper = this.isEnabled('App.Shipper');
     const isTMS = this.isEnabled('App.TachyonDealer');
     const isBroker = this.isEnabled('App.ShipperClients') && this.isEnabled('App.CarrierClients');
+    console.log('isHost', isHost);
+    console.log('isCarrier', isCarrier);
+    console.log('isShipper', isShipper);
+    console.log('isTMS', isTMS);
+    console.log('isBroker', isBroker);
     let menu = isHost
       ? this.appHostNavService.getMenu()
       : isBroker

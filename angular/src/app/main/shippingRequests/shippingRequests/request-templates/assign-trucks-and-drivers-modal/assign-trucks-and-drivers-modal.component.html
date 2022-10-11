@@ -1,0 +1,71 @@
+<div
+  #assignTrucksAndDriversModal="bs-modal"
+  aria-hidden="true"
+  aria-labelledby="AddNewEntityModalComponent"
+  bsModal
+  class="modal fade"
+  role="dialog"
+  tabindex="-10010"
+>
+  <div class="modal-dialog modal-lg">
+    <div *ngIf="active" class="modal-content">
+      <!--begin::Card-->
+      <div class="card card-custom">
+        <!--begin::Header-->
+        <div class="card-header align-items-center px-4 py-3">
+          <h3>{{ l('AssignDriversAndTrucksModal') }}</h3>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body">
+          <div class="form-group">
+            <label>{{ l('Drivers') }}</label>
+            <p-multiSelect
+              #drivers="ngModel"
+              dropdownIcon="fa fa-caret-down"
+              name="drivers"
+              [options]="driversOptions"
+              [(ngModel)]="selectedDrivers"
+              optionLabel="displayName"
+              [class.is-valid]="drivers.valid && (drivers.dirty || drivers.touched)"
+              [class.is-invalid]="drivers.invalid && (drivers.dirty || drivers.touched)"
+              [selectedItemsLabel]="'{0} items selected'"
+              [style]="{ width: '100%' }"
+              styleClass="form-control pt-1"
+              [dataKey]="'id'"
+            >
+            </p-multiSelect>
+          </div>
+          <div class="form-group">
+            <label>{{ l('Trucks') }}</label>
+            <p-multiSelect
+              #trucks="ngModel"
+              dropdownIcon="fa fa-caret-down"
+              name="trucks"
+              [options]="trucksOptions"
+              [(ngModel)]="selectedTrucks"
+              optionLabel="displayName"
+              [class.is-valid]="drivers.valid && (drivers.dirty || drivers.touched)"
+              [class.is-invalid]="drivers.invalid && (drivers.dirty || drivers.touched)"
+              [selectedItemsLabel]="'{0} items selected'"
+              [style]="{ width: '100%' }"
+              styleClass="form-control pt-1"
+              [dataKey]="'id'"
+            >
+            </p-multiSelect>
+          </div>
+        </div>
+        <!--end::Body-->
+        <!--begin::Footer-->
+        <div class="card-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">{{ l('Close') }}</button>
+          <button type="button" class="btn btn-primary" [disabled]="loading || selectedTrucks.length === 0 || selectedDrivers.length === 0">
+            {{ l('Save') }}
+          </button>
+        </div>
+        <!--end::Footer-->
+      </div>
+      <!--end::Card-->
+    </div>
+  </div>
+</div>

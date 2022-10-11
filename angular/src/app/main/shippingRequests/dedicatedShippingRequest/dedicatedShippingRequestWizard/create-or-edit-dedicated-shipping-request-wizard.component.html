@@ -1,0 +1,987 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [breadcrumbs]="breadcrumbs" [title]="l('CreateNewRequests')"></sub-header>
+
+    <div class="container">
+      <div class="card card-custom gutter-b">
+        <ng-container *ngIf="saving">
+          <div class="progress progress-modal">
+            <div
+              class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+              role="progressbar"
+              style="width: 100%"
+              aria-valuenow="100"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+        </ng-container>
+        <div class="card-header">
+          <div class="card-title">
+            <h3 class="card-label">
+              <ng-container>{{ l('NewDedicatedShippingRequest') }} </ng-container>
+            </h3>
+          </div>
+          <div class="card-toolbar">
+            <a type="button" class="btn btn-light" routerLink="/app/main/shippingRequests/shippingRequests">
+              <i class="fa fa-arrow-left"></i> {{ l('Back') }}</a
+            >
+            <button class="btn btn-secondary ml-2" (click)="resetWizard()" [disabled]="!activeShippingRequestId">
+              <i class="fa fa-redo"></i>{{ l('Reset') }}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <!--begin: Wizard -->
+          <div #wizard class="wizard wizard-1" id="kt_wizard_v1" data-wizard-state="step-first" data-wizard-clickable="true" [busyIf]="loading">
+            <!--begin: Form Wizard Nav -->
+            <div class="wizard-nav border-bottom">
+              <div class="wizard-steps p-8 p-lg-10">
+                <a class="wizard-step" href="javascript:;" data-wizard-type="step" data-wizard-state="current">
+                  <div class="wizard-label">
+                    <i class="wizard-icon flaticon-list text-danger"></i>
+                    <h3 class="wizard-title">{{ l('BasicDetails') }}</h3>
+                  </div>
+                </a>
+                <!--                                <a class="wizard-step" href="javascript:;" data-wizard-type="step">-->
+                <!--                                    <div class="wizard-label">-->
+                <!--                                        <i class="wizard-icon flaticon-bus-stop text-danger"></i>-->
+                <!--                                        <h3 class="wizard-title">{{ l('RouteDetails') }}</h3>-->
+                <!--                                    </div>-->
+                <!--                                </a>-->
+                <!--                                <a class="wizard-step" href="javascript:;" data-wizard-type="step">-->
+                <!--                                    <div class="wizard-label">-->
+                <!--                                        <i class="wizard-icon flaticon-open-box text-danger"></i>-->
+                <!--                                        <h3 class="wizard-title">{{ l('GoodDetails') }}</h3>-->
+                <!--                                    </div>-->
+                <!--                                </a>-->
+                <a class="wizard-step" href="javascript:;" data-wizard-type="step">
+                  <div class="wizard-label">
+                    <i class="wizard-icon flaticon-app text-danger"></i>
+                    <h3 class="wizard-title">{{ l('Vas') }}</h3>
+                  </div>
+                </a>
+                <a class="wizard-step" href="javascript:;" data-wizard-type="step">
+                  <div class="wizard-label">
+                    <i class="wizard-icon flaticon-globe text-danger"></i>
+                    <h3 class="wizard-title">{{ l('ReviewAndSubmit') }}</h3>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <!--end: Form Wizard Nav -->
+            <div class="row justify-content-center my-10 px-8 my-lg-15 px-lg-10">
+              <div class="col-xl-12 col-xxl-8">
+                <!--begin: Form Wizard Form-->
+                <div class="form" id="kt_form">
+                  <!--begin: Form Wizard Step 1-->
+                  <form [formGroup]="step1Form">
+                    <div class="pb-5" data-wizard-type="step-content" data-wizard-state="current">
+                      <dx-validation-group #step1FormGroup>
+                        <div class="row">
+                          <div *ngIf="this.feature.isEnabled('App.TachyonDealer')" class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('Shipper') }} <span class="required-fileds">*</span></label>
+                            <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !AllShippers }">
+                              <dx-select-box
+                                id="Shipper"
+                                name="Shipper"
+                                formControlName="Shipper"
+                                [(value)]="step1Dto.shipperId"
+                                [dataSource]="AllShippers"
+                                (onSelectionChanged)="step1Form.controls['shippingRequestType'].setValue('tachyondeal')"
+                                [searchEnabled]="true"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                placeholder="{{ l('SelectShipper') }}"
+                                required
+                              >
+                                <dx-validator [validationGroup]="'step1FormGroup'">
+                                  <dxi-validation-rule
+                                    type="required"
+                                    message="{{ 'Shipper' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                  ></dxi-validation-rule>
+                                </dx-validator>
+                              </dx-select-box>
+                            </div>
+                            <span class="form-text text-muted">{{ l('SelectShipper') }} {{ step1Dto.shipperId }}</span>
+                          </div>
+
+                          <div *ngIf="!isCarrierSass" class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('ShippingRequestType') }} <span class="required-fileds">*</span></label>
+                            <dx-select-box
+                              id="shippingRequestType"
+                              name="shippingRequestType"
+                              formControlName="shippingRequestType"
+                              [(value)]="shippingRequestType"
+                              [dataSource]="allShippingRequestsTypes"
+                              (onSelectionChanged)="validateCarrierForDirectRequest()"
+                              [searchEnabled]="true"
+                              displayExpr="displayName"
+                              valueExpr="id"
+                              placeholder="{{ l('Select') }}"
+                              [disabled]="step1Dto.shipperId > 0 ? true : null"
+                              [isValid]="step1Form.controls['shippingRequestType'].valid || !step1Form.controls['shippingRequestType'].touched"
+                              required
+                            >
+                              <dx-validator [validationGroup]="'step1FormGroup'">
+                                <dxi-validation-rule
+                                  type="required"
+                                  message="{{ 'ShippingRequestType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                ></dxi-validation-rule>
+                              </dx-validator>
+                            </dx-select-box>
+                            <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
+                          </div>
+                          <div
+                            class="form-group col-md-6 col-lg-6"
+                            [hidden]="step1Form.controls['shippingRequestType'].value !== 'directrequest' || isCarrierSass"
+                          >
+                            <label
+                              >{{ l('SelectCarriers') }}
+                              <span class="required-fileds" *ngIf="step1Form.controls['shippingRequestType'].value === 'directrequest'"
+                                >*</span
+                              ></label
+                            >
+                            <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCarriers }">
+                              <dx-select-box
+                                name="allCarriers"
+                                id="allCarriers"
+                                formControlName="carrier"
+                                [dataSource]="allCarriers"
+                                [(value)]="step1Dto.carrierTenantIdForDirectRequest"
+                                placeholder="{{ l('SelectaCarrier') }}"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                [searchEnabled]="true"
+                                [showClearButton]="true"
+                                [isValid]="step1Form.controls['carrier'].valid || !step1Form.controls['carrier'].touched"
+                                fieldTemplate="field"
+                              >
+                                <div *dxTemplate="let data of 'field'">
+                                  <div class="country-item">
+                                    <span style="float: left; margin-right: 10px" [style.width]="!data ? '100%' : '45%'">
+                                      <dx-text-box [value]="data && data.displayName" [readOnly]="true"></dx-text-box>
+                                    </span>
+                                    <span style="float: left; width: 50%">
+                                      <ng-template #t let-fill="fill">
+                                        <span class="star p-0" [class.full]="fill === 100">
+                                          <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;
+                                        </span>
+                                      </ng-template>
+                                      <ngb-rating
+                                        *ngIf="data"
+                                        [(rate)]="data && data.rate"
+                                        [starTemplate]="t"
+                                        [readonly]="true"
+                                        [max]="5"
+                                      ></ngb-rating>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div *dxTemplate="let data of 'item'">
+                                  <div class="country-item" *ngIf="data">
+                                    <span style="float: left; margin-right: 10px; width: 45%">{{ data && data.displayName }}</span>
+                                    <span style="float: left; width: 50%">
+                                      <ng-template #t1 let-fill="fill">
+                                        <span class="star p-0" [class.full]="fill === 100">
+                                          <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;
+                                        </span>
+                                      </ng-template>
+                                      <ngb-rating [(rate)]="data && data.rate" [starTemplate]="t1" [readonly]="true" [max]="5"></ngb-rating>
+                                    </span>
+                                  </div>
+                                </div>
+                                <dx-validator [validationGroup]="'step1FormGroup'">
+                                  <dxi-validation-rule
+                                    *ngIf="step1Form.controls['shippingRequestType'].value === 'directrequest'"
+                                    type="required"
+                                    message="{{ 'SelectCarriers' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                  ></dxi-validation-rule>
+                                </dx-validator>
+                              </dx-select-box>
+                            </div>
+                            <span class="form-text text-muted">{{ l('SelectaCarrier') }}</span>
+                          </div>
+                          <div class="row pb-5" *ngIf="step1Form.controls['shippingRequestType'].value == 'bidding'" [@grow]>
+                            <div class="form-group col-md-6 col-lg-6">
+                              <hijri-gregorian-datepicker-test
+                                [parentForm]="parentForm"
+                                [label]="l('BiddingStartDate')"
+                                class="m-input"
+                                [disabled]="step1Form.controls['shippingRequestType'].value == 'bidding' ? null : true"
+                                [readonly]="true"
+                                [minHijri]="todayHijri"
+                                [minGreg]="todayGregorian"
+                                [selectedDate]="startBiddate"
+                                (selectedDateChange)="validateBiddingDates($event, 'biddingStartDate')"
+                              >
+                              </hijri-gregorian-datepicker-test>
+                            </div>
+                            <div class="form-group col-md-6 col-lg-6">
+                              <hijri-gregorian-datepicker-test
+                                [parentForm]="parentForm"
+                                [label]="l('BiddingEndDate')"
+                                class="m-input"
+                                [disabled]="step1Form.controls['shippingRequestType'].value == 'bidding' ? null : true"
+                                [readonly]="true"
+                                [minHijri]="minHijriEndDate"
+                                [minGreg]="minGrogEndDate"
+                                [selectedDate]="endBiddate"
+                                (selectedDateChange)="validateBiddingDates($event, 'biddingEndDate')"
+                              >
+                              </hijri-gregorian-datepicker-test>
+                            </div>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('ShippingType') }} <span class="required-fileds">*</span></label>
+                            <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes }">
+                              <dx-select-box
+                                id="shippingTypeId"
+                                name="shippingTypeId"
+                                formControlName="shippingTypeId"
+                                [(value)]="step1Dto.shippingTypeId"
+                                [dataSource]="allShippingTypes"
+                                [searchEnabled]="true"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                placeholder="{{ l('Select') }}"
+                                [isValid]="step1Form.controls['shippingTypeId'].valid || !step1Form.controls['shippingTypeId'].touched"
+                                required
+                              >
+                                <dx-validator [validationGroup]="'step1FormGroup'">
+                                  <dxi-validation-rule
+                                    type="required"
+                                    message="{{ 'ShippingType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                  ></dxi-validation-rule>
+                                </dx-validator>
+                              </dx-select-box>
+                            </div>
+                            <span class="form-text text-muted">{{ l('SelectAShippingType') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('ExpectedMileage') }} <span class="required-fileds">*</span></label>
+                            <dx-number-box
+                              name="expectedMileage"
+                              id="expectedMileage"
+                              formControlName="expectedMileage"
+                              [min]="1"
+                              [(value)]="step1Dto.expectedMileage"
+                              [isValid]="step1Form.controls['expectedMileage'].valid || !step1Form.controls['expectedMileage'].touched"
+                              required
+                            >
+                              <dx-validator [validationGroup]="'step1FormGroup'">
+                                <dxi-validation-rule
+                                  type="required"
+                                  message="{{ 'ExpectedMileage' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                ></dxi-validation-rule>
+                                <dxi-validation-rule
+                                  type="range"
+                                  [min]="1"
+                                  message="{{ 'ExpectedMileage' | localize }}: {{ 'MinValue' | localize }} 1"
+                                ></dxi-validation-rule>
+                              </dx-validator>
+                            </dx-number-box>
+                            <span class="form-text text-muted">{{ l('EnterExpectedMileage') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('OriginCountry') }} <span class="required-fileds">*</span> </label>
+                            <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
+                              <dx-select-box
+                                id="originCountry"
+                                name="originCountry"
+                                formControlName="originCountry"
+                                [(value)]="originCountry"
+                                [dataSource]="allCountries"
+                                (onSelectionChanged)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'source')"
+                                [searchEnabled]="true"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                placeholder="{{ l('SelectanOriginCountry') }}"
+                                [isValid]="step1Form.controls['originCountry'].valid || !step1Form.controls['originCountry'].touched"
+                                required
+                              >
+                                <dx-validator [validationGroup]="'step1FormGroup'">
+                                  <dxi-validation-rule
+                                    type="required"
+                                    message="{{ 'OriginCountry' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                  ></dxi-validation-rule>
+                                </dx-validator>
+                              </dx-select-box>
+                            </div>
+                            <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
+                          </div>
+                          <div
+                            class="form-group col-md-6 col-lg-6"
+                            [hidden]="!step1Dto.shippingTypeId || step1Dto.shippingTypeId == 1 || step1Dto.shippingTypeId == 2"
+                          >
+                            <label> {{ l('DestinationCountry') }}<span class="required-fileds">*</span></label>
+                            <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
+                              <dx-select-box
+                                id="destinationCountry"
+                                name="destinationCountry"
+                                formControlName="destinationCountry"
+                                [(value)]="destinationCountry"
+                                [dataSource]="allCountries"
+                                (onSelectionChanged)="validateShippingRequestType(); loadCitiesByCountryId(destinationCountry, 'destination')"
+                                [searchEnabled]="true"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                placeholder="{{ l('SelectanDestinationCountry') }}"
+                                [isValid]="step1Form.controls['destinationCountry'].valid || !step1Form.controls['destinationCountry'].touched"
+                                [disabled]="step1Dto.shippingTypeId == 2 || step1Dto.shippingTypeId == 1 ? true : null"
+                                required
+                              >
+                                <dx-validator [validationGroup]="'step1FormGroup'">
+                                  <dxi-validation-rule
+                                    type="required"
+                                    message="{{ 'DestinationCountry' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                  ></dxi-validation-rule>
+                                </dx-validator>
+                              </dx-select-box>
+                              <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
+                            </div>
+                            <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('ServiceAreas') }} <span class="required-fileds">*</span></label>
+                            <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
+                              <p-multiSelect
+                                dropdownIcon="fa fa-caret-down"
+                                name="destinationCity"
+                                [options]="destinationCities"
+                                [(ngModel)]="step1Dto.shippingRequestDestinationCities"
+                                optionLabel="cityName"
+                                formControlName="destinationCity"
+                                [class.is-valid]="
+                                  step1Form.get('destinationCity').valid &&
+                                  (step1Form.get('destinationCity').dirty || step1Form.get('destinationCity').touched)
+                                "
+                                [class.is-invalid]="
+                                  step1Form.get('destinationCity').invalid &&
+                                  (step1Form.get('destinationCity').dirty || step1Form.get('destinationCity').touched)
+                                "
+                                [selectedItemsLabel]="'{0} items selected'"
+                                (ngModelChange)="validateShippingRequestType()"
+                                [style]="{ width: '100%' }"
+                                styleClass="form-control pt-1"
+                                [dataKey]="'cityId'"
+                                [selectionLimit]="step1Dto.shippingTypeId == 1 ? 1 : 100"
+                              >
+                              </p-multiSelect>
+                              <!--                                                            <dx-tag-box-->
+                              <!--                                                                [dataSource]="destinationCities"-->
+                              <!--                                                                displayExpr="cityName"-->
+                              <!--                                                                valueExpr="cityId"-->
+                              <!--                                                                name="destinationCity"-->
+                              <!--                                                                id="destinationCity"-->
+                              <!--                                                                formControlName="destinationCity"-->
+                              <!--                                                                [showSelectionControls]="true"-->
+                              <!--                                                                (onMultiTagPreparing)="destCitiesSelectionChange($event)"-->
+                              <!--                                                                (onSelectionChanged)="onMultiTagPreparing($event);validateShippingRequestType()"-->
+                              <!--                                                                [(value)]="step1Dto.shippingRequestDestinationCities"-->
+                              <!--                                                                [maxDisplayedTags]="step1Dto.shippingTypeId == 1 ? 1 : 3"-->
+                              <!--                                                                [isValid]="step1Form.controls['serviceAreaNotes'].valid || !step1Form.controls['serviceAreaNotes'].touched"-->
+                              <!--                                                                itemTemplate="customItem"-->
+                              <!--                                                                required-->
+                              <!--                                                            >-->
+                              <!--                                                                <div *dxTemplate="let city of 'customItem'"-->
+                              <!--                                                                     [attr.aria-disabled]="step1Dto.shippingRequestDestinationCities.length === 1 && step1Dto.shippingTypeId == 1"-->
+                              <!--                                                                     [attr.disabled]="step1Dto.shippingRequestDestinationCities.length === 1 && step1Dto.shippingTypeId == 1">-->
+                              <!--                                                                    <div class="custom-item">-->
+                              <!--                                                                        <div class="product-name">-->
+                              <!--                                                                            {{ city.cityName }}-->
+                              <!--                                                                        </div>-->
+                              <!--                                                                    </div>-->
+                              <!--                                                                </div>-->
+                              <!--                                                                <dx-validator [validationGroup]="'step1FormGroup'">-->
+                              <!--                                                                    <dxi-validation-rule-->
+                              <!--                                                                        type="required"-->
+                              <!--                                                                        message="{{ 'ServiceAreas' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"-->
+                              <!--                                                                    ></dxi-validation-rule>-->
+                              <!--                                                                </dx-validator>-->
+                              <!--                                                            </dx-tag-box>-->
+                              <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
+                            </div>
+                            <span class="form-text text-muted">{{ l('SelectAServiceAreas') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('ServiceAreaNotes') }}</label>
+                            <dx-text-box
+                              class="form-control p-0"
+                              name="serviceAreaNotes"
+                              id="serviceAreaNotes"
+                              formControlName="serviceAreaNotes"
+                              [(value)]="step1Dto.serviceAreaNotes"
+                              [isValid]="step1Form.controls['serviceAreaNotes'].valid || !step1Form.controls['serviceAreaNotes'].touched"
+                              valueChangeEvent="keyup"
+                            >
+                              <!--                                                            <dx-validator [validationGroup]="'step1FormGroup'">-->
+                              <!--                                                                <dxi-validation-rule-->
+                              <!--                                                                    type="required"-->
+                              <!--                                                                    message="{{ 'ServiceAreaNotes' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"-->
+                              <!--                                                                ></dxi-validation-rule>-->
+                              <!--                                                            </dx-validator>-->
+                            </dx-text-box>
+
+                            <span class="form-text text-muted">{{ l('SelectAServiceAreas') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <label> {{ l('TransportType') }} <span class="required-fileds">*</span></label>
+                            <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allTransportTypes }">
+                              <dx-select-box
+                                id="transportTypeId"
+                                name="transportTypeId"
+                                formControlName="transportTypeId"
+                                [(value)]="step1Dto.transportTypeId"
+                                [dataSource]="allTransportTypes"
+                                [searchEnabled]="true"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                placeholder="{{ l('SelectaTransportType') }}"
+                                [isValid]="step1Form.controls['transportTypeId'].valid || !step1Form.controls['transportTypeId'].touched"
+                                [disabled]="allTransportTypes ? null : true"
+                                (onValueChanged)="transportTypeSelectChange(step1Dto.transportTypeId)"
+                                required
+                              >
+                                <dx-validator [validationGroup]="'step1FormGroup'">
+                                  <dxi-validation-rule
+                                    type="required"
+                                    message="{{ 'TransportType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                  ></dxi-validation-rule>
+                                </dx-validator>
+                              </dx-select-box>
+                            </div>
+                            <span class="form-text text-muted">{{ l('SelectaTransportType') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6" *ngIf="IfOther(allTransportTypes, step1Dto.transportTypeId)">
+                            <label>{{ l('OtherTransportType') }} <span class="required-fileds">*</span></label>
+                            <div>
+                              <div class="input-group">
+                                <dx-text-box
+                                  class="form-control p-0"
+                                  name="otherTransportTypeName"
+                                  id="otherTransportTypeName"
+                                  formControlName="otherTransportTypeName"
+                                  [(value)]="step1Dto.otherTransportTypeName"
+                                  [isValid]="
+                                    step1Form.controls['otherTransportTypeName'].valid || !step1Form.controls['otherTransportTypeName'].touched
+                                  "
+                                  [required]="step1Form.get('transportTypeId').valid && IfOther(allTransportTypes, step1Dto.transportTypeId)"
+                                  valueChangeEvent="keyup"
+                                >
+                                  <dx-validator [validationGroup]="'step1FormGroup'">
+                                    <dxi-validation-rule
+                                      type="required"
+                                      message="{{ 'OtherTransportType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                    ></dxi-validation-rule>
+                                    <dxi-validation-rule
+                                      type="async"
+                                      [validationCallback]="asyncValidationCannotContainSpace"
+                                      message="{{ 'OtherTransportType' | localize }}: {{ 'CanNotHaveSpaces' | localize }}"
+                                    ></dxi-validation-rule>
+                                  </dx-validator>
+                                </dx-text-box>
+                              </div>
+                            </div>
+                            <span class="form-text text-muted">{{ l('OtherTransportTypeName') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('TruckType') }} <span class="required-fileds">*</span></label>
+                            <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': truckTypeLoading }">
+                              <dx-select-box
+                                id="trucksTypeId"
+                                name="trucksTypeId"
+                                formControlName="trucksTypeId"
+                                [(value)]="step1Dto.trucksTypeId"
+                                [dataSource]="allTrucksTypes"
+                                [searchEnabled]="true"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                placeholder="{{ l('SelectaTruckType') }}"
+                                [isValid]="step1Form.controls['trucksTypeId'].valid || !step1Form.controls['trucksTypeId'].touched"
+                                [disabled]="
+                                  (step1Dto.transportTypeId == null ? true : null) ||
+                                  (allTransportTypes == null ? true : null) ||
+                                  (allTrucksTypes == null ? true : null)
+                                "
+                                (onValueChanged)="trucksTypeSelectChange(step1Dto.trucksTypeId)"
+                                required
+                              >
+                                <dx-validator [validationGroup]="'step1FormGroup'">
+                                  <dxi-validation-rule
+                                    type="required"
+                                    message="{{ 'TruckType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                  ></dxi-validation-rule>
+                                </dx-validator>
+                              </dx-select-box>
+                            </div>
+                            <span class="form-text text-muted">{{ l('SelectaTruckType') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6" *ngIf="IfOther(allTrucksTypes, step1Dto.trucksTypeId)">
+                            <label>{{ l('OtherTruckType') }} <span class="required-fileds">*</span></label>
+                            <div>
+                              <div class="input-group">
+                                <dx-text-box
+                                  name="otherTrucksTypeName"
+                                  id="otherTrucksTypeName"
+                                  formControlName="otherTrucksTypeName"
+                                  [(value)]="step1Dto.otherTrucksTypeName"
+                                  [isValid]="step1Form.controls['otherTrucksTypeName'].valid || !step1Form.controls['otherTrucksTypeName'].touched"
+                                  [required]="step1Form.get('trucksTypeId').valid && IfOther(allTrucksTypes, step1Dto.trucksTypeId)"
+                                  valueChangeEvent="keyup"
+                                >
+                                  <dx-validator [validationGroup]="'step1FormGroup'">
+                                    <dxi-validation-rule
+                                      type="required"
+                                      message="{{ 'OtherTruckType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                    ></dxi-validation-rule>
+                                    <dxi-validation-rule
+                                      type="async"
+                                      [validationCallback]="asyncValidationCannotContainSpace"
+                                      message="{{ 'OtherTruckType' | localize }}: {{ 'CanNotHaveSpaces' | localize }}"
+                                    ></dxi-validation-rule>
+                                  </dx-validator>
+                                </dx-text-box>
+                              </div>
+                            </div>
+                            <span class="form-text text-muted">{{ l('otherTrucksTypeName') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('Capacity') }} <span class="required-fileds">*</span></label>
+                            <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': capacityLoading }">
+                              <dx-select-box
+                                id="capacityId"
+                                name="capacityId"
+                                formControlName="capacityId"
+                                [(value)]="step1Dto.capacityId"
+                                [dataSource]="allCapacities"
+                                [searchEnabled]="true"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                placeholder="{{ l('SelectaCapacity') }}"
+                                [isValid]="step1Form.controls['capacityId'].valid || !step1Form.controls['capacityId'].touched"
+                                [disabled]="
+                                  (capacityLoading ? true : null) ||
+                                  (step1Dto.trucksTypeId == null ? true : null) ||
+                                  (step1Dto.transportTypeId == null ? true : null) ||
+                                  (allTransportTypes == null ? true : null) ||
+                                  allTrucksTypes == null
+                                "
+                                required
+                              >
+                                <dx-validator [validationGroup]="'step1FormGroup'">
+                                  <dxi-validation-rule
+                                    type="required"
+                                    message="{{ 'Capacity' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                  ></dxi-validation-rule>
+                                </dx-validator>
+                              </dx-select-box>
+                            </div>
+                            <span class="form-text text-muted">{{ l('SelectaCapacity') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('NumberOfTrucks') }} <span class="required-fileds">*</span></label>
+                            <dx-number-box
+                              name="numberOfTrucks"
+                              id="numberOfTrucks"
+                              formControlName="numberOfTrucks"
+                              [min]="1"
+                              [(value)]="step1Dto.numberOfTrucks"
+                              [isValid]="step1Form.controls['numberOfTrucks'].valid || !step1Form.controls['numberOfTrucks'].touched"
+                              required
+                            >
+                              <dx-validator [validationGroup]="'step1FormGroup'">
+                                <dxi-validation-rule
+                                  type="required"
+                                  message="{{ 'NumberOfTrucks' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                ></dxi-validation-rule>
+                                <dxi-validation-rule
+                                  type="range"
+                                  [min]="1"
+                                  message="{{ 'NumberOfTrucks' | localize }}: {{ 'MinValue' | localize }} 1"
+                                ></dxi-validation-rule>
+                              </dx-validator>
+                            </dx-number-box>
+                            <span class="form-text text-muted">{{ l('EnterNumberOfTrucks') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allpackingTypes }">
+                              <label>{{ l('PackingType') }} <span class="required-fileds">*</span></label>
+                              <dx-select-box
+                                id="packingTypeId"
+                                name="packingTypeId"
+                                formControlName="packingTypeId"
+                                [(value)]="step1Dto.packingTypeId"
+                                [dataSource]="allpackingTypes"
+                                [searchEnabled]="true"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                placeholder="{{ l('SelectaPackingType') }}"
+                                [isValid]="step1Form.controls['packingTypeId'].valid || !step1Form.controls['packingTypeId'].touched"
+                                [disabled]="!allpackingTypes"
+                                required
+                              >
+                                <dx-validator [validationGroup]="'step1FormGroup'">
+                                  <dxi-validation-rule
+                                    type="required"
+                                    message="{{ 'PackingType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                  >
+                                  </dxi-validation-rule>
+                                </dx-validator>
+                              </dx-select-box>
+                            </div>
+                            <span class="form-text text-muted">{{ l('EnterPackingType') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('MainGoodCategory') }} <span class="required-fileds">*</span></label>
+                            <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
+                              <dx-select-box
+                                id="goodCategoryId"
+                                name="goodCategoryId"
+                                formControlName="goodCategoryId"
+                                [(value)]="step1Dto.goodCategoryId"
+                                [dataSource]="allGoodCategorys"
+                                [searchEnabled]="true"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                placeholder="{{ l('SelectAGoodCategory') }}"
+                                [isValid]="step1Form.controls['goodCategoryId'].valid || !step1Form.controls['goodCategoryId'].touched"
+                                [disabled]="!allGoodCategorys"
+                                required
+                              >
+                                <dx-validator [validationGroup]="'step1FormGroup'">
+                                  <dxi-validation-rule
+                                    type="required"
+                                    message="{{ 'MainGoodCategory' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                  ></dxi-validation-rule>
+                                </dx-validator>
+                              </dx-select-box>
+                              <span class="form-text text-muted">{{ l('SelectaGoodCategory') }}</span>
+                            </div>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('RentalDuration') }} <span class="required-fileds">*</span></label>
+                            <div class="input-group custom-prepend-input">
+                              <dx-number-box
+                                class="form-control p-0"
+                                name="rentalDuration"
+                                id="rentalDuration"
+                                formControlName="rentalDuration"
+                                [(value)]="step1Dto.rentalDuration"
+                                [isValid]="step1Form.controls['rentalDuration'].valid || !step1Form.controls['rentalDuration'].touched"
+                                [min]="0"
+                                (onValueChanged)="changeMaxSelectableDate()"
+                                required
+                                valueChangeEvent="keyup"
+                              >
+                                <dx-validator [validationGroup]="'step1FormGroup'">
+                                  <dxi-validation-rule
+                                    type="required"
+                                    message="{{ 'RentalDuration' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                  ></dxi-validation-rule>
+                                </dx-validator>
+                              </dx-number-box>
+                              <div class="input-group-prepend">
+                                <!--                                                                    (onSelectionChanged)="null"-->
+                                <dx-select-box
+                                  id="rentalDurationUnit"
+                                  name="rentalDurationUnit"
+                                  formControlName="rentalDurationUnit"
+                                  [(value)]="step1Dto.rentalDurationUnit"
+                                  [dataSource]="rentalDurationUnits"
+                                  [searchEnabled]="true"
+                                  displayExpr="value"
+                                  valueExpr="key"
+                                  placeholder="{{ l('SelectRentalDurationUnit') }}"
+                                  [isValid]="step1Form.controls['rentalDurationUnit'].valid || !step1Form.controls['rentalDurationUnit'].touched"
+                                  [disabled]="rentalDurationUnits ? null : true"
+                                  (onValueChanged)="changeMaxSelectableDate()"
+                                  required
+                                >
+                                  <dx-validator [validationGroup]="'step1FormGroup'">
+                                    <dxi-validation-rule
+                                      type="required"
+                                      message="{{ 'RentalDurationUnit' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                                    ></dxi-validation-rule>
+                                  </dx-validator>
+                                </dx-select-box>
+                              </div>
+                            </div>
+                            <span class="form-text text-muted">{{ l('EnterRentalDuration') }}</span>
+                          </div>
+                          <div class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('RentalDates') }} <span class="required-fileds">*</span></label>
+                            <p-calendar
+                              [disabled]="!step1Dto.rentalDuration || !step1Dto.rentalDurationUnit"
+                              class="rentalRangeDates form-control p-0"
+                              inputStyleClass="w-100"
+                              inputId="rentalRangeDates"
+                              formControlName="rentalRangeDates"
+                              name="rentalRangeDates"
+                              (onSelect)="rentalDatesSelected($event)"
+                              [(ngModel)]="rentalRangeDates"
+                              selectionMode="range"
+                              [readonlyInput]="true"
+                              [minDate]="today"
+                              [maxDate]="maxSelectableDate"
+                            ></p-calendar>
+                            <span class="form-text text-muted">{{ l('SelectRentalDates') }}</span>
+                          </div>
+                        </div>
+                        <div class="row pt-4">
+                          <div class="col-12">
+                            <dx-validation-summary validationGroup="step1FormGroup" id="step1-form-Group"></dx-validation-summary>
+                          </div>
+                        </div>
+                        <dx-button
+                          class="d-none"
+                          text="Validate"
+                          id="step1FormGroupButton"
+                          [validationGroup]="'step1FormGroup'"
+                          (onClick)="validateGroup($event)"
+                        >
+                        </dx-button>
+                      </dx-validation-group>
+                    </div>
+                  </form>
+                  <!--end: Form Wizard Step 1-->
+
+                  <!--begin: Form Wizard Step 4-->
+                  <div class="pb-5" data-wizard-type="step-content">
+                    <div class="mb-10 font-weight-bold text-dark"></div>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <p-listbox
+                          *ngIf="cleanedVases.length > 0"
+                          [options]="cleanedVases"
+                          [checkbox]="true"
+                          filter="true"
+                          multiple="true"
+                          [(ngModel)]="selectedVases"
+                          [listStyle]="{ 'text-align': 'center' }"
+                          optionLabel="vasName"
+                          [dataKey]="'vasId'"
+                        ></p-listbox>
+                      </div>
+                      <div class="col-sm-8">
+                        <table class="table" *ngIf="selectedVasesProperties.length > 0">
+                          <thead>
+                            <tr class="table-active">
+                              <th scope="col">{{ l('VASType') }}</th>
+                              <th scope="col">{{ l('Count') }}</th>
+                              <th scope="col">{{ l('Amount') }}</th>
+                              <!--                                                        <th scope="col">{{ l('NumberOfTrips') }}</th>-->
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let item of selectedVases; index as i">
+                              <td>
+                                {{ selectedVasesProperties[item.vasId].vasName }}
+                              </td>
+                              <td>
+                                <input
+                                  type="number"
+                                  #VasCount="ngModel"
+                                  [attr.disabled]="selectedVasesProperties[item.vasId].vasCountDisabled || null"
+                                  id="VasCount{{ i }}"
+                                  [(ngModel)]="item.requestMaxCount"
+                                  (keypress)="numberOnly($event)"
+                                  [required]="!selectedVasesProperties[item.vasId].vasCountDisabled"
+                                  class="form-control"
+                                  name="VasCount{{ i }}"
+                                  min="0"
+                                  [class.is-invalid]="VasCount.touched && !VasCount.disabled && item.requestMaxCount <= 0"
+                                  [class.is-valid]="VasCount.touched && VasCount.valid && item.requestMaxCount > 0"
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  type="number"
+                                  #VasAmount2="ngModel"
+                                  [attr.disabled]="selectedVasesProperties[item.vasId].vasAmountDisabled || null"
+                                  id="VasAmount2{{ i }}"
+                                  [(ngModel)]="item.requestMaxAmount"
+                                  (keypress)="numberOnly($event)"
+                                  [required]="!selectedVasesProperties[item.vasId].vasAmountDisabled"
+                                  class="form-control"
+                                  name="VasAmount2{{ i }}"
+                                  min="0"
+                                  [class.is-invalid]="VasAmount2.touched && !VasAmount2.disabled && item.requestMaxAmount <= 0"
+                                  [class.is-valid]="VasAmount2.touched && VasAmount2.valid && item.requestMaxAmount > 0"
+                                />
+                              </td>
+                              <!--                                                        <td>-->
+                              <!--                                                            <input-->
+                              <!--                                                                #numberOfTrips="ngModel"-->
+                              <!--                                                                type="number"-->
+                              <!--                                                                id="numberOfTrips{{ i }}"-->
+                              <!--                                                                [(ngModel)]="item.numberOfTrips"-->
+                              <!--                                                                (keypress)="numberOnly($event)"-->
+                              <!--                                                                class="form-control"-->
+                              <!--                                                                name="numberOfTrips{{ i }}"-->
+                              <!--                                                                required-->
+                              <!--                                                                [class.is-invalid]="numberOfTrips.touched && (!numberOfTrips.valid || item.numberOfTrips == 0)"-->
+                              <!--                                                                [class.is-valid]="numberOfTrips.touched && numberOfTrips.valid"-->
+                              <!--                                                                min="0"-->
+                              <!--                                                            />-->
+                              <!--                                                            &lt;!&ndash;                                                                || step2Dto.numberOfTrips < item.numberOfTrips&ndash;&gt;-->
+                              <!--                                                            &lt;!&ndash;                                                            && step2Dto.numberOfTrips >= item.numberOfTrips&ndash;&gt;-->
+                              <!--                                                            &lt;!&ndash;                                                            [max]="step2Dto.numberOfTrips"&ndash;&gt;-->
+                              <!--                                                        </td>-->
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <!--end: Form Wizard Step 4-->
+                  <!--begin: Form Wizard Step 5-->
+                  <div class="pb-5" data-wizard-type="step-content">
+                    <!--                    <h4 class="mb-10 font-weight-bold text-dark">{{ l('ReviewYourDetailsAndSubmit') }}</h4>-->
+
+                    <div>
+                      <div class="border-bottom mb-5 pb-5 map">
+                        <agm-map [latitude]="24.717942" [longitude]="46.675761" [zoom]="10">
+                          <agm-direction
+                            *ngIf="destination.lat"
+                            [origin]="{ lat: origin.lat, lng: origin.lng }"
+                            [destination]="{ lat: destination.lat, lng: destination.lng }"
+                            [travelMode]="'DRIVING'"
+                          ></agm-direction>
+                        </agm-map>
+                      </div>
+
+                      <div class="border-bottom mb-5 pb-5">
+                        <div class="font-weight-bolder text-primary mb-3">
+                          {{ l('BasicDetails') }}
+                          :
+                        </div>
+                        <div class="font-size-base line-height-xl">
+                          {{ l('ShippingRequestType') }} : {{ requestType }}
+                          <br />
+                          {{ l('BiddingRange') }}
+                          : {{ shippingRequestReview?.shippingRequest?.bidStartDate | momentFormat: 'L' }}
+                          -
+                          {{ shippingRequestReview?.shippingRequest?.bidEndDate | momentFormat: 'L' }}
+                          <br />
+                          {{ l('ShippingTypes') }}
+                          : {{ shippingRequestReview?.shippingTypeDisplayName }}
+                          <br />
+                          <!--                                                    {{ l('TripsDateRange') }}-->
+                          <!--                                                    : {{ shippingRequestReview?.shippingRequest?.startTripDate | momentFormat: 'L' }}-->
+                          <!--                                                    - -->
+                          <!--                                                    {{ shippingRequestReview?.shippingRequest?.endTripDate | momentFormat: 'L' }}-->
+                        </div>
+                      </div>
+                      <!--                                            <div class="border-bottom mb-5 pb-5">-->
+                      <!--                                                <div class="font-weight-bolder text-primary mb-3">-->
+                      <!--                                                    {{ l('RouteDetails') }}-->
+                      <!--                                                    :-->
+                      <!--                                                </div>-->
+                      <!--                                                <div class="line-height-xl">-->
+                      <!--                                                    {{ l('OriginCity') }}-->
+                      <!--                                                    : {{ shippingRequestReview?.originalCityName }}-->
+                      <!--                                                    <br/>-->
+                      <!--                                                    {{ l('DestinationCity') }}-->
+                      <!--                                                    : {{ shippingRequestReview?.destinationCityName }}-->
+                      <!--                                                    <br/>-->
+                      <!--                                                    {{ l('RouteType') }} : {{ l(shippingRequestReview?.routTypeName) }}-->
+                      <!--                                                    <br/>-->
+                      <!--                                                    {{ l('NumberOfDrops') }}-->
+                      <!--                                                    : {{ shippingRequestReview?.shippingRequest?.numberOfDrops }}-->
+                      <!--                                                    <br/>-->
+                      <!--                                                    {{ l('NumberOfTrips') }}-->
+                      <!--                                                    : {{ shippingRequestReview?.shippingRequest?.numberOfTrips }}-->
+                      <!--                                                </div>-->
+                      <!--                                            </div>-->
+                      <div class="border-bottom mb-5 pb-5">
+                        <div class="font-weight-bolder text-primary mb-3">
+                          {{ l('GoodDetails') }}
+                          :
+                        </div>
+                        <div class="line-height-xl">
+                          {{ l('MainGoodCategory') }}
+                          : {{ shippingRequestReview?.goodsCategoryName }}
+                          <br />
+                          {{ l('TotalWeight') }}
+                          : {{ shippingRequestReview?.shippingRequest?.totalWeight }}
+                          <br />
+                          {{ l('PackingType') }}
+                          : {{ shippingRequestReview?.packingTypeDisplayName }}
+                          <br />
+                          {{ l('NumberOfPacking') }}
+                          : {{ shippingRequestReview?.shippingRequest?.numberOfPacking }}
+                          <br />
+                          {{ l('TransportType') }}
+                          : {{ shippingRequestReview?.transportTypeDisplayName }}
+                          <br />
+                          {{ l('TruckType') }}
+                          : {{ shippingRequestReview?.truckTypeDisplayName }}
+                          <br />
+                          {{ l('Capacity') }}
+                          : {{ shippingRequestReview?.capacityDisplayName }}
+                        </div>
+                      </div>
+                      <div class="mb-5 pb-5">
+                        <div class="font-weight-bolder text-primary mb-3">{{ l('Vas') }}:</div>
+                        <div class="line-height-xl">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">{{ l('VasName') }}</th>
+                                <th scope="col">{{ l('VasAmount') }}</th>
+                                <th scope="col">{{ l('VasCount') }}</th>
+                                <!--                                                            <th scope="col">{{ l('NumberOfTrips') }}</th>-->
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let vas of selectedVases; let i = index">
+                                <th scope="row">{{ i + 1 }}</th>
+                                <th>{{ selectedVasesProperties[vas.vasId].vasName }}</th>
+                                <td>{{ vas.requestMaxAmount == 0 ? '-' : vas.requestMaxAmount }}</td>
+                                <td>{{ vas.requestMaxCount == 0 ? '-' : vas.requestMaxCount }}</td>
+                                <!--                                                            <td>{{ vas.numberOfTrips == 0 ? '-' : vas.numberOfTrips }}</td>-->
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--end: Form Wizard Step 5-->
+
+                  <!--begin: Form Actions -->
+                  <div class="d-flex justify-content-between border-top pt-10">
+                    <div class="mr-2">
+                      <div class="btn btn-light-danger font-weight text-uppercase px-9 py-4" data-wizard-type="action-prev">
+                        {{ l('Previous') }}
+                      </div>
+                    </div>
+                    <div>
+                      <create-or-edit-template-drop-down-button
+                        *ngIf="activeStep == 4 && (isShipper || isTachyonDealer || isCarrierSaas)"
+                        [entityType]="entityType.ShippingRequestTemplate"
+                        [sourceEntityId]="'' + activeShippingRequestId"
+                        [customClass]="'btn btn-light-danger font-weight-bold px-9 py-4 dropdown-toggle btn-elevate-hover mr-2'"
+                      ></create-or-edit-template-drop-down-button>
+                      <button (click)="onSubmit()" class="btn btn-success font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-submit">
+                        {{ l('Publish') }}
+                      </button>
+                      <button class="btn btn-primary font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-next" [buttonBusy]="saving">
+                        {{ l('Next') }}
+                      </button>
+                    </div>
+                  </div>
+                  <!--end: Form Actions -->
+                </div>
+                <!--end: Form Wizard Form-->
+              </div>
+            </div>
+          </div>
+          <!--end: Wizard -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
