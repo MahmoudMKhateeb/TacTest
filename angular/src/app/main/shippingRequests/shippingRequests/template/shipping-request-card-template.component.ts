@@ -34,6 +34,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   @ViewChild('tripsForViewShippingRequest', { static: true }) tripsForViewShippingRequest: TripsForViewShippingRequestComponent;
   shippingRequestforView: GetShippingRequestForViewOutput;
 
+  PriceOfferChannelEnum = PriceOfferChannel;
   items: GetShippingRequestForPriceOfferListDto[] = [];
   searchInput: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
   @Input() Channel: PriceOfferChannel | number | null | undefined = undefined;
@@ -302,6 +303,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   }
 
   assignTrucksAndDrivers(item: GetShippingRequestForPriceOfferListDto) {
+    console.log('item', item);
     this.assignTrucksAndDriversModal.show(item);
   }
 }

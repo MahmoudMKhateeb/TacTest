@@ -3,12 +3,15 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import {
   AssignDedicatedTrucksAndDriversInput,
-  DedicatedShippingRequestDriversDto,
+  DedicatedDriversDto,
   DedicatedShippingRequestsServiceProxy,
-  DedicatedShippingRequestTrucksDto,
+  DedicatedTruckDto,
   GetShippingRequestForPriceOfferListDto,
+  SelectItemDto,
+  TrucksServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 
+let _self;
 @Component({
   selector: 'assign-trucks-and-drivers-modal',
   templateUrl: './assign-trucks-and-drivers-modal.component.html',
@@ -19,19 +22,25 @@ export class AssignTrucksAndDriversModalComponent extends AppComponentBase {
   active = false;
   loading: boolean;
   dedicatedShippingRequest: GetShippingRequestForPriceOfferListDto;
-  trucksOptions: DedicatedShippingRequestTrucksDto[] = [];
-  selectedTrucks: DedicatedShippingRequestTrucksDto[] = [];
 
-  driversOptions: DedicatedShippingRequestDriversDto[] = [];
-  selectedDrivers: DedicatedShippingRequestDriversDto[] = [];
+  allDrivers: SelectItemDto[] = [];
+  selectedDrivers: SelectItemDto[] = [];
+  allTrucks: SelectItemDto[] = [];
+  selectedTrucks: SelectItemDto[] = [];
 
-  constructor(injector: Injector, private _dedicatedShippingRequestService: DedicatedShippingRequestsServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _dedicatedShippingRequestService: DedicatedShippingRequestsServiceProxy,
+    private _trucksServiceProxy: TrucksServiceProxy
+  ) {
     super(injector);
+    _self = this;
   }
 
   show(dedicatedShippingRequest: GetShippingRequestForPriceOfferListDto) {
-    this.getAllTrucksAndDriversForRequest();
     this.dedicatedShippingRequest = dedicatedShippingRequest;
+    this.getAllDrivers();
+    this.getAllTrucks(this.dedicatedShippingRequest.trucksTypeId);
     this.active = true;
     this.modal.show();
   }
@@ -39,28 +48,62 @@ export class AssignTrucksAndDriversModalComponent extends AppComponentBase {
   close() {
     this.active = false;
     this.dedicatedShippingRequest = null;
+    this.allDrivers = [];
+    this.selectedDrivers = [];
+    this.allTrucks = [];
+    this.selectedTrucks = [];
     this.modal.hide();
   }
 
-  getAllTrucksAndDriversForRequest() {
-    this.loading = true;
-    this._dedicatedShippingRequestService.getAllTrucksAndDriversForRequest(this.dedicatedShippingRequest.id).subscribe((res) => {
-      this.trucksOptions = res.dedicatedShippingRequestTrucksDtos;
-      this.driversOptions = res.dedicatedShippingRequestDriversDtos;
-      this.loading = false;
-    });
-  }
-
   save() {
+    console.log('this.selectedDrivers', this.selectedDrivers);
+    console.log('this.selectedTrucks', this.selectedTrucks);
+    const drivers = this.selectedDrivers.map((driver) => {
+      return new DedicatedDriversDto({ driverName: driver.displayName, id: Number(driver.id) });
+    });
+    const trucks = this.selectedTrucks.map((truck) => {
+      return new DedicatedTruckDto({ truckName: truck.displayName, id: Number(truck.id) });
+    });
     const assignDedicatedTrucksAndDriversInput = new AssignDedicatedTrucksAndDriversInput({
       shippingRequestId: this.dedicatedShippingRequest.id,
-      driversList: this.selectedDrivers,
-      trucksList: this.selectedTrucks,
+      driversList: drivers,
+      trucksList: trucks,
     });
+    console.log('assignDedicatedTrucksAndDriversInput', assignDedicatedTrucksAndDriversInput);
     this.loading = true;
     this._dedicatedShippingRequestService.assignDedicatedTrucksAndDrivers(assignDedicatedTrucksAndDriversInput).subscribe((res) => {
       this.loading = false;
       this.close();
+    });
+  }
+
+  /**
+   * Driver Assignation Section
+   * this method is for Getting All Carriers Drivers For DD
+   */
+  getAllDrivers() {
+    if (this.feature.isEnabled('App.Carrier')) {
+      this._trucksServiceProxy.getAllDriversForDropDown().subscribe((res) => {
+        this.allDrivers = res;
+      });
+    }
+  }
+
+  /**
+   * this method is for Getting All Carriers Trucks For DD
+   */
+  getAllTrucks(truckTypeId) {
+    if (this.feature.isEnabled('App.Carrier')) {
+      this._trucksServiceProxy.getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId).subscribe((res) => {
+        this.allTrucks = res;
+      });
+    }
+  }
+
+  asyncValidationOnNumberOfTrucks(params) {
+    console.log('params', params);
+    return new Promise((resolve) => {
+      resolve(params.value.length === _self.dedicatedShippingRequest.numberOfTrucks);
     });
   }
 }

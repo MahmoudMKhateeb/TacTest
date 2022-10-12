@@ -405,13 +405,25 @@
                       {{ l('Cancel') }}
                     </a>
 
-                    <a href="javascript:void(0)" (click)="moreRedirectTo(item)" class="red">
+                    <a
+                      href="javascript:void(0)"
+                      (click)="moreRedirectTo(item)"
+                      class="red"
+                      *ngIf="
+                        (!Channel &&
+                          (feature.isEnabled('App.Shipper') ||
+                            (item.isTachyonDeal && (feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)))) ||
+                        ((Channel == PriceOfferChannelEnum.MarketPlace || Channel == PriceOfferChannelEnum.DirectRequest) &&
+                          (feature.isEnabled('App.Carrier') || feature.isEnabled('App.CarrierAsASaas')))
+                      "
+                    >
                       {{ l('More') }}
                     </a>
                     <a
                       *ngIf="
                         permission.isGranted('Pages.ShippingRequests.Edit') &&
                         !Channel &&
+                        item.status === 0 &&
                         (feature.isEnabled('App.Shipper') || isCarrierOwnRequest(item))
                       "
                       [queryParams]="{ id: item.id, completedSteps: 2, isEdit: true }"
