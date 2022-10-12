@@ -219,7 +219,7 @@
     <!--end::Form-->
   </div>
   <!--Create/Edit Point Modal-->
-  <createOrEditPointModal #createOrEditPointModal></createOrEditPointModal>
+  <createOrEditPointModal #createOrEditPointModal [isForDedicated]="shippingRequestForView.shippingRequestFlag === 1"></createOrEditPointModal>
   <!--END::Create/Edit Point Modal-->
 </div>
 

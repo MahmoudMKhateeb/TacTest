@@ -17,6 +17,7 @@ import { TripService } from '@app/main/shippingRequests/shippingRequests/Shippin
 import { Subscription } from '@node_modules/rxjs';
 import Swal from 'sweetalert2';
 import { retry } from '@node_modules/rxjs/internal/operators';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'createOrEditGoodDetailsModal',
@@ -84,11 +85,11 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.loadGoodDangerousTypes();
   }
 
-  show(id?) {
+  show(id?, isForDedicated = false) {
     this.active = true;
     this.goodsDetail = new CreateOrEditGoodsDetailDto();
     //if there is an id this is an edit
-    if (typeof id !== 'undefined') {
+    if (isNotNullOrUndefined(id)) {
       this.activeEditId = id;
       this.goodCategoryId = this.myGoodsDetailList[id].goodCategoryId;
       this.weight = this.myGoodsDetailList[id].weight;
@@ -101,7 +102,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.otherUnitOfMeasureName = this.myGoodsDetailList[id].otherUnitOfMeasureName;
       this.dimentions = this.myGoodsDetailList[id].dimentions;
     }
-    if (this.weightValidation()) {
+    if (this.weightValidation() || isForDedicated) {
       this.createOrEditGoodDetail.show();
     } else {
       this.active = false;

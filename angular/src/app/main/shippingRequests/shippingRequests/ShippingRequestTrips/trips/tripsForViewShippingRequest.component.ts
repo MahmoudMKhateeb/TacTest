@@ -18,6 +18,7 @@ import { Paginator } from '@node_modules/primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
 
 import {
+  GetShippingRequestForViewOutput,
   GetShippingRequestVasForViewDto,
   ImportGoodsDetailsDto,
   ImportRoutePointDto,
@@ -65,7 +66,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @Input() ShippingRequest: ShippingRequestDto;
-  @Input() shippingRequestForView: any;
+  @Input() shippingRequestForView: GetShippingRequestForViewOutput;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled = false;
   ShippingRequestTripStatusEnum = ShippingRequestTripStatus;

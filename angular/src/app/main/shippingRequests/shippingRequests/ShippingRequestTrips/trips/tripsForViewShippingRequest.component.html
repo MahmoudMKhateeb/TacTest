@@ -8,8 +8,8 @@
     <div class="card-toolbar" *ngIf="isShipper || isTachyonDealer || isCarrierSaas">
       <button
         class="btn btn-primary mr-2"
-        (click)="AddNewTripModal.show()"
-        [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
+        (click)="AddNewTripModal.show(null, shippingRequestForView)"
+        [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips && shippingRequestForView.shippingRequestFlag === 0"
         *ngIf="ShippingRequest.canAddTrip"
       >
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
@@ -314,7 +314,7 @@
                   </a>
                   <ul *dropdownMenu class="dropdown-menu">
                     <li *ngIf="record.status == 0 && CanEditTrip">
-                      <a class="dropdown-item" (click)="AddNewTripModal.show(record)">{{ l('Edit') }}</a>
+                      <a class="dropdown-item" (click)="AddNewTripModal.show(record, shippingRequestForView)">{{ l('Edit') }}</a>
                     </li>
 
                     <li>
