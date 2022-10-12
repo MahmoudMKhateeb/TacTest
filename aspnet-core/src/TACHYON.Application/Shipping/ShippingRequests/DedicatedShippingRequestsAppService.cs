@@ -151,7 +151,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
             await ValidateTrucksAndDrivers(input, shippingRequest);
 
-            var status = shippingRequest.RentalStartDate <= Clock.Now.Date
+            var status = shippingRequest.RentalStartDate.Value.Date <= Clock.Now.Date
                 ? WorkingStatus.Busy
                 : WorkingStatus.Active;
 
@@ -316,8 +316,8 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var item = await _dedicatedShippingRequestTruckRepository.GetAll()
                 .Where(x => truckDtos.Select(y=>y.Id).Contains(x.TruckId) && x.ShippingRequestId != shippingRequest.Id &&
-                shippingRequest.RentalStartDate.Value.Date < x.ShippingRequest.RentalEndDate.Value.Date &&
-                x.ShippingRequest.RentalStartDate.Value.Date < shippingRequest.RentalEndDate.Value.Date)
+                shippingRequest.RentalStartDate.Value.Date <= x.ShippingRequest.RentalEndDate.Value.Date &&
+                x.ShippingRequest.RentalStartDate.Value.Date <= shippingRequest.RentalEndDate.Value.Date)
                 .FirstOrDefaultAsync();
             if (item != null) return item.TruckId;
             return null;
@@ -327,8 +327,8 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var item = await _dedicatedShippingRequestDriverRepository.GetAll()
                 .Where(x => driverDtos.Select(y=>y.Id).Contains(x.DriverUserId) && x.ShippingRequestId != shippingRequest.Id &&
-                shippingRequest.RentalStartDate.Value.Date < x.ShippingRequest.RentalEndDate.Value.Date &&
-                x.ShippingRequest.RentalStartDate.Value.Date < shippingRequest.RentalEndDate.Value.Date)
+                shippingRequest.RentalStartDate.Value.Date <= x.ShippingRequest.RentalEndDate.Value.Date &&
+                x.ShippingRequest.RentalStartDate.Value.Date <= shippingRequest.RentalEndDate.Value.Date)
                 .FirstOrDefaultAsync();
             if(item != null) return item.DriverUserId;
             return null;

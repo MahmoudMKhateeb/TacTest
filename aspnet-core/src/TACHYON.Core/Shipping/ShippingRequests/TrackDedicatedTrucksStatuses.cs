@@ -52,10 +52,10 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var trucksList = _dedicatedShippingRequestTruck.GetAll()
                                 .Include(x => x.Truck)
-                                .Include(x => x.ShippingRequest.ReferenceNumber)
+                                .Include(x => x.ShippingRequest)
                                 .ToList();
 
-            var activeTrucksStart = trucksList.Where(x => x.ShippingRequest.RentalStartDate.Value.Date >= Clock.Now.Date &&
+            var activeTrucksStart = trucksList.Where(x => x.ShippingRequest.RentalStartDate.Value.Date <= Clock.Now.Date &&
                 x.Status != WorkingStatus.Busy);
             foreach (var truck in activeTrucksStart)
             {
@@ -74,10 +74,10 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var driversList = _dedicatedShippingRequestDriver.GetAll()
                 .Include(x => x.DriverUser)
-                .Include(x => x.ShippingRequest.ReferenceNumber)
+                .Include(x => x.ShippingRequest)
                 .ToList();
 
-            var activeDriversStart = driversList.Where(x => x.ShippingRequest.RentalStartDate.Value.Date >= Clock.Now.Date &&
+            var activeDriversStart = driversList.Where(x => x.ShippingRequest.RentalStartDate.Value.Date <= Clock.Now.Date &&
                 x.Status != WorkingStatus.Busy);
             foreach (var driver in activeDriversStart)
             {
@@ -96,7 +96,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var expiredRentalShippingRequests = _shippingRequestRepository.GetAll()
                                 .Where(x => x.ShippingRequestFlag == ShippingRequestFlag.Dedicated &&
-                                 x.RentalEndDate != null && x.RentalEndDate.Value.Date > Clock.Now.Date
+                                 x.RentalEndDate != null && x.RentalEndDate.Value.Date < Clock.Now.Date
                                  && x.Status != ShippingRequestStatus.Expired)
                                 .ToList();
 

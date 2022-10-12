@@ -21,6 +21,7 @@ namespace TACHYON.PriceOffers.Dto
         public int ShipperRatingNumber { get; set; }
         public string Carrier { get; set; }
         public int? CarrierTenantId { get; set; }
+        public string ShipperName { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         public DateTime? CreationTime { get; set; }
@@ -89,6 +90,7 @@ namespace TACHYON.PriceOffers.Dto
         /// shipper Id 
         /// </summary>
         public int TenantId { get; set; }
+        public bool IsDriversAndTrucksAssigned { get; set; }
 
         public bool IsSaas
         {

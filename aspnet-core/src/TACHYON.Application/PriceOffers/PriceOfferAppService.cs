@@ -42,6 +42,7 @@ using TACHYON.Vases;
 using TACHYON.Shipping.ShippingRequestAndTripNotes;
 using Abp.Collections.Extensions;
 using TACHYON.Shipping.Notes;
+using TACHYON.Shipping.Dedicated;
 
 namespace TACHYON.PriceOffers
 {
@@ -63,6 +64,7 @@ namespace TACHYON.PriceOffers
         private readonly ShippingRequestUpdateManager _srUpdateManager;
         private readonly IRepository<ShippingRequestAndTripNote> _ShippingRequestAndTripNoteRepository;
         private readonly IRepository<Actor> _actorsRepository;
+        private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
 
         private IRepository<VasPrice> _vasPriceRepository;
 
@@ -81,7 +83,8 @@ namespace TACHYON.PriceOffers
             IRepository<SrPostPriceUpdate, long> srPostPriceUpdateRepository,
             ShippingRequestUpdateManager srUpdateManager,
             IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository,
-            IRepository<Actor> actorsRepository)
+            IRepository<Actor> actorsRepository,
+            IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -100,6 +103,7 @@ namespace TACHYON.PriceOffers
             _srUpdateManager = srUpdateManager;
             _ShippingRequestAndTripNoteRepository = ShippingRequestAndTripNoteRepository;
             _actorsRepository = actorsRepository;
+            _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
         }
         #region Services
 
@@ -401,7 +405,9 @@ namespace TACHYON.PriceOffers
             {
                 query = await GetFromOffers(input);
             }
-            foreach(var request in query)
+            var dedictedDrivers =await _dedicatedShippingRequestDriverRepository.GetAll().ToListAsync();
+
+            foreach (var request in query)
             {
                 var index = 1;
                 foreach(var destCity in request.destinationCities)
@@ -412,6 +418,8 @@ namespace TACHYON.PriceOffers
                         request.DestinationCity = request.DestinationCity + ", " + destCity.CityName;
                     index++;
                 }
+                request.IsDriversAndTrucksAssigned = dedictedDrivers.Any(x => x.ShippingRequestId == request.Id);
+                
             }
             return new ListResultDto<GetShippingRequestForPriceOfferListDto>(query);
         }
