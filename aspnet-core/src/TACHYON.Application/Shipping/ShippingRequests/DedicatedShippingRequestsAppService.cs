@@ -23,7 +23,7 @@ using TACHYON.Shipping.ShippingRequests.Dtos.Dedicated;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
-    //[AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
+    [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
     public class DedicatedShippingRequestsAppService: TACHYONAppServiceBase, IDedicatedShippingRequestsAppService
     {
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
@@ -70,6 +70,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .WhereIf(await IsShipper(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
                 .WhereIf(await IsTachyonDealer(), x => true)
                 .WhereIf(input.ShippingRequestId != null, x => x.ShippingRequestId == input.ShippingRequestId)
+                .ProjectTo<DedicatedShippingRequestDriversDto>(AutoMapperConfigurationProvider)
                 .AsNoTracking();
 
             return await LoadResultAsync(query, input.Filter);
@@ -176,6 +177,7 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         public async Task<List<SelectItemDto>> GetAllDedicatedDriversForDropDown(long shippingRequestId)
         {
+            DisableTenancyFilters();
             return await _dedicatedShippingRequestDriverRepository.GetAll()
                 .Include(x=>x.DriverUser)
                 .WhereIf(await IsShipper(), x=>x.ShippingRequest.TenantId==AbpSession.TenantId)
@@ -188,6 +190,7 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         public async Task<List<SelectItemDto>> GetAllDedicateTrucksForDropDown(long shippingRequestId)
         {
+            DisableTenancyFilters();
             return await _dedicatedShippingRequestTruckRepository.GetAll()
                 .Include(x=>x.Truck)
                 .WhereIf(await IsShipper(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
