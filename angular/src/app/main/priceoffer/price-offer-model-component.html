@@ -203,7 +203,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>{{l('TotalVATForTrip')}}</td>
+                  <td>{{l(!isForDedicated ? 'TotalVATForTrip' : 'TotalVatForTrucks')}}</td>
                   <td>{{offer.itemsTotalVatAmountPreCommission}}</td>
                   <td *ngIf="isTachyonDealerOrHost">{{offer.itemsTotalVatPostCommission}}</td>
                 </tr>

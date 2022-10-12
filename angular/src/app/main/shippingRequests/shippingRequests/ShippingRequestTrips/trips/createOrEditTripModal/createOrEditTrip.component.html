@@ -24,7 +24,12 @@
                 #dropdownAddPage="bs-dropdown"
                 [dropup]="false"
                 [insideClick]="true"
-                *ngIf="!trip.id && (isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas'))"
+                *ngIf="
+                  !trip.id &&
+                  (isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas')) &&
+                  shippingRequestForView &&
+                  shippingRequestForView?.shippingRequestFlag === 0
+                "
               >
                 <button
                   dropdownToggle
@@ -361,7 +366,7 @@
                 {{ l('Close') }}
               </button>
               <create-or-edit-template-drop-down-button
-                *ngIf="isShipper || isTachyonDealer || isCarrierSaas"
+                *ngIf="(isShipper || isTachyonDealer || isCarrierSaas) && shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 0"
                 [entityType]="SavedEntityType.TripTemplate"
                 [jsonData]="tripAsJson"
                 [dropDirection]="'up'"

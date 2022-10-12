@@ -70,6 +70,10 @@
                 }
             }
         }
+        .actions {
+            position: absolute;
+            top: -1rem;
+        }
     }
 
     & > div.card-body {

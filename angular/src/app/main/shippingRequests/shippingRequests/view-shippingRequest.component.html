@@ -9,7 +9,10 @@
       <!--      </div>-->
       <div role="actions">
         <create-or-edit-template-drop-down-button
-          *ngIf="isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestforView.shippingRequest.isSaas)"
+          *ngIf="
+            shippingRequestforView.shippingRequestFlag === 0 &&
+            (isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestforView.shippingRequest.isSaas))
+          "
           [entityType]="entityTypes.ShippingRequestTemplate"
           [sourceEntityId]="activeShippingRequestId"
         ></create-or-edit-template-drop-down-button>
@@ -21,7 +24,7 @@
         <a
           class="btn btn-outline-primary"
           *ngIf="!shippingRequestforView.shippingRequest.isSaas"
-          (click)="srPostPriceUpdatesModal.show(activeShippingRequestId)"
+          (click)="srPostPriceUpdatesModal.show(activeShippingRequestId, shippingRequestforView.shippingRequestFlag === 1)"
         >
           <i class="flaticon-edit-1"></i> {{ l('ShippingRequestUpdates') }}
         </a>
@@ -34,6 +37,7 @@
         <shipping-request-offers-list
           [shippingRequestId]="activeShippingRequestId"
           [isTachyonDeal]="shippingRequestforView.shippingRequest.isTachyonDeal"
+          [isForDedicated]="shippingRequestforView.shippingRequestFlag === 1"
           [Channel]="shippingRequestforView.shippingRequest.isBid ? 1 : 2"
         ></shipping-request-offers-list>
       </ng-template>
@@ -120,7 +124,7 @@
                     </div>
                     <!-- End::Shipping Type-->
 
-                    <div class="col-lg-3 mt-5">
+                    <div class="col-lg-3 mt-5" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('ShipperReference') }}</label>
                         <div class="input-group date">
@@ -135,7 +139,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-3 mt-5">
+                    <div class="col-lg-3 mt-5" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('ShipperInvoiceNumber') }}</label>
                         <div class="input-group date">
@@ -213,7 +217,7 @@
               <div class="mb-3">
                 <div class="mb-2">
                   <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" [class.mt-4]="shippingRequestforView.shippingRequestFlag === 1">
                       <label><span class="required-fileds"></span> {{ l('MainGoodCategory') }} </label>
                       <input class="form-control" type="text" name="MainGoodCategory" [value]="shippingRequestforView.goodsCategoryName" disabled />
                     </div>
@@ -241,7 +245,7 @@
                         <input class="form-control" type="text" name="packingType" [value]="shippingRequestforView.packingTypeDisplayName" disabled />
                       </div>
                     </div>
-                    <div class="col-lg-6 mt-4">
+                    <div class="col-lg-6 mt-4" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('NumberOfPacking') }}</label>
                         <input

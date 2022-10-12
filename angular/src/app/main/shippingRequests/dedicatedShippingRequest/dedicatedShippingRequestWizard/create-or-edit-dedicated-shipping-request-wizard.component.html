@@ -43,18 +43,6 @@
                     <h3 class="wizard-title">{{ l('BasicDetails') }}</h3>
                   </div>
                 </a>
-                <!--                                <a class="wizard-step" href="javascript:;" data-wizard-type="step">-->
-                <!--                                    <div class="wizard-label">-->
-                <!--                                        <i class="wizard-icon flaticon-bus-stop text-danger"></i>-->
-                <!--                                        <h3 class="wizard-title">{{ l('RouteDetails') }}</h3>-->
-                <!--                                    </div>-->
-                <!--                                </a>-->
-                <!--                                <a class="wizard-step" href="javascript:;" data-wizard-type="step">-->
-                <!--                                    <div class="wizard-label">-->
-                <!--                                        <i class="wizard-icon flaticon-open-box text-danger"></i>-->
-                <!--                                        <h3 class="wizard-title">{{ l('GoodDetails') }}</h3>-->
-                <!--                                    </div>-->
-                <!--                                </a>-->
                 <a class="wizard-step" href="javascript:;" data-wizard-type="step">
                   <div class="wizard-label">
                     <i class="wizard-icon flaticon-app text-danger"></i>
@@ -245,6 +233,7 @@
                                 displayExpr="displayName"
                                 valueExpr="id"
                                 placeholder="{{ l('Select') }}"
+                                (onValueChanged)="shippingTypeChanged()"
                                 [isValid]="step1Form.controls['shippingTypeId'].valid || !step1Form.controls['shippingTypeId'].touched"
                                 required
                               >
@@ -368,41 +357,9 @@
                                 [selectionLimit]="step1Dto.shippingTypeId == 1 ? 1 : 100"
                               >
                               </p-multiSelect>
-                              <!--                                                            <dx-tag-box-->
-                              <!--                                                                [dataSource]="destinationCities"-->
-                              <!--                                                                displayExpr="cityName"-->
-                              <!--                                                                valueExpr="cityId"-->
-                              <!--                                                                name="destinationCity"-->
-                              <!--                                                                id="destinationCity"-->
-                              <!--                                                                formControlName="destinationCity"-->
-                              <!--                                                                [showSelectionControls]="true"-->
-                              <!--                                                                (onMultiTagPreparing)="destCitiesSelectionChange($event)"-->
-                              <!--                                                                (onSelectionChanged)="onMultiTagPreparing($event);validateShippingRequestType()"-->
-                              <!--                                                                [(value)]="step1Dto.shippingRequestDestinationCities"-->
-                              <!--                                                                [maxDisplayedTags]="step1Dto.shippingTypeId == 1 ? 1 : 3"-->
-                              <!--                                                                [isValid]="step1Form.controls['serviceAreaNotes'].valid || !step1Form.controls['serviceAreaNotes'].touched"-->
-                              <!--                                                                itemTemplate="customItem"-->
-                              <!--                                                                required-->
-                              <!--                                                            >-->
-                              <!--                                                                <div *dxTemplate="let city of 'customItem'"-->
-                              <!--                                                                     [attr.aria-disabled]="step1Dto.shippingRequestDestinationCities.length === 1 && step1Dto.shippingTypeId == 1"-->
-                              <!--                                                                     [attr.disabled]="step1Dto.shippingRequestDestinationCities.length === 1 && step1Dto.shippingTypeId == 1">-->
-                              <!--                                                                    <div class="custom-item">-->
-                              <!--                                                                        <div class="product-name">-->
-                              <!--                                                                            {{ city.cityName }}-->
-                              <!--                                                                        </div>-->
-                              <!--                                                                    </div>-->
-                              <!--                                                                </div>-->
-                              <!--                                                                <dx-validator [validationGroup]="'step1FormGroup'">-->
-                              <!--                                                                    <dxi-validation-rule-->
-                              <!--                                                                        type="required"-->
-                              <!--                                                                        message="{{ 'ServiceAreas' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"-->
-                              <!--                                                                    ></dxi-validation-rule>-->
-                              <!--                                                                </dx-validator>-->
-                              <!--                                                            </dx-tag-box>-->
                               <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
                             </div>
-                            <span class="form-text text-muted">{{ l('SelectAServiceAreas') }}</span>
+                            <span class="form-text text-muted">{{ l('SelectAServiceArea') }}</span>
                           </div>
                           <div class="form-group col-md-6 col-lg-6">
                             <label>{{ l('ServiceAreaNotes') }}</label>
@@ -414,16 +371,11 @@
                               [(value)]="step1Dto.serviceAreaNotes"
                               [isValid]="step1Form.controls['serviceAreaNotes'].valid || !step1Form.controls['serviceAreaNotes'].touched"
                               valueChangeEvent="keyup"
+                              [disabled]="!step1Dto?.shippingRequestDestinationCities || step1Dto?.shippingRequestDestinationCities?.length == 0"
                             >
-                              <!--                                                            <dx-validator [validationGroup]="'step1FormGroup'">-->
-                              <!--                                                                <dxi-validation-rule-->
-                              <!--                                                                    type="required"-->
-                              <!--                                                                    message="{{ 'ServiceAreaNotes' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"-->
-                              <!--                                                                ></dxi-validation-rule>-->
-                              <!--                                                            </dx-validator>-->
                             </dx-text-box>
 
-                            <span class="form-text text-muted">{{ l('SelectAServiceAreas') }}</span>
+                            <span class="form-text text-muted">{{ l('EnterServiceAreaNotes') }}</span>
                           </div>
                           <div class="form-group col-md-6 col-lg-6">
                             <label> {{ l('TransportType') }} <span class="required-fileds">*</span></label>
@@ -682,7 +634,6 @@
                                 </dx-validator>
                               </dx-number-box>
                               <div class="input-group-prepend">
-                                <!--                                                                    (onSelectionChanged)="null"-->
                                 <dx-select-box
                                   id="rentalDurationUnit"
                                   name="rentalDurationUnit"
@@ -712,6 +663,7 @@
                           <div class="form-group col-md-6 col-lg-6">
                             <label>{{ l('RentalDates') }} <span class="required-fileds">*</span></label>
                             <p-calendar
+                              #primeCalendar
                               [disabled]="!step1Dto.rentalDuration || !step1Dto.rentalDurationUnit"
                               class="rentalRangeDates form-control p-0"
                               inputStyleClass="w-100"
@@ -724,6 +676,7 @@
                               [readonlyInput]="true"
                               [minDate]="today"
                               [maxDate]="maxSelectableDate"
+                              [hideOnDateTimeSelect]="false"
                             ></p-calendar>
                             <span class="form-text text-muted">{{ l('SelectRentalDates') }}</span>
                           </div>
@@ -770,7 +723,6 @@
                               <th scope="col">{{ l('VASType') }}</th>
                               <th scope="col">{{ l('Count') }}</th>
                               <th scope="col">{{ l('Amount') }}</th>
-                              <!--                                                        <th scope="col">{{ l('NumberOfTrips') }}</th>-->
                             </tr>
                           </thead>
                           <tbody>
@@ -810,24 +762,6 @@
                                   [class.is-valid]="VasAmount2.touched && VasAmount2.valid && item.requestMaxAmount > 0"
                                 />
                               </td>
-                              <!--                                                        <td>-->
-                              <!--                                                            <input-->
-                              <!--                                                                #numberOfTrips="ngModel"-->
-                              <!--                                                                type="number"-->
-                              <!--                                                                id="numberOfTrips{{ i }}"-->
-                              <!--                                                                [(ngModel)]="item.numberOfTrips"-->
-                              <!--                                                                (keypress)="numberOnly($event)"-->
-                              <!--                                                                class="form-control"-->
-                              <!--                                                                name="numberOfTrips{{ i }}"-->
-                              <!--                                                                required-->
-                              <!--                                                                [class.is-invalid]="numberOfTrips.touched && (!numberOfTrips.valid || item.numberOfTrips == 0)"-->
-                              <!--                                                                [class.is-valid]="numberOfTrips.touched && numberOfTrips.valid"-->
-                              <!--                                                                min="0"-->
-                              <!--                                                            />-->
-                              <!--                                                            &lt;!&ndash;                                                                || step2Dto.numberOfTrips < item.numberOfTrips&ndash;&gt;-->
-                              <!--                                                            &lt;!&ndash;                                                            && step2Dto.numberOfTrips >= item.numberOfTrips&ndash;&gt;-->
-                              <!--                                                            &lt;!&ndash;                                                            [max]="step2Dto.numberOfTrips"&ndash;&gt;-->
-                              <!--                                                        </td>-->
                             </tr>
                           </tbody>
                         </table>
@@ -837,8 +771,6 @@
                   <!--end: Form Wizard Step 4-->
                   <!--begin: Form Wizard Step 5-->
                   <div class="pb-5" data-wizard-type="step-content">
-                    <!--                    <h4 class="mb-10 font-weight-bold text-dark">{{ l('ReviewYourDetailsAndSubmit') }}</h4>-->
-
                     <div>
                       <div class="border-bottom mb-5 pb-5 map">
                         <agm-map [latitude]="24.717942" [longitude]="46.675761" [zoom]="10">
@@ -867,33 +799,8 @@
                           {{ l('ShippingTypes') }}
                           : {{ shippingRequestReview?.shippingTypeDisplayName }}
                           <br />
-                          <!--                                                    {{ l('TripsDateRange') }}-->
-                          <!--                                                    : {{ shippingRequestReview?.shippingRequest?.startTripDate | momentFormat: 'L' }}-->
-                          <!--                                                    - -->
-                          <!--                                                    {{ shippingRequestReview?.shippingRequest?.endTripDate | momentFormat: 'L' }}-->
                         </div>
                       </div>
-                      <!--                                            <div class="border-bottom mb-5 pb-5">-->
-                      <!--                                                <div class="font-weight-bolder text-primary mb-3">-->
-                      <!--                                                    {{ l('RouteDetails') }}-->
-                      <!--                                                    :-->
-                      <!--                                                </div>-->
-                      <!--                                                <div class="line-height-xl">-->
-                      <!--                                                    {{ l('OriginCity') }}-->
-                      <!--                                                    : {{ shippingRequestReview?.originalCityName }}-->
-                      <!--                                                    <br/>-->
-                      <!--                                                    {{ l('DestinationCity') }}-->
-                      <!--                                                    : {{ shippingRequestReview?.destinationCityName }}-->
-                      <!--                                                    <br/>-->
-                      <!--                                                    {{ l('RouteType') }} : {{ l(shippingRequestReview?.routTypeName) }}-->
-                      <!--                                                    <br/>-->
-                      <!--                                                    {{ l('NumberOfDrops') }}-->
-                      <!--                                                    : {{ shippingRequestReview?.shippingRequest?.numberOfDrops }}-->
-                      <!--                                                    <br/>-->
-                      <!--                                                    {{ l('NumberOfTrips') }}-->
-                      <!--                                                    : {{ shippingRequestReview?.shippingRequest?.numberOfTrips }}-->
-                      <!--                                                </div>-->
-                      <!--                                            </div>-->
                       <div class="border-bottom mb-5 pb-5">
                         <div class="font-weight-bolder text-primary mb-3">
                           {{ l('GoodDetails') }}
@@ -903,14 +810,8 @@
                           {{ l('MainGoodCategory') }}
                           : {{ shippingRequestReview?.goodsCategoryName }}
                           <br />
-                          {{ l('TotalWeight') }}
-                          : {{ shippingRequestReview?.shippingRequest?.totalWeight }}
-                          <br />
                           {{ l('PackingType') }}
                           : {{ shippingRequestReview?.packingTypeDisplayName }}
-                          <br />
-                          {{ l('NumberOfPacking') }}
-                          : {{ shippingRequestReview?.shippingRequest?.numberOfPacking }}
                           <br />
                           {{ l('TransportType') }}
                           : {{ shippingRequestReview?.transportTypeDisplayName }}
@@ -920,6 +821,37 @@
                           <br />
                           {{ l('Capacity') }}
                           : {{ shippingRequestReview?.capacityDisplayName }}
+                        </div>
+                      </div>
+                      <div class="border-bottom mb-5 pb-5">
+                        <div class="font-weight-bolder text-primary mb-3">
+                          {{ l('RentalDetails') }}
+                          :
+                        </div>
+                        <div class="line-height-xl">
+                          {{ l('RentalDuration') }}
+                          : {{ shippingRequestReview?.rentalDuration }}
+                          <br />
+                          {{ l('RentalDurationUnit') }}
+                          : {{ shippingRequestReview?.rentalDurationUnit }}
+                          <br />
+                          {{ l('ServiceAreas') }}
+                          : {{ shippingRequestReview?.destinationCityName }}
+                          <br />
+                          {{ l('ServiceAreaNotes') }}
+                          : {{ shippingRequestReview?.serviceAreaNotes }}
+                          <br />
+                          {{ l('ExpectedMileage') }}
+                          : {{ shippingRequestReview?.expectedMileage }}
+                          <br />
+                          {{ l('NumberOfTrucks') }}
+                          : {{ shippingRequestReview?.expectedMileage }}
+                          <br />
+                          {{ l('RentalStartDate') }}
+                          : {{ shippingRequestReview?.rentalStartDate }}
+                          <br />
+                          {{ l('RentalEndDate') }}
+                          : {{ shippingRequestReview?.rentalEndDate }}
                         </div>
                       </div>
                       <div class="mb-5 pb-5">
@@ -932,7 +864,6 @@
                                 <th scope="col">{{ l('VasName') }}</th>
                                 <th scope="col">{{ l('VasAmount') }}</th>
                                 <th scope="col">{{ l('VasCount') }}</th>
-                                <!--                                                            <th scope="col">{{ l('NumberOfTrips') }}</th>-->
                               </tr>
                             </thead>
                             <tbody>
@@ -941,7 +872,6 @@
                                 <th>{{ selectedVasesProperties[vas.vasId].vasName }}</th>
                                 <td>{{ vas.requestMaxAmount == 0 ? '-' : vas.requestMaxAmount }}</td>
                                 <td>{{ vas.requestMaxCount == 0 ? '-' : vas.requestMaxCount }}</td>
-                                <!--                                                            <td>{{ vas.numberOfTrips == 0 ? '-' : vas.numberOfTrips }}</td>-->
                               </tr>
                             </tbody>
                           </table>
@@ -965,7 +895,12 @@
                         [sourceEntityId]="'' + activeShippingRequestId"
                         [customClass]="'btn btn-light-danger font-weight-bold px-9 py-4 dropdown-toggle btn-elevate-hover mr-2'"
                       ></create-or-edit-template-drop-down-button>
-                      <button (click)="onSubmit()" class="btn btn-success font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-submit">
+                      <button
+                        *ngIf="step1Dto.isDrafted && !isEdit"
+                        (click)="onSubmit()"
+                        class="btn btn-success font-weight-bold text-uppercase px-9 py-4"
+                        data-wizard-type="action-submit"
+                      >
                         {{ l('Publish') }}
                       </button>
                       <button class="btn btn-primary font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-next" [buttonBusy]="saving">

@@ -371,7 +371,9 @@
                     </li>
                     <li
                       *ngIf="
-                        record.canCreateTemplate && (isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestForView.shippingRequest.isSaas))
+                        shippingRequestForView.shippingRequestFlag === 0 &&
+                        record.canCreateTemplate &&
+                        (isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestForView.shippingRequest.isSaas))
                       "
                     >
                       <a class="dropdown-item" (click)="saveAsTemplateModal.show(record.id)">{{ l('SaveAsTemplate') }}</a>

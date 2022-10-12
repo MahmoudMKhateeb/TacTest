@@ -172,8 +172,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   show(record?: CreateOrEditShippingRequestTripDto, shippingRequestForView?: GetShippingRequestForViewOutput): void {
+    this.shippingRequestForView = shippingRequestForView;
     if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === 1) {
-      this.shippingRequestForView = shippingRequestForView;
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
       this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
@@ -203,6 +203,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === 1) {
           this.canEditNumberOfDrops = false;
           (this.trip.routeType as any) = '' + this.trip.routeType;
+          (this.trip.driverUserId as any) = '' + this.trip.driverUserId;
+          (this.trip.truckId as any) = '' + this.trip.truckId;
         }
         this.loading = false;
       });

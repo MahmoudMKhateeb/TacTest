@@ -61,6 +61,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 import Swal from 'sweetalert2';
 import { DxValidationGroupComponent } from '@node_modules/devextreme-angular';
 import DOMComponent from '@node_modules/devextreme/core/dom_component';
+import { Calendar } from '@node_modules/primeng/calendar';
 
 let _self;
 
@@ -84,6 +85,7 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
   @ViewChild('userForm', { static: false }) userForm: NgForm;
   @ViewChild('wizard', { static: true }) el: ElementRef;
   @ViewChild('step1FormGroup', { static: false }) step1FormGroup: DxValidationGroupComponent;
+  @ViewChild('primeCalendar', { static: false }) primeCalendar: Calendar;
   // @ViewChild('step2FormGroup', { static: false }) step2FormGroup: DxValidationGroupComponent;
   @Input() parentForm: NgForm;
   active = false;
@@ -311,7 +313,7 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
           // let tripsCountNotValid = this.selectedVases.filter(
           //   (r) => r.numberOfTrips == null || r.numberOfTrips === 0 // || r.numberOfTrips > this.step1Dto.numberOfTrips
           // ).length;
-          this.selectedVases.forEach((element) => {
+          this.selectedVases?.forEach((element) => {
             let isDisabledAmount = this.selectedVasesProperties[element.vasId].vasAmountDisabled;
             let isDisabledCount = this.selectedVasesProperties[element.vasId].vasCountDisabled;
             if ((element.requestMaxCount <= 0 && !isDisabledCount) || (element.requestMaxAmount <= 0 && !isDisabledAmount)) {
@@ -415,7 +417,7 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
   createOrEditStep2() {
     this.saving = true;
     this.step2Dto.id = this.activeShippingRequestId;
-    this.step2Dto.shippingRequestVasList = this.selectedVases.map((item) => {
+    this.step2Dto.shippingRequestVasList = this.selectedVases?.map((item) => {
       item.numberOfTrips = 0;
       return item;
     });
@@ -434,7 +436,6 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
   //get the summary and displays it for user
   reviewAndSubmit() {
     console.log('Review And Submit Lanched');
-    this.saving = true;
     this.loading = true;
     this.updateRoutingQueries(this.activeShippingRequestId, 3);
     this._shippingRequestsServiceProxy.getShippingRequestForView(this.activeShippingRequestId).subscribe((res) => {
@@ -1016,33 +1017,44 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
 
   rentalDatesSelected($event: any) {
     console.log('this.selectingDateFor', this.selectingDateFor);
-    if ((this.selectingDateFor = 3)) {
+    if (this.selectingDateFor === 3) {
       this.selectingDateFor = 1;
+      console.log('inside this.selectingDateFor', this.selectingDateFor);
     }
-    if ((this.selectingDateFor = 1)) {
+    if (this.selectingDateFor === 1) {
+      console.log('this.primeCalendar', this.primeCalendar);
+      console.log('inside 1');
       this.step1Dto.rentalStartDate = $event;
+      this.changeMaxSelectableDate($event, true);
     }
-    if ((this.selectingDateFor = 2)) {
+    if (this.selectingDateFor === 2) {
+      console.log('inside 2');
       this.step1Dto.rentalEndDate = $event;
     }
     this.selectingDateFor = this.selectingDateFor + 1;
-    console.log('event', $event);
+    console.log('last event', $event);
   }
 
-  changeMaxSelectableDate() {
+  changeMaxSelectableDate(date?: any, shouldOpenCalendar = false) {
+    if (!isNotNullOrUndefined(date)) {
+      date = this.today;
+    }
     switch (this.step1Dto.rentalDurationUnit) {
       case TimeUnit.Daily: {
-        this.maxSelectableDate = moment(this.today).add(this.step1Dto.rentalDuration, 'd').toDate();
+        this.maxSelectableDate = moment(date).add(this.step1Dto.rentalDuration, 'd').toDate();
         break;
       }
       case TimeUnit.Weekly: {
-        this.maxSelectableDate = moment(this.today).add(this.step1Dto.rentalDuration, 'w').toDate();
+        this.maxSelectableDate = moment(date).add(this.step1Dto.rentalDuration, 'w').toDate();
         break;
       }
       case TimeUnit.Monthly: {
-        this.maxSelectableDate = moment(this.today).add(this.step1Dto.rentalDuration, 'M').toDate();
+        this.maxSelectableDate = moment(date).add(this.step1Dto.rentalDuration, 'M').toDate();
         break;
       }
+    }
+    if (shouldOpenCalendar && !this.primeCalendar.overlayVisible) {
+      this.primeCalendar.showOverlay();
     }
     console.log('this.maxSelectableDate', this.maxSelectableDate);
   }
@@ -1062,5 +1074,9 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
       return false;
       // args.text = `All selected (${selectedItemsLength})`;
     }
+  }
+
+  shippingTypeChanged() {
+    this.step1Dto.shippingRequestDestinationCities = [];
   }
 }

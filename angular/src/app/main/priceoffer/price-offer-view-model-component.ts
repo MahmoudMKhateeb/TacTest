@@ -36,12 +36,14 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
   input: CreateOrEditPriceOfferInput = new CreateOrEditPriceOfferInput();
   Items: PriceOfferItem[] = [];
   isPostPriceOffer: boolean;
+  isForDedicated: boolean;
   constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy) {
     super(injector);
     this.offerForEditOutput.priceOfferViewDto = new PriceOfferViewDto();
   }
 
-  show(shippingRequestId: number, offerId: number, isPostPriceOffer: boolean = false): void {
+  show(shippingRequestId: number, offerId: number, isPostPriceOffer: boolean = false, isForDedicated = false): void {
+    this.isForDedicated = isForDedicated;
     this.isPostPriceOffer = isPostPriceOffer;
     this._CurrentServ.getPriceOfferForView(offerId).subscribe((result) => {
       this.offerForEditOutput = result;

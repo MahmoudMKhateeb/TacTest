@@ -18,6 +18,7 @@ export class ShippingRequestOffersList extends AppComponentBase {
   @Input() shippingRequestId: number;
   @Input() Channel: PriceOfferChannel;
   @Input() isTachyonDeal: boolean;
+  @Input() isForDedicated: boolean;
   IsStartSearch: boolean = false;
 
   constructor(injector: Injector, private _currentServ: PriceOfferServiceProxy, private _router: Router) {

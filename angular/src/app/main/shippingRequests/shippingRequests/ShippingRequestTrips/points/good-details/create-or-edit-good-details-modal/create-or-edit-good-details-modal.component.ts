@@ -54,6 +54,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   dangerousGoodsCode: string;
   dimentions: string;
   AllowedWeight: number;
+  isForDedicated: boolean;
 
   constructor(
     injector: Injector,
@@ -86,6 +87,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   }
 
   show(id?, isForDedicated = false) {
+    this.isForDedicated = isForDedicated;
     this.active = true;
     this.goodsDetail = new CreateOrEditGoodsDetailDto();
     //if there is an id this is an edit
@@ -219,7 +221,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     });
     //allowed weight is how much weight is left for the user
     allowedeight = shippingRequestWeight - (totalWeightGoodDetails - (this.weight === undefined ? 0 : this.weight));
-    this.AllowedWeight = allowedeight;
+    this.AllowedWeight = !this.isForDedicated ? allowedeight : this.weight;
     this.canAddMoreGoods.emit(allowedeight !== 0); // let the other components know
     return allowedeight !== 0;
   }
