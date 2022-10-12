@@ -318,6 +318,7 @@ namespace TACHYON.Shipping.Trips
                 if (input.RouteType == ShippingRequestRouteType.SingleDrop) input.NumberOfDrops = 1;
                 _shippingRequestTripManager.ValidateDedicatedRequestTripDates(input, request);
                 _shippingRequestTripManager.ValidateDedicatedNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), input.NumberOfDrops);
+                await ValidateTruckAndDriver(input);
             }
             //ValidateNumberOfDrops(input, request);
             //ValidateTotalweight(input, request);
@@ -1055,6 +1056,25 @@ namespace TACHYON.Shipping.Trips
                     throw new UserFriendlyException(L("CanceledReasonIsRequired"));
                 }
                 trip.CanceledReason = input.CanceledReason;
+            }
+        }
+
+        private async Task ValidateTruckAndDriver(CreateOrEditShippingRequestTripDto input)
+        {
+            if (input.DriverUserId != null)
+            {
+                //Check if driver user is from assigned
+                if (!await _dedicatedShippingRequestDriverRepository.GetAll().AnyAsync(x => x.ShippingRequestId == input.ShippingRequestId && x.DriverUserId == input.DriverUserId))
+                {
+                    throw new UserFriendlyException(L("DriverUserMustBeFromAssigned"));
+                }
+            }
+            if (input.TruckId != null)
+            {
+                if (!await _dedicatedShippingRequestTrucksRepository.GetAll().AnyAsync(x => x.ShippingRequestId == input.ShippingRequestId && x.TruckId == input.TruckId))
+                {
+                    throw new UserFriendlyException(L("TruckMustBeFromAssigned"));
+                }
             }
         }
         #endregion

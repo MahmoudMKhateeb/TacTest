@@ -675,7 +675,10 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(x=>x.ShippingRequestDestinationCities)
                     .ThenInclude(x=>x.CityFk)
                     .FirstOrDefaultAsync();
-
+                if(await IsCarrier() && shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+                {
+                    throw new UserFriendlyException(L("InvalidShippingRequest"));
+                }
                 bool isShipper = await IsEnabledAsync(AppFeatures.Shipper);
                 bool isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
                 int? abpSessionTenantId = AbpSession.TenantId;
