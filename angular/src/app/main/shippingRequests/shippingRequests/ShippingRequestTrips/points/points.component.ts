@@ -145,10 +145,17 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     this.wayPoints = [];
     this.wayPointMapDest = undefined;
     //take the first Point in the List and Set it As The source
-    this.wayPointMapSource = {
-      lat: this.wayPointsList[0]?.latitude || undefined,
-      lng: this.wayPointsList[0]?.longitude || undefined,
-    };
+    if (
+      isNotNullOrUndefined(this.wayPointsList) &&
+      this.wayPointsList.length > 0 &&
+      isNotNullOrUndefined(this.wayPointsList[0]?.latitude) &&
+      isNotNullOrUndefined(this.wayPointsList[0]?.longitude)
+    ) {
+      this.wayPointMapSource = {
+        lat: this.wayPointsList[0]?.latitude || undefined,
+        lng: this.wayPointsList[0]?.longitude || undefined,
+      };
+    }
     //Take Any Other Points but the First And last one in the List and set them to way points
     for (let i = 1; i < this.wayPointsList.length - 1; i++) {
       this.wayPoints.push({
@@ -159,7 +166,12 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       });
     }
     //to avoid the source and Dest from becoming the Same when place the First Elem in wayPointsList
-    if (this.wayPointsList.length > 1) {
+    if (
+      isNotNullOrUndefined(this.wayPointsList) &&
+      this.wayPointsList.length > 1 &&
+      isNotNullOrUndefined(this.wayPointsList[this.wayPointsList.length - 1]?.latitude) &&
+      isNotNullOrUndefined(this.wayPointsList[this.wayPointsList.length - 1]?.longitude)
+    ) {
       //set the Dest
       this.wayPointMapDest = {
         lat: this.wayPointsList[this.wayPointsList.length - 1]?.latitude || undefined,
