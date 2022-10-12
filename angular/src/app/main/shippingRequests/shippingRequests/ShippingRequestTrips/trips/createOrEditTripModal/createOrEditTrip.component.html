@@ -252,6 +252,8 @@
                     name="numberOfDrops"
                     (keypress)="numberOnly($event); onRouteTypeChange()"
                     [(ngModel)]="trip.numberOfDrops"
+                    (ngModelChange)="onRouteTypeChange()"
+                    (change)="onRouteTypeChange()"
                     [min]="2"
                     [class.is-invalid]="numberOfDrops.touched && !numberOfDrops.valid"
                     [class.is-valid]="numberOfDrops.touched && numberOfDrops.valid"
