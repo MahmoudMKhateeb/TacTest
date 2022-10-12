@@ -970,4 +970,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
     if (this.step1Dto.shippingTypeId != 1) this.step2Dto.shippingRequestDestinationCities = [];
   }
+
+  goToDedicatedWizard() {
+    this._router.navigate(['/app/main/shippingRequests/dedicatedShippingRequestWizard']);
+  }
 }
