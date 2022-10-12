@@ -490,6 +490,13 @@
       </div>
       <!--   End::RentalDetails   -->
 
+      <!--  start:Tms for shipper     -->
+      <tms-for-shipper
+        [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
+        *ngIf="shippingRequestforView.shippingRequestFlag === 1"
+      ></tms-for-shipper>
+      <!--  end:Tms for shipper     -->
+
       <!--  start:: DirectOffers      -->
 
       <ng-template [ngIf]="canSeeDirectRequests()">

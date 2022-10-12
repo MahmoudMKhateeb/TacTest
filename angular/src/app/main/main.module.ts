@@ -321,6 +321,7 @@ import { InvoiceTenantSearchModelComponent } from './Invoices/invoice-tenants/in
 import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/actor-submit-invoices.component';
 import { CreateOrEditDedicatedShippingRequestWizardComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicatedShippingRequestWizard/create-or-edit-dedicated-shipping-request-wizard.component';
 import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
+import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/tmsForShipper/tms-for-shipper.component';
 
 @NgModule({
   imports: [
@@ -610,6 +611,7 @@ import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests
     ActorInvoiceListComponent,
     ActorSubmitInvoicesComponent,
     AssignTrucksAndDriversModalComponent,
+    TmsForShipperComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
