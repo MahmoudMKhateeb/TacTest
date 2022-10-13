@@ -2845,6 +2845,36 @@
 		<text name="ActorCarrierInvoicesList">قائمة فواتير الناقل للعميل</text>
 		<text name="ActorInvoicesList">قائمة فواتير العميل</text>
 		<text name="DownloadBayanDropWaybill">تحميل وثيقة شحن بيان</text>
-
+		<text name="NewDedicatedRequest">طلب تأجير شاحنات</text>
+		<text name="TMSForShipper">نظم إدارة النقل</text>
+		<text name="ServiceAreas">مدن النقل</text>
+		<text name="ServiceAreaNotes">ملاحظات مدن النقل</text>
+		<text name="ExpectedMileage">الأميال المتوقعة</text>
+		<text name="RentalDetails">تفاصيل التأجير</text>
+		<text name="RentalDurationUnit">وحدة مدة التأجير</text>
+    <text name="RentalDuration">مدة التأجير</text>
+		<text name="RentalStartDate">تاريخ بداية التأجير</text>
+    <text name="RentalEndDate">تاريخ انتهاء التأجير</text>
+		<text name="EnterRentalDuration">أدخل مدة التأجير</text>
+		<text name="SelectRentalDates">أدخل فترة التأجير</text>
+    <text name="EnterNumberOfTrucks">أدخل عدد الشاحنات</text>
+		<text name="SelectAServiceArea">أدخل مدن التأجير</text>
+		<text name="EnterServiceAreaNotes">أدخل ملاحظات مدن التأجير</text>
+		<text name="EnterExpectedMileage">أدخل عدد الأميال المتوقعة</text>
+		<text name="CanNotHaveSpaces">المسافات غير مقبولة</text>
+		<text name="AssignDriversAndTrucksModal">تنسيب سائقين وشاحنات</text>
+		<text name="AssignDriversAndTrucksForDedicatedWarning">تنبيه: السائقين والشاحنات المنسبة لن تكون متوفرة خلال فترة التأجير</text>
+		<text name="SelectedItemsMustEqualTo{0}">العناصر المحددة يجب أن تكون {0}</text>
+    <text name="AssignTrucksAndDrivers">تنسيب سائقين وشاحنات</text>
+		<text name="DedicatedShippingRequest">طلب تأجير شاحنات</text>
+		<text name="RentalFromTo">التأجير من إلى</text>
+		<text name="RentedFrom">مؤجرة من</text>
+		<text name="RentedFor">مؤجرة إلى</text>
+		<text name="NewDedicated">طلب تأجير جديد</text>
+		<text name="TotalVatForTrucks">مجمل الضريبة للشاحنات</text>
+		<text name="NoOfTrucks">عدد الشاحنات</text>
+    <text name="ShippingRequestNotFound">الطلب غير موجود</text>
+		<text name="YouMustCompleteWizardStepsFirst">يجب إكمل جميع خطوات الطلب</text>
+    
 	</texts>
 </localizationDictionary>
