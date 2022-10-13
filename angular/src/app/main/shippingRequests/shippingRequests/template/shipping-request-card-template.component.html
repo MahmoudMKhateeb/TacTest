@@ -425,7 +425,7 @@
                         permission.isGranted('Pages.ShippingRequests.Edit') &&
                         !Channel &&
                         item.status === 0 &&
-                        (feature.isEnabled('App.Shipper') || isCarrierOwnRequest(item))
+                        (isShipper || isTachyonDealer || isCarrierOwnRequest(item))
                       "
                       [queryParams]="{ id: item.id, completedSteps: 2, isEdit: true }"
                       [routerLink]="['/app/main/shippingRequests/dedicatedShippingRequestWizard']"

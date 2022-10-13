@@ -833,7 +833,7 @@
                           : {{ shippingRequestReview?.rentalDuration }}
                           <br />
                           {{ l('RentalDurationUnit') }}
-                          : {{ shippingRequestReview?.rentalDurationUnit }}
+                          : {{ shippingRequestReview?.rentalDurationUnitTitle }}
                           <br />
                           {{ l('ServiceAreas') }}
                           : {{ shippingRequestReview?.destinationCityName }}
@@ -904,6 +904,15 @@
                       >
                         {{ l('Publish') }}
                       </button>
+                      <a
+                        *ngIf="isEdit"
+                        type="button"
+                        class="btn btn-success font-weight-bold text-uppercase px-9 py-4"
+                        routerLink="/app/main/shippingRequests/shippingRequests"
+                        data-wizard-type="action-submit"
+                      >
+                        {{ l('Close') }}
+                      </a>
                       <button class="btn btn-primary font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-next" [buttonBusy]="saving">
                         {{ l('Next') }}
                       </button>
