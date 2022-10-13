@@ -447,7 +447,7 @@ namespace TACHYON
             configuration.CreateMap<ShippingRequest, EditShippingRequestStep2Dto>();
 
             configuration.CreateMap<DedicatedShippingRequestDriver, DedicatedShippingRequestDriversDto>()
-                .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => $"{src.DriverUser.UserName} {src.DriverUser.Surname}" ))
+                .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => $"{src.DriverUser.Name} {src.DriverUser.Surname}" ))
                 .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.DriverUser.AccountNumber))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.DriverUser.PhoneNumber))
                 .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.Tenant.TenancyName))

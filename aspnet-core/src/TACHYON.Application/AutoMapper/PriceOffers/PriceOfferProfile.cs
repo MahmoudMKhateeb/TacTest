@@ -58,7 +58,7 @@ namespace TACHYON.AutoMapper.PriceOffers
                  .ForMember(dst => dst.ShippingRequestFlagTitle,
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
                 .ForMember(dst => dst.RentalDurationUnitTitle,
-                    opt => opt.MapFrom(src => Enum.GetName(typeof(TimeUnit), src.RentalDurationUnit)));
+                    opt => opt.MapFrom(src =>GetDurationUnit(src.RentalDurationUnit.Value)));
         }
 
         private string GetRemainingDays(DateTime? BidEndDate, ShippingRequestBidStatus Status)
@@ -84,6 +84,21 @@ namespace TACHYON.AutoMapper.PriceOffers
             else if (StartTripDate.HasValue) return StartTripDate.Value.ToString("dd/MM/yyyy");
 
             return "";
+        }
+
+        private static string GetDurationUnit(TimeUnit timeUnit)
+        {
+            switch (timeUnit)
+            {
+                case TimeUnit.Daily:
+                    return "Days";
+                case TimeUnit.Monthly:
+                    return "Months";
+                case TimeUnit.Weekly:
+                    return "Weeks";
+                default:
+                    return "";
+            }
         }
     }
 }
