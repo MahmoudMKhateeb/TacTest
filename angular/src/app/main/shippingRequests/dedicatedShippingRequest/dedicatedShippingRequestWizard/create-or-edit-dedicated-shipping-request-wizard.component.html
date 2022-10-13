@@ -895,8 +895,9 @@
                         [sourceEntityId]="'' + activeShippingRequestId"
                         [customClass]="'btn btn-light-danger font-weight-bold px-9 py-4 dropdown-toggle btn-elevate-hover mr-2'"
                       ></create-or-edit-template-drop-down-button>
+                      <!--                        step1Dto.isDrafted &&-->
                       <button
-                        *ngIf="step1Dto.isDrafted && !isEdit"
+                        *ngIf="!isEdit"
                         (click)="onSubmit()"
                         class="btn btn-success font-weight-bold text-uppercase px-9 py-4"
                         data-wizard-type="action-submit"

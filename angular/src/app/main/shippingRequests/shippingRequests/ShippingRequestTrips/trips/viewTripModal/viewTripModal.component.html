@@ -149,48 +149,35 @@
           </div>
 
           <!--   StartOf::Driver&Truck for DedicatedSR -->
-          <!--            <ng-container *ngIf="feature.isEnabled('App.Shipper') && shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 1">-->
-          <!--                <div class="form-group col-lg-6">-->
-          <!--                    <label>{{ l('RouteType') }}</label>-->
-          <!--                    <select-->
-          <!--                        name="routeType"-->
-          <!--                        type="text"-->
-          <!--                        [(ngModel)]="trip.routeType"-->
-          <!--                        class="form-control"-->
-          <!--                        disabled-->
-          <!--                    >-->
-          <!--                        <option disabled [ngValue]="null">{{ l('SelectRouteType') }}</option>-->
-          <!--                        <option [value]="r.key" *ngFor="let r of routeTypes">-->
-          <!--                            {{ l(r.value) | localize }}-->
-          <!--                        </option>-->
-          <!--                    </select>-->
-          <!--                </div>-->
-          <!--                <div class="form-group col-lg-6" *ngIf="trip.routeType == RouteTypesEnum.MultipleDrops">-->
-          <!--                    <label>{{ l('NumberOfDrops') }}</label>-->
-          <!--                    <input-->
-          <!--                        #numberOfDrops="ngModel"-->
-          <!--                        type="number"-->
-          <!--                        class="form-control"-->
-          <!--                        name="numberOfDrops"-->
-          <!--                        [(ngModel)]="trip.numberOfDrops"-->
-          <!--                        disabled-->
-          <!--                    />-->
-          <!--                </div>-->
-          <!--                <div class="form-group col-lg-6">-->
-          <!--                    <label>{{ l('Driver') }}</label>-->
-          <!--                    <select name="driverUserId" type="text" [(ngModel)]="trip.driverUserId" class="form-control" disabled>-->
-          <!--                        <option disabled [ngValue]="null">{{ l('SelectaDriver') }}</option>-->
-          <!--                        <option *ngFor="let item of allDedicatedDrivers" [value]="item.id">{{ item.displayName }}</option>-->
-          <!--                    </select>-->
-          <!--                </div>-->
-          <!--                <div class="form-group col-lg-6">-->
-          <!--                    <label>{{ l('Truck') }}</label>-->
-          <!--                    <select name="truckId" type="text" [(ngModel)]="trip.truckId" class="form-control" disabled>-->
-          <!--                        <option disabled [ngValue]="null">{{ l('Selectatruck') }}</option>-->
-          <!--                        <option *ngFor="let item of allDedicatedTrucks" [value]="item.id">{{ item.displayName }}</option>-->
-          <!--                    </select>-->
-          <!--                </div>-->
-          <!--            </ng-container>-->
+          <ng-container *ngIf="feature.isEnabled('App.Shipper') && shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 1">
+            <div class="form-group col-lg-6">
+              <label>{{ l('RouteType') }}</label>
+              <select name="routeType" type="text" [(ngModel)]="trip.routeType" class="form-control" disabled>
+                <option disabled [ngValue]="null">{{ l('SelectRouteType') }}</option>
+                <option [value]="r.key" *ngFor="let r of routeTypes">
+                  {{ l(r.value) | localize }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-lg-6" *ngIf="trip.routeType == RouteTypesEnum.MultipleDrops">
+              <label>{{ l('NumberOfDrops') }}</label>
+              <input #numberOfDrops="ngModel" type="number" class="form-control" name="numberOfDrops" [(ngModel)]="trip.numberOfDrops" disabled />
+            </div>
+            <div class="form-group col-lg-6">
+              <label>{{ l('Driver') }}</label>
+              <select name="driverUserId" type="text" [(ngModel)]="trip.assignedDriverUserId" class="form-control" disabled>
+                <option disabled [ngValue]="null">{{ l('SelectaDriver') }}</option>
+                <option *ngFor="let item of allDedicatedDrivers" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>{{ l('Truck') }}</label>
+              <select name="truckId" type="text" [(ngModel)]="trip.assignedTruckId" class="form-control" disabled>
+                <option disabled [ngValue]="null">{{ l('Selectatruck') }}</option>
+                <option *ngFor="let item of allDedicatedTrucks" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+          </ng-container>
           <!--   EndOf::Driver&Truck for DedicatedSR -->
 
           <!-- StartOf::Driver&Truck -->

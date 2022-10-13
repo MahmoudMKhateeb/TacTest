@@ -386,7 +386,7 @@
                       {{ l('Declined') }}
                     </a>
                     <a
-                      *ngIf="feature.isEnabled('App.Carrier') && !Channel"
+                      *ngIf="feature.isEnabled('App.Carrier') && !Channel && !item.isDriversAndTrucksAssigned"
                       href="javascript:void(0)"
                       (click)="assignTrucksAndDrivers(item)"
                       class="red"
@@ -480,13 +480,14 @@
                         <b *ngIf="isCarrier || isCarrierSaas">
                           {{ 'RentedFor' | localize }}:
                           <a href="javascript:void(0)">
-                            {{ item.shipper }}
+                            {{ item.shipperName }}
                           </a>
                         </b>
                         <b *ngIf="isTachyonDealerOrHost">
                           {{ 'RentedFromTo' | localize }}:
                           <a href="javascript:void(0)">
-                            {{ item.carrier }} {{ item.shipper ? '/' + item.shipper + '|' : item.carrier ? '|' : '' }} {{ l(item.requestTypeTitle) }}
+                            {{ item.carrier }}{{ item.shipperName ? ' / ' + item.shipperName + ' | ' : item.carrier ? ' | ' : ' '
+                            }}{{ l(item.requestTypeTitle) }}
                           </a>
                         </b>
                       </p>
@@ -561,6 +562,36 @@
                       {{ item.truckType }}
                     </p>
                   </div>
+                </div>
+                <div class="info-badges buttom-info-badges">
+                  <!--                <a-->
+                  <!--                  *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.CarrierAsASaas')"-->
+                  <!--                  href="javascript:void(0)"-->
+                  <!--                  class="infoHighLight blue"-->
+                  <!--                ></a>-->
+                  <a *ngIf="(!Channel || Channel == 3) && item.createdByTachyonDealer" href="javascript:void(0)" class="infoHighLight blue">
+                    {{ l('CreatedByTachyonDealer') }}
+                  </a>
+                  <a *ngIf="feature.isEnabled('App.Shipper')" href="javascript:void(0)" class="infoHighLight blue">
+                    {{ l(item.requestTypeTitle) }}
+                  </a>
+                  <a *ngIf="canSeeTotalOffers(item)" href="javascript:void(0)" class="infoHighLight green" (click)="ModelOffer.show(item)">
+                    {{ item.totalOffers }} {{ getWordTitle(item.totalOffers, 'TotalOffer') }}
+                  </a>
+                  <a
+                    *ngIf="item.isPriced && Channel != 10"
+                    href="javascript:void(0)"
+                    class="infoHighLight blue"
+                    (click)="ModelViewPrice.show(item.id, item.offerId, false, item.shippingRequestFlag === 1)"
+                    >{{ l('MarketPlacepriced') }}</a
+                  >
+                  <a
+                    *ngIf="item.price && (item.status == 5 || item.status == 1 || item.price > 0) && Channel != 10"
+                    href="javascript:void(0)"
+                    class="infoHighLight red"
+                    >{{ item.price | number }} {{ l('SAR') }}</a
+                  >
+                  <a *ngIf="Channel == 10" href="javascript:void(0)" class="infoHighLight red">{{ item.price | number }} {{ l('SAR') }}</a>
                 </div>
               </div>
             </div>

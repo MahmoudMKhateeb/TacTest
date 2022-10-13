@@ -69,6 +69,11 @@
                     }
                 }
             }
+            .info-badges {
+                &.buttom-info-badges {
+                    margin-top: 0.5rem !important;
+                }
+            }
         }
         .actions {
             position: absolute;

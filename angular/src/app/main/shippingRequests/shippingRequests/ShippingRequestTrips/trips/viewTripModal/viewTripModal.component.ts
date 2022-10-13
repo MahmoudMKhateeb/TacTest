@@ -92,7 +92,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
 
   ngAfterViewInit() {
     if (isNotNullOrUndefined(this.activeTripId)) {
-      this.show(this.activeTripId);
+      this.show(this.activeTripId, this.shippingRequestForView);
     }
   }
 

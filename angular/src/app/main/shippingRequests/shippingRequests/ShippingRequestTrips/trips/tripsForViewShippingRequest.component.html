@@ -318,7 +318,9 @@
                     </li>
 
                     <li>
-                      <a class="dropdown-item" (click)="ViewTripModal.show(record.id)">{{ isCarrier ? l('ViewOrAssignDriver') : l('View') }}</a>
+                      <a class="dropdown-item" (click)="ViewTripModal.show(record.id, shippingRequestForView)">{{
+                        isCarrier ? l('ViewOrAssignDriver') : l('View')
+                      }}</a>
                     </li>
                     <li
                       *ngIf="

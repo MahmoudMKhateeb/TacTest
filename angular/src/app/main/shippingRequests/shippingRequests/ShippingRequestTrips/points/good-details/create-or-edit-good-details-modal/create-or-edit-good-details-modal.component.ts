@@ -92,6 +92,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.goodsDetail = new CreateOrEditGoodsDetailDto();
     //if there is an id this is an edit
     if (isNotNullOrUndefined(id)) {
+      console.log('this.myGoodsDetailList', this.myGoodsDetailList);
       this.activeEditId = id;
       this.goodCategoryId = this.myGoodsDetailList[id].goodCategoryId;
       this.weight = this.myGoodsDetailList[id].weight;
