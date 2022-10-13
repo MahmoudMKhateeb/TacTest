@@ -45,7 +45,8 @@ namespace TACHYON.Invoices.ActorInvoices
              .Where(trip => trip.ShippingRequestFk.ShipperActorId == actorId)
              .Where(trip => trip.ActorShipperPriceFk != null )
              .Where(trip=> !trip.ActorShipperPriceFk.IsActorShipperHaveInvoice)
-             .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered)
+             .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
+             trip.Status == Shipping.Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
              .ToListAsync();
 
 
@@ -100,7 +101,8 @@ namespace TACHYON.Invoices.ActorInvoices
              .Where(trip => trip.ShippingRequestFk.CarrierActorId == actorId)
              .Where(trip => trip.ActorCarrierPriceFk != null)
              .Where(trip=> !trip.ActorCarrierPriceFk.IsActorCarrierHaveInvoice)
-             .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered)
+             .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
+             trip.Status == Shipping.Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
              .ToListAsync();
 
 
