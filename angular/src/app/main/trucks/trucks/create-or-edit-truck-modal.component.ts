@@ -83,6 +83,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   allTransportTypes: SelectItemDto[];
   allTruckTypesByTransportType: SelectItemDto[];
   allTrucksCapByTruckTypeId: SelectItemDto[];
+  allDrivers: SelectItemDto[];
   imageChangedEvent: any = '';
   public maxProfilPictureBytesUserFriendlyValue = 5;
   public uploader: FileUploader;
@@ -141,6 +142,10 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
           this.truck.plateTypeId = Number(this.defaultPlateType);
         }
       });
+
+    this._trucksServiceProxy.getAllDriversForDropDown().subscribe((result) => {
+      this.allDrivers = result;
+    });
 
     if (!truckId) {
       //initlaize truck type values

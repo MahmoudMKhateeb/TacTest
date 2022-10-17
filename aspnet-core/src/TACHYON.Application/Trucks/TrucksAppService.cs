@@ -114,6 +114,7 @@ namespace TACHYON.Trucks
                                                .Where(x => x.DocumentTypeFk.SpecialConstant == TACHYONConsts.TruckIstimaraDocumentTypeSpecialConstant.ToLower());
             var query = from truck in _truckRepository.GetAll()
                                                .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer), r => r.TenantId == AbpSession.TenantId)
+                                               .Include((x=>x.DriverUserFk))
                         join tenant in _lookupTenantRepository.GetAll() on truck.TenantId equals tenant.Id
                         join document in documentQuery on truck.Id equals document.TruckId
 
@@ -140,7 +141,8 @@ namespace TACHYON.Trucks
                             TrucksTypeId = truck.TrucksTypeId,
                             IstmaraNumber = document.Number,
                             OtherTransportTypeName = truck.OtherTransportTypeName,
-                            OtherTrucksTypeName = truck.OtherTrucksTypeName
+                            OtherTrucksTypeName = truck.OtherTrucksTypeName,
+                            DriverUser = truck.DriverUserFk.Name +""
                         };
 
             var result = await LoadResultAsync(query, input.Filter);

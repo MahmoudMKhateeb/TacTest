@@ -38,5 +38,8 @@ namespace TACHYON.Trucks.Dtos
 
         //document file Number
         public string IstmaraNumber { get; set; }
+        public virtual long? DriverUserId { get; set; }
+        public string DriverUser { get; set; }
+
     }
 }
