@@ -149,7 +149,7 @@
           </div>
 
           <!-- StartOf::Driver&Truck -->
-          <ng-container *ngIf="feature.isEnabled('App.Carrier') && trip.status !== shippingRequestTripStatusEnum.Delivered">
+          <ng-container *ngIf="(isCarrier || hasCarrierClients) && trip.status !== shippingRequestTripStatusEnum.Delivered">
             <div class="form-group col-lg-6">
               <label>{{ l('Driver') }}</label>
               <select

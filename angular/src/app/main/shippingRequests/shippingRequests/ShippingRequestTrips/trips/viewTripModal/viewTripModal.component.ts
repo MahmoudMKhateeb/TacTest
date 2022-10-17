@@ -89,10 +89,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this.currentTripId = id;
     //update the active trip id in TripsService
     this._TripService.updateActiveTripId(id);
-    if (this.feature.isEnabled('App.Carrier')) {
-      this.getAllTrucks(this.TruckTypeId);
-      this.getAllDrivers();
-    }
+    this.getAllTrucks(this.TruckTypeId);
+    this.getAllDrivers();
+
     this._shippingRequestTripsService
       .getShippingRequestTripForView(id)
       .pipe(
@@ -159,7 +158,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Carriers Drivers For DD
    */
   getAllDrivers() {
-    if (this.feature.isEnabled('App.Carrier')) {
+    if (this.isCarrier || this.hasCarrierClients) {
       this._trucksServiceProxy.getAllDriversForDropDown().subscribe((res) => {
         this.allDrivers = res;
       });
@@ -170,7 +169,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Carriers Trucks For DD
    */
   getAllTrucks(truckTypeId) {
-    if (this.feature.isEnabled('App.Carrier')) {
+    if (this.isCarrier || this.hasCarrierClients) {
       this._trucksServiceProxy.getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId).subscribe((res) => {
         this.allTrucks = res;
       });

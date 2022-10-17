@@ -76,7 +76,16 @@
 
           <div class="form-group">
             <label for="Actor_Address">{{ l('Address') }} <span class="required-fileds">*</span></label>
-            <input type="text" #Actor_Address="ngModel" id="Actor_Address" class="form-control" [(ngModel)]="actor.address" name="Address" required />
+            <input
+              type="text"
+              maxlength="100"
+              #Actor_Address="ngModel"
+              id="Actor_Address"
+              class="form-control"
+              [(ngModel)]="actor.address"
+              name="Address"
+              required
+            />
             <validation-messages [formCtrl]="Actor_Address"></validation-messages>
           </div>
 
