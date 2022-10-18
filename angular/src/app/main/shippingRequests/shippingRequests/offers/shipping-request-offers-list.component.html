@@ -4,6 +4,9 @@
       {{ l('Offers') }}
     </h3>
     <div class="card-toolbar" *ngIf="feature.isEnabled('App.TachyonDealer')">
+      <button class="btn btn-success" *ngIf="matchingTmsPricePkgs.id" (click)="tmsPPAcknowledge(shippingRequestId, matchingTmsPricePkgs.id)">
+        <i class="flaticon2-check-mark"></i> {{ l('PricePackageAcknowledge') }}
+      </button>
       <button class="btn btn-danger" (click)="ModelPrice.show(shippingRequestId)"><i class="flaticon2-paper-plane"></i> {{ l('SendOffer') }}</button>
     </div>
   </div>

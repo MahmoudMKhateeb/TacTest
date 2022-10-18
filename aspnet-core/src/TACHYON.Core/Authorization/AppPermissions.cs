@@ -623,5 +623,26 @@
         public const string Pages_ShippingRequestUpdates_TakeAction = "Pages.ShippingRequestUpdates.TakeAction";
 
         #endregion
+
+        #region TMS Price Packages
+
+        public const string Pages_TmsPricePackages = "Pages.TmsPricePackages";
+        public const string Pages_TmsPricePackages_Create = "Pages.TmsPricePackages.Create";
+        public const string Pages_TmsPricePackages_Update = "Pages.TmsPricePackages.Update";
+        public const string Pages_TmsPricePackages_Delete = "Pages.TmsPricePackages.Delete";
+
+        #endregion
+
+        #region Price Package Proposal
+
+        public const string Pages_PricePackageProposal = "Pages.PricePackageProposal";
+        public const string Pages_PricePackageProposal_Create = "Pages.PricePackageProposal.Create";
+        public const string Pages_PricePackageProposal_Update = "Pages.PricePackageProposal.Update";
+        public const string Pages_PricePackageProposal_Delete = "Pages.PricePackageProposal.Delete";
+        public const string Pages_PricePackageProposal_Accept = "Pages.PricePackageProposal.Accept";
+        public const string Pages_PricePackageProposal_Reject = "Pages.PricePackageProposal.Reject";
+
+        #endregion
+
     }
 }

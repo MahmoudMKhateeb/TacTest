@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TACHYON.PriceOffers;
 using TACHYON.PricePackages;
 using TACHYON.PricePackages.Dto.NormalPricePackage;
+using TACHYON.PricePackages.Dto.PricePackageProposals;
+using TACHYON.PricePackages.Dto.TmsPricePackages;
+using TACHYON.PricePackages.PricePackageProposals;
 
 namespace TACHYON.AutoMapper.PricePackages
 {
@@ -46,6 +50,25 @@ namespace TACHYON.AutoMapper.PricePackages
             CreateMap<PricePackageOffer, PricePackageOfferDto>()
                 .ReverseMap();
             CreateMap<PricePackageOfferItemDto, PricePackageOfferItem>().ReverseMap();
+            CreateMap<TmsPricePackage, TmsPricePackageListDto>()
+                .ForMember(x=> x.OriginCity,x=> x.MapFrom(i=> i.OriginCity.DisplayName))
+                .ForMember(x=> x.DestinationCity,x=> x.MapFrom(i=> i.DestinationCity.DisplayName))
+                .ForMember(x=> x.Shipper,x=> x.MapFrom(i=> i.Shipper.Name))
+                .ForMember(x=> x.TruckType,x=> x.MapFrom(i=> i.TrucksTypeFk.Key))
+                .ForMember(x=> x.TransportType,x=> x.MapFrom(i=> i.TransportTypeFk.Key));
+            
+            CreateMap<CreateOrEditTmsPricePackageDto, TmsPricePackage>().ReverseMap();
+            CreateMap<CreateOrEditProposalDto, PricePackageProposal>()
+                .ForMember(x=> x.TmsPricePackages,x=> x.Ignore())
+                .AfterMap((dto, proposal) => proposal.Status = ProposalStatus.New);
+            CreateMap<PricePackageProposal, CreateOrEditProposalDto>()
+                .ForMember(x=>x.TmsPricePackages,x=> x.MapFrom(i=> i.TmsPricePackages.Select(t=> t.Id)));
+
+            CreateMap<PricePackageProposal, ProposalListItemDto>();
+            CreateMap<TmsPricePackage, TmsPricePackageSelectItemDto>()
+                .ForMember(x=> x.OriginCity,x=> x.MapFrom(i=> i.OriginCity.DisplayName))
+                .ForMember(x=> x.DestinationCity,x=> x.MapFrom(i=> i.DestinationCity.DisplayName))
+                .ForMember(x=> x.TruckType,x=> x.MapFrom(i=> i.TrucksTypeFk.Key));
         }
     }
 }
