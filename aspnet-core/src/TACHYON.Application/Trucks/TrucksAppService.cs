@@ -616,6 +616,16 @@ namespace TACHYON.Trucks
             return ObjectMapper.Map<List<PlateTypeSelectItemDto>>(plateTypes);
         }
 
+        public async Task<long?> GetTruckByDriverId(long driverId)
+        {
+            return (await _truckRepository.GetAll().FirstOrDefaultAsync(x => x.DriverUserId == driverId))?.Id;
+        }
+
+        public async Task<long?> GetDriverByTruckId(long truckId)
+        {
+            return (await _truckRepository.GetAll().FirstOrDefaultAsync(x => x.Id == truckId))?.DriverUserId;
+        }
+
         #endregion
 
         #region Helpers

@@ -1275,5 +1275,7 @@ namespace TACHYON
         public User User { get; set; }
 
         public string CompanyName { get; set; }
+        public long AssignedTruckId { get; set; }
+        public string AssignedTruck { get; set; }
     }
 }

@@ -48,6 +48,7 @@ using TACHYON.Notifications;
 using TACHYON.Organizations.Dto;
 using TACHYON.Url;
 using static TACHYON.Authorization.Users.Nationalites;
+using TACHYON.Trucks;
 
 namespace TACHYON.Authorization.Users
 {
@@ -72,6 +73,7 @@ namespace TACHYON.Authorization.Users
         private readonly IRoleManagementConfig _roleManagementConfig;
         private readonly IRepository<User, long> _userRepository;
         private readonly IRepository<Tenant> _tenantRepository;
+        private readonly IRepository<Truck, long> _truckRepository;
         private readonly UserManager _userManager;
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
@@ -105,9 +107,9 @@ namespace TACHYON.Authorization.Users
             DocumentFilesAppService documentFilesAppService,
 
             WaslIntegrationManager waslIntegrationManager,
-            ISmsSender smsSender, 
+            ISmsSender smsSender,
             IRepository<User, long> userRepository, IRepository<Tenant> tenantRepository,
-            DocumentFilesManager documentFilesManager)
+            DocumentFilesManager documentFilesManager, IRepository<Truck, long> truckRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -137,6 +139,7 @@ namespace TACHYON.Authorization.Users
             _roleRepository = roleRepository;
 
             AppUrlService = NullAppUrlService.Instance;
+            _truckRepository = truckRepository;
         }
 
         public async Task<PagedResultDto<UserListDto>> GetUsers(GetUsersInput input)
@@ -172,7 +175,12 @@ namespace TACHYON.Authorization.Users
             var drivers = (from user in _userRepository.GetAllIncluding(x=> x.NationalityFk).AsNoTracking()
                 where user.IsDriver 
                 join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
-                select new DriverMappingEntity(){ User = user, CompanyName = tenant.companyName})
+                join truck in _truckRepository.GetAll() on user.Id equals truck.DriverUserId
+                select new DriverMappingEntity(){ 
+                    User = user,
+                    CompanyName = tenant.companyName,
+                    AssignedTruckId=truck.Id, 
+                    AssignedTruck=truck.GetDisplayName()})
                 .Where(x=> x.User != null )
                 .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
 
