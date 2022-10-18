@@ -731,6 +731,7 @@ namespace TACHYON.Authorization
 
            #region Dynamic Invoices
 
+           // please don't change `tmsFeatureDependency` value it's used in another places
            var tmsFeatureDependency = new SimpleFeatureDependency(AppFeatures.TachyonDealer);
            
             // this permission for host and tachyon dealer only ...
@@ -760,6 +761,54 @@ namespace TACHYON.Authorization
            // For Host/TMS
            pages.CreateChildPermission(AppPermissions.Pages_Invoices_ConfirmInvoice, L("ConfirmInvoicePermission"),
                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer));
+           
+           #region TMS Price Packages
+
+           var tmsPricePackagePermission = pages.CreateChildPermission(AppPermissions.Pages_TmsPricePackages,
+               L("TmsPricePackagesPermission"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Shipper));
+           
+           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Create,
+               L("CreateTmsPricePackage"),
+               featureDependency: tmsFeatureDependency,multiTenancySides: MultiTenancySides.Tenant);
+           
+           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Update,
+               L("UpdateTmsPricePackage"),
+               featureDependency: tmsFeatureDependency,multiTenancySides: MultiTenancySides.Tenant);
+           
+           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Delete,
+               L("DeleteTmsPricePackage"),
+               featureDependency: tmsFeatureDependency,multiTenancySides: MultiTenancySides.Tenant);
+
+           #endregion
+
+           #region Price Package Proposal
+
+           var proposalPermission = pages.CreateChildPermission(AppPermissions.Pages_PricePackageProposal,
+               L("PricePackageProposal"),
+               featureDependency: tmsFeatureDependency);
+
+           proposalPermission.CreateChildPermission(AppPermissions.Pages_PricePackageProposal_Create,
+               L("CreatePricePackageProposal"),
+               featureDependency: tmsFeatureDependency);
+           
+           proposalPermission.CreateChildPermission(AppPermissions.Pages_PricePackageProposal_Update,
+               L("UpdatePricePackageProposal"),
+               featureDependency: tmsFeatureDependency);
+           
+           proposalPermission.CreateChildPermission(AppPermissions.Pages_PricePackageProposal_Delete,
+               L("DeletePricePackageProposal"),
+               featureDependency: tmsFeatureDependency);       
+           
+           proposalPermission.CreateChildPermission(AppPermissions.Pages_PricePackageProposal_Accept,
+               L("AcceptPricePackageProposal"),
+               featureDependency: tmsFeatureDependency);
+           
+           proposalPermission.CreateChildPermission(AppPermissions.Pages_PricePackageProposal_Reject,
+               L("RejectPricePackageProposal"),
+               featureDependency: tmsFeatureDependency);
+
+           #endregion
         }
 
         private static ILocalizableString L(string name)

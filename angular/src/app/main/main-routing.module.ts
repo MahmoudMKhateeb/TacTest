@@ -332,9 +332,8 @@ import { ActorsSubmittedDocumentsComponent } from '@app/main/documentFiles/docum
             data: { preload: true },
           },
           {
-            path: 'pricePackages/normalPricePackages',
-            loadChildren: () =>
-              import('app/main/pricePackages/price-package-module/price-package-module.module').then((m) => m.PricePackageModuleModule), //Lazy load main module
+            path: 'pricePackages',
+            loadChildren: () => import('@app/main/pricePackages/price-package.module').then((m) => m.PricePackageModule), //Lazy load main module
             data: { preload: true },
           },
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },

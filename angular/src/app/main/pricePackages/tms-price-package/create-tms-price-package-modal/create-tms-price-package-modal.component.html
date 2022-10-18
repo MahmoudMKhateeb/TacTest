@@ -1,0 +1,243 @@
+<div #Modal="bs-modal" bsModal role="dialog" class="modal fade">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form *ngIf="isFormActive" (ngSubmit)="createOrEdit()" [busyIf]="isFormLoading">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="tmsPricePackage.id">{{ l('EditTmsPricePackage') }}</span>
+            <span *ngIf="!tmsPricePackage.id">{{ l('CreateTmsPricePackage') }}</span>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <form class="row" #tmsPPForm="ngForm" novalidate autocomplete="off">
+            <div class="form-group col-md-6">
+              <label>{{ l('DisplayName') }} <span class="text-danger">*</span></label>
+              <input [(ngModel)]="tmsPricePackage.displayName" required type="text" class="form-control" name="tmsPP_DisplayName" />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('Shipper') }} <span class="text-danger">*</span></label>
+              <select [(ngModel)]="tmsPricePackage.shipperId" required class="form-control" name="tmsPP_Shipper">
+                <option selected disabled [value]="undefined">{{ 'SelectShipper' | localize }}</option>
+                <option *ngFor="let item of shippers" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+          </form>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label>{{ l('TransportType') }} <span class="text-danger">*</span></label>
+              <select
+                [(ngModel)]="tmsPricePackage.transportTypeId"
+                (change)="loadAllTruckTypeByTransportType(tmsPricePackage.transportTypeId)"
+                required
+                class="form-control"
+                name="tmsPP_TransportType"
+              >
+                <option selected disabled [value]="undefined">{{ 'SelectaTransportType' | localize }}</option>
+                <option *ngFor="let item of transportTypes" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('TruckType') }} <span class="text-danger">*</span></label>
+              <select
+                [(ngModel)]="tmsPricePackage.trucksTypeId"
+                required
+                class="form-control"
+                name="tmsPP_TruckType"
+                [disabled]="!tmsPricePackage.transportTypeId || !truckTypes"
+              >
+                <option selected disabled [value]="undefined">{{ 'SelectaTruckType' | localize }}</option>
+                <option *ngFor="let item of truckTypes" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label>{{ l('OriginCity') }} <span class="text-danger">*</span></label>
+              <select [(ngModel)]="tmsPricePackage.originCityId" required class="form-control" name="tmsPP_OriginCity">
+                <option selected disabled [value]="undefined">{{ 'SelectanOriginCity' | localize }}</option>
+                <option *ngFor="let item of cities" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('DestinationCity') }} <span class="text-danger">*</span></label>
+              <select [(ngModel)]="tmsPricePackage.destinationCityId" required class="form-control" name="tmsPP_DestinationCity">
+                <option selected disabled [value]="undefined">{{ 'SelectaDestination' | localize }}</option>
+                <option *ngFor="let item of cities" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label>{{ l('RouteType') }} <span class="text-danger">*</span></label>
+              <select [(ngModel)]="tmsPricePackage.routeType" required class="form-control" name="tmsPP_RouteType">
+                <option selected disabled [value]="undefined">{{ 'SelectRouteType' | localize }}</option>
+                <option *ngFor="let item of routeTypes" [value]="item.key">{{ item.value }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('PricePackageType') }} <span class="text-danger">*</span></label>
+              <select [(ngModel)]="tmsPricePackage.type" required class="form-control" name="tmsPP_PricePackageType">
+                <option selected disabled [value]="undefined">{{ 'SelectPricePackageType' | localize }}</option>
+                <option *ngFor="let item of pricePackageTypes" [disabled]="item.key != pricePackageType.PerTrip" [value]="item.key">
+                  {{ item.value }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label>{{ l('DirectRequestPrice') }} <span class="text-danger">*</span></label>
+              <input
+                [(ngModel)]="tmsPricePackage.directRequestPrice"
+                min="0"
+                (keypress)="numberOnly($event)"
+                required
+                name="tmsPP_DirectRequestPrice"
+                type="number"
+                class="form-control"
+                (change)="calculateDrFinalPrice()"
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('TMSPrice') }} <span class="text-danger">*</span></label>
+              <input
+                [(ngModel)]="tmsPricePackage.tachyonManagePrice"
+                min="0"
+                (keypress)="numberOnly($event)"
+                required
+                name="tmsPP_TMSPrice"
+                type="number"
+                class="form-control"
+                (change)="calculateTmsFinalPrice()"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label>{{ l('DirectRequestCommission') }} <span class="text-danger">*</span></label>
+              <input
+                [(ngModel)]="tmsPricePackage.directRequestCommission"
+                min="0"
+                (keypress)="numberOnly($event)"
+                required
+                name="tmsPP_DirectRequestCommission"
+                type="number"
+                class="form-control"
+                (change)="calculateDrFinalPrice()"
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('TMSCommission') }} <span class="text-danger">*</span></label>
+              <input
+                [(ngModel)]="tmsPricePackage.tachyonManageCommission"
+                min="0"
+                (keypress)="numberOnly($event)"
+                required
+                name="tmsPP_TMSCommission"
+                type="number"
+                class="form-control"
+                (change)="calculateTmsFinalPrice()"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label>{{ l('DirectRequestFinalPrice') }} </label>
+              <input
+                [(ngModel)]="tmsPricePackage.directRequestTotalPrice"
+                min="0"
+                (keypress)="numberOnly($event)"
+                name="tmsPP_DirectRequestFinalPrice"
+                type="number"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('TMSFinalPrice') }} </label>
+              <input
+                [(ngModel)]="tmsPricePackage.tachyonManageTotalPrice"
+                min="0"
+                (keypress)="numberOnly($event)"
+                name="tmsPP_FinalPrice"
+                type="number"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <!-- devExtream Table  -->
+          <div class="row">
+            <dx-data-grid
+              id="gridContainer2"
+              [dataSource]="pricePackagesInfo"
+              keyExpr="directRequestMaxPrice"
+              [columns]="[
+                'truckTypeName',
+                'tmsAveragePrice',
+                'tmsMaxPrice',
+                'tmsMaxPriceOwner',
+                'tmsMinPrice',
+                'tmsMinPriceOwner',
+                'directRequestAveragePrice',
+                'directRequestMaxPriceOwner',
+                'directRequestMinPrice',
+                'directRequestMinPriceOwner'
+              ]"
+              [showBorders]="false"
+            >
+            </dx-data-grid>
+          </div>
+          <div [class]="'row'">
+            <div class="card card-custom gutter-b">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <dx-data-grid
+                    #grid
+                    id="dataGrid"
+                    [dataSource]="dataSource"
+                    [remoteOperations]="{ groupPaging: false, sorting: true, filtering: true }"
+                    [showColumnLines]="true"
+                    [showRowLines]="false"
+                    [showBorders]="false"
+                    [rowAlternationEnabled]="true"
+                    keyExpr="id"
+                    [wordWrapEnabled]="true"
+                  >
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
+                    <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+                    <dxo-filter-builder-popup></dxo-filter-builder-popup>
+                    <dxo-scrolling mode="virtual"></dxo-scrolling>
+                    <!--                    <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>-->
+                    <!--                    <dxo-grouping #expand [autoExpandAll]="true"></dxo-grouping>-->
+                    <!--                    <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>-->
+                    <dxi-column dataField="displayName" caption="{{ l('PricePackageName') }}"> </dxi-column>
+                    <dxi-column dataField="tenantName" caption="{{ l('Carrier') }} "></dxi-column>
+                    <dxi-column dataField="truckType" caption="{{ l('TruckType') }}" [groupIndex]="0"> </dxi-column>
+
+                    <dxi-column dataField="directRequestPrice" caption="{{ l('DirectRequestPrice') }}"> </dxi-column>
+                    <dxi-column dataField="tachyonMSRequestPrice" caption="{{ l('TachyonMSRequestPrice') }}"> </dxi-column>
+                    <dxi-column dataField="isMultiDrop" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"> </dxi-column>
+                    <dxi-column dataField="origin" caption="{{ l('Origin') }}"> </dxi-column>
+                    <dxi-column dataField="destination" caption="{{ l('Destination') }}"> </dxi-column>
+
+                    <div *dxTemplate="let options of 'cellTemplate_RoutType'">
+                      <span *ngIf="options.data.isMultiDrop" class="badge badge-success badge-inline">{{ 'MultipleDrops' | localize }}</span>
+                      <span *ngIf="!options.data.isMultiDrop" class="badge badge-danger badge-inline">{{ 'SingleDrop' | localize }}</span>
+                    </div>
+                  </dx-data-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- end::DevExtream Table -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="close()">{{ 'Close' | localize }}</button>
+          <button type="submit" [buttonBusy]="isFormSaving" [disabled]="tmsPPForm.invalid" class="btn btn-primary">{{ 'Save' | localize }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
