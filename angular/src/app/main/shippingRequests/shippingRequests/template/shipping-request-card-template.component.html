@@ -106,12 +106,6 @@
                   <b *ngIf="item.notesCount > 0" class="infoHighLight blue stautsTruck">
                     {{ item.notesCount }} &nbsp; <span> {{ item.notesCount == 1 ? l('note') : l('notes') }} </span>
                   </b>
-                  <b *ngIf="item.carrierActor" class="infoHighLight green stautsTruck">
-                    {{ item.carrierActor }}
-                  </b>
-                  <b *ngIf="item.shipperActor" class="infoHighLight green stautsTruck">
-                    {{ item.shipperActor }}
-                  </b>
                 </div>
               </div>
               <div class="serialNumber">
@@ -251,6 +245,8 @@
                   >{{ item.price | number }} {{ l('SAR') }}</a
                 >
                 <a *ngIf="Channel == 10" href="javascript:void(0)" class="infoHighLight red">{{ item.price | number }} {{ l('SAR') }}</a>
+                <b *ngIf="item.carrierActor" class="infoHighLight blue stautsTruck"> {{ l('carrierActor') }}: {{ item.carrierActor }} </b>
+                <b *ngIf="item.shipperActor" class="infoHighLight blue stautsTruck"> {{ l('shipperActor') }}: {{ item.shipperActor }} </b>
               </div>
 
               <div class="actions">
