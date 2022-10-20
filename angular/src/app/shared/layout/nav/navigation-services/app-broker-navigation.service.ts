@@ -99,17 +99,8 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
         [
           new AppMenuItem('PenaltiesList', 'Pages.Invoices', '', '/app/main/penalties/view'),
           new AppMenuItem('InvoicesNoteList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
-          new AppMenuItem(
-            'SubmitInvoice',
-            'Pages.Invoices',
-
-            '',
-            '/app/main/invoices/submitinvoice',
-            undefined,
-            undefined,
-            undefined,
-            undefined
-          ),
+          new AppMenuItem('SubmitInvoice', 'Pages.Invoices', '', '/app/main/invoices/submitinvoice', undefined, undefined, undefined, undefined),
+          new AppMenuItem('InvoicesList', 'Pages.Invoices', '', '/app/main/invoices/view', undefined, undefined, undefined, undefined),
           new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', '', '/app/main/invoices/transaction'),
           new AppMenuItem(
             'ActorInvoicesList',
