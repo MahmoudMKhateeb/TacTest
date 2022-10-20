@@ -3092,6 +3092,10 @@
 		<text name="ActorCarrierInvoicesList">client carrier invoices list</text>
 		<text name="ActorInvoicesList">client invoices list</text>
 		<text name="DownloadBayanDropWaybill">Download Bayan waybill</text>
+		<text name="BulkDeliveryTripFailedMsg">Bulk Delivery Trip/s process is failed &#xA; see details: {0} </text>
+		<text name="NotSupportedCellFormat">Not supported cell type founded on row {0} at cell {1}</text>
+		<text name="NotValidDateFormatMsg">Not supported date format founded on row {0} at cell {1}</text>
+		<text name="NotValidWaybillNumber">Not valid waybill number at row {0}</text>
 
 	</texts>
 </localizationDictionary>

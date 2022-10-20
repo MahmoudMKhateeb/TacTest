@@ -1662,6 +1662,16 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyUserWhenBulkDeliverySucceeded,
                 notificationData, userIds: new[] {user});
         }
+        
+        public async Task NotifyUserWhenBulkDeliveryFailed(UserIdentifier user, string errorMsg)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(L("BulkDeliveryTripFailedMsg",CultureInfo.CurrentUICulture,errorMsg)
+                    ,TACHYONConsts.LocalizationSourceName));
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyUserWhenBulkDeliveryFailed,
+                notificationData, userIds: new[] {user});
+        }
 
         #endregion
         
