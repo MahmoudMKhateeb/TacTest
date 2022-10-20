@@ -4,6 +4,7 @@ namespace TACHYON.Integration.BayanIntegration.V3.Modules
 {
     public class Waybill
     {
+        public string waybillId { get; set; }
         public Sender sender { get; set; }
         public Recipient recipient { get; set; }
         public ReceivingLocation receivingLocation { get; set; }
