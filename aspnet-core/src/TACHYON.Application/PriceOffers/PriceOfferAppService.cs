@@ -182,52 +182,7 @@ namespace TACHYON.PriceOffers
 
             return searchList;
         }
-
-        // todo (this action for test only ) remove it after development
-        public async Task<CreateOrEditPriceOfferInput> GetAsInput(long id, long? offerId)
-        {
-
-            DisableTenancyFilters();
-            var shippingRequest = await _shippingRequestsRepository.GetAll()
-                .Include(x => x.ShippingRequestVases)
-                .ThenInclude(v => v.VasFk)
-                .SingleAsync(x => x.Id == id);
-
-            var offer = await _priceOfferRepository
-                .GetAll()
-                .Include(i => i.PriceOfferDetails)
-                .Where(x => x.ShippingRequestId == shippingRequest.Id)
-                .Where(x => x.Id == offerId).FirstOrDefaultAsync();
-            CreateOrEditPriceOfferInput priceOfferDto = new CreateOrEditPriceOfferInput();
-            if (offer != null)
-            {
-                priceOfferDto = ObjectMapper.Map<CreateOrEditPriceOfferInput>(offer);
-                priceOfferDto.ItemDetails = new List<PriceOfferDetailDto>();
-
-                if (shippingRequest.ShippingRequestVases == null || shippingRequest.ShippingRequestVases.Count <= 0)
-                    return priceOfferDto;
-
-
-                foreach (var vas in shippingRequest.ShippingRequestVases)
-                {
-                    var item = new PriceOfferDetailDto()
-                    {
-                        CommissionType = PriceOfferCommissionType.CommissionValue,
-                        Price = 0,
-                        PriceType = PriceOfferType.Vas,
-                        CommissionPercentageOrAddValue = 0,
-                        ItemId = vas.Id
-                    };
-
-                    priceOfferDto.ItemDetails.Add(item);
-                }
-
-
-            }
-
-            return priceOfferDto;
-
-        }
+        
 
         /// <summary>
         /// Get the price offer when the user need to create offer or edit
