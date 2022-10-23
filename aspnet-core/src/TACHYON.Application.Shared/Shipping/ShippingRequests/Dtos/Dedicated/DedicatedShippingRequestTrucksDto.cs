@@ -14,6 +14,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos.Dedicated
         public string ShippingRequestReference { get; set; }
         public string CarrierName { get; set; }
         public string Duration { get; set; }
+        public double? KPI { get; set; }
 
     }
 }
