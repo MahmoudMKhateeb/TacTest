@@ -212,5 +212,11 @@
         {
             public const string TenantRatingMinNumber = "App.Rating.TenantRatingMinNumber";
         }
+
+        public static class KPI
+        {
+            public const string RequestKPI = "App.KPI.DedicatedShippingRequestKPI";
+            public const string TruckKPI = "App.KPI.TruckKPI";
+        }
     }
 }

@@ -188,6 +188,11 @@ namespace TACHYON.Configuration
 
                 new SettingDefinition(AppSettings.Rating.TenantRatingMinNumber,
                     GetFromAppSettings(AppSettings.Rating.TenantRatingMinNumber, "10")),
+
+                new SettingDefinition(AppSettings.KPI.RequestKPI,
+                    GetFromAppSettings(AppSettings.KPI.RequestKPI, "0")),
+                new SettingDefinition(AppSettings.KPI.TruckKPI,
+                    GetFromAppSettings(AppSettings.KPI.TruckKPI, "0")),
             };
         }
 
