@@ -64,10 +64,10 @@ namespace TACHYON.PriceOffers.Dto
 
         public List<ShippingRequestDestinationCitiesDto> destinationCities { get; set; }
 
-        public int? ShipperActorId { get; set; }
+        public string ShipperActor { get; set; }
 
 
-        public int? CarrierActorId { get; set; }
+        public string CarrierActor { get; set; }
 
 
 

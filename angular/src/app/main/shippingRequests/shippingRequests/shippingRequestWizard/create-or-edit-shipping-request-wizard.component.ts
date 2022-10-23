@@ -970,4 +970,15 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
     if (this.step1Dto.shippingTypeId != 1) this.step2Dto.shippingRequestDestinationCities = [];
   }
+
+  removeCarrierInputFromForm1() {
+    if (!this.step1Dto.isInternalBrokerRequest) {
+      this.step1Form.get('ActorCarrier').clearValidators();
+      this.step1Form.get('ActorCarrier').updateValueAndValidity();
+      this.step1Dto.carrierActorId = null;
+    } else {
+      this.step1Form.get('ActorCarrier').setValidators([Validators.required]);
+      this.step1Form.get('ActorCarrier').updateValueAndValidity();
+    }
+  }
 }

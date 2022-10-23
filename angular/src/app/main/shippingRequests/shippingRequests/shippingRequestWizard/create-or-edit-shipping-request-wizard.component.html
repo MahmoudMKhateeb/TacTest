@@ -105,7 +105,12 @@
                         <div class="col-3">
                           <span class="switch switch-icon">
                             <label>
-                              <input type="checkbox" [(ngModel)]="step1Dto.isInternalBrokerRequest" formControlName="IsInternalBrokerRequest" />
+                              <input
+                                (change)="removeCarrierInputFromForm1()"
+                                type="checkbox"
+                                [(ngModel)]="step1Dto.isInternalBrokerRequest"
+                                formControlName="IsInternalBrokerRequest"
+                              />
                               <span></span>
                             </label>
                           </span>
@@ -131,7 +136,7 @@
                           <option *ngFor="let item of AllActorsShippers" value="{{ item.id }}">{{ item.displayName }}</option>
                         </select>
                       </div>
-                      <span class="form-text text-muted">{{ l('SelectShipperActor') }} {{ step1Dto.shipperActorId }}</span>
+                      <span class="form-text text-muted">{{ l('SelectShipperActor') }}</span>
                     </div>
 
                     <div *ngIf="this.feature.isEnabled('App.CarrierClients') && step1Dto.isInternalBrokerRequest" class="form-group">
@@ -146,13 +151,13 @@
                           name="ActorCarrier"
                           formControlName="ActorCarrier"
                           [(ngModel)]="step1Dto.carrierActorId"
-                          required
+                          [required]="step1Dto.isInternalBrokerRequest"
                         >
                           <option [value]="undefined">{{ l('Select') }}</option>
                           <option *ngFor="let item of AllActorsCarriers" value="{{ item.id }}">{{ item.displayName }}</option>
                         </select>
                       </div>
-                      <span class="form-text text-muted">{{ l('SelectCarrierActor') }} {{ step1Dto.carrierActorId }}</span>
+                      <span class="form-text text-muted">{{ l('SelectCarrierActor') }}</span>
                     </div>
 
                     <div class="separator separator-dashed my-5"></div>

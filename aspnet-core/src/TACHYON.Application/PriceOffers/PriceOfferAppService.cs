@@ -839,6 +839,8 @@ namespace TACHYON.PriceOffers
                 .Include(c => c.GoodCategoryFk)
                  .ThenInclude(x => x.Translations)
                 .Include(t => t.TrucksTypeFk)
+                .Include(t => t.ShipperActorFk)
+                .Include(t => t.CarrierActorFk)
             //.ThenInclude(x => x.Translations)
             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
