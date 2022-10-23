@@ -265,6 +265,10 @@ export abstract class AppComponentBase {
     return this.feature.isEnabled('App.CarrierAsASaas');
   }
 
+  get hasCarrierClients(): boolean {
+    return this.feature.isEnabled('App.CarrierClients');
+  }
+
   IfOther(items: any, id: any) {
     // id return string or number
     if (id != undefined) return items?.filter((x) => x.id == id && x.isOther).length > 0;
