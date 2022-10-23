@@ -18,5 +18,6 @@ namespace TACHYON.Shipping.Dedicated
         [ForeignKey("TruckId")]
         public Truck Truck { get; set; }
         public WorkingStatus Status { get; set; }
+        public double? KPI { get; set; }
     }
 }
