@@ -330,12 +330,7 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   }
 
   clearOnSelect() {
-    this.dataSourceForEdit.destinationCityId = null;
-    this.dataSourceForEdit.workDate = null;
-    this.dataSourceForEdit.containerNumber = null;
-    this.dataSourceForEdit.quantity = null;
-    this.dataSourceForEdit.originCityId = null;
-    this.dataSourceForEdit.truckId = null;
+    this.clearWaybillRelatedFields();
     this.fillDynamicInvoicItem(Number(this.dataSourceForEdit.waybillNumber), this.dataSourceForEdit);
   }
 
@@ -382,5 +377,14 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
 
   isFormInvalid(Form: NgForm): boolean {
     return Form.invalid || !this.root.items || this.root.items.length === 0 || isNotNullOrUndefined(this.dataSourceForEdit);
+  }
+
+  clearWaybillRelatedFields() {
+    this.dataSourceForEdit.destinationCityId = null;
+    this.dataSourceForEdit.workDate = null;
+    this.dataSourceForEdit.containerNumber = null;
+    this.dataSourceForEdit.quantity = null;
+    this.dataSourceForEdit.originCityId = null;
+    this.dataSourceForEdit.truckId = null;
   }
 }
