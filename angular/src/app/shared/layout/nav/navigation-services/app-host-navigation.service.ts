@@ -76,6 +76,17 @@ export class AppHostNavigationService extends AppBaseNavigationService {
               !isNotNullOrUndefined(this._appSessionService.tenantId)
           ),
           new AppMenuItem(
+            'DynamicInvoice',
+            'Pages.DynamicInvoices',
+            '',
+            '/app/main/invoices/dynamic',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => !this._appSessionService.tenantId
+          ),
+          new AppMenuItem(
             'SubmitInvoiceForHost',
             //TODO make it Pages.Administration.invoices
             '',

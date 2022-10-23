@@ -54,6 +54,17 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
               !isNotNullOrUndefined(this._appSessionService.tenantId)
           ),
           new AppMenuItem(
+            'DynamicInvoice',
+            'Pages.DynamicInvoices',
+            '',
+            '/app/main/invoices/dynamic',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.TachyonDealer') || !isNotNullOrUndefined(this._appSessionService.tenantId)
+          ),
+          new AppMenuItem(
             'SubmitInvoiceForHost',
             //TODO make it Pages.Administration.invoices
             '',
