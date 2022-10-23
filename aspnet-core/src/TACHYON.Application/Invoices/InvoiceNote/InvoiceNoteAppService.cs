@@ -265,7 +265,7 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             var invoices =  await _invoiceReposity.GetAll()
                .Where(m => m.TenantId == id)
-               .Select(x => new InvoiceRefreanceNumberDto { Id = x.Id, RefreanceNumber = x.InvoiceNumber})
+               .Select(x => new InvoiceRefreanceNumberDto { Id = x.Id, RefreanceNumber = x.InvoiceNumber.Value})
                .AsNoTracking().ToListAsync();
             
             return invoices.ToList();
