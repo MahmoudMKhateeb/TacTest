@@ -228,6 +228,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
         public virtual DbSet<DedicatedShippingRequestDriver> DedicatedShippingRequestDrivers { get; set; }
         public virtual DbSet<DedicatedShippingRequestTruck> DedicatedShippingRequestTrucks { get; set; }
+        public virtual DbSet<DedicatedShippingRequestTruckAttendance> DedicatedShippingRequestTruckAttendances { get; set; }
         public virtual DbSet<ShippingRequestDestinationCity> ShippingRequestDestinationCities { get; set; }
         public DbSet<ShippingRequestDirectRequest> ShippingRequestDirectRequests { get; set; }
 
