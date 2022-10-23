@@ -162,7 +162,8 @@ namespace TACHYON.Shipping.Trips.Importing
             try
             {
                 return _routePointRepository.FirstOrDefault(x => x.BulkUploadReference == pointReference &&
-                x.ShippingRequestTripFk.BulkUploadRef==tripReference).Id;
+                x.ShippingRequestTripFk.BulkUploadRef==tripReference &&
+                x.ShippingRequestTripFk.ShippingRequestId == ShippingRequestId).Id;
             }
             catch
             {
