@@ -31,6 +31,7 @@ namespace TACHYON.Shipping.Trips
             _excelDataReader = excelDataReader;
             _workFlowProvider = workFlowProvider;
             _appNotifier = appNotifier;
+            LocalizationSourceName = TACHYONConsts.LocalizationSourceName;
         }
 
         [UnitOfWork]
