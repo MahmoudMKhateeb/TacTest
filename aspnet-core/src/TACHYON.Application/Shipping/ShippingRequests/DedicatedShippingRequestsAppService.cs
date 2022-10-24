@@ -232,13 +232,6 @@ namespace TACHYON.Shipping.ShippingRequests
 
         #endregion
 
-        #region Performance
-        public async Task GetRequestProjectPerformance(long ShippingRequestId)
-        {
-            var request = await _shippingRequestRepository.GetAsync(ShippingRequestId);
-        }
-        #region 
-
         #region Helper
         private async Task<long> CreateStep1(CreateOrEditDedicatedStep1Dto input)
         {
