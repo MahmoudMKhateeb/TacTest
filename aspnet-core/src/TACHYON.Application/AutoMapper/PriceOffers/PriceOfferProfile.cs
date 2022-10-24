@@ -58,7 +58,7 @@ namespace TACHYON.AutoMapper.PriceOffers
                  .ForMember(dst => dst.ShippingRequestFlagTitle,
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
                 .ForMember(dst => dst.RentalDurationUnitTitle,
-                    opt => opt.MapFrom(src =>GetDurationUnit(src.RentalDurationUnit.Value)));
+                    opt =>  opt.MapFrom( src => src.RentalDurationUnit!=null ? GetDurationUnit(src.RentalDurationUnit.Value) :""));
         }
 
         private string GetRemainingDays(DateTime? BidEndDate, ShippingRequestBidStatus Status)

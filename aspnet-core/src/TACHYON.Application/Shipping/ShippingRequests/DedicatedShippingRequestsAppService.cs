@@ -49,11 +49,13 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
         #region Wizard
-        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         public async Task<LoadResult> GetAllDedicatedTrucks(GetAllDedicatedTrucksInput input)
         {
             DisableTenancyFilters();
             var query = _dedicatedShippingRequestTruckRepository.GetAll()
+                .WhereIf(await IsTachyonDealer(),x=> true)
+                .WhereIf(await IsCarrier() , x => x.ShippingRequest.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(await IsShipper(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
                 .WhereIf(input.ShippingRequestId != null, x => x.ShippingRequestId == input.ShippingRequestId)
                 .ProjectTo<DedicatedShippingRequestTrucksDto>(AutoMapperConfigurationProvider)
                 .AsNoTracking();
@@ -62,12 +64,12 @@ namespace TACHYON.Shipping.ShippingRequests
             
         }
 
-        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         public async Task<LoadResult> GetAllDedicatedDrivers(GetAllDedicatedDriversInput input)
         {
             DisableTenancyFilters();
             var query = _dedicatedShippingRequestDriverRepository.GetAll()
                 .WhereIf(await IsShipper(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
+                .WhereIf(await IsCarrier(), x => x.ShippingRequest.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(await IsTachyonDealer(), x => true)
                 .WhereIf(input.ShippingRequestId != null, x => x.ShippingRequestId == input.ShippingRequestId)
                 .ProjectTo<DedicatedShippingRequestDriversDto>(AutoMapperConfigurationProvider)

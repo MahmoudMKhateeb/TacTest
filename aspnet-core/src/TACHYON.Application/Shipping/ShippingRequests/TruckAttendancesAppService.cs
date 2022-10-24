@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -32,7 +33,11 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<LoadResult> GetAll(long dedicatedTruckId, string filter)
         {
+            DisableTenancyFilters();
             var query = _truckAttendanceRepository.GetAll()
+                .WhereIf(await IsTachyonDealer(), x => true)
+                .WhereIf(await IsCarrier(), x => x.DedicatedShippingRequestTruck.ShippingRequest.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(await IsShipper(), x => x.DedicatedShippingRequestTruck.ShippingRequest.TenantId == AbpSession.TenantId)
                 .Where(x => x.DedicatedShippingRequestTruckId == dedicatedTruckId)
                 .ProjectTo<TruckAttendanceDto>(AutoMapperConfigurationProvider)
                 .AsNoTracking();
