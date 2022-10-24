@@ -20,6 +20,7 @@ import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shi
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/tripsForViewShippingRequest.component';
 import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
+import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-shipping-request-attendance-sheet-modal.component';
 
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
@@ -32,6 +33,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   @ViewChild('loadEntityTemplateModal', { static: false }) loadEntityTemplateModal: LoadEntityTemplateModalComponent;
   @ViewChild('assignTrucksAndDriversModal', { static: false }) assignTrucksAndDriversModal: AssignTrucksAndDriversModalComponent;
   @ViewChild('tripsForViewShippingRequest', { static: true }) tripsForViewShippingRequest: TripsForViewShippingRequestComponent;
+  @ViewChild('attendanceModal', { static: true }) attendanceModal: DedicatedShippingRequestAttendanceSheetModalComponent;
   shippingRequestforView: GetShippingRequestForViewOutput;
 
   PriceOfferChannelEnum = PriceOfferChannel;
@@ -51,6 +53,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   lng: Number = 46.675761;
   directRequestId!: number;
   activeShippingRequestId!: number;
+  selectedShippingRequest: GetShippingRequestForPriceOfferListDto;
 
   constructor(
     injector: Injector,
@@ -305,5 +308,13 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   assignTrucksAndDrivers(item: GetShippingRequestForPriceOfferListDto) {
     console.log('item', item);
     this.assignTrucksAndDriversModal.show(item);
+  }
+
+  openAttendanceModal(shippingRequest: GetShippingRequestForPriceOfferListDto) {
+    this.selectedShippingRequest = shippingRequest;
+    this.attendanceModal.show(null, shippingRequest.id, {
+      rentalStartDate: shippingRequest?.rentalStartDate,
+      rentalEndDate: shippingRequest?.rentalEndDate,
+    });
   }
 }

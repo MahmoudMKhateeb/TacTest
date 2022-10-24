@@ -1,6 +1,11 @@
 import { Component, ViewChild, Injector, OnInit, Output, EventEmitter, OnDestroy, Input } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { TruckAttendancesServiceProxy, CreateOrEditTruckAttendanceDto, AttendaceStatus } from '@shared/service-proxies/service-proxies';
+import {
+  TruckAttendancesServiceProxy,
+  CreateOrEditTruckAttendanceDto,
+  AttendaceStatus,
+  DedicatedShippingRequestsServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { DxSchedulerComponent } from '@node_modules/devextreme-angular';
@@ -38,13 +43,18 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
   isCustomPopupVisible = false;
   currentDate: Date = new Date();
   allAttendaceStatus: any[] = [];
-  // attendanceDateFrom: Date;
-  // attendanceDateTo: Date;
   selectedTruckId: number;
   filteredTrucks: DedicatedTruckModel[] = [];
   attendanceSchedularResources: AttendanceSchedularResources[] = [];
+  dataSourceForTrucks: any = {};
+  shippingRequestId: number;
 
-  constructor(injector: Injector, private _truckAttendancesService: TruckAttendancesServiceProxy, private enumToArray: EnumToArrayPipe) {
+  constructor(
+    injector: Injector,
+    private _truckAttendancesService: TruckAttendancesServiceProxy,
+    private enumToArray: EnumToArrayPipe,
+    private dedicatedShippingRequestsService: DedicatedShippingRequestsServiceProxy
+  ) {
     super(injector);
     this.updateAppointment = this.updateAppointment.bind(this);
     this.onHiding = this.onHiding.bind(this);
@@ -64,17 +74,36 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
     });
   }
 
-  show(truckId?: number): void {
+  show(truckId?: number, shippingRequestId?: number, rentalRange?: { rentalStartDate: moment.Moment; rentalEndDate: moment.Moment }): void {
     // this.request = request;
     // this.rejectInput.id = request.id;
-    this.getAllAttendance(truckId);
-    this.selectedTruckId = truckId;
-    this.filteredTrucks = this.trucks;
+    if (isNotNullOrUndefined(shippingRequestId)) {
+      this.shippingRequestId = shippingRequestId;
+    }
+    if (isNotNullOrUndefined(rentalRange)) {
+      this.rentalRange = rentalRange;
+    }
+    console.log('shippingRequestId', this.shippingRequestId);
+    console.log('rentalRange', this.rentalRange);
+    if (isNotNullOrUndefined(truckId)) {
+      this.getAllAttendance(truckId);
+      this.selectedTruckId = truckId;
+      this.filteredTrucks = this.trucks;
+    } else {
+      this.filteredTrucks = [];
+      this.trucks = [];
+      this.getTrucks();
+    }
     this.modal.show();
   }
 
   close(): void {
-    // this.rejectInput = new CancelShippingRequestInput();
+    this.dataSourceForTrucks = {};
+    this.rentalRange = { rentalStartDate: null, rentalEndDate: null };
+    this.dataSource = [];
+    this.trucks = [];
+    this.filteredTrucks = [];
+    this.shippingRequestId = null;
     this.modal.hide();
   }
 
@@ -141,6 +170,10 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
   }
 
   onAppointmentFormOpening(e: any): void {
+    if (this.isCarrier) {
+      e.cancel = true;
+      return;
+    }
     const isValidAppointment = this.isValidAppointment(e.component, e.appointmentData);
     e.cancel = true;
     if (!isValidAppointment) {
@@ -248,5 +281,35 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
         this.loading = false;
       }
     );
+  }
+
+  getTrucks() {
+    let self = this;
+    this.dataSourceForTrucks = {};
+    this.dataSourceForTrucks.store = new CustomStore({
+      load(loadOptions: LoadOptions) {
+        return self.dedicatedShippingRequestsService
+          .getAllDedicatedTrucks(JSON.stringify(loadOptions), self.shippingRequestId)
+          .toPromise()
+          .then((response) => {
+            self.trucks = response.data;
+            self.filteredTrucks = self.trucks;
+            if (response.data.length > 0) {
+              self.selectedTruckId = self.trucks[0].id;
+              self.getAllAttendance(self.selectedTruckId);
+            }
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
+            };
+          })
+          .catch((error) => {
+            throw new Error('Data Loading Error');
+          });
+      },
+    });
+    this.dataSourceForTrucks.store.load();
   }
 }

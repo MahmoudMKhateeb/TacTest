@@ -14,6 +14,9 @@
           <p class="modal-title">
             <span>{{ l('truckAttendanceModal') }}</span>
           </p>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -71,7 +74,14 @@
                 (onAppointmentFormOpening)="onAppointmentFormOpening($event)"
                 (onAppointmentDeleting)="onAppointmentDeleting($event)"
               >
-                <dxo-editing [allowResizing]="false" [allowDragging]="false"></dxo-editing>
+                <dxo-editing
+                  #editingOptions
+                  [allowAdding]="!isCarrier"
+                  [allowDeleting]="!isCarrier"
+                  [allowUpdating]="!isCarrier"
+                  [allowResizing]="false"
+                  [allowDragging]="false"
+                ></dxo-editing>
 
                 <dxi-resource
                   fieldExpr="statusId"
@@ -197,8 +207,13 @@
       </dx-scroll-view>
     </div>
 
-    <dxi-toolbar-item widget="dxButton" toolbar="bottom" location="after" [options]="{ text: l('Save'), onClick: updateAppointment }">
-    </dxi-toolbar-item>
+    <dxi-toolbar-item
+      [disabled]="!!editAppointmentData && (!editAppointmentData.statusId || !editAppointmentData.startDate || !editAppointmentData.endDate)"
+      widget="dxButton"
+      toolbar="bottom"
+      location="after"
+      [options]="{ text: l('Save'), onClick: updateAppointment }"
+    ></dxi-toolbar-item>
     <dxi-toolbar-item widget="dxButton" toolbar="bottom" location="after" [options]="{ text: l('Cancel'), onClick: onHiding }"> </dxi-toolbar-item>
   </dx-popup>
 </div>

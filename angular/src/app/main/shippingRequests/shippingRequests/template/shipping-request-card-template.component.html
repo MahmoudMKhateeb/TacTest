@@ -378,7 +378,7 @@
                       {{ l('Delete') }}
                     </a>
                     <a
-                      *ngIf="feature.isEnabled('App.Carrier') && Channel == 2 && (item.directRequestStatus == 0 || item.directRequestStatus == 5)"
+                      *ngIf="(isCarrier || isCarrierSaas) && Channel == 2 && (item.directRequestStatus == 0 || item.directRequestStatus == 5)"
                       href="javascript:void(0)"
                       (click)="decline(item)"
                       class="red"
@@ -386,12 +386,20 @@
                       {{ l('Declined') }}
                     </a>
                     <a
-                      *ngIf="feature.isEnabled('App.Carrier') && !Channel && !item.isDriversAndTrucksAssigned"
+                      *ngIf="(isCarrier || isCarrierSaas) && !Channel && !item.isDriversAndTrucksAssigned"
                       href="javascript:void(0)"
                       (click)="assignTrucksAndDrivers(item)"
                       class="red"
                     >
                       {{ l('AssignTrucksAndDrivers') }}
+                    </a>
+                    <a
+                      *ngIf="(isCarrier || isCarrierSaas || isTachyonDealer) && !Channel && item.isDriversAndTrucksAssigned"
+                      href="javascript:void(0)"
+                      (click)="openAttendanceModal(item)"
+                      class="red"
+                    >
+                      {{ l('viewAttendance') }}
                     </a>
                     <a
                       *ngIf="
@@ -548,8 +556,8 @@
                         {{ l('RentalFromTo') }}:
                       </span>
                       &nbsp;
-                      {{ item.rentalStartDate.toDate() | date: 'MM/dd/yyyy' }} {{ item.rentalEndDate ? '-' : '' }}
-                      {{ item.rentalEndDate.toDate() | date: 'MM/dd/yyyy' }}
+                      {{ item.rentalStartDate.toISOString().split('T')[0] | date: 'MM/dd/yyyy' }} {{ item.rentalEndDate ? '-' : '' }}
+                      {{ item.rentalEndDate.toISOString().split('T')[0] | date: 'MM/dd/yyyy' }}
                     </p>
                   </div>
                   <div class="col-3 truckType">
@@ -612,3 +620,4 @@
 <price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search()" (modalRefresh)="LoadData()"></price-offer-view-model>
 <load-entity-template-modal #loadEntityTemplateModal></load-entity-template-modal>
 <assign-trucks-and-drivers-modal #assignTrucksAndDriversModal></assign-trucks-and-drivers-modal>
+<dedicated-shipping-request-attendance-sheet-modal #attendanceModal></dedicated-shipping-request-attendance-sheet-modal>
