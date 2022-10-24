@@ -18,6 +18,7 @@ import { TripService } from '@app/main/shippingRequests/shippingRequests/Shippin
 import { DirectRequestComponent } from '@app/main/shippingRequests/shippingRequests/directrequest/direct-request.component';
 import { retry } from 'rxjs/operators';
 import { NotesComponent } from './notes/notes.component';
+import * as moment from '@node_modules/moment';
 
 @Component({
   templateUrl: './view-shippingRequest.component.html',
@@ -37,6 +38,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   entityTypes = SavedEntityType;
   type = 'ShippingRequest';
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequests'), '/app/main/shippingRequests/shippingRequests')];
+  rentalRange: { rentalStartDate: moment.Moment; rentalEndDate: moment.Moment } = null;
 
   constructor(
     injector: Injector,
@@ -76,6 +78,12 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       .pipe(retry(3))
       .subscribe((result) => {
         this.shippingRequestforView = result;
+        this.shippingRequestforView.rentalStartDate = moment(this.shippingRequestforView?.rentalStartDate.toISOString().split('T')[0]);
+        this.shippingRequestforView.rentalEndDate = moment(this.shippingRequestforView?.rentalEndDate.toISOString().split('T')[0]);
+        this.rentalRange = {
+          rentalStartDate: this.shippingRequestforView?.rentalStartDate,
+          rentalEndDate: this.shippingRequestforView?.rentalEndDate,
+        };
         this.vases = result.shippingRequestVasDtoList;
         this.breadcrumbs.push(new BreadcrumbItem('' + result.referenceNumber));
         this.activeShippingRequestId = this.shippingRequestforView.shippingRequest.id;
