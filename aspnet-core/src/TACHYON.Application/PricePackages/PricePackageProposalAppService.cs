@@ -5,6 +5,7 @@ using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
@@ -18,14 +19,17 @@ namespace TACHYON.PricePackages
     public class PricePackageProposalAppService : TACHYONAppServiceBase, IPricePackageProposalAppService
     {
         private readonly IRepository<PricePackageProposal> _proposalRepository;
+        private readonly IRepository<TmsPricePackage> _tmsPricePackageRepository;
         private readonly IPricePackageProposalManager _proposalManager;
 
         public PricePackageProposalAppService(
             IRepository<PricePackageProposal> proposalRepository,
-            IPricePackageProposalManager proposalManager)
+            IPricePackageProposalManager proposalManager,
+            IRepository<TmsPricePackage> tmsPricePackageRepository)
         {
             _proposalRepository = proposalRepository;
             _proposalManager = proposalManager;
+            _tmsPricePackageRepository = tmsPricePackageRepository;
         }
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
@@ -38,8 +42,8 @@ namespace TACHYON.PricePackages
 
         public async Task<ProposalForViewDto> GetForView(int proposalId)
         {
-            var proposal = await _proposalRepository.GetAll().AsNoTracking()
-                .SingleAsync(x => x.Id == proposalId);
+            var proposal = await _proposalRepository.GetAllIncluding(x=> x.Shipper)
+                .AsNoTracking().SingleAsync(x => x.Id == proposalId);
 
             return ObjectMapper.Map<ProposalForViewDto>(proposal);
         }
@@ -68,7 +72,7 @@ namespace TACHYON.PricePackages
         {
             var createdProposal = ObjectMapper.Map<PricePackageProposal>(input);
             
-            return await _proposalManager.CreateProposal(createdProposal,input.TmsPricePackages);
+            return await _proposalManager.CreateProposal(createdProposal,input.TmsPricePackages,input.EmailAddress);
         }
         
         [AbpAuthorize(AppPermissions.Pages_PricePackageProposal_Update)]
@@ -82,6 +86,16 @@ namespace TACHYON.PricePackages
                 throw new UserFriendlyException(L("YouCanNotEditApprovedProposal"));
             
             ObjectMapper.Map(input, updatedProposal);
+            var addedPackages = input.TmsPricePackages.Where(x => updatedProposal.TmsPricePackages.All(i => i.Id != x));
+            var deletedPackages = updatedProposal.TmsPricePackages
+                .Where(x => input.TmsPricePackages.All(i => i != x.Id));
+            foreach (int addedPackageId in addedPackages)
+                _tmsPricePackageRepository.Update(addedPackageId, x => x.ProposalId = updatedProposal.Id);
+
+            foreach (var package in deletedPackages)
+                package.ProposalId = null;
+
+            await _proposalManager.UpdateProposal(updatedProposal, input.EmailAddress);
             
             return updatedProposal.Id;
         }

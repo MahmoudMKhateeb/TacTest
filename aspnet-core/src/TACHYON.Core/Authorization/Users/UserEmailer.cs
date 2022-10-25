@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.EmailTemplates;
 using TACHYON.EmailTemplates.Dtos;
 using TACHYON.MultiTenancy;
+using TACHYON.Storage;
 
 namespace TACHYON.Authorization.Users
 {
@@ -73,6 +75,34 @@ namespace TACHYON.Authorization.Users
 
         #region TACHYON_Emails
 
+        public virtual async Task SendPricePackageProposalEmail(string proposalName, BinaryObject proposalFile,
+            string emailAddress)
+        {
+            try
+            {
+                
+                if (proposalFile == null || proposalFile.Bytes.Length == 0)
+                    throw new UserFriendlyException(L("EmptyFile"));
+                await using MemoryStream memoryStream = new MemoryStream(proposalFile.Bytes);
+                
+                var htmlTemplate = await GetContent(EmailTemplateTypesEnum.PricePackageProposalEmail);
+                htmlTemplate = htmlTemplate.Replace("{{ProposalName}}", proposalName);
+                
+                    await _emailSender.SendAsync(new MailMessage
+                    {
+                        To = { emailAddress },
+                        Subject = L("TACHYONProposalEmail"),
+                        Body = htmlTemplate,
+                        IsBodyHtml = true,
+                        Attachments = { new Attachment(memoryStream,"TachyonProposal.pdf","application/pdf") }
+                    });
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message, e);
+            }
+        }
+        
         [UnitOfWork]
         public virtual async Task SendEmailActivationEmail(User user, string link, string password)
         {

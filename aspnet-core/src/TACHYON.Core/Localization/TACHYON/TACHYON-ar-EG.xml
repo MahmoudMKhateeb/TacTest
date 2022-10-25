@@ -2845,6 +2845,8 @@
 		<text name="ActorCarrierInvoicesList">قائمة فواتير الناقل للعميل</text>
 		<text name="ActorInvoicesList">قائمة فواتير العميل</text>
 		<text name="DownloadBayanDropWaybill">تحميل وثيقة شحن بيان</text>
-
+		<text name="CreateNewProposal">إضافة عرض حزم الأسعار </text>
+		<text name="ScopeOverview">نظرة عامة على النطاق</text>
+		<text name="PricePackagesProposal">عرض حزم الأسعار</text>
 	</texts>
 </localizationDictionary>

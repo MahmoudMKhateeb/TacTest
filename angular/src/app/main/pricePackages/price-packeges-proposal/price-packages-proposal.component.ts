@@ -22,6 +22,7 @@ export class PricePackagesProposalComponent extends AppComponentBase implements 
 
   dataSource: any;
   proposalStatuses = this.enumToArrayPipe.transform(ProposalStatus);
+  proposalStatus = ProposalStatus;
 
   ngOnInit(): void {
     this.getAllPricePackagesProposals();
@@ -91,10 +92,9 @@ export class PricePackagesProposalComponent extends AppComponentBase implements 
     });
   }
 
-  View(id: number) {}
-
   getStatusDisplayName(options): string {
     let tableStatusId = options.data.status;
-    return this.proposalStatuses.find((x) => x.key == tableStatusId).value;
+    let displayName = this.proposalStatuses.find((x) => x.key == tableStatusId).value;
+    return this.l(displayName);
   }
 }

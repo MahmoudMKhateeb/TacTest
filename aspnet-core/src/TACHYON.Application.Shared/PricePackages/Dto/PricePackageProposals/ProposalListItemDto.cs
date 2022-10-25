@@ -11,7 +11,7 @@ namespace TACHYON.PricePackages.Dto.PricePackageProposals
 
         public DateTime? ProposalDate { get; set; }
         
-        public int ShipperId { get; set; }
+        public string ShipperName { get; set; }
 
         public string Notes { get; set; }
 

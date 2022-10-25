@@ -18,7 +18,7 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 })
 export class CreateOrEditPricePackegeProposalComponent extends AppComponentBase implements OnInit {
   @ViewChild('Modal') modal: ModalDirective;
-  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  @Output() modalSave: EventEmitter<void> = new EventEmitter<void>();
   isFormActive: boolean;
   isFormLoading: boolean;
   pricePackageProposal: CreateOrEditProposalDto;
@@ -53,6 +53,7 @@ export class CreateOrEditPricePackegeProposalComponent extends AppComponentBase 
   }
 
   close() {
+    this.pricePackageProposal = new CreateOrEditProposalDto();
     this.isFormActive = false;
     this.modal.hide();
   }
@@ -62,7 +63,6 @@ export class CreateOrEditPricePackegeProposalComponent extends AppComponentBase 
    * @private
    */
   private loadAllShippers(): void {
-    console.log('Shippers Are loading');
     this._shippingRequestServiceProxy.getAllShippersForDropDown().subscribe((res) => {
       this.shippers = res;
     });
@@ -89,7 +89,7 @@ export class CreateOrEditPricePackegeProposalComponent extends AppComponentBase 
     this._proposalServiceProxy.createOrEdit(this.pricePackageProposal).subscribe(() => {
       this.notify.success(this.l('Success'));
       this.isFormLoading = false;
-      this.modalSave.emit('');
+      this.modalSave.emit();
       this.close();
     });
   }

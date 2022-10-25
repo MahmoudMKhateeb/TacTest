@@ -128,5 +128,14 @@
         public const int DropOfWithDeliveryNoteRoutPointWorkflowVersion = 2;
 
         #endregion
+
+        public const string ProposalTemplateFullNamespace =
+            "TACHYON.Net.Emailing.PricePackageTemplates.TachyonProposal.docx";
+
+        public const string ProposalTemplateCompanyName = "$$CompanyName$$";
+        public const string ProposalTemplateDate = "$$Date$$";
+        public const string ProposalTemplateTruckType = "$$TruckType$$";
+        public const string ProposalTemplateRouteType = "$$RouteType$$";
+        public const string ProposalTemplateShippingType = "$$ShippingType$$";
     }
 }

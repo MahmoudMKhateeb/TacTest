@@ -17,6 +17,7 @@
         IssuedInvoice = 9,
         ExpiredDocuments = 10,
         NotificationEmail = 16,
+        PricePackageProposalEmail = 17,
 
         #endregion
 

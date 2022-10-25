@@ -17,6 +17,7 @@ import { CreateTmsPricePackageModalComponent } from '@app/main/pricePackages/tms
 import { PricePackagesProposalComponent } from '@app/main/pricePackages/price-packeges-proposal/price-packages-proposal.component';
 import { CreateOrEditPricePackegeProposalComponent } from './price-packeges-proposal/create-or-edit-price-packege-proposal/create-or-edit-price-packege-proposal.component';
 import { BsDatepickerModule } from '@node_modules/ngx-bootstrap/datepicker';
+import { ViewPricePackageProposalComponent } from './price-packeges-proposal/view-price-package-proposal/view-price-package-proposal.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { BsDatepickerModule } from '@node_modules/ngx-bootstrap/datepicker';
     CreateTmsPricePackageModalComponent,
     PricePackagesProposalComponent,
     CreateOrEditPricePackegeProposalComponent,
+    ViewPricePackageProposalComponent,
   ],
   imports: [
     PricePackageRoutingModule,

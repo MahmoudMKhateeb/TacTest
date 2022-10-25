@@ -60,11 +60,19 @@ namespace TACHYON.AutoMapper.PricePackages
             CreateMap<CreateOrEditTmsPricePackageDto, TmsPricePackage>().ReverseMap();
             CreateMap<CreateOrEditProposalDto, PricePackageProposal>()
                 .ForMember(x=> x.TmsPricePackages,x=> x.Ignore())
-                .AfterMap((dto, proposal) => proposal.Status = ProposalStatus.New);
+                .AfterMap((dto, proposal) =>
+                {
+                    if (!dto.Id.HasValue)
+                        proposal.Status = ProposalStatus.New;
+                });
             CreateMap<PricePackageProposal, CreateOrEditProposalDto>()
                 .ForMember(x=>x.TmsPricePackages,x=> x.MapFrom(i=> i.TmsPricePackages.Select(t=> t.Id)));
 
-            CreateMap<PricePackageProposal, ProposalListItemDto>();
+            CreateMap<PricePackageProposal, ProposalListItemDto>()
+                .ForMember(x=> x.ShipperName,x=> x.MapFrom(i=> i.Shipper.Name));
+            CreateMap<PricePackageProposal, ProposalForViewDto>()
+                .ForMember(x=> x.StatusTitle,x=> x.MapFrom(i=> Enum.GetName(typeof(ProposalStatus),i.Status)))
+                .ForMember(x=> x.Shipper,x=> x.MapFrom(i=> i.Shipper.companyName));
             CreateMap<TmsPricePackage, TmsPricePackageSelectItemDto>()
                 .ForMember(x=> x.OriginCity,x=> x.MapFrom(i=> i.OriginCity.DisplayName))
                 .ForMember(x=> x.DestinationCity,x=> x.MapFrom(i=> i.DestinationCity.DisplayName))

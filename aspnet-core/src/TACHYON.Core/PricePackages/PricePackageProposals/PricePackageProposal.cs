@@ -23,7 +23,8 @@ namespace TACHYON.PricePackages.PricePackageProposals
         public string Notes { get; set; }
 
         public ProposalStatus Status { get; set; }
-        
+
+        public Guid? ProposalFileId { get; set; }
         public List<TmsPricePackage> TmsPricePackages { get; set; }
     }
 }
