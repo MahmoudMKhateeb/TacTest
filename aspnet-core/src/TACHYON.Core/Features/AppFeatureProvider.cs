@@ -331,12 +331,16 @@ namespace TACHYON.Features
                 CommissionTypes.Add(new LocalizableComboboxItem(i.ToString(),
                     L(Enum.GetName(typeof(PriceOfferCommissionType), i))));
             }
+            //Bidding Commission
 
+            #region Bidding
             biddingFeature.CreateChildFeature(
                AppFeatures.TripCommissionType,
                "false",
                L("TripCommissionType"),
                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            #region Trip bidding commission
 
             biddingFeature.CreateChildFeature(
                 AppFeatures.TripCommissionPercentage,
@@ -380,15 +384,71 @@ namespace TACHYON.Features
                 L("VasMinValueCommission"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
+            #endregion
+
+            #region Dedicated Truck bidding Commission
+
+            biddingFeature.CreateChildFeature(
+              AppFeatures.TruckCommissionType,
+              "false",
+              L("TruckCommissionType"),
+              inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            biddingFeature.CreateChildFeature(
+                AppFeatures.TruckCommissionPercentage,
+                "false",
+                L("TruckCommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            biddingFeature.CreateChildFeature(
+                AppFeatures.TruckCommissionValue,
+                "false",
+                L("TruckCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            biddingFeature.CreateChildFeature(
+                AppFeatures.TruckMinValueCommission,
+                "false",
+                L("TruckMinValueCommission"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            biddingFeature.CreateChildFeature(
+                AppFeatures.TruckVasCommissionType,
+                "false",
+                L("TruckVasCommissionType"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            biddingFeature.CreateChildFeature(
+                AppFeatures.TruckVasCommissionPercentage,
+                "false",
+                L("TruckVasCommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            biddingFeature.CreateChildFeature(
+                AppFeatures.TruckVasCommissionValue,
+                "false",
+                L("TruckVasCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            biddingFeature.CreateChildFeature(
+                AppFeatures.TruckVasMinValueCommission,
+                "false",
+                L("TruckVasMinValueCommission"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            #endregion
+
+            #endregion
             // direct request commission 
-
+            #region Direct Request
             var createDirectRequestFeature = payFeature.CreateChildFeature(
-                   AppFeatures.CreateDirectRequest,
-                   "false",
-                   L(AppFeatures.CreateDirectRequest),
-                   inputType: new CheckboxInputType()
-                   );
+               AppFeatures.CreateDirectRequest,
+               "false",
+               L(AppFeatures.CreateDirectRequest),
+               inputType: new CheckboxInputType()
+               );
 
+            #region Trip Direct Request Commission
 
             createDirectRequestFeature.CreateChildFeature(
                 AppFeatures.DirectRequestCommissionType,
@@ -444,16 +504,76 @@ namespace TACHYON.Features
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
 
+            #endregion
+
+            #region Truck Direct Request Commission
+
+            createDirectRequestFeature.CreateChildFeature(
+                AppFeatures.TruckDirectRequestCommissionType,
+                "false",
+                L("TruckDirectRequestCommissionType"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            createDirectRequestFeature.CreateChildFeature(
+                AppFeatures.TruckDirectRequestCommissionPercentage,
+                "false",
+                L("TruckDirectRequestCommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, 100)));
+
+            createDirectRequestFeature.CreateChildFeature(
+                AppFeatures.TruckDirectRequestCommissionValue,
+                "false",
+                L("TruckDirectRequestCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+
+            createDirectRequestFeature.CreateChildFeature(
+                AppFeatures.TruckDirectRequestCommissionMinValue,
+                "false",
+                L("TruckDirectDirectRequestCommissionMinValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+
+            createDirectRequestFeature.CreateChildFeature(
+                AppFeatures.TruckDirectRequestVasCommissionType,
+                "false",
+                L("TruckDirectRequestVASCommissionType"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+
+            createDirectRequestFeature.CreateChildFeature(
+                AppFeatures.TruckDirectRequestVasCommissionPercentage,
+                "false",
+                L("TruckDirectRequestVASCommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, 100)));
+
+
+            createDirectRequestFeature.CreateChildFeature(
+                AppFeatures.TruckDirectRequestVasCommissionValue,
+                "false",
+                L("TruckDirectRequestVASCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+
+            createDirectRequestFeature.CreateChildFeature(
+                AppFeatures.TruckDirectRequestVasCommissionMinValue,
+                "false",
+                L("TruckDirectRequestVASCommissionMinValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+
+            #endregion
+
+            #endregion
             // TMS request 
 
-
+            #region TMS
             var createTmsRequestFeature = payFeature.CreateChildFeature(
                 AppFeatures.CreateTmsRequest,
                 "false",
                 L(AppFeatures.CreateTmsRequest),
                 inputType: new CheckboxInputType()
                 );
-
             createTmsRequestFeature.CreateChildFeature(
                AppFeatures.TachyonDealerCommissionType,
                "false",
@@ -478,6 +598,7 @@ namespace TACHYON.Features
                 L("TachyonDealerMinValueCommission"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
+            #region TMS Trip Commission
 
             createTmsRequestFeature.CreateChildFeature(
                AppFeatures.TachyonDealerTripCommissionType,
@@ -530,7 +651,64 @@ namespace TACHYON.Features
                 L("TachyonDealerVasMinValueCommission"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
+            #endregion
 
+            #region TMS Truck Commission
+
+            createTmsRequestFeature.CreateChildFeature(
+               AppFeatures.TachyonDealerTruckCommissionType,
+               "false",
+               L("TachyonDealerTruckCommissionType"),
+               inputType: new ComboboxInputType(
+                   new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())
+               )
+           );
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerTruckCommissionPercentage,
+                "false",
+                L("TachyonDealerTruckCommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerTruckCommissionValue,
+                "false",
+                L("TachyonDealerTruckCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerTruckMinValueCommission,
+                "false",
+                L("TachyonDealerTruckMinValueCommission"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerTruckVasCommissionType,
+                "false",
+                L("TachyonDealerTruckVasCommissionType"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerTruckVasCommissionPercentage,
+                "false",
+                L("TachyonDealerTruckVasCommissionPercentage"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerTruckVasCommissionValue,
+                "false",
+                L("TachyonDealerTruckVasCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            createTmsRequestFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerTruckVasMinValueCommission,
+                "false",
+                L("TachyonDealerTruckVasMinValueCommission"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            #endregion
+
+            #endregion
             // carrier as Saas
 
             var carrierAsASaas = payFeature.CreateChildFeature(

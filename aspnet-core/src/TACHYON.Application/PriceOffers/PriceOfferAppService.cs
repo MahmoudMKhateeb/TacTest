@@ -236,7 +236,7 @@ namespace TACHYON.PriceOffers
                 .OrderBy(x => x.Status)
                 //.OrderByDescending(x=>x.Id)
                 .FirstOrDefaultAsync();
-            PriceOfferDto priceOfferDto;
+            PriceOfferDto priceOfferDto = null;
             if (offer != null)
             {
                 priceOfferDto = ObjectMapper.Map<PriceOfferDto>(offer);
@@ -263,12 +263,24 @@ namespace TACHYON.PriceOffers
             {
                 priceOfferDto = new PriceOfferDto()
                 {// Set Default data
-                    PriceType = PriceOfferType.Trip,
-                    Quantity = shippingRequest.ShippingRequestFlag==ShippingRequestFlag.Normal ?shippingRequest.NumberOfTrips :shippingRequest.NumberOfTrucks,
                     Items = GetVases(shippingRequest),
                     TaxVat = (decimal)Convert.ChangeType(SettingManager.GetSettingValue(AppSettings.HostManagement.TaxVat), typeof(decimal))
                 };
-                SetCommssionSettingsForTachyonDealer(priceOfferDto, shippingRequest);
+                if (shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Normal)
+                {
+                    priceOfferDto.PriceType = PriceOfferType.Trip;
+                    priceOfferDto.Quantity = shippingRequest.NumberOfTrips;
+                    SetCommssionSettingsForTachyonDealer(priceOfferDto, shippingRequest);
+                }
+                else if(shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+                {
+                    priceOfferDto.PriceType = PriceOfferType.Dedicated;
+                    priceOfferDto.Quantity = shippingRequest.NumberOfTrucks;
+                    SetCommssionSettingsForTruckTachyonDealer(priceOfferDto, shippingRequest);
+                }
+
+
+               
 
             }
             if (IsEnabled(AppFeatures.TachyonDealer))
@@ -611,10 +623,18 @@ namespace TACHYON.PriceOffers
                     var item = new PriceOfferItem()
                     {
                         SourceId = vas.Id,
-                        PriceType = PriceOfferType.Vas,
                         Quantity = vas.RequestMaxCount <= 0 ? 1 : vas.RequestMaxCount,
                         ItemName = vas.VasFk.Key
                     };
+                    if (shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Normal)
+                    {
+                        item.PriceType = PriceOfferType.Vas;
+                    }
+                    else if(shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+                    {
+                        item.PriceType = PriceOfferType.DedicatedVas;
+                    }
+
                     var vasDefine = Tenantvases.FirstOrDefault(x => x.VasId == vas.VasId);
                     if (vasDefine != null)
                     {
@@ -655,6 +675,36 @@ namespace TACHYON.PriceOffers
                 else
                 {
                     offer.VasCommissionPercentageOrAddValue = Convert.ToDecimal(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerVasCommissionValue));
+
+                }
+            }
+
+        }
+
+
+        private void SetCommssionSettingsForTruckTachyonDealer(PriceOfferDto offer, ShippingRequest shippingRequest)
+        {
+            if (IsEnabled(AppFeatures.TachyonDealer))
+            {
+                offer.CommissionType = (PriceOfferCommissionType)Convert.ToByte(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckCommissionType));
+                if (offer.CommissionType == PriceOfferCommissionType.CommissionPercentage)
+                {
+                    offer.CommissionPercentageOrAddValue = Convert.ToDecimal(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckCommissionPercentage));
+                }
+                else
+                {
+                    offer.CommissionPercentageOrAddValue = Convert.ToDecimal(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckCommissionValue));
+
+                }
+                offer.VasCommissionType = (PriceOfferCommissionType)Convert.ToByte(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckVasCommissionType));
+
+                if (offer.VasCommissionType == PriceOfferCommissionType.CommissionPercentage)
+                {
+                    offer.VasCommissionPercentageOrAddValue = Convert.ToDecimal(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckVasCommissionPercentage));
+                }
+                else
+                {
+                    offer.VasCommissionPercentageOrAddValue = Convert.ToDecimal(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckVasCommissionValue));
 
                 }
             }

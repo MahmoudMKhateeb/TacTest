@@ -12,7 +12,7 @@ namespace TACHYON.PriceOffers.Dto
         public decimal ItemPrice { get; set; }
         public PriceOfferChannel Channel { get; set; }
         public long? ParentId { get; set; }
-        [JsonIgnore] public PriceOfferType PriceType { get; set; } = PriceOfferType.Trip;
+        [JsonIgnore] public PriceOfferType PriceType { get; set; }
         public List<PriceOfferDetailDto> ItemDetails;
         public decimal? CommissionPercentageOrAddValue { get; set; }
         public PriceOfferCommissionType? CommissionType { get; set; }
