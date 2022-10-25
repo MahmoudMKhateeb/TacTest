@@ -501,6 +501,14 @@
       ></tms-for-shipper>
       <!--  end:Tms for shipper     -->
 
+      <app-project-performance
+        *ngIf="shippingRequestforView.shippingRequestFlag === 1"
+        [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
+        [KPI]="shippingRequestforView?.dedicatedKPI"
+        [numberOfTrips]="shippingRequestforView?.totalsTripsAddByShippier"
+      >
+      </app-project-performance>
+
       <!--  start:: DirectOffers      -->
 
       <ng-template [ngIf]="canSeeDirectRequests()">

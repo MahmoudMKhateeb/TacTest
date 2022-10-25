@@ -322,9 +322,11 @@ import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/a
 import { CreateOrEditDedicatedShippingRequestWizardComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicatedShippingRequestWizard/create-or-edit-dedicated-shipping-request-wizard.component';
 import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
 import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/tmsForShipper/tms-for-shipper.component';
+import { WidgetsModule } from '@app/shared/common/customizable-dashboard/widgets/widgets.module';
 
 @NgModule({
   imports: [
+    WidgetsModule,
     UtilsModule,
     AppCommonModule,
     CommonModule,

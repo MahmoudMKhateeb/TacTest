@@ -57,6 +57,7 @@ import { RouterModule } from '@angular/router';
 import { CarrierComplitedTripsWidgetComponent } from './carrier/carrier-complited-trips-widget/carrier-complited-trips-widget.component';
 import { CarrierAcceptedVsRejectdRequestsComponent } from './carrier/carrier-accepted-vs-rejectd-requests/carrier-accepted-vs-rejectd-requests.component';
 import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoices-details-widget/carrier-invoices-details-widget.component';
+import { ProjectPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/project-performance/project-performance.component';
 
 @NgModule({
   declarations: [
@@ -104,6 +105,7 @@ import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoice
     CarrierComplitedTripsWidgetComponent,
     CarrierAcceptedVsRejectdRequestsComponent,
     CarrierInvoicesDetailsWidgetComponent,
+    ProjectPerformanceComponent,
   ],
   imports: [
     CommonModule,
@@ -162,6 +164,8 @@ import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoice
     WorstRatedCarriersComponent,
     NumberOfRequestsForEachCityComponent,
     UnpricedRequestsInMarketplaceComponent,
+    ProjectPerformanceComponent,
   ],
+  exports: [ProjectPerformanceComponent],
 })
 export class WidgetsModule {}

@@ -1,0 +1,41 @@
+<!--begin::Card-->
+<div class="card card-custom card-stretch w-100 h-100 gutter-b" [busyIf]="loading">
+  <div class="card-header border-0 w-100">
+    <div class="card-title text-center">
+      <h3 class="card-label">{{ l('ProjectPerformance') }}</h3>
+    </div>
+    <div class="actions" *ngIf="isTachyonDealer">
+      <button class="btn btn-danger" (click)="showModifyKpi = true">
+        {{ l('updateKPIForRequest') }}
+      </button>
+    </div>
+  </div>
+  <div class="card-body p-1" [class.d-flex]="showModifyKpi">
+    <!--        <div class="pd-5 text-center" *ngIf="completedTrips.length == 0 && POD.length == 0">-->
+    <!--          {{ l('NoData') }}-->
+    <!--        </div>-->
+    <div [class.col-8]="showModifyKpi" id="acceptedVsRejectedChart">
+      <apx-chart
+        *ngIf="chartOptions && chartOptions.series"
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis"
+        [stroke]="chartOptions.stroke"
+        [tooltip]="chartOptions.tooltip"
+        [dataLabels]="chartOptions.dataLabels"
+      ></apx-chart>
+    </div>
+    <div class="col-4" *ngIf="isTachyonDealer && showModifyKpi">
+      <div class="input-group">
+        <label class="form-label" for="kpi">{{ l('ShippingRequestKPI') }} </label>
+        <input class="form-control" type="number" name="kpi" id="kpi" [(ngModel)]="kpi" />
+        <div class="input-group-append">
+          <button class="btn btn-success" (click)="updateKPI()">
+            {{ l('save') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--end::Card-->
