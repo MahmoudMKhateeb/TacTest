@@ -219,14 +219,14 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task UpdateRequestKPI(UpdateRequestKPIInput input)
         {
-            var request = await _shippingRequestRepository.GetAsync(input.ShippingRequestId);
+            var request = await _shippingRequestRepository.FirstOrDefaultAsync(input.ShippingRequestId);
             request.DedicatedKPI = input.KPI;
         }
 
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task UpdateTruckKPI(UpdateTruckKPIInput input)
         {
-            var dedicatedTruck = await _dedicatedShippingRequestTruckRepository.GetAsync(input.DedicatedTruckId);
+            var dedicatedTruck = await _dedicatedShippingRequestTruckRepository.FirstOrDefaultAsync(input.DedicatedTruckId);
             dedicatedTruck.KPI = input.KPI;
         }
 
