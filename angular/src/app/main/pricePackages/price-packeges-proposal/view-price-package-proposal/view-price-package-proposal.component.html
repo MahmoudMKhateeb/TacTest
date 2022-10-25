@@ -1,0 +1,62 @@
+<div
+  bsModal
+  #ViewProposalModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="viewProposalModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{ l('ViewProposalDetails') }}</span>
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div *ngIf="isModalActive" class="modal-body">
+        <div class="row">
+          <div class="col-6 mb-3">
+            <h6>{{ l('PricePackageName') }}:</h6>
+            {{ proposal.proposalName }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('ShipperName') }}:</h6>
+            {{ proposal.shipper }}
+          </div>
+
+          <div class="col-6 mb-3">
+            <h6>{{ l('ScopeOverview') }}:</h6>
+            {{ proposal.scopeOverview }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Notes') }}:</h6>
+            {{ proposal.notes }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('ProposalFile') }}:</h6>
+            <a *ngIf="proposal.proposalFileId" class="text-success" (click)="downloadProposalFile(proposal.proposalFileId)">{{
+              'Download' | localize
+            }}</a>
+            <span *ngIf="!proposal.proposalFileId" class="text-primary">{{ 'FileNotFound' | localize }}</span>
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Date') }}:</h6>
+            {{ proposal.proposalDate }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Status') }}:</h6>
+            {{ proposal.statusTitle | localize }}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary blue" (click)="close()">{{ l('Close') }}</button>
+      </div>
+    </div>
+  </div>
+</div>

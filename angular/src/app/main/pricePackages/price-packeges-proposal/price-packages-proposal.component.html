@@ -2,7 +2,9 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'PricePackagesProposal' | localize">
       <div role="actions">
-        <button class="btn btn-primary" (click)="PricePackageProposalModal.show()"><i class="fa fa-plus"></i> {{ l('CreateNewProposal') }}</button>
+        <button class="btn btn-primary" *ngIf="isGranted('Pages.PricePackageProposal.Create')" (click)="PricePackageProposalModal.show()">
+          <i class="fa fa-plus"></i> {{ l('CreateNewProposal') }}
+        </button>
       </div>
     </sub-header>
 
@@ -40,12 +42,12 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
-              <dxi-column dataField="shipperId" caption="{{ l('shipperId') }}"></dxi-column>
-              <dxi-column dataField="proposalName" caption="{{ l('proposalName') }}"></dxi-column>
-              <dxi-column dataField="status" caption="{{ l('status') }}" cellTemplate="cellTemplateStatuses" dataType="text"></dxi-column>
-              <dxi-column dataField="proposalDate" caption="{{ l('proposalDate') }}" dataType="date"></dxi-column>
-              <dxi-column dataField="notes" caption="{{ l('notes') }}"></dxi-column>
-              <dxi-column dataField="scopeOverview" caption="{{ l('scopeOverview') }}"></dxi-column>
+              <dxi-column dataField="shipperName" caption="{{ l('Shipper') }}"></dxi-column>
+              <dxi-column dataField="proposalName" caption="{{ l('Name') }}"></dxi-column>
+              <dxi-column dataField="status" caption="{{ l('Status') }}" cellTemplate="cellTemplateStatuses" dataType="text"></dxi-column>
+              <dxi-column dataField="proposalDate" caption="{{ l('Date') }}" dataType="date"></dxi-column>
+              <dxi-column dataField="notes" caption="{{ l('Notes') }}"></dxi-column>
+              <dxi-column dataField="scopeOverview" caption="{{ l('ScopeOverview') }}"></dxi-column>
 
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
@@ -65,16 +67,31 @@
 
                   <ul class="dropdown-menu" *dropdownMenu>
                     <li>
-                      <a class="dropdown-item" (click)="Accept(options.data.id)">{{ l('Accept') }}</a>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="isGranted('Pages.PricePackageProposal.Accept') && options.data.status !== proposalStatus.Approved"
+                        (click)="Accept(options.data.id)"
+                        >{{ l('Approve') }}</a
+                      >
                     </li>
                     <li>
-                      <a class="dropdown-item" (click)="Reject(options.data.id)">{{ l('Reject') }}</a>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="isGranted('Pages.PricePackageProposal.Reject') && options.data.status !== proposalStatus.Approved"
+                        (click)="Reject(options.data.id)"
+                        >{{ l('Reject') }}</a
+                      >
                     </li>
                     <li>
-                      <a class="dropdown-item" (click)="View(options.data.id)">{{ l('View') }}</a>
+                      <a class="dropdown-item" (click)="ViewPricePackageProposalModal.show(options.data.id)">{{ l('View') }}</a>
                     </li>
                     <li>
-                      <a class="dropdown-item" (click)="PricePackageProposalModal.show(options.data.id)">{{ l('Edit') }}</a>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="isGranted('Pages.PricePackageProposal.Update') && options.data.status !== proposalStatus.Approved"
+                        (click)="PricePackageProposalModal.show(options.data.id)"
+                        >{{ l('Edit') }}</a
+                      >
                     </li>
                   </ul>
                 </div>
@@ -83,9 +100,9 @@
                 <span
                   class="label label-inline font-weight-bold"
                   [ngClass]="{
-                    'label-light-danger': options.data.status == 3,
-                    'label-light-success': options.data.status == 2,
-                    'label-light-info': options.data.status == 1
+                    'label-light-danger': options.data.status == proposalStatus.Rejected,
+                    'label-light-success': options.data.status == proposalStatus.Approved,
+                    'label-light-info': options.data.status == proposalStatus.New
                   }"
                   >{{ getStatusDisplayName(options) }}</span
                 >
@@ -102,3 +119,5 @@
   #PricePackageProposalModal
   (modalSave)="getAllPricePackagesProposals()"
 ></app-create-or-edit-price-packege-proposal>
+
+<app-view-price-package-proposal #ViewPricePackageProposalModal></app-view-price-package-proposal>
