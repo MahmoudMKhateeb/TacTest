@@ -1,6 +1,6 @@
 <!--begin::Card-->
 <div class="card card-custom card-stretch w-100 h-100 gutter-b" [busyIf]="loading">
-  <div class="card-header border-0 w-100">
+  <div class="card-header w-100">
     <div class="card-title text-center">
       <h3 class="card-label">{{ l('ProjectPerformance') }}</h3>
     </div>
@@ -10,30 +10,44 @@
       </button>
     </div>
   </div>
-  <div class="card-body p-1" [class.d-flex]="showModifyKpi">
-    <!--        <div class="pd-5 text-center" *ngIf="completedTrips.length == 0 && POD.length == 0">-->
-    <!--          {{ l('NoData') }}-->
-    <!--        </div>-->
-    <div [class.col-8]="showModifyKpi" id="acceptedVsRejectedChart">
-      <apx-chart
-        *ngIf="chartOptions && chartOptions.series"
-        [series]="chartOptions.series"
-        [chart]="chartOptions.chart"
-        [xaxis]="chartOptions.xaxis"
-        [stroke]="chartOptions.stroke"
-        [tooltip]="chartOptions.tooltip"
-        [dataLabels]="chartOptions.dataLabels"
-      ></apx-chart>
-    </div>
-    <div class="col-4" *ngIf="isTachyonDealer && showModifyKpi">
-      <div class="input-group">
+  <div class="card-body">
+    <div class="row gutter-b" *ngIf="isTachyonDealer && showModifyKpi">
+      <div class="col-12">
         <label class="form-label" for="kpi">{{ l('ShippingRequestKPI') }} </label>
-        <input class="form-control" type="number" name="kpi" id="kpi" [(ngModel)]="kpi" />
-        <div class="input-group-append">
-          <button class="btn btn-success" (click)="updateKPI()">
-            {{ l('save') }}
-          </button>
+        <div class="input-group">
+          <input class="form-control" type="number" name="kpi" id="kpi" [(ngModel)]="kpi" />
+          <div class="input-group-append">
+            <button class="btn btn-danger" (click)="updateKPI()">
+              {{ l('save') }}
+            </button>
+          </div>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <table class="table">
+          <tr>
+            <td>{{ l('KPI') }}</td>
+            <td>{{ l('numberOfTrips') }}</td>
+          </tr>
+
+          <tr>
+            <td>{{ kpi }}</td>
+            <td>{{ numberOfTrips }}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-8" id="acceptedVsRejectedChart">
+        <apx-chart
+          *ngIf="chartOptions && chartOptions.series"
+          [series]="chartOptions.series"
+          [chart]="chartOptions.chart"
+          [xaxis]="chartOptions.xaxis"
+          [stroke]="chartOptions.stroke"
+          [tooltip]="chartOptions.tooltip"
+          [dataLabels]="chartOptions.dataLabels"
+        ></apx-chart>
       </div>
     </div>
   </div>
