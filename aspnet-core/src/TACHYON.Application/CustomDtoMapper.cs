@@ -183,6 +183,9 @@ using TACHYON.Penalties.Dto;
 using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequests.Dtos.Dedicated;
 using TACHYON.Shipping.Dedicated;
+using TACHYON.DedicatedInvoices;
+using TACHYON.DedicatedDynamicInvoices.Dtos;
+using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 
 namespace TACHYON
 {
@@ -1136,8 +1139,14 @@ namespace TACHYON
                         invoiceItem.TotalAmount = invoiceItem.Price + invoiceItem.VatAmount;
                     }
                 }));
+
+
+            configuration.CreateMap<CreateOrEditDedicatedInvoiceDto, DedicatedDynamicInvoice>()
+              .ForMember(x => x.DedicatedDynamicInvoiceItems, x => x.Ignore())
+               .AfterMap(AddOrUpdateDedicatedInvoice);
+
             
-            
+
         }
 
         private static string GetCityDisplayName(City city)
@@ -1317,6 +1326,22 @@ namespace TACHYON
                 else
                 {
                     _Mapper.Map(penaltyItem, penalty.PenaltyItems.FirstOrDefault(x => x.Id == penaltyItem.Id));
+                }
+            }
+        }
+
+        private static void AddOrUpdateDedicatedInvoice(CreateOrEditDedicatedInvoiceDto dto, DedicatedDynamicInvoice invoice)
+        {
+            if (invoice.DedicatedDynamicInvoiceItems == null) invoice.DedicatedDynamicInvoiceItems = new Collection<DedicatedDynamicInvoiceItem>();
+            foreach (var invoiceItem in dto.DedicatedInvoiceItems)
+            {
+                if (!invoiceItem.Id.HasValue)
+                {
+                    invoice.DedicatedDynamicInvoiceItems.Add(_Mapper.Map<DedicatedDynamicInvoiceItem>(invoiceItem));
+                }
+                else
+                {
+                    _Mapper.Map(invoiceItem, invoice.DedicatedDynamicInvoiceItems.FirstOrDefault(x => x.Id == invoiceItem.Id));
                 }
             }
         }

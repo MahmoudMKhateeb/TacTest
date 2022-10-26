@@ -94,6 +94,8 @@ using TACHYON.Penalties;
 using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequestAndTripNotes;
 using TACHYON.Shipping.Dedicated;
+using TACHYON.DedicatedInvoices;
+using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -326,6 +328,8 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<DynamicInvoice> DynamicInvoices { get; set; }
 
         public DbSet<DynamicInvoiceItem> DynamicInvoiceItems { get; set; }
+        public DbSet<DedicatedDynamicInvoice> DedicatedDynamicInvoices { get; set; }
+        public DbSet<DedicatedDynamicInvoiceItem> DedicatedDynamicInvoiceItems { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;

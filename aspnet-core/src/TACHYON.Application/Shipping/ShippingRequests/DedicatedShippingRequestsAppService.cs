@@ -207,6 +207,37 @@ namespace TACHYON.Shipping.ShippingRequests
 
         #endregion
 
+        #region DropDowns
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        public async Task<List<SelectItemDto>> GetDedicatedRequestsByTenant(int tenantId)
+        {
+            DisableTenancyFilters();
+            return await _shippingRequestRepository.GetAll()
+                .Where(x => (x.TenantId == tenantId || x.CarrierTenantId == tenantId) &&
+            x.Status == ShippingRequestStatus.PostPrice &&
+            x.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+                .Select(x => new SelectItemDto
+                {
+                    DisplayName = x.ReferenceNumber,
+                    Id = x.Id.ToString()
+                }).ToListAsync();
+        }
+
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        public async Task<List<SelectItemDto>> GetDedicateTrucksByRequest(int shippingRequestId)
+        {
+            DisableTenancyFilters();
+            return await _dedicatedShippingRequestTruckRepository.GetAll()
+                .Include(x => x.Truck)
+                .Where(x => x.ShippingRequestId == shippingRequestId)
+                .Select(x => new SelectItemDto
+                {
+                    DisplayName = x.Truck.GetDisplayName(),
+                    Id = x.Id.ToString()
+                }).ToListAsync();
+        }
+
+        #endregion
 
         #region Helper
         private async Task<long> CreateStep1(CreateOrEditDedicatedStep1Dto input)
