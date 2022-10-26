@@ -14,6 +14,7 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import KTCard from '@metronic/common/js/components/card';
+import { TruckPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance.component';
 
 @Component({
   selector: 'tms-for-shipper',
@@ -21,6 +22,7 @@ import KTCard from '@metronic/common/js/components/card';
   animations: [appModuleAnimation()],
 })
 export class TmsForShipperComponent extends AppComponentBase implements OnInit, AfterViewInit {
+  @ViewChild('truckPerformance') truckPerformance: TruckPerformanceComponent;
   @ViewChild('card', { static: true }) cardEl: ElementRef;
   @Input('shippingRequestId') shippingRequestId: number;
   card: any;
@@ -90,5 +92,9 @@ export class TmsForShipperComponent extends AppComponentBase implements OnInit, 
           });
       },
     });
+  }
+
+  openTruckPerformanceModal(truck: any) {
+    this.truckPerformance.show(truck.id, truck.kpi, truck.numberOfTrips);
   }
 }

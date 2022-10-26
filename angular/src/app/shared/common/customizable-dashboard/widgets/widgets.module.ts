@@ -58,6 +58,7 @@ import { CarrierComplitedTripsWidgetComponent } from './carrier/carrier-complite
 import { CarrierAcceptedVsRejectdRequestsComponent } from './carrier/carrier-accepted-vs-rejectd-requests/carrier-accepted-vs-rejectd-requests.component';
 import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoices-details-widget/carrier-invoices-details-widget.component';
 import { ProjectPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/project-performance/project-performance.component';
+import { TruckPerformanceChartComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance-chart/truck-performance-chart.component';
 
 @NgModule({
   declarations: [
@@ -106,6 +107,7 @@ import { ProjectPerformanceComponent } from '@app/main/shippingRequests/dedicate
     CarrierAcceptedVsRejectdRequestsComponent,
     CarrierInvoicesDetailsWidgetComponent,
     ProjectPerformanceComponent,
+    TruckPerformanceChartComponent,
   ],
   imports: [
     CommonModule,
@@ -165,7 +167,8 @@ import { ProjectPerformanceComponent } from '@app/main/shippingRequests/dedicate
     NumberOfRequestsForEachCityComponent,
     UnpricedRequestsInMarketplaceComponent,
     ProjectPerformanceComponent,
+    TruckPerformanceChartComponent,
   ],
-  exports: [ProjectPerformanceComponent],
+  exports: [ProjectPerformanceComponent, TruckPerformanceChartComponent],
 })
 export class WidgetsModule {}

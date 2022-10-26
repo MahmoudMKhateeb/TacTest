@@ -323,6 +323,7 @@ import { CreateOrEditDedicatedShippingRequestWizardComponent } from '@app/main/s
 import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
 import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/tmsForShipper/tms-for-shipper.component';
 import { WidgetsModule } from '@app/shared/common/customizable-dashboard/widgets/widgets.module';
+import { TruckPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance.component';
 
 @NgModule({
   imports: [
@@ -614,6 +615,7 @@ import { WidgetsModule } from '@app/shared/common/customizable-dashboard/widgets
     ActorSubmitInvoicesComponent,
     AssignTrucksAndDriversModalComponent,
     TmsForShipperComponent,
+    TruckPerformanceComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
