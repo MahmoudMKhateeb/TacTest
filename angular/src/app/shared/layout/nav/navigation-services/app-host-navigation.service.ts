@@ -87,6 +87,17 @@ export class AppHostNavigationService extends AppBaseNavigationService {
             undefined,
             () => !this._appSessionService.tenantId
           ),
+          new AppMenuItem(
+            'DedicatedInvoice',
+            '',
+            '',
+            '/app/main/invoices/dedicated',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => !this._appSessionService.tenantId
+          ),
 
           // new AppMenuItem(
           //   'InvoicingFrequency',
