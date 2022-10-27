@@ -240,17 +240,17 @@ namespace TACHYON.Tracking
 
         public async Task Accept(int id)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.CarrierClients);
             await _workFlowProvider.Accepted(id);
         }
         public async Task Start(int id)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.CarrierClients);
             await _workFlowProvider.Start(new ShippingRequestTripDriverStartInputDto { Id = id });
         }
         public async Task InvokeStatus(InvokeStatusInputDto input)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier,  AppFeatures.CarrierClients);
             var args = new PointTransactionArgs
             {
                 PointId = input.Id,
@@ -260,12 +260,12 @@ namespace TACHYON.Tracking
         }
         public async Task NextLocation(long id)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier,  AppFeatures.CarrierClients);
             await _workFlowProvider.GoToNextLocation(id);
         }
         public async Task<List<GetAllUploadedFileDto>> POD(long id)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper, AppFeatures.CarrierClients);
             return await _workFlowProvider.GetPOD(id);
         }
 

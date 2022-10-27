@@ -208,8 +208,7 @@ namespace TACHYON.Invoices
                 .ThenInclude(r => r.Translations)
                 .Include(i => i.Trips)
                 .ThenInclude(i => i.ShippingRequestFk)
-                .ThenInclude(r => r.DestinationCityFk)
-                .ThenInclude(r => r.Translations)
+                .ThenInclude(r => r.ShippingRequestDestinationCities)
                 .Include(i => i.Trips)
                 .ThenInclude(r => r.AssignedTruckFk)
                 .Include(i => i.Trips)
@@ -958,7 +957,7 @@ namespace TACHYON.Invoices
                     WayBillNumber = trip.WaybillNumber.ToString(),
                     TruckType = trip.AssignedTruckFk != null ? ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName : "",
                     Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestFk.OriginCityFk.DisplayName,
-                    Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestFk.DestinationCityFk.DisplayName,
+                    Destination = trip.ShippingRequestFk.ShippingRequestDestinationCities.First().CityFk.DisplayName,
                     DateWork = trip.EndTripDate.HasValue ? trip.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.ActorInvoiceFk.CreationTime.ToString("dd/MM/yyyy"),
                     Remarks = trip.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
                        L("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops) : "",
