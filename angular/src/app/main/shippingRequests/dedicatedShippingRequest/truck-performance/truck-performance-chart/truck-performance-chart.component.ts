@@ -62,7 +62,7 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
         color: 'rgba(187, 41, 41, 0.847)',
       },
       {
-        name: 'numberOfTrips',
+        name: this.l('NumberOfTrips'),
         data: numberOfTripsChartData,
         color: 'rgba(154,154,154,0.84)',
       },
