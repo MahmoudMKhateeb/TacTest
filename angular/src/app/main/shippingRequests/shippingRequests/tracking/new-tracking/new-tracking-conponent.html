@@ -180,7 +180,7 @@
                             </div>
                             <!--                      points DropDown Actions      -->
                             <div
-                              *ngIf="!point.isComplete && trip.status !== tripStatusesEnum.New && trip.driver && (isCarrier || isTachyonDealerOrHost) "
+                              *ngIf="!point.isComplete && trip.status !== tripStatusesEnum.New && trip.driver && (isCarrier || isTachyonDealerOrHost || hasCarrierClients) "
                               class="d-inline-block"
                               ngbDropdown
                             >

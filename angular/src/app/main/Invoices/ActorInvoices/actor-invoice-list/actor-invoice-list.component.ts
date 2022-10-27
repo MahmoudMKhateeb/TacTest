@@ -121,13 +121,7 @@ export class ActorInvoiceListComponent extends AppComponentBase implements OnIni
     });
   }
   details(invoice: any): void {
-    // if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
-    //   this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
-    // } else {
-    //   this._InvoiceServiceProxy.getById(invoice.id).subscribe((result) => {
-    //     this.InvoiceDetailsModel.show(result);
-    //   });
-    // }
+      this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
   }
 
   getAllInvoices() {
