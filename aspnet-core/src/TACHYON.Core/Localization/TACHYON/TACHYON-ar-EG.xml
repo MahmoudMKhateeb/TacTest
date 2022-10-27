@@ -2875,6 +2875,7 @@
 		<text name="NoOfTrucks">عدد الشاحنات</text>
     <text name="ShippingRequestNotFound">الطلب غير موجود</text>
 		<text name="YouMustCompleteWizardStepsFirst">يجب إكمل جميع خطوات الطلب</text>
+    <text name="downloadDedicatedInvoice">تحميل فاتورة التأجير</text>
     
 	</texts>
 </localizationDictionary>

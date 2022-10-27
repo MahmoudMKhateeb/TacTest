@@ -78,6 +78,11 @@
     <ProjectReference Include="..\TACHYON.EntityFrameworkCore\TACHYON.EntityFrameworkCore.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Invoices\Reports\Datasets\GetDedicatedInvoiceItemReportInfo.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetDedicatedInvoiceItemReportInfo.xsd</DependentUpon>
+    </Compile>
     <Compile Update="Invoices\Reports\Datasets\GetInvoiceNoteItemReportInfoDataset.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -145,6 +150,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Update="Invoices\Reports\Datasets\GetDedicatedInvoiceItemReportInfo.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetDedicatedInvoiceItemReportInfo.Designer.cs</LastGenOutput>
+    </None>
     <None Update="Invoices\Reports\Datasets\GetInvoiceNoteItemReportInfoDataset.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>GetInvoiceNoteItemReportInfoDataset.Designer.cs</LastGenOutput>

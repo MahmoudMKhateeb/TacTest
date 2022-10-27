@@ -11,12 +11,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TACHYON.Authorization;
 using TACHYON.Configuration;
 using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 using TACHYON.DedicatedDynamicInvoices.Dtos;
 using TACHYON.DedicatedInvoices;
 using TACHYON.Dto;
 using TACHYON.Features;
+using TACHYON.Invoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
 using TACHYON.Shipping.ShippingRequests;
@@ -25,7 +27,7 @@ using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.DedicatedDynamicInvoices
 {
-    [AbpAuthorize]
+    [AbpAuthorize(AppPermissions.Pages_DedicatedDynamicInvoices)]
     [RequiresFeature(AppFeatures.TachyonDealer)]
     public class DedicatedDynamiceInvoicesAppService : TACHYONAppServiceBase
     {
@@ -35,7 +37,8 @@ namespace TACHYON.DedicatedDynamicInvoices
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly TenantManager _tenantManager;
-        public DedicatedDynamiceInvoicesAppService(IRepository<DedicatedDynamicInvoice, long> dedicatedInvoiceRepository, ISettingManager settingManager, IRepository<PriceOffer, long> priceOfferRepository, IRepository<ShippingRequest, long> shippingRequestRepository, TenantManager tenantManager, IRepository<DedicatedDynamicInvoiceItem, long> dedicatedInvoiceItemRepository)
+        private readonly InvoiceManager _invoiceManager;
+        public DedicatedDynamiceInvoicesAppService(IRepository<DedicatedDynamicInvoice, long> dedicatedInvoiceRepository, ISettingManager settingManager, IRepository<PriceOffer, long> priceOfferRepository, IRepository<ShippingRequest, long> shippingRequestRepository, TenantManager tenantManager, IRepository<DedicatedDynamicInvoiceItem, long> dedicatedInvoiceItemRepository, InvoiceManager invoiceManager)
         {
             _dedicatedInvoiceRepository = dedicatedInvoiceRepository;
             _settingManager = settingManager;
@@ -43,6 +46,7 @@ namespace TACHYON.DedicatedDynamicInvoices
             _shippingRequestRepository = shippingRequestRepository;
             _tenantManager = tenantManager;
             _dedicatedInvoiceItemRepository = dedicatedInvoiceItemRepository;
+            _invoiceManager = invoiceManager;
         }
 
         public async Task<LoadResult> GetAll(string filter)
@@ -67,26 +71,61 @@ namespace TACHYON.DedicatedDynamicInvoices
                 await Update(input);
             }
         }
-
+        [AbpAuthorize(AppPermissions.Pages_DedicatedDynamicInvoices_Update)]
         public async Task<CreateOrEditDedicatedInvoiceDto> GetDedicatedInvoiceForEdit(long id)
         {
             var invoice = await _dedicatedInvoiceRepository.GetAllIncluding(x => x.DedicatedDynamicInvoiceItems).FirstOrDefaultAsync(x=>x.Id == id);
             return ObjectMapper.Map<CreateOrEditDedicatedInvoiceDto>(invoice);
         }
 
+        [AbpAuthorize(AppPermissions.Pages_DedicatedDynamicInvoices_Delete)]
+        public async Task Delete(long id)
+        {
+            var invoice = await _dedicatedInvoiceRepository.GetAllIncluding(x => x.DedicatedDynamicInvoiceItems).FirstOrDefaultAsync(x => x.Id == id);
+            if (DedicatedInvoiceGenerated(invoice))
+                throw new UserFriendlyException(L("DeleteNotAllowed"));
+
+            await _dedicatedInvoiceRepository.DeleteAsync(invoice);
+        }
+
+        public async Task GenerateDedicatedInvoice(long id)
+        {
+            var invoice = await _dedicatedInvoiceRepository.GetAllIncluding(x => x.DedicatedDynamicInvoiceItems, x=>x.Tenant).FirstOrDefaultAsync(x => x.Id == id);
+            if(invoice.InvoiceAccountType == InvoiceAccountType.AccountReceivable)
+            {
+                await _invoiceManager.GenerateDedicatedDynamicInvoice(invoice.Tenant, invoice);
+            }
+            else
+            {
+                await _invoiceManager.GenerateSubmitDedicatedDynamicInvoice(invoice.Tenant, invoice);
+            }
+        }
+
         #region Helper
+        [AbpAuthorize(AppPermissions.Pages_DedicatedDynamicInvoices_Create)]
         private async Task Create(CreateOrEditDedicatedInvoiceDto input)
         {
             var invoice = ObjectMapper.Map<DedicatedDynamicInvoice>(input);
             await _dedicatedInvoiceRepository.InsertAsync(invoice);
         }
 
+        [AbpAuthorize(AppPermissions.Pages_DedicatedDynamicInvoices_Update)]
         private async Task Update(CreateOrEditDedicatedInvoiceDto input)
         {
-            var invoice =await _dedicatedInvoiceRepository.GetAllIncluding(x=>x.DedicatedDynamicInvoiceItems).SingleAsync(x=>x.Id == input.Id.Value);
+            var invoice = await _dedicatedInvoiceRepository.GetAllIncluding(x => x.DedicatedDynamicInvoiceItems).SingleAsync(x => x.Id == input.Id.Value);
+            if (DedicatedInvoiceGenerated(invoice))
+            {
+                throw new UserFriendlyException(L("UpdateNotAllowed"));
+            }
             await RemoveDeletedItems(input, invoice);
 
             ObjectMapper.Map(input, invoice);
+        }
+
+        private static bool DedicatedInvoiceGenerated(DedicatedDynamicInvoice invoice)
+        {
+            return (invoice.InvoiceAccountType == Invoices.InvoiceAccountType.AccountReceivable && invoice.InvoiceId != null) ||
+                            (invoice.InvoiceAccountType == Invoices.InvoiceAccountType.AccountPayable && invoice.SubmitInvoiceId != null);
         }
 
         private async Task RemoveDeletedItems(CreateOrEditDedicatedInvoiceDto input, DedicatedDynamicInvoice invoice)

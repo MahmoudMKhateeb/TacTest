@@ -3121,6 +3121,7 @@
 		<text name="NoOfTrucks">No of trucks</text>
 		<text name="ShippingRequestNotFound">Shipping request not found</text>
     <text name="YouMustCompleteWizardStepsFirst">You must complete wizard steps first</text>
+    <text name="downloadDedicatedInvoice">Download Dedicated Invoice</text>
 
 	</texts>
 </localizationDictionary>

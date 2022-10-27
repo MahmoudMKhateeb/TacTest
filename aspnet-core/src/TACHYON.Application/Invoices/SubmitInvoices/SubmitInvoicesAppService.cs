@@ -20,6 +20,7 @@ using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Cities.Dtos;
 using TACHYON.Common;
+using TACHYON.DedicatedInvoices;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
 using TACHYON.DynamicInvoices;
@@ -57,6 +58,7 @@ namespace TACHYON.Invoices.Groups
         private readonly BalanceManager _balanceManager;
         private readonly TransactionManager _transactionManager;
         private readonly IRepository<DynamicInvoice, long> _DynamicInvoiceRepository;
+        private readonly IRepository<DedicatedDynamicInvoice, long> _dedicatedInvoiceRepository;
 
 
         public SubmitInvoicesAppService(
@@ -69,7 +71,7 @@ namespace TACHYON.Invoices.Groups
             IAppNotifier appNotifier,
             InvoiceManager invoiceManager,
             IExcelExporterManager<SubmitInvoiceListDto> excelExporterManager,
-            IRepository<DocumentFile, Guid> documentFileRepository, IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository, IFeatureChecker featureChecker, BalanceManager balanceManager, TransactionManager transactionManager, IRepository<DynamicInvoice, long> dynamicInvoiceRepository)
+            IRepository<DocumentFile, Guid> documentFileRepository, IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository, IFeatureChecker featureChecker, BalanceManager balanceManager, TransactionManager transactionManager, IRepository<DynamicInvoice, long> dynamicInvoiceRepository, IRepository<DedicatedDynamicInvoice, long> dedicatedInvoiceRepository)
         {
             _PeriodRepository = PeriodRepository;
             _SubmitInvoiceRepository = SubmitInvoiceRepository;
@@ -86,6 +88,7 @@ namespace TACHYON.Invoices.Groups
             _balanceManager = balanceManager;
             _transactionManager = transactionManager;
             _DynamicInvoiceRepository = dynamicInvoiceRepository;
+            _dedicatedInvoiceRepository = dedicatedInvoiceRepository;
         }
 
 
@@ -407,6 +410,10 @@ namespace TACHYON.Invoices.Groups
             {
                 return GetDynamicInvoiceItems(SubmitInvoice);
             }
+            else if(SubmitInvoice.Channel == InvoiceChannel.Dedicated)
+            {
+                return GetDedicatedInvoiceItems(SubmitInvoice);
+            }
             var TotalItem = SubmitInvoice.Trips.Count +
                             SubmitInvoice.Trips.Sum(v => v.ShippingRequestTripFK.ShippingRequestTripVases.Count);
             int Sequence = 1;
@@ -573,6 +580,54 @@ namespace TACHYON.Invoices.Groups
             });
             return Items;
         }
+
+        
+        private List<InvoiceItemDto> GetDedicatedInvoiceItems(SubmitInvoice submitInvoice)
+        {
+            var dedicatedInvoice = _dedicatedInvoiceRepository.GetAll()
+                .Include(x => x.DedicatedDynamicInvoiceItems)
+                .ThenInclude(x => x.DedicatedShippingRequestTruck)
+                .ThenInclude(x => x.Truck)
+                .ThenInclude(x => x.TrucksTypeFk)
+                .Include(x => x.DedicatedDynamicInvoiceItems)
+                .ThenInclude(x => x.DedicatedShippingRequestTruck)
+                .ThenInclude(x => x.ShippingRequest)
+                .ThenInclude(x => x.ShippingRequestDestinationCities)
+                .ThenInclude(x => x.CityFk)
+                 .Include(x => x.DedicatedDynamicInvoiceItems)
+                .ThenInclude(x => x.DedicatedShippingRequestTruck)
+                .ThenInclude(x => x.ShippingRequest)
+                .ThenInclude(x => x.ShippingRequestDestinationCities)
+                .FirstOrDefault(x => x.SubmitInvoiceId == submitInvoice.Id);
+
+            var TotalItem = dedicatedInvoice.DedicatedDynamicInvoiceItems.Count;
+
+            int Sequence = 1;
+            List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
+            dedicatedInvoice.DedicatedDynamicInvoiceItems.ToList().ForEach(item =>
+            {
+                Items.Add(new InvoiceItemDto
+                {
+                    Sequence = $"{Sequence}/{TotalItem}",
+                    SubTotalAmount = item.ItemSubTotalAmount,
+                    VatAmount = item.VatAmount,
+                    TotalAmount = item.ItemTotalAmount,
+                    WayBillNumber = "",
+                    Source = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.Count() > 0 ? "Destination Cities" :
+                    item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.First().CityFk.DisplayName,
+
+                    Destination = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.Count() > 0 ? "Destination Cities" :
+                    item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.First().CityFk.DisplayName,
+
+                    DateWork = "",
+                    Remarks = item.WorkingDayType == DedicatedDynamicInvocies.WorkingDayType.OverTime ?"Over Time" :item.Remarks,
+                    TruckType = item.DedicatedShippingRequestTruck.Truck.TrucksTypeFk.DisplayName
+                });
+                Sequence++;
+            });
+            return Items;
+        }
+
         #endregion
     }
 }

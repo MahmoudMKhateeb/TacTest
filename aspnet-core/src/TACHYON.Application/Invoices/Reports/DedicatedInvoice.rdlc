@@ -9,15 +9,83 @@
       </ConnectionProperties>
       <rd:DataSourceID>c884b9a9-51d1-49e3-bbe9-d7d94b767315</rd:DataSourceID>
     </DataSource>
-    <DataSource Name="GetInvoiceShippingRequestsReportInfoDataset">
+    <DataSource Name="GetDedicatedInvoiceItemReportInfo">
       <ConnectionProperties>
         <DataProvider>System.Data.DataSet</DataProvider>
         <ConnectString>/* Local Connection */</ConnectString>
       </ConnectionProperties>
-      <rd:DataSourceID>ae23b1ca-a7c8-4969-b7c7-479c58f66c1d</rd:DataSourceID>
+      <rd:DataSourceID>d8a7f154-72e0-4d8f-a333-376b732d59ff</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
+    <DataSet Name="GetDedicatedInvoiceItemReportInfo">
+      <Query>
+        <DataSourceName>GetDedicatedInvoiceItemReportInfo</DataSourceName>
+        <CommandText>/* Local Query */</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Sequence">
+          <DataField>Sequence</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TruckType">
+          <DataField>TruckType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TruckPlateNumber">
+          <DataField>TruckPlateNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Duration">
+          <DataField>Duration</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PricePerDay">
+          <DataField>PricePerDay</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTotalAmount">
+          <DataField>SubTotalAmount</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TaxVat">
+          <DataField>TaxVat</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TotalAmount">
+          <DataField>TotalAmount</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Remarks">
+          <DataField>Remarks</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="VatAmount">
+          <DataField>VatAmount</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="From">
+          <DataField>From</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="To">
+          <DataField>To</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Date">
+          <DataField>Date</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <rd:DataSetInfo>
+        <rd:DataSetName>GetDedicatedInvoiceItemReportInfo</rd:DataSetName>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetDedicatedInvoiceItemReportInfo.xsd</rd:SchemaPath>
+        <rd:TableName>DataTable1</rd:TableName>
+        <rd:TableAdapterFillMethod />
+        <rd:TableAdapterGetDataMethod />
+        <rd:TableAdapterName />
+      </rd:DataSetInfo>
+    </DataSet>
     <DataSet Name="GetInvoiceReportInfoDataset">
       <Query>
         <DataSourceName>GetInvoiceReportInfoDataset</DataSourceName>
@@ -136,82 +204,58 @@
           <DataField>QRCode</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="Logo">
+          <DataField>Logo</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="BrokerName">
+          <DataField>BrokerName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BrokerBankNameArabic">
+          <DataField>BrokerBankNameArabic</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BrokerBankNameEnglish">
+          <DataField>BrokerBankNameEnglish</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BrokerBankAccountNumber">
+          <DataField>BrokerBankAccountNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BrokerIban">
+          <DataField>BrokerIban</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BrokerEmailAddress">
+          <DataField>BrokerEmailAddress</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BrokerWebSite">
+          <DataField>BrokerWebSite</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BrokerAddress">
+          <DataField>BrokerAddress</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BrokerMobile">
+          <DataField>BrokerMobile</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BrokerCr">
+          <DataField>BrokerCr</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BrokerVat">
+          <DataField>BrokerVat</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>GetInvoiceReportInfoDataset</rd:DataSetName>
-        <rd:SchemaPath>E:\TrustAngleProjects\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd</rd:SchemaPath>
-        <rd:TableName>DataTable1</rd:TableName>
-        <rd:TableAdapterFillMethod />
-        <rd:TableAdapterGetDataMethod />
-        <rd:TableAdapterName />
-      </rd:DataSetInfo>
-    </DataSet>
-    <DataSet Name="GetInvoiceShippingRequestsReportInfoDataset">
-      <Query>
-        <DataSourceName>GetInvoiceShippingRequestsReportInfoDataset</DataSourceName>
-        <CommandText>/* Local Query */</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="DateWork">
-          <DataField>DateWork</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Source">
-          <DataField>Source</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Destination">
-          <DataField>Destination</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="TruckType">
-          <DataField>TruckType</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Price">
-          <DataField>Price</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Notes">
-          <DataField>Notes</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Sequence">
-          <DataField>Sequence</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="WayBillNumber">
-          <DataField>WayBillNumber</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SubTotalAmount">
-          <DataField>SubTotalAmount</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="VatAmount">
-          <DataField>VatAmount</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="TotalAmount">
-          <DataField>TotalAmount</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Remarks">
-          <DataField>Remarks</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="RoundTrip">
-          <DataField>RoundTrip</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ContainerNumber">
-          <DataField>ContainerNumber</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <rd:DataSetInfo>
-        <rd:DataSetName>GetInvoiceShippingRequestsReportInfoDataset</rd:DataSetName>
-        <rd:SchemaPath>E:\TrustAngleProjects\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceShippingRequestsReportInfoDataset.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
@@ -2130,7 +2174,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Waybill</Value>
+                                  <Value>From</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2146,9 +2190,9 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>وثيقة الشحن</Value>
+                                  <Value>من</Value>
                                   <Style>
-                                    <FontFamily>Cairo</FontFamily>
+                                    <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2185,7 +2229,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Origin</Value>
+                                  <Value>To</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2201,9 +2245,9 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>مكان التحميل</Value>
+                                  <Value>إلى</Value>
                                   <Style>
-                                    <FontFamily>Cairo</FontFamily>
+                                    <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2244,7 +2288,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Destination</Value>
+                                  <Value>Truck Type</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2260,9 +2304,9 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>مكان التنزيل</Value>
+                                  <Value>نوع الشاحنة</Value>
                                   <Style>
-                                    <FontFamily>Cairo</FontFamily>
+                                    <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2303,7 +2347,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Truck Type</Value>
+                                  <Value>Truck Plate</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2319,7 +2363,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>نوع الشاحنة</Value>
+                                  <Value>لوحة الشاحنة</Value>
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2359,7 +2403,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Price SAR</Value>
+                                  <Value>Duration</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2375,9 +2419,9 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>السعر ر.س</Value>
+                                  <Value>الفترة</Value>
                                   <Style>
-                                    <FontFamily>Cairo</FontFamily>
+                                    <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2428,32 +2472,23 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>(VAT </Value>
+                                  <Value>Price\day SAR</Value>
                                   <Style>
+                                    <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
                                   </Style>
                                 </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!TaxVat.Value, "GetInvoiceReportInfoDataset")</Value>
-                                  <Style>
-                                    <FontSize>7pt</FontSize>
-                                    <FontWeight>Normal</FontWeight>
-                                    <Color>White</Color>
-                                  </Style>
-                                </TextRun>
-                                <TextRun>
-                                  <Value> %) SAR
-</Value>
-                                  <Style>
-                                    <FontSize>7pt</FontSize>
-                                    <FontWeight>Normal</FontWeight>
-                                    <Color>White</Color>
-                                  </Style>
-                                </TextRun>
-                                <TextRun>
-                                  <Value>قيمة الضريبة المضافة ر.س</Value>
+                                  <Value>السعر/يوم ر.س</Value>
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2552,23 +2587,32 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Quantity</Value>
+                                  <Value>(VAT </Value>
                                   <Style>
-                                    <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
                                   </Style>
                                 </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                            <Paragraph>
-                              <TextRuns>
                                 <TextRun>
-                                  <Value>الكمية</Value>
+                                  <Value>=First(Fields!TaxVat.Value, "GetDedicatedInvoiceItemReportInfo")</Value>
+                                  <Style>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value> %) SAR
+</Value>
+                                  <Style>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>قيمة الضريبة المضافة ر.س</Value>
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2620,7 +2664,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Round Trip</Value>
+                                  <Value>Total</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2636,9 +2680,9 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>الرحلة المرجعة</Value>
+                                  <Value>الإجمالي</Value>
                                   <Style>
-                                    <FontFamily>Cairo</FontFamily>
+                                    <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2687,7 +2731,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Container Number</Value>
+                                  <Value>Remarks</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2703,9 +2747,9 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>رقم الحاوية</Value>
+                                  <Value>الملاحظات</Value>
                                   <Style>
-                                    <FontFamily>Cairo</FontFamily>
+                                    <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>White</Color>
@@ -2740,7 +2784,7 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Sequence1">
+                        <Textbox Name="Sequence">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -2763,7 +2807,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Sequence1</rd:DefaultName>
+                          <rd:DefaultName>Sequence</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2787,7 +2831,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!DateWork.Value</Value>
+                                  <Value>=Fields!Date.Value</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Open Sans</FontFamily>
@@ -2831,7 +2875,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!WayBillNumber.Value</Value>
+                                  <Value>=Fields!From.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2861,14 +2905,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Source1">
+                        <Textbox Name="To">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Source.Value</Value>
+                                  <Value>=Fields!To.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2881,7 +2925,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Source1</rd:DefaultName>
+                          <rd:DefaultName>To</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2903,14 +2947,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Destination1">
+                        <Textbox Name="TruckType">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Destination.Value</Value>
+                                  <Value>=Fields!TruckType.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2923,7 +2967,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Destination1</rd:DefaultName>
+                          <rd:DefaultName>TruckType</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2944,14 +2988,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="TruckType1">
+                        <Textbox Name="TruckPlateNumber">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!TruckType.Value</Value>
+                                  <Value>=Fields!TruckPlateNumber.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2964,7 +3008,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>TruckType1</rd:DefaultName>
+                          <rd:DefaultName>TruckPlateNumber</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2988,7 +3032,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!SubTotalAmount.Value</Value>
+                                  <Value>=Fields!Duration.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -3030,7 +3074,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!VatAmount.Value</Value>
+                                  <Value>=Fields!PricePerDay.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -3073,7 +3117,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!TotalAmount.Value</Value>
+                                  <Value>=Fields!SubTotalAmount.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -3111,7 +3155,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Remarks.Value</Value>
+                                  <Value>=Fields!VatAmount.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -3147,14 +3191,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="RoundTrip">
+                        <Textbox Name="TotalAmount1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!RoundTrip.Value</Value>
+                                  <Value>=Fields!TotalAmount.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -3168,7 +3212,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>RoundTrip</rd:DefaultName>
+                          <rd:DefaultName>TotalAmount1</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>White</Color>
@@ -3189,14 +3233,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="ContainerNumber">
+                        <Textbox Name="Remarks">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ContainerNumber.Value</Value>
+                                  <Value>=Fields!Remarks.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -3210,7 +3254,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>ContainerNumber</rd:DefaultName>
+                          <rd:DefaultName>Remarks</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>White</Color>
@@ -3259,7 +3303,7 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>GetInvoiceShippingRequestsReportInfoDataset</DataSetName>
+            <DataSetName>GetDedicatedInvoiceItemReportInfo</DataSetName>
             <Top>3.84951cm</Top>
             <Left>0.56761cm</Left>
             <Height>1.87638cm</Height>
@@ -3914,7 +3958,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value />
+                    <Value xml:space="preserve">                         </Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
@@ -4699,6 +4743,39 @@
               </Border>
             </Style>
           </Image>
+          <Textbox Name="Textbox95">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!Note.Value, "GetInvoiceReportInfoDataset")</Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                      <Color>DimGray</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox93</rd:DefaultName>
+            <Top>7.01893cm</Top>
+            <Left>7.57342cm</Left>
+            <Height>0.6cm</Height>
+            <Width>1.57971cm</Width>
+            <ZIndex>11</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <Height>11.81418cm</Height>
         <Style>
