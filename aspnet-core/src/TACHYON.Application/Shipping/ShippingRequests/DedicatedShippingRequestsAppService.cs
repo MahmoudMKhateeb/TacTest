@@ -219,6 +219,7 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task UpdateRequestKPI(UpdateRequestKPIInput input)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             var request = await _shippingRequestRepository.FirstOrDefaultAsync(input.ShippingRequestId);
             request.DedicatedKPI = input.KPI;
         }
@@ -226,6 +227,7 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task UpdateTruckKPI(UpdateTruckKPIInput input)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             var dedicatedTruck = await _dedicatedShippingRequestTruckRepository.FirstOrDefaultAsync(input.DedicatedTruckId);
             dedicatedTruck.KPI = input.KPI;
         }
