@@ -177,14 +177,15 @@ namespace TACHYON.Authorization.Users
                            where user.IsDriver 
                 join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
                 join truck in _truckRepository.GetAll() on user.Id equals truck.DriverUserId
-                select new DriverMappingEntity(){ 
+                let dedicatedDriver = user.DedicatedShippingRequestDrivers.FirstOrDefault(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy)
+                           select new DriverMappingEntity(){ 
                     User = user,
                     CompanyName = tenant.companyName,
                     AssignedTruckId=truck.Id, 
                     AssignedTruck=truck.GetDisplayName(),
                     RentedStatus=user.DedicatedShippingRequestDrivers.Any(x=>x.Status==Shipping.Dedicated.WorkingStatus.Busy)? "Busy" :"Active",
-                ? user.DedicatedShippingRequestDrivers.Where(x=>x.Status==Shipping.Dedicated.WorkingStatus.Busy).First().ShippingRequest.ReferenceNumber 
-                :""})
+                    RentedShippingRequestReference = dedicatedDriver != null 
+                ? dedicatedDriver.ShippingRequest.ReferenceNumber : string.Empty })
                 .Where(x=> x.User != null )
                 .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
 
