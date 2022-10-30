@@ -10,6 +10,7 @@ namespace TACHYON.DedicatedDynamicInvoices.Dtos
 {
     public class DedicatedDynamicInvoiceDto : EntityDto<long>
     {
+        public DateTime CreationTime { get; set; }
         public int TenantId { get; set; }
         public string TenantName { get; set; }
         public InvoiceAccountType InvoiceAccountType { get; set; }

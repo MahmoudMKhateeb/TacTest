@@ -51,6 +51,7 @@ namespace TACHYON.DedicatedDynamicInvoices
 
         public async Task<LoadResult> GetAll(string filter)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             var query = _dedicatedInvoiceRepository.GetAll()
                 .ProjectTo<DedicatedDynamicInvoiceDto>(AutoMapperConfigurationProvider)
             .AsNoTracking();
@@ -163,6 +164,7 @@ namespace TACHYON.DedicatedDynamicInvoices
 
         public async Task<decimal> GetDedicatePricePerDay(long ShippingRequestId, int tenantId)
         {
+           await  DisableTenancyFilterIfTachyonDealerOrHost();
             var edition = _tenantManager.GetById(tenantId).EditionId;
             var price =await _priceOfferRepository.GetAll().Where(x => x.ShippingRequestId == ShippingRequestId &&
             x.Status == PriceOfferStatus.Accepted).FirstOrDefaultAsync();
