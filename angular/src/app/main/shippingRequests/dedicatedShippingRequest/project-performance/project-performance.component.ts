@@ -16,6 +16,7 @@ export class ProjectPerformanceComponent extends AppComponentBase implements OnI
   public chartOptions: Partial<ChartOptions>;
   loading = false;
   showModifyKpi: boolean;
+  newKpi: number;
 
   constructor(injector: Injector, private _dedicatedShippingRequestsServiceProxy: DedicatedShippingRequestsServiceProxy) {
     super(injector);
@@ -77,13 +78,20 @@ export class ProjectPerformanceComponent extends AppComponentBase implements OnI
   updateKPI() {
     const input = new UpdateRequestKPIInput({
       shippingRequestId: this.shippingRequestId,
-      kpi: this.kpi,
+      kpi: this.newKpi,
     });
     this.loading = true;
     this._dedicatedShippingRequestsServiceProxy.updateRequestKPI(input).subscribe((res) => {
       this.notify.success(this.l('UpdatedSuccessfully'));
+      this.kpi = this.newKpi;
+      this.fillChartData();
       this.loading = false;
       this.showModifyKpi = false;
     });
+  }
+
+  showEditFields() {
+    this.showModifyKpi = true;
+    this.newKpi = this.kpi;
   }
 }

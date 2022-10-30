@@ -37,6 +37,7 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
   }
 
   ngOnInit() {
+    this.subscribeToUpdates();
     if (isNotNullOrUndefined(this.shippingRequestId)) {
       this.getTrucks();
       return;
@@ -147,7 +148,7 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
     this._dedicatedShippingRequestsServiceProxy.updateTruckKPI(input).subscribe((res) => {
       this.notify.success(this.l('UpdatedSuccessfully'));
       this.loading = false;
-      // this.showModifyKpi = false;
+      abp.event.trigger('TruckPerformanceUpdated', { isChanged: true, value: this.truckKPI });
       this.updatedTruckKpi.emit(true);
     });
   }
@@ -173,5 +174,14 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
       },
     });
     this.dataSourceForTrucks.store.load();
+  }
+
+  private subscribeToUpdates() {
+    abp.event.on('TruckPerformanceUpdated', (changed) => {
+      if (changed?.isChanged && isNotNullOrUndefined(this.shippingRequestId)) {
+        this.truckKPI = changed.value;
+        this.getTrucks();
+      }
+    });
   }
 }

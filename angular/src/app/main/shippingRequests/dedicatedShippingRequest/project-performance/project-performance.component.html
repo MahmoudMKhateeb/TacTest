@@ -5,7 +5,7 @@
       <h3 class="card-label">{{ l('ProjectPerformance') }}</h3>
     </div>
     <div class="actions" *ngIf="isTachyonDealer">
-      <button class="btn btn-danger" (click)="showModifyKpi = true">
+      <button class="btn btn-danger" (click)="showEditFields()">
         {{ l('updateKPIForRequest') }}
       </button>
     </div>
@@ -13,9 +13,9 @@
   <div class="card-body">
     <div class="row gutter-b" *ngIf="isTachyonDealer && showModifyKpi">
       <div class="col-12">
-        <label class="form-label" for="kpi">{{ l('ShippingRequestKPI') }} </label>
+        <label class="form-label" for="newKpi">{{ l('ShippingRequestKPI') }} </label>
         <div class="input-group">
-          <input class="form-control" type="number" name="kpi" id="kpi" [(ngModel)]="kpi" />
+          <input class="form-control" type="number" name="newKpi" id="newKpi" [(ngModel)]="newKpi" />
           <div class="input-group-append">
             <button class="btn btn-danger" (click)="updateKPI()">
               {{ l('save') }}
