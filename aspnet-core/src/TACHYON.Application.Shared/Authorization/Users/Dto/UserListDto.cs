@@ -65,5 +65,7 @@ namespace TACHYON.Authorization.Users.Dto
         public decimal Rate { get; set; }
         public string RentedStatus { get; set; }
         public string RentedShippingRequestReference { get; set; }
+        public long AssignedTruckId { get; set; }
+        public string AssignedTruck { get; set; }
     }
 }

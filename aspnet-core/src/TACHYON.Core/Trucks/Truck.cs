@@ -55,10 +55,10 @@ namespace TACHYON.Trucks
 
         [ForeignKey("TruckStatusId")] public TruckStatus TruckStatusFk { get; set; }
 
-        // public virtual long? Driver1UserId { get; set; }
+        public virtual long? DriverUserId { get; set; }
 
-        // [ForeignKey("Driver1UserId")]
-        // public User Driver1UserFk { get; set; }
+        [ForeignKey("DriverUserId")]
+        public User DriverUserFk { get; set; }
 
         //public virtual long? Driver2UserId { get; set; }
 

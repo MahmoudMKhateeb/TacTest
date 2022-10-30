@@ -116,6 +116,7 @@ namespace TACHYON.Trucks
                                                .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer), r => r.TenantId == AbpSession.TenantId)
                                                .Include(x=>x.DedicatedShippingRequestTrucks)
                                                .ThenInclude(x=>x.ShippingRequest)
+                                               .Include((x=>x.DriverUserFk))
                         join tenant in _lookupTenantRepository.GetAll() on truck.TenantId equals tenant.Id
                         join document in documentQuery on truck.Id equals document.TruckId
 
@@ -144,6 +145,7 @@ namespace TACHYON.Trucks
                             OtherTransportTypeName = truck.OtherTransportTypeName,
                             OtherTrucksTypeName = truck.OtherTrucksTypeName,
                             WorkingTruckStatus = truck.DedicatedShippingRequestTrucks.Any(x=>x.Status == Shipping.Dedicated.WorkingStatus.Busy)== true ?"Busy" :"Active",
+                            DriverUser = truck.DriverUserFk.Name +"",
                             WorkingShippingRequestReference= truck.DedicatedShippingRequestTrucks.Any(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy) == true 
                             ? truck.DedicatedShippingRequestTrucks.First().ShippingRequest.ReferenceNumber :""
                         };
@@ -617,6 +619,16 @@ namespace TACHYON.Trucks
                 .ToListAsync();
 
             return ObjectMapper.Map<List<PlateTypeSelectItemDto>>(plateTypes);
+        }
+
+        public async Task<long?> GetTruckByDriverId(long driverId)
+        {
+            return (await _truckRepository.GetAll().FirstOrDefaultAsync(x => x.DriverUserId == driverId))?.Id;
+        }
+
+        public async Task<long?> GetDriverByTruckId(long truckId)
+        {
+            return (await _truckRepository.GetAll().FirstOrDefaultAsync(x => x.Id == truckId))?.DriverUserId;
         }
 
         #endregion

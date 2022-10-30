@@ -191,6 +191,7 @@
                 (click)="checkData('driver')"
                 class="form-control"
                 [disabled]="saving"
+                (change)="DriverOrTruckSelected(assignDriverAndTruck.assignedDriverUserId, null)"
               >
                 <option [ngValue]="null">{{ l('SelectaDriver') }}</option>
                 <option *ngFor="let item of allDrivers" [value]="item.id">{{ item.displayName }}</option>
@@ -205,6 +206,7 @@
                 (click)="checkData('truck')"
                 class="form-control"
                 [disabled]="saving"
+                (change)="DriverOrTruckSelected(null, assignDriverAndTruck.assignedTruckId)"
               >
                 <option [ngValue]="null">{{ l('Selectatruck') }}</option>
                 <option *ngFor="let item of allTrucks" [value]="item.id">{{ item.displayName }}</option>

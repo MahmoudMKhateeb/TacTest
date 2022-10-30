@@ -268,4 +268,16 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
       this.allDedicatedTrucks = res;
     });
   }
+
+  DriverOrTruckSelected(driverUserId?: number, truckId?: number) {
+    if (isNotNullOrUndefined(driverUserId)) {
+      this._trucksServiceProxy.getTruckByDriverId(driverUserId).subscribe((result) => {
+        if (!isNotNullOrUndefined(this.assignDriverAndTruck.assignedTruckId)) this.assignDriverAndTruck.assignedTruckId = result;
+      });
+    } else if (isNotNullOrUndefined(truckId)) {
+      this._trucksServiceProxy.getDriverByTruckId(truckId).subscribe((result) => {
+        if (!isNotNullOrUndefined(this.assignDriverAndTruck.assignedDriverUserId)) this.assignDriverAndTruck.assignedDriverUserId = result;
+      });
+    }
+  }
 }

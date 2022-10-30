@@ -622,6 +622,9 @@ namespace TACHYON
                         ol.TruckStatusFk.Translations
                             .FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
                             .TranslatedDisplayName))
+                .ForMember(dto => dto.DriverUser,
+                    conf => conf.MapFrom(ol => 
+                        $"{ol.DriverUserFk.Name} {ol.DriverUserFk.Surname}"))
                 .ReverseMap();
 
             configuration.CreateMap<Truck, GetTruckForViewOutput>()
@@ -1344,5 +1347,7 @@ namespace TACHYON
         public string CompanyName { get; set; }
         public string RentedStatus { get; set; }
         public string RentedShippingRequestReference { get; set; }
+        public long AssignedTruckId { get; set; }
+        public string AssignedTruck { get; set; }
     }
 }

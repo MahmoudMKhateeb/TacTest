@@ -39,5 +39,8 @@ namespace TACHYON.Trucks.Dtos
         public string IstmaraNumber { get; set; }
         public string WorkingTruckStatus { get; set; }
         public string WorkingShippingRequestReference { get; set; }
+        public virtual long? DriverUserId { get; set; }
+        public string DriverUser { get; set; }
+
     }
 }
