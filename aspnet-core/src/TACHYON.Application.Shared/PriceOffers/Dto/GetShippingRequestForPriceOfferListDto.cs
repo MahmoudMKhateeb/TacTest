@@ -21,6 +21,7 @@ namespace TACHYON.PriceOffers.Dto
         public int ShipperRatingNumber { get; set; }
         public string Carrier { get; set; }
         public int? CarrierTenantId { get; set; }
+        public string ShipperName { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         public DateTime? CreationTime { get; set; }
@@ -29,6 +30,7 @@ namespace TACHYON.PriceOffers.Dto
         public bool CreatedByTachyonDealer { get; set; }
         public string OriginCity { get; set; }
         public string DestinationCity { get; set; }
+        public long TrucksTypeId { get; set; }
         public string TruckType { get; set; }
         public bool isPriced { get; set; }
         public string RemainingDays { get; set; }
@@ -69,12 +71,26 @@ namespace TACHYON.PriceOffers.Dto
 
         public string CarrierActor { get; set; }
 
+        public ShippingRequestFlag ShippingRequestFlag { get; set; }
+        public string ShippingRequestFlagTitle { get; set; }
 
+        #region Dedicated
+        public TimeUnit? RentalDurationUnit { get; set; }
+        public string RentalDurationUnitTitle { get; set; }
+        public int RentalDuration { get; set; }
+        public double ExpectedMileage { get; set; }
+        public string ServiceAreaNotes { get; set; }
+        public DateTime? RentalStartDate { get; set; }
+        public DateTime? RentalEndDate { get; set; }
+        public int NumberOfTrucks { get; set; }
+
+        #endregion
 
         /// <summary>
         /// shipper Id 
         /// </summary>
         public int TenantId { get; set; }
+        public bool IsDriversAndTrucksAssigned { get; set; }
 
         public bool IsSaas
         {

@@ -71,7 +71,7 @@
                         <a
                           *ngIf="isUpdateHasOffer(update)"
                           class="dropdown-item"
-                          (click)="ViewPriceOfferModal.show(shippingRequestId, update.priceOfferId, true); setActiveId(update.id)"
+                          (click)="ViewPriceOfferModal.show(shippingRequestId, update.priceOfferId, true, isForDedicated); setActiveId(update.id)"
                           >{{ l('ViewOffer') }}</a
                         >
                       </div>

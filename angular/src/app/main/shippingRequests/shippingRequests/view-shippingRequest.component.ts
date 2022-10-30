@@ -185,6 +185,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     let isRequestTypeTachyonManageService = this.shippingRequestforView.shippingRequest.requestType === ShippingRequestType.TachyonManageService;
     // if the user is carrier
     if (
+      this.shippingRequestforView.shippingRequestFlag === 0 &&
       !this.isCarrier &&
       !this.isShipper &&
       isNotMarketPlaceRequest &&

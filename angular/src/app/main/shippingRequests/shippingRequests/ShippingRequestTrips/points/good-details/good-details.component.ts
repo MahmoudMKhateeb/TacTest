@@ -19,6 +19,7 @@ import { first, retry } from '@node_modules/rxjs/internal/operators';
 export class GoodDetailsComponent extends AppComponentBase implements OnInit, OnDestroy {
   //inCase Of View Point
   @Input() goodDetailsListForView: GoodsDetailDto[];
+  @Input() isForDedicated = false;
   usedIn: 'view' | 'createOrEdit';
   //For Create/Edit
   Point: CreateOrEditRoutPointDto;

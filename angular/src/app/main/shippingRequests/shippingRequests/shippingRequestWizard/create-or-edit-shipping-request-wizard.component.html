@@ -1,6 +1,10 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [breadcrumbs]="breadcrumbs" [title]="l('CreateNewRequests')"> </sub-header>
+    <sub-header [breadcrumbs]="breadcrumbs" [title]="l('CreateNewRequests')">
+      <div role="actions">
+        <button (click)="goToDedicatedWizard()" class="btn btn-primary blue"><i class="fa fa-plus"></i> {{ l('NewDedicatedRequest') }}</button>
+      </div>
+    </sub-header>
 
     <div class="container">
       <div class="card card-custom gutter-b">

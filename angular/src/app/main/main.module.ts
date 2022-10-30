@@ -319,6 +319,9 @@ import { CalendarModule } from '@node_modules/primeng/calendar';
 import { InvoicesSearchModelComponent } from './Invoices/invoices-search-model/invoices-search-model.component';
 import { InvoiceTenantSearchModelComponent } from './Invoices/invoice-tenants/invoice-tenant-search-model/invoice-tenant-search-model.component';
 import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/actor-submit-invoices.component';
+import { CreateOrEditDedicatedShippingRequestWizardComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicatedShippingRequestWizard/create-or-edit-dedicated-shipping-request-wizard.component';
+import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
+import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/tmsForShipper/tms-for-shipper.component';
 
 @NgModule({
   imports: [
@@ -550,6 +553,7 @@ import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/a
     ViewApplocalizationModalComponent,
     CreateOrEditNoteModalComponent,
     CreateOrEditShippingRequestWizardComponent,
+    CreateOrEditDedicatedShippingRequestWizardComponent,
     ShippingrequestsDetailsModelComponent,
     ComingSoonComponent,
     TMSRequestListComponent,
@@ -606,6 +610,8 @@ import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/a
     CreateOrEditActorsPriceComponent,
     ActorInvoiceListComponent,
     ActorSubmitInvoicesComponent,
+    AssignTrucksAndDriversModalComponent,
+    TmsForShipperComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

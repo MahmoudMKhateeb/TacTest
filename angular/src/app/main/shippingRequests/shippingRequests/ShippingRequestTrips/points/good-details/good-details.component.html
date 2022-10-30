@@ -11,7 +11,7 @@
           *ngIf="usedIn !== 'view'"
           type="button"
           class="btn btn-primary blue"
-          (click)="createOrEditGoodDetail.show()"
+          (click)="createOrEditGoodDetail.show(null, isForDedicated)"
           [disabled]="!MainGoodsCategory || !canAddMoreGoods"
         >
           <i class="fa fa-plus"></i>
@@ -61,7 +61,9 @@
                         </a>
                         <ul *dropdownMenu class="dropdown-menu">
                           <li>
-                            <a class="dropdown-item" (click)="createOrEditGoodDetail.show(i)" *ngIf="usedIn !== 'view'">{{ l('Edit') }}</a>
+                            <a class="dropdown-item" (click)="createOrEditGoodDetail.show(i, isForDedicated)" *ngIf="usedIn !== 'view'">{{
+                              l('Edit')
+                            }}</a>
                           </li>
                           <li>
                             <a class="dropdown-item" (click)="DeleteGoodDetail(i)" *ngIf="usedIn !== 'view'">{{ l('Delete') }}</a>

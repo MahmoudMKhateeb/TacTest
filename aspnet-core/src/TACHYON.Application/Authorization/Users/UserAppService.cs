@@ -166,13 +166,19 @@ namespace TACHYON.Authorization.Users
         public async Task<LoadResult> GetDrivers(GetDriversInput input)
         {
             DisableTenancyFiltersIfHost();
-            await DisableTenancyFiltersIfTachyonDealer();
+            //await DisableTenancyFiltersIfTachyonDealer();
+            DisableTenancyFilters();
 
-
-            var drivers = (from user in _userRepository.GetAllIncluding(x=> x.NationalityFk).AsNoTracking()
-                where user.IsDriver 
+            var drivers = (from user in _userRepository.GetAllIncluding(x => x.NationalityFk).Include(x => x.DedicatedShippingRequestDrivers).ThenInclude(x => x.ShippingRequest).AsNoTracking()
+                           .WhereIf((!await IsTachyonDealer() && AbpSession.TenantId != null), x => x.TenantId == AbpSession.TenantId)
+                           where user.IsDriver 
                 join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
-                select new DriverMappingEntity(){ User = user, CompanyName = tenant.companyName})
+                select new DriverMappingEntity(){ User = user, CompanyName = tenant.companyName,
+                    RentedStatus=user.DedicatedShippingRequestDrivers.Any(x=>x.Status==Shipping.Dedicated.WorkingStatus.Busy)? "Busy" :"Active",
+                RentedShippingRequestReference = user.DedicatedShippingRequestDrivers.Any(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy) 
+                ? user.DedicatedShippingRequestDrivers.Where(x=>x.Status==Shipping.Dedicated.WorkingStatus.Busy).First().ShippingRequest.ReferenceNumber 
+                :""}
+                )
                 .Where(x=> x.User != null )
                 .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
 

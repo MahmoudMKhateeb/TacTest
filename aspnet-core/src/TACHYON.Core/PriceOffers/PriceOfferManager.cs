@@ -131,7 +131,7 @@ namespace TACHYON.PriceOffers
 
                 var offer = ObjectMapper.Map<PriceOffer>(input);
                 offer.PriceOfferDetails = await GetListOfVases(input, shippingRequest);
-                offer.ShippingRequestFk = shippingRequest;
+                offer.ShippingRequestFk = shippingRequest;                
                 Calculate(offer, shippingRequest, input);
 
                 return offer;
@@ -802,6 +802,15 @@ namespace TACHYON.PriceOffers
             ShippingRequest shippingRequest,
             CreateOrEditPriceOfferInput input)
         {
+            if (shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Normal)
+            {
+                offer.PriceType = PriceOfferType.Trip;
+            }
+            else if (shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+            {
+                offer.PriceType = PriceOfferType.Dedicated;
+            }
+
             offer.TaxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
 
             // set commissions defaults for trip and vases 
@@ -838,6 +847,9 @@ namespace TACHYON.PriceOffers
             {
                 case PriceOfferType.Trip:
                     SetCalculateTripSettings(offer, shippingRequest, input);
+                    break;
+                case PriceOfferType.Dedicated:
+                    SetCalculateTruckSettings(offer, shippingRequest, input);
                     break;
             }
         }
@@ -977,6 +989,169 @@ namespace TACHYON.PriceOffers
                         break;
                     case PriceOfferCommissionType.CommissionValue:
                         offer.CommissionPercentageOrAddValue = tripCommissionValue;
+                        vasCommissionPercentageOrAddValue = vasCommissionValue;
+                        break;
+                }
+            }
+            else if (shippingRequest.IsDirectRequest)
+            {
+                offer.CommissionType = directRequestCommissionType;
+                _minValueCommission = directRequestCommissionMinValue;
+                _detailMinValueCommission = directRequestVasCommissionMinValue;
+                switch (offer.CommissionType)
+                {
+                    case PriceOfferCommissionType.CommissionPercentage:
+                        offer.CommissionPercentageOrAddValue = directRequestCommissionPercentage;
+                        vasCommissionPercentageOrAddValue = directRequestVasCommissionPercentage;
+                        break;
+                    case PriceOfferCommissionType.CommissionValue:
+                        offer.CommissionPercentageOrAddValue = directRequestCommissionValue;
+                        vasCommissionPercentageOrAddValue = directRequestVasCommissionValue;
+                        break;
+                }
+            }
+
+            //set commission  for VASes
+            SetPriceOfferDetailsCommissionSettings(offer, vasCommissionType, vasCommissionPercentageOrAddValue);
+            // set commission  for trips
+            CalculateCommission(offer);
+        }
+
+        /// <summary>
+        /// Set Commission Settings for shipment for Calculate
+        /// </summary>
+        /// <param name="offer"></param>
+        /// <param name="shippingRequest"></param>
+        /// <param name="input"></param>
+        private void SetCalculateTruckSettings(PriceOffer offer,
+            ShippingRequest shippingRequest,
+            CreateOrEditPriceOfferInput input)
+        {
+            #region settings
+
+            // TMS
+            var tachyonDealerTruckCommissionType = (PriceOfferCommissionType)Convert.ToByte(
+                _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckCommissionType));
+            var tachyonDealerTruckMinValueCommission = Convert.ToDecimal(
+                _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckMinValueCommission));
+            var tachyonDealerVasCommissionType = (PriceOfferCommissionType)Convert.ToByte(
+                _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckVasCommissionType));
+            decimal tachyonDealerVasMinValueCommission = Convert.ToDecimal(
+                _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckVasMinValueCommission));
+            decimal tachyonDealerTruckCommissionPercentage = Convert.ToDecimal(
+                _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckCommissionPercentage));
+            decimal tachyonDealerVasCommissionPercentage = Convert.ToDecimal(
+                _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckVasCommissionPercentage));
+            decimal tachyonDealerTruckCommissionValue = Convert.ToDecimal(
+                _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckCommissionValue));
+            decimal tachyonDealerVasCommissionValue = Convert.ToDecimal(
+                _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckVasCommissionValue));
+            // marketPlace
+            var TruckCommissionType =
+                (PriceOfferCommissionType)Convert.ToByte(_featureChecker.GetValue(shippingRequest.TenantId,
+                    AppFeatures.TruckCommissionType));
+            var truckMinValueCommission =
+                Convert.ToDecimal(
+                    _featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckMinValueCommission));
+            var vasCommissionType =
+                (PriceOfferCommissionType)Convert.ToByte(_featureChecker.GetValue(shippingRequest.TenantId,
+                    AppFeatures.TruckVasCommissionType));
+            var vasMinValueCommission =
+                Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId,
+                    AppFeatures.TruckVasMinValueCommission));
+            var truckCommissionPercentage =
+                Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId,
+                    AppFeatures.TruckCommissionPercentage));
+            var vasCommissionPercentage =
+                Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId,
+                    AppFeatures.TruckVasCommissionPercentage));
+            var truckCommissionValue =
+                Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckCommissionValue));
+            var vasCommissionValue =
+                Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckVasCommissionValue));
+            // direct request
+            try { var directRequestCommissionTypes = (PriceOfferCommissionType)Convert.ToByte(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckDirectRequestCommissionType)); }
+            catch (Exception) { throw new UserFriendlyException(L("ShipperDoseNotHavedirectRequestCommissionFeautre", shippingRequest.Tenant.TenancyName)); }
+
+            var directRequestCommissionType = (PriceOfferCommissionType)Convert.ToByte(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckDirectRequestCommissionType));
+            var directRequestCommissionMinValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckDirectRequestCommissionMinValue));
+            var directRequestVasCommissionMinValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckDirectRequestVasCommissionMinValue));
+            var directRequestCommissionPercentage = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckDirectRequestCommissionPercentage));
+            var directRequestVasCommissionPercentage = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckDirectRequestVasCommissionPercentage));
+            var directRequestCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckDirectRequestCommissionValue));
+            var directRequestVasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckDirectRequestVasCommissionValue));
+            if (offer.Channel == PriceOfferChannel.CarrierAsSaas)
+            {
+                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.CarrierAsSaasCommissionValue));
+
+                directRequestCommissionType = PriceOfferCommissionType.CommissionValue;
+                directRequestCommissionMinValue = carrierAsSaasCommissionValue;
+                directRequestVasCommissionMinValue = carrierAsSaasCommissionValue;
+                directRequestCommissionPercentage = 0;
+                directRequestVasCommissionPercentage = 0;
+                directRequestCommissionValue = carrierAsSaasCommissionValue;
+                directRequestVasCommissionValue = 0;
+
+            }
+
+            #endregion
+
+
+            decimal vasCommissionPercentageOrAddValue = 0;
+            offer.Quantity = shippingRequest.NumberOfTrucks;
+
+            // TMS user can overwrite default commissions settings 
+            if (_featureChecker.IsEnabled(AppFeatures.TachyonDealer) && (input.VasCommissionType.HasValue || input.VasCommissionPercentageOrAddValue.HasValue))
+            {
+                if (input.VasCommissionType != null)
+                {
+                    vasCommissionType = input.VasCommissionType.Value;
+                }
+
+                if (input.VasCommissionPercentageOrAddValue != null)
+                {
+                    vasCommissionPercentageOrAddValue = input.VasCommissionPercentageOrAddValue.Value;
+                }
+            }
+            // set default commission settings for TMS request 
+            else if (shippingRequest.IsTachyonDeal)
+            {
+                // TMS Truck default  commission type
+                offer.CommissionType = tachyonDealerTruckCommissionType;
+                _minValueCommission = tachyonDealerTruckMinValueCommission;
+
+                // TMS VAS default commission type 
+                vasCommissionType = tachyonDealerVasCommissionType;
+                _detailMinValueCommission = tachyonDealerVasMinValueCommission;
+
+                // set default TMS commission values 
+                switch (offer.CommissionType)
+                {
+                    case PriceOfferCommissionType.CommissionPercentage:
+                        offer.CommissionPercentageOrAddValue = tachyonDealerTruckCommissionPercentage;
+                        vasCommissionPercentageOrAddValue = tachyonDealerVasCommissionPercentage;
+                        break;
+                    case PriceOfferCommissionType.CommissionValue:
+                        offer.CommissionPercentageOrAddValue = tachyonDealerTruckCommissionValue;
+                        vasCommissionPercentageOrAddValue = tachyonDealerVasCommissionValue;
+
+                        break;
+                }
+            }
+            // set default commission settings for marketPlace
+            else if (shippingRequest.IsBid)
+            {
+                offer.CommissionType = TruckCommissionType;
+                _minValueCommission = truckMinValueCommission;
+                _detailMinValueCommission = vasMinValueCommission;
+                switch (offer.CommissionType)
+                {
+                    case PriceOfferCommissionType.CommissionPercentage:
+                        offer.CommissionPercentageOrAddValue = truckCommissionPercentage;
+                        vasCommissionPercentageOrAddValue = vasCommissionPercentage;
+                        break;
+                    case PriceOfferCommissionType.CommissionValue:
+                        offer.CommissionPercentageOrAddValue = truckCommissionValue;
                         vasCommissionPercentageOrAddValue = vasCommissionValue;
                         break;
                 }

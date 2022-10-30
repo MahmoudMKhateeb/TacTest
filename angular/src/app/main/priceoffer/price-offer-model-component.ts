@@ -52,6 +52,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
   priceOfferInput: CreateOrEditPriceOfferInput;
   CreateSrUpdateActionInput: CreateSrUpdateActionInputDto = new CreateSrUpdateActionInputDto();
   AllActorsCarriers: SelectItemDto[];
+  isForDedicated: boolean;
 
   constructor(
     injector: Injector,
@@ -73,8 +74,10 @@ export class PriceOfferModelComponent extends AppComponentBase {
     SRUpdateId: number | undefined = undefined,
     type: string | undefined = undefined,
     offerId: number | undefined = undefined,
-    isPostPriceOffer: boolean = false
+    isPostPriceOffer: boolean = false,
+    isForDedicated = false
   ): void {
+    this.isForDedicated = isForDedicated;
     this.isPostPriceOffer = isPostPriceOffer;
 
     this._CurrentServ.getAllCarrierActorsForDropDown().subscribe((result) => {

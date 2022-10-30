@@ -72,6 +72,8 @@ import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/t
 import { InvoiceNoteListComponent } from './invoices/invoice-note/invoice-note-list/invoice-note-list.component';
 import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic.component';
 import { ActorsSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/actors-submitted-documents/actors-submitted-documents.component';
+import { CreateOrEditDedicatedShippingRequestWizardComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicatedShippingRequestWizard/create-or-edit-dedicated-shipping-request-wizard.component';
+import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/tmsForShipper/tms-for-shipper.component';
 
 @NgModule({
   imports: [
@@ -263,7 +265,13 @@ import { ActorsSubmittedDocumentsComponent } from '@app/main/documentFiles/docum
             component: RequestTemplatesComponent,
           },
 
+          { path: 'tmsforshipper', component: TmsForShipperComponent, data: { permission: 'Pages.ShippingRequests' } },
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
+          {
+            path: 'shippingRequests/dedicatedShippingRequestWizard',
+            component: CreateOrEditDedicatedShippingRequestWizardComponent,
+            data: { permission: 'Pages.ShippingRequests' },
+          },
           { path: 'marketplace/list', component: MarketPlaceListComponent },
           {
             path: 'tracking',

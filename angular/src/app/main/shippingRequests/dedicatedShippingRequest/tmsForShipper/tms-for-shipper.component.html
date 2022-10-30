@@ -1,0 +1,133 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <!-- [description]="'TrucksHeaderInfo' | localize" -->
+    <sub-header *ngIf="!shippingRequestId" [title]="'TMSForShipper' | localize"></sub-header>
+
+    <div [class]="!shippingRequestId ? containerClass : ''">
+      <div #card class="card card-custom gutter-b">
+        <div class="card-header card-header-tabs-line">
+          <div class="card-title" *ngIf="shippingRequestId">
+            <h3 class="card-label">{{ 'TMSForShipper' | localize }}</h3>
+          </div>
+          <div class="card-toolbar">
+            <ul class="nav nav-tabs nav-bold nav-tabs-line">
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="javascript:;" [class.active]="activeTab === 1" (click)="activeTab = 1">
+                  <span class="nav-icon"><i class="flaticon2-chat-1"></i></span>
+                  <span class="nav-text">{{ 'Trucks' | localize }}</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="javascript:;" [class.active]="activeTab === 2" (click)="activeTab = 2">
+                  <span class="nav-icon"><i class="flaticon2-drop"></i></span>
+                  <span class="nav-text">{{ 'Drivers' | localize }}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tab-content">
+            <div
+              class="tab-pane fade"
+              id="kt_tab_pane_1_3"
+              role="tabpanel"
+              aria-labelledby="kt_tab_pane_1_3"
+              [class.active]="activeTab === 1"
+              [class.show]="activeTab === 1"
+              *ngIf="activeTab === 1"
+            >
+              <dx-data-grid
+                [style.height]="!shippingRequestId ? '45vw' : 'auto'"
+                #grid
+                id="dataGrid"
+                [dataSource]="dataSourceForTrucks"
+                [remoteOperations]="{ groupPaging: false, sorting: false, filtering: false }"
+                [showColumnLines]="true"
+                [showRowLines]="false"
+                [showBorders]="true"
+                [rowAlternationEnabled]="true"
+                keyExpr="id"
+                [wordWrapEnabled]="true"
+              >
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
+                <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+                <dxo-filter-builder-popup></dxo-filter-builder-popup>
+                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                <dxo-group-panel [visible]="false" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
+                <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
+                <!--              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="false"> </dxo-remote-operations>-->
+                <dxo-paging [pageSize]="20"></dxo-paging>
+
+                <dxi-column dataField="truckType" caption="{{ l('TruckType') }}"></dxi-column>
+                <dxi-column dataField="plateNumber" caption="{{ l('PlateNumber') }}"></dxi-column>
+                <dxi-column dataField="capacity" caption="{{ l('Capacity') }}"></dxi-column>
+                <dxi-column dataField="duration" caption="{{ l('Duration') }}"></dxi-column>
+                <dxi-column
+                  *ngIf="!shippingRequestId"
+                  dataField="shippingRequestReference"
+                  caption="{{ l('ShippingRequestReference') }}"
+                ></dxi-column>
+                <dxi-column *ngIf="!shippingRequestId" dataField="carrierName" caption="{{ l('CarrierName') }}"></dxi-column>
+                <dxi-column dataField="status" caption="{{ l('Status') }}"></dxi-column>
+              </dx-data-grid>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="kt_tab_pane_2_3"
+              role="tabpanel"
+              aria-labelledby="kt_tab_pane_2_3"
+              [class.active]="activeTab === 2"
+              [class.show]="activeTab === 2"
+              *ngIf="activeTab === 2"
+            >
+              <dx-data-grid
+                [style.height]="!shippingRequestId ? '45vw' : 'auto'"
+                #grid
+                id="dataGrid1"
+                [dataSource]="dataSourceForDrivers"
+                [remoteOperations]="{ groupPaging: false, sorting: false, filtering: false }"
+                [showColumnLines]="true"
+                [showRowLines]="false"
+                [showBorders]="true"
+                [rowAlternationEnabled]="true"
+                keyExpr="id"
+                [wordWrapEnabled]="true"
+              >
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
+                <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+                <dxo-filter-builder-popup></dxo-filter-builder-popup>
+                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                <dxo-group-panel [visible]="false" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
+                <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
+                <!--              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="false"> </dxo-remote-operations>-->
+                <dxo-paging [pageSize]="20"></dxo-paging>
+
+                <dxi-column dataField="driverName" caption="{{ l('DriverName') }}"></dxi-column>
+                <dxi-column dataField="phoneNumber" caption="{{ l('PhoneNumber') }}"></dxi-column>
+                <dxi-column dataField="accountNumber" caption="{{ l('AccountNumber') }}"></dxi-column>
+                <dxi-column dataField="duration" caption="{{ l('Duration') }}"></dxi-column>
+                <dxi-column
+                  *ngIf="!shippingRequestId"
+                  dataField="shippingRequestReference"
+                  caption="{{ l('ShippingRequestReference') }}"
+                ></dxi-column>
+                <dxi-column *ngIf="!shippingRequestId" dataField="carrierName" caption="{{ l('CarrierName') }}"></dxi-column>
+                <dxi-column dataField="status" caption="{{ l('Status') }}"></dxi-column>
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--      <div class="card card-custom gutter-b">-->
+      <!--        <div class="card-body">-->
+      <!--          <div class="row align-items-center">-->
+      <!--            -->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
+    </div>
+  </div>
+</div>

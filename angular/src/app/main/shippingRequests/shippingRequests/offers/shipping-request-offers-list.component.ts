@@ -23,6 +23,7 @@ export class ShippingRequestOffersList extends AppComponentBase implements OnIni
   @Input() shippingRequestId: number;
   @Input() Channel: PriceOfferChannel;
   @Input() isTachyonDeal: boolean;
+  @Input() isForDedicated: boolean;
   IsStartSearch: boolean = false;
   matchingTmsPricePkgs: TmsPricePackageForViewDto;
 

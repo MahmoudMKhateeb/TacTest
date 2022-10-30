@@ -3097,6 +3097,35 @@
 		<text name="NotValidDateFormatMsg">Not supported date format founded on row {0} at cell {1}</text>
 		<text name="NotValidWaybillNumber">Not valid waybill number at row {0}</text>
 		<text name="CreateNewProposal">Create new proposal</text>
+		<text name="NewDedicatedRequest">New dedicated request</text>
+		<text name="TMSForShipper">TMS</text>
+		<text name="ServiceAreas">Service areas</text>
+		<text name="ServiceAreaNotes">Service area notes</text>
+		<text name="ExpectedMileage">Expected mileage</text>
+		<text name="RentalDetails">Rental details</text>
+		<text name="RentalDurationUnit">Rental duration unit</text>
+    <text name="RentalDuration">Rental duration</text>
+		<text name="RentalStartDate">Rental start date</text>
+		<text name="RentalEndDate">Rental end date</text>
+    <text name="EnterRentalDuration">Enter rental duration</text>
+		<text name="SelectRentalDates">Select rental dates</text>
+		<text name="EnterNumberOfTrucks">Enter number of trucks</text>
+		<text name="SelectAServiceArea">Select service area</text>
+		<text name="EnterExpectedMileage">Enter expected mileage</text>
+		<text name="CanNotHaveSpaces">Can not have spaces</text>
+		<text name="AssignDriversAndTrucksModal">Assign drivers and trucks modal</text>
+		<text name="AssignDriversAndTrucksForDedicatedWarning">Warning: Please note that the selected drivers and trucks will not be available for you during rental periods</text>
+		<text name="SelectedItemsMustEqualTo{0}">Selected items must equal to {0}</text>
+    <text name="AssignTrucksAndDrivers">Assign trucks and drivers</text>
+    <text name="DedicatedShippingRequest">Dedicated shipping request</text>
+		<text name="RentalFromTo">Rental from to</text>
+		<text name="RentedFrom">Rented from</text>
+		<text name="RentedFor">Rented for</text>
+		<text name="NewDedicated">New dedicated</text>
+		<text name="TotalVatForTrucks">Total vat for trucks</text>
+		<text name="NoOfTrucks">No of trucks</text>
+		<text name="ShippingRequestNotFound">Shipping request not found</text>
+    <text name="YouMustCompleteWizardStepsFirst">You must complete wizard steps first</text>
 
 	</texts>
 </localizationDictionary>

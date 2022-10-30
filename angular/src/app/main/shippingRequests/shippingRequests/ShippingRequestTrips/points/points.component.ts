@@ -1,5 +1,5 @@
 /* tslint:disable:triple-equals */
-import { AfterContentChecked, ChangeDetectorRef, Component, EventEmitter, Injector, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterContentChecked, ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CreateOrEditRoutPointDto,
@@ -16,6 +16,7 @@ import { TripService } from '@app/main/shippingRequests/shippingRequests/Shippin
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { Subscription } from 'rxjs';
 import { finalize } from '@node_modules/rxjs/operators';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'PointsComponent',
@@ -92,8 +93,10 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     }
     if (this.shippingRequestForView.shippingRequest.id != null) {
       this._tripService.currentShippingRequest.subscribe((res) => {
-        this.shippingRequestForView = res;
-        this.DestCitiesDtos = res.destinationCitiesDtos;
+        if (isNotNullOrUndefined(res)) {
+          //   this.shippingRequestForView = res;
+          this.DestCitiesDtos = res.destinationCitiesDtos;
+        }
       });
     }
     this._routStepsServiceProxy
@@ -105,7 +108,11 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       )
       .subscribe((result) => {
         this.allFacilities = result;
-        this.pickupFacilities = result.filter((r) => r.cityId == this.shippingRequestForView.originalCityId);
+        this.pickupFacilities = result.filter((r) => {
+          return this.shippingRequestForView.shippingRequestFlag === 0
+            ? r.cityId == this.shippingRequestForView.originalCityId
+            : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
+        });
         this.dropFacilities = result.filter((r) => this.DestCitiesDtos.some((y) => y.cityId == r.cityId));
       });
   }
@@ -138,10 +145,17 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     this.wayPoints = [];
     this.wayPointMapDest = undefined;
     //take the first Point in the List and Set it As The source
-    this.wayPointMapSource = {
-      lat: this.wayPointsList[0]?.latitude || undefined,
-      lng: this.wayPointsList[0]?.longitude || undefined,
-    };
+    if (
+      isNotNullOrUndefined(this.wayPointsList) &&
+      this.wayPointsList.length > 0 &&
+      isNotNullOrUndefined(this.wayPointsList[0]?.latitude) &&
+      isNotNullOrUndefined(this.wayPointsList[0]?.longitude)
+    ) {
+      this.wayPointMapSource = {
+        lat: this.wayPointsList[0]?.latitude || undefined,
+        lng: this.wayPointsList[0]?.longitude || undefined,
+      };
+    }
     //Take Any Other Points but the First And last one in the List and set them to way points
     for (let i = 1; i < this.wayPointsList.length - 1; i++) {
       this.wayPoints.push({
@@ -152,7 +166,12 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       });
     }
     //to avoid the source and Dest from becoming the Same when place the First Elem in wayPointsList
-    if (this.wayPointsList.length > 1) {
+    if (
+      isNotNullOrUndefined(this.wayPointsList) &&
+      this.wayPointsList.length > 1 &&
+      isNotNullOrUndefined(this.wayPointsList[this.wayPointsList.length - 1]?.latitude) &&
+      isNotNullOrUndefined(this.wayPointsList[this.wayPointsList.length - 1]?.longitude)
+    ) {
       //set the Dest
       this.wayPointMapDest = {
         lat: this.wayPointsList[this.wayPointsList.length - 1]?.latitude || undefined,
@@ -169,8 +188,10 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
    * creates empty points for the trip based on number of drops
    */
   createEmptyPoints() {
+    console.log('createEmptyPoints', this.shippingRequestForView);
     let numberOfDrops = this.shippingRequestForView.shippingRequest.numberOfDrops;
     //if there is already wayPoints Dont Create Empty Once
+    console.log('this.wayPointsList.length == numberOfDrops + 1', this.wayPointsList.length == numberOfDrops + 1);
     if (this.wayPointsList.length == numberOfDrops + 1) return;
     for (let i = 0; i <= numberOfDrops; i++) {
       let point = new CreateOrEditRoutPointDto();

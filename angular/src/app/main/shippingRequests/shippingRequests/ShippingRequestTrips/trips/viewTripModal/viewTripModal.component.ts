@@ -12,6 +12,9 @@ import {
   ShippingRequestDriverServiceProxy,
   ShippingRequestTripStatus,
   UpdateExpectedDeliveryTimeInput,
+  GetShippingRequestForViewOutput,
+  ShippingRequestRouteType,
+  DedicatedShippingRequestsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -23,6 +26,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 import { Moment } from '@node_modules/moment';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'viewTripModal',
@@ -55,10 +59,17 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   expectedDeliveryTime: moment.Moment;
   originalExpectedDeliveryTime: Moment;
   expectedDeliveryTimeLoading: boolean;
+  shippingRequestForView: GetShippingRequestForViewOutput;
+  allDedicatedDrivers: SelectItemDto[];
+  allDedicatedTrucks: SelectItemDto[];
+  routeTypes: any[] = [];
+  RouteTypesEnum = ShippingRequestRouteType;
+
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
+    private _dedicatedShippingRequestsServiceProxy: DedicatedShippingRequestsServiceProxy,
     public _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _trucksServiceProxy: TrucksServiceProxy,
@@ -66,7 +77,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     private _PointsService: PointsService,
     private _TripService: TripService,
     private _Router: ActivatedRoute,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
   }
@@ -80,11 +92,17 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
 
   ngAfterViewInit() {
     if (isNotNullOrUndefined(this.activeTripId)) {
-      this.show(this.activeTripId);
+      this.show(this.activeTripId, this.shippingRequestForView);
     }
   }
 
-  show(id): void {
+  show(id, shippingRequestForView?: GetShippingRequestForViewOutput): void {
+    this.shippingRequestForView = shippingRequestForView;
+    if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === 1) {
+      this.getAllDedicatedDriversForDropDown();
+      this.getAllDedicateTrucksForDropDown();
+      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
+    }
     this.loading = true;
     this.currentTripId = id;
     //update the active trip id in TripsService
@@ -236,6 +254,18 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this._shippingRequestTripsService.updateExpectedDeliveryTimeForTrip(body).subscribe((res) => {
       this.expectedDeliveryTimeLoading = false;
       this.notify.success(this.l('TripExpectedDateWasUpdated'));
+    });
+  }
+
+  private getAllDedicatedDriversForDropDown() {
+    this._dedicatedShippingRequestsServiceProxy.getAllDedicatedDriversForDropDown(this.shippingRequestForView.shippingRequest.id).subscribe((res) => {
+      this.allDedicatedDrivers = res;
+    });
+  }
+
+  private getAllDedicateTrucksForDropDown() {
+    this._dedicatedShippingRequestsServiceProxy.getAllDedicateTrucksForDropDown(this.shippingRequestForView.shippingRequest.id).subscribe((res) => {
+      this.allDedicatedTrucks = res;
     });
   }
 }

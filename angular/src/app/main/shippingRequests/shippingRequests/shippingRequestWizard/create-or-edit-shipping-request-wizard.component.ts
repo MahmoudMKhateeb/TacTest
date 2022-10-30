@@ -981,4 +981,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.step1Form.get('ActorCarrier').updateValueAndValidity();
     }
   }
+
+  goToDedicatedWizard() {
+    this._router.navigate(['/app/main/shippingRequests/dedicatedShippingRequestWizard']);
+  }
 }

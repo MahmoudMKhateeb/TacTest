@@ -84,6 +84,7 @@
                       <!--                                      required-->
                       <!--                                  />-->
                       <dx-number-box
+                        *ngIf="!isForDedicated"
                         name="Weight"
                         id="GoodsDetail_Weight"
                         maxLength="7"
@@ -110,14 +111,44 @@
                           ></dxi-validation-rule>
                         </dx-validator>
                       </dx-number-box>
-                      <a class="text-muted mt-1" *ngIf="weight > 0 && amount > 0 && !(AllowedWeight - (weight || 0) * (amount || 1) < 0)">
+                      <dx-number-box
+                        *ngIf="isForDedicated"
+                        name="Weight"
+                        id="GoodsDetail_Weight"
+                        maxLength="7"
+                        minLength="1"
+                        [min]="1"
+                        [(value)]="weight"
+                        required
+                      >
+                        <dx-validator [validationGroup]="'goodsDetailGroup'">
+                          <dxi-validation-rule
+                            type="required"
+                            message="{{ l('Weight') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                          ></dxi-validation-rule>
+                          <dxi-validation-rule
+                            type="stringLength"
+                            [min]="0"
+                            message="{{ l('Weight') }}: {{ l('PleaseEnterAtLeastNCharacter', 0) }}"
+                          ></dxi-validation-rule>
+                          <dxi-validation-rule
+                            type="stringLength"
+                            [max]="7"
+                            message="{{ l('Weight') }}: {{ l('PleaseEnterNoMoreThanNCharacter', 7) }}"
+                          ></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-number-box>
+                      <a
+                        class="text-muted mt-1"
+                        *ngIf="!isForDedicated && weight > 0 && amount > 0 && !(AllowedWeight - (weight || 0) * (amount || 1) < 0)"
+                      >
                         {{
                           l('RemainingAllowedWeight') +
                             ': ' +
                             (AllowedWeight - (weight || 0) * (amount || 1) < 0 ? 0 : AllowedWeight - (weight || 0) * (amount || 1))
                         }}
                       </a>
-                      <span *ngIf="AllowedWeight - (weight || 0) * (amount || 1) < 0"
+                      <span *ngIf="!isForDedicated && AllowedWeight - (weight || 0) * (amount || 1) < 0"
                         >{{ l('AllowedWeightShouldBeMaximum') }} : {{ AllowedWeight }}</span
                       >
                     </div>

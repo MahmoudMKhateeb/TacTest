@@ -10,6 +10,7 @@ using TACHYON.DriverLicenseTypes;
 using TACHYON.Integration.WaslIntegration;
 using TACHYON.Nationalities;
 using TACHYON.Rating;
+using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Authorization.Users
@@ -36,7 +37,8 @@ namespace TACHYON.Authorization.Users
         public virtual bool IsDriver { get; set; }
 
         public UserDriverStatus? DriverStatus { get; set; }
-
+        //public WorkingStatus WorkingStatus { get; set; }
+        //public string WorkingShippingRequestReference { get; set; }
         public virtual string Address { get; set; }
         public virtual int? NationalityId { get; set; }
 
@@ -64,6 +66,8 @@ namespace TACHYON.Authorization.Users
         public decimal Rate { get; set; }
 
         public int RateNumber { get; set; }
+
+        public ICollection<DedicatedShippingRequestDriver> DedicatedShippingRequestDrivers { get; set; }
 
         public User()
         {
@@ -114,5 +118,17 @@ namespace TACHYON.Authorization.Users
             SignInToken = Guid.NewGuid().ToString();
             SignInTokenExpireTimeUtc = Clock.Now.AddMinutes(1).ToUniversalTime();
         }
+
+        //public void StartWork(string requestReference)
+        //{
+        //    WorkingStatus = WorkingStatus.Busy;
+        //    WorkingShippingRequestReference = requestReference;
+        //}
+
+        //public void EndWork()
+        //{
+        //    WorkingStatus = WorkingStatus.Active;
+        //    WorkingShippingRequestReference = "";
+        //}
     }
 }

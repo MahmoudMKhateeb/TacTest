@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using TACHYON.ShippingRequestVases.Dtos;
@@ -63,5 +64,19 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// shipper
         /// </summary>
         public int TenantId { get; set; }
+
+        public ShippingRequestFlag ShippingRequestFlag { get; set; }
+        public string ShippingRequestFlagTitle { get; set; }
+
+        #region Dedicated
+        public TimeUnit? RentalDurationUnit { get; set; }
+        public string RentalDurationUnitTitle { get; set; }
+        public int RentalDuration { get; set; }
+        public double ExpectedMileage { get; set; }
+        public string ServiceAreaNotes { get; set; }
+        public DateTime? RentalStartDate { get; set; }
+        public DateTime? RentalEndDate { get; set; }
+        public int NumberOfTrucks { get; set; }
+        #endregion
     }
 }

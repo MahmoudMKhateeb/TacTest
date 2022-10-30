@@ -49,6 +49,7 @@ using TACHYON.Packing.PackingTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Packing.PackingTypes.Dtos;
+using TACHYON.Shipping.Dedicated;
 
 namespace TACHYON.PriceOffers
 {
@@ -74,6 +75,7 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<Capacity> _capacitiesRepository;
         private readonly IRepository<GoodCategory> _goodsCategoriesRepository;
         private readonly IRepository<PackingType> _packingTypesRepository;
+        private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
 
 
         private IRepository<VasPrice> _vasPriceRepository;
@@ -97,7 +99,8 @@ namespace TACHYON.PriceOffers
             IRepository<TransportType> transportsTypeRepository,
             IRepository<Capacity> capacitiesRepository,
             IRepository<GoodCategory> goodsCategoriesRepository,
-            IRepository<PackingType> packingTypesRepository)
+            IRepository<PackingType> packingTypesRepository,
+            IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -120,6 +123,7 @@ namespace TACHYON.PriceOffers
             _capacitiesRepository = capacitiesRepository;
             _goodsCategoriesRepository = goodsCategoriesRepository;
             _packingTypesRepository = packingTypesRepository;
+            _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
         }
         #region Services
 
@@ -212,7 +216,7 @@ namespace TACHYON.PriceOffers
                 .OrderBy(x => x.Status)
                 //.OrderByDescending(x=>x.Id)
                 .FirstOrDefaultAsync();
-            PriceOfferDto priceOfferDto;
+            PriceOfferDto priceOfferDto = null;
             if (offer != null)
             {
                 priceOfferDto = ObjectMapper.Map<PriceOfferDto>(offer);
@@ -239,12 +243,24 @@ namespace TACHYON.PriceOffers
             {
                 priceOfferDto = new PriceOfferDto()
                 {// Set Default data
-                    PriceType = PriceOfferType.Trip,
-                    Quantity = shippingRequest.NumberOfTrips,
                     Items = GetVases(shippingRequest),
                     TaxVat = (decimal)Convert.ChangeType(SettingManager.GetSettingValue(AppSettings.HostManagement.TaxVat), typeof(decimal))
                 };
-                SetCommssionSettingsForTachyonDealer(priceOfferDto, shippingRequest);
+                if (shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Normal)
+                {
+                    priceOfferDto.PriceType = PriceOfferType.Trip;
+                    priceOfferDto.Quantity = shippingRequest.NumberOfTrips;
+                    SetCommssionSettingsForTachyonDealer(priceOfferDto, shippingRequest);
+                }
+                else if(shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+                {
+                    priceOfferDto.PriceType = PriceOfferType.Dedicated;
+                    priceOfferDto.Quantity = shippingRequest.NumberOfTrucks;
+                    SetCommssionSettingsForTruckTachyonDealer(priceOfferDto, shippingRequest);
+                }
+
+
+               
 
             }
             if (IsEnabled(AppFeatures.TachyonDealer))
@@ -381,7 +397,9 @@ namespace TACHYON.PriceOffers
             {
                 query = await GetFromOffers(input);
             }
-            foreach(var request in query)
+            var dedictedDrivers =await _dedicatedShippingRequestDriverRepository.GetAll().ToListAsync();
+
+            foreach (var request in query)
             {
                 var index = 1;
                 foreach(var destCity in request.destinationCities)
@@ -392,6 +410,8 @@ namespace TACHYON.PriceOffers
                         request.DestinationCity = request.DestinationCity + ", " + destCity.CityName;
                     index++;
                 }
+                request.IsDriversAndTrucksAssigned = dedictedDrivers.Any(x => x.ShippingRequestId == request.Id);
+                
             }
             return new ListResultDto<GetShippingRequestForPriceOfferListDto>(query);
         }
@@ -533,7 +553,7 @@ namespace TACHYON.PriceOffers
             getShippingRequestForPricingOutput.TrukType = ObjectMapper.Map<TrucksTypeDto>(shippingRequest.TrucksTypeFk).TranslatedDisplayName;
             getShippingRequestForPricingOutput.ShipperRating = shippingRequest.Tenant.Rate;
             getShippingRequestForPricingOutput.ShipperRatingNumber = shippingRequest.Tenant.RateNumber;
-            getShippingRequestForPricingOutput.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(shippingRequest.OriginCityFk).DisplayName;
+            getShippingRequestForPricingOutput.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(shippingRequest.OriginCityFk)?.DisplayName;
             //getShippingRequestForPricingOutput.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(shippingRequest.DestinationCityFk).DisplayName;
             getShippingRequestForPricingOutput.PricePackageOfferId = pricePackageOfferId;
             getShippingRequestForPricingOutput.MatchingPricePackageId = matchingPricePackageId;
@@ -583,10 +603,18 @@ namespace TACHYON.PriceOffers
                     var item = new PriceOfferItem()
                     {
                         SourceId = vas.Id,
-                        PriceType = PriceOfferType.Vas,
                         Quantity = vas.RequestMaxCount <= 0 ? 1 : vas.RequestMaxCount,
                         ItemName = vas.VasFk.Key
                     };
+                    if (shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Normal)
+                    {
+                        item.PriceType = PriceOfferType.Vas;
+                    }
+                    else if(shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+                    {
+                        item.PriceType = PriceOfferType.DedicatedVas;
+                    }
+
                     var vasDefine = Tenantvases.FirstOrDefault(x => x.VasId == vas.VasId);
                     if (vasDefine != null)
                     {
@@ -627,6 +655,36 @@ namespace TACHYON.PriceOffers
                 else
                 {
                     offer.VasCommissionPercentageOrAddValue = Convert.ToDecimal(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerVasCommissionValue));
+
+                }
+            }
+
+        }
+
+
+        private void SetCommssionSettingsForTruckTachyonDealer(PriceOfferDto offer, ShippingRequest shippingRequest)
+        {
+            if (IsEnabled(AppFeatures.TachyonDealer))
+            {
+                offer.CommissionType = (PriceOfferCommissionType)Convert.ToByte(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckCommissionType));
+                if (offer.CommissionType == PriceOfferCommissionType.CommissionPercentage)
+                {
+                    offer.CommissionPercentageOrAddValue = Convert.ToDecimal(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckCommissionPercentage));
+                }
+                else
+                {
+                    offer.CommissionPercentageOrAddValue = Convert.ToDecimal(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckCommissionValue));
+
+                }
+                offer.VasCommissionType = (PriceOfferCommissionType)Convert.ToByte(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckVasCommissionType));
+
+                if (offer.VasCommissionType == PriceOfferCommissionType.CommissionPercentage)
+                {
+                    offer.VasCommissionPercentageOrAddValue = Convert.ToDecimal(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckVasCommissionPercentage));
+                }
+                else
+                {
+                    offer.VasCommissionPercentageOrAddValue = Convert.ToDecimal(FeatureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTruckVasCommissionValue));
 
                 }
             }
@@ -735,7 +793,7 @@ namespace TACHYON.PriceOffers
                 //dto.Latitude = (request.ShippingRequestFK.DestinationCityFk.Location != null ?
                 //    request.ShippingRequestFK.DestinationCityFk.Location.Y : 0);
                 dto.GoodCategoryId = request.ShippingRequestFK.GoodCategoryId;
-                dto.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.OriginCityFk).DisplayName;
+                dto.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.OriginCityFk)?.DisplayName;
                 //dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.DestinationCityFk).DisplayName;
                 dto.NotesCount = await GetRequestNotesCount(request.Id);
 
@@ -814,7 +872,7 @@ namespace TACHYON.PriceOffers
                 dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request);
                // dto.Longitude = (request.DestinationCityFk != null ? (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.X : 0) : 0);
                // dto.Latitude = (request.DestinationCityFk != null ? (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.Y : 0) : 0);
-                dto.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.OriginCityFk).DisplayName;
+                dto.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.OriginCityFk)?.DisplayName;
                // dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.DestinationCityFk).DisplayName;
                 dto.NotesCount = await GetRequestNotesCount(request.Id);
                 ShippingRequestForPriceOfferList.Add(dto);

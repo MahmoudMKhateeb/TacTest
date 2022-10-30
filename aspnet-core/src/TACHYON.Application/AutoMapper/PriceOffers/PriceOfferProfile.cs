@@ -45,6 +45,7 @@ namespace TACHYON.AutoMapper.PriceOffers
                 .ForMember(dst => dst.ShipperRating, opt => opt.MapFrom(src => src.Tenant.Rate))
                 .ForMember(dst => dst.ShipperRatingNumber, opt => opt.MapFrom(src => src.Tenant.RateNumber))
                 .ForMember(dst => dst.Carrier, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
+                .ForMember(dst => dst.ShipperName, opt => opt.MapFrom(src => src.Tenant.Name))
                 .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
                 .ForMember(dst => dst.destinationCities, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities))
                 //.ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities.First().CityFk.DisplayName))
@@ -56,7 +57,10 @@ namespace TACHYON.AutoMapper.PriceOffers
                 .ForMember(dst => dst.Price, opt => opt.MapFrom(src => src.Price))
                 .ForMember(dst => dst.ShipperActor, opt => opt.MapFrom(src => src.ShipperActorFk.CompanyName))
                 .ForMember(dst => dst.CarrierActor, opt => opt.MapFrom(src => src.CarrierActorFk.CompanyName))
-                ;
+                 .ForMember(dst => dst.ShippingRequestFlagTitle,
+                    opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
+                .ForMember(dst => dst.RentalDurationUnitTitle,
+                    opt => opt.MapFrom(src => src.RentalDurationUnit != null ? GetDurationUnit(src.RentalDurationUnit.Value) : ""));
         }
 
         private string GetRemainingDays(DateTime? BidEndDate, ShippingRequestBidStatus Status)
@@ -82,6 +86,21 @@ namespace TACHYON.AutoMapper.PriceOffers
             else if (StartTripDate.HasValue) return StartTripDate.Value.ToString("dd/MM/yyyy");
 
             return "";
+        }
+
+        private static string GetDurationUnit(TimeUnit timeUnit)
+        {
+            switch (timeUnit)
+            {
+                case TimeUnit.Daily:
+                    return "Days";
+                case TimeUnit.Monthly:
+                    return "Months";
+                case TimeUnit.Weekly:
+                    return "Weeks";
+                default:
+                    return "";
+            }
         }
     }
 }

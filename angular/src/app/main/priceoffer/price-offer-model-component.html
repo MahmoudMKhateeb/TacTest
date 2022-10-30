@@ -90,7 +90,7 @@
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
-                  <th style="width: 350px">{{l('NoOfTrips')}}</th>
+                  <th style="width: 350px">{{l('Qty')}}</th>
                   <th style="width: 350px">{{l('itemPrice')}}</th>
                   <th *ngIf="isTachyonDealer">{{l('ItemPricePostCommission')}}</th>
                 </tr>
@@ -203,7 +203,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>{{l('TotalVATForTrip')}}</td>
+                  <td>{{l(!isForDedicated ? 'TotalVATForTrip' : 'TotalVatForTrucks')}}</td>
                   <td>{{offer.itemsTotalVatAmountPreCommission}}</td>
                   <td *ngIf="isTachyonDealerOrHost">{{offer.itemsTotalVatPostCommission}}</td>
                 </tr>

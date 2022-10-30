@@ -32,12 +32,14 @@ export class SrPostPriceUpdateComponent extends AppComponentBase {
   loading: boolean;
   activeUpdateIdForRepricing: number;
   shippingRequestId: number;
+  isForDedicated: boolean;
 
   constructor(private injector: Injector, private _serviceProxy: SrPostPriceUpdateServiceProxy, private cdref: ChangeDetectorRef) {
     super(injector);
   }
 
-  show(shippingRequestId: number) {
+  show(shippingRequestId: number, isForDedicated = false) {
+    this.isForDedicated = isForDedicated;
     this.modal.show();
     this.shippingRequestId = shippingRequestId;
     this.getSrUpdates();
@@ -91,7 +93,7 @@ export class SrPostPriceUpdateComponent extends AppComponentBase {
 
   acceptChangesWithReprice(srUpdate: SrPostPriceUpdateListDto) {
     this.activeUpdateIdForRepricing = srUpdate.id;
-    this.priceOfferModal.show(this.shippingRequestId, undefined, undefined, undefined, true);
+    this.priceOfferModal.show(this.shippingRequestId, undefined, undefined, undefined, true, this.isForDedicated);
   }
 
   sendPostPriceOffer(event: CreateOrEditPriceOfferInput) {

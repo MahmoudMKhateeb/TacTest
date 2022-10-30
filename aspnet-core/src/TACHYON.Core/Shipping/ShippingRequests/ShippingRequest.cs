@@ -21,6 +21,7 @@ using TACHYON.PricePackages;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBidStatuses;
 using TACHYON.Shipping.ShippingRequestStatuses;
@@ -75,8 +76,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public int? CarrierTenantIdForDirectRequest { get; set; }
 
         public ShippingRequestRouteType? RouteTypeId { get; set; }
-
-
+        public ShippingRequestFlag ShippingRequestFlag { get; set; }
         //city
         public virtual int? OriginCityId { get; set; }
 
@@ -249,6 +249,9 @@ namespace TACHYON.Shipping.ShippingRequests
         public ICollection<ShippingRequestTrip> ShippingRequestTrips { get; set; }
         //citites
         public ICollection<ShippingRequestDestinationCity> ShippingRequestDestinationCities { get; set; }
+        public ICollection<DedicatedShippingRequestDriver> DedicatedShippingRequestDrivers { get; set; }
+        public ICollection<DedicatedShippingRequestTruck> DedicatedShippingRequestTrucks { get; set; }
+
 
         #endregion
 
@@ -288,6 +291,29 @@ namespace TACHYON.Shipping.ShippingRequests
         public decimal ActualPercentCommission { get; set; }
         public decimal ActualCommissionValue { get; set; }
         public decimal ActualMinCommissionValue { get; set; }
+
+        #endregion
+
+        #region Dedicated
+        /// <summary>
+        /// Unit of rental duration
+        /// </summary>
+        public TimeUnit? RentalDurationUnit { get; set; }
+        /// <summary>
+        /// Number of duration per time unit
+        /// </summary>
+        public int RentalDuration { get; set; }
+        /// <summary>
+        /// No of miles that are expected 
+        /// </summary>
+        public double ExpectedMileage { get; set; }
+        public string ServiceAreaNotes { get; set; }
+        public DateTime? RentalStartDate { get; set; }
+        public DateTime? RentalEndDate { get; set; }
+        /// <summary>
+        /// Qty of dedicated trucks
+        /// </summary>
+        public int NumberOfTrucks { get; set; }
 
         #endregion
 

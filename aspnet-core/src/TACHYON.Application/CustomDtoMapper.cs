@@ -181,6 +181,8 @@ using TACHYON.WorkFlows;
 using TACHYON.Penalties;
 using TACHYON.Penalties.Dto;
 using TACHYON.ServiceAreas;
+using TACHYON.Shipping.ShippingRequests.Dtos.Dedicated;
+using TACHYON.Shipping.Dedicated;
 
 namespace TACHYON
 {
@@ -444,11 +446,47 @@ namespace TACHYON
 
             configuration.CreateMap<ShippingRequest, EditShippingRequestStep2Dto>();
 
+            configuration.CreateMap<DedicatedShippingRequestDriver, DedicatedShippingRequestDriversDto>()
+                .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => $"{src.DriverUser.Name} {src.DriverUser.Surname}" ))
+                .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.DriverUser.AccountNumber))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.DriverUser.PhoneNumber))
+                .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.Tenant.TenancyName))
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}- {GetDurationUnit(src.ShippingRequest.RentalDurationUnit.Value)}"))
+                .ForMember(dest => dest.ShippingRequestReference, opt => opt.MapFrom(src => src.ShippingRequest.ReferenceNumber))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.GetEnumDescription()));
+
+            configuration.CreateMap<DedicatedShippingRequestTruck, DedicatedShippingRequestTrucksDto>()
+                .ForMember(dest => dest.TruckType, opt => opt.MapFrom(src => src.Truck.TrucksTypeFk.DisplayName))
+                .ForMember(dest => dest.PlateNumber, opt => opt.MapFrom(src => src.Truck.PlateNumber))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
+                .ForMember(dest => dest.Capacity, opt => opt.MapFrom(src => src.Truck.CapacityFk.DisplayName))
+                .ForMember(dest => dest.ShippingRequestReference, opt => opt.MapFrom(src => src.ShippingRequest.ReferenceNumber))
+                .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.Tenant.TenancyName))
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}- {GetDurationUnit(src.ShippingRequest.RentalDurationUnit.Value)}"));
+
+            configuration.CreateMap<CreateOrEditDedicatedStep1Dto, ShippingRequest>()
+                .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
+                .ForMember(dest => dest.DraftStep, opt => opt.Ignore())
+                .ForMember(d => d.ShippingRequestDestinationCities, opt => opt.Ignore());
+
+            configuration.CreateMap<ShippingRequest, CreateOrEditDedicatedStep1Dto>()
+                .ForMember(dest => dest.CountryId, opt=> opt.MapFrom(src=> src.ShippingRequestDestinationCities.First().CityFk.CountyId))
+                .ForMember(dest => dest.ShipperId, opt => opt.MapFrom(src => src.TenantId));
+
             configuration.CreateMap<EditShippingRequestStep4Dto, ShippingRequest>()
                 .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
                 .ForMember(dest => dest.DraftStep, opt => opt.Ignore())
                 .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequest);
+
+            configuration.CreateMap<EditDedicatedStep2Dto, ShippingRequest>()
+                .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
+                .ForMember(dest => dest.DraftStep, opt => opt.Ignore())
+                .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
+                .AfterMap(AddOrUpdateShippingRequest);
+
+            configuration.CreateMap<ShippingRequest, EditDedicatedStep2Dto>()
+                .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
 
             configuration.CreateMap<ShippingRequest, EditShippingRequestStep4Dto>()
                 .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
@@ -711,7 +749,7 @@ namespace TACHYON
                 .ForMember(x => x.User, x => x.MapFrom(y => y))
                 .ForPath(x => x.User.NationalityFk.Name, x => x.MapFrom(y => y.Nationality))
                 .ForMember(x => x.CompanyName, x => x.MapFrom(y => y.CompanyName))
-                .ReverseMap();
+             .ReverseMap();
             configuration.CreateMap<User, DriverListDto>();
             configuration.CreateMap<User, ChatUserDto>();
             configuration.CreateMap<User, OrganizationUnitUserListDto>();
@@ -1114,6 +1152,23 @@ namespace TACHYON
                 ?.DisplayName ?? entity.Key;
         }
 
+        private static void AddOrUpdateShippingRequest(EditVasStepBaseDto dto, ShippingRequest Request)
+        {
+            if (Request.ShippingRequestVases == null)
+                Request.ShippingRequestVases = new Collection<ShippingRequestVas>();
+            foreach (var vas in dto.ShippingRequestVasList)
+            {
+                if (!vas.Id.HasValue)
+                {
+                    Request.ShippingRequestVases.Add(_Mapper.Map<ShippingRequestVas>(vas));
+                }
+                else
+                {
+                    _Mapper.Map(vas, Request.ShippingRequestVases.SingleOrDefault(c => c.Id == vas.Id));
+                }
+            }
+        }
+
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)
         {
             if (Request.ShippingRequestVases == null)
@@ -1265,6 +1320,21 @@ namespace TACHYON
                 }
             }
         }
+
+        private static string GetDurationUnit(TimeUnit timeUnit)
+        {
+            switch (timeUnit)
+            {
+                case TimeUnit.Daily:
+                    return "Days";
+                case TimeUnit.Monthly:
+                    return "Months";
+                case TimeUnit.Weekly:
+                    return "Weeks";
+                default:
+                    return "";
+            }
+        }
     }
 
     public class DriverMappingEntity
@@ -1272,5 +1342,7 @@ namespace TACHYON
         public User User { get; set; }
 
         public string CompanyName { get; set; }
+        public string RentedStatus { get; set; }
+        public string RentedShippingRequestReference { get; set; }
     }
 }
