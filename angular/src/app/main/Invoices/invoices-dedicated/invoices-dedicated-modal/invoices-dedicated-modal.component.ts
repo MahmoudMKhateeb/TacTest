@@ -148,6 +148,7 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
 
   addNew() {
     this.dataSourceForEdit = new CreateOrEditDedicatedInvoiceItemDto();
+    this.selectedDedicateTruckId = null;
   }
 
   saveToArray() {

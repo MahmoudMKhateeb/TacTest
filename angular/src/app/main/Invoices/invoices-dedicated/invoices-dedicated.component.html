@@ -53,13 +53,14 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
-              <dxi-column dataField="shippingRequestReference" caption="{{ l('ShippingRequestReference') }}"></dxi-column>
+              <dxi-column dataField="shippingRequestReference" caption="{{ l('ReferenceNo') }}"></dxi-column>
               <dxi-column dataField="invoiceAccountName" caption="{{ l('AccountInvoiceType') }}"></dxi-column>
               <dxi-column dataField="tenantName" caption="{{ l('TenantName') }}"></dxi-column>
               <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"></dxi-column>
               <dxi-column dataField="notes" caption="{{ l('Notes') }}"></dxi-column>
               <dxi-column dataField="invoiceNumber" caption="{{ l('InvoiceNumber') }}"></dxi-column>
               <dxi-column dataField="submitInvoiceNumber" caption="{{ l('SubmitInvoiceNumber') }}"></dxi-column>
+              <dxi-column dataField="creationTime" caption="{{ l('CreationTime') }}" dataType="date"></dxi-column>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
                   <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>

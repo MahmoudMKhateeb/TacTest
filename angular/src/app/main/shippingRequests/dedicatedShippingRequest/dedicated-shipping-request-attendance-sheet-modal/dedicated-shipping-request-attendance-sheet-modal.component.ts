@@ -18,6 +18,7 @@ import { AttendanceSchedularModel } from '@app/main/shippingRequests/dedicatedSh
 import { DedicatedTruckModel } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-truck-model';
 import { AttendanceSchedularResources } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/attendance-schedular-resources';
 import Swal from 'sweetalert2';
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 
 @Component({
   selector: 'dedicated-shipping-request-attendance-sheet-modal',
@@ -53,7 +54,8 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
     injector: Injector,
     private _truckAttendancesService: TruckAttendancesServiceProxy,
     private enumToArray: EnumToArrayPipe,
-    private dedicatedShippingRequestsService: DedicatedShippingRequestsServiceProxy
+    private dedicatedShippingRequestsService: DedicatedShippingRequestsServiceProxy,
+    private dateService: DateFormatterService
   ) {
     super(injector);
     this.updateAppointment = this.updateAppointment.bind(this);
@@ -82,6 +84,7 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
     }
     if (isNotNullOrUndefined(rentalRange)) {
       this.rentalRange = rentalRange;
+      console.log('this.rentalRange', this.rentalRange);
     }
     console.log('shippingRequestId', this.shippingRequestId);
     console.log('rentalRange', this.rentalRange);
@@ -99,9 +102,9 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
 
   close(): void {
     this.dataSourceForTrucks = {};
-    this.rentalRange = { rentalStartDate: null, rentalEndDate: null };
+    // this.rentalRange = { rentalStartDate: null, rentalEndDate: null };
     this.dataSource = [];
-    this.trucks = [];
+    // this.trucks = [];
     this.filteredTrucks = [];
     this.shippingRequestId = null;
     this.modal.hide();
@@ -181,7 +184,26 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
       return;
     }
     console.log('e', e);
-    this.editAppointmentData = { ...e.appointmentData };
+    console.log('this.scheduler', this.scheduler);
+    let appointment;
+    if (this.scheduler.selectedCellData.length > 0) {
+      console.log('this.scheduler.selectedCellData[0]', this.scheduler.selectedCellData[0]);
+      console.log('this.scheduler.selectedCellData[0].startDate.toISOString()', this.scheduler.selectedCellData[0].startDate.toISOString());
+      appointment = this.dataSource.find((item) => {
+        console.log('item', item);
+        const selectedStartDate = new Date(this.scheduler.selectedCellData[0].startDate);
+        const selectedStartDateMoment = moment({
+          y: selectedStartDate.getFullYear(),
+          M: selectedStartDate.getMonth(),
+          d: selectedStartDate.getDate(),
+        });
+        const itemStartDate = moment(item.startDate);
+        const isSame = moment(itemStartDate.format('yyyy-MM-DD')).isSame(moment(selectedStartDateMoment.format('yyyy-MM-DD')));
+        return isSame;
+      });
+      console.log('appointment', appointment);
+    }
+    this.editAppointmentData = isNotNullOrUndefined(appointment) ? { ...appointment } : { ...e.appointmentData };
     // this.attendanceDateFrom = isNotNullOrUndefined(this.editAppointmentData) && isNotNullOrUndefined(this.editAppointmentData.attendanceDate) ? this.editAppointmentData.attendanceDate.toDate() : null;
     // this.attendanceDateTo = isNotNullOrUndefined(this.editAppointmentData) && isNotNullOrUndefined(this.editAppointmentData.attendanceDate) ? this.editAppointmentData.attendanceDate.toDate() : null;
     // if (this.editAppointmentData.id) {
@@ -208,7 +230,13 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
   }
 
   createOrEditAttendance() {
+    console.log('this.editAppointmentData', this.editAppointmentData);
+    const startDate = new Date(this.editAppointmentData.startDate);
+    const endDate = new Date(this.editAppointmentData.endDate);
+    this.editAppointmentData.startDate = moment({ y: startDate.getFullYear(), M: startDate.getMonth(), d: startDate.getDate() });
+    this.editAppointmentData.endDate = moment({ y: endDate.getFullYear(), M: endDate.getMonth(), d: endDate.getDate() });
     const payload = new CreateOrEditTruckAttendanceDto(this.editAppointmentData);
+    console.log('payload', payload);
     if (!!this.editAppointmentData?.id?.toString()) {
       payload.id = this.editAppointmentData.id;
       payload.startDate = null;
@@ -252,7 +280,7 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
   }
 
   isDisabledDateCell(date: Date) {
-    const localeDateMoment = moment.utc(date);
+    const localeDateMoment = moment({ y: date.getFullYear(), M: date.getMonth(), d: date.getDate() }); // moment.utc(date);
     if (
       !isNotNullOrUndefined(this.rentalRange) ||
       !isNotNullOrUndefined(this.rentalRange.rentalStartDate) ||
@@ -260,9 +288,14 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
     ) {
       return false;
     }
-    const startDate = this.rentalRange?.rentalStartDate.toISOString().split('T')[0];
-    const endDate = this.rentalRange?.rentalEndDate.toISOString().split('T')[0];
-    return localeDateMoment.clone().add('d', 1).isBefore(moment(startDate)) || localeDateMoment.clone().isAfter(moment(endDate));
+    const startDate = new Date(this.rentalRange.rentalStartDate.toISOString());
+    const startDateMoment = moment({ y: startDate.getFullYear(), M: startDate.getMonth(), d: startDate.getDate() });
+    const endDate = new Date(this.rentalRange.rentalEndDate.toISOString());
+    const endDateMoment = moment({ y: endDate.getFullYear(), M: endDate.getMonth(), d: endDate.getDate() });
+    // const startDate = this.rentalRange?.rentalStartDate.toISOString().split('T')[0];
+    // const endDate = this.rentalRange?.rentalEndDate.toISOString().split('T')[0];
+    return localeDateMoment.clone().isBefore(startDateMoment) || localeDateMoment.clone().isAfter(endDateMoment);
+    // return localeDateMoment.clone().add('d', 1).isBefore(moment(startDate)) || localeDateMoment.clone().isAfter(moment(endDate));
   }
 
   isValidAppointment(component: any, appointmentData: any) {

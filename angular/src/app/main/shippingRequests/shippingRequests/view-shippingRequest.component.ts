@@ -78,8 +78,8 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       .pipe(retry(3))
       .subscribe((result) => {
         this.shippingRequestforView = result;
-        this.shippingRequestforView.rentalStartDate = moment(this.shippingRequestforView?.rentalStartDate.toISOString().split('T')[0]);
-        this.shippingRequestforView.rentalEndDate = moment(this.shippingRequestforView?.rentalEndDate.toISOString().split('T')[0]);
+        this.shippingRequestforView.rentalStartDate = moment(this.shippingRequestforView?.rentalStartDate);
+        this.shippingRequestforView.rentalEndDate = moment(this.shippingRequestforView?.rentalEndDate);
         this.rentalRange = {
           rentalStartDate: this.shippingRequestforView?.rentalStartDate,
           rentalEndDate: this.shippingRequestforView?.rentalEndDate,

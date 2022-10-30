@@ -556,8 +556,8 @@
                         {{ l('RentalFromTo') }}:
                       </span>
                       &nbsp;
-                      {{ item.rentalStartDate.toISOString().split('T')[0] | date: 'MM/dd/yyyy' }} {{ item.rentalEndDate ? '-' : '' }}
-                      {{ item.rentalEndDate.toISOString().split('T')[0] | date: 'MM/dd/yyyy' }}
+                      {{ item.rentalStartDate.toISOString() | date: 'MM/dd/yyyy' }} {{ item.rentalEndDate ? '-' : '' }}
+                      {{ item.rentalEndDate.toISOString() | date: 'MM/dd/yyyy' }}
                     </p>
                   </div>
                   <div class="col-3 truckType">
