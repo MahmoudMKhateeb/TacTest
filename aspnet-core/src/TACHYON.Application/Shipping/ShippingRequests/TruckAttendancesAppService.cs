@@ -50,7 +50,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var attendanceTrucks = new List<DedicatedShippingRequestTruckAttendance>();
 
-            for (var dt = input.StartDate; dt <= input.EndDate; dt = dt.AddDays(1))
+            for (var dt = input.StartDate.Date; dt <= input.EndDate.Date; dt = dt.AddDays(1))
             {
                 attendanceTrucks.Add(new DedicatedShippingRequestTruckAttendance {AttendaceStatus=input.AttendaceStatus , 
                     DedicatedShippingRequestTruckId = input.DedicatedShippingRequestTruckId, AttendanceDate=dt });
