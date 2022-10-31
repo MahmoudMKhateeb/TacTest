@@ -172,17 +172,19 @@ namespace TACHYON.Authorization.Users
             //await DisableTenancyFiltersIfTachyonDealer();
             DisableTenancyFilters();
 
-            var drivers = (from user in _userRepository.GetAllIncluding(x => x.NationalityFk).Include(x => x.DedicatedShippingRequestDrivers).ThenInclude(x => x.ShippingRequest).AsNoTracking()
+            var drivers = (from user in _userRepository.GetAllIncluding(x => x.NationalityFk)
+                           .Include(x => x.DedicatedShippingRequestDrivers)
+                           .ThenInclude(x => x.ShippingRequest).AsNoTracking()
                            .WhereIf((!await IsTachyonDealer() && AbpSession.TenantId != null), x => x.TenantId == AbpSession.TenantId)
                            where user.IsDriver 
                 join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
-                join truck in _truckRepository.GetAll() on user.Id equals truck.DriverUserId
+                from truck in _truckRepository.GetAll().Where(x=> user.Id == x.DriverUserId).DefaultIfEmpty()
                 let dedicatedDriver = user.DedicatedShippingRequestDrivers.FirstOrDefault(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy)
                            select new DriverMappingEntity(){ 
                     User = user,
                     CompanyName = tenant.companyName,
-                    AssignedTruckId=truck.Id, 
-                    AssignedTruck=truck.GetDisplayName(),
+                    AssignedTruckId= truck != null ? truck.Id : default, 
+                    AssignedTruck= truck!=null ?truck.GetDisplayName() :string.Empty,
                     RentedStatus=user.DedicatedShippingRequestDrivers.Any(x=>x.Status==Shipping.Dedicated.WorkingStatus.Busy)? "Busy" :"Active",
                     RentedShippingRequestReference = dedicatedDriver != null 
                 ? dedicatedDriver.ShippingRequest.ReferenceNumber : string.Empty })
