@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   GetShippingRequestForPriceOfferListDto,
@@ -7,6 +7,7 @@ import {
   PriceOfferServiceProxy,
   ShippingRequestDirectRequestServiceProxy,
   ShippingRequestDirectRequestStatus,
+  ShippingRequestFlag,
   ShippingRequestStatus,
   ShippingRequestType,
 } from '@shared/service-proxies/service-proxies';
@@ -35,7 +36,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   @ViewChild('tripsForViewShippingRequest', { static: true }) tripsForViewShippingRequest: TripsForViewShippingRequestComponent;
   @ViewChild('attendanceModal', { static: true }) attendanceModal: DedicatedShippingRequestAttendanceSheetModalComponent;
   shippingRequestforView: GetShippingRequestForViewOutput;
-
+  ShippingRequestFlagEnum = ShippingRequestFlag;
   PriceOfferChannelEnum = PriceOfferChannel;
   items: GetShippingRequestForPriceOfferListDto[] = [];
   searchInput: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
@@ -250,7 +251,8 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     if (!this.Channel && this.appSession.tenantId) {
       if (
         !this.feature.isEnabled('App.TachyonDealer') ||
-        (this.feature.isEnabled('App.TachyonDealer') && item.requestType === ShippingRequestType.TachyonManageService)
+        (this.feature.isEnabled('App.TachyonDealer') && item.requestType === ShippingRequestType.TachyonManageService) ||
+        (this.feature.isEnabled('App.TachyonDealer') && item.shippingRequestFlag === ShippingRequestFlag.Dedicated)
       ) {
         this.router.navigateByUrl(`/app/main/shippingRequests/shippingRequests/view?id=${item.id}`);
         return;
