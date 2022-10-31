@@ -55,6 +55,8 @@ namespace TACHYON.Shipping.ShippingRequests
             DisableTenancyFilters();
             var query = _dedicatedShippingRequestTruckRepository.GetAll()
                 .WhereIf(input.ShippingRequestId != null, x => x.ShippingRequestId == input.ShippingRequestId)
+                .WhereIf(await IsTachyonDealer() || AbpSession.TenantId == null, x=> true)
+                .WhereIf(await IsShipper(), x=> x.ShippingRequest.TenantId == AbpSession.TenantId)
                 .ProjectTo<DedicatedShippingRequestTrucksDto>(AutoMapperConfigurationProvider)
                 .AsNoTracking();
 
