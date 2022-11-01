@@ -572,6 +572,12 @@ namespace TACHYON.EntityFrameworkCore
                 .HasConversion(x => x.Value,
                     x => SmartEnum.FromValue<EntityLogTransaction>(x));
 
+            modelBuilder
+                .Entity<DedicatedDynamicInvoice>()
+                .HasOne(e => e.Tenant)
+                .WithMany(e => e.DedicatedDynamicInvoices)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.ConfigurePersistedGrantEntity();
         }
     }

@@ -3,8 +3,11 @@ using Abp.Timing;
 using JetBrains.Annotations;
 using Org.BouncyCastle.Asn1.Microsoft;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TACHYON.Authorization.Users;
+using TACHYON.DedicatedInvoices;
 using TACHYON.Editions;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy.Payments;
@@ -71,6 +74,8 @@ namespace TACHYON.MultiTenancy
         public string FinancialName { get; set; }
         public string FinancialPhone { get; set; }
         public string FinancialEmail { get; set; }
+
+        public ICollection<DedicatedDynamicInvoice> DedicatedDynamicInvoices { get; set; }
         protected Tenant()
         {
         }
