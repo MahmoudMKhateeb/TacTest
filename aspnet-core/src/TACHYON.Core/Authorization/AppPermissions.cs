@@ -651,5 +651,18 @@
 
         #endregion
 
+
+        #region Price Package Appendix
+
+        public const string Pages_PricePackageAppendix = "Pages.PricePackageAppendix";
+        public const string Pages_PricePackageAppendix_Create = "Pages.PricePackageAppendix.Create";
+        public const string Pages_PricePackageAppendix_Update = "Pages.PricePackageAppendix.Update";
+        public const string Pages_PricePackageAppendix_Delete = "Pages.PricePackageAppendix.Delete";
+        public const string Pages_PricePackageAppendix_Accept = "Pages.PricePackageAppendix.Accept";
+        public const string Pages_PricePackageAppendix_Reject = "Pages.PricePackageAppendix.Reject";
+        
+
+        #endregion
+
     }
 }

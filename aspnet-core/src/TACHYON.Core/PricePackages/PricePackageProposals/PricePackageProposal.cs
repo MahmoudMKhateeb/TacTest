@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.MultiTenancy;
+using TACHYON.PricePackages.TmsPricePackages;
 
 namespace TACHYON.PricePackages.PricePackageProposals
 {

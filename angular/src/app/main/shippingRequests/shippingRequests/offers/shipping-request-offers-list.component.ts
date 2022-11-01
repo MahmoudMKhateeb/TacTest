@@ -85,10 +85,4 @@ export class ShippingRequestOffersList extends AppComponentBase implements OnIni
       this.matchingTmsPricePkgs = res;
     });
   }
-
-  tmsPPAcknowledge(shippingRequestId: number, pricePackageId: number): void {
-    this._tmsPricePkgServiceproxy.acknowledgePricePackage(shippingRequestId, pricePackageId).subscribe(() => {
-      this.notify.success(this.l('Success'));
-    });
-  }
 }

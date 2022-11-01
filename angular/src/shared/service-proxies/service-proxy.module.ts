@@ -167,6 +167,8 @@ import { DedicatedDynamiceInvoicesServiceProxy, TruckAttendancesServiceProxy } f
     ApiServiceProxies.PricePackageProposalServiceProxy,
     ApiServiceProxies.TruckAttendancesServiceProxy,
     ApiServiceProxies.DedicatedDynamiceInvoicesServiceProxy,
+    ApiServiceProxies.PricePackageAppendixServiceProxy,
+
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },

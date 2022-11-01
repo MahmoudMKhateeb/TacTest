@@ -18,5 +18,7 @@ namespace TACHYON.PricePackages
         Task CreateOrEdit(CreateOrEditTmsPricePackageDto input);
 
         Task Delete(int pricePackageId);
+
+        Task ChangeActivateStatus(int pricePackageId, bool isActive);
     }
 }

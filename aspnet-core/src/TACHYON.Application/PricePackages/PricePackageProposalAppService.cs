@@ -1,4 +1,5 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.UI;
@@ -10,8 +11,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Common;
+using TACHYON.Dto;
 using TACHYON.PricePackages.Dto.PricePackageProposals;
 using TACHYON.PricePackages.PricePackageProposals;
+using TACHYON.PricePackages.TmsPricePackages;
 
 namespace TACHYON.PricePackages
 {
@@ -126,6 +129,17 @@ namespace TACHYON.PricePackages
             _proposalRepository.Update(proposalId,x => x.Status = ProposalStatus.Rejected);
         }
 
+        public async Task<ListResultDto<SelectItemDto>> GetAllProposalsForDropdown(int shipperId)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+
+            var proposalsList = await _proposalRepository.GetAll().AsNoTracking()
+                .Where(x => x.ShipperId == shipperId)
+                .Select(x => new SelectItemDto() { DisplayName = x.ProposalName, Id = x.Id.ToString() })
+                .ToListAsync();
+
+            return new ListResultDto<SelectItemDto>(proposalsList);
+        }
         private async Task CheckCanChangeStatus(int proposalId)
         {
             var status = await _proposalRepository.GetAll().Where(x=> x.Id == proposalId)

@@ -9,5 +9,7 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
 
         [Required]
         public int ShipperId { get; set; }
+
+        public int? ProposalId { get; set; }
     }
 }

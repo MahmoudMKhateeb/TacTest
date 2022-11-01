@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Abp.Domain.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Cities;
 using TACHYON.MultiTenancy;
 using TACHYON.PricePackages.PricePackageProposals;
 using TACHYON.Shipping.ShippingRequests;
 
-namespace TACHYON.PricePackages
+namespace TACHYON.PricePackages.TmsPricePackages
 {
     [Table("TmsPricePackages")]
-    public class TmsPricePackage : BasePricePackage
+    public class TmsPricePackage : BasePricePackage, IPassivable
     {
         public int? OriginCityId { get; set; }
 
@@ -58,5 +59,7 @@ namespace TACHYON.PricePackages
 
         [ForeignKey(nameof(ProposalId))]
         public PricePackageProposal Proposal { get; set; }
+        
+        public bool IsActive { get; set; }
     }
 }
