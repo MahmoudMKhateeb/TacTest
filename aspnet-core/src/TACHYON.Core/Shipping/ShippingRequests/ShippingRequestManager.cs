@@ -217,15 +217,22 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.TenantId = input.ShipperId.Value;
             }
 
-            if (await _featureChecker.IsEnabledAsync(AppFeatures.Carrier) && await _featureChecker.IsEnabledAsync(AppFeatures.CarrierAsASaas))
+            var isSaas = await _featureChecker.IsEnabledAsync(AppFeatures.Carrier) && await _featureChecker.IsEnabledAsync(AppFeatures.CarrierAsASaas);
+            if (isSaas || input.IsInternalBrokerRequest)
             {
                 shippingRequest.TenantId = _abpSession.TenantId.Value;
                 shippingRequest.CarrierTenantId = _abpSession.TenantId.Value;
             }
 
             shippingRequest.CreatedByTachyonDealer = await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
-            shippingRequest.IsDrafted = true;
-            shippingRequest.DraftStep = 1;
+
+            //skip if edit
+            if(shippingRequest.DraftStep == 0)
+            {
+                shippingRequest.IsDrafted = true;
+                shippingRequest.DraftStep = 1;
+            }
+
         }
 
         public async Task EditVasStep(ShippingRequest shippingRequest, EditVasStepBaseDto input)
