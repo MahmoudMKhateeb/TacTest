@@ -1,0 +1,170 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  role="dialog"
+  aria-labelledby="attendanceModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static', keyboard: false }"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title">
+          <span>{{ l('Search') }}</span>
+        </p>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="dx-field col-6">
+            <div class="dx-field-label">{{ 'PlateNumber' | localize }}</div>
+            <div class="dx-field-value">
+              <dx-text-box placeholder="1234 a a a">
+                <dx-validator>
+                  <dxi-validation-rule
+                    type="pattern"
+                    [pattern]="truckPattern"
+                    message="{{ 'PlateNumber' | localize }}: {{ 'InvalidPattern' | localize }}"
+                  ></dxi-validation-rule>
+                </dx-validator>
+              </dx-text-box>
+            </div>
+          </div>
+          <div class="dx-field col-6">
+            <div class="dx-field-label">{{ 'CreationDate' | localize }}</div>
+            <div class="dx-field-value">
+              <dx-date-box invalidDateMessage="{{ 'CreationDate' | localize }}: {{ 'DatePlaceholder' | localize }}"></dx-date-box>
+            </div>
+          </div>
+          <div class="dx-field col-6">
+            <div class="dx-field-label">{{ 'CarrierName' | localize }}</div>
+            <div class="dx-field-value">
+              <dx-drop-down-box
+                [(value)]="selectedCarrier"
+                valueExpr="id"
+                displayExpr="displayName"
+                placeholder="Select a value..."
+                [showClearButton]="true"
+                [dataSource]="carriersList"
+                (onValueChanged)="logEvent($event)"
+              >
+                <div *dxTemplate="let data of 'content'">
+                  <dx-data-grid
+                    [dataSource]="carriersList"
+                    valueExpr="id"
+                    keyExpr="id"
+                    [columns]="['displayName']"
+                    [selection]="{ mode: 'multiple' }"
+                    [hoverStateEnabled]="true"
+                    [paging]="{ enabled: true, pageSize: 10 }"
+                    [filterRow]="{ visible: true }"
+                    [scrolling]="{ mode: 'virtual' }"
+                    [height]="345"
+                    [(selectedRowKeys)]="selectedCarrier"
+                    (onSelectionChanged)="onSelectionChanged($event)"
+                  >
+                  </dx-data-grid>
+                </div>
+              </dx-drop-down-box>
+            </div>
+          </div>
+          <div class="dx-field col-6">
+            <div class="dx-field-label">{{ 'TransportType' | localize }}</div>
+            <div class="dx-field-value">
+              <dx-select-box [dataSource]="transportTypeList" displayExpr="displayName" valueExpr="id"></dx-select-box>
+            </div>
+          </div>
+          <div class="dx-field col-6">
+            <div class="dx-field-label">{{ 'TrucksType' | localize }}</div>
+            <div class="dx-field-value">
+              <dx-drop-down-box
+                [(value)]="selectedTransportTypes"
+                valueExpr="id"
+                displayExpr="displayName"
+                placeholder="Select a value..."
+                [showClearButton]="true"
+                [dataSource]="truckTypesList"
+              >
+                <div *dxTemplate="let data of 'content'">
+                  <dx-data-grid
+                    [dataSource]="truckTypesList"
+                    valueExpr="id"
+                    keyExpr="id"
+                    [columns]="['displayName']"
+                    [selection]="{ mode: 'multiple' }"
+                    [hoverStateEnabled]="true"
+                    [paging]="{ enabled: true, pageSize: 10 }"
+                    [filterRow]="{ visible: true }"
+                    [scrolling]="{ mode: 'virtual' }"
+                    [height]="345"
+                    [(selectedRowKeys)]="selectedTransportTypes"
+                  >
+                  </dx-data-grid>
+                </div>
+              </dx-drop-down-box>
+            </div>
+          </div>
+          <div class="dx-field col-6">
+            <div class="dx-field-label">{{ 'Capacity' | localize }}</div>
+            <div class="dx-field-value">
+              <dx-drop-down-box
+                [(value)]="selectedCapacity"
+                valueExpr="id"
+                displayExpr="displayName"
+                placeholder="Select a value..."
+                [showClearButton]="true"
+                [dataSource]="capacityList"
+              >
+                <div *dxTemplate="let data of 'content'">
+                  <dx-data-grid
+                    [dataSource]="capacityList"
+                    valueExpr="id"
+                    keyExpr="id"
+                    [columns]="['displayName']"
+                    [selection]="{ mode: 'multiple' }"
+                    [hoverStateEnabled]="true"
+                    [paging]="{ enabled: true, pageSize: 10 }"
+                    [filterRow]="{ visible: true }"
+                    [scrolling]="{ mode: 'virtual' }"
+                    [height]="345"
+                    [(selectedRowKeys)]="selectedCapacity"
+                  >
+                  </dx-data-grid>
+                </div>
+              </dx-drop-down-box>
+            </div>
+          </div>
+          <div class="dx-field col-6">
+            <div class="dx-field-label">{{ 'IstmaraNumber' | localize }}</div>
+            <div class="dx-field-value">
+              <dx-number-box></dx-number-box>
+            </div>
+          </div>
+          <div class="dx-field col-6">
+            <div class="dx-field-label">{{ 'InsuranceNumber' | localize }}</div>
+            <div class="dx-field-value">
+              <dx-number-box></dx-number-box>
+            </div>
+          </div>
+          <div class="dx-field col-6">
+            <div class="dx-field-label">{{ 'TruckStatus' | localize }}</div>
+            <div class="dx-field-value">
+              <dx-select-box [dataSource]="truckStatusList" displayExpr="displayName" valueExpr="id"></dx-select-box>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="search()">
+          {{ l('Search') }}
+        </button>
+        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+          {{ l('Close') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

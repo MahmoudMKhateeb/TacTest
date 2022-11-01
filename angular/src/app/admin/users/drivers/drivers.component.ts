@@ -13,6 +13,7 @@ import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DriverTrackingModalComponent } from '@app/admin/users/drivers/driver-tracking-modal/driver-tracking-modal.component';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { DriverFilterModalComponent } from '@app/admin/users/drivers/driver-filter/driver-filter-modal.component';
 
 @Component({
   selector: 'app-drivers',
@@ -23,6 +24,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 })
 export class DriversComponent extends UsersComponent implements AfterViewInit, OnInit {
   @ViewChild('DriverTrackingModal') DriverTrackingModal: DriverTrackingModalComponent;
+  @ViewChild('driverFilterModal') driverFilter: DriverFilterModalComponent;
   @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
   isArabic = false;
   driverId: number;
