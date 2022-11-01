@@ -14,6 +14,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { Router } from '@angular/router';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   selector: 'app-actor-invoice-list',
@@ -23,7 +24,7 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 export class ActorInvoiceListComponent extends AppComponentBase implements OnInit {
   @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
-
+  @ViewChild('sharedPdfViewer') sharedPdfViewer: FileViwerComponent;
   IsStartSearch = false;
   PaidStatus: boolean | null | undefined;
   advancedFiltersAreShown = false;
@@ -120,8 +121,11 @@ export class ActorInvoiceListComponent extends AppComponentBase implements OnIni
       this._fileDownloadService.downloadTempFile(result);
     });
   }
-  details(invoice: any): void {
-      this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
+
+  details(invoiceId: any): void {
+    this._InvoiceReportServiceProxy.downloadActorShipperInvoiceReportPdf(invoiceId).subscribe((result) => {
+      this.sharedPdfViewer.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
+    });
   }
 
   getAllInvoices() {

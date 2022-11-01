@@ -269,6 +269,10 @@ export abstract class AppComponentBase {
     return this.feature.isEnabled('App.CarrierClients');
   }
 
+  get hasShipperClients(): boolean {
+    return this.feature.isEnabled('App.ShipperClients');
+  }
+
   IfOther(items: any, id: any) {
     // id return string or number
     if (id != undefined) return items?.filter((x) => x.id == id && x.isOther).length > 0;

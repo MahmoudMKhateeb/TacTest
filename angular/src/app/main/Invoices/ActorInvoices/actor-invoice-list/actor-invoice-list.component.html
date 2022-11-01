@@ -95,7 +95,7 @@
 
                   <ul class="dropdown-menu" *dropdownMenu>
                     <li>
-                      <a class="dropdown-item" (click)="details(options.data)">{{ l('Detail') }}</a>
+                      <a class="dropdown-item" (click)="details(options.data.id)">{{ l('Detail') }}</a>
                     </li>
                     <li>
                       <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('DownloadInvoice') }}</a>
@@ -118,3 +118,4 @@
 </div>
 <invoices-ondeman-model (modalSave)="reloadPage()" #OndemandModel></invoices-ondeman-model>
 <invoice-tenant-items-details #InvoiceDetailsModel></invoice-tenant-items-details>
+<shared-file-viewer #sharedPdfViewer></shared-file-viewer>
