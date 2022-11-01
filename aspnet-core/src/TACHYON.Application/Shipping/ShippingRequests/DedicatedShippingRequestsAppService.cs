@@ -2,6 +2,7 @@
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Timing;
@@ -14,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Configuration;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Shipping.Dedicated;
@@ -32,13 +34,15 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly ShippingRequestDirectRequestAppService _shippingRequestDirectRequestAppService;
         private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTruckRepository;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
+        private readonly ISettingManager _settingManager;
 
         public DedicatedShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository,
             ShippingRequestManager shippingRequestManager,
             IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository,
             ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService,
             IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTruckRepository,
-            IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository)
+            IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
+            ISettingManager settingManager)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestManager = shippingRequestManager;
@@ -46,6 +50,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _shippingRequestDirectRequestAppService = shippingRequestDirectRequestAppService;
             _dedicatedShippingRequestTruckRepository = dedicatedShippingRequestTruckRepository;
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
+            _settingManager = settingManager;
         }
 
         #region Wizard
@@ -163,7 +168,12 @@ namespace TACHYON.Shipping.ShippingRequests
             var trucksList = new List<DedicatedShippingRequestTruck>();
             foreach (var truck in input.TrucksList)
             {
-                trucksList.Add(new DedicatedShippingRequestTruck { ShippingRequestId = shippingRequest.Id, TruckId = truck.Id, Status = status });
+                trucksList.Add(new DedicatedShippingRequestTruck { 
+                    ShippingRequestId = shippingRequest.Id,
+                    TruckId = truck.Id, 
+                    Status = status,
+                KPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.TruckKPI)
+            });
             }
             shippingRequest.DedicatedShippingRequestTrucks = trucksList;
 
@@ -241,14 +251,33 @@ namespace TACHYON.Shipping.ShippingRequests
 
         #endregion
 
+        #region KPI
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        public async Task UpdateRequestKPI(UpdateRequestKPIInput input)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            var request = await _shippingRequestRepository.FirstOrDefaultAsync(input.ShippingRequestId);
+            request.DedicatedKPI = input.KPI;
+        }
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        public async Task UpdateTruckKPI(UpdateTruckKPIInput input)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            var dedicatedTruck = await _dedicatedShippingRequestTruckRepository.FirstOrDefaultAsync(input.DedicatedTruckId);
+            dedicatedTruck.KPI = input.KPI;
+        }
+
+        #endregion
+
         #region Helper
         private async Task<long> CreateStep1(CreateOrEditDedicatedStep1Dto input)
         {
             ShippingRequest shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
             shippingRequest.ShippingRequestFlag = ShippingRequestFlag.Dedicated;
-
+            shippingRequest.DedicatedKPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.RequestKPI);
             await _shippingRequestManager.CreateStep1Manager(shippingRequest, input);
             var SR= await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
+            
 
             //add new or remove destinaton cities
             await AddOrRemoveDestinationCities(input, shippingRequest);

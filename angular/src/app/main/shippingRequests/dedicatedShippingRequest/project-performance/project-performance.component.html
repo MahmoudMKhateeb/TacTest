@@ -1,0 +1,55 @@
+<!--begin::Card-->
+<div class="card card-custom card-stretch w-100 h-100 gutter-b" [busyIf]="loading">
+  <div class="card-header w-100">
+    <div class="card-title text-center">
+      <h3 class="card-label">{{ l('ProjectPerformance') }}</h3>
+    </div>
+    <div class="actions" *ngIf="isTachyonDealer">
+      <button class="btn btn-danger" (click)="showEditFields()">
+        {{ l('updateKPIForRequest') }}
+      </button>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row gutter-b" *ngIf="isTachyonDealer && showModifyKpi">
+      <div class="col-12">
+        <label class="form-label" for="newKpi">{{ l('ShippingRequestKPI') }} </label>
+        <div class="input-group">
+          <input class="form-control" type="number" name="newKpi" id="newKpi" [(ngModel)]="newKpi" />
+          <div class="input-group-append">
+            <button class="btn btn-danger" (click)="updateKPI()">
+              {{ l('save') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <table class="table">
+          <tr>
+            <td>{{ l('KPI') }}</td>
+            <td>{{ l('NumberOfTrips') }}</td>
+          </tr>
+
+          <tr>
+            <td>{{ kpi }}</td>
+            <td>{{ numberOfTrips }}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-8" id="acceptedVsRejectedChart">
+        <apx-chart
+          *ngIf="chartOptions && chartOptions.series"
+          [series]="chartOptions.series"
+          [chart]="chartOptions.chart"
+          [xaxis]="chartOptions.xaxis"
+          [stroke]="chartOptions.stroke"
+          [tooltip]="chartOptions.tooltip"
+          [dataLabels]="chartOptions.dataLabels"
+        ></apx-chart>
+      </div>
+    </div>
+  </div>
+</div>
+<!--end::Card-->

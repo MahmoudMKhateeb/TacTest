@@ -20,5 +20,6 @@ namespace TACHYON.Shipping.Dedicated
         public WorkingStatus Status { get; set; }
 
         public ICollection<DedicatedShippingRequestTruckAttendance> DedicatedShippingRequestTruckAttendances { get; set; }
+        public double? KPI { get; set; }
     }
 }

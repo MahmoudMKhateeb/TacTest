@@ -314,6 +314,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// Qty of dedicated trucks
         /// </summary>
         public int NumberOfTrucks { get; set; }
+        public double? DedicatedKPI { get; set; }
 
         #endregion
 

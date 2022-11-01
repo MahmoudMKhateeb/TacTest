@@ -77,6 +77,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public DateTime? RentalStartDate { get; set; }
         public DateTime? RentalEndDate { get; set; }
         public int NumberOfTrucks { get; set; }
+        public double? DedicatedKPI { get; set; }
         #endregion
     }
 }

@@ -325,9 +325,12 @@ import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShip
 import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-shipping-request-attendance-sheet-modal.component';
 import { InvoicesDedicatedComponent } from '@app/main/Invoices/invoices-dedicated/invoices-dedicated.component';
 import { InvoiceDedicatedModalComponent } from '@app/main/Invoices/invoices-dedicated/invoices-dedicated-modal/invoices-dedicated-modal.component';
+import { WidgetsModule } from '@app/shared/common/customizable-dashboard/widgets/widgets.module';
+import { TruckPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance.component';
 
 @NgModule({
   imports: [
+    WidgetsModule,
     UtilsModule,
     AppCommonModule,
     CommonModule,
@@ -618,6 +621,7 @@ import { InvoiceDedicatedModalComponent } from '@app/main/Invoices/invoices-dedi
     DedicatedShippingRequestAttendanceSheetModalComponent,
     InvoicesDedicatedComponent,
     InvoiceDedicatedModalComponent,
+    TruckPerformanceComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

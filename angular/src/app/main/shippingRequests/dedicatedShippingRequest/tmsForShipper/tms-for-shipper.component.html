@@ -63,7 +63,6 @@
                 <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
                 <!--              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="false"> </dxo-remote-operations>-->
                 <dxo-paging [pageSize]="20"></dxo-paging>
-
                 <dxi-column
                   *ngIf="shippingRequestId"
                   cellTemplate="cellTemplateActions"
@@ -105,6 +104,11 @@
                       <li>
                         <a href="javascript:;" class="dropdown-item" (click)="openFillAttendanceModal(options.data.id)">
                           {{ 'FillAttendance' | localize }}
+                        </a>
+                      </li>
+                      <li *ngIf="isTachyonDealer">
+                        <a href="javascript:;" class="dropdown-item" (click)="openTruckPerformanceModal(options.data)">
+                          {{ 'updateTruckPerformance' | localize }}
                         </a>
                       </li>
                     </ul>
@@ -175,3 +179,5 @@
   [rentalRange]="rentalRange"
   [trucks]="trucks"
 ></dedicated-shipping-request-attendance-sheet-modal>
+
+<app-truck-performance #truckPerformance></app-truck-performance>

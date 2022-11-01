@@ -17,6 +17,7 @@ import KTCard from '@metronic/common/js/components/card';
 import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-shipping-request-attendance-sheet-modal.component';
 import { DedicatedTruckModel } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-truck-model';
 import * as moment from '@node_modules/moment';
+import { TruckPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance.component';
 
 @Component({
   selector: 'tms-for-shipper',
@@ -25,6 +26,7 @@ import * as moment from '@node_modules/moment';
 })
 export class TmsForShipperComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('attendanceModal', { static: true }) attendanceModal: DedicatedShippingRequestAttendanceSheetModalComponent;
+  @ViewChild('truckPerformance') truckPerformance: TruckPerformanceComponent;
   @ViewChild('card', { static: true }) cardEl: ElementRef;
   @Input('shippingRequestId') shippingRequestId: number;
   @Input('rentalRange') rentalRange: { rentalStartDate: moment.Moment; rentalEndDate: moment.Moment } = {
@@ -96,5 +98,9 @@ export class TmsForShipperComponent extends AppComponentBase implements OnInit, 
 
   openFillAttendanceModal(truckId?: number) {
     this.attendanceModal.show(truckId);
+  }
+
+  openTruckPerformanceModal(truck: any) {
+    this.truckPerformance.show(truck.id, truck.kpi, truck.numberOfTrips);
   }
 }

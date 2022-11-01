@@ -30,5 +30,7 @@ namespace TACHYON.Configuration.Host.Dto
 
         [Required]
         public MobileAppLinksSettingDto AppLinksSettingDto { get; set; }
+        [Required]
+        public KPIDto KPI {get; set; }
     }
 }

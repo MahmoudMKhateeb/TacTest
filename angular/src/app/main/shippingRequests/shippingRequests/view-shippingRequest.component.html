@@ -502,6 +502,23 @@
       ></tms-for-shipper>
       <!--  end:Tms for shipper     -->
 
+      <div class="row gutter-b">
+        <app-project-performance
+          class="col-6"
+          *ngIf="shippingRequestforView.shippingRequestFlag === 1"
+          [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
+          [KPI]="shippingRequestforView?.dedicatedKPI"
+          [numberOfTrips]="shippingRequestforView?.totalsTripsAddByShippier"
+        >
+        </app-project-performance>
+
+        <app-truck-performance-chart
+          class="col-6"
+          *ngIf="shippingRequestforView.shippingRequestFlag === 1"
+          [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
+        ></app-truck-performance-chart>
+      </div>
+
       <!--  start:: DirectOffers      -->
 
       <ng-template [ngIf]="canSeeDirectRequests()">
