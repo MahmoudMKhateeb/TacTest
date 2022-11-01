@@ -1,6 +1,8 @@
 ﻿using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
+using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
@@ -64,8 +66,7 @@ namespace TACHYON.PricePackages
         protected virtual async Task Create(CreateOrEditTmsPricePackageDto input)
         {
             var createdTmsPricePackage = ObjectMapper.Map<TmsPricePackage>(input);
-
-            // todo: set it dynamically
+            
             createdTmsPricePackage.CommissionType = PricePackageCommissionType.Value;
             await _tmsPricePackageRepository.InsertAsync(createdTmsPricePackage);
         }
@@ -107,15 +108,19 @@ namespace TACHYON.PricePackages
             return ObjectMapper.Map<TmsPricePackageForViewDto>(tmsPricePackage);
         }
 
-        public async Task AcknowledgePricePackage(int pricePackageId, long shippingRequestId)
+        public async Task ChangeActivateStatus(int pricePackageId,bool isActive)
         {
+            var isExist = await _tmsPricePackageRepository.GetAll().AnyAsync(x => x.Id == pricePackageId);
+            if (!isExist) throw new UserFriendlyException(L("NotFound"));
             
+            _tmsPricePackageRepository.Update(pricePackageId, x => x.IsActive = isActive);
         }
         
         public async Task<LoadResult> GetAllForDropdown(GetTmsPricePackagesInput input)
         {
             var tmsPricePackages = _tmsPricePackageRepository.GetAll()
-                .AsNoTracking().Where(x=> x.ShipperId == input.ShipperId && !x.ProposalId.HasValue)
+                .AsNoTracking().Where(x=> x.IsActive && x.ShipperId == input.ShipperId)
+                .WhereIf(input.ProposalId.HasValue,x=> !x.ProposalId.HasValue || x.ProposalId == input.ProposalId)
                 .ProjectTo<TmsPricePackageSelectItemDto>(AutoMapperConfigurationProvider);
 
             return await LoadResultAsync(tmsPricePackages, input.LoadOptions);

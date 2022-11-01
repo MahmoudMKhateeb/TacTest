@@ -163,6 +163,7 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
     ApiServiceProxies.DynamicInvoiceServiceProxy,
     ApiServiceProxies.TmsPricePackageServiceProxy,
     ApiServiceProxies.PricePackageProposalServiceProxy,
+    ApiServiceProxies.PricePackageAppendixServiceProxy,
 
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },

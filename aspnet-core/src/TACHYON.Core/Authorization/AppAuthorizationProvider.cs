@@ -809,6 +809,25 @@ namespace TACHYON.Authorization
                featureDependency: tmsFeatureDependency);
 
            #endregion
+
+           #region Price Package Appendix
+
+           var pricePackageAppendicesPermission = pages.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix,
+               L("PricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
+
+           pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Create,
+               L("CreatePricePackageAppendicesPermission"), featureDependency: tmsFeatureDependency);
+           pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Update,
+               L("UpdatePricePackageAppendicesPermission"), featureDependency: tmsFeatureDependency);
+           pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Delete,
+               L("DeletePricePackageAppendicesPermission"), featureDependency: tmsFeatureDependency);
+           
+           pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Accept,
+               L("ConfirmPricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
+           pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Reject,
+               L("RejectPricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
+
+           #endregion
         }
 
         private static ILocalizableString L(string name)

@@ -91,7 +91,9 @@ using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.UnitOfMeasures;
 using TACHYON.Vases;
 using TACHYON.Penalties;
+using TACHYON.PricePackages.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageProposals;
+using TACHYON.PricePackages.TmsPricePackages;
 using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequestAndTripNotes;
 
@@ -327,6 +329,8 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<TmsPricePackage> TmsPricePackages { get; set; }
         
         public DbSet<PricePackageProposal> Proposals { get; set; }
+
+        public DbSet<PricePackageAppendix> Appendixes { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;

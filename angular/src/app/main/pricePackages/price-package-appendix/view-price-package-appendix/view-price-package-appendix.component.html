@@ -1,0 +1,62 @@
+<div
+    bsModal
+    #ViewAppendixModal="bs-modal"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="viewAppendixModal"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static' }"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>{{ l('ViewAppendixDetails') }}</span>
+                </h4>
+                <button type="button" class="close" (click)="close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div *ngIf="isModalActive" class="modal-body">
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <h6>{{ l('ContractName') }}:</h6>
+                        {{ appendix.contractName }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{ l('ContractNumber') }}:</h6>
+                        {{ appendix.contractNumber }}
+                    </div>
+
+                    <div class="col-6 mb-3">
+                        <h6>{{ l('Version') }}:</h6>
+                        {{ appendix.version }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{ l('AppendixDate') }}:</h6>
+                        {{ appendix.appendixDate }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{ l('appendixFile') }}:</h6>
+                        <a *ngIf="appendix.appendixFileId" class="text-success" (click)="downloadAppendixFile(appendix.appendixFileId)">{{
+                            'Download' | localize
+                            }}</a>
+                        <span *ngIf="!appendix.appendixFileId" class="text-primary">{{ 'FileNotFound' | localize }}</span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{ l('ProposalName') }}:</h6>
+                        {{ appendix.proposalName }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{ l('Status') }}:</h6>
+                        {{ appendix.statusTitle | localize }}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary blue" (click)="close()">{{ l('Close') }}</button>
+            </div>
+        </div>
+    </div>
+</div>

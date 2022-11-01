@@ -18,6 +18,9 @@ import { PricePackagesProposalComponent } from '@app/main/pricePackages/price-pa
 import { CreateOrEditPricePackegeProposalComponent } from './price-packeges-proposal/create-or-edit-price-packege-proposal/create-or-edit-price-packege-proposal.component';
 import { BsDatepickerModule } from '@node_modules/ngx-bootstrap/datepicker';
 import { ViewPricePackageProposalComponent } from './price-packeges-proposal/view-price-package-proposal/view-price-package-proposal.component';
+import { PricePackageAppendixComponent } from './price-package-appendix/price-package-appendix.component';
+import { CreateOrEditPricePackageAppendixComponent } from './price-package-appendix/create-or-edit-price-package-appendix/create-or-edit-price-package-appendix.component';
+import { ViewPricePackageAppendixComponent } from './price-package-appendix/view-price-package-appendix/view-price-package-appendix.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,9 @@ import { ViewPricePackageProposalComponent } from './price-packeges-proposal/vie
     PricePackagesProposalComponent,
     CreateOrEditPricePackegeProposalComponent,
     ViewPricePackageProposalComponent,
+    PricePackageAppendixComponent,
+    CreateOrEditPricePackageAppendixComponent,
+    ViewPricePackageAppendixComponent,
   ],
   imports: [
     PricePackageRoutingModule,

@@ -29,7 +29,7 @@
 
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
-              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-paging [pageSize]="5"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
               <dxi-column
                 cellTemplate="cellTemplateActions"
@@ -47,6 +47,11 @@
               <dxi-column dataField="destinationCity" caption="{{ l('Destination') }}"></dxi-column>
               <dxi-column dataField="transportType" caption="{{ l('TransportType') }}"></dxi-column>
               <dxi-column dataField="truckType" caption="{{ l('TruckType') }}"></dxi-column>
+              <dxi-column dataField="isActive" cellTemplate="cellTemplate_IsActive" caption="{{ l('IsActive') }}"></dxi-column>
+                <div *dxTemplate="let options of 'cellTemplate_IsActive'">
+                    <span *ngIf="options.data.isActive" class="badge badge-success badge-inline">{{ 'Yes' | localize }}</span>
+                    <span *ngIf="!options.data.isActive" class="badge badge-dark badge-inline">{{ 'No' | localize }}</span>
+                </div>
               <div *dxTemplate="let type of 'pricePackageTypeTemplate'">
                 <span class="badge badge-inline-badge-primary">{{ getPricePackageTypeName(type) }}</span>
               </div>
@@ -70,12 +75,12 @@
                     <li>
                       <a class="dropdown-item" (click)="TmsPricePackageModal.show(options.data.id)">{{ l('Edit') }}</a>
                     </li>
-                    <li>
-                      <a class="dropdown-item">{{ l('Cancel') }}</a>
+                    <li *ngIf="options.data.isActive && !options.data.hasProposal">
+                      <a  (click)="deActivate(options.data.id)" class="dropdown-item">{{ l('DeActivate') }}</a>
                     </li>
-                    <li>
-                      <a class="dropdown-item">{{ l('DeActivate') }}</a>
-                    </li>
+                      <li *ngIf="!options.data.isActive" >
+                          <a (click)="activate(options.data.id)" class="dropdown-item">{{ l('Activate') }}</a>
+                      </li>
                   </ul>
                 </div>
               </div>
