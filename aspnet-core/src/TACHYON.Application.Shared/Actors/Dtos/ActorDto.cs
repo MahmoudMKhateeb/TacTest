@@ -21,6 +21,7 @@ namespace TACHYON.Actors.Dtos
         public string Email { get; set; }
 
         public int InvoiceDueDays { get; set; }
+        public bool IsActive { get; set; }
         public DocumentFileDto DocumentFile { get; set; }
 
 

@@ -137,6 +137,10 @@
                       {{ l('Email') }}
                       <p-sortIcon field="actor.email"></p-sortIcon>
                     </th>
+                    <th style="width: 150px" pSortableColumn="email">
+                      {{ l('Active') }}
+                      <p-sortIcon field="actor.isActive"></p-sortIcon>
+                    </th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
@@ -203,6 +207,11 @@
                     <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Email') }}</span>
                       {{ record.actor.email }}
+                    </td>
+                    <td style="width: 150px">
+                      <span class="ui-column-title"> {{ l('Active') }}</span>
+                      <i *ngIf="record.actor.isActive" class="fa fa-check" aria-hidden="true"></i>
+                      <i *ngIf="!record.actor.isActive" class="fa fa-times" aria-hidden="true"></i>
                     </td>
                   </tr>
                 </ng-template>
