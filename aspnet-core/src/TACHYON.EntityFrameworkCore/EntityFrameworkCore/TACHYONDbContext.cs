@@ -483,6 +483,10 @@ namespace TACHYON.EntityFrameworkCore
                 .Property(b => b.IsActive)
                 .HasDefaultValue(true);
 
+            modelBuilder.Entity<Actor>()
+                .Property(b => b.IsActive)
+                .HasDefaultValue(true);
+
             modelBuilder.Entity<BinaryObject>(b =>
             {
                 b.HasIndex(e => new { e.TenantId });

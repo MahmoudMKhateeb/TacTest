@@ -1,4 +1,4 @@
-﻿import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
@@ -72,17 +72,13 @@ export class CreateOrEditActorModalComponent extends AppComponentBase {
       this.actor.createOrEditDocumentFileDto.extn = '_';
       this.actor.createOrEditDocumentFileDto.name = '_';
 
-      //RequiredDocuments
-      this._documentFilesServiceProxy.getActorShipperRequiredDocumentFiles('').subscribe((result) => {
-        this.actor.createOrEditDocumentFileDtos = result;
-      });
-
       this.active = true;
       this.modal.show();
     } else {
       this._actorsServiceProxy.getActorForEdit(actorId).subscribe((result) => {
         this.actor = result.actor;
         this.active = true;
+        this.BindRequiredDocs();
         this.modal.show();
       });
     }
@@ -200,7 +196,11 @@ export class CreateOrEditActorModalComponent extends AppComponentBase {
       this.createOrEd();
     }
 
-    if (this.requiredDocumentFormChildComponent.DocsUploader.queue?.length > 0) {
+    if (
+      this.actor.createOrEditDocumentFileDtos != undefined &&
+      this.actor.createOrEditDocumentFileDtos.length > 0 &&
+      this.requiredDocumentFormChildComponent.DocsUploader.queue?.length > 0
+    ) {
       this.requiredDocumentFormChildComponent.DocsUploader.uploadAll();
     } else {
       this.createOrEd();
@@ -210,5 +210,18 @@ export class CreateOrEditActorModalComponent extends AppComponentBase {
   isInUpdateStage(): boolean {
     // in case of the Id have value then we are in update stage
     return isNotNullOrUndefined(this.actor?.id);
+  }
+
+  BindRequiredDocs() {
+    //RequiredDocuments
+    if (this.actor.actorType == 1) {
+      this._documentFilesServiceProxy.getActorShipperRequiredDocumentFiles('').subscribe((result) => {
+        this.actor.createOrEditDocumentFileDtos = result;
+      });
+    } else if (this.actor.actorType == 2) {
+      this._documentFilesServiceProxy.getActorCarrierRequiredDocumentFiles('').subscribe((result) => {
+        this.actor.createOrEditDocumentFileDtos = result;
+      });
+    }
   }
 }

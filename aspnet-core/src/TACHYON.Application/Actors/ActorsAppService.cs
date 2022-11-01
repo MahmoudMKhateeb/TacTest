@@ -78,7 +78,8 @@ namespace TACHYON.Actors
                              o.Address,
                              o.MobileNumber,
                              o.Email,
-                             Id = o.Id
+                             Id = o.Id,
+                             isactive = o.IsActive
                          };
 
             var totalCount = await filteredActors.CountAsync();
@@ -100,6 +101,7 @@ namespace TACHYON.Actors
                         MobileNumber = o.MobileNumber,
                         Email = o.Email,
                         Id = o.Id,
+                        IsActive = o.isactive
                     }
                 };
 
@@ -186,9 +188,17 @@ namespace TACHYON.Actors
                 actor.TenantId = (int)AbpSession.TenantId;
             }
 
+            var requiredDocs = default(List<CreateOrEditDocumentFileDto>);
 
+            if (input.ActorType == ActorTypesEnum.Shipper)
+            {
+                requiredDocs = await _documentFilesAppService.GetActorShipperRequiredDocumentFiles("");
+            }
+            else if (input.ActorType == ActorTypesEnum.Carrier)
+            {
+                requiredDocs = await _documentFilesAppService.GetActorCarrierRequiredDocumentFiles("");
+            }
 
-            var requiredDocs = await _documentFilesAppService.GetActorShipperRequiredDocumentFiles("");
             if (requiredDocs.Count > 0)
             {
                 foreach (var item in requiredDocs)

@@ -39,6 +39,15 @@ namespace TACHYON.Actors
         public long OrganizationUnitId { get; set; }
 
         public int InvoiceDueDays { get; set; }
+        public bool IsActive { get; set; } = true;
+        /// <summary>
+        /// Additional fields when no documents required
+        /// </summary>
+        public string CR { get; set; }
+        /// <summary>
+        /// Additional fields when no documents required
+        /// </summary>
+        public string VatCertificate { get; set; }
 
         [InverseProperty(nameof(ShippingRequest.ShipperActorFk))]
         public ICollection<ShippingRequest> ActorShipperShippingRequests { get; set; }

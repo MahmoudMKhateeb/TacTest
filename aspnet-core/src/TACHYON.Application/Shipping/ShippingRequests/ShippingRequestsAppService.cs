@@ -1754,7 +1754,8 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<SelectItemDto>> GetAllShippersActorsForDropDown()
         {
             return await _actorsRepository.GetAll()
-                 .Where(x => x.ActorType == ActorTypesEnum.Shipper)
+                 .Where(x => x.ActorType == ActorTypesEnum.Shipper &&
+                 x.IsActive)
                    .Select(x => new SelectItemDto()
                    {
                        Id = x.Id.ToString(),
@@ -1766,7 +1767,8 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<SelectItemDto>> GetAllCarriersActorsForDropDown()
         {
             return await _actorsRepository.GetAll()
-                 .Where(x => x.ActorType == ActorTypesEnum.Carrier)
+                 .Where(x => x.ActorType == ActorTypesEnum.Carrier &&
+                 x.IsActive)
                    .Select(x => new SelectItemDto()
                    {
                        Id = x.Id.ToString(),
