@@ -217,7 +217,7 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   getDriverLiveLocation() {
     this.loading = true;
     let helper = new FirebaseHelperClass(this._db);
-    if (this.isCarrier) {
+    if (this.isCarrier || this.hasShipperClients || this.hasCarrierClients) {
       helper
         .getAllActiveDriversLiveLocationByTenantId(this.appSession.tenantId)
         .pipe(
