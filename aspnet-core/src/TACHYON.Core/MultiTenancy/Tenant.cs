@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Authorization.Users;
 using TACHYON.DedicatedInvoices;
 using TACHYON.Editions;
@@ -75,6 +76,7 @@ namespace TACHYON.MultiTenancy
         public string FinancialPhone { get; set; }
         public string FinancialEmail { get; set; }
 
+        [NotMapped]
         public ICollection<DedicatedDynamicInvoice> DedicatedDynamicInvoices { get; set; }
         protected Tenant()
         {

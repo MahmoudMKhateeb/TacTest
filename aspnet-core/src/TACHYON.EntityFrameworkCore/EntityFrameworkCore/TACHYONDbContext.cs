@@ -578,6 +578,15 @@ namespace TACHYON.EntityFrameworkCore
                 .WithMany(e => e.DedicatedDynamicInvoices)
                 .OnDelete(DeleteBehavior.Restrict);
 
+
+            modelBuilder
+                .Entity<DedicatedDynamicInvoiceItem>()
+                .HasOne(e => e.DedicatedShippingRequestTruck)
+                .WithMany(e => e.DedicatedDynamicInvoiceItems)
+                .OnDelete(DeleteBehavior.ClientNoAction);
+
+
+
             modelBuilder.ConfigurePersistedGrantEntity();
         }
     }
