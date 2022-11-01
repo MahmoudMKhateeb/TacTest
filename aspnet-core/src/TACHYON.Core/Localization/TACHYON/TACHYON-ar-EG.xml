@@ -2878,6 +2878,16 @@
 		<text name="NoOfTrucks">عدد الشاحنات</text>
     <text name="ShippingRequestNotFound">الطلب غير موجود</text>
 		<text name="YouMustCompleteWizardStepsFirst">يجب إكمل جميع خطوات الطلب</text>
+    <text name="downloadDedicatedInvoice">تحميل فاتورة التأجير</text>
+    <text name="SubmitInvoiceNumber">رقم مرجع الفاتورة</text>
+    <text name="SelectaShippingRequest">إختر طلب الشحن</text>
+    <text name="NumberOfDays">عدد الأيام</text>
+    <text name="WorkingDayType">تصنيف اليوم</text>
+    <text name="SelectWorkingDayType">اختر تصنيف اليوم</text>
+    <text name="updateKPIForRequest">تعديل KPI</text>
+    <text name="ShippingRequestKPI">KPI الخاص بطلب الشحن</text>
+    <text name="TruckPerformance">أداء الشاحنة</text>
+    <text name="truckKPI">KPI الخاص بالشاحنة</text>
     
 	</texts>
 </localizationDictionary>

@@ -3126,6 +3126,16 @@
 		<text name="NoOfTrucks">No of trucks</text>
 		<text name="ShippingRequestNotFound">Shipping request not found</text>
     <text name="YouMustCompleteWizardStepsFirst">You must complete wizard steps first</text>
+    <text name="downloadDedicatedInvoice">Download Dedicated Invoice</text>
+    <text name="SubmitInvoiceNumber">Invoice reference number</text>
+    <text name="SelectaShippingRequest">Select shipping request</text>
+    <text name="NumberOfDays">Number of days</text>
+    <text name="WorkingDayType">Working day type</text>
+    <text name="SelectWorkingDayType">Select working day type</text>
+    <text name="updateKPIForRequest">update KPI for request</text>
+    <text name="ShippingRequestKPI">ShippingrequestKPI</text>
+    <text name="TruckPerformance">Truck performance</text>
+    <text name="truckKPI">Truck KPI</text>
 
 	</texts>
 </localizationDictionary>

@@ -18,5 +18,7 @@ namespace TACHYON.Shipping.Dedicated
         [ForeignKey("TruckId")]
         public Truck Truck { get; set; }
         public WorkingStatus Status { get; set; }
+
+        public ICollection<DedicatedShippingRequestTruckAttendance> DedicatedShippingRequestTruckAttendances { get; set; }
     }
 }

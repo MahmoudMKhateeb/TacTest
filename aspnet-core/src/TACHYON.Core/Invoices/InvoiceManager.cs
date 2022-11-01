@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.Core.Invoices.Jobs;
 using TACHYON.DataFilters;
+using TACHYON.DedicatedInvoices;
 using TACHYON.Dto;
 using TACHYON.DynamicInvoices;
 using TACHYON.Features;
@@ -674,6 +675,38 @@ namespace TACHYON.Invoices
             dynamicInvoice.InvoiceId=invoice.Id;
         }
 
+        public async Task GenerateDedicatedDynamicInvoice(Tenant tenant, DedicatedDynamicInvoice dedicatedDynamicInvoice)
+        {
+            InvoicePeriod period = await _periodRepository.FirstOrDefaultAsync(x =>
+                x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
+
+            decimal subTotalAmount = dedicatedDynamicInvoice.SubTotalAmount;
+            var tax = GetTax();
+
+            decimal vatAmount = dedicatedDynamicInvoice.VatAmount;
+            decimal totalAmount = dedicatedDynamicInvoice.TotalAmount;
+
+            DateTime dueDate = Clock.Now;
+
+            var invoice = new Invoice
+            {
+                TenantId = tenant.Id,
+                PeriodId = period.Id,
+                DueDate = dueDate,
+                IsPaid = false,
+                TotalAmount = totalAmount,
+                VatAmount = vatAmount,
+                SubTotalAmount = subTotalAmount,
+                AccountType = InvoiceAccountType.AccountReceivable,
+                Channel = InvoiceChannel.Dedicated,
+                Status = InvoiceStatus.Drafted,
+                Note = dedicatedDynamicInvoice.Notes
+            };
+            //await _invoiceRepository.InsertAsync(invoice);
+            invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
+            dedicatedDynamicInvoice.InvoiceId = invoice.Id;
+        }
+
         public async Task GenerateSubmitDynamicInvoice(Tenant tenant, DynamicInvoice dynamicInvoice)
         {
 
@@ -701,6 +734,36 @@ namespace TACHYON.Invoices
             };
             submitInvoice.Id = await _submitInvoiceRepository.InsertAndGetIdAsync(submitInvoice);
             dynamicInvoice.SubmitInvoiceId=submitInvoice.Id;
+
+        }
+
+
+        public async Task GenerateSubmitDedicatedDynamicInvoice(Tenant tenant, DedicatedDynamicInvoice dedicatedDynamicInvoice)
+        {
+
+            InvoicePeriod period = await _periodRepository.FirstOrDefaultAsync(x =>
+                 x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
+
+            decimal subTotalAmount = dedicatedDynamicInvoice.SubTotalAmount;
+
+            decimal vatAmount = dedicatedDynamicInvoice.VatAmount;
+            decimal totalAmount = subTotalAmount + vatAmount;
+
+            DateTime dueDate = Clock.Now;
+
+            var submitInvoice = new SubmitInvoice
+            {
+                TenantId = tenant.Id,
+                PeriodId = period.Id,
+                TotalAmount = totalAmount,
+                VatAmount = vatAmount,
+                SubTotalAmount = subTotalAmount,
+                TaxVat = dedicatedDynamicInvoice.TaxVat,
+                Channel = InvoiceChannel.Dedicated,
+
+            };
+            submitInvoice.Id = await _submitInvoiceRepository.InsertAndGetIdAsync(submitInvoice);
+            dedicatedDynamicInvoice.SubmitInvoiceId = submitInvoice.Id;
 
         }
         public async Task GeneratePenaltySubmitInvoice(Tenant tenant, List<Penalty> penalties, InvoicePeriod period)

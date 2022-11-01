@@ -752,9 +752,32 @@ namespace TACHYON.Authorization
                L("DeleteDynamicInvoicePermission"),
                featureDependency: tmsFeatureDependency);
 
-           #endregion
+            #endregion
 
-           documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Actors, L("ActorDocumentFiles"),
+            #region Dynamic Invoices
+
+
+            // this permission for host and tachyon dealer only ...
+            var dedicatedDynamicInvoicePermission = pages.CreateChildPermission(AppPermissions.Pages_DedicatedDynamicInvoices,
+                L("DedicatedDynamicInvoicePermission"),
+                L("DedicatedDynamicInvoicePermissionDescription"),
+                featureDependency: tmsFeatureDependency);
+
+            dynamicInvoicePermission.CreateChildPermission(AppPermissions.Pages_DedicatedDynamicInvoices_Create,
+                L("CreateDedicatedDynamicInvoicePermission"),
+                featureDependency: tmsFeatureDependency);
+
+            dynamicInvoicePermission.CreateChildPermission(AppPermissions.Pages_DedicatedDynamicInvoices_Update,
+                L("UpdateDedicatedDynamicInvoicePermission"),
+                featureDependency: tmsFeatureDependency);
+
+            dynamicInvoicePermission.CreateChildPermission(AppPermissions.Pages_DedicatedDynamicInvoices_Delete,
+                L("DeleteDedicatedDynamicInvoicePermission"),
+                featureDependency: tmsFeatureDependency);
+
+            #endregion
+
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Actors, L("ActorDocumentFiles"),
                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
                    AppFeatures.DocumentsManagement));
 

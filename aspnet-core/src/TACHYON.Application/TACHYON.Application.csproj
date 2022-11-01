@@ -14,6 +14,7 @@
     <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Invoices\Reports\DedicatedInvoice.rdlc" />
     <None Remove="Invoices\Reports\Dedicated_Invoice.rdlc" />
     <None Remove="Invoices\Reports\DynamicInvoice.rdlc" />
     <None Remove="Invoices\Reports\Invoice.rdlc" />
@@ -31,6 +32,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\DynamicInvoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Invoices\Reports\DedicatedInvoice.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\LandScapeInvoice.rdlc">
@@ -74,6 +78,11 @@
     <ProjectReference Include="..\TACHYON.EntityFrameworkCore\TACHYON.EntityFrameworkCore.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Invoices\Reports\Datasets\GetDedicatedInvoiceItemReportInfo.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetDedicatedInvoiceItemReportInfo.xsd</DependentUpon>
+    </Compile>
     <Compile Update="Invoices\Reports\Datasets\GetInvoiceNoteItemReportInfoDataset.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -141,6 +150,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Update="Invoices\Reports\Datasets\GetDedicatedInvoiceItemReportInfo.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetDedicatedInvoiceItemReportInfo.Designer.cs</LastGenOutput>
+    </None>
     <None Update="Invoices\Reports\Datasets\GetInvoiceNoteItemReportInfoDataset.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>GetInvoiceNoteItemReportInfoDataset.Designer.cs</LastGenOutput>

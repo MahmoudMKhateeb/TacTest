@@ -95,6 +95,8 @@ using TACHYON.PricePackages.PricePackageProposals;
 using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequestAndTripNotes;
 using TACHYON.Shipping.Dedicated;
+using TACHYON.DedicatedInvoices;
+using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -229,6 +231,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
         public virtual DbSet<DedicatedShippingRequestDriver> DedicatedShippingRequestDrivers { get; set; }
         public virtual DbSet<DedicatedShippingRequestTruck> DedicatedShippingRequestTrucks { get; set; }
+        public virtual DbSet<DedicatedShippingRequestTruckAttendance> DedicatedShippingRequestTruckAttendances { get; set; }
         public virtual DbSet<ShippingRequestDestinationCity> ShippingRequestDestinationCities { get; set; }
         public DbSet<ShippingRequestDirectRequest> ShippingRequestDirectRequests { get; set; }
 
@@ -326,6 +329,8 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<DynamicInvoice> DynamicInvoices { get; set; }
 
         public DbSet<DynamicInvoiceItem> DynamicInvoiceItems { get; set; }
+        public DbSet<DedicatedDynamicInvoice> DedicatedDynamicInvoices { get; set; }
+        public DbSet<DedicatedDynamicInvoiceItem> DedicatedDynamicInvoiceItems { get; set; }
 
         public DbSet<TmsPricePackage> TmsPricePackages { get; set; }
         

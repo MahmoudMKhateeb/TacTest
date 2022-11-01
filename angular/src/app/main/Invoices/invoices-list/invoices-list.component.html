@@ -102,7 +102,8 @@
                     [ngClass]="{
                       'badge-primary': options.data.channel == InvoiceChannelEnum.Trip,
                       'badge-warning': options.data.channel == InvoiceChannelEnum.Penalty,
-                      'badge-success': options.data.channel == InvoiceChannelEnum.DynamicInvoice
+                      'badge-success': options.data.channel == InvoiceChannelEnum.DynamicInvoice,
+                      'badge-info': options.data.channel == InvoiceChannelEnum.Dedicated
                     }"
                     >{{ l(options.data.invoiceChannelTitle) }}</span
                   ></span
@@ -147,6 +148,15 @@
                         *ngIf="options.data.channel == InvoiceChannelEnum.DynamicInvoice"
                         (click)="downloadDynamicReport(options.data.id)"
                         >{{ l('downloadDynamicInvoice') }}</a
+                      >
+                    </li>
+
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="options.data.channel == InvoiceChannelEnum.Dedicated"
+                        (click)="downloadDedicatedReport(options.data.id)"
+                        >{{ l('downloadDedicatedInvoice') }}</a
                       >
                     </li>
                     <li *ngIf="!options.data.isPaid">

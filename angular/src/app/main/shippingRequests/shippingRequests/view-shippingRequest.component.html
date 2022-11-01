@@ -496,8 +496,9 @@
 
       <!--  start:Tms for shipper     -->
       <tms-for-shipper
-        [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
         *ngIf="shippingRequestforView.shippingRequestFlag === 1"
+        [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
+        [rentalRange]="rentalRange"
       ></tms-for-shipper>
       <!--  end:Tms for shipper     -->
 

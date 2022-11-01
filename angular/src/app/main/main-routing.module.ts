@@ -74,6 +74,7 @@ import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/in
 import { ActorsSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/actors-submitted-documents/actors-submitted-documents.component';
 import { CreateOrEditDedicatedShippingRequestWizardComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicatedShippingRequestWizard/create-or-edit-dedicated-shipping-request-wizard.component';
 import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/tmsForShipper/tms-for-shipper.component';
+import { InvoicesDedicatedComponent } from '@app/main/Invoices/invoices-dedicated/invoices-dedicated.component';
 
 @NgModule({
   imports: [
@@ -295,6 +296,7 @@ import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShip
           { path: 'trucksTypes/trucksTypes', component: TrucksTypesComponent, data: { permission: 'Pages.TrucksTypes' } },
           { path: 'invoices/view', component: InvoicesListComponent, data: { permission: 'Pages.Invoices' } },
           { path: 'invoices/dynamic', component: InvoicesDynamicComponent, data: { permission: 'Pages.DynamicInvoices' } },
+          { path: 'invoices/dedicated', component: InvoicesDedicatedComponent, data: { permission: 'Pages.DedicatedDynamicInvoices' } },
           { path: 'penalties/view', component: PenaltiesListComponent, data: { permission: 'Pages.Invoices' } },
 
           { path: 'invoicenote/view', component: InvoiceNoteListComponent, data: { permission: 'Pages.Invoices' } },

@@ -75,6 +75,7 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
             undefined,
             undefined
           ),
+          new AppMenuItem('DedicatedInvoice', '', '', '/app/main/invoices/dedicated', undefined, undefined, undefined, undefined),
         ]
       ),
       // end of  Invoices

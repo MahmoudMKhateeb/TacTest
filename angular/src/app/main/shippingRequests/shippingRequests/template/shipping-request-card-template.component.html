@@ -47,7 +47,7 @@
             [class.expanded]="openCardId == item.id"
             [class.rtl]="direction == 'rtl'"
             class="shipCard card card-custom"
-            *ngIf="item.shippingRequestFlag === 0"
+            *ngIf="item.shippingRequestFlag === ShippingRequestFlagEnum.Normal"
           >
             <!--               {{ ((item.isPriced || item.remainingDays == '0') && Channel) || (item.status == 1 && !Channel) ? ' shipCardGray' : '' }}-->
             <!--               {{ item.status == 5 && !Channel ? ' shipCardGreen' : '' }}-->
@@ -241,7 +241,7 @@
                   *ngIf="item.isPriced && Channel != 10"
                   href="javascript:void(0)"
                   class="infoHighLight blue"
-                  (click)="ModelViewPrice.show(item.id, item.offerId, false, item.shippingRequestFlag === 1)"
+                  (click)="ModelViewPrice.show(item.id, item.offerId, false, item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated)"
                   >{{ l('MarketPlacepriced') }}</a
                 >
                 <a
@@ -305,7 +305,7 @@
                       <shipping-request-offers-list
                         [shippingRequestId]="item.id"
                         [isTachyonDeal]="item.isTachyonDeal"
-                        [isForDedicated]="item.shippingRequestFlag === 1"
+                        [isForDedicated]="item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
                         [Channel]="item.bidStatus == 0 ? 2 : 1"
                       >
                       </shipping-request-offers-list>
@@ -365,7 +365,7 @@
             [class.expanded]="openCardId == item.id"
             [class.rtl]="direction == 'rtl'"
             class="shipCard card card-custom dedicated-sr"
-            *ngIf="item.shippingRequestFlag === 1"
+            *ngIf="item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
           >
             <div class="card-header ribbon ribbon-clip ribbon-left">
               <div class="ribbon-target" style="top: 5px">
@@ -383,7 +383,7 @@
                       {{ l('Delete') }}
                     </a>
                     <a
-                      *ngIf="feature.isEnabled('App.Carrier') && Channel == 2 && (item.directRequestStatus == 0 || item.directRequestStatus == 5)"
+                      *ngIf="(isCarrier || isCarrierSaas) && Channel == 2 && (item.directRequestStatus == 0 || item.directRequestStatus == 5)"
                       href="javascript:void(0)"
                       (click)="decline(item)"
                       class="red"
@@ -391,12 +391,20 @@
                       {{ l('Declined') }}
                     </a>
                     <a
-                      *ngIf="feature.isEnabled('App.Carrier') && !Channel && !item.isDriversAndTrucksAssigned"
+                      *ngIf="(isCarrier || isCarrierSaas) && !Channel && !item.isDriversAndTrucksAssigned"
                       href="javascript:void(0)"
                       (click)="assignTrucksAndDrivers(item)"
                       class="red"
                     >
                       {{ l('AssignTrucksAndDrivers') }}
+                    </a>
+                    <a
+                      *ngIf="(isCarrier || isCarrierSaas || isTachyonDealer) && !Channel && item.isDriversAndTrucksAssigned"
+                      href="javascript:void(0)"
+                      (click)="openAttendanceModal(item)"
+                      class="red"
+                    >
+                      {{ l('viewAttendance') }}
                     </a>
                     <a
                       *ngIf="
@@ -416,9 +424,7 @@
                       (click)="moreRedirectTo(item)"
                       class="red"
                       *ngIf="
-                        (!Channel &&
-                          (feature.isEnabled('App.Shipper') ||
-                            (item.isTachyonDeal && (feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)))) ||
+                        (!Channel && (feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)) ||
                         ((Channel == PriceOfferChannelEnum.MarketPlace || Channel == PriceOfferChannelEnum.DirectRequest) &&
                           (feature.isEnabled('App.Carrier') || feature.isEnabled('App.CarrierAsASaas')))
                       "
@@ -553,8 +559,8 @@
                         {{ l('RentalFromTo') }}:
                       </span>
                       &nbsp;
-                      {{ item.rentalStartDate.toDate() | date: 'MM/dd/yyyy' }} {{ item.rentalEndDate ? '-' : '' }}
-                      {{ item.rentalEndDate.toDate() | date: 'MM/dd/yyyy' }}
+                      {{ item.rentalStartDate.toISOString() | date: 'MM/dd/yyyy' }} {{ item.rentalEndDate ? '-' : '' }}
+                      {{ item.rentalEndDate.toISOString() | date: 'MM/dd/yyyy' }}
                     </p>
                   </div>
                   <div class="col-3 truckType">
@@ -587,7 +593,7 @@
                     *ngIf="item.isPriced && Channel != 10"
                     href="javascript:void(0)"
                     class="infoHighLight blue"
-                    (click)="ModelViewPrice.show(item.id, item.offerId, false, item.shippingRequestFlag === 1)"
+                    (click)="ModelViewPrice.show(item.id, item.offerId, false, item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated)"
                     >{{ l('MarketPlacepriced') }}</a
                   >
                   <a
@@ -617,3 +623,4 @@
 <price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search()" (modalRefresh)="LoadData()"></price-offer-view-model>
 <load-entity-template-modal #loadEntityTemplateModal></load-entity-template-modal>
 <assign-trucks-and-drivers-modal #assignTrucksAndDriversModal></assign-trucks-and-drivers-modal>
+<dedicated-shipping-request-attendance-sheet-modal #attendanceModal></dedicated-shipping-request-attendance-sheet-modal>

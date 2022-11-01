@@ -43,8 +43,7 @@ export class InvoiceDetailComponent extends AppComponentBase {
           console.log('res', res);
         });
       });
-    } 
-    else if (this.Data.channel === InvoiceChannel.Trip){
+    } else if (this.Data.channel === InvoiceChannel.Trip) {
       this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(this.Data.id).subscribe((result) => {
         let url = this._fileDownloadService.GetTempFileUrl(result);
         this.downloadFile(url).subscribe((res) => {
@@ -53,9 +52,16 @@ export class InvoiceDetailComponent extends AppComponentBase {
           console.log('res', res);
         });
       });
-    }
-    else{
-      
+    } else if (this.Data.channel === InvoiceChannel.Dedicated) {
+      this._InvoiceReportServiceProxy.downloadDedicatedDynamicInvoice(this.Data.id).subscribe((result) => {
+        let url = this._fileDownloadService.GetTempFileUrl(result);
+        this.downloadFile(url).subscribe((res) => {
+          this.pdfViewerAutoLoad.pdfSrc = res;
+          this.pdfViewerAutoLoad.refresh();
+          console.log('res', res);
+        });
+      });
+    } else {
       this._InvoiceReportServiceProxy.downloadActorShipperInvoiceReportPdf(this.Data.id).subscribe((result) => {
         let url = this._fileDownloadService.GetTempFileUrl(result);
         this.downloadFile(url).subscribe((res) => {

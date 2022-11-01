@@ -322,6 +322,9 @@ import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/a
 import { CreateOrEditDedicatedShippingRequestWizardComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicatedShippingRequestWizard/create-or-edit-dedicated-shipping-request-wizard.component';
 import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
 import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/tmsForShipper/tms-for-shipper.component';
+import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-shipping-request-attendance-sheet-modal.component';
+import { InvoicesDedicatedComponent } from '@app/main/Invoices/invoices-dedicated/invoices-dedicated.component';
+import { InvoiceDedicatedModalComponent } from '@app/main/Invoices/invoices-dedicated/invoices-dedicated-modal/invoices-dedicated-modal.component';
 
 @NgModule({
   imports: [
@@ -612,6 +615,9 @@ import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShip
     ActorSubmitInvoicesComponent,
     AssignTrucksAndDriversModalComponent,
     TmsForShipperComponent,
+    DedicatedShippingRequestAttendanceSheetModalComponent,
+    InvoicesDedicatedComponent,
+    InvoiceDedicatedModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
