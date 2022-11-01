@@ -457,7 +457,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private async Task<long> UpdateStep1(CreateOrEditShippingRequestStep1Dto input)
         {
             var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id.Value);
-
+            await _shippingRequestManager.CreateStep1Manager(shippingRequest, input);
             ObjectMapper.Map(input, shippingRequest);
             return shippingRequest.Id;
         }
