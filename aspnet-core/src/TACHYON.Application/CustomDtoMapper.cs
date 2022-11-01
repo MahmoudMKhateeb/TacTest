@@ -450,7 +450,7 @@ namespace TACHYON
                 .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => $"{src.DriverUser.Name} {src.DriverUser.Surname}" ))
                 .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.DriverUser.AccountNumber))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.DriverUser.PhoneNumber))
-                .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.Tenant.TenancyName))
+                .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.CarrierTenantFk.TenancyName))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}- {GetDurationUnit(src.ShippingRequest.RentalDurationUnit.Value)}"))
                 .ForMember(dest => dest.ShippingRequestReference, opt => opt.MapFrom(src => src.ShippingRequest.ReferenceNumber))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.GetEnumDescription()));
@@ -461,7 +461,7 @@ namespace TACHYON
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
                 .ForMember(dest => dest.Capacity, opt => opt.MapFrom(src => src.Truck.CapacityFk.DisplayName))
                 .ForMember(dest => dest.ShippingRequestReference, opt => opt.MapFrom(src => src.ShippingRequest.ReferenceNumber))
-                .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.Tenant.TenancyName))
+                .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.CarrierTenantFk.TenancyName))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}- {GetDurationUnit(src.ShippingRequest.RentalDurationUnit.Value)}"));
 
             configuration.CreateMap<CreateOrEditDedicatedStep1Dto, ShippingRequest>()
