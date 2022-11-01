@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
+using TACHYON.DedicatedInvoices;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trucks;
 
@@ -20,6 +22,8 @@ namespace TACHYON.Shipping.Dedicated
         public WorkingStatus Status { get; set; }
 
         public ICollection<DedicatedShippingRequestTruckAttendance> DedicatedShippingRequestTruckAttendances { get; set; }
+        [NotMapped]
+        public ICollection<DedicatedDynamicInvoiceItem> DedicatedDynamicInvoiceItems { get; set; }
         public double? KPI { get; set; }
     }
 }
