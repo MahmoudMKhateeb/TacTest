@@ -22,7 +22,7 @@
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'PlateNumber' | localize }}</div>
             <div class="dx-field-value">
-              <dx-text-box placeholder="1234 a a a">
+              <dx-text-box placeholder="1234 a a a" [(value)]="truckFilterObj.plateNumber">
                 <dx-validator>
                   <dxi-validation-rule
                     type="pattern"
@@ -36,7 +36,10 @@
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'CreationDate' | localize }}</div>
             <div class="dx-field-value">
-              <dx-date-box invalidDateMessage="{{ 'CreationDate' | localize }}: {{ 'DatePlaceholder' | localize }}"></dx-date-box>
+              <dx-date-box
+                [(value)]="truckFilterObj.creationDate"
+                invalidDateMessage="{{ 'CreationDate' | localize }}: {{ 'DatePlaceholder' | localize }}"
+              ></dx-date-box>
             </div>
           </div>
           <div class="dx-field col-6">
@@ -74,14 +77,19 @@
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'TransportType' | localize }}</div>
             <div class="dx-field-value">
-              <dx-select-box [dataSource]="transportTypeList" displayExpr="displayName" valueExpr="id"></dx-select-box>
+              <dx-select-box
+                [(value)]="truckFilterObj.transportTypeId"
+                [dataSource]="transportTypeList"
+                displayExpr="displayName"
+                valueExpr="id"
+              ></dx-select-box>
             </div>
           </div>
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'TrucksType' | localize }}</div>
             <div class="dx-field-value">
               <dx-drop-down-box
-                [(value)]="selectedTransportTypes"
+                [(value)]="selectedTruckTypes"
                 valueExpr="id"
                 displayExpr="displayName"
                 placeholder="Select a value..."
@@ -100,7 +108,7 @@
                     [filterRow]="{ visible: true }"
                     [scrolling]="{ mode: 'virtual' }"
                     [height]="345"
-                    [(selectedRowKeys)]="selectedTransportTypes"
+                    [(selectedRowKeys)]="selectedTruckTypes"
                   >
                   </dx-data-grid>
                 </div>
@@ -140,19 +148,24 @@
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'IstmaraNumber' | localize }}</div>
             <div class="dx-field-value">
-              <dx-number-box></dx-number-box>
+              <dx-text-box [(value)]="truckFilterObj.istmaraNumber"></dx-text-box>
             </div>
           </div>
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'InsuranceNumber' | localize }}</div>
             <div class="dx-field-value">
-              <dx-number-box></dx-number-box>
+              <dx-number-box [(value)]="truckFilterObj.insuranceNumber"></dx-number-box>
             </div>
           </div>
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'TruckStatus' | localize }}</div>
             <div class="dx-field-value">
-              <dx-select-box [dataSource]="truckStatusList" displayExpr="displayName" valueExpr="id"></dx-select-box>
+              <dx-select-box
+                [(value)]="truckFilterObj.truckStatusDisplayName"
+                [dataSource]="truckStatusList"
+                displayExpr="displayName"
+                valueExpr="id"
+              ></dx-select-box>
             </div>
           </div>
         </div>

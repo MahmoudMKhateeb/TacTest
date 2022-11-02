@@ -22,7 +22,7 @@
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'Name' | localize }}</div>
             <div class="dx-field-value">
-              <dx-text-box>
+              <dx-text-box [(value)]="searchObj.driverName">
                 <dx-validator>
                   <dxi-validation-rule
                     type="pattern"
@@ -36,7 +36,7 @@
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'MobileNo' | localize }}</div>
             <div class="dx-field-value">
-              <dx-text-box pattern="\b5\d{8}\b" maxlength="9" placeholder="{{ '5XXXXXXXX' | localize }}">
+              <dx-text-box [(value)]="searchObj.phoneNumber" pattern="\b5\d{8}\b" maxlength="9" placeholder="{{ '5XXXXXXXX' | localize }}">
                 <dx-validator>
                   <dxi-validation-rule
                     type="stringLength"
@@ -55,12 +55,13 @@
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'ID/Iqama' | localize }}</div>
             <div class="dx-field-value">
-              <dx-number-box></dx-number-box>
+              <dx-text-box [(value)]="searchObj.accountNumber"></dx-text-box>
             </div>
           </div>
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'CarrierName' | localize }}</div>
             <div class="dx-field-value">
+              <!--                [(value)]="selectedCarrier"-->
               <dx-drop-down-box
                 [(value)]="selectedCarrier"
                 valueExpr="id"
@@ -93,13 +94,21 @@
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'CreationDate' | localize }}</div>
             <div class="dx-field-value">
-              <dx-date-box invalidDateMessage="{{ 'CreationDate' | localize }}: {{ 'DatePlaceholder' | localize }}"></dx-date-box>
+              <dx-date-box
+                [(value)]="searchObj.creationTime"
+                invalidDateMessage="{{ 'CreationDate' | localize }}: {{ 'DatePlaceholder' | localize }}"
+              ></dx-date-box>
             </div>
           </div>
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'DriverStatus' | localize }}</div>
             <div class="dx-field-value">
-              <dx-select-box [dataSource]="driverStatusesList" displayExpr="displayName" valueExpr="id"></dx-select-box>
+              <dx-select-box
+                [(value)]="searchObj.isActive"
+                [dataSource]="driverStatusesList"
+                displayExpr="displayName"
+                valueExpr="id"
+              ></dx-select-box>
             </div>
           </div>
         </div>

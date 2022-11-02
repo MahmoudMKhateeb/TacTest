@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CarriersForDropDownDto,
@@ -11,6 +11,8 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { DriverFilter } from '@app/admin/users/drivers/driver-filter/driver-filter-model';
+import { TruckFilter } from '@app/main/trucks/trucks/truck-filter/truck-filter-model';
 
 @Component({
   selector: 'app-truck-filter-modal',
@@ -19,18 +21,20 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 })
 export class TruckFilterModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('modal', { static: false }) modal: ModalDirective;
+  @Output() searchClicked: EventEmitter<TruckFilter> = new EventEmitter<TruckFilter>();
   loading = false;
   truckPattern: any = /^\d{4}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}$/;
   maxDate: Date = new Date();
   driverStatusesList: ISelectItemDto[] = [];
   carriersList: CarriersForDropDownDto[] = [];
-  selectedCarrier: any;
+  selectedCarrier: number[] = [];
   transportTypeList: ISelectItemDto[] = [];
   truckTypesList: TrucksTypeSelectItemDto[] = [];
-  selectedTransportTypes: any;
-  selectedCapacity: any;
+  selectedTruckTypes: number[] = [];
+  selectedCapacity: number[] = [];
   capacityList: ISelectItemDto[] = [];
   truckStatusList: TruckTruckStatusLookupTableDto[] = [];
+  truckFilterObj: TruckFilter = new TruckFilter();
 
   constructor(injector: Injector, private _shippingRequestService: ShippingRequestsServiceProxy, private _trucksService: TrucksServiceProxy) {
     super(injector);
@@ -53,10 +57,26 @@ export class TruckFilterModalComponent extends AppComponentBase implements OnIni
   }
 
   close(): void {
+    this.selectedCarrier = [];
+    this.selectedTruckTypes = [];
+    this.selectedCapacity = [];
+    this.truckFilterObj = new TruckFilter();
     this.modal.hide();
   }
 
-  search() {}
+  search() {
+    this.truckFilterObj.selectedCarrier = this.selectedCarrier.map((item) => {
+      return this.carriersList.find((carrier) => Number(carrier.id) === item);
+    });
+    this.truckFilterObj.selectedTruckTypes = this.selectedTruckTypes.map((item) => {
+      return this.transportTypeList.find((type) => Number(type.id) === item);
+    });
+    this.truckFilterObj.selectedCapacity = this.selectedCapacity.map((item) => {
+      return this.capacityList.find((capacity) => Number(capacity.id) === item);
+    });
+    this.searchClicked.emit(this.truckFilterObj);
+    this.close();
+  }
 
   private getAllCarriersForDropDown() {
     this._shippingRequestService.getAllCarriersForDropDown().subscribe((res) => {

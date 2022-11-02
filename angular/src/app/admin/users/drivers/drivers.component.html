@@ -57,6 +57,9 @@
           <i class="fa fa-plus"></i> {{ 'CreateNewDriver' | localize }}
         </button>
         <button (click)="driverFilterModal.show()" class="btn btn-primary"><i class="fa fa-search"></i> {{ 'Search' | localize }}</button>
+        <button *ngIf="showClearSearchFilters" (click)="clearFilters()" class="btn btn-primary">
+          <i class="fa fa-trash"></i> {{ 'ClearFilters' | localize }}
+        </button>
       </div>
     </sub-header>
     <div [class]="containerClass">
@@ -216,6 +219,6 @@
     <createOrEditDriverModal [creatDriver]="true" #createOrEditUserModal (modalSave)="getDrivers()"> </createOrEditDriverModal>
     <editUserPermissionsModal #editUserPermissionsModal></editUserPermissionsModal>
     <app-driver-tracking-modal #DriverTrackingModal></app-driver-tracking-modal>
-    <app-driver-filter-modal #driverFilterModal></app-driver-filter-modal>
+    <app-driver-filter-modal #driverFilterModal (searchClicked)="search($event)"></app-driver-filter-modal>
   </div>
 </div>

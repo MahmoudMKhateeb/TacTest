@@ -57,6 +57,9 @@
           <i class="fa fa-plus"></i> {{ l('CreateNewTruck') }}
         </button>
         <button (click)="truckFilterModal.show()" class="btn btn-primary"><i class="fa fa-search"></i> {{ 'Search' | localize }}</button>
+        <button *ngIf="showClearSearchFilters" (click)="clearFilters()" class="btn btn-primary">
+          <i class="fa fa-trash"></i> {{ 'ClearFilters' | localize }}
+        </button>
       </div>
     </sub-header>
 
@@ -185,6 +188,6 @@
     <viewTruckModal #viewTruckModal></viewTruckModal>
     <app-viwe-truck-documents-modal #viewOrEditEntityDocumentsModal (modalSave)="getAllTrucks(undefined)"> </app-viwe-truck-documents-modal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
-    <app-truck-filter-modal #truckFilterModal></app-truck-filter-modal>
+    <app-truck-filter-modal #truckFilterModal (searchClicked)="search($event)"></app-truck-filter-modal>
   </div>
 </div>

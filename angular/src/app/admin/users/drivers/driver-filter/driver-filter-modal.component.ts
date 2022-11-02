@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CarriersForDropDownDto,
@@ -8,6 +8,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { DriverFilter } from '@app/admin/users/drivers/driver-filter/driver-filter-model';
 
 @Component({
   selector: 'app-driver-filter-modal',
@@ -16,19 +17,20 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 })
 export class DriverFilterModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('modal', { static: false }) modal: ModalDirective;
+  @Output() searchClicked: EventEmitter<DriverFilter> = new EventEmitter<DriverFilter>();
   loading = false;
   namePattern: any = /^[^0-9]+$/;
   maxDate: Date = new Date();
   driverStatusesList: ISelectItemDto[] = [];
   carriersList: CarriersForDropDownDto[] = [];
-  selectedCarrier: any;
+  selectedCarrier: number[] = [];
+  searchObj: DriverFilter = new DriverFilter();
 
   constructor(injector: Injector, private _shippingRequestService: ShippingRequestsServiceProxy) {
     super(injector);
   }
 
   ngOnInit() {
-    this.getAllCarriersForDropDown();
     this.driverStatusesList = [
       ISelectItemDto.fromJS({ id: 'true', displayName: this.l('Active') }),
       ISelectItemDto.fromJS({ id: 'false', displayName: this.l('InActive') }),
@@ -36,14 +38,24 @@ export class DriverFilterModalComponent extends AppComponentBase implements OnIn
   }
 
   show(): void {
+    this.getAllCarriersForDropDown();
     this.modal.show();
   }
 
   close(): void {
+    this.searchObj = new DriverFilter();
+    this.selectedCarrier = [];
     this.modal.hide();
   }
 
-  search() {}
+  search() {
+    console.log('searchObj', this.searchObj);
+    this.searchObj.selectedCarriers = this.selectedCarrier.map((item) => {
+      return this.carriersList.find((carrier) => carrier.id === item);
+    });
+    this.searchClicked.emit(this.searchObj);
+    this.close();
+  }
 
   private getAllCarriersForDropDown() {
     this._shippingRequestService.getAllCarriersForDropDown().subscribe((res) => {
@@ -64,5 +76,6 @@ export class DriverFilterModalComponent extends AppComponentBase implements OnIn
     console.log('onSelectionChanged event', event);
     console.log('carriersList', this.carriersList);
     console.log('selectedCarrier', this.selectedCarrier);
+    // const index = this.searchObj.selectedCarriers.findIndex(item => item.id === )
   }
 }

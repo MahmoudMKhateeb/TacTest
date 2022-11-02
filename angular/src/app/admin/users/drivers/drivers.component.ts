@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Injector, OnInit, ViewChild, ViewEncapsulatio
 import { UsersComponent } from '@app/admin/users/users.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ImpersonationService } from '@app/admin/users/impersonation.service';
-import { DocumentsEntitiesEnum, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CarriersForDropDownDto, DocumentsEntitiesEnum, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -14,6 +14,8 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DriverTrackingModalComponent } from '@app/admin/users/drivers/driver-tracking-modal/driver-tracking-modal.component';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { DriverFilterModalComponent } from '@app/admin/users/drivers/driver-filter/driver-filter-modal.component';
+import { DriverFilter } from '@app/admin/users/drivers/driver-filter/driver-filter-model';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 
 @Component({
   selector: 'app-drivers',
@@ -23,6 +25,7 @@ import { DriverFilterModalComponent } from '@app/admin/users/drivers/driver-filt
   animations: [appModuleAnimation()],
 })
 export class DriversComponent extends UsersComponent implements AfterViewInit, OnInit {
+  @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
   @ViewChild('DriverTrackingModal') DriverTrackingModal: DriverTrackingModalComponent;
   @ViewChild('driverFilterModal') driverFilter: DriverFilterModalComponent;
   @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
@@ -31,6 +34,7 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
   tripId: number;
   documentsEntitiesEnum = DocumentsEntitiesEnum;
   dataSource: any = {};
+  showClearSearchFilters: boolean;
 
   constructor(
     injector: Injector,
@@ -55,7 +59,7 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
     this.viewOrEditEntityDocumentsModal.show(driverId, DocumentsEntitiesEnum.Driver);
   }
 
-  getDrivers() {
+  getDrivers(searchOptions?: LoadOptions) {
     var filter = this._activatedRoute.snapshot.queryParams['isActive'];
     let self = this;
     this.dataSource = {};
@@ -67,6 +71,15 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
             (loadOptions.filter as any[]).push(['isActive', '=', filter]);
           }
         }
+        // console.log('searchOptions', searchOptions);
+        // debugger
+        // if (isNotNullOrUndefined(searchOptions)) {
+        //     (searchOptions.filter as any[]).map(item => {
+        //         (loadOptions.filter as any[]).push(item);
+        //     });
+        //     searchOptions = null;
+        // }
+        console.log('loadOptions', loadOptions);
         return self._userServiceProxy
           .getDrivers(JSON.stringify(loadOptions))
           .toPromise()
@@ -92,5 +105,40 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
       this.getDrivers();
       this.notify.success(this.l('SuccessfullyDeleted'));
     });
+  }
+
+  search(filterObject: DriverFilter) {
+    console.log('this.dataSource', this.dataSource);
+    const loadOptions: LoadOptions = {
+      filter: [],
+    };
+    for (const key of Object.keys(filterObject)) {
+      const val = filterObject[key];
+      if (isNotNullOrUndefined(val)) {
+        if (key === 'driverName') {
+          (loadOptions.filter as any[]).push(['name', '=', val]);
+          (loadOptions.filter as any[]).push('or');
+          (loadOptions.filter as any[]).push(['surname', '=', val]);
+          continue;
+        }
+        if (key === 'selectedCarriers') {
+          (val as CarriersForDropDownDto[]).map((item) => {
+            (loadOptions.filter as any[]).push(['companyName', '=', item.displayName]);
+            (loadOptions.filter as any[]).push('or');
+          });
+          continue;
+        }
+        (loadOptions.filter as any[]).push([key, '=', val]);
+      }
+    }
+    // this.getDrivers(loadOptions);
+    this.dataGrid.instance.clearFilter();
+    this.dataGrid.instance.filter(loadOptions.filter);
+    this.showClearSearchFilters = true;
+  }
+
+  clearFilters() {
+    this.dataGrid.instance.clearFilter();
+    this.showClearSearchFilters = false;
   }
 }

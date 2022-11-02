@@ -1,6 +1,13 @@
 ﻿import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DocumentsEntitiesEnum, TokenAuthServiceProxy, TruckDto, TrucksServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  CarriersForDropDownDto,
+  DocumentsEntitiesEnum,
+  ISelectItemDto,
+  TokenAuthServiceProxy,
+  TruckDto,
+  TrucksServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { CreateOrEditTruckModalComponent } from './create-or-edit-truck-modal.component';
@@ -18,6 +25,9 @@ import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles
 import { TruckUserLookupTableModalComponent } from './truck-user-lookup-table-modal.component';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular';
+import { TruckFilter } from '@app/main/trucks/trucks/truck-filter/truck-filter-model';
 
 @Component({
   templateUrl: './trucks.component.html',
@@ -26,6 +36,7 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
   animations: [appModuleAnimation()],
 })
 export class TrucksComponent extends AppComponentBase implements OnInit, AfterViewInit {
+  @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
   @ViewChild('createOrEditTruckModal', { static: true }) createOrEditTruckModal: CreateOrEditTruckModalComponent;
   @ViewChild('viewTruckModalComponent', { static: true }) viewTruckModal: ViewTruckModalComponent;
@@ -49,6 +60,7 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
   uploadUrl: string;
   documentsEntitiesEnum = DocumentsEntitiesEnum;
   dataSource: any = {};
+  showClearSearchFilters: boolean;
 
   constructor(
     injector: Injector,
@@ -190,5 +202,51 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
           });
       },
     });
+  }
+
+  search(filterObject: TruckFilter) {
+    console.log('this.dataSource', this.dataSource);
+    const loadOptions: LoadOptions = {
+      filter: [],
+    };
+    for (const key of Object.keys(filterObject)) {
+      const val = filterObject[key];
+      if (isNotNullOrUndefined(val)) {
+        if (key === 'selectedCarrier') {
+          (val as CarriersForDropDownDto[]).map((item) => {
+            (loadOptions.filter as any[]).push(['companyName', '=', item.displayName]);
+            (loadOptions.filter as any[]).push('or');
+          });
+          continue;
+        }
+        if (key === 'selectedTruckTypes') {
+          (val as ISelectItemDto[]).map((item) => {
+            (loadOptions.filter as any[]).push(['trucksTypeId', '=', item.id]);
+            (loadOptions.filter as any[]).push('or');
+            (loadOptions.filter as any[]).push(['trucksTypeDisplayName', '=', item.displayName]);
+            (loadOptions.filter as any[]).push('or');
+          });
+          continue;
+        }
+        if (key === 'selectedCapacity') {
+          (val as ISelectItemDto[]).map((item) => {
+            (loadOptions.filter as any[]).push(['capacityId', '=', item.id]);
+            (loadOptions.filter as any[]).push('or');
+            (loadOptions.filter as any[]).push(['capacityDisplayName', '=', item.displayName]);
+            (loadOptions.filter as any[]).push('or');
+          });
+          continue;
+        }
+        (loadOptions.filter as any[]).push([key, '=', val]);
+      }
+    }
+    this.dataGrid.instance.clearFilter();
+    this.dataGrid.instance.filter(loadOptions.filter);
+    this.showClearSearchFilters = true;
+  }
+
+  clearFilters() {
+    this.dataGrid.instance.clearFilter();
+    this.showClearSearchFilters = false;
   }
 }
