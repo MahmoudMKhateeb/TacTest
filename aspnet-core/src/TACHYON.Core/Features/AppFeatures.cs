@@ -19,6 +19,7 @@
         public const string CMS = "App.CMS";
         public const string ShipperClients = "App.ShipperClients";
         public const string CarrierClients = "App.CarrierClients";
+        public const string SaasCommission = "App.SaasCommission";
         public const string CanClientLoginToSystem = "App.CanClientLoginToSystem";
         public const string CreateDirectTrip = "App.CreateDirectTrip";
         public const string DocumentsManagement = "App.DocumentsManagement";

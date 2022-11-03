@@ -919,7 +919,7 @@ namespace TACHYON.PriceOffers
             var directRequestVasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestVasCommissionValue));
             if (offer.Channel == PriceOfferChannel.CarrierAsSaas)
             {
-                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.CarrierAsSaasCommissionValue));
+                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.SaasCommission));
 
                 directRequestCommissionType = PriceOfferCommissionType.CommissionValue;
                 directRequestCommissionMinValue = carrierAsSaasCommissionValue;
@@ -1082,7 +1082,7 @@ namespace TACHYON.PriceOffers
             var directRequestVasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckDirectRequestVasCommissionValue));
             if (offer.Channel == PriceOfferChannel.CarrierAsSaas)
             {
-                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.CarrierAsSaasCommissionValue));
+                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.SaasCommission));
 
                 directRequestCommissionType = PriceOfferCommissionType.CommissionValue;
                 directRequestCommissionMinValue = carrierAsSaasCommissionValue;

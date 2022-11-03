@@ -278,7 +278,7 @@ namespace TACHYON.Shipping.ShippingRequests
             // handle carrier as saas SR pricing
             if (shippingRequest.IsSaas())
             {
-                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(await _featureChecker.GetValueAsync(shippingRequest.TenantId, AppFeatures.CarrierAsSaasCommissionValue));
+                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(await _featureChecker.GetValueAsync(shippingRequest.TenantId, AppFeatures.SaasCommission));
 
 
                 var itemDetails = new List<PriceOfferDetailDto>();
