@@ -4,6 +4,8 @@ using Abp.Dependency;
 using Abp.Domain.Uow;
 using Castle.Core.Internal;
 using Hangfire;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Notifications;
@@ -11,9 +13,11 @@ using TACHYON.Shipping.Trips.Importing;
 using TACHYON.Shipping.Trips.Importing.Dto;
 using TACHYON.Storage;
 using TACHYON.Tracking;
+using TACHYON.Tracking.Dto;
 
 namespace TACHYON.Shipping.Trips
 {
+    [AutomaticRetry(Attempts = 1)]
     public class ForceDeliverTripJob : AsyncBackgroundJob<ForceDeliverTripJobArgs>, ITransientDependency
     {
         private readonly IBinaryObjectManager _binaryObjectManager;
@@ -31,7 +35,7 @@ namespace TACHYON.Shipping.Trips
             _excelDataReader = excelDataReader;
             _workFlowProvider = workFlowProvider;
             _appNotifier = appNotifier;
-            LocalizationSourceName = TACHYONConsts.LocalizationSourceName;
+            LocalizationSourceName ??= TACHYONConsts.LocalizationSourceName;
         }
 
         [UnitOfWork]
@@ -41,28 +45,52 @@ namespace TACHYON.Shipping.Trips
             
             _workFlowProvider.AbpSession.Use(args.RequestedByTenantId,args.RequestedByUserId);
             var binaryObject = await _binaryObjectManager.GetOrNullAsync(args.BinaryObjectId);
-            var importedTripDeliveryDetails = _excelDataReader.GetTripDeliveryDetails(binaryObject.Bytes).ToList();
-            var userIdentifier = new UserIdentifier(args.RequestedByTenantId,
+            UserIdentifier userIdentifier = new UserIdentifier(args.RequestedByTenantId,
                 args.RequestedByUserId);
-            if (!importedTripDeliveryDetails.IsNullOrEmpty() &&
-                importedTripDeliveryDetails.All(x => string.IsNullOrEmpty(x.Exception)))
+            if (binaryObject == null)
             {
-                importedTripDeliveryDetails.ForEach(_workFlowProvider.ForceDeliverTrip);
-                await _appNotifier.NotifyUserWhenBulkDeliverySucceeded(userIdentifier);
+                await _appNotifier.NotifyUserWhenBulkDeliveryFailed(userIdentifier, L("NotFoundOrDeletedFileError"));
                 return;
             }
 
-            string errorMsg = string.Empty;
-            if (importedTripDeliveryDetails.IsNullOrEmpty())
-                errorMsg = L("EmptyFileError");
-            else
+            List<ImportTripTransactionFromExcelDto> importedTripDeliveryDetails =
+                _excelDataReader.GetTripDeliveryDetails(binaryObject.Bytes).ToList();
+            if (importedTripDeliveryDetails.IsNullOrEmpty() ||
+                importedTripDeliveryDetails.Any(x => !x.Exception.IsNullOrEmpty()))
             {
-                importedTripDeliveryDetails.Where(x=> !string.IsNullOrEmpty(x.Exception))
-                    .Select(x => x.Exception + "\n")
-                    .ToList().ForEach(i => errorMsg += i);
-            }
-            await _appNotifier.NotifyUserWhenBulkDeliveryFailed(userIdentifier, errorMsg);
+                string errorMsg = importedTripDeliveryDetails.IsNullOrEmpty()
+                    ? L("EmptyFileError")
+                    : GetErrorsMessage(importedTripDeliveryDetails);
 
+                await _appNotifier.NotifyUserWhenBulkDeliveryFailed(userIdentifier, errorMsg);
+                return;
+            }
+
+            try
+            {
+                importedTripDeliveryDetails.ForEach(_workFlowProvider.ForceDeliverTrip);
+            }
+            catch (Exception e)
+            {
+                await _appNotifier.NotifyUserWhenBulkDeliveryFailed(userIdentifier, e.Message);
+                Logger.Error(e.Message, e);
+                return;
+            }
+
+            await _appNotifier.NotifyUserWhenBulkDeliverySucceeded(userIdentifier);
+            await _binaryObjectManager.DeleteAsync(args.BinaryObjectId);
+        }
+
+        private static string GetErrorsMessage(
+            IEnumerable<ImportTripTransactionFromExcelDto> importedTripDeliveryDetails)
+        {
+            string errorMsg = string.Empty;
+
+            importedTripDeliveryDetails.Where(x => !string.IsNullOrEmpty(x.Exception))
+                .Select(x => x.Exception + "\n")
+                .ToList().ForEach(i => errorMsg += i);
+
+            return errorMsg;
         }
         
         

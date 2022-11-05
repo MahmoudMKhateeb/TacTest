@@ -446,8 +446,12 @@ namespace TACHYON.Tracking
             var trip = await CheckIfCanStartTrip(Input.Id);
             if (trip == null) throw new UserFriendlyException(L("YouCannotStartWithTheTripSelected"));
 
-            var canStartTrip = await CanStartTrip(trip.AssignedDriverUserId, trip.Status, trip.DriverStatus, trip.StartTripDate);
-            if (!canStartTrip.canStart) throw new UserFriendlyException(canStartTrip.reason);
+            if (!Input.ForceDeliverModeEnabled)
+            {
+                var canStartTrip = await CanStartTrip(trip.AssignedDriverUserId, trip.Status, trip.DriverStatus,
+                    trip.StartTripDate);
+                if (!canStartTrip.canStart) throw new UserFriendlyException(canStartTrip.reason);
+            }
 
             //Get PickUp Point
             var routeStart = await GetPickUpPointToStart(trip.Id);
@@ -465,7 +469,10 @@ namespace TACHYON.Tracking
         {
             DisableTenancyFilters();
 
-            var point = await GetPointForInvoke(args.PointId);
+            var point = args.ForceDeliverModeEnabled
+                ? await _routPointRepository.FirstOrDefaultAsync(args.PointId)
+                : await GetPointForInvoke(args.PointId);
+            
             if (point == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
 
             var transaction = CheckIfTransactionIsExist(point.WorkFlowVersion, point.Status, action);
@@ -500,7 +507,7 @@ namespace TACHYON.Tracking
             
         }
 
-        public async Task GoToNextLocation(long nextPointId)
+        public async Task GoToNextLocation(long nextPointId, bool forceMode = false)
         {
             DisableTenancyFilters();
 
@@ -597,7 +604,7 @@ namespace TACHYON.Tracking
            {
                AsyncHelper.RunSync(() => Accepted(currentTrip.Id));
                CurrentUnitOfWork.SaveChanges();
-               AsyncHelper.RunSync(()=> Start(new ShippingRequestTripDriverStartInputDto(){Id = currentTrip.Id}));
+               AsyncHelper.RunSync(()=> Start(new ShippingRequestTripDriverStartInputDto(){Id = currentTrip.Id,ForceDeliverModeEnabled = true}));
                CurrentUnitOfWork.SaveChanges();
                CompleteTripPoints();
                return;
@@ -629,7 +636,7 @@ namespace TACHYON.Tracking
                        AsyncHelper.RunSync(() => Accepted(point.ShippingRequestTripId));
                        CurrentUnitOfWork.SaveChanges();
                    }
-                   AsyncHelper.RunSync(()=> Start(new ShippingRequestTripDriverStartInputDto(){Id = point.ShippingRequestTripId}));
+                   AsyncHelper.RunSync(()=> Start(new ShippingRequestTripDriverStartInputDto(){Id = point.ShippingRequestTripId,ForceDeliverModeEnabled = true}));
                    CurrentUnitOfWork.SaveChanges();
                }
                
@@ -646,6 +653,7 @@ namespace TACHYON.Tracking
            void CompleteTripPoints()
            {
                var points =  _routPointRepository.GetAllIncluding(x=> x.RoutPointStatusTransitions)
+                   .OrderBy(x=> x.PickingType)
                    .Where(x => x.ShippingRequestTripId == currentTrip.Id).ToArray();
                 
                for (int i = 0; i < points.Length; i++)
@@ -663,25 +671,29 @@ namespace TACHYON.Tracking
 
            void CompletePoint(RoutPoint routPoint)
            {
-               var pointDates = routPoint.PickingType == PickingType.Pickup
-                   ? importTripDto.TransactionsDates.Take(4).ToList()
-                   : importTripDto.TransactionsDates.Skip(4).ToList();
-               // if point transactions contains upload delivery note 
-               // we need to add increase pointTransactionsCount
-               // (see skipped transaction ... if (deliveryNote) continue)
-               var pointTransactionsCount = currentTrip.NeedsDeliveryNote? pointDates.Count +1 : pointDates.Count;
+               List<DateTime> pointDates = routPoint.PickingType switch
+               {
+                   PickingType.Pickup => importTripDto.TransactionsDates.Take(4).ToList(),
+                   PickingType.Dropoff when currentTrip.NeedsDeliveryNote => 
+                       importTripDto.TransactionsDates.Skip(4).Take(4).ToList(),
+                   _ => importTripDto.TransactionsDates.Skip(4).ToList()
+               };
 
-               for (int i = 0; i < pointTransactionsCount; i++)
+               // if point transactions contains upload delivery note 
+               // we need to skip upload delivery note transaction
+               // (see skipped transaction ... if (deliveryNote) continue)
+
+               for (int i = 0; i < pointDates.Count; i++)
                {
                    List<PointTransactionDto> availableTransactions = GetTransactionsByStatus(
                        routPoint.WorkFlowVersion,
                        routPoint.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
                        routPoint.Status);
                    PointTransactionDto transaction = availableTransactions?.FirstOrDefault();
-                   if (transaction == null || transaction.Action.Contains("DeliveryConfirmation")) return;
-                   if (transaction.Action.Contains("UplodeDeliveryNote")) continue;
+                   if (transaction == null || transaction.Action.Contains("DeliveryConfirmation") 
+                                           || transaction.Action.Contains("UplodeDeliveryNote")) break;
 
-                   AsyncHelper.RunSync((() => Invoke(new PointTransactionArgs {PointId = routPoint.Id, Code = routPoint.Code},
+                   AsyncHelper.RunSync((() => Invoke(new PointTransactionArgs {PointId = routPoint.Id, Code = routPoint.Code,ForceDeliverModeEnabled = true},
                        transaction.Action)));
                    CurrentUnitOfWork.SaveChanges();
                }
@@ -1100,13 +1112,14 @@ namespace TACHYON.Tracking
         /// <summary>
         /// Get next Point and check if it Available to Open
         /// </summary>
-        private async Task<RoutPoint> GetNextLocationInTrip(long pointId)
+        private async Task<RoutPoint> GetNextLocationInTrip(long pointId,bool forceMode = false)
         {
             var currentUser = await GetCurrentUserAsync();
             return await _routPointRepository
                 .GetAll().Include(c => c.ShippingRequestTripFk)
                 .ThenInclude(s => s.ShippingRequestFk).Include(x => x.FacilityFk)
-                .Where(x => x.Id == pointId
+                .WhereIf(forceMode,x=> x.Id == pointId)
+                .WhereIf(!forceMode,x => x.Id == pointId
                          && x.Status == RoutePointStatus.StandBy && !x.IsActive && !x.IsResolve && !x.IsComplete
                          && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.InTransit
                          && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
