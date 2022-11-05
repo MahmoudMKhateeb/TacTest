@@ -149,6 +149,13 @@ namespace TACHYON.Features
             );
 
             cms.CreateChildFeature(
+                AppFeatures.SaasCommission,
+                "false",
+                L("SaasCommission"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+            );
+
+            cms.CreateChildFeature(
                 AppFeatures.CanClientLoginToSystem,
                 "false",
                 L("CanClientLoginToSystem"),
@@ -719,6 +726,7 @@ namespace TACHYON.Features
                                  );
 
 
+            //todo will remove carrier saas commission, replaced with SAAS commission in TMS
             carrierAsASaas.CreateChildFeature(
                 AppFeatures.CarrierAsSaasCommissionValue,
                 "false",
