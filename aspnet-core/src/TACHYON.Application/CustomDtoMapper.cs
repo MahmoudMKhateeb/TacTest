@@ -464,7 +464,7 @@ namespace TACHYON
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
                 .ForMember(dest => dest.Capacity, opt => opt.MapFrom(src => src.Truck.CapacityFk.DisplayName))
                 .ForMember(dest => dest.ShippingRequestReference, opt => opt.MapFrom(src => src.ShippingRequest.ReferenceNumber))
-                .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.Tenant.TenancyName))
+                .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.CarrierTenantFk.TenancyName))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}-" +
                 $" {GetDurationUnit(src.ShippingRequest.RentalDurationUnit.Value)}"))
                 .ForMember(dest => dest.NumberOfTrips, opt => opt.MapFrom(src => src.ShippingRequest.ShippingRequestTrips.Where(x=>x.AssignedTruckId == src.TruckId).Count()));
