@@ -288,7 +288,8 @@ namespace TACHYON.PriceOffers
                   .ThenInclude(v => v.VasFk)
                   .Where(x => x.Id == offerId)
                 .WhereIf(await IsShipper() && !await HasCarrierClients(), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId.Value && (!x.ShippingRequestFk.IsTachyonDeal || x.Channel == PriceOfferChannel.TachyonManageService))
-                .WhereIf(await IsCarrier() || await HasCarrierClients(), x => x.TenantId == AbpSession.TenantId.Value)
+                .WhereIf(await IsCarrier() && !await HasCarrierClients(), x => x.TenantId == AbpSession.TenantId.Value)
+                .WhereIf(await HasCarrierClients(),x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId.Value)
                 .SingleAsync();
 
 
