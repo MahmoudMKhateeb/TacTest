@@ -52,7 +52,7 @@ export class ProjectPerformanceComponent extends AppComponentBase implements OnI
       ],
       chart: {
         type: 'bar',
-        width: 400,
+        width: '100%',
         height: 250,
       },
       xaxis: {

@@ -47,7 +47,6 @@ export class InvoicesDedicatedComponent extends AppComponentBase implements OnIn
   toDate: moment.Moment | null | undefined;
   dueFromDate: moment.Moment | null | undefined;
   dueToDate: moment.Moment | null | undefined;
-  InvoiceChannelEnum = InvoiceChannel;
 
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive = false;
@@ -58,6 +57,7 @@ export class InvoicesDedicatedComponent extends AppComponentBase implements OnIn
   dataSource: any = {};
 
   items = [];
+  invoiceAccountType = InvoiceAccountType;
 
   constructor(
     injector: Injector,
@@ -253,7 +253,9 @@ export class InvoicesDedicatedComponent extends AppComponentBase implements OnIn
     }).then((result) => {
       if (result.isConfirmed) {
         this._DedicatedDynamiceInvoicesServiceProxy.generateDedicatedInvoice(item.id).subscribe((res) => {
-          this.notify.info(this.l('SubmitInvoiceGenerated'));
+          this.notify.info(
+            this.l(item.invoiceAccountType === this.invoiceAccountType.AccountPayable ? 'SubmitInvoiceGenerated' : 'invoiceGenerated')
+          );
           this.refreshDataGrid();
         });
       }

@@ -72,7 +72,7 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
       series: [...series],
       chart: {
         type: 'line',
-        width: 400,
+        width: '100%',
         height: 250,
         zoom: {
           type: 'x',
@@ -81,7 +81,6 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
         },
       },
       xaxis: {
-        // type: 'category',
         categories: categories,
       },
       grid: {
@@ -92,37 +91,7 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
           left: 50,
         },
       },
-      // plotOptions: {
-      //     bar: {
-      //
-      //     }
-      // }
     };
-    // if (isNotNullOrUndefined(this.selectedTruckId)) {
-    // } else {
-    //     this.chartOptions = {
-    //         series: [
-    //             {
-    //                 name: this.l('KPI'),
-    //                 data: [{y: 15 /* this.truckKPI */, x: ''}],
-    //                 color: 'rgba(187, 41, 41, 0.847)',
-    //             },
-    //             {
-    //                 name: this.l('NumberOfTrips'),
-    //                 data: [{y: 12 /* this.truckNumberOfTrips */, x: ''}],
-    //                 color: 'rgba(154,154,154,0.84)',
-    //             }
-    //         ],
-    //         chart: {
-    //             type: 'bar',
-    //             width: 400,
-    //             height: 200,
-    //         },
-    //         xaxis: {
-    //             type: 'category',
-    //         },
-    //     };
-    // }
 
     (this.chartOptions.chart.locales as any[]) = [
       {

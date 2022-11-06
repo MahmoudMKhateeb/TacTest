@@ -91,7 +91,7 @@
               <thead>
                 <tr class="table-active">
                   <th style="width: 350px">{{l('Qty')}}</th>
-                  <th style="width: 350px">{{l('itemPrice')}}</th>
+                  <th style="width: 350px">{{l(!isForDedicated ? 'itemPrice' : 'truckPrice')}}</th>
                   <th *ngIf="isTachyonDealer">{{l('ItemPricePostCommission')}}</th>
                 </tr>
               </thead>
@@ -171,7 +171,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>{{l('Trip')}}</td>
+                  <td>{{l(!isForDedicated ? 'Trip' : 'TACHYON.Trucks.Truck')}}</td>
                   <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
                   <td>{{offer.itemsTotalCommission}}</td>
                   <td>{{offer.itemsTotalPricePostCommissionPreVat}}</td>
