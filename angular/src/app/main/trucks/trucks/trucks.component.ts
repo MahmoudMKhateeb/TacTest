@@ -61,6 +61,7 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
   documentsEntitiesEnum = DocumentsEntitiesEnum;
   dataSource: any = {};
   showClearSearchFilters: boolean;
+  shouldClearInputs: boolean;
 
   constructor(
     injector: Injector,
@@ -133,6 +134,7 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
     var filter = this._activatedRoute.snapshot.queryParams['Active'];
     this.getAllTrucks(filter);
   }
+
   exportToExcel(): void {
     this._trucksServiceProxy
       .getTrucksToExcel(
@@ -213,40 +215,52 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
       const val = filterObject[key];
       if (isNotNullOrUndefined(val)) {
         if (key === 'selectedCarrier') {
+          const array = [];
           (val as CarriersForDropDownDto[]).map((item) => {
-            (loadOptions.filter as any[]).push(['companyName', '=', item.displayName]);
-            (loadOptions.filter as any[]).push('or');
+            array.push(['companyName', '=', item.displayName]);
+            array.push('or');
           });
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
           continue;
         }
         if (key === 'selectedTruckTypes') {
+          const array = [];
           (val as ISelectItemDto[]).map((item) => {
-            (loadOptions.filter as any[]).push(['trucksTypeId', '=', item.id]);
-            (loadOptions.filter as any[]).push('or');
-            (loadOptions.filter as any[]).push(['trucksTypeDisplayName', '=', item.displayName]);
-            (loadOptions.filter as any[]).push('or');
+            array.push(['trucksTypeId', '=', item.id]);
+            array.push('or');
+            array.push(['trucksTypeDisplayName', '=', item.displayName]);
+            array.push('or');
           });
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
           continue;
         }
         if (key === 'selectedCapacity') {
+          const array = [];
           (val as ISelectItemDto[]).map((item) => {
-            (loadOptions.filter as any[]).push(['capacityId', '=', item.id]);
-            (loadOptions.filter as any[]).push('or');
-            (loadOptions.filter as any[]).push(['capacityDisplayName', '=', item.displayName]);
-            (loadOptions.filter as any[]).push('or');
+            array.push(['capacityId', '=', item.id]);
+            array.push('or');
+            array.push(['capacityDisplayName', '=', item.displayName]);
+            array.push('or');
           });
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
           continue;
         }
         (loadOptions.filter as any[]).push([key, '=', val]);
+        (loadOptions.filter as any[]).push('and');
       }
     }
     this.dataGrid.instance.clearFilter();
     this.dataGrid.instance.filter(loadOptions.filter);
     this.showClearSearchFilters = true;
+    this.shouldClearInputs = false;
   }
 
   clearFilters() {
     this.dataGrid.instance.clearFilter();
     this.showClearSearchFilters = false;
+    this.shouldClearInputs = true;
   }
 }

@@ -22,7 +22,7 @@
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'PlateNumber' | localize }}</div>
             <div class="dx-field-value">
-              <dx-text-box placeholder="1234 a a a" [(value)]="truckFilterObj.plateNumber">
+              <dx-text-box placeholder="1234 a a a" [(ngModel)]="truckFilterObj.plateNumber">
                 <dx-validator>
                   <dxi-validation-rule
                     type="pattern"
@@ -42,17 +42,16 @@
               ></dx-date-box>
             </div>
           </div>
-          <div class="dx-field col-6">
+          <div *ngIf="isTachyonDealerOrHost" class="dx-field col-6">
             <div class="dx-field-label">{{ 'CarrierName' | localize }}</div>
             <div class="dx-field-value">
               <dx-drop-down-box
-                [(value)]="selectedCarrier"
+                [(ngModel)]="selectedCarrier"
                 valueExpr="id"
                 displayExpr="displayName"
                 placeholder="Select a value..."
                 [showClearButton]="true"
                 [dataSource]="carriersList"
-                (onValueChanged)="logEvent($event)"
               >
                 <div *dxTemplate="let data of 'content'">
                   <dx-data-grid
@@ -67,7 +66,6 @@
                     [scrolling]="{ mode: 'virtual' }"
                     [height]="345"
                     [(selectedRowKeys)]="selectedCarrier"
-                    (onSelectionChanged)="onSelectionChanged($event)"
                   >
                   </dx-data-grid>
                 </div>
@@ -148,20 +146,20 @@
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'IstmaraNumber' | localize }}</div>
             <div class="dx-field-value">
-              <dx-text-box [(value)]="truckFilterObj.istmaraNumber"></dx-text-box>
+              <dx-text-box [(ngModel)]="truckFilterObj.istmaraNumber"></dx-text-box>
             </div>
           </div>
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'InsuranceNumber' | localize }}</div>
             <div class="dx-field-value">
-              <dx-number-box [(value)]="truckFilterObj.insuranceNumber"></dx-number-box>
+              <dx-number-box [(ngModel)]="truckFilterObj.insuranceNumber"></dx-number-box>
             </div>
           </div>
           <div class="dx-field col-6">
             <div class="dx-field-label">{{ 'TruckStatus' | localize }}</div>
             <div class="dx-field-value">
               <dx-select-box
-                [(value)]="truckFilterObj.truckStatusDisplayName"
+                [(ngModel)]="truckFilterObj.truckStatusId"
                 [dataSource]="truckStatusList"
                 displayExpr="displayName"
                 valueExpr="id"

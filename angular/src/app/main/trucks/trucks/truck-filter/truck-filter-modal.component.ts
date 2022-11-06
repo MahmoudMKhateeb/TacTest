@@ -22,6 +22,16 @@ import { TruckFilter } from '@app/main/trucks/trucks/truck-filter/truck-filter-m
 export class TruckFilterModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('modal', { static: false }) modal: ModalDirective;
   @Output() searchClicked: EventEmitter<TruckFilter> = new EventEmitter<TruckFilter>();
+  _shouldClearInputs: boolean;
+  @Input()
+  set shouldClearInputs(val: boolean) {
+      if (val) {
+          this.clear();
+      }
+  }
+  get shouldClearInputs(): boolean {
+      return this._shouldClearInputs;
+  }
   loading = false;
   truckPattern: any = /^\d{4}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}\s[a-zA-Z\u0600-\u06FF]{1}$/;
   maxDate: Date = new Date();
@@ -57,24 +67,28 @@ export class TruckFilterModalComponent extends AppComponentBase implements OnIni
   }
 
   close(): void {
-    this.selectedCarrier = [];
-    this.selectedTruckTypes = [];
-    this.selectedCapacity = [];
-    this.truckFilterObj = new TruckFilter();
     this.modal.hide();
   }
 
+  clear() {
+      this.truckFilterObj = new TruckFilter();
+      this.selectedCapacity = [];
+      this.selectedCarrier = [];
+      this.selectedTruckTypes = [];
+  }
+
   search() {
-    this.truckFilterObj.selectedCarrier = this.selectedCarrier.map((item) => {
+    this.truckFilterObj.selectedCarrier = this.selectedCarrier?.map((item) => {
       return this.carriersList.find((carrier) => Number(carrier.id) === item);
     });
-    this.truckFilterObj.selectedTruckTypes = this.selectedTruckTypes.map((item) => {
+    this.truckFilterObj.selectedTruckTypes = this.selectedTruckTypes?.map((item) => {
       return this.transportTypeList.find((type) => Number(type.id) === item);
     });
-    this.truckFilterObj.selectedCapacity = this.selectedCapacity.map((item) => {
+    this.truckFilterObj.selectedCapacity = this.selectedCapacity?.map((item) => {
       return this.capacityList.find((capacity) => Number(capacity.id) === item);
     });
     this.searchClicked.emit(this.truckFilterObj);
+      console.log(this.truckFilterObj);
     this.close();
   }
 
@@ -121,15 +135,4 @@ export class TruckFilterModalComponent extends AppComponentBase implements OnIni
     });
   }
 
-  logEvent(event) {
-    console.log('event', event);
-    console.log('carriersList', this.carriersList);
-    console.log('selectedCarrier', this.selectedCarrier);
-  }
-
-  onSelectionChanged(event) {
-    console.log('onSelectionChanged event', event);
-    console.log('carriersList', this.carriersList);
-    console.log('selectedCarrier', this.selectedCarrier);
-  }
 }

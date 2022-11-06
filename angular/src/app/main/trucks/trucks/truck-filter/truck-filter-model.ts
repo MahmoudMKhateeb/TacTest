@@ -9,5 +9,5 @@ export class TruckFilter {
   selectedCapacity: ISelectItemDto[];
   istmaraNumber: string;
   insuranceNumber: number;
-  truckStatusDisplayName: string;
+  truckStatusId: number;
 }

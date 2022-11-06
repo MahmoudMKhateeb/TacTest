@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using System;
 
 namespace TACHYON.Trucks.Dtos
 {
@@ -17,6 +18,8 @@ namespace TACHYON.Trucks.Dtos
         public int? Length { get; set; }
 
         public string TruckStatusDisplayName { get; set; }
+
+        public long? TruckStatusId { get; set; }
 
         #region Truck Categories
 

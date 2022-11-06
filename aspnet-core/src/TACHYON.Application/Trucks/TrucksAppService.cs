@@ -147,7 +147,8 @@ namespace TACHYON.Trucks
                             WorkingTruckStatus = truck.DedicatedShippingRequestTrucks.Any(x=>x.Status == Shipping.Dedicated.WorkingStatus.Busy)== true ?"Busy" :"Active",
                             DriverUser = truck.DriverUserFk.Name +"",
                             WorkingShippingRequestReference= truck.DedicatedShippingRequestTrucks.Any(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy) == true 
-                            ? truck.DedicatedShippingRequestTrucks.First().ShippingRequest.ReferenceNumber :""
+                            ? truck.DedicatedShippingRequestTrucks.First().ShippingRequest.ReferenceNumber :"",
+                            TruckStatusId = truck.TruckStatusId
                         };
 
             var result = await LoadResultAsync(query, input.Filter);
