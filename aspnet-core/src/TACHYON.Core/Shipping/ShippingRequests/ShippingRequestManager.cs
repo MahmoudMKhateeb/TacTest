@@ -349,7 +349,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 .ThenInclude(x=>x.Truck)
                 .Include(x => x.DedicatedShippingRequestDrivers)
                 .ThenInclude(x=>x.DriverUser)
-                .Where(x=>x.CarrierTenantId == _abpSession.TenantId && x.Status==ShippingRequestStatus.PostPrice)
+                .WhereIf(await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.Status == ShippingRequestStatus.PostPrice)
+                .WhereIf(await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x=>x.CarrierTenantId == _abpSession.TenantId && x.Status==ShippingRequestStatus.PostPrice)
                 .FirstOrDefaultAsync(x => x.Id == id);
             return shippingRequest;
         }

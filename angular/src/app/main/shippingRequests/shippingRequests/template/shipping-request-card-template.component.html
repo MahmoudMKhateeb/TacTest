@@ -391,7 +391,7 @@
                       {{ l('Declined') }}
                     </a>
                     <a
-                      *ngIf="(isCarrier || isCarrierSaas) && !Channel && !item.isDriversAndTrucksAssigned"
+                      *ngIf="(isCarrier || isCarrierSaas || isTachyonDealerOrHost) && !Channel && !item.isDriversAndTrucksAssigned && item.carrierTenantId"
                       href="javascript:void(0)"
                       (click)="assignTrucksAndDrivers(item)"
                       class="red"
