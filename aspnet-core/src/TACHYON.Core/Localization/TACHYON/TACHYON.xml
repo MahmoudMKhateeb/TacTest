@@ -3136,6 +3136,9 @@
     <text name="ShippingRequestKPI">ShippingrequestKPI</text>
     <text name="TruckPerformance">Truck performance</text>
     <text name="truckKPI">Truck KPI</text>
+    <text name="truckPrice">Truck price</text>
+    <text name="invoiceGenerated">Invoice generated</text>
+    <text name="DedicatedInvoice">Dedicated invoice</text>
 
 	</texts>
 </localizationDictionary>

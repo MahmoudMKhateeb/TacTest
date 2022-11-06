@@ -2888,6 +2888,9 @@
     <text name="ShippingRequestKPI">KPI الخاص بطلب الشحن</text>
     <text name="TruckPerformance">أداء الشاحنة</text>
     <text name="truckKPI">KPI الخاص بالشاحنة</text>
+    <text name="truckPrice">سعر الشاحنة</text>
+    <text name="invoiceGenerated">تم إنشاء الفاتورة</text>
+    <text name="DedicatedInvoice">فاتورة التأجير</text>
     
 	</texts>
 </localizationDictionary>
