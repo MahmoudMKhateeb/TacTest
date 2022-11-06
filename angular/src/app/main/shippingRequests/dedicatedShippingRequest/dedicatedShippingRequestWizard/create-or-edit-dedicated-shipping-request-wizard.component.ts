@@ -391,17 +391,17 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
       ? (this.step1Dto.isDirectRequest = true)
       : (this.step1Dto.isDirectRequest = false);
     const startDate = !isNotNullOrUndefined(this.step1Form.get('rentalRangeDates').value)
-      ? moment(this.today).toDate()
+      ? moment.utc(this.today).toDate()
       : new Date(this.step1Form.get('rentalRangeDates').value[0]);
     const endDate = !isNotNullOrUndefined(this.step1Form.get('rentalRangeDates').value)
-      ? moment(this.today).toDate()
+      ? moment.utc(this.today).toDate()
       : new Date(this.step1Form.get('rentalRangeDates').value[1]);
     this.step1Dto.rentalStartDate = !isNotNullOrUndefined(this.step1Form.get('rentalRangeDates').value)
-      ? moment(this.today)
-      : moment({ y: startDate.getFullYear(), M: startDate.getMonth(), d: startDate.getDate() });
+      ? moment.utc(this.today)
+      : moment.utc({ y: startDate.getFullYear(), M: startDate.getMonth(), d: startDate.getDate() });
     this.step1Dto.rentalEndDate = !isNotNullOrUndefined(this.step1Form.get('rentalRangeDates').value)
-      ? moment(this.today)
-      : moment({ y: endDate.getFullYear(), M: endDate.getMonth(), d: endDate.getDate() });
+      ? moment.utc(this.today)
+      : moment.utc({ y: endDate.getFullYear(), M: endDate.getMonth(), d: endDate.getDate() });
     if (this.isCarrierSass) {
       this.step1Dto.carrierTenantIdForDirectRequest = this.appSession.tenantId;
     }

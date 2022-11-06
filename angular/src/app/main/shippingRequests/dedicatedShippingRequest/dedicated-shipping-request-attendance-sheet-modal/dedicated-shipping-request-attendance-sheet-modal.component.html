@@ -71,6 +71,7 @@
                 [showAllDayPanel]="false"
                 [height]="600"
                 dataCellTemplate="dataCellTemplate"
+                appointmentTooltipTemplate="tooltip-template"
                 (onAppointmentFormOpening)="onAppointmentFormOpening($event)"
                 (onAppointmentDeleting)="onAppointmentDeleting($event)"
               >
@@ -97,6 +98,35 @@
                   }"
                 >
                   {{ dataCell.text }}
+                </div>
+
+                <div *dxTemplate="let model of 'tooltip-template'">
+                  <span style="display: none">
+                    {{ model | json }}
+                  </span>
+                  <div class="dx-tooltip-appointment-item">
+                    <div class="dx-tooltip-appointment-item-marker">
+                      <div class="dx-tooltip-appointment-item-marker-body" [style.background]="getBGColor(model?.appointmentData?.statusId)"></div>
+                    </div>
+                    <div class="dx-tooltip-appointment-item-content">
+                      <div class="dx-tooltip-appointment-item-content-subject">{{ model?.appointmentData?.text | localize }}</div>
+                      <div class="dx-tooltip-appointment-item-content-date">{{ model?.appointmentData?.startDate | date: 'MMMM d' }}</div>
+                    </div>
+                    <div
+                      *ngIf="!isCarrier"
+                      class="dx-tooltip-appointment-item-delete-button-container"
+                      (click)="deleteAttendance($event, model?.appointmentData?.id)"
+                    >
+                      <div
+                        class="dx-tooltip-appointment-item-delete-button dx-button dx-button-normal dx-button-mode-text dx-widget dx-button-has-icon"
+                        aria-label="trash"
+                        tabindex="0"
+                        role="button"
+                      >
+                        <div class="dx-button-content"><i class="dx-icon dx-icon-trash"></i></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </dx-scheduler>
 

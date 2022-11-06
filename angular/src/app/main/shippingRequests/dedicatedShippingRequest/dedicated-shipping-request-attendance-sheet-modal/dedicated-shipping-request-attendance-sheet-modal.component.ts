@@ -233,18 +233,19 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
     console.log('this.editAppointmentData', this.editAppointmentData);
     const startDate = new Date(this.editAppointmentData.startDate);
     const endDate = new Date(this.editAppointmentData.endDate);
-    this.editAppointmentData.startDate = moment({ y: startDate.getFullYear(), M: startDate.getMonth(), d: startDate.getDate() });
-    this.editAppointmentData.endDate = moment({ y: endDate.getFullYear(), M: endDate.getMonth(), d: endDate.getDate() });
+    this.editAppointmentData.startDate = moment.utc({ y: startDate.getFullYear(), M: startDate.getMonth(), d: startDate.getDate() });
+    this.editAppointmentData.endDate = moment.utc({ y: endDate.getFullYear(), M: endDate.getMonth(), d: endDate.getDate() });
     const payload = new CreateOrEditTruckAttendanceDto(this.editAppointmentData);
     console.log('payload', payload);
     if (!!this.editAppointmentData?.id?.toString()) {
       payload.id = this.editAppointmentData.id;
-      payload.startDate = null;
-      payload.endDate = null;
-    } else {
-      payload.startDate = moment(new Date(this.editAppointmentData.startDate).getTime() - new Date().getTimezoneOffset() * 60 * 1000);
-      payload.endDate = moment(this.editAppointmentData.endDate);
+      // payload.startDate = null;
+      // payload.endDate = null;
     }
+    // else {
+    //   // payload.startDate = moment(new Date(this.editAppointmentData.startDate).getTime() - new Date().getTimezoneOffset() * 60 * 1000);
+    //   // payload.endDate = moment(this.editAppointmentData.endDate);
+    // }
     payload.attendaceStatus = this.editAppointmentData.statusId;
     payload.dedicatedShippingRequestTruckId = this.selectedTruckId;
     this.loading = true;
@@ -344,5 +345,25 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
       },
     });
     this.dataSourceForTrucks.store.load();
+  }
+
+  getBGColor(statusId) {
+    const status = this.attendanceSchedularResources.find((item) => item.id === statusId);
+    return status.color;
+  }
+
+  deleteAttendance($event, id: number) {
+    console.log('$event', $event);
+    this.scheduler.instance.hideAppointmentTooltip();
+    $event.stopPropagation();
+    $event.stopImmediatePropagation();
+    this._truckAttendancesService.delete(id).subscribe(
+      (res) => {
+        this.getAllAttendance(this.selectedTruckId);
+      },
+      (error) => {
+        this.loading = false;
+      }
+    );
   }
 }
