@@ -18,6 +18,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using TACHYON.Chat;
@@ -100,6 +101,34 @@ namespace TACHYON.Authorization.Users
             catch (Exception e)
             {
                 Logger.Error(e.Message, e);
+            }
+        }
+
+        public async Task SendPricePackageAppendixEmail(string emailAddress, BinaryObject appendixFile)
+        {
+            try
+            {
+                if (appendixFile is null || appendixFile.Bytes.Length == 0)
+                    throw new UserFriendlyException(L("EmptyFile"));
+
+                var emailTemplate = await GetContent(EmailTemplateTypesEnum.PricePackageAppendixEmail);
+
+                await _emailSender.SendAsync(new MailMessage()
+                {
+                    To = { emailAddress },
+                    Subject = L("TACHYONAppendixEmail"),
+                    Body = emailTemplate,
+                    IsBodyHtml = true,
+                    Attachments =
+                    {
+                        new Attachment(new MemoryStream(appendixFile.Bytes), "TachyonAppendix.pdf",
+                            "application/pdf")
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message,e);
             }
         }
         

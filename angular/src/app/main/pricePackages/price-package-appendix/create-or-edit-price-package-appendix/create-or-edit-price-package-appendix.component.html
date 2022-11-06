@@ -41,9 +41,9 @@
               />
             </div>
             <div class="form-group col-md-6">
-              <label>{{ l('Date') }} <span class="text-danger">*</span></label>
+              <label>{{ l('AppendixDate') }} <span class="text-danger">*</span></label>
               <input
-                id="Date"
+                id="appendixDate"
                 type="text"
                 name="appendixDate"
                 class="form-control"
@@ -53,6 +53,19 @@
                 [bsConfig]="{ adaptivePosition: true }"
               />
             </div>
+              <div class="form-group col-md-6">
+                  <label>{{ l('ContractDate') }} <span class="text-danger">*</span></label>
+                  <input
+                      id="contractDate"
+                      type="text"
+                      name="appendixDate"
+                      class="form-control"
+                      bsDatepicker
+                      datePickerMomentModifier
+                      [(date)]="appendix.contractDate"
+                      [bsConfig]="{ adaptivePosition: true }"
+                  />
+              </div>
             <div class="form-group col-md-6">
               <label>{{ l('Proposal') }} <span class="text-danger">*</span></label>
               <div

@@ -18,6 +18,7 @@
         ExpiredDocuments = 10,
         NotificationEmail = 16,
         PricePackageProposalEmail = 17,
+        PricePackageAppendixEmail = 18,
 
         #endregion
 

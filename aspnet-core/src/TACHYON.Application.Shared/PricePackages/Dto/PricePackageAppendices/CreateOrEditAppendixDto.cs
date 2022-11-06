@@ -7,9 +7,11 @@ namespace TACHYON.PricePackages.Dto.PricePackageAppendices
     {
         public string ContractName { get; set; }
 
-        public int ContractNumber { get; set; }
+        public DateTime AppendixDate { get; set; }
+        
+        public DateTime ContractDate { get; set; }
 
-        public DateTime? AppendixDate { get; set; }
+        public string EmailAddress { get; set; }
 
         public string ScopeOverview { get; set; }
 

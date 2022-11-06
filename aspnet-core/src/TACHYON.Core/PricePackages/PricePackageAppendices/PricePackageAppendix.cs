@@ -14,8 +14,10 @@ namespace TACHYON.PricePackages.PricePackageAppendices
         
         public int Version { get; set; }
 
-        public DateTime? AppendixDate { get; set; }
-
+        public DateTime ContractDate { get; set; }
+        
+        public DateTime AppendixDate { get; set; }
+    
         public string ScopeOverview { get; set; }
 
         public string Notes { get; set; }

@@ -132,12 +132,24 @@
         #endregion
 
         public const string ProposalTemplateFullNamespace =
-            "TACHYON.Net.Emailing.PricePackageTemplates.TachyonProposal.docx";
+            "TACHYON.Net.Emailing.PricePackageTemplates.TachyonProposal.docx";        
+        public const string AppendixTemplateFullNamespace =
+            "TACHYON.Net.Emailing.PricePackageTemplates.AppendixProposal.docx";
 
         public const string ProposalTemplateCompanyName = "$$CompanyName$$";
         public const string ProposalTemplateDate = "$$Date$$";
         public const string ProposalTemplateTruckType = "$$TruckType$$";
         public const string ProposalTemplateRouteType = "$$RouteType$$";
         public const string ProposalTemplateShippingType = "$$ShippingType$$";
+        
+        
+        public const string AppendixTemplateContractNumber = "$$ContractNumber$$";
+        public const string AppendixTemplateContractDate = "$$ContractDate$$";
+        public const string AppendixTemplateVersion = "$$Version$$";
+        public const string AppendixTemplateAppendixDate = "$$Version$$";
+        public const string AppendixTemplateTruckTypes = "$$TruckTypes$$";
+        public const string AppendixTemplateTransportTypes = "$$TransportTypes$$";
+        public const string AppendixTemplateRouteTypes = "$$RouteTypes$$";
+        public const string AppendixTemplateCompanyName = "$CompanyName$$";
     }
 }

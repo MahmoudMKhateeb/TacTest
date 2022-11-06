@@ -1,4 +1,5 @@
 using Abp.Authorization;
+using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
@@ -11,6 +12,7 @@ using TACHYON.Authorization;
 using TACHYON.Common;
 using TACHYON.PricePackages.Dto.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageAppendices;
+using TACHYON.PricePackages.PricePackageAppendices.Jobs;
 
 namespace TACHYON.PricePackages
 {
@@ -18,10 +20,14 @@ namespace TACHYON.PricePackages
     public class PricePackageAppendixAppService : TACHYONAppServiceBase, IPricePackageAppendixAppService
     {
         private readonly IRepository<PricePackageAppendix> _appendixRepository;
+        private readonly IBackgroundJobManager _jobManager;
 
-        public PricePackageAppendixAppService(IRepository<PricePackageAppendix> appendixRepository)
+        public PricePackageAppendixAppService(
+            IRepository<PricePackageAppendix> appendixRepository,
+            IBackgroundJobManager jobManager)
         {
             _appendixRepository = appendixRepository;
+            _jobManager = jobManager;
         }
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
@@ -65,7 +71,13 @@ namespace TACHYON.PricePackages
         {
             var createdAppendix = ObjectMapper.Map<PricePackageAppendix>(input);
 
-            await _appendixRepository.InsertAsync(createdAppendix);
+            var appendixId = await _appendixRepository.InsertAndGetIdAsync(createdAppendix);
+
+            await _jobManager.EnqueueAsync<GenerateAppendixFileJob, GenerateAppendixFileJobArgument>(
+                new GenerateAppendixFileJobArgument
+                {
+                    AppendixId = appendixId, FileReceiverEmailAddress = input.EmailAddress
+                });
         }
 
         [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Update)]
