@@ -48,17 +48,18 @@ namespace TACHYON.Shipping.Trips.Importing
 
                 var transactionsDate = new List<DateTime>();
 
-                for (int i = 1; i < (currentRow.Cells.Count); i++)
+                for (int i = 1; i < (currentRow.Cells.Count-1); i++)
                 {
                     var currentCell = currentRow.Cells[i];
 
+                    if (currentCell.CellType == CellType.Blank) break;
                     if (currentCell.CellType != CellType.String)
                         throw new UserFriendlyException(_localizationSource.GetString("NotSupportedCellFormat", row + 1,
                             i + 1));
 
                     var date = currentCell.StringCellValue;
-                    if (date.IsNullOrEmpty()) break;
-                    var isDateValid = DateTime.TryParseExact(date, "dd/MM/yyyy - HH:mm",
+                    if (date.IsNullOrEmpty() || date.IsNullOrWhiteSpace()) break;
+                    var isDateValid = DateTime.TryParseExact(date.Trim(), "dd/MM/yyyy - HH:mm",
                         CultureInfo.CurrentUICulture, DateTimeStyles.None, out DateTime parsedDate);
                     if (!isDateValid)
                         throw new UserFriendlyException(
