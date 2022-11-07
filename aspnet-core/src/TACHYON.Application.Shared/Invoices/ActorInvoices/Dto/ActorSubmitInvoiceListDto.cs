@@ -17,5 +17,8 @@ namespace TACHYON.Invoices.ActorInvoices.Dto
         public string CarrierActorName { get; set; }
         public int? CarrierActorId { get; set; }
         public string Status { get; set; }
+        public Guid? DocumentId { get; set; }
+        public string DocumentName { get; set; }
+        public string DocumentContentType { get; set; }
     }
 }

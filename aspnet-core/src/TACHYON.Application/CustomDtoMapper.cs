@@ -186,6 +186,7 @@ using TACHYON.Shipping.Dedicated;
 using TACHYON.DedicatedInvoices;
 using TACHYON.DedicatedDynamicInvoices.Dtos;
 using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
+using TACHYON.Common;
 
 namespace TACHYON
 {
@@ -971,7 +972,8 @@ namespace TACHYON
             .ForMember(dto => dto.CarrierActorName, options => options.MapFrom(entity => entity.CarrierActorFk.CompanyName))
             .ForMember(dto => dto.Status, options => options.MapFrom(entity => entity.Status.GetEnumDescription()));
 
-
+            configuration.CreateMap<SubmitInvoiceClaimCreateInput, ActorSubmitInvoice>();
+            configuration.CreateMap<IHasDocument, ActorSubmitInvoice>().ReverseMap();
         }
 
         /// <summary>

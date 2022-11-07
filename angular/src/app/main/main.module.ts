@@ -327,6 +327,7 @@ import { InvoicesDedicatedComponent } from '@app/main/Invoices/invoices-dedicate
 import { InvoiceDedicatedModalComponent } from '@app/main/Invoices/invoices-dedicated/invoices-dedicated-modal/invoices-dedicated-modal.component';
 import { WidgetsModule } from '@app/shared/common/customizable-dashboard/widgets/widgets.module';
 import { TruckPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance.component';
+import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/client-demand-model.component';
 
 @NgModule({
   imports: [
@@ -622,6 +623,7 @@ import { TruckPerformanceComponent } from '@app/main/shippingRequests/dedicatedS
     InvoicesDedicatedComponent,
     InvoiceDedicatedModalComponent,
     TruckPerformanceComponent,
+    ClientDemandModelComponent
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
