@@ -149,9 +149,16 @@ namespace TACHYON.Features
             );
 
             cms.CreateChildFeature(
-                AppFeatures.SaasCommission,
+                AppFeatures.SingleDropSaasCommission,
                 "false",
-                L("SaasCommission"),
+                L("SingleDropSaasCommission"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+            );
+
+            cms.CreateChildFeature(
+                AppFeatures.MultipleDropsSaasCommission,
+                "false",
+                L("MultipleDropsSaasCommission"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
             );
 
