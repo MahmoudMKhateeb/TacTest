@@ -219,6 +219,6 @@
     <createOrEditDriverModal [creatDriver]="true" #createOrEditUserModal (modalSave)="getDrivers()"> </createOrEditDriverModal>
     <editUserPermissionsModal #editUserPermissionsModal></editUserPermissionsModal>
     <app-driver-tracking-modal #DriverTrackingModal></app-driver-tracking-modal>
-    <app-driver-filter-modal #driverFilterModal (searchClicked)="search($event)"></app-driver-filter-modal>
+    <app-driver-filter-modal #driverFilterModal (searchClicked)="search($event)" [shouldClearInputs]="shouldClearInputs"></app-driver-filter-modal>
   </div>
 </div>

@@ -28,6 +28,7 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import { TruckFilter } from '@app/main/trucks/trucks/truck-filter/truck-filter-model';
+import * as moment from '@node_modules/moment';
 
 @Component({
   templateUrl: './trucks.component.html',
@@ -207,49 +208,71 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
   }
 
   search(filterObject: TruckFilter) {
-    console.log('this.dataSource', this.dataSource);
     const loadOptions: LoadOptions = {
       filter: [],
     };
-    for (const key of Object.keys(filterObject)) {
+    const keys = Object.keys(filterObject);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
       const val = filterObject[key];
       if (isNotNullOrUndefined(val)) {
-        if (key === 'selectedCarrier') {
+        if (key === 'selectedCarrier' && val.length > 0) {
           const array = [];
-          (val as CarriersForDropDownDto[]).map((item) => {
+          (val as CarriersForDropDownDto[]).map((item, index) => {
             array.push(['companyName', '=', item.displayName]);
-            array.push('or');
+            if (index < val.length - 1) {
+              array.push('or');
+            }
           });
           loadOptions.filter.push(array);
           loadOptions.filter.push('and');
           continue;
         }
-        if (key === 'selectedTruckTypes') {
+        if (key === 'selectedTruckTypes' && val.length > 0) {
           const array = [];
-          (val as ISelectItemDto[]).map((item) => {
+          (val as ISelectItemDto[]).map((item, index) => {
             array.push(['trucksTypeId', '=', item.id]);
             array.push('or');
             array.push(['trucksTypeDisplayName', '=', item.displayName]);
-            array.push('or');
+            if (index < val.length - 1) {
+              array.push('or');
+            }
           });
           loadOptions.filter.push(array);
           loadOptions.filter.push('and');
           continue;
         }
-        if (key === 'selectedCapacity') {
+        if (key === 'selectedCapacity' && val.length > 0) {
           const array = [];
-          (val as ISelectItemDto[]).map((item) => {
+          (val as ISelectItemDto[]).map((item, index) => {
             array.push(['capacityId', '=', item.id]);
             array.push('or');
             array.push(['capacityDisplayName', '=', item.displayName]);
-            array.push('or');
+            if (index < val.length - 1) {
+              array.push('or');
+            }
           });
           loadOptions.filter.push(array);
           loadOptions.filter.push('and');
           continue;
         }
-        (loadOptions.filter as any[]).push([key, '=', val]);
-        (loadOptions.filter as any[]).push('and');
+        if (key === 'creationDate' && !!val) {
+          const array = [];
+          const date = val as Date;
+          const dateValue = moment.utc({ y: date.getFullYear(), M: date.getMonth(), d: date.getDate() });
+          array.push(['creationDate', '>=', dateValue.toISOString()]);
+          array.push('and');
+          array.push(['creationDate', '<', dateValue.add(1, 'd').toISOString()]);
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
+          continue;
+        }
+        if (!(val instanceof Array) && !!val) {
+          loadOptions.filter.push([key, '=', val]);
+          if (i < keys.length - 1) {
+            loadOptions.filter.push('and');
+          }
+        }
       }
     }
     this.dataGrid.instance.clearFilter();

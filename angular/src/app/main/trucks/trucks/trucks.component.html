@@ -72,7 +72,7 @@
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="{ groupPaging: false, sorting: false, filtering: false }"
+              [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -188,6 +188,6 @@
     <viewTruckModal #viewTruckModal></viewTruckModal>
     <app-viwe-truck-documents-modal #viewOrEditEntityDocumentsModal (modalSave)="getAllTrucks(undefined)"> </app-viwe-truck-documents-modal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
-    <app-truck-filter-modal #truckFilterModal (searchClicked)="search($event)" [shouldClearInputs]="shouldClearInputs" ></app-truck-filter-modal>
+    <app-truck-filter-modal #truckFilterModal (searchClicked)="search($event)" [shouldClearInputs]="shouldClearInputs"></app-truck-filter-modal>
   </div>
 </div>

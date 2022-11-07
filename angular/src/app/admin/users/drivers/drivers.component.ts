@@ -16,6 +16,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 import { DriverFilterModalComponent } from '@app/admin/users/drivers/driver-filter/driver-filter-modal.component';
 import { DriverFilter } from '@app/admin/users/drivers/driver-filter/driver-filter-model';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
+import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'app-drivers',
@@ -35,6 +36,7 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
   documentsEntitiesEnum = DocumentsEntitiesEnum;
   dataSource: any = {};
   showClearSearchFilters: boolean;
+  shouldClearInputs: boolean;
 
   constructor(
     injector: Injector,
@@ -108,37 +110,63 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
   }
 
   search(filterObject: DriverFilter) {
-    console.log('this.dataSource', this.dataSource);
     const loadOptions: LoadOptions = {
       filter: [],
     };
-    for (const key of Object.keys(filterObject)) {
+    const keys = Object.keys(filterObject);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
       const val = filterObject[key];
       if (isNotNullOrUndefined(val)) {
-        if (key === 'driverName') {
-          (loadOptions.filter as any[]).push(['name', '=', val]);
-          (loadOptions.filter as any[]).push('or');
-          (loadOptions.filter as any[]).push(['surname', '=', val]);
-          continue;
-        }
-        if (key === 'selectedCarriers') {
-          (val as CarriersForDropDownDto[]).map((item) => {
-            (loadOptions.filter as any[]).push(['companyName', '=', item.displayName]);
-            (loadOptions.filter as any[]).push('or');
+        if (key === 'selectedCarriers' && val.length > 0) {
+          const array = [];
+          (val as CarriersForDropDownDto[]).map((item, index) => {
+            array.push(['companyName', '=', item.displayName]);
+            if (index < val.length - 1) {
+              array.push('or');
+            }
           });
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
           continue;
         }
-        (loadOptions.filter as any[]).push([key, '=', val]);
+        if (key === 'creationTime' && !!val) {
+          const array = [];
+          const date = val as Date;
+          const dateValue = moment.utc({ y: date.getFullYear(), M: date.getMonth(), d: date.getDate() });
+          array.push(['creationTime', '>=', dateValue.toISOString()]);
+          array.push('and');
+          array.push(['creationTime', '<', dateValue.add(1, 'd').toISOString()]);
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
+          continue;
+        }
+        if (key === 'driverName' && !!val) {
+          const array = [];
+          array.push(['name', '=', val]);
+          array.push('or');
+          array.push(['surname', '=', val]);
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
+          continue;
+        }
+        if (!(val instanceof Array) && !!val) {
+          loadOptions.filter.push([key, '=', val]);
+          if (i < keys.length - 1) {
+            loadOptions.filter.push('and');
+          }
+        }
       }
     }
-    // this.getDrivers(loadOptions);
     this.dataGrid.instance.clearFilter();
     this.dataGrid.instance.filter(loadOptions.filter);
     this.showClearSearchFilters = true;
+    this.shouldClearInputs = false;
   }
 
   clearFilters() {
     this.dataGrid.instance.clearFilter();
     this.showClearSearchFilters = false;
+    this.shouldClearInputs = true;
   }
 }

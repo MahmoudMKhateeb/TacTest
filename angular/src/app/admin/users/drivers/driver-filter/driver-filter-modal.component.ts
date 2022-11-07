@@ -9,6 +9,7 @@ import {
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { DriverFilter } from '@app/admin/users/drivers/driver-filter/driver-filter-model';
+import { TruckFilter } from '@app/main/trucks/trucks/truck-filter/truck-filter-model';
 
 @Component({
   selector: 'app-driver-filter-modal',
@@ -25,6 +26,16 @@ export class DriverFilterModalComponent extends AppComponentBase implements OnIn
   carriersList: CarriersForDropDownDto[] = [];
   selectedCarrier: number[] = [];
   searchObj: DriverFilter = new DriverFilter();
+  _shouldClearInputs: boolean;
+  @Input()
+  set shouldClearInputs(val: boolean) {
+    if (val) {
+      this.clear();
+    }
+  }
+  get shouldClearInputs(): boolean {
+    return this._shouldClearInputs;
+  }
 
   constructor(injector: Injector, private _shippingRequestService: ShippingRequestsServiceProxy) {
     super(injector);
@@ -43,14 +54,17 @@ export class DriverFilterModalComponent extends AppComponentBase implements OnIn
   }
 
   close(): void {
+    this.modal.hide();
+  }
+
+  clear() {
     this.searchObj = new DriverFilter();
     this.selectedCarrier = [];
-    this.modal.hide();
   }
 
   search() {
     console.log('searchObj', this.searchObj);
-    this.searchObj.selectedCarriers = this.selectedCarrier.map((item) => {
+    this.searchObj.selectedCarriers = this.selectedCarrier?.map((item) => {
       return this.carriersList.find((carrier) => carrier.id === item);
     });
     this.searchClicked.emit(this.searchObj);
