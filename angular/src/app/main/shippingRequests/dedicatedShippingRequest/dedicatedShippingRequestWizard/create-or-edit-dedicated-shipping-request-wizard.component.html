@@ -622,7 +622,6 @@
                                 [(value)]="step1Dto.rentalDuration"
                                 [isValid]="step1Form.controls['rentalDuration'].valid || !step1Form.controls['rentalDuration'].touched"
                                 [min]="0"
-                                (onValueChanged)="changeMaxSelectableDate()"
                                 required
                                 valueChangeEvent="keyup"
                               >
@@ -646,7 +645,6 @@
                                   placeholder="{{ l('SelectRentalDurationUnit') }}"
                                   [isValid]="step1Form.controls['rentalDurationUnit'].valid || !step1Form.controls['rentalDurationUnit'].touched"
                                   [disabled]="rentalDurationUnits ? null : true"
-                                  (onValueChanged)="changeMaxSelectableDate()"
                                   required
                                 >
                                   <dx-validator [validationGroup]="'step1FormGroup'">
@@ -677,6 +675,8 @@
                               [minDate]="today"
                               [maxDate]="maxSelectableDate"
                               [hideOnDateTimeSelect]="false"
+                              [showButtonBar]="true"
+                              (onClearClick)="maxSelectableDate = null"
                             ></p-calendar>
                             <span class="form-text text-muted">{{ l('SelectRentalDates') }}</span>
                           </div>
@@ -895,7 +895,6 @@
                         [sourceEntityId]="'' + activeShippingRequestId"
                         [customClass]="'btn btn-light-danger font-weight-bold px-9 py-4 dropdown-toggle btn-elevate-hover mr-2'"
                       ></create-or-edit-template-drop-down-button>
-                      <!--                        step1Dto.isDrafted &&-->
                       <button
                         *ngIf="!isEdit"
                         (click)="onSubmit()"
