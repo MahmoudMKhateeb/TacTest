@@ -10,13 +10,14 @@ namespace TACHYON.Invoices.InoviceNote.Dto
     {
         public int? TripId { get; set; }
         public long? WaybillNumber { get; set; }
-        public int? TripVasId { get; set; }
+        public long? TripVasId { get; set; }
         public decimal Price { get; set; }
         public decimal VatAmount { get; set; }
         public decimal TotalAmount { get; set; }
         public decimal TaxVat { get; set; }
         public bool Checked { get; set; } = false;
+        public string ItemName { get; set; }
 
-        
+
     }
 }

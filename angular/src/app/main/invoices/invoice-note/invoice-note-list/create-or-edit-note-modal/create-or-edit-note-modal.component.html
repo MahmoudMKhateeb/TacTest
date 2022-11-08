@@ -137,7 +137,7 @@
                 <table *ngIf="allWaybills.length > 0" class="table" [busyIf]="waybillsLoading">
                   <thead>
                     <tr class="table-active">
-                      <th scope="col" width="20%">{{ l('WaybillNumber') }}</th>
+                      <th scope="col" width="23%">{{ l('WaybillNumber') }}</th>
                       <th scope="col">{{ l('Price') }}</th>
                       <th scope="col">{{ l('VatAmount') }}</th>
                       <th scope="col">{{ l('TotalAmount') }}</th>
@@ -156,7 +156,7 @@
                           id="waybill{{ i }}"
                           [value]="item.checked"
                         />
-                        {{ item.waybillNumber }}
+                        {{ item.itemName }}
                       </td>
                       <td>
                         <input
