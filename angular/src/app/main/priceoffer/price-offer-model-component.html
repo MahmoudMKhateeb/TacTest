@@ -26,10 +26,16 @@
                           'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsCarriers
                         }"
               >
-                <select class="form-control" name="ActorShipper" formControlName="ActorShipper" [(ngModel)]="offer.carrierActorId" required>
-                  <option [value]="undefined">{{ l('SelectActor') }}</option>
-                  <option *ngFor="let item of AllActorsCarriers" value="{{ item.id }}">{{ item.displayName }}</option>
-                </select>
+                  <dx-select-box
+                      name="ActorCarrier"
+                      [(ngModel)]="offer.carrierActorId"
+                      [dataSource]="AllActorsCarriers"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      placeholder="{{ l('Myself') }}">
+
+                  </dx-select-box>
               </div>
               <span class="form-text text-muted">{{ l('SelectActor') }} {{ offer.carrierActorId }}</span>
             </div>

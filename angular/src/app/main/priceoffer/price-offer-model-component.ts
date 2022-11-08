@@ -82,6 +82,10 @@ export class PriceOfferModelComponent extends AppComponentBase {
 
     this._CurrentServ.getAllCarrierActorsForDropDown().subscribe((result) => {
       this.AllActorsCarriers = result;
+        let defaultItem = new SelectItemDto();
+        defaultItem.id = null;
+        defaultItem.displayName = this.l('Myself');
+        this.AllActorsCarriers.unshift(defaultItem);
     });
 
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');

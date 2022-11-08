@@ -38,7 +38,7 @@
                 </div>
                 <span class="form-text text-muted">{{ l('SelectCompany') }} {{ facility.shipperId }}</span>
               </div>
-              
+
               <div class="form-group col-md-12">
                 <label>{{ l('FacilityName') }} <span class="required-fileds">*</span></label>
                 <!--              <input-->
@@ -89,18 +89,16 @@
                     'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsShippers
                   }"
                 >
-                  <select
-                    #ActorShipper="ngModel"
-                    class="form-control"
-                    name="fActorShipper"
-                    required
-                    [(ngModel)]="facility.shipperActorId"
-                    [class.is-invalid]="ActorShipper.touched && !ActorShipper.valid"
-                    [class.is-valid]="ActorShipper.touched && ActorShipper.valid"
-                  >
-                    <option [ngValue]="null">{{ l('SelectShipper') }}</option>
-                    <option *ngFor="let item of AllActorsShippers" value="{{ item.id }}">{{ item.displayName }}</option>
-                  </select>
+                    <dx-select-box
+                        name="fActorShipper"
+                        [(ngModel)]="facility.shipperActorId"
+                        [dataSource]="AllActorsShippers"
+                        [searchEnabled]="true"
+                        displayExpr="displayName"
+                        valueExpr="id"
+                        placeholder="{{ l('Myself') }}">
+
+                    </dx-select-box>
                 </div>
               </div>
 

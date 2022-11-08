@@ -88,6 +88,10 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     if (this.feature.isEnabled('App.ShipperClients')) {
       this._shippingRequestsServiceProxy.getAllShippersActorsForDropDown().subscribe((result) => {
         this.AllActorsShippers = result;
+        let defaultItem = new SelectItemDto();
+        defaultItem.id = null;
+        defaultItem.displayName = this.l('Myself');
+        this.AllActorsShippers.unshift(defaultItem);
       });
     }
   }
@@ -95,6 +99,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   private get SelectedCountryCode(): string {
     return this.countries?.find((x) => x.id == this.selectedCountryId)?.code;
   }
+
   getEnumsAsList() {
     const result = [];
     for (const [propertyKey, propertyValue] of Object.entries(this.days)) {
@@ -126,7 +131,12 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
           facilityId: item.facilityId,
         });
       } else {
-        result.push({ dayOfWeek: propertyKey.dayOfWeek, name: this.days[propertyKey.dayOfWeek], hasTime: false, facilityId: list2[0].facilityId });
+        result.push({
+          dayOfWeek: propertyKey.dayOfWeek,
+          name: this.days[propertyKey.dayOfWeek],
+          hasTime: false,
+          facilityId: list2[0].facilityId,
+        });
       }
     }
     return result;
