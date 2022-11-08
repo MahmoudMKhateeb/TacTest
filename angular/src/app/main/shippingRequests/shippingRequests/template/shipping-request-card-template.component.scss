@@ -78,7 +78,25 @@
         }
         .actions {
             position: absolute;
-            top: -2rem;
+            bottom: 0.75rem;
+            left: auto;
+            right: 2.25em;
+        }
+        &.rtl {
+          .actions {
+              right: auto !important;
+              left: 2.25em !important;
+          }
+          .ribbon {
+              &.ribbon-clip {
+                  &.ribbon-left {
+                      .ribbon-target {
+                          right: -10px !important;
+                          left: auto !important;
+                      }
+                  }
+              }
+          }
         }
     }
 
