@@ -892,7 +892,7 @@ namespace TACHYON
                 .ForMember(dto => dto.ComanyName, options => options.MapFrom(entity => entity.Tenant.companyName));
 
             configuration.CreateMap<InvoiceNote, InvoiceNoteInfoDto>()
-                .ForMember(dto => dto.ClientName ,options => options.MapFrom(entity=>entity.Tenant.companyName))
+                .ForMember(dto => dto.ClientName ,options => options.MapFrom(entity=>entity.Tenant.Name))
                 .ForMember(dto => dto.ClientId, options => options.MapFrom(entity => entity.TenantId))
                 .ForMember(dto => dto.Notes , options=>  options.Ignore())
                 .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
