@@ -976,9 +976,20 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.step1Form.get('ActorCarrier').clearValidators();
       this.step1Form.get('ActorCarrier').updateValueAndValidity();
       this.step1Dto.carrierActorId = null;
+      if (this.shippingRequestType === 'directrequest') {
+        this.step1Form.get('carrier').setValidators([Validators.required]);
+        this.step1Form.get('carrier').updateValueAndValidity();
+        this.step1Dto.carrierTenantIdForDirectRequest = null;
+      }
     } else {
       this.step1Form.get('ActorCarrier').setValidators([Validators.required]);
       this.step1Form.get('ActorCarrier').updateValueAndValidity();
+      if (this.shippingRequestType === 'directrequest') {
+        this.step1Form.get('carrier').setValue(null);
+        this.step1Form.get('carrier').clearValidators();
+        this.step1Form.get('carrier').updateValueAndValidity();
+        this.step1Dto.carrierTenantIdForDirectRequest = null;
+      }
     }
   }
 
