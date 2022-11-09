@@ -917,23 +917,40 @@ namespace TACHYON.PriceOffers
             var directRequestVasCommissionPercentage = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestVasCommissionPercentage));
             var directRequestCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestCommissionValue));
             var directRequestVasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.DirectRequestVasCommissionValue));
+
+
+            var directRequestCommissionValueForMultipleSaas = default(decimal);
+            var directRequestCommissionValueForSingleSaas = default(decimal);
+
             if (offer.Channel == PriceOfferChannel.CarrierAsSaas)
             {
-                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.SaasCommission));
+                decimal carrierAsSaasSingleDropCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.SingleDropSaasCommission));
+                decimal carrierAsSaasMultipleDropsCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.MultipleDropsSaasCommission));
 
                 directRequestCommissionType = PriceOfferCommissionType.CommissionValue;
-                directRequestCommissionMinValue = carrierAsSaasCommissionValue;
-                directRequestVasCommissionMinValue = carrierAsSaasCommissionValue;
+                directRequestCommissionMinValue = carrierAsSaasSingleDropCommissionValue;
+                directRequestVasCommissionMinValue = carrierAsSaasSingleDropCommissionValue;
                 directRequestCommissionPercentage = 0;
                 directRequestVasCommissionPercentage = 0;
-                directRequestCommissionValue = carrierAsSaasCommissionValue;
+                directRequestCommissionValueForSingleSaas = carrierAsSaasSingleDropCommissionValue;
                 directRequestVasCommissionValue = 0;
 
+
+                directRequestCommissionValueForMultipleSaas = carrierAsSaasMultipleDropsCommissionValue;
             }
 
             #endregion
 
+            decimal vasCommissionPercentageOrAddValue = NewMethod(offer, shippingRequest, input, tachyonDealerTripCommissionType, tachyonDealerTripMinValueCommission, tachyonDealerVasCommissionType, tachyonDealerVasMinValueCommission, tachyonDealerTripCommissionPercentage, tachyonDealerVasCommissionPercentage, tachyonDealerTripCommissionValue, tachyonDealerVasCommissionValue, tripCommissionType, tripMinValueCommission, ref vasCommissionType, vasMinValueCommission, tripCommissionPercentage, vasCommissionPercentage, tripCommissionValue, vasCommissionValue, directRequestCommissionType, directRequestCommissionMinValue, directRequestVasCommissionMinValue, directRequestCommissionPercentage, directRequestVasCommissionPercentage, directRequestCommissionValue, directRequestVasCommissionValue, directRequestCommissionValueForMultipleSaas, directRequestCommissionValueForSingleSaas);
 
+            //set commission  for VASes
+            SetPriceOfferDetailsCommissionSettings(offer, vasCommissionType, vasCommissionPercentageOrAddValue);
+            // set commission  for trips
+            CalculateCommission(offer);
+        }
+
+        private decimal NewMethod(PriceOffer offer, ShippingRequest shippingRequest, CreateOrEditPriceOfferInput input, PriceOfferCommissionType tachyonDealerTripCommissionType, decimal tachyonDealerTripMinValueCommission, PriceOfferCommissionType tachyonDealerVasCommissionType, decimal tachyonDealerVasMinValueCommission, decimal tachyonDealerTripCommissionPercentage, decimal tachyonDealerVasCommissionPercentage, decimal tachyonDealerTripCommissionValue, decimal tachyonDealerVasCommissionValue, PriceOfferCommissionType tripCommissionType, decimal tripMinValueCommission, ref PriceOfferCommissionType vasCommissionType, decimal vasMinValueCommission, decimal tripCommissionPercentage, decimal vasCommissionPercentage, decimal tripCommissionValue, decimal vasCommissionValue, PriceOfferCommissionType directRequestCommissionType, decimal directRequestCommissionMinValue, decimal directRequestVasCommissionMinValue, decimal directRequestCommissionPercentage, decimal directRequestVasCommissionPercentage, decimal directRequestCommissionValue, decimal directRequestVasCommissionValue, decimal directRequestCommissionValueForMultipleSaas, decimal directRequestCommissionValueForSingleSaas)
+        {
             decimal vasCommissionPercentageOrAddValue = 0;
             offer.Quantity = shippingRequest.NumberOfTrips;
 
@@ -1011,10 +1028,19 @@ namespace TACHYON.PriceOffers
                 }
             }
 
-            //set commission  for VASes
-            SetPriceOfferDetailsCommissionSettings(offer, vasCommissionType, vasCommissionPercentageOrAddValue);
-            // set commission  for trips
-            CalculateCommission(offer);
+            if (shippingRequest.IsSaas())
+            {
+                if (shippingRequest.RouteTypeId == ShippingRequestRouteType.SingleDrop)
+                {
+                    offer.CommissionPercentageOrAddValue = directRequestCommissionValueForSingleSaas;
+                }
+                else if (shippingRequest.RouteTypeId == ShippingRequestRouteType.MultipleDrops)
+                {
+                    offer.CommissionPercentageOrAddValue = directRequestCommissionValueForMultipleSaas;
+                }
+            }
+
+            return vasCommissionPercentageOrAddValue;
         }
 
         /// <summary>
@@ -1080,17 +1106,24 @@ namespace TACHYON.PriceOffers
             var directRequestVasCommissionPercentage = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckDirectRequestVasCommissionPercentage));
             var directRequestCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckDirectRequestCommissionValue));
             var directRequestVasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TruckDirectRequestVasCommissionValue));
+
+
+            var directRequestCommissionValueForMultipleSaas = default(decimal);
+            var directRequestCommissionValueForSingleSaas = default(decimal);
             if (offer.Channel == PriceOfferChannel.CarrierAsSaas)
             {
-                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.SaasCommission));
+                decimal carrierAsSaasSingleDropCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.SingleDropSaasCommission));
+                decimal carrierAsSaasMultipleDropsCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.MultipleDropsSaasCommission));
 
                 directRequestCommissionType = PriceOfferCommissionType.CommissionValue;
-                directRequestCommissionMinValue = carrierAsSaasCommissionValue;
-                directRequestVasCommissionMinValue = carrierAsSaasCommissionValue;
+                directRequestCommissionMinValue = carrierAsSaasSingleDropCommissionValue;
+                directRequestVasCommissionMinValue = carrierAsSaasSingleDropCommissionValue;
                 directRequestCommissionPercentage = 0;
                 directRequestVasCommissionPercentage = 0;
-                directRequestCommissionValue = carrierAsSaasCommissionValue;
+                directRequestCommissionValueForSingleSaas = carrierAsSaasSingleDropCommissionValue;
                 directRequestVasCommissionValue = 0;
+
+                directRequestCommissionValueForMultipleSaas = carrierAsSaasMultipleDropsCommissionValue;
 
             }
 
@@ -1171,6 +1204,18 @@ namespace TACHYON.PriceOffers
                         offer.CommissionPercentageOrAddValue = directRequestCommissionValue;
                         vasCommissionPercentageOrAddValue = directRequestVasCommissionValue;
                         break;
+                }
+
+                if (shippingRequest.IsSaas())
+                {
+                    if(shippingRequest.RouteTypeId == ShippingRequestRouteType.SingleDrop)
+                    {
+                        offer.CommissionPercentageOrAddValue = directRequestCommissionValueForSingleSaas;
+                    }
+                    else if (shippingRequest.RouteTypeId == ShippingRequestRouteType.MultipleDrops)
+                    {
+                        offer.CommissionPercentageOrAddValue = directRequestCommissionValueForMultipleSaas;
+                    }
                 }
             }
 

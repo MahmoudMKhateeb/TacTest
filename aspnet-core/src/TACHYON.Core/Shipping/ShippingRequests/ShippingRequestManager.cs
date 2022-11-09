@@ -278,8 +278,8 @@ namespace TACHYON.Shipping.ShippingRequests
             // handle carrier as saas SR pricing
             if (shippingRequest.IsSaas())
             {
-                decimal carrierAsSaasCommissionValue = Convert.ToDecimal(await _featureChecker.GetValueAsync(shippingRequest.TenantId, AppFeatures.SaasCommission));
-
+                decimal carrierAsSaasSingleDropCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.SingleDropSaasCommission));
+                decimal carrierAsSaasMultipleDropsCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.MultipleDropsSaasCommission));
 
                 var itemDetails = new List<PriceOfferDetailDto>();
                 foreach (ShippingRequestVas vas in shippingRequest.ShippingRequestVases)
@@ -306,7 +306,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     PriceType = PriceOfferType.Trip,
                     //ignor vas's
                     ItemDetails = itemDetails,
-                    CommissionPercentageOrAddValue = carrierAsSaasCommissionValue,
+                    CommissionPercentageOrAddValue =shippingRequest.RouteTypeId == ShippingRequestRouteType.SingleDrop ? carrierAsSaasSingleDropCommissionValue
+                    : carrierAsSaasMultipleDropsCommissionValue,
                     CommissionType = PriceOfferCommissionType.CommissionValue,
                     VasCommissionPercentageOrAddValue = 0,
                     VasCommissionType = PriceOfferCommissionType.CommissionValue,
