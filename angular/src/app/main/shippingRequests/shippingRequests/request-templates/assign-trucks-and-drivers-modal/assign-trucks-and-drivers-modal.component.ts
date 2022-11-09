@@ -82,8 +82,9 @@ export class AssignTrucksAndDriversModalComponent extends AppComponentBase {
    * this method is for Getting All Carriers Drivers For DD
    */
   getAllDrivers() {
-    if (this.feature.isEnabled('App.Carrier')) {
-      this._trucksServiceProxy.getAllDriversForDropDown().subscribe((res) => {
+    
+    if (this.feature.isEnabled('App.Carrier') || this.isTachyonDealerOrHost) {
+      this._dedicatedShippingRequestService.getAllDriversForDropDown(this.dedicatedShippingRequest.carrierTenantId).subscribe((res) => {
         this.allDrivers = res;
       });
     }
@@ -93,8 +94,8 @@ export class AssignTrucksAndDriversModalComponent extends AppComponentBase {
    * this method is for Getting All Carriers Trucks For DD
    */
   getAllTrucks(truckTypeId) {
-    if (this.feature.isEnabled('App.Carrier')) {
-      this._trucksServiceProxy.getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId).subscribe((res) => {
+    if (this.feature.isEnabled('App.Carrier') || this.isTachyonDealerOrHost) {
+      this._dedicatedShippingRequestService.getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId, this.dedicatedShippingRequest.carrierTenantId).subscribe((res) => {
         this.allTrucks = res;
       });
     }

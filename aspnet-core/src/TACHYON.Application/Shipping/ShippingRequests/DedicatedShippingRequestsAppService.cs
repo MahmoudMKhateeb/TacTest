@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Authorization.Users;
 using TACHYON.Configuration;
 using TACHYON.Dto;
 using TACHYON.Features;
@@ -22,6 +23,7 @@ using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.DirectRequests.Dto;
 using TACHYON.Shipping.ShippingRequests.Dtos.Dedicated;
+using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -35,6 +37,8 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTruckRepository;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
         private readonly ISettingManager _settingManager;
+        private readonly IRepository<Truck, long> _truckRepository;
+        private readonly IRepository<User, long> _lookup_userRepository;
 
         public DedicatedShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository,
             ShippingRequestManager shippingRequestManager,
@@ -42,7 +46,9 @@ namespace TACHYON.Shipping.ShippingRequests
             ShippingRequestDirectRequestAppService shippingRequestDirectRequestAppService,
             IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTruckRepository,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
-            ISettingManager settingManager)
+            ISettingManager settingManager,
+            IRepository<Truck, long> truckRepository,
+            IRepository<User, long> lookup_userRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestManager = shippingRequestManager;
@@ -51,6 +57,8 @@ namespace TACHYON.Shipping.ShippingRequests
             _dedicatedShippingRequestTruckRepository = dedicatedShippingRequestTruckRepository;
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
             _settingManager = settingManager;
+            _truckRepository = truckRepository;
+            _lookup_userRepository = lookup_userRepository;
         }
 
         #region Wizard
@@ -151,7 +159,7 @@ namespace TACHYON.Shipping.ShippingRequests
         #endregion
 
         #region Assign trucks
-        [RequiresFeature(AppFeatures.Carrier, AppFeatures.CarrierAsASaas)]
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.CarrierAsASaas, AppFeatures.TachyonDealer)]
         public async Task AssignDedicatedTrucksAndDrivers(AssignDedicatedTrucksAndDriversInput input)
         {
             var shippingRequest = await _shippingRequestManager.GetShippingRequestForAssign(input.ShippingRequestId);
@@ -184,6 +192,29 @@ namespace TACHYON.Shipping.ShippingRequests
                 driversList.Add(new DedicatedShippingRequestDriver { ShippingRequestId = shippingRequest.Id, DriverUserId = driver.Id, Status = status });
             }
             shippingRequest.DedicatedShippingRequestDrivers = driversList;
+        }
+
+        public async Task<List<SelectItemDto>> GetAllCarrierTrucksByTruckTypeForDropDown(long truckTypeId, int? tenantId)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            return await _truckRepository.GetAll()
+                .WhereIf(await IsTachyonDealer(), x=>x.TenantId == tenantId.Value)
+                .Where(x => x.TrucksTypeId == truckTypeId)
+                .Select(x => new SelectItemDto
+                {
+                    DisplayName = x.GetDisplayName(),
+                    Id = x.Id.ToString()
+                }).ToListAsync();
+        }
+
+        public async Task<List<SelectItemDto>> GetAllDriversForDropDown(int? tenantId)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            return await _lookup_userRepository.GetAll()
+                .WhereIf(await IsTachyonDealer(), x=>x.TenantId == tenantId.Value)
+                .Where(e => e.IsDriver == true)
+                .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
+                .ToListAsync();
         }
         #endregion
 

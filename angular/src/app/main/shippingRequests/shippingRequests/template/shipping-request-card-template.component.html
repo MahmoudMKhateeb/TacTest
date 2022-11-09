@@ -378,6 +378,73 @@
                   </div>
                 </div>
                 <div class="col-md-8 col-lg-10 p-0 align-content-end">
+                  <div class="w-100 d-flex p-0 actions justify-content-end">
+                    <a *ngIf="canDeleteDirectRequest(item)" href="javascript:void(0)" (click)="delete(item)" class="red">
+                      {{ l('Delete') }}
+                    </a>
+                    <a
+                      *ngIf="(isCarrier || isCarrierSaas) && Channel == 2 && (item.directRequestStatus == 0 || item.directRequestStatus == 5)"
+                      href="javascript:void(0)"
+                      (click)="decline(item)"
+                      class="red"
+                    >
+                      {{ l('Declined') }}
+                    </a>
+                    <a
+                      *ngIf="(isCarrier || isCarrierSaas || isTachyonDealerOrHost) && !Channel && !item.isDriversAndTrucksAssigned && item.carrierTenantId"
+                      href="javascript:void(0)"
+                      (click)="assignTrucksAndDrivers(item)"
+                      class="red"
+                    >
+                      {{ l('AssignTrucksAndDrivers') }}
+                    </a>
+                    <a
+                      *ngIf="(isCarrier || isCarrierSaas || isTachyonDealer) && !Channel && item.isDriversAndTrucksAssigned"
+                      href="javascript:void(0)"
+                      (click)="openAttendanceModal(item)"
+                      class="red"
+                    >
+                      {{ l('viewAttendance') }}
+                    </a>
+                    <a
+                      *ngIf="
+                        (item.status == 0 || item.status == 2) &&
+                        !Channel &&
+                        (feature.isEnabled('App.Shipper') || (item.isTachyonDeal && (feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)))
+                      "
+                      href="javascript:void(0)"
+                      (click)="ModelCancel.show(item)"
+                      class="red"
+                    >
+                      {{ l('Cancel') }}
+                    </a>
+
+                    <a
+                      href="javascript:void(0)"
+                      (click)="moreRedirectTo(item)"
+                      class="red"
+                      *ngIf="
+                        (!Channel && (feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)) ||
+                        ((Channel == PriceOfferChannelEnum.MarketPlace || Channel == PriceOfferChannelEnum.DirectRequest) &&
+                          (feature.isEnabled('App.Carrier') || feature.isEnabled('App.CarrierAsASaas')))
+                      "
+                    >
+                      {{ l('More') }}
+                    </a>
+                    <a
+                      *ngIf="
+                        permission.isGranted('Pages.ShippingRequests.Edit') &&
+                        !Channel &&
+                        item.status === 0 &&
+                        (isShipper || isTachyonDealer || isCarrierOwnRequest(item))
+                      "
+                      [queryParams]="{ id: item.id, completedSteps: 2, isEdit: true }"
+                      [routerLink]="['/app/main/shippingRequests/dedicatedShippingRequestWizard']"
+                      class="red"
+                    >
+                      {{ l('Edit') }}
+                    </a>
+                  </div>
                   <div class="w-100 row custom-header-details">
                     <div [class]="Channel !== PriceOfferChannelEnum.DirectRequest ? 'col-4' : 'col-6'">
                       <div>
