@@ -181,9 +181,12 @@ namespace TACHYON.Shipping.Trips
             });
 
             var pageResult = ObjectMapper.Map<List<ShippingRequestsTripListDto>>(resultPage);
-            foreach(var r in pageResult)
+
+            var canAssignTrucksAndDrivers = request.CarrierTenantId == AbpSession.TenantId || await IsTachyonDealer();
+            foreach (var r in pageResult)
             {
                 r.NotesCount = await GetTripNotesCount(r.Id);
+                r.CanAssignTrucksAndDrivers = canAssignTrucksAndDrivers;
             }
             
             if (!input.Sorting.IsNullOrEmpty() && input.Sorting.Contains("Facility"))

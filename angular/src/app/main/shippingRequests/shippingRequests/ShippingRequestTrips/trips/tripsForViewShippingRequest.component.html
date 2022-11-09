@@ -319,7 +319,7 @@
 
                     <li>
                       <a class="dropdown-item" (click)="ViewTripModal.show(record.id, shippingRequestForView)">{{
-                        isCarrier || hasCarrierClients ? l('ViewOrAssignDriver') : l('View')
+                        record.canAssignTrucksAndDrivers ? l('ViewOrAssignDriver') : l('View')
                       }}</a>
                     </li>
                     <li
