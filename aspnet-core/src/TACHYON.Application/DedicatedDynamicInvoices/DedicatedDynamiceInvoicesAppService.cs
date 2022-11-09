@@ -94,10 +94,12 @@ namespace TACHYON.DedicatedDynamicInvoices
             var invoice = await _dedicatedInvoiceRepository.GetAllIncluding(x => x.DedicatedDynamicInvoiceItems, x=>x.Tenant).FirstOrDefaultAsync(x => x.Id == id);
             if(invoice.InvoiceAccountType == InvoiceAccountType.AccountReceivable)
             {
+                if (invoice.InvoiceId != null) throw new UserFriendlyException(L("InvoiceAlreadyGenerated"));
                 await _invoiceManager.GenerateDedicatedDynamicInvoice(invoice.Tenant, invoice);
             }
             else
             {
+                if (invoice.SubmitInvoiceId != null) throw new UserFriendlyException(L("InvoiceAlreadyGenerated"));
                 await _invoiceManager.GenerateSubmitDedicatedDynamicInvoice(invoice.Tenant, invoice);
             }
         }
