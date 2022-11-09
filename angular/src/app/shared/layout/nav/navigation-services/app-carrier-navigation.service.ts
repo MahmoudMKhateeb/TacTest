@@ -146,6 +146,18 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer')
           ),
+          new AppMenuItem(
+            'InvoicesList',
+            'Pages.Invoices',
+
+            '',
+            '/app/main/invoices/view',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this.isEnabled('App.CarrierAsASaas')
+          ),
           new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', '', '/app/main/invoices/transaction'),
           new AppMenuItem(
             'ActorInvoicesList',
