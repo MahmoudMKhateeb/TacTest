@@ -1,10 +1,7 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
-import { ActorsComponent } from './actors/actors/actors.component';
-import { ViewActorModalComponent } from './actors/actors/view-actor-modal.component';
-import { CreateOrEditActorModalComponent } from './actors/actors/create-or-edit-actor-modal.component';
 
 import { VasesComponent } from './vases/vases/vases.component';
 import { ViewVasModalComponent } from './vases/vases/view-vas-modal.component';
@@ -146,6 +143,8 @@ import { RatingModule } from '@node_modules/primeng/rating';
 import { DriverTrackingModalComponent } from './users/drivers/driver-tracking-modal/driver-tracking-modal.component';
 import { AgmCoreModule } from '@node_modules/@agm/core';
 import { UnitOfMeasureTranslationsComponent } from './unitOfMeasures/unitOfMeasures/UnitOfMeasureTranslations/unit-of-measure-translations/unit-of-measure-translations.component';
+// import { ActorInvoiceDemandModelComponent } from './actors/Actor-Invoices-ondemand-model.component';
+import { MultiSelectModule } from '@node_modules/primeng/multiselect';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
@@ -186,16 +185,17 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DevExtremeModule,
     RatingModule,
     AgmCoreModule,
+    MultiSelectModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDKKZqDW_xX5azTqBV2oXSb6P3nwCAzOpw',
       libraries: ['places'],
     }),
   ],
   declarations: [
-    ActorsComponent,
+    // ActorsComponent,
 
-    ViewActorModalComponent,
-    CreateOrEditActorModalComponent,
+    // ViewActorModalComponent,
+    // CreateOrEditActorModalComponent,
     VasesComponent,
     waybillsComponent,
     ViewVasModalComponent,
@@ -299,7 +299,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     VasesTranslationsTemplateComponent,
     TruckStatusesTranslationsTemplateComponent,
     DriverTrackingModalComponent,
-    UnitOfMeasureTranslationsComponent,
+    UnitOfMeasureTranslationsComponent
+    // ActorInvoiceDemandModelComponent
   ],
 
   exports: [AddMemberModalComponent, AddRoleModalComponent, ViewOrEditEntityDocumentsModalComponent],

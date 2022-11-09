@@ -262,19 +262,59 @@ namespace TACHYON.Actors
             await _actorRepository.DeleteAsync(input.Id);
         }
 
+        #region Invoices
 
-        public async Task<bool> GenerateShipperInvoices(int actorId)
+        public async Task<bool> GenerateActorInvoice(int actorId, List<SelectItemDto> trips)
         {
-            return await _actorInvoicesManager.BuildActorShipperInvoices(actorId);
+            var actor = await _actorRepository.GetAll()
+                .FirstOrDefaultAsync(x => x.Id == actorId);
 
+            if (actor.ActorType == ActorTypesEnum.Shipper)
+            {
+                return await _actorInvoicesManager.BuildActorShipperInvoices(actorId, trips);
+            }
+            else
+            {
+                return await _actorInvoicesManager.BuildActorCarrierInvoices(actorId, trips);
+
+            }
         }
 
+        #endregion
 
-        public async Task<bool> GenerateCarrierInvoices(int actorId)
+        #region DropDowns
+
+        public async Task<List<SelectItemDto>> GetAllActorsForDropDown()
         {
-            return await _actorInvoicesManager.BuildActorCarrierInvoices(actorId);
-
+            return await _actorRepository.GetAll()
+                 .Where(x => x.IsActive)
+                   .Select(x => new SelectItemDto()
+                   {
+                       Id = x.Id.ToString(),
+                       DisplayName = x.CompanyName
+                   }).ToListAsync();
         }
+
+        public async Task<List<SelectItemDto>> GetAllUnInvoicedWaybillsForActor(int id)
+        {
+            var actor= await _actorRepository.GetAll()
+                 .FirstOrDefaultAsync(x => x.Id == id);
+            if(actor.ActorType == ActorTypesEnum.Shipper)
+            {
+                return (await _actorInvoicesManager.GetAllShipperActorUnInvoicedTrips(id, null))
+                    .Select(y => new SelectItemDto { DisplayName = y.WaybillNumber.ToString(), Id = y.Id.ToString() })
+                    .ToList();
+            }
+            else
+            {
+                return (await _actorInvoicesManager.GetAllCarrierActorUnInvoicedTrips(id, null))
+                    .Select(y => new SelectItemDto { DisplayName = y.WaybillNumber.ToString(), Id = y.Id.ToString() })
+                    .ToList();
+            }
+        }
+
+        #endregion
+
 
     }
 }

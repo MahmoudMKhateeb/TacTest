@@ -5,6 +5,13 @@
         <button *ngIf="isGranted('Pages.Administration.Actors.Create')" (click)="createActor()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewActor') }}
         </button>
+        <button
+          (click)="OndemandModel.show()"
+          type="button"
+          class="btn btn-default"
+        >
+          {{ l('OnDemandInvoice') }}
+        </button>
       </div>
     </sub-header>
 
@@ -163,7 +170,7 @@
                               >{{ l('Edit') }}</a
                             >
                           </li>
-                          <li>
+                          <!-- <li>
                             <a
                               class="dropdown-item"
                               href="javascript:;"
@@ -171,7 +178,7 @@
                               (click)="generateInvoice(record.actor)"
                               >{{ l('GenerateInvoice') }}</a
                             >
-                          </li>
+                          </li> -->
                           <li>
                             <a
                               class="dropdown-item"
@@ -241,3 +248,5 @@
     <viewActorModal #viewActorModal></viewActorModal>
   </div>
 </div>
+
+<Actor-Invoices-ondemand-model (modalSave)="reloadPage()" #OndemandModel></Actor-Invoices-ondemand-model>

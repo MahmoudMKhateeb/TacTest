@@ -75,6 +75,9 @@ import { ActorsSubmittedDocumentsComponent } from '@app/main/documentFiles/docum
 import { CreateOrEditDedicatedShippingRequestWizardComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicatedShippingRequestWizard/create-or-edit-dedicated-shipping-request-wizard.component';
 import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/tmsForShipper/tms-for-shipper.component';
 import { InvoicesDedicatedComponent } from '@app/main/Invoices/invoices-dedicated/invoices-dedicated.component';
+import { ActorsComponent } from './actors/actors/actors.component';
+import { ActorInvoiceListComponent } from './Invoices/ActorInvoices/actor-invoice-list/actor-invoice-list.component';
+import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/actor-submit-invoices.component';
 
 @NgModule({
   imports: [
@@ -300,7 +303,10 @@ import { InvoicesDedicatedComponent } from '@app/main/Invoices/invoices-dedicate
           { path: 'penalties/view', component: PenaltiesListComponent, data: { permission: 'Pages.Invoices' } },
 
           { path: 'invoicenote/view', component: InvoiceNoteListComponent, data: { permission: 'Pages.Invoices' } },
-
+          { path: 'actors/actors', component: ActorsComponent, data: { permission: 'Pages.Administration.Actors' } },
+          { path: 'actors/invoices', component: ActorInvoiceListComponent, data: { permission: 'Pages.Administration.Actors' } },
+          { path: 'actors/carrierInvoices', component: ActorSubmitInvoicesComponent, data: { permission: 'Pages.Administration.Actors' } },
+          
           {
             path: 'invoices/detail/:id',
             component: InvoiceDetailComponent,
