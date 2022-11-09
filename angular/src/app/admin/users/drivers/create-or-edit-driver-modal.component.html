@@ -172,21 +172,19 @@
                         'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsCarriers
                       }"
                     >
-                      <select
-                        id="carrierActorId"
-                        #carrierActorId="ngModel"
-                        [(ngModel)]="user.carrierActorId"
-                        class="form-control"
-                        name="user.carrierActorId"
-                        required
-                        [ngClass]="{
-                          'is-valid': carrierActorId.valid,
-                          'is-invalid': userForm.submitted && carrierActorId.invalid
-                        }"
-                      >
-                        <option [ngValue]="null">{{ l('Select') }} {{ l('CarrierActor') }}</option>
-                        <option *ngFor="let item of AllActorsCarriers" value="{{ item.id }}">{{ item.displayName }}</option>
-                      </select>
+
+                        <dx-select-box
+                            id="carrierActorId"
+                            name="user.carrierActorId"
+                            #carrierActorId="ngModel"
+                            [(ngModel)]="user.carrierActorId"
+                            [dataSource]="AllActorsCarriers"
+                            [searchEnabled]="true"
+                            displayExpr="displayName"
+                            valueExpr="id"
+                            placeholder="{{ l('Myself') }}">
+
+                        </dx-select-box>
                       <validation-messages [formCtrl]="carrierActorId"></validation-messages>
                     </div>
                   </div>

@@ -21,7 +21,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         //Add Bid details If IsBid equals True
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
-        public virtual bool IsTachyonDeal { get; set; }
+        public virtual  bool IsTachyonDeal { get; set; }
         public bool IsDirectRequest { get; set; }
 
         /// <summary>

@@ -123,22 +123,24 @@
                     </div>
 
                     <div *ngIf="this.feature.isEnabled('App.ShipperClients')" class="form-group">
-                      <label>{{ l('ActorShipper') }} <span class="required-fileds">*</span></label>
+                      <label>{{ l('ActorShipper') }}</label>
                       <div
                         [ngClass]="{
                           'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsShippers
                         }"
                       >
-                        <select
-                          class="form-control"
-                          name="ActorShipper"
-                          formControlName="ActorShipper"
-                          [(ngModel)]="step1Dto.shipperActorId"
-                          required
-                        >
-                          <option [value]="undefined">{{ l('SelectShipper') }}</option>
-                          <option *ngFor="let item of AllActorsShippers" value="{{ item.id }}">{{ item.displayName }}</option>
-                        </select>
+                          <dx-select-box
+                              id="ActorShipper"
+                              name="ActorShipper"
+                              formControlName="ActorShipper"
+                              [(value)]="step1Dto.shipperActorId"
+                              [dataSource]="AllActorsShippers"
+                              [searchEnabled]="true"
+                              displayExpr="displayName"
+                              valueExpr="id"
+                              placeholder="{{ l('Myself') }}">
+
+                          </dx-select-box>
                       </div>
                       <span class="form-text text-muted">{{ l('SelectShipperActor') }}</span>
                     </div>

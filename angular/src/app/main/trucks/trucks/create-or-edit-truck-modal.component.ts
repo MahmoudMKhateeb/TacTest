@@ -108,12 +108,14 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   allPlateTypes: PlateTypeSelectItemDto[];
 
   truckModelMaxYear = new Date();
+
   //truckModelMinYear = new Date();
   get defaultPlateType(): string {
     if (this.allPlateTypes) {
       return this.allPlateTypes.find((x) => x.isDefault)?.id || null;
     }
   }
+
   constructor(
     injector: Injector,
     private _trucksServiceProxy: TrucksServiceProxy,
@@ -167,6 +169,10 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
       this._priceOfferService.getAllCarrierActorsForDropDown().subscribe((result) => {
         this.AllActorsCarriers = result;
+        let defaultItem = new SelectItemDto();
+        defaultItem.id = null;
+        defaultItem.displayName = this.l('Myself');
+        this.AllActorsCarriers.unshift(defaultItem);
       });
 
       if (this.isTruckTenantRequired) {
@@ -253,6 +259,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
     return true;
   }
+
   save(): void {
     this.saving = true;
 
@@ -297,6 +304,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.uploader.clearQueue();
     this.uploader.addToQueue([<File>base64ToFile(event.base64)]);
   }
+
   get isTruckTenantRequired(): boolean {
     return (this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) && !this.truck?.id;
   }
