@@ -82,9 +82,9 @@
                       'badge-danger': options.data.status == 'New',
                       'badge-warning': options.data.status == 'Paid',
                       'badge-success': options.data.status == 'UnPaid',
-                      'badge-primary': options.data.status == 'Claim',
+                      'badge-info': options.data.status == 'Claimed',
                       'badge-secondary': options.data.statusTitle == 'Accepted',
-                      'badge-info': options.data.statusTitle == 'Rejected'
+                      'badge-primary': options.data.statusTitle == 'Rejected'
                     }"
                     >{{ l(options.data.status) }}</span
                   ></span
@@ -114,6 +114,14 @@
                       <li>
                         <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('DownloadInvoice') }}</a>
                       </li> -->
+                      <li *ngIf="options.data.documentName">
+                        <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(options.data.id)">
+                          {{ l('View') }}
+                        </a>
+                      </li>
+                      <li *ngIf="options.data.status == SubmitStatusEnum.New || options.data.status == SubmitStatusEnum.Rejected">
+                        <a class="dropdown-item" href="javascript:;" (click)="ClaimModel.show(options.data.id)">{{ l('Claim') }}</a>
+                      </li>
                     <li *ngIf="!options.data.isPaid">
                       <a class="dropdown-item" href="javascript:;" (click)="MakePaid(options.data)">{{ l('MakePaid') }}</a>
                     </li>
@@ -130,3 +138,5 @@
     </div>
   </div>
 </div>
+
+<client-demand-model (modalSave)="reloadPage()" #ClaimModel></client-demand-model>

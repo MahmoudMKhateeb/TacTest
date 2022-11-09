@@ -1,7 +1,9 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { ActorSubmitInvoiceServiceProxy, SubmitInvoiceStatus } from '@shared/service-proxies/service-proxies';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 import { DxDataGridComponent } from 'devextreme-angular';
 import CustomStore from 'devextreme/data/custom_store';
 import { LoadOptions } from 'devextreme/data/load_options';
@@ -14,8 +16,11 @@ import { LoadOptions } from 'devextreme/data/load_options';
 export class ActorSubmitInvoicesComponent extends AppComponentBase implements OnInit {
   dataSource: any = {};
   SubmitStatus: any;
+  SubmitStatusEnum = SubmitInvoiceStatus;
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
-  constructor(injector: Injector, private _ActorSubmitInvoiceServiceProxy: ActorSubmitInvoiceServiceProxy, private enumToArray: EnumToArrayPipe) {
+  @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
+  constructor(injector: Injector, private _ActorSubmitInvoiceServiceProxy: ActorSubmitInvoiceServiceProxy, private enumToArray: EnumToArrayPipe,
+    private _fileDownloadService: FileDownloadService) {
     super(injector);
     this.SubmitStatus = this.enumToArray.transform(SubmitInvoiceStatus);
   }
@@ -84,6 +89,13 @@ export class ActorSubmitInvoicesComponent extends AppComponentBase implements On
           this.reloadPage();
         });
       }
+    });
+  }
+
+  downloadDocument(id: number): void {
+    this._ActorSubmitInvoiceServiceProxy.getFileDto(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+      this.fileViwerComponent.show(this._fileDownloadService.downloadTempFile(result), 'pdf');
     });
   }
 }

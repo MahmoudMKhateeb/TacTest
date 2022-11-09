@@ -331,6 +331,7 @@ import { ActorsComponent } from './actors/actors/actors.component';
 import { ViewActorModalComponent } from './actors/actors/view-actor-modal.component';
 import { CreateOrEditActorModalComponent } from './actors/actors/create-or-edit-actor-modal.component';
 import { ActorInvoiceDemandModelComponent } from './actors/Actor-Invoices-ondemand-model.component';
+import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/client-demand-model.component';
 
 
 @NgModule({
@@ -630,7 +631,8 @@ import { ActorInvoiceDemandModelComponent } from './actors/Actor-Invoices-ondema
     ActorsComponent,
     ViewActorModalComponent,
     CreateOrEditActorModalComponent,
-    ActorInvoiceDemandModelComponent
+    ActorInvoiceDemandModelComponent,
+    ClientDemandModelComponent
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
