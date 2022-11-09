@@ -21,6 +21,10 @@ namespace TACHYON.Invoices
         [ForeignKey(nameof(TripVasId))]
         public ShippingRequestTripVas ShippingRequestTripVasFK { get; set; }
         /// <summary>
+        /// Displays waybill No if no vases, if there is vases displat waybill+Vas1,2,3,...
+        /// </summary>
+        public string ItemName { get; set; }
+        /// <summary>
         /// price for invoice note, can be original waybill or vas price, or edited price
         /// </summary>
         public decimal Price { get; set; }
