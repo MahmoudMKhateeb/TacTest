@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Actors;
+using TACHYON.Dto;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 
@@ -31,85 +33,75 @@ namespace TACHYON.Invoices.ActorInvoices
             _actorSubmitInvoiceRepository = actorSubmitInvoiceRepository;
         }
 
-        public async Task<bool> BuildActorShipperInvoices(int  actorId )
-        {
-
-            var actor =await  _actorRepository.FirstOrDefaultAsync(actorId);
-
-            var trips = await  _shippingRequestTripRepository.GetAll()
-             .Include(trip => trip.ShippingRequestTripVases)
-             .ThenInclude(v => v.ActorShipperPriceFk)
-             .Include(trip => trip.ShippingRequestFk)
-             .Include(trip => trip.ActorShipperPriceFk)
-            
-             .Where(trip => trip.ShippingRequestFk.ShipperActorId == actorId)
-             .Where(trip => trip.ActorShipperPriceFk != null )
-             .Where(trip=> !trip.ActorShipperPriceFk.IsActorShipperHaveInvoice)
-             .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
-             trip.Status == Shipping.Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
-             .ToListAsync();
-
-
-             var dueDate = Clock.Now.AddDays(actor.InvoiceDueDays);
-
-
-             if (trips != null && trips.Count() > 0)
-             {
-                 decimal totalAmount = (decimal)trips.Sum(r => r.ActorShipperPriceFk.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.ActorShipperPriceFk.TotalAmountWithCommission));
-                 decimal vatAmount = (decimal)trips.Sum(r => r.ActorShipperPriceFk.VatAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.ActorShipperPriceFk.VatAmountWithCommission));
-                 decimal subTotalAmount = (decimal)trips.Sum(r => r.ActorShipperPriceFk.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.ActorShipperPriceFk.SubTotalAmountWithCommission));
-                 decimal taxVat = (decimal)trips.FirstOrDefault().ActorShipperPriceFk.TaxVat;
-
-
-
-                 var actorInvoice = new ActorInvoice()
-                 {
-                     TenantId = actor.TenantId,
-                     ShipperActorId = actor.Id,
-                     DueDate = dueDate,
-                     TotalAmount = totalAmount,
-                     VatAmount = vatAmount,
-                     SubTotalAmount = subTotalAmount,
-                     TaxVat = taxVat,
-                     Trips = trips
-                 };
-
-                 await _actorInvoiceRepository.InsertAsync(actorInvoice);
-
-                foreach(var trip in trips)
-                {
-                    trip.ActorShipperPriceFk.IsActorShipperHaveInvoice = true;
-                }
-                return true;
-             }
-            return false;
-        }
-
-
-
-        public async Task<bool> BuildActorCarrierInvoices(int actorId)
+        public async Task<bool> BuildActorShipperInvoices(int  actorId, List<SelectItemDto> SelectedTrips )
         {
 
             var actor = await _actorRepository.FirstOrDefaultAsync(actorId);
 
-            var trips = await _shippingRequestTripRepository.GetAll()
-             .Include(trip => trip.ShippingRequestTripVases)
-             .ThenInclude(v => v.ActorCarrierPriceFk)
-             .Include(trip => trip.ShippingRequestFk)
-             .Include(trip => trip.ActorCarrierPriceFk)
-
-             .Where(trip => trip.ShippingRequestFk.CarrierActorId == actorId)
-             .Where(trip => trip.ActorCarrierPriceFk != null)
-             .Where(trip=> !trip.ActorCarrierPriceFk.IsActorCarrierHaveInvoice)
-             .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
-             trip.Status == Shipping.Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
-             .ToListAsync();
-
+            List<ShippingRequestTrip> trips = await GetAllShipperActorUnInvoicedTrips(actorId, null);
 
             var dueDate = Clock.Now.AddDays(actor.InvoiceDueDays);
 
 
-            if (trips != null && trips.Count()>0)
+            if (trips != null && trips.Count() > 0)
+            {
+                decimal totalAmount = (decimal)trips.Sum(r => r.ActorShipperPriceFk.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.ActorShipperPriceFk.TotalAmountWithCommission));
+                decimal vatAmount = (decimal)trips.Sum(r => r.ActorShipperPriceFk.VatAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.ActorShipperPriceFk.VatAmountWithCommission));
+                decimal subTotalAmount = (decimal)trips.Sum(r => r.ActorShipperPriceFk.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.ActorShipperPriceFk.SubTotalAmountWithCommission));
+                decimal taxVat = (decimal)trips.FirstOrDefault().ActorShipperPriceFk.TaxVat;
+
+
+
+                var actorInvoice = new ActorInvoice()
+                {
+                    TenantId = actor.TenantId,
+                    ShipperActorId = actor.Id,
+                    DueDate = dueDate,
+                    TotalAmount = totalAmount,
+                    VatAmount = vatAmount,
+                    SubTotalAmount = subTotalAmount,
+                    TaxVat = taxVat,
+                    Trips = trips
+                };
+
+                await _actorInvoiceRepository.InsertAsync(actorInvoice);
+
+                foreach (var trip in trips)
+                {
+                    trip.ActorShipperPriceFk.IsActorShipperHaveInvoice = true;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<List<ShippingRequestTrip>> GetAllShipperActorUnInvoicedTrips(int actorId, List<SelectItemDto> trips)
+        {
+            return await _shippingRequestTripRepository.GetAll()
+             .Include(trip => trip.ShippingRequestTripVases)
+             .ThenInclude(v => v.ActorShipperPriceFk)
+             .Include(trip => trip.ShippingRequestFk)
+             .Include(trip => trip.ActorShipperPriceFk)
+             .WhereIf(trips != null , x=> trips.Select(y=>y.Id).Select(int.Parse).Contains(x.Id))
+             .Where(trip => trip.ShippingRequestFk.ShipperActorId == actorId)
+             .Where(trip => trip.ActorShipperPriceFk != null)
+             .Where(trip => !trip.ActorShipperPriceFk.IsActorShipperHaveInvoice)
+             .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
+             trip.Status == Shipping.Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
+             .ToListAsync();
+        }
+
+        public async Task<bool> BuildActorCarrierInvoices(int actorId, List<SelectItemDto> SelectedTrips)
+        {
+
+            var actor = await _actorRepository.FirstOrDefaultAsync(actorId);
+
+            List<ShippingRequestTrip> trips = await GetAllCarrierActorUnInvoicedTrips(actorId, SelectedTrips);
+
+            var dueDate = Clock.Now.AddDays(actor.InvoiceDueDays);
+
+
+            if (trips != null && trips.Count() > 0)
             {
                 decimal totalAmount = (decimal)trips.Sum(r => r.ActorCarrierPriceFk.SubTotalAmount + r.ActorCarrierPriceFk.VatAmount + r.ShippingRequestTripVases.Sum(v => v.ActorCarrierPriceFk.SubTotalAmount + v.ActorCarrierPriceFk.VatAmount));
                 decimal vatAmount = (decimal)trips.Sum(r => r.ActorCarrierPriceFk.VatAmount + r.ShippingRequestTripVases.Sum(v => v.ActorCarrierPriceFk.SubTotalAmount));
@@ -132,13 +124,29 @@ namespace TACHYON.Invoices.ActorInvoices
 
                 await _actorSubmitInvoiceRepository.InsertAsync(actorSubmitInvoice);
 
-                foreach(var trip in trips)
+                foreach (var trip in trips)
                 {
                     trip.ActorCarrierPriceFk.IsActorCarrierHaveInvoice = true;
                 }
                 return true;
             }
             return false;
+        }
+
+        public async Task<List<ShippingRequestTrip>> GetAllCarrierActorUnInvoicedTrips(int actorId, List<SelectItemDto> trips)
+        {
+            return await _shippingRequestTripRepository.GetAll()
+             .Include(trip => trip.ShippingRequestTripVases)
+             .ThenInclude(v => v.ActorCarrierPriceFk)
+             .Include(trip => trip.ShippingRequestFk)
+             .Include(trip => trip.ActorCarrierPriceFk)
+             .WhereIf(trips != null, x => trips.Select(y => y.Id).Select(int.Parse).Contains(x.Id))
+             .Where(trip => trip.ShippingRequestFk.CarrierActorId == actorId)
+             .Where(trip => trip.ActorCarrierPriceFk != null)
+             .Where(trip => !trip.ActorCarrierPriceFk.IsActorCarrierHaveInvoice)
+             .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
+             trip.Status == Shipping.Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
+             .ToListAsync();
         }
     }
 }

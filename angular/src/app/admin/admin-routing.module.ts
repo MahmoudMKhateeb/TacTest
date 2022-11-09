@@ -1,6 +1,5 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { ActorsComponent } from './actors/actors/actors.component';
 import { VasesComponent } from './vases/vases/vases.component';
 import { TermAndConditionTranslationsComponent } from './termsAndConditions/termAndConditionTranslations/termAndConditionTranslations.component';
 import { ShippingRequestStatusesComponent } from './shippingRequestStatuses/shippingRequestStatuses/shippingRequestStatuses.component';
@@ -41,9 +40,6 @@ import { ActorSubmitInvoicesComponent } from '@app/main/Invoices/actor-submit-in
       {
         path: '',
         children: [
-          { path: 'actors/actors', component: ActorsComponent, data: { permission: 'Pages.Administration.Actors' } },
-          { path: 'actors/invoices', component: ActorInvoiceListComponent, data: { permission: 'Pages.Administration.Actors' } },
-          { path: 'actors/carrierInvoices', component: ActorSubmitInvoicesComponent, data: { permission: 'Pages.Administration.Actors' } },
           { path: 'vases/vases', component: VasesComponent, data: { permission: 'Pages.Administration.Vases' } },
           { path: 'waybills/waybills', component: waybillsComponent, data: { permission: undefined } },
           {
