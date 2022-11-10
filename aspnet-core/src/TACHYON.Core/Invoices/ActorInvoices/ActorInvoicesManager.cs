@@ -38,7 +38,7 @@ namespace TACHYON.Invoices.ActorInvoices
 
             var actor = await _actorRepository.FirstOrDefaultAsync(actorId);
 
-            List<ShippingRequestTrip> trips = await GetAllShipperActorUnInvoicedTrips(actorId, null);
+            List<ShippingRequestTrip> trips = await GetAllShipperActorUnInvoicedTrips(actorId, SelectedTrips);
 
             var dueDate = Clock.Now.AddDays(actor.InvoiceDueDays);
 

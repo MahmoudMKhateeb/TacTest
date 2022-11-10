@@ -3,7 +3,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
-import { CommonLookupServiceProxy, ISelectItemDto, SelectItemDto, ActorInvoiceServiceProxy, ActorsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CommonLookupServiceProxy, ISelectItemDto, SelectItemDto, ActorInvoiceServiceProxy, ActorsServiceProxy, ActorTypesEnum } from '@shared/service-proxies/service-proxies';
 @Component({
   selector: 'Actor-Invoices-ondemand-model',
   templateUrl: './Actor-Invoices-ondemand-model.component.html',
@@ -19,6 +19,7 @@ export class ActorInvoiceDemandModelComponent extends AppComponentBase  {
   AllActors: ISelectItemDto[];
   Waybills: SelectItemDto[];
   SelectedWaybills: SelectItemDto[];
+  ActorType: ActorTypesEnum;
 
   constructor(injector: Injector, private _actorService: ActorsServiceProxy) {
     super(injector);
@@ -30,7 +31,7 @@ export class ActorInvoiceDemandModelComponent extends AppComponentBase  {
     this.Waybills = undefined;
     this.SelectedWaybills = undefined;
     this.active = true;
-    this.GetAllActors();
+    //this.GetAllActors();
     this.modal.show();
   }
 
@@ -61,18 +62,25 @@ export class ActorInvoiceDemandModelComponent extends AppComponentBase  {
 
   close(): void {
     this.active = false;
+    this.ActorType=undefined;
+    this.AllActors=[];
+    this.SelectedWaybills=[];
     this.modal.hide();
   }
 
-  GetAllActors() {
-    this._actorService.getAllActorsForDropDown().subscribe((result) => {
+  // GetAllActors() {
+  //   this._actorService.getAllActorsForDropDown(this.ActorType).subscribe((result) => {
+  //     this.AllActors = result;
+  //   });
+  // }
+
+  GetActorsByType(){
+    this._actorService.getAllActorsForDropDown(this.ActorType).subscribe((result) => {
       this.AllActors = result;
     });
   }
 
-  GetAllWaybillsForActor(): void {
-    console.log('actor',this.Actor);
-    
+  GetAllWaybillsForActor(): void {    
     this._actorService.getAllUnInvoicedWaybillsForActor(this.Actor).subscribe((res) => {
       this.Waybills = res;
     });

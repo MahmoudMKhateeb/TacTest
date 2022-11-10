@@ -216,6 +216,10 @@ namespace TACHYON
         {
             return await IsEnabledAsync(AppFeatures.CarrierAsASaas);
         }
+        protected async Task<bool> IsBroker()
+        {
+            return await IsEnabledAsync(AppFeatures.ShipperClients) && await IsEnabledAsync(AppFeatures.CarrierClients);
+        }
 
         protected async Task<bool> HasCarrierClients()
         {
