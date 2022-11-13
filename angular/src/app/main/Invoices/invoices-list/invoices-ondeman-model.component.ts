@@ -20,16 +20,19 @@ export class InvoiceDemandModelComponent extends AppComponentBase implements OnI
   SelectedWaybills: SelectItemDto[];
   InvoiceTypeOptions: any[];
   invoiceTypeValue: number = 1;
+  editions: string[];
+  selectedEdition: string;
 
   constructor(injector: Injector, private _currentSrv: InvoiceServiceProxy, private _CommonServ: CommonLookupServiceProxy) {
     super(injector);
   }
   ngOnInit(): void {
-    this.InvoiceTypeOptions = [
-      { label: 'Invoice', value: '1' },
-      { label: 'PenaltyInvoice', value: '2' },
-    ];
-    this.invoiceTypeValue = 1;
+      this.InvoiceTypeOptions = [
+          {label: 'Invoice', value: '1'},
+          {label: 'PenaltyInvoice', value: '2'},
+      ];
+      this.invoiceTypeValue = 1;
+      this.editions = ['shipper', 'broker'];
   }
 
   show(): void {
@@ -88,7 +91,7 @@ export class InvoiceDemandModelComponent extends AppComponentBase implements OnI
   }
 
   search(event) {
-    this._CommonServ.getAutoCompleteTenants(event.query, 'shipper').subscribe((result) => {
+    this._CommonServ.getAutoCompleteTenants(event.query, this.selectedEdition).subscribe((result) => {
       this.Tenants = result;
     });
   }
