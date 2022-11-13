@@ -132,7 +132,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
         '',
         [],
         [
-          // new AppMenuItem('PenaltiesList', 'Pages.Invoices', '', '/app/main/penalties/view'),
+          new AppMenuItem('PenaltiesList', 'Pages.Invoices', '', '/app/main/penalties/view'),
           new AppMenuItem('InvoicesNoteList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
           new AppMenuItem(
             'SubmitInvoice',
