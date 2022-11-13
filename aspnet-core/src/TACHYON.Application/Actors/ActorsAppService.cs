@@ -284,9 +284,10 @@ namespace TACHYON.Actors
 
         #region DropDowns
 
-        public async Task<List<SelectItemDto>> GetAllActorsForDropDown()
+        public async Task<List<SelectItemDto>> GetAllActorsForDropDown(ActorTypesEnum? actorType)
         {
             return await _actorRepository.GetAll()
+                .WhereIf(actorType != null, x => x.ActorType == actorType)
                  .Where(x => x.IsActive)
                    .Select(x => new SelectItemDto()
                    {

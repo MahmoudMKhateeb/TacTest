@@ -119,7 +119,7 @@
                           {{ l('View') }}
                         </a>
                       </li>
-                      <li *ngIf="options.data.status == SubmitStatusEnum.New || options.data.status == SubmitStatusEnum.Rejected">
+                      <li *ngIf="options.data.status == 'New' || options.data.status == 'Rejected'">
                         <a class="dropdown-item" href="javascript:;" (click)="ClaimModel.show(options.data.id)">{{ l('Claim') }}</a>
                       </li>
                     <li *ngIf="!options.data.isPaid">

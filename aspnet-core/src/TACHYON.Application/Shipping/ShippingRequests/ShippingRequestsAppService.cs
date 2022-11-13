@@ -489,7 +489,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
             else if (input.IsDirectRequest)
             {
-                if (!await IsEnabledAsync(AppFeatures.SendDirectRequest) && !await IsEnabledAsync(AppFeatures.CarrierAsASaas))
+                if (!await IsEnabledAsync(AppFeatures.SendDirectRequest) && !await IsCarrierAsASaas() && !await IsBroker())
                 {
                     throw new UserFriendlyException(L("feature SendDirectRequest not enabled"));
                 }
