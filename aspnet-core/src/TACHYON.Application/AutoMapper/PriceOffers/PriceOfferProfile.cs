@@ -55,8 +55,8 @@ namespace TACHYON.AutoMapper.PriceOffers
                 .ForMember(dst => dst.RemainingDays,
                     opt => opt.MapFrom(src => GetRemainingDays(src.BidEndDate, src.BidStatus)))
                 .ForMember(dst => dst.Price, opt => opt.MapFrom(src => src.Price))
-                .ForMember(dst => dst.ShipperActor, opt => opt.MapFrom(src => src.ShipperActorFk.CompanyName))
-                .ForMember(dst => dst.CarrierActor, opt => opt.MapFrom(src => src.CarrierActorFk.CompanyName))
+                .ForMember(dst => dst.ShipperActor, opt => opt.MapFrom(src => src.ShipperActorFk!=null ?src.ShipperActorFk.CompanyName :""))
+                .ForMember(dst => dst.CarrierActor, opt => opt.MapFrom(src => src.CarrierActorFk!=null ? src.CarrierActorFk.CompanyName :""))
                  .ForMember(dst => dst.ShippingRequestFlagTitle,
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
                 .ForMember(dst => dst.RentalDurationUnitTitle,
