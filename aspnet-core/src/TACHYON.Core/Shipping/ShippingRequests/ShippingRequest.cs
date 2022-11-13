@@ -345,5 +345,15 @@ namespace TACHYON.Shipping.ShippingRequests
 
         [ForeignKey("CarrierActorId")]
         public Actor CarrierActorFk { get; set; }
+
+        public int? ActorShipperPriceId { get; set; }
+
+        [ForeignKey(nameof(ActorShipperPriceId))]
+        public ActorShipperPrice ActorShipperPrice { get; set; }
+
+        public int? ActorCarrierPriceId { get; set; }
+        
+        [ForeignKey(nameof(ActorCarrierPriceId))]
+        public ActorCarrierPrice ActorCarrierPrice { get; set; }
     }
 }

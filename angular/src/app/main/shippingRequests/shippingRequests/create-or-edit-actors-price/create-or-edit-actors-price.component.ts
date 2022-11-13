@@ -1,11 +1,11 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
-  ActorCarrierPriceDto,
-  ActorShipperPriceDto,
   ActorsPriceOffersServiceProxy,
-  CreateOrEditActorCarrierPriceInput,
-  CreateOrEditActorShipperPriceInput,
+  CreateOrEditActorCarrierPrice,
+  CreateOrEditActorShipperPriceDto,
+  CreateOrEditSrActorCarrierPriceInput,
+  CreateOrEditSrActorShipperPriceInput,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
@@ -19,43 +19,46 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
   constructor(injector: Injector, private actorsPriceOffersServiceProxy: ActorsPriceOffersServiceProxy) {
     super(injector);
 
-    this.createOrEditActorShipperPriceInput.actorShipperPriceDto = new ActorShipperPriceDto();
-    this.createOrEditActorCarrierPriceInput.actorCarrierPriceDto = new ActorCarrierPriceDto();
+    this.shipperPriceInput.actorShipperPriceDto = new CreateOrEditActorShipperPriceDto();
+    this.carrierPriceInput.actorCarrierPrice = new CreateOrEditActorCarrierPrice();
     this.shipperSaving = false;
     this.carrierSaving = false;
   }
 
   @Input() shippingRequestId: any;
   @Input() numberOfCreatedTrips: number;
-  createOrEditActorShipperPriceInput: CreateOrEditActorShipperPriceInput = new CreateOrEditActorShipperPriceInput();
-  createOrEditActorCarrierPriceInput: CreateOrEditActorCarrierPriceInput = new CreateOrEditActorCarrierPriceInput();
+  @Input() tenantId: number;
+  @Input() carrierTenantId: number;
+
+  shipperPriceInput = new CreateOrEditSrActorShipperPriceInput();
+  carrierPriceInput = new CreateOrEditSrActorCarrierPriceInput();
   active = true;
   shipperSaving: any;
   carrierSaving: any;
 
   GetCreateOrEditActorShipperPriceInputForCreateOrEdit() {
-    this.actorsPriceOffersServiceProxy.getCreateOrEditActorShipperPriceInputForCreateOrEdit(this.shippingRequestId).subscribe((result) => {
-      this.createOrEditActorShipperPriceInput = result;
-      if (!isNotNullOrUndefined(this.createOrEditActorShipperPriceInput.actorShipperPriceDto)) {
-        this.createOrEditActorShipperPriceInput.actorShipperPriceDto = new ActorShipperPriceDto();
+    this.actorsPriceOffersServiceProxy.getActorShipperPriceForEdit(this.shippingRequestId).subscribe((result) => {
+      this.shipperPriceInput = result;
+      if (!isNotNullOrUndefined(this.shipperPriceInput.actorShipperPriceDto)) {
+        this.shipperPriceInput.actorShipperPriceDto = new CreateOrEditActorShipperPriceDto();
       }
     });
   }
 
   GetCreateOrEditActorCarrierPriceInputForCreateOrEdit() {
-    this.actorsPriceOffersServiceProxy.getCreateOrEditActorCarrierPriceInputForCreateOrEdit(this.shippingRequestId).subscribe((result) => {
-      this.createOrEditActorCarrierPriceInput = result;
-      if (!isNotNullOrUndefined(this.createOrEditActorCarrierPriceInput.actorCarrierPriceDto)) {
-        this.createOrEditActorCarrierPriceInput.actorCarrierPriceDto = new ActorCarrierPriceDto();
+    this.actorsPriceOffersServiceProxy.getActorCarrierPriceForEdit(this.shippingRequestId).subscribe((result) => {
+      this.carrierPriceInput = result;
+      if (!isNotNullOrUndefined(this.carrierPriceInput.actorCarrierPrice)) {
+        this.carrierPriceInput.actorCarrierPrice = new CreateOrEditActorCarrierPrice();
       }
     });
   }
 
   save() {
-    this.createOrEditActorShipperPriceInput.shippingRequestId = this.shippingRequestId;
+    this.shipperPriceInput.actorShipperPriceDto.shippingRequestId = this.shippingRequestId;
     this.shipperSaving = true;
     this.actorsPriceOffersServiceProxy
-      .createOrEditActorShipperPrice(this.createOrEditActorShipperPriceInput)
+      .createOrEditActorShipperPrice(this.shipperPriceInput)
       .pipe(
         finalize(() => {
           this.shipperSaving = false;
@@ -66,20 +69,20 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
       });
   }
 
-  calculatePrices(dto: ActorShipperPriceDto) {
+  calculatePrices(dto: CreateOrEditActorShipperPriceDto) {
     dto.vatAmountWithCommission = dto.subTotalAmountWithCommission * 0.15;
     dto.totalAmountWithCommission = dto.vatAmountWithCommission + dto.subTotalAmountWithCommission;
   }
 
-  calculateCarrierPrices(dto: ActorCarrierPriceDto) {
+  calculateCarrierPrices(dto: CreateOrEditActorCarrierPrice) {
     dto.vatAmount = dto.subTotalAmount * 0.15;
   }
 
   saveCarrierPrice() {
-    this.createOrEditActorCarrierPriceInput.shippingRequestId = this.shippingRequestId;
+    this.carrierPriceInput.actorCarrierPrice.shippingRequestId = this.shippingRequestId;
     this.carrierSaving = true;
     this.actorsPriceOffersServiceProxy
-      .createOrEditActorCarrierPrice(this.createOrEditActorCarrierPriceInput)
+      .createOrEditActorCarrierPrice(this.carrierPriceInput)
       .pipe(
         finalize(() => {
           this.carrierSaving = false;
@@ -93,5 +96,21 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
   ngOnInit(): void {
     this.GetCreateOrEditActorShipperPriceInputForCreateOrEdit();
     this.GetCreateOrEditActorCarrierPriceInputForCreateOrEdit();
+  }
+
+  canAddCarrierActorPrices(): boolean {
+    return (
+      this.hasCarrierClients &&
+      this.tenantId === this.carrierTenantId &&
+      this.tenantId === this.appSession.tenantId
+    );
+  }
+
+  canAddShipperActorPrices(): boolean {
+    return (
+      this.hasShipperClients &&
+      this.tenantId === this.carrierTenantId &&
+      this.tenantId === this.appSession.tenantId
+    );
   }
 }

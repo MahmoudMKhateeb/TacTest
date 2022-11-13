@@ -33,9 +33,5 @@ namespace TACHYON.ShippingRequestTripVases
         public int Quantity { get; set; } = 1;
 
         #endregion
-
-        public ActorCarrierPrice ActorCarrierPriceFk { get; set; }
-
-        public ActorShipperPrice ActorShipperPriceFk { get; set; }
     }
 }

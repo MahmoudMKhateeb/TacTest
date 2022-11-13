@@ -53,6 +53,8 @@
         *ngIf="feature.isEnabled('App.CarrierClients') || feature.isEnabled('App.ShipperClients')"
         [numberOfCreatedTrips]="shippingRequestforView.totalsTripsAddByShippier"
         [shippingRequestId]="activeShippingRequestId"
+        [tenantId]="shippingRequestforView.tenantId"
+        [carrierTenantId]="shippingRequestforView.shippingRequest.carrierTenantId"
       ></app-create-or-edit-actors-price>
 
       <div class="card card-custom gutter-b">
