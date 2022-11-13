@@ -188,19 +188,19 @@ namespace TACHYON.Invoices
         public async Task GenerateInvoice(int periodId)
         {
             // get all tenants with this period
-            List<Tenant> tenants = GetTenantByFeatures(periodId);
+            List<Tenant> tenants =await GetTenantByFeatures(periodId);
 
             var period = await _periodRepository.FirstOrDefaultAsync(x => x.Id == periodId);
 
 
             foreach (var tenant in tenants)
             {
-                if (await _featureChecker.IsEnabledAsync(AppFeatures.Pay))
+                if (await _featureChecker.IsEnabledAsync(tenant.Id,AppFeatures.Pay))
                 {
                     await CollectTripsForShipper(tenant, period);
                     await PenaltyCollectorForPayTenants(tenant, period);
                 }
-                if (await _featureChecker.IsEnabledAsync(AppFeatures.Receipt))
+                if (await _featureChecker.IsEnabledAsync(tenant.Id,AppFeatures.Receipt))
                 {
                     await BuildCarrierSubmitInvoice(tenant, period);
                     await PenaltyCollectorForReceiptTenants(tenant, period);
@@ -211,30 +211,50 @@ namespace TACHYON.Invoices
             }
         }
 
-        private List<Tenant> GetTenantByFeatures(int periodId)
+        private async Task<List<Tenant>> GetTenantByFeatures(int periodId)
         {
             List<Tenant> tenantsList = new List<Tenant>();
             var tenants = _tenant.GetAll()
-                .Where(
-                    t => t.IsActive && (t.Edition.Id == ShipperEditionId || t.Edition.Id == CarrierEditionId))
+                .Where(t => t.IsActive && t.EditionId != 1)
                 .ToList();
             //todo fix this please 
             foreach (var tenant in tenants)
             {
                 int value;
-                if (tenant.EditionId == ShipperEditionId)
+                if (await _featureChecker.IsEnabledAsync(tenant.Id, AppFeatures.Pay))
                 {
                     value = int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods));
+                    if(value == periodId)
+                    {
+                        tenantsList.Add(tenant);
+                    }
+                    else
+                    {
+                        //Check if tenant have also receipt period matching with current period
+                        if (await _featureChecker.IsEnabledAsync(tenant.Id, AppFeatures.Receipt))
+                        {
+                            value = int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.CarrierPeriods));
+                            if (value == periodId)
+                            {
+                                tenantsList.Add(tenant);
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    value = int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.CarrierPeriods));
+                    if(await _featureChecker.IsEnabledAsync(tenant.Id, AppFeatures.Receipt))
+                    {
+                        value = int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.CarrierPeriods));
+                        if (value == periodId)
+                        {
+                            tenantsList.Add(tenant);
+                        }
+                    }
+
                 }
 
-                if (value == periodId)
-                {
-                    tenantsList.Add(tenant);
-                }
+                
             }
 
             return tenantsList;
@@ -268,8 +288,16 @@ namespace TACHYON.Invoices
                     continue;
                 }
 
-                var relatedCarrierId =
-                    int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
+                var relatedCarrierId = default(int) ;
+                try
+                {
+                     relatedCarrierId =
+                        int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
+                }
+                catch
+                {
+
+                }
                 if (carrierId == relatedCarrierId)
                 {
                     trips.Remove(trip);
