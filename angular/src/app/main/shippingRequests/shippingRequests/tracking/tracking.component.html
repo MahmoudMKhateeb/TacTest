@@ -117,7 +117,7 @@
                         >
                           <i class="flaticon2-up"></i> {{ l('Collapse') }}</a
                         >
-                        <div *ngIf="item.driver && (isCarrier || isTachyonDealerOrHost)" ngbDropdown container="body" class="d-inline-block">
+                        <div *ngIf="item.driver && (isCarrier || isTachyonDealerOrHost || hasCarrierClients)" ngbDropdown container="body" class="d-inline-block">
                           <a class="btn btn-danger btn-sm font-weight-bolder text-uppercase mr-2" id="dropdownBasic1" ngbDropdownToggle>
                             <i class="flaticon-settings"></i>
                             {{ l('Actions') }}

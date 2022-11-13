@@ -30,16 +30,19 @@
                   'spinner spinner-success spinner-right mr-1 ml-1': isShippersActorsLoading
                 }"
               >
-                <select
-                  [(ngModel)]="shipperActorId"
-                  class="form-control"
-                  name="shipperActor"
-                  (change)="loadFacilitiesByActor(shipperActorId)"
-                  [required]="isActorRequired()"
-                >
-                  <option [ngValue]="undefined" selected disabled>{{ l('SelectShipper') }}</option>
-                  <option *ngFor="let item of shipperActors" value="{{ item.id }}">{{ item.displayName }}</option>
-                </select>
+                  <dx-select-box
+                      id="shipperActorId"
+                      name="shipperActor"
+                      [(ngModel)]="shipperActorId"
+                      [dataSource]="shipperActors"
+                      [searchEnabled]="true"
+                      (onValueChanged)="loadFacilitiesByActor(shipperActorId)"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      [required]="isActorRequired()"
+                      placeholder="{{ l('Myself') }}">
+
+                  </dx-select-box>
               </div>
               <span class="form-text text-muted">{{ l('SelectShipperActor') }} </span>
             </div>
