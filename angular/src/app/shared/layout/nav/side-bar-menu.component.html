@@ -49,10 +49,10 @@
     [attr.data-ktmenu-submenu-mode]="item.mode"
     [attr.data-ktmenu-dropdown-toggle-class]="item['dropdown-toggle-class']"
     [ngClass]="getItemCssClasses(item)"
-    (mouseenter)="mouseEnterOnItem($event)"
-    (mouseleave)="mouseLeaveOnItem($event)"
     data-placement="right"
   >
+    <!--    (mouseenter)="mouseEnterOnItem($event)"-->
+    <!--    (mouseleave)="mouseLeaveOnItem($event)"-->
     <!-- if menu item hasn't submenu -->
     <a
       *ngIf="!item.items.length && !item.external"
