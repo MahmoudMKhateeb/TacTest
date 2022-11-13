@@ -2891,6 +2891,8 @@
     <text name="truckPrice">سعر الشاحنة</text>
     <text name="invoiceGenerated">تم إنشاء الفاتورة</text>
     <text name="DedicatedInvoice">فاتورة التأجير</text>
-    
+	<text name="ForBroker">لسمسار</text>
+	<text name="ReceivableInvoice">فاتورة قابلة للاستلام</text>
+	<text name="PayableInvoice">فاتورة فابلة للدفع</text>
 	</texts>
 </localizationDictionary>
