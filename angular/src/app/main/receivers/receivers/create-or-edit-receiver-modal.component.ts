@@ -38,6 +38,7 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   shipperActorId: number;
   shipperActors: SelectItemDto[];
   canManageShipperClients: boolean;
+
   constructor(
     injector: Injector,
     private _receiversServiceProxy: ReceiversServiceProxy,
@@ -84,10 +85,11 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   private loadAllFacilities() {
     // Important Note: There's some cases we must not load all facilities
     // 1- if the user is a broker and he is creating a receiver from the contact management page. hint: not from create trip
+    // -- Update: now allowed to create receiver without filter actor (see myself) .. so above number 1 is canceled now
     // 2- if the user is a broker and he is updating an internal receiver (actor has value) from the contact management page
 
     if (!this.facilityIdFromTrips && this.canManageShipperClients) {
-      if (!this.receiver.id || isNotNullOrUndefined(this.shipperActorId)) {
+      if (isNotNullOrUndefined(this.shipperActorId)) {
         return;
       }
     }
@@ -158,6 +160,10 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
       )
       .subscribe((result) => {
         this.shipperActors = result;
+        let defaultItem = new SelectItemDto();
+        defaultItem.id = null;
+        defaultItem.displayName = this.l('Myself');
+        this.shipperActors.unshift(defaultItem);
       });
   }
 
