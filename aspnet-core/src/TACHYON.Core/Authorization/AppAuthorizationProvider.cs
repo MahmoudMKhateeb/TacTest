@@ -851,6 +851,23 @@ namespace TACHYON.Authorization
                L("RejectPricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
 
            #endregion
+
+           #region Actor Prices
+
+           var brokerFeatureDependency =
+               new SimpleFeatureDependency(AppFeatures.CarrierClients, AppFeatures.ShipperClients);
+           
+           var actorPricesPermission = pages.CreateChildPermission(AppPermissions.Pages_ActorPrices,
+               L("ActorPricesPermission"),
+               featureDependency: brokerFeatureDependency);
+
+           actorPricesPermission.CreateChildPermission(AppPermissions.Pages_ActorPrices_Carrier,
+               L("CarrierActorPricesPermission"), featureDependency: brokerFeatureDependency);
+           
+           actorPricesPermission.CreateChildPermission(AppPermissions.Pages_ActorPrices_Shipper,
+               L("ShipperActorPricesPermission"), featureDependency: brokerFeatureDependency);
+
+           #endregion
         }
 
         private static ILocalizableString L(string name)

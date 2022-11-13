@@ -152,14 +152,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public string RoundTrip { get; set; }
         public string ContainerNumber { get; set; }
         #endregion
-
-        public ActorCarrierPrice ActorCarrierPriceFk { get; set; }
-
-
-
-        public ActorShipperPrice ActorShipperPriceFk { get; set; }
-
-
+        
+        
         public long? ActorInvoiceId { get; set; }
 
         [ForeignKey("ActorInvoiceId")]
@@ -174,6 +168,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public ShippingRequestRouteType? RouteType { get; set; }
         public int NumberOfDrops { get; set; }
 
+        public bool IsActorShipperHaveInvoice { get; set; }
+        
+        public bool IsActorCarrierHaveInvoice { get; set; }
         #endregion
     }
 }

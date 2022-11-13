@@ -6,6 +6,7 @@ using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
+using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.AutoMapper.PriceOffers
@@ -61,6 +62,12 @@ namespace TACHYON.AutoMapper.PriceOffers
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
                 .ForMember(dst => dst.RentalDurationUnitTitle,
                     opt => opt.MapFrom(src => src.RentalDurationUnit != null ? GetDurationUnit(src.RentalDurationUnit.Value) : ""));
+
+            CreateMap<ActorShipperPrice, ActorShipperPriceDto>();
+            CreateMap<CreateOrEditActorShipperPriceDto, ActorShipperPrice>().ReverseMap();
+            CreateMap<ActorCarrierPrice, ActorCarrierPriceDto>();
+            CreateMap<ActorCarrierPrice, CreateOrEditActorCarrierPrice>().ReverseMap();
+
         }
 
         private string GetRemainingDays(DateTime? BidEndDate, ShippingRequestBidStatus Status)

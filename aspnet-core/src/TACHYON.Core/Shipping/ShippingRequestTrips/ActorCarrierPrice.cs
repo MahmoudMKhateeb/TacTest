@@ -1,28 +1,22 @@
-﻿using Abp.Auditing;
-using Abp.Domain.Entities.Auditing;
-using System;
-using System.Collections.Generic;
+﻿using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TACHYON.PriceOffers;
-using TACHYON.ShippingRequestTripVases;
+using TACHYON.Shipping.ShippingRequests;
+using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.Shipping.ShippingRequestTrips
 {
-    [Table("ActorCarrierPrice")]
+    [Table("ActorCarrierPrices")]
     public class ActorCarrierPrice : FullAuditedEntity
     {
-        public int? ShippingRequestTripId { get; set; }
+        public long? ShippingRequestId { get; set; }
 
-        [ForeignKey("ShippingRequestTripId")]
-        public ShippingRequestTrip ShippingRequestTripFk { get; set; }
+        [ForeignKey(nameof(ShippingRequestId))]
+        public ShippingRequest ShippingRequest { get; set; }
 
 
-        public long? ShippingRequestTripVasId { get; set; }
-        [ForeignKey("ShippingRequestTripVasId")]
-        public ShippingRequestTripVas ShippingRequestTripVasFk { get; set; }
+        public long? ShippingRequestVasId { get; set; }
+        [ForeignKey(nameof(ShippingRequestVasId))]
+        public ShippingRequestVas ShippingRequestVas { get; set; }
 
 
 

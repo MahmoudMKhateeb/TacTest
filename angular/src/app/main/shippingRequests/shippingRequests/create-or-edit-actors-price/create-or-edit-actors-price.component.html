@@ -1,5 +1,4 @@
-<div *ngIf="numberOfCreatedTrips < 1" class="alert alert-primary">{{ 'DisabledActorPricesMsg' | localize }}</div>
-<div *ngIf="feature.isEnabled('App.ShipperClients')" class="card card-custom gutter-b" [ngClass]="{ 'div-disabled': numberOfCreatedTrips < 1 }">
+<div *ngIf="canAddShipperActorPrices()" class="card card-custom gutter-b">
   <!--  start of card::form-->
   <div class="card-header">
     <h3 class="card-title">{{ l('ActorsShipperPrices') }}</h3>
@@ -14,7 +13,7 @@
           <div class="form-group">
             <label>{{ l('TripVatAmount') }} <span class="text-danger">*</span></label>
             <input
-              [(ngModel)]="createOrEditActorShipperPriceInput.actorShipperPriceDto.vatAmountWithCommission"
+              [(ngModel)]="shipperPriceInput.actorShipperPriceDto.vatAmountWithCommission"
               required
               min="0"
               type="number"
@@ -27,21 +26,21 @@
           <div class="form-group">
             <label>{{ l('TripSubTotalAmount') }} <span class="text-danger">*</span></label>
             <input
-              [(ngModel)]="createOrEditActorShipperPriceInput.actorShipperPriceDto.subTotalAmountWithCommission"
+              [(ngModel)]="shipperPriceInput.actorShipperPriceDto.subTotalAmountWithCommission"
               min="0"
               (keypress)="numberOnly($event)"
               required
               type="number"
               class="form-control"
               name="subTotalAmountWithCommission"
-              (change)="calculatePrices(createOrEditActorShipperPriceInput.actorShipperPriceDto)"
+              (change)="calculatePrices(shipperPriceInput.actorShipperPriceDto)"
             />
           </div>
 
           <div class="form-group">
             <label>{{ l('TripTotalAmount') }} <span class="text-danger">*</span></label>
             <input
-              [(ngModel)]="createOrEditActorShipperPriceInput.actorShipperPriceDto.totalAmountWithCommission"
+              [(ngModel)]="shipperPriceInput.actorShipperPriceDto.totalAmountWithCommission"
               required
               min="0"
               type="number"
@@ -53,7 +52,7 @@
         </div>
       </div>
 
-      <div *ngFor="let vas of createOrEditActorShipperPriceInput.vasActorShipperPriceDtoPrices; index as i" class="row">
+      <div *ngFor="let vas of shipperPriceInput.vasActorShipperPriceDto; index as i" class="row">
         <!--  start of truck::Details-->
 
         <div class="col-12">
@@ -114,7 +113,7 @@
     </div>
   </form>
 </div>
-<div *ngIf="feature.isEnabled('App.CarrierClients')" class="card card-custom gutter-b" [ngClass]="{ 'div-disabled': numberOfCreatedTrips < 1 }">
+<div *ngIf="canAddCarrierActorPrices()" class="card card-custom gutter-b">
   <!--  start of card::form-->
   <div class="card-header">
     <h3 class="card-title">{{ l('ActorsCarrierPrices') }}</h3>
@@ -128,7 +127,7 @@
           <div class="form-group">
             <label>{{ l('TripVatAmount') }} <span class="text-danger">*</span></label>
             <input
-              [(ngModel)]="createOrEditActorCarrierPriceInput.actorCarrierPriceDto.vatAmount"
+              [(ngModel)]="carrierPriceInput.actorCarrierPrice.vatAmount"
               required
               min="0"
               type="number"
@@ -141,20 +140,20 @@
           <div class="form-group">
             <label>{{ l('TripSubTotalAmount') }} <span class="text-danger">*</span></label>
             <input
-              [(ngModel)]="createOrEditActorCarrierPriceInput.actorCarrierPriceDto.subTotalAmount"
+              [(ngModel)]="carrierPriceInput.actorCarrierPrice.subTotalAmount"
               min="0"
               (keypress)="numberOnly($event)"
               required
               type="number"
               class="form-control"
               name="subTotalAmount"
-              (change)="calculateCarrierPrices(createOrEditActorCarrierPriceInput.actorCarrierPriceDto)"
+              (change)="calculateCarrierPrices(carrierPriceInput.actorCarrierPrice)"
             />
           </div>
         </div>
       </div>
 
-      <div *ngFor="let vas of createOrEditActorCarrierPriceInput.vasActorCarrierPriceDtoPrices; index as i" class="row">
+      <div *ngFor="let vas of carrierPriceInput.vasActorCarrierPrices; index as i" class="row">
         <!--  start of truck::Details-->
 
         <div class="col-12">
@@ -185,7 +184,7 @@
       <button
         type="submit"
         class="btn btn-primary blue"
-        [disabled]="!createOrEditCarrierPriceForm.form.valid || numberOfCreatedTrips < 1"
+        [disabled]="!createOrEditCarrierPriceForm.form.valid"
         [buttonBusy]="carrierSaving"
         [busyText]="l('SavingWithThreeDot')"
       >

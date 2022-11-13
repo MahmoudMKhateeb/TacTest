@@ -205,8 +205,8 @@ namespace TACHYON.Invoices
                 .ThenInclude(v => v.ShippingRequestVasFk)
                 .ThenInclude(v => v.VasFk)
                 .Include(i => i.Trips)
-                .ThenInclude(r => r.ShippingRequestTripVases)
-                .ThenInclude(r => r.ActorShipperPriceFk)
+                .ThenInclude(r => r.ShippingRequestFk)
+                .ThenInclude(r => r.ActorShipperPrice)
                 .Include(i => i.Trips)
                 .ThenInclude(i => i.ShippingRequestFk)
                 .ThenInclude(r => r.OriginCityFk)
@@ -221,7 +221,9 @@ namespace TACHYON.Invoices
                 .ThenInclude(r => r.TrucksTypeFk)
                 .ThenInclude(r => r.Translations)
                 .Include(i => i.Trips)
-                .ThenInclude(i => i.ActorShipperPriceFk)
+                .ThenInclude(i => i.ShippingRequestTripVases)
+                .ThenInclude(x=> x.ShippingRequestVasFk)
+                .ThenInclude(x=> x.ActorShipperPrice)
                 .FirstOrDefaultAsync(i => i.Id == actorInvoiceId);
             if (actorInvoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
@@ -1016,9 +1018,9 @@ namespace TACHYON.Invoices
                 items.Add(new InvoiceItemDto
                 {
                     Sequence = $"{sequence}/{totalItem}",
-                    SubTotalAmount = trip.ActorShipperPriceFk.SubTotalAmountWithCommission.Value,
-                    VatAmount = trip.ActorShipperPriceFk.VatAmountWithCommission.Value,
-                    TotalAmount = trip.ActorShipperPriceFk.TotalAmountWithCommission.Value,
+                    SubTotalAmount = trip.ShippingRequestFk.ActorShipperPrice.SubTotalAmountWithCommission.Value,
+                    VatAmount = trip.ShippingRequestFk.ActorShipperPrice.VatAmountWithCommission.Value,
+                    TotalAmount = trip.ShippingRequestFk.ActorShipperPrice.TotalAmountWithCommission.Value,
                     WayBillNumber = trip.WaybillNumber.ToString(),
                     TruckType = trip.AssignedTruckFk != null ? ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName : "",
                     Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestFk.OriginCityFk.DisplayName,
@@ -1055,9 +1057,9 @@ namespace TACHYON.Invoices
                     var item = new InvoiceItemDto
                     {
                         Sequence = $"{sequence}/{totalItem}",
-                        SubTotalAmount = vas.ActorShipperPriceFk.SubTotalAmountWithCommission.Value,
-                        VatAmount = vas.ActorShipperPriceFk.VatAmountWithCommission.Value,
-                        TotalAmount = vas.ActorShipperPriceFk.TotalAmountWithCommission.Value,
+                        SubTotalAmount = vas.ShippingRequestVasFk.ActorShipperPrice.SubTotalAmountWithCommission.Value,
+                        VatAmount = vas.ShippingRequestVasFk.ActorShipperPrice.VatAmountWithCommission.Value,
+                        TotalAmount = vas.ShippingRequestVasFk.ActorShipperPrice.TotalAmountWithCommission.Value,
                         WayBillNumber = waybillNumber,
                         TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Key),
                         Source = "-",

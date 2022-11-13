@@ -664,5 +664,13 @@
 
         #endregion
 
+        #region Actor Price
+
+        public const string Pages_ActorPrices = "Pages.ActorPrices";
+        public const string Pages_ActorPrices_Carrier = "Pages.ActorPrices.Carrier";
+        public const string Pages_ActorPrices_Shipper = "Pages.ActorPrices.Shipper";
+
+        #endregion
+
     }
 }
