@@ -227,7 +227,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             var invoiceTenant = await _invoiceReposity.FirstOrDefaultAsync(x => x.Id == id);
-            if (invoiceTenant != null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+            if (invoiceTenant == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
             await FullVoidInvoiceForShipper(id);
 
         }
