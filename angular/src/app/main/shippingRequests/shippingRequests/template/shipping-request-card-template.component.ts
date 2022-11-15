@@ -319,4 +319,18 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
       rentalEndDate: shippingRequest?.rentalEndDate,
     });
   }
+
+    /**
+     * we need to hide default price if the request is internal and the user is not TMS/Host
+     * any other case he can see the price
+     * @param item
+     */
+    canViewBrokerPrice(item: GetShippingRequestForPriceOfferListDto): boolean {
+
+      if ((item.shipperActor || item.carrierActor) && !this.isTachyonDealerOrHost) {
+          return false;
+      }
+
+      return true;
+    }
 }
