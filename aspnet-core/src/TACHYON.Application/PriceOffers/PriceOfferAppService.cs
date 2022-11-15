@@ -901,7 +901,7 @@ namespace TACHYON.PriceOffers
                 .Include(t => t.ShipperActorFk)
                 .Include(t => t.CarrierActorFk)
             //.ThenInclude(x => x.Translations)
-            .WhereIf(AbpSession.TenantId.HasValue , x => x.TenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId)
+            .WhereIf(AbpSession.TenantId.HasValue && ! await IsTachyonDealer() , x => x.TenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId)
             //.WhereIf(AbpSession.TenantId.HasValue && (await IsEnabledAsync(AppFeatures.Carrier) || await HasCarrierClients()), x => x.CarrierTenantId == AbpSession.TenantId)
             .WhereIf(input.PickupFromDate.HasValue && input.PickupToDate.HasValue, x => x.StartTripDate >= input.PickupFromDate.Value && x.StartTripDate <= input.PickupToDate.Value)
             .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, x => x.CreationTime >= input.FromDate.Value && x.CreationTime <= input.ToDate.Value)
