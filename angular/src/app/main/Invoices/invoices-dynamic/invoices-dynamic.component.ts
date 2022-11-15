@@ -59,16 +59,23 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
       label: this.l('ForShipper'),
       icon: '',
       command: () => {
-        this.InvoicesDynamicModal.show(1);
+        this.InvoicesDynamicModal.show('shipper');
       },
     },
     {
       label: this.l('ForCarrier'),
       icon: '',
       command: () => {
-        this.InvoicesDynamicModal.show(2);
+        this.InvoicesDynamicModal.show('carrier');
       },
     },
+      {
+          label: this.l('ForBroker'),
+          icon: '',
+          command: () => {
+              this.InvoicesDynamicModal.show('broker');
+          },
+      },
   ];
 
   constructor(
@@ -232,7 +239,7 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
 
   editRow(item, isView = false) {
     // event.cancel = true;
-    const forWho = !!item.creditCompanyName ? 1 : 2;
+    const forWho = !!item.creditCompanyName ? 'shipper' : 'carrier';
     this.InvoicesDynamicModal.show(forWho, item.id, isView);
     // return false;
   }

@@ -33,13 +33,27 @@
               id="Tenant"
               [(ngModel)]="Tenant"
               [suggestions]="Tenants"
-              (completeMethod)="search($event)"
+              (completeMethod)="search($event.query,false)"
               field="displayName"
               [forceSelection]="true"
               required
               (keydown.enter)="$event.preventDefault(); $event.stopPropagation()"
               [disabled]="isView"
             ></p-autoComplete>
+          </div>
+          <div *ngIf="edition === 'broker'" class="col-md-4 form-group">
+              <div class="radio-inline">
+                  <label class="radio">
+                      <input type="radio" [value]="true" [(ngModel)]="isBrokerPayableInvoice" checked="checked" name="radios3"/>
+                      <span></span>
+                      {{ 'PayableInvoice' | localize }}
+                  </label>
+                  <label class="radio">
+                      <input type="radio" [value]="false" [(ngModel)]="isBrokerPayableInvoice" name="radios3"/>
+                      <span></span>
+                      {{ 'ReceivableInvoice' | localize }}
+                  </label>
+              </div>
           </div>
           <div class="form-group m-form__group">
             <label class="form-label mr-2" for="notes">{{ l('Notes') }}</label>
