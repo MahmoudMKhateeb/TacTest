@@ -245,12 +245,12 @@
                   >{{ l('MarketPlacepriced') }}</a
                 >
                 <a
-                  *ngIf="item.price && (item.status == 5 || item.status == 1 || item.price > 0) && Channel != 10"
+                  *ngIf="item.price && (item.status == 5 || item.status == 1 || item.price > 0) && Channel != 10 && canViewBrokerPrice(item)"
                   href="javascript:void(0)"
                   class="infoHighLight red"
                   >{{ item.price | number }} {{ l('SAR') }}</a
                 >
-                <a *ngIf="Channel == 10" href="javascript:void(0)" class="infoHighLight red">{{ item.price | number }} {{ l('SAR') }}</a>
+                <a *ngIf="Channel == 10 && canViewBrokerPrice(item)" href="javascript:void(0)" class="infoHighLight red">{{ item.price | number }} {{ l('SAR') }}</a>
                 <b *ngIf="item.carrierActor" class="infoHighLight blue stautsTruck"> {{ l('carrierActor') }}: {{ item.carrierActor }} </b>
                 <b *ngIf="item.shipperActor" class="infoHighLight blue stautsTruck"> {{ l('shipperActor') }}: {{ item.shipperActor }} </b>
               </div>
@@ -597,12 +597,12 @@
                     >{{ l('MarketPlacepriced') }}</a
                   >
                   <a
-                    *ngIf="item.price && (item.status == 5 || item.status == 1 || item.price > 0) && Channel != 10"
+                    *ngIf="item.price && (item.status == 5 || item.status == 1 || item.price > 0) && Channel != 10 && canViewBrokerPrice(item)"
                     href="javascript:void(0)"
                     class="infoHighLight red"
                     >{{ item.price | number }} {{ l('SAR') }}</a
                   >
-                  <a *ngIf="Channel == 10" href="javascript:void(0)" class="infoHighLight red">{{ item.price | number }} {{ l('SAR') }}</a>
+                  <a *ngIf="Channel == 10 && canViewBrokerPrice(item)" href="javascript:void(0)" class="infoHighLight red">{{ item.price | number }} {{ l('SAR') }}</a>
                 </div>
               </div>
               <div class="w-100 d-flex p-0 actions justify-content-end">
