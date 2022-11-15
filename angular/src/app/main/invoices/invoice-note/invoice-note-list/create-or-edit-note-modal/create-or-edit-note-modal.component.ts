@@ -80,6 +80,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
             tripId: it.tripId,
             tripVasId: it.tripVasId,
             waybillNumber: it.wayBillNumber,
+            itemName: it.itemName,
           })
       );
     this._invoiceNoteServiceProxy
@@ -183,7 +184,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
         this.waybillsLoading = false;
         console.log(this.form.invoiceNumber);
         this.allWaybills.forEach((x) => {
-          let waybill = this.selectedWaybills.find((y) => x.waybillNumber == y.waybillNumber);
+          let waybill = this.selectedWaybills.find((y) => x.waybillNumber == y.waybillNumber && x.tripVasId == y.tripVasId);
 
           if (waybill != null) {
             x.id = waybill.id;
@@ -191,6 +192,9 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
             x.price = waybill.price;
             x.vatAmount = waybill.vatAmount;
             x.totalAmount = waybill.totalAmount;
+            x.itemName = waybill.itemName;
+            x.tripId = waybill.tripId;
+            x.tripVasId = waybill.tripVasId;
           }
         });
       });
@@ -208,6 +212,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
             x.price = waybill.price;
             x.vatAmount = waybill.vatAmount;
             x.totalAmount = waybill.totalAmount;
+            x.itemName = waybill.itemName;
           }
         });
       });
