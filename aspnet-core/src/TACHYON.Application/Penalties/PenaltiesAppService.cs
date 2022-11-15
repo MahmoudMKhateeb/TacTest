@@ -203,7 +203,7 @@ namespace TACHYON.Penalties
         public async Task<List<GetAllCompanyForDropDownDto>> GetAllCompanyForDropDown()
         {
             return await _tenantRepository.GetAll()
-                .Where(x => x.EditionId == ShipperEditionId || x.EditionId == CarrierEditionId)
+                .Where(x => x.EditionId != TachyonEditionId)
                 .Select(x => new GetAllCompanyForDropDownDto { Id = x.Id, DisplayName = x.TenancyName }).ToListAsync();
         }
         #endregion
