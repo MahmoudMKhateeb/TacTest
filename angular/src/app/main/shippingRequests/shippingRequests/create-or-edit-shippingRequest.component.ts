@@ -16,6 +16,7 @@ import {
   ShippingRequestVasListOutput,
   RoutStepsServiceProxy,
   ShippingRequestRouteType,
+  ShippingRequestDestinationCitiesDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -27,6 +28,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { NgForm } from '@angular/forms';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
+import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
@@ -69,6 +71,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   today = new Date();
   startBiddate: any;
   endBiddate: any;
+  destinationCities: ShippingRequestDestinationCitiesDto[] = [];
   //CleanedVases
   cleanedVases: CreateOrEditShippingRequestVasListDto[] = [];
   @Input() parentForm: NgForm;
@@ -111,11 +114,11 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.loadAllDropDownLists();
     } else {
       //this is an edit
+      this.loadAllDropDownLists();
       this._shippingRequestsServiceProxy
         .getShippingRequestForEdit(shippingRequestId)
         .pipe(
           finalize(() => {
-            this.loadAllDropDownLists();
           })
         )
         .subscribe((result) => {
@@ -135,9 +138,11 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           this.selectedRouteType = result.shippingRequest.routeTypeId;
           this.active = true;
           this.totalOffers = result.totalOffers;
+          this.shippingRequest.shippingRequestDestinationCities = result.shippingRequest.shippingRequestDestinationCities;
         });
     }
   }
+  
 
   save(): void {
     //to be Removed Later
@@ -174,6 +179,17 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       });
   } //end of create
 
+  private loadDestinationCities(res: RoutStepCityLookupTableDto[]) {
+    if (isNotNullOrUndefined(res)) {
+      res.forEach((element) => {
+        var item = new ShippingRequestDestinationCitiesDto();
+        item.cityId = Number(element.id);
+        item.cityName = element.displayName;
+        this.destinationCities.push(item);
+      });
+    }
+  }
+
   loadAllDropDownLists(): void {
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
       this.allGoodCategorys = result;
@@ -181,6 +197,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
     this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
       this.allCitys = result;
+      this.loadDestinationCities(result);
     });
 
     this._shippingRequestsServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
@@ -366,19 +383,69 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
    */
   validateShippingRequestType() {
     //check if user choose local-inside city  but the origin&des same
-    if (this.shippingRequest.shippingTypeId == 1) {
-      this.shippingRequest.destinationCityId = this.shippingRequest.originCityId;
-    } else if (this.shippingRequest.shippingTypeId == 2) {
-      // check if user select same city in source and destination
-      if (this.shippingRequest.originCityId == this.shippingRequest.destinationCityId) {
-        this.shippingRequestForm.controls['destination'].setErrors({ invalid: true });
-        this.shippingRequestForm.controls['origin'].setErrors({ invalid: true });
-        this.notify.error(this.l(' SourceAndDestinationCantBeTheSame'));
-      } else {
-        this.shippingRequestForm.controls['destination'].setErrors(null);
-        this.shippingRequestForm.controls['origin'].setErrors(null);
+    // if (this.shippingRequest.shippingTypeId == 1) {
+    //   this.shippingRequest.destinationCityId = this.shippingRequest.originCityId;
+    // } else if (this.shippingRequest.shippingTypeId == 2) {
+    //   // check if user select same city in source and destination
+    //   if (this.shippingRequest.originCityId == this.shippingRequest.destinationCityId) {
+    //     this.shippingRequestForm.controls['destination'].setErrors({ invalid: true });
+    //     this.shippingRequestForm.controls['origin'].setErrors({ invalid: true });
+    //     this.notify.error(this.l(' SourceAndDestinationCantBeTheSame'));
+    //   } else {
+    //     this.shippingRequestForm.controls['destination'].setErrors(null);
+    //     this.shippingRequestForm.controls['origin'].setErrors(null);
+    //   }
+    // }
+
+
+      //check if user choose local-inside city  but the origin&des same
+      if (this.shippingRequest.originCityId != null && this.shippingRequest.shippingTypeId == 1) {
+        this.shippingRequest.shippingRequestDestinationCities = [];
+        //local inside city
+        //this.destinationCountry = this.originCountry;
+        var city = new ShippingRequestDestinationCitiesDto();
+        city.cityId = this.shippingRequest.originCityId;
+  
+        this.shippingRequest.shippingRequestDestinationCities.push(city);
+      } else if (this.shippingRequest.shippingTypeId == 2) {
+        // if route type is local betwenn cities check if user select same city in source and destination
+        // this.destinationCities = this.sourceCities;
+       // this.destinationCountry = this.originCountry;
+  
+        //if destination city one item selected and equals to origin, while shipping type is between cities
+        if (
+          isNotNullOrUndefined(this.shippingRequest.shippingRequestDestinationCities) &&
+          this.shippingRequest.shippingRequestDestinationCities.length == 1 &&
+          this.shippingRequest.shippingRequestDestinationCities.filter((c) => c.cityId == this.shippingRequest.originCityId).length > 0
+        ) {
+          this.shippingRequestForm.controls['destinationCity'].setErrors({ invalid: true });
+         // this.shippingRequestForm.controls['destinationCountry'].setErrors({ invalid: true });
+        } 
+        // else if (this.originCountry !== this.destinationCountry) {
+        //   this.shippingRequestForm.controls['originCountry'].setErrors({ invalid: true });
+        //   this.shippingRequestForm.controls['destinationCountry'].setErrors({ invalid: true });
+        // } 
+        else {
+          this.clearValidation('destinationCity');
+          this.clearValidation('destinationCountry');
+        }
       }
-    }
+      //  else if (this.shippingRequest.shippingTypeId == 4) {
+      //   //if route type is cross border prevent the countries to be the same
+      //   if (this.originCountry === this.destinationCountry) {
+      //     this.shippingRequestForm.controls['originCountry'].setErrors({ invalid: true });
+      //     this.shippingRequestForm.controls['destinationCountry'].setErrors({ invalid: true });
+      //   }
+      //    else {
+      //     this.clearValidation('originCountry');
+      //     this.clearValidation('destinationCountry');
+      //   }
+      // }
+  }
+
+  clearValidation(controlName: string) {
+    this.shippingRequestForm.controls[controlName].setErrors(null);
+    this.shippingRequestForm.controls[controlName].updateValueAndValidity();
   }
 
   changeVasListSelection(event) {

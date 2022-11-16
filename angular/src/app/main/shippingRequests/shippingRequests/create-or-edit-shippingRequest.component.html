@@ -195,7 +195,7 @@
                             'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
                           }"
                         >
-                          <select
+                           <select
                             #shippingType="ngModel"
                             class="form-control"
                             name="shippingType"
@@ -208,7 +208,7 @@
                           >
                             <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>
                             <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                          </select>
+                          </select> 
                         </div>
                         <span class="form-text text-muted">{{ l('SelectAShippingType') }}</span>
                       </div>
@@ -381,7 +381,7 @@
                         <div class="form-group">
                           <label><span class="required-fileds">*</span> {{ l('DestinationCity') }}</label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
-                            <select
+                            <!-- <select
                               #Destination="ngModel"
                               class="form-control"
                               name="destination"
@@ -400,7 +400,23 @@
                               >
                                 {{ item.displayName }}
                               </option>
-                            </select>
+                            </select> -->
+                            <p-multiSelect
+                              name="destinationCity"
+                              [options]="destinationCities"
+                              [(ngModel)]="shippingRequest.shippingRequestDestinationCities"
+                              optionLabel="cityName"
+                              formControlName="destinationCity"
+
+                              [disabled]="shippingRequest.shippingTypeId == 1 || !shippingRequest.originCityId ? true : null || shippingRequest.routeTypeId == null"
+                              [selectedItemsLabel]="'{0} items selected'"
+                              (ngModelChange)="validateShippingRequestType()"
+                              [style]="{ width: '100%' }"
+                              styleClass="form-control pt-1"
+                              [dataKey]="'cityId'"
+                              [selectionLimit]="shippingRequest.routeTypeId == 1 ? 1 : 10"
+                            >
+                            </p-multiSelect>
                           </div>
                           <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
                         </div>
