@@ -602,8 +602,9 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<List<ShippersForDropDownDto>> GetAllShippersForDropDownAsync()
         {
+            
             return await _tenantRepository.GetAll()
-                .Where(x => x.Edition.Id == ShipperEditionId)
+                .Where(x => x.Edition.Id == ShipperEditionId || x.Edition.DisplayName.Trim().ToLower().Contains(TACHYONConsts.BrokerEditionName))
                 .Select(x => new ShippersForDropDownDto { Id = x.Id, DisplayName = x.TenancyName }).ToListAsync();
         }
 
