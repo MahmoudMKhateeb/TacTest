@@ -340,11 +340,16 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   createOrEditStep1() {
     this.saving = true;
     this.step1Dto.id = this.activeShippingRequestId || undefined;
+    debugger
+    if(this.shippingRequestType == 'directrequest' || this.isCarrierSass || this.step1Dto.isInternalBrokerRequest){
+      this.step1Dto.isDirectRequest = true; this.step1Dto.isBid = false; this.step1Dto.isTachyonDeal = false
+    }
+    else{
+      this.step1Dto.isDirectRequest = false;
+    }
     this.shippingRequestType == 'bidding' ? (this.step1Dto.isBid = true) : (this.step1Dto.isBid = false);
     this.shippingRequestType == 'tachyondeal' ? (this.step1Dto.isTachyonDeal = true) : (this.step1Dto.isTachyonDeal = false);
-    this.shippingRequestType == 'directrequest' || this.isCarrierSass || this.step1Dto.isInternalBrokerRequest
-      ? (this.step1Dto.isDirectRequest = true)
-      : (this.step1Dto.isDirectRequest = false);
+   
     this.step1Dto.startTripDate == null ? (this.step1Dto.startTripDate = moment(this.today)) : null;
     if (this.isCarrierSass || this.step1Dto.isInternalBrokerRequest) {
       this.step1Dto.carrierTenantIdForDirectRequest = this.appSession.tenantId;
