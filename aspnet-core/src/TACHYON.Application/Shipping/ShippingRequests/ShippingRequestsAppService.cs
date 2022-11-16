@@ -984,6 +984,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
             ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
+                .Include(x=>x.ShippingRequestDestinationCities)
+                .ThenInclude(x=>x.CityFk)
                 .Where(x => x.Id == (long)input.Id)
                 .FirstOrDefaultAsync();
 
@@ -1013,7 +1015,7 @@ namespace TACHYON.Shipping.ShippingRequests
             ObjectMapper.Map(input, shippingRequest);
             await AddOrRemoveDestinationCities(input.ShippingRequestDestinationCities, shippingRequest);
 
-            await CurrentUnitOfWork.SaveChangesAsync();
+            //await CurrentUnitOfWork.SaveChangesAsync();
         }
 
 
@@ -1712,7 +1714,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             foreach (var destinationCity in destinationCitiesDtos)
             {
-                destinationCity.ShippingRequestId = shippingRequest.Id;
+                //destinationCity.ShippingRequestId = shippingRequest.Id;
                 var exists = await _shippingRequestDestinationCityRepository.GetAll().AnyAsync(c => c.CityId == destinationCity.CityId &&
                 c.ShippingRequestId == destinationCity.ShippingRequestId);
 
@@ -1725,7 +1727,8 @@ namespace TACHYON.Shipping.ShippingRequests
             //remove uncoming destination cities
             foreach (var destinationCity in shippingRequest.ShippingRequestDestinationCities)
             {
-                if (!destinationCitiesDtos.Any(x => x.CityId == destinationCity.CityId))
+                var cityId = destinationCity.CityId;
+                if (!destinationCitiesDtos.Any(x => x.CityId == cityId))
                 {
                     await _shippingRequestDestinationCityRepository.DeleteAsync(destinationCity);
                 }

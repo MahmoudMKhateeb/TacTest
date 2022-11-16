@@ -440,6 +440,7 @@ namespace TACHYON
                 .ForMember(x=> x.CarrierTenantId,x=> x.Ignore())
                 .ForMember(x=> x.TenantId,x=> x.Ignore())
                 .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
+                .ForMember(d => d.ShippingRequestDestinationCities, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequest);
 
             configuration.CreateMap<ShippingRequest, CreateOrEditShippingRequestDto>()
