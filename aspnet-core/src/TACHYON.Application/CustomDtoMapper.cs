@@ -440,8 +440,12 @@ namespace TACHYON
                 .ForMember(x=> x.CarrierTenantId,x=> x.Ignore())
                 .ForMember(x=> x.TenantId,x=> x.Ignore())
                 .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
-                .AfterMap(AddOrUpdateShippingRequest)
-                .ReverseMap();
+                .ForMember(d => d.ShippingRequestDestinationCities, opt => opt.Ignore())
+                .AfterMap(AddOrUpdateShippingRequest);
+
+            configuration.CreateMap<ShippingRequest, CreateOrEditShippingRequestDto>()
+                .ForMember(x => x.ShippingRequestDestinationCities, opt => opt.MapFrom(src=>src.ShippingRequestDestinationCities));
+
 
             configuration.CreateMap<EditShippingRequestStep2Dto, ShippingRequest>()
                .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())

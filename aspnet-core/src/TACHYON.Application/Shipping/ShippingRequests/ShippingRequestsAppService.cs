@@ -317,7 +317,7 @@ namespace TACHYON.Shipping.ShippingRequests
             var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id);
 
             //if request between cities and single drop
-            ValidateDestinationCities(input, shippingRequest);
+            ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest);
 
             if (shippingRequest.DraftStep < 2)
             {
@@ -326,7 +326,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
             ObjectMapper.Map(input, shippingRequest);
             //add new or remove destinaton cities
-            await AddOrRemoveDestinationCities(input, shippingRequest);
+            await AddOrRemoveDestinationCities(input.ShippingRequestDestinationCities, shippingRequest);
         }
 
         public async Task<EditShippingRequestStep2Dto> GetStep2ForEdit(EntityDto<long> entity)
@@ -885,6 +885,8 @@ namespace TACHYON.Shipping.ShippingRequests
             ShippingRequest shippingRequest = _shippingRequestRepository
                 .GetAll()
                 .Include(x => x.ShippingRequestVases)
+                .Include(x=>x.ShippingRequestDestinationCities)
+                .Include(x=>x.OriginCityFk)
                 .Single(x => x.Id == input.Id);
             var Request = ObjectMapper.Map<CreateOrEditShippingRequestDto>(shippingRequest);
             Request.ShippingRequestVasList =
@@ -983,6 +985,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
             ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
+                .Include(x=>x.ShippingRequestDestinationCities)
+                .ThenInclude(x=>x.CityFk)
                 .Where(x => x.Id == (long)input.Id)
                 .FirstOrDefaultAsync();
 
@@ -1006,13 +1010,13 @@ namespace TACHYON.Shipping.ShippingRequests
             }
 
             await ValidateGoodsCategory(input);
-            
+             ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest);
             if (shippingRequest.Status == ShippingRequestStatus.NeedsAction) 
                 await CheckHasOffersToNotifyCarriers(shippingRequest);
-
             ObjectMapper.Map(input, shippingRequest);
+            await AddOrRemoveDestinationCities(input.ShippingRequestDestinationCities, shippingRequest);
 
-            await CurrentUnitOfWork.SaveChangesAsync();
+            //await CurrentUnitOfWork.SaveChangesAsync();
         }
 
 
@@ -1707,11 +1711,11 @@ namespace TACHYON.Shipping.ShippingRequests
             return pickupFacility;
         }
 
-        private async Task AddOrRemoveDestinationCities(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
+        private async Task AddOrRemoveDestinationCities(List<ShippingRequestDestinationCitiesDto> destinationCitiesDtos, ShippingRequest shippingRequest)
         {
-            foreach (var destinationCity in input.ShippingRequestDestinationCities)
+            foreach (var destinationCity in destinationCitiesDtos)
             {
-                destinationCity.ShippingRequestId = shippingRequest.Id;
+                //destinationCity.ShippingRequestId = shippingRequest.Id;
                 var exists = await _shippingRequestDestinationCityRepository.GetAll().AnyAsync(c => c.CityId == destinationCity.CityId &&
                 c.ShippingRequestId == destinationCity.ShippingRequestId);
 
@@ -1724,16 +1728,17 @@ namespace TACHYON.Shipping.ShippingRequests
             //remove uncoming destination cities
             foreach (var destinationCity in shippingRequest.ShippingRequestDestinationCities)
             {
-                if (!input.ShippingRequestDestinationCities.Any(x => x.CityId == destinationCity.CityId))
+                var cityId = destinationCity.CityId;
+                if (!destinationCitiesDtos.Any(x => x.CityId == cityId))
                 {
                     await _shippingRequestDestinationCityRepository.DeleteAsync(destinationCity);
                 }
             }
         }
 
-        private void ValidateDestinationCities(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
+        private void ValidateDestinationCities(ShippingRequestRouteType routeType, List<ShippingRequestDestinationCitiesDto> shippingRequestDestinationCitiesDtos, ShippingRequest shippingRequest)
         {
-            if (shippingRequest.ShippingTypeId == 2 && input.RouteTypeId == ShippingRequestRouteType.SingleDrop && input.ShippingRequestDestinationCities.Count > 1)
+            if (shippingRequest.ShippingTypeId == 2 && routeType == ShippingRequestRouteType.SingleDrop && shippingRequestDestinationCitiesDtos.Count > 1)
             {
                 throw new UserFriendlyException(L("OneDestinationCityAllowed"));
             }
