@@ -195,7 +195,7 @@
                             'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
                           }"
                         >
-                           <select
+                          <select
                             #shippingType="ngModel"
                             class="form-control"
                             name="shippingType"
@@ -203,12 +203,12 @@
                             [(ngModel)]="shippingRequest.shippingTypeId"
                             [class.is-invalid]="shippingType.touched && !shippingType.valid"
                             [class.is-valid]="shippingType.touched && shippingType.valid"
-                            (change)="shippingRequest.destinationCityId = undefined"
+                            (change)="shippingRequest.shippingRequestDestinationCities = undefined"
                             [disabled]="!allShippingTypes"
                           >
                             <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>
                             <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                          </select> 
+                          </select>
                         </div>
                         <span class="form-text text-muted">{{ l('SelectAShippingType') }}</span>
                       </div>
@@ -406,10 +406,12 @@
                               [options]="destinationCities"
                               [(ngModel)]="shippingRequest.shippingRequestDestinationCities"
                               optionLabel="cityName"
-                              formControlName="destinationCity"
-
-                              [disabled]="shippingRequest.shippingTypeId == 1 || !shippingRequest.originCityId ? true : null || shippingRequest.routeTypeId == null"
-                              [selectedItemsLabel]="'{0} items selected'"
+                              [disabled]="
+                                shippingRequest.shippingTypeId == 1 || !shippingRequest.originCityId
+                                  ? true
+                                  : null || shippingRequest.routeTypeId == null
+                              "
+                              [selectedItemsLabel]="l('{0} items selected')"
                               (ngModelChange)="validateShippingRequestType()"
                               [style]="{ width: '100%' }"
                               styleClass="form-control pt-1"

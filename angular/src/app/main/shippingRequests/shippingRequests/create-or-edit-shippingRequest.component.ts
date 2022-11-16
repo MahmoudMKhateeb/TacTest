@@ -117,10 +117,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.loadAllDropDownLists();
       this._shippingRequestsServiceProxy
         .getShippingRequestForEdit(shippingRequestId)
-        .pipe(
-          finalize(() => {
-          })
-        )
+        .pipe(finalize(() => {}))
         .subscribe((result) => {
           this.shippingRequest = result.shippingRequest;
           if (result.shippingRequest.bidStartDate != null && result.shippingRequest.bidStartDate != undefined)
@@ -142,7 +139,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         });
     }
   }
-  
 
   save(): void {
     //to be Removed Later
@@ -375,7 +371,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   validateDuplicatedCites(event: Event) {
     let index: number = event.target['selectedIndex'] - 1;
 
-    if (this.shippingRequest.originCityId == this.shippingRequest.destinationCityId) this.shippingRequest.destinationCityId = null;
+    // if (this.shippingRequest.originCityId == this.shippingRequest.destinationCityId) this.shippingRequest.shippingRequestDestinationCities = null;
   }
 
   /**
@@ -397,50 +393,49 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     //   }
     // }
 
+    //check if user choose local-inside city  but the origin&des same
+    if (this.shippingRequest.originCityId != null && this.shippingRequest.shippingTypeId == 1) {
+      this.shippingRequest.shippingRequestDestinationCities = [];
+      //local inside city
+      //this.destinationCountry = this.originCountry;
+      var city = new ShippingRequestDestinationCitiesDto();
+      city.cityId = this.shippingRequest.originCityId;
 
-      //check if user choose local-inside city  but the origin&des same
-      if (this.shippingRequest.originCityId != null && this.shippingRequest.shippingTypeId == 1) {
-        this.shippingRequest.shippingRequestDestinationCities = [];
-        //local inside city
-        //this.destinationCountry = this.originCountry;
-        var city = new ShippingRequestDestinationCitiesDto();
-        city.cityId = this.shippingRequest.originCityId;
-  
-        this.shippingRequest.shippingRequestDestinationCities.push(city);
-      } else if (this.shippingRequest.shippingTypeId == 2) {
-        // if route type is local betwenn cities check if user select same city in source and destination
-        // this.destinationCities = this.sourceCities;
-       // this.destinationCountry = this.originCountry;
-  
-        //if destination city one item selected and equals to origin, while shipping type is between cities
-        if (
-          isNotNullOrUndefined(this.shippingRequest.shippingRequestDestinationCities) &&
-          this.shippingRequest.shippingRequestDestinationCities.length == 1 &&
-          this.shippingRequest.shippingRequestDestinationCities.filter((c) => c.cityId == this.shippingRequest.originCityId).length > 0
-        ) {
-          this.shippingRequestForm.controls['destinationCity'].setErrors({ invalid: true });
-         // this.shippingRequestForm.controls['destinationCountry'].setErrors({ invalid: true });
-        } 
-        // else if (this.originCountry !== this.destinationCountry) {
-        //   this.shippingRequestForm.controls['originCountry'].setErrors({ invalid: true });
-        //   this.shippingRequestForm.controls['destinationCountry'].setErrors({ invalid: true });
-        // } 
-        else {
-          this.clearValidation('destinationCity');
-          this.clearValidation('destinationCountry');
-        }
+      this.shippingRequest.shippingRequestDestinationCities.push(city);
+    } else if (this.shippingRequest.shippingTypeId == 2) {
+      // if route type is local betwenn cities check if user select same city in source and destination
+      // this.destinationCities = this.sourceCities;
+      // this.destinationCountry = this.originCountry;
+
+      //if destination city one item selected and equals to origin, while shipping type is between cities
+      if (
+        isNotNullOrUndefined(this.shippingRequest.shippingRequestDestinationCities) &&
+        this.shippingRequest.shippingRequestDestinationCities.length == 1 &&
+        this.shippingRequest.shippingRequestDestinationCities.filter((c) => c.cityId == this.shippingRequest.originCityId).length > 0
+      ) {
+        this.shippingRequestForm.controls['destinationCity'].setErrors({ invalid: true });
+        // this.shippingRequestForm.controls['destinationCountry'].setErrors({ invalid: true });
       }
-      //  else if (this.shippingRequest.shippingTypeId == 4) {
-      //   //if route type is cross border prevent the countries to be the same
-      //   if (this.originCountry === this.destinationCountry) {
-      //     this.shippingRequestForm.controls['originCountry'].setErrors({ invalid: true });
-      //     this.shippingRequestForm.controls['destinationCountry'].setErrors({ invalid: true });
-      //   }
-      //    else {
-      //     this.clearValidation('originCountry');
-      //     this.clearValidation('destinationCountry');
-      //   }
+      // else if (this.originCountry !== this.destinationCountry) {
+      //   this.shippingRequestForm.controls['originCountry'].setErrors({ invalid: true });
+      //   this.shippingRequestForm.controls['destinationCountry'].setErrors({ invalid: true });
       // }
+      else {
+        // this.clearValidation('destinationCity');
+        // this.clearValidation('destinationCountry');
+      }
+    }
+    //  else if (this.shippingRequest.shippingTypeId == 4) {
+    //   //if route type is cross border prevent the countries to be the same
+    //   if (this.originCountry === this.destinationCountry) {
+    //     this.shippingRequestForm.controls['originCountry'].setErrors({ invalid: true });
+    //     this.shippingRequestForm.controls['destinationCountry'].setErrors({ invalid: true });
+    //   }
+    //    else {
+    //     this.clearValidation('originCountry');
+    //     this.clearValidation('destinationCountry');
+    //   }
+    // }
   }
 
   clearValidation(controlName: string) {
