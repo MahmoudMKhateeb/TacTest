@@ -45,7 +45,7 @@ namespace TACHYON.PriceOffers
                 select new CreateOrEditActorShipperPriceDto()
                 {
                     VasDisplayName = srVas.VasFk.Name,
-                    VasId = srVas.VasId,
+                    VasId = srVas.VasId,Id = srVas.ActorShipperPriceId,
                     ShippingRequestVasId = srVas.Id,
                     TotalAmountWithCommission = srVas.ActorShipperPrice.TotalAmountWithCommission,
                     SubTotalAmountWithCommission = srVas.ActorShipperPrice.SubTotalAmountWithCommission,
@@ -109,10 +109,11 @@ namespace TACHYON.PriceOffers
             var srShipperPrice = await _actorShipperPriceRepository.SingleAsync(x=> x.Id == input.ActorShipperPriceDto.Id.Value);
             ObjectMapper.Map(input.ActorShipperPriceDto, srShipperPrice);
 
+            var vasActorShipperPriceIdList = input.VasActorShipperPriceDto.Select(x => x.Id).ToList();
             var vasShipperPrices = await _actorShipperPriceRepository.GetAll()
-                .Where(x => input.VasActorShipperPriceDto.Any(i => i.Id == x.Id)).ToArrayAsync();
-
-
+                .Where(x => vasActorShipperPriceIdList.Contains(x.Id)).ToArrayAsync();
+            
+            if (vasShipperPrices == null || vasShipperPrices.Length < 1) return; 
 
             foreach (var vasShipperPrice in vasShipperPrices)
             {
@@ -131,7 +132,7 @@ namespace TACHYON.PriceOffers
                 select new CreateOrEditActorCarrierPrice()
                 {
                     VasDisplayName = srVas.VasFk.Name,
-                    VasId = srVas.VasId,
+                    VasId = srVas.VasId,Id = srVas.ActorCarrierPriceId,
                     ShippingRequestVasId = srVas.Id,
                     SubTotalAmount = srVas.ActorCarrierPrice.SubTotalAmount,
                     VatAmount = srVas.ActorCarrierPrice.VatAmount,
@@ -190,12 +191,15 @@ namespace TACHYON.PriceOffers
             var srCarrierPrice = await _actorCarrierPriceRepository.SingleAsync(x=> x.Id == input.ActorCarrierPrice.Id.Value);
             ObjectMapper.Map(input.ActorCarrierPrice, srCarrierPrice);
 
-            var vasCarrierPrices = await _actorCarrierPriceRepository.GetAll()
-                .Where(x => input.VasActorCarrierPrices.Any(i => i.Id == x.Id)).ToArrayAsync();
+
+            var vasActorCarrierPriceIdList = input.VasActorCarrierPrices.Select(x => x.Id).ToList();
+            var carrierPrices = await _actorCarrierPriceRepository.GetAll()
+                .Where(x => vasActorCarrierPriceIdList.Contains(x.Id)).ToArrayAsync();
+            
+            if (carrierPrices == null || carrierPrices.Length < 1) return; 
 
 
-
-            foreach (var vasCarrierPrice in vasCarrierPrices)
+            foreach (var vasCarrierPrice in carrierPrices)
             {
                 var vasCarrierPriceDto = input.VasActorCarrierPrices.Single(x => x.Id == vasCarrierPrice.Id);
                 ObjectMapper.Map(vasCarrierPriceDto, vasCarrierPrice);
