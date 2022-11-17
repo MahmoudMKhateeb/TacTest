@@ -682,6 +682,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 }
                 bool isShipper = await IsEnabledAsync(AppFeatures.Shipper);
                 bool isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
+                bool isBroker = await  FeatureChecker.IsEnabledAsync( true,AppFeatures.CarrierClients,AppFeatures.ShipperClients);
                 int? abpSessionTenantId = AbpSession.TenantId;
 
 
@@ -692,11 +693,16 @@ namespace TACHYON.Shipping.ShippingRequests
                 }
 
                 // shippers access
-                if (abpSessionTenantId!=null && shippingRequest.TenantId != abpSessionTenantId && isShipper)
+                if (abpSessionTenantId!=null && shippingRequest.TenantId != abpSessionTenantId && isShipper && !isBroker)
                 {
                     throw new UserFriendlyException("You cant view this shipping request msg");
                 }
 
+                if (isBroker && shippingRequest.TenantId != abpSessionTenantId &&
+                                 shippingRequest.CarrierTenantId != abpSessionTenantId)
+                {
+                    throw new UserFriendlyException("You cant view this shipping request msg");
+                }
                 //carrier access if he is not assigned to the SR
                 if (abpSessionTenantId != null && !await IsCarrierSaasAndSrOwner() && isCarrier && shippingRequest.CarrierTenantId != abpSessionTenantId)
                 {
