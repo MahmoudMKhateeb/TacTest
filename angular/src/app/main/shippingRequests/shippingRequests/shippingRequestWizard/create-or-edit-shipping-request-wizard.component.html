@@ -145,23 +145,27 @@
                       <span class="form-text text-muted">{{ l('SelectShipperActor') }}</span>
                     </div>
 
-                    <div *ngIf="this.feature.isEnabled('App.CarrierClients') && step1Dto.isInternalBrokerRequest" class="form-group">
-                      <label>{{ l('ActorCarrier') }} <span class="required-fileds">*</span></label>
+                    <div [hidden]="!this.feature.isEnabled('App.CarrierClients') || !step1Dto.isInternalBrokerRequest" class="form-group">
+                      <label>{{ l('ActorCarrier') }}</label>
                       <div
                         [ngClass]="{
                           'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsCarriers
                         }"
                       >
-                        <select
-                          class="form-control"
-                          name="ActorCarrier"
-                          formControlName="ActorCarrier"
-                          [(ngModel)]="step1Dto.carrierActorId"
-                          [required]="step1Dto.isInternalBrokerRequest"
-                        >
-                          <option [value]="undefined">{{ l('Select') }}</option>
-                          <option *ngFor="let item of AllActorsCarriers" value="{{ item.id }}">{{ item.displayName }}</option>
-                        </select>
+
+                          <dx-select-box
+                              id="ActorCarrier"
+                              name="ActorCarrier"
+                              formControlName="ActorCarrier"
+                              [(value)]="step1Dto.carrierActorId"
+                              [dataSource]="AllActorsCarriers"
+                              [searchEnabled]="true"
+                              displayExpr="displayName"
+                              valueExpr="id"
+                              [required]="false"
+                              placeholder="{{ l('Myself') }}">
+                          </dx-select-box>
+
                       </div>
                       <span class="form-text text-muted">{{ l('SelectCarrierActor') }}</span>
                     </div>
