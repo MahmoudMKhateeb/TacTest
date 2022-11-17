@@ -91,7 +91,7 @@ export class InvoiceDemandModelComponent extends AppComponentBase implements OnI
   }
 
   search(event) {
-    this._CommonServ.getAutoCompleteTenants(event.query, this.selectedEdition).subscribe((result) => {
+    this._CommonServ.getAutoCompleteTenants(event.query, '').subscribe((result) => {
       this.Tenants = result;
     });
   }
