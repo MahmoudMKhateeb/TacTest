@@ -220,7 +220,7 @@
                             <span class="mt-1 mr-2">{{l('FacilityRating')}} :</span>
                             <p-rating [ngModel]="point.facilityRate" readonly="true" stars="5" [cancel]="false"></p-rating>
                           </p>
-                          <div class="flex-row" *ngIf="!appSession.tenantId">
+                          <div class="flex-row" *ngIf="!appSession.tenantId && point.pickingType == 2">
                             <p class="p-0 mr-2">
                               {{l('ReceiverCode')}} : {{point.receiverCode}}
 
