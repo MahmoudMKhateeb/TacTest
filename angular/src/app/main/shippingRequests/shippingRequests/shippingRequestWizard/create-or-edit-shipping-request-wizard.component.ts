@@ -342,7 +342,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.step1Dto.id = this.activeShippingRequestId || undefined;
     debugger
     if(this.shippingRequestType == 'directrequest' || this.isCarrierSass || this.step1Dto.isInternalBrokerRequest){
-      this.step1Dto.isDirectRequest = true; this.step1Dto.isBid = false; this.step1Dto.isTachyonDeal = false
+      this.step1Dto.isDirectRequest = true; this.step1Dto.isBid = false; this.step1Dto.isTachyonDeal = false;
+      this.shippingRequestType == 'directrequest';
     }
     else{
       this.step1Dto.isDirectRequest = false;
