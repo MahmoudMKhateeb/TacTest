@@ -85,6 +85,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   minEndDate: NgbDateStruct;
   minHijriTripdate: NgbDateStruct;
   minGrogTripdate: NgbDateStruct;
+
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -95,7 +96,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     private ngZone: NgZone,
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
-
     private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
@@ -114,20 +114,22 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.loadAllDropDownLists();
     } else {
       //this is an edit
-      this.loadAllDropDownLists();
       this._shippingRequestsServiceProxy
         .getShippingRequestForEdit(shippingRequestId)
         .pipe(finalize(() => {}))
         .subscribe((result) => {
           this.shippingRequest = result.shippingRequest;
-          if (result.shippingRequest.bidStartDate != null && result.shippingRequest.bidStartDate != undefined)
+          if (result.shippingRequest.bidStartDate != null && result.shippingRequest.bidStartDate != undefined) {
             this.startBiddate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.bidStartDate);
-          if (result.shippingRequest.bidEndDate != null && result.shippingRequest.bidEndDate != undefined)
+          }
+          if (result.shippingRequest.bidEndDate != null && result.shippingRequest.bidEndDate != undefined) {
             this.endBiddate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.bidEndDate);
+          }
           this.startTripdate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.startTripDate);
           this.minGrogTripdate = this.startTripdate;
-          if (result.shippingRequest.endTripDate != null && result.shippingRequest.endTripDate != undefined)
+          if (result.shippingRequest.endTripDate != null && result.shippingRequest.endTripDate != undefined) {
             this.endTripdate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.endTripDate);
+          }
           this.shippingRequestType =
             result.shippingRequest.isBid === true ? 'bidding' : result.shippingRequest.isDirectRequest ? 'directrequest' : 'tachyondeal';
           this.selectedVases = result.shippingRequest.shippingRequestVasList;
@@ -136,6 +138,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           this.active = true;
           this.totalOffers = result.totalOffers;
           this.shippingRequest.shippingRequestDestinationCities = result.shippingRequest.shippingRequestDestinationCities;
+          this.loadAllDropDownLists();
         });
     }
   }
@@ -151,16 +154,21 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this.shippingRequest.routeTypeId = this.selectedRouteType; //milkrun / oneway ....
     this.shippingRequest.shippingRequestVasList = this.selectedVases;
 
-    if (this.startBiddate != null && this.startBiddate != undefined)
+    if (this.startBiddate != null && this.startBiddate != undefined) {
       this.shippingRequest.bidStartDate = this.GetGregorianAndhijriFromDatepickerChange(this.startBiddate).GregorianDate;
+    }
 
-    if (this.endBiddate != undefined) this.shippingRequest.bidEndDate = this.GetGregorianAndhijriFromDatepickerChange(this.endBiddate).GregorianDate;
+    if (this.endBiddate != undefined) {
+      this.shippingRequest.bidEndDate = this.GetGregorianAndhijriFromDatepickerChange(this.endBiddate).GregorianDate;
+    }
 
-    if (this.startTripdate != null && this.startTripdate != undefined)
+    if (this.startTripdate != null && this.startTripdate != undefined) {
       this.shippingRequest.startTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.startTripdate).GregorianDate;
+    }
 
-    if (this.endTripdate != null && this.endTripdate != undefined)
+    if (this.endTripdate != null && this.endTripdate != undefined) {
       this.shippingRequest.endTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.endTripdate).GregorianDate;
+    }
 
     this._shippingRequestsServiceProxy
       .createOrEdit(this.shippingRequest)
@@ -187,6 +195,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   }
 
   loadAllDropDownLists(): void {
+    console.log('DD Was loaded');
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
       this.allGoodCategorys = result;
     });
@@ -219,8 +228,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     });
 
     /*this._routesServiceProxy.getAllRoutTypeForTableDropdown().subscribe((result) => {
-          this.allRoutTypes = result;
-        });*/
+              this.allRoutTypes = result;
+            });*/
 
     this.loadallVases();
   }
@@ -340,14 +349,18 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       }
     }
 
-    if (type == 'tripsEndDate') this.endTripdate = $event;
+    if (type == 'tripsEndDate') {
+      this.endTripdate = $event;
+    }
 
     var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startTripdate);
     var endDate = this.dateFormatterService.NgbDateStructToMoment(this.endTripdate);
 
     //checks if the trips end date is less than trips start date
     if (startDate != undefined && endDate != undefined) {
-      if (endDate < startDate) this.endTripdate = undefined;
+      if (endDate < startDate) {
+        this.endTripdate = undefined;
+      }
     }
   }
 
@@ -355,15 +368,21 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
    * validates bidding start+end date
    */
   validateBiddingDates($event: NgbDateStruct, type) {
-    if (type == 'biddingStartDate') this.startBiddate = this.minEndDate = $event;
-    if (type == 'biddingEndDate') this.endBiddate = $event;
+    if (type == 'biddingStartDate') {
+      this.startBiddate = this.minEndDate = $event;
+    }
+    if (type == 'biddingEndDate') {
+      this.endBiddate = $event;
+    }
 
     var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startBiddate);
     var endDate = this.dateFormatterService.NgbDateStructToMoment(this.endBiddate);
 
     //   //if end date is more than start date reset end date
     if (startDate != undefined && endDate != undefined) {
-      if (startDate > endDate) this.shippingRequest.bidEndDate = this.endBiddate = undefined;
+      if (startDate > endDate) {
+        this.shippingRequest.bidEndDate = this.endBiddate = undefined;
+      }
     }
   }
 

@@ -142,6 +142,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       this._fileDownloadService.downloadTempFile(result);
     });
   }
+
   downloadPenaltyReport(id: number) {
     this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
@@ -159,6 +160,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       this._fileDownloadService.downloadTempFile(result);
     });
   }
+
   details(invoice: any): void {
     if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
       this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
@@ -222,5 +224,18 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       this.notify.success(this.l('Successfully'));
       this.getAllInvoices();
     });
+  }
+
+  /**
+   * checks who can See Dynamic Invoice Label
+   * @param options
+   */
+  canSeeDynamicInvoice(options) {
+    let allowedUsers = this.isTachyonDealerOrHost || this.hasCarrierClients || this.hasShipperClients;
+    if (options.data.channel == this.InvoiceChannelEnum.DynamicInvoice && allowedUsers) {
+      return true;
+    } else if (options.data.channel != this.InvoiceChannelEnum.DynamicInvoice) {
+      return true;
+    }
   }
 }
