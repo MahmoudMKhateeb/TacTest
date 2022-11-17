@@ -161,7 +161,7 @@
                             <div
                               class="d-inline-block"
                               ngbDropdown
-                              *ngIf="point.pickingType == pickingTypeEnum.Pickup &&  trip.status === tripStatusesEnum.New"
+                              *ngIf="point.pickingType == pickingTypeEnum.Pickup &&  trip.status === tripStatusesEnum.New && trip.canDriveTrip"
                             >
                               <button class="btn btn-sm btn-danger" ngbDropdownToggle [buttonBusy]="saving">{{l('Actions')}}</button>
 
@@ -180,7 +180,7 @@
                             </div>
                             <!--                      points DropDown Actions      -->
                             <div
-                              *ngIf="!point.isComplete && trip.status !== tripStatusesEnum.New && trip.driver && (isCarrier || isTachyonDealerOrHost || hasCarrierClients) "
+                              *ngIf="!point.isComplete && trip.status !== tripStatusesEnum.New && trip.driver && (trip.canDriveTrip) "
                               class="d-inline-block"
                               ngbDropdown
                             >

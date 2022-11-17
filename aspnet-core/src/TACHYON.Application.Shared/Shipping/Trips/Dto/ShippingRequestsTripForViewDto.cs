@@ -44,5 +44,6 @@ namespace TACHYON.Shipping.Trips.Dto
         public int NotesCount { get; set; }
         public ShippingRequestRouteType? RouteType { get; set; }
         public int NumberOfDrops { get; set; }
+        public bool CanAssignDriversAndTrucks { get; set; }
     }
 }

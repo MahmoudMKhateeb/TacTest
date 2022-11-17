@@ -132,9 +132,9 @@ namespace TACHYON.Tracking
                 .PageBy(input).ToList();
 
             List<TrackingListDto> trackingLists = new List<TrackingListDto>();
-            query.ForEach(r =>
+            query.ForEach(async r =>
             {
-                trackingLists.Add(GetMap(r));
+                trackingLists.Add(await GetMap(r));
             });
 
             return new PagedResultDto<TrackingListDto>(
@@ -286,7 +286,7 @@ namespace TACHYON.Tracking
 
 
         #region Helper
-        private TrackingListDto GetMap(ShippingRequestTrip trip)
+        private async Task<TrackingListDto> GetMap(ShippingRequestTrip trip)
         {
             var dto = ObjectMapper.Map<TrackingListDto>(trip);
 
@@ -310,6 +310,11 @@ namespace TACHYON.Tracking
                 //    dto.NoActionReason = CanNotAcceptReason(trip, workingOnAnotherTrip);
                 //if (trip.Status == ShippingRequestTripStatus.New && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted && !dto.CanStartTrip)
                 //    dto.NoActionReason = CanNotStartReason(trip, workingOnAnotherTrip);
+            }
+            dto.CanDriveTrip = false;
+            if (tenantId.HasValue && (tenantId==trip.ShippingRequestFk.CarrierTenantId || await IsTachyonDealer()))
+            {
+                dto.CanDriveTrip = true;
             }
             return dto;
         }

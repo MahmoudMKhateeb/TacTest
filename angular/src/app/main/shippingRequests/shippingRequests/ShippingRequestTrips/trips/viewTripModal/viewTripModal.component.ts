@@ -1,4 +1,4 @@
-import { Component, ViewChild, Injector, OnInit, Output, EventEmitter, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, Injector, OnInit, Output, EventEmitter, AfterViewInit, ChangeDetectorRef, Input } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   RoutStepsServiceProxy,
@@ -39,6 +39,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
+  canAssignTrucksAndDrivers: boolean;
   fromTime: string;
   toTime: string;
   Vases: CreateOrEditShippingRequestTripVasDto[];
@@ -97,7 +98,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   }
 
   show(id, shippingRequestForView?: GetShippingRequestForViewOutput): void {
-    this.shippingRequestForView = shippingRequestForView;
+    this.shippingRequestForView = shippingRequestForView; 
     if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === 1) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
@@ -129,6 +130,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this.assignDriverAndTruck.assignedDriverUserId = this.trip.assignedDriverUserId;
         this.expectedDeliveryTime = this.trip.expectedDeliveryTime;
         this._changeDetectorRef.detectChanges();
+        this.canAssignTrucksAndDrivers = res.canAssignDriversAndTrucks;
       });
 
     this.modal.show();

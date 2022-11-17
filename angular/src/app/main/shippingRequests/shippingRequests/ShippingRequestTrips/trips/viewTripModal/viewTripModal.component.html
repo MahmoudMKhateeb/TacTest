@@ -139,7 +139,7 @@
                 </select>
               </div>
               <div class="col-6 col-form-label">
-                <label for="Attachment"> {{ l('Attachment') }} </label>
+                <label for="Attachment">{{ l('Attachment') }} </label>
                 <select name="Attachment" id="Attachment" [(ngModel)]="trip.hasAttachment" class="form-control" disabled>
                   <option [ngValue]="true">{{ l('Yes') }}</option>
                   <option [ngValue]="false">{{ l('No') }}</option>
@@ -181,7 +181,8 @@
           <!--   EndOf::Driver&Truck for DedicatedSR -->
 
           <!-- StartOf::Driver&Truck -->
-          <ng-container *ngIf="(isCarrier || hasCarrierClients) && trip.status !== shippingRequestTripStatusEnum.Delivered">
+          
+          <ng-container *ngIf="canAssignTrucksAndDrivers && trip.status !== shippingRequestTripStatusEnum.Delivered">
             <div class="form-group col-lg-6">
               <label>{{ l('Driver') }}</label>
               <select
