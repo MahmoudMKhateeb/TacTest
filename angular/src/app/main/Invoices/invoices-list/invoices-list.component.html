@@ -94,9 +94,7 @@
                 >
               </div>
               <div *dxTemplate="let options of 'cellTemplate_Channel'">
-                <span
-                  style="width: 137px; text-align: center"
-                  *ngIf="!(options.data.channel == InvoiceChannelEnum.DynamicInvoice && !isTachyonDealerOrHost)"
+                <span style="width: 137px; text-align: center" *ngIf="canSeeDynamicInvoice(options)"
                   ><span
                     class="badge badge-inline"
                     [ngClass]="{
