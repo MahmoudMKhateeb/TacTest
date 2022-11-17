@@ -86,6 +86,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   loading = false;
   uploadGoodDetailsUrl: string;
   ShippingRequestRouteTypeEnum = ShippingRequestRouteType;
+  CanAssignDriverAndTruck: boolean;
 
   type = 'Trip';
   ShippingRequestTripStatus = ShippingRequestTripStatus;
@@ -113,7 +114,6 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       this.VasListFromFather = result.shippingRequestVasDtoList;
       this.tripsByTmsEnabled = true;
       this._TripService.updateShippingRequest(result);
-      console.log(result);
     });
   }
 
@@ -148,6 +148,8 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
         this.primengTableHelper.totalRecordsCount = result.totalCount;
         this.primengTableHelper.records = result.items;
         this.primengTableHelper.hideLoadingIndicator();
+        this.CanAssignDriverAndTruck = result.items[0].canAssignTrucksAndDrivers;
+        
       });
   }
 

@@ -238,6 +238,7 @@ namespace TACHYON.Shipping.Trips
 
         public async Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(int id)
         {
+            var trip = await _shippingRequestTripRepository.GetAllIncluding(x => x.ShippingRequestFk).FirstOrDefaultAsync();
             var shippingRequestTrip = await GetShippingRequestTripForMapper<ShippingRequestsTripForViewDto>(id);
             if (shippingRequestTrip.HasAttachment)
             {
@@ -250,6 +251,7 @@ namespace TACHYON.Shipping.Trips
             }
             shippingRequestTrip.RoutPoints = shippingRequestTrip.RoutPoints.OrderBy(x => x.PickingType).ToList();
             shippingRequestTrip.NotesCount = await GetTripNotesCount(id);
+            shippingRequestTrip.CanAssignDriversAndTrucks = await IsTachyonDealer() || AbpSession.TenantId == trip.ShippingRequestFk.CarrierTenantId;
             return shippingRequestTrip;
         }
 
