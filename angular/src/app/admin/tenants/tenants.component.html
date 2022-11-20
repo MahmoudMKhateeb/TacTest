@@ -146,8 +146,7 @@
                         href="javascript:;"
                         class="dropdown-item"
                         *ngIf="
-                          isGranted('Pages.TenantCarrier') &&
-                          options.data.tenantListDto.editionDisplayName.trim().toLowerCase() == shipperEditionDisplayName.trim().toLowerCase()
+                          isGranted('Pages.TenantCarrier') && tenantCanHaveCarriers(options.data.tenantListDto.editionDisplayName)
                         "
                         (click)="TenantCarriersModel.show(options.data.tenantListDto.id)"
                       >

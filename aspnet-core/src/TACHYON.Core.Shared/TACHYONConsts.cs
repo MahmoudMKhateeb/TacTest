@@ -50,6 +50,7 @@
         public const string ShipperEdtionName = "shipper";
         public const string BrokerEditionName = "broker";
         public const string CarrierEdtionName = "carrier";
+        public const string BrokerEditionName = "broker";
         public const string TachyonDealerEdtionName = "Tachyon";
 
         //BidStatus consts
