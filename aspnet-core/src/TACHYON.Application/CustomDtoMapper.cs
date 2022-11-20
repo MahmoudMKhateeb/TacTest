@@ -187,6 +187,7 @@ using TACHYON.DedicatedInvoices;
 using TACHYON.DedicatedDynamicInvoices.Dtos;
 using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 using TACHYON.Common;
+using Abp.Timing;
 
 namespace TACHYON
 {
@@ -823,7 +824,9 @@ namespace TACHYON
                 .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber))
                 .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
                 .ForMember(dto => dto.Period,
-                    options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName));
+                    options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName))
+                .ForMember(dto => dto.CreationTime,
+                    options => options.MapFrom(entity => ClockProviders.Local.Normalize(entity.CreationTime).ToString("dd/MM/yyyy hh:mm")));
 
 
             configuration.CreateMap<ActorInvoice, ActorInvoiceInfoDto>()
@@ -901,7 +904,7 @@ namespace TACHYON
                 .ForMember(dto => dto.ClientId, options => options.MapFrom(entity => entity.TenantId))
                 .ForMember(dto => dto.Notes , options=>  options.Ignore())
                 .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
-                .ForMember(dto => dto.CreationTime, options => options.MapFrom(entity => entity.CreationTime.ToString("dd/mm/yyyy mm:hh")))
+                .ForMember(dto => dto.CreationTime, options => options.MapFrom(entity => ClockProviders.Local.Normalize(entity.CreationTime).ToString("dd/MM/yyyy hh:mm")))
                 .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber));
 
 
