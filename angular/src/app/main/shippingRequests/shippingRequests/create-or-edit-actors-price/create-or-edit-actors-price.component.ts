@@ -103,16 +103,16 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
   canAddCarrierActorPrices(): boolean {
     return (
       this.hasCarrierClients &&
-      this.tenantId === this.carrierTenantId &&
-      this.tenantId === this.appSession.tenantId &&
+      (this.carrierTenantId === this.appSession.tenantId ||
+          this.tenantId === this.appSession.tenantId) &&
       isNotNullOrUndefined(this.actorCarrierId)
     );
   }
 
   canAddShipperActorPrices(): boolean {
     return this.hasShipperClients &&
-        this.tenantId === this.carrierTenantId &&
-        this.tenantId === this.appSession.tenantId &&
+        (this.carrierTenantId === this.appSession.tenantId ||
+        this.tenantId === this.appSession.tenantId) &&
         isNotNullOrUndefined(this.actorShipperId);
   }
 }
