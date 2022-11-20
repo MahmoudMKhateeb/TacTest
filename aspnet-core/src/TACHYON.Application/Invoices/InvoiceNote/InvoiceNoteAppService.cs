@@ -4,6 +4,7 @@ using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Abp.Threading;
+using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -578,10 +579,10 @@ namespace TACHYON.Invoices.InvoiceNotes
             invoiceNoteDto.Attn = admin.FullName;
 
             if (invoice != null)
-                invoiceNoteDto.ReInvoiceDate = invoice.CreationTime.ToString("dd/mm/yyyy mm:hh");
+                invoiceNoteDto.ReInvoiceDate = ClockProviders.Local.Normalize(invoice.CreationTime).ToString("dd/MM/yyyy hh:mm");
             else if(submitInvoice!=null)
             {
-                invoiceNoteDto.ReInvoiceDate = submitInvoice.CreationTime.ToString("dd/mm/yyyy mm:hh");
+                invoiceNoteDto.ReInvoiceDate = ClockProviders.Local.Normalize(submitInvoice.CreationTime).ToString("dd/MM/yyyy hh:mm");
             }
             var document = AsyncHelper.RunSync(() => _documentFileRepository
             .FirstOrDefaultAsync(x => x.TenantId == invoiceNote.TenantId && x.DocumentTypeId == 14));
