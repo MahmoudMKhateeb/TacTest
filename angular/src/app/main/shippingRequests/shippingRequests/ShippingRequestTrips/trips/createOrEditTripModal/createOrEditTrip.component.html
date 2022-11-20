@@ -48,7 +48,7 @@
                         <option *ngFor="let item of tripTemples" value="{{ item.id }}">{{ item.displayName }}</option>
                       </select>
                     </div>
-                    <button class="btn btn-sm btn-block btn-info" (click)="applyTemplate()">{{ 'Load' | localize }}</button>
+                    <button class="btn btn-sm btn-block btn-info" (click)="applyTemplate()" type="button">{{ 'Load' | localize }}</button>
                   </li>
                 </ul>
               </div>
