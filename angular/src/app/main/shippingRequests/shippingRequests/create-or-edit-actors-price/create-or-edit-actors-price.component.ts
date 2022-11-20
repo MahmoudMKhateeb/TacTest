@@ -29,6 +29,8 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
   @Input() numberOfCreatedTrips: number;
   @Input() tenantId: number;
   @Input() carrierTenantId: number;
+  @Input() actorCarrierId: number;
+  @Input() actorShipperId: number;
 
   shipperPriceInput = new CreateOrEditSrActorShipperPriceInput();
   carrierPriceInput = new CreateOrEditSrActorCarrierPriceInput();
@@ -102,15 +104,15 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
     return (
       this.hasCarrierClients &&
       this.tenantId === this.carrierTenantId &&
-      this.tenantId === this.appSession.tenantId
+      this.tenantId === this.appSession.tenantId &&
+      isNotNullOrUndefined(this.actorCarrierId)
     );
   }
 
   canAddShipperActorPrices(): boolean {
-    return (
-      this.hasShipperClients &&
-      this.tenantId === this.carrierTenantId &&
-      this.tenantId === this.appSession.tenantId
-    );
+    return this.hasShipperClients &&
+        this.tenantId === this.carrierTenantId &&
+        this.tenantId === this.appSession.tenantId &&
+        isNotNullOrUndefined(this.actorShipperId);
   }
 }

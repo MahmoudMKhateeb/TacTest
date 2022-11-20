@@ -67,6 +67,10 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public ShippingRequestFlag ShippingRequestFlag { get; set; }
         public string ShippingRequestFlagTitle { get; set; }
+        
+        public int? CarrierActorId { get; set; }
+        
+        public int? ShipperActorId { get; set; }
 
         #region Dedicated
         public TimeUnit? RentalDurationUnit { get; set; }
