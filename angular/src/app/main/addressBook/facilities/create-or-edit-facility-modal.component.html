@@ -129,7 +129,7 @@
                     [disabled]="countriesLoading"
                     placeholder="{{ l('SelectACounty') }}"
                     [showClearButton]="true"
-                    (onSelectionChanged)="loadCitiesByCountryId(selectedCountryId); facility.cityId = null"
+                    (selectionchange)="loadCitiesByCountryId(selectedCountryId); facility.cityId = null"
                     required
                   >
                     <dx-validator [validationGroup]="'createFacilityGroup'">
@@ -160,7 +160,6 @@
                   <!--                <validation-messages [formCtrl]="city"></validation-messages>-->
                   <dx-select-box
                     name="fcity"
-                    [(ngModel)]="facility.cityId"
                     [(value)]="facility.cityId"
                     [dataSource]="allCities"
                     displayExpr="displayName"

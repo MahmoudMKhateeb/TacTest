@@ -117,6 +117,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
           r.itemsTotalPricePreCommissionPreVat = undefined;
         });
       }
+      (this.offer.carrierActorId as any) = this.offer.carrierActorId.toString();
       this.active = true;
       this.modal.show();
     });
