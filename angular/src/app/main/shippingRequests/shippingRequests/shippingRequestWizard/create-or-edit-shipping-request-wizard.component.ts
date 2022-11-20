@@ -530,6 +530,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     });
     this._shippingRequestsServiceProxy.getAllCarriersActorsForDropDown().subscribe((result) => {
       this.AllActorsCarriers = result;
+      this.AllActorsCarriers.unshift( SelectItemDto.fromJS({id: null, displayName: this.l('Myself'), isOther: false}));
     });
 
     this._shippingRequestsServiceProxy.getAllShippersActorsForDropDown().subscribe((result) => {
