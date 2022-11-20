@@ -73,6 +73,8 @@ namespace TACHYON.PriceOffers
             input.ActorShipperPriceDto.VatAmountWithCommission = input.ActorShipperPriceDto.SubTotalAmountWithCommission * 0.15m;
             input.ActorShipperPriceDto.TotalAmountWithCommission = input.ActorShipperPriceDto.SubTotalAmountWithCommission + input.ActorShipperPriceDto.VatAmountWithCommission;
 
+            DisableTenancyFilters();
+            
             if (input.ActorShipperPriceDto.Id.HasValue)
             {
                 await UpdateActorShipperPrice(input);
@@ -155,6 +157,7 @@ namespace TACHYON.PriceOffers
         {
             input.ActorCarrierPrice.TaxVat = 15;
 
+            DisableTenancyFilters();
             if (!input.ActorCarrierPrice.Id.HasValue)
             {
                 await CreateActorCarrierPrice(input);
