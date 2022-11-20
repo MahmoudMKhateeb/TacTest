@@ -241,7 +241,8 @@ namespace TACHYON.Shipping.Trips
 
         public async Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(int id)
         {
-            var trip = await _shippingRequestTripRepository.GetAllIncluding(x => x.ShippingRequestFk).FirstOrDefaultAsync();
+            DisableTenancyFilters();
+            var trip = await _shippingRequestTripRepository.GetAllIncluding(x => x.ShippingRequestFk).Where(x=>x.Id==id).FirstOrDefaultAsync();
             var shippingRequestTrip = await GetShippingRequestTripForMapper<ShippingRequestsTripForViewDto>(id);
             if (shippingRequestTrip.HasAttachment)
             {
