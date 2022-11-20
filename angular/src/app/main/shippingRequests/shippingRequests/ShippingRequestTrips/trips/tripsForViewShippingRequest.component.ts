@@ -148,8 +148,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
         this.primengTableHelper.totalRecordsCount = result.totalCount;
         this.primengTableHelper.records = result.items;
         this.primengTableHelper.hideLoadingIndicator();
-        this.CanAssignDriverAndTruck = result.items[0].canAssignTrucksAndDrivers;
-        
+        this.CanAssignDriverAndTruck = result.items[0]?.canAssignTrucksAndDrivers;
       });
   }
 
