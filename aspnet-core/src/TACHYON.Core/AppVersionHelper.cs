@@ -13,7 +13,7 @@ namespace TACHYON
         /// Gets current version of the application.
         /// It's also shown in the web page.
         /// </summary>
-        public const string Version = "2.4.7";
+        public const string Version = "2.4.8";
 
         /// <summary>
         /// Gets release (last build) date of the application.
