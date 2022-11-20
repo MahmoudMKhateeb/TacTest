@@ -28,17 +28,30 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));
             }
 
-            if (IsBid)
+            if (IsInternalBrokerRequest)
+            {
+                IsTachyonDeal = false;
+                IsBid = false;
+                RequestType = ShippingRequestType.DirectRequest;
+            }
+            else if (IsBid)
             {
                 RequestType = ShippingRequestType.Marketplace;
+                IsTachyonDeal=false;
+                IsInternalBrokerRequest=false;
             }
             else if (IsTachyonDeal)
             {
                 RequestType = ShippingRequestType.TachyonManageService;
+                IsBid = false;
+                IsInternalBrokerRequest = false;
             }
+
             else
             {
                 RequestType = ShippingRequestType.DirectRequest;
+                IsTachyonDeal = false;
+                IsBid = false;
             }
 
             //if (IsDirectRequest && CarrierTenantIdForDirectRequest == null)
