@@ -99,22 +99,24 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         }
       });
     }
-    this._routStepsServiceProxy
-      .getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestForView.shippingRequest.id)
-      .pipe(
-        finalize(() => {
-          this.facilityLoading = false;
-        })
-      )
-      .subscribe((result) => {
-        this.allFacilities = result;
-        this.pickupFacilities = result.filter((r) => {
-          return this.shippingRequestForView.shippingRequestFlag === 0
-            ? r.cityId == this.shippingRequestForView.originalCityId
-            : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
+    if (this.usedIn === 'createOrEdit') {
+      this._routStepsServiceProxy
+        .getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestForView.shippingRequest.id)
+        .pipe(
+          finalize(() => {
+            this.facilityLoading = false;
+          })
+        )
+        .subscribe((result) => {
+          this.allFacilities = result;
+          this.pickupFacilities = result.filter((r) => {
+            return this.shippingRequestForView.shippingRequestFlag === 0
+              ? r.cityId == this.shippingRequestForView.originalCityId
+              : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
+          });
+          this.dropFacilities = result.filter((r) => this.DestCitiesDtos.some((y) => y.cityId == r.cityId));
         });
-        this.dropFacilities = result.filter((r) => this.DestCitiesDtos.some((y) => y.cityId == r.cityId));
-      });
+    }
   }
 
   /**
