@@ -874,12 +874,15 @@ namespace TACHYON.Shipping.Trips
         {
             DisableTenancyFilters();
             var trip = await GetTrip(id);
+            var hasCarrierClients = await IsEnabledAsync(AppFeatures.CarrierClients); // that's mean he is broker
             var userHasAccess = await _shippingRequestRepository.GetAll()
                 .Where(x => x.Id == trip.ShippingRequestId)
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper),
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper) && !hasCarrierClients,
                     x => x.TenantId == AbpSession.TenantId)
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier),
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier) && !hasCarrierClients,
                     x => x.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId.HasValue && hasCarrierClients,
+                    x => x.CarrierTenantId == AbpSession.TenantId || x.TenantId == AbpSession.TenantId)
                 .AnyAsync();
 
             if (!userHasAccess) throw new UserFriendlyException(L("YouDoNotHaveAccess"));
