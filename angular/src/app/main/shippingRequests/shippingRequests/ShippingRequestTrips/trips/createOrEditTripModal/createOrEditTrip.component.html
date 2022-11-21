@@ -230,7 +230,7 @@
               </div>
 
               <!--   StartOf::Driver&Truck for DedicatedSR -->
-              <ng-container *ngIf="feature.isEnabled('App.Shipper') && shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 1">
+              <ng-container *ngIf="shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 1">
                 <div class="form-group col-lg-6">
                   <label>{{ l('RouteType') }}</label>
                   <select
