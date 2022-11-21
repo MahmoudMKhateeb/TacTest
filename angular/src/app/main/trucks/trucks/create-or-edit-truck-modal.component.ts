@@ -167,13 +167,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         this.allTruckStatuss = result;
       });
 
-      this._priceOfferService.getAllCarrierActorsForDropDown().subscribe((result) => {
-        this.AllActorsCarriers = result;
-        let defaultItem = new SelectItemDto();
-        defaultItem.id = null;
-        defaultItem.displayName = this.l('Myself');
-        this.AllActorsCarriers.unshift(defaultItem);
-      });
+      this.getAllCarrierActors();
 
       if (this.isTruckTenantRequired) {
         this._shippingRequestsService.getAllCarriersForDropDown().subscribe((result) => (this.carriers = result));
@@ -194,7 +188,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         this.initTransportDropDownList();
         this.trucksTypeDisplayName = result.trucksTypeDisplayName;
         this.getTruckPictureUrl(this.truck.id);
-
+        (this.truck.carrierActorId as any) = this.truck.carrierActorId.toString();
+        this.getAllCarrierActors();
         // dropDowns
         this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
           this.allTransportTypes = result;
@@ -226,7 +221,19 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
     this.temporaryPictureUrl = '';
     this.active = true;
-  } //end of show
+  }
+
+  private getAllCarrierActors() {
+    this._priceOfferService.getAllCarrierActorsForDropDown().subscribe((result) => {
+      this.AllActorsCarriers = result;
+      let defaultItem = new SelectItemDto();
+      defaultItem.id = null;
+      defaultItem.displayName = this.l('Myself');
+      this.AllActorsCarriers.unshift(defaultItem);
+    });
+  }
+
+  //end of show
 
   createOrEditTruck() {
     if (!this.validateOthersInputs()) {

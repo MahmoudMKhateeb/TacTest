@@ -46,7 +46,8 @@ namespace TACHYON.MultiTenancy.TenantCarriers
         {
             if (!await _tenantRepository.GetAll().AnyAsync(x =>
                     x.Id == input.CarrierTenantId &&
-                    x.Edition.DisplayName.ToLower() == TACHYONConsts.CarrierEdtionName))
+                    x.Edition.DisplayName.ToLower() == TACHYONConsts.CarrierEdtionName
+                    || x.Edition.DisplayName.ToLower().Trim() == TACHYONConsts.CarrierSaasEditionName))
             {
                 throw new UserFriendlyException(L("TheCarrierSelectedIsNotFound"));
             }
