@@ -98,7 +98,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   }
 
   show(id, shippingRequestForView?: GetShippingRequestForViewOutput): void {
-    this.shippingRequestForView = shippingRequestForView; 
+    this.shippingRequestForView = shippingRequestForView;
     if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === 1) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
@@ -178,10 +178,10 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Carriers Drivers For DD
    */
   getAllDrivers() {
-    if (this.isCarrier || this.hasCarrierClients) {
-      this._trucksServiceProxy.getAllDriversForDropDown().subscribe((res) => {
-        this.allDrivers = res;
-      });
+    if (this.isTachyonDealer || this.isCarrier || this.hasCarrierClients) {
+        this._trucksServiceProxy.getDriversByShippingRequestId(this.shippingRequestForView.shippingRequest.id).subscribe((result) => {
+            this.allDrivers = result;
+        });
     }
   }
 
@@ -189,10 +189,10 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Carriers Trucks For DD
    */
   getAllTrucks(truckTypeId) {
-    if (this.isCarrier || this.hasCarrierClients) {
-      this._trucksServiceProxy.getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId).subscribe((res) => {
-        this.allTrucks = res;
-      });
+   if (this.isTachyonDealer || this.isCarrier || this.hasCarrierClients) {
+        this._trucksServiceProxy.getTrucksByShippingRequestId(truckTypeId, this.shippingRequestForView.shippingRequest.id).subscribe((result) => {
+            this.allTrucks = result;
+        });
     }
   }
 

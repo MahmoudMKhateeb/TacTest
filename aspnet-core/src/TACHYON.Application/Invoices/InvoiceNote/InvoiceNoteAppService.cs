@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Abp.Threading;
 using Abp.Timing;
@@ -46,8 +47,10 @@ namespace TACHYON.Invoices.InvoiceNotes
         private readonly IAppNotifier _appNotifier;
         private readonly IAbpSession _AbpSession;
         private readonly UserManager _userManager;
+        private readonly IRepository<TenantFeatureSetting, long> _tenantFeatureRepository;
+        private readonly IRepository<EditionFeatureSetting, long> _editionFeatureRepository;
 
-        public InvoiceNoteAppService(IRepository<InvoiceNote, long> invoiceRepository, IRepository<Tenant> tenantRepository, IRepository<Invoice, long> invoiceReposity, IRepository<InvoiceTrip, long> invoiveTripRepository, IRepository<SubmitInvoiceTrip, long> submitInvoiceTrip, IAppNotifier appNotifier, IRepository<SubmitInvoice, long> submitInvoiceReposity, IRepository<InvoiceNoteItem, long> invoiceNoteItemReposity, IRepository<DocumentFile, Guid> documentFileRepository, UserManager userManager, IAbpSession abpSession, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequestTripVas, long> shippingRequestTripVasRepository)
+        public InvoiceNoteAppService(IRepository<InvoiceNote, long> invoiceRepository, IRepository<Tenant> tenantRepository, IRepository<Invoice, long> invoiceReposity, IRepository<InvoiceTrip, long> invoiveTripRepository, IRepository<SubmitInvoiceTrip, long> submitInvoiceTrip, IAppNotifier appNotifier, IRepository<SubmitInvoice, long> submitInvoiceReposity, IRepository<InvoiceNoteItem, long> invoiceNoteItemReposity, IRepository<DocumentFile, Guid> documentFileRepository, UserManager userManager, IAbpSession abpSession, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequestTripVas, long> shippingRequestTripVasRepository, IRepository<TenantFeatureSetting, long> tenantFeatureRepository, IRepository<EditionFeatureSetting, long> editionFeatureRepository)
         {
             _invoiceNoteRepository = invoiceRepository;
             _tenantRepository = tenantRepository;
@@ -62,6 +65,8 @@ namespace TACHYON.Invoices.InvoiceNotes
             _AbpSession = abpSession;
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestTripVasRepository = shippingRequestTripVasRepository;
+            _tenantFeatureRepository = tenantFeatureRepository;
+            _editionFeatureRepository = editionFeatureRepository;
         }
 
         #region MainFunctions
@@ -249,7 +254,6 @@ namespace TACHYON.Invoices.InvoiceNotes
         public async Task<List<CompayForDropDownDto>> GetAllCompanyForDropDown()
         {
             return await _tenantRepository.GetAll()
-                .Where(x => x.EditionId == ShipperEditionId || x.EditionId == CarrierEditionId)
                 .Select(x => new CompayForDropDownDto { Id = x.Id,
                     DisplayName = x.TenancyName })
                 .AsNoTracking()

@@ -78,6 +78,7 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<ShippingRequestAndTripNote> _ShippingRequestAndTripNoteRepository;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
         private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTrucksRepository;
+        private readonly IRepository<User, long> _userRepository;
 
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
@@ -103,7 +104,8 @@ namespace TACHYON.Shipping.Trips
             IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository
 ,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
-            IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTrucksRepository)
+            IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTrucksRepository,
+            IRepository<User, long> userRepository)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -128,6 +130,7 @@ namespace TACHYON.Shipping.Trips
             _ShippingRequestAndTripNoteRepository = ShippingRequestAndTripNoteRepository;
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
             _dedicatedShippingRequestTrucksRepository = dedicatedShippingRequestTrucksRepository;
+            _userRepository = userRepository;
         }
 
 

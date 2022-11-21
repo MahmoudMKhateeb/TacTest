@@ -58,6 +58,7 @@ namespace TACHYON.Tracking
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
 
+            var hasCarrierClient = await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierClients);
             DisableTenancyFilters();
             var query = _ShippingRequestTripRepository
             .GetAll()
@@ -84,11 +85,12 @@ namespace TACHYON.Tracking
                 //.Where(x => x.ShippingRequestFk.CarrierTenantId.HasValue)
                 .Where(x=>x.ShippingRequestFk.ShippingRequestFlag==ShippingRequestFlag.Normal)
                 .Where(x => x.ShippingRequestFk.Status == ShippingRequestStatus.PostPrice || x.ShippingRequestFk.CarrierTenantId.HasValue)
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper),
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper) && !hasCarrierClient,
                     x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                 .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier),
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier) && !hasCarrierClient,
                     x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+            .WhereIf(hasCarrierClient,x=> x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                 .WhereIf(input.PickupFromDate.HasValue && input.PickupToDate.HasValue,
                     x => x.ShippingRequestFk.StartTripDate >= input.PickupFromDate.Value &&
                          x.ShippingRequestFk.StartTripDate <= input.PickupToDate.Value)
