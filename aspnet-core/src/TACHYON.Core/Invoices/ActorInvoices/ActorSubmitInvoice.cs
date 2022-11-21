@@ -15,7 +15,7 @@ namespace TACHYON.Invoices.ActorInvoices
     [Table("ActorSubmitInvoices")]
     public class ActorSubmitInvoice : FullAuditedEntity<long>, IMustHaveTenant, IHasDocument
     {
-        public long? ReferencNumber { get; set; }
+        public string ReferencNumber { get; set; }
         public int TenantId { set; get; }
         [ForeignKey(nameof(TenantId))] 
         public Tenant Tenant { get; set; }
