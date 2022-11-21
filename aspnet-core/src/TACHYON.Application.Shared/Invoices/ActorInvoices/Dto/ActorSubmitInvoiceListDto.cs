@@ -8,7 +8,7 @@ namespace TACHYON.Invoices.ActorInvoices.Dto
 {
     public class ActorSubmitInvoiceListDto: CreationAuditedEntityDto<long>
     {
-        public long ReferencNumber { get; set; }
+        public string ReferencNumber { get; set; }
        // public int PeriodId { get; set; }
         public string TenantName { get; set; }
         public DateTime DueDate { get; set; }

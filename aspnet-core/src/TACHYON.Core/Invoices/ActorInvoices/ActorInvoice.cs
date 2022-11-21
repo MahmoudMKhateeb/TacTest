@@ -18,7 +18,7 @@ namespace TACHYON.Invoices.ActorInvoices
     public class ActorInvoice : FullAuditedEntity<long>, IMustHaveTenant
     {
 
-        public long? InvoiceNumber { get; set; }
+        public string InvoiceNumber { get; set; }
         public int TenantId { get; set; }
         [ForeignKey(nameof(TenantId))] public Tenant Tenant { get; set; }
         public DateTime DueDate { get; set; }
