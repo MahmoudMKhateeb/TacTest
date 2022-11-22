@@ -36,12 +36,14 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
   input: CreateOrEditPriceOfferInput = new CreateOrEditPriceOfferInput();
   Items: PriceOfferItem[] = [];
   isPostPriceOffer: boolean;
+  isForDedicated: boolean;
   constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy) {
     super(injector);
     this.offerForEditOutput.priceOfferViewDto = new PriceOfferViewDto();
   }
 
-  show(shippingRequestId: number, offerId: number, isPostPriceOffer: boolean = false): void {
+  show(shippingRequestId: number, offerId: number, isPostPriceOffer: boolean = false, isForDedicated = false): void {
+    this.isForDedicated = isForDedicated;
     this.isPostPriceOffer = isPostPriceOffer;
     this._CurrentServ.getPriceOfferForView(offerId).subscribe((result) => {
       this.offerForEditOutput = result;
@@ -82,7 +84,7 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
         this._CurrentServ.accept(this.offerForEditOutput.priceOfferViewDto.id).subscribe((result) => {
           this.notify.success(this.l('SuccessfullyAccepted'));
           this.offerForEditOutput.priceOfferViewDto.status = result;
-          this.modalRefresh.emit(null);
+          this.modalRefresh.emit(true);
           //this.modalDelete.emit(null);
           this.close();
         });

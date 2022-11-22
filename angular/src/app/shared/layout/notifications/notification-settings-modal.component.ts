@@ -38,6 +38,7 @@ export class NotificationSettingsModalComponent extends AppComponentBase {
       let subscription = new NotificationSubscriptionDto();
       subscription.name = n.name;
       subscription.isSubscribed = n.isSubscribed;
+      subscription.isEmailSubscribed = n.isEmailSubscribed;
       return subscription;
     });
 

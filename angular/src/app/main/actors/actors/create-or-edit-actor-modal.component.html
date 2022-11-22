@@ -1,0 +1,192 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #actorForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="actor.id">{{ l('EditActor') }}</span>
+            <span *ngIf="!actor.id">{{ l('CreateNewActor') }}</span>
+          </h4>
+
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="Actor_CompanyName">{{ l('CompanyName') }} <span class="required-fileds">*</span></label>
+            <input
+              type="text"
+              #Actor_CompanyName="ngModel"
+              id="Actor_CompanyName"
+              class="form-control"
+              [(ngModel)]="actor.companyName"
+              name="CompanyName"
+              minlength="0"
+              maxlength="255"
+              required
+            />
+            <validation-messages [formCtrl]="Actor_CompanyName"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="Actor_ActorType">{{ l('ActorType') }} <span class="required-fileds">*</span></label>
+            <select
+              class="form-select form-control custom-select"
+              #Actor_ActorType="ngModel"
+              required
+              name="ActorType"
+              id="Actor_ActorType"
+              [(ngModel)]="actor.actorType"
+              [disabled]="isInUpdateStage()"
+              (change)="BindRequiredDocs()"
+            >
+              <option *ngIf="HaveShipperClients" value="1">{{ l('Shipper') }}</option>
+
+              <option *ngIf="HaveCarrierClients" value="2">{{ l('Carrier') }}</option>
+            </select>
+            <validation-messages [formCtrl]="Actor_ActorType"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="Actor_MoiNumber">{{ l('MoiNumber') }} <span class="required-fileds">*</span></label>
+            <input
+              (keypress)="numberOnly($event)"
+              type="text"
+              #Actor_MoiNumber="ngModel"
+              id="Actor_MoiNumber"
+              class="form-control"
+              [(ngModel)]="actor.moiNumber"
+              name="MoiNumber"
+              pattern="^7\d{9}$"
+              maxlength="10"
+              required
+            />
+            <span class="text-muted small pt-2">{{ 'MoiNumberPatternMsg' | localize }}</span>
+            <validation-messages [formCtrl]="Actor_MoiNumber"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="Actor_Address">{{ l('Address') }} <span class="required-fileds">*</span></label>
+            <input
+              type="text"
+              maxlength="100"
+              #Actor_Address="ngModel"
+              id="Actor_Address"
+              class="form-control"
+              [(ngModel)]="actor.address"
+              name="Address"
+              required
+            />
+            <validation-messages [formCtrl]="Actor_Address"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="Actor_MobileNumber">{{ l('MobileNumber') }} <span class="required-fileds">*</span></label>
+            <input
+              (keypress)="numberOnly($event)"
+              type="tel"
+              #Actor_MobileNumber="ngModel"
+              id="Actor_MobileNumber"
+              class="form-control"
+              [(ngModel)]="actor.mobileNumber"
+              name="MobileNumber"
+              pattern="^5\d{8}$"
+              maxlength="9"
+              required
+              placeholder="5xxxxxxxx"
+            />
+            <span class="text-muted small px-2">{{ 'PhoneNumberPatternMsg' | localize }}</span>
+            <validation-messages [formCtrl]="Actor_MobileNumber"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="Actor_Email">{{ l('Email') }} <span class="required-fileds">*</span></label>
+            <input type="text" #Actor_Email="ngModel" id="Actor_Email" class="form-control" [(ngModel)]="actor.email" name="Email" required />
+            <validation-messages [formCtrl]="Actor_Email"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="Actor_Email">{{ l('InvoiceDueDays') }} <span class="required-fileds">*</span></label>
+            <input
+              (keypress)="numberOnly($event)"
+              type="number"
+              min="1"
+              #Actor_InvoiceDueDays="ngModel"
+              id="Actor_InvoiceDueDays"
+              class="form-control"
+              [(ngModel)]="actor.invoiceDueDays"
+              name="InvoiceDueDays"
+              required
+            />
+            <validation-messages [formCtrl]="Actor_InvoiceDueDays"></validation-messages>
+          </div>
+
+          <div *ngIf="actor.createOrEditDocumentFileDtos != undefined ? (actor.createOrEditDocumentFileDtos.length > 0 ? true : false) : false">
+            <div class="separator separator-dashed my-5"></div>
+            <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TenantRequiredDocuments') }}</h3>
+            <app-required-document-form-child
+              #requiredDocumentFormChildComponent
+              [createOrEditDocumentFileDtos]="actor.createOrEditDocumentFileDtos"
+              (onDocsUploaderCompleteAll)="createOrEd()"
+              [parentForm]="actorForm"
+            >
+            </app-required-document-form-child>
+          </div>
+
+          <div *ngIf="actor.createOrEditDocumentFileDtos == undefined || actor.createOrEditDocumentFileDtos.length == 0">
+            <div class="form-group">
+              <label for="Actor_CR">{{ l('CR') }} <span class="required-fileds">*</span></label>
+              <input type="text" #Actor_CR="ngModel" id="Actor_CR" class="form-control" [(ngModel)]="actor.cr" name="CR" required />
+              <validation-messages [formCtrl]="Actor_CR"></validation-messages>
+            </div>
+            <div class="form-group">
+              <label for="Actor_VatCertificate">{{ l('VatCertificate') }} <span class="required-fileds">*</span></label>
+              <input
+                type="text"
+                #Actor_VatCertificate="ngModel"
+                id="Actor_VatCertificate"
+                class="form-control"
+                [(ngModel)]="actor.vatCertificate"
+                name="VatCertificate"
+                required
+              />
+              <validation-messages [formCtrl]="Actor_VatCertificate"></validation-messages>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox-inline">
+              <label for="ISActive" class="checkbox">
+                <input id="ISActive" type="checkbox" name="OnlyLockedUsers" [(ngModel)]="actor.isActive" />
+                {{ 'IsActive' | localize }}
+                <span></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!actorForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

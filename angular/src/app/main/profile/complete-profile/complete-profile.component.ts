@@ -1,15 +1,20 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
-import { ProfileServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  NormalPricePackagesServiceProxy,
+  ProfileServiceProxy,
+  TenantCityLookupTableDto,
+  UpdateTenantProfileInformationInputDto,
+} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
-import { UpdateTenantProfileInformationInputDto } from '@shared/service-proxies/service-proxies';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-complete-profile',
   templateUrl: './complete-profile.component.html',
-  styleUrls: ['./complete-profile.component.css'],
+  styleUrls: ['./complete-profile.component.less'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CompleteProfileComponent extends AppComponentBase implements OnInit {
   completeFiled: UpdateTenantProfileInformationInputDto = new UpdateTenantProfileInformationInputDto();
@@ -17,8 +22,16 @@ export class CompleteProfileComponent extends AppComponentBase implements OnInit
   profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
   saving = false;
   loading = true;
+  selectedNodes1: any;
+  allCities: TenantCityLookupTableDto[];
 
-  constructor(injector: Injector, private _profileServiceProxy: ProfileServiceProxy, private _ActiveRoute: ActivatedRoute) {
+  constructor(
+    injector: Injector,
+    private _profileServiceProxy: ProfileServiceProxy,
+    private _tenantServiceProxy: NormalPricePackagesServiceProxy,
+    private _ActiveRoute: ActivatedRoute,
+    private renderer: Renderer2
+  ) {
     super(injector);
   }
 
@@ -27,12 +40,11 @@ export class CompleteProfileComponent extends AppComponentBase implements OnInit
       this.completeFiled = result;
       this.loading = false;
     });
-
     this.getProfilePicture();
     abp.event.on('profilePictureChanged', () => {
       this.getProfilePicture();
     });
-    console.log('log : ', this._ActiveRoute.snapshot.parent.paramMap.get('id'));
+    this.loadAllCities();
   }
 
   /**
@@ -69,5 +81,15 @@ export class CompleteProfileComponent extends AppComponentBase implements OnInit
    */
   changeProfilePicture() {
     abp.event.trigger('app.show.changeProfilePictureModal');
+  }
+
+  /**
+   * Get All System Cities
+   */
+
+  loadAllCities() {
+    this._tenantServiceProxy.getAllCitiesForTableDropdown().subscribe((res) => {
+      this.allCities = res;
+    });
   }
 }

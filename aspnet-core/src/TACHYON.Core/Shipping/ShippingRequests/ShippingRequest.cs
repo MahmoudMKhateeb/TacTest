@@ -1,6 +1,7 @@
 ﻿using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Organizations;
 using Abp.Timing;
 using Microsoft.Win32.SafeHandles;
 using System;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading.Tasks;
+using TACHYON.Actors;
 using TACHYON.Authorization.Users;
 using TACHYON.Cities;
 using TACHYON.Configuration;
@@ -19,6 +21,7 @@ using TACHYON.PricePackages;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBidStatuses;
 using TACHYON.Shipping.ShippingRequestStatuses;
@@ -37,7 +40,7 @@ using TACHYON.UnitOfMeasures;
 namespace TACHYON.Shipping.ShippingRequests
 {
     [Table("ShippingRequests")]
-    public class ShippingRequest : FullAuditedEntity<long>, IMustHaveTenant, IHasIsDrafted
+    public class ShippingRequest : FullAuditedEntity<long>, IMustHaveTenant, IHasIsDrafted,IMayHaveShipperActor,IMayHaveCarrierActor
     {
         public string ReferenceNumber { get; set; }
 
@@ -73,13 +76,13 @@ namespace TACHYON.Shipping.ShippingRequests
         public int? CarrierTenantIdForDirectRequest { get; set; }
 
         public ShippingRequestRouteType? RouteTypeId { get; set; }
-
-
+        public ShippingRequestFlag ShippingRequestFlag { get; set; }
         //city
         public virtual int? OriginCityId { get; set; }
 
         [ForeignKey("OriginCityId")] public City OriginCityFk { get; set; }
 
+        //todo will be removed after transfer data
         public virtual int? DestinationCityId { get; set; }
 
         [ForeignKey("DestinationCityId")] public City DestinationCityFk { get; set; }
@@ -244,6 +247,11 @@ namespace TACHYON.Shipping.ShippingRequests
 
         //trips collection
         public ICollection<ShippingRequestTrip> ShippingRequestTrips { get; set; }
+        //citites
+        public ICollection<ShippingRequestDestinationCity> ShippingRequestDestinationCities { get; set; }
+        public ICollection<DedicatedShippingRequestDriver> DedicatedShippingRequestDrivers { get; set; }
+        public ICollection<DedicatedShippingRequestTruck> DedicatedShippingRequestTrucks { get; set; }
+
 
         #endregion
 
@@ -286,6 +294,30 @@ namespace TACHYON.Shipping.ShippingRequests
 
         #endregion
 
+        #region Dedicated
+        /// <summary>
+        /// Unit of rental duration
+        /// </summary>
+        public TimeUnit? RentalDurationUnit { get; set; }
+        /// <summary>
+        /// Number of duration per time unit
+        /// </summary>
+        public int RentalDuration { get; set; }
+        /// <summary>
+        /// No of miles that are expected 
+        /// </summary>
+        public double ExpectedMileage { get; set; }
+        public string ServiceAreaNotes { get; set; }
+        public DateTime? RentalStartDate { get; set; }
+        public DateTime? RentalEndDate { get; set; }
+        /// <summary>
+        /// Qty of dedicated trucks
+        /// </summary>
+        public int NumberOfTrucks { get; set; }
+        public double? DedicatedKPI { get; set; }
+
+        #endregion
+
         public string SplitInvoiceFlag { get; set; }
 
         public void Close()
@@ -305,5 +337,25 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             return TenantId == CarrierTenantId;
         }
+
+        public int? ShipperActorId { get; set; }
+
+        [ForeignKey("ShipperActorId")]
+        public Actor ShipperActorFk { get; set; }
+
+        public int? CarrierActorId { get; set; }
+
+        [ForeignKey("CarrierActorId")]
+        public Actor CarrierActorFk { get; set; }
+
+        public int? ActorShipperPriceId { get; set; }
+
+        [ForeignKey(nameof(ActorShipperPriceId))]
+        public ActorShipperPrice ActorShipperPrice { get; set; }
+
+        public int? ActorCarrierPriceId { get; set; }
+        
+        [ForeignKey(nameof(ActorCarrierPriceId))]
+        public ActorCarrierPrice ActorCarrierPrice { get; set; }
     }
 }

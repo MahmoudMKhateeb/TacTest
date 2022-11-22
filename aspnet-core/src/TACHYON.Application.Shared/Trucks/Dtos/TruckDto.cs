@@ -1,6 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
 
-
 namespace TACHYON.Trucks.Dtos
 {
     public class TruckDto : EntityDto<long>
@@ -38,5 +37,12 @@ namespace TACHYON.Trucks.Dtos
 
         //document file Number
         public string IstmaraNumber { get; set; }
+        public string WorkingTruckStatus { get; set; }
+        public string WorkingShippingRequestReference { get; set; }
+        public virtual long? DriverUserId { get; set; }
+        public string DriverUser { get; set; }
+
+        public string CarrierActorName { get; set; }
+
     }
 }

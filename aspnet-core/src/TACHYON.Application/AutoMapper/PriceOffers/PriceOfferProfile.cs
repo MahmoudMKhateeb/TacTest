@@ -1,10 +1,12 @@
 ﻿using Abp.Timing;
 using AutoMapper;
 using System;
+using System.Linq;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
+using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.AutoMapper.PriceOffers
@@ -44,15 +46,28 @@ namespace TACHYON.AutoMapper.PriceOffers
                 .ForMember(dst => dst.ShipperRating, opt => opt.MapFrom(src => src.Tenant.Rate))
                 .ForMember(dst => dst.ShipperRatingNumber, opt => opt.MapFrom(src => src.Tenant.RateNumber))
                 .ForMember(dst => dst.Carrier, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
+                .ForMember(dst => dst.ShipperName, opt => opt.MapFrom(src => src.Tenant.Name))
                 .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
-                .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
+                .ForMember(dst => dst.destinationCities, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities))
+                //.ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities.First().CityFk.DisplayName))
                 .ForMember(dst => dst.BidStatusTitle, opt => opt.MapFrom(src => src.BidStatus.GetEnumDescription()))
                 .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
                 .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => "0"))
                 .ForMember(dst => dst.RemainingDays,
                     opt => opt.MapFrom(src => GetRemainingDays(src.BidEndDate, src.BidStatus)))
                 .ForMember(dst => dst.Price, opt => opt.MapFrom(src => src.Price))
-                ;
+                .ForMember(dst => dst.ShipperActor, opt => opt.MapFrom(src => src.ShipperActorFk!=null ?src.ShipperActorFk.CompanyName :""))
+                .ForMember(dst => dst.CarrierActor, opt => opt.MapFrom(src => src.CarrierActorFk!=null ? src.CarrierActorFk.CompanyName :""))
+                 .ForMember(dst => dst.ShippingRequestFlagTitle,
+                    opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
+                .ForMember(dst => dst.RentalDurationUnitTitle,
+                    opt => opt.MapFrom(src => src.RentalDurationUnit != null ? GetDurationUnit(src.RentalDurationUnit.Value) : ""));
+
+            CreateMap<ActorShipperPrice, ActorShipperPriceDto>();
+            CreateMap<CreateOrEditActorShipperPriceDto, ActorShipperPrice>().ReverseMap();
+            CreateMap<ActorCarrierPrice, ActorCarrierPriceDto>();
+            CreateMap<ActorCarrierPrice, CreateOrEditActorCarrierPrice>().ReverseMap();
+
         }
 
         private string GetRemainingDays(DateTime? BidEndDate, ShippingRequestBidStatus Status)
@@ -78,6 +93,21 @@ namespace TACHYON.AutoMapper.PriceOffers
             else if (StartTripDate.HasValue) return StartTripDate.Value.ToString("dd/MM/yyyy");
 
             return "";
+        }
+
+        private static string GetDurationUnit(TimeUnit timeUnit)
+        {
+            switch (timeUnit)
+            {
+                case TimeUnit.Daily:
+                    return "Days";
+                case TimeUnit.Monthly:
+                    return "Months";
+                case TimeUnit.Weekly:
+                    return "Weeks";
+                default:
+                    return "";
+            }
         }
     }
 }

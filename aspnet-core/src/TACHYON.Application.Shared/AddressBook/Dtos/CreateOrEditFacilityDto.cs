@@ -22,7 +22,9 @@ namespace TACHYON.AddressBook.Dtos
         public double Latitude { get; set; }
 
         public int CityId { get; set; }
+        public int? ShipperId { get; set; }
         [Required]
         public List<CreateOrEditFacilityWorkingHourDto> FacilityWorkingHours { get; set; }
+        public int? ShipperActorId { get; set; }
     }
 }

@@ -9,11 +9,14 @@
       <!--      </div>-->
       <div role="actions">
         <create-or-edit-template-drop-down-button
-          *ngIf="isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestforView.shippingRequest.isSaas)"
+          *ngIf="
+            shippingRequestforView.shippingRequestFlag === 0 &&
+            (isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestforView.shippingRequest.isSaas))
+          "
           [entityType]="entityTypes.ShippingRequestTemplate"
           [sourceEntityId]="activeShippingRequestId"
         ></create-or-edit-template-drop-down-button>
-        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'Activity Log' }} </a>
+        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'ActivityLog' | localize }} </a>
         <ng-container *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid">
           <a class="btn btn-outline-success" (click)="scrollToDirectRequests()">{{ l('SendDirectRequests') }}</a>
           <a class="btn btn-outline-success margin-right-5" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">{{
@@ -23,7 +26,7 @@
         <a
           class="btn btn-outline-primary"
           *ngIf="!shippingRequestforView.shippingRequest.isSaas"
-          (click)="srPostPriceUpdatesModal.show(activeShippingRequestId)"
+          (click)="srPostPriceUpdatesModal.show(activeShippingRequestId, shippingRequestforView.shippingRequestFlag === 1)"
         >
           <i class="flaticon-edit-1"></i> {{ l('ShippingRequestUpdates') }}
         </a>
@@ -49,6 +52,7 @@
           [shippingRequestId]="activeShippingRequestId"
           [shippingRequestId]="activeShippingRequestId"
           [isTachyonDeal]="shippingRequestforView.shippingRequest.isTachyonDeal"
+          [isForDedicated]="shippingRequestforView.shippingRequestFlag === 1"
           [Channel]="shippingRequestforView.shippingRequest.isBid ? 1 : 2"
         ></shipping-request-offers-list>
       </ng-template>
@@ -59,6 +63,44 @@
         <normal-price-packages-list [shippingRequestId]="activeShippingRequestId"></normal-price-packages-list>
       </ng-template>
       <!--  end:: NormalPricePackageSection -->
+
+      <div class="card card-custom gutter-b" *ngIf="feature.isEnabled('App.CarrierClients') || feature.isEnabled('App.ShipperClients')">
+        <div class="card-header">
+          <h3 class="card-title">{{ l('Actors') }}</h3>
+          <div class="card-toolbar">
+            <button type="submit" class="btn btn-primary" (click)="actorsPricing.show()">
+              <span>{{ l('ActorsPricing') }}</span>
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label>{{ l('ActorShipperName') }}</label>
+                <!--                          [(ngModel)]="carrierPriceInput.actorCarrierPrice.vatAmount"-->
+                <input type="text" [value]="shippingRequestforView.shipperActorName" class="form-control" name="ActorShipperName" disabled />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label>{{ l('ActorCarrierName') }}</label>
+                <!--                          [(ngModel)]="carrierPriceInput.actorCarrierPrice.vatAmount"-->
+                <input type="text" [value]="shippingRequestforView.carrierActorName" class="form-control" name="ActorCarrierName" disabled />
+              </div>
+            </div>
+          </div>
+        </div>
+        <app-create-or-edit-actors-price
+          #actorsPricing
+          [numberOfCreatedTrips]="shippingRequestforView.totalsTripsAddByShippier"
+          [shippingRequestId]="activeShippingRequestId"
+          [tenantId]="shippingRequestforView.tenantId"
+          [carrierTenantId]="shippingRequestforView.shippingRequest.carrierTenantId"
+          [actorCarrierId]="shippingRequestforView.carrierActorId"
+          [actorShipperId]="shippingRequestforView.shipperActorId"
+        ></app-create-or-edit-actors-price>
+      </div>
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->
         <div class="card-header">
@@ -94,6 +136,10 @@
                   <label>{{ l('Capacity') }}</label>
                   <input class="form-control" type="text" name="numberOfDrops" value="{{ shippingRequestforView.capacityDisplayName }}" disabled />
                 </div>
+                <div class="col-lg-6 mt-5" *ngIf="shippingRequestforView.shippingRequestFlag === 1">
+                  <label>{{ l('NumberOfTrucks') }}</label>
+                  <input class="form-control" type="number" name="expectedMileage" value="{{ shippingRequestforView.numberOfTrucks }}" disabled />
+                </div>
               </div>
             </div>
           </div>
@@ -124,7 +170,7 @@
                     </div>
                     <!-- End::Shipping Type-->
 
-                    <div class="col-lg-3 mt-5">
+                    <div class="col-lg-3 mt-5" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('ShipperReference') }}</label>
                         <div class="input-group date">
@@ -139,7 +185,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-3 mt-5">
+                    <div class="col-lg-3 mt-5" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('ShipperInvoiceNumber') }}</label>
                         <div class="input-group date">
@@ -217,11 +263,11 @@
               <div class="mb-3">
                 <div class="mb-2">
                   <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" [class.mt-4]="shippingRequestforView.shippingRequestFlag === 1">
                       <label><span class="required-fileds"></span> {{ l('MainGoodCategory') }} </label>
                       <input class="form-control" type="text" name="MainGoodCategory" [value]="shippingRequestforView.goodsCategoryName" disabled />
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <label><span class="required-fileds"></span> {{ l('TotalWeight') }}</label>
                       <div>
                         <div class="input-group">
@@ -245,7 +291,7 @@
                         <input class="form-control" type="text" name="packingType" [value]="shippingRequestforView.packingTypeDisplayName" disabled />
                       </div>
                     </div>
-                    <div class="col-lg-6 mt-4">
+                    <div class="col-lg-6 mt-4" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('NumberOfPacking') }}</label>
                         <input
@@ -285,7 +331,7 @@
                 <div class="mb-2">
                   <div class="row">
                     <!-- Start of Select Source -->
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('OriginCity') }}</label>
                         <input class="form-control" type="text" name="originCity" [value]="shippingRequestforView.originalCityName" disabled />
@@ -293,7 +339,7 @@
                     </div>
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label> {{ l('DestinationCity') }}</label>
+                        <label> {{ l(shippingRequestforView.shippingRequestFlag === 0 ? 'DestinationCity' : 'ServiceAreas') }}</label>
                         <input
                           class="form-control"
                           type="text"
@@ -304,7 +350,7 @@
                       </div>
                     </div>
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('TripsStartDate') }}</label>
                         <div class="input-group date">
@@ -327,7 +373,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('TripsEndDate') }}</label>
                         <div class="input-group date">
@@ -348,11 +394,11 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <label>{{ l('RouteType') }}</label>
                       <input class="form-control" type="text" name="routeType" value="{{ l(shippingRequestforView.routTypeName) }}" disabled />
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label><span class="required-fileds"></span> {{ l('NumberOfDrops') }} </label>
                         <input
@@ -364,7 +410,7 @@
                         />
                       </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('NumberOfTrips') }}</label>
                         <input
@@ -372,6 +418,24 @@
                           type="number"
                           name="numberOfTrips"
                           [value]="shippingRequestforView.shippingRequest.numberOfTrips"
+                          disabled
+                        />
+                      </div>
+                    </div>
+                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 1">
+                      <div class="form-group">
+                        <label> {{ l('ServiceAreaNotes') }}</label>
+                        <input class="form-control" type="text" name="serviceAreaNotes" [value]="shippingRequestforView.serviceAreaNotes" disabled />
+                      </div>
+                    </div>
+                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 1">
+                      <div class="form-group">
+                        <label>{{ l('ExpectedMileage') }}</label>
+                        <input
+                          class="form-control"
+                          type="text"
+                          name="expectedMileage"
+                          value="{{ shippingRequestforView.expectedMileage }}"
                           disabled
                         />
                       </div>
@@ -386,6 +450,121 @@
         <!--  start of card::form-->
       </div>
       <!--   End::RouteDetails   -->
+
+      <!--   start::RentalDetails     -->
+      <div class="card card-custom gutter-b" *ngIf="shippingRequestforView.shippingRequestFlag === 1">
+        <!--  start of card::form-->
+        <div class="card-header">
+          <h3 class="card-title">{{ l('RentalDetails') }}</h3>
+        </div>
+        <!--  start of card::body-->
+        <div class="card-body">
+          <div class="row">
+            <!--  start of Route::Details-->
+            <div class="col-12">
+              <div class="mb-3">
+                <div class="mb-2">
+                  <div class="row">
+                    <!-- Start of Select Source -->
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label> {{ l('RentalDurationUnit') }}</label>
+                        <input
+                          class="form-control"
+                          type="text"
+                          name="rentalDurationUnitTitle"
+                          [value]="shippingRequestforView.rentalDurationUnitTitle"
+                          disabled
+                        />
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label> {{ l('RentalDuration') }}</label>
+                        <input class="form-control" type="text" name="rentalDuration" [value]="shippingRequestforView.rentalDuration" disabled />
+                      </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label> {{ l('RentalStartDate') }}</label>
+                        <div class="input-group date">
+                          <input
+                            [(date)]="shippingRequestforView.rentalStartDate"
+                            class="form-control"
+                            type="datetime"
+                            placeholder="{{ l('DatePlaceholder') }}"
+                            name="rentalStartDate"
+                            bsDatepicker
+                            datePickerMomentModifier
+                            disabled
+                          />
+
+                          <div class="input-group-append">
+                            <span class="input-group-text">
+                              <i class="la la-calendar-check-o"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label> {{ l('RentalEndDate') }}</label>
+                        <div class="input-group date">
+                          <input
+                            [(date)]="shippingRequestforView.rentalEndDate"
+                            class="form-control"
+                            placeholder="{{ l('DatePlaceholder') }}"
+                            name="endDate"
+                            bsDatepicker
+                            datePickerMomentModifier
+                            disabled
+                          />
+                          <div class="input-group-append">
+                            <span class="input-group-text">
+                              <i class="la la-calendar-check-o"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--  end of card::body-->
+        <!--  start of card::form-->
+      </div>
+      <!--   End::RentalDetails   -->
+
+      <!--  start:Tms for shipper     -->
+      <tms-for-shipper
+        *ngIf="shippingRequestforView.shippingRequestFlag === 1"
+        [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
+        [rentalRange]="rentalRange"
+      ></tms-for-shipper>
+      <!--  end:Tms for shipper     -->
+
+      <div class="row gutter-b">
+        <app-project-performance
+          class="col-6"
+          *ngIf="shippingRequestforView.shippingRequestFlag === 1"
+          [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
+          [KPI]="shippingRequestforView?.dedicatedKPI"
+          [numberOfTrips]="shippingRequestforView?.totalsTripsAddByShippier"
+        >
+        </app-project-performance>
+
+        <app-truck-performance-chart
+          class="col-6"
+          *ngIf="shippingRequestforView.shippingRequestFlag === 1"
+          [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
+        ></app-truck-performance-chart>
+      </div>
+
       <!--  start:: DirectOffers      -->
 
       <ng-template [ngIf]="canSeeDirectRequests()">

@@ -7,6 +7,7 @@ namespace TACHYON.Penalties.Dto
 {
    public class GetAllPenaltiesDto : EntityDto
     {
+        public string ReferenceNumber { get; set; }
         public string PenaltyName { get; set; }
         public string PenaltyDescrption { get; set; }
         public decimal TotalAmount { get; set; }
@@ -22,5 +23,7 @@ namespace TACHYON.Penalties.Dto
         public string PenaltyStatusTitle { get { return Status.GetEnumDescription(); } }
         public long? InvoiceNumber { get; set; }
         public DateTime GenerationDate { get; set; }
+        public string InvoiceFlag { get; set; }
+
     }
 }

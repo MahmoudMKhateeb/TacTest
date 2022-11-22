@@ -151,6 +151,8 @@ import { RatingModule } from '@node_modules/primeng/rating';
 import { DriverTrackingModalComponent } from './users/drivers/driver-tracking-modal/driver-tracking-modal.component';
 import { AgmCoreModule } from '@node_modules/@agm/core';
 import { UnitOfMeasureTranslationsComponent } from './unitOfMeasures/unitOfMeasures/UnitOfMeasureTranslations/unit-of-measure-translations/unit-of-measure-translations.component';
+// import { ActorInvoiceDemandModelComponent } from './actors/Actor-Invoices-ondemand-model.component';
+import { MultiSelectModule } from '@node_modules/primeng/multiselect';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
@@ -191,6 +193,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DevExtremeModule,
     RatingModule,
     AgmCoreModule,
+    MultiSelectModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDKKZqDW_xX5azTqBV2oXSb6P3nwCAzOpw',
       libraries: ['places'],
@@ -310,6 +313,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     TruckStatusesTranslationsTemplateComponent,
     DriverTrackingModalComponent,
     UnitOfMeasureTranslationsComponent,
+    // ActorInvoiceDemandModelComponent
   ],
 
   exports: [AddMemberModalComponent, AddRoleModalComponent, ViewOrEditEntityDocumentsModalComponent],

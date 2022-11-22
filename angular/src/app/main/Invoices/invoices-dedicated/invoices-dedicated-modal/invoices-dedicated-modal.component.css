@@ -1,0 +1,8 @@
+.modal-dialog.modal-xl.custom-xl {
+  max-width: 1200px;
+}
+
+.table-dark-custom {
+  border-top: 2rem solid #fff;
+  background-color: #e9ecef;
+}

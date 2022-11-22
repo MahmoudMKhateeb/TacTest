@@ -1,4 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
+using System.Collections.Generic;
+using TACHYON.ServiceAreas;
 
 namespace TACHYON.Authorization.Users.Profile.Dto
 {
@@ -26,5 +28,8 @@ namespace TACHYON.Authorization.Users.Profile.Dto
         public decimal FacilitiesRating { get; set; }
 
         public int EditionId { get; set; }
+
+        public List<ServiceAreaListItemDto> ServiceAreas { get; set; }
+        
     }
 }

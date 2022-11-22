@@ -9,6 +9,7 @@ import {
   DocumentFilesServiceProxy,
   ISelectItemDto,
   PlateTypeSelectItemDto,
+  PriceOfferServiceProxy,
   SelectItemDto,
   ShippingRequestsServiceProxy,
   TrucksServiceProxy,
@@ -82,6 +83,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   allTransportTypes: SelectItemDto[];
   allTruckTypesByTransportType: SelectItemDto[];
   allTrucksCapByTruckTypeId: SelectItemDto[];
+  allDrivers: SelectItemDto[];
   imageChangedEvent: any = '';
   public maxProfilPictureBytesUserFriendlyValue = 5;
   public uploader: FileUploader;
@@ -91,6 +93,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   carriers: CarriersForDropDownDto[] = [];
   truckTypeLoading: boolean;
   plateTypesLoading: boolean;
+  AllActorsCarriers: SelectItemDto[];
   selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
   selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
   private dataTable: Table;
@@ -105,12 +108,14 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   allPlateTypes: PlateTypeSelectItemDto[];
 
   truckModelMaxYear = new Date();
+
   //truckModelMinYear = new Date();
   get defaultPlateType(): string {
     if (this.allPlateTypes) {
       return this.allPlateTypes.find((x) => x.isDefault)?.id || null;
     }
   }
+
   constructor(
     injector: Injector,
     private _trucksServiceProxy: TrucksServiceProxy,
@@ -119,7 +124,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
     private _fileDownloadService: FileDownloadService,
     private changeDetectorRef: ChangeDetectorRef,
-    private _shippingRequestsService: ShippingRequestsServiceProxy
+    private _shippingRequestsService: ShippingRequestsServiceProxy,
+    private _priceOfferService: PriceOfferServiceProxy
   ) {
     super(injector);
     this.plateTypesLoading = false;
@@ -139,6 +145,10 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         }
       });
 
+    this._trucksServiceProxy.getAllDriversForDropDown().subscribe((result) => {
+      this.allDrivers = result;
+    });
+
     if (!truckId) {
       //initlaize truck type values
       this.truck.id = truckId;
@@ -156,6 +166,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
         this.allTruckStatuss = result;
       });
+
+      this.getAllCarrierActors();
 
       if (this.isTruckTenantRequired) {
         this._shippingRequestsService.getAllCarriersForDropDown().subscribe((result) => (this.carriers = result));
@@ -176,7 +188,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         this.initTransportDropDownList();
         this.trucksTypeDisplayName = result.trucksTypeDisplayName;
         this.getTruckPictureUrl(this.truck.id);
-
+        (this.truck.carrierActorId as any) = this.truck.carrierActorId?.toString();
+        this.getAllCarrierActors();
         // dropDowns
         this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
           this.allTransportTypes = result;
@@ -208,7 +221,19 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
     this.temporaryPictureUrl = '';
     this.active = true;
-  } //end of show
+  }
+
+  private getAllCarrierActors() {
+    this._priceOfferService.getAllCarrierActorsForDropDown().subscribe((result) => {
+      this.AllActorsCarriers = result;
+      // let defaultItem = new SelectItemDto();
+      // defaultItem.id = null;
+      // defaultItem.displayName = this.l('Myself');
+      // this.AllActorsCarriers.unshift(defaultItem);
+    });
+  }
+
+  //end of show
 
   createOrEditTruck() {
     if (!this.validateOthersInputs()) {
@@ -241,6 +266,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
     return true;
   }
+
   save(): void {
     this.saving = true;
 
@@ -285,6 +311,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.uploader.clearQueue();
     this.uploader.addToQueue([<File>base64ToFile(event.base64)]);
   }
+
   get isTruckTenantRequired(): boolean {
     return (this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) && !this.truck?.id;
   }

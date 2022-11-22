@@ -7,177 +7,319 @@
   aria-labelledby="createOrEditModal"
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
+  (keydown.escape)="close(); $event.stopPropagation()"
 >
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <form *ngIf="active" #createFacilityForm="ngForm" novalidate autocomplete="off" (ngSubmit)="save()">
-        <div class="modal-header">
-          <h4 class="modal-title">
-            <span>{{ facility?.id ? l('EditFacility') : l('CreateNewFacility') }}</span>
-          </h4>
-          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+        <dx-validation-group name="createFacilityGroup">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <span>{{ facility?.id ? l('EditFacility') : l('CreateNewFacility') }}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
 
-        <div class="modal-body">
-          <div class="row">
-            <div class="form-group col-md-12">
-              <label>{{ l('FacilityName') }} <span class="required-fileds">*</span></label>
-              <input
-                #FacilityName="ngModel"
-                type="text"
-                class="form-control"
-                [(ngModel)]="facility.name"
-                name="Name"
-                minlength="0"
-                maxlength="256"
-                [class.is-invalid]="FacilityName.touched && !FacilityName.valid"
-                [class.is-valid]="FacilityName.touched && FacilityName.valid"
-                required
-              />
-            </div>
-
-            <div class="form-group col-md-6">
-              <label>{{ l('SelectaCountry') }} <span class="required-fileds">*</span></label>
-              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': countriesLoading }">
-                <select
-                  #country="ngModel"
-                  class="form-control"
-                  name="fcountry"
-                  required
-                  [disabled]="countriesLoading"
-                  [(ngModel)]="selectedCountryId"
-                  [class.is-invalid]="country.touched && !country.valid"
-                  [class.is-valid]="country.touched && country.valid"
-                  (change)="loadCitiesByCountryId(selectedCountryId)"
+          <div class="modal-body">
+            <div class="row">
+              <div *ngIf="isTachyonDealerOrHost" class="form-group col-md-12">
+                <label>{{ l('Company') }} <span class="required-fileds">*</span></label>
+                <div
+                  [ngClass]="{
+                    'spinner spinner-success spinner-right mr-1 ml-1': !AllTenants
+                  }"
                 >
-                  <option value="undefined" selected disabled>{{ l('SelectACounty') }}</option>
-                  <option *ngFor="let item of countries" value="{{ item.id }}">{{ item.translatedDisplayName }}</option>
-                </select>
+                  <select class="form-control" name="Shipper" [(ngModel)]="facility.shipperId" required>
+                    <option [value]="undefined" disabled>{{ l('SelectCompany') }}</option>
+                    <option *ngFor="let item of AllTenants" value="{{ item.id }}">{{ item.displayName }}</option>
+                  </select>
+                </div>
+                <span class="form-text text-muted">{{ l('SelectCompany') }} {{ facility.shipperId }}</span>
               </div>
-            </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('SelectaCity') }}<span class="required-fileds"> *</span></label>
-              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
-                <select
-                  #city="ngModel"
-                  class="form-control"
-                  name="fcity"
+
+              <div class="form-group col-md-12">
+                <label>{{ l('FacilityName') }} <span class="required-fileds">*</span></label>
+                <!--              <input-->
+                <!--                #FacilityName="ngModel"-->
+                <!--                type="text"-->
+                <!--                class="form-control"-->
+                <!--                [(ngModel)]="facility.name"-->
+                <!--                name="Name"-->
+                <!--                minlength="0"-->
+                <!--                maxlength="256"-->
+                <!--                [class.is-invalid]="FacilityName.touched && !FacilityName.valid"-->
+                <!--                [class.is-valid]="FacilityName.touched && FacilityName.valid"-->
+                <!--                required-->
+                <!--              />-->
+                <!--                <validation-messages [formCtrl]="FacilityName"></validation-messages>-->
+                <dx-text-box
+                  #FacilityName="ngModel"
+                  [(ngModel)]="facility.name"
+                  [(value)]="facility.name"
+                  id="FacilityName"
+                  name="Name"
+                  minlength="0"
+                  maxlength="256"
                   required
-                  [disabled]="citiesLoading || !selectedCountryId"
-                  [(ngModel)]="facility.cityId"
-                  [class.is-invalid]="city.touched && !city.valid"
-                  [class.is-valid]="city.touched && city.valid"
-                  (change)="handleCityPolygon()"
                 >
-                  <option [value]="undefined" disabled>{{ l('SelectaCity') }}</option>
-                  <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" [ngValue]="Number(item.id)">
-                    {{ item.displayName }}
-                  </option>
-                </select>
+                  <dx-validator [validationGroup]="'createFacilityGroup'">
+                    <dxi-validation-rule
+                      type="required"
+                      message="{{ l('FacilityName') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                    ></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="stringLength"
+                      [min]="0"
+                      message="{{ l('FacilityName') }}: {{ l('PleaseEnterAtLeastNCharacter', 0) }}"
+                    ></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="stringLength"
+                      [max]="256"
+                      message="{{ l('FacilityName') }}: {{ l('PleaseEnterNoMoreThanNCharacter', 256) }}"
+                    ></dxi-validation-rule>
+                  </dx-validator>
+                </dx-text-box>
               </div>
-            </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('longitute') }} </label>
-              <input
-                #long="ngModel"
-                type="number"
-                name="long"
-                placeholder="long"
-                class="form-control"
-                [(ngModel)]="facility.longitude"
-                (change)="manualCords()"
-                [class.is-invalid]="long.touched && !long.valid"
-                [class.is-valid]="long.touched && long.valid"
-                [disabled]="!facility.cityId"
-                minlength="0"
-                maxlength="30"
-                required
-              />
-              <div *ngIf="!long.valid" class="invalid-feedback">{{ l('HasToBeWithInCityBounds') }}</div>
-            </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('latitute') }} </label>
-              <input
-                #lat="ngModel"
-                type="number"
-                name="lat"
-                placeholder="lat"
-                class="form-control"
-                [(ngModel)]="facility.latitude"
-                (change)="manualCords()"
-                [class.is-invalid]="lat.touched && !lat.valid"
-                [class.is-valid]="lat.touched && lat.valid"
-                [disabled]="!facility.cityId"
-                minlength="0"
-                maxlength="30"
-                required
-              />
-              <div *ngIf="!lat.valid" class="invalid-feedback">{{ l('HasToBeWithInCityBounds') }}</div>
-            </div>
-            <div class="form-group col-md-12">
-              <label>{{ l('Address') }} <span class="required-fileds">*</span></label>
-              <input
-                #search
-                type="text"
-                class="form-control"
-                [(ngModel)]="facility.address"
-                placeholder="{{ l('searchForNearestLocation') }}"
-                autocorrect="off"
-                [disabled]="!facility.cityId || citiesLoading"
-                name="searchForAddress"
-                required
-              />
-            </div>
+              <div *ngIf="this.feature.isEnabled('App.ShipperClients')" class="form-group col-md-12">
+                <label>{{ l('ActorShipper') }} <span class="required-fileds">*</span></label>
+                <div
+                  [ngClass]="{
+                    'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsShippers
+                  }"
+                >
+                  <dx-select-box
+                    name="fActorShipper"
+                    [(ngModel)]="facility.shipperActorId"
+                    [dataSource]="AllActorsShippers"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="id"
+                    required
+                    placeholder="{{ l('SelectActor') }}"
+                  >
+                    <dx-validator [validationGroup]="'createFacilityGroup'">
+                      <dxi-validation-rule type="required" message="{{ l('Actor') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-select-box>
+                </div>
+              </div>
 
-            <!-- CreateNewFacilityMap -->
-            <div class="form-group col-md-12" [ngClass]="{ preventClick: !facility.cityId }">
-              <agm-map
-                class="map"
-                [zoom]="zoom"
-                [longitude]="mapCenterLng || facility.longitude"
-                [latitude]="mapCenterLat || facility.latitude"
-                (mapClick)="mapClicked($event)"
-                [busyIf]="citiesLoading"
-              >
-                <agm-marker
-                  *ngIf="facility.latitude && facility.longitude"
-                  [latitude]="facility.latitude"
-                  [longitude]="facility.longitude"
-                  [markerDraggable]="selectedCityJson ? false : true"
-                ></agm-marker>
-                <agm-data-layer
-                  *ngIf="selectedCityJson"
-                  [geoJson]="selectedCityJson"
-                  (layerClick)="mapClicked($event)"
-                  [style]="polygonStyle"
-                ></agm-data-layer>
-              </agm-map>
-            </div>
+              <div class="form-group col-md-6">
+                <label>{{ l('Country') }} <span class="required-fileds">*</span></label>
+                <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': countriesLoading }">
+                  <!--                <select-->
+                  <!--                  #country="ngModel"-->
+                  <!--                  class="form-control"-->
+                  <!--                  name="fcountry"-->
+                  <!--                  required-->
+                  <!--                  [disabled]="countriesLoading"-->
+                  <!--                  [(ngModel)]="selectedCountryId"-->
+                  <!--                  [class.is-invalid]="country.touched && !country.valid"-->
+                  <!--                  [class.is-valid]="country.touched && country.valid"-->
+                  <!--                  (change)="loadCitiesByCountryId(selectedCountryId)"-->
+                  <!--                >-->
+                  <!--                  <option value="undefined" selected disabled>{{ l('SelectACounty') }}</option>-->
+                  <!--                  <option *ngFor="let item of countries" value="{{ item.id }}">{{ item.translatedDisplayName }}</option>-->
+                  <!--                </select>-->
+                  <!--                <validation-messages [formCtrl]="country"></validation-messages>-->
+                  <dx-select-box
+                    name="fcountry"
+                    [(value)]="selectedCountryId"
+                    [dataSource]="countries"
+                    displayExpr="displayName"
+                    valueExpr="id"
+                    [disabled]="countriesLoading"
+                    placeholder="{{ l('SelectACounty') }}"
+                    [showClearButton]="true"
+                    (selectionchange)="loadCitiesByCountryId(selectedCountryId); facility.cityId = null"
+                    required
+                  >
+                    <dx-validator [validationGroup]="'createFacilityGroup'">
+                      <dxi-validation-rule type="required" message="{{ l('Country') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-select-box>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label>{{ l('City') }}<span class="required-fileds"> *</span></label>
+                <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
+                  <!--                <select-->
+                  <!--                  #city="ngModel"-->
+                  <!--                  class="form-control"-->
+                  <!--                  name="fcity"-->
+                  <!--                  required-->
+                  <!--                  [disabled]="citiesLoading || !selectedCountryId"-->
+                  <!--                  [(ngModel)]="facility.cityId"-->
+                  <!--                  [class.is-invalid]="city.touched && !city.valid"-->
+                  <!--                  [class.is-valid]="city.touched && city.valid"-->
+                  <!--                  (change)="handleCityPolygon()"-->
+                  <!--                >-->
+                  <!--                  <option [value]="undefined" disabled>{{ l('SelectaCity') }}</option>-->
+                  <!--                  <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" [ngValue]="Number(item.id)">-->
+                  <!--                    {{ item.displayName }}-->
+                  <!--                  </option>-->
+                  <!--                </select>-->
+                  <!--                <validation-messages [formCtrl]="city"></validation-messages>-->
+                  <dx-select-box
+                    name="fcity"
+                    [(value)]="facility.cityId"
+                    [dataSource]="allCities"
+                    displayExpr="displayName"
+                    valueExpr="id"
+                    [disabled]="citiesLoading || !selectedCountryId"
+                    placeholder="{{ l('SelectaCity') }}"
+                    [showClearButton]="true"
+                    (onSelectionChanged)="handleCityPolygon()"
+                    required
+                    itemTemplate="item"
+                  >
+                    <div *dxTemplate="let data of 'item'">
+                      <div [class.text-danger]="!data.hasPolygon">{{ data.displayName }}</div>
+                    </div>
 
-            <div class="col-md-6">
-              <app-create-or-edit-working-hours
-                #CreateOrEditWorkingHoursComponent
-                [FacilityWorkingHoursInput]="FacilityWorkingHours"
-                [parentForm]="createFacilityForm"
-              >
-              </app-create-or-edit-working-hours>
+                    <dx-validator [validationGroup]="'createFacilityGroup'">
+                      <dxi-validation-rule type="required" message="{{ l('City') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-select-box>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label>{{ l('longitute') }} </label>
+                <input
+                  #long="ngModel"
+                  type="number"
+                  name="long"
+                  placeholder="long"
+                  class="form-control"
+                  [(ngModel)]="facility.longitude"
+                  (change)="manualCords()"
+                  [class.is-invalid]="long.touched && !long.valid"
+                  [class.is-valid]="long.touched && long.valid"
+                  [disabled]="!facility.cityId"
+                  minlength="0"
+                  maxlength="30"
+                  required
+                />
+                <div *ngIf="!long.valid" class="invalid-feedback">{{ l('HasToBeWithInCityBounds') }}</div>
+              </div>
+              <div class="form-group col-md-6">
+                <label>{{ l('latitute') }} </label>
+                <input
+                  #lat="ngModel"
+                  type="number"
+                  name="lat"
+                  placeholder="lat"
+                  class="form-control"
+                  [(ngModel)]="facility.latitude"
+                  (change)="manualCords()"
+                  [class.is-invalid]="lat.touched && !lat.valid"
+                  [class.is-valid]="lat.touched && lat.valid"
+                  [disabled]="!facility.cityId"
+                  minlength="0"
+                  maxlength="30"
+                  required
+                />
+                <div *ngIf="!lat.valid" class="invalid-feedback">{{ l('HasToBeWithInCityBounds') }}</div>
+              </div>
+              <div class="form-group col-md-12">
+                <label>{{ l('Address') }} <span class="required-fileds">*</span></label>
+                <!--              <input-->
+                <!--                #search="ngModel"-->
+                <!--                type="text"-->
+                <!--                class="form-control"-->
+                <!--                [(ngModel)]="facility.address"-->
+                <!--                placeholder="{{ l('searchForNearestLocation') }}"-->
+                <!--                autocorrect="off"-->
+                <!--                [disabled]="!facility.cityId || citiesLoading"-->
+                <!--                name="searchForAddress"-->
+                <!--                required-->
+                <!--              />-->
+                <!--              <validation-messages [formCtrl]="search"></validation-messages>-->
+                <dx-text-box
+                  #search="ngModel"
+                  [(ngModel)]="facility.address"
+                  [(value)]="facility.address"
+                  placeholder="{{ l('searchForNearestLocation') }}"
+                  autocorrect="off"
+                  [disabled]="!facility.cityId || citiesLoading"
+                  name="searchForAddress"
+                  required
+                >
+                  <dx-validator [validationGroup]="'createFacilityGroup'">
+                    <dxi-validation-rule type="required" message="{{ l('Address') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-text-box>
+              </div>
+
+              <!-- CreateNewFacilityMap -->
+              <div class="form-group col-md-12" [ngClass]="{ preventClick: !facility.cityId }">
+                <agm-map
+                  class="map"
+                  [zoom]="zoom"
+                  [longitude]="mapCenterLng || facility.longitude"
+                  [latitude]="mapCenterLat || facility.latitude"
+                  (mapClick)="mapClicked($event)"
+                  [busyIf]="citiesLoading"
+                >
+                  <agm-marker
+                    *ngIf="facility.latitude && facility.longitude"
+                    [latitude]="facility.latitude"
+                    [longitude]="facility.longitude"
+                    [markerDraggable]="selectedCityJson ? false : true"
+                  ></agm-marker>
+                  <agm-data-layer
+                    *ngIf="selectedCityJson"
+                    [geoJson]="selectedCityJson"
+                    (layerClick)="mapClicked($event)"
+                    [style]="polygonStyle"
+                  ></agm-data-layer>
+                </agm-map>
+              </div>
+
+              <div class="col-md-6" [class.invalid]="isWorkingHoursInvalid">
+                <app-create-or-edit-working-hours
+                  id="working-hours"
+                  #CreateOrEditWorkingHoursComponent
+                  [FacilityWorkingHoursInput]="FacilityWorkingHours"
+                  [parentForm]="createFacilityForm"
+                  (itemChanged)="revalidateWorkingHours()"
+                >
+                </app-create-or-edit-working-hours>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
-          <button
-            type="submit"
-            class="btn btn-primary blue"
-            [disabled]="!createFacilityForm.form.valid"
-            [buttonBusy]="saving"
-            [busyText]="l('SavingWithThreeDot')"
-          >
-            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-          </button>
-        </div>
+          <div class="col-lg-12 mt-4 mb-2">
+            <dx-validator [validationGroup]="'createFacilityGroup'" [adapter]="adapterConfig">
+              <dxi-validation-rule type="required" message="{{ 'WorkingDaysHours' | localize }}: {{ 'PleaseEnterfacilityWorkingHours' | localize }}">
+              </dxi-validation-rule>
+            </dx-validator>
+            <dx-validation-summary validationGroup="createFacilityGroup" id="create-facility-summary"></dx-validation-summary>
+          </div>
+          <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+            <!--          <button-->
+            <!--            type="submit"-->
+            <!--            class="btn btn-primary blue"-->
+            <!--            [disabled]="!createFacilityForm.form.valid"-->
+            <!--            [buttonBusy]="saving"-->
+            <!--            [busyText]="l('SavingWithThreeDot')"-->
+            <!--          >-->
+            <!--            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>-->
+            <!--          </button>-->
+            <dx-button
+              type="submit"
+              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
+              icon="fa fa-save"
+              text="{{ l('Save') }}"
+              [disabled]="saving"
+              [useSubmitBehavior]="true"
+              [validationGroup]="'createFacilityGroup'"
+            >
+            </dx-button>
+          </div>
+        </dx-validation-group>
       </form>
     </div>
   </div>

@@ -16,6 +16,7 @@ import {
   ShippingRequestVasListOutput,
   RoutStepsServiceProxy,
   ShippingRequestRouteType,
+  ShippingRequestDestinationCitiesDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -27,6 +28,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { NgForm } from '@angular/forms';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
+import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
@@ -52,6 +54,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allFacilities: FacilityForDropdownDto[];
   allVases: ShippingRequestVasListOutput[];
   selectedVases: CreateOrEditShippingRequestVasListDto[] = [];
+  originallySelectedVases: CreateOrEditShippingRequestVasListDto[] = [];
   isTachyonDeal = false;
   isBid = false;
   shippingRequestType: string;
@@ -68,6 +71,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   today = new Date();
   startBiddate: any;
   endBiddate: any;
+  destinationCities: ShippingRequestDestinationCitiesDto[] = [];
   //CleanedVases
   cleanedVases: CreateOrEditShippingRequestVasListDto[] = [];
   @Input() parentForm: NgForm;
@@ -81,6 +85,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   minEndDate: NgbDateStruct;
   minHijriTripdate: NgbDateStruct;
   minGrogTripdate: NgbDateStruct;
+
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -91,7 +96,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     private ngZone: NgZone,
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
-
     private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
@@ -109,32 +113,32 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.active = true;
       this.loadAllDropDownLists();
     } else {
-      console.log('this is edit');
       //this is an edit
       this._shippingRequestsServiceProxy
         .getShippingRequestForEdit(shippingRequestId)
-        .pipe(
-          finalize(() => {
-            this.loadAllDropDownLists();
-          })
-        )
+        .pipe(finalize(() => {}))
         .subscribe((result) => {
           this.shippingRequest = result.shippingRequest;
-          if (result.shippingRequest.bidStartDate != null && result.shippingRequest.bidStartDate != undefined)
+          if (result.shippingRequest.bidStartDate != null && result.shippingRequest.bidStartDate != undefined) {
             this.startBiddate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.bidStartDate);
-          if (result.shippingRequest.bidEndDate != null && result.shippingRequest.bidEndDate != undefined)
+          }
+          if (result.shippingRequest.bidEndDate != null && result.shippingRequest.bidEndDate != undefined) {
             this.endBiddate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.bidEndDate);
+          }
           this.startTripdate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.startTripDate);
           this.minGrogTripdate = this.startTripdate;
-          if (result.shippingRequest.endTripDate != null && result.shippingRequest.endTripDate != undefined)
+          if (result.shippingRequest.endTripDate != null && result.shippingRequest.endTripDate != undefined) {
             this.endTripdate = this.dateFormatterService.MomentToNgbDateStruct(result.shippingRequest.endTripDate);
+          }
           this.shippingRequestType =
             result.shippingRequest.isBid === true ? 'bidding' : result.shippingRequest.isDirectRequest ? 'directrequest' : 'tachyondeal';
           this.selectedVases = result.shippingRequest.shippingRequestVasList;
-          console.log(this.selectedVases);
+          this.originallySelectedVases = [...this.selectedVases];
           this.selectedRouteType = result.shippingRequest.routeTypeId;
           this.active = true;
           this.totalOffers = result.totalOffers;
+          this.shippingRequest.shippingRequestDestinationCities = result.shippingRequest.shippingRequestDestinationCities;
+          this.loadAllDropDownLists();
         });
     }
   }
@@ -150,16 +154,21 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this.shippingRequest.routeTypeId = this.selectedRouteType; //milkrun / oneway ....
     this.shippingRequest.shippingRequestVasList = this.selectedVases;
 
-    if (this.startBiddate != null && this.startBiddate != undefined)
+    if (this.startBiddate != null && this.startBiddate != undefined) {
       this.shippingRequest.bidStartDate = this.GetGregorianAndhijriFromDatepickerChange(this.startBiddate).GregorianDate;
+    }
 
-    if (this.endBiddate != undefined) this.shippingRequest.bidEndDate = this.GetGregorianAndhijriFromDatepickerChange(this.endBiddate).GregorianDate;
+    if (this.endBiddate != undefined) {
+      this.shippingRequest.bidEndDate = this.GetGregorianAndhijriFromDatepickerChange(this.endBiddate).GregorianDate;
+    }
 
-    if (this.startTripdate != null && this.startTripdate != undefined)
+    if (this.startTripdate != null && this.startTripdate != undefined) {
       this.shippingRequest.startTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.startTripdate).GregorianDate;
+    }
 
-    if (this.endTripdate != null && this.endTripdate != undefined)
+    if (this.endTripdate != null && this.endTripdate != undefined) {
       this.shippingRequest.endTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.endTripdate).GregorianDate;
+    }
 
     this._shippingRequestsServiceProxy
       .createOrEdit(this.shippingRequest)
@@ -174,13 +183,26 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       });
   } //end of create
 
+  private loadDestinationCities(res: RoutStepCityLookupTableDto[]) {
+    if (isNotNullOrUndefined(res)) {
+      res.forEach((element) => {
+        var item = new ShippingRequestDestinationCitiesDto();
+        item.cityId = Number(element.id);
+        item.cityName = element.displayName;
+        this.destinationCities.push(item);
+      });
+    }
+  }
+
   loadAllDropDownLists(): void {
+    console.log('DD Was loaded');
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
       this.allGoodCategorys = result;
     });
 
     this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
       this.allCitys = result;
+      this.loadDestinationCities(result);
     });
 
     this._shippingRequestsServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
@@ -206,8 +228,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     });
 
     /*this._routesServiceProxy.getAllRoutTypeForTableDropdown().subscribe((result) => {
-          this.allRoutTypes = result;
-        });*/
+              this.allRoutTypes = result;
+            });*/
 
     this.loadallVases();
   }
@@ -327,14 +349,18 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       }
     }
 
-    if (type == 'tripsEndDate') this.endTripdate = $event;
+    if (type == 'tripsEndDate') {
+      this.endTripdate = $event;
+    }
 
     var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startTripdate);
     var endDate = this.dateFormatterService.NgbDateStructToMoment(this.endTripdate);
 
     //checks if the trips end date is less than trips start date
     if (startDate != undefined && endDate != undefined) {
-      if (endDate < startDate) this.endTripdate = undefined;
+      if (endDate < startDate) {
+        this.endTripdate = undefined;
+      }
     }
   }
 
@@ -342,15 +368,21 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
    * validates bidding start+end date
    */
   validateBiddingDates($event: NgbDateStruct, type) {
-    if (type == 'biddingStartDate') this.startBiddate = this.minEndDate = $event;
-    if (type == 'biddingEndDate') this.endBiddate = $event;
+    if (type == 'biddingStartDate') {
+      this.startBiddate = this.minEndDate = $event;
+    }
+    if (type == 'biddingEndDate') {
+      this.endBiddate = $event;
+    }
 
     var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startBiddate);
     var endDate = this.dateFormatterService.NgbDateStructToMoment(this.endBiddate);
 
     //   //if end date is more than start date reset end date
     if (startDate != undefined && endDate != undefined) {
-      if (startDate > endDate) this.shippingRequest.bidEndDate = this.endBiddate = undefined;
+      if (startDate > endDate) {
+        this.shippingRequest.bidEndDate = this.endBiddate = undefined;
+      }
     }
   }
 
@@ -358,7 +390,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   validateDuplicatedCites(event: Event) {
     let index: number = event.target['selectedIndex'] - 1;
 
-    if (this.shippingRequest.originCityId == this.shippingRequest.destinationCityId) this.shippingRequest.destinationCityId = null;
+    // if (this.shippingRequest.originCityId == this.shippingRequest.destinationCityId) this.shippingRequest.shippingRequestDestinationCities = null;
   }
 
   /**
@@ -366,18 +398,97 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
    */
   validateShippingRequestType() {
     //check if user choose local-inside city  but the origin&des same
-    if (this.shippingRequest.shippingTypeId == 1) {
-      this.shippingRequest.destinationCityId = this.shippingRequest.originCityId;
+    // if (this.shippingRequest.shippingTypeId == 1) {
+    //   this.shippingRequest.destinationCityId = this.shippingRequest.originCityId;
+    // } else if (this.shippingRequest.shippingTypeId == 2) {
+    //   // check if user select same city in source and destination
+    //   if (this.shippingRequest.originCityId == this.shippingRequest.destinationCityId) {
+    //     this.shippingRequestForm.controls['destination'].setErrors({ invalid: true });
+    //     this.shippingRequestForm.controls['origin'].setErrors({ invalid: true });
+    //     this.notify.error(this.l(' SourceAndDestinationCantBeTheSame'));
+    //   } else {
+    //     this.shippingRequestForm.controls['destination'].setErrors(null);
+    //     this.shippingRequestForm.controls['origin'].setErrors(null);
+    //   }
+    // }
+
+    //check if user choose local-inside city  but the origin&des same
+    if (this.shippingRequest.originCityId != null && this.shippingRequest.shippingTypeId == 1) {
+      this.shippingRequest.shippingRequestDestinationCities = [];
+      //local inside city
+      //this.destinationCountry = this.originCountry;
+      var city = new ShippingRequestDestinationCitiesDto();
+      city.cityId = this.shippingRequest.originCityId;
+
+      this.shippingRequest.shippingRequestDestinationCities.push(city);
     } else if (this.shippingRequest.shippingTypeId == 2) {
-      // check if user select same city in source and destination
-      if (this.shippingRequest.originCityId == this.shippingRequest.destinationCityId) {
-        this.shippingRequestForm.controls['destination'].setErrors({ invalid: true });
-        this.shippingRequestForm.controls['origin'].setErrors({ invalid: true });
-        this.notify.error(this.l(' SourceAndDestinationCantBeTheSame'));
-      } else {
-        this.shippingRequestForm.controls['destination'].setErrors(null);
-        this.shippingRequestForm.controls['origin'].setErrors(null);
+      // if route type is local betwenn cities check if user select same city in source and destination
+      // this.destinationCities = this.sourceCities;
+      // this.destinationCountry = this.originCountry;
+
+      //if destination city one item selected and equals to origin, while shipping type is between cities
+      if (
+        isNotNullOrUndefined(this.shippingRequest.shippingRequestDestinationCities) &&
+        this.shippingRequest.shippingRequestDestinationCities.length == 1 &&
+        this.shippingRequest.shippingRequestDestinationCities.filter((c) => c.cityId == this.shippingRequest.originCityId).length > 0
+      ) {
+        this.shippingRequestForm.controls['destinationCity'].setErrors({ invalid: true });
+        // this.shippingRequestForm.controls['destinationCountry'].setErrors({ invalid: true });
+      }
+      // else if (this.originCountry !== this.destinationCountry) {
+      //   this.shippingRequestForm.controls['originCountry'].setErrors({ invalid: true });
+      //   this.shippingRequestForm.controls['destinationCountry'].setErrors({ invalid: true });
+      // }
+      else {
+        // this.clearValidation('destinationCity');
+        // this.clearValidation('destinationCountry');
       }
     }
+    //  else if (this.shippingRequest.shippingTypeId == 4) {
+    //   //if route type is cross border prevent the countries to be the same
+    //   if (this.originCountry === this.destinationCountry) {
+    //     this.shippingRequestForm.controls['originCountry'].setErrors({ invalid: true });
+    //     this.shippingRequestForm.controls['destinationCountry'].setErrors({ invalid: true });
+    //   }
+    //    else {
+    //     this.clearValidation('originCountry');
+    //     this.clearValidation('destinationCountry');
+    //   }
+    // }
+  }
+
+  clearValidation(controlName: string) {
+    this.shippingRequestForm.controls[controlName].setErrors(null);
+    this.shippingRequestForm.controls[controlName].updateValueAndValidity();
+  }
+
+  changeVasListSelection(event) {
+    const vasId = event.option.vasId;
+    const index = this.selectedVases.findIndex((item) => vasId === item.vasId);
+    if (index === -1) {
+      return;
+    }
+    const foundIndex = this.originallySelectedVases.findIndex((found) => found.vasId === vasId);
+    if (foundIndex === -1) {
+      return;
+    }
+    const keys = Object.keys(this.originallySelectedVases[foundIndex]);
+    const item = this.selectedVases[index].toJSON();
+    this.selectedVases.splice(index, 1);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const val = this.originallySelectedVases[foundIndex][key];
+      if (val === null || val === undefined) {
+        const cleaned = this.cleanedVases.find((cleanedItem) => cleanedItem.vasId === vasId);
+        item[key] = cleaned[key];
+        continue;
+      }
+      item[key] = val;
+    }
+    this.selectedVases.push(CreateOrEditShippingRequestVasListDto.fromJS(item));
+  }
+
+  trackByFunc(index: number, item: CreateOrEditShippingRequestVasListDto) {
+    return item.vasId;
   }
 }

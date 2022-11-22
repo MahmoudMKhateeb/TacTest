@@ -17,16 +17,9 @@ import { first, retry } from '@node_modules/rxjs/internal/operators';
   styleUrls: ['./good-details.component.css'],
 })
 export class GoodDetailsComponent extends AppComponentBase implements OnInit, OnDestroy {
-  constructor(
-    injector: Injector,
-    private _TripService: TripService,
-    private _PointsService: PointsService,
-    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy
-  ) {
-    super(injector);
-  }
   //inCase Of View Point
   @Input() goodDetailsListForView: GoodsDetailDto[];
+  @Input() isForDedicated = false;
   usedIn: 'view' | 'createOrEdit';
   //For Create/Edit
   Point: CreateOrEditRoutPointDto;
@@ -39,11 +32,13 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   usedInSubs$: Subscription;
   canAddMoreGoods = true;
 
-  ngOnDestroy() {
-    this.tripServiceSubs$?.unsubscribe();
-    this.pointServiceSubs$?.unsubscribe();
-    this.usedInSubs$.unsubscribe();
-    console.log('Destroy From Good Details Component');
+  constructor(
+    injector: Injector,
+    private _TripService: TripService,
+    private _PointsService: PointsService,
+    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy
+  ) {
+    super(injector);
   }
 
   ngOnInit(): void {
@@ -93,5 +88,11 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
           this.allSubGoodCategorysLoading = false;
         });
     }
+  }
+
+  ngOnDestroy() {
+    this.tripServiceSubs$?.unsubscribe();
+    this.pointServiceSubs$?.unsubscribe();
+    this.usedInSubs$.unsubscribe();
   }
 }

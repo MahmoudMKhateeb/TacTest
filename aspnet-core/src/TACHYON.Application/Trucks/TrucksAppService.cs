@@ -38,6 +38,7 @@ using TACHYON.Features;
 using TACHYON.Integration.WaslIntegration;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Storage;
 using TACHYON.Trucks;
@@ -77,6 +78,8 @@ namespace TACHYON.Trucks
         private readonly IRepository<PlateType> _plateTypesRepository;
         private readonly WaslIntegrationManager _waslIntegrationManager;
         private readonly IRepository<Tenant> _lookupTenantRepository;
+        private readonly IRepository<ShippingRequest,long> _shippingRequestRepository;
+        private readonly IRepository<User,long> _userRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
 
 
@@ -90,7 +93,9 @@ namespace TACHYON.Trucks
             IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository,
             IRepository<PlateType> PlateTypesRepository, IRepository<Tenant> lookupTenantRepository,
             WaslIntegrationManager waslIntegrationManager,
-            IRepository<ShippingRequestTrip> shippingRequestTripRepository)
+            IRepository<ShippingRequest, long> shippingRequestRepository,
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository,
+            IRepository<User, long> userRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -108,7 +113,9 @@ namespace TACHYON.Trucks
             _plateTypesRepository = PlateTypesRepository;
             _lookupTenantRepository = lookupTenantRepository;
             _waslIntegrationManager = waslIntegrationManager;
-            _shippingRequestTripRepository = shippingRequestTripRepository;
+            _shippingRequestRepository = shippingRequestRepository;
+            _userRepository = userRepository;
+             _shippingRequestTripRepository = shippingRequestTripRepository;
         }
 
         public async Task<LoadResult> GetAll(GetAllTrucksInput input)
@@ -119,6 +126,9 @@ namespace TACHYON.Trucks
                                                .Where(x => x.DocumentTypeFk.SpecialConstant == TACHYONConsts.TruckIstimaraDocumentTypeSpecialConstant.ToLower());
             var query = from truck in _truckRepository.GetAll()
                                                .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer), r => r.TenantId == AbpSession.TenantId)
+                                               .Include(x=>x.DedicatedShippingRequestTrucks)
+                                               .ThenInclude(x=>x.ShippingRequest)
+                                               .Include((x=>x.DriverUserFk))
                         join tenant in _lookupTenantRepository.GetAll() on truck.TenantId equals tenant.Id
                         join document in documentQuery on truck.Id equals document.TruckId
 
@@ -145,7 +155,12 @@ namespace TACHYON.Trucks
                             TrucksTypeId = truck.TrucksTypeId,
                             IstmaraNumber = document.Number,
                             OtherTransportTypeName = truck.OtherTransportTypeName,
-                            OtherTrucksTypeName = truck.OtherTrucksTypeName
+                            OtherTrucksTypeName = truck.OtherTrucksTypeName,
+                            WorkingTruckStatus = truck.DedicatedShippingRequestTrucks.Any(x=>x.Status == Shipping.Dedicated.WorkingStatus.Busy)== true ?"Busy" :"Active",
+                            DriverUser = truck.DriverUserFk.Name +"",
+                            WorkingShippingRequestReference= truck.DedicatedShippingRequestTrucks.Any(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy) == true 
+                            ? truck.DedicatedShippingRequestTrucks.First().ShippingRequest.ReferenceNumber :"",
+                            CarrierActorName = truck.CarrierActorFk.CompanyName
                         };
 
             var result = await LoadResultAsync(query, input.Filter);
@@ -157,7 +172,7 @@ namespace TACHYON.Trucks
         {
             var ids = pagedResultDto.data.ToDynamicList<TruckDto>().Select(x => x.Id);
             var documentTypesCount = await _documentTypeRepository.GetAll()
-                .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
+                .Where(doc => doc.DocumentsEntityId == DocumentsEntitiesEnum.Truck)
                 .Where(x => x.IsRequired)
                 .CountAsync();
 
@@ -504,26 +519,74 @@ namespace TACHYON.Trucks
 
         }
 
-        public async Task<List<SelectItemDto>> GetAllDriversForDropDown(long tripId)
+        //public async Task<List<SelectItemDto>> GetAllDriversForDropDown(long tripId)
+        //{
+        //    int? carrierTenantId;
+        //    using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+        //    {
+        //         carrierTenantId = _shippingRequestTripRepository.GetAll()
+        //                   .Where(x => x.Id == tripId)
+        //                   .Select(x => x.ShippingRequestFk.CarrierTenantId)
+        //                   .FirstOrDefault();
+        //    }
+
+
+        //    using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
+        //    {
+        //        return await _lookup_userRepository.GetAll().Where(e => e.IsDriver == true)
+        //          .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
+        //          .ToListAsync();
+        //    }
+
+
+        //}
+
+        public async Task<List<SelectItemDto>> GetAllDriversForDropDown()
+
         {
-            int? carrierTenantId;
-            using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
-            {
-                 carrierTenantId = _shippingRequestTripRepository.GetAll()
-                           .Where(x => x.Id == tripId)
-                           .Select(x => x.ShippingRequestFk.CarrierTenantId)
-                           .FirstOrDefault();
-            }
+
+            return await _lookup_userRepository.GetAll().Where(e => e.IsDriver == true)
+
+                .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
+
+                .ToListAsync();
+
+        }
 
 
-            using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
-            {
-                return await _lookup_userRepository.GetAll().Where(e => e.IsDriver == true)
-                  .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
-                  .ToListAsync();
-            }
+        public async Task<List<SelectItemDto>> GetDriversByShippingRequestId(long shippingRequestId)
+        {
+            var isTms = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
+            DisableTenancyFilters();
+            
+            var drivers = await (from driver in _userRepository.GetAll()
 
-
+                join sr in _shippingRequestRepository.GetAll() on shippingRequestId equals sr.Id
+                where driver.IsDriver && driver.TenantId == sr.CarrierTenantId &&
+                      (!sr.CarrierActorId.HasValue || driver.CarrierActorId == sr.CarrierActorId)
+                      && (isTms || sr.CarrierTenantId == AbpSession.TenantId)
+                select new SelectItemDto()
+                {
+                    DisplayName = $"{driver.Name} {driver.Surname}", Id = driver.Id.ToString()
+                }).ToListAsync();
+            return drivers;
+        }
+        
+        
+        public async Task<List<SelectItemDto>> GetTrucksByShippingRequestId(long truckTypeId, long shippingRequestId)
+        {
+            var isTms = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
+            DisableTenancyFilters();
+            
+            var trucks = await (from truck in _truckRepository.GetAll()
+                join sr in _shippingRequestRepository.GetAll() on shippingRequestId equals sr.Id
+                where  truck.TrucksTypeId == truckTypeId && truck.TenantId == sr.CarrierTenantId &&
+                      (!sr.CarrierActorId.HasValue || truck.CarrierActorId == sr.CarrierActorId) && (isTms || sr.CarrierTenantId == AbpSession.TenantId)
+                select new SelectItemDto()
+                {
+                    DisplayName = truck.GetDisplayName(), Id = truck.Id.ToString()
+                }).ToListAsync();
+            return trucks;
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
@@ -648,6 +711,18 @@ namespace TACHYON.Trucks
                 .ToListAsync();
 
             return ObjectMapper.Map<List<PlateTypeSelectItemDto>>(plateTypes);
+        }
+
+        public async Task<long?> GetTruckByDriverId(long driverId,long truckTypeId)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            return (await _truckRepository.GetAll().FirstOrDefaultAsync(x => x.DriverUserId == driverId && x.TrucksTypeId == truckTypeId))?.Id;
+        }
+
+        public async Task<long?> GetDriverByTruckId(long truckId)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            return (await _truckRepository.GetAll().FirstOrDefaultAsync(x => x.Id == truckId))?.DriverUserId;
         }
 
         #endregion

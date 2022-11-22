@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Routs.RoutPoints.Dtos;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.ShippingRequestTripVases.Dtos;
 
 namespace TACHYON.Shipping.Trips.Dto
@@ -43,5 +44,8 @@ namespace TACHYON.Shipping.Trips.Dto
         public DateTime? SupposedPickupDateFrom { get; set; }
         public DateTime? SupposedPickupDateTo { get; set; }
         public int NotesCount { get; set; }
+        public ShippingRequestRouteType? RouteType { get; set; }
+        public int NumberOfDrops { get; set; }
+        public bool CanAssignDriversAndTrucks { get; set; }
     }
 }

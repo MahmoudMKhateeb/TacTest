@@ -68,7 +68,7 @@
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ groupPaging: false, sorting: false, filtering: false }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -77,13 +77,13 @@
               [wordWrapEnabled]="true"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
-              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
-              <dxo-group-panel [visible]="false"></dxo-group-panel>
+              <dxo-group-panel [visible]="false" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="false"> </dxo-remote-operations>
+              <!--              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="false"> </dxo-remote-operations>-->
               <dxo-paging [pageSize]="20"></dxo-paging>
 
               <dxi-column
@@ -99,11 +99,20 @@
               <dxi-column dataField="modelYear" caption="{{ l('ModelYear') }}"> </dxi-column>
               <dxi-column dataField="length" caption="{{ l('Length') }}"> </dxi-column>
               <dxi-column dataField="truckStatusDisplayName" caption="{{ l('TruckStatus') }}"> </dxi-column>
-              <dxi-column dataField="companyName" caption="{{ l('companyName') }}"> </dxi-column>
+              <dxi-column
+                *ngIf="isTachyonDealer || hasCarrierClients"
+                dataField="companyName"
+                cellTemplate="companyNameTemplate"
+                caption="{{ l('companyName') }}"
+              >
+              </dxi-column>
+              <dxi-column dataField="driverUser" caption="{{ l('DriverName') }}"> </dxi-column>
               <dxi-column dataField="transportTypeDisplayName" caption="{{ l('TransportType') }}"> </dxi-column>
               <dxi-column dataField="trucksTypeDisplayName" caption="{{ l('TrucksType') }}"> </dxi-column>
               <dxi-column dataField="capacityDisplayName" caption="{{ l('Capacity') }}"> </dxi-column>
               <dxi-column dataField="capacity" caption="{{ l('Capacity') }}"> </dxi-column>
+              <dxi-column dataField="workingTruckStatus" caption="{{ l('RentedStatus') }}"> </dxi-column>
+              <dxi-column dataField="workingShippingRequestReference" caption="{{ l('RentedShippingRequestReference') }}"> </dxi-column>
               <dxi-column dataField="istmaraNumber" caption="{{ l('IstmaraNumber') }}"> </dxi-column>
               <dxi-column
                 dataField="isMissingDocumentFiles"
@@ -112,6 +121,9 @@
                 [allowSorting]="false"
               >
               </dxi-column>
+              <div *dxTemplate="let options of 'companyNameTemplate'">
+                {{ hasCarrierClients && options.data.carrierActorName ? options.data.carrierActorName : options.data.companyName }}
+              </div>
 
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">

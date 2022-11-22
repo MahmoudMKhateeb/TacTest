@@ -3,7 +3,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'DocumentTypes' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <!--        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>-->
 
         <button *ngIf="isGranted('Pages.DocumentTypes.Create')" (click)="createDocumentType()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewDocumentType') }}
@@ -20,7 +20,7 @@
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -29,13 +29,13 @@
               [wordWrapEnabled]="true"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
-              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup [position]="popupPosition"></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
               <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <!--              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>-->
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
                 <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
@@ -53,7 +53,7 @@
               <dxi-column dataField="name" allowGrouping="false" [allowGrouping]="false"></dxi-column>
               <dxi-column dataField="isRequired"></dxi-column>
               <dxi-column dataField="documentsEntityId" caption="requiredFrom">
-                <dxo-lookup [dataSource]="entityList" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
+                <dxo-lookup [dataSource]="entityList" displayExpr="value" valueExpr="key"> </dxo-lookup>
               </dxi-column>
               <dxi-column dataField="editionId" caption="edition">
                 <dxo-lookup [dataSource]="editions" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
@@ -68,14 +68,7 @@
                 <div class="btn-group dropdown" dropdown container="body">
                   <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
                     <span class="svg-icon svg-icon-md">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink"
-                        width="24px"
-                        height="24px"
-                        viewBox="0 0 24 24"
-                        version="1.1"
-                      >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                           <rect x="0" y="0" width="24" height="24"></rect>
                           <path

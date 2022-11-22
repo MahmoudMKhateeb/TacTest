@@ -1,6 +1,7 @@
 ﻿using Abp.Timing;
 using AutoMapper;
 using System;
+using System.Globalization;
 using System.Linq;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.Drivers.Dto;
@@ -20,10 +21,16 @@ namespace TACHYON.AutoMapper.Shipping.Trips
             CreateMap<ShippingRequestTrip, ShippingRequestsTripListDto>()
                 .ForMember(dst => dst.OriginCity,
                     opt => opt.MapFrom(src =>
-                        src.OriginFacilityFk != null ? src.OriginFacilityFk.CityFk.DisplayName : ""))
+                        src.OriginFacilityFk.CityFk.Translations
+                            .FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ?
+                            src.OriginFacilityFk.CityFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName
+                            : src.OriginFacilityFk.CityFk.DisplayName))
                 .ForMember(dst => dst.DestinationCity,
                     opt => opt.MapFrom(src =>
-                        src.DestinationFacilityFk != null ? src.DestinationFacilityFk.CityFk.DisplayName : ""))
+                        src.DestinationFacilityFk.CityFk.Translations
+                            .FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null ?
+                            src.DestinationFacilityFk.CityFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName 
+                            : src.DestinationFacilityFk.CityFk.DisplayName))
                 .ForMember(dst => dst.Truck,
                     opt => opt.MapFrom(
                         src => src.AssignedTruckFk != null ? src.AssignedTruckFk.ModelName : string.Empty))
@@ -52,9 +59,12 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.Source,
                     opt => opt.MapFrom(src =>
                         $"{src.ShippingRequestFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
-                .ForMember(dst => dst.Distination,
+                .ForPath(dst => dst.Distination,
                     opt => opt.MapFrom(src =>
-                        $"{src.ShippingRequestFk.DestinationCityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
+                        //src.DestinationFacilityFk.Address))
+                        src.ShippingRequestFk.ShippingRequestDestinationCities.Count()>0
+                        ?$"{src.ShippingRequestFk.ShippingRequestDestinationCities.First().CityFk.DisplayName} - {src.DestinationFacilityFk.Address}" 
+                        : src.DestinationFacilityFk.Address))
                 .ForMember(dst => dst.RouteTypeId, opt => opt.MapFrom(src => src.ShippingRequestFk.RouteTypeId))
                 .ForMember(dst => dst.StartDate, opt => opt.MapFrom(src => src.StartTripDate))
                 .ForMember(dst => dst.EndDate, opt => opt.MapFrom(src => src.EndTripDate))
@@ -73,9 +83,12 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.SourceFacilityRating, opt => opt.MapFrom(src => src.OriginFacilityFk.Rate))
                 .ForMember(dst => dst.SourceFacilityRatingNumber,
                     opt => opt.MapFrom(src => src.OriginFacilityFk.RateNumber))
-                .ForMember(dst => dst.Distination,
+                .ForPath(dst => dst.Distination,
                     opt => opt.MapFrom(src =>
-                        $"{src.ShippingRequestFk.DestinationCityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
+                        //src.DestinationFacilityFk.Address))
+                        src.ShippingRequestFk.ShippingRequestDestinationCities.Count()>0 ?
+                        $"{src.ShippingRequestFk.ShippingRequestDestinationCities.First().CityFk.DisplayName} - {src.DestinationFacilityFk.Address}"
+                        : src.DestinationFacilityFk.Address))
                 .ForMember(dst => dst.DestinationFacilityRating,
                     opt => opt.MapFrom(src => src.DestinationFacilityFk.Rate))
                 .ForMember(dst => dst.DestinationFacilityRatingNumber,
@@ -126,7 +139,9 @@ namespace TACHYON.AutoMapper.Shipping.Trips
             CreateMap<ShippingRequestTrip, CreateOrEditShippingRequestTripDto>()
                 .ForMember(dest => dest.RoutPoints, opt => opt.MapFrom(src => src.RoutPoints))
                 .ForMember(dest => dest.ShippingRequestTripVases,
-                    opt => opt.MapFrom(src => src.ShippingRequestTripVases));
+                    opt => opt.MapFrom(src => src.ShippingRequestTripVases))
+                .ForMember(dest => dest.DriverUserId, opt => opt.MapFrom(src => src.AssignedDriverUserId))
+                .ForMember(dest => dest.TruckId, opt => opt.MapFrom(src => src.AssignedTruckId));
 
             CreateMap<ShippingRequestTrip, ShippingRequestTripDto>().ReverseMap();
             

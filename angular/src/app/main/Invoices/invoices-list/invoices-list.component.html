@@ -11,6 +11,7 @@
         >
           {{ l('OnDemand') }}
         </button>
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>
 
@@ -23,7 +24,7 @@
               #dataGrid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -32,13 +33,13 @@
               [wordWrapEnabled]="true"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
-              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
               <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"></dxo-remote-operations>
+              <!--              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"></dxo-remote-operations>-->
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
                 <dxi-group-item column="id" summaryType="count"></dxi-group-item>
@@ -70,22 +71,37 @@
               </dxi-column>
               <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"></dxi-column>
               <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"></dxi-column>
-              <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('Status') }}"></dxi-column>
+              <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('PaymentStatus') }}"></dxi-column>
+              <dxi-column
+                *ngIf="isTachyonDealerOrHost"
+                dataField="status"
+                cellTemplate="cellTemplate_status"
+                caption="{{ l('Status') }}"
+              ></dxi-column>
               <dxi-column dataField="channel" cellTemplate="cellTemplate_Channel" caption="{{ l('label') }}"></dxi-column>
               <div *dxTemplate="let options of 'cellTemplate_isPaid'">
                 <span *ngIf="options.data.isPaid" class="badge badge-success badge-inline">{{ 'Paid' | localize }}</span>
                 <span *ngIf="!options.data.isPaid" class="badge badge-danger badge-inline">{{ 'UnPaid' | localize }}</span>
               </div>
-              <div *dxTemplate="let options of 'cellTemplate_Channel'">
+              <div *dxTemplate="let options of 'cellTemplate_status'">
                 <span
-                  style="width: 137px; text-align: center"
-                  *ngIf="!(options.data.channel == InvoiceChannelEnum.DynamicInvoice && !isTachyonDealerOrHost)"
+                  class="badge badge-inline"
+                  [ngClass]="{
+                    'badge-success': options.data.status == InvoiceStatusEnum.Confirmed,
+                    'badge-secondary': options.data.status == InvoiceStatusEnum.Drafted
+                  }"
+                  >{{ getInvoiceStatusTitle(options.data.status) }}</span
+                >
+              </div>
+              <div *dxTemplate="let options of 'cellTemplate_Channel'">
+                <span style="width: 137px; text-align: center" *ngIf="canSeeDynamicInvoice(options)"
                   ><span
                     class="badge badge-inline"
                     [ngClass]="{
                       'badge-primary': options.data.channel == InvoiceChannelEnum.Trip,
                       'badge-warning': options.data.channel == InvoiceChannelEnum.Penalty,
-                      'badge-success': options.data.channel == InvoiceChannelEnum.DynamicInvoice
+                      'badge-success': options.data.channel == InvoiceChannelEnum.DynamicInvoice,
+                      'badge-info': options.data.channel == InvoiceChannelEnum.Dedicated
                     }"
                     >{{ l(options.data.invoiceChannelTitle) }}</span
                   ></span
@@ -108,6 +124,9 @@
                   </a>
 
                   <ul class="dropdown-menu" *dropdownMenu>
+                    <li *ngIf="permission.isGranted('Pages.Invoices.ConfirmInvoice') && options.data.status == InvoiceStatusEnum.Drafted">
+                      <a class="dropdown-item" (click)="confirmInvoice(options.data)">{{ l('Confirm') }}</a>
+                    </li>
                     <li>
                       <a class="dropdown-item" (click)="details(options.data)">{{ l('Detail') }}</a>
                     </li>
@@ -127,6 +146,15 @@
                         *ngIf="options.data.channel == InvoiceChannelEnum.DynamicInvoice"
                         (click)="downloadDynamicReport(options.data.id)"
                         >{{ l('downloadDynamicInvoice') }}</a
+                      >
+                    </li>
+
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="options.data.channel == InvoiceChannelEnum.Dedicated"
+                        (click)="downloadDedicatedReport(options.data.id)"
+                        >{{ l('downloadDedicatedInvoice') }}</a
                       >
                     </li>
                     <li *ngIf="!options.data.isPaid">
@@ -166,6 +194,7 @@
     </div>
   </div>
 </div>
+<app-invoices-search-model #ModelSearch (modalsearch)="searchInvoice()"></app-invoices-search-model>
 <invoices-ondeman-model (modalSave)="reloadPage()" #OndemandModel></invoices-ondeman-model>
 <invoice-tenant-items-details #InvoiceDetailsModel></invoice-tenant-items-details>
 <void-invoice-note-modal #voidModal></void-invoice-note-modal>

@@ -40,7 +40,7 @@
                 <tr class="table-active">
                   <th>{{l('Price')}}</th>
                   <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">{{l('CommissionType')}}</th>
-                  <th>{{l('NoOfTrips')}}</th>
+                  <th>{{l(!isForDedicated ? 'NoOfTrips' : 'NoOfTrucks')}}</th>
                   <th>{{l('Total')}}</th>
                 </tr>
               </thead>
@@ -126,7 +126,7 @@
       <div class="modal-footer">
         <button
           class="btn btn-primary"
-          (click)="ModelPrice.show(input.shippingRequestId ,offerForEditOutput.priceOfferViewDto.id);close()"
+          (click)="ModelPrice.show(input.shippingRequestId ,offerForEditOutput.priceOfferViewDto.id, null, null,false, isForDedicated);close()"
           *ngIf="offerForEditOutput.canIEditOffer"
         >
           <i class="fas fa-pen"></i>
@@ -156,7 +156,7 @@
 
         <button
           class="btn btn-primary"
-          (click)="ModelPrice.show(input.shippingRequestId ,offerForEditOutput.priceOfferViewDto.id);close()"
+          (click)="ModelPrice.show(input.shippingRequestId ,offerForEditOutput.priceOfferViewDto.id, null, null, false, isForDedicated);close()"
           *ngIf="canSendOfferOrCancel()"
         >
           <i class="fas fa-check"></i>

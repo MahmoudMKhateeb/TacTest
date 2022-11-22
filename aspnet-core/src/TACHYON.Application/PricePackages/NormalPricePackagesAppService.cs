@@ -171,6 +171,44 @@ namespace TACHYON.PricePackages
             return ObjectMapper.Map<NormalPricePackageDto>(pricePackage);
         }
 
+        /// <summary>
+        /// This Action used in TmsPricePackage page
+        /// to get PP pricing info like( min price, max ...etc)
+        /// </summary>
+        [AbpAuthorize(AppPermissions.Pages_TmsPricePackages,AppPermissions.Pages_NormalPricePackages)]
+        public async Task<List<PricePackagesPricingInfoDto>> GetPricePackagesPricingInfo()
+        {
+            DisableTenancyFilters();
+            var pricePackagesList = await _pricePackageRepository.GetAllIncluding(x => x.Tenant, x => x.TrucksTypeFk)
+                .AsNoTracking().ToListAsync();
+            var pricingInfoItems = (from pricePackage in pricePackagesList
+                group pricePackage by pricePackage.TrucksTypeId
+                into ppGroup
+                select new PricePackagesPricingInfoDto()
+                {
+                    DirectRequestAveragePrice = ppGroup.Average(x => x.DirectRequestPrice),
+                    DirectRequestMinPrice = ppGroup.Min(x => x.DirectRequestPrice),
+                    DirectRequestMaxPrice = ppGroup.Max(x => x.DirectRequestPrice),
+                    DirectRequestMaxPriceOwner = ppGroup
+                        .Where(c => c.DirectRequestPrice == ppGroup.Max(x => x.DirectRequestPrice))
+                        .Select(x => x.Tenant.Name).FirstOrDefault(),
+                    DirectRequestMinPriceOwner = ppGroup
+                        .Where(c => c.DirectRequestPrice == ppGroup.Min(x => x.DirectRequestPrice))
+                        .Select(x => x.Tenant.Name).FirstOrDefault(),
+                    TmsAveragePrice = ppGroup.Average(x => x.TachyonMSRequestPrice),
+                    TmsMinPrice = ppGroup.Min(x => x.TachyonMSRequestPrice),
+                    TmsMaxPrice = ppGroup.Max(x => x.TachyonMSRequestPrice),
+                    TmsMaxPriceOwner = ppGroup.Where(c =>
+                            c.TachyonMSRequestPrice == ppGroup.Max(x => x.TachyonMSRequestPrice))
+                        .Select(x => x.Tenant.Name).FirstOrDefault(),
+                    TmsMinPriceOwner = ppGroup.Where(c =>
+                            c.TachyonMSRequestPrice == ppGroup.Min(x => x.TachyonMSRequestPrice))
+                        .Select(x => x.Tenant.Name).FirstOrDefault(),
+                    TruckTypeName = ppGroup.Select(x => x.TrucksTypeFk.Key).FirstOrDefault()
+                });
+            return pricingInfoItems.ToList();
+        }
+
         private async Task<NormalPricePackage> GetPricePackageFromDB(int id)
         {
             var tenentId = AbpSession.TenantId;
@@ -193,6 +231,7 @@ namespace TACHYON.PricePackages
         {
             DisableTenancyFilters();
             var shippingRequest = await _shippingRequestRepository.GetAll()
+                .Include(x=>x.ShippingRequestDestinationCities)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == input.ShippingRequestId);
 
@@ -202,8 +241,10 @@ namespace TACHYON.PricePackages
                 .GetAll().AsNoTracking()
                 .WhereIf(input.CarrierId.HasValue, x => x.TenantId == input.CarrierId)
                 .Where(p => p.TrucksTypeId == shippingRequest.TrucksTypeId
-                && p.OriginCityId == shippingRequest.OriginCityId
-                && p.DestinationCityId == shippingRequest.DestinationCityId);
+                && p.OriginCityId == shippingRequest.OriginCityId)
+                .WhereIf(shippingRequest.ShippingRequestDestinationCities.Count() == 1, p =>
+                shippingRequest.ShippingRequestDestinationCities.First().CityId == p.DestinationCityId);
+              //  && shippingRequest.ShippingRequestDestinationCities.Any(x=>x.CityId == p.DestinationCityId));
 
             var pagedAndFilteredPricePackages = filteredPricePackages
                 .OrderBy(input.Sorting ?? "id desc")

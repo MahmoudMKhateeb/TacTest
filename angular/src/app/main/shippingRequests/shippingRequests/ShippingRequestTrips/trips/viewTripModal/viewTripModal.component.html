@@ -139,7 +139,7 @@
                 </select>
               </div>
               <div class="col-6 col-form-label">
-                <label for="Attachment"> {{ l('Attachment') }} </label>
+                <label for="Attachment">{{ l('Attachment') }} </label>
                 <select name="Attachment" id="Attachment" [(ngModel)]="trip.hasAttachment" class="form-control" disabled>
                   <option [ngValue]="true">{{ l('Yes') }}</option>
                   <option [ngValue]="false">{{ l('No') }}</option>
@@ -148,8 +148,41 @@
             </div>
           </div>
 
+          <!--   StartOf::Driver&Truck for DedicatedSR -->
+          <ng-container *ngIf="feature.isEnabled('App.Shipper') && shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 1">
+            <div class="form-group col-lg-6">
+              <label>{{ l('RouteType') }}</label>
+              <select name="routeType" type="text" [(ngModel)]="trip.routeType" class="form-control" disabled>
+                <option disabled [ngValue]="null">{{ l('SelectRouteType') }}</option>
+                <option [value]="r.key" *ngFor="let r of routeTypes">
+                  {{ l(r.value) | localize }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-lg-6" *ngIf="trip.routeType == RouteTypesEnum.MultipleDrops">
+              <label>{{ l('NumberOfDrops') }}</label>
+              <input #numberOfDrops="ngModel" type="number" class="form-control" name="numberOfDrops" [(ngModel)]="trip.numberOfDrops" disabled />
+            </div>
+            <div class="form-group col-lg-6">
+              <label>{{ l('Driver') }}</label>
+              <select name="driverUserId" type="text" [(ngModel)]="trip.assignedDriverUserId" class="form-control" disabled>
+                <option disabled [ngValue]="null">{{ l('SelectaDriver') }}</option>
+                <option *ngFor="let item of allDedicatedDrivers" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>{{ l('Truck') }}</label>
+              <select name="truckId" type="text" [(ngModel)]="trip.assignedTruckId" class="form-control" disabled>
+                <option disabled [ngValue]="null">{{ l('Selectatruck') }}</option>
+                <option *ngFor="let item of allDedicatedTrucks" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+          </ng-container>
+          <!--   EndOf::Driver&Truck for DedicatedSR -->
+
           <!-- StartOf::Driver&Truck -->
-          <ng-container *ngIf="(feature.isEnabled('App.Carrier') || isTachyonDealer) && trip.status !== shippingRequestTripStatusEnum.Delivered">
+
+          <ng-container *ngIf="canAssignTrucksAndDrivers && trip.status !== shippingRequestTripStatusEnum.Delivered">
             <div class="form-group col-lg-6">
               <label>{{ l('Driver') }}</label>
               <select
@@ -159,6 +192,7 @@
                 (click)="checkData('driver')"
                 class="form-control"
                 [disabled]="saving"
+                (change)="DriverOrTruckSelected(assignDriverAndTruck.assignedDriverUserId, null)"
               >
                 <option [ngValue]="null">{{ l('SelectaDriver') }}</option>
                 <option *ngFor="let item of allDrivers" [value]="item.id">{{ item.displayName }}</option>
@@ -173,6 +207,7 @@
                 (click)="checkData('truck')"
                 class="form-control"
                 [disabled]="saving"
+                (change)="DriverOrTruckSelected(null, assignDriverAndTruck.assignedTruckId)"
               >
                 <option [ngValue]="null">{{ l('Selectatruck') }}</option>
                 <option *ngFor="let item of allTrucks" [value]="item.id">{{ item.displayName }}</option>
@@ -218,7 +253,7 @@
 
           <!--      end:Vas's      -->
           <!--  start:: RouteSteps -->
-          <PointsComponent></PointsComponent>
+          <PointsComponent *ngIf="viewTripDetails.isShown"></PointsComponent>
           <!--  end:: RouteSteps -->
           <!--end::Body-->
         </div>

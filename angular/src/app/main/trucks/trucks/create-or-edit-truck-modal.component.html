@@ -44,7 +44,59 @@
                 </select>
               </div>
             </div>
-
+            <div class="col-sm-12" *ngIf="this.feature.isEnabled('App.CarrierClients')">
+              <div class="form-group">
+                <label>{{ l('ActorCarrier') }} <span class="required-fileds">*</span></label>
+                <div
+                  [ngClass]="{
+                    'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsCarriers
+                  }"
+                >
+                  <dx-select-box
+                    id="carrierActorId"
+                    name="truck.carrierActorId"
+                    #carrierActorId="ngModel"
+                    [(ngModel)]="truck.carrierActorId"
+                    [dataSource]="AllActorsCarriers"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="id"
+                    [required]="true"
+                    placeholder="{{ l('SelectActor') }}"
+                  >
+                  </dx-select-box>
+                  <validation-messages [formCtrl]="carrierActorId"></validation-messages>
+                  <span class="form-text text-muted">{{ l('SelectTransportType') }} </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group m-form__group">
+                <label for="capacityId"> {{ l('Driver') }}</label>
+                <div
+                  [ngClass]="{
+                    'spinner spinner-success spinner-right mr-1 ml-1': capacityLoading
+                  }"
+                >
+                  <select
+                    id="driverUserId"
+                    #driverUserId="ngModel"
+                    [(ngModel)]="truck.driverUserId"
+                    class="form-control"
+                    name="truck.driverUserId"
+                    [ngClass]="{
+                      'is-valid': driverUserId.valid,
+                      'is-invalid': truckForm.submitted && driverUserId.invalid
+                    }"
+                  >
+                    <option [ngValue]="null" disabled>{{ l('SelectDriver') }}</option>
+                    <option *ngFor="let item of allDrivers" value="{{ item.id }}">{{ item.displayName }}</option>
+                  </select>
+                </div>
+                <validation-messages [formCtrl]="capacityId"></validation-messages>
+                <span class="form-text text-muted">{{ l('SelectTrucksTypeToOpenCapacity') }} </span>
+              </div>
+            </div>
             <div class="col-md-6">
               <div class="form-group m-form__group">
                 <label for="transportTypeId">{{ l('TransportType') }}<span class="text-danger">*</span> </label>
@@ -65,7 +117,7 @@
                   <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
                 <validation-messages [formCtrl]="transportTypeId"></validation-messages>
-                <span class="form-text text-muted">{{ l('SelectTransportType') }} </span>
+                <span class="form-text text-muted">{{ l('SelectaTransportType') }} </span>
               </div>
 
               <div class="form-group m-form__group" [hidden]="!IfOther(allTransportTypes, truck.transportTypeId)">
@@ -252,7 +304,7 @@
                 }"
               >
                 <option [ngValue]="null">{{ l('Select') }} {{ l('TruckStatus') }}</option>
-                <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ item.displayName }}</option>
+                <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ l(item.translatedDisplayName) }}</option>
               </select>
               <validation-messages [formCtrl]="TruckStatus"></validation-messages>
             </div>
@@ -363,6 +415,20 @@
               <!--                }"-->
               <!--              />-->
               <!--              <validation-messages [formCtrl]="modelYear"></validation-messages>-->
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="Truck_InternalTruckId"> {{ l('InternalTruckId') }}</label>
+              <input
+                #InternalTruckId="ngModel"
+                id="Truck_InternalTruckId"
+                name="Truck_InternalTruckId"
+                type="text"
+                [(ngModel)]="truck.internalTruckId"
+                class="form-control"
+                maxlength="10"
+              />
+              <validation-messages [formCtrl]="InternalTruckId"></validation-messages>
             </div>
 
             <div class="form-group col-md-12">

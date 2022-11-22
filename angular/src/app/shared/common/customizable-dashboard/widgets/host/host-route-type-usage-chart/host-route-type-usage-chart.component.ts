@@ -79,6 +79,18 @@ export class HostRouteTypeUsageChartComponent extends AppComponentBase implement
             opacity: 1,
           },
         };
+        (this.chartOptions.chart.locales as any[]) = [
+          {
+            name: 'en',
+            options: {
+              toolbar: {
+                exportToPNG: this.l('Download') + ' PNG',
+                exportToSVG: this.l('Download') + ' SVG',
+                exportToCSV: this.l('Download') + ' CSV',
+              },
+            },
+          },
+        ];
         this.loading = false;
       });
   }

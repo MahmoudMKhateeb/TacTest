@@ -10,5 +10,7 @@ namespace TACHYON.Notifications.Dto
         public string Name { get; set; }
 
         public bool IsSubscribed { get; set; }
+        
+        public bool IsEmailSubscribed { get; set; }
     }
 }

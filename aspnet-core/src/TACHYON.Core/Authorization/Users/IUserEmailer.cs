@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TACHYON.Chat;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.EmailTemplates.Dtos;
+using TACHYON.Storage;
 
 namespace TACHYON.Authorization.Users
 {
@@ -13,6 +14,7 @@ namespace TACHYON.Authorization.Users
 
         #region TACHYON_Emails
 
+        Task SendPricePackageProposalEmail(string proposalName, BinaryObject proposalFile, string emailAddress);
         /// <summary>
         /// Send email activation link to user's email address.
         /// </summary>
@@ -96,6 +98,8 @@ namespace TACHYON.Authorization.Users
         Task SendRejectedDocumentEmail(int tenantId, string documentName, string rejectionReason);
 
         Task SendExpiredDocumentsEmail(int tenantId, params DocumentFile[] documents);
+
+        Task SendNotificationByEmail(string emailAddress, string emailTitle, string notificationContent);
 
         #endregion
 

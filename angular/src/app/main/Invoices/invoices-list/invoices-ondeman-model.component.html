@@ -20,20 +20,41 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-group m-form__group">
-            <label for="Tenant">{{ l('Shipper') }}</label>
-            <p-autoComplete
-              name="Tenant"
-              [(ngModel)]="Tenant"
-              [suggestions]="Tenants"
-              (completeMethod)="search($event)"
-              field="displayName"
-              [forceSelection]="true"
-              required
-              (onSelect)="LoadWaybills($event)"
-            ></p-autoComplete>
+          <div class="form-group m-form__group" style="float: right">
+            <p-selectButton
+              name="InvoiceTypeOption"
+              [options]="InvoiceTypeOptions"
+              [(ngModel)]="invoiceTypeValue"
+              optionLabel="label"
+              optionValue="value"
+            ></p-selectButton>
           </div>
-          <div class="form-group m-form__group">
+
+          <div class="row">
+            <!-- <div class="col-md-6">
+              <select [(ngModel)]="selectedEdition" class="form-control" name="edition" id="edition">
+                <option [value]="undefined">{{ 'SelectEdition' | localize }}</option>
+                <option *ngFor="let item of editions" [value]="item">{{ item | localize }}</option>
+              </select>
+            </div> -->
+
+            <div class="col-md-6">
+              <div class="form-group m-form__group">
+                <label for="Tenant">{{ l('TenantName') }}</label>
+                <p-autoComplete
+                  name="Tenant"
+                  [(ngModel)]="Tenant"
+                  [suggestions]="Tenants"
+                  (completeMethod)="search($event)"
+                  field="displayName"
+                  [forceSelection]="true"
+                  required
+                  (onSelect)="LoadWaybills($event)"
+                ></p-autoComplete>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="invoiceTypeValue == 1" class="form-group m-form__group">
             <label for="Tenant">{{ l('Waybills') }}</label>
             <p-multiSelect [options]="Waybills" name="waybills" [(ngModel)]="SelectedWaybills" optionLabel="displayName"></p-multiSelect>
           </div>

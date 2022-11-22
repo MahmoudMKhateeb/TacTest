@@ -20,7 +20,6 @@ import { TermAndConditionsComponent } from './termsAndConditions/termAndConditio
 import { CapacitiesComponent } from './truckCapacities/capacities/capacities.component';
 import { TransportTypesComponent } from './transportTypes/transportTypes/transportTypes.component';
 import { DocumentTypeTranslationsComponent } from './documentTypeTranslations/documentTypeTranslations/documentTypeTranslations.component';
-import { DocumentsEntitiesComponent } from './documentsEntities/documentsEntities/documentsEntities.component';
 import { PickingTypesComponent } from './pickingTypes/pickingTypes/pickingTypes.component';
 import { PortsComponent } from './ports/ports/ports.component';
 import { FacilitiesComponent } from './addressBook/facilities/facilities.component';
@@ -72,6 +71,13 @@ import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-lis
 import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
 import { InvoiceNoteListComponent } from './invoices/invoice-note/invoice-note-list/invoice-note-list.component';
 import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic.component';
+import { ActorsSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/actors-submitted-documents/actors-submitted-documents.component';
+import { CreateOrEditDedicatedShippingRequestWizardComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicatedShippingRequestWizard/create-or-edit-dedicated-shipping-request-wizard.component';
+import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/tmsForShipper/tms-for-shipper.component';
+import { InvoicesDedicatedComponent } from '@app/main/Invoices/invoices-dedicated/invoices-dedicated.component';
+import { ActorsComponent } from './actors/actors/actors.component';
+import { ActorInvoiceListComponent } from './Invoices/ActorInvoices/actor-invoice-list/actor-invoice-list.component';
+import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/actor-submit-invoices.component';
 
 @NgModule({
   imports: [
@@ -220,7 +226,6 @@ import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/in
             component: DocumentTypeTranslationsComponent,
             data: { permission: 'Pages.DocumentTypeTranslations' },
           },
-          { path: 'documentsEntities/documentsEntities', component: DocumentsEntitiesComponent, data: { permission: 'Pages.DocumentsEntities' } },
           { path: 'ports/ports', component: PortsComponent, data: { permission: 'Pages.Ports' } },
           { path: 'pickingTypes/pickingTypes', component: PickingTypesComponent, data: { permission: 'Pages.PickingTypes' } },
           { path: 'addressBook/facilities', component: FacilitiesComponent, data: { permission: 'Pages.Facilities' } },
@@ -233,6 +238,11 @@ import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/in
           {
             path: 'documentFiles/DriversSubmittedDocuments',
             component: DriversSubmittedDocumentsComponent,
+            data: { permission: 'Pages.DocumentFiles' },
+          },
+          {
+            path: 'documentFiles/ActorsSubmittedDocuments',
+            component: ActorsSubmittedDocumentsComponent,
             data: { permission: 'Pages.DocumentFiles' },
           },
           { path: 'documentTypes/documentTypes', component: DocumentTypesComponent, data: { permission: 'Pages.DocumentTypes' } },
@@ -259,7 +269,13 @@ import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/in
             component: RequestTemplatesComponent,
           },
 
+          { path: 'tmsforshipper', component: TmsForShipperComponent, data: { permission: 'Pages.ShippingRequests' } },
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
+          {
+            path: 'shippingRequests/dedicatedShippingRequestWizard',
+            component: CreateOrEditDedicatedShippingRequestWizardComponent,
+            data: { permission: 'Pages.ShippingRequests' },
+          },
           { path: 'marketplace/list', component: MarketPlaceListComponent },
           {
             path: 'tracking',
@@ -283,9 +299,13 @@ import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/in
           { path: 'trucksTypes/trucksTypes', component: TrucksTypesComponent, data: { permission: 'Pages.TrucksTypes' } },
           { path: 'invoices/view', component: InvoicesListComponent, data: { permission: 'Pages.Invoices' } },
           { path: 'invoices/dynamic', component: InvoicesDynamicComponent, data: { permission: 'Pages.DynamicInvoices' } },
+          { path: 'invoices/dedicated', component: InvoicesDedicatedComponent, data: { permission: 'Pages.DedicatedDynamicInvoices' } },
           { path: 'penalties/view', component: PenaltiesListComponent, data: { permission: 'Pages.Invoices' } },
 
           { path: 'invoicenote/view', component: InvoiceNoteListComponent, data: { permission: 'Pages.Invoices' } },
+          { path: 'actors/actors', component: ActorsComponent, data: { permission: 'Pages.Administration.Actors' } },
+          { path: 'actors/invoices', component: ActorInvoiceListComponent, data: { permission: 'Pages.Administration.Actors' } },
+          { path: 'actors/carrierInvoices', component: ActorSubmitInvoicesComponent, data: { permission: 'Pages.Administration.Actors' } },
 
           {
             path: 'invoices/detail/:id',
@@ -328,9 +348,8 @@ import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/in
             data: { preload: true },
           },
           {
-            path: 'pricePackages/normalPricePackages',
-            loadChildren: () =>
-              import('app/main/pricePackages/price-package-module/price-package-module.module').then((m) => m.PricePackageModuleModule), //Lazy load main module
+            path: 'pricePackages',
+            loadChildren: () => import('@app/main/pricePackages/price-package.module').then((m) => m.PricePackageModule), //Lazy load main module
             data: { preload: true },
           },
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },

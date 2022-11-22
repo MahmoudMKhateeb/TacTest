@@ -48,6 +48,8 @@
 
         public const int MaxDocumentFileBytesUserFriendlyValue = 5;
         public const string ShipperEdtionName = "shipper";
+        public const string BrokerEditionName = "broker";
+        public const string CarrierSaasEditionName = "carrierassaas";
         public const string CarrierEdtionName = "carrier";
         public const string TachyonDealerEdtionName = "Tachyon";
 
@@ -128,5 +130,14 @@
         public const int DropOfWithDeliveryNoteRoutPointWorkflowVersion = 2;
 
         #endregion
+
+        public const string ProposalTemplateFullNamespace =
+            "TACHYON.Net.Emailing.PricePackageTemplates.TachyonProposal.docx";
+
+        public const string ProposalTemplateCompanyName = "$$CompanyName$$";
+        public const string ProposalTemplateDate = "$$Date$$";
+        public const string ProposalTemplateTruckType = "$$TruckType$$";
+        public const string ProposalTemplateRouteType = "$$RouteType$$";
+        public const string ProposalTemplateShippingType = "$$ShippingType$$";
     }
 }

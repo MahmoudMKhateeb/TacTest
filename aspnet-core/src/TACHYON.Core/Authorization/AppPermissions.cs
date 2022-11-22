@@ -16,6 +16,13 @@
         public const string Pages_Administration_Regions_Edit = "Pages.Administration.Regions.Edit";
         public const string Pages_Administration_Regions_Delete = "Pages.Administration.Regions.Delete";
 
+        public const string Pages_Administration_Actors = "Pages.Administration.Actors";
+        public const string Pages_Administration_Actors_Create = "Pages.Administration.Actors.Create";
+        public const string Pages_Administration_Actors_Edit = "Pages.Administration.Actors.Edit";
+        public const string Pages_Administration_Actors_Delete = "Pages.Administration.Actors.Delete";
+
+        public const string Pages_Administration_ActorsInvoice = "Pages.Administration.ActorsInvoice";
+
         public const string Pages_EmailTemplates = "Pages.EmailTemplates";
         public const string Pages_EmailTemplates_Create = "Pages.EmailTemplates.Create";
         public const string Pages_EmailTemplates_Edit = "Pages.EmailTemplates.Edit";
@@ -264,6 +271,7 @@
         public const string Pages_DocumentFiles_Create = "Pages.DocumentFiles.Create";
         public const string Pages_DocumentFiles_Edit = "Pages.DocumentFiles.Edit";
         public const string Pages_DocumentFiles_Delete = "Pages.DocumentFiles.Delete";
+        public const string Pages_DocumentFiles_Actors = "Pages.DocumentFiles.Actors";
 
         public const string Pages_DocumentTypes = "Pages.DocumentTypes";
         public const string Pages_DocumentTypes_Create = "Pages.DocumentTypes.Create";
@@ -544,6 +552,7 @@
             "Pages.Administration.Host.Invoices.PaymentMethod.Delete";
 
         public const string Pages_Invoices = "Pages.Invoices";
+        public const string Pages_Invoices_ConfirmInvoice = "Pages.Invoices.ConfirmInvoice";
 
         public const string Pages_Administration_Host_Invoices_Delete =
             "Pages.Administration.Host.Invoices.Invoices.Delete";
@@ -610,16 +619,66 @@
 
         #endregion
 
+        #region Dynamic Invoices
 
+        public const string Pages_DedicatedDynamicInvoices = "Pages.DedicatedDynamicInvoices";
+        public const string Pages_DedicatedDynamicInvoices_Create = "Pages.DedicatedDynamicInvoices.Create";
+        public const string Pages_DedicatedDynamicInvoices_Update = "Pages.DedicatedDynamicInvoices.Update";
+        public const string Pages_DedicatedDynamicInvoices_Delete = "Pages.DedicatedDynamicInvoices.Delete";
+
+        #endregion
         #region shpping
 
         public const string Pages_Tracking = "Pages.shipment.Tracking";
         public const string Pages_Tracking_ReceiverCode = "Pages.Shipment.Tracking.ReceiverCode";
         public const string Pages_Tracking_ResetPointReceiverCode = "Pages.Shipment.Tracking.ResetPointReceiverCode";
-
+        public const string Pages_Tracking_BulkDeliverTrip = "Pages.Shipment.Tracking.BulkDeliverTrip";
+        
         public const string Pages_ShippingRequestUpdates = "Pages.ShippingRequestUpdates";
         public const string Pages_ShippingRequestUpdates_TakeAction = "Pages.ShippingRequestUpdates.TakeAction";
 
         #endregion
+
+        #region TMS Price Packages
+
+        public const string Pages_TmsPricePackages = "Pages.TmsPricePackages";
+        public const string Pages_TmsPricePackages_Create = "Pages.TmsPricePackages.Create";
+        public const string Pages_TmsPricePackages_Update = "Pages.TmsPricePackages.Update";
+        public const string Pages_TmsPricePackages_Delete = "Pages.TmsPricePackages.Delete";
+
+        #endregion
+
+        #region Price Package Proposal
+
+        public const string Pages_PricePackageProposal = "Pages.PricePackageProposal";
+        public const string Pages_PricePackageProposal_Create = "Pages.PricePackageProposal.Create";
+        public const string Pages_PricePackageProposal_Update = "Pages.PricePackageProposal.Update";
+        public const string Pages_PricePackageProposal_Delete = "Pages.PricePackageProposal.Delete";
+        public const string Pages_PricePackageProposal_Accept = "Pages.PricePackageProposal.Accept";
+        public const string Pages_PricePackageProposal_Reject = "Pages.PricePackageProposal.Reject";
+
+        #endregion
+
+
+        #region Price Package Appendix
+
+        public const string Pages_PricePackageAppendix = "Pages.PricePackageAppendix";
+        public const string Pages_PricePackageAppendix_Create = "Pages.PricePackageAppendix.Create";
+        public const string Pages_PricePackageAppendix_Update = "Pages.PricePackageAppendix.Update";
+        public const string Pages_PricePackageAppendix_Delete = "Pages.PricePackageAppendix.Delete";
+        public const string Pages_PricePackageAppendix_Accept = "Pages.PricePackageAppendix.Accept";
+        public const string Pages_PricePackageAppendix_Reject = "Pages.PricePackageAppendix.Reject";
+        
+
+        #endregion
+
+        #region Actor Price
+
+        public const string Pages_ActorPrices = "Pages.ActorPrices";
+        public const string Pages_ActorPrices_Carrier = "Pages.ActorPrices.Carrier";
+        public const string Pages_ActorPrices_Shipper = "Pages.ActorPrices.Shipper";
+
+        #endregion
+
     }
 }

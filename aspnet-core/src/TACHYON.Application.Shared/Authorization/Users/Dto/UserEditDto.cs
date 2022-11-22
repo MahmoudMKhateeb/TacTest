@@ -66,6 +66,7 @@ namespace TACHYON.Authorization.Users.Dto
 
         public int? DriverIssueNumber { get; set; }
 
+        public int? CarrierActorId { get; set; }
         #endregion
     }
 }

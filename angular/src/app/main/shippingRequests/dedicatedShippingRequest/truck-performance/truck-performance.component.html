@@ -1,0 +1,37 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  role="dialog"
+  aria-labelledby="attendanceModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static', keyboard: false }"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title">
+          <span>{{ l('updateTruckKpiModal') }}</span>
+        </p>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-truck-performance-chart
+          (updatedTruckKpi)="updatedTruckKpi($event)"
+          [truckKPI]="truckKPI"
+          [truckNumberOfTrips]="truckNumberOfTrips"
+          [selectedTruckId]="selectedTruckId"
+        ></app-truck-performance-chart>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <!--begin::Buttons-->
+
+    <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+      {{ l('Close') }}
+    </button>
+  </div>
+</div>

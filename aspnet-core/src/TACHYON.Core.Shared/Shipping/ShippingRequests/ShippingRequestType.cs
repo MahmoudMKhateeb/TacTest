@@ -4,6 +4,6 @@
     {
         Marketplace = 1,
         DirectRequest = 2,
-        TachyonManageService
+        TachyonManageService = 3
     }
 }

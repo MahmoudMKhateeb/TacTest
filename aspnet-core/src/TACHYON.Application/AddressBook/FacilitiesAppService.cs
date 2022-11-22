@@ -5,6 +5,7 @@ using Abp.Linq.Extensions;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using PayPalCheckoutSdk.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,12 +41,15 @@ namespace TACHYON.AddressBook
         public async Task<PagedResultDto<GetFacilityForViewOutput>> GetAll(GetAllFacilitiesInput input)
         {
             DisableTenancyFiltersIfHost();
-            
+            await DisableTenancyFiltersIfTachyonDealer();
+
+
             var filteredFacilities = _facilityRepository.GetAll()
                 .Include(e => e.CityFk)
                 .ThenInclude(c => c.CountyFk)
                 .ThenInclude(t => t.Translations)
                 .Include(x=>x.FacilityWorkingHours)
+                .Include(x=>x.Tenant)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,
                     i => i.CreationTime >= input.FromDate && i.CreationTime <= input.ToDate)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
@@ -75,6 +79,7 @@ namespace TACHYON.AddressBook
                     CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
                     Country = o.CityFk.CountyFk.DisplayName ?? "",
                     CreationTime = o.CreationTime,
+                    ShipperName = o.Tenant.TenancyName,
                     FacilityWorkingHours = ObjectMapper.Map<List<FacilityWorkingHourDto>>(o.FacilityWorkingHours)
                 };
 
@@ -132,6 +137,10 @@ namespace TACHYON.AddressBook
         public async Task<long> CreateOrEdit(CreateOrEditFacilityDto input)
         {
             await ValidateFacilityName(input);
+            if(!await IsTachyonDealer())
+            {
+                input.ShipperId = null;
+            }
             if (input.Id == null)
             {
                 return await Create(input);
@@ -150,12 +159,14 @@ namespace TACHYON.AddressBook
 
             var facility = ObjectMapper.Map<Facility>(input);
             facility.Location = point;
-
-            if (AbpSession.TenantId != null)
+            if((await IsTachyonDealer() || AbpSession.TenantId==null) && input.ShipperId != null)
             {
-                facility.TenantId = (int?)AbpSession.TenantId;
+                facility.TenantId = input.ShipperId;
             }
-
+            else
+            {
+                facility.TenantId = AbpSession.TenantId;
+            }
 
             return await _facilityRepository.InsertAndGetIdAsync(facility);
         }
@@ -167,6 +178,10 @@ namespace TACHYON.AddressBook
 
             await RemoveDeletedWorkingHours(input, facility);
             ObjectMapper.Map(input, facility);
+            if((await IsTachyonDealer() || AbpSession.TenantId == null) && input.ShipperId!=null)
+            {
+                facility.TenantId = input.ShipperId;
+            }
             return facility.Id;
         }
 

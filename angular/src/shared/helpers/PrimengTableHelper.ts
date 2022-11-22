@@ -32,6 +32,9 @@ export class PrimengTableHelper {
 
   getSorting(table: Table): string {
     let sorting = '';
+    if (!table) {
+      return sorting;
+    }
 
     if (table.sortMode === 'multiple') {
       if (table.multiSortMeta) {
@@ -63,6 +66,9 @@ export class PrimengTableHelper {
   }
 
   getMaxResultCount(paginator: Paginator, event: LazyLoadEvent): number {
+    if (!paginator) {
+      return 0;
+    }
     if (paginator.rows) {
       return paginator.rows;
     }
@@ -75,6 +81,9 @@ export class PrimengTableHelper {
   }
 
   getSkipCount(paginator: Paginator, event: LazyLoadEvent): number {
+    if (!paginator) {
+      return 0;
+    }
     if (paginator.first) {
       return paginator.first;
     }

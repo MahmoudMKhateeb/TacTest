@@ -2,8 +2,10 @@
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Abp.Threading;
+using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -45,8 +47,10 @@ namespace TACHYON.Invoices.InvoiceNotes
         private readonly IAppNotifier _appNotifier;
         private readonly IAbpSession _AbpSession;
         private readonly UserManager _userManager;
+        private readonly IRepository<TenantFeatureSetting, long> _tenantFeatureRepository;
+        private readonly IRepository<EditionFeatureSetting, long> _editionFeatureRepository;
 
-        public InvoiceNoteAppService(IRepository<InvoiceNote, long> invoiceRepository, IRepository<Tenant> tenantRepository, IRepository<Invoice, long> invoiceReposity, IRepository<InvoiceTrip, long> invoiveTripRepository, IRepository<SubmitInvoiceTrip, long> submitInvoiceTrip, IAppNotifier appNotifier, IRepository<SubmitInvoice, long> submitInvoiceReposity, IRepository<InvoiceNoteItem, long> invoiceNoteItemReposity, IRepository<DocumentFile, Guid> documentFileRepository, UserManager userManager, IAbpSession abpSession, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequestTripVas, long> shippingRequestTripVasRepository)
+        public InvoiceNoteAppService(IRepository<InvoiceNote, long> invoiceRepository, IRepository<Tenant> tenantRepository, IRepository<Invoice, long> invoiceReposity, IRepository<InvoiceTrip, long> invoiveTripRepository, IRepository<SubmitInvoiceTrip, long> submitInvoiceTrip, IAppNotifier appNotifier, IRepository<SubmitInvoice, long> submitInvoiceReposity, IRepository<InvoiceNoteItem, long> invoiceNoteItemReposity, IRepository<DocumentFile, Guid> documentFileRepository, UserManager userManager, IAbpSession abpSession, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequestTripVas, long> shippingRequestTripVasRepository, IRepository<TenantFeatureSetting, long> tenantFeatureRepository, IRepository<EditionFeatureSetting, long> editionFeatureRepository)
         {
             _invoiceNoteRepository = invoiceRepository;
             _tenantRepository = tenantRepository;
@@ -61,6 +65,8 @@ namespace TACHYON.Invoices.InvoiceNotes
             _AbpSession = abpSession;
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestTripVasRepository = shippingRequestTripVasRepository;
+            _tenantFeatureRepository = tenantFeatureRepository;
+            _editionFeatureRepository = editionFeatureRepository;
         }
 
         #region MainFunctions
@@ -227,7 +233,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             var invoiceTenant = await _invoiceReposity.FirstOrDefaultAsync(x => x.Id == id);
-            if (invoiceTenant != null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+            if (invoiceTenant == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
             await FullVoidInvoiceForShipper(id);
 
         }
@@ -248,7 +254,6 @@ namespace TACHYON.Invoices.InvoiceNotes
         public async Task<List<CompayForDropDownDto>> GetAllCompanyForDropDown()
         {
             return await _tenantRepository.GetAll()
-                .Where(x => x.EditionId == ShipperEditionId || x.EditionId == CarrierEditionId)
                 .Select(x => new CompayForDropDownDto { Id = x.Id,
                     DisplayName = x.TenancyName })
                 .AsNoTracking()
@@ -578,10 +583,10 @@ namespace TACHYON.Invoices.InvoiceNotes
             invoiceNoteDto.Attn = admin.FullName;
 
             if (invoice != null)
-                invoiceNoteDto.ReInvoiceDate = invoice.CreationTime.ToString("dd/MM/yyyy mm:hh");
+                invoiceNoteDto.ReInvoiceDate = ClockProviders.Local.Normalize(invoice.CreationTime).ToString("dd/MM/yyyy hh:mm");
             else if(submitInvoice!=null)
             {
-                invoiceNoteDto.ReInvoiceDate = submitInvoice.CreationTime.ToString("dd/MM/yyyy mm:hh");
+                invoiceNoteDto.ReInvoiceDate = ClockProviders.Local.Normalize(submitInvoice.CreationTime).ToString("dd/MM/yyyy hh:mm");
             }
             var document = AsyncHelper.RunSync(() => _documentFileRepository
             .FirstOrDefaultAsync(x => x.TenantId == invoiceNote.TenantId && x.DocumentTypeId == 14));

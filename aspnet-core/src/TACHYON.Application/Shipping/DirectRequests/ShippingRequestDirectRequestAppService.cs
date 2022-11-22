@@ -4,6 +4,7 @@ using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.MultiTenancy;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -31,6 +32,8 @@ namespace TACHYON.Shipping.DirectRequests
         private readonly ShippingRequestManager _shippingRequestManager;
         private readonly IAppNotifier _appNotifier;
         private readonly PriceOfferManager _priceOfferManager;
+        private readonly IRepository<TenantFeatureSetting, long> _tenantFeatureRepository;
+        private readonly IRepository<EditionFeatureSetting, long> _editionFeatureRepository;
 
 
         public ShippingRequestDirectRequestAppService(IRepository<TenantCarrier, long> tenantCarrierRepository,
@@ -39,7 +42,9 @@ namespace TACHYON.Shipping.DirectRequests
             ShippingRequestManager shippingRequestManager,
             IAppNotifier appNotifier,
             PriceOfferManager priceOfferManager,
-            IRepository<ShippingRequest, long> shippingRequestRepository)
+            IRepository<ShippingRequest, long> shippingRequestRepository,
+            IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
+            IRepository<EditionFeatureSetting, long> editionFeatureRepository)
         {
             _tenantCarrierRepository = tenantCarrierRepository;
             _tenantRepository = tenantRepository;
@@ -48,6 +53,8 @@ namespace TACHYON.Shipping.DirectRequests
             _appNotifier = appNotifier;
             _priceOfferManager = priceOfferManager;
             _shippingRequestRepository = shippingRequestRepository;
+            _tenantFeatureRepository = tenantFeatureRepository;
+            _editionFeatureRepository = editionFeatureRepository;
         }
 
         [RequiresFeature(AppFeatures.SendDirectRequest)]
@@ -165,18 +172,24 @@ namespace TACHYON.Shipping.DirectRequests
             IQueryable<ShippingRequestDirectRequestGetCarrirerListDto> query;
             if (IsEnabled(AppFeatures.TachyonDealer))
             {
-                query = _tenantRepository
-                    .GetAll()
-                    .AsNoTracking()
-                    .Where(t => t.IsActive && t.Edition.DisplayName == TACHYONConsts.CarrierEdtionName)
-                    .WhereIf(!string.IsNullOrEmpty(input.Filter),
-                        e => e.TenancyName.ToLower().Contains(input.Filter.ToLower()) ||
-                             e.Name.ToLower().Contains(input.Filter.ToLower()) ||
-                             e.companyName.ToLower().Contains(input.Filter.ToLower()))
-                    .OrderBy(input.Sorting ?? "id desc")
-                    .Select(r => new ShippingRequestDirectRequestGetCarrirerListDto
+                DisableTenancyFilters();
+                query = (from tenant in _tenantRepository.GetAll().AsNoTracking()
+                    from clientsTenantFeature in _tenantFeatureRepository.GetAll()
+                        .Where(x => x.TenantId == tenant.Id && x.Name.Contains(AppFeatures.CarrierClients))
+                        .DefaultIfEmpty()
+                    from clientsEditionFeature in _editionFeatureRepository.GetAll()
+                        .Where(x => x.EditionId == tenant.EditionId && x.Name.Contains(AppFeatures.CarrierClients))
+                        .DefaultIfEmpty()
+                    orderby input.Sorting ?? "id desc"
+                    where tenant.IsActive && (tenant.Edition.DisplayName == TACHYONConsts.CarrierEdtionName ||
+                                              (clientsTenantFeature != null || clientsEditionFeature != null))
+                                          && (string.IsNullOrEmpty(input.Filter) || (tenant.TenancyName.ToLower()
+                                                  .Contains(input.Filter.ToLower()) ||
+                                              tenant.Name.ToLower().Contains(input.Filter.ToLower()) ||
+                                              tenant.companyName.ToLower().Contains(input.Filter.ToLower())))
+                    select  new ShippingRequestDirectRequestGetCarrirerListDto
                     {
-                        Id = r.Id, Name = r.Name, CarrierRate = r.Rate, CarrierRateNumber = r.RateNumber
+                        Id = tenant.Id, Name = tenant.Name, CarrierRate = tenant.Rate, CarrierRateNumber = tenant.RateNumber
                     });
             }
             else if (IsEnabled(AppFeatures.Shipper))

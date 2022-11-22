@@ -1,5 +1,5 @@
 /* tslint:disable:triple-equals */
-import { Component, Injector, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterContentChecked, ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CreateOrEditRoutPointDto,
@@ -9,35 +9,32 @@ import {
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
+  ShippingRequestDestinationCitiesDto,
   ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { Subscription } from 'rxjs';
 import { finalize } from '@node_modules/rxjs/operators';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'PointsComponent',
   templateUrl: './points.component.html',
   styleUrls: ['./points.component.scss'],
 })
-export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy {
-  cityDestId: number;
+export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy, AfterContentChecked {
+  // @Output() SelectedWayPointsFromChild = this.wayPointsList;
+  @Output() wayPointsListChanged: EventEmitter<any> = new EventEmitter<any>();
+  shippingRequestId: number;
+  DestCitiesDtos: ShippingRequestDestinationCitiesDto[];
+  SRDestionationCity: number;
   allFacilities: FacilityForDropdownDto[];
   pickupFacilities: FacilityForDropdownDto[];
   dropFacilities: FacilityForDropdownDto[];
   allPointsSendersAndREcivers: ReceiverFacilityLookupTableDto[][] = [];
   receiverLoading: boolean;
   shippingRequestForView: GetShippingRequestForViewOutput;
-  constructor(
-    injector: Injector,
-    private _routStepsServiceProxy: RoutStepsServiceProxy,
-    private _receiversServiceProxy: ReceiversServiceProxy,
-    public _tripService: TripService,
-    private _PointsService: PointsService
-  ) {
-    super(injector);
-  }
   activeTripId: number;
   RouteTypes = ShippingRequestRouteType;
   wayPointsList: CreateOrEditRoutPointDto[] = [];
@@ -61,20 +58,27 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   private tripDestFacilitySub$: Subscription;
   private tripSourceFacilitySub$: Subscription;
   private currentActiveTripSubs$: Subscription;
+  private pointServiceSubs$: Subscription;
   usedIn: 'view' | 'createOrEdit';
   @Output() SelectedWayPointsFromChild = this.wayPointsList;
 
-  ngOnDestroy() {
-    this.pointsServiceSubscription$?.unsubscribe();
-    this.tripDestFacilitySub$?.unsubscribe();
-    this.tripSourceFacilitySub$?.unsubscribe();
-    this.currentActiveTripSubs$?.unsubscribe();
-    console.log('Unsubscribed/Destroid from  Point Component');
+  constructor(
+    injector: Injector,
+    private _routStepsServiceProxy: RoutStepsServiceProxy,
+    private _receiversServiceProxy: ReceiversServiceProxy,
+    public _tripService: TripService,
+    private _PointsService: PointsService,
+    private cdref: ChangeDetectorRef
+  ) {
+    super(injector);
   }
 
   ngOnInit() {
     this.loadSharedServices();
     this.loadDropDowns();
+    this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => {
+      this.onChangedWayPointsList();
+    });
   }
 
   loadDropDowns() {
@@ -85,24 +89,35 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
    * loads Facilities with validation on it related to source and destination in SR
    */
   loadFacilities() {
-    if (!this.shippingRequestForView.shippingRequest.id) return;
+    if (!this.shippingRequestForView.shippingRequest.id) {
+      return;
+    }
     if (this.shippingRequestForView.shippingRequest.id != null) {
       this._tripService.currentShippingRequest.subscribe((res) => {
-        this.shippingRequestForView = res;
+        if (isNotNullOrUndefined(res)) {
+          //   this.shippingRequestForView = res;
+          this.DestCitiesDtos = res.destinationCitiesDtos;
+        }
       });
     }
-    this._routStepsServiceProxy
-      .getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestForView.shippingRequest.id)
-      .pipe(
-        finalize(() => {
-          this.facilityLoading = false;
-        })
-      )
-      .subscribe((result) => {
-        this.allFacilities = result;
-        this.pickupFacilities = result.filter((r) => r.cityId == this.shippingRequestForView.originalCityId);
-        this.dropFacilities = result.filter((r) => r.cityId == this.shippingRequestForView.destinationCityId);
-      });
+    if (this.usedIn === 'createOrEdit') {
+      this._routStepsServiceProxy
+        .getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestForView.shippingRequest.id)
+        .pipe(
+          finalize(() => {
+            this.facilityLoading = false;
+          })
+        )
+        .subscribe((result) => {
+          this.allFacilities = result;
+          this.pickupFacilities = result.filter((r) => {
+            return this.shippingRequestForView.shippingRequestFlag === 0
+              ? r.cityId == this.shippingRequestForView.originalCityId
+              : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
+          });
+          this.dropFacilities = result.filter((r) => this.DestCitiesDtos.some((y) => y.cityId == r.cityId));
+        });
+    }
   }
 
   /**
@@ -133,10 +148,17 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     this.wayPoints = [];
     this.wayPointMapDest = undefined;
     //take the first Point in the List and Set it As The source
-    this.wayPointMapSource = {
-      lat: this.wayPointsList[0]?.latitude || undefined,
-      lng: this.wayPointsList[0]?.longitude || undefined,
-    };
+    if (
+      isNotNullOrUndefined(this.wayPointsList) &&
+      this.wayPointsList.length > 0 &&
+      isNotNullOrUndefined(this.wayPointsList[0]?.latitude) &&
+      isNotNullOrUndefined(this.wayPointsList[0]?.longitude)
+    ) {
+      this.wayPointMapSource = {
+        lat: this.wayPointsList[0]?.latitude || undefined,
+        lng: this.wayPointsList[0]?.longitude || undefined,
+      };
+    }
     //Take Any Other Points but the First And last one in the List and set them to way points
     for (let i = 1; i < this.wayPointsList.length - 1; i++) {
       this.wayPoints.push({
@@ -147,7 +169,12 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       });
     }
     //to avoid the source and Dest from becoming the Same when place the First Elem in wayPointsList
-    if (this.wayPointsList.length > 1) {
+    if (
+      isNotNullOrUndefined(this.wayPointsList) &&
+      this.wayPointsList.length > 1 &&
+      isNotNullOrUndefined(this.wayPointsList[this.wayPointsList.length - 1]?.latitude) &&
+      isNotNullOrUndefined(this.wayPointsList[this.wayPointsList.length - 1]?.longitude)
+    ) {
       //set the Dest
       this.wayPointMapDest = {
         lat: this.wayPointsList[this.wayPointsList.length - 1]?.latitude || undefined,
@@ -156,12 +183,18 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     }
   }
 
+  onChangedWayPointsList() {
+    this.wayPointsListChanged.emit(null);
+  }
+
   /**
    * creates empty points for the trip based on number of drops
    */
   createEmptyPoints() {
+    console.log('createEmptyPoints', this.shippingRequestForView);
     let numberOfDrops = this.shippingRequestForView.shippingRequest.numberOfDrops;
     //if there is already wayPoints Dont Create Empty Once
+    console.log('this.wayPointsList.length == numberOfDrops + 1', this.wayPointsList.length == numberOfDrops + 1);
     if (this.wayPointsList.length == numberOfDrops + 1) return;
     for (let i = 0; i <= numberOfDrops; i++) {
       let point = new CreateOrEditRoutPointDto();
@@ -203,5 +236,17 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   RouteStepCordSetter(pointIndex: number, facilityId: number) {
     this.wayPointsList[pointIndex].latitude = this.allFacilities.find((x) => x.id == facilityId)?.lat;
     this.wayPointsList[pointIndex].longitude = this.allFacilities.find((x) => x.id == facilityId)?.long;
+  }
+
+  ngOnDestroy() {
+    this.pointServiceSubs$?.unsubscribe();
+    this.pointsServiceSubscription$?.unsubscribe();
+    this.tripDestFacilitySub$?.unsubscribe();
+    this.tripSourceFacilitySub$?.unsubscribe();
+    this.currentActiveTripSubs$?.unsubscribe();
+  }
+
+  ngAfterContentChecked() {
+    this.cdref.detectChanges();
   }
 }

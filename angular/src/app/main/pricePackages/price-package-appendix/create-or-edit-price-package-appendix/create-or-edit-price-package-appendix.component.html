@@ -1,0 +1,89 @@
+<div #Modal="bs-modal" bsModal role="dialog" class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form #PPAForm="ngForm" *ngIf="isActive" [busyIf]="isLoading">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="appendix.id">{{ l('EditAppendix') }}</span>
+            <span *ngIf="!appendix.id">{{ l('CreateNewAppendix') }}</span>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label>{{ l('Shipper') }} <span class="text-danger">*</span></label>
+              <div
+                [ngClass]="{
+                  'spinner spinner-success spinner-right mr-1 ml-1': shippersLoading
+                }"
+              >
+                <select [(ngModel)]="shipperId" (change)="loadProposals()" required class="form-control" name="appendixShipper">
+                  <option selected disabled [value]="undefined">{{ 'SelectShipper' | localize }}</option>
+                  <option *ngFor="let item of shippers" [value]="item.id">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="appendixContractName">{{ 'ContractName' | localize }}</label>
+              <input id="appendixContractName" [(ngModel)]="appendix.contractName" required type="text" class="form-control" name="contractName" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="appendixContractNumber">{{ 'ContractNumber' | localize }}</label>
+              <input
+                id="appendixContractNumber"
+                [(ngModel)]="appendix.contractNumber"
+                required
+                type="number"
+                (keydown)="numberOnly($event)"
+                class="form-control"
+                name="contractNumber"
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('Date') }} <span class="text-danger">*</span></label>
+              <input
+                id="Date"
+                type="text"
+                name="appendixDate"
+                class="form-control"
+                bsDatepicker
+                datePickerMomentModifier
+                [(date)]="appendix.appendixDate"
+                [bsConfig]="{ adaptivePosition: true }"
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('Proposal') }} <span class="text-danger">*</span></label>
+              <div
+                [ngClass]="{
+                  'spinner spinner-success spinner-right mr-1 ml-1': proposalsLoading
+                }"
+              >
+                <select [(ngModel)]="appendix.proposalId" required class="form-control" name="appendixProposalId">
+                  <option selected disabled [value]="undefined">{{ 'SelectProposal' | localize }}</option>
+                  <option *ngFor="let item of proposals" [value]="item.id">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="appendixScopeOverview">{{ 'ScopeOverview' | localize }}</label>
+              <input id="appendixScopeOverview" [(ngModel)]="appendix.scopeOverview" required type="text" class="form-control" name="scopeOverview" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="appendixNotes">{{ 'Notes' | localize }}</label>
+              <input id="appendixNotes" [(ngModel)]="appendix.notes" required type="text" class="form-control" name="notes" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" (click)="close()" class="btn btn-secondary">{{ 'Close' | localize }}</button>
+          <button type="submit" [buttonBusy]="isLoading" (click)="createOrEdit()" [disabled]="PPAForm.invalid" class="btn btn-primary">
+            {{ 'Save' | localize }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

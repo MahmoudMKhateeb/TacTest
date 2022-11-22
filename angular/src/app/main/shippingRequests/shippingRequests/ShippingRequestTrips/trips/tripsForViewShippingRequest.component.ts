@@ -8,6 +8,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -17,6 +18,7 @@ import { Paginator } from '@node_modules/primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
 
 import {
+  GetShippingRequestForViewOutput,
   GetShippingRequestVasForViewDto,
   ImportGoodsDetailsDto,
   ImportRoutePointDto,
@@ -63,7 +65,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @Input() ShippingRequest: ShippingRequestDto;
-  @Input() shippingRequestForView: any;
+  @Input() shippingRequestForView: GetShippingRequestForViewOutput;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled = false;
   ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
@@ -83,6 +85,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   loading = false;
   uploadGoodDetailsUrl: string;
   ShippingRequestRouteTypeEnum = ShippingRequestRouteType;
+  CanAssignDriverAndTruck: boolean;
 
   type = 'Trip';
   ShippingRequestTripStatus = ShippingRequestTripStatus;
@@ -110,7 +113,6 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       this.VasListFromFather = result.shippingRequestVasDtoList;
       this.tripsByTmsEnabled = true;
       this._TripService.updateShippingRequest(result);
-      console.log(result);
     });
   }
 
@@ -145,6 +147,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
         this.primengTableHelper.totalRecordsCount = result.totalCount;
         this.primengTableHelper.records = result.items;
         this.primengTableHelper.hideLoadingIndicator();
+        this.CanAssignDriverAndTruck = result.items[0]?.canAssignTrucksAndDrivers;
       });
   }
 
@@ -169,7 +172,9 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   }
 
   reloadPage(): void {
-    this.paginator.changePage(this.paginator.getPage());
+    if (!!this.paginator) {
+      this.paginator.changePage(this.paginator.getPage());
+    }
   }
   ngAfterViewInit(): void {
     this.primengTableHelper.adjustScroll(this.dataTable);
@@ -308,15 +313,19 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       record.status !== this.ShippingRequestTripStatusEnum.Delivered
     );
   }
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges): void {
     this.reloadPage();
   }
   getCancelStatus(statusId) {
-    if (statusId == this.ShippingRequestTripCancelStatusEnum.Canceled) {
+    if (statusId === this.ShippingRequestTripCancelStatusEnum.Canceled) {
       return this.l('CanceledTrip');
-    } else if (statusId == this.ShippingRequestTripCancelStatusEnum.Rejected) return this.l('RejectedTripCancelation');
-    else if (statusId == this.ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval) return this.l('WaitingCancelApproveFromTMS');
-    else return this.l('None');
+    } else if (statusId === this.ShippingRequestTripCancelStatusEnum.Rejected) {
+      return this.l('RejectedTripCancelation');
+    } else if (statusId === this.ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval) {
+      return this.l('WaitingCancelApproveFromTMS');
+    } else {
+      return this.l('None');
+    }
   }
 
   createBayanTrip(id: any) {

@@ -31,6 +31,8 @@ using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
+using Nito.AsyncEx;
+using System.Threading;
 using TACHYON.Authorization.Users;
 
 namespace TACHYON.Tracking
@@ -44,19 +46,21 @@ namespace TACHYON.Tracking
         private readonly IRepository<User, long> _userRepository;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
         private readonly ProfileAppService _ProfileAppService;
+        private readonly ForceDeliverTripExcelExporter _deliverTripExcelExporter;
 
-        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ProfileAppService profileAppService, IRepository<RoutPoint, long> routPointRepository, IRepository<User, long> userRepository)
+        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ProfileAppService profileAppService, IRepository<RoutPoint, long> routPointRepository, ForceDeliverTripExcelExporter deliverTripExcelExporter)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _workFlowProvider = workFlowProvider;
             _ProfileAppService = profileAppService;
             _RoutPointRepository = routPointRepository;
-            _userRepository = userRepository;
+            _deliverTripExcelExporter = deliverTripExcelExporter;
         }
         public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
 
+            var hasCarrierClient = await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierClients);
             DisableTenancyFilters();
             var query = _ShippingRequestTripRepository
             .GetAll()
@@ -81,12 +85,14 @@ namespace TACHYON.Tracking
                 .ThenInclude(c => c.CarrierTenantFk)
                 //TAC-1509
                 //.Where(x => x.ShippingRequestFk.CarrierTenantId.HasValue)
+                .Where(x=>x.ShippingRequestFk.ShippingRequestFlag==ShippingRequestFlag.Normal)
                 .Where(x => x.ShippingRequestFk.Status == ShippingRequestStatus.PostPrice || x.ShippingRequestFk.CarrierTenantId.HasValue)
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper),
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper) && !hasCarrierClient,
                     x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                 .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier),
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier) && !hasCarrierClient,
                     x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+            .WhereIf(AbpSession.TenantId.HasValue && hasCarrierClient,x=> x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                 .WhereIf(input.PickupFromDate.HasValue && input.PickupToDate.HasValue,
                     x => x.ShippingRequestFk.StartTripDate >= input.PickupFromDate.Value &&
                          x.ShippingRequestFk.StartTripDate <= input.PickupToDate.Value)
@@ -94,11 +100,14 @@ namespace TACHYON.Tracking
                     x => x.StartTripDate >= input.FromDate.Value && x.StartTripDate <= input.ToDate.Value)
                 .WhereIf(input.OriginId.HasValue, x => x.ShippingRequestFk.OriginCityId == input.OriginId)
                 .WhereIf(input.DestinationId.HasValue,
-                    x => x.ShippingRequestFk.DestinationCityId == input.DestinationId)
+                    x => x.ShippingRequestFk.ShippingRequestDestinationCities.Any(y=>y.CityId == input.DestinationId))
                 .WhereIf(input.RouteTypeId.HasValue, x => x.ShippingRequestFk.RouteTypeId == input.RouteTypeId)
+                .WhereIf(input.TransportTypeId.HasValue, x=>x.ShippingRequestFk.TransportTypeId == input.TransportTypeId)
                 .WhereIf(input.TruckTypeId.HasValue, x => x.ShippingRequestFk.TrucksTypeId == input.TruckTypeId)
+                .WhereIf(input.TruckCapacityId.HasValue, x => x.ShippingRequestFk.CapacityId == input.TruckCapacityId)
                 .WhereIf(input.Status.HasValue, x => x.Status == input.Status)
-                .WhereIf(input.WaybillNumber.HasValue, x => x.WaybillNumber == input.WaybillNumber)
+                .WhereIf(input.WaybillNumber.HasValue, x => x.WaybillNumber == input.WaybillNumber ||
+                x.RoutPoints.Any(y=>y.WaybillNumber == input.WaybillNumber))
                 .WhereIf(!string.IsNullOrEmpty(input.Shipper),
                     x => x.ShippingRequestFk.Tenant.Name.ToLower().Contains(input.Shipper) ||
                          x.ShippingRequestFk.Tenant.companyName.ToLower().Contains(input.Shipper) ||
@@ -108,16 +117,29 @@ namespace TACHYON.Tracking
                     x => x.ShippingRequestFk.CarrierTenantFk.Name.ToLower().Contains(input.Carrier) ||
                          x.ShippingRequestFk.CarrierTenantFk.companyName.ToLower().Contains(input.Carrier) ||
                          x.ShippingRequestFk.CarrierTenantFk.TenancyName.ToLower().Contains(input.Carrier))
+                .WhereIf(input.PackingTypeId.HasValue, x => x.ShippingRequestFk.PackingTypeId == input.PackingTypeId)
+                .WhereIf(input.GoodsOrSubGoodsCategoryId.HasValue, x => x.ShippingRequestFk.GoodCategoryId == input.GoodsOrSubGoodsCategoryId)
+                .WhereIf(!string.IsNullOrEmpty(input.PlateNumberId), x=>x.ShippingRequestFk.AssignedTruckFk.PlateNumber == input.PlateNumberId)
+                .WhereIf(!string.IsNullOrEmpty(input.DriverNameOrMobile), x => x.ShippingRequestFk.AssignedDriverUserFk.PhoneNumber == input.DriverNameOrMobile ||
+                (x.ShippingRequestFk.AssignedDriverUserFk!=null && 
+                (x.ShippingRequestFk.AssignedDriverUserFk.Name.ToLower().Contains(input.DriverNameOrMobile) ||
+                x.ShippingRequestFk.AssignedDriverUserFk.Surname.ToLower().Contains(input.DriverNameOrMobile))))
+                .WhereIf(input.DeliveryFromDate.HasValue && input.DeliveryToDate.HasValue, x=>x.ShippingRequestFk.ShippingRequestTrips.Any(y=> y.ActualDeliveryDate>= input.DeliveryFromDate &&
+                y.ActualDeliveryDate<= input.DeliveryToDate))
+                .WhereIf(!string.IsNullOrEmpty(input.ContainerNumber), x => x.ShippingRequestFk.ShippingRequestTrips.Any(y=>y.ContainerNumber == input.ContainerNumber))
+                .WhereIf(input.IsInvoiceIssued !=null, x => x.ShippingRequestFk.ShippingRequestTrips.Any(y => y.IsShipperHaveInvoice == input.IsInvoiceIssued))
+                .WhereIf(input.IsSubmittedPOD !=null, x => x.ShippingRequestFk.ShippingRequestTrips.Any(y => y.RoutPoints.Any(x=>x.IsPodUploaded == input.IsSubmittedPOD)))
+                //todo for tasneem will update request type after dediced
+                .WhereIf(input.RequestTypeId ==1, x=>x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId)
+                .WhereIf(input.RequestTypeId == 2, x => x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId)
                 .OrderBy(input.Sorting ?? "id desc")
                 .PageBy(input).ToList();
 
             List<TrackingListDto> trackingLists = new List<TrackingListDto>();
-            
-            foreach (ShippingRequestTrip trip in query)
+            query.ForEach(async r =>
             {
-                var mappedDto = await GetMap(trip);
-                trackingLists.Add(mappedDto);
-            }
+                trackingLists.Add(await GetMap(r));
+            });
 
             return new PagedResultDto<TrackingListDto>(
                 query.Count,
@@ -159,12 +181,15 @@ namespace TACHYON.Tracking
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             DisableTenancyFilters();
 
+            var hasCarrierClient = await IsEnabledAsync(AppFeatures.CarrierClients);
+            
             var trip =
                  await _ShippingRequestTripRepository.GetAll()
                             .Where(x => x.Id == id && x.ShippingRequestFk.CarrierTenantId.HasValue)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                            .WhereIf(AbpSession.TenantId.HasValue && !hasCarrierClient && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                            .WhereIf(AbpSession.TenantId.HasValue && !hasCarrierClient && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                            .WhereIf(AbpSession.TenantId.HasValue && hasCarrierClient,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                             .FirstOrDefaultAsync();
 
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
@@ -205,19 +230,38 @@ namespace TACHYON.Tracking
             mappedTrip.RoutPoints = mappedTrip.RoutPoints.OrderBy(x => x.PickingType).ToList();
             return mappedTrip;
         }
+
+        public async Task<FileDto> GetForceDeliverTripExcelFile(int tripId)
+        {
+            DisableTenancyFilters();
+            var tripPoints = await _RoutPointRepository.GetAll()
+                .Where(x=> x.ShippingRequestTripId == tripId)
+                .Select(x => new ExportPointExcelDto() {Id = x.Id, PickingType = x.PickingType, WorkFlowVersion = x.WorkFlowVersion})
+                .ToListAsync();
+            
+            tripPoints.ForEach(point =>
+            {
+                point.Transactions = _workFlowProvider.Flows.Where(x => x.Version == point.WorkFlowVersion)
+                    .SelectMany(x => x.Transactions).GroupBy(x=> x.ToStatus)
+                    .Select(x => L(x.Key.ToString())).ToList();
+            });
+
+            return _deliverTripExcelExporter.ExportToFile(tripPoints);
+        }
+
         public async Task Accept(int id)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.CarrierClients);
             await _workFlowProvider.Accepted(id);
         }
         public async Task Start(int id)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.CarrierClients);
             await _workFlowProvider.Start(new ShippingRequestTripDriverStartInputDto { Id = id });
         }
         public async Task InvokeStatus(InvokeStatusInputDto input)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier,  AppFeatures.CarrierClients);
             var args = new PointTransactionArgs
             {
                 PointId = input.Id,
@@ -227,12 +271,12 @@ namespace TACHYON.Tracking
         }
         public async Task NextLocation(long id)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier,  AppFeatures.CarrierClients);
             await _workFlowProvider.GoToNextLocation(id);
         }
         public async Task<List<GetAllUploadedFileDto>> POD(long id)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper, AppFeatures.CarrierClients);
             return await _workFlowProvider.GetPOD(id);
         }
 
@@ -284,6 +328,7 @@ namespace TACHYON.Tracking
                 //if (trip.Status == ShippingRequestTripStatus.New && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted && !dto.CanStartTrip)
                 //    dto.NoActionReason = CanNotStartReason(trip, workingOnAnotherTrip);
             }
+            dto.CanDriveTrip = !tenantId.HasValue || tenantId== trip?.ShippingRequestFk?.CarrierTenantId || await IsTachyonDealer();
             return dto;
         }
         private bool CanStartTrip(ShippingRequestTrip trip)

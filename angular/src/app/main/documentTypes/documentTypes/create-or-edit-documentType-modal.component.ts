@@ -1,31 +1,40 @@
-import { Component, ViewChild, ViewEncapsulation, Injector, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import {
+  AfterContentChecked,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Injector,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 import { finalize } from 'rxjs/operators';
 import {
-  DocumentTypesServiceProxy,
   CreateOrEditDocumentTypeDto,
   DocumentFilesServiceProxy,
-  SelectItemDto,
+  DocumentsEntitiesEnum,
+  DocumentTypeFlagEnum,
+  DocumentTypesServiceProxy,
   DocumentTypeTranslationsServiceProxy,
-  DocumentTypeTranslationDto,
-  TokenAuthServiceProxy,
   ISelectItemDto,
+  SelectItemDto,
+  TokenAuthServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import * as moment from 'moment';
 import { CreateOrEditDocumentTypeTranslationModalComponent } from '@app/main/documentTypeTranslations/documentTypeTranslations/create-or-edit-documentTypeTranslation-modal.component';
-import { LazyLoadEvent } from 'primeng/api';
 
 import { Paginator } from '@node_modules/primeng/paginator';
 import { Table } from '@node_modules/primeng/table';
 import { IAjaxResponse, NotifyService, TokenService } from '@node_modules/abp-ng2-module';
 import { ActivatedRoute } from '@angular/router';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { id } from '@swimlane/ngx-charts';
 import { AppConsts } from '@shared/AppConsts';
-import FileUploader from 'devextreme/ui/file_uploader';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 const toBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -39,10 +48,11 @@ const toBase64 = (file) =>
   selector: 'createOrEditDocumentTypeModal',
   templateUrl: './create-or-edit-documentType-modal.component.html',
   encapsulation: ViewEncapsulation.None,
-
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [appModuleAnimation()],
+  providers: [EnumToArrayPipe],
 })
-export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
+export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase implements OnInit, AfterContentChecked {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
   @ViewChild('paginator', { static: false }) paginator: Paginator;
   @ViewChild('dataTable', { static: false }) dataTable: Table;
@@ -58,7 +68,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   saving = false;
   documentNameisAvaliable = true;
   documentType: CreateOrEditDocumentTypeDto = new CreateOrEditDocumentTypeDto();
-  allDocumentsEntities: SelectItemDto[];
+  allDocumentsEntities: [];
   buttonOptions: any = {
     text: 'Add',
     type: 'success',
@@ -72,6 +82,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   value: File[] = [];
   authorizationToken: string;
   uploadUrl: string;
+  DocumentTypeFlags: any;
 
   constructor(
     private injector: Injector,
@@ -83,17 +94,21 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     private _activatedRoute: ActivatedRoute,
     private _fileDownloadService: FileDownloadService,
     private changeDetectorRef: ChangeDetectorRef,
-    private _tokenService: TokenService
+    private _tokenService: TokenService,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
+  }
+
+  ngOnInit(): void {
     this.authorizationToken = 'Bearer ' + this._tokenService.getToken();
-    this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile';
+    // this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile';
+    this.changeDetectorRef.detectChanges();
   }
 
   show(documentTypeId?: number): void {
-    this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
-      this.allDocumentsEntities = result;
-    });
+    this.allDocumentsEntities = this.enumToArray.transform(DocumentsEntitiesEnum);
+    this.DocumentTypeFlags = this.enumToArray.transform(DocumentTypeFlagEnum);
 
     if (!documentTypeId) {
       this.documentType = new CreateOrEditDocumentTypeDto();
@@ -101,14 +116,17 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     } else if (documentTypeId) {
       this._documentTypesServiceProxy.getDocumentTypeForEdit(documentTypeId).subscribe((result) => {
         this.documentType = result.documentType;
+        (this.documentType.documentsEntityId as any) = this.documentType.documentsEntityId.toString();
+        this.active = true;
       });
     }
 
     this._documentFilesServiceProxy.getAllEditionsForDropdown().subscribe((result) => {
       this.editions = result;
+      this.active = true;
     });
-    this.active = true;
     this.modal.show();
+    this.changeDetectorRef.detectChanges();
   }
 
   save(): void {
@@ -134,6 +152,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     this.primengTableHelper.records = null;
     this.value = [];
     this.modal.hide();
+    this.changeDetectorRef.detectChanges();
   }
 
   documentsEntityDropDownOnChange($event) {
@@ -193,5 +212,9 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     this._documentTypesServiceProxy.getFileDto(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
+  }
+
+  ngAfterContentChecked(): void {
+    this.changeDetectorRef.detectChanges();
   }
 }

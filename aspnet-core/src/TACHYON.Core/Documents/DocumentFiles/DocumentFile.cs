@@ -14,6 +14,7 @@ using TACHYON.Trucks;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingRequestAndTripNotes;
+using TACHYON.Actors;
 
 namespace TACHYON.Documents.DocumentFiles
 {
@@ -80,5 +81,10 @@ namespace TACHYON.Documents.DocumentFiles
 
         public string Notes { get; set; }
         public string HijriExpirationDate { get; set; }
+        public virtual int? ActorId  { get; set; }
+
+        [ForeignKey("ActorId")] 
+        public Actor ActorFk { get; set; }
+
     }
 }

@@ -4,6 +4,11 @@ using Abp.Localization;
 using Abp.Notifications;
 using TACHYON.Authorization;
 using TACHYON.Features;
+using TACHYON.Invoices;
+using TACHYON.Invoices.SubmitInvoices;
+using TACHYON.PriceOffers;
+using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Notifications
 {
@@ -171,6 +176,75 @@ namespace TACHYON.Notifications
 
             #endregion
 
+            #region Shipping Tracking Notifications
+
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.DriverAcceptTrip,
+                displayName: L("DriverAcceptTripNotificationDefinition"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
+            ));
+
+            #endregion
+
+            #region Offers Notifications
+
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.TMSAcceptedOffer,
+                displayName: L("TachyonDealerAcceptPriceOfferNotificationDefinition")));    
+            
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.ShipperAcceptedOffer,
+                displayName: L("ShipperAcceptPriceOfferNotificationDefinition")));
+            
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.PendingOffer,
+                displayName: L("PendingPriceOfferNotificationDefinition"),
+                description: L("PendingOffer"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)));
+            
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.RejectedOffer,
+                displayName: L("RejectedPriceOfferNotificationDefinition"),
+                description: L("RejectedOffer"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,AppFeatures.Carrier)));
+            
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.RejectedPostPriceOffer,
+                displayName: L("RejectedPostPriceOfferNotificationDefinition"),
+                description: L("RejectedOffer"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)));
+            
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.ShippingRequestSendOfferWhenAddPrice,
+                displayName: L("SendOfferWhenAddPriceNotificationDefinition"),
+                description: L("ShippingRequestSendOfferWhenAddPrice"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,AppFeatures.Shipper)));
+            
+            context.Manager.Add(new NotificationDefinition(
+                AppNotificationNames.ShippingRequestSendOfferWhenUpdatePrice,
+                 displayName: L("SendOfferWhenUpdatePriceNotificationDefinition"),
+                description: L("ShippingRequestSendOfferWhenUpdatePrice"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,AppFeatures.Shipper)));
+
+            #endregion
+
+            #region Invoicing Notifications
+
+            context.Manager.Add(new NotificationDefinition(AppNotificationNames.SubmitInvoiceOnClaim,
+                 displayName: L("SubmitInvoiceOnClaimNotificationDefinition"),
+                 permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Invoices_SubmitInvoices_Claim)));
+            
+            context.Manager.Add(new NotificationDefinition(AppNotificationNames.SubmitInvoiceOnAccepted,
+                 displayName: L("SubmitInvoiceOnAcceptedNotificationDefinition"),
+                 permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Invoices_SubmitInvoices)));
+            
+            context.Manager.Add(new NotificationDefinition(AppNotificationNames.SubmitInvoiceOnRejected,
+                displayName: L("SubmitInvoiceOnRejectedNotificationDefinition"),
+                permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Invoices_SubmitInvoices)));
+
+            #endregion
+            
+            
             #endregion
         }
 

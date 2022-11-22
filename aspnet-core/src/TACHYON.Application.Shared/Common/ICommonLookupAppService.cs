@@ -17,7 +17,7 @@ namespace TACHYON.Common
 
         GetDefaultEditionNameOutput GetDefaultEditionName();
 
-        IEnumerable<ISelectItemDto> GetAutoCompleteTenants(string name, string EdtionName);
+        Task<IEnumerable<ISelectItemDto>> GetAutoCompleteTenants(string name, string EdtionName);
 
         Task<List<SelectItemDto>> GetPeriods();
 

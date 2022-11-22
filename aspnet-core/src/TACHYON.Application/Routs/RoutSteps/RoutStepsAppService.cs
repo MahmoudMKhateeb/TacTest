@@ -387,12 +387,14 @@ namespace TACHYON.Routs.RoutSteps
             ShippingRequest shippingRequest;
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
-                shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(shippingRequestId);
+                shippingRequest = await _shippingRequestRepository.GetAll().Include(y=>y.ShippingRequestDestinationCities).FirstOrDefaultAsync(x=>x.Id == shippingRequestId);
+                var destinationCities = shippingRequest.ShippingRequestDestinationCities.Select(y=>y.CityId).ToList();
                 var query = _lookup_FacilityRepository
                 .GetAll()
                 .AsNoTracking()
                 .WhereIf(shippingRequest.ShippingTypeId == 1, x => x.CityId == shippingRequest.OriginCityId) //inside city
-                .WhereIf(shippingRequest.ShippingTypeId == 2, x => x.CityId == shippingRequest.OriginCityId || x.CityId == shippingRequest.DestinationCityId); //between city
+                //.WhereIf(shippingRequest.ShippingTypeId == 2, x => x.CityId == shippingRequest.OriginCityId ); //between city
+                .WhereIf(shippingRequest.ShippingTypeId == 2, x => x.CityId == shippingRequest.OriginCityId || destinationCities.Contains(x.CityId));
                 query = query.Where(x => x.TenantId == shippingRequest.TenantId);
                 var result = await query.Select(x => new FacilityForDropdownDto
                 {

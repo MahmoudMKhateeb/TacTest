@@ -12,7 +12,7 @@
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ sorting: true, paging: true, filtering: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -22,7 +22,7 @@
             >
               <dxo-editing mode="row" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true"> </dxo-editing>
               <dxo-filter-row [visible]="true"></dxo-filter-row>
-              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-master-detail [enabled]="true" template="translations"></dxo-master-detail>

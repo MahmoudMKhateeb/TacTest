@@ -1,5 +1,15 @@
 <!--begin::Create::RouteStepModal-->
-<div class="modal fade" bsModal #createRouteStepModal="bs-modal" [config]="{ backdrop: 'static' }" role="dialog" aria-labelledby="dialog-static-name">
+<div
+  class="modal fade"
+  bsModal
+  #createRouteStepModal="bs-modal"
+  [config]="{ backdrop: 'static' }"
+  role="dialog"
+  aria-labelledby="dialog-static-name"
+  aria-hidden="true"
+  tabindex="-10000"
+  (keydown.escape)="close(); $event.stopPropagation()"
+>
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <form *ngIf="active" #createOrEditPintForm="ngForm" novalidate autocomplete="off">
@@ -18,7 +28,6 @@
                     [(ngModel)]="Point.receiverFullName"
                     class="form-control"
                     minlength="3"
-                    required
                     [ngClass]="{
                       'is-valid': receiverFullName.touched && receiverFullName.valid,
                       'is-invalid': receiverFullName.touched && receiverFullName.value && !receiverFullName.valid
@@ -61,14 +70,12 @@
                       type="tel"
                       class="form-control"
                       [(ngModel)]="Point.receiverPhoneNumber"
-                      required
                       [ngClass]="{
                         'is-valid': userPhoneInput.touched && userPhoneInput.valid,
                         'is-invalid': userPhoneInput.touched && userPhoneInput.value && !userPhoneInput.valid
                       }"
                     />
                   </div>
-                  <validation-messages [formCtrl]="userPhoneInput"></validation-messages>
                   <span *ngIf="userPhoneInput.value?.length == 9 && userPhoneInput.invalid" class="form-text text-danger">{{
                     l('PhoneNumberMustStartWith5')
                   }}</span>
@@ -116,6 +123,7 @@
               <PointGoodDetailsComponent
                 *ngIf="modalOpenedFor === 'goodDetails'"
                 [goodDetailsListForView]="this.goodDetailsListForView"
+                [isForDedicated]="isForDedicated"
               ></PointGoodDetailsComponent>
               <!--   End::GoodDetails           -->
             </div>

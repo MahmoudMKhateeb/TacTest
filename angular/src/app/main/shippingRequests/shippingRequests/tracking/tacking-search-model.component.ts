@@ -32,11 +32,17 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
   direction: string;
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   pickupDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
+  deliveryDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive: boolean;
   pickupDateRangeActive: boolean;
+  deliveryDateRangeActive: boolean;
   searchList: GetShippingRequestSearchListDto;
   cites: ComboboxItemDto[] = [];
   truckTypes: ComboboxItemDto[] = [];
+  transportTypes: ComboboxItemDto[] = [];
+  goodsCategories: ComboboxItemDto[] = [];
+  packingTypes: ComboboxItemDto[] = [];
+  truckCapacities: ComboboxItemDto[] = [];
   statusData: object[] = [];
   routeTypes: any;
   requestTypes: any;
@@ -62,6 +68,30 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
       this.truckTypes = result.trucksTypes.map((x) => {
         let item: ComboboxItemDto = new ComboboxItemDto();
         item.displayText = x.translatedDisplayName;
+        item.value = x.id.toString();
+        return item;
+      });
+      this.transportTypes = result.transportTypes.map((x) => {
+        let item: ComboboxItemDto = new ComboboxItemDto();
+        item.displayText = x.translatedDisplayName;
+        item.value = x.id.toString();
+        return item;
+      });
+      this.truckCapacities = result.capacities.map((x) => {
+        let item: ComboboxItemDto = new ComboboxItemDto();
+        item.displayText = x.translatedDisplayName;
+        item.value = x.id.toString();
+        return item;
+      });
+      this.goodsCategories = result.goodsCategories.map((x) => {
+        let item: ComboboxItemDto = new ComboboxItemDto();
+        item.displayText = x.displayName;
+        item.value = x.id.toString();
+        return item;
+      });
+      this.packingTypes = result.packingTypes.map((x) => {
+        let item: ComboboxItemDto = new ComboboxItemDto();
+        item.displayText = x.displayName;
         item.value = x.id.toString();
         return item;
       });
@@ -94,6 +124,14 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
     } else {
       this.input.pickupFromDate = null;
       this.input.pickupToDate = null;
+    }
+
+    if (this.deliveryDateRangeActive) {
+      this.input.deliveryFromDate = moment(this.deliveryDateRange[0]);
+      this.input.deliveryToDate = moment(this.deliveryDateRange[1]);
+    } else {
+      this.input.deliveryFromDate = null;
+      this.input.deliveryToDate = null;
     }
 
     this.modalsearch.emit(null);

@@ -6,9 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Actors;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Integration.WaslIntegration;
+using TACHYON.Shipping.Dedicated;
+using TACHYON.Shipping.ShippingRequests;
 //using TACHYON.Authorization.Users;
 using TACHYON.Trucks;
 using TACHYON.Trucks.PlateTypes;
@@ -21,7 +24,7 @@ namespace TACHYON.Trucks
     [Table("Trucks")]
     [Audited]
     [Serializable]
-    public class Truck : FullAuditedEntity<long>, IMustHaveTenant, IWaslIntegrated
+    public class Truck : FullAuditedEntity<long>, IMustHaveTenant, IWaslIntegrated, IMayHaveCarrierActor
     {
         public int TenantId { get; set; }
 
@@ -45,15 +48,17 @@ namespace TACHYON.Trucks
         [StringLength(TruckConsts.MaxNoteLength, MinimumLength = TruckConsts.MinNoteLength)]
         public virtual string Note { get; set; }
 
+        [StringLength(TruckConsts.MaxInternalTruckIdLength)]
+        public string InternalTruckId { get; set; }
 
         public virtual long? TruckStatusId { get; set; }
 
         [ForeignKey("TruckStatusId")] public TruckStatus TruckStatusFk { get; set; }
 
-        // public virtual long? Driver1UserId { get; set; }
+        public virtual long? DriverUserId { get; set; }
 
-        // [ForeignKey("Driver1UserId")]
-        // public User Driver1UserFk { get; set; }
+        [ForeignKey("DriverUserId")]
+        public User DriverUserFk { get; set; }
 
         //public virtual long? Driver2UserId { get; set; }
 
@@ -99,8 +104,11 @@ namespace TACHYON.Trucks
 
         public bool IsWaslIntegrated { get; set; }
         public string WaslIntegrationErrorMsg { get; set; }
+        [ForeignKey("CarrierActorId")]
+        public Actor CarrierActorFk { get; set; }
 
-
+        public int? CarrierActorId { get; set ; }
+        public ICollection<DedicatedShippingRequestTruck> DedicatedShippingRequestTrucks { get; set; }
 
         #region Helper
 
