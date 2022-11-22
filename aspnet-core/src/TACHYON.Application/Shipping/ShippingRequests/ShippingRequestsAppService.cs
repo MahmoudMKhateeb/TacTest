@@ -675,6 +675,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.CarrierTenantFk)
                     .Include(x=>x.ShippingRequestDestinationCities)
                     .ThenInclude(x=>x.CityFk)
+                    .Include(x=> x.CarrierActorFk)
+                    .Include(x=> x.ShipperActorFk)
                     .FirstOrDefaultAsync();
                 if(await IsCarrier() && shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
                 {

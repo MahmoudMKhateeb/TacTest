@@ -23,6 +23,8 @@ namespace TACHYON.AutoMapper.Shipping
 
             CreateMap<ShippingRequest, GetShippingRequestForViewOutput>()
                 .ForMember(dest => dest.TruckTypeId, opt => opt.MapFrom(x => x.TrucksTypeId))
+                .ForMember(dest => dest.CarrierActorName, opt => opt.MapFrom(x => x.CarrierActorFk.CompanyName))
+                .ForMember(dest => dest.ShipperActorName, opt => opt.MapFrom(x => x.ShipperActorFk.CompanyName))
                 .ForMember(dest => dest.ShippingRequest, opt => opt.MapFrom(src => src))
                 .ForMember(dest => dest.ShippingRequestBidDtoList, opt => opt.Ignore())
                 .ForMember(dest => dest.AssignedTruckDto, opt => opt.MapFrom(src => src.AssignedTruckFk))

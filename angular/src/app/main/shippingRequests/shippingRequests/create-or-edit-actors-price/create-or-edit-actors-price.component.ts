@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   ActorsPriceOffersServiceProxy,
@@ -9,6 +9,8 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-create-or-edit-actors-price',
@@ -16,15 +18,9 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
   styleUrls: ['./create-or-edit-actors-price.component.css'],
 })
 export class CreateOrEditActorsPriceComponent extends AppComponentBase implements OnInit {
-  constructor(injector: Injector, private actorsPriceOffersServiceProxy: ActorsPriceOffersServiceProxy) {
-    super(injector);
-
-    this.shipperPriceInput.actorShipperPriceDto = new CreateOrEditActorShipperPriceDto();
-    this.carrierPriceInput.actorCarrierPrice = new CreateOrEditActorCarrierPrice();
-    this.shipperSaving = false;
-    this.carrierSaving = false;
-  }
-
+  @ViewChild('createOrEditActorsPricesModal', { static: true }) modal: ModalDirective;
+  @ViewChild('createOrEditShipperPriceForm', { static: false }) createOrEditShipperPriceForm: NgForm;
+  @ViewChild('createOrEditCarrierPriceForm', { static: false }) createOrEditCarrierPriceForm: NgForm;
   @Input() shippingRequestId: any;
   @Input() numberOfCreatedTrips: number;
   @Input() tenantId: number;
@@ -37,6 +33,30 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
   active = true;
   shipperSaving: any;
   carrierSaving: any;
+
+  constructor(injector: Injector, private actorsPriceOffersServiceProxy: ActorsPriceOffersServiceProxy) {
+    super(injector);
+
+    this.shipperPriceInput.actorShipperPriceDto = new CreateOrEditActorShipperPriceDto();
+    this.carrierPriceInput.actorCarrierPrice = new CreateOrEditActorCarrierPrice();
+    this.shipperSaving = false;
+    this.carrierSaving = false;
+  }
+
+  ngOnInit(): void {
+    this.GetCreateOrEditActorShipperPriceInputForCreateOrEdit();
+    this.GetCreateOrEditActorCarrierPriceInputForCreateOrEdit();
+  }
+
+  show(): void {
+    this.active = true;
+    this.modal.show();
+  }
+
+  close(): void {
+    this.active = false;
+    this.modal.hide();
+  }
 
   GetCreateOrEditActorShipperPriceInputForCreateOrEdit() {
     this.actorsPriceOffersServiceProxy.getActorShipperPriceForEdit(this.shippingRequestId).subscribe((result) => {
@@ -95,24 +115,29 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
       });
   }
 
-  ngOnInit(): void {
-    this.GetCreateOrEditActorShipperPriceInputForCreateOrEdit();
-    this.GetCreateOrEditActorCarrierPriceInputForCreateOrEdit();
-  }
-
   canAddCarrierActorPrices(): boolean {
     return (
       this.hasCarrierClients &&
-      (this.carrierTenantId === this.appSession.tenantId ||
-          this.tenantId === this.appSession.tenantId) &&
+      (this.carrierTenantId === this.appSession.tenantId || this.tenantId === this.appSession.tenantId) &&
       isNotNullOrUndefined(this.actorCarrierId)
     );
   }
 
   canAddShipperActorPrices(): boolean {
-    return this.hasShipperClients &&
-        (this.carrierTenantId === this.appSession.tenantId ||
-        this.tenantId === this.appSession.tenantId) &&
-        isNotNullOrUndefined(this.actorShipperId);
+    return (
+      this.hasShipperClients &&
+      (this.carrierTenantId === this.appSession.tenantId || this.tenantId === this.appSession.tenantId) &&
+      isNotNullOrUndefined(this.actorShipperId)
+    );
+  }
+
+  saveAllPrices() {
+    if (isNotNullOrUndefined(this.createOrEditShipperPriceForm) && this.createOrEditShipperPriceForm.form.valid) {
+      this.save();
+    }
+    if (isNotNullOrUndefined(this.createOrEditCarrierPriceForm) && this.createOrEditCarrierPriceForm.form.valid) {
+      this.saveCarrierPrice();
+    }
+    this.close();
   }
 }
