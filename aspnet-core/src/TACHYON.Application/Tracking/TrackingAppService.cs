@@ -90,7 +90,7 @@ namespace TACHYON.Tracking
                 .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier) && !hasCarrierClient,
                     x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-            .WhereIf(hasCarrierClient,x=> x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+            .WhereIf(AbpSession.TenantId.HasValue && hasCarrierClient,x=> x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                 .WhereIf(input.PickupFromDate.HasValue && input.PickupToDate.HasValue,
                     x => x.ShippingRequestFk.StartTripDate >= input.PickupFromDate.Value &&
                          x.ShippingRequestFk.StartTripDate <= input.PickupToDate.Value)
@@ -176,12 +176,15 @@ namespace TACHYON.Tracking
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
             DisableTenancyFilters();
 
+            var hasCarrierClient = await IsEnabledAsync(AppFeatures.CarrierClients);
+            
             var trip =
                  await _ShippingRequestTripRepository.GetAll()
                             .Where(x => x.Id == id && x.ShippingRequestFk.CarrierTenantId.HasValue)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                            .WhereIf(AbpSession.TenantId.HasValue && !hasCarrierClient && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                            .WhereIf(AbpSession.TenantId.HasValue && !hasCarrierClient && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                            .WhereIf(AbpSession.TenantId.HasValue && hasCarrierClient,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                             .FirstOrDefaultAsync();
 
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
@@ -313,11 +316,7 @@ namespace TACHYON.Tracking
                 //if (trip.Status == ShippingRequestTripStatus.New && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted && !dto.CanStartTrip)
                 //    dto.NoActionReason = CanNotStartReason(trip, workingOnAnotherTrip);
             }
-            dto.CanDriveTrip = false;
-            if (tenantId.HasValue && (tenantId==trip.ShippingRequestFk.CarrierTenantId || await IsTachyonDealer()))
-            {
-                dto.CanDriveTrip = true;
-            }
+            dto.CanDriveTrip = !tenantId.HasValue || tenantId== trip?.ShippingRequestFk?.CarrierTenantId || await IsTachyonDealer();
             return dto;
         }
         private bool CanStartTrip(ShippingRequestTrip trip)

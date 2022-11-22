@@ -42,5 +42,7 @@ namespace TACHYON.Trucks.Dtos
         public virtual long? DriverUserId { get; set; }
         public string DriverUser { get; set; }
 
+        public string CarrierActorName { get; set; }
+
     }
 }

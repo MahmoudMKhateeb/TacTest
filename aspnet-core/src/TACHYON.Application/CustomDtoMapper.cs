@@ -636,6 +636,7 @@ namespace TACHYON
                 .ForMember(dto => dto.DriverUser,
                     conf => conf.MapFrom(ol => 
                         $"{ol.DriverUserFk.Name} {ol.DriverUserFk.Surname}"))
+                .ForMember(x=> x.CarrierActorName,x=> x.MapFrom(i=> i.CarrierActorFk.CompanyName))
                 .ReverseMap();
 
             configuration.CreateMap<Truck, GetTruckForViewOutput>()
@@ -761,6 +762,7 @@ namespace TACHYON
             configuration.CreateMap<User, DriverMappingEntity>();
             configuration.CreateMap<DriverListDto, DriverMappingEntity>()
                 .ForMember(x => x.User, x => x.MapFrom(y => y))
+                .ForPath(x => x.User.CarrierActorFk.CompanyName, x => x.MapFrom(y => y.CarrierActorName))
                 .ForPath(x => x.User.NationalityFk.Name, x => x.MapFrom(y => y.Nationality))
                 .ForMember(x => x.CompanyName, x => x.MapFrom(y => y.CompanyName))
              .ReverseMap();

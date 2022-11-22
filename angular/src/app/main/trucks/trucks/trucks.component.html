@@ -99,7 +99,13 @@
               <dxi-column dataField="modelYear" caption="{{ l('ModelYear') }}"> </dxi-column>
               <dxi-column dataField="length" caption="{{ l('Length') }}"> </dxi-column>
               <dxi-column dataField="truckStatusDisplayName" caption="{{ l('TruckStatus') }}"> </dxi-column>
-              <dxi-column *ngIf="isTachyonDealer" dataField="companyName" caption="{{ l('companyName') }}"> </dxi-column>
+              <dxi-column
+                *ngIf="isTachyonDealer || hasCarrierClients"
+                dataField="companyName"
+                cellTemplate="companyNameTemplate"
+                caption="{{ l('companyName') }}"
+              >
+              </dxi-column>
               <dxi-column dataField="driverUser" caption="{{ l('DriverName') }}"> </dxi-column>
               <dxi-column dataField="transportTypeDisplayName" caption="{{ l('TransportType') }}"> </dxi-column>
               <dxi-column dataField="trucksTypeDisplayName" caption="{{ l('TrucksType') }}"> </dxi-column>
@@ -115,6 +121,9 @@
                 [allowSorting]="false"
               >
               </dxi-column>
+              <div *dxTemplate="let options of 'companyNameTemplate'">
+                {{ hasCarrierClients && options.data.carrierActorName ? options.data.carrierActorName : options.data.companyName }}
+              </div>
 
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">

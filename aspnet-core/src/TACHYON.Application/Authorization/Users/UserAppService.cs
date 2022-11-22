@@ -180,7 +180,7 @@ namespace TACHYON.Authorization.Users
                     CompanyName = tenant.companyName,
                     RentedStatus=user.DedicatedShippingRequestDrivers.Any(x=>x.Status==Shipping.Dedicated.WorkingStatus.Busy)? "Busy" :"Active",
                     RentedShippingRequestReference = dedicatedDriver != null 
-                ? dedicatedDriver.ShippingRequest.ReferenceNumber : string.Empty })
+                ? dedicatedDriver.ShippingRequest.ReferenceNumber : string.Empty, })
                 .Where(x=> x.User != null )
                 .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
 
