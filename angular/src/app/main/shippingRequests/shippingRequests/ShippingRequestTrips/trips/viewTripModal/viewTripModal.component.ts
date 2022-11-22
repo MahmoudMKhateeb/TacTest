@@ -273,7 +273,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
 
   DriverOrTruckSelected(driverUserId?: number, truckId?: number) {
     if (isNotNullOrUndefined(driverUserId)) {
-      this._trucksServiceProxy.getTruckByDriverId(driverUserId).subscribe((result) => {
+      this._trucksServiceProxy.getTruckByDriverId(driverUserId, this.shippingRequestForView.truckTypeId).subscribe((result) => {
         if (!isNotNullOrUndefined(this.assignDriverAndTruck.assignedTruckId)) this.assignDriverAndTruck.assignedTruckId = result;
       });
     } else if (isNotNullOrUndefined(truckId)) {
