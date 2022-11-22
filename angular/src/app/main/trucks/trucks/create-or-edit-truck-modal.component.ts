@@ -188,7 +188,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         this.initTransportDropDownList();
         this.trucksTypeDisplayName = result.trucksTypeDisplayName;
         this.getTruckPictureUrl(this.truck.id);
-        (this.truck.carrierActorId as any) = this.truck.carrierActorId.toString();
+        (this.truck.carrierActorId as any) = this.truck.carrierActorId?.toString();
         this.getAllCarrierActors();
         // dropDowns
         this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
