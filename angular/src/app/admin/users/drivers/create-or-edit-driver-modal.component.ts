@@ -142,10 +142,10 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
       this._priceOfferService.getAllCarrierActorsForDropDown().subscribe((result) => {
         this.AllActorsCarriers = result;
-        let defaultItem = new SelectItemDto();
-        defaultItem.id = null;
-        defaultItem.displayName = this.l('Myself');
-        this.AllActorsCarriers.unshift(defaultItem);
+        // let defaultItem = new SelectItemDto();
+        // defaultItem.id = null;
+        // defaultItem.displayName = this.l('Myself');
+        // this.AllActorsCarriers.unshift(defaultItem);
       });
 
       this._profileService.getPasswordComplexitySetting().subscribe((passwordComplexityResult) => {

@@ -88,10 +88,10 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     if (this.feature.isEnabled('App.ShipperClients')) {
       this._shippingRequestsServiceProxy.getAllShippersActorsForDropDown().subscribe((result) => {
         this.AllActorsShippers = result;
-        let defaultItem = new SelectItemDto();
-        defaultItem.id = null;
-        defaultItem.displayName = this.l('Myself');
-        this.AllActorsShippers.unshift(defaultItem);
+        // let defaultItem = new SelectItemDto();
+        // defaultItem.id = null;
+        // defaultItem.displayName = this.l('Myself');
+        // this.AllActorsShippers.unshift(defaultItem);
       });
     }
   }
@@ -164,7 +164,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
         this.selectedCountryId = result.countryId;
         this.loadCitiesByCountryId(result.countryId);
         if (isNotNullOrUndefined(this.facility.shipperActorId)){
-            (this.facility.shipperActorId as any) = this.facility.shipperActorId.toString();
+            (this.facility.shipperActorId as any) = this.facility.shipperActorId?.toString();
         }
 
         (this.facility.cityId as any) = this.facility.cityId.toString();

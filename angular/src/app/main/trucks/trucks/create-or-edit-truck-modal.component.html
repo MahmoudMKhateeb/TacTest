@@ -61,7 +61,8 @@
                         [searchEnabled]="true"
                         displayExpr="displayName"
                         valueExpr="id"
-                        placeholder="{{ l('Myself') }}">
+                        [required]="true"
+                        placeholder="{{ l('SelectActor') }}">
 
                     </dx-select-box>
                   <validation-messages [formCtrl]="carrierActorId"></validation-messages>
@@ -88,7 +89,7 @@
                       'is-invalid': truckForm.submitted && driverUserId.invalid
                     }"
                   >
-                    <option [ngValue]="null">{{ l('SelectDriver') }}</option>
+                    <option [ngValue]="null" disabled>{{ l('SelectDriver') }}</option>
                     <option *ngFor="let item of allDrivers" value="{{ item.id }}">{{ item.displayName }}</option>
                   </select>
                 </div>

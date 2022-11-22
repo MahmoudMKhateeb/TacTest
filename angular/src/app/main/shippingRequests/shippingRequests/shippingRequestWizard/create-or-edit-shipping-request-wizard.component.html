@@ -138,7 +138,8 @@
                               [searchEnabled]="true"
                               displayExpr="displayName"
                               valueExpr="id"
-                              placeholder="{{ l('Myself') }}">
+                              [required]="true"
+                              placeholder="{{ l('SelectActor') }}">
 
                           </dx-select-box>
                       </div>
@@ -162,8 +163,8 @@
                               [searchEnabled]="true"
                               displayExpr="displayName"
                               valueExpr="id"
-                              [required]="false"
-                              placeholder="{{ l('Myself') }}">
+                              [required]="step1Dto.isInternalBrokerRequest ?true :false"
+                              placeholder="{{ l('SelectActor') }}">
                           </dx-select-box>
 
                       </div>

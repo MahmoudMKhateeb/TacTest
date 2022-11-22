@@ -3142,6 +3142,6 @@
     <text name="ForBroker">For a broker</text>
     <text name="ReceivableInvoice">Receivable invoice</text>
     <text name="PayableInvoice">Payable invoice</text>
-
+    <text name="SelectActor">Select actor</text>
 	</texts>
 </localizationDictionary>
