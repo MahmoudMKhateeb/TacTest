@@ -49,16 +49,43 @@
       </ng-template>
       <!--  end:: NormalPricePackageSection -->
 
-      <app-create-or-edit-actors-price
-        *ngIf="feature.isEnabled('App.CarrierClients') || feature.isEnabled('App.ShipperClients')"
-        [numberOfCreatedTrips]="shippingRequestforView.totalsTripsAddByShippier"
-        [shippingRequestId]="activeShippingRequestId"
-        [tenantId]="shippingRequestforView.tenantId"
-        [carrierTenantId]="shippingRequestforView.shippingRequest.carrierTenantId"
-        [actorCarrierId]="shippingRequestforView.carrierActorId"
-        [actorShipperId]="shippingRequestforView.shipperActorId"
-      ></app-create-or-edit-actors-price>
-
+      <div class="card card-custom gutter-b" *ngIf="feature.isEnabled('App.CarrierClients') || feature.isEnabled('App.ShipperClients')">
+        <div class="card-header">
+          <h3 class="card-title">{{ l('Actors') }}</h3>
+          <div class="card-toolbar">
+            <button type="submit" class="btn btn-primary" (click)="actorsPricing.show()">
+              <span>{{ l('ActorsPricing') }}</span>
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label>{{ l('ActorShipperName') }}</label>
+                <!--                          [(ngModel)]="carrierPriceInput.actorCarrierPrice.vatAmount"-->
+                <input type="text" [value]="shippingRequestforView.shipperActorName" class="form-control" name="ActorShipperName" disabled />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label>{{ l('ActorCarrierName') }}</label>
+                <!--                          [(ngModel)]="carrierPriceInput.actorCarrierPrice.vatAmount"-->
+                <input type="text" [value]="shippingRequestforView.carrierActorName"  class="form-control" name="ActorCarrierName" disabled />
+              </div>
+            </div>
+          </div>
+        </div>
+        <app-create-or-edit-actors-price
+          #actorsPricing
+          [numberOfCreatedTrips]="shippingRequestforView.totalsTripsAddByShippier"
+          [shippingRequestId]="activeShippingRequestId"
+          [tenantId]="shippingRequestforView.tenantId"
+          [carrierTenantId]="shippingRequestforView.shippingRequest.carrierTenantId"
+          [actorCarrierId]="shippingRequestforView.carrierActorId"
+          [actorShipperId]="shippingRequestforView.shipperActorId"
+        ></app-create-or-edit-actors-price>
+      </div>
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->
         <div class="card-header">

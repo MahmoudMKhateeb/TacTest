@@ -115,8 +115,21 @@ namespace TACHYON.PriceOffers
             var vasShipperPrices = await _actorShipperPriceRepository.GetAll()
                 .Where(x => vasActorShipperPriceIdList.Contains(x.Id)).ToArrayAsync();
             
-            if (vasShipperPrices == null || vasShipperPrices.Length < 1) return; 
+            if (input.VasActorShipperPriceDto == null || input.VasActorShipperPriceDto.Count < 1) return;
 
+            if (input.VasActorShipperPriceDto.Any(x => !x.Id.HasValue))
+            {
+                var addedVasesPrices = input.VasActorShipperPriceDto.Where(x => !x.Id.HasValue).ToList();
+                foreach (var vasPrice in addedVasesPrices)
+                {
+                    if (!vasPrice.ShippingRequestVasId.HasValue) return;
+                    var createdVasPrice = ObjectMapper.Map<ActorShipperPrice>(vasPrice);
+                    var createdVasPriceId = await _actorShipperPriceRepository.InsertAndGetIdAsync(createdVasPrice);
+                    _shippingRequestVasRepository.Update(vasPrice.ShippingRequestVasId.Value,
+                        x => x.ActorShipperPriceId = createdVasPriceId);
+                }
+            }
+            
             foreach (var vasShipperPrice in vasShipperPrices)
             {
                 var vasShipperPriceDto = input.VasActorShipperPriceDto.Single(x => x.Id == vasShipperPrice.Id);
@@ -199,8 +212,17 @@ namespace TACHYON.PriceOffers
             var carrierPrices = await _actorCarrierPriceRepository.GetAll()
                 .Where(x => vasActorCarrierPriceIdList.Contains(x.Id)).ToArrayAsync();
             
-            if (carrierPrices == null || carrierPrices.Length < 1) return; 
+            if (input.VasActorCarrierPrices == null || input.VasActorCarrierPrices.Count < 1) return; 
 
+            
+            foreach (var vasPrice in input.VasActorCarrierPrices.Where(x=> !x.Id.HasValue))
+            {
+                if (!vasPrice.ShippingRequestVasId.HasValue) return;
+                var createdVasPrice = ObjectMapper.Map<ActorCarrierPrice>(vasPrice);
+                var createdVasPriceId = await _actorCarrierPriceRepository.InsertAndGetIdAsync(createdVasPrice);
+                _shippingRequestVasRepository.Update(vasPrice.ShippingRequestVasId.Value,
+                    x => x.ActorCarrierPriceId = createdVasPriceId);
+            }
 
             foreach (var vasCarrierPrice in carrierPrices)
             {
