@@ -133,7 +133,8 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
       .subscribe((result) => {
         this.Tenants = result;
         if (initValue) {
-          (this.root.tenantId as any) = this.Tenants[0];
+          const tenant = this.Tenants.find((item) => Number(item.id) === this.root.tenantId);
+          (this.root.tenantId as any) = tenant;
           this.getDedicatedRequestsByTenant(this.root.tenantId);
         }
       });
