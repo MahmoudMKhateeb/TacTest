@@ -23,6 +23,7 @@ using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Firebases;
+using TACHYON.Integration.BayanIntegration.V3;
 using TACHYON.Invoices;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
@@ -75,6 +76,7 @@ namespace TACHYON.Tracking
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly PenaltyManager _penaltyManager;
+        private readonly BayanIntegrationManagerV3 _banIntegrationManagerV3;
 
 
         #region Constractor
@@ -99,7 +101,8 @@ namespace TACHYON.Tracking
             ITempFileCacheManager tempFileCacheManager,
             IRepository<ShippingRequest, long> shippingRequestRepository, 
             PenaltyManager penaltyManager,
-            NormalPricePackageManager normalPricePackageManager)
+            NormalPricePackageManager normalPricePackageManager,
+            BayanIntegrationManagerV3 banIntegrationManagerV3)
         {
             _routPointRepository = routPointRepository;
             _shippingRequestTripRepository = shippingRequestTrip;
@@ -379,6 +382,7 @@ namespace TACHYON.Tracking
             };
             _penaltyManager = penaltyManager;
             _normalPricePackageManager = normalPricePackageManager;
+            _banIntegrationManagerV3 = banIntegrationManagerV3;
         }
 
         #endregion
@@ -744,6 +748,8 @@ namespace TACHYON.Tracking
                     shippingRequest.TenantId,
                     point.ShippingRequestTripFk.EndTripDate.Value,
                     point.ShippingRequestTripId);
+
+            await _banIntegrationManagerV3.QueueCloseWaybillJob(point.Id);
 
             return nameof(RoutPointDropOffStep4);
         }

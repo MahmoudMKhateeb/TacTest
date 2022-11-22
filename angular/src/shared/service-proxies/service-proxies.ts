@@ -24971,6 +24971,73 @@ export class InvoiceNoteServiceProxy {
    * @param id (optional)
    * @return Success
    */
+  getSubmitInvoiceForPartialVoid(id: number | undefined): Observable<PartialVoidInvoiceDto> {
+    let url_ = this.baseUrl + '/api/services/app/InvoiceNote/GetSubmitInvoiceForPartialVoid?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetSubmitInvoiceForPartialVoid(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetSubmitInvoiceForPartialVoid(<any>response_);
+            } catch (e) {
+              return <Observable<PartialVoidInvoiceDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PartialVoidInvoiceDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetSubmitInvoiceForPartialVoid(response: HttpResponseBase): Observable<PartialVoidInvoiceDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PartialVoidInvoiceDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PartialVoidInvoiceDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
   genrateFullVoidInvoiceNote(id: number | undefined): Observable<void> {
     let url_ = this.baseUrl + '/api/services/app/InvoiceNote/GenrateFullVoidInvoiceNote?';
     if (id === null) throw new Error("The parameter 'id' cannot be null.");
@@ -25004,6 +25071,68 @@ export class InvoiceNoteServiceProxy {
   }
 
   protected processGenrateFullVoidInvoiceNote(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  genrateFullVoidSubmitInvoiceNote(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/InvoiceNote/GenrateFullVoidSubmitInvoiceNote?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGenrateFullVoidSubmitInvoiceNote(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGenrateFullVoidSubmitInvoiceNote(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGenrateFullVoidSubmitInvoiceNote(response: HttpResponseBase): Observable<void> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -25174,6 +25303,78 @@ export class InvoiceNoteServiceProxy {
    * @param id (optional)
    * @return Success
    */
+  getAllSubmitInvoiceNumberBaseOnCompanyDropDown(id: number | undefined): Observable<InvoiceRefreanceNumberDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/InvoiceNote/GetAllSubmitInvoiceNumberBaseOnCompanyDropDown?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllSubmitInvoiceNumberBaseOnCompanyDropDown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllSubmitInvoiceNumberBaseOnCompanyDropDown(<any>response_);
+            } catch (e) {
+              return <Observable<InvoiceRefreanceNumberDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<InvoiceRefreanceNumberDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllSubmitInvoiceNumberBaseOnCompanyDropDown(response: HttpResponseBase): Observable<InvoiceRefreanceNumberDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(InvoiceRefreanceNumberDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<InvoiceRefreanceNumberDto[]>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
   getAllInvoicmItemDto(id: number | undefined): Observable<GetAllInvoiceItemDto[]> {
     let url_ = this.baseUrl + '/api/services/app/InvoiceNote/GetAllInvoicmItemDto?';
     if (id === null) throw new Error("The parameter 'id' cannot be null.");
@@ -25209,6 +25410,78 @@ export class InvoiceNoteServiceProxy {
   }
 
   protected processGetAllInvoicmItemDto(response: HttpResponseBase): Observable<GetAllInvoiceItemDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(GetAllInvoiceItemDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetAllInvoiceItemDto[]>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getAllSubmitInvoicmItemDto(id: number | undefined): Observable<GetAllInvoiceItemDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/InvoiceNote/GetAllSubmitInvoicmItemDto?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllSubmitInvoicmItemDto(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllSubmitInvoicmItemDto(<any>response_);
+            } catch (e) {
+              return <Observable<GetAllInvoiceItemDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetAllInvoiceItemDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllSubmitInvoicmItemDto(response: HttpResponseBase): Observable<GetAllInvoiceItemDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -83800,6 +84073,7 @@ export class CreateOrEditInvoiceNoteDto implements ICreateOrEditInvoiceNoteDto {
   noteType!: NoteType;
   remarks!: string | undefined;
   invoiceNumber!: number | undefined;
+  submitInvoiceNumber!: number | undefined;
   vatAmount!: number;
   waybillNumber!: string | undefined;
   price!: number;
@@ -83822,6 +84096,7 @@ export class CreateOrEditInvoiceNoteDto implements ICreateOrEditInvoiceNoteDto {
       this.noteType = _data['noteType'];
       this.remarks = _data['remarks'];
       this.invoiceNumber = _data['invoiceNumber'];
+      this.submitInvoiceNumber = _data['submitInvoiceNumber'];
       this.vatAmount = _data['vatAmount'];
       this.waybillNumber = _data['waybillNumber'];
       this.price = _data['price'];
@@ -83848,6 +84123,7 @@ export class CreateOrEditInvoiceNoteDto implements ICreateOrEditInvoiceNoteDto {
     data['noteType'] = this.noteType;
     data['remarks'] = this.remarks;
     data['invoiceNumber'] = this.invoiceNumber;
+    data['submitInvoiceNumber'] = this.submitInvoiceNumber;
     data['vatAmount'] = this.vatAmount;
     data['waybillNumber'] = this.waybillNumber;
     data['price'] = this.price;
@@ -83867,6 +84143,7 @@ export interface ICreateOrEditInvoiceNoteDto {
   noteType: NoteType;
   remarks: string | undefined;
   invoiceNumber: number | undefined;
+  submitInvoiceNumber: number | undefined;
   vatAmount: number;
   waybillNumber: string | undefined;
   price: number;
@@ -83983,7 +84260,6 @@ export interface IPartialVoidInvoiceDto {
 export class CompayForDropDownDto implements ICompayForDropDownDto {
   id!: number;
   displayName!: string | undefined;
-  isShipper!: boolean;
 
   constructor(data?: ICompayForDropDownDto) {
     if (data) {
@@ -83997,7 +84273,6 @@ export class CompayForDropDownDto implements ICompayForDropDownDto {
     if (_data) {
       this.id = _data['id'];
       this.displayName = _data['displayName'];
-      this.isShipper = _data['isShipper'];
     }
   }
 
@@ -84012,7 +84287,6 @@ export class CompayForDropDownDto implements ICompayForDropDownDto {
     data = typeof data === 'object' ? data : {};
     data['id'] = this.id;
     data['displayName'] = this.displayName;
-    data['isShipper'] = this.isShipper;
     return data;
   }
 }
@@ -84020,7 +84294,6 @@ export class CompayForDropDownDto implements ICompayForDropDownDto {
 export interface ICompayForDropDownDto {
   id: number;
   displayName: string | undefined;
-  isShipper: boolean;
 }
 
 export class InvoiceRefreanceNumberDto implements IInvoiceRefreanceNumberDto {

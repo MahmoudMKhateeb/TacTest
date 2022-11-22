@@ -91,5 +91,10 @@ namespace TACHYON.Routs.RoutPoints
         /// This field is filled when point is imported from excel, it is unique for each trip
         /// </summary>
         public string BulkUploadReference { get; set; }
+
+        
+        //integrations
+        public string BayanId { get; set; }
+
     }
 }

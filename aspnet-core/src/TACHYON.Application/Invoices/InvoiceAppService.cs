@@ -679,11 +679,11 @@ namespace TACHYON.Invoices
                 //Source
                 if (item.ShippingRequestTrip != null)
                 {
-                    var cityDto = ObjectMapper.Map<CityDto>(item.ShippingRequestTrip.ShippingRequestFk.OriginCityFk);
+                    var city = item.ShippingRequestTrip.ShippingRequestFk.OriginCityFk;
 
-                    if (cityDto != null)
+                    if (city != null)
                     {
-                        invoiceItemDto.Source = cityDto.NormalizedDisplayName;
+                        invoiceItemDto.Source = item.ShippingRequestTrip.ShippingRequestFk.OriginCityFk.DisplayName;
 
                     }
 
@@ -692,33 +692,43 @@ namespace TACHYON.Invoices
                 {
                     if (item.OriginCity != null)
                     {
-                        CityDto cityDto = ObjectMapper.Map<CityDto>(item.OriginCity);
-                        invoiceItemDto.Source = cityDto.NormalizedDisplayName;
+                        
+                        invoiceItemDto.Source = item.OriginCity.DisplayName;
                     }
                 }
 
                 //Destination
                 if (item.ShippingRequestTrip != null)
                 {
-                    CityDto cityDto = ObjectMapper.Map<CityDto>(item.ShippingRequestTrip.ShippingRequestFk.DestinationCityFk);
-                    invoiceItemDto.Destination = cityDto.NormalizedDisplayName;
+                    var city = item.ShippingRequestTrip.ShippingRequestFk.DestinationCityFk;
+                    invoiceItemDto.Destination = item.ShippingRequestTrip.ShippingRequestFk.DestinationCityFk.DisplayName;
 
                 }
                 else
                 {
                     if (item.DestinationCity != null)
                     {
-                        CityDto cityDto = ObjectMapper.Map<CityDto>(item.DestinationCity);
-                        invoiceItemDto.Destination = cityDto.NormalizedDisplayName;
+                        var city = item.DestinationCity;
+                        invoiceItemDto.Destination = item.DestinationCity.DisplayName;
                     }
                 }
 
                 //DateWork
                 if (item.ShippingRequestTrip != null)
                 {
-                    if (item.ShippingRequestTrip.EndTripDate.HasValue)
+                    if (item.ShippingRequestTrip.EndTripDate.HasValue || item.ShippingRequestTrip.ActualDeliveryDate.HasValue )
                     {
-                        invoiceItemDto.DateWork = item.ShippingRequestTrip.EndTripDate.Value.Date.ToString("dd/MM/yyyy");
+                        if (item.ShippingRequestTrip.ActualDeliveryDate != null) // TODO FIX THIS
+                        {
+                            invoiceItemDto.DateWork = item.ShippingRequestTrip.ActualDeliveryDate.Value.Date.ToString("dd/MM/yyyy");
+                        }
+                        else
+                        {
+                            if (item.ShippingRequestTrip.EndTripDate != null)
+                            {
+                                invoiceItemDto.DateWork = item.ShippingRequestTrip.EndTripDate.Value.Date.ToString("dd/MM/yyyy");
+                            }
+                        }
                     }
                     else
                     {

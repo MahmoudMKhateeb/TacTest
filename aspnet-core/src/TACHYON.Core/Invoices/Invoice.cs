@@ -14,7 +14,7 @@ namespace TACHYON.Invoices
     [Table("Invoices")]
     public class Invoice : FullAuditedEntity<long>, IMustHaveTenant
     {
-        public long InvoiceNumber { get; set; }
+        public long? InvoiceNumber { get; set; }
         public int TenantId { get; set; }
         [ForeignKey(nameof(TenantId))] public Tenant Tenant { get; set; }
         public int PeriodId { get; set; }
