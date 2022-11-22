@@ -137,14 +137,14 @@ namespace TACHYON.Shipping.Trips
         public async Task<PagedResultDto<ShippingRequestsTripListDto>> GetAll(ShippingRequestTripFilterInput input)
         {
             DisableTenancyFilters();
-            var isBroker = await FeatureChecker.IsEnabledAsync(true, AppFeatures.CarrierClients, AppFeatures.ShipperClients);
+            var isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierClients);
 
             var request = await _shippingRequestRepository.GetAll()
                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier),
                     x => x.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper) && !isBroker,
                     x => x.TenantId == AbpSession.TenantId)
-                .WhereIf(isBroker,x=> x.TenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId.HasValue && isBroker,x=> x.TenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId)
                 .FirstOrDefaultAsync(x => x.Id == input.RequestId);
             if (request == null)
                 throw new UserFriendlyException(L("ShippingRequestIsNotFound"));

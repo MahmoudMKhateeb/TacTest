@@ -67,5 +67,7 @@ namespace TACHYON.Authorization.Users.Dto
         public string RentedShippingRequestReference { get; set; }
         public long AssignedTruckId { get; set; }
         public string AssignedTruck { get; set; }
+
+        public string CarrierActorName { get; set; }
     }
 }

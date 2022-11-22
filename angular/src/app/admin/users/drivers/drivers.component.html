@@ -112,7 +112,7 @@
               <dxi-column cellTemplate="cellRatingTemplate" dataField="rate" dataType="string" caption="{{ 'rating' | localize }}"></dxi-column>
               <dxi-column cellTemplate="cellTemplate_IsActive" dataField="isActive" caption="{{ 'Status' | localize }}"></dxi-column>
               <dxi-column dataField="creationTime" caption="{{ 'DriverCreationDateAndTime' | localize }}" dataType="datetime"></dxi-column>
-              <dxi-column dataField="companyName" caption="{{ l('companyName') }}"> </dxi-column>
+              <dxi-column dataField="companyName" cellTemplate="companyNameTemplate" caption="{{ l('companyName') }}"> </dxi-column>
               <dxi-column dataField="nationality" caption="{{ l('Nationality') }}"> </dxi-column>
               <dxi-column dataField="rentedStatus" caption="{{ l('RentedStatus') }}"> </dxi-column>
               <dxi-column dataField="rentedShippingRequestReference" caption="{{ l('RentedShippingRequestReference') }}"> </dxi-column>
@@ -133,7 +133,9 @@
                 <span *ngIf="!options.data.isActive" class="badge badge-dark badge-inline">{{ 'InActive' | localize }}</span>
               </div>
 
-              <div *dxTemplate="let options of 'cellTemplateActions'">
+                <div *dxTemplate="let options of 'companyNameTemplate'">{{(hasCarrierClients && options.data.carrierActorName) ? options.data.carrierActorName : options.data.companyName  }}</div>
+
+                <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
                   <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
                     <span class="svg-icon svg-icon-md">
