@@ -530,12 +530,12 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     });
     this._shippingRequestsServiceProxy.getAllCarriersActorsForDropDown().subscribe((result) => {
       this.AllActorsCarriers = result;
-      this.AllActorsCarriers.unshift( SelectItemDto.fromJS({id: null, displayName: this.l('Myself'), isOther: false}));
+      // this.AllActorsCarriers.unshift( SelectItemDto.fromJS({id: null, displayName: this.l('Myself'), isOther: false}));
     });
 
     this._shippingRequestsServiceProxy.getAllShippersActorsForDropDown().subscribe((result) => {
       this.AllActorsShippers = result;
-      this.AllActorsShippers.unshift( SelectItemDto.fromJS({id: null, displayName: this.l('Myself'), isOther: false}));
+      // this.AllActorsShippers.unshift( SelectItemDto.fromJS({id: null, displayName: this.l('Myself'), isOther: false}));
     });
 
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {

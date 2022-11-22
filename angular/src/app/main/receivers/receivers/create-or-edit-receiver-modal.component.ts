@@ -160,10 +160,10 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
       )
       .subscribe((result) => {
         this.shipperActors = result;
-        let defaultItem = new SelectItemDto();
-        defaultItem.id = null;
-        defaultItem.displayName = this.l('Myself');
-        this.shipperActors.unshift(defaultItem);
+        // let defaultItem = new SelectItemDto();
+        // defaultItem.id = null;
+        // defaultItem.displayName = this.l('Myself');
+        // this.shipperActors.unshift(defaultItem);
       });
   }
 

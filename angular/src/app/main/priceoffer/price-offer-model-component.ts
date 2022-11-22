@@ -82,10 +82,10 @@ export class PriceOfferModelComponent extends AppComponentBase {
 
     this._CurrentServ.getAllCarrierActorsForDropDown().subscribe((result) => {
       this.AllActorsCarriers = result;
-        let defaultItem = new SelectItemDto();
-        defaultItem.id = null;
-        defaultItem.displayName = this.l('Myself');
-        this.AllActorsCarriers.unshift(defaultItem);
+        // let defaultItem = new SelectItemDto();
+        // defaultItem.id = null;
+        // defaultItem.displayName = this.l('Myself');
+        // this.AllActorsCarriers.unshift(defaultItem);
     });
 
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
@@ -117,7 +117,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
           r.itemsTotalPricePreCommissionPreVat = undefined;
         });
       }
-      (this.offer.carrierActorId as any) = this.offer.carrierActorId.toString();
+      (this.offer.carrierActorId as any) = this.offer.carrierActorId?.toString();
       this.active = true;
       this.modal.show();
     });
@@ -251,9 +251,11 @@ export class PriceOfferModelComponent extends AppComponentBase {
     // this.offer.itemCommissionAmount = this.calculatorItemCommission(this.offer.itemPrice);
     // this.offer.itemSubTotalAmountWithCommission = this.offer.itemCommissionAmount * this.offer.quantity;
     // this.calculatorAll();
-    if (this.form.form.valid) {
+    //if (this.form.form.valid) {
+      if(this.offer.itemPrice){
       this.initPriceOffer();
-    }
+      }
+    //}
   }
 
   // calculatorItem(item: PriceOfferItem): void {

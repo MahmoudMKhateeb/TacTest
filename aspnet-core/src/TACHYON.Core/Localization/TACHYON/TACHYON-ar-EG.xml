@@ -2894,5 +2894,6 @@
 	<text name="ForBroker">لسمسار</text>
 	<text name="ReceivableInvoice">فاتورة قابلة للاستلام</text>
 	<text name="PayableInvoice">فاتورة فابلة للدفع</text>
+    <text name="SelectActor">اختر العميل</text>
 	</texts>
 </localizationDictionary>

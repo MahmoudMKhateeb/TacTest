@@ -226,10 +226,10 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   private getAllCarrierActors() {
     this._priceOfferService.getAllCarrierActorsForDropDown().subscribe((result) => {
       this.AllActorsCarriers = result;
-      let defaultItem = new SelectItemDto();
-      defaultItem.id = null;
-      defaultItem.displayName = this.l('Myself');
-      this.AllActorsCarriers.unshift(defaultItem);
+      // let defaultItem = new SelectItemDto();
+      // defaultItem.id = null;
+      // defaultItem.displayName = this.l('Myself');
+      // this.AllActorsCarriers.unshift(defaultItem);
     });
   }
 
