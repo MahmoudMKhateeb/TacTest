@@ -41,5 +41,7 @@ namespace TACHYON.MultiTenancy.Dto
         [Required]
         [RegularExpression(TenantConsts.MoiNumberRegex)]
         public string MoiNumber { get; set; }
+        public int? InsuranceCoverage { get; set; }
+        public int? ValueOfGoods { get; set; }
     }
 }
