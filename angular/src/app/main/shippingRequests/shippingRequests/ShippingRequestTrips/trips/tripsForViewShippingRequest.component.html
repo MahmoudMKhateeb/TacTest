@@ -318,9 +318,18 @@
                     </li>
 
                     <li>
-                      <a class="dropdown-item" (click)="ViewTripModal.show(record.id, shippingRequestForView)">{{
-                        record.canAssignTrucksAndDrivers ? l('ViewOrAssignDriver') : l('View')
-                      }}</a>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="shippingRequestForView.shippingRequestFlag === 1"
+                        (click)="ViewTripModal.show(record.id, shippingRequestForView)"
+                        >{{ record.canAssignTrucksAndDrivers && !isTachyonDealer ? l('ViewOrAssignDriver') : l('View') }}</a
+                      >
+                      <a
+                        class="dropdown-item"
+                        *ngIf="shippingRequestForView.shippingRequestFlag === 0"
+                        (click)="ViewTripModal.show(record.id, shippingRequestForView)"
+                        >{{ record.canAssignTrucksAndDrivers ? l('ViewOrAssignDriver') : l('View') }}</a
+                      >
                     </li>
                     <li
                       *ngIf="
