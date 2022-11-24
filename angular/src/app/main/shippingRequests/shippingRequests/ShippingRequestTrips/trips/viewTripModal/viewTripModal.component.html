@@ -149,7 +149,7 @@
           </div>
 
           <!--   StartOf::Driver&Truck for DedicatedSR -->
-          <ng-container *ngIf="feature.isEnabled('App.Shipper') && shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 1">
+          <ng-container *ngIf="(isShipper || isTachyonDealer) && shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 1">
             <div class="form-group col-lg-6">
               <label>{{ l('RouteType') }}</label>
               <select name="routeType" type="text" [(ngModel)]="trip.routeType" class="form-control" disabled>
@@ -181,8 +181,19 @@
           <!--   EndOf::Driver&Truck for DedicatedSR -->
 
           <!-- StartOf::Driver&Truck -->
-          
-          <ng-container *ngIf="canAssignTrucksAndDrivers && trip.status !== shippingRequestTripStatusEnum.Delivered">
+
+          <ng-container
+            *ngIf="
+              (canAssignTrucksAndDrivers &&
+                trip.status !== shippingRequestTripStatusEnum.Delivered &&
+                shippingRequestForView?.shippingRequestFlag === 0) ||
+              (canAssignTrucksAndDrivers &&
+                trip.status !== shippingRequestTripStatusEnum.Delivered &&
+                isShipper &&
+                shippingRequestForView &&
+                shippingRequestForView?.shippingRequestFlag === 1)
+            "
+          >
             <div class="form-group col-lg-6">
               <label>{{ l('Driver') }}</label>
               <select
