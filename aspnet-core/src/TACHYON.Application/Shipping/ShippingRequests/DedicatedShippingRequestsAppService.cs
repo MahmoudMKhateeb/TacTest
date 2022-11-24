@@ -159,7 +159,7 @@ namespace TACHYON.Shipping.ShippingRequests
         #endregion
 
         #region Assign trucks
-        [RequiresFeature(AppFeatures.Carrier, AppFeatures.CarrierAsASaas, AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.CarrierAsASaas, AppFeatures.TachyonDealer, AppFeatures.CarrierClients)]
         public async Task AssignDedicatedTrucksAndDrivers(AssignDedicatedTrucksAndDriversInput input)
         {
             var shippingRequest = await _shippingRequestManager.GetShippingRequestForAssign(input.ShippingRequestId);
@@ -194,6 +194,45 @@ namespace TACHYON.Shipping.ShippingRequests
             shippingRequest.DedicatedShippingRequestDrivers = driversList;
         }
 
+        /// <summary>
+        /// This is another service for assign truck and driver
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.CarrierAsASaas, AppFeatures.TachyonDealer, AppFeatures.CarrierClients)]
+        public async Task AssignTrucksAndDriversForDedicated(AssignTrucksAndDriversForDedicatedInput input)
+        {
+            var shippingRequest = await _shippingRequestManager.GetShippingRequestForAssign(input.ShippingRequestId);
+
+            if (shippingRequest is null) throw new UserFriendlyException(L("ShippingRequestNotFound"));
+
+            await ValidateTrucksAndDrivers(input, shippingRequest);
+
+            var status = shippingRequest.RentalStartDate.Value.Date <= Clock.Now.Date
+                ? WorkingStatus.Busy
+                : WorkingStatus.Active;
+
+            //Add trucks
+            var trucksList = new List<DedicatedShippingRequestTruck>();
+            var driversList = new List<DedicatedShippingRequestDriver>();
+            foreach (var driverAndtruck in input.DedicatedShippingRequestTrucksAndDriversDtos)
+            {
+                trucksList.Add(new DedicatedShippingRequestTruck
+                {
+                    ShippingRequestId = shippingRequest.Id,
+                    TruckId = driverAndtruck.TruckId,
+                    Status = status,
+                    KPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.TruckKPI)
+                });
+
+                driversList.Add(new DedicatedShippingRequestDriver { ShippingRequestId = shippingRequest.Id, DriverUserId = driverAndtruck.DriverId, Status = status });
+
+            }
+            shippingRequest.DedicatedShippingRequestTrucks = trucksList;
+            shippingRequest.DedicatedShippingRequestDrivers = driversList;
+
+        }
+
         public async Task<List<SelectItemDto>> GetAllCarrierTrucksByTruckTypeForDropDown(long truckTypeId, int? tenantId)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
@@ -216,6 +255,23 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
                 .ToListAsync();
         }
+
+        public async Task<List<GetAllTrucksWithDriversListDto>> GetAllTrucksWithDriversList(long truckTypeId, int? tenantId)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            return await _truckRepository.GetAll()
+                .WhereIf(await IsTachyonDealer(), x => x.TenantId == tenantId.Value)
+                .Where(x => x.TrucksTypeId == truckTypeId)
+                .Select(x => new GetAllTrucksWithDriversListDto
+                {
+                    TruckName = x.GetDisplayName(),
+                    TruckId = x.Id,
+                    DriverUserId=x.DriverUserId,
+                    DriverName = x.DriverUserFk!=null ?x.DriverUserFk.Name :""
+                }).ToListAsync();
+        }
+
+        
         #endregion
 
         #region trip
@@ -379,38 +435,45 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L(String.Format("TrucksAndDriversMustBe {0}", shippingRequest.NumberOfTrucks)));
             }
 
-            //check if truck is busy
-
-
-            //foreach(var truck in input.TrucksList)
-            //{
-            //    if (await _shippingRequestManager.CheckIfTruckIsRented(truck.Id))
-            //        throw new UserFriendlyException(L(String.Format("The truck {0} is rented", truck.TruckName)));
-
-            //}
-            var RentedTruck =await IsAnyTruckBusyDuringRentalDuration(input.TrucksList.ToList(), shippingRequest);
+            var RentedTruck =await IsAnyTruckBusyDuringRentalDuration(input.TrucksList.Select(x=>x.Id).ToList(), shippingRequest);
             if (RentedTruck !=null)
             {
                 throw new UserFriendlyException(L(String.Format("The truck {0} is rented", input.TrucksList.Where(x=>x.Id == RentedTruck).First().TruckName)));
             }
 
-            //foreach (var driver in input.DriversList)
-            //{
-            //    if (await _shippingRequestManager.CheckIfDriverIsRented(driver.Id))
-            //        throw new UserFriendlyException(L(String.Format("The driver {0} is rented", driver.DriverName)));
-
-            //}
-            var RentedDriver =await IsAnyDriverBusyDuringRentalDuration(input.DriversList.ToList(), shippingRequest);
+            var RentedDriver =await IsAnyDriverBusyDuringRentalDuration(input.DriversList.Select(x=>x.Id).ToList(), shippingRequest);
             if (RentedDriver != null)
             {
                 throw new UserFriendlyException(L(String.Format("The driver {0} is rented", input.DriversList.Where(x => x.Id == RentedDriver).First().DriverName)));
             }
         }
 
-        private async Task<long?> IsAnyTruckBusyDuringRentalDuration(List<DedicatedTruckDto> truckDtos, ShippingRequest shippingRequest)
+        private async Task ValidateTrucksAndDrivers(AssignTrucksAndDriversForDedicatedInput input, ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.DedicatedShippingRequestTrucks.Count() > 0) throw new UserFriendlyException(L("TrucksAndDriversAlreadyAssigned"));
+
+            if (shippingRequest.NumberOfTrucks != input.DedicatedShippingRequestTrucksAndDriversDtos.Count)
+            {
+                throw new UserFriendlyException(L(String.Format("TrucksAndDriversMustBe {0}", shippingRequest.NumberOfTrucks)));
+            }
+
+            var RentedTruck = await IsAnyTruckBusyDuringRentalDuration(input.DedicatedShippingRequestTrucksAndDriversDtos.Select(x=>x.TruckId).ToList(), shippingRequest);
+            if (RentedTruck != null)
+            {
+                throw new UserFriendlyException(L(String.Format("The truck {0} is rented", input.DedicatedShippingRequestTrucksAndDriversDtos.Where(x => x.TruckId == RentedTruck).First().TruckName)));
+            }
+
+            var RentedDriver = await IsAnyDriverBusyDuringRentalDuration(input.DedicatedShippingRequestTrucksAndDriversDtos.Select(x=>x.DriverId).ToList(), shippingRequest);
+            if (RentedDriver != null)
+            {
+                throw new UserFriendlyException(L(String.Format("The driver {0} is rented", input.DedicatedShippingRequestTrucksAndDriversDtos.Where(x => x.DriverId == RentedDriver).First().DriverName)));
+            }
+        }
+
+        private async Task<long?> IsAnyTruckBusyDuringRentalDuration(List<long> truckDtos, ShippingRequest shippingRequest)
         {
             var item = await _dedicatedShippingRequestTruckRepository.GetAll()
-                .Where(x => truckDtos.Select(y=>y.Id).Contains(x.TruckId) && x.ShippingRequestId != shippingRequest.Id &&
+                .Where(x => truckDtos.Contains(x.TruckId) && x.ShippingRequestId != shippingRequest.Id &&
                 shippingRequest.RentalStartDate.Value.Date <= x.ShippingRequest.RentalEndDate.Value.Date &&
                 x.ShippingRequest.RentalStartDate.Value.Date <= shippingRequest.RentalEndDate.Value.Date)
                 .FirstOrDefaultAsync();
@@ -418,10 +481,10 @@ namespace TACHYON.Shipping.ShippingRequests
             return null;
         }
 
-        private async Task<long?> IsAnyDriverBusyDuringRentalDuration(List<DedicatedDriversDto> driverDtos, ShippingRequest shippingRequest)
+        private async Task<long?> IsAnyDriverBusyDuringRentalDuration(List<long> driverDtos, ShippingRequest shippingRequest)
         {
             var item = await _dedicatedShippingRequestDriverRepository.GetAll()
-                .Where(x => driverDtos.Select(y=>y.Id).Contains(x.DriverUserId) && x.ShippingRequestId != shippingRequest.Id &&
+                .Where(x => driverDtos.Contains(x.DriverUserId) && x.ShippingRequestId != shippingRequest.Id &&
                 shippingRequest.RentalStartDate.Value.Date <= x.ShippingRequest.RentalEndDate.Value.Date &&
                 x.ShippingRequest.RentalStartDate.Value.Date <= shippingRequest.RentalEndDate.Value.Date)
                 .FirstOrDefaultAsync();
