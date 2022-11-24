@@ -73,11 +73,12 @@ namespace TACHYON.PricePackages
 
             var appendixId = await _appendixRepository.InsertAndGetIdAsync(createdAppendix);
 
-            await _jobManager.EnqueueAsync<GenerateAppendixFileJob, GenerateAppendixFileJobArgument>(
-                new GenerateAppendixFileJobArgument
-                {
-                    AppendixId = appendixId, FileReceiverEmailAddress = input.EmailAddress
-                });
+           // Todo fix this asap
+            // await _jobManager.EnqueueAsync<GenerateAppendixFileJob, GenerateAppendixFileJobArgument>(
+            //     new GenerateAppendixFileJobArgument
+            //     {
+            //         AppendixId = appendixId, FileReceiverEmailAddress = input.EmailAddress
+            //     });
         }
 
         [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Update)]

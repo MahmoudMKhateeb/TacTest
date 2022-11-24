@@ -8,7 +8,7 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
         public string LoadOptions { get; set; }
 
         [Required]
-        public int ShipperId { get; set; }
+        public int DestinationTenantId { get; set; }
 
         public int? ProposalId { get; set; }
     }

@@ -57,7 +57,7 @@ namespace TACHYON.AutoMapper.PricePackages
                 .ForMember(x=> x.HasProposal,x=> x.MapFrom(i=> i.ProposalId.HasValue))
                 .ForMember(x=> x.OriginCity,x=> x.MapFrom(i=> i.OriginCity.DisplayName))
                 .ForMember(x=> x.DestinationCity,x=> x.MapFrom(i=> i.DestinationCity.DisplayName))
-                .ForMember(x=> x.Shipper,x=> x.MapFrom(i=> i.Shipper.Name))
+                .ForMember(x=> x.Shipper,x=> x.MapFrom(i=> i.DestinationTenant.Name))
                 .ForMember(x=> x.TruckType,x=> x.MapFrom(i=> i.TrucksTypeFk.Key))
                 .ForMember(x=> x.TransportType,x=> x.MapFrom(i=> i.TransportTypeFk.Key));
             

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import {
+  CarriersForDropDownDto,
   CreateOrEditAppendixDto,
   PricePackageAppendixServiceProxy,
   PricePackageProposalServiceProxy,
@@ -11,8 +12,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import CustomStore from '@node_modules/devextreme/data/custom_store';
-import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { DestinationCompanyType } from '@app/main/pricePackages/price-package-appendix/create-or-edit-price-package-appendix/destination-company-type';
 
 @Component({
   selector: 'app-create-or-edit-price-package-appendix',
@@ -27,10 +27,14 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
   isLoading: boolean;
   shippers: ShippersForDropDownDto[];
   dataSource;
-  shipperId: number;
+  companyId: number;
   proposals: SelectItemDto[];
+  carriers: CarriersForDropDownDto[];
   proposalsLoading: boolean;
   shippersLoading: boolean;
+  carriersLoading: boolean;
+  companyType = DestinationCompanyType;
+  currentCompanyType: DestinationCompanyType;
 
   constructor(
     private _appendixServiceProxy: PricePackageAppendixServiceProxy,
@@ -46,20 +50,26 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
     this.isLoading = false;
     this.proposalsLoading = false;
     this.shippersLoading = false;
+    this.carriersLoading = false;
   }
 
-  show(id: number) {
+  show(id: number, type: DestinationCompanyType = null) {
     this.isActive = true;
     this.appendix = new CreateOrEditAppendixDto();
 
+    this.currentCompanyType = type;
     if (isNotNullOrUndefined(id)) {
       this._appendixServiceProxy.getForEdit(id).subscribe((result) => {
         this.appendix = result;
-        this.shipperId = result.shipperId;
+        this.companyId = result.shipperId;
         this.loadProposals();
       });
     }
-    this.loadAllShippers();
+    if (type === DestinationCompanyType.Shipper) {
+        this.loadAllShippers();
+    } else if (type === DestinationCompanyType.Carrier) {
+        this.loadAllCarriers();
+    }
     this.modal.show();
   }
 
@@ -77,10 +87,10 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
   }
 
   loadProposals(): void {
-    if (isNotNullOrUndefined(this.shipperId)) {
+    if (isNotNullOrUndefined(this.companyId)) {
       this.proposalsLoading = true;
       this._proposalServiceProxy
-        .getAllProposalsForDropdown(this.shipperId)
+        .getAllProposalsForDropdown(this.companyId)
         .pipe(finalize(() => (this.proposalsLoading = false)))
         .subscribe((result) => {
           this.proposals = result?.items;
@@ -92,6 +102,15 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
     this.shippersLoading = true;
     this._shippingRequestServiceProxy
       .getAllShippersForDropDown()
+      .pipe(finalize(() => (this.shippersLoading = false)))
+      .subscribe((res) => {
+        this.shippers = res;
+      });
+  }
+  private loadAllCarriers(): void {
+    this.carriersLoading = true;
+    this._shippingRequestServiceProxy
+      .getAllCarriersForDropDown()
       .pipe(finalize(() => (this.shippersLoading = false)))
       .subscribe((res) => {
         this.shippers = res;

@@ -56,7 +56,7 @@ namespace TACHYON.PricePackages.PricePackageProposals
             
             // check items if them for another shipper 
             bool anyItemNotForSelectedShipper = await _tmsPricePackageRepository.GetAll()
-                .AnyAsync(x => tmsPricePackages.Any(i => i == x.Id) && x.ShipperId != createdProposal.ShipperId);
+                .AnyAsync(x => tmsPricePackages.Any(i => i == x.Id) && x.DestinationTenantId != createdProposal.ShipperId);
             
             if (anyItemNotForSelectedShipper) 
                 throw new UserFriendlyException(L("YouMustSelectItemForSelectedShipper"));
@@ -115,7 +115,7 @@ namespace TACHYON.PricePackages.PricePackageProposals
             var routeDetails = proposal?.TmsPricePackages?.Select(x => new
             {
                 OriginCity = x.OriginCity.DisplayName,DestinationCity = x.DestinationCity.DisplayName,
-                TmsPrice = x.TachyonManageTotalPrice, DrPrice= x.DirectRequestTotalPrice
+                x.TotalPrice // todo edit this 
             }).ToArray();
             
             for (int i = 0; i < routeDetails?.Length; i++)
@@ -126,8 +126,8 @@ namespace TACHYON.PricePackages.PricePackageProposals
                 document.InsertText(routeDetailsTable[currentColumn, 0].Range.Start, $"{i + 1}");
                 document.InsertText(routeDetailsTable[currentColumn, 1].Range.Start, routeDetails[i].OriginCity);
                 document.InsertText(routeDetailsTable[currentColumn, 2].Range.Start, routeDetails[i].DestinationCity);
-                document.InsertText(routeDetailsTable[currentColumn, 3].Range.Start, $"{routeDetails[i].TmsPrice} SR");
-                document.InsertText(routeDetailsTable[currentColumn, 4].Range.Start, $"{routeDetails[i].DrPrice} SR");
+                document.InsertText(routeDetailsTable[currentColumn, 3].Range.Start, $"{routeDetails[i].TotalPrice} SR");
+                document.InsertText(routeDetailsTable[currentColumn, 4].Range.Start, $"{routeDetails[i].TotalPrice} SR"); // todo remove this line 
             }
             await using var memoryStream = new MemoryStream();
             await documentProcessor.ExportToPdfAsync(memoryStream);

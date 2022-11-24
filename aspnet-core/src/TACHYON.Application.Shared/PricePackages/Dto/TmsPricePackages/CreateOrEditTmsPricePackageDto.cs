@@ -1,11 +1,13 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Runtime.Validation;
+using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.PricePackages.Dto.TmsPricePackages
 {
-    public class CreateOrEditTmsPricePackageDto : EntityDto<int?>, IShouldNormalize
+    public class CreateOrEditTmsPricePackageDto : EntityDto<int?>
     {
         
         [Required]
@@ -21,29 +23,32 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
 
         public int DestinationCityId { get; set; }
 
-        public int ShipperId { get; set; }
+        public int? DestinationTenantId { get; set; }
 
         public ShippingRequestRouteType RouteType { get; set; }
-
-        public decimal DirectRequestPrice { get; set; }
-
-        public decimal TachyonManagePrice { get; set; }
         
-        public decimal DirectRequestCommission { get; set; }
+        public PricePackageCommissionType CommissionType { get; set; }
         
-        public decimal TachyonManageCommission { get; set; }
+        public decimal Price { get; set; }
+        
+        public decimal Commission { get; set; }
 
-        public decimal? DirectRequestTotalPrice { get; set; }
-        
-        public decimal? TachyonManageTotalPrice { get; set; }
+        [JsonIgnore]
+        public decimal TotalPrice
+        {
+            get
+            {
+                switch (CommissionType)
+                {
+                    case PricePackageCommissionType.Value:
+                        return Price + Commission;
+                    case PricePackageCommissionType.Percentage:
+                        return Price + (Commission > 0 ? (Commission*Price)/100 : Price);
+                    default: throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
 
         public PricePackageType Type { get; set; }
-        public void Normalize()
-        {
-            if (!DirectRequestTotalPrice.HasValue)
-                DirectRequestTotalPrice = DirectRequestPrice + DirectRequestCommission;
-            if (!TachyonManageTotalPrice.HasValue)
-                TachyonManageTotalPrice = TachyonManagePrice + TachyonManageCommission;
-        }
     }
 }

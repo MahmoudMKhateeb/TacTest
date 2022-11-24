@@ -21,6 +21,7 @@ import { ViewPricePackageProposalComponent } from './price-packeges-proposal/vie
 import { PricePackageAppendixComponent } from './price-package-appendix/price-package-appendix.component';
 import { CreateOrEditPricePackageAppendixComponent } from './price-package-appendix/create-or-edit-price-package-appendix/create-or-edit-price-package-appendix.component';
 import { ViewPricePackageAppendixComponent } from './price-package-appendix/view-price-package-appendix/view-price-package-appendix.component';
+import {SplitButtonModule} from '@node_modules/primeng/splitbutton';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { ViewPricePackageAppendixComponent } from './price-package-appendix/view
     DevExtremeModule,
     BsDropdownModule.forRoot(),
     BsDatepickerModule,
+    SplitButtonModule,
   ],
 })
 export class PricePackageModule {}

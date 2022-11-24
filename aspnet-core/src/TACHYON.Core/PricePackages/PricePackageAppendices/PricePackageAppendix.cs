@@ -10,8 +10,6 @@ namespace TACHYON.PricePackages.PricePackageAppendices
     {
         public string ContractName { get; set; }
 
-        public int ContractNumber { get; set; }
-        
         public int Version { get; set; }
 
         public DateTime ContractDate { get; set; }

@@ -1,15 +1,21 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.MultiTenancy;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Common;
+using TACHYON.Dto;
+using TACHYON.Features;
+using TACHYON.MultiTenancy;
 using TACHYON.PricePackages.Dto.TmsPricePackages;
 using TACHYON.PricePackages.TmsPricePackages;
 
@@ -20,13 +26,16 @@ namespace TACHYON.PricePackages
     {
         private readonly IRepository<TmsPricePackage> _tmsPricePackageRepository;
         private readonly ITmsPricePackageManager _tmsPricePackageManager;
+        private readonly IRepository<Tenant> _tenantRepository;
 
         public TmsPricePackageAppService(
             IRepository<TmsPricePackage> tmsPricePackageRepository,
-            ITmsPricePackageManager tmsPricePackageManager)
+            ITmsPricePackageManager tmsPricePackageManager,
+            IRepository<Tenant> tenantRepository)
         {
             _tmsPricePackageRepository = tmsPricePackageRepository;
             _tmsPricePackageManager = tmsPricePackageManager;
+            _tenantRepository = tenantRepository;
         }
 
 
@@ -51,15 +60,14 @@ namespace TACHYON.PricePackages
         
         public async Task CreateOrEdit(CreateOrEditTmsPricePackageDto input)
         {
-           // TODO: Add validation/pre-execution here if required
 
-           if (input.Id.HasValue)
-           {
-               await Update(input);
-               return;
-           }
+            if (input.Id.HasValue)
+            {
+                await Update(input);
+                return;
+            }
 
-           await Create(input);
+            await Create(input);
         }
 
         [AbpAuthorize(AppPermissions.Pages_TmsPricePackages_Create)]
@@ -108,6 +116,15 @@ namespace TACHYON.PricePackages
             return ObjectMapper.Map<TmsPricePackageForViewDto>(tmsPricePackage);
         }
 
+        public async Task<List<SelectItemDto>> GetCompanies()
+        {
+            DisableTenancyFilters();
+            return await (from tenant in _tenantRepository.GetAll()
+                    where tenant.EditionId == CarrierEditionId || tenant.EditionId == ShipperEditionId
+                    select new SelectItemDto { DisplayName = tenant.Name, Id = tenant.Id.ToString() })
+                .ToListAsync();
+        }
+
         public async Task ChangeActivateStatus(int pricePackageId,bool isActive)
         {
             var isExist = await _tmsPricePackageRepository.GetAll().AnyAsync(x => x.Id == pricePackageId);
@@ -119,7 +136,7 @@ namespace TACHYON.PricePackages
         public async Task<LoadResult> GetAllForDropdown(GetTmsPricePackagesInput input)
         {
             var tmsPricePackages = _tmsPricePackageRepository.GetAll()
-                .AsNoTracking().Where(x=> x.IsActive && x.ShipperId == input.ShipperId)
+                .AsNoTracking().Where(x=> x.IsActive && x.DestinationTenantId == input.DestinationTenantId)
                 .WhereIf(input.ProposalId.HasValue,x=> !x.ProposalId.HasValue || x.ProposalId == input.ProposalId)
                 .ProjectTo<TmsPricePackageSelectItemDto>(AutoMapperConfigurationProvider);
 

@@ -11,15 +11,19 @@
         <div class="modal-body">
           <div class="row">
             <div class="form-group col-md-6">
-              <label>{{ l('Shipper') }} <span class="text-danger">*</span></label>
+              <label>{{ companyType.Shipper? 'Shipper' : 'Carrier' | localize }} <span class="text-danger">*</span></label>
               <div
                 [ngClass]="{
-                  'spinner spinner-success spinner-right mr-1 ml-1': shippersLoading
+                  'spinner spinner-success spinner-right mr-1 ml-1': companyType.Shipper? shippersLoading : carriersLoading
                 }"
               >
-                <select [(ngModel)]="shipperId" (change)="loadProposals()" required class="form-control" name="appendixShipper">
+                <select *ngIf="currentCompanyType === companyType.Shipper" [(ngModel)]="companyId" (change)="loadProposals()" required class="form-control" name="appendixShipper">
                   <option selected disabled [value]="undefined">{{ 'SelectShipper' | localize }}</option>
                   <option *ngFor="let item of shippers" [value]="item.id">{{ item.displayName }}</option>
+                </select>
+                  <select *ngIf="currentCompanyType === companyType.Carrier" [(ngModel)]="companyId" (change)="loadPricePackages()" required class="form-control" name="appendixCarrier">
+                  <option selected disabled [value]="undefined">{{ 'SelectCarrier' | localize }}</option>
+                  <option *ngFor="let item of carriers" [value]="item.id">{{ item.displayName }}</option>
                 </select>
               </div>
             </div>
@@ -28,18 +32,7 @@
               <input id="appendixContractName" [(ngModel)]="appendix.contractName" required type="text" class="form-control" name="contractName" />
             </div>
 
-            <div class="form-group col-md-6">
-              <label for="appendixContractNumber">{{ 'ContractNumber' | localize }}</label>
-              <input
-                id="appendixContractNumber"
-                [(ngModel)]="appendix.contractNumber"
-                required
-                type="number"
-                (keydown)="numberOnly($event)"
-                class="form-control"
-                name="contractNumber"
-              />
-            </div>
+
             <div class="form-group col-md-6">
               <label>{{ l('AppendixDate') }} <span class="text-danger">*</span></label>
               <input

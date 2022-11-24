@@ -62,7 +62,7 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, appendix.ContractName,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateAppendixDate, appendixDate ,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateContractDate, contractDate,SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, $"{appendix.ContractNumber}",SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, $"{appendix?.Proposal?.Shipper?.ContractNumber}",SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateCompanyName, companyName,SearchOptions.None);
             if (truckTypes != null && truckTypes.Length > 0) 
                 document.ReplaceAll(TACHYONConsts.AppendixTemplateTruckTypes, string.Join(',',truckTypes),SearchOptions.None);

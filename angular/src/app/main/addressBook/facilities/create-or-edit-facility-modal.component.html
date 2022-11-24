@@ -134,7 +134,7 @@
                     [disabled]="countriesLoading"
                     placeholder="{{ l('SelectACounty') }}"
                     [showClearButton]="true"
-                    (selectionchange)="loadCitiesByCountryId(selectedCountryId); facility.cityId = null"
+                    (onValueChanged)="loadCitiesByCountryId(selectedCountryId);"
                     required
                   >
                     <dx-validator [validationGroup]="'createFacilityGroup'">
