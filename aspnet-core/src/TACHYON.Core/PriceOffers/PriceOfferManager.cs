@@ -776,7 +776,7 @@ namespace TACHYON.PriceOffers
                 shippingRequestVasesPricing.Add(new PriceOfferDetail()
                 {
                     SourceId = vas.Id,
-                    ItemPrice = vasDto.Price,
+                    ItemPrice = vasDto.Price!=null ?vasDto.Price.Value :0,
                     PriceType = PriceOfferType.Vas,
                     Quantity = vas.RequestMaxCount > 0 ? vas.RequestMaxCount : 1
                 });
