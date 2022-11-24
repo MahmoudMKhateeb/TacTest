@@ -55,6 +55,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   directRequestId!: number;
   activeShippingRequestId!: number;
   selectedShippingRequest: GetShippingRequestForPriceOfferListDto;
+  shippingRequestStatusEnum = ShippingRequestStatus;
 
   constructor(
     injector: Injector,
@@ -320,17 +321,16 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     });
   }
 
-    /**
-     * we need to hide default price if the request is internal and the user is not TMS/Host
-     * any other case he can see the price
-     * @param item
-     */
-    canViewBrokerPrice(item: GetShippingRequestForPriceOfferListDto): boolean {
-
-      if ((item.shipperActor || item.carrierActor) && !this.isTachyonDealerOrHost) {
-          return false;
-      }
-
-      return true;
+  /**
+   * we need to hide default price if the request is internal and the user is not TMS/Host
+   * any other case he can see the price
+   * @param item
+   */
+  canViewBrokerPrice(item: GetShippingRequestForPriceOfferListDto): boolean {
+    if ((item.shipperActor || item.carrierActor) && !this.isTachyonDealerOrHost) {
+      return false;
     }
+
+    return true;
+  }
 }

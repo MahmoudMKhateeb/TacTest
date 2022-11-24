@@ -3,13 +3,18 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import {
   AssignDedicatedTrucksAndDriversInput,
+  AssignTrucksAndDriversForDedicatedInput,
   DedicatedDriversDto,
   DedicatedShippingRequestsServiceProxy,
+  DedicatedShippingRequestTrucksAndDriversDto,
   DedicatedTruckDto,
+  GetAllTrucksWithDriversListDto,
   GetShippingRequestForPriceOfferListDto,
   SelectItemDto,
   TrucksServiceProxy,
 } from '@shared/service-proxies/service-proxies';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular/ui/data-grid/index';
 
 let _self;
 @Component({
@@ -18,6 +23,7 @@ let _self;
   styleUrls: ['./assign-trucks-and-drivers-modal.component.css'],
 })
 export class AssignTrucksAndDriversModalComponent extends AppComponentBase {
+  @ViewChild('dataGrid', { static: false }) public dataGrid: DxDataGridComponent;
   @ViewChild('assignTrucksAndDriversModal', { static: false }) public modal: ModalDirective;
   active = false;
   loading: boolean;
@@ -25,8 +31,8 @@ export class AssignTrucksAndDriversModalComponent extends AppComponentBase {
 
   allDrivers: SelectItemDto[] = [];
   selectedDrivers: SelectItemDto[] = [];
-  allTrucks: SelectItemDto[] = [];
-  selectedTrucks: SelectItemDto[] = [];
+  allTrucks: GetAllTrucksWithDriversListDto[] = [];
+  selectedTrucks: DedicatedShippingRequestTrucksAndDriversDto[] = [];
 
   constructor(
     injector: Injector,
@@ -56,22 +62,22 @@ export class AssignTrucksAndDriversModalComponent extends AppComponentBase {
   }
 
   save() {
-    console.log('this.selectedDrivers', this.selectedDrivers);
-    console.log('this.selectedTrucks', this.selectedTrucks);
-    const drivers = this.selectedDrivers.map((driver) => {
-      return new DedicatedDriversDto({ driverName: driver.displayName, id: Number(driver.id) });
+    const trucks = this.dataGrid.instance.getSelectedRowsData().map((truck) => {
+      const driverName = this.allDrivers.find((driver) => Number(driver.id) === truck.driverUserId).displayName;
+      const truckForDedicated = new DedicatedShippingRequestTrucksAndDriversDto({
+        truckId: truck.truckId,
+        truckName: truck.truckName,
+        driverName: driverName,
+        driverId: truck.driverUserId,
+      });
+      return truckForDedicated;
     });
-    const trucks = this.selectedTrucks.map((truck) => {
-      return new DedicatedTruckDto({ truckName: truck.displayName, id: Number(truck.id) });
-    });
-    const assignDedicatedTrucksAndDriversInput = new AssignDedicatedTrucksAndDriversInput({
+    const assignDedicatedTrucksAndDriversInput = new AssignTrucksAndDriversForDedicatedInput({
       shippingRequestId: this.dedicatedShippingRequest.id,
-      driversList: drivers,
-      trucksList: trucks,
+      dedicatedShippingRequestTrucksAndDriversDtos: trucks,
     });
-    console.log('assignDedicatedTrucksAndDriversInput', assignDedicatedTrucksAndDriversInput);
     this.loading = true;
-    this._dedicatedShippingRequestService.assignDedicatedTrucksAndDrivers(assignDedicatedTrucksAndDriversInput).subscribe((res) => {
+    this._dedicatedShippingRequestService.assignTrucksAndDriversForDedicated(assignDedicatedTrucksAndDriversInput).subscribe((res) => {
       this.loading = false;
       this.close();
     });
@@ -82,10 +88,12 @@ export class AssignTrucksAndDriversModalComponent extends AppComponentBase {
    * this method is for Getting All Carriers Drivers For DD
    */
   getAllDrivers() {
-    
     if (this.feature.isEnabled('App.Carrier') || this.isTachyonDealerOrHost) {
       this._dedicatedShippingRequestService.getAllDriversForDropDown(this.dedicatedShippingRequest.carrierTenantId).subscribe((res) => {
-        this.allDrivers = res;
+        this.allDrivers = res.map((item) => {
+          (item.id as any) = Number(item.id);
+          return item;
+        });
       });
     }
   }
@@ -95,16 +103,32 @@ export class AssignTrucksAndDriversModalComponent extends AppComponentBase {
    */
   getAllTrucks(truckTypeId) {
     if (this.feature.isEnabled('App.Carrier') || this.isTachyonDealerOrHost) {
-      this._dedicatedShippingRequestService.getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId, this.dedicatedShippingRequest.carrierTenantId).subscribe((res) => {
-        this.allTrucks = res;
-      });
+      this._dedicatedShippingRequestService
+        .getAllTrucksWithDriversList(truckTypeId, this.dedicatedShippingRequest.carrierTenantId)
+        .subscribe((res) => {
+          this.allTrucks = res;
+        });
     }
   }
 
-  asyncValidationOnNumberOfTrucks(params) {
-    console.log('params', params);
-    return new Promise((resolve) => {
-      resolve(params.value.length === _self.dedicatedShippingRequest.numberOfTrucks);
-    });
+  print(d) {
+    console.log('d', d);
+  }
+
+  onDataGridCellClick(event: any) {
+    console.log('onDataGridCellClick', event);
+    if (event.columnIndex === 2 || event.columnIndex === 3) {
+      event.event.stopPropagation();
+      event.event.stopImmediatePropagation();
+    }
+    if (event.column.dataField === 'driverUserId' && !event.row.isSelected) {
+      event.row.isSelected = true;
+    }
+  }
+
+  onSelectionChanged(row) {
+    if (row.selectedRowKeys.length > this.dedicatedShippingRequest?.numberOfTrucks) {
+      this.dataGrid.instance.deselectRows(row.currentSelectedRowKeys);
+    }
   }
 }
