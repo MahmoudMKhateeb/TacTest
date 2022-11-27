@@ -150,6 +150,12 @@ namespace TACHYON.Notifications
 
         #endregion
 
+        #region Replacement Truck or driver for dedicated
+        Task NotifyCarrierWithTruckReplacement(int tenantId, long DedicatedTruckId,string truckName, string requestRef);
+        Task NotifyCarrierWithDriverReplacement(int tenantId, long DedicatedDriverId, string driverName, string requestRef);
+
+        #endregion
+
         Task WelcomeToTheApplicationAsync(User user);
 
         Task NewUserRegisteredAsync(User user);

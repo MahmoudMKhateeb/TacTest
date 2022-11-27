@@ -216,6 +216,39 @@ namespace TACHYON.Notifications
                 });
         }
 
+        #region Replacement Truck or driver for dedicated
+        public async Task NotifyCarrierWithTruckReplacement(int tenantId, long DedicatedTruckId, string TruckName, string requestRef)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+             new LocalizableString(
+                 L("NotifyCarrierWithTruckReplacement", TruckName, requestRef),
+                 TACHYONConsts.LocalizationSourceName
+             )
+         );
+            notificationData["dedicatedTruckId"] = DedicatedTruckId;
+            DisableTenancyFilters();
+            var userIds = _userRepo.GetAll().Where(x => x.TenantId == tenantId)
+                .Select(x => new UserIdentifier(x.TenantId, x.Id)).ToArray();
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWithTruckReplacement,
+                notificationData, userIds: userIds);
+        }
+
+        public async Task NotifyCarrierWithDriverReplacement(int tenantId, long DedicatedDriverId, string DriverName, string requestRef)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+             new LocalizableString(
+                 L("NotifyCarrierWithDriverReplacement", DriverName, requestRef),
+                 TACHYONConsts.LocalizationSourceName
+             )
+         );
+            notificationData["dedicatedDriverId"] = DedicatedDriverId;
+            DisableTenancyFilters();
+            var userIds = _userRepo.GetAll().Where(x => x.TenantId == tenantId)
+                .Select(x => new UserIdentifier(x.TenantId, x.Id)).ToArray();
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWithDriverReplacement,
+                notificationData, userIds: userIds);
+        }
+        #endregion
 
         #region Tachyon Notifications
 

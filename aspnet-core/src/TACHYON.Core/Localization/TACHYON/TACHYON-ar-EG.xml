@@ -2895,5 +2895,7 @@
 	<text name="ReceivableInvoice">فاتورة قابلة للاستلام</text>
 	<text name="PayableInvoice">فاتورة فابلة للدفع</text>
     <text name="SelectActor">اختر العميل</text>
+    <text name="NotifyCarrierWithTruckReplacement">تاكيون تطلب منك استبدال الشاحنة {0} في طلب الشحن {1}</text>
+    <text name="NotifyCarrierWithDriverReplacement">تاكيون تطلب منك استبدال السائق {0} في طلب الشحن {1}</text>
 	</texts>
 </localizationDictionary>

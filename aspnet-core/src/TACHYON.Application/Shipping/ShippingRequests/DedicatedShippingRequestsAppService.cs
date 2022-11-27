@@ -19,6 +19,7 @@ using TACHYON.Authorization.Users;
 using TACHYON.Configuration;
 using TACHYON.Dto;
 using TACHYON.Features;
+using TACHYON.Notifications;
 using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.DirectRequests.Dto;
@@ -39,6 +40,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly ISettingManager _settingManager;
         private readonly IRepository<Truck, long> _truckRepository;
         private readonly IRepository<User, long> _lookup_userRepository;
+        private readonly IAppNotifier _appNotifier;
 
         public DedicatedShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository,
             ShippingRequestManager shippingRequestManager,
@@ -48,7 +50,8 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
             ISettingManager settingManager,
             IRepository<Truck, long> truckRepository,
-            IRepository<User, long> lookup_userRepository)
+            IRepository<User, long> lookup_userRepository,
+            IAppNotifier appNotifier)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestManager = shippingRequestManager;
@@ -59,6 +62,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _settingManager = settingManager;
             _truckRepository = truckRepository;
             _lookup_userRepository = lookup_userRepository;
+            _appNotifier = appNotifier;
         }
 
         #region Wizard
@@ -67,11 +71,9 @@ namespace TACHYON.Shipping.ShippingRequests
             DisableTenancyFilters();
             var query = _dedicatedShippingRequestTruckRepository.GetAll()
                 .WhereIf(await IsTachyonDealer(),x=> true)
-                .WhereIf(await IsCarrier() , x => x.ShippingRequest.CarrierTenantId == AbpSession.TenantId)
-                .WhereIf(await IsShipper(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.CarrierTenantId == AbpSession.TenantId ||
+                x.ShippingRequest.TenantId == AbpSession.TenantId)
                 .WhereIf(input.ShippingRequestId != null, x => x.ShippingRequestId == input.ShippingRequestId)
-                .WhereIf(await IsTachyonDealer() || AbpSession.TenantId == null, x=> true)
-                .WhereIf(await IsShipper(), x=> x.ShippingRequest.TenantId == AbpSession.TenantId)
                 .ProjectTo<DedicatedShippingRequestTrucksDto>(AutoMapperConfigurationProvider)
                 .AsNoTracking();
 
@@ -222,10 +224,17 @@ namespace TACHYON.Shipping.ShippingRequests
                     ShippingRequestId = shippingRequest.Id,
                     TruckId = driverAndtruck.TruckId,
                     Status = status,
+                    ReplacementFlag = ReplacementFlag.Original,
                     KPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.TruckKPI)
                 });
 
-                driversList.Add(new DedicatedShippingRequestDriver { ShippingRequestId = shippingRequest.Id, DriverUserId = driverAndtruck.DriverId, Status = status });
+                driversList.Add(new DedicatedShippingRequestDriver 
+                { 
+                    ShippingRequestId = shippingRequest.Id,
+                    DriverUserId = driverAndtruck.DriverId, 
+                    Status = status ,
+                    ReplacementFlag = ReplacementFlag.Original
+                });
 
             }
             shippingRequest.DedicatedShippingRequestTrucks = trucksList;
@@ -323,7 +332,7 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
         [RequiresFeature(AppFeatures.TachyonDealer)]
-        public async Task<List<SelectItemDto>> GetDedicateTrucksByRequest(int shippingRequestId)
+        public async Task<List<SelectItemDto>> GetDedicateTrucksByRequest(long shippingRequestId)
         {
             DisableTenancyFilters();
             return await _dedicatedShippingRequestTruckRepository.GetAll()
@@ -356,6 +365,163 @@ namespace TACHYON.Shipping.ShippingRequests
 
         #endregion
 
+        #region Replacement
+        #region Trucks
+        public async Task<LoadResult> GetDedicatedTrucksForReplace(long shippingRequestId, string Filter)
+        {
+            DisableTenancyFilters();
+            var query = _dedicatedShippingRequestTruckRepository.GetAll()
+                .WhereIf(await IsTachyonDealer(), x => true)
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.CarrierTenantId == AbpSession.TenantId &&
+                x.Truck.TenantId == AbpSession.TenantId)
+                .Where( x => x.ShippingRequestId == shippingRequestId && x.ShippingRequest.Status == ShippingRequestStatus.PostPrice)
+                .ProjectTo<GetDedicatedTruckForReplaceDto>(AutoMapperConfigurationProvider)
+                .AsNoTracking();
+
+            return await LoadResultAsync(query, Filter);
+        }
+
+        /// <summary>
+        /// Return All trucks for replacement except dedicated for this request
+        /// </summary>
+        /// <param name="shippingRequestId"></param>
+        /// <param name="truckTypeId"></param>
+        /// <param name="tenantId"></param>
+        /// <returns></returns>
+        public async Task<List<SelectItemDto>> GetReplacementTrucksForDropDown(long shippingRequestId, long truckTypeId, int? tenantId)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            return await _truckRepository.GetAll()
+                .WhereIf(await IsTachyonDealer(), x => x.TenantId == tenantId.Value)
+                .Where(x => x.TrucksTypeId == truckTypeId && 
+                !x.DedicatedShippingRequestTrucks.Any(y=>y.ShippingRequestId == shippingRequestId))
+                .Select(x => new SelectItemDto
+                {
+                    DisplayName = x.GetDisplayName(),
+                    Id = x.Id.ToString()
+                }).ToListAsync();
+        }
+
+        /// <summary>
+        /// TMS can make a request to carrier in specific truck to replace
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="UserFriendlyException"></exception>
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        public async Task RequestReplaceTruck(RequestReplaceTruckInput input)
+        {
+            var dedicatedTruck =await GetDedicateTruckById(input.DedicatedTruckId);
+            if (dedicatedTruck.IsRequestedToReplace) throw new UserFriendlyException(L("TruckIsRequestedToReplaceBefore"));
+            dedicatedTruck.ReplacementReason = input.ReplacementReason;
+            dedicatedTruck.ReplacementIntervalInDays = input.ReplacementIntervalInDays;
+            dedicatedTruck.IsRequestedToReplace = true;
+
+            await _appNotifier.NotifyCarrierWithTruckReplacement(dedicatedTruck.ShippingRequest.CarrierTenantId.Value, dedicatedTruck.Id, dedicatedTruck.ShippingRequest.CarrierTenantFk.Name, dedicatedTruck.ShippingRequest.ReferenceNumber);
+        }
+
+        public async Task ReplaceTrucks(ReplaceTruckInput input)
+        {
+            var dedicatedTrucks = await GetDedicateTrucksByIds(input);
+
+            foreach(var item in input.ReplaceTruckDtos)
+            {
+                var ReplacedTruck = ObjectMapper.Map<DedicatedShippingRequestTruck>(item);
+                ReplacedTruck.ReplacementFlag = ReplacementFlag.Replaced;
+                ReplacedTruck.ReplacementDate = Clock.Now;
+                ReplacedTruck.KPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.TruckKPI);
+                ReplacedTruck.ShippingRequestId = input.ShippingRequestId;
+                ReplacedTruck.Status = dedicatedTrucks.First(x=>x.Id == item.OriginalDedicatedTruckId).Status;
+
+                _dedicatedShippingRequestTruckRepository.Insert(ReplacedTruck);
+            }
+
+            // cancel request to replace in  original trucks
+            foreach(var originalTruck in dedicatedTrucks)
+            {
+                originalTruck.IsRequestedToReplace = false;
+                originalTruck.ReplacementDate = Clock.Now;
+            }
+           
+        }
+
+        #endregion
+        #region Drivers
+        public async Task<LoadResult> GetDedicatedDriversForReplace(long shippingRequestId, string Filter)
+        {
+            DisableTenancyFilters();
+            var query = _dedicatedShippingRequestDriverRepository.GetAll()
+                .WhereIf(await IsTachyonDealer(), x => true)
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.CarrierTenantId == AbpSession.TenantId &&
+                x.DriverUser.TenantId == AbpSession.TenantId)
+                .Where(x => x.ShippingRequestId == shippingRequestId && x.ShippingRequest.Status == ShippingRequestStatus.PostPrice)
+                .ProjectTo<GetDedicatedDriverForReplaceDto>(AutoMapperConfigurationProvider)
+                .AsNoTracking();
+
+            return await LoadResultAsync(query, Filter);
+        }
+
+        /// <summary>
+        /// Return All drivers for replacement except dedicated for this request
+        /// </summary>
+        /// <param name="shippingRequestId"></param>
+        /// <param name="truckTypeId"></param>
+        /// <param name="tenantId"></param>
+        /// <returns></returns>
+        public async Task<List<SelectItemDto>> GetReplacementDriversForDropDown(long shippingRequestId, int? tenantId)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            return await _lookup_userRepository.GetAll()
+                .WhereIf(await IsTachyonDealer(), x => x.TenantId == tenantId.Value)
+                .Where(e => e.IsDriver == true && !e.DedicatedShippingRequestDrivers.Any(x=>x.ShippingRequestId == shippingRequestId))
+                .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// TMS can make a request to carrier in specific driver to replace
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="UserFriendlyException"></exception>
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        public async Task RequestReplaceDriver(RequestReplaceDriverInput input)
+        {
+            var dedicatedDriver = await GetDedicatedDriverById(input.DedicatedDriverId);
+            if (dedicatedDriver.IsRequestedToReplace) throw new UserFriendlyException(L("TruckIsRequestedToReplaceBefore"));
+            dedicatedDriver.ReplacementReason = input.ReplacementReason;
+            dedicatedDriver.ReplacementIntervalInDays = input.ReplacementIntervalInDays;
+            dedicatedDriver.IsRequestedToReplace = true;
+
+            await _appNotifier.NotifyCarrierWithDriverReplacement(dedicatedDriver.ShippingRequest.CarrierTenantId.Value, dedicatedDriver.Id, dedicatedDriver.ShippingRequest.CarrierTenantFk.Name, dedicatedDriver.ShippingRequest.ReferenceNumber);
+        }
+
+        public async Task ReplaceDrivers(ReplaceDriverInput input)
+        {
+            var dedicatedDrivers = await GetDedicateDriversByIds(input);
+
+            foreach (var item in input.ReplaceDriverDtos)
+            {
+                var ReplacedDriver = ObjectMapper.Map<DedicatedShippingRequestDriver>(item);
+                ReplacedDriver.ReplacementFlag = ReplacementFlag.Replaced;
+                ReplacedDriver.ReplacementDate = Clock.Now;
+                ReplacedDriver.ShippingRequestId = input.ShippingRequestId;
+                ReplacedDriver.Status = dedicatedDrivers.First(x => x.Id == item.OriginalDedicatedDriverId).Status;
+
+                _dedicatedShippingRequestDriverRepository.Insert(ReplacedDriver);
+            }
+
+            // cancel request to replace in  original drivers
+            foreach (var originalDriver in dedicatedDrivers)
+            {
+                originalDriver.IsRequestedToReplace = false;
+                originalDriver.ReplacementDate = Clock.Now;
+            }
+
+        }
+        #endregion
+
+        #endregion
         #region Helper
         private async Task<long> CreateStep1(CreateOrEditDedicatedStep1Dto input)
         {
@@ -519,6 +685,56 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Where(x => x.Id == id && x.Status!=ShippingRequestStatus.PostPrice)
                 .FirstOrDefaultAsync();
             return shippingRequest;
+        }
+
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        private async Task<DedicatedShippingRequestTruck> GetDedicateTruckById(long id)
+        {
+            DisableTenancyFilters();
+            return await _dedicatedShippingRequestTruckRepository.GetAll()
+                .Include(x=>x.ShippingRequest)
+                .ThenInclude(x=>x.CarrierTenantFk)
+                .Include(x=>x.Truck)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        private async Task<List<DedicatedShippingRequestTruck>> GetDedicateTrucksByIds(ReplaceTruckInput input)
+        {
+            DisableTenancyFilters();
+            return await _dedicatedShippingRequestTruckRepository.GetAll()
+                .WhereIf(await IsTachyonDealer(), x => true)
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.Truck.TenantId == AbpSession.TenantId)
+                .Include(x => x.ShippingRequest)
+                .ThenInclude(x => x.CarrierTenantFk)
+                .Include(x => x.Truck)
+                .Where(x => input.ReplaceTruckDtos.Select(x => x.OriginalDedicatedTruckId).Contains(x.Id) &&
+                x.ShippingRequestId== input.ShippingRequestId)
+                .ToListAsync();
+        }
+
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        private async Task<DedicatedShippingRequestDriver> GetDedicatedDriverById(long id)
+        {
+            DisableTenancyFilters();
+            return await _dedicatedShippingRequestDriverRepository.GetAll()
+                .Include(x => x.ShippingRequest)
+                .ThenInclude(x => x.CarrierTenantFk)
+                .Include(x => x.DriverUser)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        private async Task<List<DedicatedShippingRequestDriver>> GetDedicateDriversByIds(ReplaceDriverInput input)
+        {
+            DisableTenancyFilters();
+            return await _dedicatedShippingRequestDriverRepository.GetAll()
+                .WhereIf(await IsTachyonDealer(), x => true)
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.DriverUser.TenantId == AbpSession.TenantId)
+                .Include(x => x.ShippingRequest)
+                .ThenInclude(x => x.CarrierTenantFk)
+                .Include(x => x.DriverUser)
+                .Where(x => input.ReplaceDriverDtos.Select(x => x.OriginalDedicatedDriverId).Contains(x.Id) &&
+                x.ShippingRequestId == input.ShippingRequestId)
+                .ToListAsync();
         }
         #endregion
     }

@@ -589,6 +589,27 @@ namespace TACHYON.EntityFrameworkCore
                 .WithMany(e => e.DedicatedDynamicInvoiceItems)
                 .OnDelete(DeleteBehavior.ClientNoAction);
 
+            modelBuilder
+               .Entity<DedicatedShippingRequestDriver>()
+               .HasOne(e => e.DriverUser)
+               .WithMany(e => e.DedicatedShippingRequestDrivers)
+               .OnDelete(DeleteBehavior.ClientNoAction);
+
+            //modelBuilder
+            //    .Entity<DedicatedShippingRequestTruck>()
+            //    .HasOne(e => e.OriginalTruck)
+            //    .WithOne(x=> x.OriginalTruck)
+            //    .OnDelete(DeleteBehavior.ClientNoAction);
+
+            //modelBuilder.Entity<DedicatedShippingRequestTruck>().has(t => t.OriginalTruck)
+            //    .WithOne(x => x.DedicatedShippingRequestTruck)
+            //             .HasForeignKey(t => t.);
+            //modelBuilder
+            //    .Entity<DedicatedShippingRequestDriver>()
+            //    .HasOne(e => e.OriginalDriver)
+            //    .WithMany(x => x.DedicatedShippingRequestDrivers)
+            //    .OnDelete(DeleteBehavior.ClientNoAction);
+
 
 
             modelBuilder.ConfigurePersistedGrantEntity();

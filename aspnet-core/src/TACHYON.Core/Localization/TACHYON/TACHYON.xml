@@ -3143,5 +3143,7 @@
     <text name="ReceivableInvoice">Receivable invoice</text>
     <text name="PayableInvoice">Payable invoice</text>
     <text name="SelectActor">Select actor</text>
+    <text name="NotifyCarrierWithTruckReplacement">Tachyon Request you to replace truck {0} at reference {1}</text>
+    <text name="NotifyCarrierWithDriverReplacement">Tachyon Request you to replace driver {0} at reference {1}</text>
 	</texts>
 </localizationDictionary>
