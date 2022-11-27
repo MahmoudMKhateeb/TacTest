@@ -11,6 +11,7 @@ using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
 using TACHYON.PricePackages.Dto.NormalPricePackage;
+using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -151,8 +152,8 @@ namespace TACHYON.Notifications
         #endregion
 
         #region Replacement Truck or driver for dedicated
-        Task NotifyCarrierWithTruckReplacement(int tenantId, long DedicatedTruckId,string truckName, string requestRef);
-        Task NotifyCarrierWithDriverReplacement(int tenantId, long DedicatedDriverId, string driverName, string requestRef);
+        Task NotifyCarrierWithTruckReplacement(DedicatedShippingRequestTruck dedicatedTruck);
+        Task NotifyCarrierWithDriverReplacement(DedicatedShippingRequestDriver dedicatedDriver);
 
         #endregion
 

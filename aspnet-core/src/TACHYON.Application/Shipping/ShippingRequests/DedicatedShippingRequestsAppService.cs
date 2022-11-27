@@ -285,31 +285,38 @@ namespace TACHYON.Shipping.ShippingRequests
 
         #region trip
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
-        public async Task<List<SelectItemDto>> GetAllDedicatedDriversForDropDown(long shippingRequestId)
+        public async Task<List<GetAllDedicatedDriversOrTrucksForDropDownDto>> GetAllDedicatedDriversForDropDown(long shippingRequestId)
         {
             DisableTenancyFilters();
             return await _dedicatedShippingRequestDriverRepository.GetAll()
                 .Include(x=>x.DriverUser)
-                .WhereIf(await IsShipper(), x=>x.ShippingRequest.TenantId==AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x=>x.ShippingRequest.TenantId==AbpSession.TenantId)
                 .WhereIf(await IsTachyonDealer(), x=>true)
                 .Where(e => e.ShippingRequestId == shippingRequestId)
-                .Select(x => new SelectItemDto { Id = x.DriverUserId.ToString(), DisplayName = $"{x.DriverUser.Name} {x.DriverUser.Surname}" })
+                .Select(x => new GetAllDedicatedDriversOrTrucksForDropDownDto { Id = x.DriverUserId.ToString()
+                ,IsAvailable = !x.ReplacementDate.HasValue || 
+                (x.ReplacementFlag == ReplacementFlag.Replaced && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) > Clock.Now.Date ) ||
+                (x.ReplacementFlag == ReplacementFlag.Original && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) < Clock.Now.Date),
+                    DisplayName = $"{x.DriverUser.Name} {x.DriverUser.Surname}" }                )
                 .ToListAsync();
         }
 
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
-        public async Task<List<SelectItemDto>> GetAllDedicateTrucksForDropDown(long shippingRequestId)
+        public async Task<List<GetAllDedicatedDriversOrTrucksForDropDownDto>> GetAllDedicateTrucksForDropDown(long shippingRequestId)
         {
             DisableTenancyFilters();
             return await _dedicatedShippingRequestTruckRepository.GetAll()
                 .Include(x=>x.Truck)
-                .WhereIf(await IsShipper(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
                 .WhereIf(await IsTachyonDealer(), x => true)
                 .Where(x => x.ShippingRequestId == shippingRequestId)
-                .Select(x => new SelectItemDto
+                .Select(x => new GetAllDedicatedDriversOrTrucksForDropDownDto
                 {
                     DisplayName = x.Truck.GetDisplayName(),
-                    Id = x.TruckId.ToString()
+                    Id = x.TruckId.ToString(),
+                    IsAvailable = !x.ReplacementDate.HasValue ||
+                (x.ReplacementFlag == ReplacementFlag.Replaced && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) > Clock.Now.Date) ||
+                (x.ReplacementFlag == ReplacementFlag.Original && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) < Clock.Now.Date)
                 }).ToListAsync();
         }
 
@@ -417,7 +424,7 @@ namespace TACHYON.Shipping.ShippingRequests
             dedicatedTruck.ReplacementIntervalInDays = input.ReplacementIntervalInDays;
             dedicatedTruck.IsRequestedToReplace = true;
 
-            await _appNotifier.NotifyCarrierWithTruckReplacement(dedicatedTruck.ShippingRequest.CarrierTenantId.Value, dedicatedTruck.Id, dedicatedTruck.ShippingRequest.CarrierTenantFk.Name, dedicatedTruck.ShippingRequest.ReferenceNumber);
+            await _appNotifier.NotifyCarrierWithTruckReplacement(dedicatedTruck);
         }
 
         public async Task ReplaceTrucks(ReplaceTruckInput input)
@@ -441,6 +448,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 originalTruck.IsRequestedToReplace = false;
                 originalTruck.ReplacementDate = Clock.Now;
+                originalTruck.ReplacementIntervalInDays = input.ReplaceTruckDtos.FirstOrDefault(x => x.OriginalDedicatedTruckId == originalTruck.Id).ReplacementIntervalInDays;
             }
            
         }
@@ -493,7 +501,7 @@ namespace TACHYON.Shipping.ShippingRequests
             dedicatedDriver.ReplacementIntervalInDays = input.ReplacementIntervalInDays;
             dedicatedDriver.IsRequestedToReplace = true;
 
-            await _appNotifier.NotifyCarrierWithDriverReplacement(dedicatedDriver.ShippingRequest.CarrierTenantId.Value, dedicatedDriver.Id, dedicatedDriver.ShippingRequest.CarrierTenantFk.Name, dedicatedDriver.ShippingRequest.ReferenceNumber);
+            await _appNotifier.NotifyCarrierWithDriverReplacement(dedicatedDriver);
         }
 
         public async Task ReplaceDrivers(ReplaceDriverInput input)
@@ -516,6 +524,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 originalDriver.IsRequestedToReplace = false;
                 originalDriver.ReplacementDate = Clock.Now;
+                originalDriver.ReplacementIntervalInDays = input.ReplaceDriverDtos.FirstOrDefault(x => x.OriginalDedicatedDriverId == originalDriver.Id).ReplacementIntervalInDays;
             }
 
         }

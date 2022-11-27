@@ -23,13 +23,13 @@ namespace TACHYON.Shipping.Dedicated
         public DateTime? ReplacementDate { get; set; }
         public string ReplacementReason { get; set; }
         public ReplacementFlag ReplacementFlag { get; set; }
-        public int ReplacementIntervalInDays { get; set; }
+        public int? ReplacementIntervalInDays { get; set; }
         public long? OriginalDedicatedDriverId { get; set; }
         /// <summary>
         /// If truck is replacement, original truck will be added here
         /// </summary>
         [ForeignKey("OriginalDedicatedDriverId")]
-        public User OriginalDriver { get; set; }
+        public DedicatedShippingRequestDriver OriginalDriver { get; set; }
         #endregion
 
 

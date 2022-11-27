@@ -17,6 +17,7 @@ import {
   ShippingRequestRouteType,
   GetShippingRequestForViewOutput,
   DedicatedShippingRequestsServiceProxy,
+  GetAllDedicatedDriversOrTrucksForDropDownDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -126,8 +127,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     validationRequestsCallbacks: this.callbacks,
   };
   isFormSubmitted = false;
-  allDedicatedDrivers: SelectItemDto[] = [];
-  allDedicatedTrucks: SelectItemDto[] = [];
+  allDedicatedDrivers: GetAllDedicatedDriversOrTrucksForDropDownDto[] = [];
+  allDedicatedTrucks: GetAllDedicatedDriversOrTrucksForDropDownDto[] = [];
   shippingRequestForView: GetShippingRequestForViewOutput = null;
 
   constructor(

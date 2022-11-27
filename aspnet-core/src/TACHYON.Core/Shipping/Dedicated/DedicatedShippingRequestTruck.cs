@@ -36,7 +36,7 @@ namespace TACHYON.Shipping.Dedicated
         /// <summary>
         /// If truck is replacement, original truck will be added here
         /// </summary>
-        [ForeignKey("OriginalTruckId")]
+        [ForeignKey("OriginalDedicatedTruckId")]
         public DedicatedShippingRequestTruck OriginalTruck { get; set; }
         #endregion
     }
