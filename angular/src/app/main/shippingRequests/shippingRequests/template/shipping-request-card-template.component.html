@@ -41,9 +41,11 @@
           <ng-template [ngIf]="!Channel"></ng-template>
           <div
             [class.tachyonDialer]="item.isTachyonDeal"
-            [class.shipCardGray]="((item.isPriced || item.remainingDays == '0') && Channel) || (item.status == 1 && !Channel)"
-            [class.shipCardGreen]="item.status == 5 && !Channel"
-            [class.shipCardRed]="(item.status == 3 || item.status == 4) && !Channel"
+            [class.shipCardGray]="
+              ((item.isPriced || item.remainingDays == '0') && Channel) || (item.status == shippingRequestStatusEnum.PostPrice && !Channel)
+            "
+            [class.shipCardGreen]="item.status == shippingRequestStatusEnum.Completed && !Channel"
+            [class.shipCardRed]="(item.status == shippingRequestStatusEnum.Expired || item.status == shippingRequestStatusEnum.Cancled) && !Channel"
             [class.expanded]="openCardId == item.id"
             [class.rtl]="direction == 'rtl'"
             class="shipCard card card-custom"
@@ -245,7 +247,12 @@
                   >{{ l('MarketPlacepriced') }}</a
                 >
                 <a
-                  *ngIf="item.price && (item.status == 5 || item.status == 1 || item.price > 0) && Channel != 10 && canViewBrokerPrice(item)"
+                  *ngIf="
+                    item.price &&
+                    (item.status == shippingRequestStatusEnum.Completed || item.status == shippingRequestStatusEnum.PostPrice || item.price > 0) &&
+                    Channel != 10 &&
+                    canViewBrokerPrice(item)
+                  "
                   href="javascript:void(0)"
                   class="infoHighLight red"
                   >{{ item.price | number }} {{ l('SAR') }}</a
@@ -271,7 +278,7 @@
                 </a>
                 <a
                   *ngIf="
-                    (item.status == 0 || item.status == 2) &&
+                    (item.status == shippingRequestStatusEnum.PrePrice || item.status == shippingRequestStatusEnum.NeedsAction) &&
                     !Channel &&
                     (feature.isEnabled('App.Shipper') || (item.isTachyonDeal && (feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)))
                   "
@@ -532,7 +539,12 @@
                     >{{ l('MarketPlacepriced') }}</a
                   >
                   <a
-                    *ngIf="item.price && (item.status == 5 || item.status == 1 || item.price > 0) && Channel != 10 && canViewBrokerPrice(item)"
+                    *ngIf="
+                      item.price &&
+                      (item.status == shippingRequestStatusEnum.Completed || item.status == shippingRequestStatusEnum.PostPrice || item.price > 0) &&
+                      Channel != 10 &&
+                      canViewBrokerPrice(item)
+                    "
                     href="javascript:void(0)"
                     class="infoHighLight red"
                     >{{ item.price | number }} {{ l('SAR') }}</a
@@ -555,7 +567,9 @@
                   {{ l('Declined') }}
                 </a>
                 <a
-                  *ngIf="(isCarrier || isCarrierSaas) && !Channel && !item.isDriversAndTrucksAssigned"
+                  *ngIf="
+                    (isCarrier || isCarrierSaas) && !Channel && !item.isDriversAndTrucksAssigned && item.status !== shippingRequestStatusEnum.Expired
+                  "
                   href="javascript:void(0)"
                   (click)="assignTrucksAndDrivers(item)"
                   class="red"
@@ -572,7 +586,7 @@
                 </a>
                 <a
                   *ngIf="
-                    (item.status == 0 || item.status == 2) &&
+                    (item.status == shippingRequestStatusEnum.PrePrice || item.status == shippingRequestStatusEnum.NeedsAction) &&
                     !Channel &&
                     (feature.isEnabled('App.Shipper') || (item.isTachyonDeal && (feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)))
                   "
@@ -599,7 +613,7 @@
                   *ngIf="
                     permission.isGranted('Pages.ShippingRequests.Edit') &&
                     !Channel &&
-                    item.status === 0 &&
+                    item.status === shippingRequestStatusEnum.PrePrice &&
                     (isShipper || isTachyonDealer || isCarrierOwnRequest(item))
                   "
                   [queryParams]="{ id: item.id, completedSteps: 2, isEdit: true }"

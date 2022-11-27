@@ -55,6 +55,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   directRequestId!: number;
   activeShippingRequestId!: number;
   selectedShippingRequest: GetShippingRequestForPriceOfferListDto;
+  shippingRequestStatusEnum = ShippingRequestStatus;
 
   constructor(
     injector: Injector,

@@ -102,6 +102,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private async Task ValidateTuckAttendance(List<DedicatedShippingRequestTruckAttendance> input)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             var dedicatedTrucks = await _dedicatedShippingRequestTruckRepository.GetAll()
                 .Include(x=>x.ShippingRequest)
                 .Include(x=>x.DedicatedShippingRequestTruckAttendances)

@@ -156,6 +156,42 @@
                 </div>
               </div>
             </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label>{{ 'InsuranceCoverage' | localize }}</label>
+                <input
+                  #InsuranceCoverage="ngModel"
+                  class="form-control py-7 font-size-h6"
+                  autoFocus
+                  [(ngModel)]="tenant.insuranceCoverage"
+                  name="insuranceCoverage"
+                  style="width: 100% !important"
+                  pattern="[0-9]+"
+                />
+                <div>
+                  <validation-messages [formCtrl]="InsuranceCoverage"></validation-messages>
+                  <span class="form-text text-muted">{{ l('NumbersOnly') }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label>{{ 'ValueOfGoods' | localize }}</label>
+                <input
+                  #ValueOfGoods="ngModel"
+                  class="form-control py-7 font-size-h6"
+                  autoFocus
+                  [(ngModel)]="tenant.valueOfGoods"
+                  name="valueOfGoods"
+                  style="width: 100% !important"
+                  pattern="[0-9]+"
+                />
+                <div>
+                  <validation-messages [formCtrl]="ValueOfGoods"></validation-messages>
+                  <span class="form-text text-muted">{{ l('NumbersOnly') }}</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!--          <div class="checkbox-list">-->

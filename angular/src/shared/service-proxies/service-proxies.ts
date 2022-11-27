@@ -10064,6 +10064,71 @@ export class DedicatedShippingRequestsServiceProxy {
   }
 
   /**
+   * @param body (optional)
+   * @return Success
+   */
+  assignTrucksAndDriversForDedicated(body: AssignTrucksAndDriversForDedicatedInput | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/DedicatedShippingRequests/AssignTrucksAndDriversForDedicated';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processAssignTrucksAndDriversForDedicated(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processAssignTrucksAndDriversForDedicated(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processAssignTrucksAndDriversForDedicated(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
    * @param truckTypeId (optional)
    * @param tenantId (optional)
    * @return Success
@@ -10206,6 +10271,80 @@ export class DedicatedShippingRequestsServiceProxy {
       );
     }
     return _observableOf<SelectItemDto[]>(<any>null);
+  }
+
+  /**
+   * @param truckTypeId (optional)
+   * @param tenantId (optional)
+   * @return Success
+   */
+  getAllTrucksWithDriversList(truckTypeId: number | undefined, tenantId: number | null | undefined): Observable<GetAllTrucksWithDriversListDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/DedicatedShippingRequests/GetAllTrucksWithDriversList?';
+    if (truckTypeId === null) throw new Error("The parameter 'truckTypeId' cannot be null.");
+    else if (truckTypeId !== undefined) url_ += 'truckTypeId=' + encodeURIComponent('' + truckTypeId) + '&';
+    if (tenantId !== undefined && tenantId !== null) url_ += 'tenantId=' + encodeURIComponent('' + tenantId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTrucksWithDriversList(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTrucksWithDriversList(<any>response_);
+            } catch (e) {
+              return <Observable<GetAllTrucksWithDriversListDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetAllTrucksWithDriversListDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTrucksWithDriversList(response: HttpResponseBase): Observable<GetAllTrucksWithDriversListDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(GetAllTrucksWithDriversListDto.fromJS(item));
+          } else {
+            result200 = <any>null;
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetAllTrucksWithDriversListDto[]>(<any>null);
   }
 
   /**
@@ -82022,6 +82161,146 @@ export interface IAssignDedicatedTrucksAndDriversInput {
   driversList: DedicatedDriversDto[] | undefined;
 }
 
+export class DedicatedShippingRequestTrucksAndDriversDto implements IDedicatedShippingRequestTrucksAndDriversDto {
+  truckId!: number;
+  truckName!: string | undefined;
+  driverId!: number;
+  driverName!: string | undefined;
+
+  constructor(data?: IDedicatedShippingRequestTrucksAndDriversDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.truckId = _data['truckId'];
+      this.truckName = _data['truckName'];
+      this.driverId = _data['driverId'];
+      this.driverName = _data['driverName'];
+    }
+  }
+
+  static fromJS(data: any): DedicatedShippingRequestTrucksAndDriversDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DedicatedShippingRequestTrucksAndDriversDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['truckId'] = this.truckId;
+    data['truckName'] = this.truckName;
+    data['driverId'] = this.driverId;
+    data['driverName'] = this.driverName;
+    return data;
+  }
+}
+
+export interface IDedicatedShippingRequestTrucksAndDriversDto {
+  truckId: number;
+  truckName: string | undefined;
+  driverId: number;
+  driverName: string | undefined;
+}
+
+export class AssignTrucksAndDriversForDedicatedInput implements IAssignTrucksAndDriversForDedicatedInput {
+  shippingRequestId!: number;
+  dedicatedShippingRequestTrucksAndDriversDtos!: DedicatedShippingRequestTrucksAndDriversDto[] | undefined;
+
+  constructor(data?: IAssignTrucksAndDriversForDedicatedInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.shippingRequestId = _data['shippingRequestId'];
+      if (Array.isArray(_data['dedicatedShippingRequestTrucksAndDriversDtos'])) {
+        this.dedicatedShippingRequestTrucksAndDriversDtos = [] as any;
+        for (let item of _data['dedicatedShippingRequestTrucksAndDriversDtos'])
+          this.dedicatedShippingRequestTrucksAndDriversDtos!.push(DedicatedShippingRequestTrucksAndDriversDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): AssignTrucksAndDriversForDedicatedInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new AssignTrucksAndDriversForDedicatedInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['shippingRequestId'] = this.shippingRequestId;
+    if (Array.isArray(this.dedicatedShippingRequestTrucksAndDriversDtos)) {
+      data['dedicatedShippingRequestTrucksAndDriversDtos'] = [];
+      for (let item of this.dedicatedShippingRequestTrucksAndDriversDtos) data['dedicatedShippingRequestTrucksAndDriversDtos'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IAssignTrucksAndDriversForDedicatedInput {
+  shippingRequestId: number;
+  dedicatedShippingRequestTrucksAndDriversDtos: DedicatedShippingRequestTrucksAndDriversDto[] | undefined;
+}
+
+export class GetAllTrucksWithDriversListDto implements IGetAllTrucksWithDriversListDto {
+  truckId!: number;
+  driverUserId!: number | undefined;
+  truckName!: string | undefined;
+  driverName!: string | undefined;
+
+  constructor(data?: IGetAllTrucksWithDriversListDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.truckId = _data['truckId'];
+      this.driverUserId = _data['driverUserId'];
+      this.truckName = _data['truckName'];
+      this.driverName = _data['driverName'];
+    }
+  }
+
+  static fromJS(data: any): GetAllTrucksWithDriversListDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetAllTrucksWithDriversListDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['truckId'] = this.truckId;
+    data['driverUserId'] = this.driverUserId;
+    data['truckName'] = this.truckName;
+    data['driverName'] = this.driverName;
+    return data;
+  }
+}
+
+export interface IGetAllTrucksWithDriversListDto {
+  truckId: number;
+  driverUserId: number | undefined;
+  truckName: string | undefined;
+  driverName: string | undefined;
+}
+
 export class UpdateRequestKPIInput implements IUpdateRequestKPIInput {
   shippingRequestId!: number;
   kpi!: number;
@@ -112122,6 +112401,8 @@ export class TenantEditDto implements ITenantEditDto {
   subscriptionEndDateUtc!: moment.Moment | undefined;
   isInTrialPeriod!: boolean;
   moiNumber!: string;
+  insuranceCoverage!: number | undefined;
+  valueOfGoods!: number | undefined;
   id!: number;
 
   constructor(data?: ITenantEditDto) {
@@ -112146,6 +112427,8 @@ export class TenantEditDto implements ITenantEditDto {
       this.subscriptionEndDateUtc = _data['subscriptionEndDateUtc'] ? moment(_data['subscriptionEndDateUtc'].toString()) : <any>undefined;
       this.isInTrialPeriod = _data['isInTrialPeriod'];
       this.moiNumber = _data['moiNumber'];
+      this.insuranceCoverage = _data['insuranceCoverage'];
+      this.valueOfGoods = _data['valueOfGoods'];
       this.id = _data['id'];
     }
   }
@@ -112171,6 +112454,8 @@ export class TenantEditDto implements ITenantEditDto {
     data['subscriptionEndDateUtc'] = this.subscriptionEndDateUtc ? this.subscriptionEndDateUtc.toISOString() : <any>undefined;
     data['isInTrialPeriod'] = this.isInTrialPeriod;
     data['moiNumber'] = this.moiNumber;
+    data['insuranceCoverage'] = this.insuranceCoverage;
+    data['valueOfGoods'] = this.valueOfGoods;
     data['id'] = this.id;
     return data;
   }
@@ -112189,6 +112474,8 @@ export interface ITenantEditDto {
   subscriptionEndDateUtc: moment.Moment | undefined;
   isInTrialPeriod: boolean;
   moiNumber: string;
+  insuranceCoverage: number | undefined;
+  valueOfGoods: number | undefined;
   id: number;
 }
 
