@@ -554,40 +554,6 @@ namespace TACHYON.Trucks
         }
 
 
-        public async Task<List<SelectItemDto>> GetDriversByShippingRequestId(long shippingRequestId)
-        {
-            var isTms = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
-            DisableTenancyFilters();
-            
-            var drivers = await (from driver in _userRepository.GetAll()
-
-                join sr in _shippingRequestRepository.GetAll() on shippingRequestId equals sr.Id
-                where driver.IsDriver && driver.TenantId == sr.CarrierTenantId &&
-                      (!sr.CarrierActorId.HasValue || driver.CarrierActorId == sr.CarrierActorId)
-                      && (isTms || sr.CarrierTenantId == AbpSession.TenantId)
-                select new SelectItemDto()
-                {
-                    DisplayName = $"{driver.Name} {driver.Surname}", Id = driver.Id.ToString()
-                }).ToListAsync();
-            return drivers;
-        }
-        
-        
-        public async Task<List<SelectItemDto>> GetTrucksByShippingRequestId(long truckTypeId, long shippingRequestId)
-        {
-            var isTms = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
-            DisableTenancyFilters();
-            
-            var trucks = await (from truck in _truckRepository.GetAll()
-                join sr in _shippingRequestRepository.GetAll() on shippingRequestId equals sr.Id
-                where  truck.TrucksTypeId == truckTypeId && truck.TenantId == sr.CarrierTenantId &&
-                      (!sr.CarrierActorId.HasValue || truck.CarrierActorId == sr.CarrierActorId) && (isTms || sr.CarrierTenantId == AbpSession.TenantId)
-                select new SelectItemDto()
-                {
-                    DisplayName = truck.GetDisplayName(), Id = truck.Id.ToString()
-                }).ToListAsync();
-            return trucks;
-        }
         
         
         public async Task<List<SelectItemDto>> GetDriversByShippingRequestId(long shippingRequestId)

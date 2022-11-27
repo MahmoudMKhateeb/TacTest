@@ -93778,7 +93778,7 @@ export interface ICreateOrEditPriceOffer {
 
 export class PriceOfferDetailDto implements IPriceOfferDetailDto {
   itemId!: number;
-  price!: number;
+  price!: number | undefined;
 
   constructor(data?: IPriceOfferDetailDto) {
     if (data) {
@@ -93812,7 +93812,7 @@ export class PriceOfferDetailDto implements IPriceOfferDetailDto {
 
 export interface IPriceOfferDetailDto {
   itemId: number;
-  price: number;
+  price: number | undefined;
 }
 
 export enum PriceOfferChannel {

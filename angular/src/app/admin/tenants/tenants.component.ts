@@ -249,17 +249,6 @@ export class TenantsComponent extends AppComponentBase implements OnInit {
   }
 
   /**
-   * check if tenant can have carriers ... for this case the tenants is (shipper & broker)
-   * @param tenantEditionName
-   */
-  tenantCanHaveCarriers(tenantEditionName: string): boolean {
-    return (
-      tenantEditionName.trim().toLowerCase() === this.shipperEditionDisplayName.trim().toLowerCase() ||
-      tenantEditionName.trim().toLowerCase() === this.brokerEditionDisplayName.trim().toLowerCase()
-    );
-  }
-
-  /**
    * opens Tenant Profile View in a new tab
    */
   viewTenantProfile(tenantId: number) {
