@@ -1,0 +1,46 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  role="dialog"
+  aria-labelledby="attendanceModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static', keyboard: false }"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h3>{{ !isForTruck ? l('ReplaceDriversModal') : l('ReplaceTrucksModal') }}</h3>
+        </div>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12 form-group">
+            <label for="interval">
+              {{ 'replacementIntervalInDays' | localize }}
+            </label>
+            <dx-number-box id="interval" format="### {{ 'Days' | localize }}" [(value)]="replacementIntervalInDays"></dx-number-box>
+          </div>
+          <div class="col-12 form-group">
+            <label for="replacementReason">
+              {{ 'replacementReason' | localize }}
+            </label>
+            <dx-text-area id="replacementReason" [(value)]="replacementReason"></dx-text-area>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="save()">
+          {{ l('Save') }}
+        </button>
+        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+          {{ l('Close') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

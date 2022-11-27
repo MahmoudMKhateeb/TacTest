@@ -18,6 +18,7 @@ import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main
 import { DedicatedTruckModel } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-truck-model';
 import * as moment from '@node_modules/moment';
 import { TruckPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance.component';
+import { TruckAndDriverReplacementComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-and-driver-replacement/truck-and-driver-replacement.component';
 
 @Component({
   selector: 'tms-for-shipper',
@@ -27,6 +28,7 @@ import { TruckPerformanceComponent } from '@app/main/shippingRequests/dedicatedS
 export class TmsForShipperComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('attendanceModal', { static: true }) attendanceModal: DedicatedShippingRequestAttendanceSheetModalComponent;
   @ViewChild('truckPerformance') truckPerformance: TruckPerformanceComponent;
+  @ViewChild('appTruckAndDriverReplacement') appTruckAndDriverReplacement: TruckAndDriverReplacementComponent;
   @ViewChild('card', { static: true }) cardEl: ElementRef;
   @Input('shippingRequestId') shippingRequestId: number;
   @Input('rentalRange') rentalRange: { rentalStartDate: moment.Moment; rentalEndDate: moment.Moment } = {
@@ -102,5 +104,10 @@ export class TmsForShipperComponent extends AppComponentBase implements OnInit, 
 
   openTruckPerformanceModal(truck: any) {
     this.truckPerformance.show(truck.id, truck.kpi, truck.numberOfTrips);
+  }
+
+  openTruckAndDriverReplacement(isForTruck: boolean, data) {
+    console.log('data', data);
+    this.appTruckAndDriverReplacement.show(isForTruck, data.id);
   }
 }
