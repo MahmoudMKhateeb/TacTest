@@ -1,18 +1,16 @@
 using Abp.Authorization;
-using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Common;
 using TACHYON.PricePackages.Dto.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageAppendices;
-using TACHYON.PricePackages.PricePackageAppendices.Jobs;
+using TACHYON.PricePackages.TmsPricePackages;
 
 namespace TACHYON.PricePackages
 {
@@ -20,14 +18,15 @@ namespace TACHYON.PricePackages
     public class PricePackageAppendixAppService : TACHYONAppServiceBase, IPricePackageAppendixAppService
     {
         private readonly IRepository<PricePackageAppendix> _appendixRepository;
-        private readonly IBackgroundJobManager _jobManager;
+        private readonly IPricePackageAppendixManager _appendixManager;
+        
 
         public PricePackageAppendixAppService(
             IRepository<PricePackageAppendix> appendixRepository,
-            IBackgroundJobManager jobManager)
+            IPricePackageAppendixManager appendixManager)
         {
             _appendixRepository = appendixRepository;
-            _jobManager = jobManager;
+            _appendixManager = appendixManager;
         }
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
@@ -71,14 +70,7 @@ namespace TACHYON.PricePackages
         {
             var createdAppendix = ObjectMapper.Map<PricePackageAppendix>(input);
 
-            var appendixId = await _appendixRepository.InsertAndGetIdAsync(createdAppendix);
-
-           // Todo fix this asap
-            // await _jobManager.EnqueueAsync<GenerateAppendixFileJob, GenerateAppendixFileJobArgument>(
-            //     new GenerateAppendixFileJobArgument
-            //     {
-            //         AppendixId = appendixId, FileReceiverEmailAddress = input.EmailAddress
-            //     });
+            await _appendixManager.CreateAppendix(createdAppendix, input.TmsPricePackages, input.EmailAddress);
         }
 
         [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Update)]

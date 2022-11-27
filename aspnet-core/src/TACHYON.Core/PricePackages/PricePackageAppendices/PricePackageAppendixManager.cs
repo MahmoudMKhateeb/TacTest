@@ -1,3 +1,4 @@
+using Abp.BackgroundJobs;
 using Abp.Collections.Extensions;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
@@ -7,9 +8,12 @@ using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.PricePackages.PricePackageAppendices.Jobs;
+using TACHYON.PricePackages.TmsPricePackages;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Storage;
 
@@ -19,15 +23,42 @@ namespace TACHYON.PricePackages.PricePackageAppendices
     {
         private readonly IRepository<PricePackageAppendix> _appendixRepository;
         private readonly IRepository<BinaryObject, Guid> _binaryObjectRepository;
+        private readonly IRepository<TmsPricePackage> _tmsPricePackageRepository;
+        private readonly IBackgroundJobManager _jobManager;
 
         public PricePackageAppendixManager(
             IRepository<PricePackageAppendix> appendixRepository,
-            IRepository<BinaryObject, Guid> binaryObjectRepository)
+            IRepository<BinaryObject, Guid> binaryObjectRepository,
+            IRepository<TmsPricePackage> tmsPricePackageRepository,
+            IBackgroundJobManager jobManager)
         {
             _appendixRepository = appendixRepository;
             _binaryObjectRepository = binaryObjectRepository;
+            _tmsPricePackageRepository = tmsPricePackageRepository;
+            _jobManager = jobManager;
         }
 
+        public async Task CreateAppendix(PricePackageAppendix createdAppendix, List<int> tmsPricePackages,string emailAddress)
+        {
+            
+            var appendixId = await _appendixRepository.InsertAndGetIdAsync(createdAppendix);
+            
+            // this step for carrier appendix
+            
+            if (!createdAppendix.ProposalId.HasValue && !tmsPricePackages.IsNullOrEmpty())
+            {
+                tmsPricePackages?.ForEach(pricePackageId =>
+                {
+                    _tmsPricePackageRepository.Update(pricePackageId, x => x.AppendixId = appendixId);
+                });
+            }
+            
+            await _jobManager.EnqueueAsync<GenerateAppendixFileJob, GenerateAppendixFileJobArgument>(
+                new GenerateAppendixFileJobArgument
+                {
+                    AppendixId = appendixId, FileReceiverEmailAddress = emailAddress
+                });
+        }
         public async Task<BinaryObject> GenerateAppendixFile(int appendixId)
         {
             var appendix = await _appendixRepository.GetAll()

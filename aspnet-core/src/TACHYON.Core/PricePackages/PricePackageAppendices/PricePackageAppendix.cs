@@ -1,7 +1,9 @@
 using Abp.Domain.Entities.Auditing;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.PricePackages.PricePackageProposals;
+using TACHYON.PricePackages.TmsPricePackages;
 
 namespace TACHYON.PricePackages.PricePackageAppendices
 {
@@ -20,13 +22,16 @@ namespace TACHYON.PricePackages.PricePackageAppendices
 
         public string Notes { get; set; }
         
-        public int ProposalId { get; set; }
+        public int? ProposalId { get; set; }
 
         [ForeignKey(nameof(ProposalId))]
         public PricePackageProposal Proposal { get; set; }
-
+        
         public Guid? AppendixFileId { get; set; }
 
         public AppendixStatus Status { get; set; }
+
+        [NotMapped]
+        public List<TmsPricePackage> TmsPricePackages { get; set; }
     }
 }

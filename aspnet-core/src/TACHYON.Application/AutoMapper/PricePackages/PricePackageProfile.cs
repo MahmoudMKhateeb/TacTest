@@ -94,13 +94,15 @@ namespace TACHYON.AutoMapper.PricePackages
                 .ForMember(x=> x.ProposalName,x=> x.MapFrom(i=> i.Proposal.ProposalName))
                 .ForMember(x=> x.StatusTitle,x=> x.MapFrom(i=> Enum.GetName(typeof(AppendixStatus),i.Status)));
             CreateMap<CreateOrEditAppendixDto, PricePackageAppendix>()
+                .ForMember(x=>x.TmsPricePackages,x=> x.Ignore())
                 .AfterMap(((dto, appendix) =>
                 {
                     if (!dto.Id.HasValue)
                         appendix.Status = AppendixStatus.New;
                 }));
             CreateMap<PricePackageAppendix, CreateOrEditAppendixDto>()
-                .ForMember(x => x.ShipperId, x => x.MapFrom(i => i.Proposal.ShipperId));
+                .ForMember(x => x.DestinationCompanyId, x => x.MapFrom(i => i.Proposal.ShipperId))
+                .ForMember(x=> x.TmsPricePackages,x=> x.MapFrom(i=> i.TmsPricePackages.Select(t=> t.Id)));
 
         }
     }

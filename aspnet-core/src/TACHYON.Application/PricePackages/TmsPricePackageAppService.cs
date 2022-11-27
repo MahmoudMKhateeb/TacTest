@@ -135,6 +135,7 @@ namespace TACHYON.PricePackages
         
         public async Task<LoadResult> GetAllForDropdown(GetTmsPricePackagesInput input)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             var tmsPricePackages = _tmsPricePackageRepository.GetAll()
                 .AsNoTracking().Where(x=> x.IsActive && x.DestinationTenantId == input.DestinationTenantId)
                 .WhereIf(input.ProposalId.HasValue,x=> !x.ProposalId.HasValue || x.ProposalId == input.ProposalId)

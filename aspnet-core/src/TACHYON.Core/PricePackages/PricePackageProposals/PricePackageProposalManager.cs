@@ -5,6 +5,7 @@ using Abp.Reflection.Extensions;
 using Abp.UI;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
+using MailKit.Search;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using TACHYON.PricePackages.PricePackageProposals.Jobs;
 using TACHYON.PricePackages.TmsPricePackages;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Storage;
+using SearchOptions = DevExpress.XtraRichEdit.API.Native.SearchOptions;
 
 namespace TACHYON.PricePackages.PricePackageProposals
 {

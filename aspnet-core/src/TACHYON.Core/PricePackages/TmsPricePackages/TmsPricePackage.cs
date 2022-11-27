@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Cities;
 using TACHYON.MultiTenancy;
+using TACHYON.PricePackages.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageProposals;
 using TACHYON.Shipping.ShippingRequests;
 
@@ -47,6 +48,11 @@ namespace TACHYON.PricePackages.TmsPricePackages
 
         [ForeignKey(nameof(ProposalId))]
         public PricePackageProposal Proposal { get; set; }
+
+        public int? AppendixId { get; set; }
+
+        [ForeignKey(nameof(AppendixId))]
+        public PricePackageAppendix Appendix { get; set; }
         
         public bool IsActive { get; set; }
     }
