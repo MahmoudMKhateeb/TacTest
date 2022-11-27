@@ -163,8 +163,8 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
         }
         this.selectedCountryId = result.countryId;
         this.loadCitiesByCountryId(result.countryId);
-        if (isNotNullOrUndefined(this.facility.shipperActorId)){
-            (this.facility.shipperActorId as any) = this.facility.shipperActorId?.toString();
+        if (isNotNullOrUndefined(this.facility.shipperActorId)) {
+          (this.facility.shipperActorId as any) = this.facility.shipperActorId?.toString();
         }
 
         (this.facility.cityId as any) = this.facility.cityId.toString();

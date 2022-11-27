@@ -1,20 +1,20 @@
-import { Component, ViewChild, Injector, OnInit, Output, EventEmitter, AfterViewInit, ChangeDetectorRef, Input } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
-  RoutStepsServiceProxy,
-  ShippingRequestsTripServiceProxy,
-  CreateOrEditShippingRequestTripVasDto,
-  ShippingRequestsTripForViewDto,
-  TrucksServiceProxy,
-  WaybillsServiceProxy,
-  SelectItemDto,
   AssignDriverAndTruckToShippmentByCarrierInput,
-  ShippingRequestDriverServiceProxy,
-  ShippingRequestTripStatus,
-  UpdateExpectedDeliveryTimeInput,
-  GetShippingRequestForViewOutput,
-  ShippingRequestRouteType,
+  CreateOrEditShippingRequestTripVasDto,
   DedicatedShippingRequestsServiceProxy,
+  GetShippingRequestForViewOutput,
+  RoutStepsServiceProxy,
+  SelectItemDto,
+  ShippingRequestDriverServiceProxy,
+  ShippingRequestRouteType,
+  ShippingRequestsTripForViewDto,
+  ShippingRequestsTripServiceProxy,
+  ShippingRequestTripStatus,
+  TrucksServiceProxy,
+  UpdateExpectedDeliveryTimeInput,
+  WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -22,7 +22,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import Swal from 'sweetalert2';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 import { Moment } from '@node_modules/moment';
@@ -88,7 +88,6 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this._TripService.currentShippingRequest.subscribe((res) => {
       this.TruckTypeId = res?.truckTypeId;
     });
-    this.activeTripId = this._Router.snapshot.queryParams['tripId'];
   }
 
   ngAfterViewInit() {
@@ -179,9 +178,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    */
   getAllDrivers() {
     if (this.isTachyonDealer || this.isCarrier || this.hasCarrierClients) {
-        this._trucksServiceProxy.getDriversByShippingRequestId(this.shippingRequestForView.shippingRequest.id).subscribe((result) => {
-            this.allDrivers = result;
-        });
+      this._trucksServiceProxy.getDriversByShippingRequestId(this.shippingRequestForView.shippingRequest.id).subscribe((result) => {
+        this.allDrivers = result;
+      });
     }
   }
 
@@ -189,10 +188,10 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Carriers Trucks For DD
    */
   getAllTrucks(truckTypeId) {
-   if (this.isTachyonDealer || this.isCarrier || this.hasCarrierClients) {
-        this._trucksServiceProxy.getTrucksByShippingRequestId(truckTypeId, this.shippingRequestForView.shippingRequest.id).subscribe((result) => {
-            this.allTrucks = result;
-        });
+    if (this.isTachyonDealer || this.isCarrier || this.hasCarrierClients) {
+      this._trucksServiceProxy.getTrucksByShippingRequestId(truckTypeId, this.shippingRequestForView.shippingRequest.id).subscribe((result) => {
+        this.allTrucks = result;
+      });
     }
   }
 

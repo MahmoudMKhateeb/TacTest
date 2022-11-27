@@ -1,8 +1,8 @@
 {
 "propertyTemplates":[
 		{
-			"placeholder" : "{{Property_Looped_Template_Before_V110000_Here}}",
-			"condition" : "{{Property_CreateOrEdit_Here}} == true && {{Project_Version_Here}} < 110000",
+			"placeholder" : "{{Property_Looped_Template_Here}}",
+			"condition" : "{{Property_CreateOrEdit_Here}} == true",
 			"templates" : [
 					{
 					"type" : "enum",
@@ -89,6 +89,8 @@
 					"
 					}
 				]
+<<<<<<< HEAD
+=======
 		},
         {
 			"placeholder" : "{{Property_Looped_Template_After_V110000_Here}}",
@@ -183,12 +185,12 @@
 					"
 					}
 				]
+>>>>>>> develop
 		}
 	],
 "navigationPropertyTemplates":[
 		{
-			"placeholder" : "{{NP_Looped_Template_Before_V110000_Here}}",
-            "condition" : "{{Project_Version_Here}} < 110000",
+			"placeholder" : "{{NP_Looped_Template_Here}}",
 			"templates" : [
 					{
 					"relation" : "single",
@@ -226,48 +228,6 @@
 					"content" : "            
 						<div class=\"form-group\">
 							<label for=\"{{nP_Name_Here}}\">@L(\"{{NP_Foreign_Entity_Name_Here}}\")</label>
-							@Html.DropDownList(\"{{nP_Name_Here}}\", new SelectList(Model.{{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}List,\"Id\",\"DisplayName\", (Model.IsEditMode ? Model.{{Entity_Name_Here}}.{{NP_Name_Here}}.ToString() : \"\")),@L(\"SelectA{{NP_Foreign_Entity_Name_Here}}\"), new { @class = \"form-control\"  {{NP_IsNullable_Required_Here_With_Comma_And_At}} })
-						</div>
-"
-					}
-				]
-		},
-		{
-			"placeholder" : "{{NP_Looped_Template_After_V110000_Here}}",
-			"condition" : "{{Project_Version_Here}} >= 110000",
-			"templates" : [
-					{
-					"relation" : "single",
-					"Type" : "Modal",
-					"viewType":"LookupTable",
-					"content" : "            
-								<div class=\"my-3\">
-                                    <label class=\"form-label\" for=\"{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}\">@L(\"{{NP_Foreign_Entity_Name_Here}}\")</label>
-                                    <div class=\"input-group\">
-                                        <input class=\"form-control\" id=\"{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}\" name=\"{{nP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}\" value=\"@Model.{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}\" type=\"text\" disabled>										
-                                        <button class=\"btn btn-primary blue\" id=\"Open{{NP_Foreign_Entity_Name_Here}}{{NP_Duplication_Number_Here}}LookupTableButton\" type=\"button\"><i class=\"fa fa-search\"></i> @L(\"Pick\")</button>
-                                        <button class=\"btn btn-danger btn-icon\" type=\"button\" id=\"Clear{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Button\"><i class=\"fa fa-times\"></i></button>
-									</div>
-								</div>
-
-								@if (Model.IsEditMode)
-								{
-									<input class=\"form-control\" id=\"{{Entity_Name_Here}}_{{NP_Name_Here}}\" value=\"@Model.{{Entity_Name_Here}}.{{NP_Name_Here}}\" type=\"text\" name=\"{{nP_Name_Here}}\" {{NP_IsNullable_Required_Here}} hidden/>
-								}
-								 else
-								{ 
-									<input class=\"form-control\" id=\"{{Entity_Name_Here}}_{{NP_Name_Here}}\" value=\"\" type=\"text\" name=\"{{nP_Name_Here}}\" {{NP_IsNullable_Required_Here}} hidden/>
-								}
-
-"
-					},
-					{
-					"relation" : "single",
-					"Type" : "Modal",
-					"viewType":"Dropdown",
-					"content" : "            
-						<div class=\"my-3\">
-							<label class=\"form-label\" for=\"{{nP_Name_Here}}\">@L(\"{{NP_Foreign_Entity_Name_Here}}\")</label>
 							@Html.DropDownList(\"{{nP_Name_Here}}\", new SelectList(Model.{{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}List,\"Id\",\"DisplayName\", (Model.IsEditMode ? Model.{{Entity_Name_Here}}.{{NP_Name_Here}}.ToString() : \"\")),@L(\"SelectA{{NP_Foreign_Entity_Name_Here}}\"), new { @class = \"form-control\"  {{NP_IsNullable_Required_Here_With_Comma_And_At}} })
 						</div>
 "

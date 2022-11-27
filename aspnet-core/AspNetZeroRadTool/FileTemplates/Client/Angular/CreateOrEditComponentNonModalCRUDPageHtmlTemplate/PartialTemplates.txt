@@ -1,8 +1,8 @@
 {
 "propertyTemplates":[
 		{
-			"placeholder" : "{{Property_Looped_Template_Before_V110000_Here}}",
-			"condition" : "{{Property_CreateOrEdit_Here}} == true && {{Project_Version_Here}} < 110000",
+			"placeholder" : "{{Property_Looped_Template_Here}}",
+			"condition" : "{{Property_CreateOrEdit_Here}} == true",
 			"templates" : [
 					{
 					"type" : "enum",
@@ -96,6 +96,8 @@
 					"
 					}
 				]
+<<<<<<< HEAD
+=======
 		},
         {
 			"placeholder" : "{{Property_Looped_Template_After_V110000_Here}}",
@@ -198,6 +200,7 @@
 					"
 					}
 				]
+>>>>>>> develop
 		}
 	],
 "navigationPropertyTemplates":[

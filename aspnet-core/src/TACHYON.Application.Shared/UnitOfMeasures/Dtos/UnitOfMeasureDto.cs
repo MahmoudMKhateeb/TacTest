@@ -10,6 +10,8 @@ namespace TACHYON.UnitOfMeasures.Dtos
         public string DisplayName { get; set; }
         public bool IsOther { get; set; }
 
+         public virtual int? BayanIntegrationId { get; set; }
+
 
 
     }

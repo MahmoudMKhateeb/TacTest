@@ -8,7 +8,6 @@ namespace TACHYON.EntityTemplates
     public class EntityTemplate : FullAuditedEntity<long>, IMustHaveTenant
     {
         [Required]
-        [StringLength(2,MinimumLength = 150)]
         public string TemplateName { get; set; }
         
         [Required]

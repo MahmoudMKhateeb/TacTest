@@ -61,8 +61,7 @@ export class InvoiceDetailComponent extends AppComponentBase {
           console.log('res', res);
         });
       });
-    } 
-    else if(this.Data.channel === InvoiceChannel.Penalty){
+    } else if (this.Data.channel === InvoiceChannel.Penalty) {
       this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(this.Data.id).subscribe((result) => {
         let url = this._fileDownloadService.GetTempFileUrl(result);
         this.downloadFile(url).subscribe((res) => {
@@ -70,9 +69,7 @@ export class InvoiceDetailComponent extends AppComponentBase {
           this.pdfViewerAutoLoad.refresh();
         });
       });
-    }
-    
-    else {
+    } else {
       this._InvoiceReportServiceProxy.downloadActorShipperInvoiceReportPdf(this.Data.id).subscribe((result) => {
         let url = this._fileDownloadService.GetTempFileUrl(result);
         this.downloadFile(url).subscribe((res) => {

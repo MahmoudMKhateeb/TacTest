@@ -33,6 +33,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Nito.AsyncEx;
 using System.Threading;
+using TACHYON.Authorization.Users;
 
 namespace TACHYON.Tracking
 {
@@ -42,6 +43,7 @@ namespace TACHYON.Tracking
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
+        private readonly IRepository<User, long> _userRepository;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
         private readonly ProfileAppService _ProfileAppService;
         private readonly ForceDeliverTripExcelExporter _deliverTripExcelExporter;
@@ -151,7 +153,10 @@ namespace TACHYON.Tracking
             DisableTenancyFilters();
             var query =  await _RoutPointRepository
              .GetAll().AsNoTracking()
-             .Where(x => x.ShippingRequestTripFk.WaybillNumber == waybillNumber)
+             .Where(x =>x.ShippingRequestTripFk.WaybillNumber == waybillNumber ||
+             (x.WaybillNumber==waybillNumber && 
+             x.ShippingRequestTripFk.ShippingRequestFk.RouteTypeId==ShippingRequestRouteType.MultipleDrops &&
+             x.PickingType == PickingType.Dropoff))
              .ProjectTo<TrackingByWaybillDto>(AutoMapperConfigurationProvider).ToListAsync();
             if (!query.Any()) throw new UserFriendlyException(L("InCorrectWaybillNumber"));
 
@@ -295,8 +300,15 @@ namespace TACHYON.Tracking
         {
             var dto = ObjectMapper.Map<TrackingListDto>(trip);
 
-            var date64 = _ProfileAppService.GetProfilePictureByUser((long)trip.CreatorUserId).Result.ProfilePicture;
-            dto.TenantPhoto = String.IsNullOrEmpty(date64) ? null : date64;
+
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                var isTripCreatorUserExist = await _userRepository.GetAll().AnyAsync(x => x.Id == trip.CreatorUserId);
+                if (trip.CreatorUserId.HasValue && isTripCreatorUserExist)
+                    dto.TenantPhoto = (await _ProfileAppService.GetProfilePictureByUser((long)trip.CreatorUserId))
+                        .ProfilePicture;
+            }
+            
             dto.NumberOfDrops = trip.ShippingRequestFk.NumberOfDrops;
             if (trip.AssignedTruckFk != null) dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk)?.TranslatedDisplayName ?? "";
             dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk)?.DisplayName;
@@ -305,7 +317,7 @@ namespace TACHYON.Tracking
                 dto.Reason = ObjectMapper.Map<ShippingRequestTripRejectReasonListDto>(trip.ShippingRequestTripRejectReason).Name ?? "";
             }
             var tenantId = AbpSession.TenantId;
-            if (!tenantId.HasValue || (tenantId.HasValue && !IsEnabled(AppFeatures.Shipper)))
+            if (!tenantId.HasValue || (tenantId.HasValue && !await IsEnabledAsync(AppFeatures.Shipper)))
             {
                 dto.Name = tenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestFk.Tenant.Name : dto.Name = $"{trip.ShippingRequestFk?.Tenant?.Name}-{trip.ShippingRequestFk?.CarrierTenantFk?.Name}";
                 dto.IsAssign = true;

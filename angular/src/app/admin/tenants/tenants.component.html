@@ -145,9 +145,7 @@
                       <a
                         href="javascript:;"
                         class="dropdown-item"
-                        *ngIf="
-                          isGranted('Pages.TenantCarrier') && tenantCanHaveCarriers(options.data.tenantListDto.editionDisplayName)
-                        "
+                        *ngIf="isGranted('Pages.TenantCarrier') && tenantCanHaveCarriers(options.data.tenantListDto.editionDisplayName)"
                         (click)="TenantCarriersModel.show(options.data.tenantListDto.id)"
                       >
                         {{ 'Carriers' | localize }}

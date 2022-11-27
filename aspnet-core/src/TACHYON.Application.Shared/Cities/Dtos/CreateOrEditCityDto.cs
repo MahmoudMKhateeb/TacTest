@@ -25,5 +25,9 @@ namespace TACHYON.Cities.Dtos
         public bool IsActive { get; set; } = true;
 
         public int CountyId { get; set; }
+
+        public int? BayanIntegrationId { get; set; }
+
+        public int? RegionId { get; set; }
     }
 }

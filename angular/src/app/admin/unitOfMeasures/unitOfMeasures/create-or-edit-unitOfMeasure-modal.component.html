@@ -34,6 +34,18 @@
               required
             />
           </div>
+          <div class="form-group">
+            <label for="BayanIntegrationId">{{ l('BayanIntegrationId') }}</label>
+            <input
+              type="number"
+              #BayanIntegrationId="ngModel"
+              id="BayanIntegrationId"
+              class="form-control"
+              [(ngModel)]="unitOfMeasure.bayanIntegrationId"
+              name="BayanIntegrationId"
+            />
+            <validation-messages [formCtrl]="BayanIntegrationId"></validation-messages>
+          </div>
         </div>
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>

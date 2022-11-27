@@ -31,24 +31,10 @@
                     'spinner spinner-success spinner-right mr-1 ml-1': !AllTenants
                   }"
                 >
-                  <dx-select-box
-                    name="fActorShipper"
-                    [(ngModel)]="facility.shipperId"
-                    [dataSource]="AllTenants"
-                    [searchEnabled]="true"
-                    displayExpr="displayName"
-                    valueExpr="id"
-                    required
-                    placeholder="{{ l('SelectCompany') }}"
-                  >
-                    <dx-validator [validationGroup]="'createFacilityGroup'">
-                      <dxi-validation-rule type="required" message="{{ l('Company') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
-                    </dx-validator>
-                  </dx-select-box>
-                  <!--                  <select class="form-control" name="Shipper" [(ngModel)]="facility.shipperId" required>-->
-                  <!--                    <option [value]="undefined" disabled>{{ l('SelectCompany') }}</option>-->
-                  <!--                    <option *ngFor="let item of AllTenants" value="{{ item.id }}">{{ item.displayName }}</option>-->
-                  <!--                  </select>-->
+                  <select class="form-control" name="Shipper" [(ngModel)]="facility.shipperId" required>
+                    <option [value]="undefined" disabled>{{ l('SelectCompany') }}</option>
+                    <option *ngFor="let item of AllTenants" value="{{ item.id }}">{{ item.displayName }}</option>
+                  </select>
                 </div>
                 <span class="form-text text-muted">{{ l('SelectCompany') }} {{ facility.shipperId }}</span>
               </div>
@@ -145,11 +131,9 @@
                     displayExpr="displayName"
                     valueExpr="id"
                     [disabled]="countriesLoading"
-                    [searchEnabled]="true"
                     placeholder="{{ l('SelectACounty') }}"
                     [showClearButton]="true"
-                    (onSelectionChanged)="loadCitiesByCountryId(selectedCountryId)"
-                    (onItemClick)="facility.cityId = null"
+                    (selectionchange)="loadCitiesByCountryId(selectedCountryId); facility.cityId = null"
                     required
                   >
                     <dx-validator [validationGroup]="'createFacilityGroup'">
@@ -187,9 +171,7 @@
                     [disabled]="citiesLoading || !selectedCountryId"
                     placeholder="{{ l('SelectaCity') }}"
                     [showClearButton]="true"
-                    [searchEnabled]="true"
                     (onSelectionChanged)="handleCityPolygon()"
-                    (reset)="handleCityPolygon()"
                     required
                     itemTemplate="item"
                   >

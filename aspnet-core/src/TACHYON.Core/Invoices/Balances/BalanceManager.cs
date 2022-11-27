@@ -128,24 +128,24 @@ namespace TACHYON.Invoices.Balances
         /// </summary>
         /// <param name="Tenant"></param>
         /// <returns></returns>
-        public async Task CheckShipperOverLimit(Tenant Tenant)
+        public async Task CheckShipperOverLimit(Tenant Tenant) // not needed for now
         {
-            if (Tenant.CreditBalance < 0)
-            {
-                decimal CurrentBalance = Tenant.CreditBalance * -1;
+            //if (Tenant.CreditBalance < 0)
+            //{
+            //    decimal CurrentBalance = Tenant.CreditBalance * -1;
 
-                decimal ShipperCreditLimit =
-                    decimal.Parse(await _featureChecker.GetValueAsync(Tenant.Id, AppFeatures.ShipperCreditLimit));
-                var percentge = (int)Math.Ceiling((CurrentBalance / ShipperCreditLimit) * 100);
-                if (percentge > 70)
-                {
-                    var user = await _userManager.GetAdminByTenantIdAsync(Tenant.Id);
-                    //await _appNotifier.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(Tenant.Id, percentge);
-                    //await _emailSender.SendAsync(user.EmailAddress, L("EmailSubjectShipperCreditLimit"),
-                    //    _emailTemplateProvider.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(Tenant.Id,
-                    //        percentge), true);
-                }
-            }
+            //    decimal ShipperCreditLimit =
+            //        decimal.Parse(await _featureChecker.GetValueAsync(Tenant.Id, AppFeatures.ShipperCreditLimit));
+            //    var percentge = (int)Math.Ceiling((CurrentBalance / ShipperCreditLimit) * 100);
+            //    if (percentge > 70)
+            //    {
+            //        var user = await _userManager.GetAdminByTenantIdAsync(Tenant.Id);
+            //        //await _appNotifier.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(Tenant.Id, percentge);
+            //        //await _emailSender.SendAsync(user.EmailAddress, L("EmailSubjectShipperCreditLimit"),
+            //        //    _emailTemplateProvider.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(Tenant.Id,
+            //        //        percentge), true);
+            //    }
+            //}
         }
 
         /// <summary>

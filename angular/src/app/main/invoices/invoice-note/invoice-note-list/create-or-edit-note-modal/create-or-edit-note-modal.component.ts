@@ -80,7 +80,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
             tripId: it.tripId,
             tripVasId: it.tripVasId,
             waybillNumber: it.wayBillNumber,
-            itemName : it.itemName
+            itemName: it.itemName,
           })
       );
     this._invoiceNoteServiceProxy

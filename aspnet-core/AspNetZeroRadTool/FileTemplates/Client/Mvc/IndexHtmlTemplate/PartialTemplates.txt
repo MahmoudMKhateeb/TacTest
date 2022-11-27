@@ -1,8 +1,8 @@
 {
 "propertyTemplates":[
 		{
-			"placeholder" : "{{Property_Filter_Template_Before_V110000_Here}}",
-			"condition" : "{{Property_Advanced_Filter_Here}} == true && {{Project_Version_Here}} < 110000",
+			"placeholder" : "{{Property_Filter_Template_Here}}",
+			"condition" : "{{Property_Advanced_Filter_Here}} == true",
 			"templates" : [
 					{
 					"type" : "enum",
@@ -70,6 +70,8 @@
 					}
 				]
 		},
+<<<<<<< HEAD
+=======
 {
 			"placeholder" : "{{Property_Filter_Template_After_V110000_Here}}",
 			"condition" : "{{Property_Advanced_Filter_Here}} == true && {{Project_Version_Here}} >= 110000",
@@ -140,6 +142,7 @@
 					}
 				]
 		},
+>>>>>>> develop
 		{
 			"placeholder" : "{{Property_Looped_Template_Here}}",
 			"condition" : "{{Property_Listed_Here}} == true",
@@ -164,8 +167,7 @@
 				]
 		},
 		{
-			"placeholder" : "{{NP_Filter_Template_Before_V110000_Here}}",
-			"condition" : "{{Project_Version_Here}} < 110000",
+			"placeholder" : "{{NP_Filter_Template_Here}}",
 			"templates" : [
 					{
 					"relation" : "single",
@@ -178,6 +180,8 @@
                             </div>"
 					}
 				]
+<<<<<<< HEAD
+=======
 		},
 		{
 			"placeholder" : "{{NP_Filter_Template_After_V110000_Here}}",
@@ -194,6 +198,7 @@
                             </div>"
 					}
 				]
+>>>>>>> develop
 		}
 	],
 "enumTemplates":[
@@ -335,6 +340,8 @@
             "condition": "{{Project_Version_Here}} >= 090000 && {{Project_Version_Here}} < 110000",
             "content": "<div class=\"separator separator-dashed\"></div>"
         },
+<<<<<<< HEAD
+=======
         {
             "placeholder": "{{Filter_Form_Group_Before_V110000_Here}}",
             "condition": "{{Project_Version_Here}} < 110000",
@@ -371,6 +378,7 @@
             "condition": "{{Project_Version_Here}} >= 110000",
             "content": "table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer"
         }
+>>>>>>> develop
 	],
 "navigationPropertyOneToManyTableTemplates": [
         {

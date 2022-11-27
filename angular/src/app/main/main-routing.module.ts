@@ -306,7 +306,7 @@ import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/a
           { path: 'actors/actors', component: ActorsComponent, data: { permission: 'Pages.Administration.Actors' } },
           { path: 'actors/invoices', component: ActorInvoiceListComponent, data: { permission: 'Pages.Administration.Actors' } },
           { path: 'actors/carrierInvoices', component: ActorSubmitInvoicesComponent, data: { permission: 'Pages.Administration.Actors' } },
-          
+
           {
             path: 'invoices/detail/:id',
             component: InvoiceDetailComponent,

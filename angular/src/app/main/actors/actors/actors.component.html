@@ -5,11 +5,7 @@
         <button *ngIf="isGranted('Pages.Administration.Actors.Create')" (click)="createActor()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewActor') }}
         </button>
-        <button
-          (click)="OndemandModel.show()"
-          type="button"
-          class="btn btn-default"
-        >
+        <button (click)="OndemandModel.show()" type="button" class="btn btn-default">
           {{ l('OnDemandInvoice') }}
         </button>
       </div>

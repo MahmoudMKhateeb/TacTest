@@ -318,6 +318,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
         #endregion
 
+        public string SplitInvoiceFlag { get; set; }
+
         public void Close()
         {
             BidStatus = ShippingRequestBidStatus.Closed;

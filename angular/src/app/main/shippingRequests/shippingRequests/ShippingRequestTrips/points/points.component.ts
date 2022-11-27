@@ -60,6 +60,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   private currentActiveTripSubs$: Subscription;
   private pointServiceSubs$: Subscription;
   usedIn: 'view' | 'createOrEdit';
+  @Output() SelectedWayPointsFromChild = this.wayPointsList;
 
   constructor(
     injector: Injector,

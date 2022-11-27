@@ -1,0 +1,127 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #bayanIntegrationResultForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="bayanIntegrationResult.id">{{ l('EditBayanIntegrationResult') }}</span>
+            <span *ngIf="!bayanIntegrationResult.id">{{ l('CreateNewBayanIntegrationResult') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group m-form__group">
+            <label for="ShippingRequestTripContainerNumber">{{ l('ShippingRequestTrip') }}</label>
+            <div class="input-group">
+              <input
+                class="form-control"
+                id="ShippingRequestTripContainerNumber"
+                name="shippingRequestTripContainerNumber"
+                [(ngModel)]="shippingRequestTripContainerNumber"
+                type="text"
+                disabled
+              />
+              <div class="input-group-append">
+                <button class="btn btn-primary blue" (click)="openSelectShippingRequestTripModal()" type="button">
+                  <i class="fa fa-search"></i> {{ l('Pick') }}
+                </button>
+              </div>
+              <div class="input-group-prepend">
+                <button class="btn btn-danger btn-icon" type="button" (click)="setShippingRequestTripIdNull()"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+          </div>
+          <input
+            class="form-control"
+            name="bayanIntegrationResult.shippingRequestTripId"
+            [(ngModel)]="bayanIntegrationResult.shippingRequestTripId"
+            type="text"
+            required
+            hidden
+          />
+
+          <div class="form-group">
+            <label for="BayanIntegrationResult_ActionName">{{ l('ActionName') }} *</label>
+            <input
+              type="text"
+              #BayanIntegrationResult_ActionName="ngModel"
+              id="BayanIntegrationResult_ActionName"
+              class="form-control"
+              [(ngModel)]="bayanIntegrationResult.actionName"
+              name="ActionName"
+              required
+            />
+            <validation-messages [formCtrl]="BayanIntegrationResult_ActionName"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="BayanIntegrationResult_InputJson">{{ l('InputJson') }} *</label>
+            <input
+              type="text"
+              #BayanIntegrationResult_InputJson="ngModel"
+              id="BayanIntegrationResult_InputJson"
+              class="form-control"
+              [(ngModel)]="bayanIntegrationResult.inputJson"
+              name="InputJson"
+              required
+            />
+            <validation-messages [formCtrl]="BayanIntegrationResult_InputJson"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="BayanIntegrationResult_ResponseJson">{{ l('ResponseJson') }}</label>
+            <input
+              type="text"
+              #BayanIntegrationResult_ResponseJson="ngModel"
+              id="BayanIntegrationResult_ResponseJson"
+              class="form-control"
+              [(ngModel)]="bayanIntegrationResult.responseJson"
+              name="ResponseJson"
+            />
+            <validation-messages [formCtrl]="BayanIntegrationResult_ResponseJson"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="BayanIntegrationResult_Version">{{ l('Version') }}</label>
+            <input
+              type="text"
+              #BayanIntegrationResult_Version="ngModel"
+              id="BayanIntegrationResult_Version"
+              class="form-control"
+              [(ngModel)]="bayanIntegrationResult.version"
+              name="Version"
+            />
+            <validation-messages [formCtrl]="BayanIntegrationResult_Version"></validation-messages>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!bayanIntegrationResultForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <bayanIntegrationResultShippingRequestTripLookupTableModal
+    #bayanIntegrationResultShippingRequestTripLookupTableModal
+    (modalSave)="getNewShippingRequestTripId()"
+  ></bayanIntegrationResultShippingRequestTripLookupTableModal>
+</div>

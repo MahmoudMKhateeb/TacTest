@@ -1,0 +1,66 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #regionForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="region.id">{{ l('EditRegion') }}</span>
+            <span *ngIf="!region.id">{{ l('CreateNewRegion') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group m-form__group">
+            <label for="CountyDisplayName">{{ l('County') }}</label>
+            <select name="region.countyId" [(ngModel)]="region.countyId" class="form-control">
+              <option value="">{{ l('SelectACounty') }}</option>
+              <option *ngFor="let item of allCountys" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="Region_Name">{{ l('Name') }} *</label>
+            <input type="text" #Region_Name="ngModel" id="Region_Name" class="form-control" [(ngModel)]="region.name" name="Name" required />
+            <validation-messages [formCtrl]="Region_Name"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="Region_BayanIntegrationId">{{ l('BayanIntegrationId') }}</label>
+            <input
+              type="number"
+              #Region_BayanIntegrationId="ngModel"
+              id="Region_BayanIntegrationId"
+              class="form-control"
+              [(ngModel)]="region.bayanIntegrationId"
+              name="BayanIntegrationId"
+            />
+            <validation-messages [formCtrl]="Region_BayanIntegrationId"></validation-messages>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!regionForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

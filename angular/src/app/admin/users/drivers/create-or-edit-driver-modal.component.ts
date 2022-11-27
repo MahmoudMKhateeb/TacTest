@@ -24,7 +24,7 @@ import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepic
 import { NgForm } from '@angular/forms';
 import { RequiredDocumentFormChildComponent } from '@app/shared/common/required-document-form-child/required-document-form-child.component';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
-import {isNotNullOrUndefined} from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   //changeDetection: ChangeDetectionStrategy.Default,
@@ -124,8 +124,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       this.canChangeUserName = this.user.userName !== AppConsts.userManagement.defaultAdminUserName;
       this.allOrganizationUnits = userResult.allOrganizationUnits;
       this.memberedOrganizationUnits = userResult.memberedOrganizationUnits;
-      if (isNotNullOrUndefined(this.user.carrierActorId)){
-          (this.user.carrierActorId as any) = this.user.carrierActorId.toString();
+      if (isNotNullOrUndefined(this.user.carrierActorId)) {
+        (this.user.carrierActorId as any) = this.user.carrierActorId.toString();
       }
 
       this.getProfilePicture(userId);

@@ -8,6 +8,8 @@ import { DedicatedDynamiceInvoicesServiceProxy, TruckAttendancesServiceProxy } f
 
 @NgModule({
   providers: [
+    ApiServiceProxies.BayanIntegrationResultsServiceProxy,
+    ApiServiceProxies.RegionsServiceProxy,
     ApiServiceProxies.ActorInvoiceServiceProxy,
     ApiServiceProxies.ActorSubmitInvoiceServiceProxy,
     ApiServiceProxies.ActorsPriceOffersServiceProxy,

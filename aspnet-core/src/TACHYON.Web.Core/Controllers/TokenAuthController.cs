@@ -13,6 +13,7 @@ using Abp.Notifications;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
+using Abp.Threading;
 using Abp.Timing;
 using Abp.UI;
 using Abp.Zero.Configuration;
@@ -29,6 +30,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using TACHYON.Authentication.TwoFactor.Google;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Accounts.Dto;
@@ -299,7 +301,7 @@ namespace TACHYON.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> OTPAuthenticate([FromBody] AuthenticateMobileModel model)
+        public async Task<AuthenticateResultModel> OTPAuthenticate([FromBody] AuthenticateMobileModel model)
         {
             if (string.IsNullOrEmpty(model.Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             string tenancyName = null;
@@ -317,21 +319,12 @@ namespace TACHYON.Web.Controllers
                 if (lockedOutDate.HasValue)
                 {
                     var remaining =  lockedOutDate.Value - DateTimeOffset.Now;
-                
-                    return Unauthorized($"{remaining.Days}:{remaining.Hours}:{remaining.Minutes}:{remaining.Seconds}");
+                    
+                    var failedAccessAttempts = await _settingManager.GetSettingValueAsync(AbpZeroSettingNames.UserManagement
+                        .UserLockOut.MaxFailedAccessAttemptsBeforeLockout);
+                    throw new AbpAuthorizationException(L("UserLockedOutMessage", failedAccessAttempts, Convert.ToInt32(remaining.TotalSeconds)));
                 }
             }
-            
-            if (!_testMobiles.Contains(model.Username))
-                try
-                {
-                    await _mobileManager.OTPValidate(user.Id, model.OTP);
-                }
-                catch (AbpAuthorizationException e)
-                {
-                    await UserAccessFailed(user);
-                    return Unauthorized(e.Message);
-                }
 
             //  get tenantId from UserName
 
@@ -341,6 +334,15 @@ namespace TACHYON.Web.Controllers
             }
             //tenancyName = GetTenancyNameOrNull();
 
+            if (!_testMobiles.Contains(model.Username))
+                try
+                {
+                    await _mobileManager.OTPValidate(user.Id, model.OTP);
+                }
+                catch (AbpAuthorizationException)
+                {
+                    await UserAccessFailed(user,model.OTP,tenancyName);
+                }
 
             // chick 2 factor auth
 
@@ -401,7 +403,7 @@ namespace TACHYON.Web.Controllers
             //AuthenticateResultModel
             
 
-            return Ok(new AuthenticateResultModel
+            return new AuthenticateResultModel
             {
                 AccessToken = accessToken,
                 ExpireInSeconds = (int)_configuration.AccessTokenExpiration.TotalSeconds,
@@ -412,10 +414,10 @@ namespace TACHYON.Web.Controllers
                 TripDto = await _workFlowProvider.GetCurrentDriverTrip(loginResult.User.Id),
                 DriverName = user.FullName,
                 TenantId = user.TenantId
-            });
+            };
         }
 
-        private async Task UserAccessFailed(User user)
+        private async Task UserAccessFailed(User user,string otp, string tenancyName)
         {
             var lockoutTime =
                 await _settingManager.GetSettingValueAsync(AbpZeroSettingNames.UserManagement.UserLockOut
@@ -425,8 +427,21 @@ namespace TACHYON.Web.Controllers
             
             _userManager.Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(Int32.Parse(lockoutTime));
             _userManager.Options.Lockout.MaxFailedAccessAttempts = Int32.Parse(failedAccessAttempts);
+            
+            try
+            {
+                await GetLoginResultAsync(user.EmailAddress, otp, tenancyName);
+            }
+            catch (AbpAuthorizationException)
+            {
+                var result = _logInManager.Login(user.EmailAddress, otp);
+                if (result.Result != AbpLoginResultType.LockedOut)
+                    throw new AbpAuthorizationException(L("InvalidOTPNumberORExpired"));
 
-            await _userManager.AccessFailedAsync(user);
+                throw new AbpAuthorizationException(L("UserLockedOutMessage", failedAccessAttempts, lockoutTime));
+            }
+            
+            
         }
 
         [HttpPost]

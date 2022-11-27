@@ -129,19 +129,19 @@
                           'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsShippers
                         }"
                       >
-                          <dx-select-box
-                              id="ActorShipper"
-                              name="ActorShipper"
-                              formControlName="ActorShipper"
-                              [(value)]="step1Dto.shipperActorId"
-                              [dataSource]="AllActorsShippers"
-                              [searchEnabled]="true"
-                              displayExpr="displayName"
-                              valueExpr="id"
-                              [required]="true"
-                              placeholder="{{ l('SelectActor') }}">
-
-                          </dx-select-box>
+                        <dx-select-box
+                          id="ActorShipper"
+                          name="ActorShipper"
+                          formControlName="ActorShipper"
+                          [(value)]="step1Dto.shipperActorId"
+                          [dataSource]="AllActorsShippers"
+                          [searchEnabled]="true"
+                          displayExpr="displayName"
+                          valueExpr="id"
+                          [required]="true"
+                          placeholder="{{ l('SelectActor') }}"
+                        >
+                        </dx-select-box>
                       </div>
                       <span class="form-text text-muted">{{ l('SelectShipperActor') }}</span>
                     </div>
@@ -153,20 +153,19 @@
                           'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsCarriers
                         }"
                       >
-
-                          <dx-select-box
-                              id="ActorCarrier"
-                              name="ActorCarrier"
-                              formControlName="ActorCarrier"
-                              [(value)]="step1Dto.carrierActorId"
-                              [dataSource]="AllActorsCarriers"
-                              [searchEnabled]="true"
-                              displayExpr="displayName"
-                              valueExpr="id"
-                              [required]="step1Dto.isInternalBrokerRequest ?true :false"
-                              placeholder="{{ l('SelectActor') }}">
-                          </dx-select-box>
-
+                        <dx-select-box
+                          id="ActorCarrier"
+                          name="ActorCarrier"
+                          formControlName="ActorCarrier"
+                          [(value)]="step1Dto.carrierActorId"
+                          [dataSource]="AllActorsCarriers"
+                          [searchEnabled]="true"
+                          displayExpr="displayName"
+                          valueExpr="id"
+                          [required]="step1Dto.isInternalBrokerRequest ? true : false"
+                          placeholder="{{ l('SelectActor') }}"
+                        >
+                        </dx-select-box>
                       </div>
                       <span class="form-text text-muted">{{ l('SelectCarrierActor') }}</span>
                     </div>

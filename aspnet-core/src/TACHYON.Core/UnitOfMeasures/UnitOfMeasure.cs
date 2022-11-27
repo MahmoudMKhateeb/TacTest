@@ -22,5 +22,7 @@ namespace TACHYON.UnitOfMeasures
             MinimumLength = UnitOfMeasureConsts.MinDisplayNameLength)]
         public virtual string Key { get; set; }
         public ICollection<UnitOfMeasureTranslation> Translations { get; set; }
+
+         public virtual int? BayanIntegrationId { get; set; }
     }
 }

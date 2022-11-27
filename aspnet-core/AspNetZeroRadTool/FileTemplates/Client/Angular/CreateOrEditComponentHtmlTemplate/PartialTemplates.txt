@@ -1,8 +1,8 @@
 {
 "propertyTemplates":[
 		{
-			"placeholder" : "{{Property_Looped_Template_Before_V110000_Here}}",
-			"condition" : "{{Property_CreateOrEdit_Here}} == true && {{Project_Version_Here}} < 110000",
+			"placeholder" : "{{Property_Looped_Template_Here}}",
+			"condition" : "{{Property_CreateOrEdit_Here}} == true",
 			"templates" : [
 					{
 					"type" : "enum",
@@ -37,7 +37,6 @@
 									</label>
 									<validation-messages [formCtrl]=\"{{Entity_Name_Here}}_{{Property_Name_Here}}\"></validation-messages>
 								</div>
-								
 					"
 					},
 					{
@@ -97,6 +96,8 @@
 					"
 					}
 				]
+<<<<<<< HEAD
+=======
 		},
         {
 			"placeholder" : "{{Property_Looped_Template_After_V110000_Here}}",
@@ -199,12 +200,12 @@
 					"
 					}
 				]
+>>>>>>> develop
 		}
 	],
 "navigationPropertyTemplates":[
 		{
-			"placeholder" : "{{NP_Looped_Template_Before_V110000_Here}}",
-			"condition": "{{Project_Version_Here}} < 110000",
+			"placeholder" : "{{NP_Looped_Template_Here}}",
 			"templates" : [
 					{
 					"relation" : "single",					
@@ -222,7 +223,7 @@
                         </div>
                     </div>
                     <input class=\"form-control\" name=\"{{entity_Name_Here}}.{{nP_Name_Here}}\" [(ngModel)]=\"{{entity_Name_Here}}.{{nP_Name_Here}}\" type=\"text\" {{NP_IsNullable_Required_Here}} hidden>
-		                "
+		 "
 					},
 					{
 					"relation" : "single",					
@@ -239,6 +240,8 @@
 					}
 				]
 		},
+<<<<<<< HEAD
+=======
         {
 			"placeholder" : "{{NP_Looped_Template_After_V110000_Here}}",
 			"condition" : "{{Project_Version_Here}} >= 110000",
@@ -273,6 +276,7 @@
 					}
 				]
 		},
+>>>>>>> develop
 		{
 			"placeholder" : "{{NP_Looped_Modal_Here}}",
 			"templates" : [
@@ -368,24 +372,7 @@
              "placeholder": "{{Date_Picker_Modifier_Pipe_Here}}",
              "condition": "{{Project_Version_Here}} < 100000",
              "content": " datePickerMomentModifier "
-        },
-        {
-             "placeholder": "{{Modal_Header_Close_Times_Before_V110000_Here}}",
-             "condition": "{{Project_Version_Here}} < 110000",
-             "content": "
-                <button type=\"button\" class=\"close\" (click)=\"close()\" aria-label=\"Close\" [disabled]=\"saving\">
-                     <span aria-hidden=\"true\">&times;</span>
-                </button>
-             "
-        },
-        {
-             "placeholder": "{{Modal_Header_Close_Times_After_V110000_Here}}",
-             "condition": "{{Project_Version_Here}} >= 110000",
-             "content": "
-                 <button type=\"button\" class=\"btn-close\" (click)=\"close()\" aria-label=\"Close\" [disabled]=\"saving\"></button>
-             "
         }
-        
 
 	]
 }

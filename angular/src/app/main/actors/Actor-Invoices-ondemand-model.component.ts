@@ -3,13 +3,20 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
-import { CommonLookupServiceProxy, ISelectItemDto, SelectItemDto, ActorInvoiceServiceProxy, ActorsServiceProxy, ActorTypesEnum } from '@shared/service-proxies/service-proxies';
+import {
+  CommonLookupServiceProxy,
+  ISelectItemDto,
+  SelectItemDto,
+  ActorInvoiceServiceProxy,
+  ActorsServiceProxy,
+  ActorTypesEnum,
+} from '@shared/service-proxies/service-proxies';
 @Component({
   selector: 'Actor-Invoices-ondemand-model',
   templateUrl: './Actor-Invoices-ondemand-model.component.html',
-  styleUrls: ['./Actor-Invoices-ondemand-model.component.scss']
+  styleUrls: ['./Actor-Invoices-ondemand-model.component.scss'],
 })
-export class ActorInvoiceDemandModelComponent extends AppComponentBase  {
+export class ActorInvoiceDemandModelComponent extends AppComponentBase {
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('modal', { static: false }) modal: ModalDirective;
 
@@ -24,7 +31,6 @@ export class ActorInvoiceDemandModelComponent extends AppComponentBase  {
   constructor(injector: Injector, private _actorService: ActorsServiceProxy) {
     super(injector);
   }
-
 
   show(): void {
     this.Actor = undefined;
@@ -45,26 +51,25 @@ export class ActorInvoiceDemandModelComponent extends AppComponentBase  {
     if (!this.Actor) return;
 
     //check if normal invoice
-      this._actorService
-        .generateActorInvoice(this.Actor, this.SelectedWaybills)
-        .pipe(
-          finalize(() => {
-            this.saving = false;
-          })
-        )
-        .subscribe(() => {
-          this.notify.info(this.l('SavedSuccessfully'));
-          this.close();
-          this.modalSave.emit(null);
-        });
-   
+    this._actorService
+      .generateActorInvoice(this.Actor, this.SelectedWaybills)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.info(this.l('SavedSuccessfully'));
+        this.close();
+        this.modalSave.emit(null);
+      });
   }
 
   close(): void {
     this.active = false;
-    this.ActorType=undefined;
-    this.AllActors=[];
-    this.SelectedWaybills=[];
+    this.ActorType = undefined;
+    this.AllActors = [];
+    this.SelectedWaybills = [];
     this.modal.hide();
   }
 
@@ -74,13 +79,13 @@ export class ActorInvoiceDemandModelComponent extends AppComponentBase  {
   //   });
   // }
 
-  GetActorsByType(){
+  GetActorsByType() {
     this._actorService.getAllActorsForDropDown(this.ActorType).subscribe((result) => {
       this.AllActors = result;
     });
   }
 
-  GetAllWaybillsForActor(): void {    
+  GetAllWaybillsForActor(): void {
     this._actorService.getAllUnInvoicedWaybillsForActor(this.Actor).subscribe((res) => {
       this.Waybills = res;
     });

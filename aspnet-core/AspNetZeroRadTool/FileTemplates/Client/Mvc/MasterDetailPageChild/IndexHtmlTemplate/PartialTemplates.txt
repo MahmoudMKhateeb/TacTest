@@ -243,6 +243,8 @@
             "condition": "{{Project_Version_Here}} >= 090000 && {{Project_Version_Here}} < 110000",
             "content": "<div class=\"separator separator-dashed\"></div>"
         },
+<<<<<<< HEAD
+=======
         {
             "placeholder": "{{Filter_Form_Group_Before_V110000_Here}}",
             "condition": "{{Project_Version_Here}} < 110000",
@@ -279,6 +281,7 @@
             "condition": "{{Project_Version_Here}} >= 110000",
             "content": "table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer"
         }
+>>>>>>> develop
 	],
 "navigationPropertyOneToManyTableTemplates": [
         {

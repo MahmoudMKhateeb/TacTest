@@ -65,8 +65,8 @@
 				]
 		},
 		{
-			"placeholder" : "{{Property_Filter_Template_Before_V110000_Here}}",
-			"condition" : "{{Property_Advanced_Filter_Here}} == true && {{Project_Version_Here}} < 110000",
+			"placeholder" : "{{Property_Filter_Template_Here}}",
+			"condition" : "{{Property_Advanced_Filter_Here}} == true",
 			"templates" : [
 					{
 					"type" : "enum",
@@ -131,6 +131,8 @@
                             </div>"
 					}
 				]
+<<<<<<< HEAD
+=======
 		},
 		{
 			"placeholder" : "{{Property_Filter_Template_After_V110000_Here}}",
@@ -199,6 +201,7 @@
                             </div>"
 					}
 				]
+>>>>>>> develop
 		}
 	],
 "navigationPropertyTemplates":[
@@ -229,30 +232,13 @@
 				]
 		},
 		{
-			"placeholder" : "{{NP_Filter_Template_Before_V110000_Here}}",
-			"condition" : "{{Project_Version_Here}} < 110000",
+			"placeholder" : "{{NP_Filter_Template_Here}}",
 			"templates" : [
 					{
 					"relation" : "single",
 					"content" : "
 							<div class=\"col-md-3\">
 								<div class=\"form-group\">
-									<label for=\"{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Filter\">({{l(\"{{NP_Foreign_Entity_Name_Here}}{{NP_Duplication_Number_Here}}\")}}) {{l(\"{{NP_Display_Property_Name_Here}}\")}}</label>
-									<input type=\"text\" class=\"form-control\" id=\"{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Filter\" name=\"{{nP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Filter\" [(ngModel)]=\"{{nP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Filter\">
-                                </div>
-                            </div>"
-					}
-				]
-		},
-		{
-			"placeholder" : "{{NP_Filter_Template_After_V110000_Here}}",
-			"condition" : "{{Project_Version_Here}} >= 110000",
-			"templates" : [
-					{
-					"relation" : "single",
-					"content" : "
-							<div class=\"col-md-3\">
-								<div class=\"my-3\">
 									<label for=\"{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Filter\">({{l(\"{{NP_Foreign_Entity_Name_Here}}{{NP_Duplication_Number_Here}}\")}}) {{l(\"{{NP_Display_Property_Name_Here}}\")}}</label>
 									<input type=\"text\" class=\"form-control\" id=\"{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Filter\" name=\"{{nP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Filter\" [(ngModel)]=\"{{nP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Filter\">
                                 </div>
@@ -516,32 +502,6 @@
             "placeholder": "{{Seperator_Div_Here}}",
             "condition": "{{Project_Version_Here}} >= 090000 && {{Project_Version_Here}} < 110000",
             "content": "<div class=\"separator separator-dashed\"></div>"
-        },
-        {
-            "placeholder": "{{Filter_Form_Group_Before_V110000_Here}}",
-            "condition": "{{Project_Version_Here}} < 110000",
-            "content": "
-                    <div class=\"form-group m-form__group align-items-center\">
-                        <div class=\"input-group\">
-                            <input [(ngModel)]=\"filterText\" name=\"filterText\" autoFocus class=\"form-control m-input\" [placeholder]=\"l('SearchWithThreeDot')\" type=\"text\">
-                            <span class=\"input-group-btn\">
-                                <button (click)=\"get{{Entity_Name_Plural_Here}}()\" class=\"btn btn-primary\" type=\"submit\"><i class=\"flaticon-search-1\"></i></button>
-                            </span>
-                        </div>
-                    </div>
-            "
-        },
-        {
-            "placeholder": "{{Filter_Form_Group_After_V110000_Here}}",
-            "condition": "{{Project_Version_Here}} >= 110000",
-            "content": "
-                    <div class=\"my-3\">
-                        <div class=\"input-group\">
-                            <input [(ngModel)]=\"filterText\" name=\"filterText\" autoFocus class=\"form-control m-input\" [placeholder]=\"l('SearchWithThreeDot')\" type=\"text\">
-                            <button (click)=\"get{{Entity_Name_Plural_Here}}()\" class=\"btn btn-primary\" type=\"submit\"><i class=\"flaticon-search-1\"></i></button>                            
-                        </div>
-                    </div>
-            "
         },
 	]
 }

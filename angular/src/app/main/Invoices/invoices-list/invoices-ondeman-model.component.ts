@@ -27,12 +27,12 @@ export class InvoiceDemandModelComponent extends AppComponentBase implements OnI
     super(injector);
   }
   ngOnInit(): void {
-      this.InvoiceTypeOptions = [
-          {label: 'Invoice', value: '1'},
-          {label: 'PenaltyInvoice', value: '2'},
-      ];
-      this.invoiceTypeValue = 1;
-      this.editions = ['shipper', 'broker'];
+    this.InvoiceTypeOptions = [
+      { label: 'Invoice', value: '1' },
+      { label: 'PenaltyInvoice', value: '2' },
+    ];
+    this.invoiceTypeValue = 1;
+    this.editions = ['shipper', 'broker'];
   }
 
   show(): void {

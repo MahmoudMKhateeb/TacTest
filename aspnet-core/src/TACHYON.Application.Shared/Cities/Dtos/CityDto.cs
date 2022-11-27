@@ -34,5 +34,9 @@ namespace TACHYON.Cities.Dtos
                 return TranslatedDisplayName;
             }
         }
+
+        public  int? BayanIntegrationId { get; set; }
+
+        public  int? RegionId { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ImpersonationService } from '@app/admin/users/impersonation.service';
 import { CommonLookupModalComponent } from '@app/shared/common/lookup/common-lookup-modal.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
@@ -237,13 +237,26 @@ export class TenantsComponent extends AppComponentBase implements OnInit {
     });
   }
 
-    /**
-     * check if tenant can have carriers ... for this case the tenants is (shipper & broker)
-     * @param tenantEditionName
-     */
+  /**
+   * check if tenant can have carriers ... for this case the tenants is (shipper & broker)
+   * @param tenantEditionName
+   */
   tenantCanHaveCarriers(tenantEditionName: string): boolean {
-      return tenantEditionName.trim().toLowerCase() === this.shipperEditionDisplayName.trim().toLowerCase()
-          || tenantEditionName.trim().toLowerCase() === this.brokerEditionDisplayName.trim().toLowerCase();
+    return (
+      tenantEditionName.trim().toLowerCase() === this.shipperEditionDisplayName.trim().toLowerCase() ||
+      tenantEditionName.trim().toLowerCase() === this.brokerEditionDisplayName.trim().toLowerCase()
+    );
+  }
+
+  /**
+   * check if tenant can have carriers ... for this case the tenants is (shipper & broker)
+   * @param tenantEditionName
+   */
+  tenantCanHaveCarriers(tenantEditionName: string): boolean {
+    return (
+      tenantEditionName.trim().toLowerCase() === this.shipperEditionDisplayName.trim().toLowerCase() ||
+      tenantEditionName.trim().toLowerCase() === this.brokerEditionDisplayName.trim().toLowerCase()
+    );
   }
 
   /**

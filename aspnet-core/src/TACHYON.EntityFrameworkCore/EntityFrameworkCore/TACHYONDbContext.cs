@@ -1,5 +1,7 @@
-﻿using TACHYON.Actors;
+﻿using TACHYON.Integration.BayanIntegration;
+using TACHYON.Regions;
 using Abp.Events.Bus.Entities;
+﻿using TACHYON.Actors;
 using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -104,6 +106,10 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<BayanIntegrationResult> BayanIntegrationResults { get; set; }
+
+        public virtual DbSet<Region> Regions { get; set; }
+
         public virtual DbSet<Actor> Actors { get; set; }
         public virtual DbSet<ActorShipperPrice> ActorShipperPrices { get; set; }
         public virtual DbSet<ActorCarrierPrice> ActorCarrierPrices { get; set; }
@@ -316,12 +322,12 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<DriverLocationLog> DriverLocationLogs { get; set; }
 
         public DbSet<EntityLog> EntityLogs { get; set; }
-        
+
         public DbSet<EntityTemplate> EntityTemplates { get; set; }
         public DbSet<NormalPricePackage> NormalPricePackages { get; set; }
         public DbSet<PricePackageOffer> PricePackageOffers { get; set; }
         public DbSet<PricePackageOfferItem> PricePackageOfferItems { get; set; }
-        
+
         public DbSet<ShippingRequestUpdate> ShippingRequestUpdates { get; set; }
 
         public DbSet<SrPostPriceUpdate> PostPriceUpdates { get; set; }

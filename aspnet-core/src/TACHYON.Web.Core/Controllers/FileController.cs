@@ -18,6 +18,7 @@ using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.Features;
+using TACHYON.Integration.BayanIntegration.V3;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Storage;
@@ -38,6 +39,8 @@ namespace TACHYON.Web.Controllers
         private readonly IRepository<RoutPointDocument, long> _routPointDocumentRepository;
         private readonly IRepository<ShippingRequestTripAccident> _shippingRequestTripAccidentRepository;
         private readonly ShippingRequestPointWorkFlowProvider _workflow;
+        private readonly BayanIntegrationManagerV3 _bayanIntegrationManagerV3;
+
 
         public FileController(
             ITempFileCacheManager tempFileCacheManager,
@@ -49,7 +52,8 @@ namespace TACHYON.Web.Controllers
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
             UserManager userManager,
             IRepository<ShippingRequestTripAccident> shippingRequestTripAccidentRepository,
-            ShippingRequestPointWorkFlowProvider workflow)
+            ShippingRequestPointWorkFlowProvider workflow,
+            BayanIntegrationManagerV3 bayanIntegrationManagerV3)
         {
             _tempFileCacheManager = tempFileCacheManager;
             _binaryObjectManager = binaryObjectManager;
@@ -61,6 +65,7 @@ namespace TACHYON.Web.Controllers
             _userManager = userManager;
             _shippingRequestTripAccidentRepository = shippingRequestTripAccidentRepository;
             _workflow = workflow;
+            _bayanIntegrationManagerV3 = bayanIntegrationManagerV3;
         }
 
         [DisableAuditing]
@@ -167,6 +172,14 @@ namespace TACHYON.Web.Controllers
             MimeTypes.TryGetExtension(DocumentTypeConsts.PDF, out var exten);
 
             return File(bytes, DocumentTypeConsts.PDF, "DropWaybill.pdf");
+        }
+
+        [DisableAuditing]
+        public async Task<ActionResult> PrintBayanIntegrationTrip(int tripId)
+        {
+            var data = await _bayanIntegrationManagerV3.PrintTrip(tripId);
+            return File(data, DocumentTypeConsts.PDF, tripId + ".pdf");
+
         }
     }
 }

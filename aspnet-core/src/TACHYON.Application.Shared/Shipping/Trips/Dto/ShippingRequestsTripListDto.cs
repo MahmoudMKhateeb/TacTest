@@ -46,6 +46,8 @@ namespace TACHYON.Shipping.Trips.Dto
         public DateTime? SupposedPickupDateFrom { get; set; }
         public DateTime? SupposedPickupDateTo { get; set; }
         public int NotesCount { get; set; }
+
+        public string BayanId { get; set; }
         public bool CanAssignTrucksAndDrivers { get; set; }
     }
 }

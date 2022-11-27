@@ -333,7 +333,6 @@ import { CreateOrEditActorModalComponent } from './actors/actors/create-or-edit-
 import { ActorInvoiceDemandModelComponent } from './actors/Actor-Invoices-ondemand-model.component';
 import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/client-demand-model.component';
 
-
 @NgModule({
   imports: [
     WidgetsModule,
@@ -632,7 +631,7 @@ import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/cli
     ViewActorModalComponent,
     CreateOrEditActorModalComponent,
     ActorInvoiceDemandModelComponent,
-    ClientDemandModelComponent
+    ClientDemandModelComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

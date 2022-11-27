@@ -19,8 +19,12 @@ export class ActorSubmitInvoicesComponent extends AppComponentBase implements On
   SubmitStatusEnum = SubmitInvoiceStatus;
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
-  constructor(injector: Injector, private _ActorSubmitInvoiceServiceProxy: ActorSubmitInvoiceServiceProxy, private enumToArray: EnumToArrayPipe,
-    private _fileDownloadService: FileDownloadService) {
+  constructor(
+    injector: Injector,
+    private _ActorSubmitInvoiceServiceProxy: ActorSubmitInvoiceServiceProxy,
+    private enumToArray: EnumToArrayPipe,
+    private _fileDownloadService: FileDownloadService
+  ) {
     super(injector);
     this.SubmitStatus = this.enumToArray.transform(SubmitInvoiceStatus);
   }

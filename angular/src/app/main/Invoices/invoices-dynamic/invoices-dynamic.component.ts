@@ -69,13 +69,13 @@ export class InvoicesDynamicComponent extends AppComponentBase implements OnInit
         this.InvoicesDynamicModal.show('carrier');
       },
     },
-      {
-          label: this.l('ForBroker'),
-          icon: '',
-          command: () => {
-              this.InvoicesDynamicModal.show('broker');
-          },
+    {
+      label: this.l('ForBroker'),
+      icon: '',
+      command: () => {
+        this.InvoicesDynamicModal.show('broker');
       },
+    },
   ];
 
   constructor(

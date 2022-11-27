@@ -114,14 +114,14 @@
                       <li>
                         <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('DownloadInvoice') }}</a>
                       </li> -->
-                      <li *ngIf="options.data.documentName">
-                        <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(options.data.id)">
-                          {{ l('View') }}
-                        </a>
-                      </li>
-                      <li *ngIf="options.data.status == 'New' || options.data.status == 'Rejected'">
-                        <a class="dropdown-item" href="javascript:;" (click)="ClaimModel.show(options.data.id)">{{ l('Claim') }}</a>
-                      </li>
+                    <li *ngIf="options.data.documentName">
+                      <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(options.data.id)">
+                        {{ l('View') }}
+                      </a>
+                    </li>
+                    <li *ngIf="options.data.status == 'New' || options.data.status == 'Rejected'">
+                      <a class="dropdown-item" href="javascript:;" (click)="ClaimModel.show(options.data.id)">{{ l('Claim') }}</a>
+                    </li>
                     <li *ngIf="!options.data.isPaid">
                       <a class="dropdown-item" href="javascript:;" (click)="MakePaid(options.data)">{{ l('MakePaid') }}</a>
                     </li>

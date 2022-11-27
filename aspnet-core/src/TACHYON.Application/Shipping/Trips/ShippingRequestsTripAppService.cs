@@ -14,6 +14,8 @@ using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +35,8 @@ using TACHYON.Firebases;
 using TACHYON.Goods.Dtos;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
+using TACHYON.Integration.BayanIntegration.V3;
+using TACHYON.Integration.BayanIntegration.V3.Jobs;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Rating;
@@ -76,6 +80,7 @@ namespace TACHYON.Shipping.Trips
         private readonly ShippingRequestTripManager _shippingRequestTripManager;
         private readonly TenantManager _tenantManager;
         private readonly IRepository<ShippingRequestAndTripNote> _ShippingRequestAndTripNoteRepository;
+        private readonly BayanIntegrationManagerV3 _bayanIntegrationManagerV3;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
         private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTrucksRepository;
         private readonly IRepository<User, long> _userRepository;
@@ -101,8 +106,8 @@ namespace TACHYON.Shipping.Trips
             PenaltyManager penaltyManager,
             ShippingRequestTripManager shippingRequestTripManager,
             TenantManager tenantManager,
-            IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository
-,
+            BayanIntegrationManagerV3 bayanIntegrationManagerV3,
+            IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
             IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTrucksRepository,
             IRepository<User, long> userRepository)
@@ -128,6 +133,7 @@ namespace TACHYON.Shipping.Trips
             _shippingRequestTripManager = shippingRequestTripManager;
             _tenantManager = tenantManager;
             _ShippingRequestAndTripNoteRepository = ShippingRequestAndTripNoteRepository;
+            _bayanIntegrationManagerV3 = bayanIntegrationManagerV3;
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
             _dedicatedShippingRequestTrucksRepository = dedicatedShippingRequestTrucksRepository;
             _userRepository = userRepository;
@@ -148,7 +154,7 @@ namespace TACHYON.Shipping.Trips
                 .FirstOrDefaultAsync(x => x.Id == input.RequestId);
             if (request == null)
                 throw new UserFriendlyException(L("ShippingRequestIsNotFound"));
-            
+
             var query = _shippingRequestTripRepository
                 .GetAll()
                 .AsNoTracking()
@@ -194,7 +200,7 @@ namespace TACHYON.Shipping.Trips
                 r.NotesCount = await GetTripNotesCount(r.Id);
                 r.CanAssignTrucksAndDrivers = canAssignTrucksAndDrivers;
             }
-            
+
             if (!input.Sorting.IsNullOrEmpty() && input.Sorting.Contains("Facility"))
                 pageResult = SortByFacility(input.Sorting, pageResult);
 
@@ -202,11 +208,11 @@ namespace TACHYON.Shipping.Trips
 
             var allRatingLogList = await _ratingLogManager.GetAllRatingByUserAsync(await IsShipper() ? RateType.CarrierByShipper : RateType.ShipperByCarrier,
                 request.TenantId, request.CarrierTenantId, null);
-            
+
             var canTripsCreateTemplate = (from trip in pageResult
-                    select (trip.Id,_routPointRepository.GetAllIncluding(x => x.GoodsDetails)
-                        .Where(x => x.ShippingRequestTripId == trip.Id && x.PickingType == PickingType.Dropoff)
-                        .All(x => x.GoodsDetails != null && x.GoodsDetails.Any()))).ToList();
+                                          select (trip.Id, _routPointRepository.GetAllIncluding(x => x.GoodsDetails)
+                                              .Where(x => x.ShippingRequestTripId == trip.Id && x.PickingType == PickingType.Dropoff)
+                                              .All(x => x.GoodsDetails != null && x.GoodsDetails.Any()))).ToList();
 
             foreach (var x in pageResult)
             {
@@ -218,7 +224,20 @@ namespace TACHYON.Shipping.Trips
                 //    TripId = x.Id
                 //});
                 x.IsTripRateBefore = allRatingLogList.Any(x => x.TripId == x.Id);
-                x.CanCreateTemplate = canTripsCreateTemplate.FirstOrDefault(i => i.Id == x.Id).Item2 ;
+                x.CanCreateTemplate = canTripsCreateTemplate.FirstOrDefault(i => i.Id == x.Id).Item2;
+                if (!x.BayanId.IsNullOrEmpty())
+                {
+                    dynamic b = JsonConvert.DeserializeObject(x.BayanId);
+                    try
+                    {
+                        x.BayanId = b.tripId;
+                    }
+                    catch 
+                    {
+                        x.BayanId = b.ToString();
+                    }
+                    
+                }
             }
 
             return new PagedResultDto<ShippingRequestsTripListDto>(
@@ -429,8 +448,8 @@ namespace TACHYON.Shipping.Trips
         public async Task UpdateExpectedDeliveryTimeForTrip(UpdateExpectedDeliveryTimeInput input)
         {
             DisableTenancyFilters();
-            var trip = await _shippingRequestTripRepository.GetAllIncluding(x=> x.ShippingRequestFk)
-                .SingleAsync(x=> x.Id == input.Id);
+            var trip = await _shippingRequestTripRepository.GetAllIncluding(x => x.ShippingRequestFk)
+                .SingleAsync(x => x.Id == input.Id);
 
             await ValidateExpectedDeliveryTime(input.ExpectedDeliveryTime, trip);
             trip.ExpectedDeliveryTime = input.ExpectedDeliveryTime;
@@ -451,90 +470,114 @@ namespace TACHYON.Shipping.Trips
                     .FirstOrDefaultAsync();
             }
 
-            if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
+            var carrierTenantId = trip.ShippingRequestFk.CarrierTenantId;
 
-            if (trip.Status == ShippingRequestTripStatus.InTransit && await _shippingRequestManager.CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
-                throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
-
-            if (await _shippingRequestManager.CheckIfDriverIsRented(input.AssignedDriverUserId))
-                throw new UserFriendlyException(L("TheDriverAreadyRented"));
-            if (await _shippingRequestManager.CheckIfTruckIsRented(input.AssignedTruckId))
-                throw new UserFriendlyException(L("TheTruckAreadyRented"));
-
-            long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
-            long? oldAssignedTruckId = trip.AssignedTruckId;
-            trip.AssignedDriverUserId = input.AssignedDriverUserId;
-            trip.AssignedTruckId = input.AssignedTruckId;
-            bool isTruckChanged = oldAssignedTruckId != input.AssignedTruckId;
-
-            //reset driver status when change 
-            if (trip.DriverStatus != ShippingRequestTripDriverStatus.None)
+            using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
             {
-                trip.DriverStatus = ShippingRequestTripDriverStatus.None;
-                trip.RejectedReason = string.Empty;
-                trip.RejectReasonId = default(int?);
-            }
 
-            if (oldAssignedDriverUserId != trip.AssignedDriverUserId)
-            {
-                trip.AssignedDriverTime = Clock.Now;
-                // Send Notification To New Driver
-                if (oldAssignedDriverUserId.HasValue)
+
+                if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
+
+                if (trip.Status == ShippingRequestTripStatus.InTransit && await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
+                    throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
+
+                long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
+                long? oldAssignedTruckId = trip.AssignedTruckId;
+                trip.AssignedDriverUserId = input.AssignedDriverUserId;
+                trip.AssignedTruckId = input.AssignedTruckId;
+                bool isTruckChanged = oldAssignedTruckId != input.AssignedTruckId;
+
+                //reset driver status when change 
+                if (trip.DriverStatus != ShippingRequestTripDriverStatus.None)
                 {
-                    await _appNotifier.NotifyDriverWhenUnassignedTrip(trip.Id, trip.WaybillNumber.ToString(),
-                        new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value));
-
-                    await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
-                    isDriverChanged = true;
+                    trip.DriverStatus = ShippingRequestTripDriverStatus.None;
+                    trip.RejectedReason = string.Empty;
+                    trip.RejectReasonId = default(int?);
                 }
-            }
 
-            #region SetUpdateReason
-
-            string reason;
-
-            switch (isDriverChanged)
-            {
-                case true when isTruckChanged:
-                    reason = nameof(RoutPointAction4);
-                    break;
-                case true:
-                    reason = nameof(RoutPointAction1);
-                    break;
-                case false when isTruckChanged:
-                    reason = nameof(RoutPointAction2);
-                    break;
-                default: return;
-            }
-
-            _reasonProvider.Use(reason);
-            #endregion
-
-            await UserManager.UpdateUserDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
-
-            if (oldAssignedTruckId != trip.AssignedTruckId && trip.ShippingRequestFk.CarrierTenantId != null)
-            {
-                var driver = await _userManager.GetUserByIdAsync(trip.AssignedDriverUserId.Value);
-                var notifyTripInput = new NotifyTripUpdatedInput()
+                if (oldAssignedDriverUserId != trip.AssignedDriverUserId)
                 {
-                    CarrierTenantId = trip.ShippingRequestFk.CarrierTenantId.Value,
-                    TripId = trip.Id,
-                    WaybillNumber = trip.WaybillNumber.ToString(),
-                    DriverIdentifier = new UserIdentifier(driver.TenantId, trip.AssignedDriverUserId.Value)
-                };
+                    trip.AssignedDriverTime = Clock.Now;
+                    // Send Notification To New Driver
+                    if (oldAssignedDriverUserId.HasValue)
+                    {
+                        await _appNotifier.NotifyDriverWhenUnassignedTrip
+                        (
+                            trip.Id,
+                            trip.WaybillNumber.ToString(),
+                            new UserIdentifier(AbpSession.TenantId, oldAssignedDriverUserId.Value)
+                        );
 
-                await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
+                        await UserManager.UpdateUserDriverStatus(oldAssignedDriverUserId.Value, UserDriverStatus.Available);
+                        isDriverChanged = true;
+                    }
+                }
+
+                #region SetUpdateReason
+
+                string reason;
+
+                switch (isDriverChanged)
+                {
+                    case true when isTruckChanged:
+                        reason = nameof(RoutPointAction4);
+                        break;
+                    case true:
+                        reason = nameof(RoutPointAction1);
+                        break;
+                    case false when isTruckChanged:
+                        reason = nameof(RoutPointAction2);
+                        break;
+                    default: return;
+                }
+
+                _reasonProvider.Use(reason);
+
+                #endregion
+
+                await UserManager.UpdateUserDriverStatus(input.AssignedDriverUserId, UserDriverStatus.NotAvailable);
+
+                if (oldAssignedTruckId != trip.AssignedTruckId && trip.ShippingRequestFk.CarrierTenantId != null)
+                {
+                    var driver = await _userManager.GetUserByIdAsync(trip.AssignedDriverUserId.Value);
+                    var notifyTripInput = new NotifyTripUpdatedInput()
+                    {
+                        CarrierTenantId = trip.ShippingRequestFk.CarrierTenantId.Value,
+                        TripId = trip.Id,
+                        WaybillNumber = trip.WaybillNumber.ToString(),
+                        DriverIdentifier = new UserIdentifier(driver.TenantId, trip.AssignedDriverUserId.Value)
+                    };
+
+                    await _appNotifier.NotifyCarrierWhenTripUpdated(notifyTripInput);
+                }
+
+                if (!oldAssignedTruckId.HasValue && !oldAssignedDriverUserId.HasValue)
+                    await _penaltyManager.ApplyNotAssigningTruckAndDriverPenalty
+                    (
+                        trip.ShippingRequestFk.CarrierTenantId.Value,
+                        trip.ShippingRequestFk.TenantId,
+                        trip.StartTripDate,
+                        trip.Id
+                    );
+
+                // Send Notification To New Driver
+                await _appNotifier.NotifyDriverWhenAssignTrip
+                (
+                    trip.Id,
+                    new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value)
+                );
+
+
+
+                await CurrentUnitOfWork.SaveChangesAsync();
+
             }
-            if (!oldAssignedTruckId.HasValue && !oldAssignedDriverUserId.HasValue)
-                await _penaltyManager.ApplyNotAssigningTruckAndDriverPenalty(trip.ShippingRequestFk.CarrierTenantId.Value, trip.ShippingRequestFk.TenantId, trip.StartTripDate, trip.Id);
 
-            // Send Notification To New Driver
-            await _appNotifier.NotifyDriverWhenAssignTrip(trip.Id,
-                new UserIdentifier(trip.ShippingRequestFk.CarrierTenantId, trip.AssignedDriverUserId.Value));
-
-
-
-            await CurrentUnitOfWork.SaveChangesAsync();
+            //Bayan integration job
+            await _bayanIntegrationManagerV3.QueueUpdateVehicleOrDriver
+            (
+                new UpdateVehicleOrDriverJobArgs { TripId = input.Id, DriverId = input.AssignedDriverUserId, TruckId = input.AssignedTruckId }
+            );
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
@@ -615,7 +658,7 @@ namespace TACHYON.Shipping.Trips
             DisableTenancyFilters();
             return await _ShippingRequestAndTripNoteRepository
                 .GetAll()
-                .Include(r=>r.TripFK)
+                .Include(r => r.TripFK)
                 .ThenInclude(r => r.ShippingRequestFk)
                  //.WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
                  //.WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.TenantId == AbpSession.TenantId)
@@ -675,6 +718,22 @@ namespace TACHYON.Shipping.Trips
             }
 
             ObjectMapper.Map(input, trip);
+
+            if (!trip.BayanId.IsNullOrEmpty())
+            {
+
+                var points = await  _routPointRepository.GetAll()
+                    .Where(x => x.PickingType == PickingType.Dropoff)
+                    .ToListAsync();
+                foreach (var point in points)
+                {
+                    if (!point.BayanId.IsNullOrEmpty())
+                    {
+                        await _bayanIntegrationManagerV3.QueueUpdateWaybill(point.Id);
+                    }
+                }
+                
+            }
         }
 
         private async Task ValidateExpectedDeliveryTime(DateTime? expectedDeliveryTime, ShippingRequestTrip trip)
@@ -795,6 +854,26 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
+        public async Task UpdateTripInvoiceFlag(int shippingRequesTripId, string invoiceFlag)
+        {
+            DisableTenancyFilters();
+            var trip = await _shippingRequestTripRepository.GetAsync(shippingRequesTripId);
+            trip.SplitInvoiceFlag = invoiceFlag?.Trim();
+
+        }
+
+
+        public async Task CreateBayanIntegrationTrip(int tripId)
+        {
+            await _bayanIntegrationManagerV3.CreateTrip(tripId);
+        }
+
+        public async Task<byte[]> PrintBayanIntegrationTrip(int tripId)
+        {
+            return await _bayanIntegrationManagerV3.PrintTrip(tripId);
+
+        }
+
         #region Heleper
 
         /// <summary>
@@ -856,7 +935,7 @@ namespace TACHYON.Shipping.Trips
                 .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
                 .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
-                .WhereIf(AbpSession.TenantId==null, x=> true)
+                .WhereIf(AbpSession.TenantId == null, x => true)
                 .FirstOrDefaultAsync(x => x.Id == shippingRequestId);
             if (request == null)
             {
@@ -974,9 +1053,15 @@ namespace TACHYON.Shipping.Trips
         //    }
         //}
 
-        
 
-        
+        private async Task<bool> CheckIfDriverWorkingOnAnotherTrip(long assignedDriverUserId)
+        {
+            return await _shippingRequestTripRepository.GetAll()
+                .AnyAsync(x => x.AssignedDriverUserId == assignedDriverUserId
+                            && x.Status == ShippingRequestTripStatus.InTransit
+                            && x.DriverStatus == ShippingRequestTripDriverStatus.Accepted);
+        }
+
 
         private async Task CancelTripAsync(CancelTripInput input, ShippingRequestTrip trip, UserIdentifier carrierIdent)
         {
@@ -1005,7 +1090,7 @@ namespace TACHYON.Shipping.Trips
                     trip.CancelStatus = ShippingRequestTripCancelStatus.WaitingForTMSApproval;
                     await _appNotifier.NotifyTmsWhenCancellationRequestedByShipper(
                         trip.ShippingRequestFk.ReferenceNumber, trip.WaybillNumber.ToString(),
-                        shipperTenant.TenancyName,trip.ShippingRequestId);
+                        shipperTenant.TenancyName, trip.ShippingRequestId);
                 }
             }
             else if (IsEnabled(AppFeatures.Carrier))
@@ -1037,7 +1122,7 @@ namespace TACHYON.Shipping.Trips
                     {
                         userIdentifiers.Add(await GetAdminTenant((int)trip.ShippingRequestFk.CarrierTenantId));
                     }
-                    
+
                     var shipperAdmin = await UserManager.GetAdminByTenantIdAsync(trip.ShippingRequestFk.TenantId);
                     userIdentifiers.Add(shipperAdmin.ToUserIdentifier());
                     await _appNotifier.ShippingRequestTripCanceled(userIdentifiers, trip, (await _tenantManager.GetByIdAsync(TMSIdent.TenantId.Value)).TenancyName);

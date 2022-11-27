@@ -1,9 +1,9 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
 import {
   GetShippingRequestForViewOutput,
+  GetShippingRequestVasForViewDto,
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
-  GetShippingRequestVasForViewDto,
   ShippingRequestStatus,
   ShippingRequestType,
   SavedEntityType,
@@ -222,5 +222,13 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     setTimeout(() => {
       this.directRequestComponent.DirectRequestTenantModel.show();
     }, 1000);
+  }
+
+  updateShippingRequestInvoiceFlag() {
+    this._shippingRequestsServiceProxy
+      .updateShippingRequestInvoiceFlag(this.shippingRequestforView.shippingRequest.id, this.shippingRequestforView.shippingRequest.splitInvoiceFlag)
+      .subscribe(() => {
+        this.notify.success(this.l('success'));
+      });
   }
 }

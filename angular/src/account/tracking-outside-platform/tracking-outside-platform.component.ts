@@ -27,8 +27,12 @@ export class TrackingOutsidePlatformComponent extends AppComponentBase implement
   trackByWaybillNumber() {
     this.loading = true;
     this._trackingservice.getDropsOffByMasterWaybill(this.waybillNumber).subscribe((res) => {
-      this.dropPoints = res.items;
       this.loading = false;
+      if (res.items.length === 2) {
+        this.dropPoints = [res.items[1]];
+        return;
+      }
+      this.dropPoints = res.items;
     });
   }
 

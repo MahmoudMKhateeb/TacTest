@@ -58,6 +58,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string ShipperInvoiceNo { get; set; }
 
         public bool IsSaas { get; set; }
+
+        public string SplitInvoiceFlag { get; set; }
+
         public string StatusTitle
         {
             get { return Status.GetEnumDescription(); }

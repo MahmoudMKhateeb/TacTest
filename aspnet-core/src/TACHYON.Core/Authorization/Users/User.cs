@@ -67,6 +67,8 @@ namespace TACHYON.Authorization.Users
 
         public int RateNumber { get; set; }
 
+        public int? DriverIssueNumber { get; set; }
+
         public ICollection<DedicatedShippingRequestDriver> DedicatedShippingRequestDrivers { get; set; }
 
         public User()

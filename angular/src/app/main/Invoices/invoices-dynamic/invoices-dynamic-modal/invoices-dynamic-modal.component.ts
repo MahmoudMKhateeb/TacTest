@@ -148,9 +148,9 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     body.items = items;
     body.notes = this.notes;
     if (this.edition === 'shipper' || (this.edition === 'broker' && this.isBrokerPayableInvoice)) {
-        body.creditTenantId = Number(this.Tenant.id);
+      body.creditTenantId = Number(this.Tenant.id);
     } else if (this.edition === 'carrier' || (this.edition === 'broker' && !this.isBrokerPayableInvoice)) {
-        body.debitTenantId = Number(this.Tenant.id);
+      body.debitTenantId = Number(this.Tenant.id);
     }
 
     this._DynamicInvoiceServiceProxy.createOrEdit(body).subscribe(

@@ -22,6 +22,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
@@ -38,6 +39,7 @@ using TACHYON.Integration.WaslIntegration;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Storage;
 using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
@@ -78,6 +80,7 @@ namespace TACHYON.Trucks
         private readonly IRepository<Tenant> _lookupTenantRepository;
         private readonly IRepository<ShippingRequest,long> _shippingRequestRepository;
         private readonly IRepository<User,long> _userRepository;
+        private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
 
 
 
@@ -91,6 +94,7 @@ namespace TACHYON.Trucks
             IRepository<PlateType> PlateTypesRepository, IRepository<Tenant> lookupTenantRepository,
             WaslIntegrationManager waslIntegrationManager,
             IRepository<ShippingRequest, long> shippingRequestRepository,
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository,
             IRepository<User, long> userRepository)
         {
             _documentFileRepository = documentFileRepository;
@@ -111,6 +115,7 @@ namespace TACHYON.Trucks
             _waslIntegrationManager = waslIntegrationManager;
             _shippingRequestRepository = shippingRequestRepository;
             _userRepository = userRepository;
+             _shippingRequestTripRepository = shippingRequestTripRepository;
         }
 
         public async Task<LoadResult> GetAll(GetAllTrucksInput input)
@@ -487,22 +492,101 @@ namespace TACHYON.Trucks
             }).ToListAsync();
         }
 
-        public async Task<List<SelectItemDto>> GetAllCarrierTrucksByTruckTypeForDropDown(long truckTypeId)
+        public async Task<List<SelectItemDto>> GetAllCarrierTrucksByTruckTypeForDropDown(long truckTypeId, long tripId)
         {
-            return await _truckRepository.GetAll()
-                .Where(x => x.TrucksTypeId == truckTypeId)
-                .Select(x => new SelectItemDto
-                {
-                    DisplayName = x.GetDisplayName(),
-                    Id = x.Id.ToString()
-                }).ToListAsync();
+            int? carrierTenantId;
+            using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                carrierTenantId = _shippingRequestTripRepository.GetAll()
+                .Where(x => x.Id == tripId)
+                .Select(x => x.ShippingRequestFk.CarrierTenantId)
+                .FirstOrDefault();
+            }
+
+
+
+            using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
+            {
+                return await _truckRepository.GetAll()
+               .Where(x => x.TrucksTypeId == truckTypeId)
+               .Select(x => new SelectItemDto
+               {
+                   DisplayName = x.GetDisplayName(),
+                   Id = x.Id.ToString()
+               }).ToListAsync();
+            }
+
+
         }
 
+        //public async Task<List<SelectItemDto>> GetAllDriversForDropDown(long tripId)
+        //{
+        //    int? carrierTenantId;
+        //    using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+        //    {
+        //         carrierTenantId = _shippingRequestTripRepository.GetAll()
+        //                   .Where(x => x.Id == tripId)
+        //                   .Select(x => x.ShippingRequestFk.CarrierTenantId)
+        //                   .FirstOrDefault();
+        //    }
+
+
+        //    using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
+        //    {
+        //        return await _lookup_userRepository.GetAll().Where(e => e.IsDriver == true)
+        //          .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
+        //          .ToListAsync();
+        //    }
+
+
+        //}
+
         public async Task<List<SelectItemDto>> GetAllDriversForDropDown()
+
         {
+
             return await _lookup_userRepository.GetAll().Where(e => e.IsDriver == true)
+
                 .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
+
                 .ToListAsync();
+
+        }
+
+
+        public async Task<List<SelectItemDto>> GetDriversByShippingRequestId(long shippingRequestId)
+        {
+            var isTms = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
+            DisableTenancyFilters();
+            
+            var drivers = await (from driver in _userRepository.GetAll()
+
+                join sr in _shippingRequestRepository.GetAll() on shippingRequestId equals sr.Id
+                where driver.IsDriver && driver.TenantId == sr.CarrierTenantId &&
+                      (!sr.CarrierActorId.HasValue || driver.CarrierActorId == sr.CarrierActorId)
+                      && (isTms || sr.CarrierTenantId == AbpSession.TenantId)
+                select new SelectItemDto()
+                {
+                    DisplayName = $"{driver.Name} {driver.Surname}", Id = driver.Id.ToString()
+                }).ToListAsync();
+            return drivers;
+        }
+        
+        
+        public async Task<List<SelectItemDto>> GetTrucksByShippingRequestId(long truckTypeId, long shippingRequestId)
+        {
+            var isTms = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
+            DisableTenancyFilters();
+            
+            var trucks = await (from truck in _truckRepository.GetAll()
+                join sr in _shippingRequestRepository.GetAll() on shippingRequestId equals sr.Id
+                where  truck.TrucksTypeId == truckTypeId && truck.TenantId == sr.CarrierTenantId &&
+                      (!sr.CarrierActorId.HasValue || truck.CarrierActorId == sr.CarrierActorId) && (isTms || sr.CarrierTenantId == AbpSession.TenantId)
+                select new SelectItemDto()
+                {
+                    DisplayName = truck.GetDisplayName(), Id = truck.Id.ToString()
+                }).ToListAsync();
+            return trucks;
         }
         
         
