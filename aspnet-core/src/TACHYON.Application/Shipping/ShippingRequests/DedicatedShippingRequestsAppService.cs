@@ -316,7 +316,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     Id = x.TruckId.ToString(),
                     IsAvailable = !x.ReplacementDate.HasValue ||
                 (x.ReplacementFlag == ReplacementFlag.Replaced && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) > Clock.Now.Date) ||
-                (x.ReplacementFlag == ReplacementFlag.Original && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) < Clock.Now.Date)
+                (x.ReplacementFlag == ReplacementFlag.Original && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) <= Clock.Now.Date)
                 }).ToListAsync();
         }
 
@@ -347,7 +347,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Where(x => x.ShippingRequestId == shippingRequestId)
                 .Select(x => new SelectItemDto
                 {
-                    DisplayName = x.Truck.GetDisplayName(),
+                    DisplayName = x.ReplacementFlag== ReplacementFlag.Replaced ?$"{x.Truck.GetDisplayName()}{"Replacement"}{x.OriginalTruck.Truck.GetDisplayName()}" :x.Truck.GetDisplayName(),
                     Id = x.Id.ToString()
                 }).ToListAsync();
         }
