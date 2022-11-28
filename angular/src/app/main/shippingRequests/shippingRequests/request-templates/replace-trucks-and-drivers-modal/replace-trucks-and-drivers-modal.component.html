@@ -14,7 +14,7 @@
         <div class="card card-custom">
           <!--begin::Header-->
           <div class="card-header align-items-center px-4 py-3">
-            <h3>{{ !isForTruck ? l('ReplaceDriversModal') : l('ReplaceTrucksModal') }}</h3>
+            <h3>{{ !isForTruck ? l('ReplaceDrivers') : l('ReplaceTrucks') }}</h3>
           </div>
           <!--end::Header-->
           <!--begin::Body-->
@@ -41,10 +41,10 @@
               <dxi-column *ngIf="!isForTruck" dataField="originalDriverId" caption="{{ 'ReplaceWith' | localize }}" cellTemplate="driverCellTemplate">
                 <dxo-lookup [dataSource]="allDrivers" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
               </dxi-column>
-              <dxi-column dataField="replacementReason" caption="{{ 'Reason' | localize }}" cellTemplate="reasonCellTemplate"></dxi-column>
+              <dxi-column dataField="replacementReason" caption="{{ 'replacementReason' | localize }}" cellTemplate="reasonCellTemplate"></dxi-column>
               <dxi-column
                 dataField="replacementIntervalInDays"
-                caption="{{ 'Duration' | localize }}"
+                caption="{{ 'replacementIntervalInDays' | localize }}"
                 cellTemplate="durationCellTemplate"
               ></dxi-column>
               <div *dxTemplate="let d of 'driverCellTemplate'">
