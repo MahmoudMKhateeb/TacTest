@@ -21,6 +21,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 import { DxDataGridComponent } from '@node_modules/devextreme-angular/ui/data-grid/index';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { Router } from '@angular/router';
 
 let _self;
 @Component({
@@ -30,7 +31,7 @@ let _self;
 })
 export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
   @ViewChild('dataGrid', { static: false }) public dataGrid: DxDataGridComponent;
-  @ViewChild('replaceTrucksAndDriversModal', { static: false }) public modal: ModalDirective;
+  @ViewChild('replaceTrucksAndDriversModal', { static: true }) public modal: ModalDirective;
   active = false;
   loading: boolean;
   dedicatedShippingRequest: GetShippingRequestForPriceOfferListDto;
@@ -43,11 +44,15 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
   private dedicatedShippingRequestId: number;
   dataSource: any;
   selectedItems: any[] = [];
+  private dedicatedTruckTypeId: number;
+  private dedicatedTruckId: number;
+  private dedicatedDriverId: number;
 
   constructor(
     injector: Injector,
     private _dedicatedShippingRequestService: DedicatedShippingRequestsServiceProxy,
-    private _trucksServiceProxy: TrucksServiceProxy
+    private _trucksServiceProxy: TrucksServiceProxy,
+    private _router: Router
   ) {
     super(injector);
     _self = this;
@@ -57,6 +62,25 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
     this.isForTruck = isForTruck;
     this.dedicatedShippingRequestId = dedicatedShippingRequest.id;
     this.dedicatedShippingRequest = dedicatedShippingRequest;
+    this.dedicatedTruckTypeId = dedicatedShippingRequest.trucksTypeId;
+    if (isForTruck) {
+      this.getTrucksForReplace();
+      this.getReplacementTrucksForDropDown();
+    } else {
+      this.getDriversForReplace();
+      this.getReplacementDriversForDropDown();
+    }
+    this.active = true;
+    this.modal.show();
+  }
+
+  showFromNotification(dedicatedShippingRequestId: number, isForTruck: boolean, driverId: number, truckId: number, truckTypeId: number) {
+    this.isForTruck = isForTruck;
+    this.dedicatedShippingRequestId = dedicatedShippingRequestId;
+    this.dedicatedDriverId = driverId;
+    this.dedicatedTruckId = truckId;
+    this.dedicatedTruckTypeId = truckTypeId;
+    // this.dedicatedShippingRequest = dedicatedShippingRequest;
     if (isForTruck) {
       this.getTrucksForReplace();
       this.getReplacementTrucksForDropDown();
@@ -76,6 +100,7 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
     this.allTrucks = [];
     this.selectedItems = [];
     this.selectedTrucks = [];
+    this._router.navigate([]);
     this.modal.hide();
   }
 
@@ -101,11 +126,11 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
       return parsedItem;
     });
     const replaceTrucksInput = new ReplaceTruckInput({
-      shippingRequestId: this.dedicatedShippingRequest.id,
+      shippingRequestId: this.dedicatedShippingRequestId,
       replaceTruckDtos: items,
     });
     const replaceDriversInput = new ReplaceDriverInput({
-      shippingRequestId: this.dedicatedShippingRequest.id,
+      shippingRequestId: this.dedicatedShippingRequestId,
       replaceDriverDtos: items,
     });
     console.log('replaceTrucksInput', replaceTrucksInput);
@@ -131,7 +156,7 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
   getReplacementDriversForDropDown() {
     if (this.feature.isEnabled('App.Carrier') || this.isTachyonDealerOrHost) {
       this._dedicatedShippingRequestService
-        .getReplacementDriversForDropDown(this.dedicatedShippingRequest.id, this.dedicatedShippingRequest.carrierTenantId)
+        .getReplacementDriversForDropDown(this.dedicatedShippingRequestId, this.appSession.tenantId)
         .subscribe((res) => {
           this.allDrivers = res.map((item) => {
             (item.id as any) = Number(item.id);
@@ -147,11 +172,7 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
   getReplacementTrucksForDropDown() {
     if (this.feature.isEnabled('App.Carrier') || this.isTachyonDealerOrHost) {
       this._dedicatedShippingRequestService
-        .getReplacementTrucksForDropDown(
-          this.dedicatedShippingRequest.id,
-          this.dedicatedShippingRequest.trucksTypeId,
-          this.dedicatedShippingRequest.carrierTenantId
-        )
+        .getReplacementTrucksForDropDown(this.dedicatedShippingRequestId, this.dedicatedTruckTypeId, this.appSession.tenantId)
         .subscribe((res) => {
           this.allTrucks = res.map((item) => {
             (item.id as any) = Number(item.id);
@@ -177,9 +198,9 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
   }
 
   onSelectionChanged(row) {
-    if (row.selectedRowKeys.length > this.dedicatedShippingRequest?.numberOfTrucks) {
-      this.dataGrid.instance.deselectRows(row.currentSelectedRowKeys);
-    }
+    // if (row.selectedRowKeys.length > this.dedicatedShippingRequest?.numberOfTrucks) {
+    //   this.dataGrid.instance.deselectRows(row.currentSelectedRowKeys);
+    // }
   }
 
   private getTrucksForReplace() {
@@ -194,6 +215,9 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
           .then((response) => {
             response.data.map((item) => {
               item.selectedTruckId = null;
+              if (item.isRequestedToReplace) {
+                self.selectedItems.push(item);
+              }
             });
             return {
               data: response.data,
@@ -220,6 +244,9 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
           .then((response) => {
             response.data.map((item) => {
               item.selectedDriverId = null;
+              if (item.isRequestedToReplace) {
+                self.selectedItems.push(item);
+              }
             });
             return {
               data: response.data,

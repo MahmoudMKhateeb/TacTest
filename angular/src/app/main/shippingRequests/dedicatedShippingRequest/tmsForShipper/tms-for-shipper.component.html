@@ -84,7 +84,14 @@
                 ></dxi-column>
                 <dxi-column *ngIf="!shippingRequestId" dataField="carrierName" caption="{{ l('CarrierName') }}"></dxi-column>
                 <dxi-column dataField="status" caption="{{ l('Status') }}"></dxi-column>
+                <dxi-column dataField="originalDedicatedTruckName" caption="{{ l('originalDedicatedTruckName') }}"></dxi-column>
+                <dxi-column dataField="replacementFlag" caption="{{ l('replacementFlag') }}" cellTemplate="replacementFlagTemplate"></dxi-column>
 
+                <div *dxTemplate="let data of 'replacementFlagTemplate'">
+                  <span>
+                    {{ getReplacementFlagText(data.data.replacementFlag) }}
+                  </span>
+                </div>
                 <div *dxTemplate="let options of 'cellTemplateActions'">
                   <div class="btn-group dropdown" dropdown container="body">
                     <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
@@ -111,7 +118,7 @@
                           {{ 'updateTruckPerformance' | localize }}
                         </a>
                       </li>
-                      <li *ngIf="isTachyonDealer">
+                      <li *ngIf="isTachyonDealer && !options?.data?.isRequestedToReplace">
                         <a href="javascript:;" class="dropdown-item" (click)="openTruckAndDriverReplacement(true, options.data)">
                           {{ 'requestReplacement' | localize }}
                         </a>
@@ -174,7 +181,14 @@
                 ></dxi-column>
                 <dxi-column *ngIf="!shippingRequestId" dataField="carrierName" caption="{{ l('CarrierName') }}"></dxi-column>
                 <dxi-column dataField="status" caption="{{ l('Status') }}"></dxi-column>
+                <dxi-column dataField="originalDedicatedTruckName" caption="{{ l('originalDedicatedTruckName') }}"></dxi-column>
+                <dxi-column dataField="replacementFlag" caption="{{ l('replacementFlag') }}" cellTemplate="replacementFlagTemplate"></dxi-column>
 
+                <div *dxTemplate="let data of 'replacementFlagTemplate'">
+                  <span>
+                    {{ getReplacementFlagText(data.data.replacementFlag) }}
+                  </span>
+                </div>
                 <div *dxTemplate="let options of 'cellTemplateActions'">
                   <div class="btn-group dropdown" dropdown container="body">
                     <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
@@ -191,7 +205,7 @@
                       </span>
                     </a>
                     <ul class="dropdown-menu z-index-1000" *dropdownMenu>
-                      <li *ngIf="isTachyonDealer">
+                      <li *ngIf="isTachyonDealer && !options?.data?.isRequestedToReplace">
                         <a href="javascript:;" class="dropdown-item" (click)="openTruckAndDriverReplacement(false, options.data)">
                           {{ 'requestReplacement' | localize }}
                         </a>

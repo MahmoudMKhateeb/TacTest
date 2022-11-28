@@ -1,6 +1,11 @@
 import { AfterViewInit, Component, ElementRef, Injector, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DedicatedShippingRequestsServiceProxy, LoadResult, NormalPricePackagesServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  DedicatedShippingRequestsServiceProxy,
+  LoadResult,
+  NormalPricePackagesServiceProxy,
+  ReplacementFlag,
+} from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -19,6 +24,7 @@ import { DedicatedTruckModel } from '@app/main/shippingRequests/dedicatedShippin
 import * as moment from '@node_modules/moment';
 import { TruckPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance.component';
 import { TruckAndDriverReplacementComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-and-driver-replacement/truck-and-driver-replacement.component';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'tms-for-shipper',
@@ -40,8 +46,13 @@ export class TmsForShipperComponent extends AppComponentBase implements OnInit, 
   dataSourceForTrucks: any = {};
   activeTab = 1;
   trucks: DedicatedTruckModel[] = [];
+  replacementFlags: any[] = [];
 
-  constructor(injector: Injector, private _dedicatedShippingRequestsServiceProxy: DedicatedShippingRequestsServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _dedicatedShippingRequestsServiceProxy: DedicatedShippingRequestsServiceProxy,
+    private enumToArrayService: EnumToArrayPipe
+  ) {
     super(injector);
   }
 
@@ -51,6 +62,8 @@ export class TmsForShipperComponent extends AppComponentBase implements OnInit, 
 
   ngOnInit() {
     this.getAllTrucksAndDrivers();
+    this.replacementFlags = this.enumToArrayService.transform(ReplacementFlag);
+    console.log('this.replacementFlags', this.replacementFlags);
   }
 
   getAllTrucksAndDrivers() {
@@ -109,5 +122,9 @@ export class TmsForShipperComponent extends AppComponentBase implements OnInit, 
   openTruckAndDriverReplacement(isForTruck: boolean, data) {
     console.log('data', data);
     this.appTruckAndDriverReplacement.show(isForTruck, data.id);
+  }
+
+  getReplacementFlagText(val: number) {
+    return this.replacementFlags.length > 0 ? this.replacementFlags.find((item) => Number(item.key) === val).value : '';
   }
 }

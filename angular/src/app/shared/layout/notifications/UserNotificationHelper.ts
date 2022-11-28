@@ -196,6 +196,10 @@ export class UserNotificationHelper extends AppComponentBase {
         return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.srId}`;
       case 'App.PenaltyComplaintAdded':
         return `app/main/penalties/view?id=${userNotification.notification.data.properties.penaltyId}`;
+      case 'App.NotifyCarrierWithDriverReplacement':
+        return `/app/main/shippingRequests/shippingRequests?dedicatedDriverId=${userNotification.notification.data.properties.dedicatedDriverId}&shippingRequestId=${userNotification.notification.data.properties.shippingRequestId}`;
+      case 'App.NotifyCarrierWithTruckReplacement':
+        return `/app/main/shippingRequests/shippingRequests?dedicatedTruckId=${userNotification.notification.data.properties.dedicatedTruckId}&shippingRequestId=${userNotification.notification.data.properties.shippingRequestId}&truckTypeId=${userNotification.notification.data.properties.truckTypeId}`;
     }
 
     //No url for this notification
