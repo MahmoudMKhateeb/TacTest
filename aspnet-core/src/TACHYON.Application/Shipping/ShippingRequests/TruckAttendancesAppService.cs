@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.DedicatedDynamicInvocies;
 using TACHYON.Features;
 using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequests.Dtos.Dedicated;
@@ -80,6 +81,13 @@ namespace TACHYON.Shipping.ShippingRequests
             await _truckAttendanceRepository.DeleteAsync(item);
         }
 
+        public async Task<int> GetDaysNumberByWorkingDayType(WorkingDayType workingDayType, long dedicatedTruckId)
+        {
+            return await _truckAttendanceRepository.GetAll()
+                .WhereIf(workingDayType == WorkingDayType.Normal, x => x.AttendaceStatus == AttendaceStatus.Present)
+                .WhereIf(workingDayType == WorkingDayType.OverTime, x => x.AttendaceStatus == AttendaceStatus.OverTime)
+                .CountAsync(x => x.DedicatedShippingRequestTruckId == dedicatedTruckId);
+        }
         #region Helper
 
         private async Task Create(List<DedicatedShippingRequestTruckAttendance> input)

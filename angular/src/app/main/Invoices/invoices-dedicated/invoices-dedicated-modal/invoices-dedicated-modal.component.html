@@ -135,6 +135,28 @@
                   valueExpr="id"
                   placeholder="{{ l('SelectaTruck') }}"
                   [disabled]="!root.shippingRequestId"
+                  (onValueChanged)="LoadNumberOfDays($event)"
+                >
+                </dx-select-box>
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="price">
+                  {{ l('WorkingDayType') }}
+                  <span class="required-fileds"> *</span>
+                </label>
+                <dx-select-box
+                  id="workingDayType"
+                  name="workingDayType"
+                  [(value)]="dataSourceForEdit.workingDayType"
+                  [dataSource]="allWorkingDayTypes"
+                  [searchEnabled]="true"
+                  displayExpr="value"
+                  valueExpr="key"
+                  placeholder="{{ l('SelectWorkingDayType') }}"
+                  (onValueChanged)="LoadNumberOfDays($event)"
+                  required
                 >
                 </dx-select-box>
               </div>
@@ -165,26 +187,7 @@
                 <input required type="number" class="form-control" name="pricePerDay" id="pricePerDay" [(ngModel)]="pricePerDay" disabled />
               </div>
             </div>
-            <div class="col-6 mb-4">
-              <div>
-                <label class="form-label" for="price">
-                  {{ l('WorkingDayType') }}
-                  <span class="required-fileds"> *</span>
-                </label>
-                <dx-select-box
-                  id="workingDayType"
-                  name="workingDayType"
-                  [(value)]="dataSourceForEdit.workingDayType"
-                  [dataSource]="allWorkingDayTypes"
-                  [searchEnabled]="true"
-                  displayExpr="value"
-                  valueExpr="key"
-                  placeholder="{{ l('SelectWorkingDayType') }}"
-                  required
-                >
-                </dx-select-box>
-              </div>
-            </div>
+            
             <div class="col-6 mb-4">
               <div>
                 <label class="form-label" for="price">
