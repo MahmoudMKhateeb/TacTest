@@ -228,6 +228,7 @@ namespace TACHYON.Notifications
          );
             notificationData["dedicatedTruckId"] = dedicatedTruck.Id;
             notificationData["shippingRequestId"] = dedicatedTruck.ShippingRequestId;
+            notificationData["truckTypeId"] = dedicatedTruck.ShippingRequest.TrucksTypeId;
             DisableTenancyFilters();
             var userIds = _userRepo.GetAll().Where(x => x.TenantId == dedicatedTruck.Truck.TenantId)
                 .Select(x => new UserIdentifier(x.TenantId, x.Id)).ToArray();
@@ -245,6 +246,7 @@ namespace TACHYON.Notifications
          );
             notificationData["dedicatedDriverId"] = dedicatedDriver.Id;
             notificationData["shippingRequestId"] = dedicatedDriver.ShippingRequestId;
+            notificationData["truckTypeId"] = dedicatedDriver.ShippingRequest.TrucksTypeId;
             DisableTenancyFilters();
             var userIds = _userRepo.GetAll().Where(x => x.TenantId == dedicatedDriver.DriverUser.TenantId)
                 .Select(x => new UserIdentifier(x.TenantId, x.Id)).ToArray();
