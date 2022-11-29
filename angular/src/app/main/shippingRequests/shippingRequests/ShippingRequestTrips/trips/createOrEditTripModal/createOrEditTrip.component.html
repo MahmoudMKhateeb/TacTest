@@ -164,7 +164,7 @@
               </div>
               <!--  end:: Trip start&End Dates-->
               <!-- begin::Vas's  -->
-              <div class="col-lg-6" *ngIf="VasListFromFather?.length > 0">
+              <div class="col-lg-6" *ngIf="VasListFromFather?.length > 0 && shippingRequestForView?.shippingRequestFlag != 1">
                 <div class="form-group">
                   <label>{{ l('vases') }}</label>
                   <p-multiSelect
@@ -179,6 +179,7 @@
                     [showHeader]="true"
                     [dataKey]="'shippingRequestVasId'"
                     optionLabel="name"
+                    
                   ></p-multiSelect>
                 </div>
               </div>

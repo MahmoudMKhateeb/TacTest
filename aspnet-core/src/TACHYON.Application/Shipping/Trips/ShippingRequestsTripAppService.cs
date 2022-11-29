@@ -53,6 +53,8 @@ using TACHYON.Storage;
 using TACHYON.Shipping.ShippingRequestAndTripNotes;
 using TACHYON.Shipping.Notes;
 using TACHYON.Shipping.Dedicated;
+using TACHYON.ShippingRequestTripVases.Dtos;
+using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.Shipping.Trips
 {
@@ -363,7 +365,23 @@ namespace TACHYON.Shipping.Trips
                 {
                     await _shippingRequestTripManager.ValidateNumberOfTrips(request, 1);
                 }
-                await Create(input, request);
+               
+                 await Create(input, request);
+                if(request.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+                {
+                    var vasList = new List<CreateOrEditShippingRequestTripVasDto>();
+                    foreach (var requestVas in request.ShippingRequestVases)
+                    {
+                        var tripVas = new CreateOrEditShippingRequestTripVasDto
+                        {
+                            ShippingRequestVasId = requestVas.VasId
+                        };
+                        vasList.Add(tripVas);
+                    }
+                    input.ShippingRequestTripVases = vasList;
+
+
+                }
                 request.TotalsTripsAddByShippier += 1;
             }
             else
@@ -932,6 +950,7 @@ namespace TACHYON.Shipping.Trips
         private async Task<ShippingRequest> GetShippingRequestByPermission(long shippingRequestId)
         {
             var request = await _shippingRequestRepository.GetAll()
+                .Include(x=>x.ShippingRequestVases)
                 .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
                 .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
