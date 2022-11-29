@@ -2897,5 +2897,15 @@
     <text name="SelectActor">اختر العميل</text>
     <text name="NotifyCarrierWithTruckReplacement">تاكيون تطلب منك استبدال الشاحنة {0} في طلب الشحن {1}</text>
     <text name="NotifyCarrierWithDriverReplacement">تاكيون تطلب منك استبدال السائق {0} في طلب الشحن {1}</text>
+    <text name="ReplaceDrivers">إستبدال السائقين</text>
+    <text name="ReplaceTrucks">إستبدال الشاحنات</text>
+    <text name="ReplaceWith">إستبدال ب</text>
+    <text name="replacementReason">سبب الاستبدال</text>
+    <text name="requestReplacement">طلب استبدال</text>
+    <text name="updateTruckPerformance">تعديل جودة الشاحنة</text>
+    <text name="FillAttendance">ادخال الحضور</text>
+    <text name="replacementIntervalInDays">فترة الاستبدال</text>
+    <text name="truckAttendanceModal">حضور الشاحنة</text>
+    <text name="viewAttendance">عرض الحضور</text>
 	</texts>
 </localizationDictionary>

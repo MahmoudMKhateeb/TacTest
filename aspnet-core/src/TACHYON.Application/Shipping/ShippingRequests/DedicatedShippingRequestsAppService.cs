@@ -381,7 +381,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 .WhereIf(await IsTachyonDealer(), x => true)
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.CarrierTenantId == AbpSession.TenantId &&
                 x.Truck.TenantId == AbpSession.TenantId)
-                .Where( x => x.ShippingRequestId == shippingRequestId && x.ShippingRequest.Status == ShippingRequestStatus.PostPrice)
+                .Where( x => x.ShippingRequestId == shippingRequestId && x.ShippingRequest.Status == ShippingRequestStatus.PostPrice &&
+                x.ReplacementFlag == ReplacementFlag.Original)
                 .ProjectTo<GetDedicatedTruckForReplaceDto>(AutoMapperConfigurationProvider)
                 .AsNoTracking();
 
@@ -420,6 +421,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var dedicatedTruck =await GetDedicateTruckById(input.DedicatedTruckId);
             if (dedicatedTruck.IsRequestedToReplace) throw new UserFriendlyException(L("TruckIsRequestedToReplaceBefore"));
+            if(dedicatedTruck.ReplacementFlag == ReplacementFlag.Replaced) throw new UserFriendlyException(L("OriginalTruckMustnotBeReplaced"));
             dedicatedTruck.ReplacementReason = input.ReplacementReason;
             dedicatedTruck.ReplacementIntervalInDays = input.ReplacementIntervalInDays;
             dedicatedTruck.IsRequestedToReplace = true;
@@ -431,16 +433,19 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var dedicatedTrucks = await GetDedicateTrucksByIds(input);
 
-            foreach(var item in input.ReplaceTruckDtos)
-            {
-                var ReplacedTruck = ObjectMapper.Map<DedicatedShippingRequestTruck>(item);
-                ReplacedTruck.ReplacementFlag = ReplacementFlag.Replaced;
-                ReplacedTruck.ReplacementDate = Clock.Now;
-                ReplacedTruck.KPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.TruckKPI);
-                ReplacedTruck.ShippingRequestId = input.ShippingRequestId;
-                ReplacedTruck.Status = dedicatedTrucks.First(x=>x.Id == item.OriginalDedicatedTruckId).Status;
+            if (dedicatedTrucks.Any(x => x.ReplacementFlag == ReplacementFlag.Replaced)) throw new UserFriendlyException(L("OriginalTruckMustnotBeReplaced"));
+            if (dedicatedTrucks.Any(x => x.ReplacementDate != null && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) > Clock.Now)) throw new UserFriendlyException(L("SomeTrucksAreCurrentlyReplaced"));
 
-                _dedicatedShippingRequestTruckRepository.Insert(ReplacedTruck);
+            var replacedTrucks = ObjectMapper.Map<List<DedicatedShippingRequestTruck>>(input.ReplaceTruckDtos);
+            foreach (var item in replacedTrucks)
+            {
+                item.ReplacementFlag = ReplacementFlag.Replaced;
+                item.ReplacementDate = Clock.Now;
+                item.KPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.TruckKPI);
+                item.ShippingRequestId = input.ShippingRequestId;
+                item.Status = dedicatedTrucks.First(x=>x.Id == item.OriginalDedicatedTruckId).Status;
+
+                _dedicatedShippingRequestTruckRepository.Insert(item);
             }
 
             // cancel request to replace in  original trucks
@@ -462,7 +467,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 .WhereIf(await IsTachyonDealer(), x => true)
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.CarrierTenantId == AbpSession.TenantId &&
                 x.DriverUser.TenantId == AbpSession.TenantId)
-                .Where(x => x.ShippingRequestId == shippingRequestId && x.ShippingRequest.Status == ShippingRequestStatus.PostPrice)
+                .Where(x => x.ShippingRequestId == shippingRequestId && x.ShippingRequest.Status == ShippingRequestStatus.PostPrice &&
+                x.ReplacementFlag == ReplacementFlag.Original)
                 .ProjectTo<GetDedicatedDriverForReplaceDto>(AutoMapperConfigurationProvider)
                 .AsNoTracking();
 
@@ -497,6 +503,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var dedicatedDriver = await GetDedicatedDriverById(input.DedicatedDriverId);
             if (dedicatedDriver.IsRequestedToReplace) throw new UserFriendlyException(L("TruckIsRequestedToReplaceBefore"));
+            if (dedicatedDriver.ReplacementFlag == ReplacementFlag.Replaced) throw new UserFriendlyException(L("OriginalDriverMustnotBeReplaced"));
             dedicatedDriver.ReplacementReason = input.ReplacementReason;
             dedicatedDriver.ReplacementIntervalInDays = input.ReplacementIntervalInDays;
             dedicatedDriver.IsRequestedToReplace = true;
@@ -507,16 +514,18 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task ReplaceDrivers(ReplaceDriverInput input)
         {
             var dedicatedDrivers = await GetDedicateDriversByIds(input);
+            if (dedicatedDrivers.Any(x=>x.ReplacementFlag == ReplacementFlag.Replaced)) throw new UserFriendlyException(L("OriginalDriverMustnotBeReplaced"));
+            if (dedicatedDrivers.Any(x => x.ReplacementDate != null && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) > Clock.Now)) throw new UserFriendlyException(L("SomeDriversAreCurrentlyReplaced"));
 
-            foreach (var item in input.ReplaceDriverDtos)
+            var ReplacedDrivers = ObjectMapper.Map<List<DedicatedShippingRequestDriver>>(input.ReplaceDriverDtos);
+            foreach (var item in ReplacedDrivers)
             {
-                var ReplacedDriver = ObjectMapper.Map<DedicatedShippingRequestDriver>(item);
-                ReplacedDriver.ReplacementFlag = ReplacementFlag.Replaced;
-                ReplacedDriver.ReplacementDate = Clock.Now;
-                ReplacedDriver.ShippingRequestId = input.ShippingRequestId;
-                ReplacedDriver.Status = dedicatedDrivers.First(x => x.Id == item.OriginalDedicatedDriverId).Status;
+                item.ReplacementFlag = ReplacementFlag.Replaced;
+                item.ReplacementDate = Clock.Now;
+                item.ShippingRequestId = input.ShippingRequestId;
+                item.Status = dedicatedDrivers.First(x => x.Id == item.OriginalDedicatedDriverId).Status;
 
-                _dedicatedShippingRequestDriverRepository.Insert(ReplacedDriver);
+                _dedicatedShippingRequestDriverRepository.Insert(item);
             }
 
             // cancel request to replace in  original drivers
