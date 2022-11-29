@@ -47,6 +47,20 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
   private dedicatedTruckTypeId: number;
   private dedicatedTruckId: number;
   private dedicatedDriverId: number;
+  public get shouldDisable(): boolean {
+    return (
+      this.selectedItems.length === 0 ||
+      (this.selectedItems.length > 0 &&
+        this.dataGrid.instance.getSelectedRowsData().some((item) => {
+          return (
+            (this.isForTruck && !isNotNullOrUndefined(item.selectedTruckId)) ||
+            (!this.isForTruck && !isNotNullOrUndefined(item.selectedDriverId)) ||
+            !isNotNullOrUndefined(item.replacementIntervalInDays) ||
+            item.replacementIntervalInDays?.toString().length === 0
+          );
+        }))
+    );
+  }
 
   constructor(
     injector: Injector,
@@ -105,7 +119,6 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
   }
 
   save() {
-    console.log('this.dataGrid.instance.getSelectedRowsData()', this.dataGrid.instance.getSelectedRowsData());
     const items = this.dataGrid.instance.getSelectedRowsData().map((item) => {
       let parsedItem;
       if (this.isForTruck) {
@@ -217,6 +230,9 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
               item.selectedTruckId = null;
               if (item.isRequestedToReplace) {
                 self.selectedItems.push(item);
+              } else {
+                item.replacementIntervalInDays = null;
+                item.replacementReason = null;
               }
             });
             return {
@@ -246,6 +262,9 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
               item.selectedDriverId = null;
               if (item.isRequestedToReplace) {
                 self.selectedItems.push(item);
+              } else {
+                item.replacementIntervalInDays = null;
+                item.replacementReason = null;
               }
             });
             return {

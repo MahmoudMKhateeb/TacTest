@@ -118,7 +118,11 @@
                           {{ 'updateTruckPerformance' | localize }}
                         </a>
                       </li>
-                      <li *ngIf="isTachyonDealer && !options?.data?.isRequestedToReplace">
+                      <li
+                        *ngIf="
+                          isTachyonDealer && !options?.data?.isRequestedToReplace && options.data.replacementFlag === ReplacementFlagEnum.Original
+                        "
+                      >
                         <a href="javascript:;" class="dropdown-item" (click)="openTruckAndDriverReplacement(true, options.data)">
                           {{ 'requestReplacement' | localize }}
                         </a>
@@ -205,7 +209,11 @@
                       </span>
                     </a>
                     <ul class="dropdown-menu z-index-1000" *dropdownMenu>
-                      <li *ngIf="isTachyonDealer && !options?.data?.isRequestedToReplace">
+                      <li
+                        *ngIf="
+                          isTachyonDealer && !options?.data?.isRequestedToReplace && options.data.replacementFlag === ReplacementFlagEnum.Original
+                        "
+                      >
                         <a href="javascript:;" class="dropdown-item" (click)="openTruckAndDriverReplacement(false, options.data)">
                           {{ 'requestReplacement' | localize }}
                         </a>

@@ -37,7 +37,7 @@
         <button type="button" class="btn btn btn-secondary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
           {{ l('Close') }}
         </button>
-        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="save()">
+        <button [disabled]="shouldDisable" type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="save()">
           {{ l('Save') }}
         </button>
       </div>

@@ -46,6 +46,7 @@ export class TmsForShipperComponent extends AppComponentBase implements OnInit, 
   dataSourceForTrucks: any = {};
   activeTab = 1;
   trucks: DedicatedTruckModel[] = [];
+  ReplacementFlagEnum = ReplacementFlag;
   replacementFlags: any[] = [];
 
   constructor(

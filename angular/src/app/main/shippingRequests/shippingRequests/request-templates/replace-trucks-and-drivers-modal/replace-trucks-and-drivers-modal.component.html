@@ -18,21 +18,22 @@
           </div>
           <!--end::Header-->
           <!--begin::Body-->
+          <!--              [selection]="{ mode: 'multiple' }"-->
           <div class="card-body">
             <dx-data-grid
               #dataGrid
               [dataSource]="dataSource"
               valueExpr="id"
-              [selection]="{ mode: 'multiple' }"
               [hoverStateEnabled]="true"
               [paging]="{ enabled: true, pageSize: 10 }"
               [filterRow]="{ visible: true }"
               [scrolling]="{ mode: 'virtual' }"
               [height]="345"
               [(selectedRowKeys)]="selectedItems"
-              (onSelectionChanged)="onSelectionChanged($event)"
-              (onCellClick)="onDataGridCellClick($event); print($event)"
             >
+              <!--              (onSelectionChanged)="onSelectionChanged($event)"-->
+              <!--              (onCellClick)="onDataGridCellClick($event); print($event)"-->
+              <dxo-selection [selectAllMode]="'allPages'" [showCheckBoxesMode]="'always'" mode="multiple"></dxo-selection>
               <dxi-column *ngIf="isForTruck" [allowEditing]="false" dataField="truckName" caption="{{ 'PlateNumber' | localize }}"></dxi-column>
               <dxi-column *ngIf="!isForTruck" [allowEditing]="false" dataField="driverName" caption="{{ 'Driver' | localize }}"></dxi-column>
               <dxi-column *ngIf="isForTruck" dataField="originalTruckId" caption="{{ 'ReplaceWith' | localize }}" cellTemplate="truckCellTemplate">
@@ -94,7 +95,7 @@
             class="btn btn-primary blue font-weight-bold py-3 px-3 no-padding-custom"
             icon="fa fa-save"
             text="{{ l('Save') }}"
-            [disabled]="selectedItems.length === 0"
+            [disabled]="shouldDisable"
             [useSubmitBehavior]="true"
             [validationGroup]="'assignTrucksAndDrivers'"
           >
