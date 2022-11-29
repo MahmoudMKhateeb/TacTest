@@ -18,6 +18,7 @@ import {
   ShippingRequestsServiceProxy,
   TenantCityLookupTableDto,
   TenantRegistrationServiceProxy,
+  TruckAttendancesServiceProxy,
   WorkingDayType,
 } from '@shared/service-proxies/service-proxies';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
@@ -59,6 +60,7 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
     private _DynamicInvoiceServiceProxy: DynamicInvoiceServiceProxy,
     private _DedicatedShippingRequestsServiceProxy: DedicatedShippingRequestsServiceProxy,
     private _DedicatedDynamiceInvoicesServiceProxy: DedicatedDynamiceInvoicesServiceProxy,
+    private _AttendanceSheetServiceProxy: TruckAttendancesServiceProxy,
     private _CommonServ: CommonLookupServiceProxy,
     private _DateFormatterService: DateFormatterService,
     private _EnumToArrayPipeService: EnumToArrayPipe
@@ -262,5 +264,14 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
     let total = 0;
     this.root?.dedicatedInvoiceItems.map((item) => (total += item[field]));
     return total;
+  }
+
+  LoadNumberOfDays($event: any){
+    if($event.value && this.selectedDedicateTruckId){
+      this._AttendanceSheetServiceProxy.getDaysNumberByWorkingDayType($event.value,this.selectedDedicateTruckId )
+      .subscribe((res)=>{
+      this.dataSourceForEdit.numberOfDays =res;
+    });
+    }
   }
 }
