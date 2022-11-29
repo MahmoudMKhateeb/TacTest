@@ -23,7 +23,6 @@
               #dataGrid
               [dataSource]="allTrucks"
               valueExpr="truckId"
-              [selection]="{ mode: 'multiple' }"
               [hoverStateEnabled]="true"
               [paging]="{ enabled: true, pageSize: 10 }"
               [filterRow]="{ visible: true }"
@@ -33,6 +32,7 @@
               (onSelectionChanged)="onSelectionChanged($event)"
               (onCellClick)="onDataGridCellClick($event); print($event)"
             >
+              <dxo-selection [selectAllMode]="'allPages'" [showCheckBoxesMode]="'always'" mode="multiple"></dxo-selection>
               <dxi-column [allowEditing]="false" dataField="truckName" caption="{{ 'PlateNumber' | localize }}"></dxi-column>
               <dxi-column dataField="driverUserId" caption="{{ 'Driver' | localize }}" cellTemplate="driverCellTemplate">
                 <dxo-lookup [dataSource]="allDrivers" displayExpr="displayName" valueExpr="id"> </dxo-lookup>

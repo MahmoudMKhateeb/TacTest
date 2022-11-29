@@ -17,12 +17,7 @@ export class TruckAndDriverReplacementComponent extends AppComponentBase impleme
   public replacementReason: string;
   public replacementIntervalInDays: number;
   public get shouldDisable(): boolean {
-    return (
-      !this.replacementReason ||
-      this.replacementReason.length === 0 ||
-      !this.replacementIntervalInDays?.toString() ||
-      this.replacementIntervalInDays?.toString().length === 0
-    );
+    return !this.replacementIntervalInDays?.toString() || this.replacementIntervalInDays?.toString().length === 0;
   }
 
   constructor(injector: Injector, private _dedicatedShippingRequestsServiceProxy: DedicatedShippingRequestsServiceProxy) {
