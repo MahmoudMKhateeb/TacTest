@@ -59,7 +59,7 @@
                       [bsConfig]="{ adaptivePosition: true }"
                   />
               </div>
-            <div class="form-group col-md-6">
+            <div *ngIf="currentCompanyType === companyType.Shipper" class="form-group col-md-6">
               <label>{{ l('Proposal') }} <span class="text-danger">*</span></label>
               <div
                 [ngClass]="{
@@ -72,6 +72,33 @@
                 </select>
               </div>
             </div>
+              <div *ngIf="currentCompanyType === companyType.Carrier" class="form-group col-md-12">
+                  <label>{{ l('PricePackages') }} <span class="text-danger">*</span></label>
+                  <dx-drop-down-box
+                      [(value)]="appendix.tmsPricePackages"
+                      valueExpr="id"
+                      displayExpr="displayName"
+                      placeholder="Select a value..."
+                      [showClearButton]="true"
+                      [dataSource]="dataSource"
+                      [disabled]="!companyId"
+                  >
+                      <div *dxTemplate="let data of 'content'">
+                          <dx-data-grid
+                              [dataSource]="dataSource"
+                              [columns]="['displayName', 'truckType', 'originCity', 'destinationCity', 'directRequestTotalPrice', 'tachyonManageTotalPrice']"
+                              [selection]="{ mode: 'multiple' }"
+                              [hoverStateEnabled]="true"
+                              [paging]="{ enabled: true, pageSize: 10 }"
+                              [filterRow]="{ visible: true }"
+                              [scrolling]="{ mode: 'virtual' }"
+                              [height]="345"
+                              [(selectedRowKeys)]="appendix.tmsPricePackages"
+                          >
+                          </dx-data-grid>
+                      </div>
+                  </dx-drop-down-box>
+              </div>
             <div class="form-group col-md-6">
               <label for="appendixScopeOverview">{{ 'ScopeOverview' | localize }}</label>
               <input id="appendixScopeOverview" [(ngModel)]="appendix.scopeOverview" required type="text" class="form-control" name="scopeOverview" />

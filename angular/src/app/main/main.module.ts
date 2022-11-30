@@ -332,6 +332,7 @@ import { ViewActorModalComponent } from './actors/actors/view-actor-modal.compon
 import { CreateOrEditActorModalComponent } from './actors/actors/create-or-edit-actor-modal.component';
 import { ActorInvoiceDemandModelComponent } from './actors/Actor-Invoices-ondemand-model.component';
 import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/client-demand-model.component';
+import {PricePackageModule} from '@app/main/pricePackages/price-package.module';
 
 
 @NgModule({
@@ -393,6 +394,7 @@ import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/cli
     QuartzCronModule,
     SplitButtonModule,
     CalendarModule,
+    PricePackageModule,
   ],
   declarations: [
     EmailTemplatesComponent,
@@ -632,7 +634,7 @@ import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/cli
     ViewActorModalComponent,
     CreateOrEditActorModalComponent,
     ActorInvoiceDemandModelComponent,
-    ClientDemandModelComponent
+    ClientDemandModelComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

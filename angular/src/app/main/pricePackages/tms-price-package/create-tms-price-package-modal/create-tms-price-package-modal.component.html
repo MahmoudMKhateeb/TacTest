@@ -99,7 +99,7 @@
             <div class="form-group col-md-4">
               <label>{{ l('CommissionType') }} </label>
                 <select [(ngModel)]="tmsPricePackage.commissionType" required class="form-control" name="tmsPP_CommissionType">
-                    <option selected disabled [value]="undefined">{{ 'SelectCompany' | localize }}</option>
+                    <option selected disabled [value]="undefined">{{ 'SelectType' | localize }}</option>
                     <option *ngFor="let item of commissionTypes" [value]="item.key">{{ item.value }}</option>
                 </select>
             </div>

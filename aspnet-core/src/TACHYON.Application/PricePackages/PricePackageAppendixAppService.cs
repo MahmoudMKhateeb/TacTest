@@ -1,5 +1,6 @@
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -31,7 +32,10 @@ namespace TACHYON.PricePackages
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
         {
+            DisableTenancyFilters();
+            var isTmsOrHost = !AbpSession.TenantId.HasValue || await IsTachyonDealer();
             var appendices = _appendixRepository.GetAll()
+                .WhereIf(!isTmsOrHost, x => x.DestinationTenantId == AbpSession.TenantId)
                 .AsNoTracking().ProjectTo<AppendixListDto>(AutoMapperConfigurationProvider);
 
             return await LoadResultAsync(appendices, input.LoadOptions);
@@ -77,19 +81,17 @@ namespace TACHYON.PricePackages
         protected virtual async Task Update(CreateOrEditAppendixDto input)
         {
             if (!input.Id.HasValue) return;
-            
-            var updatedAppendix = await _appendixRepository.FirstOrDefaultAsync(input.Id.Value);
 
-            if (updatedAppendix.Status == AppendixStatus.Confirmed)
-                throw new UserFriendlyException(L("YouCanNotUpdateConfirmedAppendix"));
+            var updatedAppendix = ObjectMapper.Map<PricePackageAppendix>(input);
 
-            ObjectMapper.Map(updatedAppendix, input);
+            await _appendixManager.UpdateAppendix(updatedAppendix, input.TmsPricePackages, input.EmailAddress);
         }
 
         [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Accept)]
         public async Task Accept(int appendixId)
         {
-            var status = await _appendixRepository.GetAll().Select(x => x.Status).FirstOrDefaultAsync();
+            var status = await _appendixRepository.GetAll().Where(x=>x.Id == appendixId)
+                .Select(x => x.Status).FirstOrDefaultAsync();
 
             if (status == default) throw new UserFriendlyException(L("NotFound"));
 

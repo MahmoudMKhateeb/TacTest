@@ -5,6 +5,8 @@ namespace TACHYON.PricePackages.TmsPricePackages
 {
     public interface ITmsPricePackageManager : IDomainService
     {
-        Task<TmsPricePackage> GetMatchingPricePackage(long shippingRequestId);
+        Task SendOfferByPricePackage(int pricePackageId, long srId);
+
+        Task AcceptOfferByPricePackage(TmsPricePackage pricePackage);
     }
 }

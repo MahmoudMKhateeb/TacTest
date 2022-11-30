@@ -22,6 +22,7 @@ export class NormalPricePackagesList extends AppComponentBase {
   constructor(injector: Injector, private _normalPricePackages: NormalPricePackagesServiceProxy) {
     super(injector);
   }
+  // TODO : remove this component (hard delete)
   ngOnInit(): void {
     this._normalPricePackages.getCarriers().subscribe((result) => {
       this.allCarriers = result;

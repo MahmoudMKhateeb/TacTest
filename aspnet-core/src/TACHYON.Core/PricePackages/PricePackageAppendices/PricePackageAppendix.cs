@@ -2,6 +2,7 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.MultiTenancy;
 using TACHYON.PricePackages.PricePackageProposals;
 using TACHYON.PricePackages.TmsPricePackages;
 
@@ -31,6 +32,11 @@ namespace TACHYON.PricePackages.PricePackageAppendices
 
         public AppendixStatus Status { get; set; }
 
+        public int? DestinationTenantId { get; set; }
+
+        [ForeignKey(nameof(DestinationTenantId))]
+        public Tenant DestinationTenant { get; set; }
+        
         [NotMapped]
         public List<TmsPricePackage> TmsPricePackages { get; set; }
     }

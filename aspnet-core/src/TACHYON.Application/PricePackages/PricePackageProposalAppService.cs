@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -37,7 +38,11 @@ namespace TACHYON.PricePackages
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
         {
+            DisableTenancyFilters();
+            var isTmsOrHost = !AbpSession.TenantId.HasValue || await IsTachyonDealer();
+            
             var proposals = _proposalRepository.GetAll().AsNoTracking()
+                .WhereIf(!isTmsOrHost,x=> x.ShipperId == AbpSession.TenantId)
                 .ProjectTo<ProposalListItemDto>(AutoMapperConfigurationProvider);
 
            return await LoadResultAsync(proposals, input.LoadOptions);
@@ -129,12 +134,14 @@ namespace TACHYON.PricePackages
             _proposalRepository.Update(proposalId,x => x.Status = ProposalStatus.Rejected);
         }
 
-        public async Task<ListResultDto<SelectItemDto>> GetAllProposalsForDropdown(int shipperId)
+        public async Task<ListResultDto<SelectItemDto>> GetAllProposalsForDropdown(int shipperId,int? appendixId)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
 
             var proposalsList = await _proposalRepository.GetAll().AsNoTracking()
                 .Where(x => x.ShipperId == shipperId)
+                .WhereIf(appendixId.HasValue,x=> !x.AppendixId.HasValue || x.AppendixId == appendixId )
+                .WhereIf(!appendixId.HasValue,x=> !x.AppendixId.HasValue)
                 .Select(x => new SelectItemDto() { DisplayName = x.ProposalName, Id = x.Id.ToString() })
                 .ToListAsync();
 
