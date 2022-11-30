@@ -42,20 +42,26 @@ namespace TACHYON.Tracking
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
-        private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<User, long> _userRepository;
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
         private readonly ProfileAppService _ProfileAppService;
         private readonly ForceDeliverTripExcelExporter _deliverTripExcelExporter;
 
-        public TrackingAppService(ShippingRequestPointWorkFlowProvider workFlowProvider, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ProfileAppService profileAppService, IRepository<RoutPoint, long> routPointRepository, ForceDeliverTripExcelExporter deliverTripExcelExporter)
+        public TrackingAppService(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository,
+            IRepository<User, long> userRepository,
+            ShippingRequestPointWorkFlowProvider workFlowProvider,
+            ProfileAppService profileAppService,
+            ForceDeliverTripExcelExporter deliverTripExcelExporter)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
+            _RoutPointRepository = routPointRepository;
+            _userRepository = userRepository;
             _workFlowProvider = workFlowProvider;
             _ProfileAppService = profileAppService;
-            _RoutPointRepository = routPointRepository;
             _deliverTripExcelExporter = deliverTripExcelExporter;
         }
+
+
         public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
@@ -136,10 +142,12 @@ namespace TACHYON.Tracking
                 .PageBy(input).ToList();
 
             List<TrackingListDto> trackingLists = new List<TrackingListDto>();
-            query.ForEach(async r =>
+
+            foreach (var item in query)
             {
-                trackingLists.Add(await GetMap(r));
-            });
+                  trackingLists.Add(await GetMap(item));
+            }
+
 
             return new PagedResultDto<TrackingListDto>(
                 query.Count,
