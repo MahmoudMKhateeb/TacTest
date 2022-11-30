@@ -6535,11 +6535,29 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsRequestedToReplace")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<long?>("OriginalDedicatedDriverId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ReplacementDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("ReplacementFlag")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int?>("ReplacementIntervalInDays")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReplacementReason")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("ShippingRequestId")
                         .HasColumnType("bigint");
@@ -6550,6 +6568,8 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DriverUserId");
+
+                    b.HasIndex("OriginalDedicatedDriverId");
 
                     b.HasIndex("ShippingRequestId");
 
@@ -6578,6 +6598,9 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsRequestedToReplace")
+                        .HasColumnType("bit");
+
                     b.Property<double?>("KPI")
                         .HasColumnType("float");
 
@@ -6586,6 +6609,21 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<long?>("OriginalDedicatedTruckId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ReplacementDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("ReplacementFlag")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int?>("ReplacementIntervalInDays")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReplacementReason")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("ShippingRequestId")
                         .HasColumnType("bigint");
@@ -6597,6 +6635,8 @@ namespace TACHYON.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OriginalDedicatedTruckId");
 
                     b.HasIndex("ShippingRequestId");
 
@@ -10717,8 +10757,12 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Authorization.Users.User", "DriverUser")
                         .WithMany("DedicatedShippingRequestDrivers")
                         .HasForeignKey("DriverUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
+
+                    b.HasOne("TACHYON.Shipping.Dedicated.DedicatedShippingRequestDriver", "OriginalDriver")
+                        .WithMany()
+                        .HasForeignKey("OriginalDedicatedDriverId");
 
                     b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "ShippingRequest")
                         .WithMany("DedicatedShippingRequestDrivers")
@@ -10729,6 +10773,10 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Shipping.Dedicated.DedicatedShippingRequestTruck", b =>
                 {
+                    b.HasOne("TACHYON.Shipping.Dedicated.DedicatedShippingRequestTruck", "OriginalTruck")
+                        .WithMany()
+                        .HasForeignKey("OriginalDedicatedTruckId");
+
                     b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "ShippingRequest")
                         .WithMany("DedicatedShippingRequestTrucks")
                         .HasForeignKey("ShippingRequestId")
