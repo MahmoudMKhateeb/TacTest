@@ -15,6 +15,10 @@ import {
   TrucksServiceProxy,
   UpdateExpectedDeliveryTimeInput,
   WaybillsServiceProxy,
+  GetShippingRequestForViewOutput,
+  ShippingRequestRouteType,
+  DedicatedShippingRequestsServiceProxy,
+  GetAllDedicatedDriversOrTrucksForDropDownDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -61,8 +65,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   originalExpectedDeliveryTime: Moment;
   expectedDeliveryTimeLoading: boolean;
   shippingRequestForView: GetShippingRequestForViewOutput;
-  allDedicatedDrivers: SelectItemDto[];
-  allDedicatedTrucks: SelectItemDto[];
+  allDedicatedDrivers: GetAllDedicatedDriversOrTrucksForDropDownDto[];
+  allDedicatedTrucks: GetAllDedicatedDriversOrTrucksForDropDownDto[];
   routeTypes: any[] = [];
   RouteTypesEnum = ShippingRequestRouteType;
 

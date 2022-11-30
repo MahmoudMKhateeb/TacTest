@@ -909,7 +909,9 @@ namespace TACHYON.Invoices
                     Remarks = item.WorkingDayType == DedicatedDynamicInvocies.WorkingDayType.OverTime ? "Over Time" : item.Remarks,
                     Duration = $"{item.NumberOfDays} {"Days"}",
                     PricePerDay = item.PricePerDay,
-                    TruckType = item.DedicatedShippingRequestTruck.Truck.TrucksTypeFk.DisplayName,
+                    TruckType = item.DedicatedShippingRequestTruck.ReplacementFlag == Shipping.Dedicated.ReplacementFlag.Replaced 
+                    ?$"{item.DedicatedShippingRequestTruck.Truck.TrucksTypeFk.DisplayName}{"<br/>"}{"Replacement"}{item.DedicatedShippingRequestTruck.OriginalTruck.Truck.PlateNumber}" 
+                    :item.DedicatedShippingRequestTruck.Truck.TrucksTypeFk.DisplayName,
                     TruckPlateNumber = item.DedicatedShippingRequestTruck.Truck.PlateNumber,
                     TaxVat = item.TaxVat,
                     Date = item.CreationTime.ToString("dd/MM/yyyy"),

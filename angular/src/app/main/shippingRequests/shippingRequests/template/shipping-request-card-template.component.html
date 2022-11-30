@@ -585,6 +585,22 @@
                   {{ l('viewAttendance') }}
                 </a>
                 <a
+                  *ngIf="(isCarrier || isCarrierSaas || isTachyonDealer) && !Channel && item.isDriversAndTrucksAssigned"
+                  href="javascript:void(0)"
+                  (click)="viewTrucksOrDrivers(item, false)"
+                  class="red"
+                >
+                  {{ l('ReplaceDrivers') }}
+                </a>
+                <a
+                  *ngIf="(isCarrier || isCarrierSaas || isTachyonDealer) && !Channel && item.isDriversAndTrucksAssigned"
+                  href="javascript:void(0)"
+                  (click)="viewTrucksOrDrivers(item, true)"
+                  class="red"
+                >
+                  {{ l('ReplaceTrucks') }}
+                </a>
+                <a
                   *ngIf="
                     (item.status == shippingRequestStatusEnum.PrePrice || item.status == shippingRequestStatusEnum.NeedsAction) &&
                     !Channel &&
@@ -641,4 +657,5 @@
 <price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search()" (modalRefresh)="LoadData()"></price-offer-view-model>
 <load-entity-template-modal #loadEntityTemplateModal></load-entity-template-modal>
 <assign-trucks-and-drivers-modal #assignTrucksAndDriversModal></assign-trucks-and-drivers-modal>
+<replace-trucks-and-drivers-modal #replaceTrucksAndDriversModal></replace-trucks-and-drivers-modal>
 <dedicated-shipping-request-attendance-sheet-modal #attendanceModal></dedicated-shipping-request-attendance-sheet-modal>

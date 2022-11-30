@@ -2955,6 +2955,7 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!TruckType.Value</Value>
+                                  <MarkupType>HTML</MarkupType>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>

@@ -3164,5 +3164,17 @@
     <text name="ReceivableInvoice">Receivable invoice</text>
     <text name="PayableInvoice">Payable invoice</text>
     <text name="SelectActor">Select actor</text>
+    <text name="NotifyCarrierWithTruckReplacement">Tachyon Request you to replace truck {0} at reference {1}</text>
+    <text name="NotifyCarrierWithDriverReplacement">Tachyon Request you to replace driver {0} at reference {1}</text>
+    <text name="ReplaceDrivers">Replace Drivers</text>
+    <text name="ReplaceTrucks">Replace trucks</text>
+    <text name="ReplaceWith">Replace with</text>
+    <text name="replacementReason">Replacement reason</text>
+    <text name="requestReplacement">Request replacement</text>
+    <text name="updateTruckPerformance">Update truck performance</text>
+    <text name="FillAttendance">Fill attendance</text>
+    <text name="replacementIntervalInDays">Replacement interval</text>
+    <text name="truckAttendanceModal">Truck attendance</text>
+    <text name="viewAttendance">View attendance</text>
 	</texts>
 </localizationDictionary>

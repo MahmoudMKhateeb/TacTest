@@ -25,5 +25,19 @@ namespace TACHYON.Shipping.Dedicated
         [NotMapped]
         public ICollection<DedicatedDynamicInvoiceItem> DedicatedDynamicInvoiceItems { get; set; }
         public double? KPI { get; set; }
+
+        #region Replacement
+        public bool IsRequestedToReplace { get; set; }
+        public DateTime? ReplacementDate { get; set; }
+        public string ReplacementReason { get; set; }
+        public ReplacementFlag ReplacementFlag { get; set; }
+        public int? ReplacementIntervalInDays { get; set; }
+        public long? OriginalDedicatedTruckId { get; set; }
+        /// <summary>
+        /// If truck is replacement, original truck will be added here
+        /// </summary>
+        [ForeignKey("OriginalDedicatedTruckId")]
+        public DedicatedShippingRequestTruck OriginalTruck { get; set; }
+        #endregion
     }
 }
