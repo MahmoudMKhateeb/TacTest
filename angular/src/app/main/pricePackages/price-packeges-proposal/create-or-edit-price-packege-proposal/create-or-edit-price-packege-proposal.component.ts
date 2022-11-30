@@ -75,7 +75,7 @@ export class CreateOrEditPricePackegeProposalComponent extends AppComponentBase 
       key: 'id',
       load(loadOptions: LoadOptions) {
         return self._tmsPricePackageServiceProxy
-          .getAllForDropdown(JSON.stringify(loadOptions), self.pricePackageProposal.shipperId, self.pricePackageProposal.id)
+          .getAllForDropdown(JSON.stringify(loadOptions), self.pricePackageProposal.shipperId, self.pricePackageProposal.id, undefined)
           .toPromise()
           .then((response) => {
             return response.data;

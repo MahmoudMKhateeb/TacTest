@@ -4,15 +4,13 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   CreateOrEditTmsPricePackageDto,
   NormalPricePackagesServiceProxy,
-  PricePackagesPricingInfoDto,
+  PricePackageCommissionType,
   PricePackageType,
   SelectItemDto,
-  ShippersForDropDownDto,
   ShippingRequestRouteType,
   ShippingRequestsServiceProxy,
   TmsPricePackageServiceProxy,
 } from '@shared/service-proxies/service-proxies';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
@@ -35,12 +33,12 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
   transportTypes: SelectItemDto[];
   truckTypes: SelectItemDto[];
   cities: SelectItemDto[];
-  shippers: ShippersForDropDownDto[];
+  shippers: SelectItemDto[];
   pricePackageType = PricePackageType;
   pricePackageTypes = this._enumToArrayPipe.transform(this.pricePackageType);
   routeTypes = this._enumToArrayPipe.transform(ShippingRequestRouteType);
   dataSource: any = {};
-  pricePackagesInfo: PricePackagesPricingInfoDto[] = [];
+  commissionTypes = this._enumToArrayPipe.transform(PricePackageCommissionType);
 
   constructor(
     private injector: Injector,
@@ -50,7 +48,6 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
     private _enumToArrayPipe: EnumToArrayPipe
   ) {
     super(injector);
-    this.getPricePackagesPricingInfo();
   }
 
   ngOnInit(): void {
@@ -91,7 +88,7 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
    */
   private loadAllShippers(): void {
     console.log('Shippers Are loading');
-    this._shippingRequestServiceProxy.getAllShippersForDropDown().subscribe((res) => {
+    this._tmsPricePackagesServiceProxy.getCompanies().subscribe((res) => {
       this.shippers = res;
     });
   }
@@ -133,17 +130,6 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
     this.modal.hide();
   }
 
-  calculateDrFinalPrice() {
-    if (isNotNullOrUndefined(this.tmsPricePackage.directRequestPrice) && isNotNullOrUndefined(this.tmsPricePackage.directRequestCommission)) {
-      this.tmsPricePackage.directRequestTotalPrice = this.tmsPricePackage.directRequestPrice + this.tmsPricePackage.directRequestCommission;
-    }
-  }
-  calculateTmsFinalPrice() {
-    if (isNotNullOrUndefined(this.tmsPricePackage.tachyonManagePrice) && isNotNullOrUndefined(this.tmsPricePackage.tachyonManageCommission)) {
-      this.tmsPricePackage.tachyonManageTotalPrice = this.tmsPricePackage.tachyonManagePrice + this.tmsPricePackage.tachyonManageCommission;
-    }
-  }
-
   /**
    * loads All Normal Price Packeges For View Table
    * @private
@@ -168,17 +154,6 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
             throw new Error('Data Loading Error');
           });
       },
-    });
-  }
-
-  /**
-   * gets Pricing info for the price Packeges
-   * min / max / avg ... etc
-   * @private
-   */
-  private getPricePackagesPricingInfo(): void {
-    this._normalPricePackagesServiceProxy.getPricePackagesPricingInfo().subscribe((res) => {
-      this.pricePackagesInfo = res;
     });
   }
 

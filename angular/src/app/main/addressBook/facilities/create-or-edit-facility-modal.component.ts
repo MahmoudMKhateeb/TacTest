@@ -69,6 +69,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     validationRequestsCallbacks: this.callbacks,
   };
   isWorkingHoursInvalid = false;
+  private cityId: number;
 
   constructor(
     injector: Injector,
@@ -154,6 +155,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
       this.modal.show();
     } else {
       this._facilitiesServiceProxy.getFacilityForEdit(facilityId).subscribe((result) => {
+        this.cityId = result.facility.cityId;
         this.facility = result.facility;
         this.FacilityWorkingHours = [];
         if (result.facility.facilityWorkingHours.length == 0) {
@@ -354,6 +356,18 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     this._countriesServiceProxy.getAllCitiesWithPolygonsByCountryId(countryId).subscribe((res) => {
       this.allCities = res;
       this.citiesLoading = false;
+
+      if (this.cityId != null) {
+        this.facility.cityId = this.cityId;
+        this.cityId = null;
+      } else {
+        this.facility.cityId = null;
+      }
+      //
+      // let selectedCity = this.allCities.find((x) => x.id == this.facility.cityId.toString());
+      // if (isNotNullOrUndefined(countryId) && selectedCity.countryId != countryId) {
+      //   this.facility.cityId = null;
+      // }
       this.handleCityPolygon();
     });
   }

@@ -192,14 +192,12 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     let isRequestTypeDirectRequest = this.shippingRequestforView.shippingRequest.requestType === ShippingRequestType.DirectRequest;
     let isRequestTypeTachyonManageService = this.shippingRequestforView.shippingRequest.requestType === ShippingRequestType.TachyonManageService;
     // if the user is carrier
+    // todo add attribute form backend (can see this section)
     if (
       this.shippingRequestforView.shippingRequestFlag === 0 &&
-      !this.isCarrier &&
-      !this.isShipper &&
+      (this.isCarrier || this.isShipper || (this.isTachyonDealer && isRequestTypeTachyonManageService)) &&
       isNotMarketPlaceRequest &&
-      (isRequestStatusPrePrice ||
-        (isRequestStatusNeedsAction && isRequestTypeDirectRequest) ||
-        (this.isTachyonDealer && isRequestTypeTachyonManageService))
+      (isRequestStatusPrePrice || isRequestStatusNeedsAction)
     ) {
       return true;
     }

@@ -1,16 +1,17 @@
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Common;
 using TACHYON.PricePackages.Dto.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageAppendices;
+using TACHYON.PricePackages.TmsPricePackages;
 
 namespace TACHYON.PricePackages
 {
@@ -18,15 +19,23 @@ namespace TACHYON.PricePackages
     public class PricePackageAppendixAppService : TACHYONAppServiceBase, IPricePackageAppendixAppService
     {
         private readonly IRepository<PricePackageAppendix> _appendixRepository;
+        private readonly IPricePackageAppendixManager _appendixManager;
+        
 
-        public PricePackageAppendixAppService(IRepository<PricePackageAppendix> appendixRepository)
+        public PricePackageAppendixAppService(
+            IRepository<PricePackageAppendix> appendixRepository,
+            IPricePackageAppendixManager appendixManager)
         {
             _appendixRepository = appendixRepository;
+            _appendixManager = appendixManager;
         }
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
         {
+            DisableTenancyFilters();
+            var isTmsOrHost = !AbpSession.TenantId.HasValue || await IsTachyonDealer();
             var appendices = _appendixRepository.GetAll()
+                .WhereIf(!isTmsOrHost, x => x.DestinationTenantId == AbpSession.TenantId)
                 .AsNoTracking().ProjectTo<AppendixListDto>(AutoMapperConfigurationProvider);
 
             return await LoadResultAsync(appendices, input.LoadOptions);
@@ -65,26 +74,24 @@ namespace TACHYON.PricePackages
         {
             var createdAppendix = ObjectMapper.Map<PricePackageAppendix>(input);
 
-            await _appendixRepository.InsertAsync(createdAppendix);
+            await _appendixManager.CreateAppendix(createdAppendix, input.TmsPricePackages, input.EmailAddress);
         }
 
         [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Update)]
         protected virtual async Task Update(CreateOrEditAppendixDto input)
         {
             if (!input.Id.HasValue) return;
-            
-            var updatedAppendix = await _appendixRepository.FirstOrDefaultAsync(input.Id.Value);
 
-            if (updatedAppendix.Status == AppendixStatus.Confirmed)
-                throw new UserFriendlyException(L("YouCanNotUpdateConfirmedAppendix"));
+            var updatedAppendix = ObjectMapper.Map<PricePackageAppendix>(input);
 
-            ObjectMapper.Map(updatedAppendix, input);
+            await _appendixManager.UpdateAppendix(updatedAppendix, input.TmsPricePackages, input.EmailAddress);
         }
 
         [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Accept)]
         public async Task Accept(int appendixId)
         {
-            var status = await _appendixRepository.GetAll().Select(x => x.Status).FirstOrDefaultAsync();
+            var status = await _appendixRepository.GetAll().Where(x=>x.Id == appendixId)
+                .Select(x => x.Status).FirstOrDefaultAsync();
 
             if (status == default) throw new UserFriendlyException(L("NotFound"));
 

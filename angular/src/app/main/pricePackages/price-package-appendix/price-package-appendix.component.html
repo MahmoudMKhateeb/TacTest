@@ -2,9 +2,14 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'PricePackageAppendices' | localize">
       <div role="actions">
-        <button class="btn btn-primary" *ngIf="isGranted('Pages.PricePackageAppendix.Create')" (click)="CreateOrEditAppendixModal.show(undefined)">
-          <i class="fa fa-plus"></i> {{ l('CreateNewAppendix') }}
-        </button>
+        <p-splitButton
+          *ngIf="isGranted('Pages.PricePackageAppendix.Create')"
+          #splitButton
+          (onClick)="splitButton.onDropdownButtonClick(null)"
+          [label]="'CreateNewAppendix' | localize"
+          [model]="items"
+          styleClass="p-button-raised"
+        ></p-splitButton>
       </div>
     </sub-header>
 
@@ -42,7 +47,7 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
-              <dxi-column dataField="shipperName" caption="{{ l('Shipper') }}"></dxi-column>
+              <dxi-column dataField="shipper" caption="{{ l('Shipper') }}"></dxi-column>
               <dxi-column dataField="contractName" caption="{{ l('ContractName') }}"></dxi-column>
               <dxi-column dataField="contractNumber" caption="{{ l('ContractNumber') }}"></dxi-column>
               <dxi-column dataField="Status" caption="{{ l('Status') }}" cellTemplate="cellTemplateStatuses" dataType="text"></dxi-column>

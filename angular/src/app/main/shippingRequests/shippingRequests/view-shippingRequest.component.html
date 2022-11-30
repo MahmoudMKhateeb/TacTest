@@ -58,11 +58,11 @@
       </ng-template>
       <!--  end:: PricOfferingSection -->
 
-      <!--  start:: NormalPricePackageSection -->
-      <ng-template [ngIf]="canSeePricePackages()">
-        <normal-price-packages-list [shippingRequestId]="activeShippingRequestId"></normal-price-packages-list>
-      </ng-template>
-      <!--  end:: NormalPricePackageSection -->
+      <!--        TODO: REVIEW THE CONDITION TO VIEW THIS COMPONENT-->
+      <app-view-matching-tms-price-package
+        *ngIf="canSeePricePackages()"
+        [shippingRequestId]="activeShippingRequestId"
+      ></app-view-matching-tms-price-package>
 
       <div class="card card-custom gutter-b" *ngIf="feature.isEnabled('App.CarrierClients') || feature.isEnabled('App.ShipperClients')">
         <div class="card-header">

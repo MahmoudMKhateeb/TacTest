@@ -816,7 +816,7 @@ namespace TACHYON.Authorization
 
            var proposalPermission = pages.CreateChildPermission(AppPermissions.Pages_PricePackageProposal,
                L("PricePackageProposal"),
-               featureDependency: tmsFeatureDependency);
+               featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
 
            proposalPermission.CreateChildPermission(AppPermissions.Pages_PricePackageProposal_Create,
                L("CreatePricePackageProposal"),
@@ -832,18 +832,18 @@ namespace TACHYON.Authorization
            
            proposalPermission.CreateChildPermission(AppPermissions.Pages_PricePackageProposal_Accept,
                L("AcceptPricePackageProposal"),
-               featureDependency: tmsFeatureDependency);
+               featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
            
            proposalPermission.CreateChildPermission(AppPermissions.Pages_PricePackageProposal_Reject,
                L("RejectPricePackageProposal"),
-               featureDependency: tmsFeatureDependency);
+               featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
 
            #endregion
 
            #region Price Package Appendix
 
            var pricePackageAppendicesPermission = pages.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix,
-               L("PricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
+               L("PricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer,AppFeatures.Carrier));
 
            pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Create,
                L("CreatePricePackageAppendicesPermission"), featureDependency: tmsFeatureDependency);
@@ -853,9 +853,9 @@ namespace TACHYON.Authorization
                L("DeletePricePackageAppendicesPermission"), featureDependency: tmsFeatureDependency);
            
            pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Accept,
-               L("ConfirmPricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
+               L("ConfirmPricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer,AppFeatures.Carrier));
            pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Reject,
-               L("RejectPricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
+               L("RejectPricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer,AppFeatures.Carrier));
 
            #endregion
 

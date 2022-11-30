@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Cities;
 using TACHYON.MultiTenancy;
+using TACHYON.PriceOffers;
+using TACHYON.PricePackages.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageProposals;
 using TACHYON.Shipping.ShippingRequests;
 
@@ -23,33 +25,21 @@ namespace TACHYON.PricePackages.TmsPricePackages
         /// <summary>
         /// ShipperId is a property tell us for who tenant is the p.p is created for 
         /// </summary>
-        public int? ShipperId { get; set; }
+        public int? DestinationTenantId { get; set; }
 
-        [ForeignKey(nameof(ShipperId))]
-        public Tenant Shipper { get; set; }
+        [ForeignKey(nameof(DestinationTenantId))]
+        public Tenant DestinationTenant { get; set; }
 
         public ShippingRequestRouteType RouteType { get; set; }
-
-        public decimal DirectRequestPrice { get; set; }
-
-        public decimal TachyonManagePrice { get; set; }
         
-        public decimal DirectRequestCommission { get; set; }
+        // Total price = Commission value + price 
+        // commission value = if (commission type == value) Commission;
+        // else if (commission type == percentage) => (Commission * Price) / 100
+        public decimal TotalPrice { get; set; }
         
-        public decimal TachyonManageCommission { get; set; }
-
-        /// <summary>
-        /// The total price is the `DirectRequestPrice` + `DirectRequestCommission`
-        /// if 
-        /// note that the user can set it manually
-        /// </summary>
-        public decimal DirectRequestTotalPrice { get; set; }
+        public decimal Price { get; set; }
         
-        /// <summary>
-        /// The total price is the `TachyonManagePrice` + `TachyonManageCommission`
-        /// note that the user can set it manually
-        /// </summary>
-        public decimal TachyonManageTotalPrice { get; set; }
+        public decimal Commission { get; set; }
 
         public PricePackageCommissionType CommissionType { get; set; }
         
@@ -59,7 +49,20 @@ namespace TACHYON.PricePackages.TmsPricePackages
 
         [ForeignKey(nameof(ProposalId))]
         public PricePackageProposal Proposal { get; set; }
+
+        public int? AppendixId { get; set; }
+
+        [ForeignKey(nameof(AppendixId))]
+        public PricePackageAppendix Appendix { get; set; }
         
         public bool IsActive { get; set; }
+        
+        public long? OfferId { get; set; }
+
+        [ForeignKey(nameof(OfferId))]
+        public PriceOffer Offer { get; set; }
+
+        public PricePackageOfferStatus Status { get; set; }
+        
     }
 }

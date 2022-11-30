@@ -334,6 +334,7 @@ import { ActorInvoiceDemandModelComponent } from './actors/Actor-Invoices-ondema
 import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/client-demand-model.component';
 import { ReplaceTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/replace-trucks-and-drivers-modal/replace-trucks-and-drivers-modal.component';
 import { TruckAndDriverReplacementComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-and-driver-replacement/truck-and-driver-replacement.component';
+import { PricePackageModule } from '@app/main/pricePackages/price-package.module';
 
 @NgModule({
   imports: [
@@ -394,6 +395,7 @@ import { TruckAndDriverReplacementComponent } from '@app/main/shippingRequests/d
     QuartzCronModule,
     SplitButtonModule,
     CalendarModule,
+    PricePackageModule,
   ],
   declarations: [
     EmailTemplatesComponent,
@@ -636,6 +638,7 @@ import { TruckAndDriverReplacementComponent } from '@app/main/shippingRequests/d
     ClientDemandModelComponent,
     ReplaceTrucksAndDriversModalComponent,
     TruckAndDriverReplacementComponent,
+    ClientDemandModelComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
