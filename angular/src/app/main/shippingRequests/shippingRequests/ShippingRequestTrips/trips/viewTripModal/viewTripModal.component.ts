@@ -15,9 +15,6 @@ import {
   TrucksServiceProxy,
   UpdateExpectedDeliveryTimeInput,
   WaybillsServiceProxy,
-  GetShippingRequestForViewOutput,
-  ShippingRequestRouteType,
-  DedicatedShippingRequestsServiceProxy,
   GetAllDedicatedDriversOrTrucksForDropDownDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
