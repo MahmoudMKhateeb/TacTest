@@ -11,7 +11,7 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    [Migration("20221130114108_release_2_4_14")]
+    [Migration("20221201112552_release_2_4_14")]
     partial class release_2_4_14
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
