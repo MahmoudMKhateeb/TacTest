@@ -84010,6 +84010,7 @@ export class GetAllInvoiceItemDto implements IGetAllInvoiceItemDto {
   totalAmount!: number;
   taxVat!: number;
   checked!: boolean;
+  itemName!: string | undefined;
   id!: number | undefined;
 
   constructor(data?: IGetAllInvoiceItemDto) {
@@ -84030,6 +84031,7 @@ export class GetAllInvoiceItemDto implements IGetAllInvoiceItemDto {
       this.totalAmount = _data['totalAmount'];
       this.taxVat = _data['taxVat'];
       this.checked = _data['checked'];
+      this.itemName = _data['itemName'];
       this.id = _data['id'];
     }
   }
@@ -84051,6 +84053,7 @@ export class GetAllInvoiceItemDto implements IGetAllInvoiceItemDto {
     data['totalAmount'] = this.totalAmount;
     data['taxVat'] = this.taxVat;
     data['checked'] = this.checked;
+    data['itemName'] = this.itemName;
     data['id'] = this.id;
     return data;
   }
@@ -84065,6 +84068,7 @@ export interface IGetAllInvoiceItemDto {
   totalAmount: number;
   taxVat: number;
   checked: boolean;
+  itemName: string | undefined;
   id: number | undefined;
 }
 
