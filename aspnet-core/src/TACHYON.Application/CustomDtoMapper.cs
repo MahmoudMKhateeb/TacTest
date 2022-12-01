@@ -905,10 +905,10 @@ namespace TACHYON
                 .ForMember(dto => dto.StatusTitle, options => options.MapFrom(entity => entity.Status.ToString()))
                 .ForMember(dto => dto.NoteTypeTitle, options => options.MapFrom(entity => entity.NoteType.GetEnumDescription()))
                 .ForMember(dto => dto.GenerationDate, options => options.MapFrom(entity => entity.CreationTime))
-                .ForMember(dto => dto.ComanyName, options => options.MapFrom(entity => entity.Tenant.companyName));
+                .ForMember(dto => dto.ComanyName, options => options.MapFrom(entity => entity.Tenant.Name));
 
             configuration.CreateMap<InvoiceNote, InvoiceNoteInfoDto>()
-                .ForMember(dto => dto.ClientName ,options => options.MapFrom(entity=>entity.Tenant.Name))
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
                 .ForMember(dto => dto.ClientId, options => options.MapFrom(entity => entity.TenantId))
                 .ForMember(dto => dto.Notes, options => options.Ignore())
                 .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
