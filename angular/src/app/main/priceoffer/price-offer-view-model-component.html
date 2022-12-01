@@ -33,7 +33,9 @@
             </div>
             <div class="divirCard"></div>
           </ng-template>
-
+          <div *ngIf="isTachyonDealer && CarrierInsuranceCoverage && ShipperValueOfGoods && CarrierInsuranceCoverage < ShipperValueOfGoods" class="row alert alert-warning" style="background-color: #fff3cd; color:#856404 ;border-color:#ffeeba" role="alert">
+            {{l('Note that Carrier insurance coverage {0} less than shipper value of goods {1}', CarrierInsuranceCoverage, ShipperValueOfGoods)}}
+          </div>
           <div>
             <table class="table">
               <thead>
@@ -166,6 +168,7 @@
           <i class="fas fa-check"></i>
           {{l('Cancel')}}
         </button>
+  
       </div>
     </div>
   </div>

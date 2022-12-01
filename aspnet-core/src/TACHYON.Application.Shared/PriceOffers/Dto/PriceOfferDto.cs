@@ -86,6 +86,8 @@ namespace TACHYON.PriceOffers.Dto
         public PriceOfferTenantCommissionSettings CommissionSettings { get; set; }
 
         public int? CarrierActorId { get; set; }
+        public int? ShipperValueOfGoods { get; set; }
+        public int? CarrierIsuranceCoverage { get; set; }
 
     }
 
