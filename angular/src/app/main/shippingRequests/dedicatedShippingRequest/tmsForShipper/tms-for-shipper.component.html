@@ -185,7 +185,7 @@
                 ></dxi-column>
                 <dxi-column *ngIf="!shippingRequestId" dataField="carrierName" caption="{{ l('CarrierName') }}"></dxi-column>
                 <dxi-column dataField="status" caption="{{ l('Status') }}"></dxi-column>
-                <dxi-column dataField="originalDedicatedTruckName" caption="{{ l('originalDedicatedTruckName') }}"></dxi-column>
+                <dxi-column dataField="originalDedicatedDriverName" caption="{{ l('originalDedicatedDriverName') }}"></dxi-column>
                 <dxi-column dataField="replacementFlag" caption="{{ l('replacementFlag') }}" cellTemplate="replacementFlagTemplate"></dxi-column>
 
                 <div *dxTemplate="let data of 'replacementFlagTemplate'">
