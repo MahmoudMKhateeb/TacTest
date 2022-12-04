@@ -402,7 +402,10 @@ namespace TACHYON.Shipping.ShippingRequests
             return await _truckRepository.GetAll()
                 .WhereIf(await IsTachyonDealer(), x => x.TenantId == tenantId.Value)
                 .Where(x => x.TrucksTypeId == truckTypeId && 
-                !x.DedicatedShippingRequestTrucks.Any(y=>y.ShippingRequestId == shippingRequestId))
+                !x.DedicatedShippingRequestTrucks.Any(y=>y.ShippingRequestId == shippingRequestId && 
+                (y.ReplacementFlag == ReplacementFlag.Original || 
+                (y.ReplacementFlag== ReplacementFlag.Replaced && y.ReplacementDate.Value.AddDays(y.ReplacementIntervalInDays.Value) < Clock.Now.Date)
+                )))
                 .Select(x => new SelectItemDto
                 {
                     DisplayName = x.GetDisplayName(),
@@ -436,7 +439,7 @@ namespace TACHYON.Shipping.ShippingRequests
             if (dedicatedTrucks.Any(x => x.ReplacementFlag == ReplacementFlag.Replaced)) throw new UserFriendlyException(L("OriginalTruckMustnotBeReplaced"));
             if (dedicatedTrucks.Any(x => x.ReplacementDate != null && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) > Clock.Now)) throw new UserFriendlyException(L("SomeTrucksAreCurrentlyReplaced"));
 
-            var replacedTrucks = ObjectMapper.Map<List<DedicatedShippingRequestTruck>>(input.ReplaceTruckDtos);
+            var replacedTrucks = ObjectMapper.Map<List<DedicatedShippingRequestTruck>>(input.ReplaceTruckDtos.Distinct());
             foreach (var item in replacedTrucks)
             {
                 item.ReplacementFlag = ReplacementFlag.Replaced;
