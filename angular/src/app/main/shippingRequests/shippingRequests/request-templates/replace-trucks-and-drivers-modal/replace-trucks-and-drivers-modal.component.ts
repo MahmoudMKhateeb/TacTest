@@ -140,11 +140,11 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
     });
     const replaceTrucksInput = new ReplaceTruckInput({
       shippingRequestId: this.dedicatedShippingRequestId,
-      replaceTruckDtos: items,
+      replaceTruckDtos: this.uniqueArray(items, 'originalDedicatedTruckId'),
     });
     const replaceDriversInput = new ReplaceDriverInput({
       shippingRequestId: this.dedicatedShippingRequestId,
-      replaceDriverDtos: items,
+      replaceDriverDtos: this.uniqueArray(items, 'originalDedicatedDriverId'),
     });
     console.log('replaceTrucksInput', replaceTrucksInput);
     console.log('replaceDriversInput', replaceDriversInput);
@@ -278,5 +278,19 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
           });
       },
     });
+  }
+
+  uniqueArray(arr: any[], attributeToConsider: string) {
+    let a = [];
+    let uniqueIds = [];
+    for (let i = 0, l = arr.length; i < l; i++) {
+      if (uniqueIds.indexOf(arr[i][attributeToConsider]) === -1 && arr[i][attributeToConsider] !== '') {
+        uniqueIds.push(arr[i][attributeToConsider]);
+      }
+    }
+    a = uniqueIds.map((item) => {
+      return arr.find((arrayItem) => arrayItem[attributeToConsider] === item);
+    });
+    return a;
   }
 }
