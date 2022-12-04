@@ -60,12 +60,12 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
       {
         name: this.l('KPI'),
         data: kpiSeriesChartData,
-        color: 'rgba(187, 41, 41, 0.847)',
+        color: 'rgba(154,154,154,0.84)',
       },
       {
         name: this.l('NumberOfTrips'),
         data: numberOfTripsChartData,
-        color: 'rgba(154,154,154,0.84)',
+        color: 'rgba(187, 41, 41, 0.847)',
       },
     ];
     this.chartOptions = {
