@@ -10,5 +10,7 @@ namespace TACHYON.Shipping.Trips.Dto
     {
         [Required] public long AssignedDriverUserId { get; set; }
         [Required] public long AssignedTruckId { get; set; }
+        public string ContainerNumber { get; set; }
+        public string SealNumber { get; set; }
     }
 }

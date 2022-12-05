@@ -487,7 +487,8 @@ namespace TACHYON.Shipping.Trips
                     //.Where(e => e.Status != ShippingRequestTripStatus.Delivered)
                     .FirstOrDefaultAsync();
             }
-
+            trip.ContainerNumber = input.ContainerNumber;
+            trip.SealNumber = input.SealNumber;
             var carrierTenantId = trip.ShippingRequestFk.CarrierTenantId;
 
             using (UnitOfWorkManager.Current.SetTenantId(carrierTenantId))
@@ -770,6 +771,7 @@ namespace TACHYON.Shipping.Trips
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Delete)]
         public async Task Delete(EntityDto input)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             var trip = await _shippingRequestTripRepository.FirstOrDefaultAsync(
                 x => x.Id == input.Id &&
                      x.Status == ShippingRequestTripStatus.New);
@@ -953,7 +955,7 @@ namespace TACHYON.Shipping.Trips
                 .Include(x=>x.ShippingRequestVases)
                 .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
-                .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
+                .WhereIf(AbpSession.TenantId != null && await IsEnabledAsync(AppFeatures.TachyonDealer), x=> true)
                 .WhereIf(AbpSession.TenantId == null, x => true)
                 .FirstOrDefaultAsync(x => x.Id == shippingRequestId);
             if (request == null)

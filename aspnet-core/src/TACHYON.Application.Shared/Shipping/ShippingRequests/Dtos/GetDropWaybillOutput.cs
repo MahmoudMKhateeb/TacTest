@@ -63,5 +63,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string DroppArea { get; set; }
         public long? WaybillNumber { get; set; }
         public bool IsSingleDrop { get; set; }
+        public string ContainerNumber { get; set; }
+        public string SealNumber { get; set; }
     }
 }
