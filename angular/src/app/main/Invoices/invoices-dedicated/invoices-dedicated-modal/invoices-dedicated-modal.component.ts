@@ -266,12 +266,12 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
     return total;
   }
 
-  LoadNumberOfDays($event: any){
-    if(this.dataSourceForEdit.workingDayType && this.selectedDedicateTruckId){
-      this._AttendanceSheetServiceProxy.getDaysNumberByWorkingDayType(this.dataSourceForEdit.workingDayType,this.selectedDedicateTruckId )
-      .subscribe((res)=>{
-      this.dataSourceForEdit.numberOfDays =res;
-    });
+  LoadNumberOfDays($event: any) {
+    if ($event.value && this.selectedDedicateTruckId) {
+      this._AttendanceSheetServiceProxy.getDaysNumberByWorkingDayType($event.value, this.selectedDedicateTruckId).subscribe((res) => {
+        this.dataSourceForEdit.numberOfDays = res;
+        this.calculateValues(null);
+      });
     }
   }
 }
