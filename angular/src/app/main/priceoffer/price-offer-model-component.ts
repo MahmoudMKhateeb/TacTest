@@ -53,6 +53,8 @@ export class PriceOfferModelComponent extends AppComponentBase {
   CreateSrUpdateActionInput: CreateSrUpdateActionInputDto = new CreateSrUpdateActionInputDto();
   AllActorsCarriers: SelectItemDto[];
   isForDedicated: boolean;
+  ShipperValueOfGoods : Number;
+  CarrierInsuranceCoverage : Number;
 
   constructor(
     injector: Injector,
@@ -95,7 +97,8 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.SRUpdateId = SRUpdateId;
     this._CurrentServ.getPriceOfferForCreateOrEdit(id, offerId).subscribe((result) => {
       this.Items = result.items;
-
+      this.ShipperValueOfGoods = result.shipperValueOfGoods;
+      this.CarrierInsuranceCoverage = result.carrierIsuranceCoverage;
       this.offer = result;
       this.Items = this.offer.items;
       this.active = true;

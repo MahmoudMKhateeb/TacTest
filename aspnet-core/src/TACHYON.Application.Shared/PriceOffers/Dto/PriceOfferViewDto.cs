@@ -74,6 +74,8 @@ namespace TACHYON.PriceOffers.Dto
         /// If shipper reject offer, will place reason of rejected
         /// </summary>
         public string RejectedReason { get; set; }
+        public int? ShipperValueOfGoods { get; set; }
+        public int? CarrierInsuranceCoverage { get; set; }
     }
 
     public class GetOfferForViewOutput

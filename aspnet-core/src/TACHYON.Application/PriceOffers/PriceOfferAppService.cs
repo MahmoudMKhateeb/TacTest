@@ -201,6 +201,7 @@ namespace TACHYON.PriceOffers
             var shippingRequest = await _shippingRequestsRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
                   .ThenInclude(v => v.VasFk)
+                  .Include(x=>x.Tenant)
                 .FirstOrDefaultAsync(x => x.Id == id && (x.Status == ShippingRequestStatus.PrePrice || x.Status == ShippingRequestStatus.NeedsAction || x.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier));
 
             if (shippingRequest == null) throw new UserFriendlyException(L("TheRecordIsNotFound"));
@@ -208,6 +209,7 @@ namespace TACHYON.PriceOffers
             var offer = await _priceOfferRepository
                 .GetAll()
                 .Include(i => i.PriceOfferDetails)
+                .Include(x=>x.Tenant)
                 .Where(x => x.ShippingRequestId == shippingRequest.Id)
                 .WhereIf(OfferId.HasValue, x => x.Id == OfferId.Value)
                 .WhereIf(AbpSession.TenantId !=null && !await IsTachyonDealer(), x => x.TenantId == AbpSession.TenantId.Value && (x.Status == PriceOfferStatus.New || x.Status == PriceOfferStatus.Rejected))
@@ -236,6 +238,11 @@ namespace TACHYON.PriceOffers
                     if (offer.TenantId != AbpSession.TenantId.Value)
                     {
                         priceOfferDto.ParentId = offer.Id;
+                        if(await IsTachyonDealer())
+                        {
+                            priceOfferDto.CarrierIsuranceCoverage = offer.Tenant.InsuranceCoverage;
+                        }
+
                     }
                 }
             }
@@ -266,6 +273,7 @@ namespace TACHYON.PriceOffers
             if (IsEnabled(AppFeatures.TachyonDealer))
             {
                 priceOfferDto.CommissionSettings = SetTenantCommssionSettingsForTachyonDealer(shippingRequest.TenantId);
+                priceOfferDto.ShipperValueOfGoods = shippingRequest.Tenant.ValueOfGoods;
             }
             return priceOfferDto;
         }
@@ -282,6 +290,8 @@ namespace TACHYON.PriceOffers
             var offer = await _priceOfferRepository
                 .GetAll()
                 .Include(i => i.Tenant)
+                .Include(x=>x.ShippingRequestFk)
+                .ThenInclude(x=>x.Tenant)
                 .Include(i => i.PriceOfferDetails)
                 .Include(i => i.ShippingRequestFk)
                  .ThenInclude(v => v.ShippingRequestVases)
@@ -295,7 +305,11 @@ namespace TACHYON.PriceOffers
 
             var priceOfferDto = ObjectMapper.Map<PriceOfferViewDto>(offer);
 
-
+            if(await IsTachyonDealer())
+            {
+                priceOfferDto.ShipperValueOfGoods = offer.ShippingRequestFk.Tenant.ValueOfGoods;
+                priceOfferDto.CarrierInsuranceCoverage = offer.Tenant.InsuranceCoverage;
+            }
 
             foreach (var item in priceOfferDto.Items)
             {
@@ -353,12 +367,19 @@ namespace TACHYON.PriceOffers
             var shippingRequest = await _shippingRequestsRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
                 .ThenInclude(v => v.VasFk)
+                .Include(x=>x.Tenant)
+                .Include(x=>x.CarrierTenantFk)
                 .FirstOrDefaultAsync(x =>
                     x.Id == input.ShippingRequestId);
 
             var offer = await _priceOfferManager.InitPriceOffer(input);
             var priceOfferDto = ObjectMapper.Map<PriceOfferDto>(offer);
 
+            if(await IsTachyonDealer())
+            {
+                priceOfferDto.ShipperValueOfGoods = shippingRequest.Tenant.ValueOfGoods;
+                priceOfferDto.CarrierIsuranceCoverage = shippingRequest.CarrierTenantFk?.InsuranceCoverage;
+            }
             if (input.VasCommissionType != null)
             {
                 priceOfferDto.VasCommissionType = input.VasCommissionType.Value;
