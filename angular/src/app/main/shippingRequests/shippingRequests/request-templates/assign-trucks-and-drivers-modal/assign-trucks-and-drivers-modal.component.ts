@@ -2,12 +2,9 @@ import { Component, Injector, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import {
-  AssignDedicatedTrucksAndDriversInput,
   AssignTrucksAndDriversForDedicatedInput,
-  DedicatedDriversDto,
   DedicatedShippingRequestsServiceProxy,
   DedicatedShippingRequestTrucksAndDriversDto,
-  DedicatedTruckDto,
   GetAllTrucksWithDriversListDto,
   GetShippingRequestForPriceOfferListDto,
   SelectItemDto,

@@ -178,12 +178,13 @@ namespace TACHYON.Shipping.ShippingRequests
             var trucksList = new List<DedicatedShippingRequestTruck>();
             foreach (var truck in input.TrucksList)
             {
-                trucksList.Add(new DedicatedShippingRequestTruck { 
+                trucksList.Add(new DedicatedShippingRequestTruck
+                {
                     ShippingRequestId = shippingRequest.Id,
-                    TruckId = truck.Id, 
+                    TruckId = truck.Id,
                     Status = status,
-                KPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.TruckKPI)
-            });
+                    KPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.TruckKPI)
+                });
             }
             shippingRequest.DedicatedShippingRequestTrucks = trucksList;
 
@@ -223,6 +224,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 {
                     ShippingRequestId = shippingRequest.Id,
                     TruckId = driverAndtruck.TruckId,
+                    DriverUserId = driverAndtruck.DriverId,
                     Status = status,
                     ReplacementFlag = ReplacementFlag.Original,
                     KPI = _settingManager.GetSettingValue<double>(AppSettings.KPI.TruckKPI)
@@ -318,6 +320,24 @@ namespace TACHYON.Shipping.ShippingRequests
                 (x.ReplacementFlag == ReplacementFlag.Replaced && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) > Clock.Now.Date) ||
                 (x.ReplacementFlag == ReplacementFlag.Original && x.ReplacementDate.Value.Date.AddDays(x.ReplacementIntervalInDays.Value) <= Clock.Now.Date)
                 }).ToListAsync();
+        }
+
+        public async Task<long?> GetDriverOrTruckForTripAssign(long? truckId, long? DriverUserId, long shippingRequestId)
+        {
+            if (truckId == null && DriverUserId == null) throw new UserFriendlyException(L("EvenTruckOrDriverMustHaveValue"));
+            await DisableTenancyFiltersIfTachyonDealer();
+            var dedicatedTruck= await _dedicatedShippingRequestTruckRepository.GetAll()
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsTachyonDealer(), x => x.ShippingRequest.TenantId == AbpSession.TenantId)
+                .WhereIf(await IsTachyonDealer(), x => true)
+                .WhereIf(truckId != null, x => x.TruckId == truckId)
+                .WhereIf(DriverUserId != null, x => x.DriverUserId == DriverUserId)
+                .Where(x => x.ShippingRequestId == shippingRequestId)
+                .FirstOrDefaultAsync();
+            if (dedicatedTruck != null && truckId != null)
+                return dedicatedTruck.DriverUserId;
+            else if (DriverUserId != null && dedicatedTruck != null)
+                return dedicatedTruck.TruckId;
+            return null;
         }
 
         #endregion

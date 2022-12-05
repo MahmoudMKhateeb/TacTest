@@ -25,6 +25,10 @@ namespace TACHYON.Shipping.Dedicated
         [NotMapped]
         public ICollection<DedicatedDynamicInvoiceItem> DedicatedDynamicInvoiceItems { get; set; }
         public double? KPI { get; set; }
+        /// <summary>
+        /// dedicated driver users have seperated table "DedicatedShippingRequestDrivers" we have this field as a helper in trip details to get driver or truck automatically
+        /// </summary>
+        public long DriverUserId { get; set; }
 
         #region Replacement
         public bool IsRequestedToReplace { get; set; }
