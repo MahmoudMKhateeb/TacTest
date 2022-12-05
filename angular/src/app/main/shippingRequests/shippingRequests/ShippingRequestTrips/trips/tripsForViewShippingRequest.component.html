@@ -382,7 +382,7 @@
                     <li
                       *ngIf="
                         (permission.isGranted('Pages.ShippingRequestTrips.Delete') &&
-                          feature.isEnabled('App.Shipper') &&
+                          (feature.isEnabled('App.Shipper') || isTachyonDealer)&&
                           record.status == ShippingRequestTripStatusEnum.New) ||
                         (isCarrierSaas && record.status == ShippingRequestTripStatusEnum.New)
                       "

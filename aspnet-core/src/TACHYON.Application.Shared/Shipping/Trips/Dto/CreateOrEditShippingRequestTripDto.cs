@@ -40,6 +40,8 @@ namespace TACHYON.Shipping.Trips.Dto
         public string Note { get; set; }
         public DateTime? SupposedPickupDateFrom { get; set; }
         public DateTime? SupposedPickupDateTo { get; set; }
+        public string ContainerNumber { get; set; }
+        public string SealNumber { get; set; }
         #region Dedicated
         public ShippingRequestRouteType? RouteType { get; set; }
         public int NumberOfDrops { get; set; }

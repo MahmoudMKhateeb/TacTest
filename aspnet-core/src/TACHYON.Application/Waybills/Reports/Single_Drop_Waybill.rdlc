@@ -581,7 +581,7 @@
         <RepeatColumnHeaders>true</RepeatColumnHeaders>
         <RepeatRowHeaders>true</RepeatRowHeaders>
         <DataSetName>SingleDropGoodsDetailsDataSet</DataSetName>
-        <Top>4.01526in</Top>
+        <Top>4.26526in</Top>
         <Left>0.20337in</Left>
         <Height>0.54188in</Height>
         <Width>7.86643in</Width>
@@ -616,7 +616,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>7.99286in</Top>
+        <Top>8.24286in</Top>
         <Left>6.54161in</Left>
         <Height>0.79844cm</Height>
         <Width>1.52819in</Width>
@@ -649,7 +649,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>7.99286in</Top>
+        <Top>8.24286in</Top>
         <Left>1.97859in</Left>
         <Height>0.79844cm</Height>
         <Width>4.56302in</Width>
@@ -696,7 +696,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>7.99286in</Top>
+        <Top>8.24286in</Top>
         <Left>0.20152in</Left>
         <Height>0.79844cm</Height>
         <Width>1.77707in</Width>
@@ -742,7 +742,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>11.77449in</Top>
+        <Top>12.02449in</Top>
         <Left>6.53664in</Left>
         <Height>0.79844cm</Height>
         <Width>1.53079in</Width>
@@ -777,7 +777,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>11.77449in</Top>
+        <Top>12.02449in</Top>
         <Left>1.92281in</Left>
         <Height>0.79844cm</Height>
         <Width>4.61383in</Width>
@@ -824,7 +824,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>11.77449in</Top>
+        <Top>12.02449in</Top>
         <Left>0.18605in</Left>
         <Height>0.79844cm</Height>
         <Width>1.73676in</Width>
@@ -862,7 +862,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.47923in</Top>
+        <Top>9.72923in</Top>
         <Left>6.53664in</Left>
         <Height>0.72972cm</Height>
         <Width>1.53079in</Width>
@@ -899,7 +899,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>9.47923in</Top>
+        <Top>9.72923in</Top>
         <Left>1.92281in</Left>
         <Height>0.72972cm</Height>
         <Width>4.61383in</Width>
@@ -946,7 +946,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.47923in</Top>
+        <Top>9.72923in</Top>
         <Left>0.19478in</Left>
         <Height>0.72972cm</Height>
         <Width>1.72803in</Width>
@@ -1611,7 +1611,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>SingleDropDataSet</DataSetName>
-        <Top>17.82551cm</Top>
+        <Top>18.46051cm</Top>
         <Left>0.48868cm</Left>
         <Height>2.29996cm</Height>
         <Width>20.0026cm</Width>
@@ -2340,7 +2340,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>SingleDropDataSet</DataSetName>
-        <Top>11.75949cm</Top>
+        <Top>12.39449cm</Top>
         <Left>0.51656cm</Left>
         <Height>2.47027cm</Height>
         <Width>19.98074cm</Width>
@@ -2496,7 +2496,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>SingleDropDataSet</DataSetName>
-        <Top>9.49639cm</Top>
+        <Top>10.13139cm</Top>
         <Left>0.51656cm</Left>
         <Height>0.68819cm</Height>
         <Width>19.98074cm</Width>
@@ -3253,7 +3253,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>SingleDropDataSet</DataSetName>
-        <Top>6.87127cm</Top>
+        <Top>7.50627cm</Top>
         <Left>0.51656cm</Left>
         <Height>1.97638cm</Height>
         <Width>19.98072cm</Width>
@@ -4332,7 +4332,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>SingleDropDataSet</DataSetName>
-        <Top>3.92017cm</Top>
+        <Top>4.55517cm</Top>
         <Left>0.51656cm</Left>
         <Height>2.57638cm</Height>
         <Width>19.98072cm</Width>
@@ -5028,7 +5028,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>SingleDropDataSet</DataSetName>
-        <Top>21.60138cm</Top>
+        <Top>22.23638cm</Top>
         <Left>0.49764cm</Left>
         <Height>2.40305cm</Height>
         <Width>19.99364cm</Width>
@@ -5064,7 +5064,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>10.23976in</Top>
+        <Top>10.48976in</Top>
         <Left>0.19667in</Left>
         <Height>0.6049in</Height>
         <Width>7.87313in</Width>
@@ -5131,7 +5131,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>11.1884in</Top>
+        <Top>11.4384in</Top>
         <Left>5.4627in</Left>
         <Height>0.78819cm</Height>
         <Width>2.6071in</Width>
@@ -5198,7 +5198,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>11.1884in</Top>
+        <Top>11.4384in</Top>
         <Left>2.52551in</Left>
         <Height>0.31031in</Height>
         <Width>2.93348in</Width>
@@ -5257,7 +5257,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>11.1884in</Top>
+        <Top>11.4384in</Top>
         <Left>0.19592in</Left>
         <Height>0.31031in</Height>
         <Width>2.33224in</Width>
@@ -5297,7 +5297,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.92771in</Top>
+        <Top>10.17771in</Top>
         <Left>6.22398in</Left>
         <Height>0.26935in</Height>
         <Width>1.84582in</Width>
@@ -5333,7 +5333,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.92874in</Top>
+        <Top>10.17874in</Top>
         <Left>0.19792in</Left>
         <Height>0.26935in</Height>
         <Width>1.81541in</Width>
@@ -5371,7 +5371,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>10.89127in</Top>
+        <Top>11.14127in</Top>
         <Left>6.24824in</Left>
         <Height>0.26935in</Height>
         <Width>1.82156in</Width>
@@ -5409,7 +5409,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>10.89127in</Top>
+        <Top>11.14127in</Top>
         <Left>0.19667in</Left>
         <Height>0.26935in</Height>
         <Width>1.83937in</Width>
@@ -6679,6 +6679,262 @@
                 </TablixCell>
               </TablixCells>
             </TablixRow>
+            <TablixRow>
+              <Height>0.6cm</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox17">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Container Number:</Value>
+                              <Style>
+                                <FontFamily>Open Sans</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <FontWeight>Normal</FontWeight>
+                                <Color>#181818</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Left</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox17</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <RightBorder>
+                          <Style>None</Style>
+                        </RightBorder>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <PaddingLeft>5pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="ContainerNumber">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!ContainerNumber.Value</Value>
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                                <Color>#181818</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>ContainerNumber</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <LeftBorder>
+                          <Style>None</Style>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>None</Style>
+                        </RightBorder>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox20">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>:رقم الحاوية</Value>
+                              <Style>
+                                <FontFamily>Cairo</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <FontWeight>Normal</FontWeight>
+                                <Color>#181818</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox20</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <LeftBorder>
+                          <Style>None</Style>
+                        </LeftBorder>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>5pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox21">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Seal number:</Value>
+                              <Style>
+                                <FontFamily>Open Sans</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <FontWeight>Normal</FontWeight>
+                                <Color>#3b3a3c</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Left</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox21</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <LeftBorder>
+                          <Style>None</Style>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>None</Style>
+                        </RightBorder>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="SealNumber">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!SealNumber.Value</Value>
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                                <Color>#181818</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>SealNumber</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <LeftBorder>
+                          <Style>None</Style>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>None</Style>
+                        </RightBorder>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>5pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox23">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>:رقم القفل</Value>
+                              <Style>
+                                <FontFamily>Cairo</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <FontWeight>Normal</FontWeight>
+                                <Color>#181818</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox23</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <LeftBorder>
+                          <Style>None</Style>
+                        </LeftBorder>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>5pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
           </TablixRows>
         </TablixBody>
         <TablixColumnHierarchy>
@@ -6701,6 +6957,7 @@
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixMember>
           </TablixMembers>
@@ -6708,7 +6965,7 @@
         <DataSetName>SingleDropDataSet</DataSetName>
         <Top>0.31749cm</Top>
         <Left>0.51656cm</Left>
-        <Height>3.24664cm</Height>
+        <Height>3.84664cm</Height>
         <Width>19.98072cm</Width>
         <ZIndex>24</ZIndex>
         <Style>
@@ -7232,7 +7489,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>SingleDropVasDataSet</DataSetName>
-        <Top>15.60212cm</Top>
+        <Top>16.23712cm</Top>
         <Left>0.5735cm</Left>
         <Height>1.48663cm</Height>
         <Width>19.92379cm</Width>
@@ -7387,7 +7644,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>SingleDropVasDataSet</DataSetName>
-        <Top>14.81895cm</Top>
+        <Top>15.45395cm</Top>
         <Left>0.55106cm</Left>
         <Height>0.68819cm</Height>
         <Width>19.93458cm</Width>
@@ -7401,7 +7658,7 @@
         </Style>
       </Tablix>
     </ReportItems>
-    <Height>31.16687cm</Height>
+    <Height>31.34064cm</Height>
     <Style>
       <Border>
         <Style>None</Style>
@@ -8203,10 +8460,18 @@
           <DataField>IsSingleDrop</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="ContainerNumber">
+          <DataField>ContainerNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SealNumber">
+          <DataField>SealNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>SingleDropDataSet</rd:DataSetName>
-        <rd:SchemaPath>E:\TrustAngleProjects\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropDataSet.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropDataSet.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />

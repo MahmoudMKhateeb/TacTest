@@ -123,7 +123,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   get CanEditTrip(): boolean {
     //check if shipper or  Carrier has a Saas feature and Can edit this trip
     return (
-      this.feature.isEnabled('App.Shipper') ||
+      this.feature.isEnabled('App.Shipper') || this.isTachyonDealer ||
       (this.feature.isEnabled('App.CarrierAsASaas') && this.ShippingRequest.carrierTenantId === this.shippingRequestForView.tenantId)
     );
   }
