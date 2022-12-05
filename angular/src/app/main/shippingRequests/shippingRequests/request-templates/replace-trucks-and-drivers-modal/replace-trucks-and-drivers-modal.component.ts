@@ -185,7 +185,7 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
   getReplacementTrucksForDropDown() {
     if (this.feature.isEnabled('App.Carrier') || this.isTachyonDealerOrHost) {
       this._dedicatedShippingRequestService
-        .getReplacementTrucksForDropDown(this.dedicatedShippingRequestId, this.dedicatedTruckTypeId, this.appSession.tenantId)
+        .getReplacementTrucksForDropDown(this.dedicatedShippingRequestId, this.dedicatedTruckTypeId, this.dedicatedShippingRequest.carrierTenantId)
         .subscribe((res) => {
           this.allTrucks = res.map((item) => {
             (item.id as any) = Number(item.id);
