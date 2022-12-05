@@ -513,7 +513,7 @@ namespace TACHYON.Invoices
             
         }
 
-        
+
         public async Task ConfirmInvoice(long invoiceId)
         {
             DisableTenancyFilters();
@@ -522,16 +522,30 @@ namespace TACHYON.Invoices
             Invoice invoice = await _invoiceRepository.GetAll().Include(x => x.InvoicePeriodsFK)
                 .Include(x => x.Tenant)
                 .FirstOrDefaultAsync(x => x.Id == invoiceId);
-            
+
             if (invoice is null) throw new UserFriendlyException(L("InvoiceNotFound"));
 
             if (invoice.Status == InvoiceStatus.Confirmed)
                 throw new UserFriendlyException(L("InvoiceAlreadyConfirmed"));
-            
+
             Tenant tenant = invoice.Tenant;
             InvoicePeriod period = invoice.InvoicePeriodsFK;
             decimal totalAmount = invoice.TotalAmount;
 
+            if (period.PeriodType == InvoicePeriodType.PayInAdvance)
+            {
+                tenant.Balance -= totalAmount;
+                tenant.ReservedBalance -= totalAmount;
+            }
+            else
+            {
+                tenant.CreditBalance -= totalAmount;
+            }
+
+
+            await _balanceManager.CheckShipperOverLimit(tenant);
+            invoice.Status = InvoiceStatus.Confirmed;
+            await _appNotifier.NewInvoiceShipperGenerated(invoice);
         }
 
 
