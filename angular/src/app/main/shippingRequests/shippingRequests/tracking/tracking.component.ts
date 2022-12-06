@@ -2,6 +2,7 @@ import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   ShippingRequestDriverServiceProxy,
+  ShippingRequestFlag,
   ShippingRequestRouteType,
   ShippingRequestStatus,
   ShippingRequestsTripListDto,
@@ -57,6 +58,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   downloadingForItem: number;
   defaultProfilePic = AppConsts.appBaseUrl + '/assets/common/images/carrier-default-pic.jpg';
   loadingTripId: number;
+  ShippingRequestFlagEnum = ShippingRequestFlag;
 
   constructor(
     injector: Injector,

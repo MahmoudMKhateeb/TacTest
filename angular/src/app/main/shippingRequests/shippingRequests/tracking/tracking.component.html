@@ -24,7 +24,17 @@
       <div class="row">
         <div class="col-12 mb-7" *ngFor="let item of Items">
           <div>
-            <div class="card card-custom" [busyIf]="loadingTripId === item.id">
+            <div
+              [class]="
+                item.shippingRequestFlag === ShippingRequestFlagEnum.Normal
+                  ? 'card card-custom pt-4'
+                  : 'card card-custom ribbon ribbon-clip ribbon-left pt-4'
+              "
+              [busyIf]="loadingTripId === item.id"
+            >
+              <div class="ribbon-target" style="top: 12px" *ngIf="item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated">
+                <span class="ribbon-inner bg-warning"></span> {{ 'DedicatedShippingRequest' | localize }}
+              </div>
               <div class="card-body ribbon ribbon-top">
                 <!--                <div class="ribbon-target bg-danger" style="top: -2px; right: 20px">Ribbon</div>-->
                 <div class="d-flex justify-content-between">
@@ -32,7 +42,7 @@
                     *ngIf="item.hasAccident"
                     (click)="showIncident(item)"
                     class="ribbon-target bg-warning border-0"
-                    style="top: -2px; right: 8%"
+                    style="top: -1rem; right: 8%"
                     type="submit"
                   >
                     <!--                    //TODO: Add The Icon and the condition-->
@@ -40,7 +50,7 @@
                   </button>
                   <div
                     class="ribbon-target"
-                    style="top: -2px; right: 2%"
+                    style="top: -1rem; right: 2%; left: auto"
                     [ngClass]="{
                       'bg-danger': item.status === ShippingRequestTripStatusEnum.Delivered,
                       'bg-info': item.status === ShippingRequestTripStatusEnum.Canceled,
@@ -51,7 +61,7 @@
                   >
                     {{ item.statusTitle | localize }}
                   </div>
-                  <div *ngIf="item.isSass" class="ribbon-target bg-info" style="top: -2px" [ngClass]="{ left: !isRtl, right: isRtl }">
+                  <div *ngIf="item.isSass" class="ribbon-target bg-info" style="top: -1rem" [ngClass]="{ left: !isRtl, right: isRtl }">
                     {{ 'SAASTrip' | localize }}
                   </div>
                 </div>
@@ -197,7 +207,7 @@
                 <!--begin::Bottom-->
                 <div class="d-flex align-items-center flex-wrap">
                   <!--begin: Item-->
-                  <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                  <div class="d-flex align-items-center flex-lg-fill mr-5 my-1" *ngIf="item.shippingRequestFlag === ShippingRequestFlagEnum.Normal">
                     <span class="mr-4">
                       <i class="flaticon-map-location icon-2x text-muted font-weight-bold"></i>
                     </span>
@@ -253,8 +263,12 @@
                       <i class="flaticon-placeholder icon-2x text-muted font-weight-bold"></i>
                     </span>
                     <div class="d-flex flex-column flex-lg-fill">
-                      <span class="text-dark-75 font-weight-bolder font-size-sm">{{ l('NumberOfDrops') }}</span>
-                      <span class="text-dark font-weight-bolder">{{ item.numberOfDrops }}</span>
+                      <span class="text-dark-75 font-weight-bolder font-size-sm">{{
+                        item.shippingRequestFlag === ShippingRequestFlagEnum.Normal ? l('NumberOfDrops') : l('NumberOfTrucks')
+                      }}</span>
+                      <span class="text-dark font-weight-bolder">{{
+                        item.shippingRequestFlag === ShippingRequestFlagEnum.Normal ? item.numberOfDrops : item.numberOfTrucks
+                      }}</span>
                     </div>
                   </div>
                   <!--end: Item-->
