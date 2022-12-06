@@ -21,6 +21,8 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.OriginFacilityFk.Address))
             .ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.DestinationFacilityFk.Address))
             .ForMember(dst => dst.ReferenceNumber, opt => opt.MapFrom(src => src.ShippingRequestFk.ReferenceNumber))
+            .ForMember(dst => dst.ShippingRequestFlag, opt => opt.MapFrom(src => src.ShippingRequestFk.ShippingRequestFlag))
+            .ForMember(dst => dst.NumberOfTrucks, opt => opt.MapFrom(src => src.ShippingRequestFk.NumberOfTrucks))
             .ForMember(dst => dst.TenantId, opt => opt.MapFrom(src => src.ShippingRequestFk.TenantId))
             .ForMember(dst => dst.RequestId, opt => opt.MapFrom(src => src.ShippingRequestId))
             .ForMember(dst => dst.DriverRate, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Rate))
