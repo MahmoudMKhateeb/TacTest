@@ -972,6 +972,7 @@ namespace TACHYON.PriceOffers
                 //dto.Longitude = (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.X : 0);
                 //dto.Latitude = (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.Y : 0);
                 dto.NotesCount = await GetRequestNotesCount(request.Id);
+                dto.CanAssignDedicatedDriversAndTrucks = request.Status == ShippingRequestStatus.PostPrice && (await IsTachyonDealer() || request.CarrierTenantId == AbpSession.TenantId);
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }

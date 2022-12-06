@@ -568,7 +568,7 @@
                 </a>
                 <a
                   *ngIf="
-                    (isCarrier || isCarrierSaas) && !Channel && !item.isDriversAndTrucksAssigned && item.status !== shippingRequestStatusEnum.Expired
+                  item.canAssignDedicatedDriversAndTrucks && !Channel && !item.isDriversAndTrucksAssigned && item.status !== shippingRequestStatusEnum.Expired
                   "
                   href="javascript:void(0)"
                   (click)="assignTrucksAndDrivers(item)"
@@ -577,7 +577,7 @@
                   {{ l('AssignTrucksAndDrivers') }}
                 </a>
                 <a
-                  *ngIf="(isCarrier || isCarrierSaas || isTachyonDealer) && !Channel && item.isDriversAndTrucksAssigned"
+                  *ngIf="item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned"
                   href="javascript:void(0)"
                   (click)="openAttendanceModal(item)"
                   class="red"
@@ -585,7 +585,7 @@
                   {{ l('viewAttendance') }}
                 </a>
                 <a
-                  *ngIf="(isCarrier || isCarrierSaas || isTachyonDealer) && !Channel && item.isDriversAndTrucksAssigned"
+                  *ngIf="item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned"
                   href="javascript:void(0)"
                   (click)="viewTrucksOrDrivers(item, false)"
                   class="red"
@@ -593,7 +593,7 @@
                   {{ l('ReplaceDrivers') }}
                 </a>
                 <a
-                  *ngIf="(isCarrier || isCarrierSaas || isTachyonDealer) && !Channel && item.isDriversAndTrucksAssigned"
+                  *ngIf="item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned"
                   href="javascript:void(0)"
                   (click)="viewTrucksOrDrivers(item, true)"
                   class="red"
