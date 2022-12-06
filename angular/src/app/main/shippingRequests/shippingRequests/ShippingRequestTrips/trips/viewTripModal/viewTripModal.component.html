@@ -157,7 +157,7 @@
                        name="ContainerNumber"
                        [(ngModel)]="trip.containerNumber"
                        type="text"
-                       disabled />
+                       [disabled]="trip.containerNumber" />
 
             </div>
         </div>
@@ -171,7 +171,7 @@
                        name="SealNumber"
                        [(ngModel)]="trip.sealNumber"
                        type="text"
-                       disabled />
+                       [disabled]="trip.sealNumber" />
 
             </div>
         </div>
