@@ -214,6 +214,7 @@ namespace TACHYON.Invoices
                 .Include(i => i.Trips)
                 .ThenInclude(i => i.ShippingRequestFk)
                 .ThenInclude(r => r.ShippingRequestDestinationCities)
+                .ThenInclude(x=>x.CityFk)
                 .Include(i => i.Trips)
                 .ThenInclude(r => r.AssignedTruckFk)
                 .Include(i => i.Trips)
