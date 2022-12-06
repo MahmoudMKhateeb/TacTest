@@ -82,6 +82,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   fileType: string;
   fileName: string;
   hasNewUpload: boolean;
+  isDisabledTruck: boolean =false;
+  isDisabledDriver: boolean = false;
 
   /**
    * DocFileUploader onProgressItem progress
@@ -270,6 +272,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
     this.allDedicatedDrivers = [];
     this.allDedicatedTrucks = [];
+    this.isDisabledTruck = false;
+    this.isDisabledDriver = false;
   }
 
   createOrEditTrip() {
@@ -305,6 +309,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
           this.modalSave.emit(null);
           this.notify.info(this.l('SuccessfullySaved'));
           abp.event.trigger('ShippingRequestTripCreatedEvent');
+          this.isDisabledTruck = false;
+          this.isDisabledDriver = false;
         });
     }
   }
@@ -667,5 +673,13 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.PointsComponent.createEmptyPoints();
       this._PointsService.updateWayPoints(this.PointsComponent.wayPointsList);
     }
+  }
+
+  GetTruckOrDriver(driverId?: number, truckId?: number){
+    this._dedicatedShippingRequestsServiceProxy.getDriverOrTruckForTripAssign(truckId, driverId, this.shippingRequestForView.shippingRequest.id)
+    .subscribe((res)=>{
+    if(driverId != null && res !=null){ this.trip.truckId=res ; this.isDisabledTruck=true}
+    else if(truckId !=null && res!=null){ this.trip.driverUserId = res; this.isDisabledDriver = true}
+  });
   }
 }
