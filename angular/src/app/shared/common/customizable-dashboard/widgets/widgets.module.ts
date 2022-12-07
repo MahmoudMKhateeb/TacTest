@@ -59,6 +59,11 @@ import { CarrierAcceptedVsRejectdRequestsComponent } from './carrier/carrier-acc
 import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoices-details-widget/carrier-invoices-details-widget.component';
 import { ProjectPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/project-performance/project-performance.component';
 import { TruckPerformanceChartComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance-chart/truck-performance-chart.component';
+import { DxSelectBoxModule } from '@node_modules/devextreme-angular';
+import { CountersWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/counters-widget/counters-widget.component';
+import { UpcomingTripsWidgetsComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/upcoming-trips-widgets/upcoming-trips-widgets.component';
+import { NeedsActionWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/needs-action-widget/needs-action-widget.component';
+import { NewOffersWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/new-offers-widget/new-offers-widget.component';
 
 @NgModule({
   declarations: [
@@ -108,6 +113,10 @@ import { TruckPerformanceChartComponent } from '@app/main/shippingRequests/dedic
     CarrierInvoicesDetailsWidgetComponent,
     ProjectPerformanceComponent,
     TruckPerformanceChartComponent,
+    CountersWidgetComponent,
+    UpcomingTripsWidgetsComponent,
+    NeedsActionWidgetComponent,
+    NewOffersWidgetComponent,
   ],
   imports: [
     CommonModule,
@@ -123,6 +132,7 @@ import { TruckPerformanceChartComponent } from '@app/main/shippingRequests/dedic
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     RouterModule,
+    DxSelectBoxModule,
   ],
   entryComponents: [
     CompletedTripsWidgetComponent,
@@ -168,7 +178,62 @@ import { TruckPerformanceChartComponent } from '@app/main/shippingRequests/dedic
     UnpricedRequestsInMarketplaceComponent,
     ProjectPerformanceComponent,
     TruckPerformanceChartComponent,
+    CountersWidgetComponent,
+    UpcomingTripsWidgetsComponent,
+    NeedsActionWidgetComponent,
+    NewOffersWidgetComponent,
   ],
-  exports: [ProjectPerformanceComponent, TruckPerformanceChartComponent],
+  exports: [
+    CompletedTripsWidgetComponent,
+    CompletedTripVsPodComponent,
+    AcceptedVsRejecedRequestsComponent,
+    InvoicesVsPaidInvoicesComponent,
+    MostWorkedWithCarriersComponent,
+    RequestsInMarketPlaceComponent,
+    NextInvoiceFrequancyDateComponent,
+    InvoiceDueDateComponent,
+    ShipperDueDateInDaysComponent,
+    MostUsedOriginComponent,
+    MostUsedDestinationsComponent,
+    TrackingMapComponent,
+    AcceptedVsRejectedPricingComponent,
+    TucksActivityComponent,
+    DriversActivityComponent,
+    MostUsedppComponent,
+    MostUsedVasesComponent,
+    MostWorkedWithShippersComponent,
+    CarrierNextInvoiceFrequenctEndComponent,
+    NumberOfRegesterdTrucksComponent,
+    NumberOfRegesterdDriversComponent,
+    NumberOfRegesterdShippersComponent,
+    OnGoingTripsComponent,
+    DeleverdTripsComponent,
+    NumberOfRegesterdCarriersComponent,
+    HostNewAccountsChartComponent,
+    HostNewTripsChartComponent,
+    HostTruckTypeUsageChartComponent,
+    HostGoodTypesUsageChartComponent,
+    HostRouteTypeUsageChartComponent,
+    HostRquestPricingMeterComponent,
+    HostRquestAcceptanceMeterComponent,
+    HostInvoicesMeterComponent,
+    TopThreeShippersHaveRequestsComponent,
+    TopThreeCarriersHaveRequestsComponent,
+    TopRatedCarriersComponent,
+    TopRatedShippersComponent,
+    WorstRatedShippersComponent,
+    WorstRatedCarriersComponent,
+    NumberOfRequestsForEachCityComponent,
+    UnpricedRequestsInMarketplaceComponent,
+    CarrierComplitedTripsWidgetComponent,
+    CarrierAcceptedVsRejectdRequestsComponent,
+    CarrierInvoicesDetailsWidgetComponent,
+    ProjectPerformanceComponent,
+    TruckPerformanceChartComponent,
+    CountersWidgetComponent,
+    UpcomingTripsWidgetsComponent,
+    NeedsActionWidgetComponent,
+    NewOffersWidgetComponent,
+  ],
 })
 export class WidgetsModule {}

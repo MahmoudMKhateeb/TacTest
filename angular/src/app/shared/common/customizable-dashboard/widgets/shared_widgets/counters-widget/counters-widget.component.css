@@ -1,0 +1,35 @@
+.counter-icon {
+  width: 3vw;
+  height: 100%;
+  margin-right: 7px;
+  border: solid 0.5px #c9c9c9;
+  padding: 6px 7px 9px 8px;
+  border-radius: 10px;
+}
+.counter-title {
+  font-size: 10px;
+}
+.counter-details {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.custom-hr {
+  border-top: 1px solid #eaeaea !important;
+}
+
+::ng-deep .counter-icon {
+  width: 3vw;
+  height: 100%;
+  margin-right: 7px;
+  border: solid 0.5px #c9c9c9;
+  padding: 6px 7px 9px 8px;
+  border-radius: 10px;
+}
+::ng-deep .counter-title {
+  font-size: 10px;
+}
+::ng-deep .counter-details {
+  font-size: 12px;
+  font-weight: 600;
+}

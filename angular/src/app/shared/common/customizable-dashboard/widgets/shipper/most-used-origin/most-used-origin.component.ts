@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { MostUsedOriginsDto, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -9,8 +9,9 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./most-used-origin.component.css'],
 })
 export class MostUsedOriginComponent extends AppComponentBase implements OnInit {
-  data: any;
+  data: MostUsedOriginsDto[] = [];
   loading: boolean = false;
+  total = 0;
 
   constructor(private injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
@@ -31,6 +32,7 @@ export class MostUsedOriginComponent extends AppComponentBase implements OnInit 
       )
       .subscribe((result) => {
         this.data = result;
+        this.total = result.reduce((accumulator, currentValue) => accumulator + currentValue.numberOfRequests, 0);
         this.loading = false;
       });
   }

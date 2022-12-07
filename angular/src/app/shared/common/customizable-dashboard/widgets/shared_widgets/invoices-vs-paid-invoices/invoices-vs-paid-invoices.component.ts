@@ -37,18 +37,34 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
           series: [
             {
               name: 'Invoices',
-              data: result.shipperInvoices,
-              color: 'rgba(187, 41, 41, 0.847)',
+              data: [6, 8, 25, 15, 10, 18, 22, 23, 25, 30, 38], // result.shipperInvoices,
+              // color: 'rgba(187, 41, 41, 0.847)',
+              color: '#d7dadc',
             },
             {
               name: 'Paid Invoices',
-              data: result.paidInvoices,
+              color: '#1c1c1c',
+              data: [4, 6, 20, 11, 8, 15, 19, 21, 20, 25, 32], //result.paidInvoices,
             },
           ],
           chart: {
-            type: 'bar',
-            width: 400,
+            type: 'line',
+            width: '100%',
             height: 250,
+            zoom: {
+              enabled: false,
+            },
+          },
+          dataLabels: {
+            enabled: false,
+          },
+          stroke: {
+            curve: 'smooth',
+          },
+          grid: {
+            row: {
+              opacity: 0.5,
+            },
           },
           xaxis: {
             type: 'category',

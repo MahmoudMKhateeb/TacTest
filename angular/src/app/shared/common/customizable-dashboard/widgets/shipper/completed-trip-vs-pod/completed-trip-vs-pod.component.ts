@@ -1,8 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ChartCategoryPairedValuesDto, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
+import { ApexLegend } from '@node_modules/ng-apexcharts';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-completed-trip-vs-pod',
@@ -12,6 +14,14 @@ import { finalize } from 'rxjs/operators';
 export class CompletedTripVsPodComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptions>;
   loading = false;
+  legend: ApexLegend = {
+    show: false,
+    // position: 'right',
+    // offsetY: 40,
+    // fontWeight: 500,
+  };
+  public completedTripVsPod: any;
+  options: string[] = [this.l('Daily'), this.l('Weekly'), this.l('Monthly')];
 
   constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
@@ -32,25 +42,67 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
         })
       )
       .subscribe((result) => {
+        const completed =
+          result.completedTrips.length > 0 ? result.completedTrips.reduce((accumulator, currentValue) => accumulator + currentValue.y, 0) : 0;
+        const pod = result.podTrips.length > 0 ? result.podTrips.reduce((accumulator, currentValue) => accumulator + currentValue.y, 0) : 0;
+        this.completedTripVsPod = {
+          completed,
+          pod,
+          total: completed + pod,
+        };
+        const categories = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const completedSeries = categories.map((item) => {
+          const foundFromResponse = result.completedTrips.find((accepted) => accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase());
+          console.log('acceptedSeries foundFromResponse', foundFromResponse);
+          return ChartCategoryPairedValuesDto.fromJS({
+            x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
+            y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
+          });
+        });
+        const podSeries = categories.map((item) => {
+          const foundFromResponse = result.podTrips.find((rejected) => rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase());
+          console.log('rejectedSeries foundFromResponse', foundFromResponse);
+          return ChartCategoryPairedValuesDto.fromJS({
+            x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
+            y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
+          });
+        });
+        console.log('completedSeries', completedSeries);
+        console.log('podSeries', podSeries);
         this.chartOptions = {
           series: [
             {
               name: this.l('Completed'),
-              data: result.completedTrips,
+              data: completedSeries,
               color: 'rgba(187, 41, 41, 0.847)',
             },
             {
               name: this.l('POD'),
-              data: result.podTrips,
+              data: podSeries,
             },
           ],
           chart: {
             type: 'bar',
-            width: 400,
-            height: 250,
+            width: '100%',
+            height: 200,
+            stacked: true,
           },
           xaxis: {
             type: 'category',
+            categories,
+          },
+          dataLabels: {
+            enabled: false,
+          },
+        };
+        (this.chartOptions as any).legend = {
+          position: 'right',
+          offsetY: 40,
+        };
+        (this.chartOptions as any).plotOptions = {
+          bar: {
+            columnWidth: '45%',
+            // distributed: true
           },
         };
         (this.chartOptions.chart.locales as any[]) = [

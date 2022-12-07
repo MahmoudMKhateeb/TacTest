@@ -23,6 +23,7 @@ import { AddWidgetModalComponent } from './add-widget-modal/add-widget-modal.com
 import { DashboardCustomizationConst } from './DashboardCustomizationConsts';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import * as rtlDetect from 'rtl-detect';
+import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'customizable-dashboard',
@@ -83,7 +84,8 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
 
         this.initializeUserDashboardDefinition(savedUserDashboard, dashboardDefinitionResult);
         this.initializeUserDashboardFilters();
-
+        console.log('savedUserDashboard', savedUserDashboard);
+        console.log('dashboardDefinitionResult', dashboardDefinitionResult);
         //select first page (if user delete all pages server will add default page to userDashboard.)
         this.selectedPage = {
           id: this.userDashboard.pages[0].id,
@@ -123,6 +125,7 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
           (w) => dashboardDefinitionResult.widgets.find((d) => d.id === w.WidgetId) && this.getWidgetViewDefinition(w.WidgetId)
         );
 
+        console.log('page.Widgets', page.Widgets);
         return {
           id: page.Id,
           name: page.Name,
@@ -132,8 +135,10 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
               //View definitions are stored in the angular side(a component of widget/filter etc.) get view definition and use defined component
               component: this.getWidgetViewDefinition(widget.WidgetId).component,
               gridInformation: {
+                resizeEnabled: false,
+                dragEnabled: false,
                 id: widget.WidgetId,
-                cols: widget.Width,
+                cols: widget.WidgetId === 'Widgets_Tenant_shipper_AcceptedVsRejectedRequestsWidget' ? 8 : widget.Width,
                 rows: widget.Height,
                 x: widget.PositionX,
                 y: widget.PositionY,
@@ -253,9 +258,9 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
   openAddWidgetModal(): void {
     let page = this.userDashboard.pages.find((page) => page.id === this.selectedPage.id);
     if (page) {
-      let widgets = this.dashboardDefinition.widgets.filter(
+      let widgets = this.dashboardDefinition.widgets; /*.filter(
         (widgetDef: WidgetOutput) => !page.widgets.find((widgetOnPage) => widgetOnPage.id === widgetDef.id)
-      );
+      )*/
       this.addWidgetModal.show(widgets);
     }
   }
@@ -432,10 +437,10 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
     return {
       pushItems: true,
       draggable: {
-        enabled: this.editModeEnabled,
+        enabled: false, // this.editModeEnabled,
       },
       resizable: {
-        enabled: this.editModeEnabled,
+        enabled: false, // this.editModeEnabled,
       },
       fixedRowHeight: 30,
       fixedColWidth: 30,

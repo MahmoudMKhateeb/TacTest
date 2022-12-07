@@ -72,7 +72,8 @@ export class DashboardViewConfigurationService {
     //2
     let acceptedVsRejectedRequestsWidget = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Shipper.ShipperAcceptedVsRejectedRequestsWidget,
-      AcceptedVsRejecedRequestsComponent
+      AcceptedVsRejecedRequestsComponent,
+      1
     );
 
     //3
