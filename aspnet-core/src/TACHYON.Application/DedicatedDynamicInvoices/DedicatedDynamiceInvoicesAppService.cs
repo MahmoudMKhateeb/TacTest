@@ -75,7 +75,7 @@ namespace TACHYON.DedicatedDynamicInvoices
         [AbpAuthorize(AppPermissions.Pages_DedicatedDynamicInvoices_Update)]
         public async Task<CreateOrEditDedicatedInvoiceDto> GetDedicatedInvoiceForEdit(long id)
         {
-            var invoice = await _dedicatedInvoiceRepository.GetAllIncluding(x => x.DedicatedDynamicInvoiceItems).FirstOrDefaultAsync(x=>x.Id == id);
+            var invoice = await _dedicatedInvoiceRepository.GetAllIncluding(x => x.DedicatedDynamicInvoiceItems).FirstOrDefaultAsync(x => x.Id == id);
             return ObjectMapper.Map<CreateOrEditDedicatedInvoiceDto>(invoice);
         }
 
@@ -91,8 +91,8 @@ namespace TACHYON.DedicatedDynamicInvoices
 
         public async Task GenerateDedicatedInvoice(long id)
         {
-            var invoice = await _dedicatedInvoiceRepository.GetAllIncluding(x => x.DedicatedDynamicInvoiceItems, x=>x.Tenant).FirstOrDefaultAsync(x => x.Id == id);
-            if(invoice.InvoiceAccountType == InvoiceAccountType.AccountReceivable)
+            var invoice = await _dedicatedInvoiceRepository.GetAllIncluding(x => x.DedicatedDynamicInvoiceItems, x => x.Tenant).FirstOrDefaultAsync(x => x.Id == id);
+            if (invoice.InvoiceAccountType == InvoiceAccountType.AccountReceivable)
             {
                 if (invoice.InvoiceId != null) throw new UserFriendlyException(L("InvoiceAlreadyGenerated"));
                 await _invoiceManager.GenerateDedicatedDynamicInvoice(invoice.Tenant, invoice);
@@ -144,13 +144,19 @@ namespace TACHYON.DedicatedDynamicInvoices
 
         private async Task CalculateAmounts(CreateOrEditDedicatedInvoiceDto input)
         {
-            var pricePerDay =await GetDedicatePricePerDay(input.ShippingRequestId, input.TenantId);
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            var price = await _priceOfferRepository.GetAll().Where(x => x.ShippingRequestId == input.ShippingRequestId &&
+            x.Status == PriceOfferStatus.Accepted).FirstOrDefaultAsync();
+            if (price == null) throw new UserFriendlyException(L("NoConfirmedOfferExists"));
+
+            //var pricePerDay =await GetDedicatePricePerDay(input.ShippingRequestId,input.InvoiceAccountType, price);
             foreach (var item in input.DedicatedInvoiceItems)
             {
+                var pricePerDay = GetTruckPricePerDay(input.InvoiceAccountType, item.AllNumberDays, price);
                 item.PricePerDay = pricePerDay;
                 item.ItemSubTotalAmount = item.NumberOfDays * item.PricePerDay;
                 item.TaxVat = GetTaxVat();
-                item.VatAmount = item.ItemSubTotalAmount * GetTaxVat()/100;
+                item.VatAmount = item.ItemSubTotalAmount * GetTaxVat() / 100;
                 item.ItemTotalAmount = item.ItemSubTotalAmount + item.VatAmount;
             }
 
@@ -164,25 +170,33 @@ namespace TACHYON.DedicatedDynamicInvoices
             return _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
         }
 
-        public async Task<decimal> GetDedicatePricePerDay(long ShippingRequestId, int tenantId)
+        private decimal GetTruckPricePerDay(InvoiceAccountType invoiceAccountType, int AllNumberOfDays, PriceOffer price)
         {
-           await  DisableTenancyFilterIfTachyonDealerOrHost();
-            var edition = _tenantManager.GetById(tenantId).EditionId;
-            var price =await _priceOfferRepository.GetAll().Where(x => x.ShippingRequestId == ShippingRequestId &&
-            x.Status == PriceOfferStatus.Accepted).FirstOrDefaultAsync();
-
-            if (price == null) throw new UserFriendlyException(L("NoConfirmedOfferExists"));
-
-            var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(x => x.Id == ShippingRequestId &&
-            x.ShippingRequestFlag == ShippingRequestFlag.Dedicated);
-            int AllDays = GetNumberOfDays(shippingRequest);
-
-            if (AllDays > 0) return (edition == ShipperEditionId ?price.TotalAmountWithCommission :price.ItemPrice) / AllDays;
+            if (AllNumberOfDays > 0) return (invoiceAccountType == InvoiceAccountType.AccountReceivable ? price.ItemSubTotalAmountWithCommission : price.ItemPrice) / AllNumberOfDays;
             return 0;
         }
 
-        private int GetNumberOfDays(ShippingRequest shippingRequest)
+        /// <summary>
+        /// Helper for front
+        /// </summary>
+        /// <param name="ShippingRequestId"></param>
+        /// <param name="invoiceAccountType"></param>
+        /// <param name="AllNumberOfDays"></param>
+        /// <returns></returns>
+        public async Task<decimal> GetDedicatePricePerDay(long ShippingRequestId, InvoiceAccountType invoiceAccountType, int AllNumberOfDays)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            var price = await _priceOfferRepository.GetAll().Where(x => x.ShippingRequestId == ShippingRequestId &&
+            x.Status == PriceOfferStatus.Accepted).FirstOrDefaultAsync();
+            if (AllNumberOfDays > 0) return (invoiceAccountType == InvoiceAccountType.AccountReceivable ? price.ItemSubTotalAmountWithCommission : price.ItemPrice) / AllNumberOfDays;
+            return 0;
+        }
+
+        public async Task<int> GetDefaultNumberOfDays(long ShippingRequestId)
+        {
+            var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(x => x.Id == ShippingRequestId &&
+            x.ShippingRequestFlag == ShippingRequestFlag.Dedicated);
+
             switch (shippingRequest.RentalDurationUnit)
             {
                 case TimeUnit.Daily:
@@ -190,7 +204,7 @@ namespace TACHYON.DedicatedDynamicInvoices
                 case TimeUnit.Monthly:
                     return shippingRequest.RentalDuration * 26;
                 case TimeUnit.Weekly:
-                    return shippingRequest.RentalDuration * 6;
+                    return shippingRequest.RentalDuration * 7;
                 default:
                     return 0;
             }

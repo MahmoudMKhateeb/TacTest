@@ -3176,5 +3176,7 @@
     <text name="replacementIntervalInDays">Replacement interval</text>
     <text name="truckAttendanceModal">Truck attendance</text>
     <text name="viewAttendance">View attendance</text>
+    <text name="AllNumberOfDays">All number of days</text>
+    <text name="PricePerDay">Price per day</text>
 	</texts>
 </localizationDictionary>

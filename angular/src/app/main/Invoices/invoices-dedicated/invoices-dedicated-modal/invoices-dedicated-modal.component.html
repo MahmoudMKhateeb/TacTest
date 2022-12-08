@@ -143,6 +143,24 @@
             <div class="col-6 mb-4">
               <div>
                 <label class="form-label" for="price">
+                  {{ l('AllNumberOfDays') }}
+                  <span class="required-fileds"> *</span>
+                </label>
+                <input
+                  required
+                  type="number"
+                  class="form-control"
+                  name="allNumberOfDays"
+                  id="allNumberOfDays"
+                  [min]="0"
+                  [(ngModel)]="allNumberOfDays"
+                  (ngModelChange)="allNumberOfDaysUpdate.next($event)"
+                />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="price">
                   {{ l('WorkingDayType') }}
                   <span class="required-fileds"> *</span>
                 </label>
@@ -187,7 +205,7 @@
                 <input required type="number" class="form-control" name="pricePerDay" id="pricePerDay" [(ngModel)]="pricePerDay" disabled />
               </div>
             </div>
-            
+
             <div class="col-6 mb-4">
               <div>
                 <label class="form-label" for="price">

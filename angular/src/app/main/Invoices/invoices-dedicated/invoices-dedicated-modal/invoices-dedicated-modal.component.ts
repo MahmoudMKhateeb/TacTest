@@ -26,6 +26,8 @@ import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepic
 import Swal from 'sweetalert2';
 import { NgForm } from '@angular/forms';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-invoices-dedicated-modal',
@@ -48,8 +50,11 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
   selectedDedicateTruckId: number;
   dedicateTrucks: SelectItemDto[];
   pricePerDay: number;
+  allNumberOfDays: number;
+  allNumberOfDaysUpdate = new Subject<number>();
   taxVat: number;
   allWorkingDayTypes: any;
+  private selectedShippingRequestId: number;
 
   constructor(
     injector: Injector,
@@ -72,6 +77,7 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
     if (!isNotNullOrUndefined(this.root.dedicatedInvoiceItems)) {
       this.root.dedicatedInvoiceItems = [];
     }
+    this.subscribeToAllNumberOfDaysChanges();
   }
 
   private getTaxVat() {
@@ -158,7 +164,8 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
     if (
       !isNotNullOrUndefined(this.dataSourceForEdit) ||
       !isNotNullOrUndefined(this.dataSourceForEdit.workingDayType) ||
-      !isNotNullOrUndefined(this.dataSourceForEdit.numberOfDays)
+      !isNotNullOrUndefined(this.dataSourceForEdit.numberOfDays) ||
+      !isNotNullOrUndefined(this.allNumberOfDays)
     ) {
       Swal.fire({
         title: this.l('FormIsNotValidMessage'),
@@ -171,6 +178,7 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
       this.root.dedicatedInvoiceItems = [];
     }
     this.dataSourceForEdit.dedicatedShippingRequestTruckId = Number(this.selectedDedicateTruckId);
+    this.dataSourceForEdit.allNumberDays = this.allNumberOfDays;
     if (
       !isNotNullOrUndefined(this.dataSourceForEdit.id) &&
       isNotNullOrUndefined(this.dataSourceForEdit.numberOfDays) &&
@@ -192,6 +200,7 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
 
   editRow(i: number, row: CreateOrEditDedicatedInvoiceItemDto) {
     this.dataSourceForEdit = CreateOrEditDedicatedInvoiceItemDto.fromJS(row.toJSON());
+    this.allNumberOfDays = row.allNumberDays;
     this.selectedDedicateTruckId = row.dedicatedShippingRequestTruckId;
     this.activeIndex = i;
   }
@@ -227,17 +236,28 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
         return item;
       });
     });
-    const tenantId = (this.root.tenantId as any) instanceof Object ? (this.root.tenantId as any).id : this.root.tenantId;
-    this._DedicatedDynamiceInvoicesServiceProxy.getDedicatePricePerDay(Number(event.value), Number(tenantId)).subscribe((res) => {
-      this.pricePerDay = res;
-    });
+    // const tenantId = (this.root.tenantId as any) instanceof Object ? (this.root.tenantId as any).id : this.root.tenantId;
+    this.selectedShippingRequestId = Number(event.value);
+    this.getDefaultNumberOfDays();
+  }
+
+  private getDedicatedPricePerDay() {
+    this._DedicatedDynamiceInvoicesServiceProxy
+      .getDedicatePricePerDay(this.selectedShippingRequestId, this.root.invoiceAccountType, Number(this.allNumberOfDays))
+      .subscribe((res) => {
+        this.pricePerDay = res;
+        this.calculateValues(null);
+      });
   }
 
   calculateValues($event: any) {
     console.log('$event', $event);
-    this.dataSourceForEdit.itemSubTotalAmount = this.dataSourceForEdit.numberOfDays * this.pricePerDay;
-    this.dataSourceForEdit.vatAmount = (this.taxVat * this.dataSourceForEdit.itemSubTotalAmount) / 100;
-    this.dataSourceForEdit.itemTotalAmount = this.dataSourceForEdit.itemSubTotalAmount + this.dataSourceForEdit.vatAmount;
+    if (!isNotNullOrUndefined(this.dataSourceForEdit)) {
+      return;
+    }
+    this.dataSourceForEdit.itemSubTotalAmount = this.dataSourceForEdit?.numberOfDays * this.pricePerDay;
+    this.dataSourceForEdit.vatAmount = (this.taxVat * this.dataSourceForEdit?.itemSubTotalAmount) / 100;
+    this.dataSourceForEdit.itemTotalAmount = this.dataSourceForEdit?.itemSubTotalAmount + this.dataSourceForEdit?.vatAmount;
   }
 
   getWorkingDayTitle(workingDayType: WorkingDayType) {
@@ -268,10 +288,27 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
 
   LoadNumberOfDays($event: any) {
     if (this.dataSourceForEdit.workingDayType && this.selectedDedicateTruckId) {
-      this._AttendanceSheetServiceProxy.getDaysNumberByWorkingDayType(this.dataSourceForEdit.workingDayType, this.selectedDedicateTruckId).subscribe((res) => {
-        this.dataSourceForEdit.numberOfDays = res;
-        this.calculateValues(null);
-      });
+      this._AttendanceSheetServiceProxy
+        .getDaysNumberByWorkingDayType(this.dataSourceForEdit.workingDayType, this.selectedDedicateTruckId)
+        .subscribe((res) => {
+          this.dataSourceForEdit.numberOfDays = res;
+          this.calculateValues(null);
+        });
     }
+  }
+
+  private getDefaultNumberOfDays() {
+    this._DedicatedDynamiceInvoicesServiceProxy.getDefaultNumberOfDays(this.selectedShippingRequestId).subscribe((res) => {
+      this.allNumberOfDays = res;
+      this.getDedicatedPricePerDay();
+    });
+  }
+
+  private subscribeToAllNumberOfDaysChanges() {
+    this.allNumberOfDaysUpdate.pipe(debounceTime(300), distinctUntilChanged()).subscribe((value) => {
+      console.log('value');
+      // this.consoleMessages.push(value);
+      this.getDedicatedPricePerDay();
+    });
   }
 }
