@@ -74,9 +74,10 @@
               </dx-drop-down-box>
             </div>
             <div class="form-group col-md-6">
-              <label>{{ l('EmailAddress') }}</label>
+              <label>{{ l('EmailAddress') }} <span class="text-danger">*</span></label>
               <input
                 [(ngModel)]="pricePackageProposal.emailAddress"
+                required
                 type="email"
                 pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
                 maxlength="256"

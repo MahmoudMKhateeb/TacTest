@@ -1,0 +1,95 @@
+<div bsModal #Modal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" [config]="{ backdrop: 'static' }">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{ l('HeaderDetails') }}</span>
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6 mb-3">
+            <h6>{{ l('DisplayName') }} :</h6>
+            {{ pricePackage.displayName }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('CompanyName') }} :</h6>
+            {{ pricePackage.companyName }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Edition') }} :</h6>
+            {{ pricePackage.companyEditionName }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Origin') }} :</h6>
+            {{ pricePackage.originCity }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Destination') }} :</h6>
+            {{ pricePackage.destinationCity }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('RouteType') }}:</h6>
+            {{ pricePackage.routeType | localize }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('PricePackageType') }} :</h6>
+            {{ pricePackage.type | localize }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('TransportType') }} :</h6>
+            {{ pricePackage.transportType }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('TruckType') }} :</h6>
+            {{ pricePackage.truckType }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Price') }} :</h6>
+            {{ pricePackage.price }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Commission') }} :</h6>
+            {{ pricePackage.commission }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('CommissionType') }} :</h6>
+            {{ pricePackage.commissionType | localize }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('TotalPrice') }} :</h6>
+            {{ pricePackage.totalPrice }}
+          </div>
+          <div class="col-6 mb-3" *ngIf="isTachyonDealerOrHost">
+            <h6>{{ l('OfferStatus') }} :</h6>
+            {{ pricePackage.offerStatusTitle | localize }}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          [buttonBusy]="isLoading"
+          *ngIf="pricePackage.offerStatus === pricePackageStatus.NoOffer"
+          (click)="sendOffer()"
+        >
+          {{ l('SendOffer') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [buttonBusy]="isAcceptLoading"
+          *ngIf="pricePackage.offerStatus === pricePackageStatus.SentAndWaitingResponse && pricePackage.destinationTenantId === appSession.tenantId"
+          (click)="acceptOffer()"
+        >
+          {{ l('Accept') }}
+        </button>
+        <button type="button" class="btn btn-primary" (click)="close()">{{ l('Close') }}</button>
+      </div>
+    </div>
+  </div>
+</div>

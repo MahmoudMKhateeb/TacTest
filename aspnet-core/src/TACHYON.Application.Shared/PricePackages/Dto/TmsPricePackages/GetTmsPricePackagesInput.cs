@@ -11,5 +11,6 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
         public int DestinationTenantId { get; set; }
 
         public int? ProposalId { get; set; }
+        public int? AppendixId { get; set; }
     }
 }

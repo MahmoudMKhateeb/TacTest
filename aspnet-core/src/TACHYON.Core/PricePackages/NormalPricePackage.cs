@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using TACHYON.Cities;
-using TACHYON.PricePackages.PricePackageAppendices;
 
 namespace TACHYON.PricePackages
 {
@@ -27,11 +26,6 @@ namespace TACHYON.PricePackages
         [ForeignKey(nameof(DestinationCityId))]
         public City DestinationCityFK { get; set; }
         public ICollection<PricePackageOffer> BidNormalPricePackages { get; set; }
-
-        public int? AppendixId { get; set; }
-
-        [ForeignKey(nameof(AppendixId))]
-        public PricePackageAppendix Appendix { get; set; }
 
     }
 }

@@ -7,11 +7,11 @@ namespace TACHYON.PricePackages.Dto.PricePackageAppendices
     {
         public string ContractName { get; set; }
 
-        public string ContractNumber { get; set; }
+        public int ContractNumber { get; set; }
             
         public string Version { get; set; }
 
-        public DateTime AppendixDate { get; set; }
+        public DateTime? AppendixDate { get; set; }
 
         public string ScopeOverview { get; set; }
 
@@ -21,7 +21,6 @@ namespace TACHYON.PricePackages.Dto.PricePackageAppendices
 
         public Guid? AppendixFileId { get; set; }
 
-        public bool IsActive { get; set; }
         public string StatusTitle { get; set; }
 
         public AppendixStatus Status { get; set; }

@@ -6,7 +6,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using TACHYON.MultiTenancy;
-using TACHYON.Shipping.DirectRequests;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TrucksTypes;
 

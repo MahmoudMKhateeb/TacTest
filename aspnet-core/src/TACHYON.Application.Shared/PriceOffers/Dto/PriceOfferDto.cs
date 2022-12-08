@@ -89,8 +89,6 @@ namespace TACHYON.PriceOffers.Dto
         public int? ShipperValueOfGoods { get; set; }
         public int? CarrierIsuranceCoverage { get; set; }
 
-        public bool HasMatchedPricePackage { get; set; }
-
     }
 
     public class PriceOfferTenantCommissionSettings

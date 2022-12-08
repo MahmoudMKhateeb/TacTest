@@ -85,8 +85,6 @@ namespace TACHYON.PriceOffers.Dto
         public bool CanIAcceptOffer { get; set; }
         public bool CanIAcceptOrRejectOfferOnBehalf { get; set; }
         public bool CanIEditOffer { get; set; }
-
-        public bool HasMatchedPricePackage { get; set; }
     }
 
 

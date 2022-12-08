@@ -2,7 +2,6 @@ import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@a
 import {
   CarriersForDropDownDto,
   CreateOrEditAppendixDto,
-  PricePackageAppendixItem,
   PricePackageAppendixServiceProxy,
   PricePackageProposalServiceProxy,
   SelectItemDto,
@@ -15,6 +14,8 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { DestinationCompanyType } from '@app/main/pricePackages/price-package-appendix/create-or-edit-price-package-appendix/destination-company-type';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
 @Component({
   selector: 'app-create-or-edit-price-package-appendix',
@@ -37,7 +38,6 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
   carriersLoading: boolean;
   companyType = DestinationCompanyType;
   currentCompanyType: DestinationCompanyType;
-  selectedPricePackages: number[];
 
   constructor(
     private _appendixServiceProxy: PricePackageAppendixServiceProxy,
@@ -69,42 +69,24 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
         if (isNotNullOrUndefined(result.proposalId)) {
           this.currentCompanyType = DestinationCompanyType.Shipper;
           this.loadProposals();
-          this.loadAllShippers();
         } else {
           this.currentCompanyType = DestinationCompanyType.Carrier;
           this.loadPricePackages();
-          this.loadAllCarriers();
-          this.selectedPricePackages = this.appendix.pricePackages.map((item) => {
-            return item.id;
-          });
         }
-          this.modal.show();
       });
     }
-    if (!this.appendix.id && this.currentCompanyType === DestinationCompanyType.Shipper) {
+    if (type === DestinationCompanyType.Shipper) {
       this.loadAllShippers();
-    } else if (!this.appendix.id && this.currentCompanyType === DestinationCompanyType.Carrier) {
+    } else if (type === DestinationCompanyType.Carrier) {
       this.loadAllCarriers();
     }
-
-    if (!this.appendix.id) {
-      this.modal.show();
-    }
+    this.modal.show();
   }
 
   createOrEdit() {
-     this.isLoading = true;
+    this.isLoading = true;
 
     this.appendix.destinationCompanyId = this.companyId;
-
-    if (this.currentCompanyType === DestinationCompanyType.Carrier) {
-      this.appendix.pricePackages = this.selectedPricePackages.map((item) => {
-        let pricePackageItem = new PricePackageAppendixItem();
-        pricePackageItem.id = item as any;
-        pricePackageItem.isTmsPricePackage = this.dataSource?.find((x) => x.id === pricePackageItem.id)?.isTmsPricePackage;
-        return pricePackageItem;
-      });
-    }
 
     this._appendixServiceProxy
       .createOrEdit(this.appendix)
@@ -152,21 +134,22 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
     this.isActive = false;
     this.appendix = new CreateOrEditAppendixDto();
     this.companyId = undefined;
-    this.selectedPricePackages = undefined;
     this.modal.hide();
   }
 
   loadPricePackages() {
-    this._tmsPricePackageServiceProxy.getPricePackagesForCarrierAppendix(this.companyId, this.appendix.id).subscribe((result) => {
-      this.dataSource = result.items;
-    });
-  }
-
-  autoFillByProposal(proposalId: number) {
-    this._proposalServiceProxy.getProposalAutoFillDetails(proposalId).subscribe((result) => {
-      this.appendix.appendixDate = result.appendixDate;
-      this.appendix.notes = result.notes;
-      this.appendix.scopeOverview = result.scopeOverview;
+    let self = this;
+    this.dataSource = new CustomStore({
+      loadMode: 'raw',
+      key: 'id',
+      load(loadOptions: LoadOptions) {
+        return self._tmsPricePackageServiceProxy
+          .getAllForDropdown(JSON.stringify(loadOptions), self.companyId, undefined, self.appendix.id)
+          .toPromise()
+          .then((response) => {
+            return response.data;
+          });
+      },
     });
   }
 }

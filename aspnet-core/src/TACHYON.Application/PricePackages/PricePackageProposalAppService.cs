@@ -134,21 +134,12 @@ namespace TACHYON.PricePackages
             _proposalRepository.Update(proposalId,x => x.Status = ProposalStatus.Rejected);
         }
 
-        [AbpAuthorize(AppPermissions.Pages_PricePackageProposal_Create,AppPermissions.Pages_PricePackageProposal_Update)]
-        public async Task<ProposalAutoFillDataDto> GetProposalAutoFillDetails(int proposalId)
-        {
-            var proposalDetails = await _proposalRepository.GetAll().AsNoTracking()
-                .Where(x => x.Id == proposalId)
-                .ProjectTo<ProposalAutoFillDataDto>(AutoMapperConfigurationProvider).SingleAsync();
-
-            return proposalDetails;
-        }
         public async Task<ListResultDto<SelectItemDto>> GetAllProposalsForDropdown(int shipperId,int? appendixId)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
 
             var proposalsList = await _proposalRepository.GetAll().AsNoTracking()
-                .Where(x => x.ShipperId == shipperId && x.Status == ProposalStatus.Approved)
+                .Where(x => x.ShipperId == shipperId)
                 .WhereIf(appendixId.HasValue,x=> !x.AppendixId.HasValue || x.AppendixId == appendixId )
                 .WhereIf(!appendixId.HasValue,x=> !x.AppendixId.HasValue)
                 .Select(x => new SelectItemDto() { DisplayName = x.ProposalName, Id = x.Id.ToString() })

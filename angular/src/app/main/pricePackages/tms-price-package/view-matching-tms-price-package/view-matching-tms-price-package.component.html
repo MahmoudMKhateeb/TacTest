@@ -21,12 +21,15 @@
         >
           <ng-template pTemplate="header">
             <tr>
-              <th *ngIf="isCarrier || isTachyonDealer" style="width: 160px">
+              <th style="width: 160px">
                 {{ l('Actions') }}
               </th>
               <th>{{ l('DisplayName') }}</th>
               <th>
                 {{ l('CompanyName') }}
+              </th>
+              <th>
+                {{ l('RouteType') }}
               </th>
               <th>
                 {{ l('Origin') }}
@@ -48,7 +51,7 @@
           <ng-template pTemplate="body" let-record="$implicit">
             <tr>
               <td style="width: 160px">
-                <button class="btn btn-danger btn-sm" *ngIf="(isCarrier || isTachyonDealer ) && !record.hasOffer && !record.hasDirectRequest" (click)="handlePricePackageAction(record.id)" [buttonBusy]="isPricePackageActionLoading" ><i class="flaticon-eye"></i> {{ (record.isShipperPricePackage? 'Acknowledge' : 'SendRequest') | localize }}</button>
+                <button class="btn btn-danger btn-sm" (click)="pricingModal.show(record.id)"><i class="flaticon-eye"></i> {{ l('Preview') }}</button>
               </td>
               <td>
                 <span class="ui-column-title"> {{ l('DisplayName') }}</span>
@@ -57,6 +60,10 @@
               <td>
                 <span class="ui-column-title"> {{ l('CompanyName') }}</span>
                 <a [routerLink]="['/app/main/profile', record.companyTenantId, 'view']">{{ record.companyName }}</a>
+              </td>
+              <td>
+                <span class="ui-column-title"> {{ l('RouteType') }}</span>
+                {{ getRouteTypeDisplayName(record.routeType) }}
               </td>
 
               <td>
@@ -104,3 +111,5 @@
     </div>
   </div>
 </div>
+
+<app-tms-price-package-for-pricing-modal #pricingModal [shippingRequestId]="shippingRequestId"></app-tms-price-package-for-pricing-modal>

@@ -207,6 +207,9 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
           new AppMenuItem('Price Package Appendices', 'Pages.PricePackageAppendix', '', '/app/main/pricePackages/pricePackageAppendices'),
         ],
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
+        undefined,
+        undefined,
+        () => (this.isEnabled('App.TachyonDealer') || this.isEnabled('App.Carrier')) && this.isEnabled('App.NormalPricePackage')
       ),
       // end of PricePackages
       // ---------------------------------------------------------------------------------------------------------------------

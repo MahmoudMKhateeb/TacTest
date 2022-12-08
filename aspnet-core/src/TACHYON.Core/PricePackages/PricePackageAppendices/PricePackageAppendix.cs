@@ -1,4 +1,3 @@
-using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
@@ -10,14 +9,14 @@ using TACHYON.PricePackages.TmsPricePackages;
 namespace TACHYON.PricePackages.PricePackageAppendices
 {
     [Table("PricePackageAppendixes")]
-    public class PricePackageAppendix : FullAuditedEntity, IPassivable
+    public class PricePackageAppendix : FullAuditedEntity
     {
         public string ContractName { get; set; }
 
-        public int MajorVersion { get; set; }
-        
-        public int MinorVersion { get; set; }
+        public int Version { get; set; }
 
+        public DateTime ContractDate { get; set; }
+        
         public DateTime AppendixDate { get; set; }
     
         public string ScopeOverview { get; set; }
@@ -38,10 +37,7 @@ namespace TACHYON.PricePackages.PricePackageAppendices
         [ForeignKey(nameof(DestinationTenantId))]
         public Tenant DestinationTenant { get; set; }
         
+        [NotMapped]
         public List<TmsPricePackage> TmsPricePackages { get; set; }
-        
-        public List<NormalPricePackage> NormalPricePackages { get; set; }
-        
-        public bool IsActive { get; set; }
     }
 }

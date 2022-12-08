@@ -140,7 +140,7 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
       if ((this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) && this.offerForEditOutput.priceOfferViewDto.editionId == 4) {
         return true;
       } else if (this.feature.isEnabled('App.Carrier')) {
-        return !this.offerForEditOutput.hasMatchedPricePackage;
+        return true;
       }
     }
     return false;

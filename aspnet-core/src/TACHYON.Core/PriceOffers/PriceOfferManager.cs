@@ -25,7 +25,6 @@ using TACHYON.Invoices.Balances;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.PriceOffers.Dto;
-using TACHYON.PricePackages.TmsPricePackages;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
 
@@ -44,9 +43,8 @@ namespace TACHYON.PriceOffers
         private ShippingRequestDirectRequest _directRequest;
         private readonly TenantManager _tenantManager;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
-        private readonly ITmsPricePackageManager _tmsPricePackageManager;
 
-        public PriceOfferManager(IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IRepository<ShippingRequest, long> shippingRequestsRepository, IAbpSession abpSession, BalanceManager balanceManager, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, IRepository<PriceOffer, long> priceOfferRepository, TenantManager tenantManager, IEntityChangeSetReasonProvider reasonProvider, ITmsPricePackageManager tmsPricePackageManager)
+        public PriceOfferManager(IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IRepository<ShippingRequest, long> shippingRequestsRepository, IAbpSession abpSession, BalanceManager balanceManager, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, IRepository<PriceOffer, long> priceOfferRepository, TenantManager tenantManager, IEntityChangeSetReasonProvider reasonProvider)
         {
             _appNotifier = appNotifier;
             _settingManager = settingManager;
@@ -58,7 +56,6 @@ namespace TACHYON.PriceOffers
             _priceOfferRepository = priceOfferRepository;
             _tenantManager = tenantManager;
             _reasonProvider = reasonProvider;
-            _tmsPricePackageManager = tmsPricePackageManager;
         }
 
         /// <summary>
@@ -482,7 +479,7 @@ namespace TACHYON.PriceOffers
         }
 
 
-        public async Task<bool> CanEditOffer(PriceOffer offer)
+        public bool CanEditOffer(PriceOffer offer)
         {
 
             if (offer.ShippingRequestFk.Status == ShippingRequestStatus.NeedsAction) // SR pre-price
@@ -491,12 +488,7 @@ namespace TACHYON.PriceOffers
                 {
                     if (offer.TenantId == _abpSession.TenantId) // my offers only 
                     {
-                        // check if have any matched price package
-                        // if the offer tenant is not carrier this method will return false
-                        // if the shipping request of offer have not any matched price package (that means shipping request not linked to any price package) will return false
-                        bool isLinkedToAnyPricePackage = await _tmsPricePackageManager.IsHaveMatchedPricePackage(offer.ShippingRequestId, offer.TenantId);
-                        
-                        return !isLinkedToAnyPricePackage;
+                        return true;
                     }
                 }
             }
@@ -732,7 +724,7 @@ namespace TACHYON.PriceOffers
             PriceOffer offer)
         {
             _reasonProvider.Use(nameof(UpdateShippingRequestPriceOfferTransaction));
-            if (!await CanEditOffer(offer))
+            if (!CanEditOffer(offer))
             {
                 throw new UserFriendlyException(L("YouCantEditOffer"));
             }

@@ -4,6 +4,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   CreateOrEditTmsPricePackageDto,
   NormalPricePackagesServiceProxy,
+  PricePackageCommissionType,
   PricePackageType,
   SelectItemDto,
   ShippingRequestRouteType,
@@ -37,6 +38,7 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
   pricePackageTypes = this._enumToArrayPipe.transform(this.pricePackageType);
   routeTypes = this._enumToArrayPipe.transform(ShippingRequestRouteType);
   dataSource: any = {};
+  commissionTypes = this._enumToArrayPipe.transform(PricePackageCommissionType);
 
   constructor(
     private injector: Injector,

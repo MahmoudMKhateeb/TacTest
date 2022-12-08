@@ -796,7 +796,7 @@ namespace TACHYON.Authorization
 
            var tmsPricePackagePermission = pages.CreateChildPermission(AppPermissions.Pages_TmsPricePackages,
                L("TmsPricePackagesPermission"),
-               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Shipper,AppFeatures.Carrier));
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Shipper));
            
            tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Create,
                L("CreateTmsPricePackage"),
@@ -809,7 +809,6 @@ namespace TACHYON.Authorization
            tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Delete,
                L("DeleteTmsPricePackage"),
                featureDependency: tmsFeatureDependency,multiTenancySides: MultiTenancySides.Tenant);
-           
 
            #endregion
 
@@ -854,13 +853,10 @@ namespace TACHYON.Authorization
                L("DeletePricePackageAppendicesPermission"), featureDependency: tmsFeatureDependency);
            
            pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Accept,
-               L("ConfirmPricePackageAppendicesPermission"), featureDependency: tmsFeatureDependency);
+               L("ConfirmPricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer,AppFeatures.Carrier));
            pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Reject,
-               L("RejectPricePackageAppendicesPermission"), featureDependency: tmsFeatureDependency);
+               L("RejectPricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer,AppFeatures.Carrier));
 
-           pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Activation,
-               L("PricePackageAppendicesActivationPermission"),
-               featureDependency: tmsFeatureDependency, multiTenancySides: MultiTenancySides.Tenant);
            #endregion
 
            #region Actor Prices

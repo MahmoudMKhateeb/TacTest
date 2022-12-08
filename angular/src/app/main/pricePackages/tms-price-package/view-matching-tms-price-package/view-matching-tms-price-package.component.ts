@@ -1,10 +1,9 @@
-import {Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { LazyLoadEvent } from 'primeng/api';
-import { ShippingRequestRouteType, TmsPricePackageForViewDto, TmsPricePackageServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ShippingRequestRouteType, TmsPricePackageServiceProxy } from '@shared/service-proxies/service-proxies';
 import { Paginator } from '@node_modules/primeng/paginator';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
-import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'app-view-matching-tms-price-package',
@@ -16,7 +15,6 @@ export class ViewMatchingTmsPricePackageComponent extends AppComponentBase imple
   @Input() shippingRequestId: number;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
   routeTypes;
-  isPricePackageActionLoading: boolean;
 
   constructor(private injector: Injector, private _enumToArray: EnumToArrayPipe, private _tmsPricePackageServiceProxy: TmsPricePackageServiceProxy) {
     super(injector);
@@ -41,22 +39,10 @@ export class ViewMatchingTmsPricePackageComponent extends AppComponentBase imple
 
   ngOnInit(): void {
     this.isDataRequested = false;
-    this.isPricePackageActionLoading = false;
     this.routeTypes = this._enumToArray.transform(ShippingRequestRouteType);
   }
 
   getRouteTypeDisplayName(key): string {
     return this.routeTypes?.find((x) => x.key == key)?.value;
-  }
-
-  handlePricePackageAction(pricePackageId: number) {
-
-      this.isPricePackageActionLoading = true;
-      this._tmsPricePackageServiceProxy.applyPricePackage(pricePackageId, this.shippingRequestId)
-          .pipe(finalize(() => this.isPricePackageActionLoading = false))
-          .subscribe(() => {
-          this.notify.success('SentSuccessfully');
-          this.getMatchingTmsPricePackages({});
-      });
   }
 }
