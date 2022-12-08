@@ -1,14 +1,11 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
-using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TACHYON.PriceOffers;
-using TACHYON.PriceOffers.Dto;
-using TACHYON.Shipping.DirectRequests;
-using TACHYON.Shipping.DirectRequests.Dto;
+using TACHYON.Configuration;
+using TACHYON.PricePackages.Dto.TmsPricePackages;
 using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.PricePackages.TmsPricePackages
@@ -16,70 +13,130 @@ namespace TACHYON.PricePackages.TmsPricePackages
     public class TmsPricePackageManager : TACHYONDomainServiceBase, ITmsPricePackageManager
     {
         private readonly IRepository<TmsPricePackage> _tmsPricePackageRepository;
+        private readonly IRepository<NormalPricePackage> _normalPricePackage;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
-        private readonly PriceOfferManager _priceOfferManager;
-        private readonly IShippingRequestDirectRequestAppService _directRequestAppService;
 
         public TmsPricePackageManager(
             IRepository<TmsPricePackage> tmsPricePackageRepository,
             IRepository<ShippingRequest, long> shippingRequestRepository,
-            PriceOfferManager priceOfferManager, IShippingRequestDirectRequestAppService directRequestAppService)
+            IRepository<NormalPricePackage> normalPricePackage)
         {
             _tmsPricePackageRepository = tmsPricePackageRepository;
             _shippingRequestRepository = shippingRequestRepository;
-            _priceOfferManager = priceOfferManager;
-            _directRequestAppService = directRequestAppService;
+            _normalPricePackage = normalPricePackage;
         }
 
-        public async Task SendOfferByPricePackage(int pricePackageId,long srId)
+        
+        public async Task<List<PricePackageSelectItemDto>> GetPricePackagesForCarrierAppendix(int carrierId, int? appendixId = null)
         {
             DisableTenancyFilters();
             
-            var pricePackage = await _tmsPricePackageRepository.GetAll().SingleAsync(x=> x.Id == pricePackageId);
-
-            if (pricePackage.DestinationTenantId is null)
-                throw new UserFriendlyException(L("PricePackageMustHaveDestinationTenant"));
+            var tmsPricePackages = await _tmsPricePackageRepository.GetAll().AsNoTracking()
+                .Where(x => x.DestinationTenantId == carrierId)
+                .WhereIf(appendixId.HasValue,
+                    x => (!x.AppendixId.HasValue && !x.ProposalId.HasValue) || x.AppendixId == appendixId)
+                .Select(x => new PricePackageSelectItemDto()
+                {
+                    DestinationCity = x.DestinationCity.DisplayName,
+                    OriginCity = x.OriginCity.DisplayName,
+                    DisplayName = x.DisplayName,
+                    Id = x.Id,
+                    TotalPrice = x.TotalPrice,
+                    TruckType = x.TrucksTypeFk.Key,
+                    IsTmsPricePackage = true
+                }).ToListAsync();
             
-            var shippingRequest = await _shippingRequestRepository.GetAllIncluding(x=> x.ShippingRequestVases)
-                .AsNoTracking().SingleAsync(x => x.Id == srId);
-
-            if (pricePackage.ProposalId.HasValue)
-            {
-                var itemDetails = shippingRequest.ShippingRequestVases?
-                    .Select(item => new PriceOfferDetailDto() { ItemId = item.Id, Price = 0 }).ToList();
-
-                var priceOfferDto = new CreateOrEditPriceOfferInput()
+            var normalPricePackages = await _normalPricePackage.GetAll().AsNoTracking()
+                .Where(x => x.TenantId == carrierId)
+                .Select(x => new PricePackageSelectItemDto()
                 {
-                    ShippingRequestId = srId, ItemPrice = pricePackage.Price, ItemDetails = itemDetails, 
-                    CommissionType = pricePackage.CommissionType == PricePackageCommissionType.Percentage?
-                        PriceOfferCommissionType.CommissionPercentage : PriceOfferCommissionType.CommissionValue,
-                    CommissionPercentageOrAddValue = pricePackage.Commission
-                };
-
-                var offerId = await _priceOfferManager.CreateOrEdit(priceOfferDto);
-
-                pricePackage.OfferId = offerId;
-                pricePackage.Status = PricePackageOfferStatus.SentAndWaitingResponse;
-            } else if (pricePackage.AppendixId.HasValue)
-            {
-                await _directRequestAppService.Create(new CreateShippingRequestDirectRequestInput()
-                {
-                    CarrierTenantId = pricePackage.DestinationTenantId.Value, ShippingRequestId = srId
-                });
-
-            }
-            else throw new UserFriendlyException(L("PricePackageMustHaveAppendixOrProposal"));
-
+                    DestinationCity = x.DestinationCityFK.DisplayName,
+                    OriginCity = x.OriginCityFK.DisplayName,
+                    DisplayName = x.DisplayName,
+                    Id = x.Id,
+                    TotalPrice = x.TachyonMSRequestPrice,
+                    TruckType = x.TrucksTypeFk.Key,
+                    IsTmsPricePackage = false
+                }).ToListAsync();
+            
+            tmsPricePackages.AddRange(normalPricePackages);
+            return tmsPricePackages;
         }
 
-        public async Task AcceptOfferByPricePackage(TmsPricePackage pricePackage)
+        private IQueryable<NormalPricePackage> GetMatchedNormalPricePackage(long shippingRequestId, int carrierId)
         {
-            if (!pricePackage.OfferId.HasValue) throw new UserFriendlyException(L("ThereIsNoOfferInThisPricePackage"));
-                
-            await _priceOfferManager.AcceptOffer(pricePackage.OfferId.Value);
-
-            pricePackage.Status = PricePackageOfferStatus.Confirmed;
+            return (from shippingRequest in _shippingRequestRepository.GetAll()
+                where shippingRequest.Id == shippingRequestId
+                from normalPricePackage in _normalPricePackage.GetAll().AsNoTracking()
+                where normalPricePackage.TenantId == carrierId &&
+                    normalPricePackage.TrucksTypeId == shippingRequest.TrucksTypeId &&
+                      normalPricePackage.OriginCityId == shippingRequest.OriginCityId
+                      && shippingRequest.ShippingRequestDestinationCities.Any(c =>
+                          c.CityId == normalPricePackage.DestinationCityId) 
+                select normalPricePackage);
         }
 
+        private IQueryable<TmsPricePackage> GetMatchedTmsPricePackage(long shippingRequestId, int carrierId)
+        {
+            return (from shippingRequest in _shippingRequestRepository.GetAll()
+                where shippingRequest.Id == shippingRequestId
+                from tmsPricePackage in _tmsPricePackageRepository.GetAll().AsNoTracking()
+                where (tmsPricePackage.ProposalId.HasValue || tmsPricePackage.AppendixId.HasValue) &&
+                      (!tmsPricePackage.ProposalId.HasValue ||
+                       (tmsPricePackage.Proposal.Status == ProposalStatus.Approved &&
+                        tmsPricePackage.Proposal.AppendixId.HasValue &&
+                        tmsPricePackage.Proposal.Appendix.Status == AppendixStatus.Confirmed &&
+                        tmsPricePackage.Proposal.Appendix.IsActive &&
+                        tmsPricePackage.Proposal.ShipperId == shippingRequest.TenantId)) &&
+                      (!tmsPricePackage.AppendixId.HasValue ||
+                       (tmsPricePackage.Appendix.Status == AppendixStatus.Confirmed &&
+                        tmsPricePackage.Appendix.IsActive &&
+                        !tmsPricePackage.ProposalId.HasValue)) &&
+                      tmsPricePackage.DestinationTenantId == carrierId &&
+                      tmsPricePackage.Type == PricePackageType.PerTrip &&
+                      tmsPricePackage.TrucksTypeId == shippingRequest.TrucksTypeId &&
+                      tmsPricePackage.OriginCityId == shippingRequest.OriginCityId &&
+                      tmsPricePackage.RouteType == shippingRequest.RouteTypeId && shippingRequest
+                          .ShippingRequestDestinationCities
+                          .Any(i => i.CityId == tmsPricePackage.DestinationCityId)
+                orderby tmsPricePackage.Id
+                select tmsPricePackage);
+        }
+
+        public async Task<decimal?> GetItemPriceByMatchedPricePackage(long shippingRequestId,decimal quantity, int carrierId)
+        {
+            // find item price from matched normal price package repository
+            
+            decimal matchedPricePackageItemPrice =
+                await (from normalPricePackage in GetMatchedNormalPricePackage(shippingRequestId, carrierId)
+                select normalPricePackage.TachyonMSRequestPrice).FirstOrDefaultAsync();
+
+            // if matched normal price package not found
+            if (matchedPricePackageItemPrice == default)
+            {
+                // find item price from matched tms price package repository
+                matchedPricePackageItemPrice = await (from tmsPricePackage in GetMatchedTmsPricePackage(shippingRequestId, carrierId)
+                    orderby tmsPricePackage.Id select tmsPricePackage.TotalPrice).FirstOrDefaultAsync();
+            }
+
+            if (matchedPricePackageItemPrice == default) return null;
+
+            decimal vat = decimal.Parse(await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.TaxVat));
+            decimal itemPriceWithVat = matchedPricePackageItemPrice / quantity;
+            decimal itemPrice = (itemPriceWithVat * 100) / (vat + 100);
+
+            return itemPrice;
+        }
+
+        public async Task<bool> IsHaveMatchedPricePackage(long shippingRequestId, int carrierId)
+        {
+            bool isHaveNormalPricePackage = await GetMatchedNormalPricePackage(shippingRequestId, carrierId).AnyAsync();
+
+            if (isHaveNormalPricePackage) return true;
+
+            bool isHaveTmsPricePackage = await GetMatchedTmsPricePackage(shippingRequestId, carrierId).AnyAsync();
+
+            return isHaveTmsPricePackage;
+        }
     }
 }

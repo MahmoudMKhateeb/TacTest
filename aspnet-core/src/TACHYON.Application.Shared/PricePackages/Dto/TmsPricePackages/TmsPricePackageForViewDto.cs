@@ -12,16 +12,20 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
         public string CompanyName { get; set; }
 
         public int CompanyTenantId { get; set; }
-
-        public ShippingRequestRouteType RouteType { get; set; }
+        
         public decimal FinalPrice { get; set; }
 
         public string PricePackageId { get; set; }
 
         public string DisplayName { get; set; }
 
+        public bool HasOffer { get; set; }
+        
+        public bool HasDirectRequest { get; set; }
+
         public string TransportType { get; set; }
 
+        public bool IsShipperPricePackage { get; set; }
         public string TruckType { get; set; }
     }
 }

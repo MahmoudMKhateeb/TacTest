@@ -11,7 +11,7 @@
         <div class="modal-body">
           <div class="row">
             <div class="form-group col-md-6">
-              <label>{{ companyType.Shipper ? 'Shipper' : ('Carrier' | localize) }} <span class="text-danger">*</span></label>
+              <label>{{ (currentCompanyType === companyType.Shipper ? 'Shipper' : 'Carrier') | localize }} <span class="text-danger">*</span></label>
               <div
                 [ngClass]="{
                   'spinner spinner-success spinner-right mr-1 ml-1': companyType.Shipper ? shippersLoading : carriersLoading
@@ -59,19 +59,7 @@
                 [bsConfig]="{ adaptivePosition: true }"
               />
             </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('ContractDate') }} <span class="text-danger">*</span></label>
-              <input
-                id="contractDate"
-                type="text"
-                name="appendixDate"
-                class="form-control"
-                bsDatepicker
-                datePickerMomentModifier
-                [(date)]="appendix.contractDate"
-                [bsConfig]="{ adaptivePosition: true }"
-              />
-            </div>
+
             <div *ngIf="currentCompanyType === companyType.Shipper" class="form-group col-md-6">
               <label>{{ l('Proposal') }} <span class="text-danger">*</span></label>
               <div
@@ -79,7 +67,7 @@
                   'spinner spinner-success spinner-right mr-1 ml-1': proposalsLoading
                 }"
               >
-                <select [(ngModel)]="appendix.proposalId" required class="form-control" name="appendixProposalId">
+                <select [(ngModel)]="appendix.proposalId" (change)="autoFillByProposal(appendix.proposalId)" required class="form-control" name="appendixProposalId">
                   <option selected disabled [value]="undefined">{{ 'SelectProposal' | localize }}</option>
                   <option *ngFor="let item of proposals" [value]="item.id">{{ item.displayName }}</option>
                 </select>
@@ -88,7 +76,7 @@
             <div *ngIf="currentCompanyType === companyType.Carrier" class="form-group col-md-12">
               <label>{{ l('PricePackages') }} <span class="text-danger">*</span></label>
               <dx-drop-down-box
-                [(value)]="appendix.tmsPricePackages"
+                [(value)]="selectedPricePackages"
                 valueExpr="id"
                 displayExpr="displayName"
                 placeholder="Select a value..."
@@ -99,14 +87,15 @@
                 <div *dxTemplate="let data of 'content'">
                   <dx-data-grid
                     [dataSource]="dataSource"
-                    [columns]="['displayName', 'truckType', 'originCity', 'destinationCity', 'directRequestTotalPrice', 'tachyonManageTotalPrice']"
+                    [columns]="['displayName', 'truckType', 'originCity', 'destinationCity', 'totalPrice']"
                     [selection]="{ mode: 'multiple' }"
                     [hoverStateEnabled]="true"
                     [paging]="{ enabled: true, pageSize: 10 }"
                     [filterRow]="{ visible: true }"
                     [scrolling]="{ mode: 'virtual' }"
                     [height]="345"
-                    [(selectedRowKeys)]="appendix.tmsPricePackages"
+                    keyExpr="id"
+                    [(selectedRowKeys)]="selectedPricePackages"
                   >
                   </dx-data-grid>
                 </div>
