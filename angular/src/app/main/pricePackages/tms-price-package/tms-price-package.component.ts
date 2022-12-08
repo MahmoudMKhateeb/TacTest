@@ -53,17 +53,5 @@ export class TmsPricePackageComponent extends AppComponentBase implements OnInit
     return this.l(typeName);
   }
 
-  activate(id: number) {
-    this._tmsPricePackageProxy.changeActivateStatus(id, true).subscribe(() => {
-      this.notify.success(this.l('ActivatedSuccessfully'));
-    });
-    this.getAllTmsPricePackages();
-  }
 
-  deActivate(id: number) {
-    this._tmsPricePackageProxy.changeActivateStatus(id, false).subscribe(() => {
-      this.notify.info(this.l('DeActivatedSuccessfully'));
-    });
-    this.getAllTmsPricePackages();
-  }
 }

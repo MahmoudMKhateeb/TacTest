@@ -26,28 +26,8 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
         public int? DestinationTenantId { get; set; }
 
         public ShippingRequestRouteType RouteType { get; set; }
-        
-        public PricePackageCommissionType CommissionType { get; set; }
-        
-        public decimal Price { get; set; }
-        
-        public decimal Commission { get; set; }
 
-        [JsonIgnore]
-        public decimal TotalPrice
-        {
-            get
-            {
-                switch (CommissionType)
-                {
-                    case PricePackageCommissionType.Value:
-                        return Price + Commission;
-                    case PricePackageCommissionType.Percentage:
-                        return Price + (Commission > 0 ? (Commission*Price)/100 : Price);
-                    default: throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
+        public decimal TotalPrice { get; set; }
 
         public PricePackageType Type { get; set; }
     }

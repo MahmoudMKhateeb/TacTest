@@ -49,6 +49,7 @@ using TACHYON.Packing.PackingTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Packing.PackingTypes.Dtos;
+using TACHYON.PricePackages.TmsPricePackages;
 using TACHYON.Shipping.Dedicated;
 
 namespace TACHYON.PriceOffers
@@ -76,7 +77,7 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<GoodCategory> _goodsCategoriesRepository;
         private readonly IRepository<PackingType> _packingTypesRepository;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
-
+        private readonly ITmsPricePackageManager _tmsPricePackageManager;
 
         private IRepository<VasPrice> _vasPriceRepository;
 
@@ -100,7 +101,8 @@ namespace TACHYON.PriceOffers
             IRepository<Capacity> capacitiesRepository,
             IRepository<GoodCategory> goodsCategoriesRepository,
             IRepository<PackingType> packingTypesRepository,
-            IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository)
+            IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
+            ITmsPricePackageManager tmsPricePackageManager)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -124,6 +126,7 @@ namespace TACHYON.PriceOffers
             _goodsCategoriesRepository = goodsCategoriesRepository;
             _packingTypesRepository = packingTypesRepository;
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
+            _tmsPricePackageManager = tmsPricePackageManager;
         }
         #region Services
 
@@ -251,6 +254,10 @@ namespace TACHYON.PriceOffers
                     priceOfferDto.PriceType = PriceOfferType.Trip;
                     priceOfferDto.Quantity = shippingRequest.NumberOfTrips;
                     SetCommssionSettingsForTachyonDealer(priceOfferDto, shippingRequest);
+                    if (await FeatureChecker.IsEnabledAsync(AppFeatures.Carrier))
+                    {
+                        await ApplyPricePackagePriceIfExist(priceOfferDto,shippingRequest.Id);
+                    }
                 }
                 else if(shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
                 {
@@ -268,6 +275,21 @@ namespace TACHYON.PriceOffers
                 priceOfferDto.CommissionSettings = SetTenantCommssionSettingsForTachyonDealer(shippingRequest.TenantId);
             }
             return priceOfferDto;
+        }
+
+        private async Task ApplyPricePackagePriceIfExist(PriceOfferDto priceOfferDto,long requestId)
+        {
+            if (!AbpSession.TenantId.HasValue) return;
+            var itemPrice = await _tmsPricePackageManager.GetItemPriceByMatchedPricePackage(requestId,priceOfferDto.Quantity,AbpSession.TenantId.Value);
+            
+            if (itemPrice is null) return;
+
+            priceOfferDto.ItemPrice = itemPrice.Value;
+            // priceOfferDto.CommissionAmount = 0;
+            // priceOfferDto.CommissionType = PriceOfferCommissionType.CommissionValue;
+            // priceOfferDto.VasCommissionType = PriceOfferCommissionType.CommissionValue;
+            // priceOfferDto.VasCommissionPercentageOrAddValue = 0;
+            priceOfferDto.HasMatchedPricePackage = true;
         }
 
         /// <summary>
@@ -323,7 +345,8 @@ namespace TACHYON.PriceOffers
                 PriceOfferViewDto = priceOfferDto,
                 CanIAcceptOffer = await _priceOfferManager.CanAcceptOrRejectOffer(offer),
                 CanIAcceptOrRejectOfferOnBehalf = await _priceOfferManager.canAcceptOrRejectOfferOnBehalf(offer),
-                CanIEditOffer = _priceOfferManager.CanEditOffer(offer)
+                CanIEditOffer = await _priceOfferManager.CanEditOffer(offer),
+                HasMatchedPricePackage = await _tmsPricePackageManager.IsHaveMatchedPricePackage(offer.ShippingRequestId,offer.TenantId)
             };
         }
 

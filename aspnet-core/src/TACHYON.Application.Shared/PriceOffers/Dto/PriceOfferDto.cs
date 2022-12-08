@@ -87,6 +87,8 @@ namespace TACHYON.PriceOffers.Dto
 
         public int? CarrierActorId { get; set; }
 
+        public bool HasMatchedPricePackage { get; set; }
+
     }
 
     public class PriceOfferTenantCommissionSettings

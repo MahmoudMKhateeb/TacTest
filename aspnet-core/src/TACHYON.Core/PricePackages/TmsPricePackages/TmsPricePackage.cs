@@ -5,12 +5,13 @@ using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
 using TACHYON.PricePackages.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageProposals;
+using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.PricePackages.TmsPricePackages
 {
     [Table("TmsPricePackages")]
-    public class TmsPricePackage : BasePricePackage, IPassivable
+    public class TmsPricePackage : BasePricePackage
     {
         public int? OriginCityId { get; set; }
 
@@ -36,13 +37,7 @@ namespace TACHYON.PricePackages.TmsPricePackages
         // commission value = if (commission type == value) Commission;
         // else if (commission type == percentage) => (Commission * Price) / 100
         public decimal TotalPrice { get; set; }
-        
-        public decimal Price { get; set; }
-        
-        public decimal Commission { get; set; }
 
-        public PricePackageCommissionType CommissionType { get; set; }
-        
         public PricePackageType Type { get; set; }
 
         public int? ProposalId { get; set; }
@@ -54,9 +49,7 @@ namespace TACHYON.PricePackages.TmsPricePackages
 
         [ForeignKey(nameof(AppendixId))]
         public PricePackageAppendix Appendix { get; set; }
-        
-        public bool IsActive { get; set; }
-        
+
         public long? OfferId { get; set; }
 
         [ForeignKey(nameof(OfferId))]

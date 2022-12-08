@@ -86,34 +86,17 @@
           </div>
           <div class="row">
             <div class="form-group col-md-4">
-              <label>{{ l('Price') }} </label>
+              <label>{{ l('TotalPrice') }} </label>
               <input
-                [(ngModel)]="tmsPricePackage.price"
+                [(ngModel)]="tmsPricePackage.totalPrice"
                 min="0"
                 (keypress)="numberOnly($event)"
-                name="tmsPP_Price"
+                name="tmsPP_TotalPrice"
                 type="number"
                 class="form-control"
               />
             </div>
-            <div class="form-group col-md-4">
-              <label>{{ l('CommissionType') }} </label>
-              <select [(ngModel)]="tmsPricePackage.commissionType" required class="form-control" name="tmsPP_CommissionType">
-                <option selected disabled [value]="undefined">{{ 'SelectType' | localize }}</option>
-                <option *ngFor="let item of commissionTypes" [value]="item.key">{{ item.value }}</option>
-              </select>
-            </div>
-            <div class="form-group col-md-4">
-              <label>{{ l('Commission') }} </label>
-              <input
-                [(ngModel)]="tmsPricePackage.commission"
-                min="0"
-                (keypress)="numberOnly($event)"
-                name="tmsPP_Commission"
-                type="number"
-                class="form-control"
-              />
-            </div>
+
           </div>
 
           <!-- devExtream Table  -->
@@ -144,8 +127,6 @@
                     <dxi-column dataField="displayName" caption="{{ l('PricePackageName') }}"> </dxi-column>
                     <dxi-column dataField="tenantName" caption="{{ l('Carrier') }} "></dxi-column>
                     <dxi-column dataField="truckType" caption="{{ l('TruckType') }}" [groupIndex]="0"> </dxi-column>
-
-                    <dxi-column dataField="directRequestPrice" caption="{{ l('DirectRequestPrice') }}"> </dxi-column>
                     <dxi-column dataField="tachyonMSRequestPrice" caption="{{ l('TachyonMSRequestPrice') }}"> </dxi-column>
                     <dxi-column dataField="isMultiDrop" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"> </dxi-column>
                     <dxi-column dataField="origin" caption="{{ l('Origin') }}"> </dxi-column>
