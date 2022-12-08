@@ -114,6 +114,7 @@ namespace TACHYON.Shipping.Drivers
        .Include(i => i.ShippingRequestFk)
               .ThenInclude(r => r.OriginCityFk)
        .Include(i => i.OriginFacilityFk)
+       .ThenInclude(i=>i.CityFk)
        .Include(i => i.DestinationFacilityFk)
            .Where(t => t.AssignedDriverUserId == AbpSession.UserId && t.Status != ShippingRequestTripStatus.Canceled && t.DriverStatus != ShippingRequestTripDriverStatus.Rejected)
         .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Current, e => e.StartTripDate.Date <= Clock.Now.Date && e.Status != ShippingRequestTripStatus.Delivered && e.Status != ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
