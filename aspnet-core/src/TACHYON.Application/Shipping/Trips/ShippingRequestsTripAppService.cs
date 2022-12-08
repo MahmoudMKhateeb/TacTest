@@ -280,6 +280,7 @@ namespace TACHYON.Shipping.Trips
             shippingRequestTrip.RoutPoints = shippingRequestTrip.RoutPoints.OrderBy(x => x.PickingType).ToList();
             shippingRequestTrip.NotesCount = await GetTripNotesCount(id);
             shippingRequestTrip.CanAssignDriversAndTrucks = await IsTachyonDealer() || AbpSession.TenantId == trip.ShippingRequestFk.CarrierTenantId;
+            shippingRequestTrip.isRequestOwner = AbpSession.TenantId == trip.ShippingRequestFk.TenantId && !trip.ShippingRequestFk.IsSaas();
             return shippingRequestTrip;
         }
 

@@ -49,5 +49,6 @@ namespace TACHYON.Shipping.Trips.Dto
         public bool CanAssignDriversAndTrucks { get; set; }
         public string ContainerNumber { get; set; }
         public string SealNumber { get; set; }
+        public bool isRequestOwner { get; set; }
     }
 }
