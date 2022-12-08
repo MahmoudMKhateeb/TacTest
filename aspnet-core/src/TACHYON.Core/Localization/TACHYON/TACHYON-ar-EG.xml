@@ -2907,5 +2907,7 @@
     <text name="replacementIntervalInDays">فترة الاستبدال</text>
     <text name="truckAttendanceModal">حضور الشاحنة</text>
     <text name="viewAttendance">عرض الحضور</text>
+    <text name="AllNumberOfDays">عدد الأيام الكلي</text>
+    <text name="PricePerDay">سعر اليوم الواحد</text>
 	</texts>
 </localizationDictionary>

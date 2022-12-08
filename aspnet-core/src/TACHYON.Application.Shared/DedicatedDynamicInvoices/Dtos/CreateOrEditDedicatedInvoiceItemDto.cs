@@ -12,6 +12,7 @@ namespace TACHYON.DedicatedDynamicInvoices.Dtos
         public long DedicatedShippingRequestTruckId { get; set; }
         public int NumberOfDays { get; set; }
         public decimal PricePerDay { get; set; }
+        public int AllNumberDays { get; set; }
         public WorkingDayType WorkingDayType { get; set; }
         public decimal ItemSubTotalAmount { get; set; }
         public decimal VatAmount { get; set; }
