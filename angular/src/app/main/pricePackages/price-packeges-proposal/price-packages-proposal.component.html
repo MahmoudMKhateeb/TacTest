@@ -77,7 +77,7 @@
                     <li>
                       <a
                         class="dropdown-item"
-                        *ngIf="isGranted('Pages.PricePackageProposal.Reject') && options.data.status !== proposalStatus.Approved"
+                        *ngIf="isGranted('Pages.PricePackageProposal.Reject') && options.data.status === proposalStatus.New"
                         (click)="Reject(options.data.id)"
                         >{{ l('Reject') }}</a
                       >

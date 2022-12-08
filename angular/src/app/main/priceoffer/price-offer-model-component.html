@@ -118,6 +118,7 @@
                       [(ngModel)]="offer.itemPrice"
                       (change)="calculator();"
                       required
+                      [disabled]="offer.hasMatchedPricePackage"
                       class="form-control"
                     />
                   </td>
@@ -157,6 +158,7 @@
                       (keypress)="numberOnly($event)"
                       required
                       class="form-control form-control-sm"
+                      [disabled]="offer.hasMatchedPricePackage"
                     />
                   </td>
                   <td>{{item.itemsTotalPricePreCommissionPreVat}}</td>
@@ -255,11 +257,12 @@
             <button
               type="submit"
               class="btn btn-primary"
-              [disabled]="!Form.form.valid"
+              [disabled]="(!Form.form.valid && !offer.hasMatchedPricePackage)"
               [buttonBusy]="saving"
               [busyText]="l('SavingWithThreeDot' | localize)"
             >
-              <i class="fa fa-save"></i> <span>{{ 'SendOffer' | localize }}</span>
+              <i class="fa fa-save"></i>
+              <span>{{ (offer.hasMatchedPricePackage ? 'Acknowledge' : 'SendOffer') | localize }}</span>
             </button>
           </div>
        

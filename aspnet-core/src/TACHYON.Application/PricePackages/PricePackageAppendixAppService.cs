@@ -19,15 +19,18 @@ namespace TACHYON.PricePackages
     public class PricePackageAppendixAppService : TACHYONAppServiceBase, IPricePackageAppendixAppService
     {
         private readonly IRepository<PricePackageAppendix> _appendixRepository;
+        private readonly IRepository<TmsPricePackage> _tmsPricePackageRepository;
         private readonly IPricePackageAppendixManager _appendixManager;
         
 
         public PricePackageAppendixAppService(
             IRepository<PricePackageAppendix> appendixRepository,
-            IPricePackageAppendixManager appendixManager)
+            IPricePackageAppendixManager appendixManager,
+            IRepository<TmsPricePackage> tmsPricePackageRepository)
         {
             _appendixRepository = appendixRepository;
             _appendixManager = appendixManager;
+            _tmsPricePackageRepository = tmsPricePackageRepository;
         }
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
@@ -35,7 +38,7 @@ namespace TACHYON.PricePackages
             DisableTenancyFilters();
             var isTmsOrHost = !AbpSession.TenantId.HasValue || await IsTachyonDealer();
             var appendices = _appendixRepository.GetAll()
-                .WhereIf(!isTmsOrHost, x => x.DestinationTenantId == AbpSession.TenantId)
+                .WhereIf(!isTmsOrHost, x => x.DestinationTenantId == AbpSession.TenantId && x.Status == AppendixStatus.Confirmed)
                 .AsNoTracking().ProjectTo<AppendixListDto>(AutoMapperConfigurationProvider);
 
             return await LoadResultAsync(appendices, input.LoadOptions);
@@ -43,17 +46,21 @@ namespace TACHYON.PricePackages
 
         public async Task<AppendixForViewDto> GetForView(int id)
         {
-            var appendix = await _appendixRepository.GetAllIncluding(x => x.Proposal)
-                .AsNoTracking().SingleAsync(x => x.Id == id);
+            var appendix = await _appendixRepository.GetAll()
+                .AsNoTracking().ProjectTo<AppendixForViewDto>(AutoMapperConfigurationProvider)
+                .SingleAsync(x => x.Id == id);
 
-            return ObjectMapper.Map<AppendixForViewDto>(appendix);
+            return appendix;
         }
 
         [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Update)]
         public async Task<CreateOrEditAppendixDto> GetForEdit(int id)
         {
-            var appendix = await _appendixRepository.GetAllIncluding(x=> x.Proposal)
-                .AsNoTracking().SingleAsync(x => x.Id == id);
+            DisableTenancyFilters();
+            
+            var appendix = await _appendixRepository.GetAll()
+                .Include(x=> x.Proposal).Include(x=> x.NormalPricePackages)
+                .Include(x=> x.TmsPricePackages).AsNoTracking().SingleAsync(x => x.Id == id);
 
             return ObjectMapper.Map<CreateOrEditAppendixDto>(appendix);
         }
@@ -74,7 +81,7 @@ namespace TACHYON.PricePackages
         {
             var createdAppendix = ObjectMapper.Map<PricePackageAppendix>(input);
 
-            await _appendixManager.CreateAppendix(createdAppendix, input.TmsPricePackages, input.EmailAddress);
+            await _appendixManager.CreateAppendix(createdAppendix, input.PricePackages, input.EmailAddress);
         }
 
         [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Update)]
@@ -84,7 +91,7 @@ namespace TACHYON.PricePackages
 
             var updatedAppendix = ObjectMapper.Map<PricePackageAppendix>(input);
 
-            await _appendixManager.UpdateAppendix(updatedAppendix, input.TmsPricePackages, input.EmailAddress);
+            await _appendixManager.UpdateAppendix(updatedAppendix, input.PricePackages, input.EmailAddress);
         }
 
         [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Accept)]
@@ -117,6 +124,16 @@ namespace TACHYON.PricePackages
                     _appendixRepository.Update(appendixId, x => x.Status = AppendixStatus.Rejected);
                     break;
             }
+        }
+        
+        
+        [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Activation)]
+        public async Task ChangeActivateStatus(int appendixId,bool isActive)
+        {
+            var isExist = await _appendixRepository.GetAll().AnyAsync(x => x.Id == appendixId);
+            if (!isExist) throw new UserFriendlyException(L("NotFound"));
+            
+            _appendixRepository.Update(appendixId, x => x.IsActive = isActive);
         }
 
         [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Delete)]

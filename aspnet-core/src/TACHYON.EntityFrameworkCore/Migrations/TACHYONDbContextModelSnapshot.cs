@@ -5315,6 +5315,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AppendixId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -5376,6 +5379,8 @@ namespace TACHYON.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AppendixId");
+
                     b.HasIndex("DestinationCityId");
 
                     b.HasIndex("OriginCityId");
@@ -5402,9 +5407,6 @@ namespace TACHYON.Migrations
                     b.Property<Guid?>("AppendixFileId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ContractDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("ContractName")
                         .HasColumnType("nvarchar(max)");
 
@@ -5423,6 +5425,9 @@ namespace TACHYON.Migrations
                     b.Property<int?>("DestinationTenantId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -5431,6 +5436,12 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<int>("MajorVersion")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinorVersion")
+                        .HasColumnType("int");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
@@ -5442,9 +5453,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -5786,12 +5794,6 @@ namespace TACHYON.Migrations
                     b.Property<int?>("AppendixId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Commission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("CommissionType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -5815,9 +5817,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -5832,9 +5831,6 @@ namespace TACHYON.Migrations
 
                     b.Property<int?>("OriginCityId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PricePackageId")
                         .HasColumnType("nvarchar(max)");
@@ -10463,6 +10459,10 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.PricePackages.NormalPricePackage", b =>
                 {
+                    b.HasOne("TACHYON.PricePackages.PricePackageAppendices.PricePackageAppendix", "Appendix")
+                        .WithMany("NormalPricePackages")
+                        .HasForeignKey("AppendixId");
+
                     b.HasOne("TACHYON.Cities.City", "DestinationCityFK")
                         .WithMany()
                         .HasForeignKey("DestinationCityId");
@@ -10561,7 +10561,7 @@ namespace TACHYON.Migrations
             modelBuilder.Entity("TACHYON.PricePackages.TmsPricePackages.TmsPricePackage", b =>
                 {
                     b.HasOne("TACHYON.PricePackages.PricePackageAppendices.PricePackageAppendix", "Appendix")
-                        .WithMany()
+                        .WithMany("TmsPricePackages")
                         .HasForeignKey("AppendixId");
 
                     b.HasOne("TACHYON.Cities.City", "DestinationCity")

@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.PriceOffers;
 using TACHYON.PricePackages.PricePackageAppendices.Jobs;
 using TACHYON.PricePackages.PricePackageProposals;
 using TACHYON.PricePackages.TmsPricePackages;
@@ -28,39 +29,71 @@ namespace TACHYON.PricePackages.PricePackageAppendices
         private readonly IRepository<TmsPricePackage> _tmsPricePackageRepository;
         private readonly IRepository<PricePackageProposal> _proposalRepository;
         private readonly IBackgroundJobManager _jobManager;
+        private readonly IRepository<NormalPricePackage> _normalPricePackage;
 
         public PricePackageAppendixManager(
             IRepository<PricePackageAppendix> appendixRepository,
             IRepository<BinaryObject, Guid> binaryObjectRepository,
             IRepository<TmsPricePackage> tmsPricePackageRepository,
             IRepository<PricePackageProposal> proposalRepository,
-            IBackgroundJobManager jobManager)
+            IBackgroundJobManager jobManager,
+            IRepository<NormalPricePackage> normalPricePackage)
         {
             _appendixRepository = appendixRepository;
             _binaryObjectRepository = binaryObjectRepository;
             _tmsPricePackageRepository = tmsPricePackageRepository;
             _proposalRepository = proposalRepository;
             _jobManager = jobManager;
+            _normalPricePackage = normalPricePackage;
         }
 
-        public async Task CreateAppendix(PricePackageAppendix createdAppendix, List<int> tmsPricePackages,string emailAddress)
+        public async Task CreateAppendix(PricePackageAppendix createdAppendix, List<PricePackageAppendixItem> pricePackages,string emailAddress)
         {
+            DisableTenancyFilters();
             
-            var appendixId = await _appendixRepository.InsertAndGetIdAsync(createdAppendix);
+            (int lastAppendixMajorVersion, int lastAppendixMinorVersion) = await _appendixRepository.GetAll()
+                .OrderByDescending(x => x.MajorVersion).ThenByDescending(x=> x.MinorVersion)
+                .Select(x => new Tuple<int, int>(x.MajorVersion, x.MinorVersion)).FirstOrDefaultAsync();
 
+            #region Handle Versioning
+
+            if (lastAppendixMajorVersion == default || lastAppendixMinorVersion == default)
+            {
+                createdAppendix.MajorVersion = 1;
+                createdAppendix.MinorVersion = 1;
+            }
+            else if (lastAppendixMinorVersion == 9)
+            {
+                createdAppendix.MajorVersion = lastAppendixMajorVersion + 1;
+                createdAppendix.MinorVersion = 1;
+            }
+            else
+            {
+                createdAppendix.MajorVersion = lastAppendixMajorVersion;
+                createdAppendix.MinorVersion = lastAppendixMinorVersion + 1;
+            }
+
+            #endregion
+
+            var appendixId = await _appendixRepository.InsertAndGetIdAsync(createdAppendix);
+            
             if (createdAppendix.ProposalId.HasValue)
                 _proposalRepository.Update(createdAppendix.ProposalId.Value, x => x.AppendixId = appendixId);
 
             // this step for carrier appendix
             
-            if (!createdAppendix.ProposalId.HasValue && !tmsPricePackages.IsNullOrEmpty())
+            if (!createdAppendix.ProposalId.HasValue && !pricePackages.IsNullOrEmpty())
             {
-                tmsPricePackages?.ForEach(pricePackageId =>
-                {
-                    _tmsPricePackageRepository.Update(pricePackageId, x => x.AppendixId = appendixId);
-                });
+                var tmsPricePackages = pricePackages.Where(x => x.IsTmsPricePackage).ToList();
+                var normalPricePackages = pricePackages.Where(x => !x.IsTmsPricePackage).ToList();
+                
+                foreach (var pricePackage in normalPricePackages)
+                    _normalPricePackage.Update(pricePackage.Id, x => x.AppendixId = appendixId);
+                foreach (var pricePackage in tmsPricePackages)
+                    _tmsPricePackageRepository.Update(pricePackage.Id, x => x.AppendixId = appendixId);
+                
             }
-             
+              // todo handle normal price package in file (also for proposal)
             await _jobManager.EnqueueAsync<GenerateAppendixFileJob, GenerateAppendixFileJobArgument>(
                 new GenerateAppendixFileJobArgument
                 {
@@ -68,11 +101,13 @@ namespace TACHYON.PricePackages.PricePackageAppendices
                 });
         }
         
-        public async Task UpdateAppendix(PricePackageAppendix updatedAppendix, List<int> tmsPricePackages,string emailAddress)
-        {
+        public async Task UpdateAppendix(PricePackageAppendix updatedAppendix, List<PricePackageAppendixItem> pricePackages,string emailAddress)
+        { 
+            DisableTenancyFilters();
             
-            var oldAppendix = await _appendixRepository.GetAllIncluding(x=> x.TmsPricePackages)
-                .SingleAsync(x=> x.Id == updatedAppendix.Id);
+            var oldAppendix = await _appendixRepository.GetAll()
+                .Include(x=> x.TmsPricePackages).Include(x=> x.NormalPricePackages)
+                .Include(x=> x.Proposal).SingleAsync(x=> x.Id == updatedAppendix.Id);
 
             if (oldAppendix.Status == AppendixStatus.Confirmed)
                 throw new UserFriendlyException(L("YouCanNotUpdateConfirmedAppendix"));
@@ -80,7 +115,7 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             var oldProposal = oldAppendix.ProposalId;
             ObjectMapper.Map(updatedAppendix,oldAppendix);
             var newProposal = updatedAppendix.ProposalId;
-            if (!newProposal.HasValue) throw new UserFriendlyException(L("YouMustSelectAProposal"));
+            if (!newProposal.HasValue && oldProposal.HasValue) throw new UserFriendlyException(L("YouMustSelectAProposal"));
 
             if (oldProposal != newProposal)
             {
@@ -92,23 +127,45 @@ namespace TACHYON.PricePackages.PricePackageAppendices
 
             // this step for carrier appendix
             
-            if (!updatedAppendix.ProposalId.HasValue && !tmsPricePackages.IsNullOrEmpty())
+            if (!updatedAppendix.ProposalId.HasValue && !pricePackages.IsNullOrEmpty())
             {
-                var oldTmsPricePackages = oldAppendix.TmsPricePackages.Select(x => x.Id).ToList();
-                
-                // the new add tmsPricePackages 
-                var addedItems = tmsPricePackages.Where(x => oldTmsPricePackages.All(o => o != x));
-                var deletedItems = oldTmsPricePackages.Where(x => tmsPricePackages.All(o => o != x));
 
-                foreach (int addedItemId in addedItems)
-                {
-                    _tmsPricePackageRepository.Update(addedItemId, x => x.AppendixId = updatedAppendix.Id);
-                }
+                #region Tms price packages created/deleted Handling
+
+                var oldTmsPricePackages = oldAppendix.TmsPricePackages.Select(x => x.Id).ToList();
+
+                var tmsPricePackages = pricePackages.Where(x => x.IsTmsPricePackage).ToList();
+
+                var addedTmsPricePackages = tmsPricePackages.Where(x => oldTmsPricePackages.All(o => o != x.Id));
+                var deletedTmsPricePackages = oldTmsPricePackages.Where(x => tmsPricePackages.All(o => o.Id != x));
+
+                foreach (var addedItem in addedTmsPricePackages)
+                    _tmsPricePackageRepository.Update(addedItem.Id, x => x.AppendixId = updatedAppendix.Id);
                 
-                foreach (int deletedItemId in deletedItems)
-                {
+                
+                foreach (var deletedItemId in deletedTmsPricePackages)
                     _tmsPricePackageRepository.Update(deletedItemId, x => x.AppendixId = null);
-                }
+                
+                #endregion
+
+                #region Normal price packages created/deleted Handling
+
+                var oldNormalPricePackages = oldAppendix.NormalPricePackages.Select(x => x.Id).ToList();
+
+                var normalPricePackages = pricePackages.Where(x => !x.IsTmsPricePackage).ToList();
+                
+                var addedNormalPricePackages = normalPricePackages.Where(x => oldNormalPricePackages.All(o => o != x.Id));
+                var deletedNormalPricePackages = oldNormalPricePackages.Where(x => normalPricePackages.All(o => o.Id != x));
+
+                foreach (var addedItem in addedNormalPricePackages)
+                    _normalPricePackage.Update(addedItem.Id, x => x.AppendixId = updatedAppendix.Id);
+                
+                
+                foreach (var deletedItemId in deletedNormalPricePackages)
+                    _normalPricePackage.Update(deletedItemId, x => x.AppendixId = null);
+                
+                #endregion
+
             }
              
             await _jobManager.EnqueueAsync<GenerateAppendixFileJob, GenerateAppendixFileJobArgument>(
@@ -147,7 +204,7 @@ namespace TACHYON.PricePackages.PricePackageAppendices
                 .ToArray();
             var companyName = appendix.Proposal?.Shipper?.companyName;
             var appendixDate = appendix.AppendixDate.ToString("dd/MM/yyyy");
-            var contractDate = appendix.ContractDate.ToString("dd/MM/yyyy");
+            var contractDate = appendix.CreationTime.ToString("dd/MM/yyyy");
 
             document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, appendix.ContractName,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateAppendixDate, appendixDate ,SearchOptions.None);

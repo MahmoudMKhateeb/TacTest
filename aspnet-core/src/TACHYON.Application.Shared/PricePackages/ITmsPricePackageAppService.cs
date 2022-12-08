@@ -19,8 +19,6 @@ namespace TACHYON.PricePackages
 
         Task Delete(int pricePackageId);
 
-        Task ChangeActivateStatus(int pricePackageId, bool isActive);
-
         Task<PagedResultDto<TmsPricePackageForViewDto>> GetMatchingPricePackages(GetMatchingPricePackagesInput input);
 
         Task<TmsPricePackageForPricingDto> GetForPricing(int pricePackageId);
