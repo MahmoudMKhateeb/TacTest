@@ -82,8 +82,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   fileType: string;
   fileName: string;
   hasNewUpload: boolean;
-  isDisabledTruck: boolean =false;
+  isDisabledTruck: boolean = false;
   isDisabledDriver: boolean = false;
+  IsHaveSealNumberValue: any = '';
+  IsHaveContainerNumberValue: any = '';
 
   /**
    * DocFileUploader onProgressItem progress
@@ -196,6 +198,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.updateActiveTripId(this.activeTripId);
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
+        this.IsHaveSealNumberValue = res.sealNumber.length > 0;
+        this.IsHaveContainerNumberValue = res.containerNumber.length > 0;
+        console.log('res', res.containerNumber);
+
         this.PointsComponent.wayPointsList = this.trip.routPoints;
         this.PointsComponent.loadReceivers(null, true);
         // this._PointsService.updateWayPoints(this.trip.routPoints);
@@ -274,6 +280,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.allDedicatedTrucks = [];
     this.isDisabledTruck = false;
     this.isDisabledDriver = false;
+    this.IsHaveContainerNumberValue = false;
+    this.IsHaveSealNumberValue = false;
   }
 
   createOrEditTrip() {
@@ -675,11 +683,17 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     }
   }
 
-  GetTruckOrDriver(driverId?: number, truckId?: number){
-    this._dedicatedShippingRequestsServiceProxy.getDriverOrTruckForTripAssign(truckId, driverId, this.shippingRequestForView.shippingRequest.id)
-    .subscribe((res)=>{
-    if(driverId != null && res !=null){ this.trip.truckId=res ; this.isDisabledTruck=true}
-    else if(truckId !=null && res!=null){ this.trip.driverUserId = res; this.isDisabledDriver = true}
-  });
+  GetTruckOrDriver(driverId?: number, truckId?: number) {
+    this._dedicatedShippingRequestsServiceProxy
+      .getDriverOrTruckForTripAssign(truckId, driverId, this.shippingRequestForView.shippingRequest.id)
+      .subscribe((res) => {
+        if (driverId != null && res != null) {
+          this.trip.truckId = res;
+          this.isDisabledTruck = true;
+        } else if (truckId != null && res != null) {
+          this.trip.driverUserId = res;
+          this.isDisabledDriver = true;
+        }
+      });
   }
 }
