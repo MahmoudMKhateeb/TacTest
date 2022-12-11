@@ -349,7 +349,7 @@ namespace TACHYON.Shipping.ShippingRequests
             DisableTenancyFilters();
             return await _shippingRequestRepository.GetAll()
                 .Where(x => (x.TenantId == tenantId || x.CarrierTenantId == tenantId) &&
-            x.Status == ShippingRequestStatus.PostPrice &&
+            (x.Status == ShippingRequestStatus.PostPrice || x.Status == ShippingRequestStatus.Expired)  &&
             x.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
                 .Select(x => new SelectItemDto
                 {

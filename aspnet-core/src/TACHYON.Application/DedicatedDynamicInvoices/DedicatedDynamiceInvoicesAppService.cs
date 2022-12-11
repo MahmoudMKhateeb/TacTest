@@ -194,6 +194,7 @@ namespace TACHYON.DedicatedDynamicInvoices
 
         public async Task<int> GetDefaultNumberOfDays(long ShippingRequestId)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(x => x.Id == ShippingRequestId &&
             x.ShippingRequestFlag == ShippingRequestFlag.Dedicated);
 
