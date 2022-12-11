@@ -15,7 +15,7 @@ namespace TACHYON.AutoMapper.Tracking
         {
             CreateMap<ShippingRequestTrip, TrackingListDto>()
              .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestFk.CarrierTenantFk.Name))
-             .ForMember(dst => dst.RouteTypeId, opt => opt.MapFrom(src => src.ShippingRequestFk.RouteTypeId))
+             .ForMember(dst => dst.RouteTypeId, opt => opt.MapFrom(src => src.RouteType != null ?src.RouteType :src.ShippingRequestFk.RouteTypeId))
             .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk.FullName))
             .ForMember(dst => dst.DriverImageProfile, opt => opt.MapFrom(src => src.AssignedDriverUserFk.ProfilePictureId))
             .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.OriginFacilityFk.Address))
