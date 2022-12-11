@@ -257,7 +257,7 @@
                   name="ContainerNumber"
                   [(ngModel)]="assignDriverAndTruck.containerNumber"
                   type="text"
-                  [disabled]="saving || trip.containerNumber.length > 0"
+                  [disabled]="saving || (trip.containerNumber && trip.containerNumber.length > 0)"
                 />
               </div>
             </div>
@@ -272,7 +272,7 @@
                   name="SealNumber"
                   [(ngModel)]="assignDriverAndTruck.sealNumber"
                   type="text"
-                  [disabled]="saving || trip.sealNumber.length > 0"
+                  [disabled]="saving || (trip.sealNumber && trip.sealNumber.length > 0)"
                 />
               </div>
             </div>
