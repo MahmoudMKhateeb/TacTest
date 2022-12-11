@@ -634,7 +634,7 @@ namespace TACHYON.Invoices
                     DateWork = trip.ShippingRequestTripFK.EndTripDate.HasValue ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.InvoiceFK.CreationTime.ToString("dd/MM/yyyy"),
                     Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
                         L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : "",
-                    ContainerNumber = trip.ShippingRequestTripFK.CanBePrinted ? trip.ShippingRequestTripFK.ContainerNumber ?? "-" : "-",
+                    ContainerNumber = trip.ShippingRequestTripFK.ContainerNumber ?? "-",
                     RoundTrip = trip.ShippingRequestTripFK.CanBePrinted ? trip.ShippingRequestTripFK.RoundTrip ?? "-" : "-",
                 });
                 Sequence++;
