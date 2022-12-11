@@ -25,9 +25,7 @@ namespace TACHYON.PricePackages.Dto.PricePackageProposals
         public string Notes { get; set; }
 
         public List<int> TmsPricePackages { get; set; }
-
-        [Required]
-        [DataType(DataType.EmailAddress)]
+        
         public string EmailAddress { get; set; }
 
         public void Normalize()

@@ -19,8 +19,6 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
 
         public string TransportType { get; set; }
 
-        public bool IsActive { get; set; }
-
         public bool HasProposal { get; set; }
     }
 }

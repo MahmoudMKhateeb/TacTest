@@ -35,7 +35,7 @@
           </div>
           <div class="col-6 mb-3">
             <h6>{{ l('AppendixDate') }}:</h6>
-            {{ appendix.appendixDate }}
+            {{ appendix.appendixDate | momentFormat:'DD/MM/yyyy' }}
           </div>
           <div class="col-6 mb-3">
             <h6>{{ l('appendixFile') }}:</h6>
@@ -44,7 +44,7 @@
             }}</a>
             <span *ngIf="!appendix.appendixFileId" class="text-primary">{{ 'FileNotFound' | localize }}</span>
           </div>
-          <div class="col-6 mb-3">
+          <div class="col-6 mb-3" *ngIf="appendix.proposalName">
             <h6>{{ l('ProposalName') }}:</h6>
             {{ appendix.proposalName }}
           </div>
