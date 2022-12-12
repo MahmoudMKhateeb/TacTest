@@ -96,13 +96,16 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var expiredRentalShippingRequests = _shippingRequestRepository.GetAll()
                                 .Where(x => x.ShippingRequestFlag == ShippingRequestFlag.Dedicated &&
-                                 x.RentalEndDate != null && x.RentalEndDate.Value.Date < Clock.Now.Date
-                                 && x.Status != ShippingRequestStatus.Expired)
+                                 x.RentalEndDate != null && x.RentalEndDate.Value.Date < Clock.Now.Date && x.Status != ShippingRequestStatus.Cancled
+                                 && ( x.Status != ShippingRequestStatus.Completed || x.Status != ShippingRequestStatus.Expired ))
                                 .ToList();
 
             foreach (var request in expiredRentalShippingRequests)
             {
-                request.Status = ShippingRequestStatus.Expired;
+                if(request.Status == ShippingRequestStatus.PostPrice)
+                    request.Status = ShippingRequestStatus.Completed;
+                else if(request.Status == ShippingRequestStatus.PrePrice || request.Status == ShippingRequestStatus.NeedsAction)
+                    request.Status = ShippingRequestStatus.Expired;
             }
         }
     }
