@@ -91,15 +91,31 @@ namespace TACHYON.DedicatedDynamicInvoices
 
         public async Task GenerateDedicatedInvoice(long id)
         {
-            var invoice = await _dedicatedInvoiceRepository.GetAllIncluding(x => x.DedicatedDynamicInvoiceItems, x => x.Tenant).FirstOrDefaultAsync(x => x.Id == id);
+            DisableTenancyFilters();
+            var invoice = await _dedicatedInvoiceRepository
+                .GetAllIncluding(x => x.Tenant, x=>x.ShippingRequest)
+                .Include(x=> x.DedicatedDynamicInvoiceItems)
+                .ThenInclude(x=>x.DedicatedShippingRequestTruck)
+                .ThenInclude(x=>x.Truck)
+                .Include(x=>x.Invoice)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
             if (invoice.InvoiceAccountType == InvoiceAccountType.AccountReceivable)
             {
-                if (invoice.InvoiceId != null) throw new UserFriendlyException(L("InvoiceAlreadyGenerated"));
+                if (invoice.Invoice != null) throw new UserFriendlyException(L("InvoiceAlreadyGenerated"));
+                if(invoice.DedicatedDynamicInvoiceItems.Any(x=>x.DedicatedShippingRequestTruck.InvoiceId != null))
+                {
+                    throw new UserFriendlyException(L(string.Format("InvoiceAlreadyGeneratedForTruck{0}",invoice.DedicatedDynamicInvoiceItems.First(x => x.DedicatedShippingRequestTruck.InvoiceId != null).DedicatedShippingRequestTruck.Truck.GetDisplayName())));
+                }
                 await _invoiceManager.GenerateDedicatedDynamicInvoice(invoice.Tenant, invoice);
             }
             else
             {
                 if (invoice.SubmitInvoiceId != null) throw new UserFriendlyException(L("InvoiceAlreadyGenerated"));
+                if (invoice.DedicatedDynamicInvoiceItems.Any(x => x.DedicatedShippingRequestTruck.SubmitInvoiceId != null))
+                {
+                    throw new UserFriendlyException(L(string.Format("InvoiceAlreadyGeneratedForTruck{0}",invoice.DedicatedDynamicInvoiceItems.First(x => x.DedicatedShippingRequestTruck.SubmitInvoiceId != null).DedicatedShippingRequestTruck.Truck.GetDisplayName())));
+                }
                 await _invoiceManager.GenerateSubmitDedicatedDynamicInvoice(invoice.Tenant, invoice);
             }
         }
