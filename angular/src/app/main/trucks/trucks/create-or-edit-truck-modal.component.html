@@ -38,6 +38,7 @@
                     'is-invalid': TruckTenantId.touched && !TruckTenantId.valid
                   }"
                   [required]="isTruckTenantRequired"
+                  (change)="LoadDrivers()"
                 >
                   <option [ngValue]="null" selected disabled>{{ l('SelectACarrier') }}</option>
                   <option *ngFor="let item of carriers" value="{{ item.id }}">{{ item.displayName }}</option>
