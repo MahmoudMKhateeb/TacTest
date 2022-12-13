@@ -175,22 +175,23 @@ namespace TACHYON.Shipping.DirectRequests
                 DisableTenancyFilters();
                 query = (from tenant in _tenantRepository.GetAll().AsNoTracking()
                     from clientsTenantFeature in _tenantFeatureRepository.GetAll()
-                        .Where(x => x.TenantId == tenant.Id && x.Name.Contains(AppFeatures.CarrierClients))
+                        .Where(x => x.TenantId == tenant.Id && (x.Name.Contains(AppFeatures.CarrierClients) || x.Name.Contains(AppFeatures.ShipperClients)))
                         .DefaultIfEmpty()
                     from clientsEditionFeature in _editionFeatureRepository.GetAll()
-                        .Where(x => x.EditionId == tenant.EditionId && x.Name.Contains(AppFeatures.CarrierClients))
+                        .Where(x => x.EditionId == tenant.EditionId && (x.Name.Contains(AppFeatures.CarrierClients) || x.Name.Contains(AppFeatures.ShipperClients)))
                         .DefaultIfEmpty()
-                    orderby input.Sorting ?? "id desc"
+                    //orderby input.Sorting ?? "id desc"
                     where tenant.IsActive && (tenant.Edition.DisplayName == TACHYONConsts.CarrierEdtionName ||
                                               (clientsTenantFeature != null || clientsEditionFeature != null))
                                           && (string.IsNullOrEmpty(input.Filter) || (tenant.TenancyName.ToLower()
                                                   .Contains(input.Filter.ToLower()) ||
                                               tenant.Name.ToLower().Contains(input.Filter.ToLower()) ||
                                               tenant.companyName.ToLower().Contains(input.Filter.ToLower())))
+
                     select  new ShippingRequestDirectRequestGetCarrirerListDto
                     {
                         Id = tenant.Id, Name = tenant.Name, CarrierRate = tenant.Rate, CarrierRateNumber = tenant.RateNumber
-                    });
+                    }).Distinct().OrderBy(input.Sorting ?? "id desc");
             }
             else if (IsEnabled(AppFeatures.Shipper))
             {
