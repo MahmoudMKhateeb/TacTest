@@ -24,12 +24,13 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
         'interaction, interact, preferences, preformance, computer, online, rating, review.svg',
         '/app/main/dashboard'
       ),
+      new AppMenuItem('Dashboard', '', 'Dashboards.svg', '/app/main/dashboard'),
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Operations
       new AppMenuItem(
         'Operations',
         'Pages.ShippingRequests',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        'Operations.svg',
         '/app/main/comingSoon',
         [],
         [
@@ -66,7 +67,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'AddressBook',
         '',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        'Facility Managment.svg',
         '',
         [],
         [
@@ -84,7 +85,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMS',
         '',
-        'logistic, delivery, warehouse, storage, empty, vacant.svg',
+        'TMS Settings.svg',
         '',
         [],
         [
@@ -100,7 +101,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Financials',
         'Pages.Invoices',
-        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        'Financials.svg',
         '',
         [],
         [
@@ -160,7 +161,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'DocumentManagement',
         '',
-        'interaction, interact, preferences, preformance, customer, rating, rate, questions.svg',
+        'Document.svg',
         '',
         [],
         [
@@ -214,7 +215,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMSSettings',
         '',
-        'digital marketing, marketing, content marketing, puzzle, piece, strategy.svg',
+        'TMS Settings.svg',
         '',
         [],
         [
@@ -229,20 +230,13 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
         undefined
       ),
       //  ---------------------------------------------------------------------------------------------------------------------
-      new AppMenuItem(
-        'Actors',
-        'Pages.Administration.Actors',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
-        '/app/main/actors/actors',
-        [],
-        []
-      ),
+      new AppMenuItem('Actors', 'Pages.Administration.Actors', 'User Management.svg', '/app/main/actors/actors', [], []),
 
       //start of Settings
       new AppMenuItem(
         'Settings',
         'Pages.Administration.Tenant.Settings',
-        'user, interface, agent, usability, settings, options, preferences, gears.svg',
+        'Settings.svg',
         '',
         [],
         [
@@ -257,7 +251,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'UserManagement',
         '',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
+        'User Management.svg',
         '',
         [],
         [

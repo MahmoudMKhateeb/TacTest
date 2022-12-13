@@ -24,6 +24,7 @@ export class DashboardCustomizationConst {
       ShipperMostUsedDestinationsWidget: 'Widgets_Tenant_shipper_MostUsedDestinationsWidget',
       ShipperRequestsInMarketplaceWidget: 'Widgets_Tenant_shipper_RequestsInMarketplaceWidget',
       ShipperTrackingMapWidget: 'Widgets_Tenant_shipper_TrackingMapWidget',
+      ShipperCountersWidget: 'Widgets_Tenant_shipper_Counters_Widget',
     },
     //Carrier Only Widgets
     Carrier: {
@@ -39,6 +40,7 @@ export class DashboardCustomizationConst {
       CarrierDueDateInDaysWidget: 'Widgets_Tenant_carrier_DueDateInDaysWidget',
       CarrierTrackingMapWidget: 'Widgets_Tenant_carrier_TrackingMapWidget',
       CarrierMostUsedPPWidget: 'Widgets_Tenant_carrier_MostUsedPPWidget',
+      CarrierCountersWidget: 'Widgets_Tenant_carrier_Counters_Widget',
     },
     //TachyonDealer Only Widgets
     TachyonDealer: {

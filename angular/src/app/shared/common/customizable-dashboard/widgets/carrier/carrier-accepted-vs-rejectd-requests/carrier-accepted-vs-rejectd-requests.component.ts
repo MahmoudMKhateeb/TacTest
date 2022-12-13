@@ -1,8 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
-import { CarrierDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CarrierDashboardServiceProxy, ChartCategoryPairedValuesDto } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
+import { ApexLegend } from '@node_modules/ng-apexcharts';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-carrier-accepted-vs-rejectd-requests',
@@ -12,6 +14,15 @@ import { finalize } from '@node_modules/rxjs/operators';
 export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptions>;
   loading = false;
+
+  legend: ApexLegend = {
+    show: false,
+    // position: 'right',
+    // offsetY: 40,
+    // fontWeight: 500,
+  };
+  public acceptedVsRejected: any;
+  options: string[] = [this.l('Daily'), this.l('Weekly'), this.l('Monthly')];
 
   constructor(injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy) {
     super(injector);
@@ -31,25 +42,67 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
         })
       )
       .subscribe((result) => {
+        const accepted = result.acceptedOffers.reduce((accumulator, currentValue) => accumulator + currentValue.y, 0);
+        const rejected = result.rejectedOffers.reduce((accumulator, currentValue) => accumulator + currentValue.y, 0);
+        this.acceptedVsRejected = {
+          accepted,
+          rejected,
+          total: accepted + rejected,
+        };
+        const categories = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const acceptedSeries = categories.map((item) => {
+          const foundFromResponse = result.acceptedOffers.find((accepted) => accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase());
+          console.log('acceptedSeries foundFromResponse', foundFromResponse);
+          return ChartCategoryPairedValuesDto.fromJS({
+            x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
+            y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
+          });
+        });
+        const rejectedSeries = categories.map((item) => {
+          const foundFromResponse = result.rejectedOffers.find((rejected) => rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase());
+          console.log('rejectedSeries foundFromResponse', foundFromResponse);
+          return ChartCategoryPairedValuesDto.fromJS({
+            x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
+            y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
+          });
+        });
+        console.log('acceptedSeries', acceptedSeries);
+        console.log('rejectedSeries', rejectedSeries);
         this.chartOptions = {
           series: [
             {
               name: this.l('Accepted'),
-              data: result.acceptedOffers,
-              color: 'rgba(187, 41, 41, 0.847)',
+              data: acceptedSeries,
+              color: 'rgba(105, 228, 94, 0.89)',
             },
             {
               name: this.l('Rejected'),
-              data: result.rejectedOffers,
+              data: rejectedSeries,
+              color: '#d82631',
             },
           ],
           chart: {
-            type: 'area',
-            width: 400,
-            height: 250,
+            type: 'bar',
+            width: '100%',
+            height: 200,
+            stacked: true,
           },
           xaxis: {
             type: 'category',
+            categories,
+          },
+          dataLabels: {
+            enabled: false,
+          },
+        };
+        (this.chartOptions as any).legend = {
+          position: 'right',
+          offsetY: 40,
+        };
+        (this.chartOptions as any).plotOptions = {
+          bar: {
+            columnWidth: '45%',
+            // distributed: true
           },
         };
         (this.chartOptions.chart.locales as any[]) = [
@@ -64,6 +117,7 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
             },
           },
         ];
+        console.log('this.chartOptions', this.chartOptions);
         this.loading = false;
       });
   }

@@ -1,3 +1,7 @@
+::ng-deep [dir='rtl'] .week-day-btn {
+  font-size: 0.767rem !important;
+}
+
 .month-section {
   margin: 0 1px 1px 0;
   padding: 12px 15px 15.8px 13px;
@@ -22,14 +26,14 @@
 
 .week-day-btn {
   width: 34px;
-  font-size: 12px;
+  font-size: 0.534vw !important;
   background: transparent;
   padding: 0.1rem;
   border: none;
   color: #757575;
 }
 .week-day-btn .week-day-number {
-  font-size: 20px !important;
+  font-size: 1vw !important;
   font-weight: 800 !important;
   color: #000 !important;
 }

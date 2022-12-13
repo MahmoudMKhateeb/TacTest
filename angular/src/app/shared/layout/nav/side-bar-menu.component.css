@@ -14,3 +14,71 @@
   width: 30px;
   margin-bottom: 5px;
 }
+
+#kt_brand {
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.aside-menu .menu-nav > .menu-item > .menu-link .menu-text {
+  /*font-size: 0.925rem !important;*/
+  font-weight: 600 !important;
+}
+
+.aside-menu .menu-nav > .menu-item > .menu-link {
+  padding: 5px 20px !important;
+}
+
+.aside-menu .menu-nav > .menu-item .menu-subnav .menu-bullet {
+  display: none;
+}
+
+.aside-menu .menu-nav > .menu-item .menu-subnav .menu-link .menu-text {
+  font-size: 0.925rem !important;
+  font-weight: 500 !important;
+}
+
+.aside-menu .menu-nav > .menu-item.menu-item-here > .menu-heading,
+.aside-menu .menu-nav > .menu-item.menu-item-here > .menu-link {
+  background-color: transparent !important;
+}
+
+.aside-menu .menu-nav > .menu-item > .menu-submenu .menu-subnav > .menu-item > .menu-link {
+  margin: 0 25px;
+  padding-left: 30px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.aside-menu .menu-nav > .menu-item .menu-submenu .menu-item.menu-item-here > .menu-heading::before,
+.aside-menu .menu-nav > .menu-item .menu-submenu .menu-item.menu-item-here > .menu-link::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 100%;
+  border-radius: 3px;
+  z-index: 1;
+  background-color: #dc2434;
+  position: absolute;
+  left: 0 !important;
+}
+
+/*.aside-menu .menu-nav > .menu-item .menu-submenu .menu-item.menu-item-here > .menu-heading,*/
+/*.aside-menu .menu-nav > .menu-item .menu-submenu .menu-item.menu-item-here > .menu-link {*/
+/*    border-left: 4px solid #dc2434;*/
+/*}*/
+
+[dir='rtl'] .aside-menu .menu-nav > .menu-item .menu-submenu .menu-item.menu-item-here > .menu-heading::before,
+[dir='rtl'] .aside-menu .menu-nav > .menu-item .menu-submenu .menu-item.menu-item-here > .menu-link::before {
+  left: auto;
+  right: 0 !important;
+}
+
+/*[dir='rtl'] .aside-menu .menu-nav > .menu-item > .menu-heading .menu-icon,*/
+/*[dir='rtl'] .aside-menu .menu-nav > .menu-item > .menu-link .menu-icon {*/
+
+/*}*/
+
+.aside-menu .menu-nav > .menu-item > .menu-heading .menu-icon,
+.aside-menu .menu-nav > .menu-item > .menu-link .menu-icon {
+  flex-basis: 25px;
+}

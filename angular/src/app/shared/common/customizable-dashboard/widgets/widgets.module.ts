@@ -64,6 +64,9 @@ import { CountersWidgetComponent } from '@app/shared/common/customizable-dashboa
 import { UpcomingTripsWidgetsComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/upcoming-trips-widgets/upcoming-trips-widgets.component';
 import { NeedsActionWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/needs-action-widget/needs-action-widget.component';
 import { NewOffersWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/new-offers-widget/new-offers-widget.component';
+import { ShipperDashboardComponent } from '@app/shared/common/customizable-dashboard/shipper-dashboard/shipper-dashboard.component';
+import { CarrierDashboardComponent } from '@app/shared/common/customizable-dashboard/carrier-dashboard/carrier-dashboard.component';
+import { NewDirectRequestsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/new-direct-requests-widget/new-direct-requests-widget.component';
 
 @NgModule({
   declarations: [
@@ -117,6 +120,9 @@ import { NewOffersWidgetComponent } from '@app/shared/common/customizable-dashbo
     UpcomingTripsWidgetsComponent,
     NeedsActionWidgetComponent,
     NewOffersWidgetComponent,
+    ShipperDashboardComponent,
+    CarrierDashboardComponent,
+    NewDirectRequestsWidgetComponent,
   ],
   imports: [
     CommonModule,
@@ -182,6 +188,9 @@ import { NewOffersWidgetComponent } from '@app/shared/common/customizable-dashbo
     UpcomingTripsWidgetsComponent,
     NeedsActionWidgetComponent,
     NewOffersWidgetComponent,
+    ShipperDashboardComponent,
+    CarrierDashboardComponent,
+    NewDirectRequestsWidgetComponent,
   ],
   exports: [
     CompletedTripsWidgetComponent,
@@ -234,6 +243,9 @@ import { NewOffersWidgetComponent } from '@app/shared/common/customizable-dashbo
     UpcomingTripsWidgetsComponent,
     NeedsActionWidgetComponent,
     NewOffersWidgetComponent,
+    ShipperDashboardComponent,
+    CarrierDashboardComponent,
+    NewDirectRequestsWidgetComponent,
   ],
 })
 export class WidgetsModule {}

@@ -10,8 +10,8 @@ input[type='radio'] {
   font-weight: 600 !important;
 }
 
-.text-black {
-  color: #1c1c1c;
+.text-red {
+  color: #dc2434;
 }
 
 .text-gray {

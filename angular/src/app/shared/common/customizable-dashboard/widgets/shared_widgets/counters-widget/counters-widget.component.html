@@ -10,15 +10,28 @@
       </div>
     </div>
     <hr class="custom-hr" />
-    <div class="row">
-      <div class="col-3">
-        <img class="counter-icon" src="assets/SVG/In_Transit_Trips.svg" alt="" />
+    <ng-container *ngIf="isShipper || hasCarrierClients || hasShipperClients">
+      <div class="row">
+        <div class="col-3">
+          <img class="counter-icon" src="assets/SVG/In_Transit_Trips.svg" alt="" />
+        </div>
+        <div class="col-9">
+          <span class="counter-title">In Transit Trips</span> <br />
+          <span class="counter-details">25 Trips</span>
+        </div>
       </div>
-      <div class="col-9">
-        <span class="counter-title">In Transit Trips</span> <br />
-        <span class="counter-details">25 Trips</span>
+    </ng-container>
+    <ng-container *ngIf="isCarrier || isCarrierSaas || isSaaS || hasCarrierClients || hasShipperClients">
+      <div class="row">
+        <div class="col-3">
+          <img class="counter-icon" src="assets/SVG/Generated_invoice.svg" alt="" />
+        </div>
+        <div class="col-9">
+          <span class="counter-title">Generated Invoice</span> <br />
+          <span class="counter-details">25 Invoice</span>
+        </div>
       </div>
-    </div>
+    </ng-container>
     <hr class="custom-hr" />
     <app-invoice-due-date></app-invoice-due-date>
     <hr class="custom-hr" />

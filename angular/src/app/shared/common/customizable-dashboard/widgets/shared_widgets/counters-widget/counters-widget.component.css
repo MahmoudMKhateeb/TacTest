@@ -1,5 +1,5 @@
 .counter-icon {
-  width: 3vw;
+  max-width: 3vw;
   height: 100%;
   margin-right: 7px;
   border: solid 0.5px #c9c9c9;
@@ -19,7 +19,7 @@
 }
 
 ::ng-deep .counter-icon {
-  width: 3vw;
+  max-width: 3vw;
   height: 100%;
   margin-right: 7px;
   border: solid 0.5px #c9c9c9;
@@ -32,4 +32,10 @@
 ::ng-deep .counter-details {
   font-size: 12px;
   font-weight: 600;
+}
+
+[dir='rtl'] ::ng-deep .counter-icon,
+[dir='rtl'] .counter-icon {
+  margin-right: 0 !important;
+  margin-left: 7px !important;
 }

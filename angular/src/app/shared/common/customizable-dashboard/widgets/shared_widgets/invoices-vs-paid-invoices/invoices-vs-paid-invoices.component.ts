@@ -36,21 +36,21 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
         this.chartOptions = {
           series: [
             {
-              name: 'Invoices',
+              name: this.l('UnPaidInvoice'),
               data: [6, 8, 25, 15, 10, 18, 22, 23, 25, 30, 38], // result.shipperInvoices,
               // color: 'rgba(187, 41, 41, 0.847)',
               color: '#d7dadc',
             },
             {
-              name: 'Paid Invoices',
-              color: '#1c1c1c',
+              name: this.l('PaidInvoice'),
+              color: '#dc2434',
               data: [4, 6, 20, 11, 8, 15, 19, 21, 20, 25, 32], //result.paidInvoices,
             },
           ],
           chart: {
             type: 'line',
             width: '100%',
-            height: 250,
+            height: 350,
             zoom: {
               enabled: false,
             },

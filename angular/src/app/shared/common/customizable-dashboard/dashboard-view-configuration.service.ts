@@ -43,6 +43,7 @@ import { NumberOfRequestsForEachCityComponent } from './widgets/host/number-of-r
 import { CarrierComplitedTripsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/carrier-complited-trips-widget/carrier-complited-trips-widget.component';
 import { CarrierAcceptedVsRejectdRequestsComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/carrier-accepted-vs-rejectd-requests/carrier-accepted-vs-rejectd-requests.component';
 import { CarrierInvoicesDetailsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/carrier-invoices-details-widget/carrier-invoices-details-widget.component';
+import { CountersWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/counters-widget/counters-widget.component';
 
 @Injectable({
   providedIn: 'root',
@@ -143,6 +144,13 @@ export class DashboardViewConfigurationService {
       8
     );
 
+    let countersWidget_Shipper = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.ShipperCountersWidget,
+      CountersWidgetComponent,
+      18,
+      20
+    );
+
     //carrier Widgets
     let carrierInvoicesVsPaid = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierInvoicesVsPaidInvoicesWidget,
@@ -188,6 +196,14 @@ export class DashboardViewConfigurationService {
       8,
       5
     );
+
+    let countersWidget_Carrier = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Carrier.CarrierCountersWidget,
+      CountersWidgetComponent,
+      18,
+      20
+    );
+
     //Host
 
     let NumberOfRegisteredTrucks = new WidgetViewDefinition(
@@ -435,6 +451,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(mostUsedOrigins);
     this.WidgetViewDefinitions.push(mostUsedDest);
     this.WidgetViewDefinitions.push(trackingMapOfShipper);
+    this.WidgetViewDefinitions.push(countersWidget_Shipper);
 
     //Carrier
     this.WidgetViewDefinitions.push(carrierInvoicesVsPaid);
@@ -448,6 +465,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(activeDrivers);
     this.WidgetViewDefinitions.push(mostUsedVases);
     this.WidgetViewDefinitions.push(trackingMapOfCarrier);
+    this.WidgetViewDefinitions.push(countersWidget_Carrier);
 
     //TMS
     this.widgetFilterDefinitions.push(NumberOfRegisteredTrucks);

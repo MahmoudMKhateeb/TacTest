@@ -171,13 +171,13 @@ gridster-item {
   color: #757575;
 }
 
-.card.card-custom > .card-header .card-title .card-label {
+::ng-deep .card.card-custom > .card-header .card-title .card-label {
   margin: 0 0.75rem 0 0;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 
-.card-label {
+::ng-deep .card-label {
   font-size: 20px !important;
   font-weight: 600 !important;
 }

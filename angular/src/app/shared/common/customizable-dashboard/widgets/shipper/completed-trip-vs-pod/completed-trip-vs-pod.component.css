@@ -1,3 +1,7 @@
+::ng-deep app-completed-trip-vs-pod .apexcharts-gridline {
+  stroke-width: 0;
+}
+
 .accepted {
   color: #fff;
   background-color: rgba(105, 228, 94, 0.89);

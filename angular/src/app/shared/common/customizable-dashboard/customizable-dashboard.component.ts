@@ -58,7 +58,7 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
 
   renamePageInput = '';
   addPageInput = '';
-
+  dashboardCustomizationConst = DashboardCustomizationConst;
   constructor(
     injector: Injector,
     private _dashboardViewConfiguration: DashboardViewConfigurationService,
@@ -148,6 +148,7 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
         };
       }),
     };
+    console.log('this.userDashboard', this.userDashboard);
   }
 
   removeItem(item: GridsterItem) {
@@ -450,7 +451,7 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
   }
 
   moreThanOnePage(): boolean {
-    return this.userDashboard && this.userDashboard.pages && this.userDashboard.pages.length > 1;
+    return true; //this.userDashboard && this.userDashboard.pages && this.userDashboard.pages.length > 1;
   }
 
   close(): void {
@@ -505,3 +506,90 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
     this.refreshAllGrids();
   };
 }
+
+const defaultWidgetsSizes = [
+  {
+    id: DashboardCustomizationConst.widgets.Shipper.ShipperNumberOfCompletedTripsWidget,
+    x: 0,
+    y: 0,
+    cols: 12,
+    rows: 8,
+  },
+  {
+    id: DashboardCustomizationConst.widgets.Shipper.ShipperAcceptedVsRejectedRequestsWidget,
+    x: 0,
+    y: 0,
+    cols: 12,
+    rows: 8,
+  },
+  {
+    id: DashboardCustomizationConst.widgets.Shipper.ShipperCompletedTripsVsPodWidget,
+    x: 0,
+    y: 0,
+    cols: 12,
+    rows: 8,
+  },
+  {
+    id: DashboardCustomizationConst.widgets.Shipper.ShipperInvoicesVsPaidInvoicesWidget,
+    x: 0,
+    y: 0,
+    cols: 12,
+    rows: 8,
+  },
+  {
+    id: DashboardCustomizationConst.widgets.Shipper.ShipperNextInvoiceFrequancyEndDateWidget,
+    x: 0,
+    y: 0,
+    cols: 12,
+    rows: 8,
+  },
+  {
+    id: DashboardCustomizationConst.widgets.Shipper.ShipperInvoiceDueDateInDaysWidget,
+    x: 0,
+    y: 0,
+    cols: 12,
+    rows: 8,
+  },
+  {
+    id: DashboardCustomizationConst.widgets.Shipper.ShipperDocumentDueDateInDaysWidget,
+    x: 0,
+    y: 0,
+    cols: 12,
+    rows: 8,
+  },
+  {
+    id: DashboardCustomizationConst.widgets.Shipper.ShipperMostWorkedWithCarriersWidget,
+    x: 0,
+    y: 0,
+    cols: 12,
+    rows: 8,
+  },
+  {
+    id: DashboardCustomizationConst.widgets.Shipper.ShipperMostUsedOriginsWidget,
+    x: 0,
+    y: 0,
+    cols: 12,
+    rows: 8,
+  },
+  {
+    id: DashboardCustomizationConst.widgets.Shipper.ShipperMostUsedDestinationsWidget,
+    x: 0,
+    y: 0,
+    cols: 12,
+    rows: 8,
+  },
+  {
+    id: DashboardCustomizationConst.widgets.Shipper.ShipperRequestsInMarketplaceWidget,
+    x: 0,
+    y: 0,
+    cols: 12,
+    rows: 8,
+  },
+  {
+    id: DashboardCustomizationConst.widgets.Shipper.ShipperTrackingMapWidget,
+    x: 0,
+    y: 0,
+    cols: 12,
+    rows: 8,
+  },
+];
