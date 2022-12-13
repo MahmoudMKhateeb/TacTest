@@ -52,6 +52,7 @@ namespace TACHYON.DedicatedDynamicInvoices
         public async Task<LoadResult> GetAll(string filter)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
+            await DisableInvoiceDraftedFilter();
             var query = _dedicatedInvoiceRepository.GetAll()
                 .ProjectTo<DedicatedDynamicInvoiceDto>(AutoMapperConfigurationProvider)
             .AsNoTracking();
@@ -92,6 +93,7 @@ namespace TACHYON.DedicatedDynamicInvoices
         public async Task GenerateDedicatedInvoice(long id)
         {
             DisableTenancyFilters();
+            await DisableInvoiceDraftedFilter();
             var invoice = await _dedicatedInvoiceRepository
                 .GetAllIncluding(x => x.Tenant, x=>x.ShippingRequest)
                 .Include(x=> x.DedicatedDynamicInvoiceItems)
