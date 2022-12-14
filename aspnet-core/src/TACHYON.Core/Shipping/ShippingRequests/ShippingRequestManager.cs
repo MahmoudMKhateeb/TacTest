@@ -454,6 +454,53 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
 
-        
+        public async Task<long?> IsAnyTruckBusyDuringRentalDuration(List<long> truckDtos, ShippingRequest shippingRequest)
+        {
+            var item = await _dedicatedShippingRequestTrucksRepository.GetAll()
+                .Where(x => truckDtos.Contains(x.TruckId) && x.ShippingRequestId != shippingRequest.Id &&
+                shippingRequest.RentalStartDate.Value.Date <= x.ShippingRequest.RentalEndDate.Value.Date &&
+                x.ShippingRequest.RentalStartDate.Value.Date <= shippingRequest.RentalEndDate.Value.Date)
+                .FirstOrDefaultAsync();
+            if (item != null) return item.TruckId;
+            return null;
+        }
+
+        public async Task<long?> IsAnyDriverBusyDuringRentalDuration(List<long> driverDtos, ShippingRequest shippingRequest)
+        {
+            var item = await _dedicatedShippingRequestDriverRepository.GetAll()
+                .Where(x => driverDtos.Contains(x.DriverUserId) && x.ShippingRequestId != shippingRequest.Id &&
+                shippingRequest.RentalStartDate.Value.Date <= x.ShippingRequest.RentalEndDate.Value.Date &&
+                x.ShippingRequest.RentalStartDate.Value.Date <= shippingRequest.RentalEndDate.Value.Date)
+                .FirstOrDefaultAsync();
+            if (item != null) return item.DriverUserId;
+            return null;
+        }
+
+        public async Task<bool> IsTruckBusyDuringTripDuration(long truckId, ShippingRequestTrip trip)
+        {
+            DisableTenancyFilters();
+            var item = await _dedicatedShippingRequestTrucksRepository.GetAll()
+                .Where(x => x.TruckId == truckId && x.ShippingRequestId != trip.ShippingRequestId && x.ReplacementFlag == ReplacementFlag.Original &&
+                trip.StartTripDate.Date <= x.ShippingRequest.RentalEndDate.Value.Date &&
+                x.ShippingRequest.RentalStartDate.Value.Date <= trip.EndTripDate.Value.Date)
+                .FirstOrDefaultAsync();
+            if (item != null) return true;
+            return false;
+        }
+
+        public async Task<bool> IsDriverBusyDuringTripDuration(long driverId, ShippingRequestTrip trip)
+        {
+            DisableTenancyFilters();
+            var item = await _dedicatedShippingRequestDriverRepository.GetAll()
+                .Where(x => x.DriverUserId == driverId && x.ShippingRequestId != trip.ShippingRequestId && x.ReplacementFlag == ReplacementFlag.Original &&
+                trip.StartTripDate.Date <= x.ShippingRequest.RentalEndDate.Value.Date &&
+                x.ShippingRequest.RentalStartDate.Value.Date <= trip.EndTripDate.Value.Date)
+                .FirstOrDefaultAsync();
+            if (item != null) return true;
+            return false;
+        }
+
+
+
     }
 }

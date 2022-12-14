@@ -500,6 +500,15 @@ namespace TACHYON.Shipping.Trips
 
                 if (trip.Status == ShippingRequestTripStatus.InTransit && await CheckIfDriverWorkingOnAnotherTrip(input.AssignedDriverUserId))
                     throw new UserFriendlyException(L("TheDriverAreadyWorkingOnAnotherTrip"));
+                //check if truck or driver rented
+                if(await _shippingRequestManager.IsTruckBusyDuringTripDuration(input.AssignedTruckId , trip))
+                {
+                    throw new UserFriendlyException(L("TruckIsAlreadyRented"));
+                }
+                if(await _shippingRequestManager.IsDriverBusyDuringTripDuration( input.AssignedDriverUserId , trip))
+                {
+                    throw new UserFriendlyException(L("DriverIsAlreadyRented"));
+                }
 
                 long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
                 long? oldAssignedTruckId = trip.AssignedTruckId;
