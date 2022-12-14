@@ -226,7 +226,7 @@ namespace TACHYON.Invoices
         {
             List<Tenant> tenantsList = new List<Tenant>();
             var tenants = _tenant.GetAll()
-                .Where(t => t.IsActive && t.EditionId != 1)
+                .Where(t => t.IsActive && !t.Edition.DisplayName.Equals("Standard"))
                 .ToList();
             //todo fix this please 
             foreach (var tenant in tenants)
