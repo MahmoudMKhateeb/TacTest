@@ -322,7 +322,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
 
   openAttendanceModal(shippingRequest: GetShippingRequestForPriceOfferListDto) {
     this.selectedShippingRequest = shippingRequest;
-    this.attendanceModal.show(null, shippingRequest.id, {
+    this.attendanceModal.show(this.selectedShippingRequest.status === this.shippingRequestStatusEnum.Completed, null, shippingRequest.id, {
       rentalStartDate: shippingRequest?.rentalStartDate,
       rentalEndDate: shippingRequest?.rentalEndDate,
     });

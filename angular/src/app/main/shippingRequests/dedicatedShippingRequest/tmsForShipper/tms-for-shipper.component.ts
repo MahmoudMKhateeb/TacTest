@@ -37,6 +37,7 @@ export class TmsForShipperComponent extends AppComponentBase implements OnInit, 
   @ViewChild('appTruckAndDriverReplacement') appTruckAndDriverReplacement: TruckAndDriverReplacementComponent;
   @ViewChild('card', { static: true }) cardEl: ElementRef;
   @Input('shippingRequestId') shippingRequestId: number;
+  @Input('isRequestStatusCompleted') isRequestStatusCompleted: boolean;
   @Input('rentalRange') rentalRange: { rentalStartDate: moment.Moment; rentalEndDate: moment.Moment } = {
     rentalStartDate: null,
     rentalEndDate: null,
@@ -113,7 +114,7 @@ export class TmsForShipperComponent extends AppComponentBase implements OnInit, 
   }
 
   openFillAttendanceModal(truckId?: number) {
-    this.attendanceModal.show(truckId);
+    this.attendanceModal.show(this.isRequestStatusCompleted, truckId);
   }
 
   openTruckPerformanceModal(truck: any) {

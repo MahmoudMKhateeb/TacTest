@@ -544,6 +544,7 @@
         *ngIf="shippingRequestforView.shippingRequestFlag === 1"
         [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
         [rentalRange]="rentalRange"
+        [isRequestStatusCompleted]="shippingRequestforView?.shippingRequest?.status === 5"
       ></tms-for-shipper>
       <!--  end:Tms for shipper     -->
 

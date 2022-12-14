@@ -82,8 +82,10 @@
                       <a
                         class="dropdown-item"
                         *ngIf="
-                          (!options.data.submitInvoiceNumber && options.data.invoiceAccountType === invoiceAccountType.AccountPayable) ||
-                          (!options.data.invoiceNumber && options.data.invoiceAccountType === invoiceAccountType.AccountReceivable)
+                          ((options.data.submitInvoiceNumber == 0 || options.data.submitInvoiceNumber == 0) &&
+                            options.data.invoiceAccountType === invoiceAccountType.AccountPayable) ||
+                          ((options.data.invoiceNumber == null || options.data.invoiceNumber == undefined) &&
+                            options.data.invoiceAccountType === invoiceAccountType.AccountReceivable)
                         "
                         (click)="dynamicInvoiceOnDemand(options.data)"
                         >{{ l('GenerateInvoice') }}</a
@@ -93,8 +95,10 @@
                       <a
                         class="dropdown-item"
                         *ngIf="
-                          (!options.data.submitInvoiceNumber && options.data.invoiceAccountType === invoiceAccountType.AccountPayable) ||
-                          (!options.data.invoiceNumber && options.data.invoiceAccountType === invoiceAccountType.AccountReceivable)
+                          ((options.data.submitInvoiceNumber == 0 || options.data.submitInvoiceNumber == 0) &&
+                            options.data.invoiceAccountType === invoiceAccountType.AccountPayable) ||
+                          ((options.data.invoiceNumber == null || options.data.invoiceNumber == undefined) &&
+                            options.data.invoiceAccountType === invoiceAccountType.AccountReceivable)
                         "
                         (click)="editRow(options.data)"
                         >{{ l('Edit') }}</a
@@ -104,8 +108,10 @@
                       <a
                         class="dropdown-item"
                         *ngIf="
-                          (options.data.submitInvoiceNumber && options.data.invoiceAccountType === invoiceAccountType.AccountPayable) ||
-                          (options.data.invoiceNumber && options.data.invoiceAccountType === invoiceAccountType.AccountReceivable)
+                          ((options.data.submitInvoiceNumber != 0 || options.data.submitInvoiceNumber != 0) &&
+                            options.data.invoiceAccountType === invoiceAccountType.AccountPayable) ||
+                          ((options.data.invoiceNumber != null || options.data.invoiceNumber != undefined) &&
+                            options.data.invoiceAccountType === invoiceAccountType.AccountReceivable)
                         "
                         (click)="editRow(options.data, true)"
                         >{{ l('View') }}</a
@@ -115,8 +121,10 @@
                       <a
                         class="dropdown-item"
                         *ngIf="
-                          (!options.data.submitInvoiceNumber && options.data.invoiceAccountType === invoiceAccountType.AccountPayable) ||
-                          (!options.data.invoiceNumber && options.data.invoiceAccountType === invoiceAccountType.AccountReceivable)
+                          ((options.data.submitInvoiceNumber == 0 || options.data.submitInvoiceNumber == 0) &&
+                            options.data.invoiceAccountType === invoiceAccountType.AccountPayable) ||
+                          ((options.data.invoiceNumber == null || options.data.invoiceNumber == undefined) &&
+                            options.data.invoiceAccountType === invoiceAccountType.AccountReceivable)
                         "
                         (click)="deleteItem(options.data.id)"
                         >{{ l('Delete') }}</a

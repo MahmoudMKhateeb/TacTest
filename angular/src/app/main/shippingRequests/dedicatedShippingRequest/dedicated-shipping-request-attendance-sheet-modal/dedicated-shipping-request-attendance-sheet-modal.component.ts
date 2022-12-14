@@ -49,6 +49,8 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
   attendanceSchedularResources: AttendanceSchedularResources[] = [];
   dataSourceForTrucks: any = {};
   shippingRequestId: number;
+  canEditTruck: boolean;
+  isRequestStatusCompleted: boolean;
 
   constructor(
     injector: Injector,
@@ -76,22 +78,24 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
     });
   }
 
-  show(truckId?: number, shippingRequestId?: number, rentalRange?: { rentalStartDate: moment.Moment; rentalEndDate: moment.Moment }): void {
-    // this.request = request;
-    // this.rejectInput.id = request.id;
+  show(
+    isRequestStatusCompleted?: boolean,
+    truckId?: number,
+    shippingRequestId?: number,
+    rentalRange?: { rentalStartDate: moment.Moment; rentalEndDate: moment.Moment }
+  ): void {
+    this.isRequestStatusCompleted = isRequestStatusCompleted;
     if (isNotNullOrUndefined(shippingRequestId)) {
       this.shippingRequestId = shippingRequestId;
     }
     if (isNotNullOrUndefined(rentalRange)) {
       this.rentalRange = rentalRange;
-      console.log('this.rentalRange', this.rentalRange);
     }
-    console.log('shippingRequestId', this.shippingRequestId);
-    console.log('rentalRange', this.rentalRange);
     if (isNotNullOrUndefined(truckId)) {
       this.getAllAttendance(truckId);
       this.selectedTruckId = truckId;
       this.filteredTrucks = this.trucks;
+      this.selectTruck(truckId);
     } else {
       this.filteredTrucks = [];
       this.trucks = [];
@@ -102,9 +106,7 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
 
   close(): void {
     this.dataSourceForTrucks = {};
-    // this.rentalRange = { rentalStartDate: null, rentalEndDate: null };
     this.dataSource = [];
-    // this.trucks = [];
     this.filteredTrucks = [];
     this.shippingRequestId = null;
     this.modal.hide();
@@ -134,7 +136,6 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
     this.dataSourceDevExtreme = {};
     this.dataSourceDevExtreme.store = new CustomStore({
       load(loadOptions: LoadOptions) {
-        console.log(JSON.stringify(loadOptions));
         return self._truckAttendancesService
           .getAll(truckId, JSON.stringify(loadOptions))
           .toPromise()
@@ -148,15 +149,7 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
                 endDate: item.attendanceDate,
               });
             });
-            console.log('response', response);
-            console.log('self.dataSource', self.dataSource);
             self.loading = false;
-            // return {
-            //     data: response.data,
-            //     totalCount: response.totalCount,
-            //     summary: response.summary,
-            //     groupCount: response.groupCount,
-            // };
           })
           .catch((error) => {
             self.loading = false;
@@ -166,14 +159,18 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
       },
     });
     this.dataSourceDevExtreme.store.load();
-    // this.truckAttendanceSubscription = this._truckAttendancesService.getAll(truckId, '').subscribe((response) => {
-    //     console.log('response', response);
-    //     this.dataSource = response.data;
-    // });
   }
 
   onAppointmentFormOpening(e: any): void {
     if (this.isCarrier) {
+      e.cancel = true;
+      return;
+    }
+    if (!this.canEditTruck) {
+      e.cancel = true;
+      return;
+    }
+    if (this.isShipper && this.isRequestStatusCompleted) {
       e.cancel = true;
       return;
     }
@@ -183,14 +180,9 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
       this.notify.error(this.l('youCanNotAddOutsideRentalRange'));
       return;
     }
-    console.log('e', e);
-    console.log('this.scheduler', this.scheduler);
     let appointment;
     if (this.scheduler.selectedCellData.length > 0) {
-      console.log('this.scheduler.selectedCellData[0]', this.scheduler.selectedCellData[0]);
-      console.log('this.scheduler.selectedCellData[0].startDate.toISOString()', this.scheduler.selectedCellData[0].startDate.toISOString());
       appointment = this.dataSource.find((item) => {
-        console.log('item', item);
         const selectedStartDate = new Date(this.scheduler.selectedCellData[0].startDate);
         const selectedStartDateMoment = moment({
           y: selectedStartDate.getFullYear(),
@@ -201,23 +193,13 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
         const isSame = moment(itemStartDate.format('yyyy-MM-DD')).isSame(moment(selectedStartDateMoment.format('yyyy-MM-DD')));
         return isSame;
       });
-      console.log('appointment', appointment);
     }
     this.editAppointmentData = isNotNullOrUndefined(appointment) ? { ...appointment } : { ...e.appointmentData };
-    // this.attendanceDateFrom = isNotNullOrUndefined(this.editAppointmentData) && isNotNullOrUndefined(this.editAppointmentData.attendanceDate) ? this.editAppointmentData.attendanceDate.toDate() : null;
-    // this.attendanceDateTo = isNotNullOrUndefined(this.editAppointmentData) && isNotNullOrUndefined(this.editAppointmentData.attendanceDate) ? this.editAppointmentData.attendanceDate.toDate() : null;
-    // if (this.editAppointmentData.id) {
-    // }
     this.isCustomPopupVisible = true;
-    console.log('this.editAppointmentData', this.editAppointmentData);
   }
 
   onHiding(e: any): void {
     this.editAppointmentData = new CreateOrEditTruckAttendanceDto();
-    // this.editAppointmentData.attendanceDate = moment(this.attendanceDateFrom);
-    // this.editAppointmentData.attendanceDate = moment(this.attendanceDateFrom);
-    // this.attendanceDateFrom = null;
-    // this.attendanceDateTo = null;
     this.isCustomPopupVisible = false;
   }
 
@@ -230,22 +212,14 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
   }
 
   createOrEditAttendance() {
-    console.log('this.editAppointmentData', this.editAppointmentData);
     const startDate = new Date(this.editAppointmentData.startDate);
     const endDate = new Date(this.editAppointmentData.endDate);
     this.editAppointmentData.startDate = moment.utc({ y: startDate.getFullYear(), M: startDate.getMonth(), d: startDate.getDate() });
     this.editAppointmentData.endDate = moment.utc({ y: endDate.getFullYear(), M: endDate.getMonth(), d: endDate.getDate() });
     const payload = new CreateOrEditTruckAttendanceDto(this.editAppointmentData);
-    console.log('payload', payload);
     if (!!this.editAppointmentData?.id?.toString()) {
       payload.id = this.editAppointmentData.id;
-      // payload.startDate = null;
-      // payload.endDate = null;
     }
-    // else {
-    //   // payload.startDate = moment(new Date(this.editAppointmentData.startDate).getTime() - new Date().getTimezoneOffset() * 60 * 1000);
-    //   // payload.endDate = moment(this.editAppointmentData.endDate);
-    // }
     payload.attendaceStatus = this.editAppointmentData.statusId;
     payload.dedicatedShippingRequestTruckId = this.selectedTruckId;
     this.loading = true;
@@ -261,6 +235,8 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
 
   selectTruck(id: number) {
     this.selectedTruckId = id;
+    const truck = this.trucks.find((truck) => truck.id === this.selectedTruckId);
+    this.canEditTruck = isNotNullOrUndefined(truck) && !truck.submitInvoiceId && !truck.invoiceId;
     this.getAllAttendance(id);
   }
 
@@ -281,7 +257,7 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
   }
 
   isDisabledDateCell(date: Date) {
-    const localeDateMoment = moment({ y: date.getFullYear(), M: date.getMonth(), d: date.getDate() }); // moment.utc(date);
+    const localeDateMoment = moment({ y: date.getFullYear(), M: date.getMonth(), d: date.getDate() });
     if (
       !isNotNullOrUndefined(this.rentalRange) ||
       !isNotNullOrUndefined(this.rentalRange.rentalStartDate) ||
@@ -293,10 +269,7 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
     const startDateMoment = moment({ y: startDate.getFullYear(), M: startDate.getMonth(), d: startDate.getDate() });
     const endDate = new Date(this.rentalRange.rentalEndDate.toISOString());
     const endDateMoment = moment({ y: endDate.getFullYear(), M: endDate.getMonth(), d: endDate.getDate() });
-    // const startDate = this.rentalRange?.rentalStartDate.toISOString().split('T')[0];
-    // const endDate = this.rentalRange?.rentalEndDate.toISOString().split('T')[0];
     return localeDateMoment.clone().isBefore(startDateMoment) || localeDateMoment.clone().isAfter(endDateMoment);
-    // return localeDateMoment.clone().add('d', 1).isBefore(moment(startDate)) || localeDateMoment.clone().isAfter(moment(endDate));
   }
 
   isValidAppointment(component: any, appointmentData: any) {
@@ -329,8 +302,7 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
             self.trucks = response.data;
             self.filteredTrucks = self.trucks;
             if (response.data.length > 0) {
-              self.selectedTruckId = self.trucks[0].id;
-              self.getAllAttendance(self.selectedTruckId);
+              self.selectTruck(self.trucks[0].id);
             }
             return {
               data: response.data,
@@ -353,7 +325,6 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
   }
 
   deleteAttendance($event, id: number) {
-    console.log('$event', $event);
     this.scheduler.instance.hideAppointmentTooltip();
     $event.stopPropagation();
     $event.stopImmediatePropagation();
