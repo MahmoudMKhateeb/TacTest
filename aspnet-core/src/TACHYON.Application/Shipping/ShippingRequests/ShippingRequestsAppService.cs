@@ -760,7 +760,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 //    await FeatureChecker.IsEnabledAsync(shippingRequest.TenantId, AppFeatures.AddTripsByTachyonDeal);
 
 
-                output.ShippingRequest.CanAddTrip = await CanCurrentUserAddTrip(shippingRequest) && (!await IsTachyonDealer() && shippingRequest.Status != ShippingRequestStatus.Completed);
+                output.ShippingRequest.CanAddTrip = await CanCurrentUserAddTrip(shippingRequest) ;
                 output.ShippingRequestBidDtoList = shippingRequestBidDtoList;
                 output.ShippingRequestVasDtoList = shippingRequestVasList;
                 output.ShipperRating = shippingRequest.Tenant.Rate;
@@ -875,6 +875,8 @@ namespace TACHYON.Shipping.ShippingRequests
             //Shipper
             if (request.TenantId == AbpSession.TenantId && await IsEnabledAsync(AppFeatures.Shipper))
             {
+                if (request.ShippingRequestFlag == ShippingRequestFlag.Dedicated && request.Status == ShippingRequestStatus.Completed)
+                    return false;
                 return true;
             }
 
