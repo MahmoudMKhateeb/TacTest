@@ -1,6 +1,7 @@
 using Abp.BackgroundJobs;
 using Abp.Domain.Uow;
 using Abp.Net.Mail;
+using IdentityServer4.Extensions;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 
@@ -28,7 +29,10 @@ namespace TACHYON.PricePackages.PricePackageAppendices.Jobs
 
             var appendixFile = await _appendixManager.GenerateAppendixFile(args.AppendixId);
 
-            await _userEmailer.SendPricePackageAppendixEmail(args.FileReceiverEmailAddress, appendixFile);
+            if (!string.IsNullOrEmpty(args.FileReceiverEmailAddress)) 
+                await _userEmailer.SendPricePackageAppendixEmail(args.FileReceiverEmailAddress, appendixFile);
+
+            await uow.CompleteAsync();
         }
     }
 }

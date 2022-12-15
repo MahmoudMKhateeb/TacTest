@@ -1,5 +1,8 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Dependency;
+using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +15,7 @@ namespace TACHYON.PricePackages.TmsPricePackages
 {
     public class TmsPricePackageManager : TACHYONDomainServiceBase, ITmsPricePackageManager
     {
+        private readonly IConfigurationProvider _configurationProvider;
         private readonly IRepository<TmsPricePackage> _tmsPricePackageRepository;
         private readonly IRepository<NormalPricePackage> _normalPricePackage;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
@@ -24,6 +28,7 @@ namespace TACHYON.PricePackages.TmsPricePackages
             _tmsPricePackageRepository = tmsPricePackageRepository;
             _shippingRequestRepository = shippingRequestRepository;
             _normalPricePackage = normalPricePackage;
+            _configurationProvider = IocManager.Instance.Resolve<IMapper>()?.ConfigurationProvider;
         }
 
         
@@ -35,16 +40,16 @@ namespace TACHYON.PricePackages.TmsPricePackages
                 .Where(x => x.DestinationTenantId == carrierId)
                 .WhereIf(appendixId.HasValue,
                     x => (!x.AppendixId.HasValue && !x.ProposalId.HasValue) || x.AppendixId == appendixId)
-                .ToListAsync();
+                .ProjectTo<PricePackageSelectItemDto>(_configurationProvider).ToListAsync();
             
             var normalPricePackages = await _normalPricePackage.GetAll().AsNoTracking()
                 .Where(x => x.TenantId == carrierId)
-                .ToListAsync();
+                .ProjectTo<PricePackageSelectItemDto>(_configurationProvider).ToListAsync();
             
             
             var result = new List<PricePackageSelectItemDto>();
-            result.AddRange(ObjectMapper.Map<List<PricePackageSelectItemDto>>(tmsPricePackages));
-            result.AddRange(ObjectMapper.Map<List<PricePackageSelectItemDto>>(normalPricePackages));
+            result.AddRange(tmsPricePackages);
+            result.AddRange(normalPricePackages);
             
             return result;
         }

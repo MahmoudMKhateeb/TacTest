@@ -64,7 +64,7 @@ namespace TACHYON.PricePackages
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
         {
-            DisableTenancyFilters();
+            DisableTenancyFilters(); 
             var isTmsOrHost = !AbpSession.TenantId.HasValue || await IsTachyonDealer();
 
             var pricePackages = _tmsPricePackageRepository.GetAll().AsNoTracking()
