@@ -642,13 +642,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L(String.Format("TrucksAndDriversMustBe {0}", shippingRequest.NumberOfTrucks)));
             }
 
-            var RentedTruck =await IsAnyTruckBusyDuringRentalDuration(input.TrucksList.Select(x=>x.Id).ToList(), shippingRequest);
+            var RentedTruck =await _shippingRequestManager.IsAnyTruckBusyDuringRentalDuration(input.TrucksList.Select(x=>x.Id).ToList(), shippingRequest);
             if (RentedTruck !=null)
             {
                 throw new UserFriendlyException(L(String.Format("The truck {0} is rented", input.TrucksList.Where(x=>x.Id == RentedTruck).First().TruckName)));
             }
 
-            var RentedDriver =await IsAnyDriverBusyDuringRentalDuration(input.DriversList.Select(x=>x.Id).ToList(), shippingRequest);
+            var RentedDriver =await _shippingRequestManager.IsAnyDriverBusyDuringRentalDuration(input.DriversList.Select(x=>x.Id).ToList(), shippingRequest);
             if (RentedDriver != null)
             {
                 throw new UserFriendlyException(L(String.Format("The driver {0} is rented", input.DriversList.Where(x => x.Id == RentedDriver).First().DriverName)));
@@ -664,40 +664,20 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L(String.Format("TrucksAndDriversMustBe {0}", shippingRequest.NumberOfTrucks)));
             }
 
-            var RentedTruck = await IsAnyTruckBusyDuringRentalDuration(input.DedicatedShippingRequestTrucksAndDriversDtos.Select(x=>x.TruckId).ToList(), shippingRequest);
+            var RentedTruck = await _shippingRequestManager.IsAnyTruckBusyDuringRentalDuration(input.DedicatedShippingRequestTrucksAndDriversDtos.Select(x=>x.TruckId).ToList(), shippingRequest);
             if (RentedTruck != null)
             {
                 throw new UserFriendlyException(L(String.Format("The truck {0} is rented", input.DedicatedShippingRequestTrucksAndDriversDtos.Where(x => x.TruckId == RentedTruck).First().TruckName)));
             }
 
-            var RentedDriver = await IsAnyDriverBusyDuringRentalDuration(input.DedicatedShippingRequestTrucksAndDriversDtos.Select(x=>x.DriverId).ToList(), shippingRequest);
+            var RentedDriver = await _shippingRequestManager.IsAnyDriverBusyDuringRentalDuration(input.DedicatedShippingRequestTrucksAndDriversDtos.Select(x=>x.DriverId).ToList(), shippingRequest);
             if (RentedDriver != null)
             {
                 throw new UserFriendlyException(L(String.Format("The driver {0} is rented", input.DedicatedShippingRequestTrucksAndDriversDtos.Where(x => x.DriverId == RentedDriver).First().DriverName)));
             }
         }
 
-        private async Task<long?> IsAnyTruckBusyDuringRentalDuration(List<long> truckDtos, ShippingRequest shippingRequest)
-        {
-            var item = await _dedicatedShippingRequestTruckRepository.GetAll()
-                .Where(x => truckDtos.Contains(x.TruckId) && x.ShippingRequestId != shippingRequest.Id &&
-                shippingRequest.RentalStartDate.Value.Date <= x.ShippingRequest.RentalEndDate.Value.Date &&
-                x.ShippingRequest.RentalStartDate.Value.Date <= shippingRequest.RentalEndDate.Value.Date)
-                .FirstOrDefaultAsync();
-            if (item != null) return item.TruckId;
-            return null;
-        }
-
-        private async Task<long?> IsAnyDriverBusyDuringRentalDuration(List<long> driverDtos, ShippingRequest shippingRequest)
-        {
-            var item = await _dedicatedShippingRequestDriverRepository.GetAll()
-                .Where(x => driverDtos.Contains(x.DriverUserId) && x.ShippingRequestId != shippingRequest.Id &&
-                shippingRequest.RentalStartDate.Value.Date <= x.ShippingRequest.RentalEndDate.Value.Date &&
-                x.ShippingRequest.RentalStartDate.Value.Date <= shippingRequest.RentalEndDate.Value.Date)
-                .FirstOrDefaultAsync();
-            if(item != null) return item.DriverUserId;
-            return null;
-        }
+       
 
         private async Task<ShippingRequest> GetDraftedDedicatedShippingRequestForStep1(long id)
         {
