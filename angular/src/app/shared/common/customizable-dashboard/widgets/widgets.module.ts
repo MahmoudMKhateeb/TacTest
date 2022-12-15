@@ -67,6 +67,7 @@ import { NewOffersWidgetComponent } from '@app/shared/common/customizable-dashbo
 import { ShipperDashboardComponent } from '@app/shared/common/customizable-dashboard/shipper-dashboard/shipper-dashboard.component';
 import { CarrierDashboardComponent } from '@app/shared/common/customizable-dashboard/carrier-dashboard/carrier-dashboard.component';
 import { NewDirectRequestsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/new-direct-requests-widget/new-direct-requests-widget.component';
+import { TabsModule } from '@node_modules/ngx-bootstrap/tabs';
 
 @NgModule({
   declarations: [
@@ -136,6 +137,7 @@ import { NewDirectRequestsWidgetComponent } from '@app/shared/common/customizabl
     BsDatepickerModule,
     NgbRatingModule,
     AngularFireModule.initializeApp(environment.firebase),
+    TabsModule.forRoot(),
     AngularFirestoreModule,
     RouterModule,
     DxSelectBoxModule,

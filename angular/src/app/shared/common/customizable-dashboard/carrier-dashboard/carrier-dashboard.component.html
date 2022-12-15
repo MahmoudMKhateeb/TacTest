@@ -1,40 +1,47 @@
-<div class="row gutter-b">
-  <div class="col-2">
-    <app-counters-widget></app-counters-widget>
-  </div>
-  <div class="col-7">
-    <!--        <app-accepted-vs-rejeced-requests></app-accepted-vs-rejeced-requests>-->
-    <div class="card card-custom gutter-b card-stretch w-100 h-100">
-      <div class="card-body p-0 d-flex justify-content-between" style="position: relative">
-        <app-drivers-activity class="w-50"></app-drivers-activity>
-        <app-tucks-activity class="w-50"></app-tucks-activity>
+<tabset #dashboardTabs [justified]="true">
+  <tab heading="General">
+    <div class="row pt-4 gutter-b">
+      <div class="col-2">
+        <app-counters-widget></app-counters-widget>
+      </div>
+      <div class="col-7">
+        <!--        <app-accepted-vs-rejeced-requests></app-accepted-vs-rejeced-requests>-->
+        <div class="card card-custom gutter-b card-stretch w-100 h-100">
+          <div class="card-body p-0 d-flex justify-content-between" style="position: relative">
+            <app-drivers-activity class="w-50"></app-drivers-activity>
+            <app-tucks-activity class="w-50"></app-tucks-activity>
+          </div>
+        </div>
+      </div>
+      <div class="col-3">
+        <app-upcoming-trips-widgets></app-upcoming-trips-widgets>
       </div>
     </div>
-  </div>
-  <div class="col-3">
-    <app-upcoming-trips-widgets></app-upcoming-trips-widgets>
-  </div>
-</div>
-<div class="row gutter-b">
-  <div class="col-5">
-    <app-invoices-vs-paid-invoices></app-invoices-vs-paid-invoices>
-  </div>
-  <div class="col-4">
-    <app-most-worked-with-shippers></app-most-worked-with-shippers>
-  </div>
-  <div class="col-3 d-flex flex-column">
-    <app-needs-action-widget class="gutter-b" style="flex-grow: 2"></app-needs-action-widget>
-    <app-new-direct-requests-widget></app-new-direct-requests-widget>
-  </div>
-</div>
-<div class="row gutter-b">
-  <div class="col-2">
-    <app-most-usedpp></app-most-usedpp>
-  </div>
-  <div class="col-7">
-    <app-carrier-accepted-vs-rejectd-requests></app-carrier-accepted-vs-rejectd-requests>
-  </div>
-  <div class="col-3">
-    <app-most-used-vases></app-most-used-vases>
-  </div>
-</div>
+    <div class="row gutter-b">
+      <div class="col-5">
+        <app-invoices-vs-paid-invoices></app-invoices-vs-paid-invoices>
+      </div>
+      <div class="col-4">
+        <app-most-worked-with-shippers></app-most-worked-with-shippers>
+      </div>
+      <div class="col-3 d-flex flex-column">
+        <app-needs-action-widget class="gutter-b" style="flex-grow: 2"></app-needs-action-widget>
+        <app-new-direct-requests-widget></app-new-direct-requests-widget>
+      </div>
+    </div>
+    <div class="row gutter-b">
+      <div class="col-2">
+        <app-most-usedpp></app-most-usedpp>
+      </div>
+      <div class="col-7">
+        <app-carrier-accepted-vs-rejectd-requests></app-carrier-accepted-vs-rejectd-requests>
+      </div>
+      <div class="col-3">
+        <app-most-used-vases></app-most-used-vases>
+      </div>
+    </div>
+  </tab>
+  <tab heading="Tracking">
+    <app-tracking-map></app-tracking-map>
+  </tab>
+</tabset>
