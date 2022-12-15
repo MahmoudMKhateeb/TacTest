@@ -134,7 +134,7 @@
         public const string ProposalTemplateFullNamespace =
             "TACHYON.Net.Emailing.PricePackageTemplates.TachyonProposal.docx";        
         public const string AppendixTemplateFullNamespace =
-            "TACHYON.Net.Emailing.PricePackageTemplates.AppendixProposal.docx";
+            "TACHYON.Net.Emailing.PricePackageTemplates.TachyonAppendix.docx";
 
         public const string ProposalTemplateCompanyName = "$$CompanyName$$";
         public const string ProposalTemplateDate = "$$Date$$";

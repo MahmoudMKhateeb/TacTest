@@ -186,6 +186,8 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             var appendix = await _appendixRepository.GetAll()
                 .Include(x => x.Proposal)
                 .ThenInclude(x => x.TmsPricePackages)
+                .Include(x=> x.NormalPricePackages)
+                .Include(x=> x.TmsPricePackages)
                 .AsNoTracking().FirstOrDefaultAsync(x => x.Id == appendixId);
 
             if (appendix is null) throw new EntityNotFoundException(L("AppendixNotFound"));

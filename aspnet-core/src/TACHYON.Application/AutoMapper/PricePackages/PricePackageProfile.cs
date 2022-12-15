@@ -82,15 +82,54 @@ namespace TACHYON.AutoMapper.PricePackages
                 .ForMember(x => x.StatusTitle, x => x.MapFrom(i => Enum.GetName(typeof(ProposalStatus), i.Status)))
                 .ForMember(x => x.Shipper, x => x.MapFrom(i => i.Shipper.companyName));
             CreateMap<TmsPricePackage, PricePackageSelectItemDto>()
-                .ForMember(x => x.OriginCity, x => x.MapFrom(i => i.OriginCity.DisplayName))
-                .ForMember(x => x.DestinationCity, x => x.MapFrom(i => i.DestinationCity.DisplayName))
-                .ForMember(x => x.TruckType, x => x.MapFrom(i => i.TrucksTypeFk.Key));
+                .ForMember(x => x.TruckType,
+                    x => x.MapFrom(i =>
+                        i.TrucksTypeFk.Translations.FirstOrDefault(t =>
+                            t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                            ? i.TrucksTypeFk.Translations
+                                .FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName
+                            : i.TrucksTypeFk.DisplayName))
+                .ForMember(x => x.OriginCity,
+                    x => x.MapFrom(i =>
+                        i.OriginCity.Translations.FirstOrDefault(t =>
+                            t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                            ? i.OriginCity.Translations
+                                .FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                                .TranslatedDisplayName
+                            : i.OriginCity.DisplayName))
+                .ForMember(x => x.DestinationCity,
+                    x => x.MapFrom(i =>
+                        i.DestinationCity.Translations.FirstOrDefault(t =>
+                            t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                            ? i.DestinationCity.Translations
+                                .FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                                .TranslatedDisplayName
+                            : i.DestinationCity.DisplayName));
            
             CreateMap<NormalPricePackage, PricePackageSelectItemDto>()
-                .ForMember(x => x.OriginCity, x => x.MapFrom(i => i.OriginCityFK.DisplayName))
-                .ForMember(x => x.DestinationCity, x => x.MapFrom(i => i.DestinationCityFK.DisplayName))
-                .ForMember(x => x.TotalPrice, x => x.MapFrom(i => i.TachyonMSRequestPrice))
-                .ForMember(x => x.TruckType, x => x.MapFrom(i => i.TrucksTypeFk.Key));
+                .ForMember(x => x.TruckType,
+                    x => x.MapFrom(i =>
+                        i.TrucksTypeFk.Translations.FirstOrDefault(t =>
+                            t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                            ? i.TrucksTypeFk.Translations
+                                .FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName
+                            : i.TrucksTypeFk.DisplayName))
+                .ForMember(x => x.OriginCity,
+                    x => x.MapFrom(i =>
+                        i.OriginCityFK.Translations.FirstOrDefault(t =>
+                            t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                            ? i.OriginCityFK.Translations
+                                .FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                                .TranslatedDisplayName
+                            : i.OriginCityFK.DisplayName))
+                .ForMember(x => x.DestinationCity,
+                    x => x.MapFrom(i =>
+                        i.DestinationCityFK.Translations.FirstOrDefault(t =>
+                            t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
+                            ? i.DestinationCityFK.Translations
+                                .FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                                .TranslatedDisplayName
+                            : i.DestinationCityFK.DisplayName));
 
             CreateMap<PricePackageAppendix, AppendixListDto>()
                 .ForMember(x => x.CompanyName,
