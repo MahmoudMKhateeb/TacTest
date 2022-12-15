@@ -8,6 +8,7 @@ using Abp.Quartz;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using NUglify.Helpers;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -781,6 +782,9 @@ namespace TACHYON.Invoices
             //await _invoiceRepository.InsertAsync(invoice);
             invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
             dedicatedDynamicInvoice.InvoiceId = invoice.Id;
+            //dedicatedDynamicInvoice.ShippingRequest.IsShipperHaveInvoice = true;
+            dedicatedDynamicInvoice.DedicatedDynamicInvoiceItems.ForEach(x =>
+            x.DedicatedShippingRequestTruck.InvoiceId = invoice.Id);
         }
 
         public async Task GenerateSubmitDynamicInvoice(Tenant tenant, DynamicInvoice dynamicInvoice)
@@ -846,6 +850,9 @@ namespace TACHYON.Invoices
             };
             submitInvoice.Id = await _submitInvoiceRepository.InsertAndGetIdAsync(submitInvoice);
             dedicatedDynamicInvoice.SubmitInvoiceId = submitInvoice.Id;
+            // dedicatedDynamicInvoice.ShippingRequest.IsCarrierHaveInvoice = true;
+            dedicatedDynamicInvoice.DedicatedDynamicInvoiceItems.ForEach(x =>
+             x.DedicatedShippingRequestTruck.SubmitInvoiceId = submitInvoice.Id);
 
         }
 

@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services.Dto;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using TACHYON.Shipping.Dedicated;
 
@@ -24,6 +25,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos.Dedicated
         public int ReplacementIntervalInDays { get; set; }
         public long? OriginalDedicatedTruckId { get; set; }
         public string OriginalDedicatedTruckName { get; set; }
+        public long? InvoiceId { get; set; }
+        public long? SubmitInvoiceId { get; set; }
 
     }
 }

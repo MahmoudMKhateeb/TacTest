@@ -760,7 +760,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 //    await FeatureChecker.IsEnabledAsync(shippingRequest.TenantId, AppFeatures.AddTripsByTachyonDeal);
 
 
-                output.ShippingRequest.CanAddTrip = await CanCurrentUserAddTrip(shippingRequest);
+                output.ShippingRequest.CanAddTrip = await CanCurrentUserAddTrip(shippingRequest) && (!await IsTachyonDealer() && shippingRequest.Status != ShippingRequestStatus.Completed);
                 output.ShippingRequestBidDtoList = shippingRequestBidDtoList;
                 output.ShippingRequestVasDtoList = shippingRequestVasList;
                 output.ShipperRating = shippingRequest.Tenant.Rate;

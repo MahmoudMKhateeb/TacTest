@@ -4,20 +4,21 @@ import {
   CreateOrEditDocumentFileDto,
   CreateOrEditShippingRequestTripDto,
   CreateOrEditShippingRequestTripVasDto,
+  DedicatedShippingRequestsServiceProxy,
   EntityTemplateServiceProxy,
+  FileDto,
+  GetAllDedicatedDriversOrTrucksForDropDownDto,
+  GetShippingRequestForViewOutput,
   GetShippingRequestVasForViewDto,
   PickingType,
   SavedEntityType,
   SelectItemDto,
   ShippingRequestDto,
+  ShippingRequestFlag,
+  ShippingRequestRouteType,
   ShippingRequestsTripServiceProxy,
   UpdateDocumentFileInput,
   WaybillsServiceProxy,
-  FileDto,
-  ShippingRequestRouteType,
-  GetShippingRequestForViewOutput,
-  DedicatedShippingRequestsServiceProxy,
-  GetAllDedicatedDriversOrTrucksForDropDownDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -36,6 +37,7 @@ import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepic
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { Subscription } from 'rxjs';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+
 @Component({
   selector: 'AddNewTripModal',
   styleUrls: ['./createOrEditTrip.component.css'],
@@ -251,6 +253,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   setStartTripDate(startTripDate) {
+    if (this.isTachyonDealer && this.shippingRequestForView.shippingRequestFlag === ShippingRequestFlag.Dedicated) {
+      startTripDate = this.shippingRequestForView.rentalStartDate;
+    }
     const todayGregorian = moment(startTripDate).locale('en').format('D/M/YYYY');
     this.minTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(todayGregorian, 'D/M/YYYY');
     this.minTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(todayGregorian, 'D/M/YYYY');

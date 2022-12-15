@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 using TACHYON.DedicatedInvoices;
+using TACHYON.Invoices;
+using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trucks;
 
@@ -43,5 +45,11 @@ namespace TACHYON.Shipping.Dedicated
         [ForeignKey("OriginalDedicatedTruckId")]
         public DedicatedShippingRequestTruck OriginalTruck { get; set; }
         #endregion
+        public long? InvoiceId { get; set; }
+        [ForeignKey("InvoiceId")]
+        public Invoice Invoice { get; set; }
+        public long? SubmitInvoiceId { get; set; }
+        [ForeignKey("SubmitInvoiceId")]
+        public SubmitInvoice SubmitInvoice { get; set; }
     }
 }
