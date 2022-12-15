@@ -480,7 +480,8 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             DisableTenancyFilters();
             var item = await _dedicatedShippingRequestTrucksRepository.GetAll()
-                .Where(x => x.TruckId == truckId && x.ShippingRequestId != trip.ShippingRequestId && x.ReplacementFlag == ReplacementFlag.Original &&
+                .Where(x => x.TruckId == truckId && x.ShippingRequestId != trip.ShippingRequestId && x.ReplacementFlag == ReplacementFlag.Original && 
+                            x.ShippingRequest.EndTripDate.HasValue && x.ShippingRequest.RentalStartDate.HasValue && x.ShippingRequest.RentalEndDate.HasValue && trip.EndTripDate.HasValue &&
                 trip.StartTripDate.Date <= x.ShippingRequest.RentalEndDate.Value.Date &&
                 x.ShippingRequest.RentalStartDate.Value.Date <= trip.EndTripDate.Value.Date)
                 .FirstOrDefaultAsync();
@@ -493,6 +494,7 @@ namespace TACHYON.Shipping.ShippingRequests
             DisableTenancyFilters();
             var item = await _dedicatedShippingRequestDriverRepository.GetAll()
                 .Where(x => x.DriverUserId == driverId && x.ShippingRequestId != trip.ShippingRequestId && x.ReplacementFlag == ReplacementFlag.Original &&
+                            x.ShippingRequest.EndTripDate.HasValue && x.ShippingRequest.RentalStartDate.HasValue && x.ShippingRequest.RentalEndDate.HasValue && trip.EndTripDate.HasValue &&
                 trip.StartTripDate.Date <= x.ShippingRequest.RentalEndDate.Value.Date &&
                 x.ShippingRequest.RentalStartDate.Value.Date <= trip.EndTripDate.Value.Date)
                 .FirstOrDefaultAsync();
