@@ -1,8 +1,8 @@
 <div>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'TmsPricePackages' | localize">
-      <div role="actions">
-        <button *ngIf="isGranted('Pages.TmsPricePackages.Create')" (click)="TmsPricePackageModal.show()" class="btn btn-primary"><i class="fa fa-plus"></i> {{ l('CreateNormalPricePackage') }}</button>
+      <div role="actions" *ngIf="isTachyonDealerOrHost">
+        <button (click)="TmsPricePackageModal.show()" class="btn btn-primary"><i class="fa fa-plus"></i> {{ l('CreateNormalPricePackage') }}</button>
       </div>
     </sub-header>
 
