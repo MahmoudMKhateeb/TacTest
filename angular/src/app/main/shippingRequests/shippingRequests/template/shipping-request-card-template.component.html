@@ -568,7 +568,10 @@
                 </a>
                 <a
                   *ngIf="
-                  item.canAssignDedicatedDriversAndTrucks && !Channel && !item.isDriversAndTrucksAssigned && item.status !== shippingRequestStatusEnum.Expired
+                    item.canAssignDedicatedDriversAndTrucks &&
+                    !Channel &&
+                    !item.isDriversAndTrucksAssigned &&
+                    item.status !== shippingRequestStatusEnum.Expired
                   "
                   href="javascript:void(0)"
                   (click)="assignTrucksAndDrivers(item)"
@@ -620,7 +623,7 @@
                   *ngIf="
                     (!Channel && (feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)) ||
                     ((Channel == PriceOfferChannelEnum.MarketPlace || Channel == PriceOfferChannelEnum.DirectRequest) &&
-                      (feature.isEnabled('App.Carrier') || feature.isEnabled('App.CarrierAsASaas')))
+                      (feature.isEnabled('App.Carrier') || feature.isEnabled('App.CarrierClients') || feature.isEnabled('App.CarrierAsASaas')))
                   "
                 >
                   {{ l('More') }}
