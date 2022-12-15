@@ -25,6 +25,7 @@ using TACHYON.Invoices.Balances;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.PriceOffers.Dto;
+using TACHYON.PricePackages.TmsPricePackageOffers;
 using TACHYON.PricePackages.TmsPricePackages;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
@@ -45,8 +46,9 @@ namespace TACHYON.PriceOffers
         private readonly TenantManager _tenantManager;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
         private readonly ITmsPricePackageManager _tmsPricePackageManager;
+        private readonly IRepository<TmsPricePackageOffer,long> _tmsPricePackageOfferRepository;
 
-        public PriceOfferManager(IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IRepository<ShippingRequest, long> shippingRequestsRepository, IAbpSession abpSession, BalanceManager balanceManager, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, IRepository<PriceOffer, long> priceOfferRepository, TenantManager tenantManager, IEntityChangeSetReasonProvider reasonProvider, ITmsPricePackageManager tmsPricePackageManager)
+        public PriceOfferManager(IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IRepository<ShippingRequest, long> shippingRequestsRepository, IAbpSession abpSession, BalanceManager balanceManager, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, IRepository<PriceOffer, long> priceOfferRepository, TenantManager tenantManager, IEntityChangeSetReasonProvider reasonProvider, ITmsPricePackageManager tmsPricePackageManager, IRepository<TmsPricePackageOffer, long> tmsPricePackageOfferRepository)
         {
             _appNotifier = appNotifier;
             _settingManager = settingManager;
@@ -59,6 +61,7 @@ namespace TACHYON.PriceOffers
             _tenantManager = tenantManager;
             _reasonProvider = reasonProvider;
             _tmsPricePackageManager = tmsPricePackageManager;
+            _tmsPricePackageOfferRepository = tmsPricePackageOfferRepository;
         }
 
         /// <summary>
@@ -195,11 +198,13 @@ namespace TACHYON.PriceOffers
             return await _AcceptOffer(offer);
         }
 
-        private async Task<PriceOfferStatus> _AcceptOffer(PriceOffer offer)
+        private async Task<PriceOfferStatus> _AcceptOffer(PriceOffer offer, bool isPricePackageOffer = false)
         {
             _reasonProvider.Use(nameof(AcceptShippingRequestPriceOfferTransaction));
 
-            await CheckIfThereOfferAcceptedBefore(offer.ShippingRequestId);
+            if (!isPricePackageOffer) 
+                await CheckIfThereOfferAcceptedBefore(offer.ShippingRequestId);
+            
             if (!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
             {
                 await TachyonAcceptOffer(offer);
@@ -290,12 +295,17 @@ namespace TACHYON.PriceOffers
             DisableTenancyFilters();
             var offer = await GetOffer(id);
 
-            var canAcceptOrRejectOffer = await canAcceptOrRejectOfferOnBehalf(offer);
-            if (!canAcceptOrRejectOffer) throw new UserFriendlyException(L("YouCanNotAcceptTheOffer"));
+            bool isPricePackageOffer = await _tmsPricePackageOfferRepository.GetAll().AnyAsync(x => x.PriceOfferId == offer.Id);
+            if (!isPricePackageOffer)
+            {
+                var canAcceptOrRejectOffer = await canAcceptOrRejectOfferOnBehalf(offer);
+                if (!canAcceptOrRejectOffer) throw new UserFriendlyException(L("YouCanNotAcceptTheOffer"));
+            }
+
             var userId = _abpSession.UserId;
             using (_abpSession.Use(offer.ShippingRequestFk.TenantId, userId))
             {
-                return await _AcceptOffer(offer);
+                return await _AcceptOffer(offer,isPricePackageOffer);
             }
 
 

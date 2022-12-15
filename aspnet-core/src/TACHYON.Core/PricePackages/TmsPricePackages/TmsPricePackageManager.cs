@@ -35,32 +35,18 @@ namespace TACHYON.PricePackages.TmsPricePackages
                 .Where(x => x.DestinationTenantId == carrierId)
                 .WhereIf(appendixId.HasValue,
                     x => (!x.AppendixId.HasValue && !x.ProposalId.HasValue) || x.AppendixId == appendixId)
-                .Select(x => new PricePackageSelectItemDto()
-                {
-                    DestinationCity = x.DestinationCity.DisplayName,
-                    OriginCity = x.OriginCity.DisplayName,
-                    DisplayName = x.DisplayName,
-                    Id = x.Id,
-                    TotalPrice = x.TotalPrice,
-                    TruckType = x.TrucksTypeFk.Key,
-                    IsTmsPricePackage = true
-                }).ToListAsync();
+                .ToListAsync();
             
             var normalPricePackages = await _normalPricePackage.GetAll().AsNoTracking()
                 .Where(x => x.TenantId == carrierId)
-                .Select(x => new PricePackageSelectItemDto()
-                {
-                    DestinationCity = x.DestinationCityFK.DisplayName,
-                    OriginCity = x.OriginCityFK.DisplayName,
-                    DisplayName = x.DisplayName,
-                    Id = x.Id,
-                    TotalPrice = x.TachyonMSRequestPrice,
-                    TruckType = x.TrucksTypeFk.Key,
-                    IsTmsPricePackage = false
-                }).ToListAsync();
+                .ToListAsync();
             
-            tmsPricePackages.AddRange(normalPricePackages);
-            return tmsPricePackages;
+            
+            var result = new List<PricePackageSelectItemDto>();
+            result.AddRange(ObjectMapper.Map<List<PricePackageSelectItemDto>>(tmsPricePackages));
+            result.AddRange(ObjectMapper.Map<List<PricePackageSelectItemDto>>(normalPricePackages));
+            
+            return result;
         }
 
         private IQueryable<NormalPricePackage> GetMatchedNormalPricePackage(long shippingRequestId, int carrierId)
@@ -119,13 +105,7 @@ namespace TACHYON.PricePackages.TmsPricePackages
                     orderby tmsPricePackage.Id select tmsPricePackage.TotalPrice).FirstOrDefaultAsync();
             }
 
-            if (matchedPricePackageItemPrice == default) return null;
-
-            decimal vat = decimal.Parse(await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.TaxVat));
-            decimal itemPriceWithVat = matchedPricePackageItemPrice / quantity;
-            decimal itemPrice = (itemPriceWithVat * 100) / (vat + 100);
-
-            return itemPrice;
+            return matchedPricePackageItemPrice;
         }
 
         public async Task<bool> IsHaveMatchedPricePackage(long shippingRequestId, int carrierId)

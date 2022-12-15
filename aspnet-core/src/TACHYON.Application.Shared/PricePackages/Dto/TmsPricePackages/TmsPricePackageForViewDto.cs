@@ -26,6 +26,8 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
         public string TransportType { get; set; }
 
         public bool IsShipperPricePackage { get; set; }
+
+        public bool IsTmsPricePackage { get; set; }
         public string TruckType { get; set; }
     }
 }

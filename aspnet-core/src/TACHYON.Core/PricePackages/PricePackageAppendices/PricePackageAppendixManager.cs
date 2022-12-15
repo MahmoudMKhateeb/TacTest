@@ -47,11 +47,13 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             _normalPricePackage = normalPricePackage;
         }
 
-        public async Task CreateAppendix(PricePackageAppendix createdAppendix, List<PricePackageAppendixItem> pricePackages,string emailAddress)
+        public async Task CreateAppendix(PricePackageAppendix createdAppendix, List<string> pricePackages,string emailAddress)
         {
             DisableTenancyFilters();
             
             (int lastAppendixMajorVersion, int lastAppendixMinorVersion) = await _appendixRepository.GetAll()
+                // to do: Improve this in future 
+               // .Where(x=> (!x.DestinationTenantId.HasValue || x.DestinationTenantId == createdAppendix.DestinationTenantId) || (!x.ProposalId.HasValue || x.Proposal.ShipperId == createdAppendix.p) )
                 .OrderByDescending(x => x.MajorVersion).ThenByDescending(x=> x.MinorVersion)
                 .Select(x => new Tuple<int, int>(x.MajorVersion, x.MinorVersion)).FirstOrDefaultAsync();
 
@@ -84,16 +86,18 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             
             if (!createdAppendix.ProposalId.HasValue && !pricePackages.IsNullOrEmpty())
             {
-                var tmsPricePackages = pricePackages.Where(x => x.IsTmsPricePackage).ToList();
-                var normalPricePackages = pricePackages.Where(x => !x.IsTmsPricePackage).ToList();
+                var tmsPricePackages = await _tmsPricePackageRepository.GetAll().Where(x => pricePackages.Contains(x.PricePackageId))
+                    .Select(x=> x.Id).ToListAsync();
+                var normalPricePackages = await _normalPricePackage.GetAll().Where(x => pricePackages.Contains(x.PricePackageId))
+                    .Select(x=> x.Id).ToListAsync();
                 
-                foreach (var pricePackage in normalPricePackages)
-                    _normalPricePackage.Update(pricePackage.Id, x => x.AppendixId = appendixId);
-                foreach (var pricePackage in tmsPricePackages)
-                    _tmsPricePackageRepository.Update(pricePackage.Id, x => x.AppendixId = appendixId);
+                foreach (var pricePackageId in normalPricePackages)
+                    _normalPricePackage.Update(pricePackageId, x => x.AppendixId = appendixId);
+                foreach (var pricePackageId in tmsPricePackages)
+                    _tmsPricePackageRepository.Update(pricePackageId, x => x.AppendixId = appendixId);
                 
             }
-              // todo handle normal price package in file (also for proposal)
+              // todo handle normal price package in file 
             await _jobManager.EnqueueAsync<GenerateAppendixFileJob, GenerateAppendixFileJobArgument>(
                 new GenerateAppendixFileJobArgument
                 {
@@ -101,7 +105,7 @@ namespace TACHYON.PricePackages.PricePackageAppendices
                 });
         }
         
-        public async Task UpdateAppendix(PricePackageAppendix updatedAppendix, List<PricePackageAppendixItem> pricePackages,string emailAddress)
+        public async Task UpdateAppendix(PricePackageAppendix updatedAppendix, List<string> pricePackages, string emailAddress)
         { 
             DisableTenancyFilters();
             
@@ -133,14 +137,15 @@ namespace TACHYON.PricePackages.PricePackageAppendices
                 #region Tms price packages created/deleted Handling
 
                 var oldTmsPricePackages = oldAppendix.TmsPricePackages.Select(x => x.Id).ToList();
+                
+                var tmsPricePackages = await _tmsPricePackageRepository.GetAll().Where(x => pricePackages.Contains(x.PricePackageId))
+                    .Select(x=> x.Id).ToListAsync();
 
-                var tmsPricePackages = pricePackages.Where(x => x.IsTmsPricePackage).ToList();
+                var addedTmsPricePackages = tmsPricePackages.Where(x => oldTmsPricePackages.All(o => o != x));
+                var deletedTmsPricePackages = oldTmsPricePackages.Where(x => tmsPricePackages.All(o => o != x));
 
-                var addedTmsPricePackages = tmsPricePackages.Where(x => oldTmsPricePackages.All(o => o != x.Id));
-                var deletedTmsPricePackages = oldTmsPricePackages.Where(x => tmsPricePackages.All(o => o.Id != x));
-
-                foreach (var addedItem in addedTmsPricePackages)
-                    _tmsPricePackageRepository.Update(addedItem.Id, x => x.AppendixId = updatedAppendix.Id);
+                foreach (var addedItemId in addedTmsPricePackages)
+                    _tmsPricePackageRepository.Update(addedItemId, x => x.AppendixId = updatedAppendix.Id);
                 
                 
                 foreach (var deletedItemId in deletedTmsPricePackages)
@@ -152,13 +157,14 @@ namespace TACHYON.PricePackages.PricePackageAppendices
 
                 var oldNormalPricePackages = oldAppendix.NormalPricePackages.Select(x => x.Id).ToList();
 
-                var normalPricePackages = pricePackages.Where(x => !x.IsTmsPricePackage).ToList();
+                var normalPricePackages = await _normalPricePackage.GetAll().Where(x => pricePackages.Contains(x.PricePackageId))
+                    .Select(x=> x.Id).ToListAsync();
                 
-                var addedNormalPricePackages = normalPricePackages.Where(x => oldNormalPricePackages.All(o => o != x.Id));
-                var deletedNormalPricePackages = oldNormalPricePackages.Where(x => normalPricePackages.All(o => o.Id != x));
+                var addedNormalPricePackages = normalPricePackages.Where(x => oldNormalPricePackages.All(o => o != x));
+                var deletedNormalPricePackages = oldNormalPricePackages.Where(x => normalPricePackages.All(o => o != x));
 
-                foreach (var addedItem in addedNormalPricePackages)
-                    _normalPricePackage.Update(addedItem.Id, x => x.AppendixId = updatedAppendix.Id);
+                foreach (var addedItemId in addedNormalPricePackages)
+                    _normalPricePackage.Update(addedItemId, x => x.AppendixId = updatedAppendix.Id);
                 
                 
                 foreach (var deletedItemId in deletedNormalPricePackages)

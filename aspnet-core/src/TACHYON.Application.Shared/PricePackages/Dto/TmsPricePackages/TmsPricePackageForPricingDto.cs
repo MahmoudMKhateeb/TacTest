@@ -31,7 +31,6 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
         public string TruckType { get; set; }
 
         public string OfferStatusTitle { get; set; }
-        public PricePackageOfferStatus OfferStatus { get; set; }
 
         public int? ProposalId { get; set; }
 

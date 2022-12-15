@@ -110,7 +110,8 @@ namespace TACHYON.PricePackages
         [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Reject)]
         public async Task Reject(int appendixId)
         {
-            var status = await _appendixRepository.GetAll().Select(x => x.Status).FirstOrDefaultAsync();
+            var status = await _appendixRepository.GetAll().Where(x=> x.Id == appendixId)
+                .Select(x => x.Status).FirstOrDefaultAsync();
 
             switch (status)
             {

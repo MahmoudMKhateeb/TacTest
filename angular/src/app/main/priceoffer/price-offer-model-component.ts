@@ -55,6 +55,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
   isForDedicated: boolean;
   ShipperValueOfGoods : Number;
   CarrierInsuranceCoverage : Number;
+  hasMatchesPricePackage: boolean;
 
   constructor(
     injector: Injector,
@@ -69,6 +70,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.priceOfferCommissionType = this.enumToArray.transform(PriceOfferCommissionType);
     this.offer.commissionSettings = new PriceOfferTenantCommissionSettings();
     this.isPostPriceOffer = false;
+    this.hasMatchesPricePackage = false;
   }
 
   show(
@@ -106,6 +108,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
       this.input.shippingRequestId = id;
       this.input.channel = this.Channel;
       this.input.carrierActorId = this.offer.carrierActorId;
+      this.hasMatchesPricePackage = this.offer.hasMatchedPricePackage;
       if (!this.feature.isEnabled('App.Carrier') && this.offer.id == 0) {
         this.changeItemComissionValue();
         this.changeVasComissionValue();
@@ -120,6 +123,9 @@ export class PriceOfferModelComponent extends AppComponentBase {
           r.itemsTotalPricePreCommissionPreVat = undefined;
         });
       }
+      if (this.hasMatchesPricePackage) {
+          this.calculator();
+      }
       (this.offer.carrierActorId as any) = this.offer.carrierActorId?.toString();
       this.active = true;
       this.modal.show();
@@ -128,6 +134,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
 
   close(): void {
     this.active = false;
+    this.hasMatchesPricePackage = false;
     this.modal.hide();
   }
 

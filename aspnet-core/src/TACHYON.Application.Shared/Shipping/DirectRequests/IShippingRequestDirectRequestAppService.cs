@@ -13,7 +13,7 @@ namespace TACHYON.Shipping.DirectRequests
         Task<PagedResultDto<ShippingRequestDirectRequestGetCarrirerListDto>> GetAllCarriers(
             ShippingRequestDirectRequestGetAllCarrirerInput input);
 
-        Task Create(CreateShippingRequestDirectRequestInput input);
+        Task<long> Create(CreateShippingRequestDirectRequestInput input);
         Task Delete(EntityDto<long> input);
         Task Decline(long id);
 

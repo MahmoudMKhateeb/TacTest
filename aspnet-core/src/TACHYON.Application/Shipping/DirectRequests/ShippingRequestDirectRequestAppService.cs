@@ -96,7 +96,7 @@ namespace TACHYON.Shipping.DirectRequests
         }
 
         [RequiresFeature(AppFeatures.SendDirectRequest)]
-        public async Task Create(CreateShippingRequestDirectRequestInput input)
+        public async Task<long> Create(CreateShippingRequestDirectRequestInput input)
         {
             IfCanAccessService();
             await CheckCanAddDriectRequestToCarrirer(input);
@@ -115,6 +115,8 @@ namespace TACHYON.Shipping.DirectRequests
             {
                 await _appNotifier.SendDriectRequest(GetCurrentTenant().Name, input.CarrierTenantId, id);
             }
+
+            return id;
         }
 
         [RequiresFeature(AppFeatures.SendDirectRequest)]

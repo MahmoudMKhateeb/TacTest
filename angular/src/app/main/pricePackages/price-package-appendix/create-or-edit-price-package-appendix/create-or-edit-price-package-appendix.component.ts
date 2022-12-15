@@ -2,7 +2,6 @@ import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@a
 import {
   CarriersForDropDownDto,
   CreateOrEditAppendixDto,
-  PricePackageAppendixItem,
   PricePackageAppendixServiceProxy,
   PricePackageProposalServiceProxy,
   SelectItemDto,
@@ -37,7 +36,6 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
   carriersLoading: boolean;
   companyType = DestinationCompanyType;
   currentCompanyType: DestinationCompanyType;
-  selectedPricePackages: number[];
 
   constructor(
     private _appendixServiceProxy: PricePackageAppendixServiceProxy,
@@ -74,9 +72,6 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
           this.currentCompanyType = DestinationCompanyType.Carrier;
           this.loadPricePackages();
           this.loadAllCarriers();
-          this.selectedPricePackages = this.appendix.pricePackages.map((item) => {
-            return item.id;
-          });
         }
           this.modal.show();
       });
@@ -96,15 +91,6 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
      this.isLoading = true;
 
     this.appendix.destinationCompanyId = this.companyId;
-
-    if (this.currentCompanyType === DestinationCompanyType.Carrier) {
-      this.appendix.pricePackages = this.selectedPricePackages.map((item) => {
-        let pricePackageItem = new PricePackageAppendixItem();
-        pricePackageItem.id = item as any;
-        pricePackageItem.isTmsPricePackage = this.dataSource?.find((x) => x.id === pricePackageItem.id)?.isTmsPricePackage;
-        return pricePackageItem;
-      });
-    }
 
     this._appendixServiceProxy
       .createOrEdit(this.appendix)
@@ -152,7 +138,6 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
     this.isActive = false;
     this.appendix = new CreateOrEditAppendixDto();
     this.companyId = undefined;
-    this.selectedPricePackages = undefined;
     this.modal.hide();
   }
 
