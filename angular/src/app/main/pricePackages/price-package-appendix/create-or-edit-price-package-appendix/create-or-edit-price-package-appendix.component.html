@@ -76,8 +76,8 @@
             <div *ngIf="currentCompanyType === companyType.Carrier" class="form-group col-md-12">
               <label>{{ l('PricePackages') }} <span class="text-danger">*</span></label>
               <dx-drop-down-box
-                [(value)]="selectedPricePackages"
-                valueExpr="id"
+                [(value)]="appendix.pricePackages"
+                valueExpr="pricePackageId"
                 displayExpr="displayName"
                 placeholder="Select a value..."
                 [showClearButton]="true"
@@ -94,8 +94,8 @@
                     [filterRow]="{ visible: true }"
                     [scrolling]="{ mode: 'virtual' }"
                     [height]="345"
-                    keyExpr="id"
-                    [(selectedRowKeys)]="selectedPricePackages"
+                    keyExpr="pricePackageId"
+                    [(selectedRowKeys)]="appendix.pricePackages"
                   >
                   </dx-data-grid>
                 </div>

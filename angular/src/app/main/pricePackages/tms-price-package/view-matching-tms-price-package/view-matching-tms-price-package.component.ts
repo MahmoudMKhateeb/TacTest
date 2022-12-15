@@ -16,7 +16,7 @@ export class ViewMatchingTmsPricePackageComponent extends AppComponentBase imple
   @Input() shippingRequestId: number;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
   routeTypes;
-  isPricePackageActionLoading: boolean;
+  loadingPricePackageId: string;
 
   constructor(private injector: Injector, private _enumToArray: EnumToArrayPipe, private _tmsPricePackageServiceProxy: TmsPricePackageServiceProxy) {
     super(injector);
@@ -41,7 +41,7 @@ export class ViewMatchingTmsPricePackageComponent extends AppComponentBase imple
 
   ngOnInit(): void {
     this.isDataRequested = false;
-    this.isPricePackageActionLoading = false;
+    this.loadingPricePackageId = undefined;
     this.routeTypes = this._enumToArray.transform(ShippingRequestRouteType);
   }
 
@@ -49,11 +49,11 @@ export class ViewMatchingTmsPricePackageComponent extends AppComponentBase imple
     return this.routeTypes?.find((x) => x.key == key)?.value;
   }
 
-  handlePricePackageAction(pricePackageId: number) {
+  handlePricePackageAction(pricePackage: TmsPricePackageForViewDto) {
 
-      this.isPricePackageActionLoading = true;
-      this._tmsPricePackageServiceProxy.applyPricePackage(pricePackageId, this.shippingRequestId)
-          .pipe(finalize(() => this.isPricePackageActionLoading = false))
+      this.loadingPricePackageId = pricePackage.pricePackageId;
+      this._tmsPricePackageServiceProxy.applyPricePackage(pricePackage.id, this.shippingRequestId, pricePackage.isTmsPricePackage)
+          .pipe(finalize(() => this.loadingPricePackageId = undefined))
           .subscribe(() => {
           this.notify.success('SentSuccessfully');
           this.getMatchingTmsPricePackages({});

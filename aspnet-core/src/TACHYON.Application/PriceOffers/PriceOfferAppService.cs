@@ -49,6 +49,7 @@ using TACHYON.Packing.PackingTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Packing.PackingTypes.Dtos;
+using TACHYON.PricePackages.TmsPricePackageOffers;
 using TACHYON.PricePackages.TmsPricePackages;
 using TACHYON.Shipping.Dedicated;
 
@@ -78,6 +79,7 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<PackingType> _packingTypesRepository;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
         private readonly ITmsPricePackageManager _tmsPricePackageManager;
+        private readonly ITmsPricePackageOfferManager _tmsPricePackageOfferManager;
 
         private IRepository<VasPrice> _vasPriceRepository;
 
@@ -102,7 +104,8 @@ namespace TACHYON.PriceOffers
             IRepository<GoodCategory> goodsCategoriesRepository,
             IRepository<PackingType> packingTypesRepository,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
-            ITmsPricePackageManager tmsPricePackageManager)
+            ITmsPricePackageManager tmsPricePackageManager,
+            ITmsPricePackageOfferManager tmsPricePackageOfferManager)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -127,6 +130,7 @@ namespace TACHYON.PriceOffers
             _packingTypesRepository = packingTypesRepository;
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
             _tmsPricePackageManager = tmsPricePackageManager;
+            _tmsPricePackageOfferManager = tmsPricePackageOfferManager;
         }
         #region Services
 
@@ -261,10 +265,10 @@ namespace TACHYON.PriceOffers
                     priceOfferDto.PriceType = PriceOfferType.Trip;
                     priceOfferDto.Quantity = shippingRequest.NumberOfTrips;
                     SetCommssionSettingsForTachyonDealer(priceOfferDto, shippingRequest);
-                    if (await FeatureChecker.IsEnabledAsync(AppFeatures.Carrier))
-                    {
-                        await ApplyPricePackagePriceIfExist(priceOfferDto,shippingRequest.Id);
-                    }
+                    
+                    if (await _tmsPricePackageOfferManager.HasDirectRequestByPricePackage(shippingRequest.Id))
+                        await ApplyPriceFromPricePackage(priceOfferDto,shippingRequest.Id);
+                    
                 }
                 else if(shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
                 {
@@ -285,7 +289,7 @@ namespace TACHYON.PriceOffers
             return priceOfferDto;
         }
 
-        private async Task ApplyPricePackagePriceIfExist(PriceOfferDto priceOfferDto,long requestId)
+        private async Task ApplyPriceFromPricePackage(PriceOfferDto priceOfferDto,long requestId)
         {
             if (!AbpSession.TenantId.HasValue) return;
             var itemPrice = await _tmsPricePackageManager.GetItemPriceByMatchedPricePackage(requestId,priceOfferDto.Quantity,AbpSession.TenantId.Value);
@@ -293,10 +297,6 @@ namespace TACHYON.PriceOffers
             if (itemPrice is null) return;
 
             priceOfferDto.ItemPrice = itemPrice.Value;
-            // priceOfferDto.CommissionAmount = 0;
-            // priceOfferDto.CommissionType = PriceOfferCommissionType.CommissionValue;
-            // priceOfferDto.VasCommissionType = PriceOfferCommissionType.CommissionValue;
-            // priceOfferDto.VasCommissionPercentageOrAddValue = 0;
             priceOfferDto.HasMatchedPricePackage = true;
         }
 

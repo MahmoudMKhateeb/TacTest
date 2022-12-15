@@ -1,32 +1,24 @@
-﻿using Abp.Application.Features;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
-using Abp.MultiTenancy;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
-using DevExpress.XtraSpreadsheet.Import.Xls;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Common;
-using TACHYON.Configuration;
 using TACHYON.Dto;
-using TACHYON.Features;
 using TACHYON.MultiTenancy;
-using TACHYON.PriceOffers;
-using TACHYON.PriceOffers.Dto;
 using TACHYON.PricePackages.Dto.TmsPricePackages;
+using TACHYON.PricePackages.PricePackageAppendices;
+using TACHYON.PricePackages.TmsPricePackageOffers;
 using TACHYON.PricePackages.TmsPricePackages;
 using TACHYON.Shipping.DirectRequests;
-using TACHYON.Shipping.DirectRequests.Dto;
 using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.PricePackages
@@ -41,8 +33,9 @@ namespace TACHYON.PricePackages
         private readonly IRepository<ShippingRequestDirectRequest, long> _directRequestRepository;
         private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly ITmsPricePackageManager _tmsPricePackageManager;
-        private readonly IShippingRequestDirectRequestAppService _directRequestAppService;
-        private readonly PriceOfferManager _priceOfferManager;
+        private readonly ITmsPricePackageOfferManager _tmsPricePackageOfferManager;
+        private readonly IRepository<PricePackageAppendix> _appendixRepository;
+        private readonly IRepository<TmsPricePackageOffer,long> _tmsOfferRepository;
 
         public TmsPricePackageAppService(
             IRepository<TmsPricePackage> tmsPricePackageRepository,
@@ -52,8 +45,9 @@ namespace TACHYON.PricePackages
             ITmsPricePackageManager tmsPricePackageManager, 
             IRepository<NormalPricePackage> normalPricePackageRepository, 
             IRepository<ShippingRequestDirectRequest, long> directRequestRepository,
-            IShippingRequestDirectRequestAppService directRequestAppService,
-            PriceOfferManager priceOfferManager)
+            ITmsPricePackageOfferManager tmsPricePackageOfferManager,
+            IRepository<PricePackageAppendix> appendixRepository,
+            IRepository<TmsPricePackageOffer, long> tmsOfferRepository)
         {
             _tmsPricePackageRepository = tmsPricePackageRepository;
             _tenantRepository = tenantRepository;
@@ -62,8 +56,9 @@ namespace TACHYON.PricePackages
             _tmsPricePackageManager = tmsPricePackageManager;
             _normalPricePackageRepository = normalPricePackageRepository;
             _directRequestRepository = directRequestRepository;
-            _directRequestAppService = directRequestAppService;
-            _priceOfferManager = priceOfferManager;
+            _tmsPricePackageOfferManager = tmsPricePackageOfferManager;
+            _appendixRepository = appendixRepository;
+            _tmsOfferRepository = tmsOfferRepository;
         }
 
 
@@ -148,9 +143,9 @@ namespace TACHYON.PricePackages
             await _tmsPricePackageRepository.DeleteAsync(x => x.Id == pricePackageId);
         }
 
-        public async Task ApplyPricePackage(int pricePackageId,long srId)
+        public async Task ApplyPricePackage(int pricePackageId,long srId,bool isTmsPricePackage)
         {
-            await ApplyPricingOnShippingRequest(pricePackageId, srId);
+            await _tmsPricePackageOfferManager.ApplyPricingOnShippingRequest(pricePackageId, srId,isTmsPricePackage);
         }
         
         public async Task<TmsPricePackageForPricingDto> GetForPricing(int pricePackageId)
@@ -195,10 +190,11 @@ namespace TACHYON.PricePackages
                 .ProjectTo<TmsPricePackageForViewDto>(AutoMapperConfigurationProvider).ToListAsync();
 
             
-            var matchedNormalPricePackage = await (from shippingRequest in _shippingRequestRepository.GetAll()
-                where shippingRequest.Id == input.ShippingRequestId
+            var matchedNormalPricePackage = await (from shippingRequest in _shippingRequestRepository.GetAll().AsNoTracking()
+                where shippingRequest.Id == input.ShippingRequestId 
                 from normalPricePackage in _normalPricePackageRepository
-                    .GetAll().AsNoTracking()
+                    .GetAll().Where(x=> x.AppendixId.HasValue && x.Appendix.IsActive && x.Appendix.Status == AppendixStatus.Confirmed)
+                from appendix in _appendixRepository.GetAll().Where(x=> x.Id == normalPricePackage.AppendixId)
                 where normalPricePackage.TrucksTypeId == shippingRequest.TrucksTypeId &&
                       (isTmsOrHost || normalPricePackage.TenantId == AbpSession.TenantId) &&
                       normalPricePackage.OriginCityId == shippingRequest.OriginCityId
@@ -212,14 +208,33 @@ namespace TACHYON.PricePackages
             var pageResult = matchedPricePackages.Skip(input.SkipCount)
                 .Take(input.MaxResultCount).ToList();
 
-            var pricePackagesHasDirectRequest = (from pricePackageDto in pageResult
-                join directRequest in _directRequestRepository.GetAll().AsNoTracking()
-                on input.ShippingRequestId  equals directRequest.ShippingRequestId 
-                where directRequest.CarrierTenantId == pricePackageDto.CompanyTenantId
-                    select pricePackageDto.Id).ToList();
+            var pricePackagesPricingLookup = (from pricePackageDto in pageResult
+                let hasNormalDirectRequest = _directRequestRepository.GetAll().Any(x=> x.ShippingRequestId == input.ShippingRequestId && x.CarrierTenantId == pricePackageDto.CompanyTenantId)
+                from pricePackageOffer in _tmsOfferRepository.GetAllIncluding(x => x.DirectRequest, x => x.PriceOffer)
+                    .AsNoTracking().Include(x=> x.TmsPricePackage).Include(x=> x.NormalPricePackage).DefaultIfEmpty()
+                where hasNormalDirectRequest || (pricePackageOffer != null && (pricePackageOffer.TmsPricePackageId == pricePackageDto.Id ||
+                       pricePackageOffer.NormalPricePackageId == pricePackageDto.Id) &&
+                      (!pricePackageOffer.DirectRequestId.HasValue ||
+                       pricePackageOffer.DirectRequest.ShippingRequestId == input.ShippingRequestId) &&
+                      (!pricePackageOffer.PriceOfferId.HasValue ||
+                       pricePackageOffer.PriceOffer.ShippingRequestId == input.ShippingRequestId))
+                select new 
+                {
+                    HasDirectRequest = pricePackageOffer.DirectRequestId.HasValue || hasNormalDirectRequest,
+                    HasOffer = pricePackageOffer.PriceOfferId.HasValue,
+                    pricePackageDto.PricePackageId
+                }).ToList();
 
             foreach (var item in pageResult)
-                item.HasDirectRequest = pricePackagesHasDirectRequest.Any(pricePackageId => pricePackageId == item.Id);
+            {
+                var pricingLookupItem = pricePackagesPricingLookup.FirstOrDefault(x => x.PricePackageId == item.PricePackageId);
+
+                if (pricingLookupItem == null) continue;
+                
+                item.HasOffer = pricingLookupItem.HasOffer;
+                item.HasDirectRequest = pricingLookupItem.HasDirectRequest;
+            }
+                
             
 
             return new PagedResultDto<TmsPricePackageForViewDto>()
@@ -258,77 +273,5 @@ namespace TACHYON.PricePackages
             return new ListResultDto<PricePackageSelectItemDto>(pricePackagesList);
         }
         
-        private async Task SendOfferToShipperByPricePackage(long srId, ShippingRequest shippingRequest,
-            TmsPricePackage pricePackage)
-        {
-            var itemDetails = shippingRequest.ShippingRequestVases?
-                .Select(item => new PriceOfferDetailDto() { ItemId = item.Id, Price = 0 }).ToList();
-            
-            decimal vat = decimal.Parse(await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.TaxVat));
-            decimal quantity = shippingRequest.NumberOfTrips;
-            decimal itemPriceWithVat = pricePackage.TotalPrice / quantity;
-            decimal itemPrice = (itemPriceWithVat * 100) / (vat + 100);
-
-            var priceOfferDto = new CreateOrEditPriceOfferInput()
-            {
-                ShippingRequestId = srId, ItemPrice = itemPrice, ItemDetails = itemDetails,
-                CommissionType = PriceOfferCommissionType.CommissionValue,
-                CommissionPercentageOrAddValue = 0,
-                VasCommissionType = PriceOfferCommissionType.CommissionValue, VasCommissionPercentageOrAddValue = 0
-            };
-
-            var offerId = await _priceOfferManager.CreateOrEdit(priceOfferDto);
-
-            pricePackage.OfferId = offerId;
-            pricePackage.Status = PricePackageOfferStatus.SentAndWaitingResponse;
-        }
-
-        private async Task AcceptOfferByPricePackage(TmsPricePackage pricePackage)
-        {
-            if (!pricePackage.OfferId.HasValue) throw new UserFriendlyException(L("ThereIsNoOfferInThisPricePackage"));
-                
-            await _priceOfferManager.AcceptOffer(pricePackage.OfferId.Value);
-
-            pricePackage.Status = PricePackageOfferStatus.Confirmed;
-        }
-        
-        /// <summary>
-        /// this method used for apply the pricing that the shipper/carrier agree it by price package
-        /// the stage can be use after price package appendix is confirmed 
-        /// </summary>
-        /// <param name="pricePackageId"></param>
-        /// <param name="srId"></param>
-        /// <exception cref="UserFriendlyException"></exception>
-        private async Task ApplyPricingOnShippingRequest(int pricePackageId,long srId)
-        {
-            DisableTenancyFilters();
-            
-            var pricePackage = await _tmsPricePackageRepository.GetAll().SingleAsync(x=> x.Id == pricePackageId);
-
-            if (pricePackage.DestinationTenantId is null)
-                throw new UserFriendlyException(L("PricePackageMustHaveDestinationTenant"));
-            
-            var shippingRequest = await _shippingRequestRepository.GetAllIncluding(x=> x.ShippingRequestVases)
-                .AsNoTracking().SingleAsync(x => x.Id == srId);
-
-            if (pricePackage.ProposalId.HasValue)
-            {
-                await SendOfferToShipperByPricePackage(srId, shippingRequest, pricePackage);
-                await CurrentUnitOfWork.SaveChangesAsync();
-                await AcceptOfferByPricePackage(pricePackage);
-
-            } else if (pricePackage.AppendixId.HasValue)
-            {
-                // send direct request to carrier by price package
-                
-                await _directRequestAppService.Create(new CreateShippingRequestDirectRequestInput()
-                {
-                    CarrierTenantId = pricePackage.DestinationTenantId.Value, ShippingRequestId = srId
-                });
-
-            }
-            else throw new UserFriendlyException(L("PricePackageMustHaveAppendixOrProposal"));
-
-        }
     }
 }

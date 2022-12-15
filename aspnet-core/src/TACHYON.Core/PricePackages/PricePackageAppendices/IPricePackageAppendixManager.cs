@@ -10,9 +10,8 @@ namespace TACHYON.PricePackages.PricePackageAppendices
     {
         Task<BinaryObject> GenerateAppendixFile(int appendixId);
 
-        Task CreateAppendix(PricePackageAppendix createdAppendix, List<PricePackageAppendixItem> tmsPricePackages,
-            string emailAddress);
+        Task CreateAppendix(PricePackageAppendix createdAppendix, List<string> pricePackages, string emailAddress);
 
-        Task UpdateAppendix(PricePackageAppendix updatedAppendix, List<PricePackageAppendixItem> pricePackages, string emailAddress);
+        Task UpdateAppendix(PricePackageAppendix updatedAppendix, List<string> pricePackages, string emailAddress);
     }
 }

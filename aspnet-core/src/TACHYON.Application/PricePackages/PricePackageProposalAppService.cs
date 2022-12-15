@@ -88,7 +88,8 @@ namespace TACHYON.PricePackages
         {
             if (!input.Id.HasValue) throw new UserFriendlyException();
             
-            var updatedProposal = await _proposalRepository.FirstOrDefaultAsync(input.Id.Value);
+            var updatedProposal = await _proposalRepository.GetAllIncluding(x=> x.TmsPricePackages)
+                .FirstOrDefaultAsync(x=> x.Id == input.Id.Value);
 
             if (updatedProposal.Status == ProposalStatus.Approved)
                 throw new UserFriendlyException(L("YouCanNotEditApprovedProposal"));

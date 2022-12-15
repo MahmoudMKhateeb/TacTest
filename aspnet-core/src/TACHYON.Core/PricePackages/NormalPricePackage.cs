@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using TACHYON.Cities;
 using TACHYON.PricePackages.PricePackageAppendices;
+using TACHYON.PricePackages.TmsPricePackageOffers;
 
 namespace TACHYON.PricePackages
 {

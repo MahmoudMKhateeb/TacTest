@@ -69,7 +69,7 @@
 
                   <ul class="dropdown-menu" *dropdownMenu>
                     <li>
-                      <a class="dropdown-item" *ngIf="isGranted('Pages.TmsPricePackages.Update')" (click)="TmsPricePackageModal.show(options.data.id)">{{ l('Edit') }}</a>
+                      <a class="dropdown-item" *ngIf="isGranted('Pages.TmsPricePackages.Update') && !options.data.hasProposal" (click)="TmsPricePackageModal.show(options.data.id)">{{ l('Edit') }}</a>
                     </li>
                   </ul>
                 </div>

@@ -65,14 +65,7 @@ namespace TACHYON.AutoMapper.PricePackages
                 .ForMember(x => x.TruckType, x => x.MapFrom(i => i.TrucksTypeFk.Key))
                 .ForMember(x => x.TransportType, x => x.MapFrom(i => i.TransportTypeFk.Key));
 
-            CreateMap<CreateOrEditTmsPricePackageDto, TmsPricePackage>()
-                .AfterMap(((dto, package) =>
-                {
-                    if (!dto.Id.HasValue)
-                    {
-                        package.Status = PricePackageOfferStatus.NoOffer;
-                    }
-                })).ReverseMap();
+            CreateMap<CreateOrEditTmsPricePackageDto, TmsPricePackage>().ReverseMap();
             CreateMap<CreateOrEditProposalDto, PricePackageProposal>()
                 .ForMember(x => x.TmsPricePackages, x => x.Ignore())
                 .AfterMap((dto, proposal) =>
@@ -91,6 +84,12 @@ namespace TACHYON.AutoMapper.PricePackages
             CreateMap<TmsPricePackage, PricePackageSelectItemDto>()
                 .ForMember(x => x.OriginCity, x => x.MapFrom(i => i.OriginCity.DisplayName))
                 .ForMember(x => x.DestinationCity, x => x.MapFrom(i => i.DestinationCity.DisplayName))
+                .ForMember(x => x.TruckType, x => x.MapFrom(i => i.TrucksTypeFk.Key));
+           
+            CreateMap<NormalPricePackage, PricePackageSelectItemDto>()
+                .ForMember(x => x.OriginCity, x => x.MapFrom(i => i.OriginCityFK.DisplayName))
+                .ForMember(x => x.DestinationCity, x => x.MapFrom(i => i.DestinationCityFK.DisplayName))
+                .ForMember(x => x.TotalPrice, x => x.MapFrom(i => i.TachyonMSRequestPrice))
                 .ForMember(x => x.TruckType, x => x.MapFrom(i => i.TrucksTypeFk.Key));
 
             CreateMap<PricePackageAppendix, AppendixListDto>()
@@ -124,17 +123,14 @@ namespace TACHYON.AutoMapper.PricePackages
                 .ForMember(x => x.PricePackages, x => x.Ignore())
                 .AfterMap(((appendix, dto) =>
                 {
-                    dto.PricePackages = new List<PricePackageAppendixItem>();
-                    var tmsPricePackage = appendix.TmsPricePackages.Select(x =>
-                        new PricePackageAppendixItem() { Id = x.Id, IsTmsPricePackage = true });
-                    var normalPricePackage = appendix.NormalPricePackages.Select(x =>
-                        new PricePackageAppendixItem() { Id = x.Id, IsTmsPricePackage = false });
+                    dto.PricePackages = new List<string>();
+                    var tmsPricePackage = appendix.TmsPricePackages.Select(x => x.PricePackageId);
+                    var normalPricePackage = appendix.NormalPricePackages.Select(x => x.PricePackageId);
                     dto.PricePackages.AddRange(tmsPricePackage);
                     dto.PricePackages.AddRange(normalPricePackage);
                 }));
 
             CreateMap<TmsPricePackage, TmsPricePackageForViewDto>()
-                .ForMember(x => x.HasOffer, x => x.MapFrom(i => i.OfferId.HasValue))
                 .ForMember(x => x.CompanyName, x => x.MapFrom(i => i.DestinationTenant.Name))
                 .ForMember(x => x.FinalPrice, x => x.MapFrom(i => i.TotalPrice))
                 .ForMember(x => x.TruckType,
@@ -168,6 +164,7 @@ namespace TACHYON.AutoMapper.PricePackages
                                 .TranslatedDisplayName
                             : i.DestinationCity.DisplayName))
                 .ForMember(x => x.CompanyTenantId, x => x.MapFrom(i => i.DestinationTenantId))
+                .ForMember(x=> x.IsTmsPricePackage,x=> x.MapFrom(i=> true))
                 .ForMember(x => x.IsShipperPricePackage,
                     x => x.MapFrom(i => i.ProposalId.HasValue && !i.AppendixId.HasValue));
 
@@ -243,9 +240,7 @@ namespace TACHYON.AutoMapper.PricePackages
                 .ForMember(x => x.CompanyEditionName, x => x.MapFrom(i => i.DestinationTenant.Edition.DisplayName))
                 .ForMember(x => x.RouteType,
                     x => x.MapFrom(i => i.RouteType.ToString()))
-                .ForMember(x => x.Type, x => x.MapFrom(i => i.Type.ToString()))
-                .ForMember(x => x.OfferStatusTitle, x => x.MapFrom(i => i.Status.ToString()))
-                .ForMember(x => x.OfferStatus, x => x.MapFrom(i => i.Status));
+                .ForMember(x => x.Type, x => x.MapFrom(i => i.Type.ToString()));
 
             CreateMap<PricePackageProposal, ProposalAutoFillDataDto>()
                 .ForMember(x => x.AppendixDate, x => x.MapFrom(i => i.ProposalDate));

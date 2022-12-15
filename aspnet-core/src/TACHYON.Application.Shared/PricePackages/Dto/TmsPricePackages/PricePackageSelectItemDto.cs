@@ -13,6 +13,6 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
         
         public string DestinationCity { get; set; }
 
-        public bool IsTmsPricePackage { get; set; }
+        public string PricePackageId { get; set; }
     }
 }
