@@ -1321,17 +1321,20 @@ namespace TACHYON
 
         private static void AddOrUpdateFacilityWorkingHours(CreateOrEditFacilityDto dto, Facility facility)
         {
-            if (facility.FacilityWorkingHours == null) facility.FacilityWorkingHours = new Collection<FacilityWorkingHour>();
-            foreach (var workingHour in dto.FacilityWorkingHours)
+            if(dto.FacilityWorkingHours != null)
             {
-                if (!workingHour.Id.HasValue)
+                if (facility.FacilityWorkingHours == null) facility.FacilityWorkingHours = new Collection<FacilityWorkingHour>();
+                foreach (var workingHour in dto.FacilityWorkingHours)
                 {
-                    var ee = _Mapper.Map<FacilityWorkingHour>(workingHour);
-                    facility.FacilityWorkingHours.Add(ee);
-                }
-                else
-                {
-                    _Mapper.Map(workingHour, facility.FacilityWorkingHours.FirstOrDefault(c => c.Id == workingHour.Id));
+                    if (!workingHour.Id.HasValue)
+                    {
+                        var ee = _Mapper.Map<FacilityWorkingHour>(workingHour);
+                        facility.FacilityWorkingHours.Add(ee);
+                    }
+                    else
+                    {
+                        _Mapper.Map(workingHour, facility.FacilityWorkingHours.FirstOrDefault(c => c.Id == workingHour.Id));
+                    }
                 }
             }
         }

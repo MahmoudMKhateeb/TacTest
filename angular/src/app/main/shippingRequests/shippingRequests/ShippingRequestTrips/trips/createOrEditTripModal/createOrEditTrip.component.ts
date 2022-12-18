@@ -17,6 +17,7 @@ import {
   ShippingRequestFlag,
   ShippingRequestRouteType,
   ShippingRequestsTripServiceProxy,
+  ShippingRequestTripFlag,
   UpdateDocumentFileInput,
   WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -88,6 +89,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   isDisabledDriver: boolean = false;
   IsHaveSealNumberValue: any = '';
   IsHaveContainerNumberValue: any = '';
+  ShippingRequestFlagEnum = ShippingRequestFlag;
+  ShippingRequestTripFlagEnum: any = [];
 
   /**
    * DocFileUploader onProgressItem progress
@@ -159,6 +162,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     //Take The Points List From the Points Shared Service
     // this.PointsServiceSubscription = this._PointsService.currentWayPointsList.subscribe((res) => (this.trip.routPoints = res));
     this.vasesHandler();
+    this.ShippingRequestTripFlagEnum = Object.values(ShippingRequestTripFlag);
   }
 
   /**
@@ -180,7 +184,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   show(record?: CreateOrEditShippingRequestTripDto, shippingRequestForView?: GetShippingRequestForViewOutput): void {
     this.shippingRequestForView = shippingRequestForView;
-    if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === 1) {
+    if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Dedicated) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
       this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
@@ -188,7 +192,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     if (this.shippingRequest) {
       this.setStartTripDate(this.shippingRequest.startTripDate);
       const endDate =
-        isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === 0
+        isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Normal
           ? this.shippingRequest.endTripDate
           : this.shippingRequestForView.rentalEndDate;
       const EndDateGregorian = moment(endDate).locale('en').format('D/M/YYYY');
@@ -211,7 +215,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         if (res.endTripDate != null && res.endTripDate != undefined)
           this.endTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.endTripDate);
         this._PointsService.updateWayPoints(this.trip.routPoints);
-        if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === 1) {
+        if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Dedicated) {
           this.canEditNumberOfDrops = false;
           (this.trip.routeType as any) = '' + this.trip.routeType;
           (this.trip.driverUserId as any) = '' + this.trip.driverUserId;
@@ -226,7 +230,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         this.trip = result;
         this.trip.createOrEditDocumentFileDto.extn = '_';
         this.trip.createOrEditDocumentFileDto.name = '_';
-        if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === 1) {
+        if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Dedicated) {
           this.trip.routeType = this.RouteTypesEnum.SingleDrop;
           this.onRouteTypeChange();
         }
@@ -293,7 +297,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.isFormSubmitted = true;
     this.revalidatePointsFromPointsComponent();
     //if there is a Validation issue in the Points do Not Proceed
-    if (isNotNullOrUndefined(this.shippingRequestForView) && this.shippingRequestForView.shippingRequestFlag === 1) {
+    if (
+      isNotNullOrUndefined(this.shippingRequestForView) &&
+      this.shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Dedicated
+    ) {
       this.trip.numberOfDrops = Number(this.trip.routeType) === this.RouteTypesEnum.SingleDrop ? 1 : this.trip.numberOfDrops;
     }
     this.trip.shippingRequestId = this.shippingRequest.id;

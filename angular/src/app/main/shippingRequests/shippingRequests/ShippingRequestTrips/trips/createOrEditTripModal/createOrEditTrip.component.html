@@ -28,7 +28,7 @@
                   !trip.id &&
                   (isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas')) &&
                   shippingRequestForView &&
-                  shippingRequestForView?.shippingRequestFlag === 0
+                  shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
                 "
               >
                 <button
@@ -66,6 +66,17 @@
             </div>
           </div>
           <div class="modal-body" [busyIf]="loading">
+            <div *ngIf="ShippingRequestFlagEnum.Dedicated" class="col-lg-6">
+              <div class="form-group row">
+                <div class="col-6 col-form-label">
+                  <label for="DeliveryNote"> {{ l('TripType') }} </label>
+                  <select #TripType="ngModel" name="TripType" id="TripType" [(ngModel)]="trip.shippingRequestTripFlag" class="form-control">
+                    <option *ngFor="let flag of ShippingRequestTripFlagEnum">{{ l('Yes') }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
             <div class="row">
               <!--begin::Body-->
               <!--  begin:: Source Dest Facilitys  -->
@@ -164,7 +175,10 @@
               </div>
               <!--  end:: Trip start&End Dates-->
               <!-- begin::Vas's  -->
-              <div class="col-lg-6" *ngIf="VasListFromFather?.length > 0 && shippingRequestForView?.shippingRequestFlag != 1">
+              <div
+                class="col-lg-6"
+                *ngIf="VasListFromFather?.length > 0 && shippingRequestForView?.shippingRequestFlag != ShippingRequestFlagEnum.Dedicated"
+              >
                 <div class="form-group">
                   <label>{{ l('vases') }}</label>
                   <p-multiSelect
@@ -260,7 +274,7 @@
                 </div>
               </div>
               <!--   StartOf::Driver&Truck for DedicatedSR -->
-              <ng-container *ngIf="shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 1">
+              <ng-container *ngIf="shippingRequestForView && shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated">
                 <div class="form-group col-lg-6">
                   <label>{{ l('RouteType') }}</label>
                   <select
@@ -412,7 +426,11 @@
                 {{ l('Close') }}
               </button>
               <create-or-edit-template-drop-down-button
-                *ngIf="(isShipper || isTachyonDealer || isCarrierSaas) && shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 0"
+                *ngIf="
+                  (isShipper || isTachyonDealer || isCarrierSaas) &&
+                  shippingRequestForView &&
+                  shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
+                "
                 [entityType]="SavedEntityType.TripTemplate"
                 [jsonData]="tripAsJson"
                 [dropDirection]="'up'"

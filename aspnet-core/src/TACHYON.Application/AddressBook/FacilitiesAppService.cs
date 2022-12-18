@@ -154,8 +154,14 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Create)]
         protected virtual async Task<long> Create(CreateOrEditFacilityDto input)
         {
-            var point = new Point
-                (input.Longitude, input.Latitude) { SRID = 4326 };
+            var point = default(Point);
+            if (input.Longitude!=null && input.Latitude != null)
+            {
+                 point = new Point
+                    (input.Longitude.Value, input.Latitude.Value)
+                { SRID = 4326 };
+            }
+
 
             var facility = ObjectMapper.Map<Facility>(input);
             facility.Location = point;

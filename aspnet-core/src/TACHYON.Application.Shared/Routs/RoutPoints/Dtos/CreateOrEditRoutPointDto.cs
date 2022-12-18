@@ -44,6 +44,13 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
         [CanBeNull] public string Note { get; set; }
 
+        #region HomeDelivery
+        public int? PaymentMethodId { get; set; }
+        public bool? NeedsReceiverCode { get; set; }
+        public bool? NeedsPOD { get; set; }
+
+        #endregion
+
         public List<CreateOrEditGoodsDetailDto> GoodsDetailListDto { get; set; }
 
         public void AddValidationErrors(CustomValidationContext context)

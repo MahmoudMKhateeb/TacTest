@@ -349,9 +349,18 @@ namespace TACHYON.Shipping.Trips
             }
             else if(request.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
             {
+
                 if (input.RouteType == ShippingRequestRouteType.SingleDrop) input.NumberOfDrops = 1;
                 _shippingRequestTripManager.ValidateDedicatedRequestTripDates(input, request);
-                _shippingRequestTripManager.ValidateDedicatedNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), input.NumberOfDrops);
+
+                if (input.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
+                {
+                    input.NumberOfDrops = input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff);
+                }
+                else  //validate number of drops if normal trip
+                {
+                    _shippingRequestTripManager.ValidateDedicatedNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), input.NumberOfDrops); 
+                }
                 await ValidateTruckAndDriver(input);
             }
             //ValidateNumberOfDrops(input, request);
@@ -912,8 +921,8 @@ namespace TACHYON.Shipping.Trips
         /// <param name="trip"></param>
         private void TripCanEditOrDelete(ShippingRequestTrip trip)
         {
-            // When Edit Or Delete
-            if (trip.ShippingRequestFk.ShippingRequestFlag==ShippingRequestFlag.Normal && trip.Status != ShippingRequestTripStatus.New)
+            // When Edit Or Delete, Allow Home delivery to edit trip even if it is intransit
+            if (trip.ShippingRequestTripFlag == ShippingRequestTripFlag.Normal && trip.ShippingRequestFk.ShippingRequestFlag==ShippingRequestFlag.Normal && trip.Status != ShippingRequestTripStatus.New)
             {
                 throw new UserFriendlyException(L("CanNotEditOrDeleteTrip"));
             }

@@ -57,6 +57,14 @@ namespace TACHYON.Shipping.Trips.Dto
 
         [JsonIgnore]
         public int TenantId { get; set; }
+
+        #region HomeDelivery
+        public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
+        public int? PaymentMethodId { get; set; }
+        public bool? NeedsReceiverCode { get; set; }
+        public bool? NeedsPOD { get; set; }
+
+        #endregion
         public void AddValidationErrors(CustomValidationContext context)
         {
             //document validation
@@ -83,6 +91,23 @@ namespace TACHYON.Shipping.Trips.Dto
                 {
                     throw new UserFriendlyException("YouMustEnterReceiver");
                 }
+            }
+
+            if(ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && NeedsReceiverCode == null )
+            {
+                context.Results.Add(new ValidationResult("NeedsReceiverCodeRequired"));
+            }
+            else if(ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && NeedsPOD == null)
+            {
+                context.Results.Add(new ValidationResult("NeedsPODeRequired"));
+            }
+            if (ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && RoutPoints.Any(x => x.PickingType == PickingType.Dropoff && x.NeedsPOD == null))
+            {
+                context.Results.Add(new ValidationResult("NeedsPODForDropsRequired"));
+            }
+            else if (ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && RoutPoints.Any(x => x.PickingType== PickingType.Dropoff && x.NeedsReceiverCode == null))
+            {
+                context.Results.Add(new ValidationResult("NeedsReceiverCodeForDropsRequired"));
             }
         }
 

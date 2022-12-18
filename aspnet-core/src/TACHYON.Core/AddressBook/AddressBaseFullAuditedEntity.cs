@@ -12,12 +12,8 @@ namespace TACHYON.AddressBook
 {
     public class AddressBaseFullAuditedEntity : FullAuditedEntity<long>
     {
-        [Required]
-        [StringLength(FacilityConsts.MaxNameLength, MinimumLength = FacilityConsts.MinNameLength)]
         public virtual string Name { get; set; }
 
-        [Required]
-        [StringLength(FacilityConsts.MaxAdressLength, MinimumLength = FacilityConsts.MinAdressLength)]
         public virtual string Address { get; set; }
 
         public virtual int CityId { get; set; }
