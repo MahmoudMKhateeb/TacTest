@@ -111,6 +111,8 @@ namespace TACHYON.PricePackages.PricePackageProposals
             document.ReplaceAll(TACHYONConsts.ProposalTemplateTruckType, string.Join(", ",truckTypes),SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.ProposalTemplateRouteType, string.Join(", ",routeTypes),SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.ProposalTemplateShippingType, string.Join(", ",shippingTypes) ,SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.ProposalTemplateScopeOverview, proposal.ScopeOverview ,SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.ProposalTemplateNotes, proposal.Notes ,SearchOptions.None);
 
             var routeDetailsTable = document.Tables[1];
 
@@ -129,7 +131,6 @@ namespace TACHYON.PricePackages.PricePackageProposals
                 document.InsertText(routeDetailsTable[currentColumn, 1].Range.Start, routeDetails[i].OriginCity);
                 document.InsertText(routeDetailsTable[currentColumn, 2].Range.Start, routeDetails[i].DestinationCity);
                 document.InsertText(routeDetailsTable[currentColumn, 3].Range.Start, $"{routeDetails[i].TotalPrice} SR");
-                document.InsertText(routeDetailsTable[currentColumn, 4].Range.Start, $"{routeDetails[i].TotalPrice} SR"); // todo remove this line 
             }
             await using var memoryStream = new MemoryStream();
             await documentProcessor.ExportToPdfAsync(memoryStream);

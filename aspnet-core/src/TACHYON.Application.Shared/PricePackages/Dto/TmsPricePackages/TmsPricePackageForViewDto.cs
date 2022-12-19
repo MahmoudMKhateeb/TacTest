@@ -19,9 +19,15 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
 
         public string DisplayName { get; set; }
 
+        /// <summary>
+        /// This property to let client side know if this price package is sent offer by it
+        /// if HasOffer true (that's mean the TMS send an offer to shipper and accept it on behalf)
+        /// </summary>
         public bool HasOffer { get; set; }
         
         public bool HasDirectRequest { get; set; }
+
+        public bool IsRequestPriced { get; set; }
 
         public string TransportType { get; set; }
 

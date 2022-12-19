@@ -79,7 +79,7 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<PackingType> _packingTypesRepository;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
         private readonly ITmsPricePackageManager _tmsPricePackageManager;
-        private readonly ITmsPricePackageOfferManager _tmsPricePackageOfferManager;
+        private readonly IRepository<TmsPricePackageOffer,long> _tmsOfferRepository;
 
         private IRepository<VasPrice> _vasPriceRepository;
 
@@ -105,7 +105,7 @@ namespace TACHYON.PriceOffers
             IRepository<PackingType> packingTypesRepository,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
             ITmsPricePackageManager tmsPricePackageManager,
-            ITmsPricePackageOfferManager tmsPricePackageOfferManager)
+            IRepository<TmsPricePackageOffer,long> tmsOfferRepository)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -130,7 +130,7 @@ namespace TACHYON.PriceOffers
             _packingTypesRepository = packingTypesRepository;
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
             _tmsPricePackageManager = tmsPricePackageManager;
-            _tmsPricePackageOfferManager = tmsPricePackageOfferManager;
+            _tmsOfferRepository = tmsOfferRepository;
         }
         #region Services
 
@@ -266,7 +266,7 @@ namespace TACHYON.PriceOffers
                     priceOfferDto.Quantity = shippingRequest.NumberOfTrips;
                     SetCommssionSettingsForTachyonDealer(priceOfferDto, shippingRequest);
                     
-                    if (await _tmsPricePackageOfferManager.HasDirectRequestByPricePackage(shippingRequest.Id))
+                    if (await HasDirectRequestByPricePackage(shippingRequest.Id))
                         await ApplyPriceFromPricePackage(priceOfferDto,shippingRequest.Id);
                     
                 }
@@ -289,9 +289,16 @@ namespace TACHYON.PriceOffers
             return priceOfferDto;
         }
 
+        private async Task<bool> HasDirectRequestByPricePackage(long shippingRequestId)
+        {
+            DisableTenancyFilters();
+            return await _tmsOfferRepository.GetAll().AnyAsync(x => x.DirectRequestId.HasValue && x.DirectRequest.ShippingRequestId == shippingRequestId);
+        }
+
         private async Task ApplyPriceFromPricePackage(PriceOfferDto priceOfferDto,long requestId)
         {
             if (!AbpSession.TenantId.HasValue) return;
+            DisableTenancyFilters();
             var itemPrice = await _tmsPricePackageManager.GetItemPriceByMatchedPricePackage(requestId,priceOfferDto.Quantity,AbpSession.TenantId.Value);
             
             if (itemPrice is null) return;

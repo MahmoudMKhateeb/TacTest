@@ -141,15 +141,19 @@
         public const string ProposalTemplateTruckType = "$$TruckType$$";
         public const string ProposalTemplateRouteType = "$$RouteType$$";
         public const string ProposalTemplateShippingType = "$$ShippingType$$";
+        public const string ProposalTemplateScopeOverview = "$$ScopeOverview$$";
+        public const string ProposalTemplateNotes = "$$Notes$$";
         
         
         public const string AppendixTemplateContractNumber = "$$ContractNumber$$";
         public const string AppendixTemplateContractDate = "$$ContractDate$$";
         public const string AppendixTemplateVersion = "$$Version$$";
-        public const string AppendixTemplateAppendixDate = "$$Version$$";
+        public const string AppendixTemplateAppendixDate = "$$AppendixDate$$";
         public const string AppendixTemplateTruckTypes = "$$TruckTypes$$";
         public const string AppendixTemplateTransportTypes = "$$TransportTypes$$";
         public const string AppendixTemplateRouteTypes = "$$RouteTypes$$";
-        public const string AppendixTemplateCompanyName = "$CompanyName$$";
+        public const string AppendixTemplateClientName = "$$ClientName$$";
+        public const string AppendixTemplateScopeOverview = "$$ScopeOverview$$";
+        public const string AppendixTemplateNotes = "$$Notes$$";
     }
 }
