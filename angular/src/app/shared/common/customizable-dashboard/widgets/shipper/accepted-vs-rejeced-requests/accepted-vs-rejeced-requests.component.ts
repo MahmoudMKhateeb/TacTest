@@ -83,7 +83,7 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
           chart: {
             type: 'bar',
             width: '100%',
-            height: 200,
+            height: 250,
             stacked: true,
           },
           xaxis: {

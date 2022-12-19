@@ -59,3 +59,9 @@
   font-size: 20px !important;
   font-weight: 600 !important;
 }
+
+#acceptedVsRejectedChart {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}

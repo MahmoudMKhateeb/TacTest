@@ -30,7 +30,8 @@
 }
 
 .aside-menu .menu-nav > .menu-item .menu-subnav .menu-bullet {
-  display: none;
+  /*display: none;*/
+  opacity: 0.4;
 }
 
 .aside-menu .menu-nav > .menu-item .menu-subnav .menu-link .menu-text {
@@ -45,7 +46,8 @@
 
 .aside-menu .menu-nav > .menu-item > .menu-submenu .menu-subnav > .menu-item > .menu-link {
   margin: 0 25px;
-  padding-left: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
   color: rgba(0, 0, 0, 0.7);
 }
 

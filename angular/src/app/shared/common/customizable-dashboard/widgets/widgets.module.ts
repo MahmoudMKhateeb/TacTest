@@ -68,6 +68,7 @@ import { ShipperDashboardComponent } from '@app/shared/common/customizable-dashb
 import { CarrierDashboardComponent } from '@app/shared/common/customizable-dashboard/carrier-dashboard/carrier-dashboard.component';
 import { NewDirectRequestsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/new-direct-requests-widget/new-direct-requests-widget.component';
 import { TabsModule } from '@node_modules/ngx-bootstrap/tabs';
+import { FromToComponent } from '@app/shared/common/from-to/from-to.component';
 
 @NgModule({
   declarations: [
@@ -124,6 +125,7 @@ import { TabsModule } from '@node_modules/ngx-bootstrap/tabs';
     ShipperDashboardComponent,
     CarrierDashboardComponent,
     NewDirectRequestsWidgetComponent,
+    FromToComponent,
   ],
   imports: [
     CommonModule,
@@ -193,6 +195,7 @@ import { TabsModule } from '@node_modules/ngx-bootstrap/tabs';
     ShipperDashboardComponent,
     CarrierDashboardComponent,
     NewDirectRequestsWidgetComponent,
+    FromToComponent,
   ],
   exports: [
     CompletedTripsWidgetComponent,
@@ -248,6 +251,7 @@ import { TabsModule } from '@node_modules/ngx-bootstrap/tabs';
     ShipperDashboardComponent,
     CarrierDashboardComponent,
     NewDirectRequestsWidgetComponent,
+    FromToComponent,
   ],
 })
 export class WidgetsModule {}
