@@ -14,6 +14,7 @@ using TACHYON.Authorization;
 using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.MultiTenancy;
+using TACHYON.PriceOffers;
 using TACHYON.PricePackages.Dto.TmsPricePackages;
 using TACHYON.PricePackages.PricePackageAppendices;
 using TACHYON.PricePackages.TmsPricePackageOffers;
@@ -36,6 +37,7 @@ namespace TACHYON.PricePackages
         private readonly ITmsPricePackageOfferManager _tmsPricePackageOfferManager;
         private readonly IRepository<PricePackageAppendix> _appendixRepository;
         private readonly IRepository<TmsPricePackageOffer,long> _tmsOfferRepository;
+        private readonly IRepository<PriceOffer,long> _priceOfferRepository;
 
         public TmsPricePackageAppService(
             IRepository<TmsPricePackage> tmsPricePackageRepository,
@@ -47,7 +49,8 @@ namespace TACHYON.PricePackages
             IRepository<ShippingRequestDirectRequest, long> directRequestRepository,
             ITmsPricePackageOfferManager tmsPricePackageOfferManager,
             IRepository<PricePackageAppendix> appendixRepository,
-            IRepository<TmsPricePackageOffer, long> tmsOfferRepository)
+            IRepository<TmsPricePackageOffer, long> tmsOfferRepository,
+            IRepository<PriceOffer, long> priceOfferRepository)
         {
             _tmsPricePackageRepository = tmsPricePackageRepository;
             _tenantRepository = tenantRepository;
@@ -59,6 +62,7 @@ namespace TACHYON.PricePackages
             _tmsPricePackageOfferManager = tmsPricePackageOfferManager;
             _appendixRepository = appendixRepository;
             _tmsOfferRepository = tmsOfferRepository;
+            _priceOfferRepository = priceOfferRepository;
         }
 
 
@@ -214,19 +218,32 @@ namespace TACHYON.PricePackages
                 .Take(input.MaxResultCount).ToList();
 
             var pricePackagesPricingLookup = (from pricePackageDto in pageResult
-                let hasNormalDirectRequest = _directRequestRepository.GetAll().Any(x=> x.ShippingRequestId == input.ShippingRequestId && x.CarrierTenantId == pricePackageDto.CompanyTenantId)
+                let hasNormalDirectRequest = _directRequestRepository.GetAll().Any(x =>
+                    x.ShippingRequestId == input.ShippingRequestId &&
+                    x.CarrierTenantId == pricePackageDto.CompanyTenantId)
                 from pricePackageOffer in _tmsOfferRepository.GetAllIncluding(x => x.DirectRequest, x => x.PriceOffer)
-                    .AsNoTracking().Include(x=> x.TmsPricePackage).Include(x=> x.NormalPricePackage).DefaultIfEmpty()
-                where hasNormalDirectRequest || (pricePackageOffer != null && (pricePackageOffer.TmsPricePackageId == pricePackageDto.Id ||
-                       pricePackageOffer.NormalPricePackageId == pricePackageDto.Id) &&
-                      (!pricePackageOffer.DirectRequestId.HasValue ||
-                       pricePackageOffer.DirectRequest.ShippingRequestId == input.ShippingRequestId) &&
-                      (!pricePackageOffer.PriceOfferId.HasValue ||
-                       pricePackageOffer.PriceOffer.ShippingRequestId == input.ShippingRequestId))
-                select new 
+                    .AsNoTracking().Include(x => x.TmsPricePackage).Include(x => x.NormalPricePackage).DefaultIfEmpty()
+                from priceOffer in _priceOfferRepository.GetAll().Where(x =>
+                    x.ShippingRequestId == input.ShippingRequestId
+                    && (x.Status == PriceOfferStatus.Accepted || x.Status == PriceOfferStatus.Pending
+                    || x.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier ||
+                        x.Status == PriceOfferStatus.AcceptedAndWaitingForShipper)
+                    && _tmsOfferRepository.GetAll()
+                        .Any(packageOffer => packageOffer.DirectRequestId.HasValue &&
+                                             packageOffer.DirectRequest.ShippingRequestId == input.ShippingRequestId &&
+                                             packageOffer.DirectRequest.CarrierTenantId == x.TenantId)).DefaultIfEmpty()
+                where hasNormalDirectRequest ||
+                      (pricePackageOffer != null && (pricePackageOffer.TmsPricePackageId == pricePackageDto.Id ||
+                                                     pricePackageOffer.NormalPricePackageId == pricePackageDto.Id) &&
+                       (!pricePackageOffer.DirectRequestId.HasValue ||
+                        pricePackageOffer.DirectRequest.ShippingRequestId == input.ShippingRequestId) &&
+                       (!pricePackageOffer.PriceOfferId.HasValue ||
+                        pricePackageOffer.PriceOffer.ShippingRequestId == input.ShippingRequestId))
+                select new
                 {
                     HasDirectRequest = pricePackageOffer.DirectRequestId.HasValue || hasNormalDirectRequest,
                     HasOffer = pricePackageOffer.PriceOfferId.HasValue,
+                    IsRequestPriced = priceOffer?.Id != null,
                     pricePackageDto.PricePackageId
                 }).ToList();
 
@@ -238,6 +255,7 @@ namespace TACHYON.PricePackages
                 
                 item.HasOffer = pricingLookupItem.HasOffer;
                 item.HasDirectRequest = pricingLookupItem.HasDirectRequest;
+                item.IsRequestPriced = pricingLookupItem.IsRequestPriced;
             }
                 
             

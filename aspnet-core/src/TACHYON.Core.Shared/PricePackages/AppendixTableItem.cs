@@ -7,6 +7,7 @@ namespace TACHYON.PricePackages
         public decimal Price { get; set; }
 
         public string Origin { get; set; }
-        public string Destinaiton { get; set; }
+        
+        public string Destination { get; set; }
     }
 }
