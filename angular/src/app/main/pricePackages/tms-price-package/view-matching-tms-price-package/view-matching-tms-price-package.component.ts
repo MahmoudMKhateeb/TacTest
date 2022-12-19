@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { LazyLoadEvent } from 'primeng/api';
 import { ShippingRequestRouteType, TmsPricePackageForViewDto, TmsPricePackageServiceProxy } from '@shared/service-proxies/service-proxies';
 import { Paginator } from '@node_modules/primeng/paginator';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
-import {finalize} from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-view-matching-tms-price-package',
@@ -50,13 +50,24 @@ export class ViewMatchingTmsPricePackageComponent extends AppComponentBase imple
   }
 
   handlePricePackageAction(pricePackage: TmsPricePackageForViewDto) {
+    this.loadingPricePackageId = pricePackage.pricePackageId;
+    this._tmsPricePackageServiceProxy
+      .applyPricePackage(pricePackage.id, this.shippingRequestId, pricePackage.isTmsPricePackage)
+      .pipe(finalize(() => (this.loadingPricePackageId = undefined)))
+      .subscribe(() => {
+        this.notify.success('SentSuccessfully');
+        this.getMatchingTmsPricePackages({});
+      });
+  }
 
-      this.loadingPricePackageId = pricePackage.pricePackageId;
-      this._tmsPricePackageServiceProxy.applyPricePackage(pricePackage.id, this.shippingRequestId, pricePackage.isTmsPricePackage)
-          .pipe(finalize(() => this.loadingPricePackageId = undefined))
-          .subscribe(() => {
-          this.notify.success('SentSuccessfully');
-          this.getMatchingTmsPricePackages({});
+  acceptOnBehalfCarrier(pricePackage: TmsPricePackageForViewDto) {
+    this.loadingPricePackageId = pricePackage.pricePackageId;
+    this._tmsPricePackageServiceProxy
+      .acknowledgeOnBehalfCarrier(pricePackage.id, this.shippingRequestId, pricePackage.isTmsPricePackage)
+      .pipe(finalize(() => (this.loadingPricePackageId = undefined)))
+      .subscribe(() => {
+        this.notify.success('SentSuccessfully');
+        this.getMatchingTmsPricePackages({});
       });
   }
 }

@@ -49,7 +49,9 @@
             <tr>
               <td style="width: 160px">
                 <button class="btn btn-danger btn-sm" *ngIf="(isCarrier || isTachyonDealer ) && !record.hasOffer && !record.hasDirectRequest" (click)="handlePricePackageAction(record)" [buttonBusy]="loadingPricePackageId === record.pricePackageId" ><i class="flaticon-eye"></i> {{ (record.isShipperPricePackage? 'Acknowledge' : 'SendRequest') | localize }}</button>
+                  <button class="btn btn-danger btn-sm" *ngIf=" isTachyonDealer && record.hasDirectRequest" (click)="acceptOnBehalfCarrier(record)" [buttonBusy]="loadingPricePackageId === record.pricePackageId" ><i class="flaticon-eye"></i> {{ 'Acknowledge' | localize }}</button>
               </td>
+
               <td>
                 <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                 {{ record.displayName }}

@@ -25,5 +25,7 @@ namespace TACHYON.PriceOffers
         Task Reject(RejectPriceOfferInput input);
         Task Cancel(long id);
         Task CancelShipment(CancelShippingRequestInput input);
+
+        Task<PriceOfferDto> InitPriceOffer(CreateOrEditPriceOfferInput input);
     }
 }

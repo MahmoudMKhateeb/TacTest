@@ -148,6 +148,11 @@ namespace TACHYON.PricePackages
             await _tmsPricePackageOfferManager.ApplyPricingOnShippingRequest(pricePackageId, srId,isTmsPricePackage);
         }
         
+        public async Task AcknowledgeOnBehalfCarrier(int pricePackageId,long srId,bool isTmsPricePackage) 
+        {
+            await _tmsPricePackageOfferManager.CreateOfferAndAcceptOnBehalfOfCarrier(pricePackageId,srId,isTmsPricePackage);
+        }
+        
         public async Task<TmsPricePackageForPricingDto> GetForPricing(int pricePackageId)
         {
             DisableTenancyFilters();
