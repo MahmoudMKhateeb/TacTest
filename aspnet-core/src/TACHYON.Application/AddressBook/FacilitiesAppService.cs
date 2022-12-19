@@ -249,13 +249,16 @@ namespace TACHYON.AddressBook
 
         private async Task ValidateFacilityName(CreateOrEditFacilityDto input)
         {
-            var ExsistItem = await _facilityRepository.GetAll().AsNoTracking()
+            if (!string.IsNullOrEmpty(input.Name))
+            {
+                var ExsistItem = await _facilityRepository.GetAll().AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Name.Equals(input.Name) && e.TenantId == AbpSession.TenantId);
-            if (input.Id != null)
-                ExsistItem = await _facilityRepository.GetAll().AsNoTracking().FirstOrDefaultAsync(e =>
-                    e.Name.Equals(input.Name) && e.Id != input.Id && e.TenantId == AbpSession.TenantId);
-            if (ExsistItem != null)
-                throw new UserFriendlyException(L("facilityNameIsAlreadyExistsForThisTenant"));
+                if (input.Id != null)
+                    ExsistItem = await _facilityRepository.GetAll().AsNoTracking().FirstOrDefaultAsync(e =>
+                        e.Name.Equals(input.Name) && e.Id != input.Id && e.TenantId == AbpSession.TenantId);
+                if (ExsistItem != null)
+                    throw new UserFriendlyException(L("facilityNameIsAlreadyExistsForThisTenant"));
+            }
         }
 
         private async Task RemoveDeletedWorkingHours(CreateOrEditFacilityDto input, Facility facility)
