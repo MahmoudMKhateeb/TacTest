@@ -1067,7 +1067,7 @@ namespace TACHYON.Shipping.Trips
 
                 foreach (var g in point.GoodsDetails.Where(x => x.Id != 0))
                 {
-                    if (!input.RoutPoints.Any(x => x.GoodsDetailListDto.Any(d => d.Id == g.Id)))
+                    if (!input.RoutPoints.Any(x => (x.GoodsDetailListDto != null && x.GoodsDetailListDto.Count > 0) && x.GoodsDetailListDto.Any(d => d.Id == g.Id)))
                     {
                         await _goodsDetailRepository.DeleteAsync(g);
                     }

@@ -92,16 +92,23 @@ namespace TACHYON.Shipping.Trips.Dto
                     throw new UserFriendlyException("YouMustEnterReceiver");
                 }
             }
-
-            if (ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && RoutPoints.Any(x => x.PickingType == PickingType.Dropoff && x.NeedsPOD == null))
+            if(ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && RoutPoints!=null && RoutPoints.Count > 0)
             {
-                context.Results.Add(new ValidationResult("NeedsPODForDropsRequired"));
-            }
-            else if (ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && RoutPoints.Any(x => x.PickingType== PickingType.Dropoff && x.NeedsReceiverCode == null))
-            {
-                context.Results.Add(new ValidationResult("NeedsReceiverCodeForDropsRequired"));
-            }
+                if (RoutPoints.Any(x => x.PickingType == PickingType.Dropoff && x.NeedsPOD == null))
+                {
+                    context.Results.Add(new ValidationResult("NeedsPODForDropsRequired"));
+                }
+                if (RoutPoints.Any(x => x.PickingType == PickingType.Dropoff && x.NeedsReceiverCode == null))
+                {
+                    context.Results.Add(new ValidationResult("NeedsReceiverCodeForDropsRequired"));
+                }
 
+                if (RoutPoints.Any(x => x.PickingType == PickingType.Dropoff && x.NeedsReceiverCode == null))
+                {
+                    context.Results.Add(new ValidationResult("NeedsReceiverCodeForDropsRequired"));
+                }
+            }
+            
             if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.SelectMany(x=>x.GoodsDetailListDto).Any(x => x.UnitOfMeasureId == null))
             {
                 context.Results.Add(new ValidationResult("GoodsUnitOfMeasureIsRequired"));
