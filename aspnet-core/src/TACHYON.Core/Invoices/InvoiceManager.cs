@@ -390,16 +390,19 @@ namespace TACHYON.Invoices
 
 
                 //related carriers 
-                int relatedCarrierId;
+                int relatedCarrierId = default;
 
-                int.TryParse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier), out relatedCarrierId);
 
-                if (carrierId == relatedCarrierId)
+                if(await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
                 {
-                    trips.Remove(trip);
+                    int.TryParse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier), out relatedCarrierId);
+                    if (carrierId == relatedCarrierId)
+                    {
+                        trips.Remove(trip);
+                    }
                 }
 
-
+                
                 //saas SR 
                 if (trip.ShippingRequestFk.IsSaas())
                 {
