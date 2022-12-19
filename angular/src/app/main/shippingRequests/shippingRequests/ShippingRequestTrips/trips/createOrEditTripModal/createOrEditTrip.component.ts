@@ -90,7 +90,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   IsHaveSealNumberValue: any = '';
   IsHaveContainerNumberValue: any = '';
   ShippingRequestFlagEnum = ShippingRequestFlag;
-  ShippingRequestTripFlagEnum: any = [];
+  ShippingRequestTripFlagEnum = ShippingRequestTripFlag;
+  ShippingRequestTripFlagArray = [];
 
   /**
    * DocFileUploader onProgressItem progress
@@ -139,6 +140,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   allDedicatedDrivers: GetAllDedicatedDriversOrTrucksForDropDownDto[] = [];
   allDedicatedTrucks: GetAllDedicatedDriversOrTrucksForDropDownDto[] = [];
   shippingRequestForView: GetShippingRequestForViewOutput = null;
+  selectedTripType;
 
   constructor(
     injector: Injector,
@@ -159,10 +161,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   ngOnInit() {
     //link the trip from the shared service to the this component
     this.TripsServiceSubscription = this._TripService.currentActiveTrip.subscribe((res) => (this.trip = res));
+    this.ShippingRequestTripFlagArray = this.enumToArray.transform(ShippingRequestTripFlag);
     //Take The Points List From the Points Shared Service
     // this.PointsServiceSubscription = this._PointsService.currentWayPointsList.subscribe((res) => (this.trip.routPoints = res));
     this.vasesHandler();
-    this.ShippingRequestTripFlagEnum = Object.values(ShippingRequestTripFlag);
+    // this.ShippingRequestTripFlagEnum = Object.values(ShippingRequestTripFlag);
   }
 
   /**

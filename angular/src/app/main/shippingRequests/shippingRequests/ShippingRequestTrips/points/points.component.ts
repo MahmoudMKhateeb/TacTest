@@ -10,6 +10,7 @@ import {
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
   ShippingRequestDestinationCitiesDto,
+  ShippingRequestFlag,
   ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
@@ -61,6 +62,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   private pointServiceSubs$: Subscription;
   usedIn: 'view' | 'createOrEdit';
   @Output() SelectedWayPointsFromChild = this.wayPointsList;
+  @Input('isHomeDelivery') isHomeDelivery: boolean;
+  shippingRequestFlagEnum = ShippingRequestFlag;
 
   constructor(
     injector: Injector,
@@ -111,7 +114,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         .subscribe((result) => {
           this.allFacilities = result;
           this.pickupFacilities = result.filter((r) => {
-            return this.shippingRequestForView.shippingRequestFlag === 0
+            return this.shippingRequestForView.shippingRequestFlag === this.shippingRequestFlagEnum.Normal
               ? r.cityId == this.shippingRequestForView.originalCityId
               : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
           });

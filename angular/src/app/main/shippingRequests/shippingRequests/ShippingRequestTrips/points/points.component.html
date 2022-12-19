@@ -219,12 +219,20 @@
     <!--end::Form-->
   </div>
   <!--Create/Edit Point Modal-->
-  <createOrEditPointModal #createOrEditPointModal [isForDedicated]="shippingRequestForView.shippingRequestFlag === 1"></createOrEditPointModal>
+  <createOrEditPointModal
+    #createOrEditPointModal
+    [isForDedicated]="shippingRequestForView.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
+  ></createOrEditPointModal>
   <!--END::Create/Edit Point Modal-->
 </div>
 
 <!--begin::CreateOrEditFacilityModal -->
-<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="loadFacilities()"></createOrEditFacilityModal>
+<createOrEditFacilityModal
+  #createOrEditFacilityModal
+  (modalSave)="loadFacilities()"
+  [isForDedicated]="shippingRequestForView.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
+  [isHomeDelivery]="isHomeDelivery"
+></createOrEditFacilityModal>
 <!-- End::CreateOrEditFacilityModal -->
 <!-- begin::CreateOrEditReceiver -->
 <createOrEditReceiverModal #createOrEditReceiverModal (modalSave)="loadReceivers($event)"> </createOrEditReceiverModal>

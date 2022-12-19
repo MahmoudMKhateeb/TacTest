@@ -66,12 +66,12 @@
             </div>
           </div>
           <div class="modal-body" [busyIf]="loading">
-            <div *ngIf="ShippingRequestFlagEnum.Dedicated" class="col-lg-6">
-              <div class="form-group row">
-                <div class="col-6 col-form-label">
+            <div class="row" *ngIf="shippingRequestForView?.shippingRequestFlag == ShippingRequestFlagEnum.Dedicated">
+              <div class="col-lg-6">
+                <div class="form-group">
                   <label for="DeliveryNote"> {{ l('TripType') }} </label>
                   <select #TripType="ngModel" name="TripType" id="TripType" [(ngModel)]="trip.shippingRequestTripFlag" class="form-control">
-                    <option *ngFor="let flag of ShippingRequestTripFlagEnum">{{ l('Yes') }}</option>
+                    <option *ngFor="let flag of ShippingRequestTripFlagArray" [value]="flag.key">{{ flag.value }}</option>
                   </select>
                 </div>
               </div>
@@ -408,6 +408,7 @@
               <PointsComponent
                 [class.invalid-trip-points]="isTripPointsInvalid && isFormSubmitted"
                 (wayPointsListChanged)="revalidatePointsFromPointsComponent()"
+                [isHomeDelivery]="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
                 #PointsComponent
               ></PointsComponent>
               <!--  end:: RouteSteps -->

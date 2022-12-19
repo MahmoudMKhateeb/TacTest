@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Injector, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
@@ -35,6 +35,8 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   @ViewChild('CreateOrEditWorkingHoursComponent', { static: true }) CreateOrEditWorkingHoursComponent: CreateOrEditWorkingHoursComponent;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  @Input('isForDedicated') isForDedicated: boolean;
+  @Input('isHomeDelivery') isHomeDelivery: boolean;
 
   zoom = 6;
   active = false;
@@ -70,6 +72,18 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   };
   isWorkingHoursInvalid = false;
   private cityId: number;
+  get isRequiredFacilityName(): boolean {
+    if (!this.isHomeDelivery) {
+      return true;
+    }
+    return !isNotNullOrUndefined(this.facility.address) || this.facility.address === '';
+  }
+  get isRequiredAddress(): boolean {
+    if (!this.isHomeDelivery) {
+      return true;
+    }
+    return !isNotNullOrUndefined(this.facility.name) || this.facility.name === '';
+  }
 
   constructor(
     injector: Injector,
@@ -84,6 +98,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   }
 
   ngOnInit() {
+    console.log('isHomeDelivery', this.isHomeDelivery);
     this.loadAllCountries();
     this.loadAllCompaniesForDropDown();
     if (this.feature.isEnabled('App.ShipperClients')) {
@@ -144,6 +159,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   }
 
   show(facilityId?: number): void {
+    console.log('isHomeDelivery', this.isHomeDelivery);
     this.active = true;
 
     if (!facilityId) {
@@ -152,6 +168,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
       this.facility.latitude = 24.67911662122269;
       this.facility.longitude = 46.6355543345471;
       this.FacilityWorkingHours = this.getEnumsAsList();
+      this.facility.isForHomeDelivery = this.isHomeDelivery;
       this.modal.show();
     } else {
       this._facilitiesServiceProxy.getFacilityForEdit(facilityId).subscribe((result) => {
@@ -193,16 +210,22 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
           id: this.facility.id == undefined ? null : fh.id,
         })
     );
-    if (this.facility.facilityWorkingHours.length == 0) {
+    if (this.facility.facilityWorkingHours.length == 0 && !this.isHomeDelivery) {
       this.notify.error(this.l('PleaseEnterfacilityWorkingHours'));
       this.saving = false;
       return;
     }
 
-    if (this.facility.cityId == undefined) {
+    if (this.facility.cityId == undefined && this.isRequiredAddress) {
       this.notify.error(this.l('PleaseEnterCity'));
       this.saving = false;
       return;
+    }
+
+    console.log('this.facility', this.facility);
+    if (!this.isRequiredAddress && !this.facility.address) {
+      this.facility.latitude = null;
+      this.facility.longitude = null;
     }
 
     this._facilitiesServiceProxy
@@ -408,7 +431,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
 
   private validateWorkingHours() {
     const facilityWorkingHours = this.FacilityWorkingHours.filter((r) => r.startTime && r.endTime && r.hasTime);
-    if (facilityWorkingHours.length === 0) {
+    if (facilityWorkingHours.length === 0 && !this.isHomeDelivery) {
       return false;
     }
     return true;
