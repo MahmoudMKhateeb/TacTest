@@ -60,9 +60,6 @@ namespace TACHYON.Shipping.Trips.Dto
 
         #region HomeDelivery
         public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
-        public int? PaymentMethodId { get; set; }
-        public bool? NeedsReceiverCode { get; set; }
-        public bool? NeedsPOD { get; set; }
 
         #endregion
         public void AddValidationErrors(CustomValidationContext context)
@@ -74,7 +71,10 @@ namespace TACHYON.Shipping.Trips.Dto
 
             if (!OriginFacilityId.HasValue)
                 context.Results.Add(new ValidationResult("You Must Select Origin Facility"));
-            if (!DestinationFacilityId.HasValue)
+            if (ShippingRequestTripFlag!= ShippingRequestTripFlag.HomeDelivery && !DestinationFacilityId.HasValue)
+                context.Results.Add(new ValidationResult("You Must Select Destination Facility"));
+
+            if (ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && RoutPoints.Count(x=>x.PickingType == PickingType.Dropoff)>0 && !DestinationFacilityId.HasValue)
                 context.Results.Add(new ValidationResult("You Must Select Destination Facility"));
 
             if (EndTripDate != null && StartTripDate?.Date > EndTripDate.Value.Date)
@@ -93,14 +93,6 @@ namespace TACHYON.Shipping.Trips.Dto
                 }
             }
 
-            if(ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && NeedsReceiverCode == null )
-            {
-                context.Results.Add(new ValidationResult("NeedsReceiverCodeRequired"));
-            }
-            else if(ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && NeedsPOD == null)
-            {
-                context.Results.Add(new ValidationResult("NeedsPODeRequired"));
-            }
             if (ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && RoutPoints.Any(x => x.PickingType == PickingType.Dropoff && x.NeedsPOD == null))
             {
                 context.Results.Add(new ValidationResult("NeedsPODForDropsRequired"));
@@ -108,6 +100,16 @@ namespace TACHYON.Shipping.Trips.Dto
             else if (ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && RoutPoints.Any(x => x.PickingType== PickingType.Dropoff && x.NeedsReceiverCode == null))
             {
                 context.Results.Add(new ValidationResult("NeedsReceiverCodeForDropsRequired"));
+            }
+
+            if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.SelectMany(x=>x.GoodsDetailListDto).Any(x => x.UnitOfMeasureId == null))
+            {
+                context.Results.Add(new ValidationResult("GoodsUnitOfMeasureIsRequired"));
+            }
+
+            if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.SelectMany(x => x.GoodsDetailListDto).Any(x => x.Description == null))
+            {
+                context.Results.Add(new ValidationResult("GoodsDescriptionIsRequired"));
             }
         }
 

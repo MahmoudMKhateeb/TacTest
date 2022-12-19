@@ -50,5 +50,6 @@ namespace TACHYON.Shipping.Trips.Dto
         public string ContainerNumber { get; set; }
         public string SealNumber { get; set; }
         public bool isRequestOwner { get; set; }
+        public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
     }
 }

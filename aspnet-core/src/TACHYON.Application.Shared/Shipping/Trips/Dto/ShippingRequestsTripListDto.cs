@@ -49,5 +49,6 @@ namespace TACHYON.Shipping.Trips.Dto
 
         public string BayanId { get; set; }
         public bool CanAssignTrucksAndDrivers { get; set; }
+        public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
     }
 }

@@ -58,8 +58,7 @@ namespace TACHYON.Goods.GoodsDetails
         /// <summary>
         /// unit of measure for the total amount, ex: litre
         /// </summary>
-        [Required]
-        public int UnitOfMeasureId { get; set; }
+        public int? UnitOfMeasureId { get; set; }
 
         [ForeignKey("UnitOfMeasureId")] public UnitOfMeasure UnitOfMeasureFk { get; set; }
 
