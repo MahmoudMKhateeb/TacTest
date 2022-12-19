@@ -4,7 +4,6 @@ using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Reflection.Extensions;
 using Abp.UI;
-using DevExpress.Pdf;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using TACHYON.PriceOffers;
 using TACHYON.PricePackages.PricePackageAppendices.Jobs;
 using TACHYON.PricePackages.PricePackageProposals;
 using TACHYON.PricePackages.TmsPricePackages;
@@ -183,11 +181,17 @@ namespace TACHYON.PricePackages.PricePackageAppendices
         
         public async Task<BinaryObject> GenerateAppendixFile(int appendixId)
         {
+            DisableTenancyFilters();
+            
             var appendix = await _appendixRepository.GetAll()
-                .Include(x => x.Proposal)
-                .ThenInclude(x => x.TmsPricePackages)
-                .Include(x=> x.NormalPricePackages)
-                .Include(x=> x.TmsPricePackages)
+                .Include(x => x.Proposal).ThenInclude(x => x.TmsPricePackages).ThenInclude(x=> x.TransportTypeFk)
+                .Include(x => x.Proposal).ThenInclude(x => x.TmsPricePackages).ThenInclude(x=> x.TrucksTypeFk)
+                .Include(x => x.Proposal).ThenInclude(x => x.Shipper)
+                .Include(x=> x.NormalPricePackages).ThenInclude(x=> x.TransportTypeFk)
+                .Include(x=> x.NormalPricePackages).ThenInclude(x=> x.TrucksTypeFk)
+                .Include(x=> x.TmsPricePackages).ThenInclude(x=> x.TransportTypeFk)
+                .Include(x=> x.TmsPricePackages).ThenInclude(x=> x.TrucksTypeFk)
+                .Include(x=> x.DestinationTenant)
                 .AsNoTracking().FirstOrDefaultAsync(x => x.Id == appendixId);
 
             if (appendix is null) throw new EntityNotFoundException(L("AppendixNotFound"));
@@ -197,20 +201,103 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             await documentProcessor.LoadDocumentAsync(stream);
             var document = documentProcessor.Document;
 
-            // todo : create method to generate document version !important
+            List<AppendixTableItem> items;
+            string[] truckTypes, transportTypes, routeTypes;
+            
+            // check if this shipper appendix
+            if (!appendix.DestinationTenantId.HasValue && appendix.ProposalId.HasValue)
+            {
+                items = appendix.Proposal?.TmsPricePackages?.Select(x => new AppendixTableItem()
+                {
+                    Origin = x.OriginCity.DisplayName,
+                    Destination = x.DestinationCity.DisplayName,
+                    Price = x.TotalPrice,
+                    TruckType = x.TrucksTypeFk.DisplayName
+                }).ToList();
+                
+                truckTypes = appendix.Proposal?.TmsPricePackages?
+                    .Select(x => x.TrucksTypeFk?.DisplayName)?.Distinct()
+                    .ToArray();
+            
+                transportTypes = appendix.Proposal?.TmsPricePackages?
+                    .Select(x => x.TransportTypeFk?.DisplayName)?.Distinct()
+                    .ToArray();
+            
+                routeTypes = appendix.Proposal?.TmsPricePackages?
+                    .Select(x => Enum.GetName(typeof(ShippingRequestRouteType),x.RouteType))?.Distinct()
+                    .ToArray();
+                
+            }
+             // check if this carrier appendix
+            else if (appendix.DestinationTenantId.HasValue && !appendix.ProposalId.HasValue)
+            {
+                
+                #region Truck Types
 
-            var truckTypes = appendix.Proposal?.TmsPricePackages?
-                .Select(x => x.TrucksTypeFk?.DisplayName)?.Distinct()
-                .ToArray();
-            
-            var transportTypes = appendix.Proposal?.TmsPricePackages?
-                .Select(x => x.TransportTypeFk?.DisplayName)?.Distinct()
-                .ToArray();
-            
-            var routeTypes = appendix.Proposal?.TmsPricePackages?
-                .Select(x => Enum.GetName(typeof(ShippingRequestRouteType),x.RouteType))?.Distinct()
-                .ToArray();
-            var companyName = appendix.Proposal?.Shipper?.companyName;
+                var tmsTruckTypes = appendix.TmsPricePackages?
+                    .Select(x => x.TrucksTypeFk?.DisplayName).ToList();
+                
+                var normalTruckTypes = appendix.NormalPricePackages?
+                    .Select(x => x.TrucksTypeFk?.DisplayName).ToList();
+                if (normalTruckTypes != null && normalTruckTypes.Count > 0)
+                    tmsTruckTypes?.AddRange(normalTruckTypes);
+                truckTypes = tmsTruckTypes?.Distinct().ToArray();
+
+                    #endregion
+
+                #region Transport Types
+
+                    var tmsTransportTypes = appendix.TmsPricePackages?
+                        .Select(x => x.TransportTypeFk?.DisplayName).ToList();
+                
+                    var normalTransportTypes = appendix.NormalPricePackages?
+                        .Select(x => x.TransportTypeFk?.DisplayName).ToList();
+                    if (normalTransportTypes != null && normalTransportTypes.Count > 0)
+                        tmsTransportTypes?.AddRange(normalTransportTypes);
+
+                    transportTypes = tmsTransportTypes?.Distinct().ToArray();
+
+                    #endregion
+
+                #region Route Types
+
+                    var tmsRouteTypes = appendix.TmsPricePackages?
+                        .Select(x => x.TransportTypeFk?.DisplayName).ToList();
+
+                    var normalTRouteTypes = appendix.NormalPricePackages?
+                        .Select(x => Enum.GetName(typeof(ShippingRequestRouteType),
+                            x.IsMultiDrop
+                                ? ShippingRequestRouteType.MultipleDrops
+                                : ShippingRequestRouteType.SingleDrop)).ToList();
+                    if (normalTRouteTypes != null && normalTRouteTypes.Count > 0)
+                        tmsRouteTypes?.AddRange(normalTRouteTypes);
+
+                    routeTypes = tmsRouteTypes?.Distinct().ToArray();
+
+                #endregion
+                    
+                items = appendix.TmsPricePackages?.Select(x => new AppendixTableItem()
+                {
+                    Origin = x.OriginCity.DisplayName,
+                    Destination = x.DestinationCity.DisplayName,
+                    Price = x.TotalPrice,
+                    TruckType = x.TrucksTypeFk.DisplayName
+                }).ToList();
+
+                var normalPricePackage = appendix.NormalPricePackages?.Select(x => new AppendixTableItem()
+                {
+                    Origin = x.OriginCityFK.DisplayName,
+                    Destination = x.DestinationCityFK.DisplayName,
+                    Price = x.TachyonMSRequestPrice,
+                    TruckType = x.TrucksTypeFk.DisplayName
+                }).ToList();
+
+                if (normalPricePackage != null && normalPricePackage.Count > 0)
+                    items?.AddRange(normalPricePackage);
+            }
+            else throw new UserFriendlyException(L("AppendixMustHaveDestinationCompanyOrProposal"));
+             
+            var companyName = appendix.ProposalId.HasValue ? appendix.Proposal?.Shipper?.companyName : appendix.DestinationTenant?.companyName;
             var appendixDate = appendix.AppendixDate.ToString("dd/MM/yyyy");
             var contractDate = appendix.CreationTime.ToString("dd/MM/yyyy");
 
@@ -218,7 +305,10 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             document.ReplaceAll(TACHYONConsts.AppendixTemplateAppendixDate, appendixDate ,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateContractDate, contractDate,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, $"{appendix?.Proposal?.Shipper?.ContractNumber}",SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateCompanyName, companyName,SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.AppendixTemplateClientName, companyName,SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.AppendixTemplateScopeOverview, appendix.ScopeOverview,SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.AppendixTemplateNotes, appendix.Notes,SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.AppendixTemplateVersion, $"{appendix.MajorVersion}.{appendix.MinorVersion}",SearchOptions.None);
             if (truckTypes != null && truckTypes.Length > 0) 
                 document.ReplaceAll(TACHYONConsts.AppendixTemplateTruckTypes, string.Join(',',truckTypes),SearchOptions.None);
             
@@ -228,6 +318,21 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             if (routeTypes != null && routeTypes.Length > 0) 
                 document.ReplaceAll(TACHYONConsts.AppendixTemplateRouteTypes, string.Join(',',routeTypes),SearchOptions.None);
 
+            if (items == null || items.Count < 1) throw new UserFriendlyException(L("AppendixMustHavePricePackages"));
+
+            var pricingDetailsTable = document.Tables[2];
+            for (int i = 0; i < items?.Count; i++)
+            {
+                int rowLength = pricingDetailsTable.Rows.Count;
+                if (i > 0) pricingDetailsTable.Rows.InsertAfter(rowLength- 1);
+                var currentColumn = i == 0 ? rowLength - 1 : rowLength;
+                document.InsertText(pricingDetailsTable[currentColumn, 0].Range.Start, $"{i + 1}");
+                document.InsertText(pricingDetailsTable[currentColumn, 1].Range.Start, items[i].Origin);
+                document.InsertText(pricingDetailsTable[currentColumn, 2].Range.Start, items[i].Destination);
+                document.InsertText(pricingDetailsTable[currentColumn, 3].Range.Start, items[i].TruckType);
+                document.InsertText(pricingDetailsTable[currentColumn, 4].Range.Start, $"{items[i].Price} SR");
+            }
+            
             await using MemoryStream outputFileStream = new MemoryStream();
 
             await documentProcessor.ExportToPdfAsync(outputFileStream);

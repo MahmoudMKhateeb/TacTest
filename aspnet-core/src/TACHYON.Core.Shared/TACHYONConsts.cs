@@ -152,6 +152,8 @@
         public const string AppendixTemplateTruckTypes = "$$TruckTypes$$";
         public const string AppendixTemplateTransportTypes = "$$TransportTypes$$";
         public const string AppendixTemplateRouteTypes = "$$RouteTypes$$";
-        public const string AppendixTemplateCompanyName = "$CompanyName$$";
+        public const string AppendixTemplateClientName = "$$ClientName$$";
+        public const string AppendixTemplateScopeOverview = "$$ScopeOverview$$";
+        public const string AppendixTemplateNotes = "$$Notes$$";
     }
 }
