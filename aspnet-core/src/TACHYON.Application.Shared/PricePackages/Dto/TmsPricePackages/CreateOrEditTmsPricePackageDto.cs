@@ -24,6 +24,8 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
         public int? DestinationTenantId { get; set; }
 
         public ShippingRequestRouteType RouteType { get; set; }
+        
+        public int ShippingTypeId { get; set; }
 
         public decimal TotalPrice { get; set; }
 

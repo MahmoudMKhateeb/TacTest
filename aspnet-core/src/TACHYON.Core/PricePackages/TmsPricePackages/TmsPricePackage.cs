@@ -1,14 +1,10 @@
-﻿using Abp.Domain.Entities;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Cities;
 using TACHYON.MultiTenancy;
-using TACHYON.PriceOffers;
 using TACHYON.PricePackages.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageProposals;
-using TACHYON.PricePackages.TmsPricePackageOffers;
-using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingTypes;
 
 namespace TACHYON.PricePackages.TmsPricePackages
 {
@@ -34,6 +30,11 @@ namespace TACHYON.PricePackages.TmsPricePackages
         public Tenant DestinationTenant { get; set; }
 
         public ShippingRequestRouteType RouteType { get; set; }
+        
+        public int? ShippingTypeId { get; set; }
+
+        [ForeignKey(nameof(ShippingTypeId))]
+        public ShippingType ShippingType { get; set; }
         
         // Total price = Commission value + price 
         // commission value = if (commission type == value) Commission;

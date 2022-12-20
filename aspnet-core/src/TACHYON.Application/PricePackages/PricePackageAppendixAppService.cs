@@ -88,10 +88,9 @@ namespace TACHYON.PricePackages
         protected virtual async Task Update(CreateOrEditAppendixDto input)
         {
             if (!input.Id.HasValue) return;
+            
 
-            var updatedAppendix = ObjectMapper.Map<PricePackageAppendix>(input);
-
-            await _appendixManager.UpdateAppendix(updatedAppendix, input.PricePackages, input.EmailAddress);
+            await _appendixManager.UpdateAppendix(input, input.PricePackages, input.EmailAddress);
         }
 
         [AbpAuthorize(AppPermissions.Pages_PricePackageAppendix_Accept)]

@@ -26,9 +26,7 @@ namespace TACHYON.PricePackages.TmsPricePackageOffers
         private readonly IShippingRequestDirectRequestAppService _directRequestAppService;
         private readonly PriceOfferManager _priceOfferManager;
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
-        private readonly IPriceOfferAppService _priceOfferAppService;
-        private readonly IRepository<User,long> _userRepository;
-        private readonly IAbpSession _session;
+        
 
         public TmsPricePackageOfferManager(
             IRepository<TmsPricePackageOffer, long> tmsOfferRepository,
@@ -37,10 +35,7 @@ namespace TACHYON.PricePackages.TmsPricePackageOffers
             IRepository<NormalPricePackage> normalPricePackageRepository,
             IShippingRequestDirectRequestAppService directRequestAppService,
             PriceOfferManager priceOfferManager,
-            IRepository<PriceOffer, long> priceOfferRepository,
-            IPriceOfferAppService priceOfferAppService, 
-            IRepository<User, long> userRepository,
-            IAbpSession session)
+            IRepository<PriceOffer, long> priceOfferRepository)
         {
             _tmsOfferRepository = tmsOfferRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -49,9 +44,6 @@ namespace TACHYON.PricePackages.TmsPricePackageOffers
             _directRequestAppService = directRequestAppService;
             _priceOfferManager = priceOfferManager;
             _priceOfferRepository = priceOfferRepository;
-            _priceOfferAppService = priceOfferAppService;
-            _userRepository = userRepository;
-            _session = session;
         }
         
         
@@ -93,49 +85,7 @@ namespace TACHYON.PricePackages.TmsPricePackageOffers
 
         }
 
-        public async Task CreateOfferAndAcceptOnBehalfOfCarrier(int pricePackageId, long shippingRequestId,bool isTmsPricePackage)
-        {
-            int? carrierTenantId;
-            long carrierUserId;
-            
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
-            {
-                if (isTmsPricePackage)
-                {
-                    carrierTenantId = await (from tmsPricePackage in _tmsPricePackageRepository.GetAll()
-                            where tmsPricePackage.Id == pricePackageId
-                            select tmsPricePackage.DestinationTenantId).FirstAsync();
-                }
-                else
-                    carrierTenantId = await (
-                        from normalPricePackage in _normalPricePackageRepository.GetAll()
-                        where normalPricePackage.Id == pricePackageId
-                        select normalPricePackage.TenantId).FirstAsync();
-
-                carrierUserId = await _userRepository.GetAll().Where(x =>
-                        x.TenantId == carrierTenantId && x.UserName == AbpUserBase.AdminUserName)
-                    .Select(x => x.Id).FirstOrDefaultAsync();
-            }
-
-            // impersonate the carrier 
-            long createdOfferId;
-            using (CurrentUnitOfWork.SetTenantId(carrierTenantId))
-            {
-                var priceOfferDto = await _priceOfferAppService.GetPriceOfferForCreateOrEdit(shippingRequestId, null);
-
-                
-                var priceOffer = ObjectMapper.Map<PriceOffer>(priceOfferDto);
-
-                priceOffer.ShippingRequestId = shippingRequestId;
-                var priceOfferInput = ObjectMapper.Map<CreateOrEditPriceOfferInput>(priceOffer);
-
-                priceOfferInput.Channel = PriceOfferChannel.DirectRequest;
-                createdOfferId = await _priceOfferAppService.CreateOrEdit(priceOfferInput);
-                _priceOfferRepository.Update(createdOfferId, x => x.CreatorUserId = carrierUserId);
-            }
-
-            await _priceOfferManager.AcceptOffer(createdOfferId);
-        }
+        
         public async Task<bool> HasDirectRequestByPricePackage(long shippingRequestId)
         {
             DisableTenancyFilters();
@@ -231,7 +181,7 @@ namespace TACHYON.PricePackages.TmsPricePackageOffers
             await _tmsOfferRepository.InsertAsync(createdPricePackageOffer);
         }
 
-        private async Task<long> GetParentOfferId(long shippingRequestId)
+        public async Task<long> GetParentOfferId(long shippingRequestId)
         {
            return await (from priceOffer in _priceOfferRepository.GetAll()
                 where priceOffer.ShippingRequestId == shippingRequestId
