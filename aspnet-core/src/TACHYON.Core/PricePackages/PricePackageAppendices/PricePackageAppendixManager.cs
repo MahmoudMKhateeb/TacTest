@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.PricePackages.Dto.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageAppendices.Jobs;
 using TACHYON.PricePackages.PricePackageProposals;
 using TACHYON.PricePackages.TmsPricePackages;
@@ -48,29 +49,35 @@ namespace TACHYON.PricePackages.PricePackageAppendices
         public async Task CreateAppendix(PricePackageAppendix createdAppendix, List<string> pricePackages,string emailAddress)
         {
             DisableTenancyFilters();
-            
-            (int lastAppendixMajorVersion, int lastAppendixMinorVersion) = await _appendixRepository.GetAll()
-                // to do: Improve this in future 
-               // .Where(x=> (!x.DestinationTenantId.HasValue || x.DestinationTenantId == createdAppendix.DestinationTenantId) || (!x.ProposalId.HasValue || x.Proposal.ShipperId == createdAppendix.p) )
-                .OrderByDescending(x => x.MajorVersion).ThenByDescending(x=> x.MinorVersion)
-                .Select(x => new Tuple<int, int>(x.MajorVersion, x.MinorVersion)).FirstOrDefaultAsync();
+
+            var tenantId = createdAppendix.DestinationTenantId;
+
+            if (tenantId == null && createdAppendix.ProposalId.HasValue)
+            {
+               tenantId = await _proposalRepository.GetAll().Where(x => x.Id == createdAppendix.ProposalId).Select(x => x.ShipperId)
+                    .FirstOrDefaultAsync();
+            }
+            var lastCreatedAppendix = await _appendixRepository.GetAll()
+                .Where(x=> (!x.DestinationTenantId.HasValue || x.DestinationTenantId == tenantId) 
+                           || (!x.ProposalId.HasValue || x.Proposal.ShipperId == tenantId))
+                .OrderByDescending(x => x.MajorVersion).ThenByDescending(x=> x.MinorVersion).FirstOrDefaultAsync();
 
             #region Handle Versioning
 
-            if (lastAppendixMajorVersion == default || lastAppendixMinorVersion == default)
+            if (lastCreatedAppendix == null)
             {
                 createdAppendix.MajorVersion = 1;
                 createdAppendix.MinorVersion = 1;
             }
-            else if (lastAppendixMinorVersion == 9)
+            else if (lastCreatedAppendix.MinorVersion == 9)
             {
-                createdAppendix.MajorVersion = lastAppendixMajorVersion + 1;
+                createdAppendix.MajorVersion = lastCreatedAppendix.MajorVersion + 1;
                 createdAppendix.MinorVersion = 1;
             }
             else
             {
-                createdAppendix.MajorVersion = lastAppendixMajorVersion;
-                createdAppendix.MinorVersion = lastAppendixMinorVersion + 1;
+                createdAppendix.MajorVersion = lastCreatedAppendix.MajorVersion;
+                createdAppendix.MinorVersion = lastCreatedAppendix.MinorVersion + 1;
             }
 
             #endregion
@@ -103,8 +110,11 @@ namespace TACHYON.PricePackages.PricePackageAppendices
                 });
         }
         
-        public async Task UpdateAppendix(PricePackageAppendix updatedAppendix, List<string> pricePackages, string emailAddress)
+        public async Task UpdateAppendix(CreateOrEditAppendixDto updatedAppendix, List<string> pricePackages, string emailAddress)
         { 
+            
+            if (!updatedAppendix.Id.HasValue) return;
+            
             DisableTenancyFilters();
             
             var oldAppendix = await _appendixRepository.GetAll()
@@ -175,7 +185,7 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             await _jobManager.EnqueueAsync<GenerateAppendixFileJob, GenerateAppendixFileJobArgument>(
                 new GenerateAppendixFileJobArgument
                 {
-                    AppendixId = updatedAppendix.Id, FileReceiverEmailAddress = emailAddress
+                    AppendixId = updatedAppendix.Id.Value, FileReceiverEmailAddress = emailAddress
                 });
         }
         
@@ -186,11 +196,17 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             var appendix = await _appendixRepository.GetAll()
                 .Include(x => x.Proposal).ThenInclude(x => x.TmsPricePackages).ThenInclude(x=> x.TransportTypeFk)
                 .Include(x => x.Proposal).ThenInclude(x => x.TmsPricePackages).ThenInclude(x=> x.TrucksTypeFk)
+                .Include(x => x.Proposal).ThenInclude(x => x.TmsPricePackages).ThenInclude(x=> x.OriginCity)
+                .Include(x => x.Proposal).ThenInclude(x => x.TmsPricePackages).ThenInclude(x=> x.DestinationCity)
                 .Include(x => x.Proposal).ThenInclude(x => x.Shipper)
                 .Include(x=> x.NormalPricePackages).ThenInclude(x=> x.TransportTypeFk)
-                .Include(x=> x.NormalPricePackages).ThenInclude(x=> x.TrucksTypeFk)
+                .Include(x=> x.NormalPricePackages).ThenInclude(x=> x.TrucksTypeFk)                
+                .Include(x=> x.NormalPricePackages).ThenInclude(x=> x.OriginCityFK)
+                .Include(x=> x.NormalPricePackages).ThenInclude(x=> x.DestinationCityFK)
                 .Include(x=> x.TmsPricePackages).ThenInclude(x=> x.TransportTypeFk)
                 .Include(x=> x.TmsPricePackages).ThenInclude(x=> x.TrucksTypeFk)
+                .Include(x=> x.TmsPricePackages).ThenInclude(x=> x.OriginCity)
+                .Include(x=> x.TmsPricePackages).ThenInclude(x=> x.DestinationCity)
                 .Include(x=> x.DestinationTenant)
                 .AsNoTracking().FirstOrDefaultAsync(x => x.Id == appendixId);
 
@@ -205,14 +221,14 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             string[] truckTypes, transportTypes, routeTypes;
             
             // check if this shipper appendix
-            if (!appendix.DestinationTenantId.HasValue && appendix.ProposalId.HasValue)
+            if (appendix.ProposalId.HasValue)
             {
                 items = appendix.Proposal?.TmsPricePackages?.Select(x => new AppendixTableItem()
                 {
-                    Origin = x.OriginCity.DisplayName,
-                    Destination = x.DestinationCity.DisplayName,
+                    Origin = x.OriginCity?.DisplayName,
+                    Destination = x.DestinationCity?.DisplayName,
                     Price = x.TotalPrice,
-                    TruckType = x.TrucksTypeFk.DisplayName
+                    TruckType = x.TrucksTypeFk?.DisplayName
                 }).ToList();
                 
                 truckTypes = appendix.Proposal?.TmsPricePackages?
@@ -262,7 +278,7 @@ namespace TACHYON.PricePackages.PricePackageAppendices
                 #region Route Types
 
                     var tmsRouteTypes = appendix.TmsPricePackages?
-                        .Select(x => x.TransportTypeFk?.DisplayName).ToList();
+                        .Select(x => Enum.GetName(typeof(ShippingRequestRouteType),x.RouteType)).ToList();
 
                     var normalTRouteTypes = appendix.NormalPricePackages?
                         .Select(x => Enum.GetName(typeof(ShippingRequestRouteType),
@@ -278,18 +294,18 @@ namespace TACHYON.PricePackages.PricePackageAppendices
                     
                 items = appendix.TmsPricePackages?.Select(x => new AppendixTableItem()
                 {
-                    Origin = x.OriginCity.DisplayName,
-                    Destination = x.DestinationCity.DisplayName,
+                    Origin = x.OriginCity?.DisplayName,
+                    Destination = x.DestinationCity?.DisplayName,
                     Price = x.TotalPrice,
-                    TruckType = x.TrucksTypeFk.DisplayName
+                    TruckType = x.TrucksTypeFk?.DisplayName
                 }).ToList();
 
                 var normalPricePackage = appendix.NormalPricePackages?.Select(x => new AppendixTableItem()
                 {
-                    Origin = x.OriginCityFK.DisplayName,
-                    Destination = x.DestinationCityFK.DisplayName,
+                    Origin = x.OriginCityFK?.DisplayName,
+                    Destination = x.DestinationCityFK?.DisplayName,
                     Price = x.TachyonMSRequestPrice,
-                    TruckType = x.TrucksTypeFk.DisplayName
+                    TruckType = x.TrucksTypeFk?.DisplayName
                 }).ToList();
 
                 if (normalPricePackage != null && normalPricePackage.Count > 0)
@@ -301,12 +317,14 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             var appendixDate = appendix.AppendixDate.ToString("dd/MM/yyyy");
             var contractDate = appendix.CreationTime.ToString("dd/MM/yyyy");
 
+            string formattedScopeOverview = appendix.ScopeOverview.Replace(TACHYONConsts.AppendixTemplateClientName, companyName);
+            
             document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, appendix.ContractName,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateAppendixDate, appendixDate ,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateContractDate, contractDate,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, $"{appendix?.Proposal?.Shipper?.ContractNumber}",SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateClientName, companyName,SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateScopeOverview, appendix.ScopeOverview,SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.AppendixTemplateScopeOverview, formattedScopeOverview,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateNotes, appendix.Notes,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateVersion, $"{appendix.MajorVersion}.{appendix.MinorVersion}",SearchOptions.None);
             if (truckTypes != null && truckTypes.Length > 0) 

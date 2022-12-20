@@ -59,7 +59,7 @@ export class ViewMatchingTmsPricePackageComponent extends AppComponentBase imple
         this.getMatchingTmsPricePackages({});
       });
   }
-
+/*
   acceptOnBehalfCarrier(pricePackage: TmsPricePackageForViewDto) {
     this.loadingPricePackageId = pricePackage.pricePackageId;
     this._tmsPricePackageServiceProxy
@@ -69,5 +69,5 @@ export class ViewMatchingTmsPricePackageComponent extends AppComponentBase imple
         this.notify.success('SentSuccessfully');
         this.getMatchingTmsPricePackages({});
       });
-  }
+  }*/
 }

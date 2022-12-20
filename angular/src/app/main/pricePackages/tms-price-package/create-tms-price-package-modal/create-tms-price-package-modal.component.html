@@ -78,13 +78,22 @@
               <label>{{ l('PricePackageType') }} <span class="text-danger">*</span></label>
               <select [(ngModel)]="tmsPricePackage.type" required class="form-control" name="tmsPP_PricePackageType">
                 <option selected disabled [value]="undefined">{{ 'SelectPricePackageType' | localize }}</option>
-                <option *ngFor="let item of pricePackageTypes" [disabled]="item.key != pricePackageType.PerTrip" [value]="item.key">
+                <option *ngFor="let item of pricePackageTypes" [disabled]="item.key != pricePackageType.PerTrip" value="{{item.key}}">
                   {{ item.value }}
                 </option>
               </select>
             </div>
           </div>
           <div class="row">
+              <div class="form-group col-md-6">
+                  <label>{{ l('ShippingType') }} <span class="text-danger">*</span></label>
+                  <select [(ngModel)]="tmsPricePackage.shippingTypeId" required class="form-control" name="tmsPP_PricePackageType">
+                      <option selected disabled [value]="undefined">{{ 'SelectShippingType' | localize }}</option>
+                      <option *ngFor="let item of shippingTypes" [value]="item.id">
+                          {{ item.displayName }}
+                      </option>
+                  </select>
+              </div>
             <div class="form-group col-md-4">
               <label>{{ l('TotalPrice') }} </label>
               <input

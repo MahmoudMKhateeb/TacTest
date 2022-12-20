@@ -1,7 +1,9 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
@@ -11,10 +13,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Authorization.Users;
 using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
+using TACHYON.PriceOffers.Dto;
 using TACHYON.PricePackages.Dto.TmsPricePackages;
 using TACHYON.PricePackages.PricePackageAppendices;
 using TACHYON.PricePackages.TmsPricePackageOffers;
@@ -38,6 +42,8 @@ namespace TACHYON.PricePackages
         private readonly IRepository<PricePackageAppendix> _appendixRepository;
         private readonly IRepository<TmsPricePackageOffer,long> _tmsOfferRepository;
         private readonly IRepository<PriceOffer,long> _priceOfferRepository;
+        private readonly IPriceOfferAppService _priceOfferAppService;
+        private readonly IRepository<User,long> _userRepository;
 
         public TmsPricePackageAppService(
             IRepository<TmsPricePackage> tmsPricePackageRepository,
@@ -50,7 +56,9 @@ namespace TACHYON.PricePackages
             ITmsPricePackageOfferManager tmsPricePackageOfferManager,
             IRepository<PricePackageAppendix> appendixRepository,
             IRepository<TmsPricePackageOffer, long> tmsOfferRepository,
-            IRepository<PriceOffer, long> priceOfferRepository)
+            IRepository<PriceOffer, long> priceOfferRepository,
+            IRepository<User, long> userRepository,
+            IPriceOfferAppService priceOfferAppService)
         {
             _tmsPricePackageRepository = tmsPricePackageRepository;
             _tenantRepository = tenantRepository;
@@ -63,6 +71,8 @@ namespace TACHYON.PricePackages
             _appendixRepository = appendixRepository;
             _tmsOfferRepository = tmsOfferRepository;
             _priceOfferRepository = priceOfferRepository;
+            _userRepository = userRepository;
+            _priceOfferAppService = priceOfferAppService;
         }
 
 
@@ -151,12 +161,7 @@ namespace TACHYON.PricePackages
         {
             await _tmsPricePackageOfferManager.ApplyPricingOnShippingRequest(pricePackageId, srId,isTmsPricePackage);
         }
-        
-        public async Task AcknowledgeOnBehalfCarrier(int pricePackageId,long srId,bool isTmsPricePackage) 
-        {
-            await _tmsPricePackageOfferManager.CreateOfferAndAcceptOnBehalfOfCarrier(pricePackageId,srId,isTmsPricePackage);
-        }
-        
+
         public async Task<TmsPricePackageForPricingDto> GetForPricing(int pricePackageId)
         {
             DisableTenancyFilters();
@@ -223,15 +228,6 @@ namespace TACHYON.PricePackages
                     x.CarrierTenantId == pricePackageDto.CompanyTenantId)
                 from pricePackageOffer in _tmsOfferRepository.GetAllIncluding(x => x.DirectRequest, x => x.PriceOffer)
                     .AsNoTracking().Include(x => x.TmsPricePackage).Include(x => x.NormalPricePackage).DefaultIfEmpty()
-                from priceOffer in _priceOfferRepository.GetAll().Where(x =>
-                    x.ShippingRequestId == input.ShippingRequestId
-                    && (x.Status == PriceOfferStatus.Accepted || x.Status == PriceOfferStatus.Pending
-                    || x.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier ||
-                        x.Status == PriceOfferStatus.AcceptedAndWaitingForShipper)
-                    && _tmsOfferRepository.GetAll()
-                        .Any(packageOffer => packageOffer.DirectRequestId.HasValue &&
-                                             packageOffer.DirectRequest.ShippingRequestId == input.ShippingRequestId &&
-                                             packageOffer.DirectRequest.CarrierTenantId == x.TenantId)).DefaultIfEmpty()
                 where hasNormalDirectRequest ||
                       (pricePackageOffer != null && (pricePackageOffer.TmsPricePackageId == pricePackageDto.Id ||
                                                      pricePackageOffer.NormalPricePackageId == pricePackageDto.Id) &&
@@ -243,10 +239,10 @@ namespace TACHYON.PricePackages
                 {
                     HasDirectRequest = pricePackageOffer.DirectRequestId.HasValue || hasNormalDirectRequest,
                     HasOffer = pricePackageOffer.PriceOfferId.HasValue,
-                    IsRequestPriced = priceOffer?.Id != null,
                     pricePackageDto.PricePackageId
                 }).ToList();
 
+            var offerId = await _tmsPricePackageOfferManager.GetParentOfferId(input.ShippingRequestId);
             foreach (var item in pageResult)
             {
                 var pricingLookupItem = pricePackagesPricingLookup.FirstOrDefault(x => x.PricePackageId == item.PricePackageId);
@@ -255,7 +251,7 @@ namespace TACHYON.PricePackages
                 
                 item.HasOffer = pricingLookupItem.HasOffer;
                 item.HasDirectRequest = pricingLookupItem.HasDirectRequest;
-                item.IsRequestPriced = pricingLookupItem.IsRequestPriced;
+                item.IsRequestPriced = offerId != default;
             }
                 
             
@@ -296,5 +292,49 @@ namespace TACHYON.PricePackages
             return new ListResultDto<PricePackageSelectItemDto>(pricePackagesList);
         }
         
+        
+        private async Task CreateOfferAndAcceptOnBehalfOfCarrier(int pricePackageId, long shippingRequestId,bool isTmsPricePackage)
+        {
+            int? carrierTenantId;
+            long carrierUserId;
+            
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            {
+                if (isTmsPricePackage)
+                {
+                    carrierTenantId = await (from tmsPricePackage in _tmsPricePackageRepository.GetAll()
+                            where tmsPricePackage.Id == pricePackageId
+                            select tmsPricePackage.DestinationTenantId).FirstAsync();
+                }
+                else
+                    carrierTenantId = await (
+                        from normalPricePackage in _normalPricePackageRepository.GetAll()
+                        where normalPricePackage.Id == pricePackageId
+                        select normalPricePackage.TenantId).FirstAsync();
+
+                carrierUserId = await _userRepository.GetAll().Where(x =>
+                        x.TenantId == carrierTenantId && x.UserName == AbpUserBase.AdminUserName)
+                    .Select(x => x.Id).FirstOrDefaultAsync();
+            }
+
+            // impersonate the carrier 
+            long createdOfferId;
+            using (AbpSession.Use(carrierTenantId,carrierUserId))
+            {
+                var priceOfferDto = await _priceOfferAppService.GetPriceOfferForCreateOrEdit(shippingRequestId, null);
+
+                
+                var priceOffer = ObjectMapper.Map<PriceOffer>(priceOfferDto);
+
+                priceOffer.ShippingRequestId = shippingRequestId;
+                var priceOfferInput = ObjectMapper.Map<CreateOrEditPriceOfferInput>(priceOffer);
+
+                priceOfferInput.Channel = PriceOfferChannel.DirectRequest;
+                createdOfferId = await _priceOfferAppService.CreateOrEdit(priceOfferInput);
+                _priceOfferRepository.Update(createdOfferId, x => x.CreatorUserId = carrierUserId);
+            }
+
+            await _priceOfferAppService.Accept(createdOfferId);
+        }
     }
 }

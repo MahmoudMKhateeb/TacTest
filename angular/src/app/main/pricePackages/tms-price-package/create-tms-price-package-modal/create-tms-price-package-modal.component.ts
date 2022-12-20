@@ -37,6 +37,7 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
   pricePackageTypes = this._enumToArrayPipe.transform(this.pricePackageType);
   routeTypes = this._enumToArrayPipe.transform(ShippingRequestRouteType);
   dataSource: any = {};
+  shippingTypes: SelectItemDto[];
 
   constructor(
     private injector: Injector,
@@ -54,6 +55,7 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
     this.isFormSaving = false;
     this.loadAllDropDowns();
     this.getAllNormalPricePackages();
+    this.getAllShippingType();
   }
 
   show(id?: number): void {
@@ -68,6 +70,7 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
     }
     this.modal.show();
     this.isFormActive = true;
+      console.log(this.pricePackageTypes);
   }
 
   /**
@@ -163,5 +166,10 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
       this.modalSave.emit('');
       this.close();
     });
+  }
+  getAllShippingType() {
+      this._shippingRequestServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
+          this.shippingTypes = result;
+      });
   }
 }
