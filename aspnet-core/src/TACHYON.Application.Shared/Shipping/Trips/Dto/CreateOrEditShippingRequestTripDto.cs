@@ -92,7 +92,7 @@ namespace TACHYON.Shipping.Trips.Dto
                     throw new UserFriendlyException("YouMustEnterReceiver");
                 }
             }
-            if(ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && RoutPoints!=null && RoutPoints.Count > 0)
+            if(ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && RoutPoints!=null && RoutPoints.Count(x => x.PickingType == PickingType.Dropoff) > 0)
             {
                 if (RoutPoints.Any(x => x.PickingType == PickingType.Dropoff && x.NeedsPOD == null))
                 {
@@ -102,24 +102,19 @@ namespace TACHYON.Shipping.Trips.Dto
                 {
                     context.Results.Add(new ValidationResult("NeedsReceiverCodeForDropsRequired"));
                 }
-
-                if (RoutPoints.Any(x => x.PickingType == PickingType.Dropoff && x.NeedsReceiverCode == null))
-                {
-                    context.Results.Add(new ValidationResult("NeedsReceiverCodeForDropsRequired"));
-                }
             }
             
-            if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.SelectMany(x=>x.GoodsDetailListDto).Any(x => x.UnitOfMeasureId == null))
+            if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.Where(x=>x.PickingType == PickingType.Dropoff).SelectMany(x=>x.GoodsDetailListDto).Any(x => x.UnitOfMeasureId == null))
             {
                 context.Results.Add(new ValidationResult("GoodsUnitOfMeasureIsRequired"));
             }
 
-            if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.SelectMany(x => x.GoodsDetailListDto).Any(x => x.Description == null))
+            if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).Any(x => x.Description == null))
             {
                 context.Results.Add(new ValidationResult("GoodsDescriptionIsRequired"));
             }
 
-            if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.SelectMany(x => x.GoodsDetailListDto).Any(x => x.Amount == null))
+            if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).Any(x => x.Amount == null))
             {
                 context.Results.Add(new ValidationResult("GoodsQuantityIsRequired"));
             }
