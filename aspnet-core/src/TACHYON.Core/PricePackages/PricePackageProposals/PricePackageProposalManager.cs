@@ -107,7 +107,7 @@ namespace TACHYON.PricePackages.PricePackageProposals
             
             var shippingTypes = proposal.TmsPricePackages?
                 .Where(x=> x.ShippingTypeId.HasValue)
-                .Select(x => Enum.GetName(typeof(ShippingRequestRouteType),x.ShippingType.DisplayName))
+                .Select(x => x.ShippingType?.DisplayName)
                 .Distinct().ToArray();
             
             document.ReplaceAll(TACHYONConsts.ProposalTemplateCompanyName, proposal.Shipper?.companyName,SearchOptions.None);
@@ -117,14 +117,14 @@ namespace TACHYON.PricePackages.PricePackageProposals
             document.ReplaceAll(TACHYONConsts.ProposalTemplateNotes, proposal.Notes, SearchOptions.None);
             
             
-                document.ReplaceAll(TACHYONConsts.ProposalTemplateTruckType, string.Join(", ", truckTypes ?? new string[]{}),
+                document.ReplaceAll(TACHYONConsts.ProposalTemplateTruckType, string.Join(", ", truckTypes ?? new[]{string.Empty}),
                     SearchOptions.None);
             
-                document.ReplaceAll(TACHYONConsts.ProposalTemplateRouteType, string.Join(", ", routeTypes ?? new string[]{}),
+                document.ReplaceAll(TACHYONConsts.ProposalTemplateRouteType, string.Join(", ", routeTypes ?? new[]{string.Empty}),
                     SearchOptions.None);
             
             
-                document.ReplaceAll(TACHYONConsts.ProposalTemplateShippingType, string.Join(", ", shippingTypes ?? new string[]{}),
+                document.ReplaceAll(TACHYONConsts.ProposalTemplateShippingType, string.Join(", ", shippingTypes ?? new[]{string.Empty}),
                     SearchOptions.None);
 
             var routeDetailsTable = document.Tables[1];

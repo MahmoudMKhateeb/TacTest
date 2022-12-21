@@ -70,7 +70,6 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
     }
     this.modal.show();
     this.isFormActive = true;
-      console.log(this.pricePackageTypes);
   }
 
   /**
@@ -128,6 +127,7 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
     this.tmsPricePackage = new CreateOrEditTmsPricePackageDto();
     this.isFormActive = false;
     this.isFormSaving = false;
+    this.truckTypes = undefined;
     this.modal.hide();
   }
 
@@ -167,9 +167,10 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
       this.close();
     });
   }
+
   getAllShippingType() {
-      this._shippingRequestServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
-          this.shippingTypes = result;
-      });
+    this._shippingRequestServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
+      this.shippingTypes = result;
+    });
   }
 }
