@@ -564,19 +564,23 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     }
     //trip Details Validation
     for (const point of this.trip.routPoints) {
-      const isFacilityOrReceiverEmpty =
-        !isNotNullOrUndefined(point.facilityId) ||
-        !isNotNullOrUndefined(point.receiverId) ||
-        ('' + point.facilityId).length === 0 ||
-        ('' + point.receiverId).length === 0;
-      if (point.pickingType === this.PickingType.Pickup && isFacilityOrReceiverEmpty) {
+      const isFacilityEmpty = !isNotNullOrUndefined(point.facilityId) || ('' + point.facilityId).length === 0;
+      const isReceiverEmpty =
+        (this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.Normal &&
+          (!isNotNullOrUndefined(point.receiverId) || ('' + point.receiverId).length === 0)) ||
+        (this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.HomeDelivery &&
+          (!isNotNullOrUndefined(point.receiverFullName) || point.receiverFullName.length === 0) &&
+          (!isNotNullOrUndefined(point.receiverPhoneNumber) || point.receiverPhoneNumber.length === 0) &&
+          (!isNotNullOrUndefined(point.receiverId) || ('' + point.receiverId).length === 0));
+      if (point.pickingType === this.PickingType.Pickup && (isFacilityEmpty || isReceiverEmpty)) {
         Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseCompletePicKupPointDetails'), 'warning');
         return false;
         break;
       }
       if (point.pickingType === this.PickingType.Dropoff) {
         if (
-          isFacilityOrReceiverEmpty ||
+          isFacilityEmpty ||
+          isReceiverEmpty ||
           (this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.Normal && !isNotNullOrUndefined(point.goodsDetailListDto as any))
         ) {
           Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseCompleteAllDropPointDetails'), 'warning');
@@ -593,17 +597,21 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       return false;
     }
     for (const point of this.PointsComponent.wayPointsList) {
-      const isFacilityOrReceiverEmpty =
-        !isNotNullOrUndefined(point.facilityId) ||
-        !isNotNullOrUndefined(point.receiverId) ||
-        ('' + point.facilityId).length === 0 ||
-        ('' + point.receiverId).length === 0;
-      if (point.pickingType === this.PickingType.Pickup && isFacilityOrReceiverEmpty) {
+      const isFacilityEmpty = !isNotNullOrUndefined(point.facilityId) || ('' + point.facilityId).length === 0;
+      const isReceiverEmpty =
+        (this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.Normal &&
+          (!isNotNullOrUndefined(point.receiverId) || ('' + point.receiverId).length === 0)) ||
+        (this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.HomeDelivery &&
+          (!isNotNullOrUndefined(point.receiverFullName) || point.receiverFullName.length === 0) &&
+          (!isNotNullOrUndefined(point.receiverPhoneNumber) || point.receiverPhoneNumber.length === 0) &&
+          (!isNotNullOrUndefined(point.receiverId) || ('' + point.receiverId).length === 0));
+      if (point.pickingType === this.PickingType.Pickup && (isFacilityEmpty || isReceiverEmpty)) {
         return false;
       }
       if (point.pickingType === this.PickingType.Dropoff) {
         if (
-          isFacilityOrReceiverEmpty ||
+          isFacilityEmpty ||
+          isReceiverEmpty ||
           (this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.Normal &&
             (!isNotNullOrUndefined(point.goodsDetailListDto as any) || point.goodsDetailListDto.length === 0))
         ) {
@@ -759,7 +767,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     } else {
       point.pickingType = this.PickingType.Dropoff;
     }
-    point.paymentMethodId = this.selectedPaymentMethod;
+    point.dropPaymentMethod = this.selectedPaymentMethod;
     point.needsPOD = false;
     point.needsReceiverCode = false;
     wayPointsList.push(point);

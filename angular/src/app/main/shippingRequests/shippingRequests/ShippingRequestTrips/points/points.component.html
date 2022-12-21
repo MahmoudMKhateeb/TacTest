@@ -195,7 +195,7 @@
                           <select
                             name="PaymentMethod-{{ i }}"
                             id="PaymentMethod-{{ i }}"
-                            [(ngModel)]="wayPointsList[i].paymentMethodId"
+                            [(ngModel)]="wayPointsList[i].dropPaymentMethod"
                             class="form-control"
                           >
                             <option *ngFor="let flag of paymentMethodsArray" [value]="flag.key">{{ flag.value }}</option>
@@ -266,6 +266,7 @@
   <createOrEditPointModal
     #createOrEditPointModal
     [isForDedicated]="shippingRequestForView.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
+    [isHomeDelivery]="isHomeDelivery"
   ></createOrEditPointModal>
   <!--END::Create/Edit Point Modal-->
 </div>

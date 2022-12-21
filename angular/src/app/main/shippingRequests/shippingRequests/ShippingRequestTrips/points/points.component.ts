@@ -212,7 +212,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       } else {
         point.pickingType = this.PickingType.Dropoff;
       }
-      point.paymentMethodId = selectedPaymentMethodId;
+      point.dropPaymentMethod = selectedPaymentMethodId;
       point.needsPOD = false;
       point.needsReceiverCode = false;
       this.wayPointsList.push(point);
