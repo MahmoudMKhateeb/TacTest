@@ -86,7 +86,7 @@ namespace TACHYON.Goods.GoodsDetails
                     {
                         // Name = o.Name,
                         Description = o.Description,
-                        Amount = o.Amount,
+                        Amount = o.Amount != null ?o.Amount.Value :0,
                         Weight = o.Weight,
                         Dimentions = o.Dimentions,
                         IsDangerousGood = o.IsDangerousGood,
@@ -236,7 +236,7 @@ namespace TACHYON.Goods.GoodsDetails
                     GoodsDetail = new GoodsDetailDto
                     {
                         Description = o.Description,
-                        Amount = o.Amount,
+                        Amount = o.Amount !=null ?o.Amount :0,
                         Weight = o.Weight,
                         Dimentions = o.Dimentions,
                         IsDangerousGood = o.IsDangerousGood,

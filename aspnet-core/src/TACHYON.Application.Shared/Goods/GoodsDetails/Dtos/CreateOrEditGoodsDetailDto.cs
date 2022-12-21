@@ -9,7 +9,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         public string Description { get; set; }
 
 
-        public int Amount { get; set; }
+        public int? Amount { get; set; }
 
         [Required] public double Weight { get; set; }
 

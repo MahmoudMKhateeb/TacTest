@@ -118,6 +118,11 @@ namespace TACHYON.Shipping.Trips.Dto
             {
                 context.Results.Add(new ValidationResult("GoodsDescriptionIsRequired"));
             }
+
+            if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.SelectMany(x => x.GoodsDetailListDto).Any(x => x.Amount == null))
+            {
+                context.Results.Add(new ValidationResult("GoodsQuantityIsRequired"));
+            }
         }
 
         public void Normalize()

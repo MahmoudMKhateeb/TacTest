@@ -6,7 +6,7 @@ namespace TACHYON.Goods.Dtos
 {
     public interface ICreateOrEditGoodsDetailDtoBase
     {
-        int Amount { get; set; }
+        int? Amount { get; set; }
         double Weight { get; set; }
         long RoutPointId { get; set; }
         string Description { get; set; }

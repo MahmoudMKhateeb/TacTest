@@ -22,8 +22,7 @@ namespace TACHYON.Goods.GoodsDetails
         /// <summary>
         ///  Amount for this Category of Goods 
         /// </summary>
-        [Required]
-        public int Amount { get; set; }
+        public int? Amount { get; set; }
 
         /// <summary>
         /// Weight of this category of goods
