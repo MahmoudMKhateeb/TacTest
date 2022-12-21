@@ -2,9 +2,11 @@ import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnDestroy,
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   CreateOrEditDocumentFileDto,
+  CreateOrEditRoutPointDto,
   CreateOrEditShippingRequestTripDto,
   CreateOrEditShippingRequestTripVasDto,
   DedicatedShippingRequestsServiceProxy,
+  DropPaymentMethod,
   EntityTemplateServiceProxy,
   FileDto,
   GetAllDedicatedDriversOrTrucksForDropDownDto,
@@ -92,6 +94,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   ShippingRequestFlagEnum = ShippingRequestFlag;
   ShippingRequestTripFlagEnum = ShippingRequestTripFlag;
   ShippingRequestTripFlagArray = [];
+  paymentMethodsArray = [];
+  selectedPaymentMethod: number;
 
   /**
    * DocFileUploader onProgressItem progress
@@ -162,6 +166,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     //link the trip from the shared service to the this component
     this.TripsServiceSubscription = this._TripService.currentActiveTrip.subscribe((res) => (this.trip = res));
     this.ShippingRequestTripFlagArray = this.enumToArray.transform(ShippingRequestTripFlag);
+    this.paymentMethodsArray = this.enumToArray.transform(DropPaymentMethod);
     //Take The Points List From the Points Shared Service
     // this.PointsServiceSubscription = this._PointsService.currentWayPointsList.subscribe((res) => (this.trip.routPoints = res));
     this.vasesHandler();
@@ -537,12 +542,16 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   private validatePointsBeforeAddTrip() {
     let isSingleDropTrip = this.shippingRequest.routeTypeId === this.RouteTypesEnum.SingleDrop;
-    let isFacilitiesTheSame = isNotNullOrUndefined(this.trip.routPoints) && this.trip.routPoints[0].facilityId === this.trip.routPoints[1].facilityId;
+    let isFacilitiesTheSame =
+      isNotNullOrUndefined(this.trip.routPoints) &&
+      isNotNullOrUndefined(this.trip.routPoints[1]) &&
+      this.trip.routPoints[0].facilityId === this.trip.routPoints[1].facilityId;
     let isFacilitiesEmpty =
       isNotNullOrUndefined(this.trip.routPoints) &&
       !isNotNullOrUndefined(this.trip.routPoints[0].facilityId) &&
+      isNotNullOrUndefined(this.trip.routPoints[1]) &&
       !isNotNullOrUndefined(this.trip.routPoints[1].facilityId);
-    if (isSingleDropTrip && isFacilitiesEmpty) {
+    if (isSingleDropTrip && isFacilitiesEmpty && this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.Normal) {
       Swal.fire(this.l('ValidationError'), this.l('SourcePickUpFacilityOrDropOffFacilityCantBeEmpty'), 'error');
       return false;
     }
@@ -566,7 +575,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         break;
       }
       if (point.pickingType === this.PickingType.Dropoff) {
-        if (isFacilityOrReceiverEmpty || !isNotNullOrUndefined(point.goodsDetailListDto as any)) {
+        if (
+          isFacilityOrReceiverEmpty ||
+          (this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.Normal && !isNotNullOrUndefined(point.goodsDetailListDto as any))
+        ) {
           Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseCompleteAllDropPointDetails'), 'warning');
           return false;
           break;
@@ -590,7 +602,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         return false;
       }
       if (point.pickingType === this.PickingType.Dropoff) {
-        if (isFacilityOrReceiverEmpty || !isNotNullOrUndefined(point.goodsDetailListDto as any) || point.goodsDetailListDto.length === 0) {
+        if (
+          isFacilityOrReceiverEmpty ||
+          (this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.Normal &&
+            (!isNotNullOrUndefined(point.goodsDetailListDto as any) || point.goodsDetailListDto.length === 0))
+        ) {
           return false;
         }
       }
@@ -680,20 +696,40 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     } else {
       this.trip.numberOfDrops = 1;
     }
+    if (this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.HomeDelivery) {
+      this.trip.numberOfDrops = 0;
+    }
+    this.onNumberOfDropsChanged(true);
+    console.log('this.trip.numberOfDrops', this.trip);
+  }
+
+  addAdditionalDrop() {
+    if (Number(this.trip.routeType) === this.RouteTypesEnum.MultipleDrops) {
+      this.trip.numberOfDrops = this.trip.numberOfDrops + 1;
+    } else {
+      this.trip.numberOfDrops = 1;
+    }
     this.onNumberOfDropsChanged();
     console.log('this.trip.numberOfDrops', this.trip);
   }
 
-  onNumberOfDropsChanged() {
+  onNumberOfDropsChanged(shouldReset = false) {
     console.log('this.trip', { ...this.trip });
     this.shippingRequestForView.shippingRequest.numberOfDrops = this.trip.numberOfDrops;
     this._TripService.updateShippingRequest(this.shippingRequestForView);
     console.log('this.PointsComponent.wayPointsList', this.PointsComponent.wayPointsList);
     console.log('this.canEditNumberOfDrops', this.canEditNumberOfDrops);
-    if (this.canEditNumberOfDrops) {
+    if (this.canEditNumberOfDrops || this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.HomeDelivery) {
+      const wayPointsList = this.PointsComponent.wayPointsList.length > 0 && !shouldReset ? [...this.PointsComponent.wayPointsList] : [];
       this.PointsComponent.wayPointsList = [];
       this._PointsService.updateWayPoints([]);
-      this.PointsComponent.createEmptyPoints();
+      if (wayPointsList.length > 0 && !shouldReset) {
+        this.PointsComponent.wayPointsList = wayPointsList;
+        this._PointsService.updateWayPoints(wayPointsList);
+        this.PointsComponent.wayPointsList = this.addNewPoint(wayPointsList);
+      } else {
+        this.PointsComponent.createEmptyPoints(this.selectedPaymentMethod);
+      }
       this._PointsService.updateWayPoints(this.PointsComponent.wayPointsList);
     }
   }
@@ -710,5 +746,23 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
           this.isDisabledDriver = true;
         }
       });
+  }
+
+  addNewPoint(wayPointsList: CreateOrEditRoutPointDto[]): CreateOrEditRoutPointDto[] {
+    if (!isNotNullOrUndefined(wayPointsList)) {
+      wayPointsList = [];
+    }
+    let point = new CreateOrEditRoutPointDto();
+    //pickup Point
+    if (wayPointsList.length === 0) {
+      point.pickingType = this.PickingType.Pickup;
+    } else {
+      point.pickingType = this.PickingType.Dropoff;
+    }
+    point.paymentMethodId = this.selectedPaymentMethod;
+    point.needsPOD = false;
+    point.needsReceiverCode = false;
+    wayPointsList.push(point);
+    return wayPointsList;
   }
 }

@@ -43,6 +43,10 @@
                       <th>
                         {{ l('Notes') }}
                       </th>
+                      <th *ngIf="isHomeDelivery">
+                        {{ l('PaymentMethod') }}
+                      </th>
+                      <th *ngIf="isHomeDelivery"></th>
                     </tr>
                   </ng-template>
                   <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
@@ -182,6 +186,46 @@
                           ></i>
                           {{ wayPointsList[i]?.note?.length > 18 ? (wayPointsList[i].note | slice: 0:18) + ' ....' : wayPointsList[i].note }}
                         </a>
+                      </td>
+                      <td *ngIf="isHomeDelivery">
+                        <!--      td trip notes     -->
+
+                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.note ?? '-' }}</span>
+                        <div *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff" class="input-group">
+                          <select
+                            name="PaymentMethod-{{ i }}"
+                            id="PaymentMethod-{{ i }}"
+                            [(ngModel)]="wayPointsList[i].paymentMethodId"
+                            class="form-control"
+                          >
+                            <option *ngFor="let flag of paymentMethodsArray" [value]="flag.key">{{ flag.value }}</option>
+                          </select>
+                        </div>
+                      </td>
+                      <td *ngIf="isHomeDelivery">
+                        <!--      td trip notes     -->
+
+                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.note ?? '-' }}</span>
+                        <div *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff">
+                          <div class="checkbox-list mb-2">
+                            <label class="checkbox ml-2">
+                              <input type="checkbox" [(ngModel)]="wayPointsList[i].needsPOD" id="needsPOD" name="needsPOD" value="false" />
+                              <span class="ml-2 mt-1"></span>
+                              {{ l('needsPOD') }}
+                            </label>
+                            <label class="checkbox ml-2">
+                              <input
+                                type="checkbox"
+                                [(ngModel)]="wayPointsList[i].needsReceiverCode"
+                                id="needsReceiverCode"
+                                name="needsReceiverCode"
+                                value="false"
+                              />
+                              <span class="ml-2 mt-1"></span>
+                              {{ l('needsReceiverCode') }}
+                            </label>
+                          </div>
+                        </div>
                       </td>
                     </tr>
                   </ng-template>

@@ -69,8 +69,15 @@
             <div class="row" *ngIf="shippingRequestForView?.shippingRequestFlag == ShippingRequestFlagEnum.Dedicated">
               <div class="col-lg-6">
                 <div class="form-group">
-                  <label for="DeliveryNote"> {{ l('TripType') }} </label>
-                  <select #TripType="ngModel" name="TripType" id="TripType" [(ngModel)]="trip.shippingRequestTripFlag" class="form-control">
+                  <label for="TripType"> {{ l('TripType') }} </label>
+                  <select
+                    #TripType="ngModel"
+                    name="TripType"
+                    id="TripType"
+                    [(ngModel)]="trip.shippingRequestTripFlag"
+                    class="form-control"
+                    (change)="onRouteTypeChange()"
+                  >
                     <option *ngFor="let flag of ShippingRequestTripFlagArray" [value]="flag.key">{{ flag.value }}</option>
                   </select>
                 </div>
@@ -275,7 +282,7 @@
               </div>
               <!--   StartOf::Driver&Truck for DedicatedSR -->
               <ng-container *ngIf="shippingRequestForView && shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated">
-                <div class="form-group col-lg-6">
+                <div class="form-group col-lg-6" *ngIf="trip.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery">
                   <label>{{ l('RouteType') }}</label>
                   <select
                     name="routeType"
@@ -292,7 +299,10 @@
                     </option>
                   </select>
                 </div>
-                <div class="form-group col-lg-6" *ngIf="trip.routeType == RouteTypesEnum.MultipleDrops">
+                <div
+                  class="form-group col-lg-6"
+                  *ngIf="trip.routeType == RouteTypesEnum.MultipleDrops && trip.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery"
+                >
                   <label>{{ l('NumberOfDrops') }}</label>
                   <input
                     #numberOfDrops="ngModel"
@@ -344,7 +354,7 @@
               <!--   EndOf::Driver&Truck for DedicatedSR -->
 
               <!--       start:: Notes       -->
-              <div class="col-lg-6">
+              <div [class]="trip.hasAttachment ? 'col-lg-6' : 'col-lg-12'">
                 <label>{{ l('Notes') }}</label>
                 <div class="input-group">
                   <textarea
@@ -404,6 +414,73 @@
                   </div>
                 </div>
               </div>
+
+              <!--        begin of home delivery for dedicated request special fields          -->
+              <ng-container
+                *ngIf="
+                  shippingRequestForView &&
+                  shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated &&
+                  trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery
+                "
+              >
+                <div class="form-group col-lg-12 mt-3">
+                  <label for="PaymentMethod"> {{ l('PaymentMethod') }} </label>
+                  <select #PaymentMethod="ngModel" name="PaymentMethod" id="PaymentMethod" [(ngModel)]="selectedPaymentMethod" class="form-control">
+                    <option *ngFor="let flag of paymentMethodsArray" [value]="flag.key">{{ flag.value }}</option>
+                  </select>
+                </div>
+                <div class="form-group col-lg-6 mt-3">
+                  <label>{{ l('RouteType') }}</label>
+                  <select
+                    name="routeType"
+                    type="text"
+                    [(ngModel)]="trip.routeType"
+                    class="form-control"
+                    [disabled]="saving"
+                    required
+                    (change)="onRouteTypeChange()"
+                  >
+                    <option disabled [ngValue]="null">{{ l('SelectRouteType') }}</option>
+                    <option [value]="r.key" *ngFor="let r of routeTypes">
+                      {{ l(r.value) | localize }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-lg-3 mt-3">
+                  <div class="d-flex">
+                    <div class="form-group">
+                      <label>{{ l('NumberOfDrops') }}</label>
+                      <input
+                        #numberOfDrops="ngModel"
+                        type="number"
+                        class="form-control"
+                        name="numberOfDrops"
+                        (keypress)="numberOnly($event); onRouteTypeChange()"
+                        [(ngModel)]="trip.numberOfDrops"
+                        (ngModelChange)="onRouteTypeChange()"
+                        (change)="onRouteTypeChange()"
+                        [min]="2"
+                        [class.is-invalid]="numberOfDrops.touched && !numberOfDrops.valid"
+                        [class.is-valid]="numberOfDrops.touched && numberOfDrops.valid"
+                        disabled
+                        required
+                      />
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-end p-6">
+                      <button
+                        [disabled]="trip.routeType == RouteTypesEnum.SingleDrop && trip.numberOfDrops == 1"
+                        type="button"
+                        class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
+                        (click)="addAdditionalDrop()"
+                      >
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <!--        end of home delivery for dedicated request special fields          -->
+
               <!--  start:: RouteSteps -->
               <PointsComponent
                 [class.invalid-trip-points]="isTripPointsInvalid && isFormSubmitted"
