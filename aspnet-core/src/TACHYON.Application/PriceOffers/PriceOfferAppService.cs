@@ -970,26 +970,37 @@ namespace TACHYON.PriceOffers
 
             //get truck type tranlation list
             var goodscategoryIds = query.Select(x => x.TrucksTypeId).ToList();
-            var truckTypeTranslationList = _truckTypeTranslationRepository.GetAll().Where(x => goodscategoryIds.Contains(x.CoreId)).ToList();
+            var truckTypeTranslationList = _truckTypeTranslationRepository.GetAll().Where(x =>  goodscategoryIds.Contains(x.CoreId)).ToList();
 
 
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
-
+            
             var isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
             var isShipper = await IsEnabledAsync(AppFeatures.Shipper);
 
+            var pageResult = await query.ToListAsync();
+            var shippingRequestIds = pageResult.Select(x => x.Id).ToList();
 
-            foreach (var request in await query.ToListAsync())
+            var shippingRequestCarrierPrices = await _priceOfferRepository.GetAll()
+                .Where(x => x.TenantId == AbpSession.TenantId && x.Status != PriceOfferStatus.Rejected && x.Status != PriceOfferStatus.New && shippingRequestIds.Contains(x.ShippingRequestId))
+                .Select(x => new {RequestId = x.ShippingRequestId, Price = x.TotalAmount}).ToListAsync();
+
+            foreach (var request in pageResult )
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request);
                 //dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk)?.TranslatedDisplayName;
                 dto.TruckType = truckTypeTranslationList.Where(x => x.CoreId == request.TrucksTypeId && x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault()?.TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.GoodCategoryFk)?.DisplayName;
                 dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request);
-                if (AbpSession.TenantId.HasValue && (isCarrier))
+                if (AbpSession.TenantId.HasValue && AbpSession.TenantId == request.CarrierTenantId)
                 {
-
                     dto.Price = request.CarrierPrice;
+
+                    if (request.IsTachyonDeal)
+                    {
+                        dto.Price = shippingRequestCarrierPrices?.FirstOrDefault(x => x.RequestId == request.Id)?.Price;
+                    }
+                        
                 }
                 else if (AbpSession.TenantId.HasValue && (isShipper))
                 {
