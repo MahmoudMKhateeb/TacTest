@@ -3,6 +3,7 @@ using Abp.Collections.Extensions;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Reflection.Extensions;
+using Abp.Timing;
 using Abp.UI;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
@@ -314,14 +315,19 @@ namespace TACHYON.PricePackages.PricePackageAppendices
             else throw new UserFriendlyException(L("AppendixMustHaveDestinationCompanyOrProposal"));
              
             var companyName = appendix.ProposalId.HasValue ? appendix.Proposal?.Shipper?.companyName : appendix.DestinationTenant?.companyName;
-            var appendixDate = appendix.AppendixDate.ToString("dd/MM/yyyy");
-            var contractDate = appendix.CreationTime.ToString("dd/MM/yyyy");
+            string contractNumber = appendix.ProposalId.HasValue ? appendix.Proposal?.Shipper?.ContractNumber : appendix.DestinationTenant?.ContractNumber;
+            var appendixDate = ClockProviders.Local.Normalize(appendix.AppendixDate).ToString("dd/MM/yyyy");
+            var contractDate = appendix.ProposalId.HasValue ? appendix.Proposal?.Shipper?.CreationTime : appendix.DestinationTenant?.CreationTime;
+            if (!contractDate.HasValue) throw new UserFriendlyException(L("CanNotFindContractDate"));
+            
+            
+            string formattedContractDate = ClockProviders.Local.Normalize(contractDate.Value).ToString("dd/MM/yyyy");
 
             string formattedScopeOverview = appendix.ScopeOverview.Replace(TACHYONConsts.AppendixTemplateClientName, companyName);
             
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, appendix.ContractName,SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, contractNumber,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateAppendixDate, appendixDate ,SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateContractDate, contractDate,SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.AppendixTemplateContractDate, formattedContractDate,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, $"{appendix?.Proposal?.Shipper?.ContractNumber}",SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateClientName, companyName,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.AppendixTemplateScopeOverview, formattedScopeOverview,SearchOptions.None);
