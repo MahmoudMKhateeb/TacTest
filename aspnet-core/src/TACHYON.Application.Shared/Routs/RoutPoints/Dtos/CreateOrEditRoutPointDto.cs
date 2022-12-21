@@ -45,7 +45,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         [CanBeNull] public string Note { get; set; }
 
         #region HomeDelivery
-        public DropPaymentMethod? PaymentMethodId { get; set; }
+        public DropPaymentMethod? DropPaymentMethod { get; set; }
         public bool? NeedsReceiverCode { get; set; }
         public bool? NeedsPOD { get; set; }
 
