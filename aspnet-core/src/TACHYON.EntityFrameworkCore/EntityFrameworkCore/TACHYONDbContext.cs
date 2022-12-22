@@ -101,6 +101,7 @@ using TACHYON.Shipping.ShippingRequestAndTripNotes;
 using TACHYON.Shipping.Dedicated;
 using TACHYON.DedicatedInvoices;
 using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
+using TACHYON.PricePackages.TmsPricePackageOffers;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -345,6 +346,8 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<PricePackageProposal> Proposals { get; set; }
 
         public DbSet<PricePackageAppendix> Appendixes { get; set; }
+
+        public DbSet<TmsPricePackageOffer> TmsPricePackageOffers { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;
