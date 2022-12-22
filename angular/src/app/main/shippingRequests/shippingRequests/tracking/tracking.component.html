@@ -32,7 +32,13 @@
               "
               [busyIf]="loadingTripId === item.id"
             >
-              <div class="ribbon-target" style="top: 12px" *ngIf="item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated">
+              <div
+                class="ribbon-target"
+                style="top: 12px"
+                [style.left]="isRtl ? 'auto !important' : ''"
+                [style.right]="isRtl ? '-10px !important' : ''"
+                *ngIf="item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
+              >
                 <span class="ribbon-inner bg-warning"></span> {{ 'DedicatedShippingRequest' | localize }}
               </div>
               <div class="card-body ribbon ribbon-top">
