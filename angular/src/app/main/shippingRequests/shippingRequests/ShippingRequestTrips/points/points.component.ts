@@ -32,9 +32,9 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   shippingRequestId: number;
   DestCitiesDtos: ShippingRequestDestinationCitiesDto[];
   SRDestionationCity: number;
-  allFacilities: FacilityForDropdownDto[];
-  pickupFacilities: FacilityForDropdownDto[];
-  dropFacilities: FacilityForDropdownDto[];
+  allFacilities: FacilityForDropdownDto[] = [];
+  pickupFacilities: FacilityForDropdownDto[] = [];
+  dropFacilities: FacilityForDropdownDto[] = [];
   allPointsSendersAndREcivers: ReceiverFacilityLookupTableDto[][] = [];
   receiverLoading: boolean;
   shippingRequestForView: GetShippingRequestForViewOutput;
@@ -109,6 +109,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       });
     }
     if (this.usedIn === 'createOrEdit') {
+      this.facilityLoading = true;
       this._routStepsServiceProxy
         .getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestForView.shippingRequest.id)
         .pipe(

@@ -78,7 +78,7 @@
                             <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
                             <option
                               *ngFor="let item of record.pickingType === PickingType.Pickup ? pickupFacilities : dropFacilities"
-                              [value]="item.id"
+                              [ngValue]="item.id"
                             >
                               {{ item.displayName }}
                             </option>
@@ -209,7 +209,13 @@
                         <div *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff">
                           <div class="checkbox-list mb-2">
                             <label class="checkbox ml-2">
-                              <input type="checkbox" [(ngModel)]="wayPointsList[i].needsPOD" id="needsPOD" name="needsPOD" value="false" />
+                              <input
+                                type="checkbox"
+                                [(ngModel)]="wayPointsList[i].needsPOD"
+                                id="needsPOD-{{ i }}"
+                                name="needsPOD-{{ i }}"
+                                value="false"
+                              />
                               <span class="ml-2 mt-1"></span>
                               {{ l('needsPOD') }}
                             </label>
@@ -217,8 +223,8 @@
                               <input
                                 type="checkbox"
                                 [(ngModel)]="wayPointsList[i].needsReceiverCode"
-                                id="needsReceiverCode"
-                                name="needsReceiverCode"
+                                id="needsReceiverCode-{{ i }}"
+                                name="needsReceiverCode-{{ i }}"
                                 value="false"
                               />
                               <span class="ml-2 mt-1"></span>
