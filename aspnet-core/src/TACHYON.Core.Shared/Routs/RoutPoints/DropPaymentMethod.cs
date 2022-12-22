@@ -7,6 +7,6 @@ namespace TACHYON.Routs.RoutPoints
     public enum DropPaymentMethod
     {
         Cash =1,
-        PayUponDeleivery=2,
+        Visa=2,
     }
 }
