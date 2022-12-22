@@ -25,6 +25,7 @@ import {
   ImportTripDto,
   ImportTripVasesFromExcelInput,
   ShippingRequestDto,
+  ShippingRequestFlag,
   ShippingRequestRouteType,
   ShippingRequestsServiceProxy,
   ShippingRequestStatus,
@@ -89,6 +90,8 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
 
   type = 'Trip';
   ShippingRequestTripStatus = ShippingRequestTripStatus;
+  showBtnAddTrips: boolean;
+
   constructor(
     injector: Injector,
     private _TripService: TripService,
@@ -111,6 +114,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       this.shippingRequestForView = result;
       this.ShippingRequest = result.shippingRequest;
       this.VasListFromFather = result.shippingRequestVasDtoList;
+      this.modifyShowBtnAddTrips(result.shippingRequest.canAddTrip);
       this.tripsByTmsEnabled = true;
       this._TripService.updateShippingRequest(result);
     });
@@ -124,6 +128,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     //check if shipper or  Carrier has a Saas feature and Can edit this trip
     return (
       this.feature.isEnabled('App.Shipper') ||
+      this.isTachyonDealer ||
       (this.feature.isEnabled('App.CarrierAsASaas') && this.ShippingRequest.carrierTenantId === this.shippingRequestForView.tenantId)
     );
   }
@@ -181,8 +186,28 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     abp.event.on('ShippingRequestTripCreatedEvent', (args) => {
       this._shippingRequestsServiceProxy.canAddTripForShippingRequest(this.ShippingRequest.id).subscribe((result) => {
         this.ShippingRequest.canAddTrip = result;
+        this.modifyShowBtnAddTrips(result);
       });
     });
+  }
+
+  private modifyShowBtnAddTrips(canAddTrip: boolean) {
+    if (this.shippingRequestForView.shippingRequestFlag === ShippingRequestFlag.Normal) {
+      this.showBtnAddTrips = canAddTrip;
+    } else {
+      const isBroker = this.hasCarrierClients && this.hasShipperClients;
+      this.showBtnAddTrips =
+        (this.isTachyonDealer &&
+          (this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.Completed ||
+            this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.PrePrice ||
+            this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.PostPrice ||
+            this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.NeedsAction)) ||
+        ((this.isShipper || isBroker) &&
+          canAddTrip &&
+          (this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.PrePrice ||
+            this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.PostPrice ||
+            this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.NeedsAction));
+    }
   }
 
   uploadExcel(data: { files: File }): void {

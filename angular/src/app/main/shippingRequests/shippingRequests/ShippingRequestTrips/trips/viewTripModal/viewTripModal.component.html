@@ -147,6 +147,28 @@
               </div>
             </div>
           </div>
+          <div class="col-lg-6" *ngIf="trip.isRequestOwner">
+            <div class="form-group">
+              <!--                expected trip Delivery Date-->
+              <label>{{ l('ContainerNumber') }}</label>
+              <input
+                #ContainerNumber
+                id="ContainerNumber"
+                class="form-control"
+                name="ContainerNumber"
+                [(ngModel)]="trip.containerNumber"
+                type="text"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="col-lg-6" *ngIf="trip.isRequestOwner">
+            <div class="form-group">
+              <!--                expected trip Delivery Date-->
+              <label>{{ l('SealNumber') }}</label>
+              <input #SealNumber id="SealNumber" class="form-control" name="SealNumber" [(ngModel)]="trip.sealNumber" type="text" disabled />
+            </div>
+          </div>
 
           <!--   StartOf::Driver&Truck for DedicatedSR -->
           <ng-container *ngIf="(isShipper || isTachyonDealer) && shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 1">
@@ -223,6 +245,36 @@
                 <option [ngValue]="null">{{ l('Selectatruck') }}</option>
                 <option *ngFor="let item of allTrucks" [value]="item.id">{{ item.displayName }}</option>
               </select>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <!--                expected trip Delivery Date-->
+                <label>{{ l('ContainerNumber') }}</label>
+                <input
+                  #ContainerNumber
+                  id="ContainerNumber"
+                  class="form-control"
+                  name="ContainerNumber"
+                  [(ngModel)]="assignDriverAndTruck.containerNumber"
+                  type="text"
+                  [disabled]="saving || (trip.containerNumber && trip.containerNumber.length > 0)"
+                />
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <!--                expected trip Delivery Date-->
+                <label>{{ l('SealNumber') }}</label>
+                <input
+                  #SealNumber
+                  id="SealNumber"
+                  class="form-control"
+                  name="SealNumber"
+                  [(ngModel)]="assignDriverAndTruck.sealNumber"
+                  type="text"
+                  [disabled]="saving || (trip.sealNumber && trip.sealNumber.length > 0)"
+                />
+              </div>
             </div>
             <div class="form-group col-lg-1 mt-7 align-items-end">
               <button

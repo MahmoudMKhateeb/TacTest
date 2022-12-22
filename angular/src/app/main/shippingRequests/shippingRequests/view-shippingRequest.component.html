@@ -58,11 +58,10 @@
       </ng-template>
       <!--  end:: PricOfferingSection -->
 
-      <!--  start:: NormalPricePackageSection -->
-      <ng-template [ngIf]="canSeePricePackages()">
-        <normal-price-packages-list [shippingRequestId]="activeShippingRequestId"></normal-price-packages-list>
-      </ng-template>
-      <!--  end:: NormalPricePackageSection -->
+      <app-view-matching-tms-price-package
+        *ngIf="canSeePricePackages()"
+        [shippingRequestId]="activeShippingRequestId"
+      ></app-view-matching-tms-price-package>
 
       <div class="card card-custom gutter-b" *ngIf="feature.isEnabled('App.CarrierClients') || feature.isEnabled('App.ShipperClients')">
         <div class="card-header">
@@ -545,6 +544,7 @@
         *ngIf="shippingRequestforView.shippingRequestFlag === 1"
         [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
         [rentalRange]="rentalRange"
+        [isRequestStatusCompleted]="shippingRequestforView?.shippingRequest?.status === 5"
       ></tms-for-shipper>
       <!--  end:Tms for shipper     -->
 

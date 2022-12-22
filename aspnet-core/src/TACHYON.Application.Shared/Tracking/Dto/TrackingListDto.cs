@@ -51,5 +51,10 @@ namespace TACHYON.Tracking.Dto
         public ShippingRequestStatus shippingRequestStatus { get; set; }
         public bool? IsPrePayedShippingRequest { get; set; }
         public bool CanDriveTrip { get; set; }
+        public ShippingRequestFlag ShippingRequestFlag { get; set; }
+
+        #region Dedicated
+        public int NumberOfTrucks { get; set; }
+        #endregion
     }
 }

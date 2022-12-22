@@ -243,8 +243,23 @@ namespace TACHYON.Notifications
                 permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Invoices_SubmitInvoices)));
 
             #endregion
-            
-            
+
+            #region Replacement in dedicated
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.NotifyCarrierWithTruckReplacement,
+                    displayName: L("NotifyCarrierWithTruckReplacement")
+                )
+            );
+
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.NotifyCarrierWithDriverReplacement,
+                    displayName: L("NotifyCarrierWithDriverReplacement")
+                )
+            );
+            #endregion
+
             #endregion
         }
 

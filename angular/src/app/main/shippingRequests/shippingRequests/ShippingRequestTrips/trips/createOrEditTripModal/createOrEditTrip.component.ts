@@ -4,19 +4,21 @@ import {
   CreateOrEditDocumentFileDto,
   CreateOrEditShippingRequestTripDto,
   CreateOrEditShippingRequestTripVasDto,
+  DedicatedShippingRequestsServiceProxy,
   EntityTemplateServiceProxy,
+  FileDto,
+  GetAllDedicatedDriversOrTrucksForDropDownDto,
+  GetShippingRequestForViewOutput,
   GetShippingRequestVasForViewDto,
   PickingType,
   SavedEntityType,
   SelectItemDto,
   ShippingRequestDto,
+  ShippingRequestFlag,
+  ShippingRequestRouteType,
   ShippingRequestsTripServiceProxy,
   UpdateDocumentFileInput,
   WaybillsServiceProxy,
-  FileDto,
-  ShippingRequestRouteType,
-  GetShippingRequestForViewOutput,
-  DedicatedShippingRequestsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -35,6 +37,7 @@ import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepic
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { Subscription } from 'rxjs';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+
 @Component({
   selector: 'AddNewTripModal',
   styleUrls: ['./createOrEditTrip.component.css'],
@@ -81,6 +84,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   fileType: string;
   fileName: string;
   hasNewUpload: boolean;
+  isDisabledTruck: boolean = false;
+  isDisabledDriver: boolean = false;
+  IsHaveSealNumberValue: any = '';
+  IsHaveContainerNumberValue: any = '';
 
   /**
    * DocFileUploader onProgressItem progress
@@ -126,8 +133,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     validationRequestsCallbacks: this.callbacks,
   };
   isFormSubmitted = false;
-  allDedicatedDrivers: SelectItemDto[] = [];
-  allDedicatedTrucks: SelectItemDto[] = [];
+  allDedicatedDrivers: GetAllDedicatedDriversOrTrucksForDropDownDto[] = [];
+  allDedicatedTrucks: GetAllDedicatedDriversOrTrucksForDropDownDto[] = [];
   shippingRequestForView: GetShippingRequestForViewOutput = null;
 
   constructor(
@@ -193,6 +200,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.updateActiveTripId(this.activeTripId);
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
+        this.IsHaveSealNumberValue = res.sealNumber && res.sealNumber.length > 0;
+        this.IsHaveContainerNumberValue = res.containerNumber && res.containerNumber.length > 0;
+        console.log('res', res.containerNumber);
+
         this.PointsComponent.wayPointsList = this.trip.routPoints;
         this.PointsComponent.loadReceivers(null, true);
         // this._PointsService.updateWayPoints(this.trip.routPoints);
@@ -242,6 +253,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   setStartTripDate(startTripDate) {
+    if (this.isTachyonDealer && this.shippingRequestForView.shippingRequestFlag === ShippingRequestFlag.Dedicated) {
+      startTripDate = this.shippingRequestForView.rentalStartDate;
+    }
     const todayGregorian = moment(startTripDate).locale('en').format('D/M/YYYY');
     this.minTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(todayGregorian, 'D/M/YYYY');
     this.minTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(todayGregorian, 'D/M/YYYY');
@@ -269,6 +283,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
     this.allDedicatedDrivers = [];
     this.allDedicatedTrucks = [];
+    this.isDisabledTruck = false;
+    this.isDisabledDriver = false;
+    this.IsHaveContainerNumberValue = false;
+    this.IsHaveSealNumberValue = false;
   }
 
   createOrEditTrip() {
@@ -304,6 +322,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
           this.modalSave.emit(null);
           this.notify.info(this.l('SuccessfullySaved'));
           abp.event.trigger('ShippingRequestTripCreatedEvent');
+          this.isDisabledTruck = false;
+          this.isDisabledDriver = false;
         });
     }
   }
@@ -666,5 +686,19 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.PointsComponent.createEmptyPoints();
       this._PointsService.updateWayPoints(this.PointsComponent.wayPointsList);
     }
+  }
+
+  GetTruckOrDriver(driverId?: number, truckId?: number) {
+    this._dedicatedShippingRequestsServiceProxy
+      .getDriverOrTruckForTripAssign(truckId, driverId, this.shippingRequestForView.shippingRequest.id)
+      .subscribe((res) => {
+        if (driverId != null && res != null) {
+          this.trip.truckId = res;
+          this.isDisabledTruck = true;
+        } else if (truckId != null && res != null) {
+          this.trip.driverUserId = res;
+          this.isDisabledDriver = true;
+        }
+      });
   }
 }

@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -37,7 +38,11 @@ namespace TACHYON.PricePackages
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)
         {
+            DisableTenancyFilters();
+            var isTmsOrHost = !AbpSession.TenantId.HasValue || await IsTachyonDealer();
+            
             var proposals = _proposalRepository.GetAll().AsNoTracking()
+                .WhereIf(!isTmsOrHost,x=> x.ShipperId == AbpSession.TenantId)
                 .ProjectTo<ProposalListItemDto>(AutoMapperConfigurationProvider);
 
            return await LoadResultAsync(proposals, input.LoadOptions);
@@ -83,7 +88,8 @@ namespace TACHYON.PricePackages
         {
             if (!input.Id.HasValue) throw new UserFriendlyException();
             
-            var updatedProposal = await _proposalRepository.FirstOrDefaultAsync(input.Id.Value);
+            var updatedProposal = await _proposalRepository.GetAllIncluding(x=> x.TmsPricePackages)
+                .FirstOrDefaultAsync(x=> x.Id == input.Id.Value);
 
             if (updatedProposal.Status == ProposalStatus.Approved)
                 throw new UserFriendlyException(L("YouCanNotEditApprovedProposal"));
@@ -129,12 +135,23 @@ namespace TACHYON.PricePackages
             _proposalRepository.Update(proposalId,x => x.Status = ProposalStatus.Rejected);
         }
 
-        public async Task<ListResultDto<SelectItemDto>> GetAllProposalsForDropdown(int shipperId)
+        [AbpAuthorize(AppPermissions.Pages_PricePackageProposal_Create,AppPermissions.Pages_PricePackageProposal_Update)]
+        public async Task<ProposalAutoFillDataDto> GetProposalAutoFillDetails(int proposalId)
+        {
+            var proposalDetails = await _proposalRepository.GetAll().AsNoTracking()
+                .Where(x => x.Id == proposalId)
+                .ProjectTo<ProposalAutoFillDataDto>(AutoMapperConfigurationProvider).SingleAsync();
+
+            return proposalDetails;
+        }
+        public async Task<ListResultDto<SelectItemDto>> GetAllProposalsForDropdown(int shipperId,int? appendixId)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
 
             var proposalsList = await _proposalRepository.GetAll().AsNoTracking()
-                .Where(x => x.ShipperId == shipperId)
+                .Where(x => x.ShipperId == shipperId && x.Status == ProposalStatus.Approved)
+                .WhereIf(appendixId.HasValue,x=> !x.AppendixId.HasValue || x.AppendixId == appendixId )
+                .WhereIf(!appendixId.HasValue,x=> !x.AppendixId.HasValue)
                 .Select(x => new SelectItemDto() { DisplayName = x.ProposalName, Id = x.Id.ToString() })
                 .ToListAsync();
 

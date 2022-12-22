@@ -22,6 +22,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/tripsForViewShippingRequest.component';
 import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
 import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-shipping-request-attendance-sheet-modal.component';
+import { ReplaceTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/replace-trucks-and-drivers-modal/replace-trucks-and-drivers-modal.component';
 
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
@@ -33,6 +34,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   @ViewChild('Model', { static: false }) modalMore: ShippingrequestsDetailsModelComponent;
   @ViewChild('loadEntityTemplateModal', { static: false }) loadEntityTemplateModal: LoadEntityTemplateModalComponent;
   @ViewChild('assignTrucksAndDriversModal', { static: false }) assignTrucksAndDriversModal: AssignTrucksAndDriversModalComponent;
+  @ViewChild('replaceTrucksAndDriversModal', { static: false }) replaceTrucksAndDriversModal: ReplaceTrucksAndDriversModalComponent;
   @ViewChild('tripsForViewShippingRequest', { static: true }) tripsForViewShippingRequest: TripsForViewShippingRequestComponent;
   @ViewChild('attendanceModal', { static: true }) attendanceModal: DedicatedShippingRequestAttendanceSheetModalComponent;
   shippingRequestforView: GetShippingRequestForViewOutput;
@@ -313,9 +315,14 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     this.assignTrucksAndDriversModal.show(item);
   }
 
+  viewTrucksOrDrivers(item: GetShippingRequestForPriceOfferListDto, isForTruck: boolean) {
+    console.log('item', item);
+    this.replaceTrucksAndDriversModal.show(item, isForTruck);
+  }
+
   openAttendanceModal(shippingRequest: GetShippingRequestForPriceOfferListDto) {
     this.selectedShippingRequest = shippingRequest;
-    this.attendanceModal.show(null, shippingRequest.id, {
+    this.attendanceModal.show(this.selectedShippingRequest.status === this.shippingRequestStatusEnum.Completed, null, shippingRequest.id, {
       rentalStartDate: shippingRequest?.rentalStartDate,
       rentalEndDate: shippingRequest?.rentalEndDate,
     });

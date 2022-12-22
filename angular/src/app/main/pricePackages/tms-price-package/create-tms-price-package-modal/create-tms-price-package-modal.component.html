@@ -15,9 +15,9 @@
               <input [(ngModel)]="tmsPricePackage.displayName" required type="text" class="form-control" name="tmsPP_DisplayName" />
             </div>
             <div class="form-group col-md-6">
-              <label>{{ l('Shipper') }} <span class="text-danger">*</span></label>
-              <select [(ngModel)]="tmsPricePackage.shipperId" required class="form-control" name="tmsPP_Shipper">
-                <option selected disabled [value]="undefined">{{ 'SelectShipper' | localize }}</option>
+              <label>{{ l('Company') }} <span class="text-danger">*</span></label>
+              <select [(ngModel)]="tmsPricePackage.destinationTenantId" required class="form-control" name="tmsPP_Shipper">
+                <option selected disabled [value]="undefined">{{ 'SelectCompany' | localize }}</option>
                 <option *ngFor="let item of shippers" [value]="item.id">{{ item.displayName }}</option>
               </select>
             </div>
@@ -86,79 +86,21 @@
           </div>
           <div class="row">
             <div class="form-group col-md-6">
-              <label>{{ l('DirectRequestPrice') }} <span class="text-danger">*</span></label>
-              <input
-                [(ngModel)]="tmsPricePackage.directRequestPrice"
-                min="0"
-                (keypress)="numberOnly($event)"
-                required
-                name="tmsPP_DirectRequestPrice"
-                type="number"
-                class="form-control"
-                (change)="calculateDrFinalPrice()"
-              />
+              <label>{{ l('ShippingType') }} <span class="text-danger">*</span></label>
+              <select [(ngModel)]="tmsPricePackage.shippingTypeId" required class="form-control" name="tmsPP_ShippingType">
+                <option selected disabled [value]="undefined">{{ 'SelectShippingType' | localize }}</option>
+                <option *ngFor="let item of shippingTypes" [value]="item.id">
+                  {{ item.displayName }}
+                </option>
+              </select>
             </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('TMSPrice') }} <span class="text-danger">*</span></label>
+            <div class="form-group col-md-4">
+              <label>{{ l('TotalPrice') }} </label>
               <input
-                [(ngModel)]="tmsPricePackage.tachyonManagePrice"
+                [(ngModel)]="tmsPricePackage.totalPrice"
                 min="0"
                 (keypress)="numberOnly($event)"
-                required
-                name="tmsPP_TMSPrice"
-                type="number"
-                class="form-control"
-                (change)="calculateTmsFinalPrice()"
-              />
-            </div>
-          </div>
-          <div class="row">
-            <div class="form-group col-md-6">
-              <label>{{ l('DirectRequestCommission') }} <span class="text-danger">*</span></label>
-              <input
-                [(ngModel)]="tmsPricePackage.directRequestCommission"
-                min="0"
-                (keypress)="numberOnly($event)"
-                required
-                name="tmsPP_DirectRequestCommission"
-                type="number"
-                class="form-control"
-                (change)="calculateDrFinalPrice()"
-              />
-            </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('TMSCommission') }} <span class="text-danger">*</span></label>
-              <input
-                [(ngModel)]="tmsPricePackage.tachyonManageCommission"
-                min="0"
-                (keypress)="numberOnly($event)"
-                required
-                name="tmsPP_TMSCommission"
-                type="number"
-                class="form-control"
-                (change)="calculateTmsFinalPrice()"
-              />
-            </div>
-          </div>
-          <div class="row">
-            <div class="form-group col-md-6">
-              <label>{{ l('DirectRequestFinalPrice') }} </label>
-              <input
-                [(ngModel)]="tmsPricePackage.directRequestTotalPrice"
-                min="0"
-                (keypress)="numberOnly($event)"
-                name="tmsPP_DirectRequestFinalPrice"
-                type="number"
-                class="form-control"
-              />
-            </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('TMSFinalPrice') }} </label>
-              <input
-                [(ngModel)]="tmsPricePackage.tachyonManageTotalPrice"
-                min="0"
-                (keypress)="numberOnly($event)"
-                name="tmsPP_FinalPrice"
+                name="tmsPP_TotalPrice"
                 type="number"
                 class="form-control"
               />
@@ -166,27 +108,6 @@
           </div>
 
           <!-- devExtream Table  -->
-          <div class="row">
-            <dx-data-grid
-              id="gridContainer2"
-              [dataSource]="pricePackagesInfo"
-              keyExpr="directRequestMaxPrice"
-              [columns]="[
-                'truckTypeName',
-                'tmsAveragePrice',
-                'tmsMaxPrice',
-                'tmsMaxPriceOwner',
-                'tmsMinPrice',
-                'tmsMinPriceOwner',
-                'directRequestAveragePrice',
-                'directRequestMaxPriceOwner',
-                'directRequestMinPrice',
-                'directRequestMinPriceOwner'
-              ]"
-              [showBorders]="false"
-            >
-            </dx-data-grid>
-          </div>
           <div [class]="'row'">
             <div class="card card-custom gutter-b">
               <div class="card-body">
@@ -214,8 +135,6 @@
                     <dxi-column dataField="displayName" caption="{{ l('PricePackageName') }}"> </dxi-column>
                     <dxi-column dataField="tenantName" caption="{{ l('Carrier') }} "></dxi-column>
                     <dxi-column dataField="truckType" caption="{{ l('TruckType') }}" [groupIndex]="0"> </dxi-column>
-
-                    <dxi-column dataField="directRequestPrice" caption="{{ l('DirectRequestPrice') }}"> </dxi-column>
                     <dxi-column dataField="tachyonMSRequestPrice" caption="{{ l('TachyonMSRequestPrice') }}"> </dxi-column>
                     <dxi-column dataField="isMultiDrop" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"> </dxi-column>
                     <dxi-column dataField="origin" caption="{{ l('Origin') }}"> </dxi-column>
@@ -235,7 +154,9 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="close()">{{ 'Close' | localize }}</button>
-          <button type="submit" [buttonBusy]="isFormSaving" [disabled]="tmsPPForm.invalid" class="btn btn-primary">{{ 'Save' | localize }}</button>
+          <button type="submit" [buttonBusy]="isFormSaving" [disabled]="tmsPPForm.invalid || !tmsPricePackage.type" class="btn btn-primary">
+            {{ 'Save' | localize }}
+          </button>
         </div>
       </form>
     </div>

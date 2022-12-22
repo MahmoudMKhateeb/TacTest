@@ -10,7 +10,7 @@
         class="btn btn-primary mr-2"
         (click)="AddNewTripModal.show(null, shippingRequestForView)"
         [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips && shippingRequestForView.shippingRequestFlag === 0"
-        *ngIf="ShippingRequest.canAddTrip"
+        *ngIf="showBtnAddTrips"
       >
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
       </button>
@@ -382,7 +382,7 @@
                     <li
                       *ngIf="
                         (permission.isGranted('Pages.ShippingRequestTrips.Delete') &&
-                          feature.isEnabled('App.Shipper') &&
+                          (feature.isEnabled('App.Shipper') || isTachyonDealer) &&
                           record.status == ShippingRequestTripStatusEnum.New) ||
                         (isCarrierSaas && record.status == ShippingRequestTripStatusEnum.New)
                       "

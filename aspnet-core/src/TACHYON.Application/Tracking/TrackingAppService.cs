@@ -89,9 +89,8 @@ namespace TACHYON.Tracking
                 .ThenInclude(s => s.Tenant)
                 .Include(r => r.ShippingRequestFk)
                 .ThenInclude(c => c.CarrierTenantFk)
-                //TAC-1509
-                //.Where(x => x.ShippingRequestFk.CarrierTenantId.HasValue)
-                .Where(x=>x.ShippingRequestFk.ShippingRequestFlag==ShippingRequestFlag.Normal)
+                .WhereIf(!await IsTachyonDealer(),x=>x.ShippingRequestFk.ShippingRequestFlag==ShippingRequestFlag.Normal ||
+                (x.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated && AbpSession.TenantId == x.ShippingRequestFk.TenantId))
                 .Where(x => x.ShippingRequestFk.Status == ShippingRequestStatus.PostPrice || x.ShippingRequestFk.CarrierTenantId.HasValue)
                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper) && !hasCarrierClient,
                     x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)

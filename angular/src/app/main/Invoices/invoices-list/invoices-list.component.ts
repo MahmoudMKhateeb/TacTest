@@ -21,6 +21,7 @@ import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import { VoidInvoiceNoteModalComponent } from '../invoice-note/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
 import { InvoiceSearchInputDto } from './InvoiceSearchInputDto';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 
 @Component({
   templateUrl: './invoices-list.component.html',
@@ -32,6 +33,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
   @ViewChild('voidModal', { static: true }) voidModal: VoidInvoiceNoteModalComponent;
+  @ViewChild('sharedPdfViewer') sharedPdfViewer: FileViwerComponent;
 
   searchInput: InvoiceSearchInputDto = new InvoiceSearchInputDto();
   IsStartSearch = false;
@@ -162,13 +164,30 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   }
 
   details(invoice: any): void {
-    if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
-      this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
-    } else {
-      this._InvoiceServiceProxy.getById(invoice.id).subscribe((result) => {
-        this.InvoiceDetailsModel.show(result);
+    if (invoice.channel == InvoiceChannel.Dedicated) {
+      this._InvoiceReportServiceProxy.downloadDedicatedDynamicInvoice(invoice.id).subscribe((result) => {
+        let file = this._fileDownloadService.downloadTempFile(result);
+        this.sharedPdfViewer.show(file, 'pdf');
+      });
+    } else if (invoice.channel == InvoiceChannel.Trip) {
+      this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(invoice.id).subscribe((result) => {
+        let file = this._fileDownloadService.downloadTempFile(result);
+        this.sharedPdfViewer.show(file, 'pdf');
+      });
+    } else if (invoice.channel == InvoiceChannel.Penalty) {
+      this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(invoice.id).subscribe((result) => {
+        let file = this._fileDownloadService.downloadTempFile(result);
+        this.sharedPdfViewer.show(file, 'pdf');
       });
     }
+
+    // if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
+    //  this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
+    // } else {
+    //   this._InvoiceServiceProxy.getById(invoice.id).subscribe((result) => {
+    //     this.InvoiceDetailsModel.show(result);
+    //   });
+    // }
   }
 
   getAllInvoices() {

@@ -58,7 +58,9 @@ namespace TACHYON.AutoMapper.Shipping.Trips
             CreateMap<ShippingRequestTrip, ShippingRequestTripDriverListDto>()
                 .ForMember(dst => dst.Source,
                     opt => opt.MapFrom(src =>
-                        $"{src.ShippingRequestFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
+                       src.ShippingRequestFk.OriginCityFk!=null? $"{src.ShippingRequestFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"
+                       : $"{src.OriginFacilityFk.CityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
+
                 .ForPath(dst => dst.Distination,
                     opt => opt.MapFrom(src =>
                         //src.DestinationFacilityFk.Address))

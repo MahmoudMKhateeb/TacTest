@@ -145,7 +145,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         }
       });
 
-    this._trucksServiceProxy.getAllDriversForDropDown().subscribe((result) => {
+    this._trucksServiceProxy.getAllDriversForDropDown(null).subscribe((result) => {
       this.allDrivers = result;
     });
 
@@ -409,7 +409,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       _.filter(customSettings.EntityHistory.enabledEntities, (entityType) => entityType === this._entityTypeFullName).length === 1
     );
   }
-
+  LoadDrivers() {
+    this._trucksServiceProxy.getAllDriversForDropDown(this.isTachyonDealer ? this.truck.tenantId : null).subscribe((result) => {
+      this.allDrivers = result;
+    });
+  }
   // plateNumberNoramlize() {
   //   this.truck.plateNumber = this.truck.plateNumber
   //     .replace(/\s/g, '')

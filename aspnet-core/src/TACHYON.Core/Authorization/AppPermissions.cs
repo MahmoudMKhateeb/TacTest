@@ -645,6 +645,7 @@
         public const string Pages_TmsPricePackages_Create = "Pages.TmsPricePackages.Create";
         public const string Pages_TmsPricePackages_Update = "Pages.TmsPricePackages.Update";
         public const string Pages_TmsPricePackages_Delete = "Pages.TmsPricePackages.Delete";
+        
 
         #endregion
 
@@ -668,6 +669,8 @@
         public const string Pages_PricePackageAppendix_Delete = "Pages.PricePackageAppendix.Delete";
         public const string Pages_PricePackageAppendix_Accept = "Pages.PricePackageAppendix.Accept";
         public const string Pages_PricePackageAppendix_Reject = "Pages.PricePackageAppendix.Reject";
+        public const string Pages_PricePackageAppendix_Activation = "Pages.PricePackageAppendix.Activation";
+        
         
 
         #endregion

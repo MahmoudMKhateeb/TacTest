@@ -84,7 +84,14 @@
                 ></dxi-column>
                 <dxi-column *ngIf="!shippingRequestId" dataField="carrierName" caption="{{ l('CarrierName') }}"></dxi-column>
                 <dxi-column dataField="status" caption="{{ l('Status') }}"></dxi-column>
+                <dxi-column dataField="originalDedicatedTruckName" caption="{{ l('originalDedicatedTruckName') }}"></dxi-column>
+                <dxi-column dataField="replacementFlag" caption="{{ l('replacementFlag') }}" cellTemplate="replacementFlagTemplate"></dxi-column>
 
+                <div *dxTemplate="let data of 'replacementFlagTemplate'">
+                  <span>
+                    {{ getReplacementFlagText(data.data.replacementFlag) }}
+                  </span>
+                </div>
                 <div *dxTemplate="let options of 'cellTemplateActions'">
                   <div class="btn-group dropdown" dropdown container="body">
                     <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
@@ -109,6 +116,15 @@
                       <li *ngIf="isTachyonDealer">
                         <a href="javascript:;" class="dropdown-item" (click)="openTruckPerformanceModal(options.data)">
                           {{ 'updateTruckPerformance' | localize }}
+                        </a>
+                      </li>
+                      <li
+                        *ngIf="
+                          isTachyonDealer && !options?.data?.isRequestedToReplace && options.data.replacementFlag === ReplacementFlagEnum.Original
+                        "
+                      >
+                        <a href="javascript:;" class="dropdown-item" (click)="openTruckAndDriverReplacement(true, options.data)">
+                          {{ 'requestReplacement' | localize }}
                         </a>
                       </li>
                     </ul>
@@ -148,6 +164,16 @@
                 <!--              <dxo-remote-operations [groupPaging]="false" [sorting]="false" [filtering]="false"> </dxo-remote-operations>-->
                 <dxo-paging [pageSize]="20"></dxo-paging>
 
+                <dxi-column
+                  *ngIf="shippingRequestId && isTachyonDealer"
+                  cellTemplate="cellTemplateActions"
+                  [allowFiltering]="false"
+                  [allowSorting]="false"
+                  [allowEditing]="false"
+                  [editorOptions]="{ visible: false }"
+                  [width]="50"
+                  [fixed]="true"
+                ></dxi-column>
                 <dxi-column dataField="driverName" caption="{{ l('DriverName') }}"></dxi-column>
                 <dxi-column dataField="phoneNumber" caption="{{ l('PhoneNumber') }}"></dxi-column>
                 <dxi-column dataField="accountNumber" caption="{{ l('AccountNumber') }}"></dxi-column>
@@ -159,6 +185,42 @@
                 ></dxi-column>
                 <dxi-column *ngIf="!shippingRequestId" dataField="carrierName" caption="{{ l('CarrierName') }}"></dxi-column>
                 <dxi-column dataField="status" caption="{{ l('Status') }}"></dxi-column>
+                <dxi-column dataField="originalDedicatedDriverName" caption="{{ l('originalDedicatedDriverName') }}"></dxi-column>
+                <dxi-column dataField="replacementFlag" caption="{{ l('replacementFlag') }}" cellTemplate="replacementFlagTemplate"></dxi-column>
+
+                <div *dxTemplate="let data of 'replacementFlagTemplate'">
+                  <span>
+                    {{ getReplacementFlagText(data.data.replacementFlag) }}
+                  </span>
+                </div>
+                <div *dxTemplate="let options of 'cellTemplateActions'">
+                  <div class="btn-group dropdown" dropdown container="body">
+                    <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
+                      <span class="svg-icon svg-icon-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"></rect>
+                            <path
+                              d="M5,8.6862915 L5,5 L8.6862915,5 L11.5857864,2.10050506 L14.4852814,5 L19,5 L19,9.51471863 L21.4852814,12 L19,14.4852814 L19,19 L14.4852814,19 L11.5857864,21.8994949 L8.6862915,19 L5,19 L5,15.3137085 L1.6862915,12 L5,8.6862915 Z M12,15 C13.6568542,15 15,13.6568542 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,13.6568542 10.3431458,15 12,15 Z"
+                              fill="#000000"
+                            ></path>
+                          </g>
+                        </svg>
+                      </span>
+                    </a>
+                    <ul class="dropdown-menu z-index-1000" *dropdownMenu>
+                      <li
+                        *ngIf="
+                          isTachyonDealer && !options?.data?.isRequestedToReplace && options.data.replacementFlag === ReplacementFlagEnum.Original
+                        "
+                      >
+                        <a href="javascript:;" class="dropdown-item" (click)="openTruckAndDriverReplacement(false, options.data)">
+                          {{ 'requestReplacement' | localize }}
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </dx-data-grid>
             </div>
           </div>
@@ -181,3 +243,4 @@
 ></dedicated-shipping-request-attendance-sheet-modal>
 
 <app-truck-performance #truckPerformance></app-truck-performance>
+<app-truck-and-driver-replacement #appTruckAndDriverReplacement></app-truck-and-driver-replacement>

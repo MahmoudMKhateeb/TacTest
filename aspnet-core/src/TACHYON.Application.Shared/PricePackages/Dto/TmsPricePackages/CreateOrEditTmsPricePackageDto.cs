@@ -5,7 +5,7 @@ using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.PricePackages.Dto.TmsPricePackages
 {
-    public class CreateOrEditTmsPricePackageDto : EntityDto<int?>, IShouldNormalize
+    public class CreateOrEditTmsPricePackageDto : EntityDto<int?>, ICustomValidate
     {
         
         [Required]
@@ -21,29 +21,29 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
 
         public int DestinationCityId { get; set; }
 
-        public int ShipperId { get; set; }
+        public int? DestinationTenantId { get; set; }
 
         public ShippingRequestRouteType RouteType { get; set; }
-
-        public decimal DirectRequestPrice { get; set; }
-
-        public decimal TachyonManagePrice { get; set; }
         
-        public decimal DirectRequestCommission { get; set; }
-        
-        public decimal TachyonManageCommission { get; set; }
+        public int ShippingTypeId { get; set; }
 
-        public decimal? DirectRequestTotalPrice { get; set; }
-        
-        public decimal? TachyonManageTotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
 
         public PricePackageType Type { get; set; }
-        public void Normalize()
+        public void AddValidationErrors(CustomValidationContext context)
         {
-            if (!DirectRequestTotalPrice.HasValue)
-                DirectRequestTotalPrice = DirectRequestPrice + DirectRequestCommission;
-            if (!TachyonManageTotalPrice.HasValue)
-                TachyonManageTotalPrice = TachyonManagePrice + TachyonManageCommission;
+            if (TransportTypeId == default)
+                context.Results.Add(new ValidationResult("You must select transport type"));
+            if (TrucksTypeId == default)
+                context.Results.Add(new ValidationResult("You must select truck type"));
+            if (OriginCityId == default)
+                context.Results.Add(new ValidationResult("You must select origin city"));
+            if (DestinationCityId == default)
+                context.Results.Add(new ValidationResult("You must select destination city"));
+            if (RouteType == default)
+                context.Results.Add(new ValidationResult("You must select route type"));
+            if (Type == default)
+                context.Results.Add(new ValidationResult("You must select price package type"));
         }
     }
 }

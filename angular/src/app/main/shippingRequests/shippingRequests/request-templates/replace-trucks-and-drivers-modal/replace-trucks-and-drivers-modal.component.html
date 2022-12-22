@@ -1,0 +1,108 @@
+<div
+  #replaceTrucksAndDriversModal="bs-modal"
+  aria-hidden="true"
+  aria-labelledby="AddNewEntityModalComponent"
+  bsModal
+  class="modal fade"
+  role="dialog"
+  tabindex="-10010"
+>
+  <div class="modal-dialog modal-xl">
+    <div *ngIf="active" class="modal-content">
+      <form #assignTrucksAndDriversForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <!--begin::Card-->
+        <div class="card card-custom">
+          <!--begin::Header-->
+          <div class="card-header align-items-center px-4 py-3">
+            <h3>{{ !isForTruck ? l('ReplaceDrivers') : l('ReplaceTrucks') }}</h3>
+          </div>
+          <!--end::Header-->
+          <!--begin::Body-->
+          <!--              [selection]="{ mode: 'multiple' }"-->
+          <div class="card-body">
+            <dx-data-grid
+              #dataGrid
+              [dataSource]="dataSource"
+              valueExpr="id"
+              [hoverStateEnabled]="true"
+              [paging]="{ enabled: true, pageSize: 10 }"
+              [filterRow]="{ visible: true }"
+              [scrolling]="{ mode: 'virtual' }"
+              [height]="345"
+              [(selectedRowKeys)]="selectedItems"
+            >
+              <!--              (onSelectionChanged)="onSelectionChanged($event)"-->
+              <!--              (onCellClick)="onDataGridCellClick($event); print($event)"-->
+              <dxo-selection [selectAllMode]="'allPages'" [showCheckBoxesMode]="'always'" mode="multiple"></dxo-selection>
+              <dxi-column *ngIf="isForTruck" [allowEditing]="false" dataField="truckName" caption="{{ 'PlateNumber' | localize }}"></dxi-column>
+              <dxi-column *ngIf="!isForTruck" [allowEditing]="false" dataField="driverName" caption="{{ 'Driver' | localize }}"></dxi-column>
+              <dxi-column *ngIf="isForTruck" dataField="originalTruckId" caption="{{ 'ReplaceWith' | localize }}" cellTemplate="truckCellTemplate">
+                <dxo-lookup [dataSource]="allTrucks" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
+              </dxi-column>
+              <dxi-column *ngIf="!isForTruck" dataField="originalDriverId" caption="{{ 'ReplaceWith' | localize }}" cellTemplate="driverCellTemplate">
+                <dxo-lookup [dataSource]="allDrivers" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="replacementReason" caption="{{ 'replacementReason' | localize }}" cellTemplate="reasonCellTemplate"></dxi-column>
+              <dxi-column
+                dataField="replacementIntervalInDays"
+                caption="{{ 'replacementIntervalInDays' | localize }}"
+                cellTemplate="durationCellTemplate"
+              ></dxi-column>
+              <div *dxTemplate="let d of 'driverCellTemplate'">
+                <dx-select-box
+                  [(value)]="d.data.selectedDriverId"
+                  [dataSource]="allDrivers"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  [searchEnabled]="true"
+                ></dx-select-box>
+              </div>
+              <div *dxTemplate="let d of 'truckCellTemplate'">
+                <dx-select-box
+                  [(value)]="d.data.selectedTruckId"
+                  [dataSource]="allTrucks"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  [searchEnabled]="true"
+                ></dx-select-box>
+              </div>
+              <div *dxTemplate="let d of 'reasonCellTemplate'">
+                <dx-text-area [(value)]="d.data.replacementReason"></dx-text-area>
+              </div>
+              <div *dxTemplate="let d of 'durationCellTemplate'">
+                <dx-number-box format="### {{ 'Days' | localize }}" [(value)]="d.data.replacementIntervalInDays"></dx-number-box>
+              </div>
+            </dx-data-grid>
+            <div class="row pt-4">
+              <div class="col-12">
+                <span class="text-danger">
+                  {{ 'AssignDriversAndTrucksForDedicatedWarning' | localize }}
+                </span>
+              </div>
+            </div>
+            <div class="row pt-4">
+              <div class="col-12">
+                <dx-validation-summary validationGroup="assignTrucksAndDrivers" id="assign-trucks-and-drivers"></dx-validation-summary>
+              </div>
+            </div>
+          </div>
+          <!--end::Body-->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">{{ l('Close') }}</button>
+          <dx-button
+            type="submit"
+            class="btn btn-primary blue font-weight-bold py-3 px-3 no-padding-custom"
+            icon="fa fa-save"
+            text="{{ l('Save') }}"
+            [disabled]="shouldDisable"
+            [useSubmitBehavior]="true"
+            [validationGroup]="'assignTrucksAndDrivers'"
+          >
+          </dx-button>
+        </div>
+      </form>
+      <!--end::Card-->
+    </div>
+  </div>
+</div>

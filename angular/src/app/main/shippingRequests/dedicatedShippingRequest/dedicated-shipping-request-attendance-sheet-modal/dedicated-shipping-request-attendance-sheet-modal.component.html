@@ -113,7 +113,9 @@
                       <div class="dx-tooltip-appointment-item-content-date">{{ model?.appointmentData?.startDate | date: 'MMMM d' }}</div>
                     </div>
                     <div
-                      *ngIf="!isCarrier"
+                      *ngIf="
+                        (!isCarrier && canEditTruck && !isRequestStatusCompleted) || (isTachyonDealer && canEditTruck && isRequestStatusCompleted)
+                      "
                       class="dx-tooltip-appointment-item-delete-button-container"
                       (click)="deleteAttendance($event, model?.appointmentData?.id)"
                     >

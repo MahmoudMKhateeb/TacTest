@@ -17,6 +17,6 @@ namespace TACHYON.Shipping.ShippingRequests
         Task EditStep2(EditDedicatedStep2Dto input);
         Task<EditDedicatedStep2Dto> GetStep2ForEdit(long id);
         Task PublishDedicatedShippingRequest(long id);
-        Task AssignDedicatedTrucksAndDrivers(AssignDedicatedTrucksAndDriversInput input);
+        //Task AssignDedicatedTrucksAndDrivers(AssignDedicatedTrucksAndDriversInput input);
     }
 }

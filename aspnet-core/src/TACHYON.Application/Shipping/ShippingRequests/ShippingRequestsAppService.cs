@@ -760,7 +760,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 //    await FeatureChecker.IsEnabledAsync(shippingRequest.TenantId, AppFeatures.AddTripsByTachyonDeal);
 
 
-                output.ShippingRequest.CanAddTrip = await CanCurrentUserAddTrip(shippingRequest);
+                output.ShippingRequest.CanAddTrip = await CanCurrentUserAddTrip(shippingRequest) ;
                 output.ShippingRequestBidDtoList = shippingRequestBidDtoList;
                 output.ShippingRequestVasDtoList = shippingRequestVasList;
                 output.ShipperRating = shippingRequest.Tenant.Rate;
@@ -875,6 +875,8 @@ namespace TACHYON.Shipping.ShippingRequests
             //Shipper
             if (request.TenantId == AbpSession.TenantId && await IsEnabledAsync(AppFeatures.Shipper))
             {
+                if (request.ShippingRequestFlag == ShippingRequestFlag.Dedicated && request.Status == ShippingRequestStatus.Completed)
+                    return false;
                 return true;
             }
 
@@ -1212,7 +1214,9 @@ namespace TACHYON.Shipping.ShippingRequests
                     ShipperReference = x.ShippingRequestFk.ShipperReference,
                     ShipperInvoiceNo = x.ShippingRequestFk.ShipperInvoiceNo,
                     ClientName = x.ShippingRequestFk.Tenant.TenancyName,
-                    ShipperNotes = x.Note
+                    ShipperNotes = x.Note,
+                    ContainerNumber = x.ContainerNumber,
+                    SealNumber = x.SealNumber,
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
@@ -1246,7 +1250,9 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShipperInvoiceNo = x.ShipperInvoiceNo,
                         InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId).ToString(),//GetInvoiceNumberByTripId(shippingRequestTripId),
                         ClientName = x.ClientName,
-                        ShipperNotes = x.ShipperNotes
+                        ShipperNotes = x.ShipperNotes,
+                        ContainerNumber = x.ContainerNumber,
+                        SealNumber = x.SealNumber,
                     });
 
                 return finalOutput;
@@ -1300,7 +1306,9 @@ namespace TACHYON.Shipping.ShippingRequests
                     NeedDeliveryNote = x.NeedsDeliveryNote,
                     ShipperReference = x.ShippingRequestFk.ShipperReference,
                     ShipperInvoiceNo = x.ShippingRequestFk.ShipperInvoiceNo,
-                    ShipperNotes = x.Note
+                    ShipperNotes = x.Note,
+                    ContainerNumber = x.ContainerNumber,
+                    SealNumber = x.SealNumber,
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
@@ -1356,7 +1364,9 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShipperInvoiceNo = x.ShipperInvoiceNo, /*TAC-2181 || 22/12/2021 || need to display it as an empty on production*/
                         InvoiceNumber = GetInvoiceNumberByTripId(shippingRequestTripId).ToString(),
                         IsSingleDrop = !dropOffId.HasValue,
-                        ShipperNotes = x.ShipperNotes
+                        ShipperNotes = x.ShipperNotes, 
+                        ContainerNumber= x.ContainerNumber,
+                        SealNumber = x.SealNumber
                     });
 
                 return finalOutput;

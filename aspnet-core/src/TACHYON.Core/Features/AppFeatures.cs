@@ -36,7 +36,7 @@
         public const string ShipperCreditLimit = "App.Shipper.CreditLimit";
         public const string ShipperPeriods = "App.Shipper.Periods";
         public const string CarrierPeriods = "App.Carrier.Periods";
-
+        public const string TmsPricePackage = "App.TmsPricePackage";
 
         public const string TachyonDealerCommissionPercentage = "TachyonDealer.TachyonDealerCommissionPercentage";
         public const string TachyonDealerCommissionValue = "TachyonDealer.TachyonDealerCommissionValue";

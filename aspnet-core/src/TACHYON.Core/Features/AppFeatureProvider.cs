@@ -1,10 +1,12 @@
 ﻿using Abp.Application.Features;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Runtime.Validation;
 using Abp.UI.Inputs;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -864,14 +866,21 @@ namespace TACHYON.Features
                   displayName: L(AppFeatures.Saas),
                   inputType: new CheckboxInputType()
               );
+
+            var saasRelatedCarrierFeature =
             saasFeature.CreateChildFeature(
                 AppFeatures.SaasRelatedCarrier,
                 defaultValue: "false",
-                displayName: L(AppFeatures.SaasRelatedCarrier),
-                inputType: new ComboboxInputType(
+                displayName: L(AppFeatures.SaasRelatedCarrier)
+
+                );
+
+            if (!tenants.IsNullOrEmpty())
+            {
+                saasRelatedCarrierFeature.InputType = new ComboboxInputType(
                     new StaticLocalizableComboboxItemSource(tenants)
-                )
             );
+            }
 
             #region Penalties
             List<LocalizableComboboxItem> unitsOfMeasures = new List<LocalizableComboboxItem>();
@@ -1106,6 +1115,7 @@ namespace TACHYON.Features
 
             #endregion
 
+            
 
         }
 

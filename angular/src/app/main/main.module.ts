@@ -332,6 +332,9 @@ import { ViewActorModalComponent } from './actors/actors/view-actor-modal.compon
 import { CreateOrEditActorModalComponent } from './actors/actors/create-or-edit-actor-modal.component';
 import { ActorInvoiceDemandModelComponent } from './actors/Actor-Invoices-ondemand-model.component';
 import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/client-demand-model.component';
+import { ReplaceTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/replace-trucks-and-drivers-modal/replace-trucks-and-drivers-modal.component';
+import { TruckAndDriverReplacementComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-and-driver-replacement/truck-and-driver-replacement.component';
+import { PricePackageModule } from '@app/main/pricePackages/price-package.module';
 
 @NgModule({
   imports: [
@@ -392,6 +395,7 @@ import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/cli
     QuartzCronModule,
     SplitButtonModule,
     CalendarModule,
+    PricePackageModule,
   ],
   declarations: [
     EmailTemplatesComponent,
@@ -631,6 +635,9 @@ import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/cli
     ViewActorModalComponent,
     CreateOrEditActorModalComponent,
     ActorInvoiceDemandModelComponent,
+    ClientDemandModelComponent,
+    ReplaceTrucksAndDriversModalComponent,
+    TruckAndDriverReplacementComponent,
     ClientDemandModelComponent,
   ],
   providers: [

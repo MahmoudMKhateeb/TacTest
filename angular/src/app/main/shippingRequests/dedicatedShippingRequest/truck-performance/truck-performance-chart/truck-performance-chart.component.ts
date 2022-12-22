@@ -3,6 +3,7 @@ import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   DedicatedShippingRequestsServiceProxy,
+  ReplacementFlag,
   ShipperDashboardServiceProxy,
   UpdateRequestKPIInput,
   UpdateTruckKPIInput,
@@ -31,6 +32,7 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
   showModifyKpi: boolean;
 
   dataSourceForTrucks: any = {};
+  originalTrucks: DedicatedTruckDto[];
 
   constructor(injector: Injector, private _dedicatedShippingRequestsServiceProxy: DedicatedShippingRequestsServiceProxy) {
     super(injector);
@@ -49,10 +51,11 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
     let series = [];
     let categories = [];
     console.log('this.selectedTruckId', this.selectedTruckId);
-    const kpiSeriesChartData = this.trucks.map((truck, index) => {
+    this.originalTrucks = this.trucks.filter((truck) => truck.replacementFlag === ReplacementFlag.Original);
+    const kpiSeriesChartData = this.originalTrucks.map((truck, index) => {
       return truck.kpi;
     });
-    const numberOfTripsChartData = this.trucks.map((truck, index) => {
+    const numberOfTripsChartData = this.originalTrucks.map((truck, index) => {
       categories.push(truck.plateNumber);
       return truck.numberOfTrips;
     });
@@ -60,12 +63,12 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
       {
         name: this.l('KPI'),
         data: kpiSeriesChartData,
-        color: 'rgba(187, 41, 41, 0.847)',
+        color: 'rgba(154,154,154,0.84)',
       },
       {
         name: this.l('NumberOfTrips'),
         data: numberOfTripsChartData,
-        color: 'rgba(154,154,154,0.84)',
+        color: 'rgba(187, 41, 41, 0.847)',
       },
     ];
     this.chartOptions = {

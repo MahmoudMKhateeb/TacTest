@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Features;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -24,16 +25,18 @@ namespace TACHYON.Invoices.ActorInvoices
         private readonly IFeatureChecker _featureChecker;
         private readonly IRepository<ActorInvoice,long> _actorInvoiceRepository;
         private readonly IRepository<ActorSubmitInvoice, long> _actorSubmitInvoiceRepository;
+        private readonly IAbpSession _session;
 
         public ActorInvoicesManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<Actor> actorRepository,
             IRepository<ActorInvoice, long> actorInvoiceRepository,
-            IRepository<ActorSubmitInvoice, long> actorSubmitInvoiceRepository, IFeatureChecker featureChecker)
+            IRepository<ActorSubmitInvoice, long> actorSubmitInvoiceRepository, IFeatureChecker featureChecker, IAbpSession session)
         {
             this._shippingRequestTripRepository = shippingRequestTripRepository;
             this._actorRepository = actorRepository;
             this._actorInvoiceRepository = actorInvoiceRepository;
             _actorSubmitInvoiceRepository = actorSubmitInvoiceRepository;
             _featureChecker = featureChecker;
+            _session = session;
         }
 
         public async Task<bool> BuildActorShipperInvoices(int  actorId, List<SelectItemDto> SelectedTrips )
@@ -146,7 +149,7 @@ namespace TACHYON.Invoices.ActorInvoices
 
         public async Task<List<ShippingRequestTrip>> GetAllCarrierActorUnInvoicedTrips(int actorId, List<SelectItemDto> trips)
         {
-            
+            DisableTenancyFilters();
             return await _shippingRequestTripRepository.GetAll()
              .Include(trip => trip.ShippingRequestTripVases)
              .ThenInclude(x=> x.ShippingRequestVasFk)
@@ -157,6 +160,7 @@ namespace TACHYON.Invoices.ActorInvoices
              .Where(trip => trip.ShippingRequestFk.CarrierActorId == actorId)
              .Where(trip => trip.ShippingRequestFk.ActorCarrierPriceId.HasValue)
              .Where(trip => !trip.IsActorCarrierHaveInvoice)
+             .Where(x=>x.ShippingRequestFk.CarrierTenantId == _session.TenantId && x.ShippingRequestFk.CarrierActorFk.TenantId == _session.TenantId)
              .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
              trip.Status == Shipping.Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
              .ToListAsync();

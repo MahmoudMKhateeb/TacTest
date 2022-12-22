@@ -6,6 +6,7 @@ namespace TACHYON.Cities.Dtos
     {
         public string Polygon { get; set; }
 
+        public int CountryId { get; set; }
         public bool HasPolygon { get; set; }
     }
 }

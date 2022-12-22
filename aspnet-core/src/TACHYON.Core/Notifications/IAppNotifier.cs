@@ -11,6 +11,7 @@ using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
 using TACHYON.PricePackages.Dto.NormalPricePackage;
+using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -147,6 +148,12 @@ namespace TACHYON.Notifications
 
         Task ShippingRequestNotifyCarrirerWhenShipperAccepted(ShippingRequest shippingRequest);
         Task ShipperReminderToCompleteTrips(long shippingRequestId, UserIdentifier userIds);
+
+        #endregion
+
+        #region Replacement Truck or driver for dedicated
+        Task NotifyCarrierWithTruckReplacement(DedicatedShippingRequestTruck dedicatedTruck);
+        Task NotifyCarrierWithDriverReplacement(DedicatedShippingRequestDriver dedicatedDriver);
 
         #endregion
 

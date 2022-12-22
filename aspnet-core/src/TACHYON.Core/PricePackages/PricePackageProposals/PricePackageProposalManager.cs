@@ -5,6 +5,7 @@ using Abp.Reflection.Extensions;
 using Abp.UI;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
+using MailKit.Search;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using TACHYON.PricePackages.PricePackageProposals.Jobs;
 using TACHYON.PricePackages.TmsPricePackages;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Storage;
+using SearchOptions = DevExpress.XtraRichEdit.API.Native.SearchOptions;
 
 namespace TACHYON.PricePackages.PricePackageProposals
 {
@@ -56,7 +58,7 @@ namespace TACHYON.PricePackages.PricePackageProposals
             
             // check items if them for another shipper 
             bool anyItemNotForSelectedShipper = await _tmsPricePackageRepository.GetAll()
-                .AnyAsync(x => tmsPricePackages.Any(i => i == x.Id) && x.ShipperId != createdProposal.ShipperId);
+                .AnyAsync(x => tmsPricePackages.Any(i => i == x.Id) && x.DestinationTenantId != createdProposal.ShipperId);
             
             if (anyItemNotForSelectedShipper) 
                 throw new UserFriendlyException(L("YouMustSelectItemForSelectedShipper"));
@@ -97,25 +99,40 @@ namespace TACHYON.PricePackages.PricePackageProposals
             await documentProcessor.LoadDocumentAsync(documentStream, DocumentFormat.Rtf);
             var document = documentProcessor.Document;
             string proposalDate = proposal.ProposalDate?.ToString("dd-MM-yyyy");
-            var truckTypes = proposal.TmsPricePackages.Select(x => x.TrucksTypeFk.Key)
-                .Distinct().ToList();
-            var routeTypes =  proposal.TmsPricePackages.Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType))
-                .Distinct().ToList();
-            var shippingTypes = proposal.TmsPricePackages.Select(x => Enum.GetName(typeof(PricePackageType), x.Type))
-                .Distinct().ToList();
+            var truckTypes = proposal.TmsPricePackages?.Select(x => x.TrucksTypeFk?.Key)
+                .Distinct().ToArray();
+            var routeTypes = proposal.TmsPricePackages
+                ?.Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType))
+                .Distinct().ToArray();
             
-            document.ReplaceAll(TACHYONConsts.ProposalTemplateCompanyName, proposal.Shipper.companyName,SearchOptions.None);
+            var shippingTypes = proposal.TmsPricePackages?
+                .Where(x=> x.ShippingTypeId.HasValue)
+                .Select(x => x.ShippingType?.DisplayName)
+                .Distinct().ToArray();
+            
+            document.ReplaceAll(TACHYONConsts.ProposalTemplateCompanyName, proposal.Shipper?.companyName,SearchOptions.None);
             document.ReplaceAll(TACHYONConsts.ProposalTemplateDate,proposalDate ,SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.ProposalTemplateTruckType, string.Join(", ",truckTypes),SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.ProposalTemplateRouteType, string.Join(", ",routeTypes),SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.ProposalTemplateShippingType, string.Join(", ",shippingTypes) ,SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.ProposalTemplateScopeOverview, proposal.ScopeOverview,
+                SearchOptions.None);
+            document.ReplaceAll(TACHYONConsts.ProposalTemplateNotes, proposal.Notes, SearchOptions.None);
+            
+            
+                document.ReplaceAll(TACHYONConsts.ProposalTemplateTruckType, string.Join(", ", truckTypes ?? new[]{string.Empty}),
+                    SearchOptions.None);
+            
+                document.ReplaceAll(TACHYONConsts.ProposalTemplateRouteType, string.Join(", ", routeTypes ?? new[]{string.Empty}),
+                    SearchOptions.None);
+            
+            
+                document.ReplaceAll(TACHYONConsts.ProposalTemplateShippingType, string.Join(", ", shippingTypes ?? new[]{string.Empty}),
+                    SearchOptions.None);
 
             var routeDetailsTable = document.Tables[1];
 
             var routeDetails = proposal?.TmsPricePackages?.Select(x => new
             {
-                OriginCity = x.OriginCity.DisplayName,DestinationCity = x.DestinationCity.DisplayName,
-                TmsPrice = x.TachyonManageTotalPrice, DrPrice= x.DirectRequestTotalPrice
+                OriginCity = x.OriginCity?.DisplayName,DestinationCity = x.DestinationCity?.DisplayName,
+                x.TotalPrice, TruckType = x.TrucksTypeFk?.DisplayName 
             }).ToArray();
             
             for (int i = 0; i < routeDetails?.Length; i++)
@@ -126,8 +143,8 @@ namespace TACHYON.PricePackages.PricePackageProposals
                 document.InsertText(routeDetailsTable[currentColumn, 0].Range.Start, $"{i + 1}");
                 document.InsertText(routeDetailsTable[currentColumn, 1].Range.Start, routeDetails[i].OriginCity);
                 document.InsertText(routeDetailsTable[currentColumn, 2].Range.Start, routeDetails[i].DestinationCity);
-                document.InsertText(routeDetailsTable[currentColumn, 3].Range.Start, $"{routeDetails[i].TmsPrice} SR");
-                document.InsertText(routeDetailsTable[currentColumn, 4].Range.Start, $"{routeDetails[i].DrPrice} SR");
+                document.InsertText(routeDetailsTable[currentColumn, 3].Range.Start, routeDetails[i].TruckType);
+                document.InsertText(routeDetailsTable[currentColumn, 4].Range.Start, $"{routeDetails[i].TotalPrice} SR");
             }
             await using var memoryStream = new MemoryStream();
             await documentProcessor.ExportToPdfAsync(memoryStream);

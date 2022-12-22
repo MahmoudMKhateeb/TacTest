@@ -15,6 +15,9 @@ namespace TACHYON.Authorization.Users
         #region TACHYON_Emails
 
         Task SendPricePackageProposalEmail(string proposalName, BinaryObject proposalFile, string emailAddress);
+
+        Task SendPricePackageAppendixEmail(string emailAddress, BinaryObject appendixFile);
+        
         /// <summary>
         /// Send email activation link to user's email address.
         /// </summary>

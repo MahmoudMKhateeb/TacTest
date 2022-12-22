@@ -469,7 +469,8 @@ namespace TACHYON
                 .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.CarrierTenantFk.TenancyName))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}- {GetDurationUnit(src.ShippingRequest.RentalDurationUnit.Value)}"))
                 .ForMember(dest => dest.ShippingRequestReference, opt => opt.MapFrom(src => src.ShippingRequest.ReferenceNumber))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.GetEnumDescription()));
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
+                .ForMember(dest => dest.OriginalDedicatedDriverName, opt => opt.MapFrom(src => src.OriginalDedicatedDriverId !=null ? $"{src.OriginalDriver.DriverUser.Name} {src.OriginalDriver.DriverUser.Surname}" :""));
 
             configuration.CreateMap<DedicatedShippingRequestTruck, DedicatedShippingRequestTrucksDto>()
                 .ForMember(dest => dest.TruckType, opt => opt.MapFrom(src => src.Truck.TrucksTypeFk.DisplayName))
@@ -480,7 +481,8 @@ namespace TACHYON
                 .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.CarrierTenantFk.TenancyName))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}-" +
                 $" {GetDurationUnit(src.ShippingRequest.RentalDurationUnit.Value)}"))
-                .ForMember(dest => dest.NumberOfTrips, opt => opt.MapFrom(src => src.ShippingRequest.ShippingRequestTrips.Where(x=>x.AssignedTruckId == src.TruckId).Count()));
+                .ForMember(dest => dest.NumberOfTrips, opt => opt.MapFrom(src => src.ShippingRequest.ShippingRequestTrips.Where(x=>x.AssignedTruckId == src.TruckId).Count()))
+                .ForMember(dest => dest.OriginalDedicatedTruckName, opt => opt.MapFrom(src => src.OriginalDedicatedTruckId.HasValue ?src.OriginalTruck.Truck.GetDisplayName() :""));
 
             configuration.CreateMap<CreateOrEditDedicatedStep1Dto, ShippingRequest>()
                 .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
