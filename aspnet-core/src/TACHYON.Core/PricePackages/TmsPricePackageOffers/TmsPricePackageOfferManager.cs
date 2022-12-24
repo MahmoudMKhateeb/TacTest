@@ -157,17 +157,19 @@ namespace TACHYON.PricePackages.TmsPricePackageOffers
                 .Select(item => new PriceOfferDetailDto() { ItemId = item.Id, Price = 0 }).ToList();
 
 
-            var parentPriceOfferId = await GetParentOfferId(shippingRequest.Id);
+            var parentPriceOffer = await GetParentOffer(shippingRequest.Id);
 
-           if (parentPriceOfferId == default)
+           if (parentPriceOffer == null)
                throw new UserFriendlyException(L("YouMustSendRequestToCarrierAndAcceptTheOffer"));
                 
             var priceOfferDto = new CreateOrEditPriceOfferInput()
             {
-                ShippingRequestId = shippingRequest.Id, ItemPrice = pricePackage.TotalPrice, ItemDetails = itemDetails,
+                ShippingRequestId = shippingRequest.Id, 
+                ItemPrice = parentPriceOffer.ItemPrice,
+                ItemDetails = itemDetails,
                 CommissionType = PriceOfferCommissionType.CommissionValue,
-                CommissionPercentageOrAddValue = 0,
-                ParentId = parentPriceOfferId,
+                CommissionPercentageOrAddValue = pricePackage.TotalPrice - parentPriceOffer.ItemPrice,
+                ParentId = parentPriceOffer.Id,
                 VasCommissionType = PriceOfferCommissionType.CommissionValue, VasCommissionPercentageOrAddValue = 0
             };
 
@@ -193,6 +195,20 @@ namespace TACHYON.PricePackages.TmsPricePackageOffers
                                     x.DirectRequest.ShippingRequestId == shippingRequestId &&
                                     x.DirectRequest.CarrierTenantId == priceOffer.TenantId)
                 select priceOffer.Id).FirstOrDefaultAsync();
+        }
+
+        public async Task<PriceOffer> GetParentOffer(long shippingRequestId)
+        {
+            return await (from priceOffer in _priceOfferRepository.GetAll()
+                          where priceOffer.ShippingRequestId == shippingRequestId
+                                && (priceOffer.Status == PriceOfferStatus.Accepted || priceOffer.Status == PriceOfferStatus.Pending || priceOffer.Status == PriceOfferStatus.Pending
+                                    || priceOffer.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier ||
+                                    priceOffer.Status == PriceOfferStatus.AcceptedAndWaitingForShipper)
+                                && _tmsOfferRepository.GetAll()
+                                    .Any(x => x.DirectRequestId.HasValue &&
+                                              x.DirectRequest.ShippingRequestId == shippingRequestId &&
+                                              x.DirectRequest.CarrierTenantId == priceOffer.TenantId)
+                          select priceOffer).FirstOrDefaultAsync();
         }
 
         private async Task AcceptOfferByPricePackage(TmsPricePackage pricePackage,long srId)
