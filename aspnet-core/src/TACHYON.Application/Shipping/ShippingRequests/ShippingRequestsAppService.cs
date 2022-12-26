@@ -1179,7 +1179,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 var query = info.Select(x => new
                 {
                     MasterWaybillNo = x.WaybillNumber.Value,
-                    ShippingRequestStatus = x.Status == Trips.ShippingRequestTripStatus.Delivered ? "Final" : "Draft",
+                    ShippingRequestStatus = x.Status == Trips.ShippingRequestTripStatus.Delivered || x.Status == Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation ? "Final" : "Draft",
                     //(x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     SenderCompanyName = pickupFacility, //.ShippingRequestFk.Tenant.companyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
@@ -1202,7 +1202,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         ),
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                     IsMultipDrops = x.ShippingRequestFk.NumberOfDrops > 1 ? true : false,
-                    TotalDrops = x.ShippingRequestFk.NumberOfDrops,
+                    TotalDrops =x.RouteType !=null ?x.NumberOfDrops :x.ShippingRequestFk.NumberOfDrops,
                     StartTripDate = x.ActualPickupDate,
                     CarrierName =
                         x.ShippingRequestFk.CarrierTenantFk != null
@@ -1267,11 +1267,14 @@ namespace TACHYON.Shipping.ShippingRequests
                 var info = _shippingRequestTripRepository.GetAll()
                     .Where(e => e.Id == shippingRequestTripId);
 
+                var dropPoint = dropOffId.HasValue ? AsyncHelper.RunSync(() => _routPointRepository.FirstOrDefaultAsync(dropOffId.Value)) :default;
+
                 var query = info.Select(x => new
                 {
                     Id = x.Id,
                     MasterWaybillNo = x.WaybillNumber.Value,
-                    ShippingRequestStatus = x.Status == Trips.ShippingRequestTripStatus.Delivered ? "Final" : "Draft",
+                    ShippingRequestStatus = dropOffId.HasValue ?(dropPoint.IsComplete ?"Final" :"Draft")
+                    : x.Status == Trips.ShippingRequestTripStatus.Delivered  || x.Status == Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation ? "Final" : "Draft",
                     ClientName = (x.ShippingRequestFk.IsSaas() && x.ShippingRequestFk.ShipperActorId!=null) ?x.ShippingRequestFk.ShipperActorFk.CompanyName :x.ShippingRequestFk.Tenant.Name ,
                     CarrierName = x.ShippingRequestFk.CarrierTenantFk.TenancyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
