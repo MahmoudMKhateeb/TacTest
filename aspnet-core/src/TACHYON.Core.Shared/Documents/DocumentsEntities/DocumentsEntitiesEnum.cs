@@ -14,6 +14,9 @@ namespace TACHYON.Documents.DocumentsEntities
         [Description("Tenant")] Tenant = 1,
         [Description("Driver")] Driver = 2,
         [Description("Truck")] Truck = 3,
-        [Description("Trip")] Trip = 3,
+        [Description("Trip")] Trip = 4,
+        [Description("ActorShipper")] 
+        ActorShipper = 5,
+        [Description("ActorCarrier")] ActorCarrier = 6,
     }
 }

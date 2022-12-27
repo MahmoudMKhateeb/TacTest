@@ -161,7 +161,7 @@
                             <div
                               class="d-inline-block"
                               ngbDropdown
-                              *ngIf="point.pickingType == pickingTypeEnum.Pickup &&  trip.status === tripStatusesEnum.New"
+                              *ngIf="point.pickingType == pickingTypeEnum.Pickup &&  trip.status === tripStatusesEnum.New && trip.canDriveTrip"
                             >
                               <button class="btn btn-sm btn-danger" ngbDropdownToggle [buttonBusy]="saving">{{l('Actions')}}</button>
 
@@ -180,7 +180,7 @@
                             </div>
                             <!--                      points DropDown Actions      -->
                             <div
-                              *ngIf="!point.isComplete && trip.status !== tripStatusesEnum.New && trip.driver && (isCarrier || isTachyonDealerOrHost) "
+                              *ngIf="!point.isComplete && trip.status !== tripStatusesEnum.New && trip.driver && (trip.canDriveTrip) "
                               class="d-inline-block"
                               ngbDropdown
                             >
@@ -220,13 +220,13 @@
                             <span class="mt-1 mr-2">{{l('FacilityRating')}} :</span>
                             <p-rating [ngModel]="point.facilityRate" readonly="true" stars="5" [cancel]="false"></p-rating>
                           </p>
-                          <div class="flex-row" *ngIf="!appSession.tenantId">
+                          <div class="flex-row" *ngIf="!appSession.tenantId && point.pickingType == 2">
                             <p class="p-0 mr-2">
-                              {{l('ReceiverCode')}} : {{newReceiverCode? newReceiverCode: point.receiverCode}}
+                              {{l('ReceiverCode')}} : {{point.receiverCode}}
 
                               <i
                                 *ngIf="!point.isResolve && !point.isComplete"
-                                (click)="resetReceiverCode(point.id)"
+                                (click)="resetReceiverCode(point.id,i)"
                                 class="flaticon-refresh text-hover-primary ml-2"
                                 data-toggle="tooltip"
                                 title="{{l('ResetReceiverCode')}}"

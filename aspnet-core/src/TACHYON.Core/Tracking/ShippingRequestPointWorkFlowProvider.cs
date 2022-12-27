@@ -6,6 +6,7 @@ using Abp.Domain.Repositories;
 using Abp.EntityHistory;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
+using Abp.Threading;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +40,6 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
-using TACHYON.Storage;
 using TACHYON.Tracking.Dto;
 using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Url;
@@ -62,7 +62,6 @@ namespace TACHYON.Tracking
         private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFeatureChecker _featureChecker;
-        private readonly IAbpSession _abpSession;
         private readonly IRepository<RoutPointDocument, long> _routPointDocumentRepository;
         private readonly IRepository<ShippingRequestTripTransition> _shippingRequestTripTransitionRepository;
         private readonly IRepository<RoutPointStatusTransition> _routPointStatusTransitionRepository;
@@ -74,9 +73,10 @@ namespace TACHYON.Tracking
         private readonly IWebUrlService _webUrlService;
         private readonly IPermissionChecker _permissionChecker;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
-        private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly PenaltyManager _penaltyManager;
         private readonly BayanIntegrationManagerV3 _banIntegrationManagerV3;
+        private readonly IRepository<User, long> _userRepository;
+        public IAbpSession AbpSession { set; get; }
 
 
         #region Constractor
@@ -98,18 +98,18 @@ namespace TACHYON.Tracking
             IWebUrlService webUrlService,
             IPermissionChecker permissionChecker,
             IEntityChangeSetReasonProvider reasonProvider,
-            ITempFileCacheManager tempFileCacheManager,
             IRepository<ShippingRequest, long> shippingRequestRepository, 
             PenaltyManager penaltyManager,
+            BayanIntegrationManagerV3 banIntegrationManagerV3,
             NormalPricePackageManager normalPricePackageManager,
-            BayanIntegrationManagerV3 banIntegrationManagerV3)
+            IRepository<User, long> userRepository)
         {
             _routPointRepository = routPointRepository;
             _shippingRequestTripRepository = shippingRequestTrip;
             _priceOfferManager = priceOfferManager;
             _appNotifier = appNotifier;
             _featureChecker = featureChecker;
-            _abpSession = abpSession;
+            AbpSession = abpSession;
             _routPointDocumentRepository = routPointDocumentRepository;
             _shippingRequestTripTransitionRepository = shippingRequestTripTransitionRepository;
             _routPointStatusTransitionRepository = routPointStatusTransitionRepository;
@@ -121,7 +121,6 @@ namespace TACHYON.Tracking
             _webUrlService = webUrlService;
             _permissionChecker = permissionChecker;
             _reasonProvider = reasonProvider;
-            _tempFileCacheManager = tempFileCacheManager;
             _shippingRequestRepository = shippingRequestRepository;
             Flows = new List<WorkFlow<PointTransactionArgs, RoutePointStatus>>
             {
@@ -383,6 +382,7 @@ namespace TACHYON.Tracking
             _penaltyManager = penaltyManager;
             _normalPricePackageManager = normalPricePackageManager;
             _banIntegrationManagerV3 = banIntegrationManagerV3;
+            _userRepository = userRepository;
         }
 
         #endregion
@@ -433,8 +433,8 @@ namespace TACHYON.Tracking
             DisableTenancyFilters();
             var trip = await CheckIfCanAccepted(id);
 
-            var canAcceptTrip = await CanAcceptTrip(trip.AssignedDriverUserId, trip.Status, trip.DriverStatus);
-            if (!canAcceptTrip.canAccept) throw new UserFriendlyException(canAcceptTrip.reason);
+            // var canAcceptTrip = await CanAcceptTrip(trip.AssignedDriverUserId, trip.Status, trip.DriverStatus);
+            // if (!canAcceptTrip.canAccept) throw new UserFriendlyException(canAcceptTrip.reason);
 
             trip.DriverStatus = ShippingRequestTripDriverStatus.Accepted;
             await TransferPricesToTrip(trip);
@@ -450,8 +450,12 @@ namespace TACHYON.Tracking
             var trip = await CheckIfCanStartTrip(Input.Id);
             if (trip == null) throw new UserFriendlyException(L("YouCannotStartWithTheTripSelected"));
 
-            var canStartTrip = await CanStartTrip(trip.AssignedDriverUserId, trip.Status, trip.DriverStatus, trip.StartTripDate);
-            if (!canStartTrip.canStart) throw new UserFriendlyException(canStartTrip.reason);
+            if (!Input.ForceDeliverModeEnabled)
+            {
+                var canStartTrip = await CanStartTrip(trip.AssignedDriverUserId, trip.Status, trip.DriverStatus,
+                    trip.StartTripDate);
+                if (!canStartTrip.canStart) throw new UserFriendlyException(canStartTrip.reason);
+            }
 
             //Get PickUp Point
             var routeStart = await GetPickUpPointToStart(trip.Id);
@@ -469,7 +473,10 @@ namespace TACHYON.Tracking
         {
             DisableTenancyFilters();
 
-            var point = await GetPointForInvoke(args.PointId);
+            var point = args.ForceDeliverModeEnabled
+                ? await _routPointRepository.FirstOrDefaultAsync(args.PointId)
+                : await GetPointForInvoke(args.PointId);
+            
             if (point == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
 
             var transaction = CheckIfTransactionIsExist(point.WorkFlowVersion, point.Status, action);
@@ -477,8 +484,6 @@ namespace TACHYON.Tracking
             if (!_permissionChecker.IsGranted(false, transaction.Permissions?.ToArray()) ||
                 (transaction.Features.Any() && transaction.Features.Any(x => _featureChecker.IsEnabled(x))))
                 throw new AbpAuthorizationException("You are not authorized to " + transaction.Name);
-
-            await CheckIfLessThanMinutelastStatus(args.PointId);
 
             var reason = await transaction.Func(args);
             _reasonProvider.Use(reason);
@@ -497,16 +502,16 @@ namespace TACHYON.Tracking
                 .FirstOrDefaultAsync(x => !x.IsReset && x.PointId == pointId);
 
 
-            if (lastTranstion != null)
-            {
-                var minutes = (Clock.Now - lastTranstion.CreationTime).TotalMinutes;
-                if (minutes < 1)
-                    throw new UserFriendlyException(L("YouCanNotChangeTheStatusMultipleTimes"));
-            }
+            //if (lastTranstion != null)
+            //{
+            //    var minutes = (Clock.Now - lastTranstion.CreationTime).TotalMinutes;
+            //    if (minutes < 1)
+            //        throw new UserFriendlyException(L("YouCanNotChangeTheStatusMultipleTimes"));
+            //}
             
         }
 
-        public async Task GoToNextLocation(long nextPointId)
+        public async Task GoToNextLocation(long nextPointId, bool forceMode = false)
         {
             DisableTenancyFilters();
 
@@ -592,6 +597,125 @@ namespace TACHYON.Tracking
 
             return (true, null);
         }
+       
+        public void ForceDeliverTrip(ImportTripTransactionFromExcelDto importTripDto)
+        {
+           var currentTrip = _shippingRequestTripRepository.GetAll().FirstOrDefault(x => x.WaybillNumber == importTripDto.WaybillNumber);
+
+           #region Deliver Trip / MasterWaybill
+
+           if (currentTrip != null)
+           {
+               AsyncHelper.RunSync(() => Accepted(currentTrip.Id));
+               CurrentUnitOfWork.SaveChanges();
+               AsyncHelper.RunSync(()=> Start(new ShippingRequestTripDriverStartInputDto(){Id = currentTrip.Id,ForceDeliverModeEnabled = true}));
+               CurrentUnitOfWork.SaveChanges();
+               CompleteTripPoints();
+               return;
+           }
+
+           #endregion
+
+           #region Deliver Point / SubWaybill
+
+           var point = _routPointRepository.GetAllIncluding(x=> x.RoutPointStatusTransitions)
+               .Single(x => x.WaybillNumber == importTripDto.WaybillNumber);
+
+           currentTrip = _shippingRequestTripRepository.FirstOrDefault(point.ShippingRequestTripId);
+           var isPickupPointCompleted = _routPointRepository.GetAll()
+               .Any(x => x.ShippingRequestTripId == point.ShippingRequestTripId &&
+                         x.PickingType == PickingType.Pickup && x.Status == RoutePointStatus.FinishLoading);
+
+           if (!isPickupPointCompleted)
+           {
+
+               var isTripStarted = currentTrip.Status == ShippingRequestTripStatus.InTransit;
+               
+               if (!isTripStarted)
+               {
+                   var isTripAccepted = currentTrip.DriverStatus == ShippingRequestTripDriverStatus.Accepted;
+                   
+                   if (!isTripAccepted)
+                   {
+                       AsyncHelper.RunSync(() => Accepted(point.ShippingRequestTripId));
+                       CurrentUnitOfWork.SaveChanges();
+                   }
+                   AsyncHelper.RunSync(()=> Start(new ShippingRequestTripDriverStartInputDto(){Id = point.ShippingRequestTripId,ForceDeliverModeEnabled = true}));
+                   CurrentUnitOfWork.SaveChanges();
+               }
+               
+               var pickupPoint = _routPointRepository.GetAllIncluding(x=> x.RoutPointStatusTransitions).Single(x =>
+                   x.ShippingRequestTripId == point.ShippingRequestTripId && x.PickingType == PickingType.Pickup);
+               CompletePoint(pickupPoint);
+           }
+           AsyncHelper.RunSync(()=> GoToNextLocation(point.Id));
+           CurrentUnitOfWork.SaveChanges();
+           CompletePoint(point);
+
+           #endregion
+
+           void CompleteTripPoints()
+           {
+               var points =  _routPointRepository.GetAllIncluding(x=> x.RoutPointStatusTransitions)
+                   .OrderBy(x=> x.PickingType)
+                   .Where(x => x.ShippingRequestTripId == currentTrip.Id).ToArray();
+                
+               for (int i = 0; i < points.Length; i++)
+               {
+                   if (i > 0)
+                   {
+                       AsyncHelper.RunSync(()=> GoToNextLocation(points[i].Id));
+                       CurrentUnitOfWork.SaveChanges();
+                   }
+                    
+                   CompletePoint(points[i]);
+               }
+
+           }
+
+           void CompletePoint(RoutPoint routPoint)
+           {
+               List<DateTime> pointDates = routPoint.PickingType switch
+               {
+                   PickingType.Pickup => importTripDto.TransactionsDates.Take(4).ToList(),
+                   PickingType.Dropoff when currentTrip.NeedsDeliveryNote => 
+                       importTripDto.TransactionsDates.Skip(4).Take(4).ToList(),
+                   _ => importTripDto.TransactionsDates.Skip(4).ToList()
+               };
+
+               // if point transactions contains upload delivery note 
+               // we need to skip upload delivery note transaction
+               // (see skipped transaction ... if (deliveryNote) continue)
+
+               for (int i = 0; i < pointDates.Count; i++)
+               {
+                   List<PointTransactionDto> availableTransactions = GetTransactionsByStatus(
+                       routPoint.WorkFlowVersion,
+                       routPoint.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
+                       routPoint.Status);
+                   PointTransactionDto transaction = availableTransactions?.FirstOrDefault();
+                   if (transaction == null || transaction.Action.Contains("DeliveryConfirmation") 
+                                           || transaction.Action.Contains("UplodeDeliveryNote")) break;
+
+                   AsyncHelper.RunSync((() => Invoke(new PointTransactionArgs {PointId = routPoint.Id, Code = routPoint.Code,ForceDeliverModeEnabled = true},
+                       transaction.Action)));
+                   CurrentUnitOfWork.SaveChanges();
+               }
+
+               var pointTransitions = _routPointStatusTransitionRepository.GetAll()
+                   .Where(x => x.PointId == routPoint.Id && !x.IsReset).ToList();
+
+               for (var i = 0; i < pointDates.Count; i++)
+               {
+                   var realIndex = routPoint.PickingType == PickingType.Pickup ? i + 1 : i;
+                   pointTransitions[realIndex].CreationTime = pointDates[i];
+               }
+                    
+
+           }
+            
+        }
+        
         #endregion
 
         #region Transactions Functions
@@ -994,13 +1118,14 @@ namespace TACHYON.Tracking
         /// <summary>
         /// Get next Point and check if it Available to Open
         /// </summary>
-        private async Task<RoutPoint> GetNextLocationInTrip(long pointId)
+        private async Task<RoutPoint> GetNextLocationInTrip(long pointId,bool forceMode = false)
         {
             var currentUser = await GetCurrentUserAsync();
             return await _routPointRepository
                 .GetAll().Include(c => c.ShippingRequestTripFk)
                 .ThenInclude(s => s.ShippingRequestFk).Include(x => x.FacilityFk)
-                .Where(x => x.Id == pointId
+                .WhereIf(forceMode,x=> x.Id == pointId)
+                .WhereIf(!forceMode,x => x.Id == pointId
                          && x.Status == RoutePointStatus.StandBy && !x.IsActive && !x.IsResolve && !x.IsComplete
                          && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.InTransit
                          && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
@@ -1218,7 +1343,7 @@ namespace TACHYON.Tracking
         /// </summary>
         protected virtual async Task<User> GetCurrentUserAsync()
         {
-            var user = await UserManager.FindByIdAsync(_abpSession.GetUserId().ToString());
+            var user = await UserManager.FindByIdAsync(AbpSession.GetUserId().ToString());
             if (user == null)
                 throw new Exception("There is no current user!");
             return user;
@@ -1226,7 +1351,7 @@ namespace TACHYON.Tracking
         public async Task<List<ShippingRequestFilterListDto>> GetRequestReferancesList()
         {
             DisableTenancyFilters();
-            var tenantId = _abpSession.TenantId;
+            var tenantId = AbpSession.TenantId;
             return await _shippingRequestRepository.GetAll()
                         .Where(x=> x.CarrierTenantId.HasValue)
                         .WhereIf(tenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == tenantId.Value)

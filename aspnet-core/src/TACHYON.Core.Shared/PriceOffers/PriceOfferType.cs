@@ -4,6 +4,7 @@
     {
         Trip = 1,
         Vas = 2,
-        Dedicated = 3
+        Dedicated = 3,
+        DedicatedVas = 4,
     }
 }

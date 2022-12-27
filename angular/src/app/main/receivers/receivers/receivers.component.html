@@ -124,25 +124,29 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Receivers.Edit', 'Pages.Receivers.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="facilityFk.name">
+                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.Receivers.Edit', 'Pages.Receivers.Delete')">{{ l('Actions') }}</th>
+                    <th *ngIf="isTachyonDealerOrHost" style="width: 150px" pSortableColumn="tenant.tenancyName">
+                      {{ l('Company') }}
+                      <p-sortIcon field="companyName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="facilityFk.name">
                       {{ l('Facility') }}
                       <p-sortIcon field="facilityName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="fullName">
+                    <th style="width: 150px" pSortableColumn="fullName">
                       {{ l('ReciverName') }}
                       <p-sortIcon field="receiver.fullName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="email">
+                    <th style="width: 150px" pSortableColumn="email">
                       {{ l('Email') }}
                       <p-sortIcon field="receiver.email"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="phoneNumber">
+                    <th style="width: 150px" pSortableColumn="phoneNumber">
                       {{ l('PhoneNumber') }}
                       <p-sortIcon field="receiver.phoneNumber"></p-sortIcon>
                     </th>
 
-                    <th style="width: 150px;" pSortableColumn="CreationTime">
+                    <th style="width: 150px" pSortableColumn="CreationTime">
                       {{ l('CreationDate') }}
                       <p-sortIcon field="CreationTime"></p-sortIcon>
                     </th>
@@ -150,7 +154,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.Receivers.Edit', 'Pages.Receivers.Delete')">
+                    <td style="width: 130px" [hidden]="!isGrantedAny('Pages.Receivers.Edit', 'Pages.Receivers.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -185,23 +189,28 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+
+                    <td *ngIf="isTachyonDealerOrHost" style="width: 150px">
+                      <span class="ui-column-title"> {{ l('Company') }}</span>
+                      {{ record.tenantName }}
+                    </td>
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.facilityName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('FullName') }}</span>
                       {{ record.receiver.fullName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Email') }}</span>
                       {{ record.receiver.email }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('PhoneNumber') }}</span>
                       {{ record.receiver.phoneNumber }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('CreationDate') }}</span>
                       {{ record.creationTime | momentFormat: 'L' }}
                     </td>

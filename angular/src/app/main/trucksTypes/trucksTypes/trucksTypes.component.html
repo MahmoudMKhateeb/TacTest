@@ -10,7 +10,7 @@
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true, paging: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -20,14 +20,14 @@
             >
               <dxo-editing mode="inline" [allowUpdating]="true" [allowAdding]="true"> </dxo-editing>
               <dxo-filter-row [visible]="true"></dxo-filter-row>
-              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-master-detail [enabled]="true" template="translations"></dxo-master-detail>
               <div *dxTemplate="let options of 'translations'">
                 <trucksType-translationsTemplate [CoreId]="options.data.id"></trucksType-translationsTemplate>
               </div>
-              <dxo-remote-operations></dxo-remote-operations>
+              <!--              <dxo-remote-operations></dxo-remote-operations>-->
               <dxo-paging [pageSize]="10"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true"></dxo-pager>
               <dxi-column dataField="displayName" caption="{{ l('truckType') }}">

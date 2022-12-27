@@ -18,12 +18,14 @@ import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facili
 import { ViewFacilityModalComponent } from '@app/main/addressBook/facilities/view-facility-modal.component';
 import Swal from 'sweetalert2';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 @Component({
   selector: 'request-templates',
   templateUrl: './request-templates.component.html',
   styleUrls: ['./request-templates.component.css'],
   providers: [EnumToArrayPipe],
+  animations: [appModuleAnimation()],
 })
 export class RequestTemplatesComponent extends AppComponentBase implements OnInit {
   @ViewChild('createOrEditFacilityModal', { static: true }) createOrEditFacilityModal: CreateOrEditFacilityModalComponent;

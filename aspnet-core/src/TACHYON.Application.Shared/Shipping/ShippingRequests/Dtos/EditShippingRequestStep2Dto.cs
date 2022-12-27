@@ -13,13 +13,14 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         [Required] public int OriginCityId { get; set; }
 
-        [Required] public int DestinationCityId { get; set; }
+        //[Required] public int DestinationCityId { get; set; }
 
         //[Range(1, 20)]
         public int NumberOfDrops { get; set; }
         [Required] public int NumberOfTrips { get; set; }
         public bool IsDrafted { get; set; }
         public int DraftStep { get; set; }
+        public List<ShippingRequestDestinationCitiesDto> ShippingRequestDestinationCities { get; set; }
 
         public void AddValidationErrors(CustomValidationContext context)
         {

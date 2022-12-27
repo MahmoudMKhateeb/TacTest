@@ -41,6 +41,8 @@
       *ngIf="tenantProfileInformation.tenancyName == 'carrier' && (isTachyonDealerOrHost || (isCarrier && givenId == appSession.tenantId))"
       [giverUserId]="givenId"
     ></profile-carrier-normal-price-package>
+    <!-- Section Carrier Service Areas-->
+    <carrier-service-areas class="w-100" *ngIf="giveUserEditionType == 3" [givenUserId]="givenId"> </carrier-service-areas>
 
     <!--  section Carrier Vases    -->
     <profile-carrier-vases *ngIf="giveUserEditionType == 3 && (isTMS || isCarrier)" [giverUserId]="givenId"></profile-carrier-vases>

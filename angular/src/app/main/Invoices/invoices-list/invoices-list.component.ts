@@ -8,6 +8,7 @@ import {
   InvoiceFilterInput,
   InvoiceReportServiceServiceProxy,
   InvoiceServiceProxy,
+  InvoiceStatus,
   ISelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
@@ -18,6 +19,8 @@ import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import { VoidInvoiceNoteModalComponent } from '../invoice-note/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
+import { InvoiceSearchInputDto } from './InvoiceSearchInputDto';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   templateUrl: './invoices-list.component.html',
@@ -30,6 +33,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
   @ViewChild('voidModal', { static: true }) voidModal: VoidInvoiceNoteModalComponent;
 
+  searchInput: InvoiceSearchInputDto = new InvoiceSearchInputDto();
   IsStartSearch = false;
   PaidStatus: boolean | null | undefined;
   advancedFiltersAreShown = false;
@@ -42,7 +46,8 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   dueFromDate: moment.Moment | null | undefined;
   dueToDate: moment.Moment | null | undefined;
   InvoiceChannelEnum = InvoiceChannel;
-
+  InvoiceStatusEnum = InvoiceStatus;
+  invoiceStatusTitles = Object.entries(this.InvoiceStatusEnum);
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive = false;
 
@@ -50,6 +55,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   duteDateRangeActive = false;
   accountType: InvoiceAccountType | undefined = undefined;
   dataSource: any = {};
+  invoiceChannels: any;
 
   constructor(
     injector: Injector,
@@ -57,9 +63,11 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     private _InvoiceReportServiceProxy: InvoiceReportServiceServiceProxy,
     private _CommonServ: CommonLookupServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private router: Router
+    private router: Router,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
+    this.invoiceChannels = this.enumToArray.transform(InvoiceChannel);
   }
 
   ngOnInit() {
@@ -70,6 +78,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       this.Periods = result;
     });
     this.getAllInvoices();
+    console.log(this.invoiceStatusTitles);
   }
 
   reloadPage(): void {
@@ -108,6 +117,10 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     });
   }
 
+  searchInvoice() {
+    this.getAllInvoices();
+  }
+
   exportToExcel(): void {
     let data: InvoiceFilterInput = new InvoiceFilterInput();
     console.log(this.accountType);
@@ -129,6 +142,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       this._fileDownloadService.downloadTempFile(result);
     });
   }
+
   downloadPenaltyReport(id: number) {
     this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
@@ -140,6 +154,13 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       this._fileDownloadService.downloadTempFile(result);
     });
   }
+
+  downloadDedicatedReport(id: number) {
+    this._InvoiceReportServiceProxy.downloadDedicatedDynamicInvoice(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
+
   details(invoice: any): void {
     if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
       this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
@@ -158,7 +179,13 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       load(loadOptions: LoadOptions) {
         console.log(JSON.stringify(loadOptions));
         return self._InvoiceServiceProxy
-          .getAll(JSON.stringify(loadOptions))
+          .getAll(
+            JSON.stringify(loadOptions),
+            self.searchInput.paymentDate,
+            self.searchInput.waybillOrSubWaybillNumber,
+            self.searchInput.containerNumber,
+            self.searchInput.accountNumber
+          )
           .toPromise()
           .then((response) => {
             return {
@@ -185,5 +212,30 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       .catch(function (error) {
         // ...
       });
+  }
+
+  getInvoiceStatusTitle(status) {
+    let invoiceStatus = this.invoiceStatusTitles.find((x) => x[0] == status);
+    return invoiceStatus[1];
+  }
+
+  confirmInvoice(invoice: any) {
+    this._InvoiceServiceProxy.confirmInvoice(invoice.id).subscribe(() => {
+      this.notify.success(this.l('Successfully'));
+      this.getAllInvoices();
+    });
+  }
+
+  /**
+   * checks who can See Dynamic Invoice Label
+   * @param options
+   */
+  canSeeDynamicInvoice(options) {
+    let allowedUsers = this.isTachyonDealerOrHost || this.hasCarrierClients || this.hasShipperClients;
+    if (options.data.channel == this.InvoiceChannelEnum.DynamicInvoice && allowedUsers) {
+      return true;
+    } else if (options.data.channel != this.InvoiceChannelEnum.DynamicInvoice) {
+      return true;
+    }
   }
 }

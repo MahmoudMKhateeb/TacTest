@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
@@ -9,7 +9,6 @@ import {
   UserEditDto,
   UserRoleDto,
   UserServiceProxy,
-  GetUserForEditOutput,
   SelectItemDto,
   NationalitiesServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -17,6 +16,32 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IOrganizationUnitsTreeComponentData, OrganizationUnitsTreeComponent } from '../shared/organization-unit-tree.component';
 import * as _ from 'lodash';
 import { finalize } from 'rxjs/operators';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
+
+/**
+ * Required vars and functions for devextreme validation
+ **/
+let that: any;
+const emailAsyncValidation = function (value) {
+  return new Promise(async (resolve) => {
+    resolve(await that._userService.checkIfEmailisAvailable(value).toPromise());
+  });
+};
+const phoneNumberAsyncValidation = function (value) {
+  return new Promise(async (resolve) => {
+    resolve(
+      await that._userService.checkIfPhoneNumberValid(value, isNotNullOrUndefined(that.user) && that.user.id == null ? 0 : that.user.id).toPromise()
+    );
+  });
+};
+const userNameAsyncValidation = function (value) {
+  return new Promise(async (resolve) => {
+    resolve(
+      await that._userService.checkIfUserNameValid(value, isNotNullOrUndefined(that.user) && that.user.id == null ? 0 : that.user.id).toPromise()
+    );
+  });
+};
 
 @Component({
   selector: 'createOrEditUserModal',
@@ -26,6 +51,7 @@ import { finalize } from 'rxjs/operators';
 export class CreateOrEditUserModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
   @ViewChild('organizationUnitTree') organizationUnitTree: OrganizationUnitsTreeComponent;
+  @ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Input() creatDriver: boolean;
@@ -46,11 +72,24 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
   setRandomPassword = true;
   passwordComplexityInfo = '';
   profilePicture: string;
-  isWaintingUserNameValidation = false;
   allOrganizationUnits: OrganizationUnitDto[];
   memberedOrganizationUnits: string[];
   userPasswordRepeat = '';
   nationalities: SelectItemDto[] = [];
+  customPasswordMessage = '';
+
+  numberOfRolesStyleClass = 'checkbox-inline';
+  callbacks = [];
+  adapterConfig = {
+    getValue: () => {
+      return this.getAssignedRoleCount() > 0;
+    },
+    applyValidationResults: (e) => {
+      this.numberOfRolesStyleClass = e.isValid ? 'checkbox-inline' : 'checkbox-inline custom-invalid';
+    },
+    validationRequestsCallbacks: this.callbacks,
+  };
+
   constructor(
     injector: Injector,
     private _userService: UserServiceProxy,
@@ -58,6 +97,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
     private _nationalitiesServiceProxy: NationalitiesServiceProxy
   ) {
     super(injector);
+    that = this;
   }
 
   show(userId?: number): void {
@@ -65,6 +105,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
       this.active = true;
       this.setRandomPassword = true;
       this.sendActivationEmail = true;
+      this.user = new UserEditDto();
     }
     this.getUserNationalites();
     this._userService.getUserForEdit(userId).subscribe((userResult) => {
@@ -175,7 +216,9 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.userPasswordRepeat = '';
+    this.numberOfRolesStyleClass = 'checkbox-inline';
     this.modal.hide();
+    this.user = null;
   }
 
   getAssignedRoleCount(): number {
@@ -184,9 +227,9 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
 
   removeWhiteSpacesFromEmail() {
     this.user.emailAddress.trim();
-    var exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+    let exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
 
-    var result = exp.test(this.user.emailAddress);
+    let result = exp.test(this.user.emailAddress);
     if (!result) {
       this.isEmailValid = false;
     } else {
@@ -228,5 +271,87 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
       return false;
     }
     return true;
+  }
+
+  removeWhiteSpacesFromEmailAsync(params) {
+    params.value.trim();
+    let exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+    let result = exp.test(params.value);
+    if (!result) {
+      return new Promise((resolve) => resolve(false));
+    }
+    return emailAsyncValidation(params.value);
+  }
+
+  checkIfDriverPhoneNumberIsValidAsync(params) {
+    if (params?.value?.length > 9) {
+      return new Promise((resolve) => resolve(false));
+    }
+    return phoneNumberAsyncValidation(params.value);
+  }
+
+  checkIfCanChangeUserNameAsync() {
+    return new Promise((resolve) => {
+      resolve(that.canChangeUserName);
+    });
+  }
+
+  checkIfIsUserNameAvailableAsync(params) {
+    if (params?.value?.length > 9) {
+      return new Promise((resolve) => resolve(false));
+    }
+    return userNameAsyncValidation(params.value);
+  }
+
+  validatePassword(params) {
+    return new Promise((resolve) => {
+      const givenPassword = params.value;
+      const requireDigit = that.passwordComplexitySetting.requireDigit;
+      if (requireDigit && givenPassword && !/[0-9]/.test(givenPassword)) {
+        that.customPasswordMessage = that.l('PasswordComplexity_RequireDigit_Hint');
+        resolve(false);
+      }
+
+      const requireUppercase = that.passwordComplexitySetting.requireUppercase;
+      if (requireUppercase && givenPassword && !/[A-Z]/.test(givenPassword)) {
+        that.customPasswordMessage = that.l('PasswordComplexity_RequireUppercase_Hint');
+        resolve(false);
+      }
+
+      const requireLowercase = that.passwordComplexitySetting.requireLowercase;
+      if (requireLowercase && givenPassword && !/[a-z]/.test(givenPassword)) {
+        that.customPasswordMessage = that.l('PasswordComplexity_RequireLowercase_Hint');
+        resolve(false);
+      }
+
+      const requiredLength = that.passwordComplexitySetting.requiredLength;
+      if (requiredLength && givenPassword && givenPassword.length < requiredLength) {
+        that.customPasswordMessage = that.l('PasswordComplexity_RequiredLength_Hint', that.passwordComplexitySetting.requiredLength);
+        resolve(false);
+      }
+
+      const requireNonAlphanumeric = that.passwordComplexitySetting.requireNonAlphanumeric;
+      if (requireNonAlphanumeric && givenPassword && /^[0-9a-zA-Z]+$/.test(givenPassword)) {
+        that.customPasswordMessage = that.l('PasswordComplexity_RequireNonAlphanumeric_Hint');
+        resolve(false);
+      }
+      resolve(true);
+    });
+  }
+
+  passwordComparison = () => that.user.password;
+
+  revalidateRoles() {
+    this.callbacks.forEach((func) => {
+      func();
+    });
+  }
+
+  validationSummaryItemClicked($event: any) {
+    if (($event.itemData.text as string).search(this.l('Roles')) > -1) {
+      this.staticTabs.tabs[1].active = true;
+      return;
+    }
+    this.staticTabs.tabs[0].active = true;
   }
 }

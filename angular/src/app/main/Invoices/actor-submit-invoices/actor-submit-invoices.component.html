@@ -1,0 +1,142 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'CarrierInvoicesList' | localize" [description]="'' | localize">
+      <div role="actions">
+        <!--<button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+           <button
+            *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId"
+            (click)="OndemandModel.show()"
+            type="button"
+            class="btn btn-default"
+          >
+            {{ l('OnDemand') }}
+          </button> -->
+      </div>
+    </sub-header>
+
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <dx-data-grid
+              style="height: 45vw"
+              #dataGrid
+              id="dataGrid"
+              [dataSource]="dataSource"
+              [remoteOperations]="true"
+              [showColumnLines]="true"
+              [showRowLines]="false"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              keyExpr="id"
+              [wordWrapEnabled]="true"
+            >
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+              <dxo-filter-builder-popup></dxo-filter-builder-popup>
+              <dxo-scrolling mode="virtual"></dxo-scrolling>
+              <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
+              <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
+              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>
+              <dxo-paging [pageSize]="20"></dxo-paging>
+              <dxo-summary>
+                <dxi-group-item column="id" summaryType="count"> </dxi-group-item>
+              </dxo-summary>
+
+              <dxi-column
+                cellTemplate="cellTemplateActions"
+                [allowFiltering]="false"
+                [allowSorting]="false"
+                [allowEditing]="false"
+                [editorOptions]="{ visible: false }"
+                [width]="50"
+              ></dxi-column>
+              <dxi-column dataField="referencNumber" caption="{{ l('ReferenceNumber') }}"> </dxi-column>
+              <dxi-column
+                *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
+                dataField="tenantName"
+                [groupIndex]="0"
+                caption="{{ l('CompanyName') }}"
+              >
+              </dxi-column>
+              <dxi-column dataField="carrierActorName" caption="{{ l('ActorName') }}"> </dxi-column>
+              <dxi-column dataField="dueDate" caption="{{ l('DueDate') }}" dataType="date"> </dxi-column>
+              <dxi-column
+                dataField="accountType"
+                caption="{{ l('AccountType') }} "
+                *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
+              >
+              </dxi-column>
+              <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"> </dxi-column>
+              <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"> </dxi-column>
+              <dxi-column dataField="status" cellTemplate="cellTemplate_status" caption="{{ l('Status') }}">
+                <dxo-lookup [dataSource]="SubmitStatus" displayExpr="value" valueExpr="key"></dxo-lookup>
+              </dxi-column>
+
+              <div *dxTemplate="let options of 'cellTemplate_status'">
+                <span style="width: 137px"
+                  ><span
+                    class="badge badge-inline"
+                    [ngClass]="{
+                      'badge-danger': options.data.status == 'New',
+                      'badge-warning': options.data.status == 'Paid',
+                      'badge-success': options.data.status == 'UnPaid',
+                      'badge-info': options.data.status == 'Claimed',
+                      'badge-secondary': options.data.statusTitle == 'Accepted',
+                      'badge-primary': options.data.statusTitle == 'Rejected'
+                    }"
+                    >{{ l(options.data.status) }}</span
+                  ></span
+                >
+              </div>
+
+              <div *dxTemplate="let options of 'cellTemplateActions'">
+                <div class="btn-group dropdown" dropdown container="body">
+                  <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
+                    <span class="svg-icon svg-icon-md">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <rect x="0" y="0" width="24" height="24"></rect>
+                          <path
+                            d="M5,8.6862915 L5,5 L8.6862915,5 L11.5857864,2.10050506 L14.4852814,5 L19,5 L19,9.51471863 L21.4852814,12 L19,14.4852814 L19,19 L14.4852814,19 L11.5857864,21.8994949 L8.6862915,19 L5,19 L5,15.3137085 L1.6862915,12 L5,8.6862915 Z M12,15 C13.6568542,15 15,13.6568542 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,13.6568542 10.3431458,15 12,15 Z"
+                            fill="#000000"
+                          ></path>
+                        </g>
+                      </svg>
+                    </span>
+                  </a>
+
+                  <ul class="dropdown-menu" *dropdownMenu>
+                    <!-- <li>
+                        <a class="dropdown-item" (click)="details(options.data)">{{ l('Detail') }}</a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('DownloadInvoice') }}</a>
+                      </li> -->
+                    <li *ngIf="options.data.documentName">
+                      <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(options.data.id)">
+                        {{ l('View') }}
+                      </a>
+                    </li>
+                    <li *ngIf="options.data.status == 'New' || options.data.status == 'Rejected'">
+                      <a class="dropdown-item" href="javascript:;" (click)="ClaimModel.show(options.data.id)">{{ l('Claim') }}</a>
+                    </li>
+                    <li *ngIf="!options.data.isPaid">
+                      <a class="dropdown-item" href="javascript:;" (click)="MakePaid(options.data)">{{ l('MakePaid') }}</a>
+                    </li>
+                    <li *ngIf="options.data.isPaid">
+                      <a class="dropdown-item" href="javascript:;" (click)="MakeUnPaid(options.data)">{{ l('MakeUnPaid') }}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </dx-data-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<client-demand-model (modalSave)="reloadPage()" #ClaimModel></client-demand-model>

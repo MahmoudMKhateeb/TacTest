@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'InvoicesNoteList' | localize" [description]="'' | localize">
+    <sub-header [title]="'InvoicesNotesList' | localize" [description]="'' | localize">
       <div role="actions">
         <button
           *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId"
@@ -20,7 +20,7 @@
               #dataGrid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -29,13 +29,13 @@
               [wordWrapEnabled]="true"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
-              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
-              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"></dxo-remote-operations>
+              <!--              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"></dxo-remote-operations>-->
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
                 <dxi-group-item column="id" summaryType="count"></dxi-group-item>
@@ -50,6 +50,7 @@
                 [width]="50"
               ></dxi-column>
               <dxi-column dataField="referanceNumber" caption=" {{ l('MemoNo') }}"></dxi-column>
+              <dxi-column dataField="invoiceNoteReferenceNumber" caption=" {{ l('ReferenceNo') }}"></dxi-column>
               <dxi-column
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
                 dataField="comanyName"

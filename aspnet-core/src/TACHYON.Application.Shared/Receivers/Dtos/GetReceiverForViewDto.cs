@@ -9,5 +9,6 @@ namespace TACHYON.Receivers.Dtos
         public string FacilityName { get; set; }
 
         public DateTime CreationTime { get; set; }
+        public string TenantName { get; set; }
     }
 }

@@ -1,17 +1,20 @@
-import { AfterViewInit, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
+  AssignDriverAndTruckToShippmentByCarrierInput,
+  CreateOrEditShippingRequestTripVasDto,
+  DedicatedShippingRequestsServiceProxy,
+  GetShippingRequestForViewOutput,
   RoutStepsServiceProxy,
   SelectItemDto,
   ShippingRequestDriverServiceProxy,
+  ShippingRequestRouteType,
+  ShippingRequestsTripForViewDto,
+  ShippingRequestsTripServiceProxy,
   ShippingRequestTripStatus,
   TrucksServiceProxy,
-  WaybillsServiceProxy,
   UpdateExpectedDeliveryTimeInput,
-  CreateOrEditShippingRequestTripVasDto,
-  ShippingRequestsTripForViewDto,
-  AssignDriverAndTruckToShippmentByCarrierInput,
-  ShippingRequestsTripServiceProxy,
+  WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -23,6 +26,7 @@ import { ActivatedRoute } from '@angular/router';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 import { Moment } from '@node_modules/moment';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'viewTripModal',
@@ -35,6 +39,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
 
+  canAssignTrucksAndDrivers: boolean;
+  fromTime: string;
+  toTime: string;
   Vases: CreateOrEditShippingRequestTripVasDto[];
   trip: ShippingRequestsTripForViewDto = new ShippingRequestsTripForViewDto();
   assignDriverAndTruck: AssignDriverAndTruckToShippmentByCarrierInput = new AssignDriverAndTruckToShippmentByCarrierInput();
@@ -53,42 +60,56 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   expectedDeliveryTime: moment.Moment;
   originalExpectedDeliveryTime: Moment;
   expectedDeliveryTimeLoading: boolean;
+  shippingRequestForView: GetShippingRequestForViewOutput;
+  allDedicatedDrivers: SelectItemDto[];
+  allDedicatedTrucks: SelectItemDto[];
+  routeTypes: any[] = [];
+  RouteTypesEnum = ShippingRequestRouteType;
+
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
+    private _dedicatedShippingRequestsServiceProxy: DedicatedShippingRequestsServiceProxy,
     public _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _trucksServiceProxy: TrucksServiceProxy,
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
     private _PointsService: PointsService,
     private _TripService: TripService,
-    private _Router: ActivatedRoute
+    private _Router: ActivatedRoute,
+    private _changeDetectorRef: ChangeDetectorRef,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
   }
 
   ngOnInit() {
     this._TripService.currentShippingRequest.subscribe((res) => {
-      this.TruckTypeId = res.truckTypeId;
+      this.TruckTypeId = res?.truckTypeId;
     });
   }
 
   ngAfterViewInit() {
     if (isNotNullOrUndefined(this.activeTripId)) {
-      this.show(this.activeTripId);
+      this.show(this.activeTripId, this.shippingRequestForView);
     }
   }
 
-  show(id): void {
+  show(id, shippingRequestForView?: GetShippingRequestForViewOutput): void {
+    this.shippingRequestForView = shippingRequestForView;
+    if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === 1) {
+      this.getAllDedicatedDriversForDropDown();
+      this.getAllDedicateTrucksForDropDown();
+      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
+    }
     this.loading = true;
     this.currentTripId = id;
     //update the active trip id in TripsService
     this._TripService.updateActiveTripId(id);
-    if (this.feature.isEnabled('App.Carrier') || this.isTachyonDealer) {
-      this.getAllTrucks(this.TruckTypeId);
-      this.getAllDrivers();
-    }
+    this.getAllTrucks(this.TruckTypeId);
+    this.getAllDrivers();
+
     this._shippingRequestTripsService
       .getShippingRequestTripForView(id)
       .pipe(
@@ -98,14 +119,17 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
       )
       .subscribe((res) => {
         this.trip = res;
+        this.fromTime = res.supposedPickupDateFrom?.format('HH:mm');
+        this.toTime = res.supposedPickupDateTo?.format('HH:mm');
         //Get The Points From The View Service and send them to the Points Service To Draw Them
         this._PointsService.updateWayPoints(this.trip.routPoints);
         this._PointsService.updateCurrentUsedIn('view');
-        this.pickUpPointSender = res.routPoints[0].senderOrReceiverContactName;
+        this.pickUpPointSender = res.routPoints.length > 0 ? res.routPoints[0].senderOrReceiverContactName : null;
         this.assignDriverAndTruck.assignedTruckId = this.trip.assignedTruckId;
         this.assignDriverAndTruck.assignedDriverUserId = this.trip.assignedDriverUserId;
         this.expectedDeliveryTime = this.trip.expectedDeliveryTime;
-        this.originalExpectedDeliveryTime = this.expectedDeliveryTime;
+        this._changeDetectorRef.detectChanges();
+        this.canAssignTrucksAndDrivers = res.canAssignDriversAndTrucks;
       });
 
     this.modal.show();
@@ -119,11 +143,16 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this.loading = true;
     this._PointsService.updateWayPoints([]);
     this.modal.hide();
+    this._changeDetectorRef.detectChanges();
   }
 
   checkData(category) {
-    if (category == 'truck' && this.allTrucks.length == 0) this.getAlert(this.l('NoMatchingTrucks'));
-    if (category == 'driver' && this.allDrivers.length == 0) this.getAlert(this.l('NoMatchingDrivers'));
+    if (category === 'truck' && this.allTrucks.length === 0) {
+      this.getAlert(this.l('NoMatchingTrucks'));
+    }
+    if (category === 'driver' && this.allDrivers.length === 0) {
+      this.getAlert(this.l('NoMatchingDrivers'));
+    }
   }
 
   getAlert(msg: string) {
@@ -148,18 +177,22 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Carriers Drivers For DD
    */
   getAllDrivers() {
-    this._trucksServiceProxy.getAllDriversForDropDown(this.currentTripId).subscribe((res) => {
-      this.allDrivers = res;
-    });
+    if (this.isTachyonDealer || this.isCarrier || this.hasCarrierClients) {
+      this._trucksServiceProxy.getDriversByShippingRequestId(this.shippingRequestForView.shippingRequest.id).subscribe((result) => {
+        this.allDrivers = result;
+      });
+    }
   }
 
   /**
    * this method is for Getting All Carriers Trucks For DD
    */
   getAllTrucks(truckTypeId) {
-    this._trucksServiceProxy.getAllCarrierTrucksByTruckTypeForDropDown(truckTypeId, this.currentTripId).subscribe((res) => {
-      this.allTrucks = res;
-    });
+    if (this.isTachyonDealer || this.isCarrier || this.hasCarrierClients) {
+      this._trucksServiceProxy.getTrucksByShippingRequestId(truckTypeId, this.shippingRequestForView.shippingRequest.id).subscribe((result) => {
+        this.allTrucks = result;
+      });
+    }
   }
 
   getNotes() {
@@ -210,7 +243,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * update the expected Delivery Time Of the Trip
    */
   updateTripExpectedDeliveryTime() {
-    if (!isNotNullOrUndefined(this.currentTripId)) return;
+    if (!isNotNullOrUndefined(this.currentTripId)) {
+      return;
+    }
     if (this.expectedDeliveryTime === this.originalExpectedDeliveryTime) return;
     // console.log('Trip Expected Delivery time Was Updated');
     this.expectedDeliveryTimeLoading = true;
@@ -221,5 +256,29 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
       this.expectedDeliveryTimeLoading = false;
       this.notify.success(this.l('TripExpectedDateWasUpdated'));
     });
+  }
+
+  private getAllDedicatedDriversForDropDown() {
+    this._dedicatedShippingRequestsServiceProxy.getAllDedicatedDriversForDropDown(this.shippingRequestForView.shippingRequest.id).subscribe((res) => {
+      this.allDedicatedDrivers = res;
+    });
+  }
+
+  private getAllDedicateTrucksForDropDown() {
+    this._dedicatedShippingRequestsServiceProxy.getAllDedicateTrucksForDropDown(this.shippingRequestForView.shippingRequest.id).subscribe((res) => {
+      this.allDedicatedTrucks = res;
+    });
+  }
+
+  DriverOrTruckSelected(driverUserId?: number, truckId?: number) {
+    if (isNotNullOrUndefined(driverUserId)) {
+      this._trucksServiceProxy.getTruckByDriverId(driverUserId, this.shippingRequestForView.truckTypeId).subscribe((result) => {
+        if (!isNotNullOrUndefined(this.assignDriverAndTruck.assignedTruckId)) this.assignDriverAndTruck.assignedTruckId = result;
+      });
+    } else if (isNotNullOrUndefined(truckId)) {
+      this._trucksServiceProxy.getDriverByTruckId(truckId).subscribe((result) => {
+        if (!isNotNullOrUndefined(this.assignDriverAndTruck.assignedDriverUserId)) this.assignDriverAndTruck.assignedDriverUserId = result;
+      });
+    }
   }
 }

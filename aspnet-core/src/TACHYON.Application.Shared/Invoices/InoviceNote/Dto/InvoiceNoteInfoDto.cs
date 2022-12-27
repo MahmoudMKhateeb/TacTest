@@ -20,7 +20,11 @@ namespace TACHYON.Invoices.InoviceNote.Dto
         public string TenantVatNumber { get; set; }
         public decimal TotalValue { get; set; }
         public decimal VatAmount { get; set; }
+        /// <summary>
+        /// represents Memo number
+        /// </summary>
         public string ReferanceNumber { get; set; }
+        public string InvoiceNoteReferenceNumber { get; set; }
         public long InvoiceNumber { get; set; }
         public decimal Price { get; set; }
     }

@@ -74,13 +74,13 @@
               </p>
               <p>
                 <span>
-                  {{ l('NumberOfTrips') }}
+                  {{ request.shippingRequestFlag == shippingRequestFlagEnum.Normal ? l('NumberOfTrips') : l('NumberOfTrucks') }}
                 </span>
                 <span>
-                  {{ request.numberOfTrips }}
+                  {{ request.shippingRequestFlag == shippingRequestFlagEnum.Normal ? request.numberOfTrips : request.numberOfTrucks }}
                 </span>
               </p>
-              <p>
+              <p *ngIf="request.shippingRequestFlag == shippingRequestFlagEnum.Normal">
                 <span>
                   {{ l('NumberOfDrops') }}
                 </span>
@@ -159,7 +159,9 @@
                                 <a
                                   class="dropdown-item"
                                   *ngIf="record.status == ShippingRequestUpdateStatusEnum.None"
-                                  (click)="ModelPrice.show(shippingrequest.id, record.id, 'Reprice')"
+                                  (click)="
+                                    ModelPrice.show(shippingrequest.id, record.id, 'Reprice', null, false, shippingrequest.shippingRequestFlag === 1)
+                                  "
                                   >{{ l('Reprice') }}</a
                                 >
                               </li>
@@ -229,7 +231,7 @@
                         {{ l('Value') }}
                       </th>
                       <th>
-                        {{ l('NumberOfTrips') }}
+                        {{ request.shippingRequestFlag == shippingRequestFlagEnum.Normal ? l('NumberOfTrips') : l('NumberOfTrucks') }}
                       </th>
                     </tr>
                   </thead>
@@ -245,7 +247,7 @@
                       <td>
                         {{ !item.isAppearAmount ? '' : item.amount }}
                       </td>
-                      <td>{{ item.numberOfTrips }}</td>
+                      <td>{{ request.shippingRequestFlag == shippingRequestFlagEnum.Normal ? item.numberOfTrips : item.numberOfTrucks }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -254,7 +256,7 @@
             <ng-template [ngIf]="canSetPrice()">
               <div class="divirCard"></div>
               <div class="setPrice">
-                <button type="button" (click)="ModelPrice.show(request.id)">
+                <button type="button" (click)="ModelPrice.show(request.id, null, null, null, false, request.shippingRequestFlag === 1)">
                   {{ l('SetPriceOffer') }}
                 </button>
               </div>
@@ -262,7 +264,7 @@
             <ng-template [ngIf]="shippingrequest.isPriced && shippingrequest.offerId">
               <div class="divirCard"></div>
               <div class="setPrice">
-                <button type="button" (click)="ModelViewPrice.show(request.id, shippingrequest.offerId)">
+                <button type="button" (click)="ModelViewPrice.show(request.id, shippingrequest.offerId, false, request.shippingRequestFlag === 1)">
                   {{ l('PreviewOffer') }}
                 </button>
               </div>

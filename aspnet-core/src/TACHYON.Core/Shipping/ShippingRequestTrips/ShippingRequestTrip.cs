@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Integration.WaslIntegration;
+using TACHYON.Invoices.ActorInvoices;
 using TACHYON.Penalties;
 using TACHYON.PriceOffers;
 using TACHYON.Rating;
@@ -153,5 +154,25 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         #endregion
         public string SplitInvoiceFlag { get; set; }
 
+        
+        
+        public long? ActorInvoiceId { get; set; }
+
+        [ForeignKey("ActorInvoiceId")]
+        public ActorInvoice ActorInvoiceFk { get; set; }
+
+        public long? ActorSubmitInvoiceId { get; set; }
+
+        [ForeignKey("ActorSubmitInvoiceId")]
+        public ActorSubmitInvoice ActorSubmitInvoiceFk { get; set; }
+
+        #region Dedicated
+        public ShippingRequestRouteType? RouteType { get; set; }
+        public int NumberOfDrops { get; set; }
+
+        public bool IsActorShipperHaveInvoice { get; set; }
+        
+        public bool IsActorCarrierHaveInvoice { get; set; }
+        #endregion
     }
 }

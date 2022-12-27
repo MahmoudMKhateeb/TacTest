@@ -17,7 +17,7 @@ export class TripRejectReasonModalComponent extends AppComponentBase implements 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
   @ViewChild('modal', { static: false }) modal: ModalDirective;
-  @ViewChild('nameInput', { static: false }) nameInput: ElementRef;
+  @ViewChild('inputName', { static: false }) nameInput: ElementRef;
 
   reason: CreateOrEditShippingRequestTripRejectReasonDto;
   languages: abp.localization.ILanguageInfo[];

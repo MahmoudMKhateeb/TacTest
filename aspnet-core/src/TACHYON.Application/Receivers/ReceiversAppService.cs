@@ -4,6 +4,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Castle.MicroKernel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -39,10 +40,11 @@ namespace TACHYON.Receivers
         public async Task<PagedResultDto<GetReceiverForViewDto>> GetAll(GetAllReceiversInput input)
         {
 
-            DisableTenancyFiltersIfHost();
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             
             var filteredReceivers = _receiverRepository.GetAll()
                 .Include(e => e.FacilityFk)
+                .Include(x=>x.Tenant)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,
                     i => i.CreationTime >= input.FromDate && i.CreationTime <= input.ToDate)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
@@ -70,7 +72,8 @@ namespace TACHYON.Receivers
                         FullName = o.FullName, Email = o.Email, PhoneNumber = o.PhoneNumber, Id = o.Id
                     },
                     FacilityName = s1 == null || s1.Name == null ? "" : s1.Name.ToString(),
-                    CreationTime = o.CreationTime
+                    CreationTime = o.CreationTime,
+                    TenantName=o.Tenant.TenancyName
                 };
 
             var totalCount = await filteredReceivers.CountAsync();
@@ -110,6 +113,7 @@ namespace TACHYON.Receivers
                 var _lookupFacility =
                     await _lookup_facilityRepository.FirstOrDefaultAsync((int)output.Receiver.FacilityId);
                 output.FacilityName = _lookupFacility?.Name?.ToString();
+                output.ShipperActorId = _lookupFacility?.ShipperActorId;
             }
 
             return output;
@@ -132,9 +136,13 @@ namespace TACHYON.Receivers
         {
             var receiver = ObjectMapper.Map<Receiver>(input);
 
-            if (AbpSession.TenantId != null)
+            if ((await IsTachyonDealer() || AbpSession.TenantId == null) && input.tenantId != null)
             {
-                receiver.TenantId = (int)AbpSession.TenantId;
+                receiver.TenantId = input.tenantId.Value;
+            }
+            else
+            {
+                receiver.TenantId = AbpSession.TenantId.Value;
             }
 
             await _receiverRepository.InsertAsync(receiver);
@@ -144,6 +152,10 @@ namespace TACHYON.Receivers
         protected virtual async Task Update(CreateOrEditReceiverDto input)
         {
             var receiver = await _receiverRepository.FirstOrDefaultAsync((int)input.Id);
+            if ((await IsTachyonDealer() || AbpSession.TenantId == null) && input.tenantId != null)
+            {
+                receiver.TenantId = input.tenantId.Value;
+            }
             ObjectMapper.Map(input, receiver);
         }
 
@@ -192,13 +204,27 @@ namespace TACHYON.Receivers
         }
 
         [AbpAuthorize(AppPermissions.Pages_Receivers)]
-        public async Task<List<ReceiverFacilityLookupTableDto>> GetAllFacilityForTableDropdown()
+        public async Task<List<ReceiverFacilityLookupTableDto>> GetAllFacilityForTableDropdown(int? tenantId)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _lookup_facilityRepository.GetAll()
+                .WhereIf(tenantId!=null, x=>x.TenantId==tenantId)
                 .Select(facility => new ReceiverFacilityLookupTableDto
                 {
                     Id = facility.Id,
                     DisplayName = facility == null || facility.Name == null ? "" : facility.Name.ToString()
+                }).ToListAsync();
+        }
+        [AbpAuthorize(AppPermissions.Pages_Receivers)]
+        [RequiresFeature(AppFeatures.ShipperClients)]
+        public async Task<List<ReceiverFacilityLookupTableDto>> GetAllFacilitiesByActorId(int actorId)
+        {
+            return await _lookup_facilityRepository.GetAll()
+                .Where(x=> x.ShipperActorId == actorId)
+                .Select(facility => new ReceiverFacilityLookupTableDto
+                {
+                    Id = facility.Id,
+                    DisplayName = facility == null || facility.Name == null ? "" : facility.Name
                 }).ToListAsync();
         }
 

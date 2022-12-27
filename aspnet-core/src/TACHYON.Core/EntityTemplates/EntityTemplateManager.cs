@@ -181,7 +181,7 @@ namespace TACHYON.EntityTemplates
         {
             await DisableTenancyFilterIfTms();
             
-            var shippingRequest = await _shippingRequestRepository.GetAllIncluding(x=> x.ShippingRequestVases,x=> x.OriginCityFk,x=> x.DestinationCityFk)
+            var shippingRequest = await _shippingRequestRepository.GetAllIncluding(x=> x.ShippingRequestVases,x=> x.OriginCityFk,x=> x.ShippingRequestDestinationCities)
                 .AsNoTracking().FirstOrDefaultAsync(x => x.Id.ToString().Equals(savedEntityId));
             return ObjectMapper.Map<CreateOrEditShippingRequestTemplateInputDto>(shippingRequest);
         }
@@ -218,7 +218,7 @@ namespace TACHYON.EntityTemplates
                     RoutType = x.RouteTypeId, 
                     x.GoodCategoryId,
                     SourceCityId = x.OriginCityId, 
-                    x.DestinationCityId,
+                    x.ShippingRequestDestinationCities,
                     x.NumberOfDrops
                 }).FirstOrDefaultAsync();
 
@@ -253,7 +253,7 @@ namespace TACHYON.EntityTemplates
                 join destinationFacility in _facilityRepository.GetAll().AsNoTracking()
                     on template.Trip.DestinationFacilityId equals destinationFacility.Id
                     where originFacility.CityId == shippingRequest.SourceCityId 
-                && destinationFacility.CityId == shippingRequest.DestinationCityId
+                && shippingRequest.ShippingRequestDestinationCities.Any(x=>x.CityId == destinationFacility.CityId)
                 select new SelectItemDto() {DisplayName = template.TemplateName, Id = template.Id.ToString()});
             
             return matchesOriginAndDestinationItems.ToList();

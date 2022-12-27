@@ -8,6 +8,10 @@ import {
   CreateOrEditFacilityWorkingHourDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
+  PenaltiesServiceProxy,
+  SelectItemDto,
+  ShippersForDropDownDto,
+  ShippingRequestsServiceProxy,
   TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
@@ -47,28 +51,55 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   countries: CountyDto[];
   private geoCoder: google.maps.Geocoder;
   polygonStyle = styleObject;
+  AllActorsShippers: SelectItemDto[];
   days = WeekDay;
   FacilityWorkingHours: any[];
   mapCenterLat: number;
   mapCenterLng: number;
+  AllTenants: ShippersForDropDownDto[];
+
+  callbacks: any[] = [];
+  adapterConfig = {
+    getValue: () => {
+      return this.validateWorkingHours();
+    },
+    applyValidationResults: (e) => {
+      this.isWorkingHoursInvalid = !e.isValid;
+    },
+    validationRequestsCallbacks: this.callbacks,
+  };
+  isWorkingHoursInvalid = false;
 
   constructor(
     injector: Injector,
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private _countriesServiceProxy: TenantRegistrationServiceProxy,
     private ngZone: NgZone,
-    private mapsAPILoader: MapsAPILoader
+    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
+    private mapsAPILoader: MapsAPILoader,
+    private _penaltiesServiceProxy: PenaltiesServiceProxy
   ) {
     super(injector);
   }
 
   ngOnInit() {
     this.loadAllCountries();
+    this.loadAllCompaniesForDropDown();
+    if (this.feature.isEnabled('App.ShipperClients')) {
+      this._shippingRequestsServiceProxy.getAllShippersActorsForDropDown().subscribe((result) => {
+        this.AllActorsShippers = result;
+        // let defaultItem = new SelectItemDto();
+        // defaultItem.id = null;
+        // defaultItem.displayName = this.l('Myself');
+        // this.AllActorsShippers.unshift(defaultItem);
+      });
+    }
   }
 
   private get SelectedCountryCode(): string {
     return this.countries?.find((x) => x.id == this.selectedCountryId)?.code;
   }
+
   getEnumsAsList() {
     const result = [];
     for (const [propertyKey, propertyValue] of Object.entries(this.days)) {
@@ -100,7 +131,12 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
           facilityId: item.facilityId,
         });
       } else {
-        result.push({ dayOfWeek: propertyKey.dayOfWeek, name: this.days[propertyKey.dayOfWeek], hasTime: false, facilityId: list2[0].facilityId });
+        result.push({
+          dayOfWeek: propertyKey.dayOfWeek,
+          name: this.days[propertyKey.dayOfWeek],
+          hasTime: false,
+          facilityId: list2[0].facilityId,
+        });
       }
     }
     return result;
@@ -108,6 +144,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
 
   show(facilityId?: number): void {
     this.active = true;
+
     if (!facilityId) {
       this.facility = new CreateOrEditFacilityDto();
       this.facility.id = facilityId;
@@ -126,6 +163,11 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
         }
         this.selectedCountryId = result.countryId;
         this.loadCitiesByCountryId(result.countryId);
+        if (isNotNullOrUndefined(this.facility.shipperActorId)) {
+          (this.facility.shipperActorId as any) = this.facility.shipperActorId?.toString();
+        }
+
+        (this.facility.cityId as any) = this.facility.cityId.toString();
       });
     }
     this.modal.show();
@@ -135,7 +177,10 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    * CreateOrUpdate Facility
    */
   save(): void {
+    this.revalidateWorkingHours();
     this.saving = true;
+    console.log(this.facility.shipperId);
+
     this.facility.facilityWorkingHours = this.FacilityWorkingHours.filter((r) => r.startTime && r.endTime && r.hasTime).map(
       (fh) =>
         new CreateOrEditFacilityWorkingHourDto({
@@ -180,7 +225,9 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
 
   close(): void {
     this.facility = new CreateOrEditFacilityDto();
+    this.selectedCountryId = null;
     this.FacilityWorkingHours = null;
+    this.isWorkingHoursInvalid = false;
     this.active = false;
     this.modal.hide();
   }
@@ -256,7 +303,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   mapClicked($event) {
     let position;
     if (isNotNullOrUndefined(this.selectedCityJson)) {
-      position = { lat: $event.latLng.lat(), lng: $event.latLng.lng() };
+      position = { lat: $event?.latLng?.lat(), lng: $event?.latLng?.lng() };
     } else {
       position = { lat: $event.coords.lat, lng: $event.coords.lng };
     }
@@ -291,6 +338,12 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     });
   }
 
+  loadAllCompaniesForDropDown() {
+    this._penaltiesServiceProxy.getAllCompanyForDropDown().subscribe((result) => {
+      this.AllTenants = result;
+    });
+  }
+
   /**
    * Loads All Cities After Selecting The Country
    * @Input selectedCountryId
@@ -309,6 +362,9 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    * Gets the Selected City Polygons
    */
   handleCityPolygon() {
+    if (!isNotNullOrUndefined(this.facility.cityId)) {
+      return;
+    }
     let Json = this.allCities[this.allCities.findIndex((x) => x.id === this.facility.cityId.toString())].polygon;
     this.selectedCityJson = JSON.parse(Json);
     //empty old address
@@ -334,5 +390,19 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
       this.mapCenterLat = this.selectedCityJson.geometry.coordinates[0][0][0][1];
     }
     this.zoom = 10;
+  }
+
+  private validateWorkingHours() {
+    const facilityWorkingHours = this.FacilityWorkingHours.filter((r) => r.startTime && r.endTime && r.hasTime);
+    if (facilityWorkingHours.length === 0) {
+      return false;
+    }
+    return true;
+  }
+
+  revalidateWorkingHours() {
+    this.callbacks.forEach((func) => {
+      func();
+    });
   }
 }

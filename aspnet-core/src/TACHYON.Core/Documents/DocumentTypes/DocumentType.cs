@@ -27,9 +27,9 @@ namespace TACHYON.Documents.DocumentTypes
 
         public virtual bool HasExpirationDate { get; set; }
 
-        public int DocumentsEntityId { get; set; }
+        public DocumentsEntitiesEnum DocumentsEntityId { get; set; }
 
-        [ForeignKey("DocumentsEntityId")] public DocumentsEntity DocumentsEntityFk { get; set; }
+        //[ForeignKey("DocumentsEntityId")] public DocumentsEntity DocumentsEntityFk { get; set; }
 
         /// <summary>
         /// To specify this file type is required from any Edition
@@ -51,6 +51,7 @@ namespace TACHYON.Documents.DocumentTypes
         /// to use in filtering or queries or we can use it as a tag
         /// </summary>
         public string SpecialConstant { get; set; }
+        public DocumentTypeFlagEnum Flag { get; set; }
 
         /// <summary>
         /// to set min length validation for number <see cref="DocumentFile.Number"/>

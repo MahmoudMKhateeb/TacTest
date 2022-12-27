@@ -1,14 +1,19 @@
-﻿import { AbpHttpConfigurationService, AbpHttpInterceptor, RefreshTokenService } from 'abp-ng2-module';
+import { AbpHttpConfigurationService, AbpHttpInterceptor, RefreshTokenService } from 'abp-ng2-module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
 import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.service';
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
+import { DedicatedDynamiceInvoicesServiceProxy, TruckAttendancesServiceProxy } from './service-proxies';
 
 @NgModule({
   providers: [
     ApiServiceProxies.BayanIntegrationResultsServiceProxy,
     ApiServiceProxies.RegionsServiceProxy,
+    ApiServiceProxies.ActorInvoiceServiceProxy,
+    ApiServiceProxies.ActorSubmitInvoiceServiceProxy,
+    ApiServiceProxies.ActorsPriceOffersServiceProxy,
+    ApiServiceProxies.ActorsServiceProxy,
     ApiServiceProxies.EmailTemplatesServiceProxy,
     ApiServiceProxies.DriverLicenseTypesServiceProxy,
     ApiServiceProxies.DangerousGoodTypesServiceProxy,
@@ -57,7 +62,6 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
     ApiServiceProxies.CapacitiesServiceProxy,
     ApiServiceProxies.TransportTypesServiceProxy,
     ApiServiceProxies.DocumentTypeTranslationsServiceProxy,
-    ApiServiceProxies.DocumentsEntitiesServiceProxy,
     ApiServiceProxies.ShippingRequestStatusesServiceProxy,
     ApiServiceProxies.PortsServiceProxy,
     ApiServiceProxies.PickingTypesServiceProxy,
@@ -66,6 +70,7 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
     ApiServiceProxies.DocumentFilesServiceProxy,
     ApiServiceProxies.DocumentTypesServiceProxy,
     ApiServiceProxies.ShippingRequestsServiceProxy,
+    ApiServiceProxies.DedicatedShippingRequestsServiceProxy,
     ApiServiceProxies.GoodsDetailsServiceProxy,
     ApiServiceProxies.OffersServiceProxy,
     ApiServiceProxies.RoutStepsServiceProxy,
@@ -160,6 +165,12 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
     ApiServiceProxies.ShippingRequestAndTripNotesServiceProxy,
     ApiServiceProxies.ShippingRequestUpdateServiceProxy,
     ApiServiceProxies.DynamicInvoiceServiceProxy,
+    ApiServiceProxies.TmsPricePackageServiceProxy,
+    ApiServiceProxies.PricePackageProposalServiceProxy,
+    ApiServiceProxies.TruckAttendancesServiceProxy,
+    ApiServiceProxies.DedicatedDynamiceInvoicesServiceProxy,
+    ApiServiceProxies.PricePackageAppendixServiceProxy,
+
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },

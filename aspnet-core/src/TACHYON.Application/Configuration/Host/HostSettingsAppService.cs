@@ -68,7 +68,8 @@ namespace TACHYON.Configuration.Host
                 EditionSettings = await GetEditionsSettingsAsync(),
                 OtpNumbersSettings = await GetOtpNumberSettingsAsync(),
                 TenantRatingMinNumber=await GetTenantRatingMinNumberAsync(),
-                AppLinksSettingDto = await GetMobileAppLinkSettingsAsync()
+                AppLinksSettingDto = await GetMobileAppLinkSettingsAsync(),
+                KPI = await GetKPIAsync()
             };
         }
 
@@ -390,6 +391,16 @@ namespace TACHYON.Configuration.Host
             return tenantRating;
         }
 
+        private async Task<KPIDto> GetKPIAsync()
+        {
+            var kpi = new KPIDto()
+            {
+                DedicatedShippingRequestKPI = await SettingManager.GetSettingValueAsync(AppSettings.KPI.RequestKPI),
+                TruckKPI = await SettingManager.GetSettingValueAsync(AppSettings.KPI.TruckKPI)
+            };
+            return kpi;
+        }
+
         private async Task<MobileAppLinksSettingDto> GetMobileAppLinkSettingsAsync()
         {
             var mobileAppLinks = new MobileAppLinksSettingDto()
@@ -422,6 +433,7 @@ namespace TACHYON.Configuration.Host
             await UpdateOtpNumberSettingsAsync(input.OtpNumbersSettings);
             await UpdateTenantRatingSettingsAsync(input.TenantRatingMinNumber);
             await UpdateMobileAppLinkSettingAsync(input.AppLinksSettingDto);
+            await UpdateKPI(input.KPI);
         }
 
         private async Task UpdateOtherSettingsAsync(OtherSettingsEditDto input)
@@ -761,6 +773,18 @@ namespace TACHYON.Configuration.Host
             await SettingManager.ChangeSettingForApplicationAsync(
                 AppSettings.Rating.TenantRatingMinNumber,
                 input.RateMinNumber
+            );
+        }
+
+        private async Task UpdateKPI(KPIDto input)
+        {
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.KPI.RequestKPI,
+                input.DedicatedShippingRequestKPI
+            );
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.KPI.TruckKPI,
+                input.TruckKPI
             );
         }
 

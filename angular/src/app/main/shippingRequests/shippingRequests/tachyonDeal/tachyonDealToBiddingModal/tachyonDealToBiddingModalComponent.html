@@ -7,7 +7,7 @@
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div *ngIf="tachyonDealToBiddingModal.isShown" class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <p class="modal-title">
@@ -63,9 +63,7 @@
       <div class="modal-footer">
         <!--begin::Buttons-->
 
-        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
-          {{ l('Close') }}
-        </button>
+        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">{{ l('Close') }}</button>
         <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="makeShippingRequestaBidding()">
           {{ l('save') }}
         </button>

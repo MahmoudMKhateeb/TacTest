@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TACHYON.Invoices.Dto
 {
-    public class InvoiceInfoDto : EntityDto<long>, IHasCreationTime
+    public class InvoiceInfoDto : EntityDto<long>
     {
         public string ClientName { get; set; }
         public string Email { get; set; }
@@ -20,7 +20,7 @@ namespace TACHYON.Invoices.Dto
         public string ProjectName { get; set; }
         public string Period { get; set; }
         public DateTime DueDate { get; set; }
-        public DateTime CreationTime { get; set; }
+        public string CreationTime { get; set; }
         public bool IsPaid { get; set; }
         public InvoiceAccountType AccountType { get; set; }
         public string Note { get; set; }
@@ -34,6 +34,8 @@ namespace TACHYON.Invoices.Dto
         public string FinancialEmail { get; set; }
         public string QRCode { get; set; }
         public InvoiceChannel Channel { get; set; }
+
+        public InvoiceStatus Status { get; set; }
 
         public List<InvoiceItemDto> Items { get; set; }
 

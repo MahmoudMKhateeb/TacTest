@@ -104,6 +104,18 @@ export class HostNewTripsChartComponent extends WidgetComponentBase implements O
             opacity: 1,
           },
         };
+        (this.chartOptions.chart.locales as any[]) = [
+          {
+            name: 'en',
+            options: {
+              toolbar: {
+                exportToPNG: this.l('Download') + ' PNG',
+                exportToSVG: this.l('Download') + ' SVG',
+                exportToCSV: this.l('Download') + ' CSV',
+              },
+            },
+          },
+        ];
         this.loading = false;
       });
   }

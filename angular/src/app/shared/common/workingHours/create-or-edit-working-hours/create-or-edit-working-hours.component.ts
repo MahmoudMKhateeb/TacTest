@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ControlContainer, NgForm } from '@angular/forms';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
@@ -11,6 +11,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 export class CreateOrEditWorkingHoursComponent extends AppComponentBase implements OnInit {
   @Input() parentForm: NgForm;
   @Input() FacilityWorkingHoursInput: any[];
+  @Output() itemChanged: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(injector: Injector) {
     super(injector);

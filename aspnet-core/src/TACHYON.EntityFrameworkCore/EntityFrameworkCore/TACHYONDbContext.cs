@@ -1,6 +1,7 @@
 ﻿using TACHYON.Integration.BayanIntegration;
 using TACHYON.Regions;
 using Abp.Events.Bus.Entities;
+﻿using TACHYON.Actors;
 using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ using TACHYON.Cities;
 using TACHYON.Cities.CitiesTranslations;
 using TACHYON.Countries;
 using TACHYON.Countries.CountriesTranslations;
+using TACHYON.DataFilters;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
@@ -35,6 +37,7 @@ using TACHYON.Goods;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Invoices;
+using TACHYON.Invoices.ActorInvoices;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Groups;
 using TACHYON.Invoices.PaymentMethods;
@@ -90,7 +93,14 @@ using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.UnitOfMeasures;
 using TACHYON.Vases;
 using TACHYON.Penalties;
+using TACHYON.PricePackages.PricePackageAppendices;
+using TACHYON.PricePackages.PricePackageProposals;
+using TACHYON.PricePackages.TmsPricePackages;
+using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequestAndTripNotes;
+using TACHYON.Shipping.Dedicated;
+using TACHYON.DedicatedInvoices;
+using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -99,6 +109,13 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<BayanIntegrationResult> BayanIntegrationResults { get; set; }
 
         public virtual DbSet<Region> Regions { get; set; }
+
+        public virtual DbSet<Actor> Actors { get; set; }
+        public virtual DbSet<ActorShipperPrice> ActorShipperPrices { get; set; }
+        public virtual DbSet<ActorCarrierPrice> ActorCarrierPrices { get; set; }
+
+        public virtual DbSet<ActorInvoice> ActorInvoices { get; set; }
+        public virtual DbSet<ActorSubmitInvoice> ActorSubmitInvoices { get; set; }
 
         public virtual DbSet<EmailTemplateTranslation> EmailTemplateTranslations { get; set; }
 
@@ -195,7 +212,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<DocumentTypeTranslation> DocumentTypeTranslations { get; set; }
 
-        public virtual DbSet<DocumentsEntity> DocumentsEntities { get; set; }
+        //public virtual DbSet<DocumentsEntity> DocumentsEntities { get; set; }
 
         public virtual DbSet<Shipping.ShippingRequestStatuses.ShippingRequestStatus> ShippingRequestStatuses
         {
@@ -216,9 +233,14 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
         public virtual DbSet<Penalty> Penalties { get; set; }
+        public virtual DbSet<PenaltyItem> PenaltyItems { get; set; }
         public virtual DbSet<PenaltyComplaint> PenaltyComplaints { get; set; }
 
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
+        public virtual DbSet<DedicatedShippingRequestDriver> DedicatedShippingRequestDrivers { get; set; }
+        public virtual DbSet<DedicatedShippingRequestTruck> DedicatedShippingRequestTrucks { get; set; }
+        public virtual DbSet<DedicatedShippingRequestTruckAttendance> DedicatedShippingRequestTruckAttendances { get; set; }
+        public virtual DbSet<ShippingRequestDestinationCity> ShippingRequestDestinationCities { get; set; }
         public DbSet<ShippingRequestDirectRequest> ShippingRequestDirectRequests { get; set; }
 
         public virtual DbSet<GoodsDetail> GoodsDetails { get; set; }
@@ -310,9 +332,19 @@ namespace TACHYON.EntityFrameworkCore
 
         public DbSet<SrPostPriceUpdate> PostPriceUpdates { get; set; }
 
+         public DbSet<ServiceArea> ServiceAreas { get; set; }
+
         public DbSet<DynamicInvoice> DynamicInvoices { get; set; }
 
         public DbSet<DynamicInvoiceItem> DynamicInvoiceItems { get; set; }
+        public DbSet<DedicatedDynamicInvoice> DedicatedDynamicInvoices { get; set; }
+        public DbSet<DedicatedDynamicInvoiceItem> DedicatedDynamicInvoiceItems { get; set; }
+
+        public DbSet<TmsPricePackage> TmsPricePackages { get; set; }
+        
+        public DbSet<PricePackageProposal> Proposals { get; set; }
+
+        public DbSet<PricePackageAppendix> Appendixes { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;
@@ -322,6 +354,8 @@ namespace TACHYON.EntityFrameworkCore
 
         protected virtual bool IsDraftedFilterEnabled =>
             CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsDrafted") == true;
+        protected virtual bool IsInvoiceStatusFilterEnabled =>
+            CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(TACHYONDataFilters.HaveInvoiceStatus) == true;
 
         #region Mobile
 
@@ -348,7 +382,11 @@ namespace TACHYON.EntityFrameworkCore
             {
                 return true;
             }
-            else if (typeof(IHasIsDrafted).IsAssignableFrom(typeof(TEntity)))
+            if (typeof(IHasIsDrafted).IsAssignableFrom(typeof(TEntity)))
+            {
+                return true;
+            }
+            if (typeof(IHaveInvoiceStatus).IsAssignableFrom(typeof(TEntity)))
             {
                 return true;
             }
@@ -374,6 +412,13 @@ namespace TACHYON.EntityFrameworkCore
                     (((IHasIsDrafted)e).IsDrafted == CurrentIsDrafted) == IsDraftedFilterEnabled;
                 expression = expression == null ? mayHaveOUFilter : CombineExpressions(expression, mayHaveOUFilter);
             }
+            else if (typeof(IHaveInvoiceStatus).IsAssignableFrom(typeof(TEntity)))
+            {
+                Expression<Func<TEntity, bool>> mustHaveInvoiceStatus = e =>
+                    ((IHaveInvoiceStatus)e).Status == InvoiceStatus.Confirmed ||
+                    (((IHaveInvoiceStatus)e).Status == InvoiceStatus.Confirmed) == IsInvoiceStatusFilterEnabled;
+                expression = expression == null ? mustHaveInvoiceStatus : CombineExpressions(expression, mustHaveInvoiceStatus);
+            }
 
             return expression;
         }
@@ -382,14 +427,19 @@ namespace TACHYON.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Actor>(a =>
+            {
+                a.HasIndex(e => new { e.TenantId });
+            });
+
             //modelBuilder.Entity<ShippingRequestVas>(s =>
             //{
             //    s.HasIndex(e => new { e.TenantId });
             //});
             modelBuilder.Entity<VasPrice>(v =>
-            {
-                v.HasIndex(e => new { e.TenantId });
-            });
+             {
+                 v.HasIndex(e => new { e.TenantId });
+             });
             modelBuilder.Entity<Receiver>(r =>
             {
                 r.HasIndex(e => new { e.TenantId });
@@ -448,6 +498,10 @@ namespace TACHYON.EntityFrameworkCore
                 .HasDefaultValue(true);
 
             modelBuilder.Entity<GoodCategory>()
+                .Property(b => b.IsActive)
+                .HasDefaultValue(true);
+
+            modelBuilder.Entity<Actor>()
                 .Property(b => b.IsActive)
                 .HasDefaultValue(true);
 
@@ -527,6 +581,21 @@ namespace TACHYON.EntityFrameworkCore
                 .Property(x => x.LogTransaction)
                 .HasConversion(x => x.Value,
                     x => SmartEnum.FromValue<EntityLogTransaction>(x));
+
+            modelBuilder
+                .Entity<DedicatedDynamicInvoice>()
+                .HasOne(e => e.Tenant)
+                .WithMany(e => e.DedicatedDynamicInvoices)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder
+                .Entity<DedicatedDynamicInvoiceItem>()
+                .HasOne(e => e.DedicatedShippingRequestTruck)
+                .WithMany(e => e.DedicatedDynamicInvoiceItems)
+                .OnDelete(DeleteBehavior.ClientNoAction);
+
+
 
             modelBuilder.ConfigurePersistedGrantEntity();
         }

@@ -53,7 +53,7 @@ namespace TACHYON.Penalties
             var amount = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, AppFeatures.TripCancelation));
             var commestionValues = await CalculateCommestions(tenantId, amount,
                 AppFeatures.TripCancelationCommissionType, AppFeatures.TripCancelationCommissionMinValue,
-                AppFeatures.TripCancelationCommissionPercentage, AppFeatures.TripCancelationCommissionValue);
+                AppFeatures.TripCancelationCommissionPercentage, AppFeatures.TripCancelationCommissionValue, tripId);
             commestionValues.ItemPrice = amount;
             await InitPenalty(PenaltyType.TripCancelation, tenantId, destinationTenantId, tripId, commestionValues);
         }
@@ -76,7 +76,7 @@ namespace TACHYON.Penalties
 
                 var commestionValues = await CalculateCommestions(tenantId, amount,
                 AppFeatures.DetentionCommissionType, AppFeatures.DetentionCommissionMinValue,
-                AppFeatures.DetentionCommissionPercentage, AppFeatures.DetentionCommissionValue);
+                AppFeatures.DetentionCommissionPercentage, AppFeatures.DetentionCommissionValue, tripId);
                 commestionValues.ItemPrice = price;
                 await InitPenalty(PenaltyType.DetentionPeriodExceedMaximumAllowedTime, tenantId, destinationTenantId, tripId, commestionValues);
                 await _appNotifier.NotifyShipperWhenApplyDetention(tenantId, facilityName, waybillNumber.ToString(), commestionValues.TotalAmount(), tripId);
@@ -104,7 +104,7 @@ namespace TACHYON.Penalties
                 AppFeatures.NotAssignTruckAndDriverStartDate_CommissionType,
                 AppFeatures.NotAssignTruckAndDriverStartDate_CommissionMinValue,
                 AppFeatures.NotAssignTruckAndDriverStartDate_CommissionPercentage,
-                AppFeatures.NotAssignTruckAndDriverStartDate_CommissionValue);
+                AppFeatures.NotAssignTruckAndDriverStartDate_CommissionValue, tripId);
                 commestionValues.ItemPrice = amount;
                 await InitPenalty(PenaltyType.NotAssigningTruckAndDriverBeforeTheDateForTheTrip, tenantId, destinationTenantId, tripId, commestionValues);
             }
@@ -127,7 +127,7 @@ namespace TACHYON.Penalties
 
                 var commestionValues = await CalculateCommestions(tenantId, finalAmount,
                AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionType, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionMinValue,
-               AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionPercentage, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionValue);
+               AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionPercentage, AppFeatures.NotDeliveringAllDropsBeforeEndDate_CommissionValue, tripId);
 
                 commestionValues.ItemPrice = amount;
                 await InitPenalty(PenaltyType.NotDeliveringAllDropsBeforeExpectedTripEndDate, tenantId, destinationTenantId, tripId, commestionValues);
@@ -162,7 +162,7 @@ namespace TACHYON.Penalties
         #region Helpers 
         private async Task<PenaltyCommestionDto> CalculateCommestions(int tenantId, decimal amount,
             string commestionTypeKey, string commestionMinValueKey,
-            string commestionPercentageKey, string commestionValueKey)
+            string commestionPercentageKey, string commestionValueKey, int? shippingRequestTripId)
         {
             var commestionType = (PriceOfferCommissionType)Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, commestionTypeKey));
             var commestionMinValue = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, commestionMinValueKey));
@@ -170,15 +170,38 @@ namespace TACHYON.Penalties
             var commestionValue = Convert.ToDecimal(await _featureChecker.GetValueAsync(tenantId, commestionValueKey));
             var taxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
 
-            return CalculateValues(amount, commestionType, commestionMinValue, commestionPercentage, commestionValue, taxVat);
+            // we have one item for this penalty
+            List<PenaltyItemDto> penaltyItemDtoList = GeneratePenaltyItemListFromTrip(amount, shippingRequestTripId, taxVat);
+            return CalculateValues(commestionType, commestionMinValue, commestionPercentage, commestionValue, taxVat,
+                penaltyItemDtoList);
         }
 
-        public  PenaltyCommestionDto CalculateValues(decimal amount, PriceOfferCommissionType commestionType, decimal commestionMinValue, decimal commestionPercentage, decimal commestionValue, decimal taxVat)
+        private static List<PenaltyItemDto> GeneratePenaltyItemListFromTrip(decimal amount, int? shippingRequestTripId, decimal taxVat)
+        {
+            var vatAmount = Calculate.CalculateVat(amount, taxVat);
+            var itemTotalAmountPostVat = amount + vatAmount;
+            var penaltyItemDto = new PenaltyItemDto
+            {
+                ItemPrice = amount,
+                VatAmount = vatAmount,
+                ShippingRequestTripId = shippingRequestTripId,
+                ItemTotalAmountPostVat = itemTotalAmountPostVat
+            };
+            List<PenaltyItemDto> penaltyItemDtoList = new List<PenaltyItemDto>();
+            penaltyItemDtoList.Add(penaltyItemDto);
+            return penaltyItemDtoList;
+        }
+
+        public  PenaltyCommestionDto CalculateValues( PriceOfferCommissionType commestionType,
+            decimal commestionMinValue, decimal commestionPercentage, decimal commestionValue, decimal taxVat,
+            List<PenaltyItemDto> penaltyItems)
         {
             var res = new PenaltyCommestionDto();
+            res.ItemPrice = penaltyItems.Sum(x => x.ItemPrice);
+            var amount = res.ItemPrice;
             res.AmountPreCommestion = amount;
             res.CommissionType = commestionType;
-            res.VatAmount = Calculate.CalculateVat(res.AmountPreCommestion, taxVat);
+            res.VatAmount = penaltyItems.Sum(x => x.VatAmount); // Calculate.CalculateVat(res.AmountPreCommestion, taxVat);
             res.TaxVat = taxVat;
             
             switch (commestionType)

@@ -8,7 +8,7 @@
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <form #editForm="ngForm" novalidate (ngSubmit)="save()">
         <div class="modal-header">
@@ -20,38 +20,46 @@
           </button>
         </div>
         <div class="modal-body" *ngIf="settings">
-          <h4>{{ 'ReceiveNotifications' | localize }}</h4>
-          <div>
-            <span class="switch switch-icon-check">
-              <label>
-                <input type="checkbox" name="ReceiveNotifications" value="true" [(ngModel)]="settings.receiveNotifications" />
-                <span></span>
-              </label>
-            </span>
-
-            <div class="help-block">{{ 'ReceiveNotifications_Definition' | localize }}</div>
-          </div>
-          <h4 *ngIf="settings.notifications.length" class="mt-4">{{ 'NotificationTypes' | localize }}</h4>
-          <p *ngIf="settings.notifications.length && !settings.receiveNotifications" class="text-danger">
-            <small>{{ 'ReceiveNotifications_DisableInfo' | localize }}</small>
-          </p>
-          <div class="checkbox-inline">
-            <div *ngFor="let notification of settings.notifications">
-              <label attr.for="Notification_{{ notification.name }}" class="checkbox">
-                <input
-                  id="Notification_{{ notification.name }}"
-                  type="checkbox"
-                  name="Notification_{{ notification.name }}"
-                  [(ngModel)]="notification.isSubscribed"
-                  [disabled]="!settings.receiveNotifications"
-                />
-                {{ notification.displayName }}
-                <span></span>
-              </label>
-              <span *ngIf="notification.description" class="help-block">{{ notification.description }}</span>
-            </div>
-          </div>
+          <p-table [value]="settings.notifications" [scrollable]="true" scrollHeight="400px">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="min-width: 400px">{{ l('Name') }}</th>
+                <th>{{ l('Platform') }}</th>
+                <th>{{ l('Email') }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-notification>
+              <tr>
+                <td style="min-width: 400px">{{ notification.displayName }}</td>
+                <td>
+                  <label class="checkbox checkbox-lg">
+                    <input
+                      id="Notification_{{ notification.name }}"
+                      type="checkbox"
+                      name="Notification_{{ notification.name }}"
+                      [(ngModel)]="notification.isSubscribed"
+                      [disabled]="!settings.receiveNotifications"
+                    />
+                    <span></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="checkbox checkbox-lg">
+                    <input
+                      id="Email_{{ notification.name }}"
+                      type="checkbox"
+                      name="Email_{{ notification.name }}"
+                      [(ngModel)]="notification.isEmailSubscribed"
+                      [disabled]="!settings.receiveNotifications"
+                    />
+                    <span></span>
+                  </label>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
         </div>
+
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">
             {{ 'Cancel' | localize }}

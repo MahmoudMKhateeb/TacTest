@@ -17,6 +17,7 @@ import { TripService } from '@app/main/shippingRequests/shippingRequests/Shippin
 import { Subscription } from '@node_modules/rxjs';
 import Swal from 'sweetalert2';
 import { retry } from '@node_modules/rxjs/internal/operators';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'createOrEditGoodDetailsModal',
@@ -24,8 +25,10 @@ import { retry } from '@node_modules/rxjs/internal/operators';
   styleUrls: ['./create-or-edit-good-details-modal.component.css'],
 })
 export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase implements OnInit, OnDestroy {
-  @Output() canAddMoreGoods: EventEmitter<boolean> = new EventEmitter<boolean>();
   @ViewChild('createOrEditGoodDetail', { static: false }) public createOrEditGoodDetail: ModalDirective;
+  @Input() GoodDetailsListInput: CreateOrEditGoodsDetailDto[];
+  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  @Output() canAddMoreGoods: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   active = false;
   // singleWayPoint: CreateOrEditRoutPointDto;
@@ -39,20 +42,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
 
   private activeEditId: number;
 
-  constructor(
-    injector: Injector,
-    private _PointsService: PointsService,
-    private _TripService: TripService,
-    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
-    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
-    private _dangerousGoodTypesAppService: DangerousGoodTypesServiceProxy
-  ) {
-    super(injector);
-  }
-  @Input() GoodDetailsListInput: CreateOrEditGoodsDetailDto[];
-  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   tripServiceSubs$: Subscription;
-  // pointServiceSubs$: Subscription;
   goodCategoryId: number;
   weight: number;
   amount: number;
@@ -64,9 +54,19 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   dangerousGoodsCode: string;
   dimentions: string;
   AllowedWeight: number;
-  ngOnDestroy() {
-    this.tripServiceSubs$.unsubscribe();
+  isForDedicated: boolean;
+
+  constructor(
+    injector: Injector,
+    private _PointsService: PointsService,
+    private _TripService: TripService,
+    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
+    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
+    private _dangerousGoodTypesAppService: DangerousGoodTypesServiceProxy
+  ) {
+    super(injector);
   }
+
   ngOnInit(): void {
     this.myGoodsDetailList = this.GoodDetailsListInput || [];
     //take the current Active WayPoint From the Shared Service
@@ -74,6 +74,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     //sync the singleWayPoint From the Service
     this.loadAllDropDowns();
   }
+
   /**
    * load DropDowns
    */
@@ -85,11 +86,13 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.loadGoodDangerousTypes();
   }
 
-  show(id?) {
+  show(id?, isForDedicated = false) {
+    this.isForDedicated = isForDedicated;
     this.active = true;
     this.goodsDetail = new CreateOrEditGoodsDetailDto();
     //if there is an id this is an edit
-    if (typeof id !== 'undefined') {
+    if (isNotNullOrUndefined(id)) {
+      console.log('this.myGoodsDetailList', this.myGoodsDetailList);
       this.activeEditId = id;
       this.goodCategoryId = this.myGoodsDetailList[id].goodCategoryId;
       this.weight = this.myGoodsDetailList[id].weight;
@@ -102,7 +105,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.otherUnitOfMeasureName = this.myGoodsDetailList[id].otherUnitOfMeasureName;
       this.dimentions = this.myGoodsDetailList[id].dimentions;
     }
-    if (this.weightValidation()) {
+    if (this.weightValidation() || isForDedicated) {
       this.createOrEditGoodDetail.show();
     } else {
       this.active = false;
@@ -113,6 +116,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       });
     }
   }
+
   close() {
     this.active = false;
     this.activeEditId = undefined;
@@ -185,6 +189,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.allDangerousGoodTypes = res;
     });
   }
+
   /**
    * validates Good Details Weight and Amount
    */
@@ -217,8 +222,12 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     });
     //allowed weight is how much weight is left for the user
     allowedeight = shippingRequestWeight - (totalWeightGoodDetails - (this.weight === undefined ? 0 : this.weight));
-    this.AllowedWeight = allowedeight;
-    this.canAddMoreGoods.emit(allowedeight === 0 ? false : true); // let the other components know
-    return allowedeight === 0 ? false : true;
+    this.AllowedWeight = !this.isForDedicated ? allowedeight : this.weight;
+    this.canAddMoreGoods.emit(allowedeight !== 0); // let the other components know
+    return allowedeight !== 0;
+  }
+
+  ngOnDestroy() {
+    this.tripServiceSubs$.unsubscribe();
   }
 }

@@ -34,12 +34,12 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
         this.chartOptions = {
           series: [
             {
-              name: 'Accepted',
+              name: this.l('Accepted'),
               data: result.acceptedOffers,
               color: 'rgba(187, 41, 41, 0.847)',
             },
             {
-              name: 'Rejected',
+              name: this.l('Rejected'),
               data: result.rejectedOffers,
               color: '#b5b5c3',
             },
@@ -53,6 +53,18 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
             type: 'category',
           },
         };
+        (this.chartOptions.chart.locales as any[]) = [
+          {
+            name: 'en',
+            options: {
+              toolbar: {
+                exportToPNG: this.l('Download') + ' PNG',
+                exportToSVG: this.l('Download') + ' SVG',
+                exportToCSV: this.l('Download') + ' CSV',
+              },
+            },
+          },
+        ];
         this.loading = false;
       });
   }

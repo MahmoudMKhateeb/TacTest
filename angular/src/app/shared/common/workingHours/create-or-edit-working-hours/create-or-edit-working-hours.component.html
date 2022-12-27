@@ -25,6 +25,7 @@
             name="FromTimeInput{{ i }}"
             [class.is-invalid]="FromTimeInput.touched && !FromTimeInput.valid"
             [class.is-valid]="FromTimeInput.touched && FromTimeInput.valid"
+            (change)="itemChanged.emit(null)"
           />&nbsp;
           <input
             type="time"
@@ -37,6 +38,7 @@
             name="ToTimeInput{{ i }}"
             [class.is-invalid]="ToTimeInput.touched && !ToTimeInput.valid"
             [class.is-valid]="ToTimeInput.touched && ToTimeInput.valid"
+            (change)="itemChanged.emit(null)"
           />
         </div>
       </div>

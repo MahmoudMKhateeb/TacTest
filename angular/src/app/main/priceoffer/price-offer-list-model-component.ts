@@ -16,6 +16,7 @@ import { PriceOfferServiceProxy, PriceOfferChannel, GetShippingRequestForPriceOf
 export class PriceOfferListModelComponent extends AppComponentBase {
   @Input() Channel: PriceOfferChannel | null | undefined;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  @Output() valueUpdated: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
   @ViewChild('modal', { static: false }) modal: ModalDirective;
@@ -24,6 +25,7 @@ export class PriceOfferListModelComponent extends AppComponentBase {
   saving = false;
   IsStartSearch: boolean = false;
   shippingRequest: GetShippingRequestForPriceOfferListDto = new GetShippingRequestForPriceOfferListDto();
+  isUpdated = false;
 
   constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy) {
     super(injector);
@@ -50,6 +52,7 @@ export class PriceOfferListModelComponent extends AppComponentBase {
 
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
+    this.isUpdated = true;
   }
   show(shippingRequest: GetShippingRequestForPriceOfferListDto): void {
     this.primengTableHelper.records = [];
@@ -61,6 +64,9 @@ export class PriceOfferListModelComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.modal.hide();
+    if (this.isUpdated) {
+      this.valueUpdated.emit(true);
+    }
   }
   Reject() {
     this.reloadPage();

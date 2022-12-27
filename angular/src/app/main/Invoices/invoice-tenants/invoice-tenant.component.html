@@ -3,6 +3,7 @@
     <sub-header [title]="'Invoices' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>
 
@@ -15,7 +16,7 @@
               #dataGrid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="true"
+              [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -24,13 +25,13 @@
               [wordWrapEnabled]="true"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
-              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
               <dxo-filter-panel [visible]="true"></dxo-filter-panel>
               <dxo-filter-builder-popup></dxo-filter-builder-popup>
               <dxo-scrolling mode="virtual"></dxo-scrolling>
               <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
-              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"></dxo-remote-operations>
+              <!--              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"></dxo-remote-operations>-->
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
                 <dxi-group-item column="id" summaryType="count"></dxi-group-item>
@@ -61,7 +62,12 @@
               <dxi-column cellTemplate="statusCellTemplate" dataField="status" caption=" {{ l('Status') }}">
                 <dxo-lookup [dataSource]="SubmitStatus" displayExpr="value" valueExpr="key"></dxo-lookup>
               </dxi-column>
-              <dxi-column dataField="channel" cellTemplate="channelCellTemplate" caption="{{ l('Type') }}"></dxi-column>
+              <dxi-column dataField="channel" cellTemplate="channelCellTemplate" caption="{{ l('Type') }}">
+                <dxo-lookup [dataSource]="SubmitChannel" displayExpr="value" valueExpr="key"></dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="submittedDate" caption="{{ l('SubmittedDate') }}" dataType="date"> </dxi-column>
+              <dxi-column dataField="acceptanceDate" caption="{{ l('AcceptanceDate') }}" dataType="date"> </dxi-column>
+              <dxi-column dataField="paymentDate" caption="{{ l('PaymentDate') }}" dataType="date"> </dxi-column>
               <dxo-master-detail [enabled]="true" template="detail"></dxo-master-detail>
               <div *dxTemplate="let options of 'detail'">
                 <app-invoice-tenant-item [Id]="options.data.id"></app-invoice-tenant-item>
@@ -88,7 +94,9 @@
                     class="badge badge-inline"
                     [ngClass]="{
                       'badge-danger': options.data.channel == 3,
-                      'badge-primary': options.data.channel != 3
+                      'badge-primary': options.data.channel == 1,
+                      'badge-warning': options.data.channel == 2,
+                      'badge-info': options.data.channel == 4
                     }"
                     >{{ l(options.data.invoiceChannelTitle) }}</span
                   ></span
@@ -151,7 +159,7 @@
                       <a
                         class="dropdown-item"
                         href="javascript:;"
-                        *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.SubmitInvoices.Rejected') && isTachyonDealer"
+                        *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.SubmitInvoices.Rejected') && isTachyonDealerOrHost"
                         (click)="RejectedModel.show(options.data.id)"
                         >{{ l('Reject') }}</a
                       >
@@ -173,6 +181,8 @@
     </div>
   </div>
 </div>
+
+<app-invoice-tenant-search-model #ModelSearch (modalsearch)="searchInPage()"></app-invoice-tenant-search-model>
 <deman-model (modalSave)="reloadPage()" #ClaimModel></deman-model>
 <submitinvoice-rejected-modal #RejectedModel (modalSave)="reloadPage()"></submitinvoice-rejected-modal>
 <invoice-tenant-items-details #InvoiceDetailsModel></invoice-tenant-items-details>

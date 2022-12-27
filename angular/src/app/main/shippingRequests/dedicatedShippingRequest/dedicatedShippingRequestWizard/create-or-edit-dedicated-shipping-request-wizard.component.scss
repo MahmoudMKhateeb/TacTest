@@ -1,0 +1,106 @@
+@import '../../../../../assets/metronic/themes/default/css/pages/wizard/wizard-1.css';
+
+:host ::ng-deep .p-multiselect {
+    min-width: 15rem;
+}
+
+:host ::ng-deep .multiselect-custom-virtual-scroll .p-multiselect {
+    min-width: 20rem;
+}
+
+:host ::ng-deep .multiselect-custom {
+    .p-multiselect-label {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+    }
+
+    .vas-item-value {
+        padding: 0.25rem 0.5rem;
+        border-radius: 3px;
+        display: inline-flex;
+        margin-right: 0.5rem;
+        background-color: var(--primary-color);
+        color: var(--primary-color-text);
+
+        img.flag {
+            width: 17px;
+        }
+    }
+
+    .vas-placeholder {
+        padding: 0.25rem;
+    }
+}
+
+agm-map {
+    height: 300px;
+}
+
+.star {
+    position: relative;
+    display: inline-block;
+    font-size: 2rem;
+    color: #d3d3d3;
+}
+
+.full {
+    color: #ffca08;
+}
+
+.half {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color: #ffca08;
+}
+
+.custom-prepend-input {
+    .input-group-prepend {
+        width: 40%;
+        dx-select-box {
+            background: #e9ecef;
+        }
+    }
+}
+
+::ng-deep {
+    .myCarrierInput {
+        width: 100% !important;
+        height: 27px !important;
+        border: none;
+        padding: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .rentalRangeDates {
+        .p-calendar {
+            display: flex;
+
+            .p-inputtext {
+                border: none;
+            }
+        }
+    }
+    [dir='ltr'] {
+        .custom-prepend-input {
+            .input-group-prepend {
+                dx-select-box {
+                    border-top-left-radius: 0 !important;
+                    border-bottom-left-radius: 0 !important;
+                }
+            }
+        }
+    }
+
+    [dir='rtl'] {
+        .custom-prepend-input {
+            .input-group-prepend {
+                dx-select-box {
+                    border-top-right-radius: 0 !important;
+                    border-bottom-right-radius: 0 !important;
+                }
+            }
+        }
+    }
+
+}

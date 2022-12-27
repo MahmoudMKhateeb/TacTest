@@ -6,302 +6,396 @@
   tabindex="-1"
   aria-labelledby="createOrEditModal"
   aria-hidden="true"
-  [config]="{ backdrop: 'static', keyboard: false }"
+  [config]="{ backdrop: 'static' }"
+  (keydown.escape)="close(); $event.stopPropagation()"
 >
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
-      <form *ngIf="active" #shippingRequestTripsForm="ngForm" novalidate autocomplete="off">
-        <div class="modal-header">
-          <p class="modal-title">
-            <span>{{ l('TripDetails') }}</span>
-          </p>
-          <div class="card-toolbar">
-            <div
-              class="btn-group"
-              dropdown
-              #dropdownAddPage="bs-dropdown"
-              [dropup]="false"
-              [insideClick]="true"
-              *ngIf="!trip.id && (isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas'))"
-            >
-              <button
-                dropdownToggle
-                type="button"
-                class="btn btn-outline-danger dropdown-toggle btn-elevate-hover mr-2"
-                aria-controls="dropdown-basic"
-                (click)="loadTemplates()"
+      <form *ngIf="active" #shippingRequestTripsForm="ngForm" novalidate autocomplete="off" (submit)="createOrEditTrip()">
+        <dx-validation-group name="shippingRequestTripsGroup">
+          <div class="modal-header">
+            <p class="modal-title">
+              <span>{{ l('TripDetails') }}</span>
+            </p>
+            <div class="card-toolbar">
+              <div
+                class="btn-group"
+                dropdown
+                #dropdownAddPage="bs-dropdown"
+                [dropup]="false"
+                [insideClick]="true"
+                *ngIf="
+                  !trip.id &&
+                  (isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas')) &&
+                  shippingRequestForView &&
+                  shippingRequestForView?.shippingRequestFlag === 0
+                "
               >
-                <i class="fa fa-list"></i> {{ 'TripTemplates' | localize }}<span class="caret"></span>
+                <button
+                  dropdownToggle
+                  type="button"
+                  class="btn btn-outline-danger dropdown-toggle btn-elevate-hover mr-2"
+                  aria-controls="dropdown-basic"
+                  (click)="loadTemplates()"
+                >
+                  <i class="fa fa-list"></i> {{ 'TripTemplates' | localize }}<span class="caret"></span>
+                </button>
+                <ul *dropdownMenu class="dropdown-menu p-2" role="menu" aria-labelledby="button-basic">
+                  <li role="menuitem">
+                    <div class="form-group">
+                      <select class="form-control" name="tripTemplate" [(ngModel)]="selectedTemplate" [busyIf]="templatesLoading">
+                        <option [value]="undefined" hidden selected disabled>{{ l('SelectATripTemplate') }}</option>
+                        <option *ngFor="let item of tripTemples" value="{{ item.id }}">{{ item.displayName }}</option>
+                      </select>
+                    </div>
+                    <button class="btn btn-sm btn-block btn-info" (click)="applyTemplate()" type="button">{{ 'Load' | localize }}</button>
+                  </li>
+                </ul>
+              </div>
+
+              <button
+                class="btn btn-primary"
+                *ngIf="trip.id"
+                [disabled]="!trip.id"
+                (click)="DownloadSingleDropWaybillPdf(trip.id)"
+                [buttonBusy]="wayBillIsDownloading"
+              >
+                <i class="fa flaticon2-print"></i>
+                {{ l('PrintWaybill') }}
               </button>
-              <ul *dropdownMenu class="dropdown-menu p-2" role="menu" aria-labelledby="button-basic">
-                <li role="menuitem">
-                  <div class="form-group">
-                    <select class="form-control" name="tripTemplate" [(ngModel)]="selectedTemplate" [busyIf]="templatesLoading">
-                      <option [value]="undefined" hidden selected disabled>{{ l('SelectATripTemplate') }}</option>
-                      <option *ngFor="let item of tripTemples" value="{{ item.id }}">{{ item.displayName }}</option>
+            </div>
+          </div>
+          <div class="modal-body" [busyIf]="loading">
+            <div class="row">
+              <!--begin::Body-->
+              <!--  begin:: Source Dest Facilitys  -->
+
+              <!--  begin:: Trip start&End Dates-->
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <hijri-gregorian-datepicker-test
+                    [parentForm]="parentForm"
+                    [label]="l('TripsStartDate')"
+                    class="m-input"
+                    [readonly]="true"
+                    [isRequired]="true"
+                    [minHijri]="minTripDateAsHijri"
+                    [minGreg]="minTripDateAsGrorg"
+                    [maxHijri]="maxTripDateAsHijri"
+                    [maxGreg]="maxTripDateAsGrorg"
+                    [selectedDate]="startTripdate"
+                    (selectedDateChange)="GetSelectedstartDateChange($event, 'start')"
+                  >
+                  </hijri-gregorian-datepicker-test>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <hijri-gregorian-datepicker-test
+                    [parentForm]="parentForm"
+                    [label]="l('TripsEndDate')"
+                    class="m-input"
+                    [readonly]="true"
+                    [isRequired]="false"
+                    [minHijri]="minHijriTripdate"
+                    [minGreg]="minGrogTripdate"
+                    [maxHijri]="maxTripDateAsHijri"
+                    [maxGreg]="maxTripDateAsGrorg"
+                    [selectedDate]="endTripdate"
+                    (selectedDateChange)="GetSelectedstartDateChange($event, 'end')"
+                  >
+                  </hijri-gregorian-datepicker-test>
+                </div>
+              </div>
+              <div class="col-lg-6 form-group d-inline-flex">
+                <div class="input-group d-inline-block mr-8">
+                  <label> {{ l('supposedPickupTimeFrom') }} <span class="required-fileds">*</span></label>
+                  <dx-date-box
+                    name="supposedPickupDateFrom"
+                    [(value)]="trip.supposedPickupDateFrom"
+                    type="time"
+                    pickerType="list"
+                    openOnFieldClick="true"
+                    [interval]="20"
+                    required
+                  >
+                    <dx-validator [validationGroup]="'shippingRequestTripsGroup'">
+                      <dxi-validation-rule
+                        type="required"
+                        message="{{ l('supposedPickupTimeFrom') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                      ></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-date-box>
+                </div>
+                <div class="input-group d-inline-block">
+                  <label> {{ l('supposedPickupTimeTo') }} <span class="required-fileds">*</span></label>
+                  <dx-date-box
+                    name="supposedPickupDateTo"
+                    [(value)]="trip.supposedPickupDateTo"
+                    type="time"
+                    pickerType="list"
+                    openOnFieldClick="true"
+                    [interval]="20"
+                    required
+                  >
+                    <dx-validator [validationGroup]="'shippingRequestTripsGroup'">
+                      <dxi-validation-rule
+                        type="required"
+                        message="{{ l('supposedPickupTimeTo') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                      ></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-date-box>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <!--                expected trip Delivery Date-->
+                  <label>{{ l('ExpectedDeliveryTime') }}</label>
+                  <dx-date-box
+                    id="tripExpectedDeliveryTime"
+                    name="tripStartDate"
+                    [(value)]="trip.expectedDeliveryTime"
+                    type="datetime"
+                    [min]="trip.startTripDate"
+                    openOnFieldClick="true"
+                  >
+                  </dx-date-box>
+                </div>
+              </div>
+              <!--  end:: Trip start&End Dates-->
+              <!-- begin::Vas's  -->
+              <div class="col-lg-6" *ngIf="VasListFromFather?.length > 0">
+                <div class="form-group">
+                  <label>{{ l('vases') }}</label>
+                  <p-multiSelect
+                    name="shippingRequestTripVases"
+                    [options]="cleanVasesList"
+                    [(ngModel)]="trip.shippingRequestTripVases"
+                    (ngModelChange)="isSelectedVasesHasinsurance($event)"
+                    [style]="{ width: '100%' }"
+                    styleClass="form-control pt-1"
+                    tooltipPositionStyle="dropdown-menu"
+                    [filter]="true"
+                    [showHeader]="true"
+                    [dataKey]="'shippingRequestVasId'"
+                    optionLabel="name"
+                  ></p-multiSelect>
+                </div>
+              </div>
+              <!--      end:Vas's      -->
+
+              <!--  begin::Trip Goods Approximate Value -->
+              <div class="col-lg-6 mt-3">
+                <div class="form-group">
+                  <label>{{ l('ApproximateTripGoodsValue') }} <span class="required-fileds" *ngIf="isApproximateValueRequired">*</span></label>
+                  <div class="input-group date">
+                    <input
+                      #approximateGoodsTotalValue="ngModel"
+                      type="number"
+                      class="form-control"
+                      name="approximateGoodsTotalValue"
+                      (keypress)="numberOnly($event)"
+                      [(ngModel)]="trip.totalValue"
+                      [min]="1"
+                      [class.is-invalid]="isApproximateValueRequired && approximateGoodsTotalValue.touched && !approximateGoodsTotalValue.valid"
+                      [class.is-valid]="isApproximateValueRequired && approximateGoodsTotalValue.touched && approximateGoodsTotalValue.valid"
+                      [required]="isApproximateValueRequired"
+                    />
+                    <div class="input-group-append">
+                      <span class="input-group-text">
+                        {{ l('SAR') }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--  end::Trip Goods Approximate Value -->
+              <div class="col-lg-6">
+                <div class="form-group row">
+                  <div class="col-6 col-form-label">
+                    <label for="DeliveryNote"> {{ l('NeedsDeliveryNote') }} </label>
+                    <select #DeliveryNote="ngModel" name="DeliveryNote" id="DeliveryNote" [(ngModel)]="trip.needsDeliveryNote" class="form-control">
+                      <option [ngValue]="true">{{ l('Yes') }}</option>
+                      <option [ngValue]="false">{{ l('No') }}</option>
                     </select>
                   </div>
-                  <button class="btn btn-sm btn-block btn-info" (click)="applyTemplate()">{{ 'Load' | localize }}</button>
-                </li>
-              </ul>
-            </div>
+                  <div class="col-6 col-form-label">
+                    <label for="Attachment"> {{ l('Attachment') }} </label>
+                    <select #Attachment="ngModel" name="Attachment" id="Attachment" [(ngModel)]="trip.hasAttachment" class="form-control">
+                      <option [ngValue]="true">{{ l('Yes') }}</option>
+                      <option [ngValue]="false">{{ l('No') }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
 
-            <button
-              class="btn btn-primary"
-              *ngIf="trip.id"
-              [disabled]="!trip.id"
-              (click)="DownloadSingleDropWaybillPdf(trip.id)"
-              [buttonBusy]="wayBillIsDownloading"
-            >
-              <i class="fa flaticon2-print"></i>
-              {{ l('PrintWaybill') }}
-            </button>
-          </div>
-        </div>
-        <div class="modal-body" [busyIf]="loading">
-          <div class="row">
-            <!--begin::Body-->
-            <!--  begin:: Source Dest Facilitys  -->
-
-            <!--  begin:: Trip start&End Dates-->
-            <div class="col-lg-6">
-              <div class="form-group">
-                <hijri-gregorian-datepicker-test
-                  [parentForm]="parentForm"
-                  [label]="l('TripsStartDate')"
-                  class="m-input"
-                  [readonly]="true"
-                  [isRequired]="true"
-                  [minHijri]="minTripDateAsHijri"
-                  [minGreg]="minTripDateAsGrorg"
-                  [maxHijri]="maxTripDateAsHijri"
-                  [maxGreg]="maxTripDateAsGrorg"
-                  [selectedDate]="startTripdate"
-                  (selectedDateChange)="GetSelectedstartDateChange($event, 'start')"
-                >
-                </hijri-gregorian-datepicker-test>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="form-group">
-                <hijri-gregorian-datepicker-test
-                  [parentForm]="parentForm"
-                  [label]="l('TripsEndDate')"
-                  class="m-input"
-                  [readonly]="true"
-                  [isRequired]="false"
-                  [minHijri]="minHijriTripdate"
-                  [minGreg]="minGrogTripdate"
-                  [maxHijri]="maxTripDateAsHijri"
-                  [maxGreg]="maxTripDateAsGrorg"
-                  [selectedDate]="endTripdate"
-                  (selectedDateChange)="GetSelectedstartDateChange($event, 'end')"
-                >
-                </hijri-gregorian-datepicker-test>
-              </div>
-            </div>
-            <div class="col-lg-6 form-group d-inline-flex">
-              <div class="input-group d-inline-block">
-                <label> {{ l('supposedPickupTimeFrom') }} <span class="required-fileds">*</span></label>
-                <dx-date-box
-                  name="supposedPickupDateFrom"
-                  [(value)]="trip.supposedPickupDateFrom"
-                  type="time"
-                  pickerType="list"
-                  openOnFieldClick="true"
-                  [interval]="20"
-                  required
-                >
-                </dx-date-box>
-              </div>
-              <div class="input-group d-inline-block">
-                <label> {{ l('supposedPickupTimeTo') }} <span class="required-fileds">*</span></label>
-                <dx-date-box
-                  name="supposedPickupDateTo"
-                  [(value)]="trip.supposedPickupDateTo"
-                  type="time"
-                  pickerType="list"
-                  openOnFieldClick="true"
-                  [interval]="20"
-                  required
-                >
-                </dx-date-box>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="form-group">
-                <!--                expected trip Delivery Date-->
-                <label>{{ l('ExpectedDeliveryTime') }}</label>
-                <dx-date-box
-                  id="tripExpectedDeliveryTime"
-                  name="tripStartDate"
-                  [(value)]="trip.expectedDeliveryTime"
-                  type="datetime"
-                  [min]="trip.startTripDate"
-                  openOnFieldClick="true"
-                >
-                </dx-date-box>
-              </div>
-            </div>
-            <!--  end:: Trip start&End Dates-->
-            <!-- begin::Vas's  -->
-            <div class="col-lg-6" *ngIf="VasListFromFather?.length > 0">
-              <div class="form-group">
-                <label>{{ l('vases') }}</label>
-                <p-multiSelect
-                  name="shippingRequestTripVases"
-                  [options]="cleanVasesList"
-                  [(ngModel)]="trip.shippingRequestTripVases"
-                  (ngModelChange)="isSelectedVasesHasinsurance($event)"
-                  [style]="{ width: '100%' }"
-                  styleClass="form-control pt-1"
-                  tooltipPositionStyle="dropdown-menu"
-                  [filter]="true"
-                  [showHeader]="true"
-                  [dataKey]="'shippingRequestVasId'"
-                  optionLabel="name"
-                ></p-multiSelect>
-              </div>
-            </div>
-            <!--      end:Vas's      -->
-
-            <!--  begin::Trip Goods Approximate Value -->
-            <div class="col-lg-6 mt-3">
-              <div class="form-group">
-                <label>{{ l('ApproximateTripGoodsValue') }} <span class="required-fileds" *ngIf="isApproximateValueRequired">*</span></label>
-                <div class="input-group date">
+              <!--   StartOf::Driver&Truck for DedicatedSR -->
+              <ng-container *ngIf="shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 1">
+                <div class="form-group col-lg-6">
+                  <label>{{ l('RouteType') }}</label>
+                  <select
+                    name="routeType"
+                    type="text"
+                    [(ngModel)]="trip.routeType"
+                    class="form-control"
+                    [disabled]="saving"
+                    required
+                    (change)="onRouteTypeChange()"
+                  >
+                    <option disabled [ngValue]="null">{{ l('SelectRouteType') }}</option>
+                    <option [value]="r.key" *ngFor="let r of routeTypes">
+                      {{ l(r.value) | localize }}
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group col-lg-6" *ngIf="trip.routeType == RouteTypesEnum.MultipleDrops">
+                  <label>{{ l('NumberOfDrops') }}</label>
                   <input
-                    #approximateGoodsTotalValue="ngModel"
+                    #numberOfDrops="ngModel"
                     type="number"
                     class="form-control"
-                    name="approximateGoodsTotalValue"
-                    (keypress)="numberOnly($event)"
-                    [(ngModel)]="trip.totalValue"
-                    [min]="1"
-                    [class.is-invalid]="isApproximateValueRequired && approximateGoodsTotalValue.touched && !approximateGoodsTotalValue.valid"
-                    [class.is-valid]="isApproximateValueRequired && approximateGoodsTotalValue.touched && approximateGoodsTotalValue.valid"
-                    [required]="isApproximateValueRequired"
+                    name="numberOfDrops"
+                    (keypress)="numberOnly($event); onRouteTypeChange()"
+                    [(ngModel)]="trip.numberOfDrops"
+                    (ngModelChange)="onRouteTypeChange()"
+                    (change)="onRouteTypeChange()"
+                    [min]="2"
+                    [class.is-invalid]="numberOfDrops.touched && !numberOfDrops.valid"
+                    [class.is-valid]="numberOfDrops.touched && numberOfDrops.valid"
+                    [disabled]="!canEditNumberOfDrops"
+                    required
                   />
-                  <div class="input-group-append">
-                    <span class="input-group-text">
-                      {{ l('SAR') }}
-                    </span>
-                  </div>
                 </div>
-              </div>
-            </div>
-            <!--  end::Trip Goods Approximate Value -->
-            <div class="col-lg-6">
-              <div class="form-group row">
-                <div class="col-6 col-form-label">
-                  <label for="DeliveryNote"> {{ l('NeedsDeliveryNote') }} </label>
-                  <select #DeliveryNote="ngModel" name="DeliveryNote" id="DeliveryNote" [(ngModel)]="trip.needsDeliveryNote" class="form-control">
-                    <option [ngValue]="true">{{ l('Yes') }}</option>
-                    <option [ngValue]="false">{{ l('No') }}</option>
+                <div class="form-group col-lg-6">
+                  <label>{{ l('Driver') }}</label>
+                  <select name="driverUserId" type="text" [(ngModel)]="trip.driverUserId" class="form-control" [disabled]="saving" required>
+                    <option disabled [ngValue]="null">{{ l('SelectaDriver') }}</option>
+                    <option *ngFor="let item of allDedicatedDrivers" [value]="item.id">{{ item.displayName }}</option>
                   </select>
                 </div>
-                <div class="col-6 col-form-label">
-                  <label for="Attachment"> {{ l('Attachment') }} </label>
-                  <select #Attachment="ngModel" name="Attachment" id="Attachment" [(ngModel)]="trip.hasAttachment" class="form-control">
-                    <option [ngValue]="true">{{ l('Yes') }}</option>
-                    <option [ngValue]="false">{{ l('No') }}</option>
+                <div class="form-group col-lg-6">
+                  <label>{{ l('Truck') }}</label>
+                  <select name="truckId" type="text" [(ngModel)]="trip.truckId" class="form-control" [disabled]="saving" required>
+                    <option disabled [ngValue]="null">{{ l('Selectatruck') }}</option>
+                    <option *ngFor="let item of allDedicatedTrucks" [value]="item.id">{{ item.displayName }}</option>
                   </select>
                 </div>
-              </div>
-            </div>
+              </ng-container>
+              <!--   EndOf::Driver&Truck for DedicatedSR -->
 
-            <!--       start:: Notes       -->
-            <div class="col-lg-6">
-              <label>{{ l('Notes') }}</label>
-              <div class="input-group">
-                <textarea
-                  #notes="ngModel"
-                  name="notes"
-                  class="form-control"
-                  [maxlength]="512"
-                  [(ngModel)]="trip.note"
-                  [class.is-valid]="notes.touched && notes.valid && notes.value?.length != 0"
-                  [class.is-invalid]="notes.touched && !notes.valid"
-                ></textarea>
+              <!--       start:: Notes       -->
+              <div class="col-lg-6">
+                <label>{{ l('Notes') }}</label>
+                <div class="input-group">
+                  <textarea
+                    #notes="ngModel"
+                    name="notes"
+                    class="form-control"
+                    [maxlength]="512"
+                    [(ngModel)]="trip.note"
+                    [class.is-valid]="notes.touched && notes.valid && notes.value?.length != 0"
+                    [class.is-invalid]="notes.touched && !notes.valid"
+                  ></textarea>
+                </div>
               </div>
-            </div>
-            <!--End :: notes-->
-            <div *ngIf="trip.hasAttachment" class="col-lg-6">
-              <label>{{ l('SelectFile') }} {{ fileToken }} </label>
-              <div class="custom-file">
-                <input
-                  name="file"
-                  (change)="DocFileChangeEvent($event, trip.createOrEditDocumentFileDto)"
-                  type="file"
-                  class="custom-file-input"
-                  accept="image/x-png,image/jpeg,application/pdf"
-                  [required]="trip.hasAttachment"
-                />
-                <label class="custom-file-label text-truncate" [for]="trip.createOrEditDocumentFileDto.name">
-                  {{ trip.createOrEditDocumentFileDto.name ? trip.createOrEditDocumentFileDto.name : l('SelectFile') }}</label
-                >
-              </div>
-              <div class="margin-top-5">
-                <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
-              </div>
-              <div class="mt-2" *ngIf="trip.createOrEditDocumentFileDto.name">
-                <div class="d-flex align-items-center flex-wrap mb-8">
-                  <!--begin::Symbol-->
-                  <div class="symbol symbol-50 symbol-light mr-3 ml-3">
-                    <span class="symbol-label">
-                      <i class="fa-2x fa-file-image fas" style="color: #5cb85c" aria-hidden="true"></i>
-                    </span>
-                  </div>
-                  <!--end::Symbol-->
-                  <!--begin::Text-->
-                  <div class="d-flex flex-column flex-grow-1 mr-2">
-                    <a (click)="downloadAttatchment()" class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">
-                      {{ trip.createOrEditDocumentFileDto?.name }}</a
-                    >
-                    <span class="text-muted font-weight-bold">{{ trip.createOrEditDocumentFileDto?.documentTypeDto?.templateContentType }}</span>
-                  </div>
-                  <!--end::Text-->
-                  <a
-                    *ngIf="trip.createOrEditDocumentFileDto?.binaryObjectId"
-                    (click)="downloadAttatchment()"
-                    class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
+              <!--End :: notes-->
+              <div *ngIf="trip.hasAttachment" class="col-lg-6">
+                <label>{{ l('SelectFile') }} {{ fileToken }} </label>
+                <div class="custom-file">
+                  <input
+                    name="file"
+                    (change)="DocFileChangeEvent($event, trip.createOrEditDocumentFileDto)"
+                    type="file"
+                    class="custom-file-input"
+                    accept="image/x-png,image/jpeg,application/pdf"
+                    [required]="trip.hasAttachment"
+                  />
+                  <label class="custom-file-label text-truncate" [for]="trip.createOrEditDocumentFileDto.name">
+                    {{ trip.createOrEditDocumentFileDto.name ? trip.createOrEditDocumentFileDto.name : l('SelectFile') }}</label
                   >
-                    <i class="flaticon2-download"></i>
-                  </a>
+                </div>
+                <div class="margin-top-5">
+                  <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
+                </div>
+                <div class="mt-2" *ngIf="trip.createOrEditDocumentFileDto.name">
+                  <div class="d-flex align-items-center flex-wrap mb-8">
+                    <!--begin::Symbol-->
+                    <div class="symbol symbol-50 symbol-light mr-3 ml-3">
+                      <span class="symbol-label">
+                        <i class="fa-2x fa-file-image fas" style="color: #5cb85c" aria-hidden="true"></i>
+                      </span>
+                    </div>
+                    <!--end::Symbol-->
+                    <!--begin::Text-->
+                    <div class="d-flex flex-column flex-grow-1 mr-2">
+                      <a (click)="downloadAttatchment()" class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">
+                        {{ trip.createOrEditDocumentFileDto?.name }}</a
+                      >
+                      <span class="text-muted font-weight-bold">{{ trip.createOrEditDocumentFileDto?.documentTypeDto?.templateContentType }}</span>
+                    </div>
+                    <!--end::Text-->
+                    <a
+                      *ngIf="trip.createOrEditDocumentFileDto?.binaryObjectId"
+                      (click)="downloadAttatchment()"
+                      class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
+                    >
+                      <i class="flaticon2-download"></i>
+                    </a>
+                  </div>
                 </div>
               </div>
+              <!--  start:: RouteSteps -->
+              <PointsComponent
+                [class.invalid-trip-points]="isTripPointsInvalid && isFormSubmitted"
+                (wayPointsListChanged)="revalidatePointsFromPointsComponent()"
+                #PointsComponent
+              ></PointsComponent>
+              <!--  end:: RouteSteps -->
+              <dx-validator [validationGroup]="'shippingRequestTripsGroup'" [adapter]="adapterConfig">
+                <dxi-validation-rule type="required" message="{{ 'IncompleteTripPoint' | localize }}"> </dxi-validation-rule>
+              </dx-validator>
+              <div class="col-lg-12 mt-4 mb-2">
+                <dx-validation-summary validationGroup="shippingRequestTripsGroup" id="summary"></dx-validation-summary>
+              </div>
+              <!--end::Body-->
             </div>
-            <!--  start:: RouteSteps -->
-            <PointsComponent #PointsComponent></PointsComponent>
-            <!--  end:: RouteSteps -->
+            <div class="modal-footer">
+              <!--begin::Buttons-->
 
-            <!--end::Body-->
-          </div>
-          <div class="modal-footer">
-            <!--begin::Buttons-->
+              <button [disabled]="saving" type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6" (click)="close()">
+                {{ l('Close') }}
+              </button>
+              <create-or-edit-template-drop-down-button
+                *ngIf="(isShipper || isTachyonDealer || isCarrierSaas) && shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 0"
+                [entityType]="SavedEntityType.TripTemplate"
+                [jsonData]="tripAsJson"
+                [dropDirection]="'up'"
+                [customClass]="'btn btn-light-danger font-weight-bold  dropdown-toggle btn-elevate-hover mx-2'"
+                [disabled]="!CanCreateTemplate() || !shippingRequestTripsForm.form.valid"
+              ></create-or-edit-template-drop-down-button>
 
-            <button [disabled]="saving" type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6" (click)="close()">
-              {{ l('Close') }}
-            </button>
-            <create-or-edit-template-drop-down-button
-              *ngIf="isShipper || isTachyonDealer || isCarrierSaas"
-              [entityType]="SavedEntityType.TripTemplate"
-              [jsonData]="tripAsJson"
-              [dropDirection]="'up'"
-              [customClass]="'btn btn-light-danger font-weight-bold  dropdown-toggle btn-elevate-hover mx-2'"
-              [disabled]="!CanCreateTemplate() || !shippingRequestTripsForm.form.valid"
-            ></create-or-edit-template-drop-down-button>
-            <button
-              type="submit"
-              [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"
-              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
-              (click)="createOrEditTrip()"
-            >
-              {{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}
-            </button>
-            <!--end::Buttons-->
+              <dx-button
+                type="submit"
+                class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
+                [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"
+                text="{{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}"
+                (onClick)="isFormSubmitted = true"
+                [useSubmitBehavior]="true"
+                [validationGroup]="'shippingRequestTripsGroup'"
+              >
+              </dx-button>
+              <!--            <button-->
+              <!--              type="submit"-->
+              <!--              [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"-->
+              <!--              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"-->
+              <!--              (click)="createOrEditTrip()"-->
+              <!--            >-->
+              <!--              {{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}-->
+              <!--            </button>-->
+              <!--end::Buttons-->
+            </div>
           </div>
-        </div>
+        </dx-validation-group>
       </form>
     </div>
   </div>

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.Configuration;
 using TACHYON.Notifications.Dto;
 
 namespace TACHYON.Notifications
@@ -98,7 +99,14 @@ namespace TACHYON.Notifications
                 .Select(ns => ns.NotificationName)
                 .ToList();
 
-            output.Notifications.ForEach(n => n.IsSubscribed = subscribedNotifications.Contains(n.Name));
+            var subscribedEmails = await SettingManager.GetSettingValueForUserAsync(
+                AppSettings.UserManagement.SubscribedNotificationEmails, AbpSession.ToUserIdentifier());
+
+            output.Notifications.ForEach(n =>
+            {
+                n.IsSubscribed = subscribedNotifications.Contains(n.Name);
+                n.IsEmailSubscribed = subscribedEmails.Contains(n.Name);
+            });
 
             return output;
         }
@@ -108,6 +116,7 @@ namespace TACHYON.Notifications
             await SettingManager.ChangeSettingForUserAsync(AbpSession.ToUserIdentifier(),
                 NotificationSettingNames.ReceiveNotifications, input.ReceiveNotifications.ToString());
 
+            string subscribedNotificationEmails = string.Empty;
             foreach (var notification in input.Notifications)
             {
                 if (notification.IsSubscribed)
@@ -120,7 +129,13 @@ namespace TACHYON.Notifications
                     await _notificationSubscriptionManager.UnsubscribeAsync(AbpSession.ToUserIdentifier(),
                         notification.Name);
                 }
+
+                if (notification.IsEmailSubscribed)
+                    subscribedNotificationEmails += $"{notification.Name},";
             }
+
+            await SettingManager.ChangeSettingForUserAsync(AbpSession.ToUserIdentifier(),
+                AppSettings.UserManagement.SubscribedNotificationEmails, subscribedNotificationEmails);
         }
 
         public async Task DeleteNotification(EntityDto<Guid> input)

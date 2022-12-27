@@ -1,0 +1,17 @@
+::-ng-deep {
+    p-dropdown{ 
+        &.p-0 {
+            .p-inputtext {
+                padding: 0 !important;
+            }
+        }
+    }
+}
+
+p-dropdown{ 
+    &.p-0 {
+        .p-inputtext {
+            padding: 0 !important;
+        }
+    }
+}

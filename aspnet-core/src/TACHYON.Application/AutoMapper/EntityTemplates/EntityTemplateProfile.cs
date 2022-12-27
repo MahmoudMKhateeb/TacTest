@@ -19,7 +19,7 @@ namespace TACHYON.AutoMapper.EntityTemplates
                     x.MapFrom(i=> i.EntityType.GetEnumDescription() ?? i.EntityType.ToString()));
             CreateMap<ShippingRequest, CreateOrEditShippingRequestTemplateInputDto>()
                 .ForMember(x=> x.OriginCountryId,x=> x.MapFrom(i=> i.OriginCityFk.CountyId))
-                .ForMember(x=> x.DestinationCountryId,x=> x.MapFrom(i=> i.DestinationCityFk.CountyId))
+                //.ForMember(x=> x.DestinationCountryId,x=> x.MapFrom(i=> i.DestinationCityFk.CountyId))
                 .ForMember(x => x.ShippingRequestVasList,
                     x => x.MapFrom(i => i.ShippingRequestVases));
         }

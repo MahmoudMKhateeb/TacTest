@@ -12,7 +12,7 @@ using TACHYON.Penalties;
 namespace TACHYON.Invoices
 {
     [Table("Invoices")]
-    public class Invoice : FullAuditedEntity<long>, IMustHaveTenant
+    public class Invoice : FullAuditedEntity<long>, IMustHaveTenant, IHaveInvoiceStatus
     {
         public long? InvoiceNumber { get; set; }
         public int TenantId { get; set; }
@@ -22,6 +22,7 @@ namespace TACHYON.Invoices
         public InvoiceChannel Channel { get; set; }
         public DateTime DueDate { get; set; }
         public bool IsPaid { get; set; }
+        public DateTime? PaymentDate { get; set; }
         public string Note { get; set; }
         public decimal SubTotalAmount { get; set; }
         public decimal TotalAmount { get; set; }
@@ -35,5 +36,7 @@ namespace TACHYON.Invoices
         {
             Trips = new List<InvoiceTrip>();
         }
+
+        public InvoiceStatus Status { get; set; }
     }
 }

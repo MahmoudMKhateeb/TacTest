@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { BayanIntegrationResultsComponent } from './bayanIntegration/bayanIntegrationResults/bayanIntegrationResults.component';
 import { RegionsComponent } from './regions/regions/regions.component';
@@ -33,6 +33,8 @@ import { EntityDynamicParameterComponent } from './dynamic-entity-parameters/ent
 import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/entity-dynamic-parameter-value.component';
 import { DriversComponent } from '@app/admin/users/drivers/drivers.component';
 import { waybillsComponent } from './waybills/waybills';
+import { ActorInvoiceListComponent } from '@app/main/Invoices/ActorInvoices/actor-invoice-list/actor-invoice-list.component';
+import { ActorSubmitInvoicesComponent } from '@app/main/Invoices/actor-submit-invoices/actor-submit-invoices.component';
 
 @NgModule({
   imports: [

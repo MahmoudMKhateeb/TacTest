@@ -1,6 +1,8 @@
 ﻿using Abp.Application.Services.Dto;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace TACHYON.Shipping.Drivers.Dto
@@ -9,5 +11,9 @@ namespace TACHYON.Shipping.Drivers.Dto
     {
         public double lat { get; set; }
         public double lng { get; set; }
+
+        [JsonIgnore]
+        [DefaultValue(false)]
+        public bool ForceDeliverModeEnabled { get; set; }
     }
 }

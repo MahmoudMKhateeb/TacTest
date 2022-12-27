@@ -21,7 +21,7 @@
             [dataSource]="dataSource"
           >
             <dxo-remote-operations [filtering]="true" [sorting]="true" [grouping]="true"></dxo-remote-operations>
-            <dxo-search-panel [visible]="true"></dxo-search-panel>
+            <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
             <dxo-header-filter [visible]="true"></dxo-header-filter>
             <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true"> </dxo-editing>
 

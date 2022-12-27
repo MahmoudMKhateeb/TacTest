@@ -1,0 +1,92 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade tachyonDialer   {{ direction == 'rtl' ? ' rtl' : '' }} "
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" style="position: relative; z-index: 99999" (click)="close()" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+
+        <div class="form-body">
+          <div class="row">
+            <div class="row mb-4">
+              <div class="col-xl-6">
+                <label for="Shipper">{{ 'WaybillNumber' | localize }}</label>
+                <div class="input-group">
+                  <input
+                    id="input.waybillOrSubWaybillNumber"
+                    (keypress)="numberOnly($event)"
+                    [(ngModel)]="input.waybillOrSubWaybillNumber"
+                    name="input.waybillOrSubWaybillNumber"
+                    class="form-control"
+                    placeholder="{{ 'SearchWithThreeDot' | localize }}"
+                    type="text"
+                  />
+                </div>
+              </div>
+
+              <div class="col-xl-6">
+                <label for="input.containerNumber">{{ 'ContainerNumber' | localize }}</label>
+                <div class="input-group">
+                  <input
+                    id="input.containerNumber"
+                    (keypress)="numberOnly($event)"
+                    [(ngModel)]="input.containerNumber"
+                    name="input.containerNumber"
+                    class="form-control"
+                    placeholder="{{ 'SearchWithThreeDot' | localize }}"
+                    type="text"
+                  />
+                </div>
+              </div>
+
+              <div class="col-xl-6">
+                <label for="input.containerNumber">{{ 'AccountNumber' | localize }}</label>
+                <div class="input-group">
+                  <input
+                    id="input.AccountNumber"
+                    [(ngModel)]="input.accountNumber"
+                    name="input.accountNumber"
+                    class="form-control"
+                    placeholder="{{ 'SearchWithThreeDot' | localize }}"
+                    type="text"
+                  />
+                </div>
+              </div>
+
+              <div class="col-xl-6">
+                <div class="checkbox-list mb-2">
+                  <label for="paymentDate" class="checkbox">
+                    {{ 'PaymentDate' | localize }}
+                  </label>
+                </div>
+                <input
+                  class="form-control"
+                  name="paymentDate"
+                  #SampleDatePicker
+                  bsDatepicker
+                  readonly="readonly"
+                  [(date)]="paymentDate"
+                  datePickerMomentModifier
+                  [bsConfig]="{ adaptivePosition: true }"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" (click)="searchInvoice()" class="btn btn-primary">{{ l('search') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

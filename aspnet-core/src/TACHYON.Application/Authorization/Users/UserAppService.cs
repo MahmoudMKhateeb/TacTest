@@ -48,6 +48,7 @@ using TACHYON.Notifications;
 using TACHYON.Organizations.Dto;
 using TACHYON.Url;
 using static TACHYON.Authorization.Users.Nationalites;
+using TACHYON.Trucks;
 
 namespace TACHYON.Authorization.Users
 {
@@ -72,6 +73,7 @@ namespace TACHYON.Authorization.Users
         private readonly IRoleManagementConfig _roleManagementConfig;
         private readonly IRepository<User, long> _userRepository;
         private readonly IRepository<Tenant> _tenantRepository;
+        private readonly IRepository<Truck, long> _truckRepository;
         private readonly UserManager _userManager;
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
@@ -105,9 +107,9 @@ namespace TACHYON.Authorization.Users
             DocumentFilesAppService documentFilesAppService,
 
             WaslIntegrationManager waslIntegrationManager,
-            ISmsSender smsSender, 
+            ISmsSender smsSender,
             IRepository<User, long> userRepository, IRepository<Tenant> tenantRepository,
-            DocumentFilesManager documentFilesManager)
+            DocumentFilesManager documentFilesManager, IRepository<Truck, long> truckRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -137,6 +139,7 @@ namespace TACHYON.Authorization.Users
             _roleRepository = roleRepository;
 
             AppUrlService = NullAppUrlService.Instance;
+            _truckRepository = truckRepository;
         }
 
         public async Task<PagedResultDto<UserListDto>> GetUsers(GetUsersInput input)
@@ -165,19 +168,25 @@ namespace TACHYON.Authorization.Users
 
         public async Task<LoadResult> GetDrivers(GetDriversInput input)
         {
-            DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
-
-
-            var drivers = (from user in _userRepository.GetAllIncluding(x=> x.NationalityFk).AsNoTracking()
-                where user.IsDriver 
+            var drivers = (from user in _userRepository.GetAllIncluding(x => x.NationalityFk)
+                           .Include(x => x.DedicatedShippingRequestDrivers)
+                           .ThenInclude(x => x.ShippingRequest).AsNoTracking()
+                           where user.IsDriver 
                 join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
-                select new DriverMappingEntity(){ User = user, CompanyName = tenant.companyName})
+                let dedicatedDriver = user.DedicatedShippingRequestDrivers.FirstOrDefault(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy)
+                           select new DriverMappingEntity(){ 
+                    User = user,
+                    CompanyName = tenant.companyName,
+                    RentedStatus=user.DedicatedShippingRequestDrivers.Any(x=>x.Status==Shipping.Dedicated.WorkingStatus.Busy)? "Busy" :"Active",
+                    RentedShippingRequestReference = dedicatedDriver != null 
+                ? dedicatedDriver.ShippingRequest.ReferenceNumber : string.Empty, })
                 .Where(x=> x.User != null )
                 .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
 
             var result = await LoadResultAsync(drivers, input.LoadOptions);
             await FillIsMissingDocumentFiles(result);
+            FillAssignedTrucks(result);
             return result;
         }
 
@@ -185,7 +194,7 @@ namespace TACHYON.Authorization.Users
         {
             var ids = pagedResultDto.data.ToDynamicList<DriverListDto>().Select(x => x.Id);
             var documentTypesCount = await _documentTypeRepository.GetAll()
-                .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver)
+                .Where(doc => doc.DocumentsEntityId == DocumentsEntitiesEnum.Driver)
                 .Where(x => x.IsRequired)
                 .CountAsync();
 
@@ -208,6 +217,25 @@ namespace TACHYON.Authorization.Users
                 else
                 {
                     driverListDto.IsMissingDocumentFiles = true;
+                }
+            }
+        }
+
+        private void FillAssignedTrucks(LoadResult pagedResultDto)
+        {
+
+            var trucks = _truckRepository.GetAll().ToList();
+            foreach (DriverListDto driverListDto in pagedResultDto.data.ToDynamicList<DriverListDto>())
+            {
+                var DriverTrucks = trucks.Where(y => driverListDto.Id == y.DriverUserId).ToList();
+                int index = 0;
+                foreach (var t in DriverTrucks)
+                {
+                    if (index == 0)
+                        driverListDto.AssignedTruck = t.GetDisplayName();
+                    else
+                        driverListDto.AssignedTruck += $"{","} {t.GetDisplayName()}";
+                    index++;
                 }
             }
         }

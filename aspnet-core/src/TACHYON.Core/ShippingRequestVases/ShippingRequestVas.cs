@@ -5,6 +5,7 @@ using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
 using System.Collections.Generic;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.ShippingRequestTripVases;
 
 namespace TACHYON.ShippingRequestVases
@@ -34,5 +35,15 @@ namespace TACHYON.ShippingRequestVases
         public int NumberOfTrips { get; set; }
 
         public ICollection<ShippingRequestTripVas> ShippingRequestTripVases { get; set; }
+
+        public int? ActorShipperPriceId { get; set; }
+
+        [ForeignKey(nameof(ActorShipperPriceId))]
+        public ActorShipperPrice ActorShipperPrice { get; set; }
+        
+        public int? ActorCarrierPriceId { get; set; }
+
+        [ForeignKey(nameof(ActorCarrierPriceId))]
+        public ActorCarrierPrice ActorCarrierPrice { get; set; }
     }
 }

@@ -12,7 +12,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">
-          <span>{{ l('HeaderNormalPricePackageDetails') }}</span>
+          <span>{{ l('ViewPricePackageDetails') }}</span>
         </h4>
         <button type="button" class="close" (click)="close()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -25,16 +25,16 @@
             {{ normalPricePackage.displayName }}
           </div>
           <div class="col-6 mb-3">
-            <h6>{{ l('reference') }}:</h6>
+            <h6>{{ l('Reference') }}:</h6>
             {{ normalPricePackage.pricePackageId }}
           </div>
           <div class="col-6 mb-3">
-            <h6>{{ l('truckType') }} :</h6>
+            <h6>{{ l('TruckType') }} :</h6>
             {{ normalPricePackage.truckType }}
           </div>
           <div class="col-6 mb-3">
-            <h6>{{ l('routeType') }} :</h6>
-            {{ normalPricePackage.isMultiDrop ? l('MultipleDrop') : l('SingleDrop') }}
+            <h6>{{ l('RouteType') }} :</h6>
+            {{ normalPricePackage.isMultiDrop ? l('MultipleDrops') : l('SingleDrop') }}
           </div>
           <div class="col-6 mb-3">
             <h6>{{ l('DirectRequestPrice') }}:</h6>
@@ -45,7 +45,7 @@
             {{ normalPricePackage.tachyonMSRequestPrice }}
           </div>
           <div class="col-6 mb-3">
-            <h6>{{ l('MarcketPlaceRequestPrice') }}:</h6>
+            <h6>{{ l('MarketplaceRequestPrice') }}:</h6>
             {{ normalPricePackage.marcketPlaceRequestPrice }}
           </div>
           <div class="col-6 mb-3">
@@ -53,11 +53,11 @@
             {{ normalPricePackage.pricePerExtraDrop }}
           </div>
           <div class="col-6 mb-3">
-            <h6>{{ l('origin') }}:</h6>
+            <h6>{{ l('Origin') }}:</h6>
             {{ normalPricePackage.origin }}
           </div>
           <div class="col-6 mb-3">
-            <h6>{{ l('destination') }}:</h6>
+            <h6>{{ l('Destination') }}:</h6>
             {{ normalPricePackage.destination }}
           </div>
         </div>

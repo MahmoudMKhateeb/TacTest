@@ -4,7 +4,9 @@ export class TrackingSearchInput {
   shipper!: string;
   carrier!: string;
   WaybillNumber!: number;
+  transportTypeId!: number;
   truckTypeId!: number;
+  truckCapacityId!: number;
   originId!: number;
   destinationId!: number;
   fromDate!: moment.Moment | undefined;
@@ -14,4 +16,14 @@ export class TrackingSearchInput {
   routeTypeId!: ShippingRequestRouteType;
   status!: ShippingRequestTripStatus;
   shippingRequestReferance!: string;
+  packingTypeId!: number;
+  goodsOrSubGoodsCategoryId!: number;
+  plateNumberId!: string;
+  driverNameOrMobile!: string;
+  deliveryFromDate!: moment.Moment | undefined;
+  deliveryToDate!: moment.Moment | undefined;
+  containerNumber!: string;
+  isInvoiceIssued!: boolean;
+  isSubmittedPOD!: boolean;
+  requestTypeId!: number;
 }

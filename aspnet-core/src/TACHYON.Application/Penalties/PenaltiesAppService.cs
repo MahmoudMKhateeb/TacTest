@@ -68,9 +68,7 @@ namespace TACHYON.Penalties
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task CreateOrEdit(CreateOrEditPenaltyDto input)
         {
-            if (input.TenantId == input.DestinationTenantId)
-                throw new UserFriendlyException(L("DestinationCompanyShouldNotBeSourceCompany"));
-
+            await ValidateWaybills(input);
             if (!input.Id.HasValue)
             {
                 await Create(input);
@@ -80,17 +78,25 @@ namespace TACHYON.Penalties
                 await Update(input);
             }
         }
+
+
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task<CreateOrEditPenaltyDto> GetPenaltyForEditDto(long Id)
         {
             DisableTenancyFilters();
 
-            var penalty = await _penaltyRepository.FirstOrDefaultAsync(x => x.Id == Id && x.Status==PenaltyStatus.Draft);
+            var penalty = await _penaltyRepository
+                .GetAll()
+                .Include(x=>x.PenaltyItems)
+                .ThenInclude(x=>x.ShippingRequestTripFK)
+                .FirstOrDefaultAsync(x => x.Id == Id && x.Status==PenaltyStatus.Draft);
 
             if (penalty == null)
                 throw new UserFriendlyException("ThePenaltyDoseNotFounded");
 
-            return ObjectMapper.Map<CreateOrEditPenaltyDto>(penalty);
+            var list= ObjectMapper.Map<CreateOrEditPenaltyDto>(penalty);
+
+            return list;
         }
 
         [RequiresFeature(AppFeatures.TachyonDealer)]
@@ -171,14 +177,19 @@ namespace TACHYON.Penalties
         }
 
         [RequiresFeature(AppFeatures.TachyonDealer)]
-        public async Task<List<GetAllWaybillsDto>> GetAllWaybillsByCompany(int companyTenantId, int? destinationCompanyTenantId)
+        public async Task<List<PenaltyItemDto>> GetAllWaybillsByCompany(int? companyTenantId, int? destinationCompanyTenantId)
         {
             DisableTenancyFilters();
             var trips= await _shippingRequestTripRepository.GetAll()
-                .Where(x => x.ShippingRequestFk.TenantId == companyTenantId)
-                .WhereIf(destinationCompanyTenantId != null, x => x.ShippingRequestFk.CarrierTenantId == destinationCompanyTenantId)
+                .WhereIf(companyTenantId!=null, x => x.ShippingRequestFk.TenantId == companyTenantId || x.ShippingRequestFk.CarrierTenantId == companyTenantId)
+                .WhereIf(destinationCompanyTenantId != null, x => x.ShippingRequestFk.CarrierTenantId == destinationCompanyTenantId || x.ShippingRequestFk.TenantId == destinationCompanyTenantId)
                 .ToListAsync();
-            return ObjectMapper.Map<List<GetAllWaybillsDto>>(trips);
+            return trips.Select(x => new PenaltyItemDto
+            {
+                ShippingRequestTripId = x.Id,
+                WaybillNumber = x.WaybillNumber.Value.ToString()
+            }).ToList();
+            //return ObjectMapper.Map<List<PenaltyItemDto>>(trips);
         }
 
 
@@ -192,7 +203,7 @@ namespace TACHYON.Penalties
         public async Task<List<GetAllCompanyForDropDownDto>> GetAllCompanyForDropDown()
         {
             return await _tenantRepository.GetAll()
-                .Where(x => x.EditionId == ShipperEditionId || x.EditionId == CarrierEditionId)
+                .Where(x => x.EditionId != TachyonEditionId)
                 .Select(x => new GetAllCompanyForDropDownDto { Id = x.Id, DisplayName = x.TenancyName }).ToListAsync();
         }
         #endregion
@@ -201,10 +212,13 @@ namespace TACHYON.Penalties
         private async Task Create(CreateOrEditPenaltyDto model)
         {
             var peanlty = ObjectMapper.Map<Penalty>(model);
-            peanlty.CommissionType = PriceOffers.PriceOfferCommissionType.CommissionValue;
+            //peanlty.CommissionType = PriceOffers.PriceOfferCommissionType.CommissionValue;
             var value = model.CommissionPercentageOrAddValue;
             var taxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
-            var commestion =  _penaltyManager.CalculateValues(model.ItmePrice, model.CommissionType, value, value, value, taxVat);
+
+
+            //calculate for penalty
+            var commestion =  _penaltyManager.CalculateValues(model.CommissionType, value, value, value, taxVat, model.PenaltyItems);
             var penalty = ObjectMapper.Map(commestion,peanlty);
             penalty.TaxVat = taxVat;
             await _penaltyRepository.InsertAsync(penalty);
@@ -216,9 +230,20 @@ namespace TACHYON.Penalties
             var output = ObjectMapper.Map(model, penalty);
             var value = output.CommissionPercentageOrAddValue;
             var taxVat = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
-            var commestion = _penaltyManager.CalculateValues(output.ItmePrice, output.CommissionType, value, value, value, taxVat);
+            var commestion = _penaltyManager.CalculateValues( output.CommissionType, value, value, value, taxVat, model.PenaltyItems);
              ObjectMapper.Map(commestion, output);
            // ObjectMapper.Map(output, penalty);
+        }
+
+        private async Task ValidateWaybills(CreateOrEditPenaltyDto input)
+        {
+            var waybillsList = await GetAllWaybillsByCompany(input.TenantId, input.DestinationTenantId);
+            var inputWaybills = input.PenaltyItems.Where(x => x.WaybillNumber != null);
+
+            if (inputWaybills.Where(p => waybillsList.All(x => x.WaybillNumber != p.WaybillNumber)).Any())
+            {
+                throw new UserFriendlyException(L("SomeWaybillsNoAreInvalid"));
+            }
         }
         #endregion
 

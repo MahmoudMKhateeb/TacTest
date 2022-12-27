@@ -16,9 +16,9 @@ import { filter } from '@node_modules/rxjs/internal/operators';
 import { DOCUMENT } from '@angular/common';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { DirectRequestComponent } from '@app/main/shippingRequests/shippingRequests/directrequest/direct-request.component';
-import { finalize, retry } from 'rxjs/operators';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { retry } from 'rxjs/operators';
 import { NotesComponent } from './notes/notes.component';
+import * as moment from '@node_modules/moment';
 
 @Component({
   templateUrl: './view-shippingRequest.component.html',
@@ -38,6 +38,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   entityTypes = SavedEntityType;
   type = 'ShippingRequest';
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequests'), '/app/main/shippingRequests/shippingRequests')];
+  rentalRange: { rentalStartDate: moment.Moment; rentalEndDate: moment.Moment } = null;
 
   constructor(
     injector: Injector,
@@ -49,12 +50,13 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     @Inject(DOCUMENT) private _document: Document
   ) {
     super(injector);
-    this.shippingRequestforView = new GetShippingRequestForViewOutput();
-    this.shippingRequestforView.shippingRequest = new ShippingRequestDto();
-    this.activeShippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
   }
 
   ngOnInit(): void {
+    this.shippingRequestforView = new GetShippingRequestForViewOutput();
+    this.shippingRequestforView.shippingRequest = new ShippingRequestDto();
+    this.shippingRequestforView.shippingRequest.init();
+    this.activeShippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
     this.show(this._activatedRoute.snapshot.queryParams['id']);
     this._router.events.pipe(filter((event: RouterEvent) => event instanceof NavigationEnd)).subscribe(() => {
       this.show(this._activatedRoute.snapshot.queryParams['id']);
@@ -67,6 +69,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     //update the Trips Shared Service With RouteType
     //routeType id is not reterned from backend
     this._trip.updateShippingRequest(this.shippingRequestforView);
+    this.changeDetectorRef.detectChanges();
   }
 
   show(shippingRequestId: number): void {
@@ -75,6 +78,12 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       .pipe(retry(3))
       .subscribe((result) => {
         this.shippingRequestforView = result;
+        this.shippingRequestforView.rentalStartDate = moment(this.shippingRequestforView?.rentalStartDate);
+        this.shippingRequestforView.rentalEndDate = moment(this.shippingRequestforView?.rentalEndDate);
+        this.rentalRange = {
+          rentalStartDate: this.shippingRequestforView?.rentalStartDate,
+          rentalEndDate: this.shippingRequestforView?.rentalEndDate,
+        };
         this.vases = result.shippingRequestVasDtoList;
         this.breadcrumbs.push(new BreadcrumbItem('' + result.referenceNumber));
         this.activeShippingRequestId = this.shippingRequestforView.shippingRequest.id;
@@ -184,6 +193,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     let isRequestTypeTachyonManageService = this.shippingRequestforView.shippingRequest.requestType === ShippingRequestType.TachyonManageService;
     // if the user is carrier
     if (
+      this.shippingRequestforView.shippingRequestFlag === 0 &&
       !this.isCarrier &&
       !this.isShipper &&
       isNotMarketPlaceRequest &&

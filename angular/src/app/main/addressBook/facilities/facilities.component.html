@@ -4,7 +4,7 @@
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
-        <button *ngIf="isGranted('Pages.Facilities.Create')" (click)="createFacility()" class="btn btn-primary blue">
+        <button *ngIf="isGranted('Pages.Facilities.Create') || isTachyonDealerOrHost" (click)="createFacility()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewFacility') }}
         </button>
       </div>
@@ -182,6 +182,10 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th [hidden]="!isGrantedAny('Pages.Facilities.Edit', 'Pages.Facilities.Delete')">{{ l('Actions') }}</th>
+                    <th *ngIf="isTachyonDealerOrHost" pSortableColumn="Tenant.Name">
+                      {{ l('CompanyName') }}
+                      <p-sortIcon field="CountryDisplayName"></p-sortIcon>
+                    </th>
                     <th pSortableColumn="cityFk.CountyFk.displayName">
                       {{ l('Country') }}
                       <p-sortIcon field="CountryDisplayName"></p-sortIcon>
@@ -195,7 +199,7 @@
                       {{ l('FacilityName') }}
                       <p-sortIcon field="facility.name"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="address">
+                    <th width="20%" pSortableColumn="address">
                       {{ l('Address') }}
                       <p-sortIcon field="facility.address"></p-sortIcon>
                     </th>
@@ -245,6 +249,10 @@
                         </ul>
                       </div>
                     </td>
+                    <td *ngIf="isTachyonDealerOrHost">
+                      <span class="ui-column-title"> {{ l('Shipper') }}</span>
+                      {{ record.shipperName }}
+                    </td>
                     <td>
                       <span class="ui-column-title"> {{ l('Country') }}</span>
                       {{ record.country }}
@@ -257,7 +265,7 @@
                       <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.facility.name }}
                     </td>
-                    <td>
+                    <td width="20%">
                       <span class="ui-column-title"> {{ l('Address') }}</span>
                       {{ record.facility.address }}
                     </td>

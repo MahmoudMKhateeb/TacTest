@@ -161,11 +161,32 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
+        public void ValidateDedicatedRequestTripDates(ICreateOrEditTripDtoBase input, ShippingRequest request)
+        {
+            if (
+                input.StartTripDate?.Date > request.RentalEndDate?.Date ||
+                input.StartTripDate?.Date < request.RentalStartDate?.Date ||
+                (input.EndTripDate != null && input.EndTripDate.Value.Date > request.RentalEndDate?.Date) ||
+                (input.EndTripDate != null && input.EndTripDate.Value.Date < request.RentalStartDate?.Date)
+            )
+            {
+                throw new UserFriendlyException(L("TheTripDateRangeMustBetweenDedicatedShippingRequestRentalDate"));
+            }
+        }
+
         public void ValidateNumberOfDrops(int dropsCount, ShippingRequest request)
         {
             if (dropsCount != request.NumberOfDrops)
             {
                 throw new UserFriendlyException(L("The number of drop points must be" + request.NumberOfDrops));
+            }
+        }
+
+        public void ValidateDedicatedNumberOfDrops(int dropsCount, int numberOfDrops)
+        {
+            if (dropsCount != numberOfDrops)
+            {
+                throw new UserFriendlyException(L("The number of drop points must be" + numberOfDrops));
             }
         }
 

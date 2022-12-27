@@ -100,15 +100,16 @@ namespace TACHYON.Common
             return new GetDefaultEditionNameOutput { Name = EditionManager.DefaultEditionName };
         }
 
-        public IEnumerable<ISelectItemDto> GetAutoCompleteTenants(string name, string EdtionName)
+        public async Task<IEnumerable<ISelectItemDto>> GetAutoCompleteTenants(string name, string EdtionName)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             name = name.ToLower().Trim();
-            var query =
-                _Tenant.GetAll().Where(t =>
+            var query = await 
+                _Tenant.GetAllIncluding(x=> x.Edition).Where(t =>
                         t.IsActive && (t.Name.ToLower().Contains(name) || t.TenancyName.ToLower().Contains(name)) &&
                         (string.IsNullOrEmpty(EdtionName) ||
                          t.Edition.DisplayName.ToLower().Contains(EdtionName.ToLower().Trim())))
-                    .Select(t => new SelectItemDto { DisplayName = t.Name, Id = t.Id.ToString() }).Take(20).ToList();
+                    .Select(t => new SelectItemDto { DisplayName = t.Name, Id = t.Id.ToString() }).Take(20).ToListAsync();
 
             return query;
         }

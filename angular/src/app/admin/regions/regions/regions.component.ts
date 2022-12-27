@@ -47,7 +47,9 @@ export class RegionsComponent extends AppComponentBase {
   getRegions(event?: LazyLoadEvent) {
     if (this.primengTableHelper.shouldResetPaging(event)) {
       this.paginator.changePage(0);
-      return;
+      if (this.primengTableHelper.records && this.primengTableHelper.records.length > 0) {
+        return;
+      }
     }
 
     this.primengTableHelper.showLoadingIndicator();

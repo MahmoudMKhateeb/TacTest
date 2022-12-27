@@ -44,7 +44,8 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   Tenants: ISelectItemDto[] = [];
   Waybills: number[] = [];
   SelectedWaybills: SelectItemDto[] = [];
-  private isForShipper: boolean;
+  edition: string;
+  isBrokerPayableInvoice: boolean;
   dataSource: DynamicInvoiceItemDto[] = [];
   dataSourceForEdit: DynamicInvoiceItemDto;
   notes: any;
@@ -77,16 +78,17 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     }
     this.getAllTrucksTypeForTableDropdown();
     this.GetAllCitiesForTableDropdown();
+    this.isBrokerPayableInvoice = true;
   }
 
-  show(forWho: number, id?: number, isView = false): void {
+  show(forWho: string, id?: number, isView = false): void {
     this.isView = isView;
     this.getAllTrucksTypeForTableDropdown();
     this.GetAllCitiesForTableDropdown();
     if (isNotNullOrUndefined(id)) {
       this.getForView(id);
     }
-    this.isForShipper = forWho === 1;
+    this.edition = forWho;
     this.Tenant = undefined;
     this.Waybills = undefined;
     this.SelectedWaybills = undefined;
@@ -131,13 +133,26 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
         item.containerNumber = null;
       }
     });
-    const body = new CreateOrEditDynamicInvoiceDto({
-      id: isNotNullOrUndefined(this.root.id) ? this.root.id : null,
-      creditTenantId: this.isForShipper ? Number(this.Tenant.id) : null,
+    const body = new CreateOrEditDynamicInvoiceDto();
+    /*
+    * {
+      id: ,
+      creditTenantId: this.isForShipper ?  : null,
       debitTenantId: !this.isForShipper ? Number(this.Tenant.id) : null,
       notes: this.notes,
       items: items,
-    });
+    }
+    * */
+
+    body.id = isNotNullOrUndefined(this.root.id) ? this.root.id : null;
+    body.items = items;
+    body.notes = this.notes;
+    if (this.edition === 'shipper' || (this.edition === 'broker' && this.isBrokerPayableInvoice)) {
+      body.creditTenantId = Number(this.Tenant.id);
+    } else if (this.edition === 'carrier' || (this.edition === 'broker' && !this.isBrokerPayableInvoice)) {
+      body.debitTenantId = Number(this.Tenant.id);
+    }
+
     this._DynamicInvoiceServiceProxy.createOrEdit(body).subscribe(
       (result) => {
         this.notify.info(this.l('SavedSuccessfully'));
@@ -166,7 +181,8 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
 
   close(): void {
     this.root = new DynamicInvoiceForViewDto();
-    this.isForShipper = false;
+    this.isBrokerPayableInvoice = false;
+    this.edition = undefined;
     this.active = false;
     this.modal.hide();
     this.Tenants = [];
@@ -180,8 +196,8 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     this.activeIndex = null;
   }
 
-  search(event, initValue = false) {
-    this._CommonServ.getAutoCompleteTenants(event.query, this.isForShipper ? 'shipper' : 'carrier').subscribe((result) => {
+  search(tenantName: string, initValue = false) {
+    this._CommonServ.getAutoCompleteTenants(tenantName, this.edition).subscribe((result) => {
       this.Tenants = result;
       if (initValue) {
         this.Tenant = this.Tenants[0];
@@ -213,7 +229,8 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
       (data) => {
         this.root = data;
         this.notes = this.root.notes;
-        this.search({ query: this.isForShipper ? data.creditCompany : data.debitCompany }, true);
+        let tenantName = isNotNullOrUndefined(data.creditCompany) ? data.creditCompany : data.debitCompany;
+        this.search(tenantName, true);
         this.dataSource = this.root.items;
         if (this.root.items.length > 0) {
           this.root.items.map((item) => {
@@ -330,12 +347,7 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   }
 
   clearOnSelect() {
-    this.dataSourceForEdit.destinationCityId = null;
-    this.dataSourceForEdit.workDate = null;
-    this.dataSourceForEdit.containerNumber = null;
-    this.dataSourceForEdit.quantity = null;
-    this.dataSourceForEdit.originCityId = null;
-    this.dataSourceForEdit.truckId = null;
+    this.clearWaybillRelatedFields();
     this.fillDynamicInvoicItem(Number(this.dataSourceForEdit.waybillNumber), this.dataSourceForEdit);
   }
 
@@ -382,5 +394,14 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
 
   isFormInvalid(Form: NgForm): boolean {
     return Form.invalid || !this.root.items || this.root.items.length === 0 || isNotNullOrUndefined(this.dataSourceForEdit);
+  }
+
+  clearWaybillRelatedFields() {
+    this.dataSourceForEdit.destinationCityId = null;
+    this.dataSourceForEdit.workDate = null;
+    this.dataSourceForEdit.containerNumber = null;
+    this.dataSourceForEdit.quantity = null;
+    this.dataSourceForEdit.originCityId = null;
+    this.dataSourceForEdit.truckId = null;
   }
 }

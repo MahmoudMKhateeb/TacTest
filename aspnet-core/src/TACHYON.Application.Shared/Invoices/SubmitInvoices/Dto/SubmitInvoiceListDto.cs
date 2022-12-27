@@ -19,6 +19,9 @@ namespace TACHYON.Invoices.SubmitInvoices.Dto
         public DateTime CreationTime { get; set; }
         public DateTime? DueDate { get; set; }
         public decimal TotalAmount { get; set; }
+        public DateTime? PaymentDate { get; set; }
+        public DateTime? AcceptanceDate { get; set; }
+        public DateTime? SubmittedDate { get; set; }
         public string InvoiceChannelTitle { get { return Channel.GetEnumDescription(); } }
     }
 }

@@ -11,7 +11,7 @@
   <div class="modal-dialog modal-lg" style="max-width: 1200px">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">MatchingPricePackage</h5>
+        <h5 class="modal-title">{{'MatchingPricePackages' | localize}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
@@ -20,19 +20,19 @@
         <form #Form="ngForm" novalidate>
           <div class="row">
             <div class="col-3 mb-3">
-              <h6>{{ l('reference') }}:</h6>
+              <h6>{{ l('Reference') }}:</h6>
               {{ offer.pricePackageId }}
             </div>
             <div class="col-3 mb-3">
-              <h6>{{ l('truckType') }} :</h6>
+              <h6>{{ l('TruckType') }} :</h6>
               {{ offer.truckType }}
             </div>
             <div class="col-3 mb-3">
-              <h6>{{ l('origin') }}:</h6>
+              <h6>{{ l('Origin') }}:</h6>
               {{ offer.origin }}
             </div>
             <div class="col-3 mb-3">
-              <h6>{{ l('destination') }}:</h6>
+              <h6>{{ l('Destination') }}:</h6>
               {{ offer.destination }}
             </div>
           </div>
@@ -42,13 +42,13 @@
                 <tr class="table-active">
                   <th style="width: 200px"></th>
                   <th style="width: 150px">{{l('Qty')}}</th>
-                  <th style="width: 350px">itemPrice</th>
+                  <th style="width: 350px">{{'itemPrice' | localize}}</th>
                   <th>{{l('Total Price of All Trips Pre-Commission Pre-VAT')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Trip</td>
+                  <td>{{'Trip' | localize}}</td>
                   <td>{{offer.quantity}}</td>
                   <td>{{offer.itemPrice}}</td>
                   <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
@@ -68,7 +68,7 @@
                   <th style="width: 200px">{{l('VasName')}}</th>
                   <th style="width: 150px">{{l('Qty')}}</th>
                   <th style="width: 350px">{{l('Price')}}</th>
-                  <th>{{l('Total Price of All VAS Pre-Commission Pre-VAT')}}</th>
+                  <th>{{l('TotalPriceOfAllVASPre-CommissionPre-VAT')}}</th>
                 </tr>
               </thead>
               <tbody>
@@ -90,21 +90,23 @@
             <table class="table table-sm table-bordered rounded" *ngIf="feature.isEnabled('App.TachyonDealer')">
               <thead>
                 <tr class="table-active">
-                  <th style="width: 200px">field</th>
-                  <th style="width: 150px">Price Pre commission</th>
-                  <th style="width: 350px">Total commission</th>
-                  <th>Total Price post commission</th>
+                  <th style="width: 200px">
+                    <!--                      field-->
+                  </th>
+                  <th style="width: 150px">{{l('PricePreCommission')}}</th>
+                  <th style="width: 350px">{{l('TotalCommission')}}</th>
+                  <th>{{l('TotalPricePostCommission')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Trip</td>
+                  <td>{{l('Trip')}}</td>
                   <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
                   <td>{{offer.itemsTotalCommission}}</td>
                   <td>{{offer.itemsTotalPricePostCommissionPreVat}}</td>
                 </tr>
                 <tr>
-                  <td>VAS</td>
+                  <td>{{l('VAS')}}</td>
                   <td>{{offer.detailsTotalPricePreCommissionPreVat}}</td>
                   <td>{{offer.detailsTotalCommission}}</td>
                   <td>{{offer.detailsTotalPricePostCommissionPreVat}}</td>
@@ -124,13 +126,13 @@
                   <tr class="table-active">
                     <th style="width: 200px"></th>
                     <th style="width: 150px">{{l('Qty')}}</th>
-                    <th style="width: 350px">itemPrice</th>
+                    <th style="width: 350px">{{l('itemPrice')}}</th>
                     <th>{{l('Total Price of All Trips Pre-VAT')}}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Trip</td>
+                    <td>{{l('Trip')}}</td>
                     <td>{{offer.quantity}}</td>
                     <td>{{isCarrier? offer.itemPrice :offer.itemSubTotalAmountWithCommission}}</td>
                     <td>{{isCarrier? offer.itemsTotalPricePreCommissionPreVat :offer.itemsTotalPricePostCommissionPreVat}}</td>
@@ -176,16 +178,16 @@
                 <thead>
                   <tr class="table-active">
                     <th style="width: 700px"></th>
-                    <th>{{l('Total Vat')}}</th>
+                    <th>{{l('TotalVatAmount')}}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{{l('total VAT for Trip')}}</td>
+                    <td>{{l('TotalVATForTrip')}}</td>
                     <td>{{isCarrier? offer.itemsTotalVatAmountPreCommission :offer.itemsTotalVatPostCommission}}</td>
                   </tr>
                   <tr>
-                    <td>total VAT for VAS</td>
+                    <td>{{l('TotalVATForVas')}}</td>
                     <td>{{isCarrier?offer.detailsTotalVatPostCommission : offer.detailsTotalVatAmountPreCommission}}</td>
                   </tr>
                   <tr>
@@ -203,18 +205,18 @@
               <thead>
                 <tr class="table-active">
                   <th style="width: 350px"></th>
-                  <th style="width: 350px">Pre commission</th>
-                  <th>Post commission</th>
+                  <th style="width: 350px">{{l('PreCommission')}}</th>
+                  <th>{{l('PostCommission')}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>total VAT for Trip</td>
+                  <td>{{l('TotalVATForTrip')}}</td>
                   <td>{{offer.itemsTotalVatAmountPreCommission}}</td>
                   <td>{{offer.itemsTotalVatPostCommission}}</td>
                 </tr>
                 <tr>
-                  <td>total VAT for VAS</td>
+                  <td>{{l('TotalVATForVas')}}</td>
                   <td>{{offer.detailsTotalVatAmountPreCommission}}</td>
                   <td>{{offer.detailsTotalVatPostCommission}}</td>
                 </tr>
@@ -233,7 +235,7 @@
                 <tr class="table-active">
                   <th style="width: 350px"></th>
                   <th style="width: 350px"></th>
-                  <th>Total Price Post Vat</th>
+                  <th>{{l('TotalPricePostVat')}}</th>
                 </tr>
               </thead>
               <tbody>

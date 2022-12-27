@@ -1,0 +1,289 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-xl custom-xl">
+    <div class="modal-content">
+      <form *ngIf="active" #Form="ngForm" novalidate autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{ !isView ? (!root.id ? l('CreateDynamicInvoice') : l('UpdateDynamicInvoice')) : l('View') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-md-6 col-lg-6">
+              <label class="form-label" for="Tenant">
+                {{ l('Tenant') }}
+                <span *ngIf="!isView" class="required-fileds"> *</span>
+              </label>
+              <p-autoComplete
+                class="p-0"
+                styleClass="w-100"
+                inputStyleClass="form-control"
+                name="Tenant"
+                id="Tenant"
+                [(ngModel)]="root.tenantId"
+                [suggestions]="Tenants"
+                (completeMethod)="search($event)"
+                (onSelect)="getDedicatedRequestsByTenant($event)"
+                field="displayName"
+                dataKey="id"
+                [forceSelection]="true"
+                required
+                (keydown.enter)="$event.preventDefault(); $event.stopPropagation()"
+                [disabled]="isView"
+              ></p-autoComplete>
+            </div>
+            <div class="form-group col-md-6 col-lg-6">
+              <label>{{ l('SelectaShippingRequest') }} <span class="required-fileds">*</span></label>
+              <dx-select-box
+                id="dedicatedShippingRequests"
+                name="dedicatedShippingRequests"
+                [(value)]="root.shippingRequestId"
+                [dataSource]="dedicatedShippingRequests"
+                [searchEnabled]="true"
+                displayExpr="displayName"
+                valueExpr="id"
+                placeholder="{{ l('SelectRequest') }}"
+                [disabled]="!root.tenantId || isView"
+                (onValueChanged)="getDedicateTrucksByRequest($event)"
+              >
+              </dx-select-box>
+            </div>
+            <div class="form-group col-md-12 col-lg-12">
+              <label class="form-label mr-2" for="notes">{{ l('Notes') }}</label>
+              <textarea
+                [disabled]="isView"
+                class="form-control"
+                name="notes"
+                id="notes"
+                [(ngModel)]="root.notes"
+                rows="4"
+                cols="30"
+                maxlength="500"
+                pInputTextarea
+              ></textarea>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end mb-2">
+            <button *ngIf="!isView && !dataSourceForEdit && !!root.shippingRequestId" class="btn btn-sm btn-success" (click)="addNew()">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </button>
+          </div>
+          <table class="table">
+            <tr>
+              <th>{{ l('NumberOfDays') }}</th>
+              <th>{{ l('WorkingDayType') }}</th>
+              <th>{{ l('SubTotalAmount') }}</th>
+              <th>{{ l('VatAmount') }}</th>
+              <th>{{ l('TaxVat') }}</th>
+              <th>{{ l('TotalAmount') }}</th>
+              <th>{{ l('Remarks') }}</th>
+              <th style="width: 8rem"></th>
+            </tr>
+            <tr *ngFor="let row of root.dedicatedInvoiceItems; let i = index">
+              <td>{{ row.numberOfDays }}</td>
+              <td>{{ getWorkingDayTitle(row.workingDayType) }}</td>
+              <td>{{ row.itemSubTotalAmount }}</td>
+              <td>{{ row.vatAmount }}</td>
+              <td>{{ taxVat }}</td>
+              <td>{{ row.itemTotalAmount }}</td>
+              <td>{{ row.remarks }}</td>
+              <td>
+                <div *ngIf="!isView" class="d-flex">
+                  <button class="btn btn-xs btn-info" (click)="editRow(i, row)">
+                    <i class="fa fa-edit" aria-hidden="true"></i>
+                  </button>
+                  <button class="btn btn-xs btn-danger" (click)="deleteRow(i)">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr class="table-dark-custom" *ngIf="root?.dedicatedInvoiceItems?.length > 0">
+              <td>{{ 'Total' | localize }}</td>
+              <td></td>
+              <td>{{ getTotalByAttributeName('itemSubTotalAmount') }}</td>
+              <td>{{ getTotalByAttributeName('vatAmount') }}</td>
+              <td></td>
+              <td>{{ getTotalByAttributeName('itemTotalAmount') }}</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+          <div class="row" *ngIf="!!dataSourceForEdit">
+            <div class="col-6 mb-4">
+              <div>
+                <label>{{ l('SelectaTruck') }} <span class="required-fileds">*</span></label>
+                <dx-select-box
+                  id="dedicateTrucks"
+                  name="dedicateTrucks"
+                  [(value)]="selectedDedicateTruckId"
+                  [dataSource]="dedicateTrucks"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  placeholder="{{ l('SelectaTruck') }}"
+                  [disabled]="!root.shippingRequestId"
+                >
+                </dx-select-box>
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="price">
+                  {{ l('NumberOfDays') }}
+                  <span class="required-fileds"> *</span>
+                </label>
+                <input
+                  required
+                  type="number"
+                  class="form-control"
+                  name="price"
+                  id="price"
+                  [(ngModel)]="dataSourceForEdit.numberOfDays"
+                  (ngModelChange)="calculateValues($event)"
+                />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="price">
+                  {{ l('PricePerDay') }}
+                  <span class="required-fileds"> *</span>
+                </label>
+                <input required type="number" class="form-control" name="pricePerDay" id="pricePerDay" [(ngModel)]="pricePerDay" disabled />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="price">
+                  {{ l('WorkingDayType') }}
+                  <span class="required-fileds"> *</span>
+                </label>
+                <dx-select-box
+                  id="workingDayType"
+                  name="workingDayType"
+                  [(value)]="dataSourceForEdit.workingDayType"
+                  [dataSource]="allWorkingDayTypes"
+                  [searchEnabled]="true"
+                  displayExpr="value"
+                  valueExpr="key"
+                  placeholder="{{ l('SelectWorkingDayType') }}"
+                  required
+                >
+                </dx-select-box>
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="price">
+                  {{ l('SubTotalAmount') }}
+                  <span class="required-fileds"> *</span>
+                </label>
+                <input
+                  required
+                  type="number"
+                  class="form-control"
+                  name="itemSubTotalAmount"
+                  id="itemSubTotalAmount"
+                  [(ngModel)]="dataSourceForEdit.itemSubTotalAmount"
+                  disabled
+                />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="price">
+                  {{ l('TaxVat') }}
+                </label>
+                <input required type="number" class="form-control" name="taxVat" id="taxVat" [(ngModel)]="taxVat" disabled />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="price">
+                  {{ l('VatAmount') }}
+                </label>
+                <input
+                  required
+                  type="number"
+                  class="form-control"
+                  name="vatAmount"
+                  id="vatAmount"
+                  [(ngModel)]="dataSourceForEdit.vatAmount"
+                  disabled
+                />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="price">
+                  {{ l('VatAmount') }}
+                </label>
+                <input
+                  required
+                  type="number"
+                  class="form-control"
+                  name="itemTotalAmount"
+                  id="itemTotalAmount"
+                  [(ngModel)]="dataSourceForEdit.itemTotalAmount"
+                  disabled
+                />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="remarks">{{ l('Remarks') }}</label>
+                <textarea
+                  [disabled]="isView"
+                  class="form-control"
+                  name="remarks"
+                  id="remarks"
+                  [(ngModel)]="dataSourceForEdit.remarks"
+                  rows="3"
+                  cols="30"
+                  maxlength="500"
+                  pInputTextarea
+                ></textarea>
+              </div>
+            </div>
+            <div class="col-12 d-flex justify-content-end">
+              <button class="btn btn-sm btn-danger" (click)="cancelAddToArray()">
+                {{ l('Cancel') }}
+              </button>
+              <button class="btn btn-sm btn-success" (click)="saveToArray()">
+                {{ ('' + activeIndex).length > 0 ? l('Save') : l('Add') }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button *ngIf="isView" type="button" class="btn btn-default" (click)="close()">{{ l('Close') }}</button>
+          <button *ngIf="!isView" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            *ngIf="!isView"
+            type="submit"
+            class="btn btn-save blue"
+            [disabled]="isFormInvalid(Form)"
+            [buttonBusy]="Form.valid && saving"
+            [busyText]="l('SavingWithThreeDot')"
+            (click)="save()"
+          >
+            <i class="fa fa-save"></i> <span class="text-white">{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -203,7 +203,7 @@
                             [(ngModel)]="shippingRequest.shippingTypeId"
                             [class.is-invalid]="shippingType.touched && !shippingType.valid"
                             [class.is-valid]="shippingType.touched && shippingType.valid"
-                            (change)="shippingRequest.destinationCityId = undefined"
+                            (change)="shippingRequest.shippingRequestDestinationCities = undefined"
                             [disabled]="!allShippingTypes"
                           >
                             <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>
@@ -381,7 +381,7 @@
                         <div class="form-group">
                           <label><span class="required-fileds">*</span> {{ l('DestinationCity') }}</label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
-                            <select
+                            <!-- <select
                               #Destination="ngModel"
                               class="form-control"
                               name="destination"
@@ -400,7 +400,25 @@
                               >
                                 {{ item.displayName }}
                               </option>
-                            </select>
+                            </select> -->
+                            <p-multiSelect
+                              name="destinationCity"
+                              [options]="destinationCities"
+                              [(ngModel)]="shippingRequest.shippingRequestDestinationCities"
+                              optionLabel="cityName"
+                              [disabled]="
+                                shippingRequest.shippingTypeId == 1 || !shippingRequest.originCityId
+                                  ? true
+                                  : null || shippingRequest.routeTypeId == null
+                              "
+                              [selectedItemsLabel]="l('{0} items selected')"
+                              (ngModelChange)="validateShippingRequestType()"
+                              [style]="{ width: '100%' }"
+                              styleClass="form-control pt-1"
+                              [dataKey]="'cityId'"
+                              [selectionLimit]="shippingRequest.routeTypeId == 1 ? 1 : 10"
+                            >
+                            </p-multiSelect>
                           </div>
                           <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
                         </div>
@@ -544,6 +562,7 @@
                   [(ngModel)]="selectedVases"
                   optionLabel="vasName"
                   [dataKey]="'vasId'"
+                  (onClick)="changeVasListSelection($event)"
                 ></p-listbox>
               </div>
               <div class="col-sm-9">
@@ -557,7 +576,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let item of selectedVases; index as i">
+                    <tr *ngFor="let item of selectedVases; index as i; trackBy: trackByFunc">
                       <td>
                         {{ selectedVasesProperties[item.vasId]?.vasName }}
                       </td>
@@ -570,10 +589,10 @@
                           (keypress)="numberOnly($event)"
                           [required]="!selectedVasesProperties[item.vasId]?.vasCountDisabled"
                           class="form-control"
-                          name="Vas-Count{{ i }}"
                           [min]="selectedVasesProperties[item.vasId]?.vasCountDisabled ? 0 : 1"
                           [class.is-valid]="!selectedVasesProperties[item.vasId]?.vasCountDisabled && selectedVases[i].requestMaxCount > 0"
                           [class.is-invalid]="!selectedVasesProperties[item.vasId]?.vasCountDisabled && selectedVases[i].requestMaxCount == 0"
+                          [ngModelOptions]="{ standalone: true }"
                         />
                       </td>
                       <td>
@@ -584,11 +603,11 @@
                           [(ngModel)]="item.requestMaxAmount"
                           (keypress)="numberOnly($event)"
                           class="form-control"
-                          name="VasAmount2{{ i }}"
                           [min]="selectedVasesProperties[item.vasId]?.vasAmountDisabled ? 0 : 1"
                           [required]="!selectedVasesProperties[item.vasId]?.vasAmountDisabled"
                           [class.is-valid]="!selectedVasesProperties[item.vasId]?.vasAmountDisabled && selectedVases[i].requestMaxAmount > 0"
                           [class.is-invalid]="!selectedVasesProperties[item.vasId]?.vasAmountDisabled && selectedVases[i].requestMaxAmount == 0"
+                          [ngModelOptions]="{ standalone: true }"
                         />
                       </td>
                       <td>
@@ -598,11 +617,11 @@
                           [(ngModel)]="item.numberOfTrips"
                           (keypress)="numberOnly($event)"
                           class="form-control"
-                          name="numberOfTrips{{ i }}"
                           [min]="1"
                           [class.is-valid]="selectedVases[i].numberOfTrips <= shippingRequest.numberOfTrips"
                           [class.is-invalid]="!selectedVases[i].numberOfTrips || selectedVases[i].numberOfTrips > shippingRequest.numberOfTrips"
                           [max]="shippingRequest.numberOfTrips"
+                          [ngModelOptions]="{ standalone: true }"
                           required
                         />
                       </td>

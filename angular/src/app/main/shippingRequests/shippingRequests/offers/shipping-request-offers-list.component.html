@@ -4,7 +4,9 @@
       {{ l('Offers') }}
     </h3>
     <div class="card-toolbar" *ngIf="feature.isEnabled('App.TachyonDealer')">
-      <button class="btn btn-danger" (click)="ModelPrice.show(shippingRequestId)"><i class="flaticon2-paper-plane"></i> {{ l('SendOffer') }}</button>
+      <button class="btn btn-danger" (click)="ModelPrice.show(shippingRequestId, null, null, null, false, isForDedicated)">
+        <i class="flaticon2-paper-plane"></i> {{ l('SendOffer') }}
+      </button>
     </div>
   </div>
   <div class="card-body">
@@ -57,7 +59,7 @@
           <ng-template pTemplate="body" let-record="$implicit">
             <tr>
               <td style="width: 160px">
-                <button class="btn btn-danger btn-sm" (click)="ModelViewPrice.show(record.shippingRequestId, record.id)">
+                <button class="btn btn-danger btn-sm" (click)="ModelViewPrice.show(record.shippingRequestId, record.id, false, isForDedicated)">
                   <i class="flaticon-eye"></i> {{ l('PreviewOffer') }}
                 </button>
               </td>

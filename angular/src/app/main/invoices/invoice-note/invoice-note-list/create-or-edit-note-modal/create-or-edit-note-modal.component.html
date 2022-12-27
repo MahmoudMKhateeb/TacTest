@@ -33,6 +33,19 @@
           <div class="row">
             <!--  begin :: Body-->
             <div class="col-lg-12">
+              <label>{{ l('ReferenceNo') }} </label>
+              <div>
+                <input
+                  [(ngModel)]="form.invoiceNoteReferenceNumber"
+                  #NewVatAmount="ngModel"
+                  class="form-control"
+                  type="text"
+                  name="invoiceNoteReferenceNumber"
+                  id="invoiceNoteReferenceNumber"
+                />
+              </div>
+            </div>
+            <div class="col-lg-12">
               <label>{{ l('NoteType') }} <span class="required-fileds">*</span></label>
               <div>
                 <select

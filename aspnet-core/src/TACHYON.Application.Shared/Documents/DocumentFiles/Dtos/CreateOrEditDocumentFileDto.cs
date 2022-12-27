@@ -72,6 +72,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public long? RoutStepId { get; set; }
 
         public int? ShippingRequestTripId { get; set; }
+        public int? ActorId { get; set; }
 
         public string Number { get; set; }
         public string Notes { get; set; }

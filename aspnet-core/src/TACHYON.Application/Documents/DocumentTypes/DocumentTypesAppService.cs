@@ -27,13 +27,13 @@ using TACHYON.Storage;
 namespace TACHYON.Documents.DocumentTypes
 {
     [AbpAuthorize(AppPermissions.Pages_DocumentTypes)]
-    public class DocumentTypesAppService : TACHYONAppServiceBase, IDocumentTypesAppService
+    public class DocumentTypesAppService : TACHYONAppServiceBase
     {
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IDocumentTypesExcelExporter _documentTypesExcelExporter;
-        private readonly IRepository<DocumentsEntity, int> _documentsEntityRepository;
+        //private readonly IRepository<DocumentsEntity, int> _documentsEntityRepository;
         private readonly IRepository<DocumentTypeTranslation> _documentTypeTranslationRepository;
-        private readonly IRepository<DocumentsEntity, int> _documentEntityRepository;
+        //private readonly IRepository<DocumentsEntity, int> _documentEntityRepository;
         private readonly IRepository<Tenant> _Tenant;
         private readonly IRepository<Edition, int> _editionRepository;
         private readonly IBinaryObjectManager _binaryObjectManager;
@@ -42,10 +42,11 @@ namespace TACHYON.Documents.DocumentTypes
         private readonly DocumentFilesManager _documentFilesManager;
 
 
-        public DocumentTypesAppService(IRepository<DocumentsEntity, int> documentEntityRepository,
+        public DocumentTypesAppService(
+            //IRepository<DocumentsEntity, int> documentEntityRepository,
             IRepository<DocumentType, long> documentTypeRepository,
             IDocumentTypesExcelExporter documentTypesExcelExporter,
-            IRepository<DocumentsEntity, int> documentsEntityRepository,
+            //IRepository<DocumentsEntity, int> documentsEntityRepository,
             IRepository<DocumentTypeTranslation> documentTypeTranslationRepository,
             IRepository<Edition, int> editionRepository,
             IBinaryObjectManager BinaryObjectManager,
@@ -56,10 +57,10 @@ namespace TACHYON.Documents.DocumentTypes
         {
             _documentTypeRepository = documentTypeRepository;
             _documentTypesExcelExporter = documentTypesExcelExporter;
-            _documentsEntityRepository = documentsEntityRepository;
+            //_documentsEntityRepository = documentsEntityRepository;
             _documentTypeTranslationRepository = documentTypeTranslationRepository;
             _editionRepository = editionRepository;
-            _documentEntityRepository = documentEntityRepository;
+            //_documentEntityRepository = documentEntityRepository;
             _binaryObjectManager = BinaryObjectManager;
             _tempFileCacheManager = tempFileCacheManager;
             _unitOfWorkManager = unitOfWorkManager;
@@ -181,50 +182,50 @@ namespace TACHYON.Documents.DocumentTypes
             }
         }
 
-        public async Task<FileDto> GetDocumentTypesToExcel(GetAllDocumentTypesForExcelInput input)
-        {
-            var filteredDocumentTypes = _documentTypeRepository.GetAll()
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
-                    e => false || e.DisplayName.Contains(input.Filter) ||
-                         e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
-                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
-                    e => e.DisplayName == input.DisplayNameFilter)
-                .WhereIf(input.IsRequiredFilter > -1,
-                    e => (input.IsRequiredFilter == 1 && e.IsRequired) ||
-                         (input.IsRequiredFilter == 0 && !e.IsRequired))
-                .WhereIf(input.HasExpirationDateFilter > -1,
-                    e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) ||
-                         (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                .WhereIf(input.RequiredFromFilter.HasValue, e => e.DocumentsEntityId == (int)input.RequiredFromFilter);
+        //public async Task<FileDto> GetDocumentTypesToExcel(GetAllDocumentTypesForExcelInput input)
+        //{
+        //    var filteredDocumentTypes = _documentTypeRepository.GetAll()
+        //        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+        //            e => false || e.DisplayName.Contains(input.Filter) ||
+        //                 e.DocumentsEntityId.DisplayName.Contains(input.Filter))
+        //        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter),
+        //            e => e.DisplayName == input.DisplayNameFilter)
+        //        .WhereIf(input.IsRequiredFilter > -1,
+        //            e => (input.IsRequiredFilter == 1 && e.IsRequired) ||
+        //                 (input.IsRequiredFilter == 0 && !e.IsRequired))
+        //        .WhereIf(input.HasExpirationDateFilter > -1,
+        //            e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) ||
+        //                 (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
+        //        .WhereIf(input.RequiredFromFilter.HasValue, e => e.DocumentsEntityId == (int)input.RequiredFromFilter);
 
-            var query = (from o in filteredDocumentTypes
-                select new GetDocumentTypeForViewDto()
-                {
-                    DocumentType = new DocumentTypeDto
-                    {
-                        DisplayName = o.DisplayName,
-                        IsRequired = o.IsRequired,
-                        HasExpirationDate = o.HasExpirationDate,
-                        RequiredFrom = o.DocumentsEntityFk.DisplayName,
-                        Id = o.Id
-                    }
-                });
+        //    var query = (from o in filteredDocumentTypes
+        //        select new GetDocumentTypeForViewDto()
+        //        {
+        //            DocumentType = new DocumentTypeDto
+        //            {
+        //                DisplayName = o.DisplayName,
+        //                IsRequired = o.IsRequired,
+        //                HasExpirationDate = o.HasExpirationDate,
+        //                RequiredFrom = o.DocumentsEntityFk.DisplayName,
+        //                Id = o.Id
+        //            }
+        //        });
 
 
-            var documentTypeListDtos = await query.ToListAsync();
+        //    var documentTypeListDtos = await query.ToListAsync();
 
-            return _documentTypesExcelExporter.ExportToFile(documentTypeListDtos);
-        }
+        //    return _documentTypesExcelExporter.ExportToFile(documentTypeListDtos);
+        //}
 
-        public async Task<List<SelectItemDto>> GetAllDocumentsEntitiesForTableDropdown()
-        {
-            return await _documentsEntityRepository.GetAll()
-                .Select(x => new SelectItemDto
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString()
-                }).ToListAsync();
-        }
+        //public async Task<List<SelectItemDto>> GetAllDocumentsEntitiesForTableDropdown()
+        //{
+        //    return await _documentsEntityRepository.GetAll()
+        //        .Select(x => new SelectItemDto
+        //        {
+        //            Id = x.Id.ToString(),
+        //            DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString()
+        //        }).ToListAsync();
+        //}
 
         public async Task Translate(long documentTypeId, DocumentTypeTranslationDto input)
         {
@@ -259,13 +260,13 @@ namespace TACHYON.Documents.DocumentTypes
             return result;
         }
 
-        public async Task<List<SelectItemDto>> GetDocumentEntitiesForTableDropdown()
-        {
-            return await _documentEntityRepository
-                .GetAll()
-                .Select(x => new SelectItemDto { DisplayName = x.DisplayName, Id = x.Id.ToString() }
-                ).ToListAsync();
-        }
+        //public async Task<List<SelectItemDto>> GetDocumentEntitiesForTableDropdown()
+        //{
+        //    return await _documentEntityRepository
+        //        .GetAll()
+        //        .Select(x => new SelectItemDto { DisplayName = x.DisplayName, Id = x.Id.ToString() }
+        //        ).ToListAsync();
+        //}
 
         public async Task<List<SelectItemDto>> GetEditionsForTableDropdown()
         {

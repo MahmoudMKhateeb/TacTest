@@ -1,4 +1,4 @@
-﻿<div
+<div
   bsModal
   #createOrEditModal="bs-modal"
   class="modal fade"
@@ -7,6 +7,7 @@
   aria-labelledby="createOrEditModal"
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
+  (keydown.escape)="close(); $event.stopPropagation()"
 >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -21,45 +22,129 @@
           </button>
         </div>
         <div class="modal-body">
+          <div *ngIf="this.feature.isEnabled('App.ShipperClients') && !facilityIdFromTrips" class="form-row">
+            <div class="form-group col-md-12">
+              <label>{{ l('ActorShipper') }} <span *ngIf="isActorRequired()" class="required-fileds">*</span></label>
+              <div
+                [ngClass]="{
+                  'spinner spinner-success spinner-right mr-1 ml-1': isShippersActorsLoading
+                }"
+              >
+                <dx-select-box
+                  id="shipperActorId"
+                  name="shipperActor"
+                  [(ngModel)]="shipperActorId"
+                  [dataSource]="shipperActors"
+                  [searchEnabled]="true"
+                  (onValueChanged)="loadFacilitiesByActor(shipperActorId)"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  required
+                  placeholder="{{ l('SelectActor') }}"
+                >
+                  <dx-validator [validationGroup]="'receiverGroup'">
+                    <dxi-validation-rule type="required" message="{{ l('Actor') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-select-box>
+              </div>
+              <span class="form-text text-muted">{{ l('SelectShipperActor') }} </span>
+            </div>
+          </div>
+          <div *ngIf="isTachyonDealerOrHost" class="form-group col-md-12">
+            <label>{{ l('Company') }} <span class="required-fileds">*</span></label>
+            <div
+              [ngClass]="{
+                'spinner spinner-success spinner-right mr-1 ml-1': !AllTenants
+              }"
+            >
+              <select class="form-control" name="Shipper" [(ngModel)]="receiver.tenantId" required>
+                <option [value]="undefined" disabled>{{ l('SelectCompany') }}</option>
+                <option *ngFor="let item of AllTenants" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
+            <span class="form-text text-muted">{{ l('SelectCompany') }} {{ receiver.tenantId }}</span>
+          </div>
           <div class="form-row">
             <div class="form-group col-md-6">
               <label>{{ l('Facility') }}<span class="required-fileds"> *</span></label>
-              <select name="receiver.facilityId" [(ngModel)]="receiver.facilityId" class="form-control" required [disabled]="facilityIdFromTrips">
-                <option [value]="undefined" disabled>{{ l('SelectaFacility') }}</option>
-                <option *ngFor="let item of allFacilitys" [value]="item.id">{{ item.displayName }}</option>
-              </select>
+              <div
+                [ngClass]="{
+                  'spinner spinner-success spinner-right mr-1 ml-1': isFacilitiesLoading
+                }"
+              >
+                <select name="receiver.facilityId" [(ngModel)]="receiver.facilityId" class="form-control" required [disabled]="facilityIdFromTrips">
+                  <option [value]="undefined" disabled>{{ l('SelectaFacility') }}</option>
+                  <option *ngFor="let item of allFacilitys" [value]="item.id">{{ item.displayName }}</option>
+                </select>
+              </div>
             </div>
 
             <div class="form-group col-md-6">
               <label for="Receiver_FullName">{{ l('ReciverName') }}<span class="required-fileds"> *</span> </label>
-              <input
-                type="text"
-                #Receiver_FullName="ngModel"
+              <!--              <input-->
+              <!--                type="text"-->
+              <!--                #Receiver_FullName="ngModel"-->
+              <!--                id="Receiver_FullName"-->
+              <!--                class="form-control"-->
+              <!--                [(ngModel)]="receiver.fullName"-->
+              <!--                name="FullName"-->
+              <!--                minlength="0"-->
+              <!--                maxlength="256"-->
+              <!--                required-->
+              <!--              />-->
+              <!--              <validation-messages [formCtrl]="Receiver_FullName"></validation-messages>-->
+              <dx-text-box
                 id="Receiver_FullName"
-                class="form-control"
                 [(ngModel)]="receiver.fullName"
                 name="FullName"
-                minlength="0"
-                maxlength="256"
-                required
-              />
-              <validation-messages [formCtrl]="Receiver_FullName"></validation-messages>
+                [(value)]="receiver.fullName"
+                minLength="0"
+                maxLength="256"
+              >
+                <dx-validator [validationGroup]="'receiverGroup'">
+                  <dxi-validation-rule type="required" message="{{ l('ReciverName') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
+                  <dxi-validation-rule
+                    type="stringLength"
+                    [min]="0"
+                    message="{{ l('ReciverName') }}: {{ 'PleaseEnterAtLeastNCharacter' | localize }}"
+                  ></dxi-validation-rule>
+                  <dxi-validation-rule
+                    type="stringLength"
+                    [max]="256"
+                    message="{{ l('ReciverName') }}: {{ 'PleaseEnterNoMoreThanNCharacter' | localize }}"
+                  ></dxi-validation-rule>
+                </dx-validator>
+              </dx-text-box>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="Receiver_Email">{{ l('Email') }}</label>
-              <input
-                type="text"
-                #Receiver_Email="ngModel"
-                id="Receiver_Email"
-                class="form-control"
-                [(ngModel)]="receiver.email"
-                name="Email"
-                minlength="0"
-                maxlength="256"
-              />
-              <validation-messages [formCtrl]="Receiver_Email"></validation-messages>
+              <!--              <input-->
+              <!--                type="text"-->
+              <!--                #Receiver_Email="ngModel"-->
+              <!--                id="Receiver_Email"-->
+              <!--                class="form-control"-->
+              <!--                [(ngModel)]="receiver.email"-->
+              <!--                name="Email"-->
+              <!--                minlength="0"-->
+              <!--                maxlength="256"-->
+              <!--              />-->
+              <!--              <validation-messages [formCtrl]="Receiver_Email"></validation-messages>-->
+              <dx-text-box id="Receiver_Email" [(ngModel)]="receiver.email" name="Email" minLength="0" maxLength="256">
+                <dx-validator [validationGroup]="'receiverGroup'">
+                  <dxi-validation-rule
+                    type="stringLength"
+                    [min]="0"
+                    message="{{ l('Email') }}: {{ l('PleaseEnterAtLeastNCharacter', 0) }}"
+                  ></dxi-validation-rule>
+                  <dxi-validation-rule
+                    type="stringLength"
+                    [max]="256"
+                    message="{{ l('Email') }}: {{ l('PleaseEnterNoMoreThanNCharacter', 256) }}"
+                  ></dxi-validation-rule>
+                </dx-validator>
+              </dx-text-box>
             </div>
 
             <div class="form-group col-md-6">
@@ -69,46 +154,98 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">+966</span>
                 </div>
-                <input
-                  type="tel"
-                  #Receiver_PhoneNumber="ngModel"
-                  (input)="CheckIfReciverPhoneNumberIsValid(Receiver_PhoneNumber.value, receiver.id)"
-                  pattern="^\d{9}$"
-                  minlength="0"
-                  maxlength="9"
-                  id="Receiver_PhoneNumber"
-                  class="form-control"
-                  [(ngModel)]="receiver.phoneNumber"
-                  name="PhoneNumber"
-                  required
-                  [ngClass]="{
-                    'is-valid': CheckingIfReciverPhoneNumberIsValid && isPhoneNumberAvilable && Receiver_PhoneNumber.valid,
-                    'is-invalid':
-                      receiverForm.submitted && !CheckingIfReciverPhoneNumberIsValid && (!isPhoneNumberAvilable || !Receiver_PhoneNumber.valid)
-                  }"
-                />
+                <!--                <input-->
+                <!--                  type="tel"-->
+                <!--                  #Receiver_PhoneNumber="ngModel"-->
+                <!--                  (input)="CheckIfReciverPhoneNumberIsValid(Receiver_PhoneNumber.value, receiver.id)"-->
+                <!--                  pattern="^\d{9}$"-->
+                <!--                  minlength="0"-->
+                <!--                  maxlength="9"-->
+                <!--                  id="Receiver_PhoneNumber"-->
+                <!--                  class="form-control"-->
+                <!--                  [(ngModel)]="receiver.phoneNumber"-->
+                <!--                  name="PhoneNumber"-->
+                <!--                  required-->
+                <!--                  [ngClass]="{-->
+                <!--                    'is-valid': CheckingIfReciverPhoneNumberIsValid && isPhoneNumberAvilable && Receiver_PhoneNumber.valid,-->
+                <!--                    'is-invalid':-->
+                <!--                      receiverForm.submitted && !CheckingIfReciverPhoneNumberIsValid && (!isPhoneNumberAvilable || !Receiver_PhoneNumber.valid)-->
+                <!--                  }"-->
+                <!--                />-->
+                <span class="form-control m-0 p-0">
+                  <dx-text-box
+                    #Receiver_PhoneNumber="ngModel"
+                    [(ngModel)]="receiver.phoneNumber"
+                    [(value)]="receiver.phoneNumber"
+                    pattern="^\d{9}$"
+                    id="Receiver_PhoneNumber"
+                    name="PhoneNumber"
+                    valueChangeEvent="keyup"
+                    minLength="0"
+                    maxLength="9"
+                    (onValueChanged)="CheckIfReciverPhoneNumberIsValid(Receiver_PhoneNumber.value, receiver.id)"
+                  >
+                    <dx-validator [validationGroup]="'receiverGroup'">
+                      <dxi-validation-rule
+                        type="required"
+                        message="{{ l('PhoneNumber') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                      ></dxi-validation-rule>
+                      <dxi-validation-rule
+                        type="stringLength"
+                        [min]="0"
+                        message="{{ l('PhoneNumber') }}: {{ l('PleaseEnterAtLeastNCharacter', 0) }}"
+                      ></dxi-validation-rule>
+                      <dxi-validation-rule
+                        type="stringLength"
+                        [max]="9"
+                        message="{{ l('PhoneNumber') }}: {{ l('PleaseEnterNoMoreThanNCharacter', 9) }}"
+                      ></dxi-validation-rule>
+                      <dxi-validation-rule
+                        type="pattern"
+                        pattern="^\d{9}$"
+                        message="{{ l('PhoneNumber') }}: {{ 'InvalidPattern' | localize }}"
+                      ></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
+                </span>
                 <div class="input-group-append">
                   <span class="input-group-text">
                     <i [ngClass]="{ 'fa-spin': CheckingIfReciverPhoneNumberIsValid }" class="flaticon-refresh"></i>
                   </span>
                 </div>
               </div>
-              <validation-messages [formCtrl]="Receiver_PhoneNumber"></validation-messages>
+              <!--              <validation-messages [formCtrl]="Receiver_PhoneNumber"></validation-messages>-->
             </div>
+          </div>
+          <div class="col-lg-12 mt-4 mb-2">
+            <dx-validation-summary validationGroup="receiverGroup" id="receiver-summary"></dx-validation-summary>
           </div>
         </div>
 
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
-          <button
+          <!--          <button-->
+          <!--            type="submit"-->
+          <!--            class="btn btn-primary blue"-->
+          <!--            [disabled]="!receiverForm.form.valid"-->
+          <!--            [buttonBusy]="saving"-->
+          <!--            [busyText]="l('SavingWithThreeDot')"-->
+          <!--          >-->
+          <!--            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>-->
+          <!--          </button>-->
+
+          <!--                [busyText]="l('SavingWithThreeDot')"-->
+          <!--                [disabled]="saving || !receiverForm.form.valid"-->
+          <dx-button
             type="submit"
-            class="btn btn-primary blue"
-            [disabled]="!receiverForm.form.valid"
-            [buttonBusy]="saving"
-            [busyText]="l('SavingWithThreeDot')"
+            class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
+            icon="fa fa-save"
+            text="{{ l('Save') }}"
+            [disabled]="saving"
+            [useSubmitBehavior]="true"
+            [validationGroup]="'receiverGroup'"
           >
-            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-          </button>
+          </dx-button>
         </div>
       </form>
     </div>

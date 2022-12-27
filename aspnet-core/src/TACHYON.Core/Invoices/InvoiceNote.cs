@@ -24,7 +24,14 @@ namespace TACHYON.Invoices
         public decimal VatAmount { get; set; }
         public decimal Price { get; set; }
         public decimal TotalValue { get; set; }
+        /// <summary>
+        /// represents Memo#, generated when confirm invoice note
+        /// </summary>
         public string ReferanceNumber { get; set; }
+        /// <summary>
+        /// Reference that added manual when TMS or host insert invoice note
+        /// </summary>
+        public string InvoiceNoteReferenceNumber { get; set; }
         public long? InvoiceNumber { get; set; }
         public long? SubmitInvoiceNumber { get; set; }
         public VoidType VoidType { get; set; }

@@ -11,7 +11,7 @@
 >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form *ngIf="active" #userForm="ngForm" novalidate (ngSubmit)="save()">
+      <form *ngIf="active && user" #userForm="ngForm" (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 *ngIf="!creatDriver" class="modal-title">
             <span *ngIf="user.id">{{ 'EditUser' | localize }}: {{ user.userName }}</span>
@@ -26,7 +26,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <tabset>
+          <tabset #staticTabs>
             <tab class="pt-5" heading="{{ 'UserInformations' | localize }}">
               <div class="row">
                 <div class="col-sm-3 text-center mb-5 mt-5">
@@ -35,52 +35,69 @@
                 <div class="col-sm-9">
                   <div class="form-group">
                     <label for="Name">{{ 'CreateUserFirstName' | localize }} <span class="required-fileds"> *</span></label>
-                    <input
-                      id="Name"
-                      #nameInput="ngModel"
-                      class="form-control"
-                      type="text"
-                      name="Name"
-                      [(ngModel)]="user.name"
-                      required
-                      maxlength="64"
-                    />
-                    <validation-messages [formCtrl]="nameInput"></validation-messages>
+                    <dx-text-box id="Name" name="Name" [(value)]="user.name" required maxlength="64" [inputAttr]="{ autocomplete: 'off' }">
+                      <dx-validator [validationGroup]="'createUserGroup'">
+                        <dxi-validation-rule
+                          type="required"
+                          message="{{ 'CreateUserFirstName' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                        ></dxi-validation-rule>
+                        <dxi-validation-rule
+                          type="stringLength"
+                          [max]="64"
+                          message="{{ 'CreateUserFirstName' | localize }}: {{ l('PleaseEnterNoMoreThanNCharacter', 64) }}"
+                        ></dxi-validation-rule>
+                      </dx-validator>
+                    </dx-text-box>
                   </div>
 
                   <div class="form-group">
                     <label for="Surname">{{ 'CreateUserLastName' | localize }}<span class="required-fileds"> *</span></label>
-                    <input
-                      id="Surname"
-                      #surnameInput="ngModel"
-                      type="text"
-                      name="Surname"
-                      class="form-control"
-                      [(ngModel)]="user.surname"
-                      required
-                      maxlength="64"
-                    />
-                    <validation-messages [formCtrl]="surnameInput"></validation-messages>
+                    <dx-text-box id="Surname" name="Surname" [(value)]="user.surname" required maxlength="64" [inputAttr]="{ autocomplete: 'off' }">
+                      <dx-validator [validationGroup]="'createUserGroup'">
+                        <dxi-validation-rule
+                          type="required"
+                          message="{{ 'CreateUserLastName' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                        ></dxi-validation-rule>
+                        <dxi-validation-rule
+                          type="stringLength"
+                          [max]="64"
+                          message="{{ 'CreateUserLastName' | localize }}: {{ l('PleaseEnterNoMoreThanNCharacter', 64) }}"
+                        ></dxi-validation-rule>
+                      </dx-validator>
+                    </dx-text-box>
                   </div>
                 </div>
               </div>
               <div class="form-group">
                 <label for="EmailAddress">{{ 'EmailAddress' | localize }}<span class="required-fileds"> *</span> </label>
-                <input
+                <dx-text-box
                   id="EmailAddress"
-                  #emailAddressInput="ngModel"
-                  type="email"
                   name="EmailAddress"
-                  class="form-control"
-                  [(ngModel)]="user.emailAddress"
-                  required
-                  (change)="removeWhiteSpacesFromEmail()"
+                  [(value)]="user.emailAddress"
                   maxlength="256"
+                  required
                   email
-                />
-                <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('NotValid') }}</span>
-                <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
-                <validation-messages [formCtrl]="emailAddressInput"></validation-messages>
+                  valueChangeEvent="keyup"
+                  [inputAttr]="{ autocomplete: 'off' }"
+                >
+                  <dx-validator [validationGroup]="'createUserGroup'">
+                    <dxi-validation-rule
+                      type="required"
+                      message="{{ 'EmailAddress' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                    ></dxi-validation-rule>
+                    <dxi-validation-rule type="email" message="{{ 'EmailAddress' | localize }}: {{ 'NotValid' | localize }}"></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="stringLength"
+                      [max]="256"
+                      message="{{ 'EmailAddress' | localize }}: {{ l('PleaseEnterNoMoreThanNCharacter', 256) }}"
+                    ></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="async"
+                      message="{{ 'EmailAddress' | localize }}: {{ 'AlreadyTaken' | localize }}"
+                      [validationCallback]="removeWhiteSpacesFromEmailAsync"
+                    ></dxi-validation-rule>
+                  </dx-validator>
+                </dx-text-box>
               </div>
 
               <div class="form-group">
@@ -89,148 +106,170 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">+966</span>
                   </div>
-                  <input
-                    id="PhoneNumber"
-                    #phoneNumberInput="ngModel"
-                    (keypress)="numberOnly($event)"
-                    (change)="CheckIfDriverPhoneNumberIsValid(phoneNumberInput.value, user.id)"
-                    type="text"
-                    name="PhoneNumber"
-                    class="form-control"
-                    pattern="^\d{9}$"
-                    maxlength="9"
-                    [(ngModel)]="user.phoneNumber"
-                    maxlength="32"
-                  />
+                  <span class="form-control p-0">
+                    <dx-text-box
+                      class=""
+                      id="PhoneNumber"
+                      #phoneNumberInput="ngModel"
+                      [(ngModel)]="user.phoneNumber"
+                      [(value)]="user.phoneNumber"
+                      pattern="^\d{9}$"
+                      id="Receiver_PhoneNumber"
+                      name="PhoneNumber"
+                      minLength="0"
+                      maxLength="9"
+                      valueChangeEvent="keyup"
+                      (keypress)="numberOnly($event)"
+                      [inputAttr]="{ autocomplete: 'off' }"
+                    >
+                      <dx-validator [validationGroup]="'createUserGroup'">
+                        <dxi-validation-rule
+                          type="stringLength"
+                          [min]="0"
+                          message="{{ l('PhoneNumber') }}: {{ l('PleaseEnterAtLeastNCharacter', 0) }}"
+                        ></dxi-validation-rule>
+                        <dxi-validation-rule
+                          type="stringLength"
+                          [max]="9"
+                          message="{{ l('PhoneNumber') }}: {{ l('PleaseEnterNoMoreThanNCharacter', 9) }}"
+                        ></dxi-validation-rule>
+                        <dxi-validation-rule
+                          type="pattern"
+                          pattern="^\d{9}$"
+                          message="{{ l('PhoneNumber') }}: {{ 'InvalidPattern' | localize }}"
+                        ></dxi-validation-rule>
+                        <dxi-validation-rule
+                          type="async"
+                          message="{{ 'PhoneNumber' | localize }}: {{ 'AlreadyTaken' | localize }}"
+                          [validationCallback]="checkIfDriverPhoneNumberIsValidAsync"
+                        ></dxi-validation-rule>
+                      </dx-validator>
+                    </dx-text-box>
+                  </span>
                 </div>
                 <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'PhoneNumber' | localize }}</span>
                 <span class="form-text text-muted">{{ '9digitsNumber' | localize }}</span>
-                <span *ngIf="!isPhoneNumberAvilable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
               </div>
               <div class="form-group">
                 <div class="form-group">
                   <label for="Nationality">{{ 'Nationality' | localize }}</label>
-                  <select name="Nationality" [(ngModel)]="user.nationalityId" class="form-control form-control-lg custom-select mr-sm-2">
-                    <option *ngFor="let nationality of nationalities" [value]="Number(nationality.id)">{{ nationality.displayName }}</option>
-                  </select>
+                  <dx-select-box
+                    id="Nationality"
+                    name="Nationality"
+                    [(value)]="user.nationalityId"
+                    [dataSource]="nationalities"
+                    displayExpr="displayName"
+                    valueExpr="id"
+                    placeholder="{{ l('PickNationality') }}"
+                  >
+                  </dx-select-box>
                   <span class="text-muted">{{ 'ChooseNationality' | localize }}</span>
                 </div>
               </div>
               <div class="form-group">
                 <label for="UserName">{{ 'UserName' | localize }}<span class="required-fileds"> *</span></label>
-                <input
+                <dx-text-box
                   id="UserName"
-                  #userNameInput="ngModel"
-                  type="text"
-                  (change)="CheckIfUserNameIsValid(userNameInput.value, user.id)"
-                  [disabled]="!canChangeUserName"
                   name="UserName"
-                  class="form-control"
-                  [(ngModel)]="user.userName"
+                  [(value)]="user.userName"
                   required
+                  valueChangeEvent="keyup"
+                  [disabled]="!canChangeUserName"
+                  [inputAttr]="{ autocomplete: 'off' }"
                   maxlength="256"
-                />
+                >
+                  <dx-validator [validationGroup]="'createUserGroup'">
+                    <dxi-validation-rule
+                      type="required"
+                      message="{{ 'UserName' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                    ></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="stringLength"
+                      [max]="64"
+                      message="{{ 'UserName' | localize }}: {{ l('PleaseEnterNoMoreThanNCharacter', 256) }}"
+                    ></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="async"
+                      message="{{ 'UserName' | localize }}: {{ 'CanNotChangeAdminUserName' | localize }}"
+                      [validationCallback]="checkIfCanChangeUserNameAsync"
+                    ></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="async"
+                      message="{{ 'UserName' | localize }}: {{ 'AlreadyTaken' | localize }}"
+                      [validationCallback]="checkIfIsUserNameAvailableAsync"
+                    ></dxi-validation-rule>
+                  </dx-validator>
+                </dx-text-box>
                 <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'UserName' | localize }}</span>
-                <span *ngIf="!isUserNameAvilable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
 
                 <span class="help-block" *ngIf="!canChangeUserName">{{ 'CanNotChangeAdminUserName' | localize }}</span>
-                <validation-messages [formCtrl]="userNameInput"></validation-messages>
               </div>
 
               <div class="checkbox-inline">
                 <label for="EditUser_SetRandomPassword" class="checkbox">
                   <input id="EditUser_SetRandomPassword" type="checkbox" name="SetRandomPassword" [(ngModel)]="setRandomPassword" />
                   {{ 'SetRandomPassword' | localize }}
-                  <span></span>
+                  <span class="ml-1 mr-1"></span>
                 </label>
               </div>
               <div class="form-group" *ngIf="!setRandomPassword">
                 <div class="right">
                   <label for="Password">{{ 'Password' | localize }}<span class="required-fileds"> *</span> </label>
-                  <input
+                  <dx-text-box
                     id="Password"
-                    type="password"
                     name="Password"
-                    #Password="ngModel"
-                    id="Password"
-                    class="form-control"
-                    [(ngModel)]="user.password"
-                    [required]="!user.id && !setRandomPassword"
+                    mode="password"
+                    [(value)]="user.password"
                     maxlength="32"
-                    [requireDigit]="passwordComplexitySetting.requireDigit"
-                    [requireLowercase]="passwordComplexitySetting.requireLowercase"
-                    [requireUppercase]="passwordComplexitySetting.requireUppercase"
-                    [requireNonAlphanumeric]="passwordComplexitySetting.requireNonAlphanumeric"
-                    [requiredLength]="passwordComplexitySetting.requiredLength"
-                    validateEqual="PasswordRepeat"
-                    reverse="true"
-                    autocomplete="new-password"
-                  />
+                    valueChangeEvent="keyup"
+                    [inputAttr]="{ autocomplete: 'new-password' }"
+                  >
+                    <dx-validator [validationGroup]="'createUserGroup'">
+                      <dxi-validation-rule
+                        *ngIf="!user.id && !setRandomPassword"
+                        type="required"
+                        message="{{ 'Password' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                      ></dxi-validation-rule>
+                      <dxi-validation-rule
+                        type="async"
+                        message="{{ 'Password' | localize }}: {{ customPasswordMessage }}"
+                        [validationCallback]="validatePassword"
+                      ></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
                 </div>
-              </div>
-              <div [hidden]="setRandomPassword || userForm.form.valid || userForm.form.pristine">
-                <ul class="help-block text-danger" *ngIf="userForm.controls['Password'] && userForm.controls['Password'].errors">
-                  <li [hidden]="!userForm.controls['Password'].errors.requireDigit">
-                    {{ 'PasswordComplexity_RequireDigit_Hint' | localize }}
-                  </li>
-                  <li [hidden]="!userForm.controls['Password'].errors.requireLowercase">
-                    {{ 'PasswordComplexity_RequireLowercase_Hint' | localize }}
-                  </li>
-                  <li [hidden]="!userForm.controls['Password'].errors.requireUppercase">
-                    {{ 'PasswordComplexity_RequireUppercase_Hint' | localize }}
-                  </li>
-                  <li [hidden]="!userForm.controls['Password'].errors.requireNonAlphanumeric">
-                    {{ 'PasswordComplexity_RequireNonAlphanumeric_Hint' | localize }}
-                  </li>
-                  <li [hidden]="!userForm.controls['Password'].errors.requiredLength">
-                    {{ 'PasswordComplexity_RequiredLength_Hint' | localize: passwordComplexitySetting.requiredLength }}
-                  </li>
-                </ul>
               </div>
               <div class="form-group" *ngIf="!setRandomPassword">
                 <div class="right">
                   <label for="PasswordRepeat">{{ 'PasswordRepeat' | localize }}<span class="required-fileds"> *</span> </label>
-                  <input
+                  <dx-text-box
                     id="PasswordRepeat"
-                    type="password"
                     name="PasswordRepeat"
-                    #PasswordRepeat="ngModel"
-                    class="form-control"
-                    [(ngModel)]="userPasswordRepeat"
-                    [required]="!user.id && !setRandomPassword"
+                    mode="password"
+                    [(value)]="userPasswordRepeat"
                     maxlength="32"
-                    [requireDigit]="passwordComplexitySetting.requireDigit"
-                    [requireLowercase]="passwordComplexitySetting.requireLowercase"
-                    [requireUppercase]="passwordComplexitySetting.requireUppercase"
-                    [requireNonAlphanumeric]="passwordComplexitySetting.requireNonAlphanumeric"
-                    [requiredLength]="passwordComplexitySetting.requiredLength"
-                    validateEqual="Password"
-                    reverse="false"
-                    autocomplete="new-password"
-                  />
+                    valueChangeEvent="keyup"
+                    [inputAttr]="{ autocomplete: 'new-password' }"
+                  >
+                    <dx-validator [validationGroup]="'createUserGroup'">
+                      <dxi-validation-rule
+                        *ngIf="!user.id && !setRandomPassword"
+                        type="required"
+                        message="{{ 'PasswordRepeat' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                      ></dxi-validation-rule>
+                      <dxi-validation-rule
+                        type="async"
+                        message="{{ 'PasswordRepeat' | localize }}: {{ customPasswordMessage }}"
+                        [validationCallback]="validatePassword"
+                      ></dxi-validation-rule>
+                      <dxi-validation-rule
+                        type="compare"
+                        [comparisonTarget]="passwordComparison"
+                        message="{{ 'PasswordRepeat' | localize }}: {{ 'PasswordsDontMatch' | localize }}"
+                      ></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
                 </div>
-              </div>
-              <div [hidden]="setRandomPassword || userForm.form.valid || userForm.form.pristine">
-                <ul class="help-block text-danger" *ngIf="userForm.controls['PasswordRepeat'] && userForm.controls['PasswordRepeat'].errors">
-                  <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requireDigit">
-                    {{ 'PasswordComplexity_RequireDigit_Hint' | localize }}
-                  </li>
-                  <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requireLowercase">
-                    {{ 'PasswordComplexity_RequireLowercase_Hint' | localize }}
-                  </li>
-                  <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requireUppercase">
-                    {{ 'PasswordComplexity_RequireUppercase_Hint' | localize }}
-                  </li>
-                  <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requireNonAlphanumeric">
-                    {{ 'PasswordComplexity_RequireNonAlphanumeric_Hint' | localize }}
-                  </li>
-                  <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requiredLength">
-                    {{ 'PasswordComplexity_RequiredLength_Hint' | localize: passwordComplexitySetting.requiredLength }}
-                  </li>
-                  <li [hidden]="!userForm.controls['PasswordRepeat'].valid && !userForm.controls['PasswordRepeat'].touched">
-                    {{ 'PasswordsDontMatch' | localize }}
-                  </li>
-                </ul>
               </div>
               <div class="checkbox-inline">
                 <label for="EditUser_ShouldChangePasswordOnNextLogin" class="checkbox">
@@ -241,31 +280,31 @@
                     [(ngModel)]="user.shouldChangePasswordOnNextLogin"
                   />
                   {{ 'ShouldChangePasswordOnNextLogin' | localize }}
-                  <span></span>
+                  <span class="ml-1 mr-1"></span>
                 </label>
 
                 <label for="EditUser_SendActivationEmail" class="checkbox">
                   <input id="EditUser_SendActivationEmail" type="checkbox" name="SendActivationEmail" [(ngModel)]="sendActivationEmail" />
                   {{ 'SendActivationEmail' | localize }}
-                  <span></span>
+                  <span class="ml-1 mr-1"></span>
                 </label>
 
                 <label for="EditUser_IsActive" class="checkbox">
                   <input id="EditUser_IsActive" type="checkbox" name="IsActive" [(ngModel)]="user.isActive" />
                   {{ 'Active' | localize }}
-                  <span></span>
+                  <span class="ml-1 mr-1"></span>
                 </label>
 
                 <label *ngIf="isTwoFactorEnabled" for="EditUser_IsTwoFactorEnabled" class="checkbox">
                   <input id="EditUser_IsTwoFactorEnabled" type="checkbox" name="IsTwoFactorEnabled" [(ngModel)]="user.isTwoFactorEnabled" />
                   {{ 'IsTwoFactorEnabled' | localize }}
-                  <span></span>
+                  <span class="ml-1 mr-1"></span>
                 </label>
 
                 <label *ngIf="isLockoutEnabled" for="EditUser_IsLockoutEnabled" class="checkbox">
                   <input id="EditUser_IsLockoutEnabled" type="checkbox" name="IsLockoutEnabled" [(ngModel)]="user.isLockoutEnabled" />
                   {{ 'IsLockoutEnabled' | localize }}
-                  <span></span>
+                  <span class="ml-1 mr-1"></span>
                 </label>
               </div>
             </tab>
@@ -273,39 +312,51 @@
               <ng-template tabHeading>
                 <span class="label label-success label-inline assigned-role-count">{{ getAssignedRoleCount() }}</span>
               </ng-template>
-              <div class="checkbox-inline">
-                <label attr.for="EditUser_{{ role.roleName }}" class="checkbox" *ngFor="let role of roles">
+              <div [class]="numberOfRolesStyleClass">
+                <label *ngFor="let role of roles" attr.for="EditUser_{{ role.roleName }}" class="checkbox">
                   <input
                     id="EditUser_{{ role.roleName }}"
                     type="checkbox"
                     name="{{ role.roleName }}"
                     [(ngModel)]="role.isAssigned"
                     [disabled]="role.inheritedFromOrganizationUnit"
+                    (change)="revalidateRoles()"
                   />
                   {{ role.roleDisplayName }}
                   <small *ngIf="role.inheritedFromOrganizationUnit">({{ 'RoleIsInheritedFromOrganizationUnit' | localize }})</small>
-                  <span></span>
+                  <span class="ml-1 mr-1"></span>
                 </label>
+                <dx-validator [adapter]="adapterConfig" [validationGroup]="'createUserGroup'">
+                  <dxi-validation-rule type="required" message="{{ 'Roles' | localize }}: Please select at least 1 role"> </dxi-validation-rule>
+                </dx-validator>
               </div>
             </tab>
             <tab *ngIf="!creatDriver" class="pt-5" heading="{{ 'OrganizationUnits' | localize }}">
               <organization-unit-tree [cascadeSelectEnabled]="false" #organizationUnitTree></organization-unit-tree>
             </tab>
           </tabset>
+          <div class="col-12 pt-4">
+            <dx-validation-summary
+              (onItemClick)="validationSummaryItemClicked($event)"
+              validationGroup="createUserGroup"
+              id="create-user-group"
+            ></dx-validation-summary>
+          </div>
         </div>
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">
             {{ 'Cancel' | localize }}
           </button>
-          <button
+          <dx-button
             type="submit"
-            class="btn btn-save font-weight-bold"
-            [disabled]="!userForm.form.valid"
-            [buttonBusy]="saving"
-            [busyText]="l('SavingWithThreeDot')"
+            class="btn btn-save font-weight-bold btn-sm py-3 px-6 no-padding-custom"
+            icon="fa fa-save"
+            text="{{ l('Save') }}"
+            [disabled]="saving"
+            [useSubmitBehavior]="true"
+            [validationGroup]="'createUserGroup'"
           >
-            <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
-          </button>
+          </dx-button>
         </div>
       </form>
     </div>

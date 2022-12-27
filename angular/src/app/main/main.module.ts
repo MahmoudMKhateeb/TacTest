@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -79,10 +79,6 @@ import { CreateOrEditTransportTypeModalComponent } from './transportTypes/transp
 import { DocumentTypeTranslationsComponent } from './documentTypeTranslations/documentTypeTranslations/documentTypeTranslations.component';
 import { ViewDocumentTypeTranslationModalComponent } from './documentTypeTranslations/documentTypeTranslations/view-documentTypeTranslation-modal.component';
 import { CreateOrEditDocumentTypeTranslationModalComponent } from './documentTypeTranslations/documentTypeTranslations/create-or-edit-documentTypeTranslation-modal.component';
-
-import { DocumentsEntitiesComponent } from './documentsEntities/documentsEntities/documentsEntities.component';
-import { ViewDocumentsEntityModalComponent } from './documentsEntities/documentsEntities/view-documentsEntity-modal.component';
-import { CreateOrEditDocumentsEntityModalComponent } from './documentsEntities/documentsEntities/create-or-edit-documentsEntity-modal.component';
 
 import { PortsComponent } from './ports/ports/ports.component';
 import { ViewPortModalComponent } from './ports/ports/view-port-modal.component';
@@ -302,6 +298,10 @@ import { ViewNotesComponent } from './shippingRequests/shippingRequests/notes/vi
 import { AddNewNoteModalComponent } from './shippingRequests/shippingRequests/notes/add-new-note-modal/add-new-note-modal.component';
 import { NotesComponent } from './shippingRequests/shippingRequests/notes/notes.component';
 import { TripNotesModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/trip-notes-modal/trip-notes-modal.component';
+import { ActorsSubmittedDocumentsComponent } from './documentFiles/documentFiles/actors-submitted-documents/actors-submitted-documents.component';
+import { ActorsSubmittedDocumentsListComponent } from './documentFiles/documentFiles/actors-submitted-documents/actors-submitted-documents-list/actors-submitted-documents-list.component';
+import { CreateOrEditActorsPriceComponent } from './shippingRequests/shippingRequests/create-or-edit-actors-price/create-or-edit-actors-price.component';
+import { ActorInvoiceListComponent } from './Invoices/ActorInvoices/actor-invoice-list/actor-invoice-list.component';
 
 import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
 import { CreateOrEditPenaltyModalComponent } from './Penalties/penalties-list/create-or-edit-penalty-modal/create-or-edit-penalty-modal.component';
@@ -310,14 +310,32 @@ import { ViewComplaintModalComponent } from './Penalties/penalties-list/view-com
 import { CancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/cancel-trip-modal/cancel-trip-modal.component';
 import { TmsCancelTripModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/tms-cancel-trip-modal/tms-cancel-trip-modal.component';
 import { ViewCancelReasonModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/cancelTrip/view-cancel-reason-modal/view-cancel-reason-modal.component';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic.component';
 import { InvoiceDynamicModalComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic-modal/invoices-dynamic-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { CalendarModule } from '@node_modules/primeng/calendar';
+import { InvoicesSearchModelComponent } from './Invoices/invoices-search-model/invoices-search-model.component';
+import { InvoiceTenantSearchModelComponent } from './Invoices/invoice-tenants/invoice-tenant-search-model/invoice-tenant-search-model.component';
+import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/actor-submit-invoices.component';
+import { CreateOrEditDedicatedShippingRequestWizardComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicatedShippingRequestWizard/create-or-edit-dedicated-shipping-request-wizard.component';
+import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
+import { TmsForShipperComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/tmsForShipper/tms-for-shipper.component';
+import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-shipping-request-attendance-sheet-modal.component';
+import { InvoicesDedicatedComponent } from '@app/main/Invoices/invoices-dedicated/invoices-dedicated.component';
+import { InvoiceDedicatedModalComponent } from '@app/main/Invoices/invoices-dedicated/invoices-dedicated-modal/invoices-dedicated-modal.component';
+import { WidgetsModule } from '@app/shared/common/customizable-dashboard/widgets/widgets.module';
+import { TruckPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance.component';
+import { ActorsComponent } from './actors/actors/actors.component';
+import { ViewActorModalComponent } from './actors/actors/view-actor-modal.component';
+import { CreateOrEditActorModalComponent } from './actors/actors/create-or-edit-actor-modal.component';
+import { ActorInvoiceDemandModelComponent } from './actors/Actor-Invoices-ondemand-model.component';
+import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/client-demand-model.component';
 
 @NgModule({
   imports: [
+    WidgetsModule,
     UtilsModule,
     AppCommonModule,
     CommonModule,
@@ -348,7 +366,7 @@ import { CalendarModule } from '@node_modules/primeng/calendar';
     // ListboxModule,
     AgmDirectionModule,
     // StepsModule,
-    // SelectButtonModule,
+    SelectButtonModule,
     ReactiveFormsModule,
     MultiSelectModule,
     ListboxModule,
@@ -437,9 +455,6 @@ import { CalendarModule } from '@node_modules/primeng/calendar';
     DocumentTypeTranslationsComponent,
     ViewDocumentTypeTranslationModalComponent,
     CreateOrEditDocumentTypeTranslationModalComponent,
-    DocumentsEntitiesComponent,
-    ViewDocumentsEntityModalComponent,
-    CreateOrEditDocumentsEntityModalComponent,
     PortsComponent,
     ViewPortModalComponent,
     CreateOrEditPortModalComponent,
@@ -549,6 +564,7 @@ import { CalendarModule } from '@node_modules/primeng/calendar';
     ViewApplocalizationModalComponent,
     CreateOrEditNoteModalComponent,
     CreateOrEditShippingRequestWizardComponent,
+    CreateOrEditDedicatedShippingRequestWizardComponent,
     ShippingrequestsDetailsModelComponent,
     ComingSoonComponent,
     TMSRequestListComponent,
@@ -598,6 +614,24 @@ import { CalendarModule } from '@node_modules/primeng/calendar';
     AddNewNoteModalComponent,
     NotesComponent,
     TripNotesModalComponent,
+    InvoicesSearchModelComponent,
+    InvoiceTenantSearchModelComponent,
+    ActorsSubmittedDocumentsComponent,
+    ActorsSubmittedDocumentsListComponent,
+    CreateOrEditActorsPriceComponent,
+    ActorInvoiceListComponent,
+    ActorSubmitInvoicesComponent,
+    AssignTrucksAndDriversModalComponent,
+    TmsForShipperComponent,
+    DedicatedShippingRequestAttendanceSheetModalComponent,
+    InvoicesDedicatedComponent,
+    InvoiceDedicatedModalComponent,
+    TruckPerformanceComponent,
+    ActorsComponent,
+    ViewActorModalComponent,
+    CreateOrEditActorModalComponent,
+    ActorInvoiceDemandModelComponent,
+    ClientDemandModelComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

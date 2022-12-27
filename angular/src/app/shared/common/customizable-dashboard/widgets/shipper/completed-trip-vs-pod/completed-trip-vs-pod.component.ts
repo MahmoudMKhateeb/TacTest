@@ -35,12 +35,12 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
         this.chartOptions = {
           series: [
             {
-              name: 'Completed',
+              name: this.l('Completed'),
               data: result.completedTrips,
               color: 'rgba(187, 41, 41, 0.847)',
             },
             {
-              name: 'Pod',
+              name: this.l('POD'),
               data: result.podTrips,
             },
           ],
@@ -53,6 +53,18 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
             type: 'category',
           },
         };
+        (this.chartOptions.chart.locales as any[]) = [
+          {
+            name: 'en',
+            options: {
+              toolbar: {
+                exportToPNG: this.l('Download') + ' PNG',
+                exportToSVG: this.l('Download') + ' SVG',
+                exportToCSV: this.l('Download') + ' CSV',
+              },
+            },
+          },
+        ];
         this.loading = false;
       });
   }

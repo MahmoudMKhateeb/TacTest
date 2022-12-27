@@ -24,5 +24,6 @@ namespace TACHYON.Invoices.InoviceNote.Dto
         public long? SubmitInvoiceNumber { get; set; }
 
         public string ReferanceNumber { get; set; }
+        public string InvoiceNoteReferenceNumber { get; set; }
     }
 }

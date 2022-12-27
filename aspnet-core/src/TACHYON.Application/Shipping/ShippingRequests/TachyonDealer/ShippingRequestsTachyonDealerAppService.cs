@@ -2,6 +2,7 @@
 using Abp.Domain.Repositories;
 using Abp.Timing;
 using Abp.UI;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using TACHYON.Features;
 using TACHYON.PricePackages;
@@ -27,7 +28,10 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
         public async Task StartBid(TachyonDealerBidDtoInupt Input)
         {
             DisableTenancyFilters();
-            ShippingRequest shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(e =>
+            ShippingRequest shippingRequest = await _shippingRequestRepository
+                .GetAll()
+                .Include(x=>x.ShippingRequestDestinationCities)
+                .FirstOrDefaultAsync(e =>
                 e.Id == Input.Id && e.IsTachyonDeal &&
                 !e.IsBid &&
                 (e.Status == ShippingRequestStatus.PrePrice || e.Status == ShippingRequestStatus.NeedsAction));

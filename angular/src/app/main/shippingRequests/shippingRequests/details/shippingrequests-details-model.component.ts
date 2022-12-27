@@ -16,6 +16,7 @@ import {
   ShippingRequestUpdateServiceProxy,
   CreateSrUpdateActionInputDto,
   CreateOrEditPriceOfferInput,
+  ShippingRequestFlag,
 } from '@shared/service-proxies/service-proxies';
 import { LazyLoadEvent } from 'primeng/api';
 import { Table } from '@node_modules/primeng/table';
@@ -49,6 +50,7 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
   duration: string;
   direction: string;
   Items: PriceOfferItemDto[] = [];
+  shippingRequestFlagEnum = ShippingRequestFlag;
   shippingrequest: GetShippingRequestForPriceOfferListDto = new GetShippingRequestForPriceOfferListDto();
   constructor(
     injector: Injector,
@@ -103,8 +105,8 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
     if (this.shippingrequest.directRequestStatus != ShippingRequestDirectRequestStatus.New) return false;
     if (this.request.status != ShippingRequestStatus.NeedsAction && this.request.status != ShippingRequestStatus.PrePrice) return false;
     if (this.Channel == PriceOfferChannel.MarketPlace && this.request.bidStatus != ShippingRequestBidStatus.OnGoing) return false;
-    if (this.feature.isEnabled('App.Shipper')) return false;
     if (this.feature.isEnabled('App.Carrier')) return true;
+    if (this.feature.isEnabled('App.CarrierClients')) return true;
     if (this.feature.isEnabled('App.TachyonDealer') && !this.request.isTachyonDeal) return true;
     return false;
   }

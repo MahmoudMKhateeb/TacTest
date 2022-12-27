@@ -11,6 +11,7 @@ using System.Linq;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.ShippingRequestTripVases.Dtos;
 
 namespace TACHYON.Shipping.Trips.Dto
@@ -39,6 +40,13 @@ namespace TACHYON.Shipping.Trips.Dto
         public string Note { get; set; }
         public DateTime? SupposedPickupDateFrom { get; set; }
         public DateTime? SupposedPickupDateTo { get; set; }
+        #region Dedicated
+        public ShippingRequestRouteType? RouteType { get; set; }
+        public int NumberOfDrops { get; set; }
+
+        public long? TruckId { get; set; }
+        public long? DriverUserId { get; set; }
+        #endregion
 
         public List<CreateOrEditRoutPointDto> RoutPoints { get; set; }
         public List<CreateOrEditShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }

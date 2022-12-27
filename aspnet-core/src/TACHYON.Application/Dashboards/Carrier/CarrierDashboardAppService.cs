@@ -248,21 +248,26 @@ namespace TACHYON.Dashboards.Carrier
         {
             DisableTenancyFilters();
 
-            return (await _shippingRequestVasRepository
+             var shippingRequestVases =  await _shippingRequestVasRepository
                     .GetAll()
                     .AsNoTracking()
-                    .Include(r => r.VasFk)
+                    .Include(r => r.VasFk).ThenInclude(x=> x.Translations)
                     .Where(x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                    .ToListAsync())
-                .GroupBy(r => new { r.VasFk.Key })
-                .Select(vas => new ChartCategoryPairedValuesDto()
-                {
-                    X = vas.Key.Key,
-                    Y = vas.Count()
-                }).Distinct()
-                .OrderByDescending(r => r.Y)
+                    .ToListAsync();
+                var mostVasesUsed = (from srVas in shippingRequestVases
+                        group srVas by srVas.VasId into vasGroup
+                        let vasFk = vasGroup.Select(x=> x.VasFk).FirstOrDefault(x=> x.Id == vasGroup.Key)
+                        let vasTranslation = vasFk.Translations.FirstOrDefault(x=> x.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                        select new ChartCategoryPairedValuesDto()
+                        {
+                            X = vasTranslation != null ? vasTranslation.DisplayName : vasFk.Key,
+                            Y = vasGroup.Count()
+                        }).Distinct()
+                    .OrderByDescending(r => r.Y)
                 .Take(5)
                 .ToList();
+
+             return mostVasesUsed;
         }
 
         public async Task<AcceptedAndRejectedRequestsListDto> GetAcceptedAndRejectedRequests()

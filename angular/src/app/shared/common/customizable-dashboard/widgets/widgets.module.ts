@@ -57,6 +57,8 @@ import { RouterModule } from '@angular/router';
 import { CarrierComplitedTripsWidgetComponent } from './carrier/carrier-complited-trips-widget/carrier-complited-trips-widget.component';
 import { CarrierAcceptedVsRejectdRequestsComponent } from './carrier/carrier-accepted-vs-rejectd-requests/carrier-accepted-vs-rejectd-requests.component';
 import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoices-details-widget/carrier-invoices-details-widget.component';
+import { ProjectPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/project-performance/project-performance.component';
+import { TruckPerformanceChartComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance-chart/truck-performance-chart.component';
 
 @NgModule({
   declarations: [
@@ -104,6 +106,8 @@ import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoice
     CarrierComplitedTripsWidgetComponent,
     CarrierAcceptedVsRejectdRequestsComponent,
     CarrierInvoicesDetailsWidgetComponent,
+    ProjectPerformanceComponent,
+    TruckPerformanceChartComponent,
   ],
   imports: [
     CommonModule,
@@ -162,6 +166,9 @@ import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoice
     WorstRatedCarriersComponent,
     NumberOfRequestsForEachCityComponent,
     UnpricedRequestsInMarketplaceComponent,
+    ProjectPerformanceComponent,
+    TruckPerformanceChartComponent,
   ],
+  exports: [ProjectPerformanceComponent, TruckPerformanceChartComponent],
 })
 export class WidgetsModule {}

@@ -22,6 +22,7 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 import { VoidInvoiceNoteModalComponent } from '@app/main/invoices/invoice-note/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
+import { SubmitInvoicesSearchInput } from '@app/shared/common/search/SubmitInvoiceSearchInput';
 
 @Component({
   templateUrl: './invoice-tenant.component.html',
@@ -36,6 +37,7 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   @ViewChild('voidModal', { static: true }) voidModal: VoidInvoiceNoteModalComponent;
 
   SubmitStatus: any;
+  SubmitChannel: any;
   IsStartSearch = false;
   advancedFiltersAreShown = false;
   Periods: ISelectItemDto[];
@@ -43,10 +45,10 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   Tenants: ISelectItemDto[];
   fromDate: moment.Moment | null | undefined;
   toDate: moment.Moment | null | undefined;
-
+  searchInput: SubmitInvoicesSearchInput = new SubmitInvoicesSearchInput();
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive = false;
-  InvoiceChannelEnum: InvoiceChannel;
+  //InvoiceChannelEnum: InvoiceChannel;
   inputSearch: SubmitInvoiceFilterInput = new SubmitInvoiceFilterInput();
   dataSource: any = {};
   constructor(
@@ -58,6 +60,7 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   ) {
     super(injector);
     this.SubmitStatus = this.enumToArray.transform(SubmitInvoiceStatus);
+    this.SubmitChannel = this.enumToArray.transform(InvoiceChannel);
   }
 
   ngOnInit() {
@@ -76,6 +79,10 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
     this._CommonServ.getAutoCompleteTenants(event.query, 'carrier').subscribe((result) => {
       this.Tenants = result;
     });
+  }
+
+  searchInPage() {
+    this.getAllSubmitInvoices();
   }
 
   MakePaid(invoice: any): void {
@@ -157,7 +164,12 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
       load(loadOptions: LoadOptions) {
         console.log(JSON.stringify(loadOptions));
         return self._InvoiceServiceProxy
-          .getAllSubmitInvoices(JSON.stringify(loadOptions))
+          .getAllSubmitInvoices(
+            JSON.stringify(loadOptions),
+            self.searchInput.accountNumber,
+            self.searchInput.waybillOrSubWaybillNumber,
+            self.searchInput.containerNumber
+          )
           .toPromise()
           .then((response) => {
             return {

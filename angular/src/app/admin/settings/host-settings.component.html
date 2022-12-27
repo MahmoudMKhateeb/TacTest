@@ -939,6 +939,34 @@
                 />
               </div>
             </tab>
+            <tab class="p-5" heading="{{ 'KPISettings' | localize }}">
+              <h5>{{ 'KPISettings' | localize }}</h5>
+              <div class="form-group">
+                <label for="RequesKPI">{{ 'RequestKPI' | localize }}</label>
+                <input
+                  id="RequesKPI"
+                  type="text"
+                  #ignoredOtpNumbers="ngModel"
+                  name="RequesKPI"
+                  class="form-control"
+                  [pattern]="pattern"
+                  [(ngModel)]="hostSettings.kpi.dedicatedShippingRequestKPI"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="TruckKPI">{{ 'TruckKPI' | localize }}</label>
+                <input
+                  id="truckKPI"
+                  type="text"
+                  #ignoredOtpNumbers="ngModel"
+                  name="truckKPI"
+                  class="form-control"
+                  [pattern]="pattern"
+                  [(ngModel)]="hostSettings.kpi.truckKPI"
+                />
+              </div>
+            </tab>
           </tabset>
         </div>
       </div>

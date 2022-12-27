@@ -20,6 +20,7 @@ using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Cities.Dtos;
 using TACHYON.Common;
+using TACHYON.DedicatedInvoices;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
 using TACHYON.DynamicInvoices;
@@ -57,6 +58,7 @@ namespace TACHYON.Invoices.Groups
         private readonly BalanceManager _balanceManager;
         private readonly TransactionManager _transactionManager;
         private readonly IRepository<DynamicInvoice, long> _DynamicInvoiceRepository;
+        private readonly IRepository<DedicatedDynamicInvoice, long> _dedicatedInvoiceRepository;
 
 
         public SubmitInvoicesAppService(
@@ -69,7 +71,7 @@ namespace TACHYON.Invoices.Groups
             IAppNotifier appNotifier,
             InvoiceManager invoiceManager,
             IExcelExporterManager<SubmitInvoiceListDto> excelExporterManager,
-            IRepository<DocumentFile, Guid> documentFileRepository, IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository, IFeatureChecker featureChecker, BalanceManager balanceManager, TransactionManager transactionManager, IRepository<DynamicInvoice, long> dynamicInvoiceRepository)
+            IRepository<DocumentFile, Guid> documentFileRepository, IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository, IFeatureChecker featureChecker, BalanceManager balanceManager, TransactionManager transactionManager, IRepository<DynamicInvoice, long> dynamicInvoiceRepository, IRepository<DedicatedDynamicInvoice, long> dedicatedInvoiceRepository)
         {
             _PeriodRepository = PeriodRepository;
             _SubmitInvoiceRepository = SubmitInvoiceRepository;
@@ -86,10 +88,11 @@ namespace TACHYON.Invoices.Groups
             _balanceManager = balanceManager;
             _transactionManager = transactionManager;
             _DynamicInvoiceRepository = dynamicInvoiceRepository;
+            _dedicatedInvoiceRepository = dedicatedInvoiceRepository;
         }
 
 
-        public async Task<LoadResult> GetAllSubmitInvoices(GetAllSubmitInvoicesInput input)
+        public async Task<LoadResult> GetAllSubmitInvoices(GetAllSubmitInvoicesInput input, GetAllSubmitInvoicesSearchInput searchInput)
         {
             DisableTenancyFilters();
 
@@ -99,6 +102,12 @@ namespace TACHYON.Invoices.Groups
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer),
                     i => i.TenantId == AbpSession.TenantId.Value)
                 .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), i => true)
+                .WhereIf(!string.IsNullOrEmpty(searchInput.AccountNumber), x => x.Tenant.AccountNumber == searchInput.AccountNumber)
+                .WhereIf(!string.IsNullOrEmpty(searchInput.ContainerNumber), x => x.Trips.Any(y => y.ShippingRequestTripFK.ContainerNumber == searchInput.ContainerNumber))
+                .WhereIf(searchInput.WaybillOrSubWaybillNumber != null, x => x.Trips.Any(y => y.ShippingRequestTripFK.WaybillNumber == searchInput.WaybillOrSubWaybillNumber) ||
+                x.Trips.Any(x => x.ShippingRequestTripFK.RoutPoints.Any(x => x.WaybillNumber == searchInput.WaybillOrSubWaybillNumber)) ||
+                x.Penalties.Any(x => x.ShippingRequestTripFK.WaybillNumber == searchInput.WaybillOrSubWaybillNumber) ||
+                x.Penalties.Any(x => x.ShippingRequestTripFK.RoutPoints.Any(y => y.WaybillNumber == searchInput.WaybillOrSubWaybillNumber)))
                 .ProjectTo<SubmitInvoiceListDto>(AutoMapperConfigurationProvider);
 
             return await LoadResultAsync(query, input.LoadData);
@@ -145,6 +154,7 @@ namespace TACHYON.Invoices.Groups
             var document = await _commonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(Input), AbpSession.TenantId);
             submit.Status = SubmitInvoiceStatus.Claim;
             submit.RejectedReason = string.Empty;
+            submit.SubmittedDate = Clock.Now;
             ObjectMapper.Map(document, submit);
 
             var admin = await _userManager.GetAdminHostAsync();
@@ -165,6 +175,7 @@ namespace TACHYON.Invoices.Groups
             if (invoice != null)
             {
                 invoice.Status = SubmitInvoiceStatus.Accepted;
+                invoice.AcceptanceDate = Clock.Now;
                 await _appNotifier.SubmitInvoiceOnAccepted(
                     new UserIdentifier(invoice.TenantId,
                         (await _userManager.GetAdminByTenantIdAsync(invoice.TenantId)).Id), invoice);
@@ -234,7 +245,7 @@ namespace TACHYON.Invoices.Groups
 
             return await _commonManager.ExecuteMethodIfHostOrTenantUsers(async () =>
             {
-                var InvoiceListDto = ObjectMapper.Map<List<SubmitInvoiceListDto>>(await GetSubmitInvoices(input));
+                var InvoiceListDto = ObjectMapper.Map<List<SubmitInvoiceListDto>>((await GetSubmitInvoices(input)).ToList());
                 return _excelExporterManager.ExportToFile(InvoiceListDto, "SubmitInvoices", HeaderText,
                     propertySelectors);
             });
@@ -348,8 +359,7 @@ namespace TACHYON.Invoices.Groups
                 .Include(i => i.Trips)
                 .ThenInclude(r => r.ShippingRequestTripFK)
                 .ThenInclude(i => i.ShippingRequestFk)
-                .ThenInclude(r => r.DestinationCityFk)
-                .ThenInclude(r => r.Translations)
+                .ThenInclude(r => r.ShippingRequestDestinationCities)
                 .Include(i => i.Trips)
                 .ThenInclude(r => r.ShippingRequestTripFK)
                 .ThenInclude(r => r.AssignedTruckFk)
@@ -367,13 +377,20 @@ namespace TACHYON.Invoices.Groups
                 .Include(r => r.Penalties)
                 .ThenInclude(r => r.ShippingRequestTripFK)
                 .ThenInclude(i => i.ShippingRequestFk)
-                .ThenInclude(r => r.DestinationCityFk)
-                .ThenInclude(r => r.Translations)
+                .ThenInclude(r => r.ShippingRequestDestinationCities)
                 .Include(r => r.Penalties)
                 .ThenInclude(r => r.ShippingRequestTripFK)
                 .ThenInclude(r => r.AssignedTruckFk)
                 .ThenInclude(r => r.TrucksTypeFk)
                 .ThenInclude(r => r.Translations)
+                .Include(i => i.Trips)
+                .ThenInclude(r => r.ShippingRequestTripFK)
+                .ThenInclude(r=>r.DestinationFacilityFk)
+                .ThenInclude(r=>r.CityFk)
+                .Include(i => i.Penalties)
+                .ThenInclude(r => r.ShippingRequestTripFK)
+                .ThenInclude(r => r.DestinationFacilityFk)
+                .ThenInclude(r => r.CityFk)
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer),
                     i => i.TenantId == AbpSession.TenantId.Value)
                 .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), i => true)
@@ -393,6 +410,10 @@ namespace TACHYON.Invoices.Groups
             {
                 return GetDynamicInvoiceItems(SubmitInvoice);
             }
+            else if(SubmitInvoice.Channel == InvoiceChannel.Dedicated)
+            {
+                return GetDedicatedInvoiceItems(SubmitInvoice);
+            }
             var TotalItem = SubmitInvoice.Trips.Count +
                             SubmitInvoice.Trips.Sum(v => v.ShippingRequestTripFK.ShippingRequestTripVases.Count);
             int Sequence = 1;
@@ -409,7 +430,8 @@ namespace TACHYON.Invoices.Groups
                     WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
                     TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName,
                     Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
-                    Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
+                    //Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
+                    Destination = trip.ShippingRequestTripFK.DestinationFacilityFk.CityFk.DisplayName,
                     DateWork = trip.ShippingRequestTripFK.EndWorking.HasValue ? trip.ShippingRequestTripFK.EndWorking.Value.ToString("dd MMM, yyyy") : "",
                     Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
                     L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : ""
@@ -478,8 +500,8 @@ namespace TACHYON.Invoices.Groups
                     Source = penalty.ShippingRequestTripId != null 
                     ? ObjectMapper.Map<CityDto>(penalty.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? penalty.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName
                     : "-",
-                    Destination = penalty.ShippingRequestTripId != null 
-                    ? ObjectMapper.Map<CityDto>(penalty.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? penalty.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName
+                    Destination = penalty.ShippingRequestTripId != null
+                    ? penalty.ShippingRequestTripFK.DestinationFacilityFk.CityFk.DisplayName
                     : "-",
                     DateWork = penalty.ShippingRequestTripId != null 
                     ? penalty.ShippingRequestTripFK.EndWorking.HasValue ? penalty.ShippingRequestTripFK.EndWorking.Value.ToString("dd MMM, yyyy") : ""
@@ -558,6 +580,54 @@ namespace TACHYON.Invoices.Groups
             });
             return Items;
         }
+
+        
+        private List<InvoiceItemDto> GetDedicatedInvoiceItems(SubmitInvoice submitInvoice)
+        {
+            var dedicatedInvoice = _dedicatedInvoiceRepository.GetAll()
+                .Include(x => x.DedicatedDynamicInvoiceItems)
+                .ThenInclude(x => x.DedicatedShippingRequestTruck)
+                .ThenInclude(x => x.Truck)
+                .ThenInclude(x => x.TrucksTypeFk)
+                .Include(x => x.DedicatedDynamicInvoiceItems)
+                .ThenInclude(x => x.DedicatedShippingRequestTruck)
+                .ThenInclude(x => x.ShippingRequest)
+                .ThenInclude(x => x.ShippingRequestDestinationCities)
+                .ThenInclude(x => x.CityFk)
+                 .Include(x => x.DedicatedDynamicInvoiceItems)
+                .ThenInclude(x => x.DedicatedShippingRequestTruck)
+                .ThenInclude(x => x.ShippingRequest)
+                .ThenInclude(x => x.ShippingRequestDestinationCities)
+                .FirstOrDefault(x => x.SubmitInvoiceId == submitInvoice.Id);
+
+            var TotalItem = dedicatedInvoice.DedicatedDynamicInvoiceItems.Count;
+
+            int Sequence = 1;
+            List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
+            dedicatedInvoice.DedicatedDynamicInvoiceItems.ToList().ForEach(item =>
+            {
+                Items.Add(new InvoiceItemDto
+                {
+                    Sequence = $"{Sequence}/{TotalItem}",
+                    SubTotalAmount = item.ItemSubTotalAmount,
+                    VatAmount = item.VatAmount,
+                    TotalAmount = item.ItemTotalAmount,
+                    WayBillNumber = "",
+                    Source = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.Count() > 0 ? "Destination Cities" :
+                    item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.First().CityFk.DisplayName,
+
+                    Destination = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.Count() > 0 ? "Destination Cities" :
+                    item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.First().CityFk.DisplayName,
+
+                    DateWork = "",
+                    Remarks = item.WorkingDayType == DedicatedDynamicInvocies.WorkingDayType.OverTime ?"Over Time" :item.Remarks,
+                    TruckType = item.DedicatedShippingRequestTruck.Truck.TrucksTypeFk.DisplayName
+                });
+                Sequence++;
+            });
+            return Items;
+        }
+
         #endregion
     }
 }

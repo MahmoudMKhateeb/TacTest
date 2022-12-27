@@ -5,3 +5,11 @@
   pointer-events: none;
   opacity: 80%;
 }
+
+::ng-deep .no-padding-custom .dx-button-content {
+  padding: 0 !important;
+}
+
+::ng-deep .invalid .card {
+  border: 1px solid red !important;
+}

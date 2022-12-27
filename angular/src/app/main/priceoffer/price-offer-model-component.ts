@@ -16,6 +16,7 @@ import {
   PriceOfferTenantCommissionSettings,
   ShippingRequestUpdateServiceProxy,
   ShippingRequestUpdateStatus,
+  SelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
@@ -50,6 +51,8 @@ export class PriceOfferModelComponent extends AppComponentBase {
   type: string;
   priceOfferInput: CreateOrEditPriceOfferInput;
   CreateSrUpdateActionInput: CreateSrUpdateActionInputDto = new CreateSrUpdateActionInputDto();
+  AllActorsCarriers: SelectItemDto[];
+  isForDedicated: boolean;
 
   constructor(
     injector: Injector,
@@ -71,9 +74,19 @@ export class PriceOfferModelComponent extends AppComponentBase {
     SRUpdateId: number | undefined = undefined,
     type: string | undefined = undefined,
     offerId: number | undefined = undefined,
-    isPostPriceOffer: boolean = false
+    isPostPriceOffer: boolean = false,
+    isForDedicated = false
   ): void {
+    this.isForDedicated = isForDedicated;
     this.isPostPriceOffer = isPostPriceOffer;
+
+    this._CurrentServ.getAllCarrierActorsForDropDown().subscribe((result) => {
+      this.AllActorsCarriers = result;
+      // let defaultItem = new SelectItemDto();
+      // defaultItem.id = null;
+      // defaultItem.displayName = this.l('Myself');
+      // this.AllActorsCarriers.unshift(defaultItem);
+    });
 
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this.input.shippingRequestId = id;
@@ -89,6 +102,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
       this.modal.show();
       this.input.shippingRequestId = id;
       this.input.channel = this.Channel;
+      this.input.carrierActorId = this.offer.carrierActorId;
       if (!this.feature.isEnabled('App.Carrier') && this.offer.id == 0) {
         this.changeItemComissionValue();
         this.changeVasComissionValue();
@@ -103,6 +117,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
           r.itemsTotalPricePreCommissionPreVat = undefined;
         });
       }
+      (this.offer.carrierActorId as any) = this.offer.carrierActorId?.toString();
       this.active = true;
       this.modal.show();
     });
@@ -176,6 +191,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.input.commissionType = this.offer.commissionType;
     this.input.vasCommissionPercentageOrAddValue = this.offer.vasCommissionPercentageOrAddValue;
     this.input.vasCommissionType = this.offer.vasCommissionType;
+    this.input.carrierActorId = this.offer.carrierActorId;
 
     if (this.isPostPriceOffer) {
       this.postPriceOfferSubmitted.emit(this.input);
@@ -235,9 +251,11 @@ export class PriceOfferModelComponent extends AppComponentBase {
     // this.offer.itemCommissionAmount = this.calculatorItemCommission(this.offer.itemPrice);
     // this.offer.itemSubTotalAmountWithCommission = this.offer.itemCommissionAmount * this.offer.quantity;
     // this.calculatorAll();
-    if (this.form.form.valid) {
+    //if (this.form.form.valid) {
+    if (this.offer.itemPrice) {
       this.initPriceOffer();
     }
+    //}
   }
 
   // calculatorItem(item: PriceOfferItem): void {

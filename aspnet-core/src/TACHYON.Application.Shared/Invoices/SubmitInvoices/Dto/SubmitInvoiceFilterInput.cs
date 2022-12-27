@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using NetTopologySuite.Geometries;
 using System;
 
 namespace TACHYON.Invoices.SubmitInvoices.Dto
@@ -17,5 +18,12 @@ namespace TACHYON.Invoices.SubmitInvoices.Dto
     public class GetAllSubmitInvoicesInput
     {
         public string LoadData { get; set; }
+    }
+
+    public class GetAllSubmitInvoicesSearchInput
+    {
+        public string AccountNumber { get; set; }
+        public long? WaybillOrSubWaybillNumber { get; set; }
+        public string ContainerNumber { get; set; }
     }
 }

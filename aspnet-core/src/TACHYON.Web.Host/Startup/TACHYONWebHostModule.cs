@@ -95,6 +95,7 @@ namespace TACHYON.Web.Startup
 
             //register worker start, end Bids requests
             workManager.Add(IocManager.Resolve<TrackBidEndDateWorker>());
+            workManager.Add(IocManager.Resolve<TrackDedicatedTrucksStatuses>());
 
             workManager.Add(IocManager.Resolve<ExpiredDocumentFileWorker>());
 

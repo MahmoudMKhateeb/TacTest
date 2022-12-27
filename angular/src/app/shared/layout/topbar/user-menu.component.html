@@ -145,7 +145,7 @@
       <!-- section myProfile For Carrier/Shipper Accounts    -->
       <a
         href="javascript:;"
-        *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.Carrier')"
+        *ngIf="!feature.isEnabled('App.CarrierClients') && (isShipper || isCarrier)"
         class="navi-item"
         id="UserProfileLink"
         [routerLink]="['/app/main/profile', this.appSession.tenantId, 'view']"

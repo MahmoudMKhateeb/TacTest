@@ -18,8 +18,31 @@
       </div>
       <div class="modal-body">
         <form #Form="ngForm" novalidate (ngSubmit)="type == 'Reprice' ? Reprice(SRUpdateId) : confirmSendOffer()">
+          <div class="form-group row" *ngIf="this.feature.isEnabled('App.CarrierClients')">
+            <div class="col-lg-4">
+              <label>{{ l('ActorCarrier') }} <span class="required-fileds">*</span></label>
+              <div
+                [ngClass]="{
+                          'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsCarriers
+                        }"
+              >
+                <dx-select-box
+                  name="ActorCarrier"
+                  [(ngModel)]="offer.carrierActorId"
+                  [dataSource]="AllActorsCarriers"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  [required]="true"
+                  placeholder="{{ l('SelectActor') }}"
+                >
+                </dx-select-box>
+              </div>
+              <span class="form-text text-muted">{{ l('SelectActor') }} {{ offer.carrierActorId }}</span>
+            </div>
+          </div>
           <div class="form-group row">
-            <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
+            <div class="col-lg-4" *ngIf="feature.isEnabled('App.TachyonDealer')">
               <label>{{ l('CommissionType') }}:</label>
               <select
                 class="form-control"
@@ -30,7 +53,7 @@
                 <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
               </select>
             </div>
-            <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
+            <div class="col-lg-4" *ngIf="feature.isEnabled('App.TachyonDealer')">
               <label>{{ l('CommissionTypeValue') }}:</label>
               <input
                 type="number"
@@ -43,7 +66,7 @@
             </div>
           </div>
           <div class="form-group row">
-            <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
+            <div class="col-lg-4" *ngIf="feature.isEnabled('App.TachyonDealer')">
               <label>{{ l('VasCommissionType') }}:</label>
 
               <select
@@ -55,7 +78,7 @@
                 <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
               </select>
             </div>
-            <div class="col-lg-4" *ngIf="!feature.isEnabled('App.Carrier')">
+            <div class="col-lg-4" *ngIf="feature.isEnabled('App.TachyonDealer')">
               <label>{{ l('VasCommissionPercentageOrAddValue') }}:</label>
 
               <input
@@ -74,8 +97,8 @@
             <table class="table table-sm table-bordered rounded">
               <thead>
                 <tr class="table-active">
-                  <th style="width: 350px">{{l('NoOfTrips')}}</th>
-                  <th style="width: 350px">{{l('itemPrice')}}</th>
+                  <th style="width: 350px">{{l('Qty')}}</th>
+                  <th style="width: 350px">{{l(!isForDedicated ? 'itemPrice' : 'truckPrice')}}</th>
                   <th *ngIf="isTachyonDealer">{{l('ItemPricePostCommission')}}</th>
                 </tr>
               </thead>
@@ -155,7 +178,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>{{l('Trip')}}</td>
+                  <td>{{l(!isForDedicated ? 'Trip' : 'TACHYON.Trucks.Truck')}}</td>
                   <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
                   <td>{{offer.itemsTotalCommission}}</td>
                   <td>{{offer.itemsTotalPricePostCommissionPreVat}}</td>
@@ -187,7 +210,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>{{l('TotalVATForTrip')}}</td>
+                  <td>{{l(!isForDedicated ? 'TotalVATForTrip' : 'TotalVatForTrucks')}}</td>
                   <td>{{offer.itemsTotalVatAmountPreCommission}}</td>
                   <td *ngIf="isTachyonDealerOrHost">{{offer.itemsTotalVatPostCommission}}</td>
                 </tr>

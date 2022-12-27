@@ -1,0 +1,249 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  role="dialog"
+  aria-labelledby="attendanceModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static', keyboard: false }"
+>
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <form #Form="ngForm" novalidate (ngSubmit)="send()" autocomplete="off">
+        <div class="modal-header">
+          <p class="modal-title">
+            <span>{{ l('truckAttendanceModal') }}</span>
+          </p>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!--  begin :: Body-->
+            <!-- begin :: Source Dest Facilitys  -->
+            <div class="col-4 form-group">
+              <div class="row">
+                <div class="input-group mb-3">
+                  <input
+                    name="searchTerm"
+                    [(ngModel)]="searchTerm"
+                    (ngModelChange)="filterTrucks()"
+                    type="text"
+                    class="form-control"
+                    placeholder="{{ 'searchForTruck' | localize }}"
+                    aria-label="searchForTruck"
+                    aria-describedby="basic-addon2"
+                  />
+                  <div class="input-group-append">
+                    <button class="btn btn-primary btn-outline" type="button" (click)="filterTrucks()">{{ 'Search' | localize }}</button>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngFor="let truck of filteredTrucks">
+                <div class="card card-custom gutter-b w-100" (click)="selectTruck(truck.id)" [class.selected]="selectedTruckId === truck.id">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-8">
+                        {{ truck.plateNumber }}
+                      </div>
+                      <div class="col-4 text-center">
+                        {{ truck.status | localize }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-8 form-group">
+              <!--                    [views]="['day', 'timelineDay']"-->
+              <ng-container *ngIf="loading">
+                <dx-load-panel [(visible)]="loading"></dx-load-panel>
+              </ng-container>
+              <dx-scheduler
+                id="scheduler"
+                [dataSource]="dataSource"
+                currentView="month"
+                [currentDate]="currentDate"
+                [firstDayOfWeek]="0"
+                [startDayHour]="0"
+                [endDayHour]="23"
+                [showAllDayPanel]="false"
+                [height]="600"
+                dataCellTemplate="dataCellTemplate"
+                appointmentTooltipTemplate="tooltip-template"
+                (onAppointmentFormOpening)="onAppointmentFormOpening($event)"
+                (onAppointmentDeleting)="onAppointmentDeleting($event)"
+              >
+                <dxo-editing
+                  #editingOptions
+                  [allowAdding]="!isCarrier"
+                  [allowDeleting]="!isCarrier"
+                  [allowUpdating]="!isCarrier"
+                  [allowResizing]="false"
+                  [allowDragging]="false"
+                ></dxo-editing>
+
+                <dxi-resource
+                  fieldExpr="statusId"
+                  [allowMultiple]="true"
+                  [dataSource]="attendanceSchedularResources"
+                  label="{{ 'Status' | localize }}"
+                  [useColorAsDefault]="true"
+                ></dxi-resource>
+                <div
+                  *dxTemplate="let dataCell of 'dataCellTemplate'"
+                  [ngClass]="{
+                    'disable-date': isDisabledDateCell(dataCell.startDate)
+                  }"
+                >
+                  {{ dataCell.text }}
+                </div>
+
+                <div *dxTemplate="let model of 'tooltip-template'">
+                  <span style="display: none">
+                    {{ model | json }}
+                  </span>
+                  <div class="dx-tooltip-appointment-item">
+                    <div class="dx-tooltip-appointment-item-marker">
+                      <div class="dx-tooltip-appointment-item-marker-body" [style.background]="getBGColor(model?.appointmentData?.statusId)"></div>
+                    </div>
+                    <div class="dx-tooltip-appointment-item-content">
+                      <div class="dx-tooltip-appointment-item-content-subject">{{ model?.appointmentData?.text | localize }}</div>
+                      <div class="dx-tooltip-appointment-item-content-date">{{ model?.appointmentData?.startDate | date: 'MMMM d' }}</div>
+                    </div>
+                    <div
+                      *ngIf="!isCarrier"
+                      class="dx-tooltip-appointment-item-delete-button-container"
+                      (click)="deleteAttendance($event, model?.appointmentData?.id)"
+                    >
+                      <div
+                        class="dx-tooltip-appointment-item-delete-button dx-button dx-button-normal dx-button-mode-text dx-widget dx-button-has-icon"
+                        aria-label="trash"
+                        tabindex="0"
+                        role="button"
+                      >
+                        <div class="dx-button-content"><i class="dx-icon dx-icon-trash"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </dx-scheduler>
+
+              <!--              <label>{{ l('Reason') }}*</label>-->
+              <!--              <div class="input-group">-->
+              <!--                <textarea class="form-control" name="cancelReason" [(ngModel)]="rejectInput.cancelReason" maxlength="500" min="5" required>-->
+              <!--                </textarea>-->
+              <!--              </div>-->
+            </div>
+            <!-- end::Body-->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!--begin::Buttons-->
+
+          <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" [disabled]="saving" (click)="close()">
+            {{ l('Close') }}
+          </button>
+          <!--          <button-->
+          <!--            type="submit"-->
+          <!--            class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase"-->
+          <!--            [buttonBusy]="saving"-->
+          <!--            [disabled]="!Form.form.valid"-->
+          <!--          >-->
+          <!--            {{ l('Save') }}-->
+          <!--          </button>-->
+          <!--end::Buttons-->
+        </div>
+      </form>
+    </div>
+  </div>
+  <dx-popup
+    [width]="500"
+    [height]="500"
+    [closeOnOutsideClick]="true"
+    [(visible)]="isCustomPopupVisible"
+    [title]="l('Edit')"
+    (onHiding)="onHiding($event)"
+  >
+    <div *dxTemplate="let data of 'content'">
+      <dx-scroll-view width="100%" height="100%">
+        <!--            <img src="{{ editAppointmentData.image }}" class="dx-field-label" />-->
+        <!--            <div class="dx-field-label">-->
+        <!--                <p>-->
+        <!--                    <b>{{ editAppointmentData.text }}</b>-->
+        <!--                </p>-->
+        <!--                <p>Year: {{ editAppointmentData.year }}</p>-->
+        <!--                <p>Duration: {{ editAppointmentData.duration }} minutes</p>-->
+        <!--            </div>-->
+
+        <!--            <div class="dx-field-label">-->
+        <!--                <b>{{ formatDate(editAppointmentData.startDate, "shortTime") }} - -->
+        <!--                    {{ formatDate(editAppointmentData.endDate, "shortTime") }}</b>-->
+        <!--            </div>-->
+
+        <!--            <div class="dx-field-label"><b>Price ($): </b></div>-->
+        <!--            <div id="priceView" class="dx-field-label">-->
+        <!--                {{-->
+        <!--                editAppointmentData.seatRow && editAppointmentData.seatNumber-->
+        <!--                    ? setSeatPrice(-->
+        <!--                        editAppointmentData.price,-->
+        <!--                        editAppointmentData.seatRow-->
+        <!--                    )-->
+        <!--                    : "Pick a seat for pricing"-->
+        <!--                }}-->
+        <!--            </div>-->
+        <div class="row">
+          <div class="col-12">
+            <label [style.width]="'100%'" class="dx-field-label">
+              {{ 'attendaceStatus' | localize }}
+            </label>
+            <dx-select-box
+              class="dx-field-label"
+              [dataSource]="allAttendaceStatus"
+              [width]="'100%'"
+              displayExpr="value"
+              valueExpr="key"
+              placeholder="{{ 'Select' | localize }}"
+              [(value)]="editAppointmentData.statusId"
+            >
+            </dx-select-box>
+          </div>
+          <div class="col-6" *ngIf="!!rentalRange.rentalStartDate && rentalRange.rentalEndDate">
+            <label [style.width]="'100%'" class="dx-field-label"> {{ 'attendanceDateFrom' | localize }}: </label>
+            <dx-date-box
+              [min]="rentalRange.rentalStartDate.toDate()"
+              [max]="rentalRange.rentalEndDate.toDate()"
+              class="dx-field-label"
+              [width]="'100%'"
+              placeholder="{{ 'SelectDate' | localize }}"
+              [(value)]="editAppointmentData.startDate"
+            >
+            </dx-date-box>
+          </div>
+          <div class="col-6" *ngIf="!!rentalRange.rentalStartDate && rentalRange.rentalEndDate">
+            <label [style.width]="'100%'" class="dx-field-label"> {{ 'attendanceDateTo' | localize }}: </label>
+            <dx-date-box
+              [min]="rentalRange.rentalStartDate.toDate()"
+              [max]="rentalRange.rentalEndDate.toDate()"
+              class="dx-field-label"
+              [width]="'100%'"
+              placeholder="{{ 'SelectDate' | localize }}"
+              [(value)]="editAppointmentData.endDate"
+            >
+            </dx-date-box>
+          </div>
+        </div>
+      </dx-scroll-view>
+    </div>
+
+    <dxi-toolbar-item
+      [disabled]="!!editAppointmentData && (!editAppointmentData.statusId || !editAppointmentData.startDate || !editAppointmentData.endDate)"
+      widget="dxButton"
+      toolbar="bottom"
+      location="after"
+      [options]="{ text: l('Save'), onClick: updateAppointment }"
+    ></dxi-toolbar-item>
+    <dxi-toolbar-item widget="dxButton" toolbar="bottom" location="after" [options]="{ text: l('Cancel'), onClick: onHiding }"> </dxi-toolbar-item>
+  </dx-popup>
+</div>

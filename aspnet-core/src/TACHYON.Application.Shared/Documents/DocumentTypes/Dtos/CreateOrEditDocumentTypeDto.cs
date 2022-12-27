@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;
+using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Dto;
 
 namespace TACHYON.Documents.DocumentTypes.Dtos
@@ -16,7 +17,7 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
 
         public bool HasExpirationDate { get; set; }
 
-        public int DocumentsEntityId { get; set; }
+        public DocumentsEntitiesEnum DocumentsEntityId { get; set; }
 
         public int? EditionId { get; set; }
         public bool HasNumber { get; set; }
@@ -26,6 +27,8 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public bool HasNotes { get; set; }
         public bool IsNumberUnique { get; set; }
         public string SpecialConstant { get; set; }
+        public DocumentTypeFlagEnum Flag { get; set; }
+
         public int? NumberMinDigits { get; set; }
         public int? NumberMaxDigits { get; set; }
         public int? ExpirationAlertDays { get; set; }
@@ -47,5 +50,6 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public SelectItemDto DocumentRelatedWith { get; set; }
 
         [MaxLength(400)] public string FileToken { get; set; }
+
     }
 }

@@ -9,7 +9,7 @@
   [config]="{ backdrop: 'static' }"
 >
   <div class="modal-dialog modal-md">
-    <div class="modal-content">
+    <div class="modal-content" style="width: 700px">
       <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="save()">
         <div class="modal-header">
           <h4 class="modal-title">
@@ -20,7 +20,7 @@
           <div class="row">
             <!--  begin :: Body-->
             <div class="col-lg-12 mt-4">
-              <label>{{ l('Company') }} <span class="required-fileds">*</span></label>
+              <label>{{ l('Company') }} </label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
                 <p-dropdown
                   #Company="ngModel"
@@ -35,12 +35,13 @@
                   optionValue="id"
                   [styleClass]="'CompanyInput'"
                   class="form-control"
-                  required
                   (onChange)="GetWaybillsByCompany()"
                 >
                 </p-dropdown>
               </div>
             </div>
+          </div>
+          <div class="row">
             <div class="col-lg-12 mt-4">
               <label>{{ l('DestinationCompany') }}</label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
@@ -57,31 +58,29 @@
                   optionValue="id"
                   [styleClass]="'CompanyInput'"
                   class="form-control"
-                  (onChange)="Calculator()"
+                  (onChange)="GetWaybillsByCompany()"
                 >
                 </p-dropdown>
               </div>
             </div>
-            <div class="col-lg-12 mt-4">
-              <label>{{ l('Waybill') }}</label>
-              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': false }">
-                <p-dropdown
-                  #Waybill="ngModel"
-                  name="wabills"
-                  [options]="Allwaybills"
-                  [(ngModel)]="form.shippingRequestTripId"
-                  optionLabel="waybillNumber"
-                  [filter]="true"
-                  filterBy="waybillNumber"
-                  [showClear]="true"
-                  placeholder="{{ l('SelectWaybill') }}"
-                  optionValue="id"
-                  [styleClass]="'CompanyInput'"
-                  class="form-control"
-                >
-                </p-dropdown>
-              </div>
+            <div>
+              <small *ngIf="form.tenantId == null && form.destinationTenantId == null" class="text-danger">{{ l('OneCompanyMustBeSelected') }}</small>
             </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-6 mt-4">
+              <label>{{ l('ReferenceNo') }} </label>
+              <input #penaltyName="ngModel" type="text" class="form-control" [(ngModel)]="form.referenceNumber" name="penaltyName" />
+            </div>
+
+            <div class="col-lg-6 mt-4">
+              <label>{{ l('InvoiceFlag') }} </label>
+              <input #penaltyInvoiceFlag="ngModel" type="text" class="form-control" [(ngModel)]="form.invoiceFlag" name="penaltyInvoiceFlag" />
+            </div>
+          </div>
+
+          <div class="row">
             <div class="col-lg-12 mt-4">
               <label>{{ l('PenaltyName') }} <span class="required-fileds">*</span></label>
               <input
@@ -95,6 +94,9 @@
                 required
               />
             </div>
+          </div>
+
+          <div class="row">
             <div class="col-lg-12 mt-4">
               <label>{{ l('PenaltyDescription') }} <span class="required-fileds">*</span></label>
               <input
@@ -107,28 +109,14 @@
                 [class.is-invalid]="penaltyDescrption.invalid && (penaltyDescrption.dirty || penaltyDescrption.touched)"
               />
             </div>
-            <div class="col-lg-6 mt-4">
-              <label>{{ l('Price') }} <span class="required-fileds">*</span></label>
-              <input
-                #ItmePrice="ngModel"
-                type="number"
-                class="form-control"
-                [(ngModel)]="form.itmePrice"
-                name="ItmePrice"
-                [class.is-valid]="ItmePrice.valid && (ItmePrice.dirty || ItmePrice.touched)"
-                [class.is-invalid]="ItmePrice.invalid && (ItmePrice.dirty || ItmePrice.touched)"
-                (change)="Calculator()"
-                min="1"
-                required
-              />
-            </div>
-            <div *ngIf="form.destinationTenantId" class="col-lg-6 mt-4">
+
+            <div *ngIf="form.tenantId && form.destinationTenantId" class="col-lg-6 mt-4">
               <label>{{ l('commissionType') }}:</label>
-              <select class="form-control" name="CommissionType" [(ngModel)]="form.commissionType" (change)="Calculator()">
+              <select class="form-control" name="CommissionType" [(ngModel)]="form.commissionType" (change)="CalculatePrices()">
                 <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
               </select>
             </div>
-            <div *ngIf="form.destinationTenantId" class="col-lg-6 mt-4">
+            <div *ngIf="form.tenantId && form.destinationTenantId" class="col-lg-6 mt-4">
               <label>{{ l('commissionTypeValue') }}:</label>
               <input
                 type="number"
@@ -137,7 +125,7 @@
                 required
                 class="form-control"
                 placeholder="Value"
-                (change)="Calculator()"
+                (change)="CalculatePrices()"
                 name="commissionPercentageOrAddValue"
                 [(ngModel)]="form.commissionPercentageOrAddValue"
                 [class.is-valid]="
@@ -148,10 +136,138 @@
                 "
               />
             </div>
-            <div class="col-lg-6 mt-4" *ngIf="form.destinationTenantId">
+            <div class="col-lg-6 mt-4" *ngIf="form.tenantId && form.destinationTenantId">
               <label>{{ l('commissionAmount') }}:</label>
               <input type="number" min="0" class="form-control" name="commissionAmount" [(ngModel)]="CommissionAmount" disabled />
             </div>
+          </div>
+          <div class="row">
+            <div class="row col-lg-12 mt-4">
+              <div class="col-sm-12">
+                <table class="table">
+                  <thead>
+                    <tr class="table-active">
+                      <th width="30%" scope="col">{{ l('WaybillNumber') }}</th>
+                      <th scope="col">{{ l('Price') }}</th>
+                      <th scope="col">{{ l('VatAmount') }}</th>
+                      <th scope="col">{{ l('TotalAmount') }}</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let field of SelectedWaybills; let i = index">
+                      <td>
+                        <input type="hidden" [(ngModel)]="field.id" name="id" id="id" />
+                        <input
+                          [(ngModel)]="field.waybillNumber"
+                          #waybill="ngModel"
+                          disabled
+                          class="form-control"
+                          type="text"
+                          name="waybill{{ i }}"
+                          id="waybill{{ i }}"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          [(ngModel)]="field.itemPrice"
+                          #NewPrice="ngModel"
+                          disabled
+                          class="form-control"
+                          type="text"
+                          name="newPrice{{ i }}"
+                          id="newPrice{{ i }}"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          [(ngModel)]="field.vatAmount"
+                          #NewVatAmount="ngModel"
+                          disabled
+                          class="form-control"
+                          type="text"
+                          name="newVatAmount{{ i }}"
+                          id="newVatAmount{{ i }}"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          [(ngModel)]="field.itemTotalAmountPostVat"
+                          #NewTotalPrice="ngModel"
+                          class="form-control"
+                          type="text"
+                          name="newTotalAmount{{ i }}"
+                          id="newTotalAmount{{ i }}"
+                          disabled
+                        />
+                      </td>
+                      <td>
+                        <button class="btn btn-default" type="button" (click)="deleteFieldValue(i)">Delete</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p-autoComplete
+                          [(ngModel)]="newAttribute.penaltyItemDto"
+                          [suggestions]="FilteredWaybills"
+                          (completeMethod)="filterWaybills($event)"
+                          field="waybillNumber"
+                          [minLength]="1"
+                          name="MultiSelectInput"
+                          id="MultiSelectInput"
+                          #waybillnumberAutoComplete="ngModel"
+                          inputStyleClass="form-control"
+                          styleClass="width-percent-100"
+                          [class.ng-valid]="isValidAutoComplete(waybillnumberAutoComplete) && waybillnumberAutoComplete.touched"
+                          [class.ng-invalid]="isInvalidAutoComplete(waybillnumberAutoComplete) && waybillnumberAutoComplete.touched"
+                        >
+                        </p-autoComplete>
+                      </td>
+                      <td>
+                        <input type="hidden" name="newAttTripId" [(ngModel)]="newAttribute.shippingRequestTripId" />
+                        <input
+                          class="form-control"
+                          type="number"
+                          (keypress)="numberOnly($event)"
+                          id="newAttributePrice"
+                          [(ngModel)]="newAttribute.itemPrice"
+                          (change)="calculateNewPrice(newAttribute.itemPrice)"
+                          name="newAttributePrice"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          class="form-control"
+                          type="number"
+                          disabled
+                          id="newAttributeName"
+                          [(ngModel)]="newAttribute.vatAmount"
+                          name="newAttributeName"
+                          #vatAmount="ngModel"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          class="form-control"
+                          type="number"
+                          disabled
+                          id="newAttributeTotalAmount"
+                          [(ngModel)]="newAttribute.itemTotalAmountPostVat"
+                          name="newAttributeTotalAmount"
+                          #PriceAfterVat="ngModel"
+                        />
+                      </td>
+                      <td>
+                        <!-- || isInvalidAutoComplete(waybillnumberAutoComplete) -->
+                        <button class="btn btn-default" type="button" [disabled]="!newAttribute.itemPrice" (click)="addFieldValue()">Add</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-lg-12 mt-4">
               <table class="table">
                 <thead>
@@ -164,7 +280,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr *ngIf="form.tenantId" let item in sel>
                     <td>{{ l('Company') }}</td>
                     <td><input [(ngModel)]="CompanyPrice" disabled class="form-control" type="number" name="CompanyPrice" id="CompanyPrice" /></td>
                     <td>
@@ -224,8 +340,8 @@
                 </tbody>
               </table>
             </div>
-            <!--  end :: Body-->
           </div>
+          <!--  end :: Body-->
         </div>
         <!-- end::Body-->
         <div class="modal-footer">
@@ -233,7 +349,7 @@
           <button
             type="submit"
             class="btn btn-primary"
-            [disabled]="!Form.form.valid"
+            [disabled]="!Form.form.valid || (form.tenantId == null && form.destinationTenantId == null)"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot' | localize)"
             (click)="save()"

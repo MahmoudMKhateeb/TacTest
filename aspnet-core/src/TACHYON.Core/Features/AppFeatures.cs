@@ -16,7 +16,14 @@
         public const string Carrier = "App.Carrier";
         public const string Pay = "App.Pay";
         public const string Receipt = "App.Receipt";
-        public const string Broker = "App.Broker";
+        public const string CMS = "App.CMS";
+        public const string ShipperClients = "App.ShipperClients";
+        public const string CarrierClients = "App.CarrierClients";
+        public const string SingleDropSaasCommission = "App.SingleDropSaasCommission";
+        public const string MultipleDropsSaasCommission = "App.MultipleDropsSaasCommission";
+        public const string CanClientLoginToSystem = "App.CanClientLoginToSystem";
+        public const string CreateDirectTrip = "App.CreateDirectTrip";
+        public const string DocumentsManagement = "App.DocumentsManagement";
         public const string Receiver = "App.Receiver";
         public const string TachyonDealer = "App.TachyonDealer";
         public const string ShippingRequest = "App.shippingRequest";
@@ -36,6 +43,7 @@
         public const string TachyonDealerMinValueCommission = "TachyonDealer.TachyonDealerMinValueCommission";
         public const string TachyonDealerCommissionType = "App.Shipper.TachyonDealerCommissionType";
 
+
         public const string InvoicePaymentMethod = "App.Shipper.Invoice.Payment.Method";
         public const string InvoicePaymentMethodCrarrier = "App.Shipper.Invoice.Payment.MethodCrarrier";
 
@@ -44,16 +52,29 @@
         #region Shipper between carrier
 
         #region Trip Comission
-
+        //bidding
         public const string TripCommissionPercentage = "App.Shipper.TripCommissionPercentage";
         public const string TripCommissionValue = "App.Shipper.TripCommissionValue";
         public const string TripMinValueCommission = "App.Shipper.TripMinValueCommission";
         public const string TripCommissionType = "App.Shipper.TripCommissionType";
 
-        public static string DirectRequestCommissionPercentage = "App.Shipper.DirectRequestCommissionPercentage";
-        public static string DirectRequestCommissionValue = "App.Shipper.DirectRequestCommissionValue";
-        public static string DirectRequestCommissionType = "App.Shipper.DirectRequestCommissionType";
-        public static string DirectRequestCommissionMinValue = "App.Shipper.DirectRequestCommissionMinValue";
+        public static string DirectRequestCommissionPercentage = "App.Shipper.TripDirectRequestCommissionPercentage";
+        public static string DirectRequestCommissionValue = "App.Shipper.TripDirectRequestCommissionValue";
+        public static string DirectRequestCommissionType = "App.Shipper.TripDirectRequestCommissionType";
+        public static string DirectRequestCommissionMinValue = "App.Shipper.TripDirectRequestCommissionMinValue";
+
+        #endregion
+
+        #region Truck Commission
+        public const string TruckCommissionPercentage = "App.Shipper.TruckCommissionPercentage";
+        public const string TruckCommissionValue = "App.Shipper.TruckCommissionValue";
+        public const string TruckMinValueCommission = "App.Shipper.TruckMinValueCommission";
+        public const string TruckCommissionType = "App.Shipper.TruckCommissionType";
+
+        public static string TruckDirectRequestCommissionPercentage = "App.Shipper.TruckDirectRequestCommissionPercentage";
+        public static string TruckDirectRequestCommissionValue = "App.Shipper.TruckDirectRequestCommissionValue";
+        public static string TruckDirectRequestCommissionType = "App.Shipper.TruckDirectRequestCommissionType";
+        public static string TruckDirectRequestCommissionMinValue = "App.Shipper.TruckDirectRequestCommissionMinValue";
 
         #endregion
 
@@ -72,6 +93,21 @@
 
         #endregion
 
+        #region Truck Vas Comission
+
+        public const string TruckVasCommissionPercentage = "App.Shipper.TruckVasCommissionPercentage";
+        public const string TruckVasCommissionValue = "App.Shipper.TruckVasCommissionValue";
+        public const string TruckVasMinValueCommission = "App.Shipper.TruckVasMinValueCommission";
+        public const string TruckVasCommissionType = "App.Shipper.TruckVasCommissionType";
+
+
+        public static string TruckDirectRequestVasCommissionType = "App.Shipper.TruckDirectRequestVASCommissionType";
+        public static string TruckDirectRequestVasCommissionPercentage = "App.Shipper.TruckDirectRequestVASCommissionPercentage";
+        public static string TruckDirectRequestVasCommissionValue = "App.Shipper.TruckDirectRequestVASCommissionValue";
+        public static string TruckDirectRequestVasCommissionMinValue = "App.Shipper.TruckDirectRequestVASCommissionMinValue";
+
+        #endregion
+
         #endregion
 
         #region TachyonDealer
@@ -85,12 +121,30 @@
 
         #endregion
 
+        #region Truck commission
+
+        public const string TachyonDealerTruckCommissionPercentage = "App.TachyonDealer.TruckCommissionPercentage";
+        public const string TachyonDealerTruckCommissionValue = "App.TachyonDealer.TruckCommissionValue";
+        public const string TachyonDealerTruckMinValueCommission = "App.TachyonDealer.TruckMinValueCommission";
+        public const string TachyonDealerTruckCommissionType = "App.TachyonDealer.TruckCommissionType";
+
+        #endregion
+
         #region Vas Comission
 
         public const string TachyonDealerVasCommissionPercentage = "App.TachyonDealer.VasCommissionPercentage";
         public const string TachyonDealerVasCommissionValue = "App.TachyonDealer.VasCommissionValue";
         public const string TachyonDealerVasMinValueCommission = "App.TachyonDealer.VasMinValueCommission";
         public const string TachyonDealerVasCommissionType = "App.TachyonDealer.VasCommissionType";
+
+        #endregion
+
+        #region Truck Vas Comission
+
+        public const string TachyonDealerTruckVasCommissionPercentage = "App.TachyonDealer.TruckVasCommissionPercentage";
+        public const string TachyonDealerTruckVasCommissionValue = "App.TachyonDealer.TruckVasCommissionValue";
+        public const string TachyonDealerTruckVasMinValueCommission = "App.TachyonDealer.TruckVasMinValueCommission";
+        public const string TachyonDealerTruckVasCommissionType = "App.TachyonDealer.TruckVasCommissionType";
 
         #endregion
 

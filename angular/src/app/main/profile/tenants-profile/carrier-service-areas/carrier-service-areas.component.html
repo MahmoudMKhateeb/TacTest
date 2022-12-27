@@ -1,0 +1,25 @@
+<div class="col-lg-12 gutter-b" *ngIf="serviceAreas">
+  <div class="card card-custom card-stretch gutter-b">
+    <!--begin::Header-->
+    <div class="card-header border-0 pt-5">
+      <h3 class="card-title align-items-start flex-column">
+        <span class="card-label font-weight-bolder text-dark">{{ 'serviceAreas' | localize }}</span>
+        <span class="text-muted mt-3 font-weight-bold font-size-sm">{{ l('carrierServiceAreas') }}</span>
+      </h3>
+    </div>
+    <!--end::Header-->
+    <!--begin::Body-->
+    <div class="card-body pt-2">
+      <!--<Primeng-Datatable-Start>-->
+      <p-accordion *ngFor="let area of serviceAreas">
+        <p-accordionTab header="{{ area.countryName }}" [selected]="true">
+          <span *ngFor="let city of area.cities" class="label font-weight-bold label-lg label-light-success label-inline mr-1 mt-1">{{
+            city.displayName
+          }}</span>
+        </p-accordionTab>
+      </p-accordion>
+      <!--<Primeng-Datatable-End>-->
+    </div>
+    <!--end::Body-->
+  </div>
+</div>

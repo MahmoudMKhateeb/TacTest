@@ -6,7 +6,7 @@
     </div>
   </div>
   <div class="card-body p-1">
-    <div id="invoicesVsPaidInvoices">
+    <div *ngIf="chartOptions" id="invoicesVsPaidInvoices">
       <apx-chart
         [series]="chartOptions.series"
         [chart]="chartOptions.chart"

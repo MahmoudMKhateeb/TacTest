@@ -1,5 +1,5 @@
 /* tslint:disable:triple-equals */
-import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   CreateOrEditRoutPointDto,
   FacilitiesServiceProxy,
@@ -19,12 +19,10 @@ import { NgForm } from '@angular/forms';
   templateUrl: './createOrEditPointModal.component.html',
 })
 export class CreateOrEditPointModalComponent extends AppComponentBase implements OnInit, OnDestroy {
-  goodDetailsListForView: any;
-  constructor(injector: Injector, public _tripService: TripService, private _PointService: PointsService) {
-    super(injector);
-  }
   @ViewChild('createRouteStepModal', { static: true }) modal: ModalDirective;
   @ViewChild('createOrEditPintForm') public createOrEditPintForm: NgForm;
+  goodDetailsListForView: any;
+  @Input('isForDedicated') isForDedicated: boolean;
   RouteType: number; //filled in onInit from the Trip Shared Service
   PickingType = PickingType;
   RouteTypes = ShippingRequestRouteType;
@@ -45,16 +43,15 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   pointsServiceSubscription$: any;
   usedInSubscription$: any;
   modalOpenedFor: 'note' | 'goodDetails' | 'receiver';
-  ngOnDestroy() {
-    this.tripServiceSubscription$.unsubscribe();
-    this.pointsServiceSubscription$.unsubscribe();
-    this.usedInSubscription$.unsubscribe();
+
+  constructor(injector: Injector, public _tripService: TripService, private _PointService: PointsService) {
+    super(injector);
   }
 
   ngOnInit(): void {
     //take the Route Type From the Shared Service
     this.tripServiceSubscription$ = this._tripService.currentShippingRequest.subscribe((res) => {
-      if (res.shippingRequest) {
+      if (res && res.shippingRequest) {
         this.RouteType = res.shippingRequest.routeTypeId;
         this.shippingRequestId = res.shippingRequest.id;
       }
@@ -69,18 +66,22 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   }
 
   show(id?, modalOpendFor?, goodDetailsListForView?) {
+    console.log('modalOpendFor', modalOpendFor);
+    console.log('id', id);
     this.modalOpenedFor = modalOpendFor;
     this.goodDetailsListForView = goodDetailsListForView;
     this.isAdditionalReceiverEnabled = this.modalOpenedFor === 'receiver';
     console.log('this.isAdditionalReceiverEnabled', this.isAdditionalReceiverEnabled);
 
     //if view disable the form otherwise enable it
+    console.log('this.wayPointsList', this.wayPointsList);
     this.active = true;
     if (id) {
       this.pointIdForEdit = id;
       //this is edit point action
       this.Point = this.wayPointsList[id];
     }
+    console.log('this.Point', this.Point);
     //tell the service that i have this SinglePoint Active Right Now
     this.isAdditionalReceiverEnabled = this.Point.receiverFullName ? true : false;
     this._PointService.updateSinglePoint(this.Point);
@@ -94,5 +95,11 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     this.isAdditionalReceiverEnabled = false;
     this.active = false;
     this.modal.hide();
+  }
+
+  ngOnDestroy() {
+    this.tripServiceSubscription$.unsubscribe();
+    this.pointsServiceSubscription$.unsubscribe();
+    this.usedInSubscription$.unsubscribe();
   }
 }

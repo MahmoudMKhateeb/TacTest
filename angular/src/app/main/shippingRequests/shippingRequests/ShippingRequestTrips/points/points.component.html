@@ -18,6 +18,7 @@
                   [scrollable]="true"
                   [value]="wayPointsList"
                   rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                  class="trip-points-table"
                 >
                   <ng-template pTemplate="header">
                     <tr>
@@ -64,7 +65,8 @@
                               RouteStepCordSetter(i, wayPointsList[i].facilityId);
                               wayPointsSetter();
                               loadReceivers(wayPointsList[i].facilityId);
-                              wayPointsList[i].receiverId = null
+                              wayPointsList[i].receiverId = null;
+                              onChangedWayPointsList()
                             "
                             [class.is-valid]="pointFacility.touched && wayPointsList[i].facilityId && pointFacility.valid"
                             [class.is-invalid]="pointFacility.touched && !wayPointsList[i].facilityId && !pointFacility.valid"
@@ -96,6 +98,7 @@
                             [busyIf]="receiverLoading"
                             [class.is-valid]="pointReciver.touched && wayPointsList[i].receiverId && pointReciver.valid"
                             [class.is-invalid]="pointReciver.touched && !wayPointsList[i].receiverId && !pointReciver.valid"
+                            (change)="onChangedWayPointsList()"
                           >
                             <option value="">{{ l('SelectContact') }}</option>
                             <option *ngFor="let item of allPointsSendersAndREcivers[wayPointsList[i].facilityId] ?? []" [ngValue]="item.id">
@@ -216,7 +219,7 @@
     <!--end::Form-->
   </div>
   <!--Create/Edit Point Modal-->
-  <createOrEditPointModal #createOrEditPointModal></createOrEditPointModal>
+  <createOrEditPointModal #createOrEditPointModal [isForDedicated]="shippingRequestForView.shippingRequestFlag === 1"></createOrEditPointModal>
   <!--END::Create/Edit Point Modal-->
 </div>
 

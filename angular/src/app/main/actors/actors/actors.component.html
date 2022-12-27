@@ -1,0 +1,248 @@
+﻿<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'Actors' | localize" [description]="'ActorsHeaderInfo' | localize">
+      <div role="actions">
+        <button *ngIf="isGranted('Pages.Administration.Actors.Create')" (click)="createActor()" class="btn btn-primary blue">
+          <i class="fa fa-plus"></i> {{ l('CreateNewActor') }}
+        </button>
+        <button (click)="OndemandModel.show()" type="button" class="btn btn-default">
+          {{ l('OnDemandInvoice') }}
+        </button>
+      </div>
+    </sub-header>
+
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <form class="form" autocomplete="off">
+            <div>
+              <div class="row align-items-center">
+                <div class="col-xl-12">
+                  <div class="form-group m-form__group align-items-center">
+                    <div class="input-group">
+                      <input
+                        [(ngModel)]="filterText"
+                        name="filterText"
+                        autoFocus
+                        class="form-control m-input"
+                        [placeholder]="l('SearchWithThreeDot')"
+                        type="text"
+                      />
+                      <span class="input-group-btn">
+                        <button (click)="getActors()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" [hidden]="!advancedFiltersAreShown">
+                <div class="col-md-12">
+                  <div class="separator separator-dashed"></div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="CompanyNameFilter">{{ l('CompanyName') }}</label>
+                    <input type="text" class="form-control" id="CompanyNameFilter" name="companyNameFilter" [(ngModel)]="companyNameFilter" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <label for="ActorTypeFilterSelect">{{ l('ActorType') }}</label>
+                  <select class="form-select" name="ActorTypeFilter" id="ActorTypeFilterSelect" [(ngModel)]="actorTypeFilter">
+                    <option value="-1">{{ l('All') }}</option>
+                    <option value="1">{{ l('Shipper') }}</option>
+
+                    <option value="2">{{ l('Carrier') }}</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="MoiNumberFilter">{{ l('MoiNumber') }}</label>
+                    <input type="text" class="form-control" id="MoiNumberFilter" name="moiNumberFilter" [(ngModel)]="moiNumberFilter" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="AddressFilter">{{ l('Address') }}</label>
+                    <input type="text" class="form-control" id="AddressFilter" name="addressFilter" [(ngModel)]="addressFilter" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="MobileNumberFilter">{{ l('MobileNumber') }}</label>
+                    <input type="text" class="form-control" id="MobileNumberFilter" name="mobileNumberFilter" [(ngModel)]="mobileNumberFilter" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="EmailFilter">{{ l('Email') }}</label>
+                    <input type="text" class="form-control" id="EmailFilter" name="emailFilter" [(ngModel)]="emailFilter" />
+                  </div>
+                </div>
+              </div>
+              <div class="row my-4">
+                <div class="col-sm-12">
+                  <span
+                    class="clickable-item text-muted"
+                    *ngIf="!advancedFiltersAreShown"
+                    (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                    ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
+                  >
+                  <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                    ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
+                  >
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="row align-items-center">
+            <!--<Primeng-Datatable-Start>-->
+            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+              <p-table
+                #dataTable
+                (onLazyLoad)="getActors($event)"
+                [value]="primengTableHelper.records"
+                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                [paginator]="false"
+                [lazy]="true"
+                [scrollable]="true"
+                ScrollWidth="100%"
+                [responsive]="primengTableHelper.isResponsive"
+                [resizableColumns]="primengTableHelper.resizableColumns"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.Administration.Actors.Edit', 'Pages.Administration.Actors.Delete')">
+                      {{ l('Actions') }}
+                    </th>
+                    <th style="width: 150px" pSortableColumn="companyName">
+                      {{ l('CompanyName') }}
+                      <p-sortIcon field="actor.companyName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="actorType">
+                      {{ l('ActorType') }}
+                      <p-sortIcon field="actor.actorType"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="moiNumber">
+                      {{ l('MoiNumber') }}
+                      <p-sortIcon field="actor.moiNumber"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="address">
+                      {{ l('Address') }}
+                      <p-sortIcon field="actor.address"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="mobileNumber">
+                      {{ l('MobileNumber') }}
+                      <p-sortIcon field="actor.mobileNumber"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="email">
+                      {{ l('Email') }}
+                      <p-sortIcon field="actor.email"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px" pSortableColumn="email">
+                      {{ l('Active') }}
+                      <p-sortIcon field="actor.isActive"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                  <tr>
+                    <td style="width: 130px" [hidden]="!isGrantedAny('Pages.Administration.Actors.Edit', 'Pages.Administration.Actors.Delete')">
+                      <div class="btn-group dropdown" dropdown container="body">
+                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                        </button>
+                        <ul class="dropdown-menu" *dropdownMenu>
+                          <li>
+                            <a href="javascript:;" class="dropdown-item" (click)="viewActorModal.show(record)">{{ l('View') }}</a>
+                          </li>
+                          <li>
+                            <a
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Administration.Actors.Edit')"
+                              class="dropdown-item"
+                              (click)="createOrEditActorModal.show(record.actor.id)"
+                              >{{ l('Edit') }}</a
+                            >
+                          </li>
+                          <!-- <li>
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Administration.Actors.Edit')"
+                              (click)="generateInvoice(record.actor)"
+                              >{{ l('GenerateInvoice') }}</a
+                            >
+                          </li> -->
+                          <li>
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Administration.Actors.Delete')"
+                              (click)="deleteActor(record.actor)"
+                              >{{ l('Delete') }}</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                    <td style="width: 150px">
+                      <span class="ui-column-title"> {{ l('CompanyName') }}</span>
+                      {{ record.actor.companyName }}
+                    </td>
+                    <td style="width: 150px">
+                      <span class="ui-column-title"> {{ l('ActorType') }}</span>
+                      {{ l(actorTypesEnum[record.actor.actorType]) }}
+                    </td>
+                    <td style="width: 150px">
+                      <span class="ui-column-title"> {{ l('MoiNumber') }}</span>
+                      {{ record.actor.moiNumber }}
+                    </td>
+                    <td style="width: 150px">
+                      <span class="ui-column-title"> {{ l('Address') }}</span>
+                      {{ record.actor.address }}
+                    </td>
+                    <td style="width: 150px">
+                      <span class="ui-column-title"> {{ l('MobileNumber') }}</span>
+                      {{ record.actor.mobileNumber }}
+                    </td>
+                    <td style="width: 150px">
+                      <span class="ui-column-title"> {{ l('Email') }}</span>
+                      {{ record.actor.email }}
+                    </td>
+                    <td style="width: 150px">
+                      <span class="ui-column-title"> {{ l('Active') }}</span>
+                      <i *ngIf="record.actor.isActive" class="fa fa-check" aria-hidden="true"></i>
+                      <i *ngIf="!record.actor.isActive" class="fa fa-times" aria-hidden="true"></i>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                {{ l('NoData') }}
+              </div>
+              <div class="primeng-paging-container">
+                <p-paginator
+                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                  #paginator
+                  (onPageChange)="getActors($event)"
+                  [totalRecords]="primengTableHelper.totalRecordsCount"
+                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                  [showCurrentPageReport]="true"
+                  [currentPageReportTemplate]="'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount"
+                >
+                </p-paginator>
+              </div>
+            </div>
+            <!--<Primeng-Datatable-End>-->
+          </div>
+        </div>
+      </div>
+    </div>
+    <createOrEditActorModal #createOrEditActorModal (modalSave)="getActors()"></createOrEditActorModal>
+    <viewActorModal #viewActorModal></viewActorModal>
+  </div>
+</div>
+
+<Actor-Invoices-ondemand-model (modalSave)="reloadPage()" #OndemandModel></Actor-Invoices-ondemand-model>

@@ -12,7 +12,7 @@ namespace TACHYON.PriceOffers.Dto
         public decimal ItemPrice { get; set; }
         public PriceOfferChannel Channel { get; set; }
         public long? ParentId { get; set; }
-        [JsonIgnore] public PriceOfferType PriceType { get; set; } = PriceOfferType.Trip;
+        [JsonIgnore] public PriceOfferType PriceType { get; set; }
         public List<PriceOfferDetailDto> ItemDetails;
         public decimal? CommissionPercentageOrAddValue { get; set; }
         public PriceOfferCommissionType? CommissionType { get; set; }
@@ -27,6 +27,8 @@ namespace TACHYON.PriceOffers.Dto
         
         [JsonIgnore]
         public bool IgnoreExistingOffer { get; set; }
+         public int? CarrierActorId { get; set; }
+
         public void AddValidationErrors(CustomValidationContext context)
         {
             if (ItemPrice < 0)

@@ -25,6 +25,8 @@ namespace TACHYON.Configuration.Tenants.Dto
 
         public ExternalLoginProviderSettingsEditDto ExternalLoginProviderSettings { get; set; }
 
+        public TenantBrokerInvoiceSettingsEditDto BrokerInvoiceSettings { get; set; }
+
         /// <summary>
         /// This validation is done for single-tenant applications.
         /// Because, these settings can only be set by tenant in a single-tenant application.

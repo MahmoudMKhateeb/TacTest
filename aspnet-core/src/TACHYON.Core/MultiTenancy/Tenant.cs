@@ -3,9 +3,12 @@ using Abp.Timing;
 using JetBrains.Annotations;
 using Org.BouncyCastle.Asn1.Microsoft;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Authorization.Users;
+using TACHYON.DedicatedInvoices;
 using TACHYON.Cities;
 using TACHYON.Countries;
 using TACHYON.Editions;
@@ -75,9 +78,17 @@ namespace TACHYON.MultiTenancy
         [CanBeNull]
         [RegularExpression(TenantConsts.MoiNumberRegex)]
         public string MoiNumber { get; set; }
+        public int? InsuranceCoverage { get; set; }
+        /// <summary>
+        /// This field is for shipper
+        /// </summary>
+        public int? ValueOfGoods { get; set; }
         public string FinancialName { get; set; }
         public string FinancialPhone { get; set; }
         public string FinancialEmail { get; set; }
+
+        [NotMapped]
+        public ICollection<DedicatedDynamicInvoice> DedicatedDynamicInvoices { get; set; }
         protected Tenant()
         {
         }

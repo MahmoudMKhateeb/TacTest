@@ -1,7 +1,14 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
-import { CommonLookupServiceProxy, ISelectItemDto, PenaltiesServiceProxy, PenaltyStatus, PenaltyType } from '@shared/service-proxies/service-proxies';
+import {
+  CommonLookupServiceProxy,
+  InvoiceServiceProxy,
+  ISelectItemDto,
+  PenaltiesServiceProxy,
+  PenaltyStatus,
+  PenaltyType,
+} from '@shared/service-proxies/service-proxies';
 import { DxDataGridComponent } from 'devextreme-angular';
 import CustomStore from 'devextreme/data/custom_store';
 import { LoadOptions } from 'devextreme/data/load_options';
@@ -10,11 +17,13 @@ import { ActivatedRoute } from '@angular/router';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ViewComplaintModalComponent } from '@app/main/Penalties/penalties-list/view-complaint/view-complaint-modal.component';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 @Component({
   selector: 'app-penalties-list',
   templateUrl: './penalties-list.component.html',
   providers: [EnumToArrayPipe],
+  animations: [appModuleAnimation()],
 })
 export class PenaltiesListComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataGrid', { static: true }) dataGrid: DxDataGridComponent;
@@ -30,6 +39,7 @@ export class PenaltiesListComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _PenaltiesServiceProxy: PenaltiesServiceProxy,
+    private _InvoiceServiceProxy: InvoiceServiceProxy,
     private _CommonServ: CommonLookupServiceProxy,
     private enumToArray: EnumToArrayPipe,
     private _activatedRoute: ActivatedRoute
@@ -103,6 +113,23 @@ export class PenaltiesListComponent extends AppComponentBase implements OnInit {
       if (isConfirmed) {
         this._PenaltiesServiceProxy
           .confirmPenalty(id)
+          .pipe(
+            finalize(() => {
+              this.refreshDataGrid();
+            })
+          )
+          .subscribe((result) => {
+            this.notify.info(this.l('SuccessfullyConfirmed'));
+          });
+      }
+    });
+  }
+
+  OnDemandInvoice(tenantId: number, id: number) {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._InvoiceServiceProxy
+          .generatePenaltyInvoiceOnDemand(tenantId, id)
           .pipe(
             finalize(() => {
               this.refreshDataGrid();

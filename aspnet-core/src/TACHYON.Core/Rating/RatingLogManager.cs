@@ -204,8 +204,23 @@ namespace TACHYON.Rating
                                 .WhereIf(rate.PointId != null, x => x.TripId == rate.RoutePointFk.ShippingRequestTripId)
                                 .FirstOrDefaultAsync(x => x.RateType == RateType.ShipperTripBySystem);
 
+            DisableTenancyFilters();
+            rate =await _ratingLogRepository.GetAll()
+                .Include(x => x.TripFk)
+                .ThenInclude(x => x.RoutPoints)
+                .Include(x => x.TripFk)
+                .ThenInclude(x => x.ShippingRequestFk)
+                .Include(x=>x.RoutePointFk)
+                .ThenInclude(x=>x.ShippingRequestTripFk)
+                .ThenInclude(x=>x.ShippingRequestFk)
+                .FirstOrDefaultAsync(x => x.Id == rate.Id);
+
             //recalculate For trip and trip points
-            var shipperId = rate.ShipperId != null ? rate.ShipperId : rate.PointId != null ? rate.RoutePointFk.ShippingRequestTripFk.ShippingRequestFk.TenantId : rate.TripFk.ShippingRequestFk.TenantId;
+            var shipperId = rate.ShipperId != null 
+                ? rate.ShipperId 
+                : rate.PointId != null
+                    ? rate.RoutePointFk.ShippingRequestTripFk.ShippingRequestFk.TenantId 
+                    : rate.TripFk.ShippingRequestFk.TenantId;
             if (ShipperTripBySystem == null)
             {
                 //insert
@@ -225,7 +240,8 @@ namespace TACHYON.Rating
                 if (tripId != null)
                 {
                     //trip points that rated in the system to calculate the trip rate with, in this case the rate is directly to trip
-                    tripPoints = rate.TripFk.RoutPoints.Select(x => x.Id).ToList();
+                    tripPoints = _routePointRepository.GetAll().Where(x => x.ShippingRequestTripId == rate.TripId).Select(y=>y.Id).ToList();
+                    //tripPoints = rate.TripFk.RoutPoints.Select(x => x.Id).ToList();
                 }
                 else
                 {

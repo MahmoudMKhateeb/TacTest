@@ -1,5 +1,10 @@
-import { Component, ViewChild, Injector, Input } from '@angular/core';
-import { PriceOfferServiceProxy, PriceOfferChannel } from '@shared/service-proxies/service-proxies';
+import { Component, ViewChild, Injector, Input, OnInit } from '@angular/core';
+import {
+  PriceOfferServiceProxy,
+  PriceOfferChannel,
+  TmsPricePackageServiceProxy,
+  TmsPricePackageForViewDto,
+} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { LazyLoadEvent } from 'primeng/api';
 
@@ -12,16 +17,29 @@ import { Router } from '@angular/router';
   styleUrls: ['./shipping-request-offers-list.component.scss'],
   templateUrl: './shipping-request-offers-list.component.html',
 })
-export class ShippingRequestOffersList extends AppComponentBase {
+export class ShippingRequestOffersList extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
   @Input() shippingRequestId: number;
   @Input() Channel: PriceOfferChannel;
   @Input() isTachyonDeal: boolean;
+  @Input() isForDedicated: boolean;
   IsStartSearch: boolean = false;
+  matchingTmsPricePkgs: TmsPricePackageForViewDto;
 
-  constructor(injector: Injector, private _currentServ: PriceOfferServiceProxy, private _router: Router) {
+  constructor(
+    injector: Injector,
+    private _currentServ: PriceOfferServiceProxy,
+    private _router: Router,
+    private _tmsPricePkgServiceproxy: TmsPricePackageServiceProxy
+  ) {
     super(injector);
+  }
+
+  ngOnInit() {
+    if (this.isTachyonDealer) {
+      this.getTMSMatchingPricePackage();
+    }
   }
 
   getAll(event?: LazyLoadEvent): void {
@@ -56,5 +74,15 @@ export class ShippingRequestOffersList extends AppComponentBase {
     const url = this._router.serializeUrl(this._router.createUrlTree([`/app/main/profile`, tenantId]));
 
     window.open(url, '_blank');
+  }
+
+  /**
+   * checks if there a Matching TMS Price Package and if yes Allow the Tms To acknowledge
+   */
+  getTMSMatchingPricePackage(): void {
+    //service
+    this._tmsPricePkgServiceproxy.getMatchingPricePackage(this.shippingRequestId).subscribe((res) => {
+      this.matchingTmsPricePkgs = res;
+    });
   }
 }

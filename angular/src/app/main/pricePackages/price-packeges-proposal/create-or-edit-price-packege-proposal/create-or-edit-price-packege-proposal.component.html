@@ -1,0 +1,103 @@
+<div #Modal="bs-modal" bsModal role="dialog" class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form #PPPForm="ngForm" *ngIf="isFormActive" [busyIf]="isFormLoading">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="pricePackageProposal.id">{{ l('EditProposal') }}</span>
+            <span *ngIf="!pricePackageProposal.id">{{ l('CreateNewProposal') }}</span>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label>{{ l('Name') }} <span class="text-danger">*</span></label>
+              <input [(ngModel)]="pricePackageProposal.proposalName" required type="text" class="form-control" name="proposalName" />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('Shipper') }} <span class="text-danger">*</span></label>
+              <select
+                [(ngModel)]="pricePackageProposal.shipperId"
+                (change)="loadAllPricePkgForTable()"
+                required
+                class="form-control"
+                name="tmsPP_Shipper"
+              >
+                <option selected disabled [value]="undefined">{{ 'SelectShipper' | localize }}</option>
+                <option *ngFor="let item of shippers" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('Date') }} <span class="text-danger">*</span></label>
+              <input
+                id="Date"
+                type="text"
+                name="Date"
+                class="form-control"
+                bsDatepicker
+                datePickerMomentModifier
+                [(date)]="pricePackageProposal.proposalDate"
+                [bsConfig]="{ adaptivePosition: true }"
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('ScopeOverview') }} <span class="text-danger">*</span></label>
+              <input [(ngModel)]="pricePackageProposal.scopeOverview" required type="text" class="form-control" name="scopeOverview" />
+            </div>
+
+            <div class="form-group col-md-12">
+              <!--              <input [(ngModel)]="pricePackageProposal.tmsPricePackages" required type="text" class="form-control" name="tmsPricePackages" />-->
+              <label>{{ l('PricePackages') }} <span class="text-danger">*</span></label>
+              <dx-drop-down-box
+                [(value)]="pricePackageProposal.tmsPricePackages"
+                valueExpr="id"
+                displayExpr="displayName"
+                placeholder="Select a value..."
+                [showClearButton]="true"
+                [dataSource]="dataSource"
+                [disabled]="!pricePackageProposal.shipperId"
+              >
+                <div *dxTemplate="let data of 'content'">
+                  <dx-data-grid
+                    [dataSource]="dataSource"
+                    [columns]="['displayName', 'truckType', 'originCity', 'destinationCity', 'directRequestTotalPrice', 'tachyonManageTotalPrice']"
+                    [selection]="{ mode: 'multiple' }"
+                    [hoverStateEnabled]="true"
+                    [paging]="{ enabled: true, pageSize: 10 }"
+                    [filterRow]="{ visible: true }"
+                    [scrolling]="{ mode: 'virtual' }"
+                    [height]="345"
+                    [(selectedRowKeys)]="pricePackageProposal.tmsPricePackages"
+                  >
+                  </dx-data-grid>
+                </div>
+              </dx-drop-down-box>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('EmailAddress') }} <span class="text-danger">*</span></label>
+              <input
+                [(ngModel)]="pricePackageProposal.emailAddress"
+                required
+                type="email"
+                pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
+                maxlength="256"
+                class="form-control"
+                name="emailAddress"
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('Notes') }} <span class="text-danger">*</span></label>
+              <!--                            <textarea [(ngModel)]='pricePackageProposal.notes' required type='text' class='form-control'-->
+              <!--                                      name='notes' />-->
+              <textarea name="notes" [(ngModel)]="pricePackageProposal.notes" required type="text" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" (click)="close()" class="btn btn-secondary">{{ 'Close' | localize }}</button>
+          <button type="submit" (click)="createOrEdit()" [disabled]="PPPForm.invalid" class="btn btn-primary">{{ 'Save' | localize }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

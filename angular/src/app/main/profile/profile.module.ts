@@ -19,6 +19,9 @@ import { ShipperFacilitiesComponent } from './tenants-profile/shipper-facilities
 import { ShipperInvoicingComponent } from './tenants-profile/shipper-invoicing/shipper-invoicing.component';
 import { NgbRatingModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { TooltipModule } from '@node_modules/ngx-bootstrap/tooltip';
+import { CarrierServiceAreasComponent } from './tenants-profile/carrier-service-areas/carrier-service-areas.component';
+import { AccordionModule } from '@node_modules/primeng/accordion';
+import { MultiSelectModule } from '@node_modules/primeng/multiselect';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,7 @@ import { TooltipModule } from '@node_modules/ngx-bootstrap/tooltip';
     CarrierFleetInformationComponent,
     ShipperFacilitiesComponent,
     ShipperInvoicingComponent,
+    CarrierServiceAreasComponent,
   ],
   imports: [
     CommonModule,
@@ -44,6 +48,8 @@ import { TooltipModule } from '@node_modules/ngx-bootstrap/tooltip';
     PaginatorModule,
     NgbRatingModule,
     TooltipModule,
+    AccordionModule,
+    MultiSelectModule,
   ],
 })
 export class ProfileModule {}

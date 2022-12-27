@@ -615,3 +615,9 @@ ngb-datepicker {
 .mr-btm {
   margin-bottom: 3% !important;
 }
+
+.div-disabled {
+  opacity: 0.6;
+  cursor: none;
+  pointer-events: none;
+}

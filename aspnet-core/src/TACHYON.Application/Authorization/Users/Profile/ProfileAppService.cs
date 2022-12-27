@@ -6,6 +6,7 @@ using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -35,6 +36,7 @@ using TACHYON.Authorization.Users.Profile.Cache;
 using TACHYON.Authorization.Users.Profile.Dto;
 using TACHYON.Cities;
 using TACHYON.Configuration;
+using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Friendships;
 using TACHYON.Gdpr;
@@ -44,6 +46,7 @@ using TACHYON.Net.Sms;
 using TACHYON.PricePackages;
 using TACHYON.PricePackages.Dto.NormalPricePackage;
 using TACHYON.Security;
+using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Storage;
@@ -82,6 +85,7 @@ namespace TACHYON.Authorization.Users.Profile
         private readonly IRepository<TrucksTypesTranslation> _trucksTypesTranslationRepository;
         private readonly IRepository<TrucksType, long> _truckTypeRepository;
         private readonly IRepository<NormalPricePackage> _normalPricePackageRepository;
+        private readonly IRepository<ServiceArea,long> _serviceAreaRepository;
 
         public ProfileAppService(
             IBinaryObjectManager binaryObjectManager,
@@ -104,7 +108,8 @@ namespace TACHYON.Authorization.Users.Profile
             IRepository<TrucksTypesTranslation> trucksTypesTranslationRepository,
             IRepository<Tenant> tenantRepository,
             IRepository<TrucksType, long> truckTypeRepository,
-            IRepository<NormalPricePackage> normalPricePackageRepository)
+            IRepository<NormalPricePackage> normalPricePackageRepository,
+            IRepository<ServiceArea, long> serviceAreaRepository)
         {
             _binaryObjectManager = binaryObjectManager;
             _timeZoneService = timezoneService;
@@ -127,6 +132,7 @@ namespace TACHYON.Authorization.Users.Profile
             _tenantRepository = tenantRepository;
             _truckTypeRepository = truckTypeRepository;
             _normalPricePackageRepository = normalPricePackageRepository;
+            _serviceAreaRepository = serviceAreaRepository;
         }
 
         [DisableAuditing]
@@ -239,15 +245,64 @@ namespace TACHYON.Authorization.Users.Profile
                     profileForView.FacilitiesRating = facilities.Average();
                 }
             }
+
+            var citiesServiceAreas = await _serviceAreaRepository.GetAll()
+                .Include(x=> x.City).ThenInclude(x=> x.Translations)
+                .Include(x=> x.City).ThenInclude(x=> x.CountyFk)
+                .ThenInclude(x=> x.Translations)
+                .Where(x => x.TenantId == tenantId).Select(x => x.City).ToListAsync();
+
+            profileForView.ServiceAreas = GetAllServiceAreas(citiesServiceAreas);
+
             return profileForView;
+        }
+
+
+        public async Task<List<ServiceAreaListItemDto>> GetAllServiceAreas()
+        {
+            var cities = await _lookupCityRepository.GetAll()
+                .Include(x=> x.Translations)
+                .Include(x=> x.CountyFk).ThenInclude(x=> x.Translations)
+                .AsNoTracking().ToListAsync();
+
+            return GetAllServiceAreas(cities);
+        }
+        private static List<ServiceAreaListItemDto> GetAllServiceAreas(IEnumerable<City> citiesServiceAreas)
+        {
+            return (from city in citiesServiceAreas
+                group city by city.CountyId
+                into cityGroup
+                let country = cityGroup.Select(x => x.CountyFk).FirstOrDefault()
+                select new ServiceAreaListItemDto()
+                {
+                    CountryName = country.Translations
+                        ?.FirstOrDefault(x => x.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                        ?.TranslatedDisplayName ?? country.DisplayName,
+                    Cities = cityGroup.Select(x => new SelectItemDto()
+                        {
+                            Id = x.Id.ToString(),
+                            DisplayName =
+                                x.Translations
+                                    ?.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                                    ?.TranslatedDisplayName ?? x.DisplayName
+                        })
+                        .ToList()
+                }).ToList();
         }
 
         public async Task<UpdateTenantProfileInformationInputDto> GetTenantProfileInformationForEdit()
         {
             if (!AbpSession.TenantId.HasValue)
                 throw new UserFriendlyException(L("YouDontHaveAccessToThisPage"));
-            return ObjectMapper.Map<UpdateTenantProfileInformationInputDto>(
+            var updateTenantProfileDto = ObjectMapper.Map<UpdateTenantProfileInformationInputDto>(
                 await GetTenantProfileInformation(AbpSession.TenantId.Value));
+            if (!await IsEnabledAsync(AppFeatures.Carrier)) return updateTenantProfileDto;
+
+            updateTenantProfileDto.CityServiceAreas = await _serviceAreaRepository.GetAll()
+                .Where(x => x.TenantId == AbpSession.TenantId)
+                .Select(x => new CreateServiceAreaDto {Id = x.Id.ToString(),DisplayName = x.City.DisplayName}).ToListAsync();
+
+            return updateTenantProfileDto;
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenant_ProfileManagement)]
@@ -266,6 +321,41 @@ namespace TACHYON.Authorization.Users.Profile
                 user.EmailAddress = input.CompanyEmailAddress;
                 user.IsEmailConfirmed = false;
             }
+
+            if (!await IsEnabledAsync(AppFeatures.Carrier)) return;
+
+            if (!input.CityServiceAreas.IsNullOrEmpty())
+            {
+                var serviceArea = await _serviceAreaRepository.GetAll().AsNoTracking().ToListAsync();
+                foreach (var area in serviceArea.Where(area => input.CityServiceAreas.All(x => x.CityId != area.CityId)))
+                    await _serviceAreaRepository.DeleteAsync(area);
+                
+                // await BulkInsertServiceAreas(input.CityServiceAreas);
+
+                var addedServiceAreas = input.CityServiceAreas.Where(x => serviceArea.All(i => i.CityId != x.CityId));
+                var createdServiceAreas = ObjectMapper.Map<List<ServiceArea>>(addedServiceAreas);
+                foreach (var area in createdServiceAreas)
+                {
+                    area.TenantId = AbpSession.TenantId.Value;
+                    await _serviceAreaRepository.InsertAsync(area);
+                }
+                    
+
+            }
+                
+        }
+
+        private async Task BulkInsertServiceAreas(List<CreateServiceAreaDto> serviceAreaDtos)
+        {
+            var createdServiceAreas = ObjectMapper.Map<List<ServiceArea>>(serviceAreaDtos);
+            if (!AbpSession.TenantId.HasValue) return;
+            
+            foreach (var area in createdServiceAreas )
+            {
+                area.TenantId = AbpSession.TenantId.Value;
+                await _serviceAreaRepository.InsertAsync(area);
+            }
+                
         }
 
         public async Task<int> GetShipmentCount(int tenantId)
