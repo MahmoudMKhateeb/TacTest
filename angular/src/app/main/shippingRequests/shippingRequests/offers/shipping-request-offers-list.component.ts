@@ -80,9 +80,9 @@ export class ShippingRequestOffersList extends AppComponentBase implements OnIni
    * checks if there a Matching TMS Price Package and if yes Allow the Tms To acknowledge
    */
   getTMSMatchingPricePackage(): void {
-    //service
-    this._tmsPricePkgServiceproxy.getMatchingPricePackage(this.shippingRequestId).subscribe((res) => {
-      this.matchingTmsPricePkgs = res;
-    });
+    //service // todo fix this
+    // this._tmsPricePkgServiceproxy.getMatchingPricePackages(this.shippingRequestId).subscribe((res) => {
+    //   this.matchingTmsPricePkgs = res;
+    // });
   }
 }

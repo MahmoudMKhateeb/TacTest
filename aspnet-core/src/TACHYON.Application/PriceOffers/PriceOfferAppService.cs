@@ -49,6 +49,8 @@ using TACHYON.Packing.PackingTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Packing.PackingTypes.Dtos;
+using TACHYON.PricePackages.TmsPricePackageOffers;
+using TACHYON.PricePackages.TmsPricePackages;
 using TACHYON.Shipping.Dedicated;
 
 namespace TACHYON.PriceOffers
@@ -76,7 +78,8 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<GoodCategory> _goodsCategoriesRepository;
         private readonly IRepository<PackingType> _packingTypesRepository;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
-
+        private readonly ITmsPricePackageManager _tmsPricePackageManager;
+        private readonly IRepository<TmsPricePackageOffer,long> _tmsOfferRepository;
 
         private IRepository<VasPrice> _vasPriceRepository;
 
@@ -100,7 +103,9 @@ namespace TACHYON.PriceOffers
             IRepository<Capacity> capacitiesRepository,
             IRepository<GoodCategory> goodsCategoriesRepository,
             IRepository<PackingType> packingTypesRepository,
-            IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository)
+            IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
+            ITmsPricePackageManager tmsPricePackageManager,
+            IRepository<TmsPricePackageOffer,long> tmsOfferRepository)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -124,6 +129,8 @@ namespace TACHYON.PriceOffers
             _goodsCategoriesRepository = goodsCategoriesRepository;
             _packingTypesRepository = packingTypesRepository;
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
+            _tmsPricePackageManager = tmsPricePackageManager;
+            _tmsOfferRepository = tmsOfferRepository;
         }
         #region Services
 
@@ -201,6 +208,7 @@ namespace TACHYON.PriceOffers
             var shippingRequest = await _shippingRequestsRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
                   .ThenInclude(v => v.VasFk)
+                  .Include(x=>x.Tenant)
                 .FirstOrDefaultAsync(x => x.Id == id && (x.Status == ShippingRequestStatus.PrePrice || x.Status == ShippingRequestStatus.NeedsAction || x.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier));
 
             if (shippingRequest == null) throw new UserFriendlyException(L("TheRecordIsNotFound"));
@@ -208,6 +216,7 @@ namespace TACHYON.PriceOffers
             var offer = await _priceOfferRepository
                 .GetAll()
                 .Include(i => i.PriceOfferDetails)
+                .Include(x=>x.Tenant)
                 .Where(x => x.ShippingRequestId == shippingRequest.Id)
                 .WhereIf(OfferId.HasValue, x => x.Id == OfferId.Value)
                 .WhereIf(AbpSession.TenantId !=null && !await IsTachyonDealer(), x => x.TenantId == AbpSession.TenantId.Value && (x.Status == PriceOfferStatus.New || x.Status == PriceOfferStatus.Rejected))
@@ -236,6 +245,11 @@ namespace TACHYON.PriceOffers
                     if (offer.TenantId != AbpSession.TenantId.Value)
                     {
                         priceOfferDto.ParentId = offer.Id;
+                        if(await IsTachyonDealer())
+                        {
+                            priceOfferDto.CarrierIsuranceCoverage = offer.Tenant.InsuranceCoverage;
+                        }
+
                     }
                 }
             }
@@ -251,6 +265,10 @@ namespace TACHYON.PriceOffers
                     priceOfferDto.PriceType = PriceOfferType.Trip;
                     priceOfferDto.Quantity = shippingRequest.NumberOfTrips;
                     SetCommssionSettingsForTachyonDealer(priceOfferDto, shippingRequest);
+                    
+                    if (await HasDirectRequestByPricePackage(shippingRequest.Id))
+                        await ApplyPriceFromPricePackage(priceOfferDto,shippingRequest.Id);
+                    
                 }
                 else if(shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
                 {
@@ -266,8 +284,27 @@ namespace TACHYON.PriceOffers
             if (IsEnabled(AppFeatures.TachyonDealer))
             {
                 priceOfferDto.CommissionSettings = SetTenantCommssionSettingsForTachyonDealer(shippingRequest.TenantId);
+                priceOfferDto.ShipperValueOfGoods = shippingRequest.Tenant.ValueOfGoods;
             }
             return priceOfferDto;
+        }
+
+        private async Task<bool> HasDirectRequestByPricePackage(long shippingRequestId)
+        {
+            DisableTenancyFilters();
+            return await _tmsOfferRepository.GetAll().AnyAsync(x => x.DirectRequestId.HasValue && x.DirectRequest.ShippingRequestId == shippingRequestId);
+        }
+
+        private async Task ApplyPriceFromPricePackage(PriceOfferDto priceOfferDto,long requestId)
+        {
+            if (!AbpSession.TenantId.HasValue) return;
+            DisableTenancyFilters();
+            var itemPrice = await _tmsPricePackageManager.GetItemPriceByMatchedPricePackage(requestId,priceOfferDto.Quantity,AbpSession.TenantId.Value);
+            
+            if (itemPrice is null) return;
+
+            priceOfferDto.ItemPrice = itemPrice.Value;
+            priceOfferDto.HasMatchedPricePackage = true;
         }
 
         /// <summary>
@@ -282,6 +319,8 @@ namespace TACHYON.PriceOffers
             var offer = await _priceOfferRepository
                 .GetAll()
                 .Include(i => i.Tenant)
+                .Include(x=>x.ShippingRequestFk)
+                .ThenInclude(x=>x.Tenant)
                 .Include(i => i.PriceOfferDetails)
                 .Include(i => i.ShippingRequestFk)
                  .ThenInclude(v => v.ShippingRequestVases)
@@ -295,7 +334,11 @@ namespace TACHYON.PriceOffers
 
             var priceOfferDto = ObjectMapper.Map<PriceOfferViewDto>(offer);
 
-
+            if(await IsTachyonDealer())
+            {
+                priceOfferDto.ShipperValueOfGoods = offer.ShippingRequestFk.Tenant.ValueOfGoods;
+                priceOfferDto.CarrierInsuranceCoverage = offer.Tenant.InsuranceCoverage;
+            }
 
             foreach (var item in priceOfferDto.Items)
             {
@@ -323,7 +366,8 @@ namespace TACHYON.PriceOffers
                 PriceOfferViewDto = priceOfferDto,
                 CanIAcceptOffer = await _priceOfferManager.CanAcceptOrRejectOffer(offer),
                 CanIAcceptOrRejectOfferOnBehalf = await _priceOfferManager.canAcceptOrRejectOfferOnBehalf(offer),
-                CanIEditOffer = _priceOfferManager.CanEditOffer(offer)
+                CanIEditOffer = await _priceOfferManager.CanEditOffer(offer),
+                HasMatchedPricePackage = await _tmsPricePackageManager.IsHaveMatchedPricePackage(offer.ShippingRequestId,offer.TenantId)
             };
         }
 
@@ -353,12 +397,19 @@ namespace TACHYON.PriceOffers
             var shippingRequest = await _shippingRequestsRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
                 .ThenInclude(v => v.VasFk)
+                .Include(x=>x.Tenant)
+                .Include(x=>x.CarrierTenantFk)
                 .FirstOrDefaultAsync(x =>
                     x.Id == input.ShippingRequestId);
 
             var offer = await _priceOfferManager.InitPriceOffer(input);
             var priceOfferDto = ObjectMapper.Map<PriceOfferDto>(offer);
 
+            if(await IsTachyonDealer())
+            {
+                priceOfferDto.ShipperValueOfGoods = shippingRequest.Tenant.ValueOfGoods;
+                priceOfferDto.CarrierIsuranceCoverage = shippingRequest.CarrierTenantFk?.InsuranceCoverage;
+            }
             if (input.VasCommissionType != null)
             {
                 priceOfferDto.VasCommissionType = input.VasCommissionType.Value;
@@ -919,26 +970,37 @@ namespace TACHYON.PriceOffers
 
             //get truck type tranlation list
             var goodscategoryIds = query.Select(x => x.TrucksTypeId).ToList();
-            var truckTypeTranslationList = _truckTypeTranslationRepository.GetAll().Where(x => goodscategoryIds.Contains(x.CoreId)).ToList();
+            var truckTypeTranslationList = _truckTypeTranslationRepository.GetAll().Where(x =>  goodscategoryIds.Contains(x.CoreId)).ToList();
 
 
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
-
+            
             var isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
             var isShipper = await IsEnabledAsync(AppFeatures.Shipper);
 
+            var pageResult = await query.ToListAsync();
+            var shippingRequestIds = pageResult.Select(x => x.Id).ToList();
 
-            foreach (var request in await query.ToListAsync())
+            var shippingRequestCarrierPrices = await _priceOfferRepository.GetAll()
+                .Where(x => x.TenantId == AbpSession.TenantId && x.Status != PriceOfferStatus.Rejected && x.Status != PriceOfferStatus.New && shippingRequestIds.Contains(x.ShippingRequestId))
+                .Select(x => new {RequestId = x.ShippingRequestId, Price = x.TotalAmount}).ToListAsync();
+
+            foreach (var request in pageResult )
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request);
                 //dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.TrucksTypeFk)?.TranslatedDisplayName;
                 dto.TruckType = truckTypeTranslationList.Where(x => x.CoreId == request.TrucksTypeId && x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault()?.TranslatedDisplayName;
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.GoodCategoryFk)?.DisplayName;
                 dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request);
-                if (AbpSession.TenantId.HasValue && (isCarrier))
+                if (AbpSession.TenantId.HasValue && AbpSession.TenantId == request.CarrierTenantId)
                 {
-
                     dto.Price = request.CarrierPrice;
+
+                    if (request.IsTachyonDeal)
+                    {
+                        dto.Price = shippingRequestCarrierPrices?.FirstOrDefault(x => x.RequestId == request.Id)?.Price;
+                    }
+                        
                 }
                 else if (AbpSession.TenantId.HasValue && (isShipper))
                 {
@@ -951,6 +1013,7 @@ namespace TACHYON.PriceOffers
                 //dto.Longitude = (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.X : 0);
                 //dto.Latitude = (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.Y : 0);
                 dto.NotesCount = await GetRequestNotesCount(request.Id);
+                dto.CanAssignDedicatedDriversAndTrucks = request.Status == ShippingRequestStatus.PostPrice && (await IsTachyonDealer() || request.CarrierTenantId == AbpSession.TenantId);
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }

@@ -101,6 +101,7 @@ using TACHYON.Shipping.ShippingRequestAndTripNotes;
 using TACHYON.Shipping.Dedicated;
 using TACHYON.DedicatedInvoices;
 using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
+using TACHYON.PricePackages.TmsPricePackageOffers;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -346,6 +347,8 @@ namespace TACHYON.EntityFrameworkCore
 
         public DbSet<PricePackageAppendix> Appendixes { get; set; }
 
+        public DbSet<TmsPricePackageOffer> TmsPricePackageOffers { get; set; }
+
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;
 
@@ -374,6 +377,7 @@ namespace TACHYON.EntityFrameworkCore
         public TACHYONDbContext(DbContextOptions<TACHYONDbContext> options)
             : base(options)
         {
+            this.Database.SetCommandTimeout(18000);
         }
 
         protected override bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType)

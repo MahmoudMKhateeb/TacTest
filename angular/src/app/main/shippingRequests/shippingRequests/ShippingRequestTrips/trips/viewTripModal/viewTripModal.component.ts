@@ -15,6 +15,7 @@ import {
   TrucksServiceProxy,
   UpdateExpectedDeliveryTimeInput,
   WaybillsServiceProxy,
+  GetAllDedicatedDriversOrTrucksForDropDownDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -61,8 +62,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   originalExpectedDeliveryTime: Moment;
   expectedDeliveryTimeLoading: boolean;
   shippingRequestForView: GetShippingRequestForViewOutput;
-  allDedicatedDrivers: SelectItemDto[];
-  allDedicatedTrucks: SelectItemDto[];
+  allDedicatedDrivers: GetAllDedicatedDriversOrTrucksForDropDownDto[];
+  allDedicatedTrucks: GetAllDedicatedDriversOrTrucksForDropDownDto[];
   routeTypes: any[] = [];
   RouteTypesEnum = ShippingRequestRouteType;
 
@@ -127,6 +128,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this.pickUpPointSender = res.routPoints.length > 0 ? res.routPoints[0].senderOrReceiverContactName : null;
         this.assignDriverAndTruck.assignedTruckId = this.trip.assignedTruckId;
         this.assignDriverAndTruck.assignedDriverUserId = this.trip.assignedDriverUserId;
+        this.assignDriverAndTruck.containerNumber = this.trip.containerNumber;
+        this.assignDriverAndTruck.sealNumber = this.trip.sealNumber;
         this.expectedDeliveryTime = this.trip.expectedDeliveryTime;
         this._changeDetectorRef.detectChanges();
         this.canAssignTrucksAndDrivers = res.canAssignDriversAndTrucks;

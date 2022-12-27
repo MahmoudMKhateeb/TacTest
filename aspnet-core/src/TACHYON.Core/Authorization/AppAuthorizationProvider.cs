@@ -796,7 +796,7 @@ namespace TACHYON.Authorization
 
            var tmsPricePackagePermission = pages.CreateChildPermission(AppPermissions.Pages_TmsPricePackages,
                L("TmsPricePackagesPermission"),
-               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Shipper));
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Shipper,AppFeatures.Carrier));
            
            tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Create,
                L("CreateTmsPricePackage"),
@@ -809,6 +809,7 @@ namespace TACHYON.Authorization
            tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Delete,
                L("DeleteTmsPricePackage"),
                featureDependency: tmsFeatureDependency,multiTenancySides: MultiTenancySides.Tenant);
+           
 
            #endregion
 
@@ -816,7 +817,7 @@ namespace TACHYON.Authorization
 
            var proposalPermission = pages.CreateChildPermission(AppPermissions.Pages_PricePackageProposal,
                L("PricePackageProposal"),
-               featureDependency: tmsFeatureDependency);
+               featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
 
            proposalPermission.CreateChildPermission(AppPermissions.Pages_PricePackageProposal_Create,
                L("CreatePricePackageProposal"),
@@ -832,18 +833,18 @@ namespace TACHYON.Authorization
            
            proposalPermission.CreateChildPermission(AppPermissions.Pages_PricePackageProposal_Accept,
                L("AcceptPricePackageProposal"),
-               featureDependency: tmsFeatureDependency);
+               featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
            
            proposalPermission.CreateChildPermission(AppPermissions.Pages_PricePackageProposal_Reject,
                L("RejectPricePackageProposal"),
-               featureDependency: tmsFeatureDependency);
+               featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
 
            #endregion
 
            #region Price Package Appendix
 
            var pricePackageAppendicesPermission = pages.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix,
-               L("PricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
+               L("PricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer,AppFeatures.Carrier));
 
            pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Create,
                L("CreatePricePackageAppendicesPermission"), featureDependency: tmsFeatureDependency);
@@ -853,10 +854,13 @@ namespace TACHYON.Authorization
                L("DeletePricePackageAppendicesPermission"), featureDependency: tmsFeatureDependency);
            
            pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Accept,
-               L("ConfirmPricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
+               L("ConfirmPricePackageAppendicesPermission"), featureDependency: tmsFeatureDependency);
            pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Reject,
-               L("RejectPricePackageAppendicesPermission"), featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper,AppFeatures.TachyonDealer));
+               L("RejectPricePackageAppendicesPermission"), featureDependency: tmsFeatureDependency);
 
+           pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Activation,
+               L("PricePackageAppendicesActivationPermission"),
+               featureDependency: tmsFeatureDependency, multiTenancySides: MultiTenancySides.Tenant);
            #endregion
 
            #region Actor Prices

@@ -2,6 +2,7 @@
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
@@ -37,10 +38,12 @@ namespace TACHYON.PricePackages.PricePackageProposals.Jobs
                 .Include(x => x.TmsPricePackages).ThenInclude(x=> x.DestinationCity)
                 .Include(x => x.TmsPricePackages).ThenInclude(x=> x.OriginCity)
                 .Include(x => x.TmsPricePackages).ThenInclude(x=> x.TrucksTypeFk)
+                .Include(x => x.TmsPricePackages).ThenInclude(x=> x.ShippingType)
                 .FirstOrDefaultAsync(x => x.Id == args.ProposalId);
             var file = await _proposalManager.GenerateProposalPdfFile(proposal);
 
-            await _userEmailer.SendPricePackageProposalEmail(proposal.ProposalName, file,
+            if (args.ProposalReceiverEmailAddress.IsNullOrEmpty()) 
+                await _userEmailer.SendPricePackageProposalEmail(proposal.ProposalName, file,
                 args.ProposalReceiverEmailAddress);
             
             await uow.CompleteAsync();

@@ -13,7 +13,7 @@
                 <i class="fas fa-plus"></i> {{ l('New') }}
               </button>
             </li>
-            <li role="menuitem">
+            <li *ngIf="!hasCarrierClients && !hasShipperClients && !isCarrierSaas" role="menuitem">
               <button (click)="createNewDedicatedRequest()" class="btn btn-outline-success btn-elevate-hover mt-2 w-100">
                 <i class="fas fa-plus"></i> {{ l('NewDedicated') }}
               </button>
@@ -568,7 +568,10 @@
                 </a>
                 <a
                   *ngIf="
-                    (isCarrier || isCarrierSaas) && !Channel && !item.isDriversAndTrucksAssigned && item.status !== shippingRequestStatusEnum.Expired
+                    item.canAssignDedicatedDriversAndTrucks &&
+                    !Channel &&
+                    !item.isDriversAndTrucksAssigned &&
+                    item.status !== shippingRequestStatusEnum.Expired
                   "
                   href="javascript:void(0)"
                   (click)="assignTrucksAndDrivers(item)"
@@ -577,12 +580,28 @@
                   {{ l('AssignTrucksAndDrivers') }}
                 </a>
                 <a
-                  *ngIf="(isCarrier || isCarrierSaas || isTachyonDealer) && !Channel && item.isDriversAndTrucksAssigned"
+                  *ngIf="item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned"
                   href="javascript:void(0)"
                   (click)="openAttendanceModal(item)"
                   class="red"
                 >
                   {{ l('viewAttendance') }}
+                </a>
+                <a
+                  *ngIf="item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned"
+                  href="javascript:void(0)"
+                  (click)="viewTrucksOrDrivers(item, false)"
+                  class="red"
+                >
+                  {{ l('ReplaceDrivers') }}
+                </a>
+                <a
+                  *ngIf="item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned"
+                  href="javascript:void(0)"
+                  (click)="viewTrucksOrDrivers(item, true)"
+                  class="red"
+                >
+                  {{ l('ReplaceTrucks') }}
                 </a>
                 <a
                   *ngIf="
@@ -604,7 +623,7 @@
                   *ngIf="
                     (!Channel && (feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)) ||
                     ((Channel == PriceOfferChannelEnum.MarketPlace || Channel == PriceOfferChannelEnum.DirectRequest) &&
-                      (feature.isEnabled('App.Carrier') || feature.isEnabled('App.CarrierAsASaas')))
+                      (feature.isEnabled('App.Carrier') || feature.isEnabled('App.CarrierClients') || feature.isEnabled('App.CarrierAsASaas')))
                   "
                 >
                   {{ l('More') }}
@@ -641,4 +660,5 @@
 <price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search()" (modalRefresh)="LoadData()"></price-offer-view-model>
 <load-entity-template-modal #loadEntityTemplateModal></load-entity-template-modal>
 <assign-trucks-and-drivers-modal #assignTrucksAndDriversModal></assign-trucks-and-drivers-modal>
+<replace-trucks-and-drivers-modal #replaceTrucksAndDriversModal></replace-trucks-and-drivers-modal>
 <dedicated-shipping-request-attendance-sheet-modal #attendanceModal></dedicated-shipping-request-attendance-sheet-modal>

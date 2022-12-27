@@ -11,15 +11,33 @@
         <div class="modal-body">
           <div class="row">
             <div class="form-group col-md-6">
-              <label>{{ l('Shipper') }} <span class="text-danger">*</span></label>
+              <label>{{ (currentCompanyType === companyType.Shipper ? 'Shipper' : 'Carrier') | localize }} <span class="text-danger">*</span></label>
               <div
                 [ngClass]="{
-                  'spinner spinner-success spinner-right mr-1 ml-1': shippersLoading
+                  'spinner spinner-success spinner-right mr-1 ml-1': companyType.Shipper ? shippersLoading : carriersLoading
                 }"
               >
-                <select [(ngModel)]="shipperId" (change)="loadProposals()" required class="form-control" name="appendixShipper">
+                <select
+                  *ngIf="currentCompanyType === companyType.Shipper"
+                  [(ngModel)]="companyId"
+                  (change)="loadProposals()"
+                  required
+                  class="form-control"
+                  name="appendixShipper"
+                >
                   <option selected disabled [value]="undefined">{{ 'SelectShipper' | localize }}</option>
                   <option *ngFor="let item of shippers" [value]="item.id">{{ item.displayName }}</option>
+                </select>
+                <select
+                  *ngIf="currentCompanyType === companyType.Carrier"
+                  [(ngModel)]="companyId"
+                  (change)="loadPricePackages()"
+                  required
+                  class="form-control"
+                  name="appendixCarrier"
+                >
+                  <option selected disabled [value]="undefined">{{ 'SelectCarrier' | localize }}</option>
+                  <option *ngFor="let item of carriers" [value]="item.id">{{ item.displayName }}</option>
                 </select>
               </div>
             </div>
@@ -29,21 +47,9 @@
             </div>
 
             <div class="form-group col-md-6">
-              <label for="appendixContractNumber">{{ 'ContractNumber' | localize }}</label>
+              <label>{{ l('AppendixDate') }} <span class="text-danger">*</span></label>
               <input
-                id="appendixContractNumber"
-                [(ngModel)]="appendix.contractNumber"
-                required
-                type="number"
-                (keydown)="numberOnly($event)"
-                class="form-control"
-                name="contractNumber"
-              />
-            </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('Date') }} <span class="text-danger">*</span></label>
-              <input
-                id="Date"
+                id="appendixDate"
                 type="text"
                 name="appendixDate"
                 class="form-control"
@@ -53,18 +59,53 @@
                 [bsConfig]="{ adaptivePosition: true }"
               />
             </div>
-            <div class="form-group col-md-6">
+
+            <div *ngIf="currentCompanyType === companyType.Shipper" class="form-group col-md-6">
               <label>{{ l('Proposal') }} <span class="text-danger">*</span></label>
               <div
                 [ngClass]="{
                   'spinner spinner-success spinner-right mr-1 ml-1': proposalsLoading
                 }"
               >
-                <select [(ngModel)]="appendix.proposalId" required class="form-control" name="appendixProposalId">
+                <select
+                  [(ngModel)]="appendix.proposalId"
+                  (change)="autoFillByProposal(appendix.proposalId)"
+                  required
+                  class="form-control"
+                  name="appendixProposalId"
+                >
                   <option selected disabled [value]="undefined">{{ 'SelectProposal' | localize }}</option>
                   <option *ngFor="let item of proposals" [value]="item.id">{{ item.displayName }}</option>
                 </select>
               </div>
+            </div>
+            <div *ngIf="currentCompanyType === companyType.Carrier" class="form-group col-md-12">
+              <label>{{ l('PricePackages') }} <span class="text-danger">*</span></label>
+              <dx-drop-down-box
+                [(value)]="appendix.pricePackages"
+                valueExpr="pricePackageId"
+                displayExpr="displayName"
+                placeholder="Select a value..."
+                [showClearButton]="true"
+                [dataSource]="dataSource"
+                [disabled]="!companyId"
+              >
+                <div *dxTemplate="let data of 'content'">
+                  <dx-data-grid
+                    [dataSource]="dataSource"
+                    [columns]="['displayName', 'truckType', 'originCity', 'destinationCity', 'totalPrice']"
+                    [selection]="{ mode: 'multiple' }"
+                    [hoverStateEnabled]="true"
+                    [paging]="{ enabled: true, pageSize: 10 }"
+                    [filterRow]="{ visible: true }"
+                    [scrolling]="{ mode: 'virtual' }"
+                    [height]="345"
+                    keyExpr="pricePackageId"
+                    [(selectedRowKeys)]="appendix.pricePackages"
+                  >
+                  </dx-data-grid>
+                </div>
+              </dx-drop-down-box>
             </div>
             <div class="form-group col-md-6">
               <label for="appendixScopeOverview">{{ 'ScopeOverview' | localize }}</label>

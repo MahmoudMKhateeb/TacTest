@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.MultiTenancy;
+using TACHYON.PricePackages.PricePackageAppendices;
 using TACHYON.PricePackages.TmsPricePackages;
 
 namespace TACHYON.PricePackages.PricePackageProposals
@@ -26,6 +27,11 @@ namespace TACHYON.PricePackages.PricePackageProposals
         public ProposalStatus Status { get; set; }
 
         public Guid? ProposalFileId { get; set; }
+
+        public int? AppendixId { get; set; }
+
+        [ForeignKey(nameof(AppendixId))]
+        public PricePackageAppendix Appendix { get; set; }
         public List<TmsPricePackage> TmsPricePackages { get; set; }
     }
 }

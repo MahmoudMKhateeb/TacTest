@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.DedicatedDynamicInvocies;
 using TACHYON.Features;
 using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequests.Dtos.Dedicated;
@@ -48,15 +49,21 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Shipper)]
         public async Task CreateOrEdit(CreateOrEditTruckAttendanceDto input)
         {
+            await ValidateRequest(input);
+
             var attendanceTrucks = new List<DedicatedShippingRequestTruckAttendance>();
 
             for (var dt = input.StartDate.Date; dt <= input.EndDate.Date; dt = dt.AddDays(1))
             {
-                attendanceTrucks.Add(new DedicatedShippingRequestTruckAttendance {AttendaceStatus=input.AttendaceStatus , 
-                    DedicatedShippingRequestTruckId = input.DedicatedShippingRequestTruckId, AttendanceDate=dt });
+                attendanceTrucks.Add(new DedicatedShippingRequestTruckAttendance
+                {
+                    AttendaceStatus = input.AttendaceStatus,
+                    DedicatedShippingRequestTruckId = input.DedicatedShippingRequestTruckId,
+                    AttendanceDate = dt
+                });
             }
 
-            
+
             if (input.Id == null)
             {
                 await Create(attendanceTrucks);
@@ -66,6 +73,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 await Edit(input);
             }
         }
+
 
         [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Shipper)]
         public async Task<CreateOrEditTruckAttendanceDto> GetTruckAttendanceForEdit(long id)
@@ -80,6 +88,13 @@ namespace TACHYON.Shipping.ShippingRequests
             await _truckAttendanceRepository.DeleteAsync(item);
         }
 
+        public async Task<int> GetDaysNumberByWorkingDayType(WorkingDayType workingDayType, long dedicatedTruckId)
+        {
+            return await _truckAttendanceRepository.GetAll()
+                .WhereIf(workingDayType == WorkingDayType.Normal, x => x.AttendaceStatus == AttendaceStatus.Present)
+                .WhereIf(workingDayType == WorkingDayType.OverTime, x => x.AttendaceStatus == AttendaceStatus.OverTime)
+                .CountAsync(x => x.DedicatedShippingRequestTruckId == dedicatedTruckId);
+        }
         #region Helper
 
         private async Task Create(List<DedicatedShippingRequestTruckAttendance> input)
@@ -127,6 +142,20 @@ namespace TACHYON.Shipping.ShippingRequests
 
             };
 
+        }
+
+        private async Task ValidateRequest(CreateOrEditTruckAttendanceDto input)
+        {
+            await DisableTenancyFiltersIfTachyonDealer();
+            //Deny create or edit if request have invoice, and if user is shipper and the request is completed
+            var dedicatedTruck = await _dedicatedShippingRequestTruckRepository.GetAllIncluding(x => x.ShippingRequest)
+                .WhereIf(await IsShipper() && ! await IsTachyonDealer(), x =>
+                x.ShippingRequest.Status == ShippingRequestStatus.PostPrice)
+                .Where(x => x.ShippingRequest.Status != ShippingRequestStatus.Cancled)
+                .FirstOrDefaultAsync(x => x.Id == input.DedicatedShippingRequestTruckId);
+            if (dedicatedTruck == null) throw new UserFriendlyException(L("RequestIsNotFoundOrCompleted"));
+            if (dedicatedTruck.InvoiceId !=null || dedicatedTruck.SubmitInvoiceId !=null)
+                throw new UserFriendlyException(L("OperationDeniedForInvoicedTruck"));
         }
         #endregion
     }

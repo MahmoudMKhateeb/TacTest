@@ -152,5 +152,11 @@ namespace TACHYON.Notifications
         public const string NotifyUserWhenBulkDeliverySucceeded = "App.NotifyUserWhenBulkDeliverySucceeded";
         public const string NotifyUserWhenBulkDeliveryFailed = "App.NotifyUserWhenBulkDeliveryFailed";
         #endregion
+
+
+        #region Replacement
+        public const string NotifyCarrierWithTruckReplacement = "App.NotifyCarrierWithTruckReplacement";
+        public const string NotifyCarrierWithDriverReplacement = "App.NotifyCarrierWithDriverReplacement";
+        #endregion
     }
 }

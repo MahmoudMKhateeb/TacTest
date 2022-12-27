@@ -214,6 +214,7 @@ namespace TACHYON.Invoices
                 .Include(i => i.Trips)
                 .ThenInclude(i => i.ShippingRequestFk)
                 .ThenInclude(r => r.ShippingRequestDestinationCities)
+                .ThenInclude(x=>x.CityFk)
                 .Include(i => i.Trips)
                 .ThenInclude(r => r.AssignedTruckFk)
                 .Include(i => i.Trips)
@@ -571,7 +572,7 @@ namespace TACHYON.Invoices
             var bankNameEnglish = SettingManager.GetSettingValue(AppSettings.Invoice.BankNameEnglish);
 
             DisableTenancyFilters();
-            DisableDraftedFilter();
+            AsyncHelper.RunSync(() => DisableInvoiceDraftedFilter());
             var invoice = _invoiceRepository
                 .GetAll()
                 .Include(i => i.InvoicePeriodsFK)
@@ -633,7 +634,7 @@ namespace TACHYON.Invoices
                     DateWork = trip.ShippingRequestTripFK.EndTripDate.HasValue ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.InvoiceFK.CreationTime.ToString("dd/MM/yyyy"),
                     Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
                         L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : "",
-                    ContainerNumber = trip.ShippingRequestTripFK.CanBePrinted ? trip.ShippingRequestTripFK.ContainerNumber ?? "-" : "-",
+                    ContainerNumber = trip.ShippingRequestTripFK.ContainerNumber ?? "-",
                     RoundTrip = trip.ShippingRequestTripFK.CanBePrinted ? trip.ShippingRequestTripFK.RoundTrip ?? "-" : "-",
                 });
                 Sequence++;
@@ -909,7 +910,9 @@ namespace TACHYON.Invoices
                     Remarks = item.WorkingDayType == DedicatedDynamicInvocies.WorkingDayType.OverTime ? "Over Time" : item.Remarks,
                     Duration = $"{item.NumberOfDays} {"Days"}",
                     PricePerDay = item.PricePerDay,
-                    TruckType = item.DedicatedShippingRequestTruck.Truck.TrucksTypeFk.DisplayName,
+                    TruckType = item.DedicatedShippingRequestTruck.ReplacementFlag == Shipping.Dedicated.ReplacementFlag.Replaced 
+                    ?$"{item.DedicatedShippingRequestTruck.Truck.TrucksTypeFk.DisplayName}{"<br/>"}{"Replacement"}{item.DedicatedShippingRequestTruck.OriginalTruck.Truck.PlateNumber}" 
+                    :item.DedicatedShippingRequestTruck.Truck.TrucksTypeFk.DisplayName,
                     TruckPlateNumber = item.DedicatedShippingRequestTruck.Truck.PlateNumber,
                     TaxVat = item.TaxVat,
                     Date = item.CreationTime.ToString("dd/MM/yyyy"),

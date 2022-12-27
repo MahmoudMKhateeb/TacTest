@@ -151,6 +151,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public bool CanBePrinted { get; set; }
         public string RoundTrip { get; set; }
         public string ContainerNumber { get; set; }
+        public string SealNumber { get; set; }
         #endregion
         public string SplitInvoiceFlag { get; set; }
 

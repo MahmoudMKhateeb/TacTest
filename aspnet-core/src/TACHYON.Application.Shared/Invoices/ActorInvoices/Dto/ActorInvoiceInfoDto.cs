@@ -31,7 +31,7 @@ namespace TACHYON.Invoices.ActorInvoices.Dto
         public decimal TotalAmount { get; set; }
         public decimal VatAmount { get; set; }
         public decimal TaxVat { get; set; }
-        public long InvoiceNumber { get; set; }
+        public string InvoiceNumber { get; set; }
         public List<InvoiceItemDto> Items { get; set; }
 
 

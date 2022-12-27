@@ -17,7 +17,7 @@ namespace TACHYON.AutoMapper.DedicatedDynamicInvoices
 
             CreateMap<DedicatedDynamicInvoice, DedicatedDynamicInvoiceDto>()
             .ForMember(x => x.TenantName, x => x.MapFrom(i => i.Tenant.Name))
-            .ForMember(x => x.InvoiceNumber, x => x.MapFrom(i => i.Invoice.InvoiceNumber))
+            .ForMember(x => x.InvoiceNumber, x => x.MapFrom(i => i.Invoice !=null  &&i.Invoice.InvoiceNumber==null ?0 :i.Invoice.InvoiceNumber))
              .ForMember(x => x.SubmitInvoiceNumber, x => x.MapFrom(i => i.SubmitInvoice.ReferencNumber))
             .ForMember(x => x.InvoiceAccountName, x => x.MapFrom(i => i.InvoiceAccountType.GetEnumDescription()))
             .ForMember(x => x.ShippingRequestReference, x => x.MapFrom(i => i.ShippingRequest.ReferenceNumber));

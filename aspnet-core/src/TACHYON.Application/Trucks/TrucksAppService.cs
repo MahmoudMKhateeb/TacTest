@@ -541,12 +541,12 @@ namespace TACHYON.Trucks
 
         //}
 
-        public async Task<List<SelectItemDto>> GetAllDriversForDropDown()
+        public async Task<List<SelectItemDto>> GetAllDriversForDropDown(long? tenantId)
 
         {
-
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _lookup_userRepository.GetAll().Where(e => e.IsDriver == true)
-
+                .WhereIf(await IsTachyonDealer(), x => x.TenantId == tenantId)
                 .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}" })
 
                 .ToListAsync();

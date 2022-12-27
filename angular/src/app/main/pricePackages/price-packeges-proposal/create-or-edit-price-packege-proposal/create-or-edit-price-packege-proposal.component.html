@@ -42,7 +42,7 @@
             </div>
             <div class="form-group col-md-6">
               <label>{{ l('ScopeOverview') }} <span class="text-danger">*</span></label>
-              <input [(ngModel)]="pricePackageProposal.scopeOverview" required type="text" class="form-control" name="scopeOverview" />
+              <input [(ngModel)]="pricePackageProposal.scopeOverview" minlength="3" required type="text" class="form-control" name="scopeOverview" />
             </div>
 
             <div class="form-group col-md-12">
@@ -74,10 +74,9 @@
               </dx-drop-down-box>
             </div>
             <div class="form-group col-md-6">
-              <label>{{ l('EmailAddress') }} <span class="text-danger">*</span></label>
+              <label>{{ l('EmailAddress') }}</label>
               <input
                 [(ngModel)]="pricePackageProposal.emailAddress"
-                required
                 type="email"
                 pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
                 maxlength="256"

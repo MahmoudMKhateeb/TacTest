@@ -8,6 +8,7 @@ using Abp.Quartz;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using NUglify.Helpers;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -226,7 +227,7 @@ namespace TACHYON.Invoices
         {
             List<Tenant> tenantsList = new List<Tenant>();
             var tenants = _tenant.GetAll()
-                .Where(t => t.IsActive && t.EditionId != 1)
+                .Where(t => t.IsActive && !t.Edition.DisplayName.Equals("Standard"))
                 .ToList();
             //todo fix this please 
             foreach (var tenant in tenants)
@@ -389,16 +390,19 @@ namespace TACHYON.Invoices
 
 
                 //related carriers 
-                int relatedCarrierId;
+                int relatedCarrierId = default;
 
-                int.TryParse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier), out relatedCarrierId);
 
-                if (carrierId == relatedCarrierId)
+                if(await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
                 {
-                    trips.Remove(trip);
+                    int.TryParse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier), out relatedCarrierId);
+                    if (carrierId == relatedCarrierId)
+                    {
+                        trips.Remove(trip);
+                    }
                 }
 
-
+                
                 //saas SR 
                 if (trip.ShippingRequestFk.IsSaas())
                 {
@@ -513,7 +517,7 @@ namespace TACHYON.Invoices
             
         }
 
-        
+
         public async Task ConfirmInvoice(long invoiceId)
         {
             DisableTenancyFilters();
@@ -522,16 +526,30 @@ namespace TACHYON.Invoices
             Invoice invoice = await _invoiceRepository.GetAll().Include(x => x.InvoicePeriodsFK)
                 .Include(x => x.Tenant)
                 .FirstOrDefaultAsync(x => x.Id == invoiceId);
-            
+
             if (invoice is null) throw new UserFriendlyException(L("InvoiceNotFound"));
 
             if (invoice.Status == InvoiceStatus.Confirmed)
                 throw new UserFriendlyException(L("InvoiceAlreadyConfirmed"));
-            
+
             Tenant tenant = invoice.Tenant;
             InvoicePeriod period = invoice.InvoicePeriodsFK;
             decimal totalAmount = invoice.TotalAmount;
 
+            if (period.PeriodType == InvoicePeriodType.PayInAdvance)
+            {
+                tenant.Balance -= totalAmount;
+                tenant.ReservedBalance -= totalAmount;
+            }
+            else
+            {
+                tenant.CreditBalance -= totalAmount;
+            }
+
+
+            await _balanceManager.CheckShipperOverLimit(tenant);
+            invoice.Status = InvoiceStatus.Confirmed;
+            await _appNotifier.NewInvoiceShipperGenerated(invoice);
         }
 
 
@@ -767,6 +785,9 @@ namespace TACHYON.Invoices
             //await _invoiceRepository.InsertAsync(invoice);
             invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
             dedicatedDynamicInvoice.InvoiceId = invoice.Id;
+            //dedicatedDynamicInvoice.ShippingRequest.IsShipperHaveInvoice = true;
+            dedicatedDynamicInvoice.DedicatedDynamicInvoiceItems.ForEach(x =>
+            x.DedicatedShippingRequestTruck.InvoiceId = invoice.Id);
         }
 
         public async Task GenerateSubmitDynamicInvoice(Tenant tenant, DynamicInvoice dynamicInvoice)
@@ -832,6 +853,9 @@ namespace TACHYON.Invoices
             };
             submitInvoice.Id = await _submitInvoiceRepository.InsertAndGetIdAsync(submitInvoice);
             dedicatedDynamicInvoice.SubmitInvoiceId = submitInvoice.Id;
+            // dedicatedDynamicInvoice.ShippingRequest.IsCarrierHaveInvoice = true;
+            dedicatedDynamicInvoice.DedicatedDynamicInvoiceItems.ForEach(x =>
+             x.DedicatedShippingRequestTruck.SubmitInvoiceId = submitInvoice.Id);
 
         }
 

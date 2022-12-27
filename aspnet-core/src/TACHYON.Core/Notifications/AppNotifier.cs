@@ -22,6 +22,7 @@ using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
 using TACHYON.PricePackages.Dto.NormalPricePackage;
+using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -216,6 +217,43 @@ namespace TACHYON.Notifications
                 });
         }
 
+        #region Replacement Truck or driver for dedicated
+        public async Task NotifyCarrierWithTruckReplacement(DedicatedShippingRequestTruck dedicatedTruck)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+             new LocalizableString(
+                 L("NotifyCarrierWithTruckReplacement", dedicatedTruck.Truck.GetDisplayName(), dedicatedTruck.ShippingRequest.ReferenceNumber),
+                 TACHYONConsts.LocalizationSourceName
+             )
+         );
+            notificationData["dedicatedTruckId"] = dedicatedTruck.Id;
+            notificationData["shippingRequestId"] = dedicatedTruck.ShippingRequestId;
+            notificationData["truckTypeId"] = dedicatedTruck.ShippingRequest.TrucksTypeId;
+            DisableTenancyFilters();
+            var userIds = _userRepo.GetAll().Where(x => x.TenantId == dedicatedTruck.Truck.TenantId)
+                .Select(x => new UserIdentifier(x.TenantId, x.Id)).ToArray();
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWithTruckReplacement,
+                notificationData, userIds: userIds);
+        }
+        
+        public async Task NotifyCarrierWithDriverReplacement(DedicatedShippingRequestDriver dedicatedDriver)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+             new LocalizableString(
+                 L("NotifyCarrierWithDriverReplacement", $"{dedicatedDriver} {dedicatedDriver.DriverUser.Surname}", dedicatedDriver.ShippingRequest.ReferenceNumber),
+                 TACHYONConsts.LocalizationSourceName
+             )
+         );
+            notificationData["dedicatedDriverId"] = dedicatedDriver.Id;
+            notificationData["shippingRequestId"] = dedicatedDriver.ShippingRequestId;
+            notificationData["truckTypeId"] = dedicatedDriver.ShippingRequest.TrucksTypeId;
+            DisableTenancyFilters();
+            var userIds = _userRepo.GetAll().Where(x => x.TenantId == dedicatedDriver.DriverUser.TenantId)
+                .Select(x => new UserIdentifier(x.TenantId, x.Id)).ToArray();
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotifyCarrierWithDriverReplacement,
+                notificationData, userIds: userIds);
+        }
+        #endregion
 
         #region Tachyon Notifications
 

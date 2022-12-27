@@ -91,6 +91,7 @@ namespace TACHYON.PriceOffers.Dto
         /// </summary>
         public int TenantId { get; set; }
         public bool IsDriversAndTrucksAssigned { get; set; }
+        public bool CanAssignDedicatedDriversAndTrucks { get; set; }
 
         public bool IsSaas
         {

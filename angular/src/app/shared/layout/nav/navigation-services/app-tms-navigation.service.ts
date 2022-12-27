@@ -80,6 +80,19 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       ),
       // end of  Invoices
       //  ---------------------------------------------------------------------------------------------------------------------
+      //start of TMS for shipper
+      new AppMenuItem(
+        'TMSForShipper',
+        'Pages.ShippingRequests',
+        'logistic, delivery, warehouse, storage, empty, vacant.svg',
+        '/app/main/tmsforshipper',
+        [],
+        undefined,
+        undefined,
+        undefined
+      ),
+      //end of TMS for shipper
+      //  ---------------------------------------------------------------------------------------------------------------------
       // start of Documents
       new AppMenuItem(
         'DocumentManagement',
@@ -192,11 +205,8 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
           new AppMenuItem('TMS Price Packages', 'Pages.TmsPricePackages', '', '/app/main/pricePackages/tmsPricePackages'),
           new AppMenuItem('Price Packages Proposal', 'Pages.TmsPricePackages', '', '/app/main/pricePackages/pricePackagesProposal'),
           new AppMenuItem('Price Package Appendices', 'Pages.PricePackageAppendix', '', '/app/main/pricePackages/pricePackageAppendices'),
-        ],
+        ]
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
-        undefined,
-        undefined,
-        () => (this.isEnabled('App.TachyonDealer') || this.isEnabled('App.Carrier')) && this.isEnabled('App.NormalPricePackage')
       ),
       // end of PricePackages
       // ---------------------------------------------------------------------------------------------------------------------

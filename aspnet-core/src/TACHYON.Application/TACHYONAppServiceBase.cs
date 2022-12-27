@@ -21,7 +21,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Configuration;
+using TACHYON.DataFilters;
 using TACHYON.Features;
+using TACHYON.Invoices;
 using TACHYON.MultiTenancy;
 
 namespace TACHYON
@@ -118,6 +120,15 @@ namespace TACHYON
         protected virtual void DisableDraftedFilter()
         {
             CurrentUnitOfWork.DisableFilter("IHasIsDrafted");
+        }
+
+        
+        protected virtual async Task DisableInvoiceDraftedFilter()
+        {
+            if (!AbpSession.TenantId.HasValue || await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                CurrentUnitOfWork.DisableFilter(TACHYONDataFilters.HaveInvoiceStatus);
+            }
         }
 
         protected virtual async Task DisableTenancyFilterIfTachyonDealerOrHost() 

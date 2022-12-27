@@ -37,6 +37,8 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
   Items: PriceOfferItem[] = [];
   isPostPriceOffer: boolean;
   isForDedicated: boolean;
+  ShipperValueOfGoods: Number;
+  CarrierInsuranceCoverage: Number;
   constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy) {
     super(injector);
     this.offerForEditOutput.priceOfferViewDto = new PriceOfferViewDto();
@@ -52,6 +54,8 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
       this.modal.show();
       this.input.shippingRequestId = shippingRequestId;
       this.input.channel = this.Channel;
+      this.ShipperValueOfGoods = this.offerForEditOutput.priceOfferViewDto.shipperValueOfGoods;
+      this.CarrierInsuranceCoverage = this.offerForEditOutput.priceOfferViewDto.carrierInsuranceCoverage;
     });
   }
   close(): void {
@@ -136,7 +140,7 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
       if ((this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) && this.offerForEditOutput.priceOfferViewDto.editionId == 4) {
         return true;
       } else if (this.feature.isEnabled('App.Carrier')) {
-        return true;
+        return !this.offerForEditOutput.hasMatchedPricePackage;
       }
     }
     return false;
