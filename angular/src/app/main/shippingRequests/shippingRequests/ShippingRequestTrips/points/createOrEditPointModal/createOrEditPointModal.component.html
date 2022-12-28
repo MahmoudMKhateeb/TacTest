@@ -133,7 +133,13 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" *ngIf="isHomeDelivery" [disabled]="createOrEditPintForm.invalid" (click)="close()">
+          <button
+            type="button"
+            class="btn btn-primary"
+            *ngIf="isHomeDelivery && usedIn === 'createOrEdit'"
+            [disabled]="createOrEditPintForm.invalid"
+            (click)="close()"
+          >
             {{ l('Save') }}
           </button>
           <button type="button" class="btn btn-secondary" (click)="close()">{{ l('Close') }}</button>

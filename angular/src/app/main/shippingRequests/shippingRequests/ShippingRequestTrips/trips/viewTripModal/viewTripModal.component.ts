@@ -16,6 +16,9 @@ import {
   UpdateExpectedDeliveryTimeInput,
   WaybillsServiceProxy,
   GetAllDedicatedDriversOrTrucksForDropDownDto,
+  ShippingRequestFlag,
+  ShippingRequestTripFlag,
+  DropPaymentMethod,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -66,6 +69,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   allDedicatedTrucks: GetAllDedicatedDriversOrTrucksForDropDownDto[];
   routeTypes: any[] = [];
   RouteTypesEnum = ShippingRequestRouteType;
+  ShippingRequestFlagEnum = ShippingRequestFlag;
+  ShippingRequestTripFlagEnum = ShippingRequestTripFlag;
+  ShippingRequestTripFlagArray = [];
 
   constructor(
     injector: Injector,
@@ -89,6 +95,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this._TripService.currentShippingRequest.subscribe((res) => {
       this.TruckTypeId = res?.truckTypeId;
     });
+    this.ShippingRequestTripFlagArray = this.enumToArray.transform(ShippingRequestTripFlag);
   }
 
   ngAfterViewInit() {
@@ -99,7 +106,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
 
   show(id, shippingRequestForView?: GetShippingRequestForViewOutput): void {
     this.shippingRequestForView = shippingRequestForView;
-    if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === 1) {
+    if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Dedicated) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
       this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);

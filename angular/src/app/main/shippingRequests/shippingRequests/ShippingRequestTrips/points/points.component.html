@@ -148,7 +148,7 @@
                         <!--      td Additional reciver -->
                         <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.receiverFullName }} - {{ record.receiverPhoneNumber }}</span>
                         <a
-                          *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff"
+                          *ngIf="this.usedIn == 'createOrEdit' && (record.pickingType === PickingType.Dropoff || isHomeDelivery)"
                           (click)="createOrEditPointModal.show(i, 'receiver')"
                           class="btn btn-sm mr-3"
                           [ngClass]="{
@@ -188,9 +188,7 @@
                         </a>
                       </td>
                       <td *ngIf="isHomeDelivery">
-                        <!--      td trip notes     -->
-
-                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.note ?? '-' }}</span>
+                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.dropPaymentMethod ?? '-' }}</span>
                         <div *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff" class="input-group">
                           <select
                             name="PaymentMethod-{{ i }}"
@@ -203,10 +201,8 @@
                         </div>
                       </td>
                       <td *ngIf="isHomeDelivery">
-                        <!--      td trip notes     -->
-
-                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.note ?? '-' }}</span>
-                        <div *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff">
+                        <!--                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.note ?? '-' }}</span>-->
+                        <div *ngIf="record.pickingType === PickingType.Dropoff">
                           <div class="checkbox-list mb-2">
                             <label class="checkbox ml-2">
                               <input
@@ -215,6 +211,7 @@
                                 id="needsPOD-{{ i }}"
                                 name="needsPOD-{{ i }}"
                                 value="false"
+                                [disabled]="this.usedIn != 'createOrEdit'"
                               />
                               <span class="ml-2 mt-1"></span>
                               {{ l('needsPOD') }}
@@ -226,6 +223,7 @@
                                 id="needsReceiverCode-{{ i }}"
                                 name="needsReceiverCode-{{ i }}"
                                 value="false"
+                                [disabled]="this.usedIn != 'createOrEdit'"
                               />
                               <span class="ml-2 mt-1"></span>
                               {{ l('needsReceiverCode') }}

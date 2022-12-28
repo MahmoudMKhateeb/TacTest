@@ -717,24 +717,37 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     } else {
       this.trip.numberOfDrops = 1;
     }
-    this.onNumberOfDropsChanged();
+    this.onNumberOfDropsChanged(false, true);
     console.log('this.trip.numberOfDrops', this.trip);
   }
 
-  onNumberOfDropsChanged(shouldReset = false) {
+  onNumberOfDropsChanged(shouldReset = false, shouldAddNewPoint = false) {
     console.log('this.trip', { ...this.trip });
     this.shippingRequestForView.shippingRequest.numberOfDrops = this.trip.numberOfDrops;
     this._TripService.updateShippingRequest(this.shippingRequestForView);
     console.log('this.PointsComponent.wayPointsList', this.PointsComponent.wayPointsList);
     console.log('this.canEditNumberOfDrops', this.canEditNumberOfDrops);
     if (this.canEditNumberOfDrops || this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.HomeDelivery) {
-      const wayPointsList = this.PointsComponent.wayPointsList.length > 0 && !shouldReset ? [...this.PointsComponent.wayPointsList] : [];
+      const anyWayPointHasId = this.PointsComponent.wayPointsList.some((item) => isNotNullOrUndefined(item.id));
+      console.log('anyWayPointHasId', anyWayPointHasId);
+      const wayPointsList =
+        (this.PointsComponent.wayPointsList.length > 0 && !shouldReset) || anyWayPointHasId
+          ? this.trip.routeType == this.RouteTypesEnum.MultipleDrops
+            ? [...this.PointsComponent.wayPointsList]
+            : this.PointsComponent.wayPointsList.length >= 2
+            ? [this.PointsComponent.wayPointsList[0], this.PointsComponent.wayPointsList[1]]
+            : [this.PointsComponent.wayPointsList[0]]
+          : [];
       this.PointsComponent.wayPointsList = [];
       this._PointsService.updateWayPoints([]);
-      if (wayPointsList.length > 0 && !shouldReset) {
+      console.log('wayPointsList', wayPointsList);
+      if ((wayPointsList.length > 0 && !shouldReset) || anyWayPointHasId) {
         this.PointsComponent.wayPointsList = wayPointsList;
+        this.trip.numberOfDrops = this.trip.numberOfDrops === 0 ? wayPointsList.length - 1 : this.trip.numberOfDrops;
         this._PointsService.updateWayPoints(wayPointsList);
-        this.PointsComponent.wayPointsList = this.addNewPoint(wayPointsList);
+        if (shouldAddNewPoint) {
+          this.PointsComponent.wayPointsList = this.addNewPoint(wayPointsList);
+        }
       } else {
         this.PointsComponent.createEmptyPoints(this.selectedPaymentMethod);
       }
