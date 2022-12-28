@@ -50,6 +50,10 @@
                     "Widgets_Tenant_shipper_RequestsInMarketplaceWidget";
 
                 public const string ShipperTrackingMapWidget = "Widgets_Tenant_shipper_TrackingMapWidget";
+                public const string ShipperCountersWidget = "Widgets_Tenant_shipper_Counters_Widget";
+                public const string ShipperUpcomingTripsWidget = "Widgets_Tenant_shipper_Upcoming_Trips_Widget";
+                public const string ShipperNeedsActionWidget = "Widgets_Tenant_shipper_Needs_Action_Widget";
+                public const string ShipperNewOffersWidget = "Widgets_Tenant_shipper_New_Offers_Widget";
             }
 
             public class Carrier

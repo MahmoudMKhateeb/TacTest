@@ -25,6 +25,9 @@ export class DashboardCustomizationConst {
       ShipperRequestsInMarketplaceWidget: 'Widgets_Tenant_shipper_RequestsInMarketplaceWidget',
       ShipperTrackingMapWidget: 'Widgets_Tenant_shipper_TrackingMapWidget',
       ShipperCountersWidget: 'Widgets_Tenant_shipper_Counters_Widget',
+      UpcomingTripsWidget: 'Widgets_Tenant_shipper_Upcoming_Trips_Widget',
+      NeedsActionWidget: 'Widgets_Tenant_shipper_Needs_Action_Widget',
+      NewOffersWidget: 'Widgets_Tenant_shipper_New_Offers_Widget',
     },
     //Carrier Only Widgets
     Carrier: {

@@ -136,9 +136,9 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
               component: this.getWidgetViewDefinition(widget.WidgetId).component,
               gridInformation: {
                 resizeEnabled: false,
-                dragEnabled: false,
+                dragEnabled: true,
                 id: widget.WidgetId,
-                cols: widget.WidgetId === 'Widgets_Tenant_shipper_AcceptedVsRejectedRequestsWidget' ? 8 : widget.Width,
+                cols: widget.Width,
                 rows: widget.Height,
                 x: widget.PositionX,
                 y: widget.PositionY,
@@ -207,6 +207,7 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
             id: widgetId,
             component: widgetViewConfiguration.component,
             gridInformation: {
+              resizeEnabled: false,
               id: widgetId,
               cols: addedWidget.width,
               rows: addedWidget.height,
@@ -250,7 +251,8 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
     if (this.options) {
       this.options.forEach((option) => {
         option.draggable.enabled = this.editModeEnabled;
-        option.resizable.enabled = this.editModeEnabled;
+        option.resizable.enabled = false; // this.editModeEnabled;
+        option.pushItems = false;
         option.api.optionsChanged();
       });
     }
@@ -259,9 +261,9 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
   openAddWidgetModal(): void {
     let page = this.userDashboard.pages.find((page) => page.id === this.selectedPage.id);
     if (page) {
-      let widgets = this.dashboardDefinition.widgets; /*.filter(
+      let widgets = this.dashboardDefinition.widgets.filter(
         (widgetDef: WidgetOutput) => !page.widgets.find((widgetOnPage) => widgetOnPage.id === widgetDef.id)
-      )*/
+      );
       this.addWidgetModal.show(widgets);
     }
   }
@@ -436,9 +438,9 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
   private getGridsterConfig(): GridsterConfig {
     const isRtl = rtlDetect.isRtlLang(abp.localization.currentLanguage.name);
     return {
-      pushItems: true,
+      pushItems: false,
       draggable: {
-        enabled: false, // this.editModeEnabled,
+        enabled: this.editModeEnabled,
       },
       resizable: {
         enabled: false, // this.editModeEnabled,
@@ -451,7 +453,7 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
   }
 
   moreThanOnePage(): boolean {
-    return true; //this.userDashboard && this.userDashboard.pages && this.userDashboard.pages.length > 1;
+    return this.userDashboard && this.userDashboard.pages && this.userDashboard.pages.length > 1;
   }
 
   close(): void {

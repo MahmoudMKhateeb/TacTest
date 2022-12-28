@@ -119,6 +119,10 @@ namespace TACHYON.DashboardCustomization.Definitions
             var shipperMostUsedDestinationsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperMostUsedDestinationsWidget, "ShipperMostUsedDestinationsWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperRequestsInMarketplaceWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperRequestsInMarketplaceWidget, "ShipperRequestsInMarketplaceWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperTrackingMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperTrackingMapWidget, "ShipperTrackingMapWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
+            var shipperCountersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperCountersWidget, "ShipperCountersWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
+            var shipperUpcomingTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperUpcomingTripsWidget, "ShipperUpcomingTripsWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
+            var shipperNeedsActionWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNeedsActionWidget, "ShipperNeedsActionWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
+            var shipperNewOffersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNewOffersWidget, "ShipperNewOffersWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
 
             WidgetDefinitions.Add(shipperNumberOfCompletedTripsWidget);
             WidgetDefinitions.Add(shipperAcceptedVsRejectedRequestsWidget);
@@ -132,6 +136,10 @@ namespace TACHYON.DashboardCustomization.Definitions
             WidgetDefinitions.Add(shipperMostUsedDestinationsWidget);
             WidgetDefinitions.Add(shipperRequestsInMarketplaceWidget);
             WidgetDefinitions.Add(shipperTrackingMapWidget);
+            WidgetDefinitions.Add(shipperCountersWidget);
+            WidgetDefinitions.Add(shipperUpcomingTripsWidget);
+            WidgetDefinitions.Add(shipperNeedsActionWidget);
+            WidgetDefinitions.Add(shipperNewOffersWidget);
 
             #endregion
 
@@ -269,6 +277,10 @@ namespace TACHYON.DashboardCustomization.Definitions
                     shipperMostUsedDestinationsWidget.Id,
                     shipperRequestsInMarketplaceWidget.Id,
                     shipperTrackingMapWidget.Id,
+                    shipperCountersWidget.Id,
+                    shipperUpcomingTripsWidget.Id,
+                    shipperNeedsActionWidget.Id,
+                    shipperNewOffersWidget.Id,
                 });
             DashboardDefinitions.Add(defaultShipperDashboard);
 

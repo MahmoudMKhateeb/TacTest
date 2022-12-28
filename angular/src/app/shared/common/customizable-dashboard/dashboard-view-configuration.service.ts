@@ -44,6 +44,9 @@ import { CarrierComplitedTripsWidgetComponent } from '@app/shared/common/customi
 import { CarrierAcceptedVsRejectdRequestsComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/carrier-accepted-vs-rejectd-requests/carrier-accepted-vs-rejectd-requests.component';
 import { CarrierInvoicesDetailsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/carrier-invoices-details-widget/carrier-invoices-details-widget.component';
 import { CountersWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/counters-widget/counters-widget.component';
+import { UpcomingTripsWidgetsComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/upcoming-trips-widgets/upcoming-trips-widgets.component';
+import { NeedsActionWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/needs-action-widget/needs-action-widget.component';
+import { NewOffersWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/new-offers-widget/new-offers-widget.component';
 
 @Injectable({
   providedIn: 'root',
@@ -74,24 +77,31 @@ export class DashboardViewConfigurationService {
     let acceptedVsRejectedRequestsWidget = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Shipper.ShipperAcceptedVsRejectedRequestsWidget,
       AcceptedVsRejecedRequestsComponent,
-      1
+      20,
+      9
     );
 
     //3
     let shipperCompletedTripsVsPodWidget = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Shipper.ShipperCompletedTripsVsPodWidget,
-      CompletedTripVsPodComponent
+      CompletedTripVsPodComponent,
+      20,
+      9
     );
     //4
     let shipperInvoicesVsPaidInvoices = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Shipper.ShipperInvoicesVsPaidInvoicesWidget,
-      InvoicesVsPaidInvoicesComponent
+      InvoicesVsPaidInvoicesComponent,
+      15,
+      9
     );
 
     //5
     let mostWorkedWithCarriers = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Shipper.ShipperMostWorkedWithCarriersWidget,
-      MostWorkedWithCarriersComponent
+      MostWorkedWithCarriersComponent,
+      11,
+      9
     );
 
     //5
@@ -125,16 +135,16 @@ export class DashboardViewConfigurationService {
     let mostUsedOrigins = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Shipper.ShipperMostUsedOriginsWidget,
       MostUsedOriginComponent,
-      4,
-      6
+      6,
+      9
     );
 
     //9
     let mostUsedDest = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Shipper.ShipperMostUsedDestinationsWidget,
       MostUsedDestinationsComponent,
-      4,
-      6
+      6,
+      9
     );
 
     let trackingMapOfShipper = new WidgetViewDefinition(
@@ -147,8 +157,26 @@ export class DashboardViewConfigurationService {
     let countersWidget_Shipper = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Shipper.ShipperCountersWidget,
       CountersWidgetComponent,
-      18,
-      20
+      6,
+      9
+    );
+    let upcomingTripsWidget_Shipper = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.UpcomingTripsWidget,
+      UpcomingTripsWidgetsComponent,
+      6,
+      9
+    );
+    let needsActionWidget_Shipper = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.NeedsActionWidget,
+      NeedsActionWidgetComponent,
+      6,
+      6
+    );
+    let newOffersWidget_Shipper = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Shipper.NewOffersWidget,
+      NewOffersWidgetComponent,
+      6,
+      3
     );
 
     //carrier Widgets
@@ -452,6 +480,9 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(mostUsedDest);
     this.WidgetViewDefinitions.push(trackingMapOfShipper);
     this.WidgetViewDefinitions.push(countersWidget_Shipper);
+    this.WidgetViewDefinitions.push(upcomingTripsWidget_Shipper);
+    this.WidgetViewDefinitions.push(needsActionWidget_Shipper);
+    this.WidgetViewDefinitions.push(newOffersWidget_Shipper);
 
     //Carrier
     this.WidgetViewDefinitions.push(carrierInvoicesVsPaid);
