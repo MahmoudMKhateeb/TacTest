@@ -1,19 +1,19 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
-  ShippingRequestDriverServiceProxy,
-  ShippingRequestFlag,
-  ShippingRequestRouteType,
-  ShippingRequestStatus,
-  ShippingRequestsTripListDto,
-  ShippingRequestTripCancelStatus,
-  ShippingRequestTripDriverRoutePointDto,
-  ShippingRequestTripDriverStatus,
-  ShippingRequestTripStatus,
-  ShippingRequestType,
-  TrackingListDto,
-  TrackingServiceProxy,
-  WaybillsServiceProxy,
+    ShippingRequestDriverServiceProxy,
+    ShippingRequestFlag,
+    ShippingRequestRouteType,
+    ShippingRequestStatus,
+    ShippingRequestsTripListDto,
+    ShippingRequestTripCancelStatus,
+    ShippingRequestTripDriverRoutePointDto,
+    ShippingRequestTripDriverStatus, ShippingRequestTripFlag,
+    ShippingRequestTripStatus,
+    ShippingRequestType,
+    TrackingListDto,
+    TrackingServiceProxy,
+    WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
 import { TrackingSearchInput } from '../../../../shared/common/search/TrackingSearchInput';
@@ -59,6 +59,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   defaultProfilePic = AppConsts.appBaseUrl + '/assets/common/images/carrier-default-pic.jpg';
   loadingTripId: number;
   ShippingRequestFlagEnum = ShippingRequestFlag;
+  TripFlag = ShippingRequestTripFlag;
 
   constructor(
     injector: Injector,
@@ -71,12 +72,14 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   ) {
     super(injector);
   }
+
   ngOnInit(): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this.syncTrip();
     this.LoadData();
     this.handleTripIncidentReport();
   }
+
   LoadData() {
     this._currentServ
       .getAll(
@@ -221,6 +224,31 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
           )
           .subscribe((result) => {
             this.notify.success(this.l('SuccessfullyAccepted'));
+          });
+      }
+    });
+  }
+
+  start(trip?: TrackingListDto): void {
+
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this.loadingTripId = trip.id;
+        this._trackingServiceProxy
+          .start(trip.id)
+          .pipe(
+            finalize(() => {
+              this.loadingTripId = undefined;
+
+              // todo review the finalize function
+
+              // this.saving = false;
+              // this.getForView();
+              // this.emitToMobileApplication('Started', this.routePoints[0], 'write');
+            })
+          )
+          .subscribe(() => {
+            this.notify.info(this.l('SuccessfullyStarted'));
           });
       }
     });

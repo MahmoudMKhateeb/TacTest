@@ -628,9 +628,16 @@ namespace TACHYON.Shipping.Trips
             {
                 trip.AssignedDriverUserId = input.DriverUserId;
                 trip.AssignedTruckId = input.TruckId;
+                
+                //? Important Note : Home Delivery Trip Doesn't have (Accept) Transaction
+                // and that's mean transfer prices not applied on home delivery trip
+                // (no need for transfer prices, the price calculated by num of trucks & driver `see dedicated request details`)
+                
+                if (trip.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
+                    trip.DriverStatus = ShippingRequestTripDriverStatus.Accepted;
             }
             //AssignWorkFlowVersionToRoutPoints(trip);
-            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.RoutPoints.ToList(), trip.NeedsDeliveryNote);
+            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.RoutPoints.ToList(), trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag);
             //insert trip 
             var shippingRequestTripId = await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
 
@@ -675,20 +682,6 @@ namespace TACHYON.Shipping.Trips
                       ContainerNumber = y.ContainerNumber,
                       CanBePrinted = y.CanBePrinted
                   }).FirstOrDefaultAsync(x => x.Id == tripId);
-        }
-        private void AssignWorkFlowVersionToRoutPoints(ShippingRequestTrip trip)
-        {
-            if (trip.RoutPoints != null && trip.RoutPoints.Any())
-            {
-                foreach (var point in trip.RoutPoints)
-                {
-                    point.WorkFlowVersion = point.PickingType == PickingType.Pickup
-                        ? TACHYONConsts.PickUpRoutPointWorkflowVersion
-                        : trip.NeedsDeliveryNote
-                            ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
-                            : TACHYONConsts.DropOfRoutPointWorkflowVersion;
-                }
-            }
         }
 
         private async Task<int> GetTripNotesCount(long TripId)

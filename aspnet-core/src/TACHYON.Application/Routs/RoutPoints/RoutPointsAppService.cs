@@ -17,6 +17,7 @@ using TACHYON.Authorization;
 using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Tracking;
 
 namespace TACHYON.Routs.RoutPoints
 {
@@ -104,10 +105,12 @@ namespace TACHYON.Routs.RoutPoints
         [AbpAuthorize(AppPermissions.Pages_RoutPoints_Create)]
         private async Task Create(CreateOrEditRoutPointDto input)
         {
+            // Note: This Service is not used 
+            // if you want use it you must know that (delivery note & home delivery not handled here)
             var routPoint = ObjectMapper.Map<RoutPoint>(input);
             routPoint.WorkFlowVersion = routPoint.PickingType == PickingType.Pickup
-                ? TACHYONConsts.PickUpRoutPointWorkflowVersion
-                : TACHYONConsts.DropOfRoutPointWorkflowVersion;
+                ? WorkflowVersionConst.PickupPointWorkflowVersion
+                : WorkflowVersionConst.DropOffWithoutDeliveryNotePointWorkflowVersion;
             await _routPointsRepository.InsertAsync(routPoint);
         }
 

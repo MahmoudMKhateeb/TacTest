@@ -28,6 +28,7 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.DriverRate, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Rate))
             .ForMember(dst => dst.shippingRequestStatus, opt => opt.MapFrom(src => src.ShippingRequestFk.Status))
             .ForMember(dst => dst.IsPrePayedShippingRequest, opt => opt.MapFrom(src => src.ShippingRequestFk.IsPrePayed))
+            .ForMember(dst => dst.TripFlag, opt => opt.MapFrom(src => src.ShippingRequestTripFlag))
             .ForMember(dst => dst.IsSass, opt => opt.MapFrom(src => src.ShippingRequestFk.IsSaas()));
 
 
