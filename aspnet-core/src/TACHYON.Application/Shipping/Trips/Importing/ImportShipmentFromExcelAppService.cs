@@ -18,6 +18,7 @@ using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Shipping.Trips.Importing.Dto;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.Storage;
+using TACHYON.Tracking;
 
 namespace TACHYON.Shipping.Trips.Importing
 {
@@ -213,7 +214,7 @@ namespace TACHYON.Shipping.Trips.Importing
                         PickingType = PickingType.Pickup,
                         ReceiverId = trip.SenderId,
                         FacilityId = trip.OriginFacilityId.Value,
-                        WorkFlowVersion = TACHYONConsts.PickUpRoutPointWorkflowVersion,
+                        WorkFlowVersion = WorkflowVersionConst.PickupPointWorkflowVersion,
                         Code = (new Random().Next(100000, 999999)).ToString(),
                     };
 
@@ -225,8 +226,8 @@ namespace TACHYON.Shipping.Trips.Importing
                         FacilityId = trip.DestinationFacilityId.Value,
                         Code = (new Random().Next(100000, 999999)).ToString(),
                         WorkFlowVersion = trip.NeedsDeliveryNote
-                            ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
-                            : TACHYONConsts.DropOfRoutPointWorkflowVersion
+                            ? WorkflowVersionConst.DropOffWithDeliveryNotePointWorkflowVersion
+                            : WorkflowVersionConst.DropOffWithoutDeliveryNotePointWorkflowVersion
                     };
                     tripItem.RoutPoints = new List<RoutPoint>
                     {
@@ -264,7 +265,7 @@ namespace TACHYON.Shipping.Trips.Importing
             //assign workflow version
             foreach (var point in groupedPointsByDeliverNote)
             {
-                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(ObjectMapper.Map<List<RoutPoint>>(point.points.ToList()), point.TripNeedsDeliveryNote);
+                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(ObjectMapper.Map<List<RoutPoint>>(point.points.ToList()), point.TripNeedsDeliveryNote,ShippingRequestTripFlag.Normal);
             }
         }
 
