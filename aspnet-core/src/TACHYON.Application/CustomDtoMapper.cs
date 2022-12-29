@@ -556,15 +556,14 @@ namespace TACHYON
 
             configuration.CreateMap<RoutStepDto, RoutStep>().ReverseMap();
 
-            configuration.CreateMap<RoutPointDto, RoutPoint>()
-                .ForPath(dest => dest.FacilityFk.Location.X, opt => opt.MapFrom(src => src.Longitude))
-                .ForPath(dest => dest.FacilityFk.Location.Y, opt => opt.MapFrom(src => src.Latitude))
-                .ForPath(dest => dest.FacilityFk.Name, opt => opt.MapFrom(src => src.Facility))
-                .ForPath(dest => dest.FacilityFk.Rate, opt => opt.MapFrom(src => src.FacilityRate))
-                .ForPath(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
-                .ForPath(dest => dest.ReceiverFk.FullName, opt => opt.MapFrom(src => src.SenderOrReceiverContactName))
-                .ForPath(dest => Enum.GetName(typeof(DropPaymentMethod),dest.DropPaymentMethod), opt => opt.MapFrom(src => src.DropPaymentMethodTitle))
-                .ReverseMap();
+            configuration.CreateMap<RoutPoint, RoutPointDto>()
+                .ForPath(dest => dest.Longitude , opt => opt.MapFrom(src => src.FacilityFk.Location.X))
+                .ForPath(dest => dest.Latitude , opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
+                .ForPath(dest => dest.Facility , opt => opt.MapFrom(src => src.FacilityFk.Name))
+                .ForPath(dest => dest.FacilityRate , opt => opt.MapFrom(src => src.FacilityFk.Rate))
+                .ForPath(dest => dest.GoodsDetailListDto , opt => opt.MapFrom(src => src.GoodsDetails))
+                .ForPath(dest => dest.SenderOrReceiverContactName , opt => opt.MapFrom(src => src.ReceiverFk.FullName))
+                .ForPath(dest => dest.DropPaymentMethodTitle , opt => opt.MapFrom(src => src.DropPaymentMethod.GetEnumDescription()));
 
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
                 .ForMember(x => x.WaybillNumber, otp => otp.Ignore())
