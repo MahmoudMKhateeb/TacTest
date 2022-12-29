@@ -188,7 +188,7 @@
                         </a>
                       </td>
                       <td *ngIf="isHomeDelivery">
-                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.dropPaymentMethod ?? '-' }}</span>
+                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.dropPaymentMethodTitle ?? '-' }}</span>
                         <div *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff" class="input-group">
                           <select
                             name="PaymentMethod-{{ i }}"
