@@ -23,6 +23,7 @@ namespace TACHYON.DynamicInvoices.DynamicInvoiceItems
 
         public string ContainerNumber { get; set; }
         public decimal VatAmount { get; set; }
+        public decimal VatTax { get; set; }
         public decimal TotalAmount { get; set; }
 
 

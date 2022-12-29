@@ -103,7 +103,7 @@ namespace TACHYON.DynamicInvoices
             foreach (var item in input.Items)
             {
                 var createdItem = ObjectMapper.Map<DynamicInvoiceItem>(item);
-                createdItem.VatAmount = Convert.ToDecimal(.15)  * createdItem.Price;
+                createdItem.VatAmount = (createdItem.VatTax / 100)  * createdItem.Price;
                 createdItem.TotalAmount = createdItem.Price + createdItem.VatAmount;
                 if (item.WaybillNumber.HasValue) 
                     createdItem.TripId = itemsList.FirstOrDefault(x=> x.WaybillNumber == item.WaybillNumber)?.TripId
@@ -130,31 +130,32 @@ namespace TACHYON.DynamicInvoices
             var deletedItems = dynamicInvoice.Items
                 .Where(x => input.Items.All(i => i.Id != x.Id))
                 .ToList();
-            
+
             foreach (DynamicInvoiceItem deletedItem in deletedItems)
                 await _dynamicInvoiceItemRepository.DeleteAsync(deletedItem);
-            
+
             var addedItems = input.Items
                 .Where(x => !x.Id.HasValue);
             var itemsList = (from item in input.Items
-                from trip in _tripRepository.GetAll().Where(x=> x.WaybillNumber == item.WaybillNumber).DefaultIfEmpty()
-                select new {item.WaybillNumber, TripId = trip?.Id}).ToList();
-            
+                             from trip in _tripRepository.GetAll().Where(x => x.WaybillNumber == item.WaybillNumber).DefaultIfEmpty()
+                             select new { item.WaybillNumber, TripId = trip?.Id }).ToList();
+
             foreach (var item in addedItems)
             {
                 var createdItem = ObjectMapper.Map<DynamicInvoiceItem>(item);
-                if (item.WaybillNumber.HasValue) 
-                    createdItem.TripId = itemsList.FirstOrDefault(x=> x.WaybillNumber == item.WaybillNumber)?.TripId
+                if (item.WaybillNumber.HasValue)
+                    createdItem.TripId = itemsList.FirstOrDefault(x => x.WaybillNumber == item.WaybillNumber)?.TripId
                                          ?? throw new UserFriendlyException(L("TripWithWaybillNumberNotFound", item.WaybillNumber));
-                createdItem.VatAmount = Convert.ToDecimal(.15)  * createdItem.Price;
+                createdItem.VatAmount = (createdItem.VatTax / 100) * createdItem.Price;
                 createdItem.TotalAmount = createdItem.Price + createdItem.VatAmount;
                 dynamicInvoice.Items.Add(createdItem);
             }
-            
+
             foreach (DynamicInvoiceItem deletedItem in deletedItems)
                 await _dynamicInvoiceItemRepository.DeleteAsync(deletedItem);
 
             ObjectMapper.Map(input, dynamicInvoice);
+
         }
 
         /// <summary>

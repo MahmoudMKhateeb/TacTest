@@ -726,9 +726,9 @@ namespace TACHYON.Invoices
             );
 
             decimal subTotalAmount = dynamicInvoice.Items.Sum(r => r.Price);
-            var tax = GetTax();
+            //var tax = GetTax();
 
-            decimal vatAmount = subTotalAmount * tax / 100; //dynamicInvoice.Items.Sum(r => r.va);
+            decimal vatAmount = dynamicInvoice.Items.Sum(r => r.VatAmount);
             decimal totalAmount = subTotalAmount + vatAmount;
 
             DateTime dueDate = Clock.Now;
@@ -800,9 +800,9 @@ namespace TACHYON.Invoices
             );
 
             decimal subTotalAmount = dynamicInvoice.Items.Sum(r => r.Price);
-            var tax = GetTax();
+            //var tax = GetTax();
 
-            decimal vatAmount = subTotalAmount * tax / 100; //dynamicInvoice.Items.Sum(r => r.va);
+            decimal vatAmount = dynamicInvoice.Items.Sum(r => r.VatAmount);
             decimal totalAmount = subTotalAmount + vatAmount;
 
             DateTime dueDate = Clock.Now;
@@ -814,7 +814,7 @@ namespace TACHYON.Invoices
                 TotalAmount = totalAmount,
                 VatAmount = vatAmount,
                 SubTotalAmount = subTotalAmount,
-                TaxVat = tax,
+                //TaxVat = tax,
                 Channel = InvoiceChannel.DynamicInvoice,
 
             };

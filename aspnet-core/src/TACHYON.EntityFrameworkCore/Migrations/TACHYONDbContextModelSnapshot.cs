@@ -2787,6 +2787,9 @@ namespace TACHYON.Migrations
                     b.Property<decimal>("VatAmount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("VatTax")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime?>("WorkDate")
                         .HasColumnType("datetime2");
 

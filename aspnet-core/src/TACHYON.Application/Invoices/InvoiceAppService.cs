@@ -751,6 +751,7 @@ namespace TACHYON.Invoices
                     Sequence = $"{Sequence}/{TotalItem}",
                     SubTotalAmount = item.Price,
                     VatAmount = item.VatAmount,
+                    VatTax = item.VatTax,
                     TotalAmount = item.TotalAmount,
                     RoundTrip = item.Description,
 
