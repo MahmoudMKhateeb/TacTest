@@ -558,7 +558,7 @@ namespace TACHYON.Shipping.Drivers
             {
                 trip.Status = ShippingRequestTripStatus.New;
                 trip.RoutePointStatus = RoutePointStatus.StandBy;
-                trip.DriverStatus = ShippingRequestTripDriverStatus.None;
+                trip.DriverStatus = trip.ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery? ShippingRequestTripDriverStatus.None: ShippingRequestTripDriverStatus.Accepted;
                 trip.RejectedReason = string.Empty;
                 trip.RejectReasonId = default(int?);
                 trip.ActualDeliveryDate = trip.ActualPickupDate = null;

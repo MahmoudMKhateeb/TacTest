@@ -750,6 +750,21 @@ namespace TACHYON.Shipping.Trips
 
             ObjectMapper.Map(input, trip);
 
+
+            if (request.ShippingRequestFlag == ShippingRequestFlag.Dedicated &&
+                trip.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
+            {
+                // Note: if the trip is normal and changed to Home delivery 
+                // the driver status must updated
+                trip.DriverStatus = ShippingRequestTripDriverStatus.Accepted;
+                
+                var pointHasAbilityToChangeWorkflow =
+                    trip.RoutPoints?.Where(x => x.Status == RoutePointStatus.StandBy).ToList();
+                
+                if (pointHasAbilityToChangeWorkflow != null && pointHasAbilityToChangeWorkflow.Count > 0) 
+                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(pointHasAbilityToChangeWorkflow, trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag);
+            }
+            
             if (!trip.BayanId.IsNullOrEmpty())
             {
 

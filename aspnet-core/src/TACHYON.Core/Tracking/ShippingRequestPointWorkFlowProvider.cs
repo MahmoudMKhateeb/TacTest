@@ -404,7 +404,7 @@ namespace TACHYON.Tracking
                         {
                             Action = WorkFlowActionConst.DropOffConfirmDelivery,
                             FromStatus = RoutePointStatus.StandBy,
-                            ToStatus = RoutePointStatus.FinishOffLoadShipment,
+                            ToStatus = RoutePointStatus.ConfirmDelivery,
                             Func = DropOffConfirmDelivery,
                             Name = "ConfirmDropOffDelivery",
                             Permissions = new List<string>(),
@@ -421,7 +421,7 @@ namespace TACHYON.Tracking
                         {
                             Action = WorkFlowActionConst.DropOffConfirmDelivery,
                             FromStatus = RoutePointStatus.StandBy,
-                            ToStatus = RoutePointStatus.FinishOffLoadShipment,
+                            ToStatus = RoutePointStatus.ConfirmDelivery,
                             Func = DropOffConfirmDelivery,
                             Name = "ConfirmDropOffDelivery",
                             Permissions = new List<string>(),
@@ -430,7 +430,7 @@ namespace TACHYON.Tracking
                         new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
                         {
                             Action = WorkFlowActionConst.FinishOffLoadShipmentDeliveryConfirmation,
-                            FromStatus = RoutePointStatus.FinishOffLoadShipment,
+                            FromStatus = RoutePointStatus.ConfirmDelivery,
                             ToStatus = RoutePointStatus.DeliveryConfirmation,
                             Func = DeliveryConfirmation,
                             Name = "UploadDeliveryConfirmation",
@@ -448,7 +448,7 @@ namespace TACHYON.Tracking
                         {
                             Action = WorkFlowActionConst.DropOffConfirmDelivery,
                             FromStatus = RoutePointStatus.StandBy,
-                            ToStatus = RoutePointStatus.FinishOffLoadShipment,
+                            ToStatus = RoutePointStatus.ConfirmDelivery,
                             Func = DropOffConfirmDelivery,
                             Name = "ConfirmDropOffDelivery",
                             Permissions = new List<string>(),
@@ -457,7 +457,7 @@ namespace TACHYON.Tracking
                         new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
                         {
                             Action = WorkFlowActionConst.ReceiverConfirmed,
-                            FromStatus = RoutePointStatus.FinishOffLoadShipment,
+                            FromStatus = RoutePointStatus.ConfirmDelivery,
                             ToStatus = RoutePointStatus.ReceiverConfirmed,
                             Func = ReceiverConfirmed,
                             Name = "EnterReceiverCode",
@@ -475,7 +475,7 @@ namespace TACHYON.Tracking
                         {
                             Action = WorkFlowActionConst.DropOffConfirmDelivery,
                             FromStatus = RoutePointStatus.StandBy,
-                            ToStatus = RoutePointStatus.FinishOffLoadShipment,
+                            ToStatus = RoutePointStatus.ConfirmDelivery,
                             Func = DropOffConfirmDelivery,
                             Name = "ConfirmDropOffDelivery",
                             Permissions = new List<string>(),
@@ -484,7 +484,7 @@ namespace TACHYON.Tracking
                         new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
                         {
                             Action = WorkFlowActionConst.ReceiverConfirmed,
-                            FromStatus = RoutePointStatus.FinishOffLoadShipment,
+                            FromStatus = RoutePointStatus.ConfirmDelivery,
                             ToStatus = RoutePointStatus.ReceiverConfirmed,
                             Func = ReceiverConfirmed,
                             Name = "EnterReceiverCode",
@@ -494,7 +494,7 @@ namespace TACHYON.Tracking
                         new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
                         {
                             Action = WorkFlowActionConst.FinishOffLoadShipmentDeliveryConfirmation,
-                            FromStatus = RoutePointStatus.FinishOffLoadShipment,
+                            FromStatus = RoutePointStatus.ConfirmDelivery,
                             ToStatus = RoutePointStatus.DeliveryConfirmation,
                             Func = DeliveryConfirmation,
                             Name = "UploadDeliveryConfirmation",
@@ -1132,8 +1132,8 @@ namespace TACHYON.Tracking
                .GetAllIncluding(x=> x.ShippingRequestTripFk)
                .FirstOrDefaultAsync(x => x.Id == arg.PointId);
             
-            point.Status = RoutePointStatus.FinishOffLoadShipment;
-            point.ShippingRequestTripFk.RoutePointStatus = RoutePointStatus.FinishOffLoadShipment;
+            point.Status = RoutePointStatus.ConfirmDelivery;
+            point.ShippingRequestTripFk.RoutePointStatus = RoutePointStatus.ConfirmDelivery;
             point.ActualPickupOrDeliveryDate = Clock.Now;
 
             point.CanGoToNextLocation = await _routPointRepository.GetAll().AnyAsync(x =>
@@ -1149,8 +1149,8 @@ namespace TACHYON.Tracking
 
             if (otherPoints.All(x => x.IsResolve))
                 point.ShippingRequestTripFk.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
-            
 
+            await HandlePointDelivery(point);
             await _banIntegrationManagerV3.QueueCloseWaybillJob(point.Id);
 
             return nameof(RoutPointDropOffStep4);
@@ -1348,13 +1348,17 @@ namespace TACHYON.Tracking
                 .FirstOrDefaultAsync();
         }
 
+        private async Task HandlePointDelivery(long pointId)
+        {
+            var point = await _routPointRepository.GetAsync(pointId);
+            await HandlePointDelivery(point);
+        }
         /// <summary>
         /// check if point is complete and mark it as complete & check if trip is complete and mark it as delivered
         /// </summary>
-        private async Task HandlePointDelivery(long pointId)
+        private async Task HandlePointDelivery(RoutPoint point)
         {
             var currentUser = await GetCurrentUserAsync();
-            var point = await _routPointRepository.GetAsync(pointId);
             var isCompleted = CheckIfPointIsCompleted(point);
             var trip = await _shippingRequestTripRepository
                     .GetAllIncluding(d => d.ShippingRequestTripVases)
@@ -1389,7 +1393,7 @@ namespace TACHYON.Tracking
                 else if (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops)
                 {
                     var allPointHasProofDelivery = await _routPointRepository.GetAll()
-                                        .Where(c => c.Id != pointId && c.PickingType == PickingType.Dropoff && c.ShippingRequestTripId == point.ShippingRequestTripId)
+                                        .Where(c => c.Id != point.Id && c.PickingType == PickingType.Dropoff && c.ShippingRequestTripId == point.ShippingRequestTripId)
                                         .AllAsync(x => x.RoutPointStatusTransitions.Any(x => !x.IsReset
                                          && (x.Status == RoutePointStatus.ReceiverConfirmed
                                          || x.Status == RoutePointStatus.DeliveryConfirmation)));
