@@ -273,31 +273,36 @@ namespace TACHYON.Goods.GoodsDetails
         {
             var dropPoint = _routPointRepository.GetAll()
                 .WhereIf(dropOffId.HasValue, x => x.Id == dropOffId)
-                .Single(x => x.ShippingRequestTripId == shippingRequestTripId && x.PickingType == PickingType.Dropoff);
-
-            var goods = _goodsDetailRepository.GetAll()
+                .SingleOrDefault(x => x.ShippingRequestTripId == shippingRequestTripId && x.PickingType == PickingType.Dropoff);
+            if(dropPoint != null)
+            {
+                var goods = _goodsDetailRepository.GetAll()
                 .Include(x => x.GoodCategoryFk)
                 .ThenInclude(x => x.Translations)
                 .Where(x => x.RoutPointId == dropPoint.Id);
 
-            var query = goods.Select(x => new
-            {
-                Description = x.Description,
-                TotalAmount = x.Amount,
-                Weight = x.Weight,
-                UnitOfMeasureDisplayName = ObjectMapper.Map<UnitOfMeasureDto>(x.UnitOfMeasureFk).DisplayName,
-                SubCategory = x.GoodCategoryFk
-            });
-
-            var output = query.ToList().Select(e =>
-                new GetGoodsDetailsForWaybillsOutput()
+                var query = goods.Select(x => new
                 {
-                    UnitOfMeasureDisplayName = e.UnitOfMeasureDisplayName,
-                    TotalAmount = e.TotalAmount,
-                    Description = e.Description,
-                    SubCategory = ObjectMapper.Map<GoodCategoryDto>(e.SubCategory)?.DisplayName
+                    Description = x.Description,
+                    TotalAmount = x.Amount,
+                    Weight = x.Weight,
+                    UnitOfMeasureDisplayName = x.UnitOfMeasureFk != null ? ObjectMapper.Map<UnitOfMeasureDto>(x.UnitOfMeasureFk).DisplayName : "",
+                    SubCategory = x.GoodCategoryFk
                 });
-            return output;
+
+                var output = query.ToList().Select(e =>
+                    new GetGoodsDetailsForWaybillsOutput()
+                    {
+                        UnitOfMeasureDisplayName = e.UnitOfMeasureDisplayName,
+                        TotalAmount = e.TotalAmount,
+                        Description = e.Description,
+                        SubCategory = ObjectMapper.Map<GoodCategoryDto>(e.SubCategory)?.DisplayName
+                    });
+                return output;
+            }
+            return new List<GetGoodsDetailsForWaybillsOutput>() ;
+
+
         }
 
         public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForMultipleDropWaybill(

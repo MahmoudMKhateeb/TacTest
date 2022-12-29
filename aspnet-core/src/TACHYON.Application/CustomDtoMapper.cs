@@ -563,6 +563,7 @@ namespace TACHYON
                 .ForPath(dest => dest.FacilityFk.Rate, opt => opt.MapFrom(src => src.FacilityRate))
                 .ForPath(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
                 .ForPath(dest => dest.ReceiverFk.FullName, opt => opt.MapFrom(src => src.SenderOrReceiverContactName))
+                .ForPath(dest => Enum.GetName(typeof(DropPaymentMethod),dest.DropPaymentMethod), opt => opt.MapFrom(src => src.DropPaymentMethodTitle))
                 .ReverseMap();
 
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
