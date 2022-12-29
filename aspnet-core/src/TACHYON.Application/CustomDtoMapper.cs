@@ -601,10 +601,9 @@ namespace TACHYON
 
             configuration.CreateMap<City, CityDto>()
                 .ForMember(x => x.HasPolygon, x => x.MapFrom(i => !i.Polygon.IsNullOrEmpty()))
-            .ForMember(x => x.DisplayName, x => x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName))
+            .ForMember(x => x.TranslatedDisplayName, x => x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName))
             .ForMember(x => x.CountyId, x => x.MapFrom(i => i.CountyId))
             .ForMember(x => x.Code, x => x.MapFrom(i => i.Code))
-            .ForMember(x => x.TranslatedDisplayName, x => x.MapFrom(i => i.CountyFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.CountyFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName))
             .ForMember(x => x.Latitude, x => x.MapFrom(i => i.Location.Y))
             .ForMember(x => x.Longitude, x => x.MapFrom(i => i.Location.X)).ReverseMap();
 

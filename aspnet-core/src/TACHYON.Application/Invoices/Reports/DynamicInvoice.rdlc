@@ -2821,7 +2821,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!VatTax.Value +"%"</Value>
+                                  <Value>=Fields!VatTax.Value &amp; " %"</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
