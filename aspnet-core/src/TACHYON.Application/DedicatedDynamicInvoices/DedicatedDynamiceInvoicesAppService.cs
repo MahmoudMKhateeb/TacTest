@@ -170,8 +170,11 @@ namespace TACHYON.DedicatedDynamicInvoices
             //var pricePerDay =await GetDedicatePricePerDay(input.ShippingRequestId,input.InvoiceAccountType, price);
             foreach (var item in input.DedicatedInvoiceItems)
             {
-                var pricePerDay = GetTruckPricePerDay(input.InvoiceAccountType, item.AllNumberDays, price);
-                item.PricePerDay = pricePerDay;
+                if(item.WorkingDayType == DedicatedDynamicInvocies.WorkingDayType.Normal)
+                {
+                    var pricePerDay = GetTruckPricePerDay(input.InvoiceAccountType, item.AllNumberDays, price);
+                    item.PricePerDay = pricePerDay;
+                }
                 item.ItemSubTotalAmount = item.NumberOfDays * item.PricePerDay;
                 item.TaxVat = GetTaxVat();
                 item.VatAmount = item.ItemSubTotalAmount * GetTaxVat() / 100;

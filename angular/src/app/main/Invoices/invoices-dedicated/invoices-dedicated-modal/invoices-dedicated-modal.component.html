@@ -155,6 +155,7 @@
                   [min]="0"
                   [(ngModel)]="allNumberOfDays"
                   (ngModelChange)="allNumberOfDaysUpdate.next($event)"
+                  [disabled]="dataSourceForEdit.workingDayType == workingDayType.OverTime"
                 />
               </div>
             </div>
@@ -202,7 +203,16 @@
                   {{ l('PricePerDay') }}
                   <span class="required-fileds"> *</span>
                 </label>
-                <input required type="number" class="form-control" name="pricePerDay" id="pricePerDay" [(ngModel)]="pricePerDay" disabled />
+                <input
+                  required
+                  type="number"
+                  class="form-control"
+                  name="pricePerDay"
+                  id="pricePerDay"
+                  [(ngModel)]="pricePerDay"
+                  [disabled]="!dataSourceForEdit.workingDayType || dataSourceForEdit.workingDayType == workingDayType.Normal"
+                  (ngModelChange)="dataSourceForEdit.workingDayType == workingDayType.OverTime ? calculateValues($event) : null"
+                />
               </div>
             </div>
 

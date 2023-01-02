@@ -53,6 +53,7 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
   allNumberOfDays: number;
   allNumberOfDaysUpdate = new Subject<number>();
   taxVat: number;
+  workingDayType = WorkingDayType;
   allWorkingDayTypes: any;
   private selectedShippingRequestId: number;
 
@@ -175,6 +176,9 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
     if (!isNotNullOrUndefined(this.root.dedicatedInvoiceItems)) {
       this.root.dedicatedInvoiceItems = [];
     }
+    if (this.dataSourceForEdit.workingDayType == this.workingDayType.OverTime) {
+      this.dataSourceForEdit.pricePerDay = this.pricePerDay;
+    }
     this.dataSourceForEdit.dedicatedShippingRequestTruckId = Number(this.selectedDedicateTruckId);
     this.dataSourceForEdit.allNumberDays = this.allNumberOfDays;
     if (
@@ -285,6 +289,11 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
   }
 
   LoadNumberOfDays($event: any) {
+    if ($event.value == WorkingDayType.Normal) {
+      this.getDefaultNumberOfDays();
+    } else {
+      this.allNumberOfDays = 0;
+    }
     if (this.dataSourceForEdit.workingDayType && this.selectedDedicateTruckId) {
       this._AttendanceSheetServiceProxy
         .getDaysNumberByWorkingDayType(this.dataSourceForEdit.workingDayType, this.selectedDedicateTruckId)
