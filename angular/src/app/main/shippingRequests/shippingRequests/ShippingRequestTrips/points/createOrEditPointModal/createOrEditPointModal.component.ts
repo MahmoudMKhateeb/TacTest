@@ -12,6 +12,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { NgForm } from '@angular/forms';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'createOrEditPointModal',
@@ -23,6 +24,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   @ViewChild('createOrEditPintForm') public createOrEditPintForm: NgForm;
   goodDetailsListForView: any;
   @Input('isForDedicated') isForDedicated: boolean;
+  @Input('isHomeDelivery') isHomeDelivery: boolean;
   RouteType: number; //filled in onInit from the Trip Shared Service
   PickingType = PickingType;
   RouteTypes = ShippingRequestRouteType;
@@ -65,7 +67,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     });
   }
 
-  show(id?, modalOpendFor?, goodDetailsListForView?) {
+  show(id?: number, modalOpendFor?, goodDetailsListForView?) {
     console.log('modalOpendFor', modalOpendFor);
     console.log('id', id);
     this.modalOpenedFor = modalOpendFor;
@@ -76,7 +78,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     //if view disable the form otherwise enable it
     console.log('this.wayPointsList', this.wayPointsList);
     this.active = true;
-    if (id) {
+    if (!isNaN(id)) {
       this.pointIdForEdit = id;
       //this is edit point action
       this.Point = this.wayPointsList[id];
@@ -89,11 +91,18 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   }
 
   close() {
-    this.Point = new CreateOrEditRoutPointDto();
-    this._PointService.updateSinglePoint(this.Point);
-    this.pointIdForEdit = null;
-    this.isAdditionalReceiverEnabled = false;
-    this.active = false;
+    if (this.createOrEditPintForm.valid) {
+      this.Point = new CreateOrEditRoutPointDto();
+      this._PointService.updateSinglePoint(this.Point);
+      this.pointIdForEdit = null;
+      this.isAdditionalReceiverEnabled = false;
+      this.active = false;
+    } else {
+      this.Point.receiverPhoneNumber = null;
+      this.Point.receiverEmailAddress = null;
+      this.Point.receiverCardIdNumber = null;
+      this.Point.receiverFullName = null;
+    }
     this.modal.hide();
   }
 

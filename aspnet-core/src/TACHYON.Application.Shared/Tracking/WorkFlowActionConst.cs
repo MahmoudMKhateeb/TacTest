@@ -23,5 +23,12 @@ namespace TACHYON.Tracking
         public const string DeliveryConfirmationUplodeGoodPicture = "DeliveryConfirmationUplodeGoodPicture";
         public const string DeliveryConfirmationReceiverConfirmed = "DeliveryConfirmationReceiverConfirmed";
 
+        #region Home Delivery
+
+        public const string PickupConfirmDelivery = "PickupConfirmDelivery";
+        public const string DropOffConfirmDelivery = "DropOffConfirmDelivery";
+
+        #endregion
+
     }
 }

@@ -8,7 +8,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
     {
         public string Description { get; set; }
 
-        public int TotalAmount { get; set; }
+        public int? TotalAmount { get; set; }
 
         public string UnitOfMeasureDisplayName { get; set; }
         public string SubCategory { get; set; }

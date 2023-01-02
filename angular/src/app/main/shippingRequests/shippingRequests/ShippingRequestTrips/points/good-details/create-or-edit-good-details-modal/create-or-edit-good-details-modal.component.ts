@@ -27,6 +27,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase implements OnInit, OnDestroy {
   @ViewChild('createOrEditGoodDetail', { static: false }) public createOrEditGoodDetail: ModalDirective;
   @Input() GoodDetailsListInput: CreateOrEditGoodsDetailDto[];
+  @Input() isHomeDelivery: boolean;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Output() canAddMoreGoods: EventEmitter<boolean> = new EventEmitter<boolean>();
 

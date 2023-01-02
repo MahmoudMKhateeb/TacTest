@@ -2909,5 +2909,7 @@
     <text name="viewAttendance">عرض الحضور</text>
     <text name="AllNumberOfDays">عدد الأيام الكلي</text>
     <text name="PricePerDay">سعر اليوم الواحد</text>
+	<text name="ConfirmDelivery">تأكيد التوصيل</text>
+	<text name="DropOffConfirmDelivery">تأكيد توصيل نقطة التنزيل</text>
 	</texts>
 </localizationDictionary>

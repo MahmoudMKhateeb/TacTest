@@ -156,7 +156,7 @@
 
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <label for="goodsDetail.amount">{{ l('Quantity') }} <span class="required-fileds">*</span> </label>
+                      <label for="goodsDetail.amount">{{ l('Quantity') }} <span *ngIf="!isHomeDelivery" class="required-fileds">*</span> </label>
                       <!--                                  <input-->
                       <!--                                      #GoodsAmount="ngModel"-->
                       <!--                                      [(ngModel)]="amount"-->
@@ -174,11 +174,13 @@
                           <dxi-validation-rule
                             type="required"
                             message="{{ l('Quantity') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                            *ngIf="!isHomeDelivery"
                           ></dxi-validation-rule>
                           <dxi-validation-rule
                             type="stringLength"
                             [min]="1"
                             message="{{ l('Quantity') }}: {{ l('PleaseEnterAtLeastNCharacter', 1) }}"
+                            *ngIf="!isHomeDelivery"
                           ></dxi-validation-rule>
                         </dx-validator>
                       </dx-number-box>
@@ -187,7 +189,7 @@
 
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <label>{{ l('UnitOfMeasure') }} <span class="required-fileds">*</span> </label>
+                      <label>{{ l('UnitOfMeasure') }} <span *ngIf="!isHomeDelivery" class="required-fileds">*</span> </label>
                       <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allUnitOfMeasure }">
                         <!--                                      <select-->
                         <!--                                          #GoodsUnitOfMeasure="ngModel"-->
@@ -217,6 +219,7 @@
                             <dxi-validation-rule
                               type="required"
                               message="{{ l('UnitOfMeasure') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                              *ngIf="!isHomeDelivery"
                             ></dxi-validation-rule>
                           </dx-validator>
                         </dx-select-box>
@@ -262,7 +265,9 @@
 
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <label for="GoodsDetail_Description">{{ l('Description') }} <span class="required-fileds">*</span> </label>
+                      <label for="GoodsDetail_Description"
+                        >{{ l('Description') }} <span *ngIf="!isHomeDelivery" class="required-fileds">*</span>
+                      </label>
                       <!--                                  <input-->
                       <!--                                      #Description="ngModel"-->
                       <!--                                      [(ngModel)]="description"-->
@@ -279,6 +284,7 @@
                           <dxi-validation-rule
                             type="required"
                             message="{{ l('Description') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                            *ngIf="!isHomeDelivery"
                           ></dxi-validation-rule>
                         </dx-validator>
                       </dx-text-box>

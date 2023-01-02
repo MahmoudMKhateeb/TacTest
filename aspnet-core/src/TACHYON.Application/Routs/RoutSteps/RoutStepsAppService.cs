@@ -399,7 +399,7 @@ namespace TACHYON.Routs.RoutSteps
                 var result = await query.Select(x => new FacilityForDropdownDto
                 {
                     Id = x.Id,
-                    DisplayName = x.Name,
+                    DisplayName = !string.IsNullOrEmpty(x.Name) ?x.Name :x.Address,
                     Long = x.Location.X,
                     Lat = x.Location.Y,
                     CityId = x.CityId

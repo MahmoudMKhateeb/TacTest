@@ -17,5 +17,6 @@
         Issue = 12,
         DeliveryNoteUploded = 13,
         UplodeGoodPicture = 14,
+        ConfirmDelivery = 15
     }
 }

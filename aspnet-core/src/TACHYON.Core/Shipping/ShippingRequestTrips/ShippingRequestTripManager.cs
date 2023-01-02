@@ -18,8 +18,10 @@ using TACHYON.Receivers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.ShippingRequestVases;
+using TACHYON.Tracking;
 
 namespace TACHYON.Shipping.ShippingRequestTrips
 {
@@ -252,18 +254,49 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
-        public void AssignWorkFlowVersionToRoutPoints(List<RoutPoint> routPoints, bool tripNeedsDeliveryNote)
+        public void AssignWorkFlowVersionToRoutPoints(List<RoutPoint> routPoints, bool tripNeedsDeliveryNote, ShippingRequestTripFlag tripFlag)
         {
-            if (routPoints != null && routPoints.Any())
+            if (routPoints == null || !routPoints.Any()) return;
+            
+
+            foreach (var point in routPoints)
             {
-                foreach (var point in routPoints)
+                  point.WorkFlowVersion = point.PickingType switch
                 {
-                    point.WorkFlowVersion = point.PickingType == PickingType.Pickup
-                        ? TACHYONConsts.PickUpRoutPointWorkflowVersion
-                        : tripNeedsDeliveryNote
-                            ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
-                            : TACHYONConsts.DropOfRoutPointWorkflowVersion;
+                    PickingType.Dropoff => GetDropOffWorkflowVersion(point),
+                    PickingType.Pickup => tripFlag == ShippingRequestTripFlag.HomeDelivery ? WorkflowVersionConst.PickupHomeDeliveryWorkflowVersion : WorkflowVersionConst.PickupPointWorkflowVersion,
+                    _ => throw new ArgumentOutOfRangeException(nameof(point.PickingType))
+                };
+                  
+            }
+            
+            int GetDropOffWorkflowVersion(RoutPoint point)
+            {
+                switch (tripFlag)
+                {
+                    case ShippingRequestTripFlag.Normal:
+                        return tripNeedsDeliveryNote
+                            ? WorkflowVersionConst.DropOffWithDeliveryNotePointWorkflowVersion
+                            : WorkflowVersionConst.DropOffWithoutDeliveryNotePointWorkflowVersion;
+                    case ShippingRequestTripFlag.HomeDelivery:
+
+                        switch (point.NeedsReceiverCode)
+                        {
+                            case true when point.NeedsPOD:
+                                return WorkflowVersionConst.DropOffHomeDeliveryWithPodAndReceiverCodeWorkflowVersion;
+                            case true when !point.NeedsPOD:
+                                return WorkflowVersionConst.DropOffHomeDeliveryWithReceiverCodeWorkflowVersion;
+                            case false when point.NeedsPOD:
+                                return WorkflowVersionConst.DropOffHomeDeliveryWithPodWorkflowVersion;
+                            case false when !point.NeedsPOD:
+                                return WorkflowVersionConst.DropOffHomeDeliveryWorkflowVersion;
+                        }
+
+                        break;
+                    default: throw new UserFriendlyException(L("TripTypeIsNotValid"));
                 }
+
+                throw new UserFriendlyException(L("TripTypeIsNotValid"));
             }
         }
 

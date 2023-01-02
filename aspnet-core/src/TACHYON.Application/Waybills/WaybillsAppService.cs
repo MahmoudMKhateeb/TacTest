@@ -74,6 +74,8 @@ namespace TACHYON.Waybills
                 .GetAll()
                 .Include(e => e.ShippingRequestFk)
                 .FirstOrDefault(e => e.Id == shippingRequestTripId);
+            if (item.ShippingRequestFk.RouteTypeId == null)
+                return item.RouteType == ShippingRequestRouteType.SingleDrop;
             return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
         }
 

@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
 using TACHYON.Goods.GoodsDetails;
+using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Penalties;
 using TACHYON.Rating;
 using TACHYON.Receivers;
@@ -53,14 +54,7 @@ namespace TACHYON.Routs.RoutPoints
         public bool CanGoToNextLocation { get; set; }
 
         public int WorkFlowVersion { get; set; }
-        //todo will be removed
-        //public Guid? DocumentId { get; set; }
-        //todo will be removed
-        //public string DocumentName { get; set; }
-        //todo will be removed
-        //public string DocumentContentType { get; set; }
 
-        //public double? Rating { get; set; }
         [CanBeNull] public string ReceiverNote { get; set; }
         //to do receiver attribute
 
@@ -95,6 +89,14 @@ namespace TACHYON.Routs.RoutPoints
         
         //integrations
         public string BayanId { get; set; }
+
+        #region Home delivery
+        public DropPaymentMethod? DropPaymentMethod { get; set; }
+        public bool NeedsReceiverCode { get; set; }
+        public bool NeedsPOD { get; set; }
+        public bool IsDeliveryConfiremed { get; set; }
+
+        #endregion
 
     }
 }

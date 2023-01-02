@@ -8,6 +8,7 @@ import {
   RoutPointTransactionDto,
   ShippingRequestRouteType,
   ShippingRequestTripDriverStatus,
+  ShippingRequestTripFlag,
   ShippingRequestTripStatus,
   ShippingRequestType,
   TrackingListDto,
@@ -77,6 +78,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   driverLiveLocation: DriverLocation = { lng: 0, lat: 0 };
   trackingIconsList = trackingIconsList;
   driverOnline: boolean;
+  TripFlag = ShippingRequestTripFlag;
 
   constructor(
     injector: Injector,

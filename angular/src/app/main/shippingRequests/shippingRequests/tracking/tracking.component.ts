@@ -9,6 +9,7 @@ import {
   ShippingRequestTripCancelStatus,
   ShippingRequestTripDriverRoutePointDto,
   ShippingRequestTripDriverStatus,
+  ShippingRequestTripFlag,
   ShippingRequestTripStatus,
   ShippingRequestType,
   TrackingListDto,
@@ -59,6 +60,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   defaultProfilePic = AppConsts.appBaseUrl + '/assets/common/images/carrier-default-pic.jpg';
   loadingTripId: number;
   ShippingRequestFlagEnum = ShippingRequestFlag;
+  TripFlag = ShippingRequestTripFlag;
 
   constructor(
     injector: Injector,
@@ -71,12 +73,14 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   ) {
     super(injector);
   }
+
   ngOnInit(): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this.syncTrip();
     this.LoadData();
     this.handleTripIncidentReport();
   }
+
   LoadData() {
     this._currentServ
       .getAll(
@@ -221,6 +225,27 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
           )
           .subscribe((result) => {
             this.notify.success(this.l('SuccessfullyAccepted'));
+          });
+      }
+    });
+  }
+
+  start(trip?: TrackingListDto): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this.loadingTripId = trip.id;
+        this._trackingServiceProxy
+          .start(trip.id)
+          .pipe(
+            finalize(() => {
+              this.loadingTripId = undefined;
+            })
+          )
+          .subscribe(() => {
+            this.activePanelId = trip.id;
+            this.syncTrip();
+            abp.event.trigger('TripAccepted'); // used to refresh child component
+            this.notify.info(this.l('SuccessfullyStarted'));
           });
       }
     });
