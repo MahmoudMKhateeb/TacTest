@@ -283,7 +283,7 @@ namespace TACHYON.Invoices
             var trips = _shippingRequestTrip.GetAll()
                 .Include(trip => trip.ShippingRequestTripVases)
                 .Include(trip => trip.ShippingRequestFk)
-                .Where(x => x.ShippingRequestFk.ShippingRequestFlag == Shipping.ShippingRequests.ShippingRequestFlag.Normal)
+                .Where(x => x.ShippingRequestFk.ShippingRequestFlag == Shipping.ShippingRequests.ShippingRequestFlag.Normal || x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId)
                 .Where(trip => trip.ShippingRequestFk.TenantId == tenant.Id)
                 .Where(trip => !trip.IsShipperHaveInvoice)
                 .Where

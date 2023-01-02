@@ -35,18 +35,21 @@ namespace TACHYON.DedicatedDynamicInvoices
         private readonly IRepository<DedicatedDynamicInvoiceItem, long> _dedicatedInvoiceItemRepository;
         private readonly ISettingManager _settingManager;
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
-        private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
-        private readonly TenantManager _tenantManager;
         private readonly InvoiceManager _invoiceManager;
-        public DedicatedDynamiceInvoicesAppService(IRepository<DedicatedDynamicInvoice, long> dedicatedInvoiceRepository, ISettingManager settingManager, IRepository<PriceOffer, long> priceOfferRepository, IRepository<ShippingRequest, long> shippingRequestRepository, TenantManager tenantManager, IRepository<DedicatedDynamicInvoiceItem, long> dedicatedInvoiceItemRepository, InvoiceManager invoiceManager)
+        private readonly DedicatedDynamicInvoiceManager _dedicatedDynamicInvoiceManager;
+        public DedicatedDynamiceInvoicesAppService(IRepository<DedicatedDynamicInvoice, long> dedicatedInvoiceRepository,
+            ISettingManager settingManager,
+            IRepository<PriceOffer, long> priceOfferRepository,
+            IRepository<DedicatedDynamicInvoiceItem, long> dedicatedInvoiceItemRepository,
+            InvoiceManager invoiceManager, 
+            DedicatedDynamicInvoiceManager dedicatedDynamicInvoiceManager)
         {
             _dedicatedInvoiceRepository = dedicatedInvoiceRepository;
             _settingManager = settingManager;
             _priceOfferRepository = priceOfferRepository;
-            _shippingRequestRepository = shippingRequestRepository;
-            _tenantManager = tenantManager;
             _dedicatedInvoiceItemRepository = dedicatedInvoiceItemRepository;
             _invoiceManager = invoiceManager;
+            _dedicatedDynamicInvoiceManager = dedicatedDynamicInvoiceManager;
         }
 
         public async Task<LoadResult> GetAll(string filter)
@@ -216,20 +219,7 @@ namespace TACHYON.DedicatedDynamicInvoices
         public async Task<int> GetDefaultNumberOfDays(long ShippingRequestId)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
-            var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(x => x.Id == ShippingRequestId &&
-            x.ShippingRequestFlag == ShippingRequestFlag.Dedicated);
-
-            switch (shippingRequest.RentalDurationUnit)
-            {
-                case TimeUnit.Daily:
-                    return shippingRequest.RentalDuration;
-                case TimeUnit.Monthly:
-                    return shippingRequest.RentalDuration * 26;
-                case TimeUnit.Weekly:
-                    return shippingRequest.RentalDuration * 7;
-                default:
-                    return 0;
-            }
+            return await _dedicatedDynamicInvoiceManager._getDefaultNumberOfDays(ShippingRequestId);
         }
         #endregion
     }

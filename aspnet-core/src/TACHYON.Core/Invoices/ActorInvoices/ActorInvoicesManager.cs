@@ -5,12 +5,15 @@ using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using NUglify.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Actors;
+using TACHYON.DedicatedDynamicActorInvoices;
+using TACHYON.DedicatedDynamicInvocies;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -68,6 +71,7 @@ namespace TACHYON.Invoices.ActorInvoices
                     VatAmount = vatAmount,
                     SubTotalAmount = subTotalAmount,
                     TaxVat = taxVat,
+                    ActorInvoiceChannel = ActorInvoiceChannel.trip,
                     Trips = trips
                 };
 
@@ -95,6 +99,7 @@ namespace TACHYON.Invoices.ActorInvoices
              .Include(trip => trip.ShippingRequestFk)
              .ThenInclude(request => request.ActorShipperPrice)
              .WhereIf(trips != null , x=> trips.Select(y=>y.Id).Select(int.Parse).Contains(x.Id))
+             .Where(trip => trip.ShippingRequestFk.ShippingRequestFlag == Shipping.ShippingRequests.ShippingRequestFlag.Normal)
              .Where(trip => trip.ShippingRequestFk.ShipperActorId == actorId)
              .Where(trip => trip.ShippingRequestFk.ActorShipperPriceId.HasValue)
              .Where(trip => !trip.IsActorShipperHaveInvoice)
@@ -130,6 +135,7 @@ namespace TACHYON.Invoices.ActorInvoices
                     VatAmount = vatAmount,
                     SubTotalAmount = subTotalAmount,
                     TaxVat = taxVat,
+                    ActorInvoiceChannel= ActorInvoiceChannel.trip,
                     Trips = trips
                 };
 
@@ -157,6 +163,7 @@ namespace TACHYON.Invoices.ActorInvoices
              .Include(trip => trip.ShippingRequestFk)
              .ThenInclude(request => request.ActorCarrierPrice)
              .WhereIf(trips != null, x => trips.Select(y => y.Id).Select(int.Parse).Contains(x.Id))
+             .Where(trip=>trip.ShippingRequestFk.ShippingRequestFlag == Shipping.ShippingRequests.ShippingRequestFlag.Normal)
              .Where(trip => trip.ShippingRequestFk.CarrierActorId == actorId)
              .Where(trip => trip.ShippingRequestFk.ActorCarrierPriceId.HasValue)
              .Where(trip => !trip.IsActorCarrierHaveInvoice)
@@ -164,6 +171,74 @@ namespace TACHYON.Invoices.ActorInvoices
              .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
              trip.Status == Shipping.Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
              .ToListAsync();
+        }
+
+        //shipper actor invoice
+        public async Task GenerateDedicatedDynamicActorInvoice (DedicatedDynamicActorInvoice dedicatedDynamicActorInvoice)
+        {
+            decimal subTotalAmount = dedicatedDynamicActorInvoice.SubTotalAmount;
+            var tax = 15;
+
+            decimal vatAmount = dedicatedDynamicActorInvoice.VatAmount;
+            decimal totalAmount = dedicatedDynamicActorInvoice.TotalAmount;
+
+            DateTime dueDate = Clock.Now;
+
+            var actorInvoice = new ActorInvoice
+            {
+                TenantId = dedicatedDynamicActorInvoice.TenantId,
+                ShipperActorId = dedicatedDynamicActorInvoice.ShipperActorId,
+                DueDate = dueDate,
+                IsPaid = false,
+                TotalAmount = totalAmount,
+                VatAmount = vatAmount,
+                SubTotalAmount = subTotalAmount,
+                ActorInvoiceChannel = ActorInvoiceChannel.Dedicated,
+                Note = dedicatedDynamicActorInvoice.Notes,
+                TaxVat = tax
+            };
+            //await _invoiceRepository.InsertAsync(invoice);
+            actorInvoice.Id = await _actorInvoiceRepository.InsertAndGetIdAsync(actorInvoice);
+            dedicatedDynamicActorInvoice.ActorInvoiceId = actorInvoice.Id;
+            //dedicatedDynamicInvoice.ShippingRequest.IsShipperHaveInvoice = true;
+            dedicatedDynamicActorInvoice.DedicatedDynamicActorInvoiceItems.ForEach(x =>
+            x.DedicatedShippingRequestTruck.ActorInvoiceId = actorInvoice.Id);
+
+            //Generate invoice number
+            await GenerateInvoiceNumber(actorInvoice);
+        }
+
+
+        public async Task GenerateDedicatedDynamicActorSubmitInvoice(DedicatedDynamicActorInvoice dedicatedDynamicActorInvoice)
+        {
+            decimal subTotalAmount = dedicatedDynamicActorInvoice.SubTotalAmount;
+            var tax = 15;
+
+            decimal vatAmount = dedicatedDynamicActorInvoice.VatAmount;
+            decimal totalAmount = dedicatedDynamicActorInvoice.TotalAmount;
+
+            DateTime dueDate = Clock.Now;
+
+            var actorInvoice = new ActorSubmitInvoice
+            {
+                TenantId = dedicatedDynamicActorInvoice.TenantId,
+                CarrierActorId = dedicatedDynamicActorInvoice.CarrierActorId,
+                DueDate = dueDate,
+                TotalAmount = totalAmount,
+                VatAmount = vatAmount,
+                SubTotalAmount = subTotalAmount,
+                TaxVat = tax,
+                ActorInvoiceChannel = ActorInvoiceChannel.Dedicated
+            };
+            //await _invoiceRepository.InsertAsync(invoice);
+            actorInvoice.Id = await _actorSubmitInvoiceRepository.InsertAndGetIdAsync(actorInvoice);
+            dedicatedDynamicActorInvoice.ActorSubmitInvoiceId = actorInvoice.Id;
+            //dedicatedDynamicInvoice.ShippingRequest.IsShipperHaveInvoice = true;
+            dedicatedDynamicActorInvoice.DedicatedDynamicActorInvoiceItems.ForEach(x =>
+            x.DedicatedShippingRequestTruck.ActorSubmitInvoiceId = actorInvoice.Id);
+
+            //Generate invoice reference number
+            await GenerateSubmitReferenceNumber(actorInvoice);
         }
 
         #region helper

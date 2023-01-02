@@ -94,7 +94,7 @@
                             <span class="form-text text-muted">{{ l('SelectShipper') }} {{ step1Dto.shipperId }}</span>
                           </div>
 
-                          <div *ngIf="!isCarrierSass" class="form-group col-md-6 col-lg-6">
+                          <div *ngIf="!isCarrierSass" [hidden]="step1Dto.isInternalBrokerRequest" class="form-group col-md-6 col-lg-6">
                             <label>{{ l('ShippingRequestType') }} <span class="required-fileds">*</span></label>
                             <dx-select-box
                               id="shippingRequestType"
@@ -109,10 +109,12 @@
                               placeholder="{{ l('Select') }}"
                               [disabled]="step1Dto.shipperId > 0 ? true : null"
                               [isValid]="step1Form.controls['shippingRequestType'].valid || !step1Form.controls['shippingRequestType'].touched"
+                              [required]="!step1Dto.isInternalBrokerRequest"
                               required
                             >
                               <dx-validator [validationGroup]="'step1FormGroup'">
                                 <dxi-validation-rule
+                                  *ngIf="!step1Dto.isInternalBrokerRequest"
                                   type="required"
                                   message="{{ 'ShippingRequestType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
                                 ></dxi-validation-rule>
@@ -122,7 +124,9 @@
                           </div>
                           <div
                             class="form-group col-md-6 col-lg-6"
-                            [hidden]="step1Form.controls['shippingRequestType'].value !== 'directrequest' || isCarrierSass"
+                            [hidden]="
+                              step1Form.controls['shippingRequestType'].value !== 'directrequest' || isCarrierSass || step1Dto.isInternalBrokerRequest
+                            "
                           >
                             <label
                               >{{ l('SelectCarriers') }}
@@ -181,7 +185,7 @@
                                 </div>
                                 <dx-validator [validationGroup]="'step1FormGroup'">
                                   <dxi-validation-rule
-                                    *ngIf="step1Form.controls['shippingRequestType'].value === 'directrequest'"
+                                    *ngIf="step1Form.controls['shippingRequestType'].value === 'directrequest' && !step1Dto.isInternalBrokerRequest"
                                     type="required"
                                     message="{{ 'SelectCarriers' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
                                   ></dxi-validation-rule>
@@ -219,6 +223,77 @@
                               >
                               </hijri-gregorian-datepicker-test>
                             </div>
+                          </div>
+                          <div
+                            class="form-group col-md-12 col-lg-12"
+                            *ngIf="this.feature.isEnabled('App.ShipperClients') && this.feature.isEnabled('App.CarrierClients')"
+                          >
+                            <h2 class="font-size-lg text-dark font-weight-bold mb-6">{{ l('Broker:') }}</h2>
+                            <div class="form-group row">
+                              <label class="col-3 col-form-label">{{ l('IsInternalBrokerRequest') }} </label>
+                              <div class="col-3">
+                                <span class="switch switch-icon">
+                                  <label>
+                                    <input
+                                      (change)="removeCarrierInputFromForm1()"
+                                      type="checkbox"
+                                      [(ngModel)]="step1Dto.isInternalBrokerRequest"
+                                      formControlName="IsInternalBrokerRequest"
+                                    />
+                                    <span></span>
+                                  </label>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="this.feature.isEnabled('App.ShipperClients')" class="form-group col-md-6 col-lg-6">
+                            <label>{{ l('ActorShipper') }}</label>
+                            <div
+                              [ngClass]="{
+                                'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsShippers
+                              }"
+                            >
+                              <dx-select-box
+                                id="ActorShipper"
+                                name="ActorShipper"
+                                formControlName="ActorShipper"
+                                [(value)]="step1Dto.shipperActorId"
+                                [dataSource]="AllActorsShippers"
+                                [searchEnabled]="true"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                [required]="true"
+                                placeholder="{{ l('SelectActor') }}"
+                              >
+                              </dx-select-box>
+                            </div>
+                            <span class="form-text text-muted">{{ l('SelectShipperActor') }}</span>
+                          </div>
+                          <div
+                            [hidden]="!this.feature.isEnabled('App.CarrierClients') || !step1Dto.isInternalBrokerRequest"
+                            class="form-group col-md-6 col-lg-6"
+                          >
+                            <label>{{ l('ActorCarrier') }}</label>
+                            <div
+                              [ngClass]="{
+                                'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsCarriers
+                              }"
+                            >
+                              <dx-select-box
+                                id="ActorCarrier"
+                                name="ActorCarrier"
+                                formControlName="ActorCarrier"
+                                [(value)]="step1Dto.carrierActorId"
+                                [dataSource]="AllActorsCarriers"
+                                [searchEnabled]="true"
+                                displayExpr="displayName"
+                                valueExpr="id"
+                                [required]="step1Dto.isInternalBrokerRequest ? true : false"
+                                placeholder="{{ l('SelectActor') }}"
+                              >
+                              </dx-select-box>
+                            </div>
+                            <span class="form-text text-muted">{{ l('SelectCarrierActor') }}</span>
                           </div>
                           <div class="form-group col-md-6 col-lg-6">
                             <label>{{ l('ShippingType') }} <span class="required-fileds">*</span></label>

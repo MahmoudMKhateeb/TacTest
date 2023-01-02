@@ -70,7 +70,21 @@
               </dxi-column>
               <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"> </dxi-column>
               <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"> </dxi-column>
+              <dxi-column dataField="actorInvoiceChannel" cellTemplate="channelCellTemplate" caption="{{ l('InvoiceChannel') }}"> </dxi-column>
               <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('Status') }}"> </dxi-column>
+
+              <div *dxTemplate="let options of 'channelCellTemplate'">
+                <span style="width: 137px">
+                  <span
+                    class="badge badge-inline"
+                    [ngClass]="{
+                      'badge-danger': options.data.actorInvoiceChannel == 0,
+                      'badge-primary': options.data.actorInvoiceChannel == 1
+                    }"
+                    >{{ l(options.data.actorInvoiceChannelTitle) }}
+                  </span>
+                </span>
+              </div>
 
               <div *dxTemplate="let options of 'cellTemplate_isPaid'">
                 <span *ngIf="options.data.isPaid" class="badge badge-success badge-inline">{{ 'Paid' | localize }}</span>
@@ -97,13 +111,13 @@
                     <li>
                       <a class="dropdown-item" (click)="details(options.data.id)">{{ l('Detail') }}</a>
                     </li>
-                    <li>
+                    <li *ngIf="options.data.actorInvoiceChannel != 1">
                       <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('DownloadInvoice') }}</a>
                     </li>
-                    <li *ngIf="!options.data.isPaid">
+                    <li *ngIf="!options.data.isPaid && options.data.actorInvoiceChannel != 1">
                       <a class="dropdown-item" href="javascript:;" (click)="MakePaid(options.data)">{{ l('MakePaid') }}</a>
                     </li>
-                    <li *ngIf="options.data.isPaid">
+                    <li *ngIf="options.data.isPaid && options.data.actorInvoiceChannel != 1">
                       <a class="dropdown-item" href="javascript:;" (click)="MakeUnPaid(options.data)">{{ l('MakeUnPaid') }}</a>
                     </li>
                   </ul>
