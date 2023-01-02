@@ -202,7 +202,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
             this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.PrePrice ||
             this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.PostPrice ||
             this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.NeedsAction)) ||
-        ((this.isShipper || isBroker) &&
+        ((this.isShipper || isBroker || this.isCarrierSaas) &&
           canAddTrip &&
           (this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.PrePrice ||
             this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.PostPrice ||

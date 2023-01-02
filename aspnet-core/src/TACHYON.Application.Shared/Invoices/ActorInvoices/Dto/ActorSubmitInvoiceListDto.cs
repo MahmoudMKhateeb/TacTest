@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.DedicatedDynamicInvocies;
 using TACHYON.Invoices.SubmitInvoices;
 
 namespace TACHYON.Invoices.ActorInvoices.Dto
@@ -20,5 +21,7 @@ namespace TACHYON.Invoices.ActorInvoices.Dto
         public Guid? DocumentId { get; set; }
         public string DocumentName { get; set; }
         public string DocumentContentType { get; set; }
+        public ActorInvoiceChannel ActorInvoiceChannel { get; set; }
+        public string ActorInvoiceChannelTitle { get; set; }
     }
 }

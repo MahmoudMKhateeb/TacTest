@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using TACHYON.DedicatedDynamicInvoices;
 using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
@@ -13,9 +14,11 @@ using TACHYON.Shipping.ShippingRequests;
 namespace TACHYON.DedicatedInvoices
 {
     [Table("DedicatedDynamicInvoices")]
-    public class DedicatedDynamicInvoice :FullAuditedEntity<long>
+    public class DedicatedDynamicInvoice :FullAuditedEntity<long>, IDedicatedDynamicInvoiceBase
     {
-        //todo will add info for submit invoice
+        /// <summary>
+        /// tenant id: carrier or shipper or broker that the invoice is for
+        /// </summary>
         public int TenantId { get; set; }
         [ForeignKey("TenantId")]
         public Tenant Tenant { get; set; }

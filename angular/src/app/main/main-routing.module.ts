@@ -78,6 +78,7 @@ import { InvoicesDedicatedComponent } from '@app/main/Invoices/invoices-dedicate
 import { ActorsComponent } from './actors/actors/actors.component';
 import { ActorInvoiceListComponent } from './Invoices/ActorInvoices/actor-invoice-list/actor-invoice-list.component';
 import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/actor-submit-invoices.component';
+import { InvoicesDedicatedClientsComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients.component';
 
 @NgModule({
   imports: [
@@ -300,6 +301,8 @@ import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/a
           { path: 'invoices/view', component: InvoicesListComponent, data: { permission: 'Pages.Invoices' } },
           { path: 'invoices/dynamic', component: InvoicesDynamicComponent, data: { permission: 'Pages.DynamicInvoices' } },
           { path: 'invoices/dedicated', component: InvoicesDedicatedComponent, data: { permission: 'Pages.DedicatedDynamicInvoices' } },
+          // data: { permission: 'Pages.DedicatedDynamicInvoices' }
+          { path: 'invoices/dedicatedClients', component: InvoicesDedicatedClientsComponent },
           { path: 'penalties/view', component: PenaltiesListComponent, data: { permission: 'Pages.Invoices' } },
 
           { path: 'invoicenote/view', component: InvoiceNoteListComponent, data: { permission: 'Pages.Invoices' } },

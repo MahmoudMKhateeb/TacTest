@@ -8,7 +8,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public abstract class CreateOrEditShippingRequestStep1BaseDto : EntityDto<long?>
+    public abstract class CreateOrEditShippingRequestStep1BaseDto : EntityDto<long?>, IShouldNormalize
     {
         /// <summary>
         /// TAC-1937
@@ -39,6 +39,40 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public bool IsInternalBrokerRequest { get; set; }
 
+        public void Normalize()
+        {
+            if (IsInternalBrokerRequest)
+            {
+                IsTachyonDeal = false;
+                IsBid = false;
+                IsDirectRequest = true;
+                RequestType = ShippingRequestType.DirectRequest;
+            }
 
+            else if (IsBid)
+            {
+                RequestType = ShippingRequestType.Marketplace;
+                IsTachyonDeal = false;
+                IsInternalBrokerRequest = false;
+                IsDirectRequest = false;
+            }
+            else if (IsTachyonDeal)
+            {
+                RequestType = ShippingRequestType.TachyonManageService;
+                IsBid = false;
+                IsInternalBrokerRequest = false;
+                IsDirectRequest = false;
+            }
+            else
+            {
+                RequestType = ShippingRequestType.DirectRequest;
+                IsTachyonDeal = false;
+                IsBid = false;
+                IsDirectRequest = true;
+            }
+
+            // to get date only without time
+            BidStartDate = BidStartDate?.Date;
+        }
     }
 }

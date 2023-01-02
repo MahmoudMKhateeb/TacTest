@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Actors;
+using TACHYON.DedicatedDynamicInvocies;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequests;
@@ -29,7 +30,7 @@ namespace TACHYON.Invoices.ActorInvoices
         public decimal VatAmount { get; set; }
         public decimal TaxVat { get; set; }
         public ICollection<ShippingRequestTrip> Trips { get; set; }
-
+        public ActorInvoiceChannel ActorInvoiceChannel { get; set; }
         public ActorInvoice()
         {
             Trips = new List<ShippingRequestTrip>();

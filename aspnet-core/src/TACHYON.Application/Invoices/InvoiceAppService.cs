@@ -115,7 +115,6 @@ namespace TACHYON.Invoices
             _dedicatedDynamicInvoiceRepository = dedicatedDynamicInvoiceRepository;
         }
 
-
         public async Task<LoadResult> GetAll(string filter, InvoiceSearchInputDto input)
 
         {
@@ -535,6 +534,7 @@ namespace TACHYON.Invoices
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _shippingRequestTripRepository.GetAll()
+                .Where(x=>x.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Normal || x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId)
                 .Where(
                 x => (x.ShippingRequestFk.TenantId == tenantId && !x.IsShipperHaveInvoice) &&
                 (x.Status == ShippingRequestTripStatus.Delivered ||
@@ -629,7 +629,8 @@ namespace TACHYON.Invoices
                     TotalAmount = trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
                     WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
                     TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName,
-                    Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
+                    Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? 
+                     trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk?.DisplayName ?? trip.ShippingRequestTripFK.OriginFacilityFk.CityFk.DisplayName,
                     Destination = trip.ShippingRequestTripFK.DestinationFacilityFk.CityFk.DisplayName,
                     DateWork = trip.ShippingRequestTripFK.EndTripDate.HasValue ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.InvoiceFK.CreationTime.ToString("dd/MM/yyyy"),
                     Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?

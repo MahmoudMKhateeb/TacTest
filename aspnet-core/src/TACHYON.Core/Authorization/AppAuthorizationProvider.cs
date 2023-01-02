@@ -740,9 +740,10 @@ namespace TACHYON.Authorization
 
            // please don't change `tmsFeatureDependency` value it's used in another places
            var tmsFeatureDependency = new SimpleFeatureDependency(AppFeatures.TachyonDealer);
-           
+           var shipperOrCarrierClientsFeatureDependency = new SimpleFeatureDependency(false, AppFeatures.ShipperClients, AppFeatures.CarrierClients);
+
             // this permission for host and tachyon dealer only ...
-           var dynamicInvoicePermission = pages.CreateChildPermission(AppPermissions.Pages_DynamicInvoices,
+            var dynamicInvoicePermission = pages.CreateChildPermission(AppPermissions.Pages_DynamicInvoices,
                L("DynamicInvoicePermission"),
                L("DynamicInvoicePermissionDescription"),
                featureDependency: tmsFeatureDependency);
@@ -782,6 +783,24 @@ namespace TACHYON.Authorization
                 L("DeleteDedicatedDynamicInvoicePermission"),
                 featureDependency: tmsFeatureDependency);
 
+
+            //actor dedicated invoices
+            var dedicatedDynamicActorInvoicePermission = pages.CreateChildPermission(AppPermissions.Pages_DedicatedDynamicActorInvoices,
+                L("DedicatedDynamicActorInvoicePermission"),
+                L("DedicatedDynamicActorInvoicePermissionDescription"),
+                featureDependency: shipperOrCarrierClientsFeatureDependency);
+
+            dedicatedDynamicActorInvoicePermission.CreateChildPermission(AppPermissions.Pages_DedicatedDynamicActorInvoices_Create,
+                L("CreateDedicatedDynamicActorInvoicePermission"),
+                featureDependency: shipperOrCarrierClientsFeatureDependency);
+
+            dedicatedDynamicActorInvoicePermission.CreateChildPermission(AppPermissions.Pages_DedicatedDynamicActorInvoices_Update,
+                L("UpdateDedicatedDynamicActorInvoicePermission"),
+                featureDependency: shipperOrCarrierClientsFeatureDependency);
+
+            dedicatedDynamicActorInvoicePermission.CreateChildPermission(AppPermissions.Pages_DedicatedDynamicActorInvoices_Delete,
+                L("DeleteDedicatedDynamicActorInvoicePermission"),
+                featureDependency: shipperOrCarrierClientsFeatureDependency);
             #endregion
 
             documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Actors, L("ActorDocumentFiles"),

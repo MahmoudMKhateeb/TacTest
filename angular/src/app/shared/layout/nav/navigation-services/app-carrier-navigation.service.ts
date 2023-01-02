@@ -92,9 +92,8 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
           new AppMenuItem('PricePackages', 'Pages.NormalPricePackages', '', '/app/main/pricePackages/normalPricePackages'),
           new AppMenuItem('TMS Price Packages', 'Pages.TmsPricePackages', '', '/app/main/pricePackages/tmsPricePackages'),
           new AppMenuItem('Price Package Appendices', 'Pages.PricePackageAppendix', '', '/app/main/pricePackages/pricePackageAppendices'),
-        ],
+        ]
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
-
       ),
       // end of PricePackages
       // ---------------------------------------------------------------------------------------------------------------------
@@ -182,6 +181,9 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
             undefined,
             undefined,
             () => this.isEnabled('App.CarrierClients')
+          ),
+          new AppMenuItem('ClientsDedicatedInvoices', '', '', '/app/main/invoices/dedicatedClients', undefined, undefined, undefined, undefined, () =>
+            this.isEnabled('App.ShipperClients')
           ),
         ]
       ),

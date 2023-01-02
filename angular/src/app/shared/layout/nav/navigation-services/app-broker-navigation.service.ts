@@ -122,6 +122,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
             undefined,
             undefined
           ),
+          new AppMenuItem('ClientsDedicatedInvoices', '', '', '/app/main/invoices/dedicatedClients', undefined, undefined, undefined, undefined),
         ]
       ),
       // end of  Invoices

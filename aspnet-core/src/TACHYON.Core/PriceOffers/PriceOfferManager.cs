@@ -820,7 +820,7 @@ namespace TACHYON.PriceOffers
             ShippingRequest shippingRequest,
             CreateOrEditPriceOfferInput input)
         {
-            if (shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Normal)
+            if (shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Normal || shippingRequest.IsSaas())
             {
                 offer.PriceType = PriceOfferType.Trip;
             }
@@ -861,6 +861,11 @@ namespace TACHYON.PriceOffers
             ShippingRequest shippingRequest,
             CreateOrEditPriceOfferInput input)
         {
+            if (shippingRequest.IsSaas())
+            {
+                SetCalculateTripSettings(offer, shippingRequest, input);
+                return;
+            }
             switch (offer.PriceType)
             {
                 case PriceOfferType.Trip:
@@ -1055,6 +1060,12 @@ namespace TACHYON.PriceOffers
                 else if (shippingRequest.RouteTypeId == ShippingRequestRouteType.MultipleDrops)
                 {
                     offer.CommissionPercentageOrAddValue = directRequestCommissionValueForMultipleSaas;
+                }
+                else if(shippingRequest.RouteTypeId == null)
+                {
+                    offer.CommissionPercentageOrAddValue = 0;
+                    offer.CommissionPercentageOrAddValueForSingleDrop = directRequestCommissionValueForSingleSaas;
+                    offer.CommissionPercentageOrAddValueForMultipleDrop = directRequestCommissionValueForMultipleSaas;
                 }
             }
 

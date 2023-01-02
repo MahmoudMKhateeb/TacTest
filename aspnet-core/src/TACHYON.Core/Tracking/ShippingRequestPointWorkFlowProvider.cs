@@ -1031,16 +1031,45 @@ namespace TACHYON.Tracking
         /// </summary>
         private void TransferPrices(ShippingRequestTrip trip, PriceOfferBase offer, List<PricePackageOfferItem> items, decimal taxVat)
         {
-            trip.CommissionType = offer.CommissionType;
-            trip.SubTotalAmount = offer.ItemPrice;
-            trip.VatAmount = offer.ItemVatAmount;
-            trip.TotalAmount = offer.ItemTotalAmount;
-            trip.SubTotalAmountWithCommission = offer.ItemSubTotalAmountWithCommission;
-            trip.VatAmountWithCommission = offer.ItemVatAmountWithCommission;
-            trip.TotalAmountWithCommission = offer.ItemTotalAmountWithCommission;
-            trip.CommissionAmount = offer.ItemCommissionAmount;
-            trip.CommissionPercentageOrAddValue = offer.CommissionPercentageOrAddValue;
-            trip.TaxVat = taxVat;
+            if(trip.ShippingRequestFk.RouteTypeId == null && trip.ShippingRequestFk.IsSaas())
+            {
+                trip.CommissionType = PriceOfferCommissionType.CommissionValue;// always value
+                trip.TaxVat = taxVat;
+                trip.SubTotalAmount = offer.ItemPrice;
+                trip.VatAmount = offer.ItemVatAmount;
+                trip.TotalAmount = offer.ItemTotalAmount;
+
+                if (trip.RouteType == ShippingRequestRouteType.SingleDrop)
+                {
+                    trip.CommissionAmount = offer.CommissionPercentageOrAddValueForSingleDrop;
+                    trip.CommissionPercentageOrAddValue = offer.CommissionPercentageOrAddValueForSingleDrop; 
+                }
+                else //multiple drop
+                {
+                    trip.CommissionAmount = offer.CommissionPercentageOrAddValueForMultipleDrop;
+                    trip.CommissionPercentageOrAddValue = offer.CommissionPercentageOrAddValueForMultipleDrop;
+                }
+
+                trip.SubTotalAmountWithCommission = trip.CommissionPercentageOrAddValue;
+                trip.VatAmountWithCommission = taxVat / 100 * trip.CommissionPercentageOrAddValue;
+                trip.TotalAmountWithCommission = trip.SubTotalAmountWithCommission + trip.VatAmountWithCommission;
+
+            }
+            else
+            {
+                trip.CommissionType = offer.CommissionType;
+                trip.SubTotalAmount = offer.ItemPrice;
+                trip.VatAmount = offer.ItemVatAmount;
+                trip.TotalAmount = offer.ItemTotalAmount;
+                trip.SubTotalAmountWithCommission = offer.ItemSubTotalAmountWithCommission;
+                trip.VatAmountWithCommission = offer.ItemVatAmountWithCommission;
+                trip.TotalAmountWithCommission = offer.ItemTotalAmountWithCommission;
+                trip.CommissionAmount = offer.ItemCommissionAmount;
+                trip.CommissionPercentageOrAddValue = offer.CommissionPercentageOrAddValue;
+                trip.TaxVat = taxVat;
+               
+            }
+
             if (trip.ShippingRequestTripVases == null || trip.ShippingRequestTripVases.Count == 0) return;
 
             foreach (var vas in trip.ShippingRequestTripVases)
@@ -1057,6 +1086,7 @@ namespace TACHYON.Tracking
                 vas.CommissionAmount = item.ItemCommissionAmount;
                 vas.Quantity = 1;
             }
+
         }
         /// <summary>
         /// Check If user Can Start the trip
@@ -1183,12 +1213,12 @@ namespace TACHYON.Tracking
             }
             else
             {
-                if (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop)
+                if (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop || (trip.ShippingRequestFk.RouteTypeId == null && trip.RouteType == ShippingRequestRouteType.SingleDrop))
                 {
                     trip.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
                     await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);//we will create invoice in this case if shipper period is PayInAdvance
                 }
-                else if (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops)
+                else if (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops || (trip.ShippingRequestFk.RouteTypeId == null && trip.RouteType == ShippingRequestRouteType.MultipleDrops))
                 {
                     var allPointHasProofDelivery = await _routPointRepository.GetAll()
                                         .Where(c => c.Id != pointId && c.PickingType == PickingType.Dropoff && c.ShippingRequestTripId == point.ShippingRequestTripId)

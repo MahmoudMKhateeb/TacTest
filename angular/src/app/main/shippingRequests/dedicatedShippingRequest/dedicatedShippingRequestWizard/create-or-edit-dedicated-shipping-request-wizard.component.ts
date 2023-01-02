@@ -165,12 +165,17 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
     carrierActorId: [null],
     isInternalBrokerRequest: [null],
     rentalRangeDates: [null],
+    ActorShipper: [''],
+    ActorCarrier: [''],
+    IsInternalBrokerRequest: [''],
   });
   rentalDurationUnits: any[];
   rentalRangeDates: any;
   private selectingDateFor = 1;
   maxSelectableDate: Date;
   selectedDestCitiesForEdit: ShippingRequestDestinationCitiesDto[] = [];
+  AllActorsShippers: SelectItemDto[];
+  AllActorsCarriers: SelectItemDto[];
 
   constructor(
     injector: Injector,
@@ -191,6 +196,7 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
   ) {
     super(injector);
     _self = this;
+    this.step1Dto.isInternalBrokerRequest = false;
   }
 
   ngOnInit() {
@@ -472,48 +478,57 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
 
   loadAllDropDownLists(): void {
     this._shippingRequestsServiceProxy.getAllShippersForDropDown().subscribe((result) => {
-      this.AllShippers = result.map((item) => {
+      this.AllShippers = result?.map((item) => {
         item.id = Number(item.id);
         return item;
       });
     });
+    this._shippingRequestsServiceProxy.getAllCarriersActorsForDropDown().subscribe((result) => {
+      this.AllActorsCarriers = result;
+      // this.AllActorsCarriers.unshift( SelectItemDto.fromJS({id: null, displayName: this.l('Myself'), isOther: false}));
+    });
+
+    this._shippingRequestsServiceProxy.getAllShippersActorsForDropDown().subscribe((result) => {
+      this.AllActorsShippers = result;
+      // this.AllActorsShippers.unshift( SelectItemDto.fromJS({id: null, displayName: this.l('Myself'), isOther: false}));
+    });
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
-      this.allGoodCategorys = result.map((item) => {
+      this.allGoodCategorys = result?.map((item) => {
         item.id = Number(item.id);
         return item;
       });
     });
 
     this._countriesServiceProxy.getAllCountriesWithCode().subscribe((res) => {
-      this.allCountries = res.map((item) => {
+      this.allCountries = res?.map((item) => {
         item.id = Number(item.id);
         return item;
       });
     });
 
     this._shippingRequestsServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
-      this.allTransportTypes = result.map((item) => {
+      this.allTransportTypes = result?.map((item) => {
         (item.id as any) = Number(item.id);
         return item;
       });
     });
 
     this._shippingRequestsServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
-      this.allShippingTypes = result.map((item) => {
+      this.allShippingTypes = result?.map((item) => {
         (item.id as any) = Number(item.id);
         return item;
       });
     });
 
     this._shippingRequestsServiceProxy.getAllPackingTypesForDropdown().subscribe((result) => {
-      this.allpackingTypes = result.map((item) => {
+      this.allpackingTypes = result?.map((item) => {
         (item.id as any) = Number(item.id);
         return item;
       });
     });
 
     this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
-      this.allCarriers = result.map((item) => {
+      this.allCarriers = result?.map((item) => {
         item.id = Number(item.id);
         return item;
       });
@@ -909,5 +924,27 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
 
   shippingTypeChanged() {
     this.step1Dto.shippingRequestDestinationCities = [];
+  }
+
+  removeCarrierInputFromForm1() {
+    if (!this.step1Dto.isInternalBrokerRequest) {
+      this.step1Form.get('ActorCarrier').clearValidators();
+      this.step1Form.get('ActorCarrier').updateValueAndValidity();
+      this.step1Dto.carrierActorId = null;
+      if (this.shippingRequestType === 'directrequest') {
+        this.step1Form.get('carrier').setValidators([Validators.required]);
+        this.step1Form.get('carrier').updateValueAndValidity();
+        this.step1Dto.carrierTenantIdForDirectRequest = null;
+      }
+    } else {
+      this.step1Form.get('ActorCarrier').setValidators([Validators.required]);
+      this.step1Form.get('ActorCarrier').updateValueAndValidity();
+      if (this.shippingRequestType === 'directrequest') {
+        this.step1Form.get('carrier').setValue(null);
+        this.step1Form.get('carrier').clearValidators();
+        this.step1Form.get('carrier').updateValueAndValidity();
+        this.step1Dto.carrierTenantIdForDirectRequest = null;
+      }
+    }
   }
 }

@@ -626,6 +626,13 @@
         public const string Pages_DedicatedDynamicInvoices_Update = "Pages.DedicatedDynamicInvoices.Update";
         public const string Pages_DedicatedDynamicInvoices_Delete = "Pages.DedicatedDynamicInvoices.Delete";
 
+
+        //actor invoices
+        public const string Pages_DedicatedDynamicActorInvoices = "Pages.DedicatedDynamicActorInvoices";
+        public const string Pages_DedicatedDynamicActorInvoices_Create = "Pages.DedicatedDynamicActorInvoices.Create";
+        public const string Pages_DedicatedDynamicActorInvoices_Update = "Pages.DedicatedDynamicActorInvoices.Update";
+        public const string Pages_DedicatedDynamicActorInvoices_Delete = "Pages.DedicatedDynamicActorInvoices.Delete";
+
         #endregion
         #region shpping
 

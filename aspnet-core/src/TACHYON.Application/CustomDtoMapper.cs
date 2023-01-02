@@ -192,6 +192,10 @@ using TACHYON.DedicatedDynamicInvoices.Dtos;
 using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 using TACHYON.Common;
 using Abp.Timing;
+using TACHYON.DedidcatedDynamicActorInvoices.Dtos;
+using TACHYON.DedicatedDynamicActorInvoices;
+using TACHYON.DedicatedDynamicActorInvoices.DedicatedDynamicActorInvoiceItems;
+using TACHYON.DedicatedDynamicInvocies;
 
 namespace TACHYON
 {
@@ -980,12 +984,14 @@ namespace TACHYON
             //Actor Invoices
             configuration.CreateMap<ActorInvoice, ActorInvoiceListDto>()
             .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
-            .ForMember(dto => dto.ShipperActorName, options => options.MapFrom(entity => entity.ShipperActorFk.CompanyName));
+            .ForMember(dto => dto.ShipperActorName, options => options.MapFrom(entity => entity.ShipperActorFk.CompanyName))
+            .ForMember(dto => dto.ActorInvoiceChannelTitle, options => options.MapFrom(entity => entity.ActorInvoiceChannel.GetEnumDescription()));
 
             configuration.CreateMap<ActorSubmitInvoice, ActorSubmitInvoiceListDto>()
             .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
             .ForMember(dto => dto.CarrierActorName, options => options.MapFrom(entity => entity.CarrierActorFk.CompanyName))
-            .ForMember(dto => dto.Status, options => options.MapFrom(entity => entity.Status.GetEnumDescription()));
+            .ForMember(dto => dto.Status, options => options.MapFrom(entity => entity.Status.GetEnumDescription()))
+            .ForMember(dto => dto.ActorInvoiceChannelTitle, options => options.MapFrom(entity => entity.ActorInvoiceChannel.GetEnumDescription()));
 
             configuration.CreateMap<SubmitInvoiceClaimCreateInput, ActorSubmitInvoice>();
             configuration.CreateMap<IHasDocument, ActorSubmitInvoice>().ReverseMap();
@@ -1167,7 +1173,11 @@ namespace TACHYON
               .ForMember(x => x.DedicatedDynamicInvoiceItems, x => x.Ignore())
                .AfterMap(AddOrUpdateDedicatedInvoice);
 
-            
+            configuration.CreateMap<CreateOrEditDedicatedActorInvoiceDto, DedicatedDynamicActorInvoice>()
+              .ForMember(x => x.DedicatedDynamicActorInvoiceItems, x => x.Ignore())
+               .AfterMap(AddOrUpdateDedicatedActorInvoice);
+
+
 
         }
 
@@ -1364,6 +1374,23 @@ namespace TACHYON
                 else
                 {
                     _Mapper.Map(invoiceItem, invoice.DedicatedDynamicInvoiceItems.FirstOrDefault(x => x.Id == invoiceItem.Id));
+                }
+            }
+        }
+
+        
+        private static void AddOrUpdateDedicatedActorInvoice(CreateOrEditDedicatedActorInvoiceDto dto, DedicatedDynamicActorInvoice invoice)
+        {
+            if (invoice.DedicatedDynamicActorInvoiceItems == null) invoice.DedicatedDynamicActorInvoiceItems = new Collection<DedicatedDynamicActorInvoiceItem>();
+            foreach (var invoiceItem in dto.DedicatedActorInvoiceItems)
+            {
+                if (!invoiceItem.Id.HasValue)
+                {
+                    invoice.DedicatedDynamicActorInvoiceItems.Add(_Mapper.Map<DedicatedDynamicActorInvoiceItem>(invoiceItem));
+                }
+                else
+                {
+                    _Mapper.Map(invoiceItem, invoice.DedicatedDynamicActorInvoiceItems.FirstOrDefault(x => x.Id == invoiceItem.Id));
                 }
             }
         }

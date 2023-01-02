@@ -678,7 +678,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(x=> x.CarrierActorFk)
                     .Include(x=> x.ShipperActorFk)
                     .FirstOrDefaultAsync();
-                if(await IsCarrier() && shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+                if(await IsCarrier() && !shippingRequest.IsSaas() && shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
                 {
                     throw new UserFriendlyException(L("InvalidShippingRequest"));
                 }

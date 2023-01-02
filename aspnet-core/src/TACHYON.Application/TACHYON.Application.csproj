@@ -14,7 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Invoices\Reports\DedicatedInvoice.rdlc" />
-    <None Remove="Invoices\Reports\Dedicated_Invoice.rdlc" />
+    <None Remove="Invoices\Reports\DedicatedInvoice_Actor.rdlc" />
     <None Remove="Invoices\Reports\DynamicInvoice.rdlc" />
     <None Remove="Invoices\Reports\Invoice.rdlc" />
     <None Remove="Invoices\Reports\InvoiceNote.rdlc" />
@@ -27,6 +27,9 @@
     <None Remove="Shipping\Trips\ShippingRequestsTripManager.cs.orig" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Invoices\Reports\DedicatedInvoice_Actor.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\InvoiceNote.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -40,9 +43,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\Invoice.rdlc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Invoices\Reports\Dedicated_Invoice.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\PenaltyInvoice.rdlc">
