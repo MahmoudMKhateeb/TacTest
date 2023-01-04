@@ -2,6 +2,7 @@ using Abp;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
@@ -80,7 +81,7 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
         private readonly ITmsPricePackageManager _tmsPricePackageManager;
         private readonly IRepository<TmsPricePackageOffer,long> _tmsOfferRepository;
-
+        private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private IRepository<VasPrice> _vasPriceRepository;
 
         public PriceOfferAppService(IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository,
@@ -105,7 +106,8 @@ namespace TACHYON.PriceOffers
             IRepository<PackingType> packingTypesRepository,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
             ITmsPricePackageManager tmsPricePackageManager,
-            IRepository<TmsPricePackageOffer,long> tmsOfferRepository)
+            IRepository<TmsPricePackageOffer,long> tmsOfferRepository,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -131,6 +133,7 @@ namespace TACHYON.PriceOffers
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
             _tmsPricePackageManager = tmsPricePackageManager;
             _tmsOfferRepository = tmsOfferRepository;
+            _userOrganizationUnitRepository = userOrganizationUnitRepository;
         }
         #region Services
 
@@ -938,6 +941,15 @@ namespace TACHYON.PriceOffers
         private async Task<List<GetShippingRequestForPriceOfferListDto>> GetFromShippingRequest(ShippingRequestForPriceOfferGetAllInput input)
         {
 
+            bool isCmsEnabled = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            
+            List<long> userOrganizationUnits = null;
+            if (isCmsEnabled)
+            {
+                userOrganizationUnits = await _userOrganizationUnitRepository.GetAll().Where(x => x.UserId == AbpSession.UserId)
+                    .Select(x => x.OrganizationUnitId).ToListAsync();
+            }
+            
             var query = _shippingRequestsRepository
             .GetAll()
             .AsNoTracking()
@@ -965,6 +977,8 @@ namespace TACHYON.PriceOffers
             .WhereIf(input.IsTachyonDeal, x => x.IsTachyonDeal == input.IsTachyonDeal)
             .WhereIf(!string.IsNullOrEmpty(input.Filter), x => x.Tenant.Name.ToLower().Contains(input.Filter) || x.Tenant.companyName.ToLower().Contains(input.Filter) || x.Tenant.TenancyName.ToLower().Contains(input.Filter))
             .WhereIf(!string.IsNullOrEmpty(input.Carrier), x => x.CarrierTenantFk.Name.ToLower().Contains(input.Carrier) || x.CarrierTenantFk.companyName.ToLower().Contains(input.Carrier) || x.CarrierTenantFk.TenancyName.ToLower().Contains(input.Carrier))
+            .WhereIf(isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(),
+                x=> (x.CarrierActorId.HasValue && userOrganizationUnits.Contains(x.CarrierActorFk.OrganizationUnitId)) || (x.ShipperActorId.HasValue && userOrganizationUnits.Contains(x.ShipperActorFk.OrganizationUnitId)))
             .OrderBy(input.Sorting ?? "id desc")
             .PageBy(input);
 

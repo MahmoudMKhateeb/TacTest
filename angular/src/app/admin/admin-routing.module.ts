@@ -63,7 +63,7 @@ import { ActorSubmitInvoicesComponent } from '@app/main/Invoices/actor-submit-in
           { path: 'unitOfMeasures/unitOfMeasures', component: UnitOfMeasuresComponent, data: { permission: 'Pages.Administration.UnitOfMeasures' } },
           { path: 'trucks/truckStatuses', component: TruckStatusesComponent, data: { permission: 'Pages.Administration.TruckStatuses' } },
           { path: 'users', component: UsersComponent, data: { permission: 'Pages.Administration.Users' } },
-          { path: 'drivers', component: DriversComponent, data: { permission: 'Pages.Administration.Users' } },
+          { path: 'drivers', component: DriversComponent, data: { permission: 'Pages.Administration.Drivers' } },
           { path: 'roles', component: RolesComponent, data: { permission: 'Pages.Administration.Roles' } },
           { path: 'auditLogs', component: AuditLogsComponent, data: { permission: 'Pages.Administration.AuditLogs' } },
           { path: 'maintenance', component: MaintenanceComponent, data: { permission: 'Pages.Administration.Host.Maintenance' } },

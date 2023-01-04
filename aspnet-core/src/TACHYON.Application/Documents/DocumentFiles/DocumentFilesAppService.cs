@@ -2,6 +2,8 @@
 using Abp.Application.Editions;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Authorization.Users;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
@@ -24,6 +26,7 @@ using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Dto;
+using TACHYON.Features;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Routs.RoutSteps;
@@ -55,6 +58,7 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly TenantManager _tenantManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IUserEmailer _userEmailer;
+        private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
 
         public IAppUrlService _appUrlService { get; set; }
 
@@ -74,7 +78,8 @@ namespace TACHYON.Documents.DocumentFiles
             IRepository<Tenant, int> lookupTenantRepository,
             //IRepository<DocumentsEntity, int> documentEntityRepository,
             IAppNotifier appNotifier,
-            IUserEmailer userEmailer)
+            IUserEmailer userEmailer,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentFilesExcelExporter = documentFilesExcelExporter;
@@ -93,10 +98,12 @@ namespace TACHYON.Documents.DocumentFiles
             _tenantManager = tenantManager;
             _appNotifier = appNotifier;
             _userEmailer = userEmailer;
+            _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _appUrlService = NullAppUrlService.Instance;
         }
 
 
+        [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Submitted)]
         public async Task<LoadResult> GetAllTenantsSubmittedDocuments(GetAllForListDocumentFilesInput input)
         {
             DisableTenancyFiltersIfHost();
@@ -109,6 +116,7 @@ namespace TACHYON.Documents.DocumentFiles
             return result;
         }
 
+        [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Trucks)]
         public async Task<LoadResult> GetAllTrucksSubmittedDocuments(GetAllTrucksSubmittedDocumentsInput input)
         {
             DisableTenancyFiltersIfHost();
@@ -122,6 +130,7 @@ namespace TACHYON.Documents.DocumentFiles
             return result;
         }
 
+        [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Drivers)]
         public async Task<LoadResult> GetAllDriversSubmittedDocuments(GetAllDriversSubmittedDocumentsInput input)
         {
             DisableTenancyFiltersIfHost();
@@ -142,9 +151,19 @@ namespace TACHYON.Documents.DocumentFiles
             DisableTenancyFiltersIfHost();
             await DisableTenancyFiltersIfTachyonDealer();
 
+            bool isCmsEnabled = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            
+            List<long> userOrganizationUnits = null;
+            if (isCmsEnabled)
+            {
+                userOrganizationUnits = await _userOrganizationUnitRepository.GetAll().Where(x => x.UserId == AbpSession.UserId)
+                    .Select(x => x.OrganizationUnitId).ToListAsync();
+            }
+            
             var filteredDocumentFiles = _documentFileRepository.GetAll()
                 .Where(e => e.DocumentTypeFk.DocumentsEntityId == DocumentsEntitiesEnum.ActorShipper || e.DocumentTypeFk.DocumentsEntityId == DocumentsEntitiesEnum.ActorCarrier)
                 .WhereIf(input.ActorId.HasValue, x => x.UserId == input.ActorId)
+                .WhereIf(isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(), x => x.ActorId.HasValue && userOrganizationUnits.Contains(x.ActorFk.OrganizationUnitId))
                 .ProjectTo<GetAllActorsSubmittedDocumentsDto>(AutoMapperConfigurationProvider);
 
             var result = await LoadResultAsync(filteredDocumentFiles, input.Filter);

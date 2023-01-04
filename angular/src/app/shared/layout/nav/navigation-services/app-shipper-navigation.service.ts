@@ -52,7 +52,7 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
             'SavedTemplates',
-            'Pages.ShippingRequests',
+            'Pages.EntityTemplate',
             '',
             '/app/main/shippingRequests/requestsTemplates',
             undefined,

@@ -142,6 +142,7 @@ namespace TACHYON.Authorization.Users
             _truckRepository = truckRepository;
         }
 
+        [AbpAuthorize(AppPermissions.Pages_Administration_Users_View)]
         public async Task<PagedResultDto<UserListDto>> GetUsers(GetUsersInput input)
         {
             var query = GetUsersFilteredQuery(input);
@@ -155,6 +156,9 @@ namespace TACHYON.Authorization.Users
                 .PageBy(input)
                 .ToListAsync();
 
+            // Hide Internal Clients Users !!
+            users.RemoveAll(x => GetUserInternalClientRole(x.Id, x.TenantId).Any());
+            
             userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
             await FillRoleNames(userListDtos);
 
@@ -166,12 +170,25 @@ namespace TACHYON.Authorization.Users
         }
 
 
+        [AbpAuthorize(AppPermissions.Pages_Administration_Drivers)]
         public async Task<LoadResult> GetDrivers(GetDriversInput input)
         {
             await DisableTenancyFiltersIfTachyonDealer();
+            
+            bool isCmsEnabled = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            
+            List<long> userOrganizationUnits = null;
+            if (isCmsEnabled)
+            {
+                userOrganizationUnits = await _userOrganizationUnitRepository.GetAll().Where(x => x.UserId == AbpSession.UserId)
+                    .Select(x => x.OrganizationUnitId).ToListAsync();
+            }
+            
             var drivers = (from user in _userRepository.GetAllIncluding(x => x.NationalityFk)
                            .Include(x => x.DedicatedShippingRequestDrivers)
                            .ThenInclude(x => x.ShippingRequest).AsNoTracking()
+                           .WhereIf(isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(),
+                               x=> x.CarrierActorId.HasValue && userOrganizationUnits.Contains(x.CarrierActorFk.OrganizationUnitId))
                            where user.IsDriver 
                 join tenant in _tenantRepository.GetAll() on user.TenantId equals tenant.Id
                 let dedicatedDriver = user.DedicatedShippingRequestDrivers.FirstOrDefault(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy)
@@ -957,6 +974,16 @@ namespace TACHYON.Authorization.Users
                     throw new UserFriendlyException(L("DriverPhoneNumberAlreadyExists"));
                 }
             }
+        }
+
+        private IQueryable<Role> GetUserInternalClientRole(long userId, int? tenantId)
+        {
+            return (from userOrganizationUnit in _userOrganizationUnitRepository.GetAll().Where(x => x.UserId == userId)
+                join organizationUnitRole in _organizationUnitRoleRepository.GetAll() on userOrganizationUnit
+                    .OrganizationUnitId equals organizationUnitRole.OrganizationUnitId
+                join role in _roleRepository.GetAll() on organizationUnitRole.RoleId equals role.Id
+                where role.TenantId == tenantId && role.Name == StaticRoleNames.Tenants.InternalClients
+                select role);
         }
     }
 

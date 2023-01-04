@@ -272,6 +272,10 @@
         public const string Pages_DocumentFiles_Edit = "Pages.DocumentFiles.Edit";
         public const string Pages_DocumentFiles_Delete = "Pages.DocumentFiles.Delete";
         public const string Pages_DocumentFiles_Actors = "Pages.DocumentFiles.Actors";
+        public const string Pages_DocumentFiles_Submitted = "Pages.DocumentFiles.Submitted";
+        public const string Pages_DocumentFiles_Additional = "Pages.DocumentFiles.Additional";
+        public const string Pages_DocumentFiles_Trucks = "Pages.DocumentFiles.Trucks";
+        public const string Pages_DocumentFiles_Drivers = "Pages.DocumentFiles.Drivers";
 
         public const string Pages_DocumentTypes = "Pages.DocumentTypes";
         public const string Pages_DocumentTypes_Create = "Pages.DocumentTypes.Create";
@@ -282,6 +286,9 @@
         public const string Pages_ShippingRequests_Create = "Pages.ShippingRequests.Create";
         public const string Pages_ShippingRequests_Edit = "Pages.ShippingRequests.Edit";
         public const string Pages_ShippingRequests_Delete = "Pages.ShippingRequests.Delete";
+        public const string Pages_ShippingRequests_Marketplace = "Pages.ShippingRequests.Marketplace";
+        public const string Pages_ShippingRequests_DirectRequests = "Pages.ShippingRequests.DirectRequests";
+        public const string Pages_ShippingRequests_TmsForShipper = "Pages.ShippingRequests.TmsForShipper";
 
         public const string Pages_ShippingRequestBids = "Pages.ShippingRequestBis";
         public const string Pages_ShippingRequestBids_Create = "Pages.ShippingRequestBis.Create";
@@ -687,6 +694,10 @@
         public const string Pages_ActorPrices = "Pages.ActorPrices";
         public const string Pages_ActorPrices_Carrier = "Pages.ActorPrices.Carrier";
         public const string Pages_ActorPrices_Shipper = "Pages.ActorPrices.Shipper";
+        public const string Pages_Administration_Drivers = "Pages.Administration.Drivers";
+        public const string Pages_Administration_Users_View = "Pages.Administration.Users.View";
+        public const string Pages_Penalties = "Pages.Penalties";
+        public const string Pages_Invoices_View = "Pages.Invoices.View";
 
         #endregion
 

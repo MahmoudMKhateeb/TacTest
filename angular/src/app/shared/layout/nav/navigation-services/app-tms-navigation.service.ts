@@ -154,7 +154,7 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking'),
           new AppMenuItem(
             'SavedTemplates',
-            'Pages.ShippingRequests',
+            'Pages.EntityTemplate',
             '',
             '/app/main/shippingRequests/requestsTemplates',
             undefined,
@@ -205,7 +205,7 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
           new AppMenuItem('TMS Price Packages', 'Pages.TmsPricePackages', '', '/app/main/pricePackages/tmsPricePackages'),
           new AppMenuItem('Price Packages Proposal', 'Pages.TmsPricePackages', '', '/app/main/pricePackages/pricePackagesProposal'),
           new AppMenuItem('Price Package Appendices', 'Pages.PricePackageAppendix', '', '/app/main/pricePackages/pricePackageAppendices'),
-        ],
+        ]
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
       ),
       // end of PricePackages
@@ -219,7 +219,7 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
         '',
         [],
         [
-          new AppMenuItem('Drivers', 'Pages.Administration.Users', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
+          new AppMenuItem('Drivers', 'Pages.Administration.Drivers', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
           new AppMenuItem('Trucks', 'Pages.Trucks', '', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined),
         ],
         undefined,
@@ -267,7 +267,7 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
         [],
         [
           new AppMenuItem('Roles', 'Pages.Administration.Roles', '', '/app/admin/roles'),
-          new AppMenuItem('Users', 'Pages.Administration.Users', '', '/app/admin/users'),
+          new AppMenuItem('Users', 'Pages.Administration.Users.View', '', '/app/admin/users'),
         ]
       ),
 
