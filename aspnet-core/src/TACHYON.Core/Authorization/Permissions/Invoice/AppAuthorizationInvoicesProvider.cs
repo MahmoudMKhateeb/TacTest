@@ -19,6 +19,8 @@ namespace TACHYON.Authorization.Permissions.Invoice
                 L("UnPaidInvoice"), multiTenancySides: MultiTenancySides.Tenant);
             Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_MakePaid, L("PaidInvoice"),
                 multiTenancySides: MultiTenancySides.Tenant);
+            Invoices.CreateChildPermission(AppPermissions.Pages_Invoices_View, L("ViewInvoices"),
+                multiTenancySides: MultiTenancySides.Tenant);
 
 
             var Periods = Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Periods,

@@ -295,7 +295,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking'),
           new AppMenuItem(
             'SavedTemplates',
-            'Pages.ShippingRequests',
+            'Pages.EntityTemplate',
             '',
             '/app/main/shippingRequests/requestsTemplates',
             undefined,
@@ -375,7 +375,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.Carrier') || this.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
           ),
-          new AppMenuItem('Drivers', 'Pages.Administration.Users', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
+          new AppMenuItem('Drivers', 'Pages.Administration.Drivers', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
           new AppMenuItem('TransportTypes', 'Pages.TransportTypes', '', '/app/main/transportTypes/transportTypes'),
           new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', '', '/app/main/trucksTypes/trucksTypes'),
           new AppMenuItem('CapacityCategories', 'Pages.Capacities', '', '/app/main/truckCapacities/capacities'),
@@ -506,7 +506,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
         [],
         [
           new AppMenuItem('Roles', 'Pages.Administration.Roles', '', '/app/admin/roles'),
-          new AppMenuItem('Users', 'Pages.Administration.Users', '', '/app/admin/users'),
+          new AppMenuItem('Users', 'Pages.Administration.Users.View', '', '/app/admin/users'),
         ]
       ),
       //End Of User Manegment

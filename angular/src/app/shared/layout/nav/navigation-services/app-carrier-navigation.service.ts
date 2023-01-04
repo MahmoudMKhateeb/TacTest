@@ -41,7 +41,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
           ),
           new AppMenuItem(
             'SavedTemplates',
-            'Pages.ShippingRequests',
+            'Pages.EntityTemplate',
             '',
             '/app/main/shippingRequests/requestsTemplates',
             undefined,
@@ -105,7 +105,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
         '',
         [],
         [
-          new AppMenuItem('Drivers', 'Pages.Administration.Users', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
+          new AppMenuItem('Drivers', 'Pages.Administration.Drivers', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
           new AppMenuItem(
             'Trucks',
             'Pages.Trucks',
@@ -281,7 +281,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
         [],
         [
           new AppMenuItem('Roles', 'Pages.Administration.Roles', '', '/app/admin/roles'),
-          new AppMenuItem('Users', 'Pages.Administration.Users', '', '/app/admin/users'),
+          new AppMenuItem('Users', 'Pages.Administration.Users.View', '', '/app/admin/users'),
         ]
       ),
 

@@ -1,15 +1,18 @@
 ﻿using Abp.Application.Features;
 using Abp.Application.Services;
 using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
+using IdentityServer4.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
@@ -31,20 +34,37 @@ namespace TACHYON.Invoices.ActorInvoices
     public class ActorSubmitInvoiceAppService : TACHYONAppServiceBase, IApplicationService
     {
         private readonly IRepository<ActorSubmitInvoice, long> _actorSubmitInvoiceRepository;
+        private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly CommonManager _commonManager;
 
-        public ActorSubmitInvoiceAppService(IRepository<ActorSubmitInvoice, long> actorSubmitInvoiceRepository,
-            CommonManager commonManager)
+        public ActorSubmitInvoiceAppService(
+            IRepository<ActorSubmitInvoice, long> actorSubmitInvoiceRepository,
+            CommonManager commonManager,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository)
         {
             _actorSubmitInvoiceRepository = actorSubmitInvoiceRepository;
             _commonManager = commonManager;
+            _userOrganizationUnitRepository = userOrganizationUnitRepository;
         }
 
         public async Task<LoadResult> GetAll(string filter)
 
         {
+            
+            bool isCmsEnabled = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            
+            List<long> userOrganizationUnits = null;
+            if (isCmsEnabled)
+            {
+                userOrganizationUnits = await _userOrganizationUnitRepository.GetAll().Where(x => x.UserId == AbpSession.UserId)
+                    .Select(x => x.OrganizationUnitId).ToListAsync();
+            }
+            
+            
             var query = _actorSubmitInvoiceRepository
                 .GetAll()
+                .WhereIf(isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(),
+                    x=> x.CarrierActorId.HasValue && userOrganizationUnits.Contains(x.CarrierActorFk.OrganizationUnitId))
                 .ProjectTo<ActorSubmitInvoiceListDto>(AutoMapperConfigurationProvider)
                 .AsNoTracking();
             if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
