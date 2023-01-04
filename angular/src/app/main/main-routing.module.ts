@@ -304,8 +304,8 @@ import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/a
 
           { path: 'invoicenote/view', component: InvoiceNoteListComponent, data: { permission: 'Pages.Invoices' } },
           { path: 'actors/actors', component: ActorsComponent, data: { permission: 'Pages.Administration.Actors' } },
-          { path: 'actors/invoices', component: ActorInvoiceListComponent, data: { permission: 'Pages.Administration.Actors' } },
-          { path: 'actors/carrierInvoices', component: ActorSubmitInvoicesComponent, data: { permission: 'Pages.Administration.Actors' } },
+          { path: 'actors/invoices', component: ActorInvoiceListComponent, data: { permission: 'Pages.Administration.ActorsInvoice' } },
+          { path: 'actors/carrierInvoices', component: ActorSubmitInvoicesComponent, data: { permission: 'Pages.Administration.ActorsInvoice' } },
 
           {
             path: 'invoices/detail/:id',

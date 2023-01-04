@@ -3,7 +3,7 @@
     <!--begin::Subheader-->
     <sub-header [title]="Title | localize" [description]="'' | localize">
       <div role="actions" *ngIf="isShipper || isTachyonDealer || isCarrierSaas">
-        <div class="btn-group mr-2" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true">
+        <div *ngIf="isGranted('Pages.ShippingRequests.Create')" class="btn-group mr-2" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true">
           <button dropdownToggle type="button" class="btn btn-success" aria-controls="dropdown-basic">
             <i class="fas fa-plus"></i> {{ 'CreateNewRequest' | localize }}<span class="caret"></span>
           </button>

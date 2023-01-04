@@ -116,6 +116,7 @@ namespace TACHYON.Invoices
         }
 
 
+        [AbpAuthorize(AppPermissions.Pages_Invoices_View)]
         public async Task<LoadResult> GetAll(string filter, InvoiceSearchInputDto input)
 
         {

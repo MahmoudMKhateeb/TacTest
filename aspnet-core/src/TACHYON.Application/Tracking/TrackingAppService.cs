@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -37,7 +38,7 @@ using TACHYON.Authorization.Users;
 
 namespace TACHYON.Tracking
 {
-    [AbpAuthorize()]
+    [AbpAuthorize(AppPermissions.Pages_Tracking)]
     public class TrackingAppService : TACHYONAppServiceBase
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
@@ -46,12 +47,14 @@ namespace TACHYON.Tracking
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
         private readonly ProfileAppService _ProfileAppService;
         private readonly ForceDeliverTripExcelExporter _deliverTripExcelExporter;
+        private readonly IRepository<UserOrganizationUnit,long> _userOrganizationUnitRepository;
 
         public TrackingAppService(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository,
             IRepository<User, long> userRepository,
             ShippingRequestPointWorkFlowProvider workFlowProvider,
             ProfileAppService profileAppService,
-            ForceDeliverTripExcelExporter deliverTripExcelExporter)
+            ForceDeliverTripExcelExporter deliverTripExcelExporter,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _RoutPointRepository = routPointRepository;
@@ -59,12 +62,24 @@ namespace TACHYON.Tracking
             _workFlowProvider = workFlowProvider;
             _ProfileAppService = profileAppService;
             _deliverTripExcelExporter = deliverTripExcelExporter;
+            _userOrganizationUnitRepository = userOrganizationUnitRepository;
         }
 
 
         public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
+
+            bool isCmsEnabled = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            
+            List<long> userOrganizationUnits = null;
+            if (isCmsEnabled)
+            {
+                userOrganizationUnits = await _userOrganizationUnitRepository.GetAll()
+                    .Where(x => x.UserId == AbpSession.UserId)
+                    .Select(x => x.OrganizationUnitId).ToListAsync();
+            }
+
 
             var hasCarrierClient = await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierClients);
             DisableTenancyFilters();
@@ -137,8 +152,9 @@ namespace TACHYON.Tracking
                 //todo for tasneem will update request type after dediced
                 .WhereIf(input.RequestTypeId ==1, x=>x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId)
                 .WhereIf(input.RequestTypeId == 2, x => x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId)
-                .OrderBy(input.Sorting ?? "id desc")
-                .PageBy(input).ToList();
+            .WhereIf(isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(),
+                x=> (x.ShippingRequestFk.CarrierActorId.HasValue && userOrganizationUnits.Contains(x.ShippingRequestFk.CarrierActorFk.OrganizationUnitId)) || (x.ShippingRequestFk.ShipperActorId.HasValue && userOrganizationUnits.Contains(x.ShippingRequestFk.ShipperActorFk.OrganizationUnitId)))    
+            .OrderBy(input.Sorting ?? "id desc").PageBy(input).ToList();
 
             List<TrackingListDto> trackingLists = new List<TrackingListDto>();
 

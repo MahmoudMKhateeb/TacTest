@@ -1,7 +1,10 @@
 ﻿using Abp.Application.Features;
 using Abp.Application.Services;
 using Abp.Authorization;
+using Abp.Authorization.Users;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
@@ -22,17 +25,33 @@ namespace TACHYON.Invoices.ActorInvoices
     {
 
         private readonly IRepository<ActorInvoice, long> _actorInvoiceRepository;
+        private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
 
-        public ActorInvoiceAppService(IRepository<ActorInvoice, long> actorInvoiceRepository)
+        public ActorInvoiceAppService(
+            IRepository<ActorInvoice, long> actorInvoiceRepository,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository)
         {
             _actorInvoiceRepository = actorInvoiceRepository;
+            _userOrganizationUnitRepository = userOrganizationUnitRepository;
         }
 
 
         public async Task<LoadResult> GetAll(string filter)
         {
+            
+            bool isCmsEnabled = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            
+            List<long> userOrganizationUnits = null;
+            if (isCmsEnabled)
+            {
+                userOrganizationUnits = await _userOrganizationUnitRepository.GetAll().Where(x => x.UserId == AbpSession.UserId)
+                    .Select(x => x.OrganizationUnitId).ToListAsync();
+            }
+            
             var query = _actorInvoiceRepository
                 .GetAll()
+                .WhereIf(isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(),
+                    x=> x.ShipperActorId.HasValue && userOrganizationUnits.Contains(x.ShipperActorFk.OrganizationUnitId))
                 .ProjectTo<ActorInvoiceListDto>(AutoMapperConfigurationProvider)
                 .AsNoTracking();
             if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))

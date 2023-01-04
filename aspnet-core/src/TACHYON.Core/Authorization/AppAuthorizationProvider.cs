@@ -285,6 +285,10 @@ namespace TACHYON.Authorization
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Create, L("CreateNewShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Edit, L("EditShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Delete, L("DeleteShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Marketplace, L("Marketplace"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_DirectRequests, L("DirectRequests"),
+                multiTenancySides: MultiTenancySides.Tenant,featureDependency: new SimpleFeatureDependency(AppFeatures.SendDirectRequest));
+            shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_TmsForShipper, L("TmsForShipper"));
 
             // new AppAuthorizationTripsProvider(pages);
 
@@ -425,11 +429,14 @@ namespace TACHYON.Authorization
                 multiTenancySides: MultiTenancySides.Host);
 
             pages.CreateChildPermission(AppPermissions.Pages_DemoUiComponents, L("DemoUiComponents"));
-            pages.CreateChildPermission(AppPermissions.Pages_Tracking_ReceiverCode, L("TrackingReceiverCode"),
+            var trackingPermission = pages.CreateChildPermission(AppPermissions.Pages_Tracking, L("Tracking"),
+                multiTenancySides: MultiTenancySides.Tenant);
+            
+            trackingPermission.CreateChildPermission(AppPermissions.Pages_Tracking_ReceiverCode, L("TrackingReceiverCode"),
                 multiTenancySides: MultiTenancySides.Host);
-            pages.CreateChildPermission(AppPermissions.Pages_Tracking_ResetPointReceiverCode, L("ResetReceiverCode"),
+            trackingPermission.CreateChildPermission(AppPermissions.Pages_Tracking_ResetPointReceiverCode, L("ResetReceiverCode"),
                 multiTenancySides: MultiTenancySides.Host);
-            pages.CreateChildPermission(AppPermissions.Pages_Tracking_BulkDeliverTrip, L("BulkDeliverTrip"),
+            trackingPermission.CreateChildPermission(AppPermissions.Pages_Tracking_BulkDeliverTrip, L("BulkDeliverTrip"),
                 featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer));
 
             var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("Administration"));
@@ -513,7 +520,7 @@ namespace TACHYON.Authorization
             roles.CreateChildPermission(AppPermissions.Pages_Administration_Roles_Edit, L("EditingRole"));
             roles.CreateChildPermission(AppPermissions.Pages_Administration_Roles_Delete, L("DeletingRole"));
 
-            var users = administration.CreateChildPermission(AppPermissions.Pages_Administration_Users, L("Users"));
+            var users = administration.CreateChildPermission(AppPermissions.Pages_Administration_Users, L("UsersRootPermission"));
             users.CreateChildPermission(AppPermissions.Pages_Administration_Users_Create, L("CreatingNewUser"));
             users.CreateChildPermission(AppPermissions.Pages_Administration_Users_Edit, L("EditingUser"));
             users.CreateChildPermission(AppPermissions.Pages_Administration_Users_Delete, L("DeletingUser"));
@@ -521,6 +528,8 @@ namespace TACHYON.Authorization
                 L("ChangingPermissions"));
             users.CreateChildPermission(AppPermissions.Pages_Administration_Users_Impersonation, L("LoginForUsers"));
             users.CreateChildPermission(AppPermissions.Pages_Administration_Users_Unlock, L("Unlock"));
+            users.CreateChildPermission(AppPermissions.Pages_Administration_Drivers, L("Drivers"));
+            users.CreateChildPermission(AppPermissions.Pages_Administration_Users_View, L("Users"));
 
             var languages =
                 administration.CreateChildPermission(AppPermissions.Pages_Administration_Languages, L("Languages"));
@@ -787,6 +796,22 @@ namespace TACHYON.Authorization
             documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Actors, L("ActorDocumentFiles"),
                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
                    AppFeatures.DocumentsManagement));
+            
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Submitted, L("SubmittedDocument"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
+                   AppFeatures.DocumentsManagement));
+            
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Additional, L("AdditionalDocumentFiles"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
+                   AppFeatures.DocumentsManagement));
+            
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Drivers, L("DriversDocumentFiles"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
+                   AppFeatures.DocumentsManagement));
+            
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Trucks, L("TrucksDocumentFiles"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
+                   AppFeatures.DocumentsManagement));
 
            // For Host/TMS
            pages.CreateChildPermission(AppPermissions.Pages_Invoices_ConfirmInvoice, L("ConfirmInvoicePermission"),
@@ -879,6 +904,9 @@ namespace TACHYON.Authorization
                L("ShipperActorPricesPermission"), featureDependency: brokerFeatureDependency);
 
            #endregion
+
+           var penaltiesPermission = pages.CreateChildPermission(AppPermissions.Pages_Penalties, L("Penalties"));
+           // note : to do use penalties permission to add some missing permission like create, update, and delete
         }
 
         private static ILocalizableString L(string name)
