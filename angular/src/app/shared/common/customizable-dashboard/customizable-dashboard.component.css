@@ -183,7 +183,7 @@ gridster-item {
 }
 
 ::ng-deep .text-red {
-  color: #dc2434;
+  color: #dc2434 !important;
 }
 
 ::ng-deep .label.text-red {

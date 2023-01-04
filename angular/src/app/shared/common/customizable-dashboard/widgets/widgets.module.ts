@@ -69,6 +69,7 @@ import { CarrierDashboardComponent } from '@app/shared/common/customizable-dashb
 import { NewDirectRequestsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/new-direct-requests-widget/new-direct-requests-widget.component';
 import { TabsModule } from '@node_modules/ngx-bootstrap/tabs';
 import { FromToComponent } from '@app/shared/common/from-to/from-to.component';
+import { DriverTucksActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/driver-tucks-activity/driver-tucks-activity.component';
 
 @NgModule({
   declarations: [
@@ -126,6 +127,7 @@ import { FromToComponent } from '@app/shared/common/from-to/from-to.component';
     CarrierDashboardComponent,
     NewDirectRequestsWidgetComponent,
     FromToComponent,
+    DriverTucksActivityComponent,
   ],
   imports: [
     CommonModule,
@@ -196,6 +198,7 @@ import { FromToComponent } from '@app/shared/common/from-to/from-to.component';
     CarrierDashboardComponent,
     NewDirectRequestsWidgetComponent,
     FromToComponent,
+    DriverTucksActivityComponent,
   ],
   exports: [
     CompletedTripsWidgetComponent,
@@ -252,6 +255,7 @@ import { FromToComponent } from '@app/shared/common/from-to/from-to.component';
     CarrierDashboardComponent,
     NewDirectRequestsWidgetComponent,
     FromToComponent,
+    DriverTucksActivityComponent,
   ],
 })
 export class WidgetsModule {}

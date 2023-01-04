@@ -159,6 +159,11 @@ namespace TACHYON.DashboardCustomization.Definitions
             var carrierDueDateInDaysWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierDueDateInDaysWidget, "CarrierDueDateInDaysWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var carrierTrackingMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierTrackingMapWidget, "CarrierTrackingMapWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var CarrierMostUsedPPWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierMostUsedPPWidget, "CarrierMostUsedPPWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
+            var CarrierActiveDriversAndTrucksWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierActiveDriversAndTrucksWidget, "CarrierActiveDriversAndTrucksWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
+            var CarrierUpcomingTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierUpcomingTripsWidget, "CarrierUpcomingTripsWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
+            var CarrierCountersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierCountersWidget, "CarrierCountersWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
+            var CarrierNeedsActionWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.NeedsActionWidget, "NeedsActionWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
+            var CarrierNewOffersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.NewOffersWidget, "NewOffersWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
 
 
 
@@ -176,6 +181,11 @@ namespace TACHYON.DashboardCustomization.Definitions
             WidgetDefinitions.Add(carrierDueDateInDaysWidget);
             WidgetDefinitions.Add(carrierTrackingMapWidget);
             WidgetDefinitions.Add(CarrierMostUsedPPWidget);
+            WidgetDefinitions.Add(CarrierActiveDriversAndTrucksWidget);
+            WidgetDefinitions.Add(CarrierUpcomingTripsWidget);
+            WidgetDefinitions.Add(CarrierCountersWidget);
+            WidgetDefinitions.Add(CarrierNeedsActionWidget);
+            WidgetDefinitions.Add(CarrierNewOffersWidget);
 
             #endregion
 
@@ -256,7 +266,12 @@ namespace TACHYON.DashboardCustomization.Definitions
                     //carrierNextInvoiceFrequenctEndDateWidget.Id,
                     carrierDueDateInDaysWidget.Id,
                     carrierTrackingMapWidget.Id,
-                    CarrierMostUsedPPWidget.Id
+                    CarrierMostUsedPPWidget.Id,
+                    CarrierActiveDriversAndTrucksWidget.Id,
+                    CarrierUpcomingTripsWidget.Id,
+                    CarrierCountersWidget.Id,
+                    CarrierNeedsActionWidget.Id,
+                    CarrierNewOffersWidget.Id,
                 });
             DashboardDefinitions.Add(defaultCarrierDashboard);
 

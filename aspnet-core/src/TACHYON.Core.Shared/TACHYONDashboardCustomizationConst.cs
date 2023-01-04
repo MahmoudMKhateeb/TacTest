@@ -82,7 +82,11 @@
                 public const string CarrierDueDateInDaysWidget = "Widgets_Tenant_carrier_DueDateInDaysWidget";
                 public const string CarrierTrackingMapWidget = "Widgets_Tenant_carrier_TrackingMapWidget";
                 public const string CarrierMostUsedPPWidget = "Widgets_Tenant_carrier_MostUsedPPWidget";
-
+                public const string CarrierActiveDriversAndTrucksWidget = "Widgets_Tenant_carrier_active_drivers_and_trucks_Widget";
+                public const string CarrierUpcomingTripsWidget = "Widgets_Tenant_carrier_Upcoming_Trips_Widget";
+                public const string CarrierCountersWidget = "Widgets_Tenant_carrier_Counters_Widget";
+                public const string NeedsActionWidget = "Widgets_Tenant_carrier_Needs_Action_Widget";
+                public const string NewOffersWidget = "Widgets_Tenant_carrier_New_Offers_Widget";
             }
 
             public class TachyonDealer

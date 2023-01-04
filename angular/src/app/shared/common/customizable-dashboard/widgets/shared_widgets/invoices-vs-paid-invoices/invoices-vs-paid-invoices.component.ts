@@ -15,6 +15,16 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
 
   loading = false;
   acceptedVsRejected: { total: number; paid: number; unpaid: number };
+  yaxis = [
+    {
+      labels: {
+        formatter: function (val) {
+          console.log('InvoicesVsPaidInvoicesComponent val', val);
+          return isNaN(val) ? val.toFixed(0) : val;
+        },
+      },
+    },
+  ];
 
   constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
@@ -42,9 +52,12 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
           unpaid,
           total: paid + unpaid,
         };
-        const categories = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const paidSeries = categories.map((item) => {
-          const foundFromResponse = result.paidInvoices.find((accepted) => accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase());
+          const foundFromResponse = result.paidInvoices.find((accepted) => {
+            accepted.x = accepted?.x?.slice(0, 3);
+            return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
+          });
           console.log('acceptedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
@@ -52,7 +65,10 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
           });
         });
         const unpaidSeries = categories.map((item) => {
-          const foundFromResponse = result.shipperInvoices.find((rejected) => rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase());
+          const foundFromResponse = result.shipperInvoices.find((rejected) => {
+            rejected.x = rejected?.x?.slice(0, 3);
+            return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
+          });
           console.log('rejectedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
@@ -80,7 +96,7 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
           chart: {
             type: 'line',
             width: '100%',
-            height: 350,
+            height: 250,
             zoom: {
               enabled: false,
             },

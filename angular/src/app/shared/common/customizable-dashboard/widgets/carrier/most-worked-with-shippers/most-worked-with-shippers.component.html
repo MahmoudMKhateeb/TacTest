@@ -9,7 +9,7 @@
     <!--begin::Body-->
     <div id="chart">
       <apx-chart
-        *ngIf="Shippers.length > 0"
+        *ngIf="Shippers && Shippers.length > 0"
         [series]="chartOptions.series"
         [chart]="chartOptions.chart"
         [labels]="chartOptions.labels"

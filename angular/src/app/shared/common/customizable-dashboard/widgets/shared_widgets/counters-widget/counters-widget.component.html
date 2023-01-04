@@ -1,32 +1,32 @@
 <div class="card card-custom card-stretch w-100 h-100">
   <div class="card-body p-4 d-flex flex-column justify-content-center">
-    <div class="row">
-      <div class="col-3">
+    <div class="d-flex">
+      <div class="text-center col-4 p-0">
         <img class="counter-icon" src="assets/SVG/Delivered_Trips.svg" alt="" />
       </div>
-      <div class="col-9">
+      <div>
         <span class="counter-title">Delivered Trips</span> <br />
         <span class="counter-details">25 / Month</span>&nbsp;&nbsp;<i class="fa fa-chevron-down text-dark"></i>
       </div>
     </div>
     <hr class="custom-hr" />
     <ng-container *ngIf="isShipper || hasCarrierClients || hasShipperClients">
-      <div class="row">
-        <div class="col-3">
+      <div class="d-flex">
+        <div class="text-center col-4 p-0">
           <img class="counter-icon" src="assets/SVG/In_Transit_Trips.svg" alt="" />
         </div>
-        <div class="col-9">
+        <div>
           <span class="counter-title">In Transit Trips</span> <br />
           <span class="counter-details">25 Trips</span>
         </div>
       </div>
     </ng-container>
     <ng-container *ngIf="isCarrier || isCarrierSaas || isSaaS || hasCarrierClients || hasShipperClients">
-      <div class="row">
-        <div class="col-3">
+      <div class="d-flex">
+        <div class="text-center col-4 p-0">
           <img class="counter-icon" src="assets/SVG/Generated_invoice.svg" alt="" />
         </div>
-        <div class="col-9">
+        <div>
           <span class="counter-title">Generated Invoice</span> <br />
           <span class="counter-details">25 Invoice</span>
         </div>

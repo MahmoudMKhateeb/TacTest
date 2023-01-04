@@ -15,7 +15,8 @@
 }
 
 .custom-hr {
-  border-top: 1px solid #eaeaea !important;
+  border-top: 2px solid #eaeaea !important;
+  margin: 1rem;
 }
 
 ::ng-deep .counter-icon {

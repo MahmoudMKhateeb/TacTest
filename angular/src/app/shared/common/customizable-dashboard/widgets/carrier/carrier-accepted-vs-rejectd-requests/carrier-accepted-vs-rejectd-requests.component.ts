@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
+import { ChartOptions, ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { CarrierDashboardServiceProxy, ChartCategoryPairedValuesDto } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
 import { ApexLegend } from '@node_modules/ng-apexcharts';
@@ -12,7 +12,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
   styleUrls: ['./carrier-accepted-vs-rejectd-requests.component.css'],
 })
 export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase implements OnInit {
-  public chartOptions: Partial<ChartOptions>;
+  public chartOptions: Partial<ChartOptionsBars>;
   loading = false;
 
   legend: ApexLegend = {
@@ -49,9 +49,12 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
           rejected,
           total: accepted + rejected,
         };
-        const categories = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const acceptedSeries = categories.map((item) => {
-          const foundFromResponse = result.acceptedOffers.find((accepted) => accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase());
+          const foundFromResponse = result.acceptedOffers.find((accepted) => {
+            accepted.x = accepted?.x?.slice(0, 3);
+            return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
+          });
           console.log('acceptedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
@@ -59,7 +62,10 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
           });
         });
         const rejectedSeries = categories.map((item) => {
-          const foundFromResponse = result.rejectedOffers.find((rejected) => rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase());
+          const foundFromResponse = result.rejectedOffers.find((rejected) => {
+            rejected.x = rejected?.x?.slice(0, 3);
+            return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
+          });
           console.log('rejectedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
@@ -84,12 +90,18 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
           chart: {
             type: 'bar',
             width: '100%',
-            height: 200,
+            height: 250,
             stacked: true,
           },
           xaxis: {
             type: 'category',
             categories,
+          },
+          yaxis: {
+            min: 0,
+            tickAmount: 1,
+            floating: false,
+            decimalsInFloat: 0,
           },
           dataLabels: {
             enabled: false,

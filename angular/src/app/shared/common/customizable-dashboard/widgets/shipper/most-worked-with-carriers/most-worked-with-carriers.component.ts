@@ -25,7 +25,7 @@ export class MostWorkedWithCarriersComponent extends AppComponentBase implements
   public chartOptions: Partial<ChartOptions>;
   plotOptions: ApexPlotOptions = {
     pie: {
-      customScale: 0.7,
+      customScale: 1,
       // donut: {
       //     labels: {
       //         name: {
@@ -69,6 +69,8 @@ export class MostWorkedWithCarriersComponent extends AppComponentBase implements
           series: this.Carriers.map((carrier) => carrier.numberOfTrips) /* [44, 55, 13, 43, 22] */,
           chart: {
             type: 'donut',
+            width: '100%',
+            height: 250,
           },
           labels: this.Carriers.map((carrier) => carrier.name) /* ["Team A", "Team B", "Team C", "Team D", "Team E"] */,
           responsive: [

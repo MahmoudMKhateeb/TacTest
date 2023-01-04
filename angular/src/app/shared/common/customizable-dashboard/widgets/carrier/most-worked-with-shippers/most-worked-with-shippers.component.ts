@@ -12,14 +12,14 @@ import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/
   styleUrls: ['./most-worked-with-shippers.component.css'],
 })
 export class MostWorkedWithShippersComponent extends AppComponentBase implements OnInit {
-  Shippers: MostTenantWorksListDto[];
+  Shippers: MostTenantWorksListDto[] = [];
   loading = false;
 
   @ViewChild('chart') chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
   plotOptions: ApexPlotOptions = {
     pie: {
-      customScale: 0.7,
+      customScale: 1,
       // donut: {
       //     labels: {
       //         name: {
@@ -62,6 +62,8 @@ export class MostWorkedWithShippersComponent extends AppComponentBase implements
           series: this.Shippers.map((carrier) => carrier.numberOfTrips) /* [44, 55, 13, 43, 22] */,
           chart: {
             type: 'donut',
+            width: '100%',
+            height: 250,
           },
           labels: this.Shippers.map((carrier) => carrier.name) /* ["Team A", "Team B", "Team C", "Team D", "Team E"] */,
           responsive: [

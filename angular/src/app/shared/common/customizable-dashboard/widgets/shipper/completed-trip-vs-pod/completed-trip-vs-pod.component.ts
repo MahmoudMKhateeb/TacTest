@@ -20,6 +20,16 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
     // offsetY: 40,
     // fontWeight: 500,
   };
+  yaxis = [
+    // {
+    //     labels: {
+    //         formatter: function(val) {
+    //             console.log('InvoicesVsPaidInvoicesComponent val', val);
+    //             return isNaN(val) ? val.toFixed(0) : val;
+    //         }
+    //     }
+    // }
+  ];
   public completedTripVsPod: any;
   options: string[] = [this.l('Daily'), this.l('Weekly'), this.l('Monthly')];
 
@@ -50,9 +60,12 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
           pod,
           total: completed + pod,
         };
-        const categories = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const completedSeries = categories.map((item) => {
-          const foundFromResponse = result.completedTrips.find((accepted) => accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase());
+          const foundFromResponse = result.completedTrips.find((accepted) => {
+            accepted.x = accepted?.x.slice(0, 3);
+            return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
+          });
           console.log('acceptedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
@@ -60,7 +73,10 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
           });
         });
         const podSeries = categories.map((item) => {
-          const foundFromResponse = result.podTrips.find((rejected) => rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase());
+          const foundFromResponse = result.podTrips.find((rejected) => {
+            rejected.x = rejected?.x.slice(0, 3);
+            return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
+          });
           console.log('rejectedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
@@ -84,7 +100,7 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
           chart: {
             type: 'bar',
             width: '100%',
-            height: 200,
+            height: 250,
             stacked: true,
           },
           xaxis: {
