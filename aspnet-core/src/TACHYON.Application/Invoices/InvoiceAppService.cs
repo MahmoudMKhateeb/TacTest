@@ -191,6 +191,10 @@ namespace TACHYON.Invoices
                 .ThenInclude(r => r.DestinationFacilityFk)
                 .ThenInclude(r => r.CityFk)
                 .Include(i => i.Trips)
+                .ThenInclude(r => r.ShippingRequestTripFK)
+                .ThenInclude(r => r.OriginFacilityFk)
+                .ThenInclude(r => r.CityFk)
+                .Include(i => i.Trips)
                 .FirstOrDefaultAsync(i => i.Id == invoiceId);
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
