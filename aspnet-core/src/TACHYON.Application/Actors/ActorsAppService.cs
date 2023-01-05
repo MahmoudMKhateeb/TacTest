@@ -281,6 +281,8 @@ namespace TACHYON.Actors
                     new RolePermissionSetting() { Name = AppPermissions.Pages_Administration_Drivers, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_DocumentFiles, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_DocumentFiles_Actors, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequestTrips, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequestAndTripNotes, TenantId = AbpSession.TenantId },
                 }
             });
         }

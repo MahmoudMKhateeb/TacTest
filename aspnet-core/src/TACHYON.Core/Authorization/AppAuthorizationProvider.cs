@@ -429,8 +429,7 @@ namespace TACHYON.Authorization
                 multiTenancySides: MultiTenancySides.Host);
 
             pages.CreateChildPermission(AppPermissions.Pages_DemoUiComponents, L("DemoUiComponents"));
-            var trackingPermission = pages.CreateChildPermission(AppPermissions.Pages_Tracking, L("Tracking"),
-                multiTenancySides: MultiTenancySides.Tenant);
+            var trackingPermission = pages.CreateChildPermission(AppPermissions.Pages_Tracking, L("Tracking"));
             
             trackingPermission.CreateChildPermission(AppPermissions.Pages_Tracking_ReceiverCode, L("TrackingReceiverCode"),
                 multiTenancySides: MultiTenancySides.Host);
