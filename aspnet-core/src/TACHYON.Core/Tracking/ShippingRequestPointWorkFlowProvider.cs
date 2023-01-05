@@ -1208,7 +1208,7 @@ namespace TACHYON.Tracking
         /// <summary>
         /// Transfer the prices from price offer to trip
         /// </summary>
-        private async Task TransferPricesToTrip(ShippingRequestTrip trip)
+        public async Task TransferPricesToTrip(ShippingRequestTrip trip)
         {
             DisableTenancyFilters();
 
@@ -1573,7 +1573,7 @@ namespace TACHYON.Tracking
         /// <summary>
         /// Get Currnent user
         /// </summary>
-        protected virtual async Task<User> GetCurrentUserAsync()
+        public virtual async Task<User> GetCurrentUserAsync()
         {
             var user = await UserManager.FindByIdAsync(AbpSession.GetUserId().ToString());
             if (user == null)
