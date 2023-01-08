@@ -771,13 +771,18 @@ namespace TACHYON.Invoices
                 if (item.ShippingRequestTrip != null)
                 {
                     invoiceItemDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(item.ShippingRequestTrip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;
+                    invoiceItemDto.PlateNumber = item.ShippingRequestTrip.AssignedTruckFk.PlateNumber;
+
                 }
                 else
                 {
                     if (item.Truck != null)
                     {
                         invoiceItemDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(item.Truck.TrucksTypeFk).TranslatedDisplayName;
+                        invoiceItemDto.PlateNumber = item.Truck.PlateNumber;
+
                     }
+
                 }
 
                 //Source
