@@ -162,7 +162,7 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
    * this method is for Getting All Carriers Drivers For DD
    */
   getReplacementDriversForDropDown() {
-    if (this.feature.isEnabled('App.Carrier') || this.isTachyonDealerOrHost) {
+    if (this.isCarrier || this.isCarrierSaas || (this.hasCarrierClients && this.hasShipperClients) || this.isTachyonDealerOrHost) {
       this._dedicatedShippingRequestService
         .getReplacementDriversForDropDown(this.dedicatedShippingRequestId, this.dedicatedShippingRequest.carrierTenantId)
         .subscribe((res) => {
@@ -178,7 +178,7 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
    * this method is for Getting All Carriers Trucks For DD
    */
   getReplacementTrucksForDropDown() {
-    if (this.feature.isEnabled('App.Carrier') || this.isTachyonDealerOrHost) {
+    if (this.isCarrier || this.isCarrierSaas || (this.hasCarrierClients && this.hasShipperClients) || this.isTachyonDealerOrHost) {
       this._dedicatedShippingRequestService
         .getReplacementTrucksForDropDown(this.dedicatedShippingRequestId, this.dedicatedTruckTypeId, this.dedicatedShippingRequest.carrierTenantId)
         .subscribe((res) => {
