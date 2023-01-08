@@ -215,6 +215,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         this.IsHaveSealNumberValue = res.sealNumber && res.sealNumber.length > 0;
         this.IsHaveContainerNumberValue = res.containerNumber && res.containerNumber.length > 0;
         console.log('res', res.containerNumber);
+        const gregorian = moment(res.startTripDate).locale('en').format('D/M/YYYY');
+        this.startTripdate = this.dateFormatterService.ToGregorianDateStruct(gregorian, 'D/M/YYYY');
 
         this.PointsComponent.wayPointsList = this.trip.routPoints;
         this.PointsComponent.loadReceivers(null, true);
