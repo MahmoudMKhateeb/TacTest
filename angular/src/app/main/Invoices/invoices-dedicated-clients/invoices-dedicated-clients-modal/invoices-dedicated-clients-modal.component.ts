@@ -310,9 +310,10 @@ export class InvoiceDedicatedClientsModalComponent extends AppComponentBase impl
   }
 
   LoadNumberOfDays($event: any) {
-    if ($event.value == WorkingDayType.Normal) {
+    if ($event?.value == WorkingDayType.Normal) {
       this.getDefaultNumberOfDays();
-    } else {
+    }
+    if ($event?.value == WorkingDayType.OverTime) {
       this.allNumberOfDays = 0;
     }
 
