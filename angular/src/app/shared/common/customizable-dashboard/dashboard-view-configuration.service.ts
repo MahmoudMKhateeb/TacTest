@@ -48,6 +48,7 @@ import { UpcomingTripsWidgetsComponent } from '@app/shared/common/customizable-d
 import { NeedsActionWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/needs-action-widget/needs-action-widget.component';
 import { NewOffersWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/new-offers-widget/new-offers-widget.component';
 import { DriverTucksActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/driver-tucks-activity/driver-tucks-activity.component';
+import { AcceptedVsRejectedPricingComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/accepted-vs-rejected-pricing/accepted-vs-rejected-pricing.component';
 
 @Injectable({
   providedIn: 'root',
@@ -190,7 +191,7 @@ export class DashboardViewConfigurationService {
 
     let carrierAcceptedVsRejected = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Carrier.CarrierAcceptedVsRejectedPricingWidget,
-      CarrierAcceptedVsRejectdRequestsComponent,
+      AcceptedVsRejectedPricingComponent,
       18,
       10
     );

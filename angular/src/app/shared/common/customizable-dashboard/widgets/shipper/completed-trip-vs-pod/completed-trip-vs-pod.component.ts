@@ -102,6 +102,7 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
             width: '100%',
             height: 250,
             stacked: true,
+            stackType: '100%',
           },
           xaxis: {
             type: 'category',

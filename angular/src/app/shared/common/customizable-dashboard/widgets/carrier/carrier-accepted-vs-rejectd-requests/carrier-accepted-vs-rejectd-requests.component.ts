@@ -92,6 +92,7 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
             width: '100%',
             height: 250,
             stacked: true,
+            stackType: '100%',
           },
           xaxis: {
             type: 'category',

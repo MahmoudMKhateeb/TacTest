@@ -1,0 +1,61 @@
+::ng-deep app-accepted-vs-rejected-pricing .apexcharts-gridline {
+  stroke-width: 0 !important;
+}
+::ng-deep app-accepted-vs-rejected-pricing .apexcharts-bar-area {
+  stroke-width: 2px;
+}
+
+.accepted {
+  color: #fff;
+  background-color: rgba(105, 228, 94, 0.89);
+}
+
+.rejected {
+  color: #fff;
+  background-color: #d82631;
+}
+
+.gray {
+  color: #fff;
+  background-color: #d8d8d8;
+}
+
+.text-gray {
+  color: #757575;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.requests-count {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.custom-progress {
+  height: 18px;
+  border-radius: 10px;
+}
+
+.filter-box {
+  position: absolute;
+  top: -4.5rem;
+  left: 0;
+  right: 1.5rem;
+}
+
+/*::ng-deep .filter-box .dx-selectbox .dx-texteditor-input {*/
+/*  min-height: 28px !important;*/
+/*  padding: 1px 9px 1px !important;*/
+/*}*/
+/*::ng-deep .filter-box .dx-selectbox {*/
+/*  border-radius: 7px;*/
+/*}*/
+
+/*::ng-deep .filter-box dx-select-box {*/
+/*  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);*/
+/*}*/
+
+.card-label {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+}
