@@ -28,6 +28,7 @@ namespace TACHYON.Migrations.Seed
             //Default tenant seed (in host database).
             new DefaultTenantBuilder(context).Create();
             new TenantRoleAndUserBuilder(context, 1).Create();
+            new TrackingPermissionForDriverSeeder(context).GrantTrackingPermissionForDrivers();
         }
 
         private static void WithDbContext<TDbContext>(IIocResolver iocResolver, Action<TDbContext> contextAction)
