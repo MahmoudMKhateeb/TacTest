@@ -46,8 +46,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public ShippingRequestRouteType? RouteType { get; set; }
         public int NumberOfDrops { get; set; }
 
-        public long? TruckId { get; set; }
-        public long? DriverUserId { get; set; }
+       
         #endregion
 
         public List<CreateOrEditRoutPointDto> RoutPoints { get; set; }
@@ -60,6 +59,8 @@ namespace TACHYON.Shipping.Trips.Dto
 
         #region HomeDelivery
         public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
+        public long? TruckId { set; get; }
+        public long? DriverUserId { set; get; }
 
         #endregion
         public void AddValidationErrors(CustomValidationContext context)

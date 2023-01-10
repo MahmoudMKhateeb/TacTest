@@ -41,19 +41,31 @@
                 (uploadHandler)="uploadExcel($event)"
                 (onError)="onUploadExcelError()"
                 chooseLabel="{{ 'ImportTripFromExcel' | localize }}"
-                [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
+                [disabled]="
+                  shippingRequestForView.shippingRequestFlag == shippingRequestFlagEnum.Normal &&
+                  primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips
+                "
               >
               </p-fileUpload>
               <span class="dropdown-item-text text-muted pl-3" href="#">
                 <small
-                  *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
+                  *ngIf="ShippingRequest.routeTypeId != null && ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
                   [innerHTML]="
                     l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/Import_trip_details.xlsx>' + l('ClickHere') + '</a>')
                   "
                 ></small>
+                <small
+                  *ngIf="shippingRequestForView.shippingRequestFlag == shippingRequestFlagEnum.Dedicated"
+                  [innerHTML]="
+                    l(
+                      'ImportToExcelSampleFileDownloadInfo',
+                      '<a href=/assets/sampleFiles/Import_dedicated_Trip_details.xlsx>' + l('ClickHere') + '</a>'
+                    )
+                  "
+                ></small>
 
                 <small
-                  *ngIf="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+                  *ngIf="ShippingRequest.routeTypeId != null && ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
                   [innerHTML]="
                     l(
                       'ImportToExcelSampleFileDownloadInfo',
@@ -107,7 +119,16 @@
               </p-fileUpload>
               <span class="dropdown-item-text text-muted pl-3" href="#">
                 <small
-                  *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
+                  *ngIf="shippingRequestForView.shippingRequestFlag == shippingRequestFlagEnum.Dedicated"
+                  [innerHTML]="
+                    l(
+                      'ImportToExcelSampleFileDownloadInfo',
+                      '<a href=/assets/sampleFiles/Import_goods_details_dedicated.xlsx>' + l('ClickHere') + '</a>'
+                    )
+                  "
+                ></small>
+                <small
+                  *ngIf="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.MultipleDrops"
                   [innerHTML]="
                     l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/Import_goods_details.xlsx>' + l('ClickHere') + '</a>')
                   "
@@ -138,7 +159,11 @@
                 (uploadHandler)="uploadVasesExcel($event)"
                 (onError)="onUploadExcelError()"
                 chooseLabel="{{ 'ImportVasesFromExcel' | localize }}"
-                [disabled]="primengTableHelper.totalRecordsCount == 0 || VasListFromFather.length == 0"
+                [disabled]="
+                  primengTableHelper.totalRecordsCount == 0 ||
+                  VasListFromFather.length == 0 ||
+                  shippingRequestForView.shippingRequestFlag == shippingRequestFlagEnum.Dedicated
+                "
               >
               </p-fileUpload>
               <span class="dropdown-item-text text-muted pl-3" href="#">
@@ -445,6 +470,7 @@
   <app-view-imported-trips-from-excel-modal
     [ImportedTripsList]="list"
     [isSingleDdrop]="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+    [isDedicatedRequest]="shippingRequestForView.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
     #ViewImportedTripsModal
     (modalSave)="reloadPage()"
   ></app-view-imported-trips-from-excel-modal>
