@@ -189,3 +189,7 @@ gridster-item {
 ::ng-deep .label.text-red {
   width: auto !important;
 }
+
+::ng-deep .card.card-custom.card-stretch {
+  border-radius: 0.9rem;
+}

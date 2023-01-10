@@ -254,6 +254,9 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
         option.draggable.enabled = this.editModeEnabled;
         option.resizable.enabled = false; // this.editModeEnabled;
         option.pushItems = false;
+        option.swap = true;
+        option.swapWhileDragging = false;
+        option.scrollToNewItems = true;
         option.api.optionsChanged();
       });
     }
@@ -450,6 +453,9 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
       fixedColWidth: 30,
       gridType: 'verticalFixed',
       dirType: isRtl ? 'rtl' : 'ltr',
+      scrollToNewItems: true,
+      swap: true,
+      swapWhileDragging: false,
     };
   }
 

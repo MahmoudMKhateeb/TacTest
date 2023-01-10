@@ -43,7 +43,7 @@
             <!--&lt;!&ndash;            </div>&ndash;&gt;-->
             <!--            &lt;!&ndash;end::Symbol&ndash;&gt;-->
             <!--            &lt;!&ndash;begin::Title&ndash;&gt;-->
-            <img class="drivers-and-trucks-icon" src="assets/SVG/Active_driver.svg" alt="" />
+            <img class="drivers-and-trucks-icon" src="assets/SVG/Active_driver.svg" alt="" [class.mr-4]="!isRtl" [class.ml-4]="isRtl" />
             <div>
               <div class="font-size-sm text-dark font-weight-normal mt-1">{{ l('CurrentlyActiveDrivers') }}</div>
               <div class="font-size-h4 text-dark-75 font-weight-bolder">{{ items?.activeItems }}</div>
@@ -82,7 +82,7 @@
             <!--&lt;!&ndash;            </div>&ndash;&gt;-->
             <!--            &lt;!&ndash;end::Symbol&ndash;&gt;-->
             <!--            &lt;!&ndash;begin::Title&ndash;&gt;-->
-            <img class="drivers-and-trucks-icon" src="assets/SVG/Non_active_driver_or_truck.svg" alt="" />
+            <img class="drivers-and-trucks-icon" src="assets/SVG/Non_active_driver_or_truck.svg" alt="" [class.mr-4]="!isRtl" [class.ml-4]="isRtl" />
             <div>
               <div class="font-size-sm text-dark font-weight-normal mt-1">{{ l('CurrentlyNonActiveDrivers') }}</div>
               <div class="font-size-h4 text-dark-75 font-weight-bolder">{{ items?.notActiveItems }}</div>
@@ -122,7 +122,7 @@
             <!--&lt;!&ndash;                >&ndash;&gt;-->
             <!--              </div>-->
             <!--            </div>-->
-            <img class="drivers-and-trucks-icon" src="assets/SVG/In_Transit_Driver.svg" alt="" />
+            <img class="drivers-and-trucks-icon" src="assets/SVG/In_Transit_Driver.svg" alt="" [class.mr-4]="!isRtl" [class.ml-4]="isRtl" />
             <!--end::Symbol-->
             <!--begin::Title-->
             <div>
