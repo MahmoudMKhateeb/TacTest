@@ -212,8 +212,8 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
               id: widgetId,
               cols: addedWidget.width,
               rows: addedWidget.height,
-              x: addedWidget.positionX,
-              y: addedWidget.positionY,
+              x: 0, // addedWidget.positionX,
+              y: 0, //addedWidget.positionY,
             },
           });
 

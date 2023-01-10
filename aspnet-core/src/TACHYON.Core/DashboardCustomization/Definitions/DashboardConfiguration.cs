@@ -124,17 +124,17 @@ namespace TACHYON.DashboardCustomization.Definitions
             var shipperNeedsActionWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNeedsActionWidget, "ShipperNeedsActionWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperNewOffersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNewOffersWidget, "ShipperNewOffersWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
 
-            WidgetDefinitions.Add(shipperNumberOfCompletedTripsWidget);
+            // WidgetDefinitions.Add(shipperNumberOfCompletedTripsWidget);
             WidgetDefinitions.Add(shipperAcceptedVsRejectedRequestsWidget);
             WidgetDefinitions.Add(shipperCompletedTripsVsPodWidget);
             WidgetDefinitions.Add(shipperInvoicesVsPaidInvoicesWidget);
             //WidgetDefinitions.Add(shipperNextInvoiceFrequancyEndDateWidget);
-            WidgetDefinitions.Add(shipperInvoiceDueDateInDaysWidget);
-            WidgetDefinitions.Add(shipperDocumentDueDateInDaysWidget);
+            // WidgetDefinitions.Add(shipperInvoiceDueDateInDaysWidget);
+            // WidgetDefinitions.Add(shipperDocumentDueDateInDaysWidget);
             WidgetDefinitions.Add(shipperMostWorkedWithCarriersWidget);
             WidgetDefinitions.Add(shipperMostUsedOriginsWidget);
             WidgetDefinitions.Add(shipperMostUsedDestinationsWidget);
-            WidgetDefinitions.Add(shipperRequestsInMarketplaceWidget);
+            // WidgetDefinitions.Add(shipperRequestsInMarketplaceWidget);
             WidgetDefinitions.Add(shipperTrackingMapWidget);
             WidgetDefinitions.Add(shipperCountersWidget);
             WidgetDefinitions.Add(shipperUpcomingTripsWidget);
@@ -169,16 +169,16 @@ namespace TACHYON.DashboardCustomization.Definitions
 
 
 
-            WidgetDefinitions.Add(carrierDriversActivityWidget);
-            WidgetDefinitions.Add(carrierTrucksActivityWidget);
+            // WidgetDefinitions.Add(carrierDriversActivityWidget);
+            // WidgetDefinitions.Add(carrierTrucksActivityWidget);
             WidgetDefinitions.Add(carrierAcceptedVsRejectedPricingWidget);
             WidgetDefinitions.Add(carrierInvoicesVsPaidInvoicesWidget);
             //WidgetDefinitions.Add(carrierMostUsedPpWidget);
             WidgetDefinitions.Add(carrierMostUsedVasWidget);
-            WidgetDefinitions.Add(carrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget);
+            // WidgetDefinitions.Add(carrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget);
             WidgetDefinitions.Add(carrierMostWorkedWithShipperWidget);
             //WidgetDefinitions.Add(carrierNextInvoiceFrequenctEndDateWidget);
-            WidgetDefinitions.Add(carrierDueDateInDaysWidget);
+            // WidgetDefinitions.Add(carrierDueDateInDaysWidget);
             WidgetDefinitions.Add(carrierTrackingMapWidget);
             WidgetDefinitions.Add(CarrierMostUsedPPWidget);
             WidgetDefinitions.Add(CarrierActiveDriversAndTrucksWidget);
