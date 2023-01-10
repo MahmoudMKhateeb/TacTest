@@ -24,6 +24,7 @@ import { DashboardCustomizationConst } from './DashboardCustomizationConsts';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import * as rtlDetect from 'rtl-detect';
 import * as moment from '@node_modules/moment';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'customizable-dashboard',
@@ -507,4 +508,49 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
   onMenuToggle = () => {
     this.refreshAllGrids();
   };
+
+  resetPageToDefault() {
+    if (
+      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultShipperDashboard ||
+      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultCarrierDashboard
+    ) {
+      this.resetPage(this.dashboardName);
+    }
+  }
+
+  resetPage(dashboardName: string) {
+    const dashboardDefault = DashboardCustomizationConst.dashboardDefaults.find((item) => item.dashboardName === dashboardName);
+    if (!isNotNullOrUndefined(dashboardDefault)) {
+      return;
+    }
+    this.busy = true;
+    let savePageInput = new SavePageInput({
+      dashboardName: dashboardName,
+      pages: dashboardDefault.pages.map((page) => {
+        return new Page({
+          id: page.id,
+          name: page.name,
+          widgets: page.widgets.map((widget) => {
+            return new Widget({
+              widgetId: widget.widgetId,
+              height: widget.height,
+              width: widget.width,
+              positionX: widget.positionX,
+              positionY: widget.positionY,
+            });
+          }),
+        });
+      }),
+      application: DashboardCustomizationConst.Applications.Angular,
+    });
+
+    this._dashboardCustomizationServiceProxy.savePage(savePageInput).subscribe(() => {
+      this.changeEditMode(); //after changes saved close edit mode
+      this.initializeUserDashboardFilters();
+
+      this.busy = false;
+      this.notify.success(this.l('SavedSuccessfully'));
+      window.location.reload();
+    });
+  }
 }

@@ -122,4 +122,196 @@ export class DashboardCustomizationConst {
   static Applications = {
     Angular: 'Angular',
   };
+  static dashboardDefaults = [
+    {
+      dashboardName: 'ShipperDashboard',
+      application: 'Angular',
+      pages: [
+        {
+          id: 'Page190addd5a073425fb455b4bb7b91b5c9',
+          name: 'General',
+          widgets: [
+            {
+              widgetId: 'Widgets_Tenant_shipper_Counters_Widget',
+              height: 10,
+              width: 6,
+              positionX: 0,
+              positionY: 0,
+            },
+            {
+              widgetId: 'Widgets_Tenant_shipper_AcceptedVsRejectedRequestsWidget',
+              height: 10,
+              width: 18,
+              positionX: 6,
+              positionY: 0,
+            },
+            {
+              widgetId: 'Widgets_Tenant_shipper_Upcoming_Trips_Widget',
+              height: 10,
+              width: 6,
+              positionX: 24,
+              positionY: 0,
+            },
+            {
+              widgetId: 'Widgets_Tenant_shipper_InvoicesVsPaidInvoicesWidget',
+              height: 10,
+              width: 14,
+              positionX: 0,
+              positionY: 10,
+            },
+            {
+              widgetId: 'Widgets_Tenant_shipper_MostWorkedWithCarriersWidget',
+              height: 10,
+              width: 10,
+              positionX: 14,
+              positionY: 10,
+            },
+            {
+              widgetId: 'Widgets_Tenant_shipper_Needs_Action_Widget',
+              height: 7,
+              width: 6,
+              positionX: 24,
+              positionY: 10,
+            },
+            {
+              widgetId: 'Widgets_Tenant_shipper_New_Offers_Widget',
+              height: 3,
+              width: 6,
+              positionX: 24,
+              positionY: 17,
+            },
+            {
+              widgetId: 'Widgets_Tenant_shipper_MostUsedOriginsWidget',
+              height: 10,
+              width: 6,
+              positionX: 0,
+              positionY: 20,
+            },
+            {
+              widgetId: 'Widgets_Tenant_shipper_CompletedTripsVsPodWidget',
+              height: 10,
+              width: 18,
+              positionX: 6,
+              positionY: 20,
+            },
+            {
+              widgetId: 'Widgets_Tenant_shipper_MostUsedDestinationsWidget',
+              height: 10,
+              width: 6,
+              positionX: 24,
+              positionY: 20,
+            },
+          ],
+        },
+        {
+          id: 'Page38080c9450894938bfd2eb832a3e57c9',
+          name: 'Tracking',
+          widgets: [
+            {
+              widgetId: 'Widgets_Tenant_shipper_TrackingMapWidget',
+              height: 30,
+              width: 15,
+              positionX: 0,
+              positionY: 0,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      dashboardName: 'CarrierDashboard',
+      application: 'Angular',
+      pages: [
+        {
+          id: 'Page32a6dc261b8b4b7db19c4262c3dd5f56',
+          name: 'General',
+          widgets: [
+            {
+              widgetId: 'Widgets_Tenant_carrier_Counters_Widget',
+              height: 10,
+              width: 6,
+              positionX: 0,
+              positionY: 0,
+            },
+            {
+              widgetId: 'Widgets_Tenant_carrier_active_drivers_and_trucks_Widget',
+              height: 10,
+              width: 18,
+              positionX: 6,
+              positionY: 0,
+            },
+            {
+              widgetId: 'Widgets_Tenant_carrier_Upcoming_Trips_Widget',
+              height: 10,
+              width: 6,
+              positionX: 24,
+              positionY: 0,
+            },
+            {
+              widgetId: 'Widgets_Tenant_carrier_InvoicesVsPaidInvoicesWidget',
+              height: 10,
+              width: 14,
+              positionX: 0,
+              positionY: 10,
+            },
+            {
+              widgetId: 'Widgets_Tenant_carrier_MostWorkedWithShipperWidget',
+              height: 10,
+              width: 10,
+              positionX: 14,
+              positionY: 10,
+            },
+            {
+              widgetId: 'Widgets_Tenant_carrier_Needs_Action_Widget',
+              height: 7,
+              width: 6,
+              positionX: 24,
+              positionY: 10,
+            },
+            {
+              widgetId: 'Widgets_Tenant_carrier_New_Offers_Widget',
+              height: 3,
+              width: 6,
+              positionX: 24,
+              positionY: 17,
+            },
+            {
+              widgetId: 'Widgets_Tenant_carrier_MostUsedPPWidget',
+              height: 10,
+              width: 6,
+              positionX: 0,
+              positionY: 20,
+            },
+            {
+              widgetId: 'Widgets_Tenant_carrier_AcceptedVsRejectedPricingWidget',
+              height: 10,
+              width: 18,
+              positionX: 6,
+              positionY: 20,
+            },
+            {
+              widgetId: 'Widgets_Tenant_carrier_MostUsedVasWidget',
+              height: 10,
+              width: 6,
+              positionX: 24,
+              positionY: 20,
+            },
+          ],
+        },
+        {
+          id: 'Page239aacf78a14479dbfea851f2e9d7cbf',
+          name: 'Tracking',
+          widgets: [
+            {
+              widgetId: 'Widgets_Tenant_carrier_TrackingMapWidget',
+              height: 30,
+              width: 12,
+              positionX: 0,
+              positionY: 0,
+            },
+          ],
+        },
+      ],
+    },
+  ];
 }

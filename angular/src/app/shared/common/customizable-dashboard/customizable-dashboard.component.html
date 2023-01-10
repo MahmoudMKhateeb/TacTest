@@ -125,6 +125,10 @@
           <button type="button" class="btn btn-sm btn-success btn-elevate-hover btn-pill" (click)="savePage()">
             <i class="fa fa-save"></i>{{ 'Save' | localize }}
           </button>
+          <button id="ResetPageButton" class="btn btn-sm btn-primary btn-elevate-hover btn-pill" (click)="resetPageToDefault()">
+            <i class="fas fa-sync"></i>
+            <span>{{ 'RestoreDashboardDefaults' | localize }}</span>
+          </button>
         </div>
       </div>
     </div>
