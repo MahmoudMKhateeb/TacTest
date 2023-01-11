@@ -42,12 +42,25 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
-              <dxi-column dataField="shipperName" caption="{{ l('Shipper') }}"></dxi-column>
-              <dxi-column dataField="proposalName" caption="{{ l('Name') }}"></dxi-column>
-              <dxi-column dataField="status" caption="{{ l('Status') }}" cellTemplate="cellTemplateStatuses" dataType="text"></dxi-column>
-              <dxi-column dataField="proposalDate" caption="{{ l('Date') }}" dataType="date"></dxi-column>
-              <dxi-column dataField="notes" caption="{{ l('Notes') }}"></dxi-column>
-              <dxi-column dataField="scopeOverview" caption="{{ l('ScopeOverview') }}"></dxi-column>
+
+              <dxi-column dataField="proposalName" caption="{{ l('Subject') }}"></dxi-column>
+              <dxi-column dataField="shipperName" caption="{{ l('CompanyName') }}"></dxi-column>
+
+              <dxi-column dataField="creationTime" alignment="center" caption="{{ l('CreationDate') }}" dataType="date"></dxi-column>
+              <dxi-column
+                dataField="status"
+                caption="{{ l('Status') }}"
+                alignment="center"
+                cellTemplate="cellTemplateStatuses"
+                dataType="text"
+              ></dxi-column>
+              <dxi-column dataField="appendixNumber" alignment="center" caption="{{ l('AppendixNumber') }}"></dxi-column>
+              <dxi-column dataField="numberOfPricePackages" alignment="center" caption="{{ l('NumberOfPricePackages') }}"></dxi-column>
+              <dxo-master-detail [enabled]="true" template="proposalDetails"></dxo-master-detail>
+              <div *dxTemplate="let options of 'proposalDetails'">
+                <div class="master-detail-caption">{{ 'PricePackages' | localize }}</div>
+                <app-proposal-detail-grid [proposalId]="options.data.id"></app-proposal-detail-grid>
+              </div>
 
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">

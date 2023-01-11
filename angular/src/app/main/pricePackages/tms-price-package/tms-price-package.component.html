@@ -40,16 +40,21 @@
                 [width]="50"
               ></dxi-column>
 
-              <dxi-column dataField="displayName" caption="{{ l('DisplayName') }}"></dxi-column>
-              <dxi-column dataField="shipper" caption="{{ l('Company') }}"></dxi-column>
-              <dxi-column cellTemplate="pricePackageTypeTemplate" dataField="type" caption="{{ l('Type') }}"></dxi-column>
+              <dxi-column dataField="displayName" caption="{{ l('Subject') }}"></dxi-column>
+              <dxi-column dataField="editionName" caption="{{ l('Edition') }}"></dxi-column>
+              <dxi-column dataField="shipper" caption="{{ l('CompanyName') }}"></dxi-column>
+              <dxi-column dataField="truckType" caption="{{ l('TruckType') }}"></dxi-column>
+              <dxi-column dataField="routeType" caption="{{ l('RouteType') }}"></dxi-column>
               <dxi-column dataField="originCity" caption="{{ l('Origin') }}"></dxi-column>
               <dxi-column dataField="destinationCity" caption="{{ l('Destination') }}"></dxi-column>
-              <dxi-column dataField="transportType" caption="{{ l('TransportType') }}"></dxi-column>
-              <dxi-column dataField="truckType" caption="{{ l('TruckType') }}"></dxi-column>
+              <dxi-column dataField="totalPrice" caption="{{ l('Price') }}"></dxi-column>
 
-              <div *dxTemplate="let type of 'pricePackageTypeTemplate'">
-                <span class="badge badge-inline-badge-primary">{{ getPricePackageTypeName(type) }}</span>
+              <dxi-column dataField="status" cellTemplate="statusTemplate" alignment="center" caption="{{ l('Status') }}"></dxi-column>
+              <dxi-column dataField="proposalName" caption="{{ l('ProposalName') }}"></dxi-column>
+              <dxi-column dataField="appendix" caption="{{ l('AppendixName') }}"></dxi-column>
+
+              <div *dxTemplate="let options of 'statusTemplate'">
+                <span class="badge badge-primary badge-inline">{{ options.data.status | localize }}</span>
               </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
@@ -69,7 +74,12 @@
 
                   <ul class="dropdown-menu" *dropdownMenu>
                     <li>
-                      <a class="dropdown-item" *ngIf="isGranted('Pages.TmsPricePackages.Update') && !options.data.hasProposal" (click)="TmsPricePackageModal.show(options.data.id)">{{ l('Edit') }}</a>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="isGranted('Pages.TmsPricePackages.Update') && !options.data.hasProposal"
+                        (click)="TmsPricePackageModal.show(options.data.id)"
+                        >{{ l('Edit') }}</a
+                      >
                     </li>
                   </ul>
                 </div>

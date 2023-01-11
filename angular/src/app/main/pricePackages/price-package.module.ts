@@ -23,6 +23,8 @@ import { CreateOrEditPricePackageAppendixComponent } from './price-package-appen
 import { ViewPricePackageAppendixComponent } from './price-package-appendix/view-price-package-appendix/view-price-package-appendix.component';
 import { SplitButtonModule } from '@node_modules/primeng/splitbutton';
 import { ViewMatchingTmsPricePackageComponent } from './tms-price-package/view-matching-tms-price-package/view-matching-tms-price-package.component';
+import { ProposalDetailGridComponent } from './price-packeges-proposal/proposal-detail-grid/proposal-detail-grid.component';
+import { AppendixDetailGridComponent } from './price-package-appendix/appendix-detail-grid/appendix-detail-grid.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import { ViewMatchingTmsPricePackageComponent } from './tms-price-package/view-m
     CreateOrEditPricePackageAppendixComponent,
     ViewPricePackageAppendixComponent,
     ViewMatchingTmsPricePackageComponent,
+    ProposalDetailGridComponent,
+    AppendixDetailGridComponent,
   ],
   imports: [
     PricePackageRoutingModule,
