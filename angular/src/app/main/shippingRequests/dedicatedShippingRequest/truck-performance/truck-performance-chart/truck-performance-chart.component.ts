@@ -25,6 +25,7 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
   @Input('truckKPI') truckKPI: number;
   @Input('truckNumberOfTrips') truckNumberOfTrips: number;
   @Input('selectedTruckId') selectedTruckId: number;
+  @Input('isRequestSaas') isRequestSaas: boolean;
   @Output() updatedTruckKpi: EventEmitter<boolean> = new EventEmitter<boolean>();
   trucks: DedicatedTruckDto[] = [];
   public chartOptions: Partial<ChartOptions>;

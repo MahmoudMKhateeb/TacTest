@@ -361,7 +361,7 @@ namespace TACHYON.Shipping.Trips
                 {
                     _shippingRequestTripManager.ValidateDedicatedNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), input.NumberOfDrops); 
                 }
-                await ValidateTruckAndDriver(input);
+                await _shippingRequestTripManager.ValidateTruckAndDriver(input);
             }
             //ValidateNumberOfDrops(input, request);
             //ValidateTotalweight(input, request);
@@ -379,17 +379,8 @@ namespace TACHYON.Shipping.Trips
                  await Create(input, request);
                 if(request.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
                 {
-                    var vasList = new List<CreateOrEditShippingRequestTripVasDto>();
-                    foreach (var requestVas in request.ShippingRequestVases)
-                    {
-                        var tripVas = new CreateOrEditShippingRequestTripVasDto
-                        {
-                            ShippingRequestVasId = requestVas.VasId
-                        };
-                        vasList.Add(tripVas);
-                    }
-                    input.ShippingRequestTripVases = vasList;
-
+                    //add all vases automatic in dedicated trip
+                    AddAllRequestVasesToDedicatedTrip(input, request);
 
                 }
                 request.TotalsTripsAddByShippier += 1;
@@ -398,6 +389,20 @@ namespace TACHYON.Shipping.Trips
             {
                 await Update(input, request);
             }
+        }
+
+        private static void AddAllRequestVasesToDedicatedTrip(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
+        {
+            var vasList = new List<CreateOrEditShippingRequestTripVasDto>();
+            foreach (var requestVas in request.ShippingRequestVases)
+            {
+                var tripVas = new CreateOrEditShippingRequestTripVasDto
+                {
+                    ShippingRequestVasId = requestVas.VasId
+                };
+                vasList.Add(tripVas);
+            }
+            input.ShippingRequestTripVases = vasList;
         }
 
         //[RequiresFeature(AppFeatures.Shipper)]
@@ -628,19 +633,17 @@ namespace TACHYON.Shipping.Trips
             {
                 trip.AssignedDriverUserId = input.DriverUserId;
                 trip.AssignedTruckId = input.TruckId;
-                
-                //? Important Note : Home Delivery Trip Doesn't have (Accept) Transaction
-                // and that's mean transfer prices not applied on home delivery trip
-                // (no need for transfer prices, the price calculated by num of trucks & driver `see dedicated request details`)
-                
-                if (trip.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
-                    trip.DriverStatus = ShippingRequestTripDriverStatus.Accepted;
+
+                 
             }
             //AssignWorkFlowVersionToRoutPoints(trip);
             _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.RoutPoints.ToList(), trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag);
             //insert trip 
             var shippingRequestTripId = await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
 
+            //accept trip if trip is home delivery
+            if (trip.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
+                await _shippingRequestTripManager.DriverAcceptTrip(trip);
             // add document file
             var docFileDto = input.CreateOrEditDocumentFileDto;
             if (trip.HasAttachment)
@@ -1207,24 +1210,7 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
-        private async Task ValidateTruckAndDriver(CreateOrEditShippingRequestTripDto input)
-        {
-            if (input.DriverUserId != null)
-            {
-                //Check if driver user is from assigned
-                if (!await _dedicatedShippingRequestDriverRepository.GetAll().AnyAsync(x => x.ShippingRequestId == input.ShippingRequestId && x.DriverUserId == input.DriverUserId))
-                {
-                    throw new UserFriendlyException(L("DriverUserMustBeFromAssigned"));
-                }
-            }
-            if (input.TruckId != null)
-            {
-                if (!await _dedicatedShippingRequestTrucksRepository.GetAll().AnyAsync(x => x.ShippingRequestId == input.ShippingRequestId && x.TruckId == input.TruckId))
-                {
-                    throw new UserFriendlyException(L("TruckMustBeFromAssigned"));
-                }
-            }
-        }
+       
         #endregion
     }
 }

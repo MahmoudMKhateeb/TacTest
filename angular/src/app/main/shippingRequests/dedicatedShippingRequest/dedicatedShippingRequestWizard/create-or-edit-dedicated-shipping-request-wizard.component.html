@@ -752,6 +752,15 @@
                               [hideOnDateTimeSelect]="false"
                               [showButtonBar]="true"
                               (onClearClick)="maxSelectableDate = null"
+                              required
+                              [class.is-valid]="
+                                step1Form.get('rentalRangeDates').valid &&
+                                (step1Form.get('rentalRangeDates').dirty || step1Form.get('rentalRangeDates').touched)
+                              "
+                              [class.is-invalid]="
+                                step1Form.get('rentalRangeDates').invalid &&
+                                (step1Form.get('rentalRangeDates').dirty || step1Form.get('rentalRangeDates').touched)
+                              "
                             ></p-calendar>
                             <span class="form-text text-muted">{{ l('SelectRentalDates') }}</span>
                           </div>

@@ -377,6 +377,7 @@ namespace TACHYON.Dashboards.Shipper
             .WhereIf(input.TruckTypeId.HasValue,x=> x.ShippingRequestFk.TrucksTypeId == input.TruckTypeId)
             .WhereIf(input.RouteType.HasValue,x=> x.ShippingRequestFk.RouteTypeId == input.RouteType)
             .WhereIf(input.SourceCityId.HasValue,x=> x.OriginFacilityFk.CityId == input.SourceCityId )
+            .WhereIf(!string.IsNullOrEmpty(input.ContainerNumber), x => x.ContainerNumber == input.ContainerNumber)
             .WhereIf(input.DestinationCityId.HasValue,x=> x.DestinationFacilityFk.CityId == input.DestinationCityId )
             .WhereIf(!input.DriverName.IsNullOrEmpty(),x=> x.AssignedDriverUserFk.Name.Contains(input.DriverName) || x.AssignedDriverUserFk.Surname.Contains(input.DriverName))
             .Where(r => r.Status == ShippingRequestTripStatus.InTransit && r.CreationTime.Year == Clock.Now.Year)
@@ -410,6 +411,7 @@ namespace TACHYON.Dashboards.Shipper
                         .FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName,
                 DriverName = $"{s.AssignedDriverUserFk.Name} {s.AssignedDriverUserFk.Surname}",
                 ExpectedDeliveryTime = s.ExpectedDeliveryTime.HasValue ? s.ExpectedDeliveryTime.ToString() : String.Empty,
+                ContainerNumber = s.ContainerNumber
             });
 
             var pagedAndFilteredTrips = trips

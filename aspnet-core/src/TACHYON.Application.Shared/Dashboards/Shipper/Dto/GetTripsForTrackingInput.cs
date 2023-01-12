@@ -26,6 +26,7 @@ namespace TACHYON.Dashboards.Shipper.Dto
         public int? SourceCityId { get; set; }
         
         public int? DestinationCityId { get; set; }
+        public string ContainerNumber { get; set; }
         
     }
 

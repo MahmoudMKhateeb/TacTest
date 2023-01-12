@@ -19,18 +19,15 @@ namespace TACHYON.PricePackages
     public class PricePackageAppendixAppService : TACHYONAppServiceBase, IPricePackageAppendixAppService
     {
         private readonly IRepository<PricePackageAppendix> _appendixRepository;
-        private readonly IRepository<TmsPricePackage> _tmsPricePackageRepository;
         private readonly IPricePackageAppendixManager _appendixManager;
         
 
         public PricePackageAppendixAppService(
             IRepository<PricePackageAppendix> appendixRepository,
-            IPricePackageAppendixManager appendixManager,
-            IRepository<TmsPricePackage> tmsPricePackageRepository)
+            IPricePackageAppendixManager appendixManager)
         {
             _appendixRepository = appendixRepository;
             _appendixManager = appendixManager;
-            _tmsPricePackageRepository = tmsPricePackageRepository;
         }
 
         public async Task<LoadResult> GetAll(LoadOptionsInput input)

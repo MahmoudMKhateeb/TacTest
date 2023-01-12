@@ -18,6 +18,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 })
 export class TruckPerformanceComponent extends AppComponentBase implements OnInit {
   @ViewChild('modal', { static: false }) modal: ModalDirective;
+  @Input('isRequestSaas') isRequestSaas: boolean;
   loading = false;
   truckKPI: number;
   truckNumberOfTrips: number;

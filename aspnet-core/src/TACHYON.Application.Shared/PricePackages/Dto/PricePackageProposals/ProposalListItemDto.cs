@@ -7,15 +7,15 @@ namespace TACHYON.PricePackages.Dto.PricePackageProposals
     {
         public string ProposalName { get; set; }
 
-        public string ScopeOverview { get; set; }
-
-        public DateTime? ProposalDate { get; set; }
-        
         public string ShipperName { get; set; }
 
-        public string Notes { get; set; }
-
-        public ProposalStatus Status { get; set; }
+        public DateTime? CreationTime { get; set; }
         
+        public ProposalStatus Status { get; set; }
+
+        public string AppendixNumber { get; set; }
+
+        public int NumberOfPricePackages { get; set; }
+
     }
 }

@@ -5,6 +5,7 @@
         Trip = 1,
         Dedicated = 2,
         Penalty = 3,
-        DynamicInvoice =4
+        DynamicInvoice =4,
+        SaasTrip =5,
     }
 }

@@ -87,10 +87,12 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   uploadGoodDetailsUrl: string;
   ShippingRequestRouteTypeEnum = ShippingRequestRouteType;
   CanAssignDriverAndTruck: boolean;
+  shippingRequestFlagEnum = ShippingRequestFlag;
 
   type = 'Trip';
   ShippingRequestTripStatus = ShippingRequestTripStatus;
   showBtnAddTrips: boolean;
+  ShippingRequestFlagEnum = ShippingRequestFlag;
 
   constructor(
     injector: Injector,

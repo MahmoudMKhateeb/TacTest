@@ -110,18 +110,18 @@ namespace TACHYON.DedicatedDynamicActorInvoices
             if (dedicatedInvoice.InvoiceAccountType == InvoiceAccountType.AccountReceivable)
             {
                 if (dedicatedInvoice.ActorInvoice != null) throw new UserFriendlyException(L("InvoiceAlreadyGenerated"));
-                if (dedicatedInvoice.DedicatedDynamicActorInvoiceItems.Any(x => x.DedicatedShippingRequestTruck.InvoiceId != null))
+                if (dedicatedInvoice.DedicatedDynamicActorInvoiceItems.Any(x => x.DedicatedShippingRequestTruck.ActorInvoiceId != null))
                 {
-                    throw new UserFriendlyException(L(string.Format("InvoiceAlreadyGeneratedForTruck{0}", dedicatedInvoice.DedicatedDynamicActorInvoiceItems.First(x => x.DedicatedShippingRequestTruck.InvoiceId != null).DedicatedShippingRequestTruck.Truck.GetDisplayName())));
+                    throw new UserFriendlyException(L(string.Format("InvoiceAlreadyGeneratedForTruck{0}", dedicatedInvoice.DedicatedDynamicActorInvoiceItems.First(x => x.DedicatedShippingRequestTruck.ActorInvoiceId != null).DedicatedShippingRequestTruck.Truck.GetDisplayName())));
                 }
                 await _actorInvoicesManager.GenerateDedicatedDynamicActorInvoice(dedicatedInvoice);
             }
             else
             {
                 if (dedicatedInvoice.ActorSubmitInvoice != null) throw new UserFriendlyException(L("InvoiceAlreadyGenerated"));
-                if (dedicatedInvoice.DedicatedDynamicActorInvoiceItems.Any(x => x.DedicatedShippingRequestTruck.SubmitInvoiceId != null))
+                if (dedicatedInvoice.DedicatedDynamicActorInvoiceItems.Any(x => x.DedicatedShippingRequestTruck.ActorSubmitInvoiceId != null))
                 {
-                    throw new UserFriendlyException(L(string.Format("InvoiceAlreadyGeneratedForTruck{0}", dedicatedInvoice.DedicatedDynamicActorInvoiceItems.First(x => x.DedicatedShippingRequestTruck.SubmitInvoiceId != null).DedicatedShippingRequestTruck.Truck.GetDisplayName())));
+                    throw new UserFriendlyException(L(string.Format("InvoiceAlreadyGeneratedForTruck{0}", dedicatedInvoice.DedicatedDynamicActorInvoiceItems.First(x => x.DedicatedShippingRequestTruck.ActorSubmitInvoiceId != null).DedicatedShippingRequestTruck.Truck.GetDisplayName())));
                 }
                 //await _invoiceManager.GenerateSubmitDedicatedDynamicInvoice(invoice.Tenant, invoice);
                 await _actorInvoicesManager.GenerateDedicatedDynamicActorSubmitInvoice(dedicatedInvoice);

@@ -55,5 +55,7 @@ namespace TACHYON.Invoices.ActorInvoices.Dto
 
         public string BrokerVat { get; set; }
 
+        public string QRCode { get; set; }
+
     }
 }
