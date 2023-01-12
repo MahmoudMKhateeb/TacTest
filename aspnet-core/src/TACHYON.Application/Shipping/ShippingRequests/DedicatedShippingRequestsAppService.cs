@@ -377,18 +377,22 @@ namespace TACHYON.Shipping.ShippingRequests
         #endregion
 
         #region KPI
-        [RequiresFeature(AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.ShipperClients, AppFeatures.CarrierClients)]
         public async Task UpdateRequestKPI(UpdateRequestKPIInput input)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
-            var request = await _shippingRequestRepository.FirstOrDefaultAsync(input.ShippingRequestId);
+            var request = await _shippingRequestRepository.GetAll()
+                .WhereIf(!await IsTachyonDealer(), x=>x.TenantId == x.CarrierTenantId)
+                .FirstOrDefaultAsync(x=>x.Id == input.ShippingRequestId);
             request.DedicatedKPI = input.KPI;
         }
-        [RequiresFeature(AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.ShipperClients, AppFeatures.CarrierClients)]
         public async Task UpdateTruckKPI(UpdateTruckKPIInput input)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
-            var dedicatedTruck = await _dedicatedShippingRequestTruckRepository.FirstOrDefaultAsync(input.DedicatedTruckId);
+            var dedicatedTruck = await _dedicatedShippingRequestTruckRepository.GetAll()
+                .WhereIf(!await IsTachyonDealer(), x => x.ShippingRequest.TenantId == x.ShippingRequest.CarrierTenantId)
+                .FirstOrDefaultAsync(x=>x.Id == input.DedicatedTruckId);
             dedicatedTruck.KPI = input.KPI;
         }
 

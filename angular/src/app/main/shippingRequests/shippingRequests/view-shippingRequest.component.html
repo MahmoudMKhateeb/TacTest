@@ -546,6 +546,7 @@
         [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
         [rentalRange]="rentalRange"
         [isRequestStatusCompleted]="shippingRequestforView?.shippingRequest?.status === 5"
+        [isRequestSaas]="shippingRequestforView?.shippingRequest?.isSaas"
       ></tms-for-shipper>
       <!--  end:Tms for shipper     -->
 
@@ -556,6 +557,7 @@
           [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
           [KPI]="shippingRequestforView?.dedicatedKPI"
           [numberOfTrips]="shippingRequestforView?.totalsTripsAddByShippier"
+          [isRequestSaas]="shippingRequestforView?.shippingRequest?.isSaas"
         >
         </app-project-performance>
 
