@@ -95,7 +95,7 @@ namespace TACHYON.Dashboards.Carrier
                 .Where(x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .CountAsync(x =>
                     x.Status == ShippingRequestTripStatus.Delivered && x.EndWorking.HasValue &&
-                    (x.EndWorking.Value.Date >= startOfCurrentWeek || x.EndWorking.Value.Date <= endOfCurrentWeek));
+                    (x.EndWorking.Value.Date >= startOfCurrentWeek && x.EndWorking.Value.Date <= endOfCurrentWeek));
         }
 
         public async Task<int> GetInTransitTripsCount()
@@ -396,48 +396,71 @@ namespace TACHYON.Dashboards.Carrier
              return mostVasesUsed;
         }
 
-        public async Task<AcceptedAndRejectedRequestsListDto> GetAcceptedAndRejectedRequests()
+                public async Task<AcceptedAndRejectedRequestsListDto> GetAcceptedAndRejectedRequests(FilterDatePeriod period)
         {
             DisableTenancyFilters();
 
-
+        DateTime startOfCurrentWeek = Clock.Now.StartOfWeek(DayOfWeek.Sunday).Date;
+        DateTime endOfCurrentWeek = startOfCurrentWeek.AddDays(7).Date;
+        
             var query = _priceOfferRepository
                 .GetAll()
                 .AsNoTracking()
-                .Where(x => x.CreationTime.Year == Clock.Now.Year)
                 .Where(x => x.TenantId == AbpSession.TenantId)
-                .Select(x => new
-                {
-                    x.Status,
-                    x.CreationTime.Month
-                });
+                .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
+                .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year && x.CreationTime.Month == Clock.Now.Month )
+                .WhereIf(period == FilterDatePeriod.Monthly,x=>  x.CreationTime.Year == Clock.Now.Year )
+                .Select(x => new { x.Status, x.CreationTime });
 
-            var accepted = await query
-                .Where(x => x.Status == PriceOfferStatus.Accepted)
-                .GroupBy(x => x.Month)
-                .Select(g => new ChartCategoryPairedValuesDto
-                {
-                    X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
-                    Y = g.Count()
-                })
-                .ToListAsync();
+            var accepted =  await query.Where(x => x.Status == PriceOfferStatus.Accepted).ToListAsync();
+            var rejected = await query.Where(x => x.Status == PriceOfferStatus.Rejected).ToListAsync();
 
-            var rejected = await query
-                .Where(x => x.Status == PriceOfferStatus.Rejected)
-                .GroupBy(x => x.Month)
-                .Select(g => new ChartCategoryPairedValuesDto
-                {
-                    X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
-                    Y = g.Count()
-                })
-                .ToListAsync();
+            var acceptedOffers = new List<ChartCategoryPairedValuesDto>();
+            var rejectedOffers = new List<ChartCategoryPairedValuesDto>();
+            if (period == FilterDatePeriod.Daily)
+            {
+                acceptedOffers = accepted.GroupBy(x => x.CreationTime.DayOfWeek)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = x.Key.ToString(), Y = x.Count() })
+                    .ToList();
+                
+                rejectedOffers = rejected.GroupBy(x => x.CreationTime.DayOfWeek)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = x.Key.ToString(), Y = x.Count() })
+                    .ToList();
+            }
+
+            if (period == FilterDatePeriod.Monthly)
+            {
+                acceptedOffers = accepted.GroupBy(x => x.CreationTime.Month)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key ),Y = x.Count() })
+                    .ToList();
+                
+                rejectedOffers = rejected.GroupBy(x => x.CreationTime.Month)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                    .ToList();
+            }
+            
+            if (period == FilterDatePeriod.Weekly)
+            {
+                int dayOfCurrentMonth = Clock.Now.Day;
+                DateTime firstMonthDay = new DateTime(Clock.Now.Year, Clock.Now.Month, 1);
+                DateTime firstMonthSunday = firstMonthDay.AddDays((DayOfWeek.Sunday + 7 - firstMonthDay.DayOfWeek) % 7);
+                
+                acceptedOffers = accepted.GroupBy(x => ((x.CreationTime.Day - firstMonthSunday.Day) / 7) +1)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"Week {x.Key}",Y = x.Count() })
+                    .ToList();
+                
+                rejectedOffers = rejected.GroupBy(x => ((x.CreationTime.Day - firstMonthSunday.Day) / 7) +1)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"Week {x.Key}", Y = x.Count() })
+                    .ToList();
+            }
 
             return new AcceptedAndRejectedRequestsListDto
             {
-                AcceptedOffers = accepted,
-                RejectedOffers = rejected
+                AcceptedOffers = acceptedOffers,
+                RejectedOffers = rejectedOffers
             };
         }
+
 
         public async Task<GetCarrierInvoicesDetailsOutput> GetCarrierInvoicesDetails()
         {
