@@ -61,6 +61,8 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   cityFillter: number;
   destCityFilter: number;
   citiesList: FacilityCityLookupTableDto[];
+  containerNumber: string;
+
   constructor(
     private injector: Injector,
     private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy,
@@ -109,6 +111,7 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
         this.driverName,
         this.cityFillter,
         this.destCityFilter,
+        this.containerNumber,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
