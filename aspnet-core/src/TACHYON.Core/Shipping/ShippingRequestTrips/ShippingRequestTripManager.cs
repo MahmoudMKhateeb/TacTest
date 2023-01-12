@@ -35,11 +35,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         private readonly IRepository<Receiver> _receiverRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
+        private readonly ShippingRequestPointWorkFlowProvider _shippingRequestPointWorkFlowProvider;
 
         private IAbpSession _AbpSession { get; set; }
 
 
-        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPoint, long> routePointRepository, IRepository<Facility, long> facilityRepository, IRepository<Receiver> receiverRepository, IAppNotifier appNotifier, IRepository<ShippingRequestVas, long> shippingRequestVasRepository)
+        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPoint, long> routePointRepository, IRepository<Facility, long> facilityRepository, IRepository<Receiver> receiverRepository, IAppNotifier appNotifier, IRepository<ShippingRequestVas, long> shippingRequestVasRepository, ShippingRequestPointWorkFlowProvider shippingRequestPointWorkFlowProvider)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -50,8 +51,17 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             _receiverRepository = receiverRepository;
             _appNotifier = appNotifier;
             _shippingRequestVasRepository = shippingRequestVasRepository;
+            _shippingRequestPointWorkFlowProvider = shippingRequestPointWorkFlowProvider;
         }
 
+        public async Task DriverAcceptTrip(ShippingRequestTrip trip )
+        {
+            trip.DriverStatus = ShippingRequestTripDriverStatus.Accepted;
+            await _shippingRequestPointWorkFlowProvider.TransferPricesToTrip(trip);
+            var currentUser = await _shippingRequestPointWorkFlowProvider.GetCurrentUserAsync();
+            if (currentUser.IsDriver) await _appNotifier.DriverAcceptTrip(trip, currentUser.FullName);
+
+        }
         public async Task<int> CreateAndGetIdAsync(ShippingRequestTrip trip)
         {
             //var existedTrip = await _shippingRequestTripRepository.FirstOrDefaultAsync(x => x.BulkUploadRef == trip.BulkUploadRef);
