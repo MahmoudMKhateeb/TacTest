@@ -1,6 +1,7 @@
 ﻿using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
@@ -26,7 +27,9 @@ using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
 using TACHYON.PricePackages;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutTypes;
+using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
@@ -49,6 +52,8 @@ namespace TACHYON.Dashboards.Carrier
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IRepository<SubmitInvoice, long> _submitInvoiceRepository;
         private readonly IRepository<NormalPricePackage> _pricePackageRepository;
+        private readonly IRepository<ShippingRequestDirectRequest,long> _directRequestRepository;
+        private readonly IRepository<RoutPoint,long> _routePointRepository;
 
         public CarrierDashboardAppService(
              IRepository<User, long> usersRepository,
@@ -58,7 +63,9 @@ namespace TACHYON.Dashboards.Carrier
              IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
              IRepository<PriceOffer, long> priceOfferRepository,
              IRepository<SubmitInvoice, long> submitInvoiceRepository,
-             IRepository<NormalPricePackage> pricePackageRepository)
+             IRepository<NormalPricePackage> pricePackageRepository,
+             IRepository<ShippingRequestDirectRequest, long> directRequestRepository,
+             IRepository<RoutPoint, long> routePointRepository)
         {
             _usersRepository = usersRepository;
             _trucksRepository = trucksRepository;
@@ -68,9 +75,126 @@ namespace TACHYON.Dashboards.Carrier
             _priceOfferRepository = priceOfferRepository;
             _submitInvoiceRepository = submitInvoiceRepository;
             _pricePackageRepository = pricePackageRepository;
+            _directRequestRepository = directRequestRepository;
+            _routePointRepository = routePointRepository;
         }
 
 
+        public async Task<long> GetNumberOfGeneratedInvoices()
+        {
+            return await _submitInvoiceRepository.GetAll().Where(x => x.TenantId == AbpSession.TenantId)
+                .LongCountAsync();
+        }
+        public async Task<int> GetDeliveredTripsCountForCurrentWeek()
+        {
+            DateTime startOfCurrentWeek = Clock.Now.StartOfWeek(DayOfWeek.Sunday).Date;
+            DateTime endOfCurrentWeek = startOfCurrentWeek.AddDays(7).Date;
+            DisableTenancyFilters();
+
+            return await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .CountAsync(x =>
+                    x.Status == ShippingRequestTripStatus.Delivered && x.EndWorking.HasValue &&
+                    (x.EndWorking.Value.Date >= startOfCurrentWeek || x.EndWorking.Value.Date <= endOfCurrentWeek));
+        }
+
+        public async Task<int> GetInTransitTripsCount()
+        {
+            DisableTenancyFilters();
+
+            return await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                .CountAsync(x => x.Status == ShippingRequestTripStatus.InTransit);
+        }
+        
+        public async Task<List<UpcomingTripsOutput>> GetUpcomingTrips()
+        {
+            DateTime currentDay = Clock.Now.Date;
+            DateTime endOfCurrentWeek = currentDay.AddDays(7).Date; 
+            
+            DisableTenancyFilters();
+
+            var trips = await (from trip in _shippingRequestTripRepository.GetAll().AsNoTracking()
+                    .Include(x => x.OriginFacilityFk).ThenInclude(x => x.CityFk)
+                    .Include(x => x.DestinationFacilityFk).ThenInclude(x => x.CityFk)
+                where trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId &&
+                      trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay &&
+                      trip.StartTripDate.Date <= endOfCurrentWeek
+                select new
+                {
+                    trip.Id,
+                    Origin =
+                        trip.OriginFacilityId.HasValue ? trip.OriginFacilityFk.CityFk.DisplayName : string.Empty,
+                    Destinations = trip.RoutPoints.Where(x=> x.PickingType == PickingType.Dropoff)
+                        .Select(x=> x.FacilityFk.CityFk.DisplayName).ToList(),
+                        trip.WaybillNumber,
+                    TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated
+                        ? LocalizationSource.GetString("Dedicated")
+                        : trip.ShippingRequestFk.IsSaas() ? LocalizationSource.GetString("Saas")
+                            : LocalizationSource.GetString("TruckAggregation"), trip.StartTripDate
+                }).ToListAsync();
+            
+           var upcomingTrips = (from trip in trips
+                group trip by trip.StartTripDate.Date
+                into upcomingTripsGroup
+                select new UpcomingTripsOutput()
+                {
+                    Date = upcomingTripsGroup.Key,
+                    Trips = upcomingTripsGroup.Select(x=> new UpcomingTripItemDto()
+                    {
+                        Id = x.Id,Origin = x.Origin,
+                        Destinations = x.Destinations,
+                        WaybillNumber = x.WaybillNumber,
+                        TripType = x.TripType
+                    }).ToList()
+                }).ToList();
+
+            return upcomingTrips;
+        }
+        
+        public async Task<List<NeedsActionTripDto>> GetNeedsActionTrips()
+        {
+            var trips = await (from point in _routePointRepository.GetAll()
+                where point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId
+                      && point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
+                      && point.PickingType == PickingType.Dropoff && !point.IsComplete && (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue)
+                select new NeedsActionTripDto()
+                {
+                    Origin = point.ShippingRequestTripFk.OriginFacilityFk.CityFk.DisplayName,
+                    Destinations = point.ShippingRequestTripFk.RoutPoints
+                        .Where(x => x.PickingType == PickingType.Dropoff)
+                        .Select(x => x.FacilityFk.CityFk.DisplayName).ToList(),
+                    WaybillNumber = point.ShippingRequestTripFk.RouteType.HasValue
+                        ? (point.ShippingRequestTripFk.RouteType == ShippingRequestRouteType.SingleDrop
+                            ? point.ShippingRequestTripFk.WaybillNumber
+                            : point.WaybillNumber)
+                        : (point.ShippingRequestTripFk.ShippingRequestFk.RouteTypeId ==
+                           ShippingRequestRouteType.SingleDrop
+                            ? point.ShippingRequestTripFk.WaybillNumber
+                            : point.WaybillNumber),
+                    NeedsPod = !point.IsPodUploaded,
+                    NeedsReceiverCode = !point.ShippingRequestTripFk.EndWorking.HasValue
+                }).ToListAsync();
+
+            return trips;
+        }
+        public async Task<List<NewDirectRequestListDto>> GetNewDirectRequest()
+        {
+            DisableTenancyFilters();
+
+            var directRequests = await _directRequestRepository.GetAll()
+                .Where(x => x.CarrierTenantId == AbpSession.TenantId &&
+                            x.Status == ShippingRequestDirectRequestStatus.New)
+                .Select(x => new NewDirectRequestListDto()
+                {
+                    ReferenceNumber = x.ShippingRequestFK.ReferenceNumber,
+                    CompanyName = x.ShippingRequestFK.RequestType == ShippingRequestType.TachyonManageService
+                        ? LocalizationSource.GetString("TachyonManageService")
+                        : x.Tenant.companyName
+                }).ToListAsync();
+
+            return directRequests;
+        }
 
         public async Task<List<ChartCategoryPairedValuesDto>> GetCompletedTripsCountPerMonth(GetDataByDateFilterInput input)
         {

@@ -32,6 +32,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Tenants.Dashboard.Dto;
+using TACHYON.Tracking;
 using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.Dashboards.Shipper
@@ -46,6 +47,7 @@ namespace TACHYON.Dashboards.Shipper
         private readonly IRepository<PriceOffer, long> _priceOffersRepository;
         private readonly IRepository<ShippingRequestTripAccident> _accidentRepository;
         private readonly IRepository<TrucksType,long> _truckTypesRepository;
+        private readonly IRepository<RoutPoint,long> _routePointRepository;
 
         public ShipperDashboardAppService(
              IRepository<ShippingRequest, long> shippingRequestRepository,
@@ -54,7 +56,8 @@ namespace TACHYON.Dashboards.Shipper
              IRepository<Invoice, long> invoiceRepository,
              IRepository<PriceOffer, long> priceOffersRepository,
              IRepository<ShippingRequestTripAccident> accidentRepository,
-             IRepository<TrucksType, long> truckTypesRepository)
+             IRepository<TrucksType, long> truckTypesRepository,
+             IRepository<RoutPoint, long> routePointRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
@@ -63,10 +66,122 @@ namespace TACHYON.Dashboards.Shipper
             _priceOffersRepository = priceOffersRepository;
             _accidentRepository = accidentRepository;
             _truckTypesRepository = truckTypesRepository;
+            _routePointRepository = routePointRepository;
         }
 
 
-        public async Task<List<ChartCategoryPairedValuesDto>> GetCompletedTripsCountPerMonth(GetDataByDateFilterInput input)
+
+        public async Task<int> GetDeliveredTripsCountForCurrentWeek()
+        {
+            DateTime startOfCurrentWeek = Clock.Now.StartOfWeek(DayOfWeek.Sunday).Date;
+            DateTime endOfCurrentWeek = startOfCurrentWeek.AddDays(7).Date;
+            DisableTenancyFilters();
+            
+            return await _shippingRequestTripRepository.GetAll()
+                .Where(x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .CountAsync(x =>
+                    x.Status == ShippingRequestTripStatus.Delivered && x.EndWorking.HasValue &&
+                   ( x.EndWorking.Value.Date >= startOfCurrentWeek || x.EndWorking.Value.Date <= endOfCurrentWeek));
+        }
+        
+        public async Task<int> GetInTransitTripsCount()
+        {
+            DisableTenancyFilters();
+            
+            return await _shippingRequestTripRepository.GetAll()
+                .Where(x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .CountAsync(x =>x.Status == ShippingRequestTripStatus.InTransit);
+        }
+        
+        public async Task<List<UpcomingTripsOutput>> GetUpcomingTrips()
+        {
+            DateTime currentDay = Clock.Now.Date;
+            DateTime endOfCurrentWeek = currentDay.AddDays(7).Date; 
+            
+            DisableTenancyFilters();
+
+            var trips = await (from trip in _shippingRequestTripRepository.GetAll().AsNoTracking()
+                    .Include(x => x.OriginFacilityFk).ThenInclude(x => x.CityFk)
+                    .Include(x => x.DestinationFacilityFk).ThenInclude(x => x.CityFk)
+                where trip.ShippingRequestFk.TenantId == AbpSession.TenantId &&
+                      trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay &&
+                      trip.StartTripDate.Date <= endOfCurrentWeek
+                select new
+                {
+                    trip.Id,
+                    Origin =
+                        trip.OriginFacilityId.HasValue ? trip.OriginFacilityFk.CityFk.DisplayName : string.Empty,
+                    Destinations = trip.RoutPoints.Where(x=> x.PickingType == PickingType.Dropoff)
+                        .Select(x=> x.FacilityFk.CityFk.DisplayName).ToList(),
+                        trip.WaybillNumber,
+                    TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated
+                        ? LocalizationSource.GetString("Dedicated")
+                        : trip.ShippingRequestFk.IsSaas() ? LocalizationSource.GetString("Saas")
+                            : LocalizationSource.GetString("TruckAggregation"), trip.StartTripDate
+                }).ToListAsync();
+            
+           var upcomingTrips = (from trip in trips
+                group trip by trip.StartTripDate.Date
+                into upcomingTripsGroup
+                select new UpcomingTripsOutput()
+                {
+                    Date = upcomingTripsGroup.Key,
+                    Trips = upcomingTripsGroup.Select(x=> new UpcomingTripItemDto()
+                    {
+                        Id = x.Id,Origin = x.Origin,
+                        Destinations = x.Destinations,
+                        WaybillNumber = x.WaybillNumber,
+                        TripType = x.TripType
+                    }).ToList()
+                }).ToList();
+
+            return upcomingTrips;
+        }
+        
+        public async Task<List<NeedsActionTripDto>> GetNeedsActionTrips()
+        {
+            var trips = await (from point in _routePointRepository.GetAll()
+                where point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId
+                      && point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
+                      && point.PickingType == PickingType.Dropoff && !point.IsComplete && (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue)
+                select new NeedsActionTripDto()
+                {
+                    Origin = point.ShippingRequestTripFk.OriginFacilityFk.CityFk.DisplayName,
+                    Destinations = point.ShippingRequestTripFk.RoutPoints
+                        .Where(x => x.PickingType == PickingType.Dropoff)
+                        .Select(x => x.FacilityFk.CityFk.DisplayName).ToList(),
+                    WaybillNumber = point.ShippingRequestTripFk.RouteType.HasValue
+                        ? (point.ShippingRequestTripFk.RouteType == ShippingRequestRouteType.SingleDrop
+                            ? point.ShippingRequestTripFk.WaybillNumber
+                            : point.WaybillNumber)
+                        : (point.ShippingRequestTripFk.ShippingRequestFk.RouteTypeId ==
+                           ShippingRequestRouteType.SingleDrop
+                            ? point.ShippingRequestTripFk.WaybillNumber
+                            : point.WaybillNumber),
+                    NeedsPod = !point.IsPodUploaded,
+                    NeedsReceiverCode = !point.ShippingRequestTripFk.EndWorking.HasValue
+                }).ToListAsync();
+
+            return trips;
+        }
+
+        public async Task<List<NewPriceOfferListDto>> GetNewPriceOffers()
+        {
+            DisableTenancyFilters();
+            var offers = await _priceOffersRepository.GetAll()
+                .Where(x => x.ShippingRequestFk.TenantId == AbpSession.TenantId && x.Status == PriceOfferStatus.New
+                    && (x.ShippingRequestFk.Status == ShippingRequestStatus.NeedsAction))
+                .Select(x => new NewPriceOfferListDto()
+                {
+                    ReferenceNumber = x.ShippingRequestFk.ReferenceNumber,
+                    CompanyName = x.ShippingRequestFk.RequestType == ShippingRequestType.TachyonManageService
+                        ? LocalizationSource.GetString("TachyonManageService")
+                        : x.Tenant.companyName
+                }).ToListAsync();
+
+            return offers;
+        }
+            public async Task<List<ChartCategoryPairedValuesDto>> GetCompletedTripsCountPerMonth(GetDataByDateFilterInput input)
         {
             DisableTenancyFilters();
 
