@@ -115,6 +115,14 @@ namespace TACHYON.Invoices
             _dedicatedDynamicInvoiceRepository = dedicatedDynamicInvoiceRepository;
         }
 
+        /// <summary>
+        /// This is for backend testing
+        /// </summary>
+        /// <returns></returns>
+        public async Task GenerateInvoiceEveryHour()
+        {
+            await _invoiceManager.GenerateInvoice(8);
+        }
 
         [AbpAuthorize(AppPermissions.Pages_Invoices_View)]
         public async Task<LoadResult> GetAll(string filter, InvoiceSearchInputDto input)
@@ -705,6 +713,59 @@ namespace TACHYON.Invoices
             //DisableTenancyFilters();
             //var documnet = AsyncHelper.RunSync(() => _documentFileRepository.FirstOrDefaultAsync(x => x.TenantId == invoice.TenantId && x.DocumentTypeId == 14);
             //if (documnet != null) invoiceDto.CR = documnet.Number;
+            return Items;
+        }
+        
+        public IEnumerable<SAASInvoiceItemDto> GetSAASInvoiceShippingRequestsReportInfo(long invoiceId)
+        {
+            DisableTenancyFilters();
+            var invoice = AsyncHelper.RunSync(() => GetInvoiceInfo(invoiceId));
+
+            if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+
+            var groupedTrips = invoice.Trips.GroupBy(x =>new
+            {
+                RouteType = x.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId != null
+            ? (x.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop ?"Single Drop" :"Multiple Drops")
+            : (x.ShippingRequestTripFK.RouteType == ShippingRequestRouteType.SingleDrop ? "Single Drop" : "Multiple Drops"),
+                IsIntegratedWithBayan = x.ShippingRequestTripFK.BayanId !=null ?"Yes" :"No",
+                ItemPrice = x.ShippingRequestTripFK.SubTotalAmountWithCommission
+            })
+                .Select(g=> new
+                {
+                    RouteType = g.Key.RouteType,
+                    IsIntegratedWithBayan = g.Key.IsIntegratedWithBayan,
+                    ItemPrice = g.Key.ItemPrice,
+                    List = g,
+                });
+
+            var TotalItem = groupedTrips.Count();
+            int Sequence = 1;
+            List<SAASInvoiceItemDto> Items = new List<SAASInvoiceItemDto>();
+            foreach (var trip in groupedTrips.ToList())
+            {
+                Items.Add(new SAASInvoiceItemDto
+                {
+                    Sequence = $"{Sequence}/{TotalItem}",
+                    Type = trip.RouteType,
+                    ItemSubTotalAmount = trip.List.Sum(x=> x.ShippingRequestTripFK.SubTotalAmountWithCommission.Value),
+                    ItemVatAmount = trip.List.Sum(x=> x.ShippingRequestTripFK.VatAmountWithCommission.Value),
+                    ItemTotalAmount = trip.List.Sum(x => x.ShippingRequestTripFK.TotalAmountWithCommission.Value),
+                    ItemTaxVat = trip.List.First().ShippingRequestTripFK.TaxVat.Value,
+                    IsIntegratedWithBayan = trip.IsIntegratedWithBayan,
+                    QTY = trip.List.Count(),
+                    PricePerItem = trip.List.First().ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
+                    
+                    // Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
+                    //   L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : "",
+                });
+                Sequence++;
+
+            }
+
+            Items.First().SubTotalAmount = Items.Sum(x => x.ItemSubTotalAmount);
+            Items.First().VatAmount = Items.Sum(x => x.ItemVatAmount);
+            Items.First().TotalAmount = Items.Sum(x=>x.ItemTotalAmount);
             return Items;
         }
         public IEnumerable<PeanltyInvoiceItemDto> GetInvoicePenaltiseInvoiceReportInfo(long penaltynvoiceId)

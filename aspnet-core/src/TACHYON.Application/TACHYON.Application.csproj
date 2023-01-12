@@ -19,6 +19,7 @@
     <None Remove="Invoices\Reports\Invoice.rdlc" />
     <None Remove="Invoices\Reports\InvoiceNote.rdlc" />
     <None Remove="Invoices\Reports\LandScapeInvoice.rdlc" />
+    <None Remove="Invoices\Reports\LandScapeInvoice_SAAS.rdlc" />
     <None Remove="Invoices\Reports\PenaltyInvoice.rdlc" />
     <None Remove="Invoices\Reports\LandScapeInvoice_Actor.rdlc" />
     <None Remove="Waybills\Reports\Master_Waybill.rdlc" />
@@ -37,6 +38,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\DedicatedInvoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Invoices\Reports\LandScapeInvoice_SAAS.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Invoices\Reports\LandScapeInvoice.rdlc">
@@ -107,6 +111,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>GetInvoiceShippingRequestsReportInfoDataset.xsd</DependentUpon>
     </Compile>
+    <Compile Update="Invoices\Reports\Datasets\GetSAASInvoiceShippingRequestsReportInfoDataset.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetSAASInvoiceShippingRequestsReportInfoDataset.xsd</DependentUpon>
+    </Compile>
     <Compile Update="Waybills\Reports\DataSet1.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -172,6 +181,10 @@
     <None Update="Invoices\Reports\Datasets\GetInvoiceShippingRequestsReportInfoDataset.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>GetInvoiceShippingRequestsReportInfoDataset.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Invoices\Reports\Datasets\GetSAASInvoiceShippingRequestsReportInfoDataset.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetSAASInvoiceShippingRequestsReportInfoDataset.Designer.cs</LastGenOutput>
     </None>
     <None Update="Waybills\Reports\DataSet1.xsd">
       <Generator>MSDataSetGenerator</Generator>
