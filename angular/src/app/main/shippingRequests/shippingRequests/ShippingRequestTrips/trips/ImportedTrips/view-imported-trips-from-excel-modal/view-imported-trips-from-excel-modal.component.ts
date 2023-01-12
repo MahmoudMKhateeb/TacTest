@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ImportTripDto, ImportShipmentFromExcelServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ImportTripDto, ImportShipmentFromExcelServiceProxy, ShippingRequestRouteType } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 
@@ -12,6 +12,7 @@ import { finalize } from 'rxjs/operators';
 export class ViewImportedTripsFromExcelModalComponent extends AppComponentBase {
   @Input() ImportedTripsList: ImportTripDto[];
   @Input() isSingleDdrop: boolean;
+  @Input() isDedicatedRequest: boolean;
   active = false;
   saving = false;
   @ViewChild('ViewImportedTripsModal', { static: false }) modal: ModalDirective;

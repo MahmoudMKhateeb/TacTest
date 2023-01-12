@@ -50,18 +50,32 @@
                       <th>
                         {{ l('Destination') }}
                       </th>
-                      <th *ngIf="isSingleDdrop">
+                      <th *ngIf="isDedicatedRequest">
+                        {{ l('RouteType') }}
+                      </th>
+                      <th *ngIf="isDedicatedRequest">
+                        {{ l('NumberOfDrops') }}
+                      </th>
+
+                      <th *ngIf="isSingleDdrop || isDedicatedRequest">
                         {{ l('Sender') }}
                       </th>
-                      <th *ngIf="isSingleDdrop">
+                      <th *ngIf="isSingleDdrop || isDedicatedRequest">
                         {{ l('Receiver') }}
                       </th>
+                      <th *ngIf="isDedicatedRequest">
+                        {{ l('Driver') }}
+                      </th>
+                      <th *ngIf="isDedicatedRequest">
+                        {{ l('Truck') }}
+                      </th>
+
                       <th>
                         {{ l('totalValue') }}
                       </th>
-                      <th>
+                      <!-- <th>
                         {{ l('Note') }}
-                      </th>
+                      </th> -->
                     </tr>
                   </ng-template>
                   <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
@@ -94,6 +108,14 @@
                         <span class="ui-column-title"> {{ l('destinationFacility') }}</span>
                         {{ record.destinationFacility }}
                       </td>
+                      <td *ngIf="isDedicatedRequest">
+                        <span class="ui-column-title"> {{ l('RouteType') }}</span>
+                        {{ record.routeTypeTitle }}
+                      </td>
+                      <td *ngIf="isDedicatedRequest">
+                        <span class="ui-column-title"> {{ l('NumberOfDrops') }}</span>
+                        {{ record.numberOfDrops }}
+                      </td>
                       <td *ngIf="isSingleDdrop">
                         <span class="ui-column-title"> {{ l('sender') }}</span>
                         {{ record.sender }}
@@ -102,14 +124,22 @@
                         <span class="ui-column-title"> {{ l('receiver') }}</span>
                         {{ record.receiver }}
                       </td>
+                      <td *ngIf="isDedicatedRequest">
+                        <span class="ui-column-title"> {{ l('Driver') }}</span>
+                        {{ record.driver }}
+                      </td>
+                      <td *ngIf="isDedicatedRequest">
+                        <span class="ui-column-title"> {{ l('Truck') }}</span>
+                        {{ record.truck }}
+                      </td>
                       <td>
                         <span class="ui-column-title"> {{ l('totalValue') }}</span>
                         {{ record.totalValue }}
                       </td>
-                      <td>
+                      <!-- <td>
                         <span class="ui-column-title"> {{ l('note') }}</span>
                         {{ record.note }}
-                      </td>
+                      </td> -->
                     </tr>
                     <tr>
                       <td [attr.colspan]="isSingleDdrop ? '11' : '9'" *ngIf="record.exception">

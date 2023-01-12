@@ -27,6 +27,7 @@ namespace TACHYON.Shipping.Trips.Importing
         private int RequestGoodsCategoryId;
         private bool IsSingleDropRequest;
         private long ShippingRequestId;
+        private bool IsDedicatedRequest;
         public GoodsDetailsListExcelDataReader(TachyonExcelDataReaderHelper tachyonExcelDataReaderHelper, IRepository<RoutPoint, long> routePointRepository, IRepository<GoodCategory> goodsCategoryRepository, IRepository<DangerousGoodType> dangerousGoodTypeRepository, IRepository<UnitOfMeasure> unitOfMesureRepository)
         {
             _tachyonExcelDataReaderHelper = tachyonExcelDataReaderHelper;
@@ -36,11 +37,12 @@ namespace TACHYON.Shipping.Trips.Importing
             _unitOfMesureRepository = unitOfMesureRepository;
         }
 
-        public List<ImportGoodsDetailsDto> GetGoodsDetailsFromExcel(byte[] fileBytes, long shippingRequestId,int requestGoodsCategoryId, bool isSingleDropRequest)
+        public List<ImportGoodsDetailsDto> GetGoodsDetailsFromExcel(byte[] fileBytes, long shippingRequestId,int requestGoodsCategoryId, bool isSingleDropRequest, bool isDedicatedRequest)
         {
             RequestGoodsCategoryId = requestGoodsCategoryId;
             IsSingleDropRequest = isSingleDropRequest;
             ShippingRequestId = shippingRequestId;
+            IsDedicatedRequest = isDedicatedRequest;
             return ProcessExcelFile(fileBytes, ProcessGoodsDetailsExcelRow);
         }
 
@@ -60,10 +62,18 @@ namespace TACHYON.Shipping.Trips.Importing
 
                 goodsDetail.TripReference = TripReference;
                 //1
-                if (!IsSingleDropRequest)
+                if (!IsSingleDropRequest || IsDedicatedRequest)
                 {
-                    var pointReference = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                    var pointReference= "";
+                    if (!IsDedicatedRequest) {
+                        pointReference = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                             row, 1, "Point Reference*", exceptionMessage);
+                    }
+                    else
+                    {
+                        pointReference = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                           row, 1, "Point Reference*", exceptionMessage);
+                    }
                     goodsDetail.PointReference = pointReference;
                     var pointId = GetRoutePointIdByBulkRef(pointReference, TripReference, exceptionMessage);
                     if (pointId != null)
@@ -162,6 +172,7 @@ namespace TACHYON.Shipping.Trips.Importing
             try
             {
                 return _routePointRepository.FirstOrDefault(x => x.BulkUploadReference == pointReference &&
+                x.PickingType == PickingType.Dropoff &&
                 x.ShippingRequestTripFk.BulkUploadRef==tripReference &&
                 x.ShippingRequestTripFk.ShippingRequestId == ShippingRequestId).Id;
             }
