@@ -91,6 +91,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   type = 'Trip';
   ShippingRequestTripStatus = ShippingRequestTripStatus;
   showBtnAddTrips: boolean;
+  ShippingRequestFlagEnum = ShippingRequestFlag;
 
   constructor(
     injector: Injector,
