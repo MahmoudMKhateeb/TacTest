@@ -2911,5 +2911,8 @@
     <text name="PricePerDay">سعر اليوم الواحد</text>
 	<text name="ConfirmDelivery">تأكيد التوصيل</text>
 	<text name="DropOffConfirmDelivery">تأكيد توصيل نقطة التنزيل</text>
+	<text name="YouMustUpdateTheVersionOfTheApplication">يجب عليك تحديث نسخة التطبيق</text>
+	<text name="UpdateTheApplication">تحديث التطبيق</text>
+	<text name="ChangeStatus">تغيير الحالة</text>
 	</texts>
 </localizationDictionary>
