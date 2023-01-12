@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.Threading;
 using Org.BouncyCastle.Asn1.Esf;
 using System;
 using System.Collections;
@@ -20,30 +21,58 @@ namespace TACHYON.Invoices.Reports
         private readonly IInvoiceNoteAppService _InvoiceNoteAppService;
         private readonly IRepository<InvoiceNote, long> _invoiceNoteRepository;
         private readonly IRepository<ActorInvoice, long> _actorInvoiceRepository;
+        private readonly IRepository<Invoice, long> _invoiceRepository;
 
-        public InvoiceReportService(InvoiceAppService invoiceAppService, PdfExporterBase pdfExporterBase, IInvoiceNoteAppService invoiceNoteAppService, IRepository<InvoiceNote, long> invoiceNoteRepository, IRepository<ActorInvoice, long> actorInvoiceRepository)
+
+        public InvoiceReportService(InvoiceAppService invoiceAppService, PdfExporterBase pdfExporterBase, IInvoiceNoteAppService invoiceNoteAppService, IRepository<InvoiceNote, long> invoiceNoteRepository, IRepository<ActorInvoice, long> actorInvoiceRepository, IRepository<Invoice, long> invoiceRepository)
         {
             _invoiceAppService = invoiceAppService;
             _pdfExporterBase = pdfExporterBase;
             _InvoiceNoteAppService = invoiceNoteAppService;
             _invoiceNoteRepository = invoiceNoteRepository;
             _actorInvoiceRepository = actorInvoiceRepository;
+            _invoiceRepository = invoiceRepository;
         }
 
-        public FileDto DownloadInvoiceReportPdf(long invoiceId)
+        public FileDto? DownloadInvoiceReportPdf(long invoiceId)
         {
-            var reportPath = "/Invoices/Reports/LandScapeInvoice.rdlc";
+            DisableTenancyFilters();
+            AsyncHelper.RunSync(() => DisableInvoiceDraftedFilter());
+            var invoice = _invoiceRepository.GetAll().FirstOrDefault(i => i.Id == invoiceId);
 
-            ArrayList names = new ArrayList();
-            ArrayList data = new ArrayList();
+            if(invoice.Channel == InvoiceChannel.Trip)
+            {
+                var reportPath = "/Invoices/Reports/LandScapeInvoice.rdlc";
 
-            var invoice = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
-            names.Add("GetInvoiceReportInfoDataset");
-            data.Add(invoice);
+                ArrayList names = new ArrayList();
+                ArrayList data = new ArrayList();
 
-            names.Add("GetInvoiceShippingRequestsReportInfoDataset");
-            data.Add(_invoiceAppService.GetInvoiceShippingRequestsReportInfo(invoiceId));
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetInvoiceNumber(invoiceId), reportPath, names, data);
+                var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
+                names.Add("GetInvoiceReportInfoDataset");
+                data.Add(invoiceDto);
+
+                names.Add("GetInvoiceShippingRequestsReportInfoDataset");
+                data.Add(_invoiceAppService.GetInvoiceShippingRequestsReportInfo(invoiceId));
+                return _pdfExporterBase.CreateRdlcPdfPackageFromList(invoice.InvoiceNumber?.ToString(), reportPath, names, data);
+            }
+            else if(invoice.Channel == InvoiceChannel.SaasTrip)
+            {
+                var reportPath = "/Invoices/Reports/LandScapeInvoice_SAAS.rdlc";
+
+                ArrayList names = new ArrayList();
+                ArrayList data = new ArrayList();
+
+                var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
+                names.Add("GetInvoiceReportInfoDataset");
+                data.Add(invoiceDto);
+
+                names.Add("GetSAASInvoiceShippingRequestsReportInfoDataset");
+                data.Add(_invoiceAppService.GetSAASInvoiceShippingRequestsReportInfo(invoiceId));
+
+                return _pdfExporterBase.CreateRdlcPdfPackageFromList(invoice.InvoiceNumber?.ToString(), reportPath, names, data);
+            }
+            return null;
+
         }
         public FileDto DonwloadPenaltyInvoice(long invoiceId)
         {
