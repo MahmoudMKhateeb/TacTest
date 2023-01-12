@@ -120,8 +120,8 @@ namespace TACHYON.Invoices.Reports
         public async Task<FileDto> DownloadActorShipperInvoiceReportPdf(long actorInvoiceId)
         {
             var actorInvoice = await _actorInvoiceRepository.FirstOrDefaultAsync(x => x.Id == actorInvoiceId);
-            //if(actorInvoice.ActorInvoiceChannel == DedicatedDynamicInvocies.ActorInvoiceChannel.trip)
-           // {
+            if (actorInvoice.ActorInvoiceChannel == DedicatedDynamicInvocies.ActorInvoiceChannel.trip)
+            {
                 var reportPath = "/Invoices/Reports/LandScapeInvoice_Actor.rdlc";
 
                 ArrayList names = new ArrayList();
@@ -135,25 +135,25 @@ namespace TACHYON.Invoices.Reports
                 data.Add(_invoiceAppService.GetActorInvoiceShippingRequestsReportInfo(actorInvoiceId));
                 var number = invoice.FirstOrDefault()?.InvoiceNumber.ToString();
                 return _pdfExporterBase.CreateRdlcPdfPackageFromList(number, reportPath, names, data);
-           // }
+            }
 
-            //else
-            //{
-            //    Complete here download dedicated invoice
-            //    var reportPath = "/Invoices/Reports/DedicatedInvoice_Actor.rdlc";
+            else
+            {
+               // Complete here download dedicated invoice
+                var reportPath = "/Invoices/Reports/DedicatedInvoice_Actor.rdlc";
 
-            //    ArrayList names = new ArrayList();
-            //    ArrayList data = new ArrayList();
+                ArrayList names = new ArrayList();
+                ArrayList data = new ArrayList();
 
-            //    var invoice = await _invoiceAppService.GetActorShipperInvoiceReportInfo(actorInvoiceId);
-            //    names.Add("GetInvoiceReportInfoDataset");
-            //    data.Add(invoice);
+                var invoice = await _invoiceAppService.GetActorShipperInvoiceReportInfo(actorInvoiceId);
+                names.Add("GetInvoiceReportInfoDataset");
+                data.Add(invoice);
 
-            //    names.Add("GetInvoiceShippingRequestsReportInfoDataset");
-            //    data.Add(_invoiceAppService.GetActorInvoiceShippingRequestsReportInfo(actorInvoiceId));
-            //    var number = invoice.FirstOrDefault()?.InvoiceNumber.ToString();
-            //    return _pdfExporterBase.CreateRdlcPdfPackageFromList(number, reportPath, names, data);
-            //}
+                names.Add("GetDedicatedInvoiceItemReportInfo");
+                data.Add(_invoiceAppService.GetDedicatedDynamicActorInvoiceItemsReportInfo(actorInvoiceId));
+                var number = invoice.FirstOrDefault()?.InvoiceNumber.ToString();
+                return _pdfExporterBase.CreateRdlcPdfPackageFromList(number, reportPath, names, data);
+            }
 
         }
 

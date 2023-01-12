@@ -28,9 +28,12 @@ using TACHYON.Common;
 using TACHYON.Configuration;
 using TACHYON.DataExporting;
 using TACHYON.DataFilters;
+using TACHYON.DedicatedDynamicActorInvoices;
+using TACHYON.DedicatedDynamicActorInvoices.DedicatedDynamicActorInvoiceItems;
 using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 using TACHYON.DedicatedDynamicInvoices.Dtos;
 using TACHYON.DedicatedInvoices;
+using TACHYON.DedidcatedDynamicActorInvoices.Dtos;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
@@ -77,6 +80,7 @@ namespace TACHYON.Invoices
         private readonly IRepository<ActorInvoice, long> _actorInvoiceRepository;
         private readonly DbBinaryObjectManager _binaryObjectManager;
         private readonly IRepository<DedicatedDynamicInvoice, long> _dedicatedDynamicInvoiceRepository;
+        private readonly IRepository<DedicatedDynamicActorInvoice, long> _dedicatedDynamicActorInvoiceRepository;
 
 
         public InvoiceAppService(
@@ -92,7 +96,7 @@ namespace TACHYON.Invoices
             IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager,
              IWebUrlService webUrlService, PdfExporterBase pdfExporterBase, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ISettingManager settingManager, IRepository<DynamicInvoice, long> dynamicInvoiceRepository,
             IRepository<ActorInvoice, long> actorInvoiceRepository,
-            DbBinaryObjectManager binaryObjectManager, IRepository<DedicatedDynamicInvoice, long> dedicatedDynamicInvoiceRepository)
+            DbBinaryObjectManager binaryObjectManager, IRepository<DedicatedDynamicInvoice, long> dedicatedDynamicInvoiceRepository, IRepository<DedicatedDynamicActorInvoice, long> dedicatedDynamicActorInvoiceRepository)
 
         {
             _invoiceRepository = invoiceRepository;
@@ -113,6 +117,7 @@ namespace TACHYON.Invoices
             _actorInvoiceRepository = actorInvoiceRepository;
             _binaryObjectManager = binaryObjectManager;
             _dedicatedDynamicInvoiceRepository = dedicatedDynamicInvoiceRepository;
+            _dedicatedDynamicActorInvoiceRepository = dedicatedDynamicActorInvoiceRepository;
         }
 
 
@@ -276,6 +281,31 @@ namespace TACHYON.Invoices
                 .ThenInclude(x=>x.ShippingRequestDestinationCities)
                 .ThenInclude(x=>x.CityFk)
                 .FirstOrDefaultAsync(i => i.InvoiceId == invoiceId);
+            if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+
+            return invoice;
+        }
+
+        private async Task<DedicatedDynamicActorInvoice> GetDedicatedDynamicActorInvoiceInfo(long actorInvoiceId)
+        {
+            DisableTenancyFilters();
+            var invoice = await _dedicatedDynamicActorInvoiceRepository
+                .GetAll()
+                .Include(i => i.Tenant)
+                .Include(i => i.DedicatedDynamicActorInvoiceItems)
+                .ThenInclude(x => x.DedicatedShippingRequestTruck)
+                .ThenInclude(x => x.ShippingRequest)
+                .ThenInclude(x => x.OriginCityFk)
+                .Include(i => i.DedicatedDynamicActorInvoiceItems)
+                .ThenInclude(x => x.DedicatedShippingRequestTruck)
+                .ThenInclude(x => x.Truck)
+                .ThenInclude(x => x.TrucksTypeFk)
+                .Include(i => i.DedicatedDynamicActorInvoiceItems)
+                .ThenInclude(x => x.DedicatedShippingRequestTruck)
+                .ThenInclude(x => x.ShippingRequest)
+                .ThenInclude(x => x.ShippingRequestDestinationCities)
+                .ThenInclude(x => x.CityFk)
+                .FirstOrDefaultAsync(i => i.ActorInvoiceId == actorInvoiceId);
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
             return invoice;
@@ -934,6 +964,45 @@ namespace TACHYON.Invoices
 
         }
 
+
+        public IEnumerable<DedicatedDynamicActorInvoiceItemDto> GetDedicatedDynamicActorInvoiceItemsReportInfo(long actorInvoiceId)
+        {
+            var dedicatedInvoice = AsyncHelper.RunSync(() => GetDedicatedDynamicActorInvoiceInfo(actorInvoiceId));
+
+            if (dedicatedInvoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+            var TotalItem = dedicatedInvoice.DedicatedDynamicActorInvoiceItems.Count();
+            int Sequence = 1;
+            List<DedicatedDynamicActorInvoiceItemDto> Items = new List<DedicatedDynamicActorInvoiceItemDto>();
+            List<DedicatedDynamicActorInvoiceItem> dedicatednvoiceItems = dedicatedInvoice.DedicatedDynamicActorInvoiceItems.ToList();
+
+            foreach (var item in dedicatednvoiceItems)
+            {
+                DedicatedDynamicActorInvoiceItemDto invoiceItemDto = new DedicatedDynamicActorInvoiceItemDto
+                {
+                    Sequence = $"{Sequence}/{TotalItem}",
+                    SubTotalAmount = item.ItemSubTotalAmount,
+                    VatAmount = item.VatAmount,
+                    TotalAmount = item.ItemTotalAmount,
+                    Remarks = item.WorkingDayType == DedicatedDynamicInvocies.WorkingDayType.OverTime ? "Over Time" : item.Remarks,
+                    Duration = $"{item.NumberOfDays} {"Days"}",
+                    PricePerDay = item.PricePerDay,
+                    TruckType = item.DedicatedShippingRequestTruck.ReplacementFlag == Shipping.Dedicated.ReplacementFlag.Replaced
+                    ? $"{item.DedicatedShippingRequestTruck.Truck.TrucksTypeFk.DisplayName}{"<br/>"}{"Replacement"}{item.DedicatedShippingRequestTruck.OriginalTruck.Truck.PlateNumber}"
+                    : item.DedicatedShippingRequestTruck.Truck.TrucksTypeFk.DisplayName,
+                    TruckPlateNumber = item.DedicatedShippingRequestTruck.Truck.PlateNumber,
+                    TaxVat = item.TaxVat,
+                    Date = item.CreationTime.ToString("dd/MM/yyyy"),
+                    From = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.First().CityFk.DisplayName,
+                    To = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.Count() > 0 ? "Multiple dedtinations"
+                    : item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.First().CityFk.DisplayName,
+                };
+                Items.Add(invoiceItemDto);
+                Sequence++;
+            }
+            return Items;
+
+        }
+
         // Actors invoice
         public async Task<IEnumerable<ActorInvoiceInfoDto>> GetActorShipperInvoiceReportInfo(long actorInvoiceId)
         {
@@ -1009,6 +1078,8 @@ namespace TACHYON.Invoices
                   x.ActorId == invoice.ShipperActorId && x.DocumentTypeFk.Flag == DocumentTypeFlagEnum.Vat));
             if (document != null) actorInvoiceDto.TenantVatNumber = documentVat.Number;
 
+            var link = $"{_webUrlService.WebSiteRootAddressFormat}account/outsideInvoice?id={actorInvoiceId}";
+            actorInvoiceDto.QRCode = _pdfExporterBase.GenerateQrCode(link);
             return new List<ActorInvoiceInfoDto>() { actorInvoiceDto };
         }
 

@@ -111,7 +111,7 @@
                     <li>
                       <a class="dropdown-item" (click)="details(options.data.id)">{{ l('Detail') }}</a>
                     </li>
-                    <li *ngIf="options.data.actorInvoiceChannel != 1">
+                    <li>
                       <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('DownloadInvoice') }}</a>
                     </li>
                     <li *ngIf="!options.data.isPaid && options.data.actorInvoiceChannel != 1">
