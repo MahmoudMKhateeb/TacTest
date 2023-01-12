@@ -164,7 +164,7 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
     shipperActorId: [null],
     carrierActorId: [null],
     isInternalBrokerRequest: [null],
-    rentalRangeDates: [null],
+    rentalRangeDates: [null, Validators.required],
     ActorShipper: [''],
     ActorCarrier: [''],
     IsInternalBrokerRequest: [''],
@@ -274,7 +274,7 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
         case 1: {
           document.getElementById('step1FormGroupButton').click();
           this.step1FormGroup.instance.validate();
-          if (this.step1Form.invalid || !this.validateOthersInputs()) {
+          if (this.step1Form.invalid || !this.validateOthersInputs() || !this.validateRentalDuration()) {
             wizardObj.stop();
             this.step1Form.markAllAsTouched();
             this.notify.error(this.l('PleaseCompleteMissingFields'));
@@ -324,6 +324,20 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
       return false;
     }
     if (this.IfOther(this.allpackingTypes, this.step1Dto.packingTypeId) && !this.step1Dto.otherPackingTypeName.trim()) {
+      return false;
+    }
+    return true;
+  }
+
+  validateRentalDuration() {
+    if (!isNotNullOrUndefined(this.step1Form.get('rentalRangeDates').value)) {
+      return false;
+    }
+    if (
+      isNotNullOrUndefined(this.step1Form.get('rentalRangeDates').value) &&
+      (!isNotNullOrUndefined(this.step1Form.get('rentalRangeDates').value[0]) ||
+        !isNotNullOrUndefined(this.step1Form.get('rentalRangeDates').value[1]))
+    ) {
       return false;
     }
     return true;
