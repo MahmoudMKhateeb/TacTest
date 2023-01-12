@@ -112,7 +112,7 @@ namespace TACHYON.Dashboards.Shipper
                     Origin =
                         trip.OriginFacilityId.HasValue ? trip.OriginFacilityFk.CityFk.DisplayName : string.Empty,
                     Destinations = trip.RoutPoints.Where(x=> x.PickingType == PickingType.Dropoff)
-                        .Select(x=> x.FacilityFk.CityFk.DisplayName).ToList(),
+                        .Select(x=> x.FacilityFk.CityFk.DisplayName).Distinct().ToList(),
                         trip.WaybillNumber,
                     TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated
                         ? LocalizationSource.GetString("Dedicated")
@@ -149,7 +149,7 @@ namespace TACHYON.Dashboards.Shipper
                     Origin = point.ShippingRequestTripFk.OriginFacilityFk.CityFk.DisplayName,
                     Destinations = point.ShippingRequestTripFk.RoutPoints
                         .Where(x => x.PickingType == PickingType.Dropoff)
-                        .Select(x => x.FacilityFk.CityFk.DisplayName).ToList(),
+                        .Select(x => x.FacilityFk.CityFk.DisplayName).Distinct().ToList(),
                     WaybillNumber = point.ShippingRequestTripFk.RouteType.HasValue
                         ? (point.ShippingRequestTripFk.RouteType == ShippingRequestRouteType.SingleDrop
                             ? point.ShippingRequestTripFk.WaybillNumber
@@ -176,7 +176,8 @@ namespace TACHYON.Dashboards.Shipper
                     ReferenceNumber = x.ShippingRequestFk.ReferenceNumber,
                     CompanyName = x.ShippingRequestFk.RequestType == ShippingRequestType.TachyonManageService
                         ? LocalizationSource.GetString("TachyonManageService")
-                        : x.Tenant.companyName
+                        : x.Tenant.companyName,
+                    ShippingRequestId = x.ShippingRequestId
                 }).ToListAsync();
 
             return offers;

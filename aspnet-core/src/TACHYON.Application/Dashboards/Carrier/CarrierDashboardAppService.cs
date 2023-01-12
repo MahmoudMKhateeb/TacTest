@@ -126,7 +126,7 @@ namespace TACHYON.Dashboards.Carrier
                     Origin =
                         trip.OriginFacilityId.HasValue ? trip.OriginFacilityFk.CityFk.DisplayName : string.Empty,
                     Destinations = trip.RoutPoints.Where(x=> x.PickingType == PickingType.Dropoff)
-                        .Select(x=> x.FacilityFk.CityFk.DisplayName).ToList(),
+                        .Select(x=> x.FacilityFk.CityFk.DisplayName).Distinct().ToList(),
                         trip.WaybillNumber,
                     TripType = trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated
                         ? LocalizationSource.GetString("Dedicated")
@@ -154,6 +154,7 @@ namespace TACHYON.Dashboards.Carrier
         
         public async Task<List<NeedsActionTripDto>> GetNeedsActionTrips()
         {
+            DisableTenancyFilters();
             var trips = await (from point in _routePointRepository.GetAll()
                 where point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId
                       && point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
@@ -163,7 +164,7 @@ namespace TACHYON.Dashboards.Carrier
                     Origin = point.ShippingRequestTripFk.OriginFacilityFk.CityFk.DisplayName,
                     Destinations = point.ShippingRequestTripFk.RoutPoints
                         .Where(x => x.PickingType == PickingType.Dropoff)
-                        .Select(x => x.FacilityFk.CityFk.DisplayName).ToList(),
+                        .Select(x => x.FacilityFk.CityFk.DisplayName).Distinct().ToList(),
                     WaybillNumber = point.ShippingRequestTripFk.RouteType.HasValue
                         ? (point.ShippingRequestTripFk.RouteType == ShippingRequestRouteType.SingleDrop
                             ? point.ShippingRequestTripFk.WaybillNumber
@@ -190,7 +191,8 @@ namespace TACHYON.Dashboards.Carrier
                     ReferenceNumber = x.ShippingRequestFK.ReferenceNumber,
                     CompanyName = x.ShippingRequestFK.RequestType == ShippingRequestType.TachyonManageService
                         ? LocalizationSource.GetString("TachyonManageService")
-                        : x.Tenant.companyName
+                        : x.Tenant.companyName,
+                    ShippingRequestId = x.ShippingRequestId
                 }).ToListAsync();
 
             return directRequests;
