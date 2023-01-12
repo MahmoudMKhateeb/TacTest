@@ -325,7 +325,11 @@
                     <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                   </a>
                   <ul *dropdownMenu class="dropdown-menu">
-                    <li *ngIf="(record.status == 0 && CanEditTrip) || record.shippingRequestTripFlag === 1">
+                    <li
+                      *ngIf="
+                        (record.status == 0 && CanEditTrip) || (record.shippingRequestTripFlag === 1 && (record.status == 0 || record.status == 1))
+                      "
+                    >
                       <a class="dropdown-item" (click)="AddNewTripModal.show(record, shippingRequestForView)">{{ l('Edit') }}</a>
                     </li>
 
