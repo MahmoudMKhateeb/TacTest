@@ -1,6 +1,12 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  CarrierDashboardServiceProxy,
+  NewDirectRequestListDto,
+  NewPriceOfferListDto,
+  ShipperDashboardServiceProxy,
+} from '@shared/service-proxies/service-proxies';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-direct-requests-widget',
@@ -8,9 +14,23 @@ import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-pr
   styleUrls: ['./new-direct-requests-widget.component.css'],
 })
 export class NewDirectRequestsWidgetComponent extends AppComponentBase implements OnInit {
-  constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
+  newDirectRequests: NewDirectRequestListDto[] = [];
+
+  constructor(injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy, private router: Router) {
     super(injector);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getNewDirectRequests();
+  }
+
+  getNewDirectRequests(): void {
+    this._carrierDashboardServiceProxy.getNewDirectRequest().subscribe((res) => {
+      this.newDirectRequests = res;
+    });
+  }
+
+  goToRequest() {
+    this.router.navigateByUrl(`/app/main/directrequest/list`);
+  }
 }

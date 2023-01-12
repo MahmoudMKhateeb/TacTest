@@ -38,8 +38,8 @@
                 public const string ShipperDocumentDueDateInDaysWidget =
                     "Widgets_Tenant_shipper_DocumentDueDateInDaysWidget";
 
-                public const string ShipperMostWorkedWithCarriersWidget =
-                    "Widgets_Tenant_shipper_MostWorkedWithCarriersWidget";
+                // public const string ShipperMostWorkedWithCarriersWidget =
+                //     "Widgets_Tenant_shipper_MostWorkedWithCarriersWidget";
 
                 public const string ShipperMostUsedOriginsWidget = "Widgets_Tenant_shipper_MostUsedOriginsWidget";
 
@@ -73,8 +73,8 @@
                 public const string CarrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget =
                     "Widgets_Tenant_carrier_NumberOfCompletedTripsTotalMonthlyIncreaseWidget";
 
-                public const string CarrierMostWorkedWithShipperWidget =
-                    "Widgets_Tenant_carrier_MostWorkedWithShipperWidget";
+                // public const string CarrierMostWorkedWithShipperWidget =
+                //     "Widgets_Tenant_carrier_MostWorkedWithShipperWidget";
 
                 public const string CarrierNextInvoiceFrequenctEndDateWidget =
                     "Widgets_Tenant_carrier_NextInvoiceFrequenctEndDateWidget";
@@ -86,7 +86,7 @@
                 public const string CarrierUpcomingTripsWidget = "Widgets_Tenant_carrier_Upcoming_Trips_Widget";
                 public const string CarrierCountersWidget = "Widgets_Tenant_carrier_Counters_Widget";
                 public const string NeedsActionWidget = "Widgets_Tenant_carrier_Needs_Action_Widget";
-                public const string NewOffersWidget = "Widgets_Tenant_carrier_New_Offers_Widget";
+                public const string NewDirectRequestsWidget = "Widgets_Tenant_carrier_New_Direct_request";
             }
 
             public class TachyonDealer

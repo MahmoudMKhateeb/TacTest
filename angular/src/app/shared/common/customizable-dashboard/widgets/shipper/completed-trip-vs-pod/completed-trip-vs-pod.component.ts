@@ -90,11 +90,12 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
             {
               name: this.l('Completed'),
               data: completedSeries,
-              color: 'rgba(187, 41, 41, 0.847)',
+              color: 'rgba(105, 228, 94, 0.89)',
             },
             {
               name: this.l('POD'),
               data: podSeries,
+              color: '#d82631',
             },
           ],
           chart: {

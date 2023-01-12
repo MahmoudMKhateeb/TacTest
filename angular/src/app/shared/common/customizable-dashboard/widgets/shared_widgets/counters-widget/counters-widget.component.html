@@ -1,3 +1,4 @@
+<!--[busyIf]="loading"-->
 <div class="card card-custom card-stretch w-100 h-100">
   <div class="card-body p-4 d-flex flex-column justify-content-center">
     <div class="d-flex">
@@ -5,8 +6,8 @@
         <img class="counter-icon" src="assets/SVG/Delivered_Trips.svg" alt="" />
       </div>
       <div>
-        <span class="counter-title">Delivered Trips</span> <br />
-        <span class="counter-details">25 / Week</span>
+        <span class="counter-title">{{ 'DeliveredTrips' | localize }}</span> <br />
+        <span class="counter-details">{{ deliveredTripsCount }} / {{ 'Week' | localize }}</span>
       </div>
     </div>
     <hr class="custom-hr" />
@@ -16,8 +17,8 @@
           <img class="counter-icon" src="assets/SVG/In_Transit_Trips.svg" alt="" />
         </div>
         <div>
-          <span class="counter-title">In Transit Trips</span> <br />
-          <span class="counter-details">25 Trips</span>
+          <span class="counter-title">{{ 'InTransitTrips' | localize }}</span> <br />
+          <span class="counter-details">{{ inTransitTripsCount }} {{ 'Trip' | localize }}</span>
         </div>
       </div>
     </ng-container>
@@ -27,8 +28,8 @@
           <img class="counter-icon" src="assets/SVG/Generated_invoice.svg" alt="" />
         </div>
         <div>
-          <span class="counter-title">Generated Invoice</span> <br />
-          <span class="counter-details">25 Invoice</span>
+          <span class="counter-title">{{ 'GeneratedInvoice' | localize }}</span> <br />
+          <span class="counter-details">{{ numberOfGeneratedInvoices }} {{ 'Invoice' | localize }}</span>
         </div>
       </div>
     </ng-container>

@@ -10,11 +10,14 @@ import * as moment from '@node_modules/moment';
 })
 export class FromToComponent extends AppComponentBase implements OnInit {
   @Input('from') from: string;
-  @Input('to') to: string;
+  @Input('to') to: string | string[];
+  dest: string;
 
   constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.dest = this.to instanceof Array ? this.to.join(', ') : this.to;
+  }
 }
