@@ -584,6 +584,9 @@ namespace TACHYON.Authorization.Users
                     await _documentFilesManager.CreateOrEditDocumentFile(item);
                 }
 
+                 // grant the tracking permission for driver (see issue TAC-4992)
+                var trackingPermission = PermissionManager.GetPermission(AppPermissions.Pages_Tracking);
+                await UserManager.GrantPermissionAsync(user, trackingPermission);
                 var iosLink = await SettingManager.GetSettingValueAsync(AppSettings.Links.IosAppLink);
                 var androidLink = await SettingManager.GetSettingValueAsync(AppSettings.Links.AndroidAppLink);
 
