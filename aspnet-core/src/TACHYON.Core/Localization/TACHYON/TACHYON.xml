@@ -3180,5 +3180,8 @@
     <text name="PricePerDay">Price per day</text>
     <text name="ConfirmDelivery">Confirm Delivery</text>
     <text name="DropOffConfirmDelivery">Confirm drop-off delivery</text>
+    <text name="YouMustUpdateTheVersionOfTheApplication">You Must Update The Version Of The Application</text>
+    <text name="UpdateTheApplication">Update The Application</text>
+    <text name="ChangeStatus">Change Status</text>
 	</texts>
 </localizationDictionary>
