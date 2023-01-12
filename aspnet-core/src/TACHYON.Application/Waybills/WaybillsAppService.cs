@@ -76,7 +76,9 @@ namespace TACHYON.Waybills
                 .FirstOrDefault(e => e.Id == shippingRequestTripId);
             if (item.ShippingRequestFk.RouteTypeId == null)
                 return item.RouteType == ShippingRequestRouteType.SingleDrop;
-            return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
+            if(item.ShippingRequestFk.RouteTypeId !=null)
+                return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
+            return item.RouteType == ShippingRequestRouteType.SingleDrop;
         }
 
         private bool IsSingleDropShippingRequest(long routPointId)
@@ -86,8 +88,9 @@ namespace TACHYON.Waybills
                 .Include(e => e.ShippingRequestFk)
                 .Include(e => e.RoutPoints)
                 .FirstOrDefault(e => e.RoutPoints.Any(x => x.Id == routPointId));
-
-            return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
+            if (item.ShippingRequestFk.RouteTypeId != null)
+                return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
+            return item.RouteType == ShippingRequestRouteType.SingleDrop;
         }
 
         private FileDto GetMasterWaybillPdf(int shippingRequestTripId)
