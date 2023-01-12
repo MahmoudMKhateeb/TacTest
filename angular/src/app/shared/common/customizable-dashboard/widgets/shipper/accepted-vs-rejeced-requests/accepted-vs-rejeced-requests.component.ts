@@ -1,10 +1,11 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptions, ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ChartCategoryPairedValuesDto, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ChartCategoryPairedValuesDto, FilterDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { ApexLegend } from '@node_modules/ng-apexcharts';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'app-accepted-vs-rejeced-requests',
@@ -21,7 +22,8 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
     // fontWeight: 500,
   };
   public acceptedVsRejected: any;
-  options: string[] = [this.l('Daily'), this.l('Weekly'), this.l('Monthly')];
+  // this.l('Daily'), this.l('Weekly'), this.l('Monthly')
+  options: { key: any; value: any }[] = [];
   yaxis = [
     // {
     //     labels: {
@@ -32,19 +34,25 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
     //     }
     // }
   ];
+  selectedOption = FilterDatePeriod.Monthly;
 
-  constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
+  constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy, private _enumService: EnumToArrayPipe) {
     super(injector);
   }
 
   ngOnInit() {
     this.getRequests();
+    this.options = this._enumService.transform(FilterDatePeriod).map((item) => {
+      item.key = Number(item.key);
+      return item;
+    });
   }
 
   getRequests() {
+    console.log('this.selectedOption', this.selectedOption);
     this.loading = true;
     this._shipperDashboardServiceProxy
-      .getAcceptedAndRejectedRequests()
+      .getAcceptedAndRejectedRequests(this.selectedOption)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -58,10 +66,21 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
           rejected,
           total: accepted + rejected,
         };
-        const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        let categories = [];
+        if (this.selectedOption == FilterDatePeriod.Monthly) {
+          categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        }
+        if (this.selectedOption == FilterDatePeriod.Weekly) {
+          categories = Array.from(
+            new Set<string>(result.acceptedOffers.map((item) => item.x).concat(result.rejectedOffers.map((rej) => rej.x))).values()
+          );
+        }
+        if (this.selectedOption == FilterDatePeriod.Daily) {
+          categories = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        }
         const acceptedSeries = categories.map((item) => {
           const foundFromResponse = result.acceptedOffers.find((accepted) => {
-            accepted.x = accepted?.x?.slice(0, 3);
+            accepted.x = this.selectedOption != FilterDatePeriod.Weekly ? accepted?.x?.slice(0, 3) : accepted?.x;
             return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
           console.log('acceptedSeries foundFromResponse', foundFromResponse);
@@ -72,7 +91,7 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
         });
         const rejectedSeries = categories.map((item) => {
           const foundFromResponse = result.rejectedOffers.find((rejected) => {
-            rejected.x = rejected?.x?.slice(0, 3);
+            rejected.x = this.selectedOption != FilterDatePeriod.Weekly ? rejected?.x?.slice(0, 3) : rejected?.x;
             return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
           console.log('rejectedSeries foundFromResponse', foundFromResponse);

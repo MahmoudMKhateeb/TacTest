@@ -1,10 +1,11 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ChartCategoryPairedValuesDto, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ChartCategoryPairedValuesDto, FilterDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { ApexLegend } from '@node_modules/ng-apexcharts';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'app-completed-trip-vs-pod',
@@ -31,21 +32,26 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
     // }
   ];
   public completedTripVsPod: any;
-  options: string[] = [this.l('Daily'), this.l('Weekly'), this.l('Monthly')];
+  options: { key: any; value: any }[] = [];
+  selectedOption = FilterDatePeriod.Monthly;
 
-  constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
+  constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy, private _enumService: EnumToArrayPipe) {
     super(injector);
   }
 
   ngOnInit() {
     this.getTrips();
+    this.options = this._enumService.transform(FilterDatePeriod).map((item) => {
+      item.key = Number(item.key);
+      return item;
+    });
   }
 
   getTrips() {
     this.loading = true;
 
     this._shipperDashboardServiceProxy
-      .getCompletedTripVsPod()
+      .getCompletedTripVsPod(this.selectedOption)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -60,11 +66,20 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
           pod,
           total: completed + pod,
         };
-        const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        let categories = [];
+        if (this.selectedOption == FilterDatePeriod.Monthly) {
+          categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        }
+        if (this.selectedOption == FilterDatePeriod.Weekly) {
+          categories = Array.from(new Set<string>(result.completedTrips.map((item) => item.x).concat(result.podTrips.map((rej) => rej.x))).values());
+        }
+        if (this.selectedOption == FilterDatePeriod.Daily) {
+          categories = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        }
         const completedSeries = categories.map((item) => {
-          const foundFromResponse = result.completedTrips.find((accepted) => {
-            accepted.x = accepted?.x.slice(0, 3);
-            return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
+          const foundFromResponse = result.completedTrips.find((completed) => {
+            completed.x = this.selectedOption != FilterDatePeriod.Weekly ? completed?.x?.slice(0, 3) : completed?.x;
+            return completed.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
           console.log('acceptedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
@@ -73,9 +88,9 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
           });
         });
         const podSeries = categories.map((item) => {
-          const foundFromResponse = result.podTrips.find((rejected) => {
-            rejected.x = rejected?.x.slice(0, 3);
-            return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
+          const foundFromResponse = result.podTrips.find((pod) => {
+            pod.x = this.selectedOption != FilterDatePeriod.Weekly ? pod?.x?.slice(0, 3) : pod?.x;
+            return pod.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
           console.log('rejectedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({

@@ -12,7 +12,7 @@
           <div
             class="d-flex justify-content-between mb-4 px-4 clickable-item"
             *ngFor="let directRequest of newDirectRequests"
-            (click)="goToRequest()"
+            (click)="goToRequest(directRequest)"
           >
             <div>
               {{ directRequest.referenceNumber }}

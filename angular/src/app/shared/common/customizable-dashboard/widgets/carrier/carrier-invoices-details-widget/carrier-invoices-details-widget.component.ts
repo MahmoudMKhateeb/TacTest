@@ -15,6 +15,16 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
 
   loading = false;
   acceptedVsRejected: { total: number; paid: number; unpaid: number };
+  yaxis = [
+    {
+      labels: {
+        formatter: function (val) {
+          console.log('InvoicesVsPaidInvoicesComponent val', val);
+          return isNaN(val) ? val.toFixed(0) : val;
+        },
+      },
+    },
+  ];
 
   constructor(injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy) {
     super(injector);

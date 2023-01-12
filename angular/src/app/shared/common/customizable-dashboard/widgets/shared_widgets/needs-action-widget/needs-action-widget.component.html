@@ -6,7 +6,11 @@
           <div class="card-label">{{ 'NeedsAction' | localize }}</div>
         </div>
         <div class="overflow-auto">
-          <div class="card card-custom dashboard-plain-card mb-2 clickable-item" *ngFor="let trip of needsActionTrips" (click)="goToTrackingPage()">
+          <div
+            class="card card-custom dashboard-plain-card mb-2 clickable-item"
+            *ngFor="let trip of needsActionTrips"
+            (click)="goToTrackingPage(trip)"
+          >
             <div class="card-body p-4 d-flex justify-content-between align-items-end">
               <app-from-to [from]="trip.origin" [to]="trip.destinations"></app-from-to>
               <!--            <div class="d-flex justify-content-between">-->

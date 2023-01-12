@@ -30,7 +30,7 @@ export class NewDirectRequestsWidgetComponent extends AppComponentBase implement
     });
   }
 
-  goToRequest() {
-    this.router.navigateByUrl(`/app/main/directrequest/list`);
+  goToRequest(item: NewDirectRequestListDto) {
+    this.router.navigateByUrl(`/app/main/directrequest/list?srId=${item.shippingRequestId}`);
   }
 }

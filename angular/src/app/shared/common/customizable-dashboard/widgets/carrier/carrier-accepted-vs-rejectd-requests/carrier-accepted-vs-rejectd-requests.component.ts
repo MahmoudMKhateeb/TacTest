@@ -1,10 +1,11 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ChartOptions, ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
-import { CarrierDashboardServiceProxy, ChartCategoryPairedValuesDto } from '@shared/service-proxies/service-proxies';
+import { CarrierDashboardServiceProxy, ChartCategoryPairedValuesDto, FilterDatePeriod } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
 import { ApexLegend } from '@node_modules/ng-apexcharts';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'app-carrier-accepted-vs-rejectd-requests',
@@ -22,20 +23,23 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
     // fontWeight: 500,
   };
   public acceptedVsRejected: any;
-  options: string[] = [this.l('Daily'), this.l('Weekly'), this.l('Monthly')];
+  // options: string[] = [this.l('Daily'), this.l('Weekly'), this.l('Monthly')];
+  options: { key: any; value: any }[] = [];
+  selectedOption = FilterDatePeriod.Monthly;
 
-  constructor(injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy) {
+  constructor(injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy, private _enumService: EnumToArrayPipe) {
     super(injector);
   }
 
   ngOnInit() {
     this.getRequests();
+    this.options = this._enumService.transform(FilterDatePeriod);
   }
 
   getRequests() {
     this.loading = true;
     this._carrierDashboardServiceProxy
-      .getAcceptedAndRejectedRequests()
+      .getAcceptedAndRejectedRequests(this.selectedOption)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -49,10 +53,21 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
           rejected,
           total: accepted + rejected,
         };
-        const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        let categories = [];
+        if (this.selectedOption == FilterDatePeriod.Monthly) {
+          categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        }
+        if (this.selectedOption == FilterDatePeriod.Weekly) {
+          categories = Array.from(
+            new Set<string>(result.acceptedOffers.map((item) => item.x).concat(result.rejectedOffers.map((rej) => rej.x))).values()
+          );
+        }
+        if (this.selectedOption == FilterDatePeriod.Daily) {
+          categories = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        }
         const acceptedSeries = categories.map((item) => {
           const foundFromResponse = result.acceptedOffers.find((accepted) => {
-            accepted.x = accepted?.x?.slice(0, 3);
+            accepted.x = this.selectedOption != FilterDatePeriod.Weekly ? accepted?.x?.slice(0, 3) : accepted?.x;
             return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
           console.log('acceptedSeries foundFromResponse', foundFromResponse);
@@ -63,7 +78,7 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
         });
         const rejectedSeries = categories.map((item) => {
           const foundFromResponse = result.rejectedOffers.find((rejected) => {
-            rejected.x = rejected?.x?.slice(0, 3);
+            rejected.x = this.selectedOption != FilterDatePeriod.Weekly ? rejected?.x?.slice(0, 3) : rejected?.x;
             return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
           console.log('rejectedSeries foundFromResponse', foundFromResponse);

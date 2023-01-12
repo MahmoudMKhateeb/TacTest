@@ -2,12 +2,14 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CarrierDashboardServiceProxy,
+  NeedsActionTripDto,
   ShipperDashboardServiceProxy,
   UpcomingTripItemDto,
   UpcomingTripsOutput,
 } from '@shared/service-proxies/service-proxies';
 import * as moment from '@node_modules/moment';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upcoming-trips-widgets',
@@ -25,7 +27,8 @@ export class UpcomingTripsWidgetsComponent extends AppComponentBase implements O
   constructor(
     injector: Injector,
     private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy,
-    private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy
+    private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy,
+    private router: Router
   ) {
     super(injector);
   }
@@ -63,5 +66,9 @@ export class UpcomingTripsWidgetsComponent extends AppComponentBase implements O
     } else {
       this.upcomingTripsForSelectedDay = [];
     }
+  }
+
+  goToTrackingPage(trip: NeedsActionTripDto): void {
+    this.router.navigateByUrl(`/app/main/tracking?waybillNumber=${trip.waybillNumber}`);
   }
 }

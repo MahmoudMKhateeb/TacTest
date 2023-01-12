@@ -45,7 +45,7 @@ export class NeedsActionWidgetComponent extends AppComponentBase implements OnIn
     }
   }
 
-  goToTrackingPage(): void {
-    this.router.navigate(['/app/main/tracking']);
+  goToTrackingPage(trip: NeedsActionTripDto): void {
+    this.router.navigateByUrl(`/app/main/tracking?waybillNumber=${trip.waybillNumber}`);
   }
 }

@@ -26,7 +26,16 @@
       </div>
       <div class="col-3 p-0 pl-2 pr-2">
         <div class="filter-box">
-          <dx-select-box [items]="options"></dx-select-box>
+          <dx-select-box
+            id="shipperActorId"
+            name="shipperActor"
+            [(value)]="selectedOption"
+            [dataSource]="options"
+            [searchEnabled]="true"
+            displayExpr="value"
+            valueExpr="key"
+            (onValueChanged)="getRequests()"
+          ></dx-select-box>
         </div>
         <div class="pb-5">
           <div class="text-gray">
