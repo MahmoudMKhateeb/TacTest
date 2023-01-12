@@ -263,6 +263,28 @@ namespace TACHYON.PricePackages
             
         }
 
+        public async Task<LoadResult> GetAppendixPricePackages(LoadOptionsInput input)
+        {
+            var isTmsOrHost = !AbpSession.TenantId.HasValue || await IsTachyonDealer();
+            var tmsPricePackages = await _tmsPricePackageRepository.GetAll().AsNoTracking()
+                .WhereIf(!isTmsOrHost,
+                    x => x.DestinationTenantId == AbpSession.TenantId &&
+                         (x.Proposal.Appendix.Status == AppendixStatus.Confirmed ||
+                          x.Appendix.Status == AppendixStatus.Confirmed) && (x.Proposal.Appendix.IsActive || x.Appendix.IsActive))
+                .ProjectTo<TmsPricePackageForViewDto>(AutoMapperConfigurationProvider).ToListAsync();
+            
+            var normalPricePackages = await _normalPricePackageRepository.GetAll().AsNoTracking()
+                .WhereIf(!isTmsOrHost,
+                    x => x.TenantId == AbpSession.TenantId && (x.Appendix.Status == AppendixStatus.Confirmed) && x.Appendix.IsActive)
+                .ProjectTo<TmsPricePackageForViewDto>(AutoMapperConfigurationProvider).ToListAsync();
+
+            var pageResult = new List<TmsPricePackageForViewDto>();
+            pageResult.AddRange(tmsPricePackages);
+            pageResult.AddRange(normalPricePackages);
+
+            return LoadResult(pageResult, input.LoadOptions); 
+        }
+
         public async Task<List<SelectItemDto>> GetCompanies()
         {
             DisableTenancyFilters();
