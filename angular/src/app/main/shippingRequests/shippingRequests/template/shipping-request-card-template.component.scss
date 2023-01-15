@@ -185,26 +185,28 @@
 }
 
 ::ng-deep {
-    .card {
+    shipping-request-card-template {
         .card {
-            background: transparent;
+            .card {
+                background: transparent;
 
-            .card-header,
-            .card-body {
-                padding: 0 !important;
-                margin: 0rem 2.25rem;
-            }
+                .card-header,
+                .card-body {
+                    padding: 0 !important;
+                    margin: 0rem 2.25rem;
+                }
 
-            .p-datatable {
-                .p-datatable-tbody {
-                    & > tr {
-                        background: transparent;
+                .p-datatable {
+                    .p-datatable-tbody {
+                        & > tr {
+                            background: transparent;
+                        }
                     }
                 }
-            }
 
-            .p-paginator {
-                background: transparent;
+                .p-paginator {
+                    background: transparent;
+                }
             }
         }
     }

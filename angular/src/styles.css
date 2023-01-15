@@ -621,3 +621,10 @@ ngb-datepicker {
   cursor: none;
   pointer-events: none;
 }
+
+.dashboard {
+  background-color: #f4f4f4;
+}
+.dashboard .subheader.subheader-solid {
+  position: absolute !important;
+}

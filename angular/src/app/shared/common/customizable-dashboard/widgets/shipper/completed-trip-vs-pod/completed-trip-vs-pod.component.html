@@ -5,20 +5,91 @@
       <h3 class="card-label">{{ l('CompletedTripsvsPod') }}</h3>
     </div>
   </div>
-  <div class="card-body p-1">
-    <!--        <div class="pd-5 text-center" *ngIf="completedTrips.length == 0 && POD.length == 0">-->
+  <div class="card-body p-4">
+    <!--        <div class="pd-5 text-center" *ngIf="acceptedReqs.length == 0 && rejectedReqs.length == 0">-->
     <!--          {{ l('NoData') }}-->
     <!--        </div>-->
-    <div id="acceptedVsRejectedChart">
-      <apx-chart
-        *ngIf="chartOptions && chartOptions.series"
-        [series]="chartOptions.series"
-        [chart]="chartOptions.chart"
-        [xaxis]="chartOptions.xaxis"
-        [stroke]="chartOptions.stroke"
-        [tooltip]="chartOptions.tooltip"
-        [dataLabels]="chartOptions.dataLabels"
-      ></apx-chart>
+    <div class="row" *ngIf="chartOptions && chartOptions.series">
+      <div class="col-9 p-0">
+        <div id="acceptedVsRejectedChart">
+          <apx-chart
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [xaxis]="chartOptions.xaxis"
+            [yaxis]="yaxis"
+            [stroke]="chartOptions.stroke"
+            [tooltip]="chartOptions.tooltip"
+            [dataLabels]="chartOptions.dataLabels"
+            [legend]="legend"
+            [plotOptions]="{ bar: { columnWidth: '45%' } }"
+          ></apx-chart>
+        </div>
+      </div>
+      <div class="col-3 p-0 pl-2 pr-2">
+        <div class="filter-box">
+          <dx-select-box
+            id="shipperActorId"
+            name="shipperActor"
+            [(value)]="selectedOption"
+            [dataSource]="options"
+            [searchEnabled]="true"
+            displayExpr="value"
+            valueExpr="key"
+            (onValueChanged)="getTrips()"
+          ></dx-select-box>
+        </div>
+        <div class="pb-5">
+          <div class="text-gray">
+            {{ 'Completed' | localize }}
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="col-4 p-0 text-center requests-count">{{ completedTripVsPod?.completed }}</div>
+            <div class="col-8">
+              <div class="progress custom-progress">
+                <div class="progress-bar accepted" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                  {{
+                    completedTripVsPod?.completed > 0 && completedTripVsPod?.total > 0
+                      ? (completedTripVsPod?.completed / completedTripVsPod?.total) * 100
+                      : 0
+                  }}%
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pb-5">
+          <div class="text-gray">
+            {{ 'POD' | localize }}
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="col-4 p-0 text-center requests-count">{{ completedTripVsPod?.pod }}</div>
+            <div class="col-8">
+              <div class="progress custom-progress">
+                <div class="progress-bar rejected" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                  {{
+                    completedTripVsPod?.pod > 0 && completedTripVsPod?.total > 0 ? (completedTripVsPod?.pod / completedTripVsPod?.total) * 100 : 0
+                  }}%
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pb-5">
+          <div class="text-gray">
+            {{ 'Total' | localize }}
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="col-4 p-0 text-center requests-count">{{ completedTripVsPod?.total }}</div>
+            <div class="col-8">
+              <div class="progress custom-progress">
+                <div class="progress-bar gray" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                  100%
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

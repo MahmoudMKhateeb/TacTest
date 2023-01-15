@@ -114,24 +114,32 @@ namespace TACHYON.DashboardCustomization.Definitions
             //var shipperNextInvoiceFrequancyEndDateWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNextInvoiceFrequancyEndDateWidget, "ShipperNextInvoiceFrequancyEndDateWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperInvoiceDueDateInDaysWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperInvoiceDueDateInDaysWidget, "ShipperInvoiceDueDateInDaysWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperDocumentDueDateInDaysWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperDocumentDueDateInDaysWidget, "ShipperDocumentDueDateInDaysWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
-            var shipperMostWorkedWithCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperMostWorkedWithCarriersWidget, "ShipperMostWorkedWithCarriersWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
+            // var shipperMostWorkedWithCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperMostWorkedWithCarriersWidget, "ShipperMostWorkedWithCarriersWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperMostUsedOriginsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperMostUsedOriginsWidget, "ShipperMostUsedOriginsWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperMostUsedDestinationsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperMostUsedDestinationsWidget, "ShipperMostUsedDestinationsWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperRequestsInMarketplaceWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperRequestsInMarketplaceWidget, "ShipperRequestsInMarketplaceWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperTrackingMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperTrackingMapWidget, "ShipperTrackingMapWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
+            var shipperCountersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperCountersWidget, "ShipperCountersWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
+            var shipperUpcomingTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperUpcomingTripsWidget, "ShipperUpcomingTripsWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
+            var shipperNeedsActionWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNeedsActionWidget, "ShipperNeedsActionWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
+            var shipperNewOffersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNewOffersWidget, "ShipperNewOffersWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
 
-            WidgetDefinitions.Add(shipperNumberOfCompletedTripsWidget);
+            // WidgetDefinitions.Add(shipperNumberOfCompletedTripsWidget);
             WidgetDefinitions.Add(shipperAcceptedVsRejectedRequestsWidget);
             WidgetDefinitions.Add(shipperCompletedTripsVsPodWidget);
             WidgetDefinitions.Add(shipperInvoicesVsPaidInvoicesWidget);
             //WidgetDefinitions.Add(shipperNextInvoiceFrequancyEndDateWidget);
-            WidgetDefinitions.Add(shipperInvoiceDueDateInDaysWidget);
-            WidgetDefinitions.Add(shipperDocumentDueDateInDaysWidget);
-            WidgetDefinitions.Add(shipperMostWorkedWithCarriersWidget);
+            // WidgetDefinitions.Add(shipperInvoiceDueDateInDaysWidget);
+            // WidgetDefinitions.Add(shipperDocumentDueDateInDaysWidget);
+            // WidgetDefinitions.Add(shipperMostWorkedWithCarriersWidget);
             WidgetDefinitions.Add(shipperMostUsedOriginsWidget);
             WidgetDefinitions.Add(shipperMostUsedDestinationsWidget);
-            WidgetDefinitions.Add(shipperRequestsInMarketplaceWidget);
+            // WidgetDefinitions.Add(shipperRequestsInMarketplaceWidget);
             WidgetDefinitions.Add(shipperTrackingMapWidget);
+            WidgetDefinitions.Add(shipperCountersWidget);
+            WidgetDefinitions.Add(shipperUpcomingTripsWidget);
+            WidgetDefinitions.Add(shipperNeedsActionWidget);
+            WidgetDefinitions.Add(shipperNewOffersWidget);
 
             #endregion
 
@@ -146,28 +154,38 @@ namespace TACHYON.DashboardCustomization.Definitions
             //var carrierMostUsedPpWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierMostUsedPpWidget, "CarrierMostUsedPpWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var carrierMostUsedVasWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierMostUsedVasWidget, "CarrierMostUsedVasWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var carrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget, "CarrierNumberOfCompletedTripsWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
-            var carrierMostWorkedWithShipperWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierMostWorkedWithShipperWidget, "CarrierMostWorkedWithShipperWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
+            // var carrierMostWorkedWithShipperWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierMostWorkedWithShipperWidget, "CarrierMostWorkedWithShipperWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             //var carrierNextInvoiceFrequenctEndDateWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierNextInvoiceFrequenctEndDateWidget, "CarrierNextInvoiceFrequenctEndDateWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var carrierDueDateInDaysWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierDueDateInDaysWidget, "CarrierDueDateInDaysWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var carrierTrackingMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierTrackingMapWidget, "CarrierTrackingMapWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var CarrierMostUsedPPWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierMostUsedPPWidget, "CarrierMostUsedPPWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
+            var CarrierActiveDriversAndTrucksWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierActiveDriversAndTrucksWidget, "CarrierActiveDriversAndTrucksWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
+            var CarrierUpcomingTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierUpcomingTripsWidget, "CarrierUpcomingTripsWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
+            var CarrierCountersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierCountersWidget, "CarrierCountersWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
+            var CarrierNeedsActionWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.NeedsActionWidget, "NeedsActionWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
+            var CarrierNewDirectRequestsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.NewDirectRequestsWidget, "NewDirectRequestsWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
 
 
 
 
 
-            WidgetDefinitions.Add(carrierDriversActivityWidget);
-            WidgetDefinitions.Add(carrierTrucksActivityWidget);
+            // WidgetDefinitions.Add(carrierDriversActivityWidget);
+            // WidgetDefinitions.Add(carrierTrucksActivityWidget);
             WidgetDefinitions.Add(carrierAcceptedVsRejectedPricingWidget);
             WidgetDefinitions.Add(carrierInvoicesVsPaidInvoicesWidget);
             //WidgetDefinitions.Add(carrierMostUsedPpWidget);
             WidgetDefinitions.Add(carrierMostUsedVasWidget);
-            WidgetDefinitions.Add(carrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget);
-            WidgetDefinitions.Add(carrierMostWorkedWithShipperWidget);
+            // WidgetDefinitions.Add(carrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget);
+            // WidgetDefinitions.Add(carrierMostWorkedWithShipperWidget);
             //WidgetDefinitions.Add(carrierNextInvoiceFrequenctEndDateWidget);
-            WidgetDefinitions.Add(carrierDueDateInDaysWidget);
+            // WidgetDefinitions.Add(carrierDueDateInDaysWidget);
             WidgetDefinitions.Add(carrierTrackingMapWidget);
             WidgetDefinitions.Add(CarrierMostUsedPPWidget);
+            WidgetDefinitions.Add(CarrierActiveDriversAndTrucksWidget);
+            WidgetDefinitions.Add(CarrierUpcomingTripsWidget);
+            WidgetDefinitions.Add(CarrierCountersWidget);
+            WidgetDefinitions.Add(CarrierNeedsActionWidget);
+            WidgetDefinitions.Add(CarrierNewDirectRequestsWidget);
 
             #endregion
 
@@ -244,11 +262,16 @@ namespace TACHYON.DashboardCustomization.Definitions
                     //carrierMostUsedPpWidget.Id,
                     carrierMostUsedVasWidget.Id,
                     carrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget.Id,
-                    carrierMostWorkedWithShipperWidget.Id,
+                    // carrierMostWorkedWithShipperWidget.Id,
                     //carrierNextInvoiceFrequenctEndDateWidget.Id,
                     carrierDueDateInDaysWidget.Id,
                     carrierTrackingMapWidget.Id,
-                    CarrierMostUsedPPWidget.Id
+                    CarrierMostUsedPPWidget.Id,
+                    CarrierActiveDriversAndTrucksWidget.Id,
+                    CarrierUpcomingTripsWidget.Id,
+                    CarrierCountersWidget.Id,
+                    CarrierNeedsActionWidget.Id,
+                    CarrierNewDirectRequestsWidget.Id,
                 });
             DashboardDefinitions.Add(defaultCarrierDashboard);
 
@@ -264,11 +287,15 @@ namespace TACHYON.DashboardCustomization.Definitions
                     //shipperNextInvoiceFrequancyEndDateWidget.Id,
                     shipperInvoiceDueDateInDaysWidget.Id,
                     shipperDocumentDueDateInDaysWidget.Id,
-                    shipperMostWorkedWithCarriersWidget.Id,
+                    // shipperMostWorkedWithCarriersWidget.Id,
                     shipperMostUsedOriginsWidget.Id,
                     shipperMostUsedDestinationsWidget.Id,
                     shipperRequestsInMarketplaceWidget.Id,
                     shipperTrackingMapWidget.Id,
+                    shipperCountersWidget.Id,
+                    shipperUpcomingTripsWidget.Id,
+                    shipperNeedsActionWidget.Id,
+                    shipperNewOffersWidget.Id,
                 });
             DashboardDefinitions.Add(defaultShipperDashboard);
 
