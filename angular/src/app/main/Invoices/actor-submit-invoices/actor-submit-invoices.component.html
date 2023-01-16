@@ -74,6 +74,10 @@
               <dxi-column dataField="status" cellTemplate="cellTemplate_status" caption="{{ l('Status') }}">
                 <dxo-lookup [dataSource]="SubmitStatus" displayExpr="value" valueExpr="key"></dxo-lookup>
               </dxi-column>
+                <dxo-master-detail [enabled]="true" template="actorSubmitInvoiceDetails"></dxo-master-detail>
+                <div *dxTemplate="let options of 'actorSubmitInvoiceDetails'">
+                    <app-actor-submit-invoice-item-detail [actorSubmitInvoiceId]="options.data.id"></app-actor-submit-invoice-item-detail>
+                </div>
 
               <div *dxTemplate="let options of 'channelCellTemplate'">
                 <span style="width: 137px">
