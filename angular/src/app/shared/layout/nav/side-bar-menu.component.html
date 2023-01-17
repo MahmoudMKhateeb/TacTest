@@ -91,7 +91,7 @@
 <ng-template #mMenuItemText let-item="item" let-parentItem="parentItem">
   <span class="menu-item-here"></span>
   <!-- if menu item has icon -->
-  <span class="menu-icon mr-5" *ngIf="item.icon">
+  <span class="menu-icon" [class.mr-5]="!isRtl" [class.ml-4]="isRtl" *ngIf="item.icon">
     <!--    <i class="menu-link-icon" [ngClass]="item.icon"></i>-->
 
     <span class="svg-icon menu-icon">
@@ -99,7 +99,7 @@
 
       <!--      <svg-icon *ngIf="item.icon" [src]="'assets/SVG/' + item.icon"></svg-icon>-->
 
-      <img width="35" src="assets/SVG/{{ item.icon }}" alt="" />
+      <img width="25" src="assets/SVG/{{ item.icon }}" alt="" />
 
       <!--end::Svg Icon-->
     </span>

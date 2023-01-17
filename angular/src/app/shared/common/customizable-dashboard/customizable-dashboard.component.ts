@@ -23,6 +23,8 @@ import { AddWidgetModalComponent } from './add-widget-modal/add-widget-modal.com
 import { DashboardCustomizationConst } from './DashboardCustomizationConsts';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import * as rtlDetect from 'rtl-detect';
+import * as moment from '@node_modules/moment';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'customizable-dashboard',
@@ -57,7 +59,7 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
 
   renamePageInput = '';
   addPageInput = '';
-
+  dashboardCustomizationConst = DashboardCustomizationConst;
   constructor(
     injector: Injector,
     private _dashboardViewConfiguration: DashboardViewConfigurationService,
@@ -83,7 +85,8 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
 
         this.initializeUserDashboardDefinition(savedUserDashboard, dashboardDefinitionResult);
         this.initializeUserDashboardFilters();
-
+        console.log('savedUserDashboard', savedUserDashboard);
+        console.log('dashboardDefinitionResult', dashboardDefinitionResult);
         //select first page (if user delete all pages server will add default page to userDashboard.)
         this.selectedPage = {
           id: this.userDashboard.pages[0].id,
@@ -123,6 +126,7 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
           (w) => dashboardDefinitionResult.widgets.find((d) => d.id === w.WidgetId) && this.getWidgetViewDefinition(w.WidgetId)
         );
 
+        console.log('page.Widgets', page.Widgets);
         return {
           id: page.Id,
           name: page.Name,
@@ -132,6 +136,8 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
               //View definitions are stored in the angular side(a component of widget/filter etc.) get view definition and use defined component
               component: this.getWidgetViewDefinition(widget.WidgetId).component,
               gridInformation: {
+                resizeEnabled: false,
+                dragEnabled: true,
                 id: widget.WidgetId,
                 cols: widget.Width,
                 rows: widget.Height,
@@ -143,6 +149,7 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
         };
       }),
     };
+    console.log('this.userDashboard', this.userDashboard);
   }
 
   removeItem(item: GridsterItem) {
@@ -201,11 +208,12 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
             id: widgetId,
             component: widgetViewConfiguration.component,
             gridInformation: {
+              resizeEnabled: false,
               id: widgetId,
               cols: addedWidget.width,
               rows: addedWidget.height,
-              x: addedWidget.positionX,
-              y: addedWidget.positionY,
+              x: 0, // addedWidget.positionX,
+              y: 0, //addedWidget.positionY,
             },
           });
 
@@ -244,7 +252,11 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
     if (this.options) {
       this.options.forEach((option) => {
         option.draggable.enabled = this.editModeEnabled;
-        option.resizable.enabled = this.editModeEnabled;
+        option.resizable.enabled = false; // this.editModeEnabled;
+        option.pushItems = false;
+        option.swap = true;
+        option.swapWhileDragging = false;
+        option.scrollToNewItems = true;
         option.api.optionsChanged();
       });
     }
@@ -430,17 +442,20 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
   private getGridsterConfig(): GridsterConfig {
     const isRtl = rtlDetect.isRtlLang(abp.localization.currentLanguage.name);
     return {
-      pushItems: true,
+      pushItems: false,
       draggable: {
         enabled: this.editModeEnabled,
       },
       resizable: {
-        enabled: this.editModeEnabled,
+        enabled: false, // this.editModeEnabled,
       },
       fixedRowHeight: 30,
       fixedColWidth: 30,
       gridType: 'verticalFixed',
       dirType: isRtl ? 'rtl' : 'ltr',
+      scrollToNewItems: true,
+      swap: true,
+      swapWhileDragging: false,
     };
   }
 
@@ -499,4 +514,49 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
   onMenuToggle = () => {
     this.refreshAllGrids();
   };
+
+  resetPageToDefault() {
+    if (
+      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultShipperDashboard ||
+      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultCarrierDashboard
+    ) {
+      this.resetPage(this.dashboardName);
+    }
+  }
+
+  resetPage(dashboardName: string) {
+    const dashboardDefault = DashboardCustomizationConst.dashboardDefaults.find((item) => item.dashboardName === dashboardName);
+    if (!isNotNullOrUndefined(dashboardDefault)) {
+      return;
+    }
+    this.busy = true;
+    let savePageInput = new SavePageInput({
+      dashboardName: dashboardName,
+      pages: dashboardDefault.pages.map((page) => {
+        return new Page({
+          id: page.id,
+          name: page.name,
+          widgets: page.widgets.map((widget) => {
+            return new Widget({
+              widgetId: widget.widgetId,
+              height: widget.height,
+              width: widget.width,
+              positionX: widget.positionX,
+              positionY: widget.positionY,
+            });
+          }),
+        });
+      }),
+      application: DashboardCustomizationConst.Applications.Angular,
+    });
+
+    this._dashboardCustomizationServiceProxy.savePage(savePageInput).subscribe(() => {
+      this.changeEditMode(); //after changes saved close edit mode
+      this.initializeUserDashboardFilters();
+
+      this.busy = false;
+      this.notify.success(this.l('SavedSuccessfully'));
+      window.location.reload();
+    });
+  }
 }

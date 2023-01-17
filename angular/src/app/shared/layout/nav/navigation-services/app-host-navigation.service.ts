@@ -20,12 +20,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
   getMenu(): AppMenu {
     console.log('AppHostNavigationService');
     let menu = new AppMenu('MainMenu', 'MainMenu', [
-      new AppMenuItem(
-        'Dashboard',
-        '',
-        'interaction, interact, preferences, preformance, computer, online, rating, review.svg',
-        '/app/main/dashboard'
-      ),
+      new AppMenuItem('Dashboard', '', 'Dashboards.svg', '/app/main/dashboard'),
       // ! host item with shared Sub-menu
       // ---------------------------------------------------------------------------------------------------------------------
       //start of reports
@@ -53,7 +48,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Financials',
         'Pages.Invoices',
-        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        'Financials.svg',
         '',
         [],
         [
@@ -197,7 +192,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'DocumentManagement',
         '',
-        'interaction, interact, preferences, preformance, customer, rating, rate, questions.svg',
+        'Document.svg',
         '',
         [],
         [
@@ -287,7 +282,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Operations',
         'Pages',
-        'digital marketing, marketing, content marketing, launch, startup, laptop.svg',
+        'Operations.svg',
         '',
         [],
         [
@@ -359,7 +354,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMSSettings',
         '',
-        'digital marketing, marketing, content marketing, puzzle, piece, strategy.svg',
+        'TMS Settings.svg',
         '',
         [],
         [
@@ -412,7 +407,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'AddressBook',
         '',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        'Facility Managment.svg',
         '',
         [],
         [
@@ -435,7 +430,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Settings',
         'Pages.Administration',
-        'user, interface, agent, usability, settings, options, preferences, gears.svg',
+        'Settings.svg',
         '',
         [],
         [
@@ -501,7 +496,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'UserManagement',
         '',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
+        'User Management.svg',
         '',
         [],
         [

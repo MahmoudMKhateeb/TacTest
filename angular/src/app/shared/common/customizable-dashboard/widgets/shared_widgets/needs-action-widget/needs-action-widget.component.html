@@ -1,0 +1,62 @@
+<div class="row" style="height: 100%">
+  <div class="col-12">
+    <div class="card card-custom card-stretch w-100 h-100">
+      <div class="card-body p-4">
+        <div class="card-title mb-4">
+          <div class="card-label">{{ 'NeedsAction' | localize }}</div>
+        </div>
+        <div class="overflow-auto">
+          <div
+            class="card card-custom dashboard-plain-card mb-2 clickable-item"
+            *ngFor="let trip of needsActionTrips"
+            (click)="goToTrackingPage(trip)"
+          >
+            <div class="card-body p-4 d-flex justify-content-between align-items-end">
+              <app-from-to [from]="trip.origin" [to]="trip.destinations"></app-from-to>
+              <!--            <div class="d-flex justify-content-between">-->
+              <!--              <div class="details">10:00am - 12:00pm</div>-->
+              <!--            </div>-->
+              <div class="d-flex flex-column">
+                <ng-container *ngIf="trip.needsPod && !trip.needsReceiverCode">
+                  <div class="pb-3">
+                    <span class="label label-default label-rounded text-red p-2">{{ 'DeliveryConfirmation' | localize }}</span>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!trip.needsPod && trip.needsReceiverCode">
+                  <div class="pb-3">
+                    <span class="label label-default label-rounded text-red p-2">{{ 'ReceiverCode' | localize }}</span>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="trip.needsPod && trip.needsReceiverCode">
+                  <div class="pb-3">
+                    <span class="label label-default label-rounded text-red p-2"
+                      >{{ 'DeliveryConfirmation' | localize }} / {{ 'ReceiverCode' | localize }}</span
+                    >
+                  </div>
+                </ng-container>
+                <div class="pt-3 title">{{ trip.waybillNumber }}</div>
+              </div>
+              <!--            <div class="title">221123018844</div>-->
+              <!--            <div class="d-flex justify-content-between">-->
+              <!--              <div class="details">10:00am - 12:00pm</div>-->
+              <!--              <div><span class="label label-default label-rounded text-red p-2">POD</span></div>-->
+              <!--            </div>-->
+            </div>
+          </div>
+        </div>
+        <!--        <div class="card card-custom dashboard-plain-card">-->
+        <!--          <div class="card-body p-4 d-flex justify-content-between align-items-end">-->
+        <!--            <app-from-to from="Riyadh" to="Jeddah"></app-from-to>-->
+        <!--            &lt;!&ndash;            <div class="d-flex justify-content-between">&ndash;&gt;-->
+        <!--            &lt;!&ndash;              <div class="details">10:00am - 12:00pm</div>&ndash;&gt;-->
+        <!--            &lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--            <div class="d-flex flex-column">-->
+        <!--              <div class="pb-3"><span class="label label-default label-rounded text-red p-2">Receiver Code</span></div>-->
+        <!--              <div class="pt-3 title">221123018844</div>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
+      </div>
+    </div>
+  </div>
+</div>

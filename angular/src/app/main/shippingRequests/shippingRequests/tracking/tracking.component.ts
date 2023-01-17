@@ -27,6 +27,8 @@ import { NewTrackingConponent } from '@app/main/shippingRequests/shippingRequest
 import { finalize } from '@node_modules/rxjs/operators';
 import Swal from 'sweetalert2';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
+import { ActivatedRoute } from '@angular/router';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './tracking.component.html',
@@ -61,6 +63,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   loadingTripId: number;
   ShippingRequestFlagEnum = ShippingRequestFlag;
   TripFlag = ShippingRequestTripFlag;
+  private waybillNumber: number;
 
   constructor(
     injector: Injector,
@@ -69,9 +72,11 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
     private _trackingServiceProxy: TrackingServiceProxy,
-    private _fileDownloadService: FileDownloadService
+    private _fileDownloadService: FileDownloadService,
+    private _activatedRoute: ActivatedRoute
   ) {
     super(injector);
+    this.waybillNumber = this._activatedRoute.snapshot.queryParams['waybillNumber'];
   }
 
   ngOnInit(): void {
@@ -82,6 +87,9 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   }
 
   LoadData() {
+    if (isNotNullOrUndefined(this.waybillNumber)) {
+      this.searchInput.WaybillNumber = this.waybillNumber;
+    }
     this._currentServ
       .getAll(
         this.searchInput.status,

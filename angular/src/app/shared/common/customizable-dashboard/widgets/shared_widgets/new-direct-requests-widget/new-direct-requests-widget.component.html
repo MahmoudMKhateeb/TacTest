@@ -1,0 +1,57 @@
+<div class="h-100 d-flex">
+  <div class="h-100 w-100">
+    <div class="card card-custom card-stretch w-100 h-100">
+      <div class="card-body p-4 d-flex flex-column">
+        <div class="card-title mt-4 mb-4">
+          <div class="card-label">{{ 'NewDirectRequest' | localize }}</div>
+        </div>
+        <div class="w-100 text-center gutter-b">
+          <img class="new-direct-requests-img" src="assets/SVG/Direct_request.svg" alt="" />
+        </div>
+        <div class="overflow-auto">
+          <div
+            class="d-flex justify-content-between mb-4 px-4 clickable-item"
+            *ngFor="let directRequest of newDirectRequests"
+            (click)="goToRequest(directRequest)"
+          >
+            <div>
+              {{ directRequest.referenceNumber }}
+            </div>
+            <div class="flex-grow-2 border-bottom-dashed mx-4"></div>
+            <div>
+              <small>{{ 'ChatMessage_From' | localize }}</small
+              >&nbsp;&nbsp;<b>{{ directRequest.companyName }}</b>
+            </div>
+          </div>
+          <!--                    <div class="d-flex justify-content-between mb-4 px-4 clickable-item" *ngFor="let directRequest of newDirectRequests" (click)="goToRequest()">-->
+          <!--                        <div>-->
+          <!--                            {{directRequest.referenceNumber}}-->
+          <!--                        </div>-->
+          <!--                        <div class="flex-grow-2 border-bottom-dashed mx-4"></div>-->
+          <!--                        <div>-->
+          <!--                            <small>{{ 'ChatMessage_From' | localize }}</small>&nbsp;&nbsp;<b>{{directRequest.companyName}}</b>-->
+          <!--                        </div>-->
+          <!--                    </div>-->
+          <!--                    <div class="d-flex justify-content-between mb-4 px-4 clickable-item" *ngFor="let directRequest of newDirectRequests" (click)="goToRequest()">-->
+          <!--                        <div>-->
+          <!--                            {{directRequest.referenceNumber}}-->
+          <!--                        </div>-->
+          <!--                        <div class="flex-grow-2 border-bottom-dashed mx-4"></div>-->
+          <!--                        <div>-->
+          <!--                            <small>{{ 'ChatMessage_From' | localize }}</small>&nbsp;&nbsp;<b>{{directRequest.companyName}}</b>-->
+          <!--                        </div>-->
+          <!--                    </div>-->
+          <!--                    <div class="d-flex justify-content-between mb-4 px-4 clickable-item" *ngFor="let directRequest of newDirectRequests" (click)="goToRequest()">-->
+          <!--                        <div>-->
+          <!--                            {{directRequest.referenceNumber}}-->
+          <!--                        </div>-->
+          <!--                        <div class="flex-grow-2 border-bottom-dashed mx-4"></div>-->
+          <!--                        <div>-->
+          <!--                            <small>{{ 'ChatMessage_From' | localize }}</small>&nbsp;&nbsp;<b>{{directRequest.companyName}}</b>-->
+          <!--                        </div>-->
+          <!--                    </div>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

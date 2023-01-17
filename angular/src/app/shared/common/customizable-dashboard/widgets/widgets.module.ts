@@ -59,6 +59,17 @@ import { CarrierAcceptedVsRejectdRequestsComponent } from './carrier/carrier-acc
 import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoices-details-widget/carrier-invoices-details-widget.component';
 import { ProjectPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/project-performance/project-performance.component';
 import { TruckPerformanceChartComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance-chart/truck-performance-chart.component';
+import { DxSelectBoxModule } from '@node_modules/devextreme-angular';
+import { CountersWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/counters-widget/counters-widget.component';
+import { UpcomingTripsWidgetsComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/upcoming-trips-widgets/upcoming-trips-widgets.component';
+import { NeedsActionWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/needs-action-widget/needs-action-widget.component';
+import { NewOffersWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/new-offers-widget/new-offers-widget.component';
+import { ShipperDashboardComponent } from '@app/shared/common/customizable-dashboard/shipper-dashboard/shipper-dashboard.component';
+import { CarrierDashboardComponent } from '@app/shared/common/customizable-dashboard/carrier-dashboard/carrier-dashboard.component';
+import { NewDirectRequestsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/new-direct-requests-widget/new-direct-requests-widget.component';
+import { TabsModule } from '@node_modules/ngx-bootstrap/tabs';
+import { FromToComponent } from '@app/shared/common/from-to/from-to.component';
+import { DriverTucksActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/driver-tucks-activity/driver-tucks-activity.component';
 
 @NgModule({
   declarations: [
@@ -108,6 +119,15 @@ import { TruckPerformanceChartComponent } from '@app/main/shippingRequests/dedic
     CarrierInvoicesDetailsWidgetComponent,
     ProjectPerformanceComponent,
     TruckPerformanceChartComponent,
+    CountersWidgetComponent,
+    UpcomingTripsWidgetsComponent,
+    NeedsActionWidgetComponent,
+    NewOffersWidgetComponent,
+    ShipperDashboardComponent,
+    CarrierDashboardComponent,
+    NewDirectRequestsWidgetComponent,
+    FromToComponent,
+    DriverTucksActivityComponent,
   ],
   imports: [
     CommonModule,
@@ -121,8 +141,10 @@ import { TruckPerformanceChartComponent } from '@app/main/shippingRequests/dedic
     BsDatepickerModule,
     NgbRatingModule,
     AngularFireModule.initializeApp(environment.firebase),
+    TabsModule.forRoot(),
     AngularFirestoreModule,
     RouterModule,
+    DxSelectBoxModule,
   ],
   entryComponents: [
     CompletedTripsWidgetComponent,
@@ -168,7 +190,72 @@ import { TruckPerformanceChartComponent } from '@app/main/shippingRequests/dedic
     UnpricedRequestsInMarketplaceComponent,
     ProjectPerformanceComponent,
     TruckPerformanceChartComponent,
+    CountersWidgetComponent,
+    UpcomingTripsWidgetsComponent,
+    NeedsActionWidgetComponent,
+    NewOffersWidgetComponent,
+    ShipperDashboardComponent,
+    CarrierDashboardComponent,
+    NewDirectRequestsWidgetComponent,
+    FromToComponent,
+    DriverTucksActivityComponent,
   ],
-  exports: [ProjectPerformanceComponent, TruckPerformanceChartComponent],
+  exports: [
+    CompletedTripsWidgetComponent,
+    CompletedTripVsPodComponent,
+    AcceptedVsRejecedRequestsComponent,
+    InvoicesVsPaidInvoicesComponent,
+    MostWorkedWithCarriersComponent,
+    RequestsInMarketPlaceComponent,
+    NextInvoiceFrequancyDateComponent,
+    InvoiceDueDateComponent,
+    ShipperDueDateInDaysComponent,
+    MostUsedOriginComponent,
+    MostUsedDestinationsComponent,
+    TrackingMapComponent,
+    AcceptedVsRejectedPricingComponent,
+    TucksActivityComponent,
+    DriversActivityComponent,
+    MostUsedppComponent,
+    MostUsedVasesComponent,
+    MostWorkedWithShippersComponent,
+    CarrierNextInvoiceFrequenctEndComponent,
+    NumberOfRegesterdTrucksComponent,
+    NumberOfRegesterdDriversComponent,
+    NumberOfRegesterdShippersComponent,
+    OnGoingTripsComponent,
+    DeleverdTripsComponent,
+    NumberOfRegesterdCarriersComponent,
+    HostNewAccountsChartComponent,
+    HostNewTripsChartComponent,
+    HostTruckTypeUsageChartComponent,
+    HostGoodTypesUsageChartComponent,
+    HostRouteTypeUsageChartComponent,
+    HostRquestPricingMeterComponent,
+    HostRquestAcceptanceMeterComponent,
+    HostInvoicesMeterComponent,
+    TopThreeShippersHaveRequestsComponent,
+    TopThreeCarriersHaveRequestsComponent,
+    TopRatedCarriersComponent,
+    TopRatedShippersComponent,
+    WorstRatedShippersComponent,
+    WorstRatedCarriersComponent,
+    NumberOfRequestsForEachCityComponent,
+    UnpricedRequestsInMarketplaceComponent,
+    CarrierComplitedTripsWidgetComponent,
+    CarrierAcceptedVsRejectdRequestsComponent,
+    CarrierInvoicesDetailsWidgetComponent,
+    ProjectPerformanceComponent,
+    TruckPerformanceChartComponent,
+    CountersWidgetComponent,
+    UpcomingTripsWidgetsComponent,
+    NeedsActionWidgetComponent,
+    NewOffersWidgetComponent,
+    ShipperDashboardComponent,
+    CarrierDashboardComponent,
+    NewDirectRequestsWidgetComponent,
+    FromToComponent,
+    DriverTucksActivityComponent,
+  ],
 })
 export class WidgetsModule {}

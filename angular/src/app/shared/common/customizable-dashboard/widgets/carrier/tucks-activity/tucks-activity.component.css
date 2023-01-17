@@ -1,0 +1,7 @@
+[dir='rtl'] app-tucks-activity .card-title {
+  margin-top: 0;
+}
+
+[dir='rtl'] .activity-data img {
+  margin-left: 0.5rem !important;
+}
