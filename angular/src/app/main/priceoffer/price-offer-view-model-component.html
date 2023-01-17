@@ -103,7 +103,8 @@
                   <th scope="col">{{l('SubTotalAmount')}}</th>
                   <th scope="col">{{l('VatAmount')}}</th>
                   <th scope="col">{{l('TotalAmount')}}</th>
-                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId" scope="col">{{l('Commission')}}</th>
+                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId" scope="col">{{l('CommissionPerTrip')}}</th>
+                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId" scope="col">{{l('TotalCommission')}}</th>
                 </tr>
               </thead>
               <tbody>
@@ -119,6 +120,10 @@
                   <td>
                     <price-sar [value]="offerForEditOutput.priceOfferViewDto.totalAmount"></price-sar>
                   </td>
+
+                    <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
+                        <price-sar [value]="offerForEditOutput.priceOfferViewDto.itemCommissionAmount"></price-sar>
+                    </td>
 
                   <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
                     <price-sar [value]="offerForEditOutput.priceOfferViewDto.commissionAmount"></price-sar>
@@ -137,7 +142,7 @@
           *ngIf="offerForEditOutput.canIEditOffer"
         >
           <i class="fas fa-pen"></i>
-          {{offerForEditOutput.priceOfferViewDto.status==2? l('RePricing'):l('Edit')}}
+          {{offerForEditOutput.priceOfferViewDto.status == 2 ? l('RePricing') : l('Edit')}}
         </button>
         <button (click)="delete()" class="btn btn-danger" *ngIf="canDeleteOffer()">
           <i class="far fa-trash-alt"></i>

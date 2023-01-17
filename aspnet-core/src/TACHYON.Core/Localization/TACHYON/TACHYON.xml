@@ -3183,5 +3183,6 @@
     <text name="YouMustUpdateTheVersionOfTheApplication">You Must Update The Version Of The Application</text>
     <text name="UpdateTheApplication">Update The Application</text>
     <text name="ChangeStatus">Change Status</text>
+    <text name="CommissionPerTrip">Commission Per Trip</text>
 	</texts>
 </localizationDictionary>

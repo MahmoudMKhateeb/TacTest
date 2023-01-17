@@ -2914,5 +2914,6 @@
 	<text name="YouMustUpdateTheVersionOfTheApplication">يجب عليك تحديث نسخة التطبيق</text>
 	<text name="UpdateTheApplication">تحديث التطبيق</text>
 	<text name="ChangeStatus">تغيير الحالة</text>
+	<text name="CommissionPerTrip">العمولة لكل رحلة</text>
 	</texts>
 </localizationDictionary>
