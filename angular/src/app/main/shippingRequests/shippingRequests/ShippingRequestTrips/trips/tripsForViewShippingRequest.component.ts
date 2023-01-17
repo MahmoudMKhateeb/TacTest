@@ -41,6 +41,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { FileUpload } from 'primeng/fileupload';
 import { HttpClient } from '@angular/common/http';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'TripsForViewShippingRequest',
@@ -235,7 +236,12 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
         } else if (response.error != null) {
           this.loading = false;
           //this.notify.error(this.l('ImportFailed'));
-          this.notify.error(response.error.message);
+          // this.notify.error(response.error.message);
+          Swal.fire({
+            icon: 'error',
+            title: response.error.message,
+            showConfirmButton: true,
+          });
         }
       });
   }
@@ -263,7 +269,12 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
         } else if (response.error != null) {
           this.loading = false;
           // this.notify.error(this.l('ImportFailed'));
-          this.notify.error(response.error.message);
+          // this.notify.error(response.error.message);
+          Swal.fire({
+            icon: 'error',
+            title: response.error.message,
+            showConfirmButton: true,
+          });
         }
       });
   }
@@ -291,7 +302,12 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
         } else if (response.error != null) {
           this.loading = false;
           // this.notify.error(this.l('ImportFailed'));
-          this.notify.error(response.error.message);
+          // this.notify.error(response.error.message);
+          Swal.fire({
+            icon: 'error',
+            title: response.error.message,
+            showConfirmButton: true,
+          });
         }
       });
   }
@@ -319,13 +335,23 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
         } else if (response.error != null) {
           this.loading = false;
           // this.notify.error(this.l('ImportFailed'));
-          this.notify.error(response.error.message);
+          // this.notify.error(response.error.message);
+          Swal.fire({
+            icon: 'error',
+            title: response.error.message,
+            showConfirmButton: true,
+          });
         }
       });
   }
 
   onUploadExcelError(): void {
-    this.notify.error(this.l('ImportUploadFailed'));
+    // this.notify.error(this.l('ImportUploadFailed'));
+    Swal.fire({
+      icon: 'error',
+      title: this.l('ImportUploadFailed'),
+      showConfirmButton: true,
+    });
   }
 
   /**
