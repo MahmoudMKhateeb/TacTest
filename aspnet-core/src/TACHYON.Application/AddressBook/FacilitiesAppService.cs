@@ -80,6 +80,8 @@ namespace TACHYON.AddressBook
                     Country = o.CityFk.CountyFk.DisplayName ?? "",
                     CreationTime = o.CreationTime,
                     ShipperName = o.Tenant.TenancyName,
+                    FacilityType = o.FacilityType,
+                    FacilityTypeTitle = o.FacilityType.GetEnumDescription(),
                     FacilityWorkingHours = ObjectMapper.Map<List<FacilityWorkingHourDto>>(o.FacilityWorkingHours)
                 };
 
@@ -246,6 +248,18 @@ namespace TACHYON.AddressBook
                     DisplayName = city == null || city.DisplayName == null ? "" : city.DisplayName.ToString()
                 }).ToListAsync();
         }
+
+        public async Task<List<SelectItemDto>> GetAllPortsForTableDropdown()
+        {
+            return await _facilityRepository.GetAll().Include(x=>x.CityFk).Where(x=>x.FacilityType == FacilityType.Port)
+                .Select(item => new SelectItemDto
+                {
+                    Id = item.Id.ToString(),
+                    DisplayName = item == null || item.Name == null ? "" : $"{item.Name} - {item.CityFk.DisplayName}"
+                }).ToListAsync();
+        }
+
+
 
         private async Task ValidateFacilityName(CreateOrEditFacilityDto input)
         {

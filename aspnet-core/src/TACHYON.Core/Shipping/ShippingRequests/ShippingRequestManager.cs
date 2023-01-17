@@ -34,6 +34,7 @@ using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Dedicated;
+using TACHYON.Shipping.ShippingTypes;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -205,6 +206,16 @@ namespace TACHYON.Shipping.ShippingRequests
                 {
                     throw new UserFriendlyException(L("feature SendDirectRequest not enabled"));
                 }
+            }
+
+            if (input.ShippingTypeId == ShippingTypeEnum.ImportPortMovements && (input.RoundTripType == null && input.RoundTripType != RoundTripType.WithoutReturnTrip && input.RoundTripType != RoundTripType.WithReturnTrip))
+            {
+                throw new UserFriendlyException(L("RoundTripTypeIsRequired"));
+            }
+
+            else if (input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements && (input.RoundTripType == null && input.RoundTripType != RoundTripType.TwoWayRoutsWithoutPortShuttling && input. RoundTripType != RoundTripType.TwoWayRoutsWithPortShuttling || input.RoundTripType != RoundTripType.OneWayRoutWithPortShuttling))
+            {
+                throw new UserFriendlyException(L("RoundTripTypeIsRequired"));
             }
 
         }

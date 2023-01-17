@@ -3183,5 +3183,15 @@
     <text name="YouMustUpdateTheVersionOfTheApplication">You Must Update The Version Of The Application</text>
     <text name="UpdateTheApplication">Update The Application</text>
     <text name="ChangeStatus">Change Status</text>
+    <text name="LocalInsideCity">Local - Inside City</text>
+    <text name="LocalBetweenCities">Local - Between Cities</text>
+    <text name="ImportPortMovements">Port Movements - Import</text>
+    <text name ="CrossBorderMovements">Cross Border Movements</text>
+    <text name="ExportPortMovements">Port Movements - Export</text>
+    <text name="WithReturnTrip">With return trip</text>
+    <text name="WithoutReturnTrip">Without return trip</text>
+    <text name="TwoWayRoutsWithPortShuttling">Two way routs with port shuttling</text>
+    <text name="TwoWayRoutsWithoutPortShuttling">Two way routs without port shuttling</text>
+    <text name="OneWayRoutWithPortShuttling">One way rout with port shuttling</text>
 	</texts>
 </localizationDictionary>

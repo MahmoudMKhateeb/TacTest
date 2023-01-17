@@ -93,6 +93,8 @@ namespace TACHYON.PriceOffers.Dto
         public bool IsDriversAndTrucksAssigned { get; set; }
         public bool CanAssignDedicatedDriversAndTrucks { get; set; }
 
+        public long? OriginFacilityId { get; set; }
+
         public bool IsSaas
         {
             get => TenantId == CarrierTenantId;

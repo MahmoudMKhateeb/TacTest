@@ -43,5 +43,13 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// shipper Id
         /// </summary>
         public int TenantId { get; set; }
+
+        #region Port movements
+
+        public long? OriginFacilityId { get; set; }
+
+        public string OriginFacilityTitle { get; set; }
+
+        #endregion
     }
 }

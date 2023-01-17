@@ -111,7 +111,8 @@ namespace TACHYON.Shipping.ShippingRequests
             SrPostPriceUpdateManager postPriceUpdateManager,
             IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository,
             ShippingRequestManager shippingRequestManager,
-            IRepository<Actor> actorsRepository)
+            IRepository<Actor> actorsRepository,
+            IRepository<Facility, long> facilityRepository)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -145,6 +146,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _shippingRequestDestinationCityRepository = shippingRequestDestinationCityRepository;
             _shippingRequestManager = shippingRequestManager;
             _actorsRepository = actorsRepository;
+            _facilityRepository = facilityRepository;
         }
 
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
@@ -178,6 +180,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly IRepository<ShippingRequestDestinationCity> _shippingRequestDestinationCityRepository;
         private readonly ShippingRequestManager _shippingRequestManager;
+        private readonly IRepository<Facility, long> _facilityRepository;
 
         private readonly IRepository<Actor> _actorsRepository;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
@@ -318,6 +321,7 @@ namespace TACHYON.Shipping.ShippingRequests
             var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id);
 
             //if request between cities and single drop
+            await ValidatePortMovementInputs(input, shippingRequest);
             ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest);
 
             if (shippingRequest.DraftStep < 2)
@@ -670,7 +674,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .ThenInclude(e => e.TruckStatusFk)
                     .Include(e => e.GoodCategoryFk)
                     .ThenInclude(e => e.Translations)
-                    .Include(e => e.ShippingTypeFk)
+                    //.Include(e => e.ShippingTypeFk)
                     .Include(e => e.PackingTypeFk)
                     .ThenInclude(v => v.Translations)
                     .Include(e => e.CarrierTenantFk)
@@ -678,6 +682,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     .ThenInclude(x=>x.CityFk)
                     .Include(x=> x.CarrierActorFk)
                     .Include(x=> x.ShipperActorFk)
+                    .Include(x=>x.OriginFacility)
+                    .ThenInclude(x=>x.CityFk)
                     .FirstOrDefaultAsync();
                 if(await IsCarrier() && !shippingRequest.IsSaas() && shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
                 {
@@ -1769,10 +1775,42 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private void ValidateDestinationCities(ShippingRequestRouteType routeType, List<ShippingRequestDestinationCitiesDto> shippingRequestDestinationCitiesDtos, ShippingRequest shippingRequest)
         {
-            if (shippingRequest.ShippingTypeId == 2 && routeType == ShippingRequestRouteType.SingleDrop && shippingRequestDestinationCitiesDtos.Count > 1)
+            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.LocalBetweenCities && routeType == ShippingRequestRouteType.SingleDrop && shippingRequestDestinationCitiesDtos.Count > 1)
             {
                 throw new UserFriendlyException(L("OneDestinationCityAllowed"));
             }
+        }
+
+        private async Task ValidatePortMovementInputs(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || shippingRequest.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+            {
+                if (input.OriginFacilityId == null) throw new UserFriendlyException(L("OriginPortIsRequired"));
+                if (!await _facilityRepository.GetAll().AnyAsync(x => x.Id == input.OriginFacilityId && x.FacilityType == FacilityType.Port))
+                {
+                    throw new UserFriendlyException(L("OriginMustBePort"));
+                }
+            }
+
+            switch (shippingRequest.RoundTripType)
+            {
+                case RoundTripType.WithoutReturnTrip :
+                case RoundTripType.OneWayRoutWithPortShuttling:
+                    input.RouteTypeId = ShippingRequestRouteType.SingleDrop;
+                    input.NumberOfDrops = 1;
+                    break;
+                case RoundTripType.WithReturnTrip:
+                case RoundTripType.TwoWayRoutsWithoutPortShuttling :
+                    input.RouteTypeId = ShippingRequestRouteType.MultipleDrops;
+                    input.NumberOfDrops = 2;
+                    break;
+
+                case RoundTripType.TwoWayRoutsWithPortShuttling:
+                    input.RouteTypeId = ShippingRequestRouteType.MultipleDrops;
+                    input.NumberOfDrops = 3;
+                    break;
+            }
+  
         }
     }
 }

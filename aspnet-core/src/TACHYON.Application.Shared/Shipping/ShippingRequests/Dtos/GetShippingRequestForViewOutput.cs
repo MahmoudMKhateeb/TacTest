@@ -87,5 +87,15 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public int NumberOfTrucks { get; set; }
         public double? DedicatedKPI { get; set; }
         #endregion
+
+        #region Port movements
+
+        public long? OriginFacilityId { get; set; }
+
+        public string OriginFacilityTitle { get; set; }
+        public RoundTripType? RoundTripType { get; set; }
+        public string RoundTripTypeTitle { get; set; }
+
+        #endregion
     }
 }

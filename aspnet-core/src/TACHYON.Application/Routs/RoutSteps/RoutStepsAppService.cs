@@ -392,9 +392,9 @@ namespace TACHYON.Routs.RoutSteps
                 var query = _lookup_FacilityRepository
                 .GetAll()
                 .AsNoTracking()
-                .WhereIf(shippingRequest.ShippingTypeId == 1, x => x.CityId == shippingRequest.OriginCityId || destinationCities.Contains(x.CityId)) //inside city
+                .WhereIf(shippingRequest.ShippingTypeId == ShippingTypeEnum.LocalInsideCity, x => x.CityId == shippingRequest.OriginCityId || destinationCities.Contains(x.CityId)) //inside city
                 //.WhereIf(shippingRequest.ShippingTypeId == 2, x => x.CityId == shippingRequest.OriginCityId ); //between city
-                .WhereIf(shippingRequest.ShippingTypeId == 2, x => x.CityId == shippingRequest.OriginCityId || destinationCities.Contains(x.CityId));
+                .WhereIf(shippingRequest.ShippingTypeId == ShippingTypeEnum.LocalBetweenCities, x => x.CityId == shippingRequest.OriginCityId || destinationCities.Contains(x.CityId));
                 query = query.Where(x => x.TenantId == shippingRequest.TenantId);
                 var result = await query.Select(x => new FacilityForDropdownDto
                 {
@@ -420,7 +420,8 @@ namespace TACHYON.Routs.RoutSteps
                 .Where(x => x.CityId == cityId)
                 .Select(x => new FacilityForDropdownDto
                 {
-                    Id = x.Id, DisplayName = x.Name, Long = x.Location.X, Lat = x.Location.Y
+                    Id = x.Id, DisplayName = x.Name, Long = x.Location.X, Lat = x.Location.Y,
+                    FacilityType = x.FacilityType
                 }).ToListAsync();
         }
 

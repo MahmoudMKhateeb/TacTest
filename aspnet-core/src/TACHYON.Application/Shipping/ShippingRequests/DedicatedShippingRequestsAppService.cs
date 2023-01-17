@@ -621,7 +621,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private void ValidateDestinationCities(CreateOrEditDedicatedStep1Dto input)
         {
-            if (input.ShippingTypeId == 1 && input.ShippingRequestDestinationCities.Count > 1)
+            if (input.ShippingTypeId == ShippingTypeEnum.LocalInsideCity && input.ShippingRequestDestinationCities.Count > 1)
             {
                 throw new UserFriendlyException(L("OneDestinationCityAllowed"));
             }

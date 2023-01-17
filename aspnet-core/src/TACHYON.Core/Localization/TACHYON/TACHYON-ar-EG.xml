@@ -2914,5 +2914,15 @@
 	<text name="YouMustUpdateTheVersionOfTheApplication">يجب عليك تحديث نسخة التطبيق</text>
 	<text name="UpdateTheApplication">تحديث التطبيق</text>
 	<text name="ChangeStatus">تغيير الحالة</text>
+    <text name="LocalInsideCity"></text>
+    <text name="LocalBetweenCities"></text>
+    <text name="ImportPortMovements"></text>
+    <text name ="CrossBorderMovements"></text>
+    <text name="ExportPortMovements"></text>
+    <text name="WithReturnTrip"></text>
+    <text name="WithoutReturnTrip"></text>
+    <text name="TwoWayRoutsWithPortShuttling"></text>
+    <text name="TwoWayRoutsWithoutPortShuttling"></text>
+    <text name="OneWayRoutWithPortShuttling"></text>
 	</texts>
 </localizationDictionary>
