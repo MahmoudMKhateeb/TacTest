@@ -5,3 +5,15 @@ input[type='radio'] {
   margin-left: -35px !important;
   margin-top: 35px !important;
 }
+.card-label {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+}
+
+.text-red {
+  color: #dc2434;
+}
+
+.text-gray {
+  color: #d7dadc;
+}

@@ -20,18 +20,13 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
   getMenu(): AppMenu {
     console.log('AppCarrierNavigationService');
     let menu = new AppMenu('MainMenu', 'MainMenu', [
-      new AppMenuItem(
-        'Dashboard',
-        '',
-        'interaction, interact, preferences, preformance, computer, online, rating, review.svg',
-        '/app/main/dashboard'
-      ),
+      new AppMenuItem('Dashboard', '', 'Dashboards.svg', '/app/main/dashboard'),
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Operations
       new AppMenuItem(
         'Operations',
         'Pages.ShippingRequests',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        'Operations.svg',
         '/app/main/comingSoon',
         [],
         [
@@ -67,7 +62,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'AddressBook',
         '',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        'Facility Managment.svg',
         '',
         [],
         [
@@ -101,7 +96,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMS',
         '',
-        'logistic, delivery, warehouse, storage, empty, vacant.svg',
+        'TMS Settings.svg',
         '',
         [],
         [
@@ -129,7 +124,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Financials',
         'Pages.Invoices',
-        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        'Financials.svg',
         '',
         [],
         [
@@ -193,7 +188,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'DocumentManagement',
         '',
-        'interaction, interact, preferences, preformance, customer, rating, rate, questions.svg',
+        'Document.svg',
         '',
         [],
         [
@@ -246,16 +241,8 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
         undefined
       ),
       /////Start of Actors
-      new AppMenuItem(
-        'Actors',
-        'Pages.Administration.Actors',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
-        '/app/main/actors/actors',
-        [],
-        [],
-        undefined,
-        undefined,
-        () => this.isEnabled('App.ShipperClients')
+      new AppMenuItem('Actors', 'Pages.Administration.Actors', 'User Management.svg', '/app/main/actors/actors', [], [], undefined, undefined, () =>
+        this.isEnabled('App.ShipperClients')
       ),
       //end of actors
       //end of Documents
@@ -264,7 +251,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Settings',
         'Pages.Administration.Tenant.Settings',
-        'user, interface, agent, usability, settings, options, preferences, gears.svg',
+        'Settings.svg',
         '',
         [],
         [new AppMenuItem('GeneralSettings', 'Pages.Administration.Tenant.Settings', '', '/app/admin/tenantSettings')]
@@ -276,7 +263,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'UserManagement',
         '',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
+        'User Management.svg',
         '',
         [],
         [

@@ -6,6 +6,7 @@ import { DOCUMENT } from '@angular/common';
 import { OffcanvasOptions } from '@metronic/app/core/_base/layout/directives/offcanvas.directive';
 import { AppConsts } from '@shared/AppConsts';
 import { ToggleOptions } from '@metronic/app/core/_base/layout/directives/toggle.directive';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: './default-layout.component.html',
@@ -27,12 +28,17 @@ export class DefaultLayoutComponent extends ThemesLayoutBaseComponent implements
   };
 
   remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
+  isDashboard = false;
 
-  constructor(injector: Injector, @Inject(DOCUMENT) private document: Document) {
+  constructor(injector: Injector, @Inject(DOCUMENT) private document: Document, private router: Router) {
     super(injector);
   }
 
   ngOnInit() {
     this.installationMode = UrlHelper.isInstallUrl(location.href);
+    this.isDashboard = location.href.toLowerCase().search('dashboard') > -1;
+    this.router.events.subscribe((res) => {
+      this.isDashboard = location.href.toLowerCase().search('dashboard') > -1;
+    });
   }
 }
