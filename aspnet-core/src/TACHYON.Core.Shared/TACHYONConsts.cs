@@ -1,4 +1,6 @@
-﻿namespace TACHYON
+﻿using System.ComponentModel.Design.Serialization;
+
+namespace TACHYON
 {
     public class TACHYONConsts
     {
@@ -119,6 +121,10 @@
 
         #endregion
 
+        #region Vases
+        public const string AppointmentVasName = "Appointment";
+        public const string ClearanceVasName = "Custom Clearance";
+        #endregion
         #endregion
 
         public const string OthersDisplayName = "Others";

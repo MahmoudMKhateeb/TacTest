@@ -213,7 +213,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L("RoundTripTypeIsRequired"));
             }
 
-            else if (input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements && (input.RoundTripType == null && input.RoundTripType != RoundTripType.TwoWayRoutsWithoutPortShuttling && input. RoundTripType != RoundTripType.TwoWayRoutsWithPortShuttling || input.RoundTripType != RoundTripType.OneWayRoutWithPortShuttling))
+            else if (input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements && (input.RoundTripType == null && input.RoundTripType != RoundTripType.TwoWayRoutsWithoutPortShuttling && input. RoundTripType != RoundTripType.TwoWayRoutsWithPortShuttling && input.RoundTripType != RoundTripType.OneWayRoutWithPortShuttling))
             {
                 throw new UserFriendlyException(L("RoundTripTypeIsRequired"));
             }
@@ -250,10 +250,15 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             foreach (var vas in shippingRequest.ShippingRequestVases)
             {
-                if (!input.ShippingRequestVasList.Any(x => x.Id == vas.Id))
+                if( vas.VasFk.Name != TACHYONConsts.AppointmentVasName && vas.VasFk.Name != TACHYONConsts.ClearanceVasName)
                 {
-                    await _shippingRequestVasRepository.DeleteAsync(vas);
+
+                    if (!input.ShippingRequestVasList.Any(x => x.Id == vas.Id))
+                    {
+                        await _shippingRequestVasRepository.DeleteAsync(vas);
+                    }
                 }
+
             }
         }
 

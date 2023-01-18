@@ -385,12 +385,19 @@ namespace TACHYON.Shipping.ShippingRequests
 
             ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
+                .ThenInclude(x=>x.VasFk)
                 .Where(x => x.Id == input.Id && x.IsDrafted == true)
                 .FirstOrDefaultAsync();
 
+            //Add appointment & clearance vases automatically to request when port movements
+            if(shippingRequest.ShippingRequestVases.Count() == 0)
+            {
+                await AddPortMovementVases(input, shippingRequest);
+            }
+
             await ShippingRequestVasListValidate(input, shippingRequest.NumberOfTrips);
             //delete vases
-            await _shippingRequestManager.EditVasStep(shippingRequest,input);
+            await _shippingRequestManager.EditVasStep(shippingRequest, input);
 
             if (shippingRequest.DraftStep < 4)
             {
@@ -398,12 +405,13 @@ namespace TACHYON.Shipping.ShippingRequests
             }
 
             ObjectMapper.Map(input, shippingRequest);
-            
+
         }
 
 
         public async Task<EditShippingRequestStep4Dto> GetStep4ForEdit(EntityDto<long> entity)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
@@ -1041,6 +1049,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<ShippingRequestVasListOutput>> GetAllShippingRequestVasesForTableDropdown()
         {
             return await _lookup_vasRepository.GetAll()
+                .Where(x=>!x.Name.ToLower().Equals(TACHYONConsts.AppointmentVasName) && !x.Name.ToLower().Equals(TACHYONConsts.ClearanceVasName))
                 .Select(vas => new ShippingRequestVasListOutput
                 {
                     VasName = vas.Translations.FirstOrDefault(t => t.Language.Contains(CurrentLanguage)) != null
@@ -1783,7 +1792,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private async Task ValidatePortMovementInputs(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
         {
-            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || shippingRequest.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements)
             {
                 if (input.OriginFacilityId == null) throw new UserFriendlyException(L("OriginPortIsRequired"));
                 if (!await _facilityRepository.GetAll().AnyAsync(x => x.Id == input.OriginFacilityId && x.FacilityType == FacilityType.Port))
@@ -1812,5 +1821,65 @@ namespace TACHYON.Shipping.ShippingRequests
             }
   
         }
+
+
+        private async Task AddPortMovementVases(EditShippingRequestStep4Dto input, ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || shippingRequest.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+            {
+                var portVases = await _lookup_vasRepository.GetAll().Where(x => x.Name.ToLower().Equals(TACHYONConsts.AppointmentVasName) ||
+                x.Name.ToLower().Equals(TACHYONConsts.ClearanceVasName)).ToListAsync();
+                var ClearVases = new List<Vas>();
+
+               if(portVases.Count() < 2)
+               {
+                  await AddNotExistVases(portVases);
+               }
+               if (portVases.Count() > 2) 
+               {
+                   ClearVases.Add(portVases.Where(x => x.Name == TACHYONConsts.AppointmentVasName).First());
+                   ClearVases.Add(portVases.Where(x => x.Name == TACHYONConsts.ClearanceVasName).First());
+               }
+               else
+               {
+                   ClearVases = portVases;
+               }
+
+               foreach (var vas in ClearVases)
+               {
+                    input.ShippingRequestVasList.Add(new CreateOrEditShippingRequestVasListDto { NumberOfTrips = 0, RequestMaxCount = 1, VasId = vas.Id });
+               }
+            }
+        }
+
+        private async Task AddNotExistVases(List<Vas> ClearedVases)
+        {
+            var appointVasId = default(int);
+            var ClearanceVasId = default(int);
+
+            if (!ClearedVases.Any(x => x.Name == TACHYONConsts.AppointmentVasName))
+            {
+                var AppointmentVas = new Vas() { Key = TACHYONConsts.AppointmentVasName, Name = TACHYONConsts.AppointmentVasName, HasCount = true, HasAmount = false, IsAppearAmount = false };
+                appointVasId = await _lookup_vasRepository.InsertAndGetIdAsync(AppointmentVas);
+                ClearedVases.Add(AppointmentVas);
+            }
+            if (!ClearedVases.Any(x => x.Name == TACHYONConsts.ClearanceVasName))
+            {
+                var clearanceVas = new Vas() { Key = TACHYONConsts.ClearanceVasName, Name = TACHYONConsts.ClearanceVasName, HasCount = true, HasAmount = false, IsAppearAmount = false };
+                ClearanceVasId = await _lookup_vasRepository.InsertAndGetIdAsync(clearanceVas);
+                ClearedVases.Add(clearanceVas);
+            }
+            //force save vases to DB
+            await CurrentUnitOfWork.SaveChangesAsync();
+        }
+
+        //private void EditVasNameByKey(string key, List<Vas> portVases)
+        //{
+        //    var vas = portVases.FirstOrDefault(x => x.Key.ToLower() == key.ToLower());
+        //    if ( vas != null)
+        //    {
+        //        vas.Name = key;
+        //    }
+        //}
     }
 }
