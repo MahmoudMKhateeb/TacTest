@@ -199,6 +199,10 @@
                       {{ l('FacilityName') }}
                       <p-sortIcon field="facility.name"></p-sortIcon>
                     </th>
+                    <th pSortableColumn="facilityType">
+                      {{ l('FacilityType') }}
+                      <p-sortIcon field="facilityType"></p-sortIcon>
+                    </th>
                     <th width="20%" pSortableColumn="address">
                       {{ l('Address') }}
                       <p-sortIcon field="facility.address"></p-sortIcon>
@@ -264,6 +268,10 @@
                     <td>
                       <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.facility.name }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('FacilityType') }}</span>
+                      {{ record.facilityTypeTitle }}
                     </td>
                     <td width="20%">
                       <span class="ui-column-title"> {{ l('Address') }}</span>

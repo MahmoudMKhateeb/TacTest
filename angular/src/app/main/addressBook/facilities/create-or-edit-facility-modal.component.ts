@@ -8,6 +8,7 @@ import {
   CreateOrEditFacilityWorkingHourDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
+  FacilityType,
   PenaltiesServiceProxy,
   SelectItemDto,
   ShippersForDropDownDto,
@@ -21,6 +22,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 import { Pokedex, styleObject } from '@app/main/addressBook/facilities/facilites-helper';
 import { WeekDay } from '@angular/common';
 import { CreateOrEditWorkingHoursComponent } from '@app/shared/common/workingHours/create-or-edit-working-hours/create-or-edit-working-hours.component';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'createOrEditFacilityModal',
@@ -72,6 +74,8 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   };
   isWorkingHoursInvalid = false;
   private cityId: number;
+  allFacilityTypes: { key: number; value: string }[] = [];
+
   get isRequiredFacilityName(): boolean {
     if (!this.isHomeDelivery) {
       return true;
@@ -92,13 +96,15 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     private ngZone: NgZone,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private mapsAPILoader: MapsAPILoader,
-    private _penaltiesServiceProxy: PenaltiesServiceProxy
+    private _penaltiesServiceProxy: PenaltiesServiceProxy,
+    private _enumService: EnumToArrayPipe
   ) {
     super(injector);
   }
 
   ngOnInit() {
     console.log('isHomeDelivery', this.isHomeDelivery);
+    this.loadAllFacilityTypes();
     this.loadAllCountries();
     this.loadAllCompaniesForDropDown();
     if (this.feature.isEnabled('App.ShipperClients')) {
@@ -440,6 +446,16 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   revalidateWorkingHours() {
     this.callbacks.forEach((func) => {
       func();
+    });
+  }
+
+  /**
+   * Loads All Facility types for Facilities CRUD
+   */
+  loadAllFacilityTypes() {
+    this.allFacilityTypes = this._enumService.transform(FacilityType).map((item) => {
+      item.key = Number(item.key);
+      return item;
     });
   }
 }
