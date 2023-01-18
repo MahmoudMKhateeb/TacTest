@@ -166,7 +166,7 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
     this.totalCommission = undefined;
     this.selectedCarriers = undefined;
     this.selectedRows = undefined;
-
+    this.dataSource = {};
     this.modal.hide();
   }
 
@@ -186,7 +186,6 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
             loadOptions.filter = filter;
           }
         }
-        console.log(loadOptions.filter);
         return self._normalPricePackagesServiceProxy
           .getAll(JSON.stringify(loadOptions))
           .toPromise()
