@@ -249,13 +249,14 @@ namespace TACHYON.AddressBook
                 }).ToListAsync();
         }
 
-        public async Task<List<SelectItemDto>> GetAllPortsForTableDropdown()
+        public async Task<List<SelectFacilityItemDto>> GetAllPortsForTableDropdown()
         {
             return await _facilityRepository.GetAll().Include(x=>x.CityFk).Where(x=>x.FacilityType == FacilityType.Port)
-                .Select(item => new SelectItemDto
+                .Select(item => new SelectFacilityItemDto
                 {
                     Id = item.Id.ToString(),
-                    DisplayName = item == null || item.Name == null ? "" : $"{item.Name} - {item.CityFk.DisplayName}"
+                    DisplayName = item == null || item.Name == null ? "" : $"{item.Name} - {item.CityFk.DisplayName}",
+                    CityId = item.CityId
                 }).ToListAsync();
         }
 
