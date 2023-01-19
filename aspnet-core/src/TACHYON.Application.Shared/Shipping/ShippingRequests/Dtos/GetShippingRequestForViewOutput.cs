@@ -40,6 +40,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string TransportTypeDisplayName { get; set; }
         public string CapacityDisplayName { get; set; }
         public string DriverName { get; set; }
+        public ShippingRequestRouteType? RouteTypeId { get; set; }
         public string RoutTypeName { get; set; }
         public string OriginalCityName { get; set; }
         public int OriginalCityId { get; set; }
