@@ -2914,5 +2914,7 @@
 	<text name="YouMustUpdateTheVersionOfTheApplication">يجب عليك تحديث نسخة التطبيق</text>
 	<text name="UpdateTheApplication">تحديث التطبيق</text>
 	<text name="ChangeStatus">تغيير الحالة</text>
+	<text name="AppointmentNumber">رقم الموعد</text>
+	<text name="AppointmentDetails">تفاصيل الموعد</text>
 	</texts>
 </localizationDictionary>
