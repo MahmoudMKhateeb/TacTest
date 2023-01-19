@@ -347,15 +347,7 @@ namespace TACHYON.Shipping.Trips
             {
                 //additional receiver must provided
 
-                foreach (var drop in input.RoutPoints)
-                {
-                    if (drop.ReceiverId == null &&
-                        (string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
-                         string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
-                    {
-                        throw new UserFriendlyException("YouMustEnterReceiver");
-                    }
-                }
+                ValidateReceiver(input);
 
                 if (input.ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).Any(x => x.Description == null))
                 {
@@ -372,11 +364,11 @@ namespace TACHYON.Shipping.Trips
             {
                 _shippingRequestTripManager.ValidateTripDates(input, request);
                 _shippingRequestTripManager.ValidateNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), request);
-                if(request.ShippingTypeId != ShippingTypeEnum.ImportPortMovements && request.ShippingTypeId != ShippingTypeEnum.ExportPortMovements)
-                _shippingRequestTripManager.ValidateTotalweight(input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).ToList<ICreateOrEditGoodsDetailDtoBase>(), request);
+                if (request.ShippingTypeId != ShippingTypeEnum.ImportPortMovements && request.ShippingTypeId != ShippingTypeEnum.ExportPortMovements)
+                    _shippingRequestTripManager.ValidateTotalweight(input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).ToList<ICreateOrEditGoodsDetailDtoBase>(), request);
 
             }
-            else if(request.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+            else if (request.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
             {
                 if (input.RouteType == ShippingRequestRouteType.SingleDrop) input.NumberOfDrops = 1;
                 _shippingRequestTripManager.ValidateDedicatedRequestTripDates(input, request);
@@ -393,26 +385,54 @@ namespace TACHYON.Shipping.Trips
                 await _shippingRequestTripManager.ValidateTruckAndDriver(input);
             }
 
+            ValidatePortMovementRequest(input, request);
+
+            if (!input.Id.HasValue)
+            {
+                if (request.ShippingRequestFlag == ShippingRequestFlag.Normal)
+                {
+                    await _shippingRequestTripManager.ValidateNumberOfTrips(request, 1);
+                }
+
+                await Create(input, request);
+                if (request.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+                {
+                    //add all vases automatic in dedicated trip
+                    AddAllRequestVasesToDedicatedTrip(input, request);
+
+                }
+                request.TotalsTripsAddByShippier += 1;
+            }
+            else
+            {
+                await Update(input, request);
+            }
+        }
+
+        private void ValidatePortMovementRequest(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
+        {
             if (request.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || request.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
             {
                 _shippingRequestTripManager.ValidateDedicatedNumberOfPickups(input.RoutPoints.Count(x => x.PickingType == PickingType.Pickup), input.NumberOfDrops);
+
                 if (string.IsNullOrEmpty(input.ContainerNumber))
                 {
                     throw new UserFriendlyException(L("ContainerNumberIsRequired"));
                 }
 
-                if(input.RoutPoints.Any(x=>x.PointOrder == null || x.PointOrder <= 0))
+                if (input.RoutPoints.Any(x => x.PointOrder == null || x.PointOrder <= 0))
                 {
                     throw new UserFriendlyException(L("PointOrderIsMandatory"));
                 }
 
                 var facilities = _shippingRequestTripManager.GetAllFacilitiesByIds(input.RoutPoints.Select(x => x.FacilityId).ToList());
+
                 //validate sender, receiver, weight, Qty, description
                 var firstStep = input.RoutPoints.OrderBy(x => x.PointOrder).Take(2).ToList();
                 var secondStep = input.RoutPoints.OrderBy(x => x.PointOrder).Skip(2)?.Take(2).ToList();
                 var thirdStep = input.RoutPoints.OrderBy(x => x.PointOrder).Skip(4)?.Take(2).ToList();
 
-                if(request.ShippingTypeId == ShippingTypeEnum.ImportPortMovements)
+                if (request.ShippingTypeId == ShippingTypeEnum.ImportPortMovements)
                 {
                     if (request.RoundTripType == RoundTripType.WithReturnTrip || request.RoundTripType == RoundTripType.WithoutReturnTrip)
                     {
@@ -430,13 +450,13 @@ namespace TACHYON.Shipping.Trips
                             throw new UserFriendlyException(L("GoodsDescriptionForFirstTripIsRequired"));
                         }
 
-                        if (facilities.First(x=>x.Id == firstStep[1].FacilityId).FacilityType != AddressBook.FacilityType.Facility)
+                        if (facilities.First(x => x.Id == firstStep[1].FacilityId).FacilityType != AddressBook.FacilityType.Facility)
                         {
                             throw new UserFriendlyException(L("DropFacilityTypeForSecondTripMustNotBePort"));
                         }
 
                         //second trip
-                        if(request.RoundTripType == RoundTripType.WithReturnTrip)
+                        if (request.RoundTripType == RoundTripType.WithReturnTrip)
                         {
                             if (secondStep[0].FacilityId != firstStep[1].FacilityId)
                             {
@@ -458,26 +478,18 @@ namespace TACHYON.Shipping.Trips
                     }
                 }
             }
+        }
 
-            if (!input.Id.HasValue)
+        private static void ValidateReceiver(CreateOrEditShippingRequestTripDto input)
+        {
+            foreach (var drop in input.RoutPoints)
             {
-                if (request.ShippingRequestFlag == ShippingRequestFlag.Normal)
+                if (drop.ReceiverId == null &&
+                    (string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
+                     string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
                 {
-                    await _shippingRequestTripManager.ValidateNumberOfTrips(request, 1);
+                    throw new UserFriendlyException("YouMustEnterReceiver");
                 }
-               
-                 await Create(input, request);
-                if(request.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
-                {
-                    //add all vases automatic in dedicated trip
-                    AddAllRequestVasesToDedicatedTrip(input, request);
-
-                }
-                request.TotalsTripsAddByShippier += 1;
-            }
-            else
-            {
-                await Update(input, request);
             }
         }
 
