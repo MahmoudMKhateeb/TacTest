@@ -112,11 +112,6 @@ namespace TACHYON.Goods.GoodCategories
             }
         }
 
-        public async Task<int?> GetGeneralGoodsCategoryId()
-        {
-            return await _goodCategoryRepository.GetAll().Where(x => x.Flag.Equals(TACHYONConsts.GeneralGoods)).Select(x => x.Id).FirstOrDefaultAsync();
-        }
-
         private async Task ValidateDuplicatedDisplayName(CreateOrEditGoodCategoryDto input)
         {
             foreach (var transItem in input.Translations)

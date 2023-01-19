@@ -268,6 +268,15 @@ namespace TACHYON.Goods.GoodsDetails
             return ObjectMapper.Map<List<GetAllGoodsCategoriesForDropDownOutput>>(list);
         }
 
+        /// <summary>
+        /// Helper for front
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int?> GetGeneralGoodsCategoryId()
+        {
+            return await _lookup_goodCategoryRepository.GetAll().Where(x => x.Flag.Equals(TACHYONConsts.GeneralGoods)).Select(x => x.Id).FirstOrDefaultAsync();
+        }
+
         #region Waybills
         public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForSingleDropWaybill(int shippingRequestTripId, long? dropOffId = null)
         {
