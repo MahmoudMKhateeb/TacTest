@@ -48,6 +48,10 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public DropPaymentMethod? DropPaymentMethod { get; set; }
         public bool? NeedsReceiverCode { get; set; }
         public bool? NeedsPOD { get; set; }
+        #region Port Movements
+        public int? PointOrder { get; set; }
+
+        #endregion
 
         #endregion
 
@@ -56,11 +60,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public void AddValidationErrors(CustomValidationContext context)
         {
             if (PickingType == PickingType.Pickup) return;
-            //additional receiver must provided
-            if (!ReceiverId.HasValue && ReceiverPhoneNumber.IsNullOrEmpty())
-            {
-                context.Results.Add(new ValidationResult("AtLeastOneReceiverShouldBeProvided"));
-            }
+            
 
             //there is additional receiver
             if (ReceiverPhoneNumber != null)

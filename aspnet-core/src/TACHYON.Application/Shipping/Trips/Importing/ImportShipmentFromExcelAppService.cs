@@ -345,6 +345,10 @@ namespace TACHYON.Shipping.Trips.Importing
                         DisableTenancyFilters();
                         
                         _shippingRequestTripManager.ValidateDedicatedNumberOfDrops(tripDto.importPointsDtoList.Count(x => x.PickingType == PickingType.Dropoff), trip.NumberOfDrops);
+                        if (request.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || request.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+                        {
+                            _shippingRequestTripManager.ValidateDedicatedNumberOfDrops(tripDto.importPointsDtoList.Count(x => x.PickingType == PickingType.Pickup), trip.NumberOfDrops);
+                        }
                     }
                 }
                 catch (UserFriendlyException exception)

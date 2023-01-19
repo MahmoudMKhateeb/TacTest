@@ -258,6 +258,14 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
+        public void ValidateDedicatedNumberOfPickups(int PickupsCount, int numberOfPickups)
+        {
+            if (PickupsCount != numberOfPickups)
+            {
+                throw new UserFriendlyException(L("The number of pickup points must be" + numberOfPickups));
+            }
+        }
+
         public bool ValidateTripVasesNumber(long shippingRequestId,int tripVasNumber, long shippingRequestVasId)
         {
             var tripsNumber=_shippingRequestVasRepository.FirstOrDefault(x => x.Id == shippingRequestVasId && x.ShippingRequestId == shippingRequestId).NumberOfTrips;
@@ -423,6 +431,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                     throw new UserFriendlyException(L("TruckMustBeFromAssigned"));
                 }
             }
+        }
+
+        public List<Facility> GetAllFacilitiesByIds(List<long> facilityIds)
+        {
+            DisableTenancyFilters();
+            return _facilityRepository.GetAll().Where(x => facilityIds.Contains(x.Id)).ToList();
         }
         private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, StringBuilder exceptionMessage)
         {

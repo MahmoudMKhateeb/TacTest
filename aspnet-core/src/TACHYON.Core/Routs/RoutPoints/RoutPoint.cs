@@ -98,5 +98,9 @@ namespace TACHYON.Routs.RoutPoints
 
         #endregion
 
+        #region port movement
+        public int? PointOrder { get; set; }
+        #endregion
+
     }
 }
