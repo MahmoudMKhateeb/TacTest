@@ -35,6 +35,8 @@ using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingTypes;
+using TACHYON.AddressBook;
+using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -56,6 +58,8 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
         private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTrucksRepository;
+        private readonly IRepository<Facility, long> _facilityRepository;
+
 
 
         private readonly ISmsSender _smsSender;
@@ -78,7 +82,8 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<PriceOffer, long> priceOfferRepository,
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
-            IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTrucksRepository)
+            IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTrucksRepository,
+            IRepository<Facility, long> facilityRepository)
         {
             _smsSender = smsSender;
             _routPointRepository = routPointRepository;
@@ -98,6 +103,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
             _dedicatedShippingRequestTrucksRepository = dedicatedShippingRequestTrucksRepository;
+            _facilityRepository = facilityRepository;
         }
 
         /// <summary>
@@ -218,6 +224,64 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L("RoundTripTypeIsRequired"));
             }
 
+        }
+
+        public async Task ValidatePortMovementInputs(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements)
+            {
+                if (input.OriginFacilityId == null) throw new UserFriendlyException(L("OriginPortIsRequired"));
+                if (!await _facilityRepository.GetAll().AnyAsync(x => x.Id == input.OriginFacilityId && x.FacilityType == FacilityType.Port))
+                {
+                    throw new UserFriendlyException(L("OriginMustBePort"));
+                }
+            }
+
+            switch (shippingRequest.RoundTripType)
+            {
+                case RoundTripType.WithoutReturnTrip:
+                case RoundTripType.OneWayRoutWithPortShuttling:
+                    input.RouteTypeId = ShippingRequestRouteType.SingleDrop;
+                    input.NumberOfDrops = 1;
+                    break;
+                case RoundTripType.WithReturnTrip:
+                case RoundTripType.TwoWayRoutsWithoutPortShuttling:
+                    input.RouteTypeId = ShippingRequestRouteType.MultipleDrops;
+                    input.NumberOfDrops = 2;
+                    break;
+
+                case RoundTripType.TwoWayRoutsWithPortShuttling:
+                    input.RouteTypeId = ShippingRequestRouteType.MultipleDrops;
+                    input.NumberOfDrops = 3;
+                    break;
+            }
+
+        }
+
+        public void OverridePortMovementRoutInputsForTrip(CreateOrEditShippingRequestTripDto input, ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || shippingRequest.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+            {
+
+                switch (shippingRequest.RoundTripType)
+                {
+                    case RoundTripType.WithoutReturnTrip:
+                    case RoundTripType.OneWayRoutWithPortShuttling:
+                        input.RouteType = ShippingRequestRouteType.SingleDrop;
+                        input.NumberOfDrops = 1;
+                        break;
+                    case RoundTripType.WithReturnTrip:
+                    case RoundTripType.TwoWayRoutsWithoutPortShuttling:
+                        input.RouteType = ShippingRequestRouteType.MultipleDrops;
+                        input.NumberOfDrops = 2;
+                        break;
+
+                    case RoundTripType.TwoWayRoutsWithPortShuttling:
+                        input.RouteType = ShippingRequestRouteType.MultipleDrops;
+                        input.NumberOfDrops = 3;
+                        break;
+                }
+            }
         }
 
 

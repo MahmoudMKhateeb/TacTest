@@ -155,5 +155,7 @@ namespace TACHYON
         public const string AppendixTemplateClientName = "$$ClientName$$";
         public const string AppendixTemplateScopeOverview = "$$ScopeOverview$$";
         public const string AppendixTemplateNotes = "$$Notes$$";
+
+        public const string GeneralGoods = "General Goods";
     }
 }

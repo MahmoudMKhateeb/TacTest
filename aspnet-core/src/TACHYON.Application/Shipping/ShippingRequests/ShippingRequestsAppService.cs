@@ -321,7 +321,7 @@ namespace TACHYON.Shipping.ShippingRequests
             var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id);
 
             //if request between cities and single drop
-            await ValidatePortMovementInputs(input, shippingRequest);
+            await _shippingRequestManager.ValidatePortMovementInputs(input, shippingRequest);
             ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest);
 
             if (shippingRequest.DraftStep < 2)
@@ -1790,37 +1790,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-        private async Task ValidatePortMovementInputs(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
-        {
-            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements)
-            {
-                if (input.OriginFacilityId == null) throw new UserFriendlyException(L("OriginPortIsRequired"));
-                if (!await _facilityRepository.GetAll().AnyAsync(x => x.Id == input.OriginFacilityId && x.FacilityType == FacilityType.Port))
-                {
-                    throw new UserFriendlyException(L("OriginMustBePort"));
-                }
-            }
-
-            switch (shippingRequest.RoundTripType)
-            {
-                case RoundTripType.WithoutReturnTrip :
-                case RoundTripType.OneWayRoutWithPortShuttling:
-                    input.RouteTypeId = ShippingRequestRouteType.SingleDrop;
-                    input.NumberOfDrops = 1;
-                    break;
-                case RoundTripType.WithReturnTrip:
-                case RoundTripType.TwoWayRoutsWithoutPortShuttling :
-                    input.RouteTypeId = ShippingRequestRouteType.MultipleDrops;
-                    input.NumberOfDrops = 2;
-                    break;
-
-                case RoundTripType.TwoWayRoutsWithPortShuttling:
-                    input.RouteTypeId = ShippingRequestRouteType.MultipleDrops;
-                    input.NumberOfDrops = 3;
-                    break;
-            }
-  
-        }
+        
 
 
         private async Task AddPortMovementVases(EditShippingRequestStep4Dto input, ShippingRequest shippingRequest)
@@ -1831,11 +1801,12 @@ namespace TACHYON.Shipping.ShippingRequests
                 x.Name.ToLower().Equals(TACHYONConsts.ClearanceVasName)).ToListAsync();
                 var ClearVases = new List<Vas>();
 
-               if(portVases.Count() < 2)
-               {
-                  await AddNotExistVases(portVases);
-               }
-               if (portVases.Count() > 2) 
+                if (portVases.Count() < 2)
+                {
+                    //await AddNotExistVases(portVases);
+                    throw new UserFriendlyException(L("InvalidVases"));
+                }
+                if (portVases.Count() > 2) 
                {
                    ClearVases.Add(portVases.Where(x => x.Name == TACHYONConsts.AppointmentVasName).First());
                    ClearVases.Add(portVases.Where(x => x.Name == TACHYONConsts.ClearanceVasName).First());
