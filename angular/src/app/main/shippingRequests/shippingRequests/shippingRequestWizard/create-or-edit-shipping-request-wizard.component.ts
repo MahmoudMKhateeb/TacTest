@@ -959,6 +959,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       case RoundTripType.TwoWayRoutsWithPortShuttling:
       case RoundTripType.WithReturnTrip: {
         this.step2Dto.routeTypeId = ShippingRequestRouteType.MultipleDrops;
+        this.step2Dto.numberOfDrops = 2;
         break;
       }
       default: {

@@ -652,7 +652,13 @@
                         </div>
                       </div>
 
-                      <div class="col-lg-6">
+                      <div
+                        class="col-lg-6"
+                        [hidden]="
+                          step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                          step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
+                        "
+                      >
                         <div class="form-group">
                           <label>{{ l('NumberOfDrops') }} <span class="required-fileds">*</span></label>
                           <input
