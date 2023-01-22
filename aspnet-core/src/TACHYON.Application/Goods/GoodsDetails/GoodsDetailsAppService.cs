@@ -277,6 +277,15 @@ namespace TACHYON.Goods.GoodsDetails
             return await _lookup_goodCategoryRepository.GetAll().Where(x => x.Flag.Equals(TACHYONConsts.GeneralGoods)).Select(x => x.Id).FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// Helper for front
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int?> GetEmptyGoodsCategoryId()
+        {
+            return await _lookup_goodCategoryRepository.GetAll().Where(x => x.Flag.Equals(TACHYONConsts.EmptyContainer)).Select(x => x.Id).FirstOrDefaultAsync();
+        }
+
         #region Waybills
         public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForSingleDropWaybill(int shippingRequestTripId, long? dropOffId = null)
         {

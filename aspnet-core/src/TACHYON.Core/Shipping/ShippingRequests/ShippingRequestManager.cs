@@ -37,6 +37,8 @@ using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.AddressBook;
 using TACHYON.Shipping.Trips.Dto;
+using TACHYON.Vases.Dtos;
+using TACHYON.Vases;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -59,6 +61,8 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
         private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTrucksRepository;
         private readonly IRepository<Facility, long> _facilityRepository;
+        private readonly IRepository<Vas, int> _lookup_vasRepository;
+
 
 
 
@@ -83,7 +87,8 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
             IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTrucksRepository,
-            IRepository<Facility, long> facilityRepository)
+            IRepository<Facility, long> facilityRepository,
+            IRepository<Vas, int> lookup_vasRepository)
         {
             _smsSender = smsSender;
             _routPointRepository = routPointRepository;
@@ -104,6 +109,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
             _dedicatedShippingRequestTrucksRepository = dedicatedShippingRequestTrucksRepository;
             _facilityRepository = facilityRepository;
+            _lookup_vasRepository = lookup_vasRepository;
         }
 
         /// <summary>
@@ -312,6 +318,11 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task EditVasStep(ShippingRequest shippingRequest, EditVasStepBaseDto input)
         {
+            //Add appointment & clearance vases automatically to request when port movements
+            if (shippingRequest.ShippingRequestVases.Count() == 0)
+            {
+                await AddPortMovementVases(input, shippingRequest);
+            }
             foreach (var vas in shippingRequest.ShippingRequestVases)
             {
                 if( vas.VasFk.Name != TACHYONConsts.AppointmentVasName && vas.VasFk.Name != TACHYONConsts.ClearanceVasName)
@@ -325,6 +336,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
             }
         }
+
+
 
         public async Task PublishShippingRequestManager(ShippingRequest shippingRequest)
         {
@@ -580,7 +593,35 @@ namespace TACHYON.Shipping.ShippingRequests
             return false;
         }
 
+        private async Task AddPortMovementVases(EditVasStepBaseDto input, ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || shippingRequest.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+            {
+                var portVases = await _lookup_vasRepository.GetAll().Where(x => x.Name.ToLower().Equals(TACHYONConsts.AppointmentVasName) ||
+                x.Name.ToLower().Equals(TACHYONConsts.ClearanceVasName)).ToListAsync();
+                var ClearVases = new List<Vas>();
 
+                if (portVases.Count() < 2)
+                {
+                    //await AddNotExistVases(portVases);
+                    throw new UserFriendlyException(L("InvalidVases"));
+                }
+                if (portVases.Count() > 2)
+                {
+                    ClearVases.Add(portVases.Where(x => x.Name == TACHYONConsts.AppointmentVasName).First());
+                    ClearVases.Add(portVases.Where(x => x.Name == TACHYONConsts.ClearanceVasName).First());
+                }
+                else
+                {
+                    ClearVases = portVases;
+                }
+
+                foreach (var vas in ClearVases)
+                {
+                    input.ShippingRequestVasList.Add(new CreateOrEditShippingRequestVasListDto { NumberOfTrips = 0, RequestMaxCount = 1, VasId = vas.Id });
+                }
+            }
+        }
 
     }
 }

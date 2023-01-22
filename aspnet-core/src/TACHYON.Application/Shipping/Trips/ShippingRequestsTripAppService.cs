@@ -336,17 +336,16 @@ namespace TACHYON.Shipping.Trips
             await DisableTenancyFiltersIfTachyonDealer();
             var request = await GetShippingRequestByPermission(input.ShippingRequestId);
 
-            //if (await IsEnabledAsync(AppFeatures.TachyonDealer) && !await FeatureChecker.IsEnabledAsync(request.TenantId, AppFeatures.AddTripsByTachyonDeal))
-            //    throw new AbpValidationException(L("AddTripsByTachyonDealIsNotEnabledFromShipper"));
-            await ValidateGoodsCategory(input.RoutPoints, request.GoodCategoryId);
             if (request.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || request.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
             {
                 _shippingRequestManager.OverridePortMovementRoutInputsForTrip(input, request);
             }
             else
             {
-                //additional receiver must provided
+                // validate goods category if shipping type not port movements, bcz port movements has sometimes empty container category that breaks normal goods category validation
+                await ValidateGoodsCategory(input.RoutPoints, request.GoodCategoryId);
 
+                //additional receiver must provided
                 ValidateReceiver(input);
 
                 if (input.ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).Any(x => x.Description == null))
@@ -409,7 +408,7 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
-        private void ValidatePortMovementRequest(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
+        private async Task ValidatePortMovementRequest(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
         {
             if (request.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || request.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
             {
@@ -434,47 +433,88 @@ namespace TACHYON.Shipping.Trips
 
                 if (request.ShippingTypeId == ShippingTypeEnum.ImportPortMovements)
                 {
-                    if (request.RoundTripType == RoundTripType.WithReturnTrip || request.RoundTripType == RoundTripType.WithoutReturnTrip)
+                    if (firstStep[0].FacilityId != request.OriginFacilityId && request.ShippingRequestFlag == ShippingRequestFlag.Normal)
                     {
-                        if (firstStep[0].FacilityId != request.OriginFacilityId && request.ShippingRequestFlag == ShippingRequestFlag.Normal)
+                        throw new UserFriendlyException(L("OriginPortMustBeSameAsOriginRequestPort"));
+                    }
+
+                    if (!firstStep[1].ReceiverId.HasValue && firstStep[1].ReceiverPhoneNumber.IsNullOrEmpty())
+                    {
+                        throw new UserFriendlyException(L("ReceiverIsRequiredForFirstTripDrop"));
+                    }
+                    if (firstStep[1].GoodsDetailListDto.Any(x => string.IsNullOrEmpty(x.Description)))
+                    {
+                        throw new UserFriendlyException(L("GoodsDescriptionForFirstTripIsRequired"));
+                    }
+
+                    if (facilities.First(x => x.Id == firstStep[1].FacilityId).FacilityType != AddressBook.FacilityType.Facility)
+                    {
+                        throw new UserFriendlyException(L("DropFacilityTypeForSecondTripMustNotBePort"));
+                    }
+                    await ValidateGoodsCategory(firstStep, request.GoodCategoryId);
+
+                    //second trip
+                    if (request.RoundTripType == RoundTripType.WithReturnTrip)
+                    {
+                        if (secondStep[0].FacilityId != firstStep[1].FacilityId)
                         {
-                            throw new UserFriendlyException(L("OriginPortMustBeSameAsOriginRequestPort"));
+                            throw new UserFriendlyException(L("InvalidFacilityPickupForSecondTrip"));
+                        }
+                        if (!secondStep[0].ReceiverId.HasValue && secondStep[0].ReceiverPhoneNumber.IsNullOrEmpty())
+                        {
+                            throw new UserFriendlyException(L("SenderIsRequiredForSecondTrip"));
                         }
 
-                        if (!firstStep[1].ReceiverId.HasValue && firstStep[1].ReceiverPhoneNumber.IsNullOrEmpty())
+                        if (facilities.First(x => x.Id == secondStep[1].FacilityId).FacilityType == AddressBook.FacilityType.Facility &&
+                            !secondStep[1].ReceiverId.HasValue && secondStep[1].ReceiverPhoneNumber.IsNullOrEmpty())
                         {
-                            throw new UserFriendlyException(L("ReceiverIsRequiredForFirstTripDrop"));
+                            throw new UserFriendlyException(L("ReceiverIsRequiredForSecondTrip"));
                         }
-                        if (firstStep[1].GoodsDetailListDto.Any(x => string.IsNullOrEmpty(x.Description)))
+                    }
+                    
+                }
+
+                else if (request.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+                {
+                    if(request.RoundTripType == RoundTripType.TwoWayRoutsWithPortShuttling)
+                    {
+                        if (firstStep[0].ReceiverId != null || secondStep[0].ReceiverId == null || thirdStep[0].ReceiverId == null)
                         {
-                            throw new UserFriendlyException(L("GoodsDescriptionForFirstTripIsRequired"));
+                            throw new UserFriendlyException(L("SenderIsRequired"));
                         }
-
-                        if (facilities.First(x => x.Id == firstStep[1].FacilityId).FacilityType != AddressBook.FacilityType.Facility)
+                        if (secondStep[1].ReceiverId == null)
                         {
-                            throw new UserFriendlyException(L("DropFacilityTypeForSecondTripMustNotBePort"));
+                            throw new UserFriendlyException(L("ReceiverIsRequiredForSecondTrip"));
                         }
-
-                        //second trip
-                        if (request.RoundTripType == RoundTripType.WithReturnTrip)
+                        if(facilities.FirstOrDefault(x=>x.Id == thirdStep[1].FacilityId).FacilityType != AddressBook.FacilityType.Port)
                         {
-                            if (secondStep[0].FacilityId != firstStep[1].FacilityId)
-                            {
-                                throw new UserFriendlyException(L("InvalidFacilityPickupForSecondTrip"));
-                            }
-                            if (!secondStep[0].ReceiverId.HasValue && secondStep[0].ReceiverPhoneNumber.IsNullOrEmpty())
-                            {
-                                throw new UserFriendlyException(L("SenderIsRequiredForSecondTrip"));
-                            }
-
-                            if (facilities.First(x => x.Id == secondStep[1].FacilityId).FacilityType == AddressBook.FacilityType.Facility &&
-                                !secondStep[1].ReceiverId.HasValue && secondStep[1].ReceiverPhoneNumber.IsNullOrEmpty())
-                            {
-                                throw new UserFriendlyException(L("ReceiverIsRequiredForSecondTrip"));
-                            }
-
-
+                            throw new UserFriendlyException(L("FinalDropFacilityMustBePort"));
                         }
+                        await ValidateGoodsCategory(secondStep.Union(thirdStep), request.GoodCategoryId);
+                    }
+                    else if(request.RoundTripType == RoundTripType.TwoWayRoutsWithoutPortShuttling)
+                    {
+                        await ValidateGoodsCategory(secondStep, request.GoodCategoryId);
+                        if (firstStep[0].ReceiverId != null || secondStep[0].ReceiverId == null)
+                        {
+                            throw new UserFriendlyException(L("SenderIsRequired"));
+                        }
+                        if (secondStep[1].ReceiverId == null)
+                        {
+                            throw new UserFriendlyException(L("ReceiverIsRequiredForSecondTrip"));
+                        }
+                    }
+                    else if (request.RoundTripType == RoundTripType.OneWayRoutWithPortShuttling)
+                    {
+                        if (facilities.FirstOrDefault(x => x.Id == firstStep[1].FacilityId).FacilityType != AddressBook.FacilityType.Port)
+                        {
+                            throw new UserFriendlyException(L("DropFacilityMustBePort"));
+                        }
+                    }
+
+                    if (input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).Any(x => x.Amount == null || string.IsNullOrEmpty(x.Description)))
+                    {
+                        throw new UserFriendlyException(L("GoodsQtyAndDescriptionIsRequired"));
                     }
                 }
             }

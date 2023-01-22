@@ -389,11 +389,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Where(x => x.Id == input.Id && x.IsDrafted == true)
                 .FirstOrDefaultAsync();
 
-            //Add appointment & clearance vases automatically to request when port movements
-            if(shippingRequest.ShippingRequestVases.Count() == 0)
-            {
-                await AddPortMovementVases(input, shippingRequest);
-            }
+            
 
             await ShippingRequestVasListValidate(input, shippingRequest.NumberOfTrips);
             //delete vases
@@ -1791,37 +1787,6 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
         
-
-
-        private async Task AddPortMovementVases(EditShippingRequestStep4Dto input, ShippingRequest shippingRequest)
-        {
-            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || shippingRequest.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
-            {
-                var portVases = await _lookup_vasRepository.GetAll().Where(x => x.Name.ToLower().Equals(TACHYONConsts.AppointmentVasName) ||
-                x.Name.ToLower().Equals(TACHYONConsts.ClearanceVasName)).ToListAsync();
-                var ClearVases = new List<Vas>();
-
-                if (portVases.Count() < 2)
-                {
-                    //await AddNotExistVases(portVases);
-                    throw new UserFriendlyException(L("InvalidVases"));
-                }
-                if (portVases.Count() > 2) 
-               {
-                   ClearVases.Add(portVases.Where(x => x.Name == TACHYONConsts.AppointmentVasName).First());
-                   ClearVases.Add(portVases.Where(x => x.Name == TACHYONConsts.ClearanceVasName).First());
-               }
-               else
-               {
-                   ClearVases = portVases;
-               }
-
-               foreach (var vas in ClearVases)
-               {
-                    input.ShippingRequestVasList.Add(new CreateOrEditShippingRequestVasListDto { NumberOfTrips = 0, RequestMaxCount = 1, VasId = vas.Id });
-               }
-            }
-        }
 
         private async Task AddNotExistVases(List<Vas> ClearedVases)
         {

@@ -55,6 +55,8 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public string DropPaymentMethodTitle { get; set; }
         public bool NeedsReceiverCode { get; set; }
         public bool NeedsPOD { get; set; }
+        public int? PointOrder { get; set; }
+
 
         //to do receiver attribute
     }

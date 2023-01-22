@@ -157,5 +157,6 @@ namespace TACHYON
         public const string AppendixTemplateNotes = "$$Notes$$";
 
         public const string GeneralGoods = "General Goods";
+        public const string EmptyContainer = "Empty Container";
     }
 }
