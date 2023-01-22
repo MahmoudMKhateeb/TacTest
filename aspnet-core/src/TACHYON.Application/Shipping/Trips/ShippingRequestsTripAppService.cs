@@ -363,7 +363,7 @@ namespace TACHYON.Shipping.Trips
             {
                 _shippingRequestTripManager.ValidateTripDates(input, request);
                 _shippingRequestTripManager.ValidateNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), request);
-                if (request.ShippingTypeId != ShippingTypeEnum.ImportPortMovements && request.ShippingTypeId != ShippingTypeEnum.ExportPortMovements)
+                //if (request.ShippingTypeId != ShippingTypeEnum.ImportPortMovements && request.ShippingTypeId != ShippingTypeEnum.ExportPortMovements)
                     _shippingRequestTripManager.ValidateTotalweight(input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).ToList<ICreateOrEditGoodsDetailDtoBase>(), request);
 
             }
@@ -384,7 +384,7 @@ namespace TACHYON.Shipping.Trips
                 await _shippingRequestTripManager.ValidateTruckAndDriver(input);
             }
 
-            ValidatePortMovementRequest(input, request);
+            await ValidatePortMovementRequest(input, request);
 
             if (!input.Id.HasValue)
             {

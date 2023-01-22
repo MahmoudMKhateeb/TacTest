@@ -340,6 +340,19 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         {
             if (request.TotalWeight > 0)
             {
+                if(request.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || request.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+                {
+                    foreach(var drop in input)
+                    {
+                        var weight = drop.Weight;
+                        if (weight > request.TotalWeight)
+                        {
+                            throw new UserFriendlyException(L(
+                                "TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight",
+                                request.TotalWeight));
+                        }
+                    }
+                }
                 var totalWeight = input.Sum(g => g.Weight * g.Amount);
                 if (totalWeight > request.TotalWeight)
                 {
