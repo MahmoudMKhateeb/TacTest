@@ -96,6 +96,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string OriginFacilityTitle { get; set; }
         public RoundTripType? RoundTripType { get; set; }
         public string RoundTripTypeTitle { get; set; }
+        public bool IsGeneralGoodsCategory { get; set; }
 
         #endregion
     }

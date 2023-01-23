@@ -780,6 +780,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 output.GoodsCategoryName =
                     ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
 
+                output.IsGeneralGoodsCategory = shippingRequest.GoodCategoryFk.Flag.Equals(TACHYONConsts.GeneralGoods);
 
                 //fill dest city list
                 var index = 1;
@@ -1652,6 +1653,14 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Include(x => x.Translations)
                 .ToListAsync();
             return ObjectMapper.Map<List<GetAllUnitOfMeasureForDropDownOutput>>(unitOfMeasures);
+        }
+
+        public async Task<int?> GetContainerUOMId()
+        {
+            return await _unitOfMeasureRepository.GetAll()
+                .Where(x => x.DisplayName.Equals(TACHYONConsts.ContainerUOM))
+                .Select(x=>x.Id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<SelectItemDto>> GetAllShippingTypesForDropdown()

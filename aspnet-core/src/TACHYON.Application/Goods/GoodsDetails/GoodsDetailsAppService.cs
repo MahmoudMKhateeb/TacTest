@@ -261,6 +261,7 @@ namespace TACHYON.Goods.GoodsDetails
         {
             var list = await _lookup_goodCategoryRepository.GetAll()
                 .Include(x => x.Translations)
+                .Where(x=>x.Flag != TACHYONConsts.EmptyContainer)
                 .WhereIf(fatherId == null, x => x.GoodCategories.Where(e => e.GoodCategories != null).Any())
                 .WhereIf(fatherId != null, x => x.FatherId == fatherId)
                 .ToListAsync();
@@ -281,9 +282,10 @@ namespace TACHYON.Goods.GoodsDetails
         /// Helper for front
         /// </summary>
         /// <returns></returns>
-        public async Task<int?> GetEmptyGoodsCategoryId()
+        public async Task<GetAllGoodsCategoriesForDropDownOutput> GetEmptyGoodsCategoryForDropDown()
         {
-            return await _lookup_goodCategoryRepository.GetAll().Where(x => x.Flag.Equals(TACHYONConsts.EmptyContainer)).Select(x => x.Id).FirstOrDefaultAsync();
+            var item= await _lookup_goodCategoryRepository.GetAll().Where(x => x.Flag.Equals(TACHYONConsts.EmptyContainer)).FirstOrDefaultAsync();
+            return ObjectMapper.Map<GetAllGoodsCategoriesForDropDownOutput>(item);
         }
 
         #region Waybills
