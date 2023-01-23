@@ -51,6 +51,9 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         #region Port Movements
         public int? PointOrder { get; set; }
 
+        public bool DropNeedsAppointment { get; set; }
+        public bool DropNeedsClearance { get; set; }
+
         #endregion
 
         #endregion

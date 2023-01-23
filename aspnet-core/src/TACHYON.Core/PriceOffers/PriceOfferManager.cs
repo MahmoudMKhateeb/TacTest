@@ -1361,7 +1361,7 @@ namespace TACHYON.PriceOffers
             }
         }
 
-        private void CalculatePriceOfferDetails(PriceOffer offer)
+        public void CalculatePriceOfferDetails(PriceOffer offer)
         {
             foreach (var item in offer.PriceOfferDetails)
             {

@@ -100,6 +100,12 @@ namespace TACHYON.Routs.RoutPoints
 
         #region port movement
         public int? PointOrder { get; set; }
+        public bool NeedsAppointment { get; set; }
+        public bool NeedsClearance { get; set; }
+        public DateTime? AppointmentDateTime { get; set; }
+        public string AppointmentNumber { get; set; }
+        public bool HasClearanceVas { get; set; }
+        public bool HasAppointmentVas { get; set; }
         #endregion
 
     }

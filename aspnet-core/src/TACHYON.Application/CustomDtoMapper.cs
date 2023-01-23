@@ -570,6 +570,8 @@ namespace TACHYON
                 .ForPath(dest => dest.DropPaymentMethodTitle , opt => opt.MapFrom(src => src.DropPaymentMethod.GetEnumDescription()));
 
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
+                .ForMember(dest => dest.NeedsClearance, opt => opt.MapFrom(src => src.DropNeedsClearance))
+                .ForMember(dest => dest.NeedsAppointment, opt => opt.MapFrom(src => src.DropNeedsAppointment))
                 .ForMember(x => x.WaybillNumber, otp => otp.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTripRoutePointGoods);
 

@@ -57,6 +57,11 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public bool NeedsPOD { get; set; }
         public int? PointOrder { get; set; }
 
+        public DateTime? AppointmentDateTime { get; set; }
+        public string AppointmentNumber { get; set; }
+        public bool NeedsAppointment { get; set; }
+        public bool NeedsClearance { get; set; }
+
 
         //to do receiver attribute
     }

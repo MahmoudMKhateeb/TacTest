@@ -2,11 +2,14 @@
 using AutoMapper;
 using System;
 using System.Linq;
+using TACHYON.Goods.GoodsDetails;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips.Dto;
+using TACHYON.ShippingRequestTripVases;
 using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.AutoMapper.PriceOffers
@@ -68,6 +71,12 @@ namespace TACHYON.AutoMapper.PriceOffers
             CreateMap<CreateOrEditActorShipperPriceDto, ActorShipperPrice>().ReverseMap();
             CreateMap<ActorCarrierPrice, ActorCarrierPriceDto>();
             CreateMap<ActorCarrierPrice, CreateOrEditActorCarrierPrice>().ReverseMap();
+
+            CreateMap<SetAppointmentDataInput, PriceOfferDetail>();
+            CreateMap<SetClearancePriceInput, PriceOfferDetail>();
+
+            CreateMap<PriceOfferDetail, ShippingRequestTripVas>();
+
 
         }
 

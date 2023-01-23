@@ -353,13 +353,17 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                         }
                     }
                 }
-                var totalWeight = input.Sum(g => g.Weight * g.Amount);
-                if (totalWeight > request.TotalWeight)
+                else
                 {
-                    throw new UserFriendlyException(L(
-                        "TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight",
-                        request.TotalWeight));
+                    var totalWeight = input.Sum(g => g.Weight * g.Amount);
+                    if (totalWeight > request.TotalWeight)
+                    {
+                        throw new UserFriendlyException(L(
+                            "TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight",
+                            request.TotalWeight));
+                    }
                 }
+
             }
         }
 

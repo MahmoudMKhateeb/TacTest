@@ -3,6 +3,7 @@ using AutoMapper;
 using System;
 using System.Globalization;
 using System.Linq;
+using TACHYON.PriceOffers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -151,6 +152,9 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ReverseMap();
 
             CreateMap<ImportTripVasesDto, ShippingRequestTripVas>();
+
+            CreateMap<SetAppointmentDataInput, ShippingRequestTripVas>();
+            CreateMap<SetClearancePriceInput, ShippingRequestTripVas>();
         }
 
         private static ShippingRequestTripDriverLoadStatusDto GetMobileTripStatus(ShippingRequestTrip trip)
