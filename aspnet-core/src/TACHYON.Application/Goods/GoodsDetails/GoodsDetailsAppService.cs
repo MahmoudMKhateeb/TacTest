@@ -285,7 +285,7 @@ namespace TACHYON.Goods.GoodsDetails
         public async Task<GetAllGoodsCategoriesForDropDownOutput> GetEmptyGoodsCategoryForDropDown()
         {
             var item= await _lookup_goodCategoryRepository.GetAll().Where(x => x.Flag.Equals(TACHYONConsts.EmptyContainer)).FirstOrDefaultAsync();
-            return ObjectMapper.Map<GetAllGoodsCategoriesForDropDownOutput>(item);
+            return ObjectMapper.Map<GetAllGoodsCategoriesForDropDownOutput>(new GetAllGoodsCategoriesForDropDownOutput { DisplayName=item.Flag, Id=item.Id});
         }
 
         #region Waybills
