@@ -21,6 +21,8 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   @Input() goodDetailsListForView: GoodsDetailDto[];
   @Input() isForDedicated = false;
   @Input() isHomeDelivery = false;
+  @Input() isForPortsMovement = false;
+  @Input() pointIndex: number;
   usedIn: 'view' | 'createOrEdit';
   //For Create/Edit
   Point: CreateOrEditRoutPointDto;

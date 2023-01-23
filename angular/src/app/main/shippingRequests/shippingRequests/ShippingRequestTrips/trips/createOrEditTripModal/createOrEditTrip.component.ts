@@ -8,11 +8,13 @@ import {
   DedicatedShippingRequestsServiceProxy,
   DropPaymentMethod,
   EntityTemplateServiceProxy,
+  FacilityType,
   FileDto,
   GetAllDedicatedDriversOrTrucksForDropDownDto,
   GetShippingRequestForViewOutput,
   GetShippingRequestVasForViewDto,
   PickingType,
+  RoundTripType,
   SavedEntityType,
   SelectItemDto,
   ShippingRequestDto,
@@ -20,6 +22,7 @@ import {
   ShippingRequestRouteType,
   ShippingRequestsTripServiceProxy,
   ShippingRequestTripFlag,
+  ShippingTypeEnum,
   UpdateDocumentFileInput,
   WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -53,6 +56,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   @ViewChild('PointsComponent') PointsComponent: PointsComponent;
   @ViewChild('userForm', { static: false }) userForm: NgForm;
 
+  @Input('isPortMovement') isPortMovement = false;
   @Input() shippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   @Input() parentForm: NgForm;
@@ -145,6 +149,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   allDedicatedTrucks: GetAllDedicatedDriversOrTrucksForDropDownDto[] = [];
   shippingRequestForView: GetShippingRequestForViewOutput = null;
   selectedTripType;
+  ShippingTypeEnum = ShippingTypeEnum;
 
   constructor(
     injector: Injector,
@@ -163,6 +168,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   ngOnInit() {
+    console.log('isPortMovement', this.isPortMovement);
     //link the trip from the shared service to the this component
     this.TripsServiceSubscription = this._TripService.currentActiveTrip.subscribe((res) => (this.trip = res));
     this.ShippingRequestTripFlagArray = this.enumToArray.transform(ShippingRequestTripFlag);
@@ -192,6 +198,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   show(record?: CreateOrEditShippingRequestTripDto, shippingRequestForView?: GetShippingRequestForViewOutput): void {
     this.shippingRequestForView = shippingRequestForView;
+    this._PointsService.currentShippingRequest = this.shippingRequestForView;
     if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Dedicated) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
@@ -543,6 +550,12 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * @private
    */
   private validatePointsBeforeAddTrip() {
+    if (
+      this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+      this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+    ) {
+      return this.validatePointsFromPointsComponentForPortsMovement();
+    }
     let isSingleDropTrip = this.shippingRequest.routeTypeId === this.RouteTypesEnum.SingleDrop;
     let isFacilitiesTheSame =
       isNotNullOrUndefined(this.trip.routPoints) &&
@@ -595,6 +608,12 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   private validatePointsFromPointsComponent() {
+    if (
+      this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+      this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+    ) {
+      return this.validatePointsFromPointsComponentForPortsMovement();
+    }
     if (!isNotNullOrUndefined(this.PointsComponent) || !isNotNullOrUndefined(this.PointsComponent.wayPointsList)) {
       return false;
     }
@@ -621,6 +640,107 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         }
       }
     }
+    return true;
+  }
+
+  private validatePointsFromPointsComponentForPortsMovement() {
+    // debugger;
+    if (!isNotNullOrUndefined(this.PointsComponent) || !isNotNullOrUndefined(this.PointsComponent.wayPointsList)) {
+      return false;
+    }
+    if (this.shippingRequestForView.shippingRequest.roundTripType === RoundTripType.WithReturnTrip && this.PointsComponent.wayPointsList.length > 0) {
+      const point1 = this.PointsComponent.wayPointsList[1];
+      const point2 = this.PointsComponent.wayPointsList[2];
+      const point3 = this.PointsComponent.wayPointsList[3];
+      const goodDetailsValidForPoint1 = isNotNullOrUndefined(point1.goodsDetailListDto)
+        ? point1.goodsDetailListDto.filter((goodDetail) => {
+            return isNotNullOrUndefined(goodDetail.description) && goodDetail.description?.length > 0;
+          }).length === point1.goodsDetailListDto.length
+        : false;
+
+      const pointOneValid = isNotNullOrUndefined(point1.receiverId) && goodDetailsValidForPoint1;
+      if (!pointOneValid) {
+        return false;
+      }
+
+      const pointTwoValid = isNotNullOrUndefined(point2.receiverId);
+      if (!pointTwoValid) {
+        return false;
+      }
+
+      const foundFacility = this.PointsComponent.allFacilities.find((fac) => fac.id === point3.facilityId);
+      const recieverValid =
+        foundFacility?.facilityType === FacilityType.Facility ? point3.facilityId && isNotNullOrUndefined(point3.receiverId) : true;
+      const goodsDetailsValidForPoint3 = isNotNullOrUndefined(point3.goodsDetailListDto)
+        ? point3.goodsDetailListDto.filter((goodDetail) => {
+            return (
+              isNotNullOrUndefined(goodDetail.weight) &&
+              goodDetail.weight?.toString()?.length > 0 &&
+              isNotNullOrUndefined(goodDetail.description) &&
+              goodDetail.description?.length > 0
+            );
+          }).length === point3.goodsDetailListDto.length
+        : false;
+      const pointThreeValid = recieverValid && goodsDetailsValidForPoint3;
+      if (!pointThreeValid) {
+        return false;
+      }
+      // for (let i = 0; i < this.PointsComponent.wayPointsList.length; i++) {
+      //     const point = this.PointsComponent.wayPointsList[i];
+      //     // if (i === 1) {
+      //     //     const pointOneValid = isNotNullOrUndefined(point.receiverId) &&
+      //     //         isNotNullOrUndefined(point.goodsDetailListDto) &&
+      //     //         isNotNullOrUndefined(point.goodsDetailListDto[0]?.description) &&
+      //     //         point.goodsDetailListDto[0]?.description?.length > 0;
+      //     //     if (!pointOneValid) {
+      //     //         return false;
+      //     //     }
+      //     // }
+      //     // if (i === 2) {
+      //     //     const pointTwoValid = isNotNullOrUndefined(point.receiverId);
+      //     //     if (!pointTwoValid) {
+      //     //         return false;
+      //     //     }
+      //     // }
+      //     if (i === 3) {
+      //         const foundFacility = this.PointsComponent.allFacilities.find(fac => fac.id === point.facilityId);
+      //         const recieverValid = foundFacility?.facilityType === FacilityType.Facility ? point.facilityId && isNotNullOrUndefined(point.receiverId) : true;
+      //         const goodsDetailsValid = isNotNullOrUndefined(point.goodsDetailListDto) ?
+      //                 (isNotNullOrUndefined(point.goodsDetailListDto) &&
+      //                 isNotNullOrUndefined(point.goodsDetailListDto[0]?.weight) &&
+      //                 isNotNullOrUndefined(point.goodsDetailListDto[0]?.description) &&
+      //                 point.goodsDetailListDto[0]?.weight?.toString()?.length > 0 &&
+      //                 point.goodsDetailListDto[0]?.description.length > 0) : false;
+      //         const pointThreeValid = recieverValid && goodsDetailsValid;
+      //         if (!pointThreeValid) {
+      //             return false;
+      //         }
+      //     }
+      // }
+    }
+    // for (const point of this.PointsComponent.wayPointsList) {
+    //     const isFacilityEmpty = !isNotNullOrUndefined(point.facilityId) || ('' + point.facilityId).length === 0;
+    //     const isReceiverEmpty =
+    //         (this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.Normal &&
+    //             (!isNotNullOrUndefined(point.receiverId) || ('' + point.receiverId).length === 0)) ||
+    //         (this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.HomeDelivery &&
+    //             (!isNotNullOrUndefined(point.receiverFullName) || point.receiverFullName.length === 0) &&
+    //             (!isNotNullOrUndefined(point.receiverPhoneNumber) || point.receiverPhoneNumber.length === 0) &&
+    //             (!isNotNullOrUndefined(point.receiverId) || ('' + point.receiverId).length === 0));
+    //     if (point.pickingType === this.PickingType.Pickup && (isFacilityEmpty || isReceiverEmpty)) {
+    //         return false;
+    //     }
+    //     if (point.pickingType === this.PickingType.Dropoff) {
+    //         if (
+    //             isFacilityEmpty ||
+    //             isReceiverEmpty ||
+    //             (this.trip.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.Normal &&
+    //                 (!isNotNullOrUndefined(point.goodsDetailListDto as any) || point.goodsDetailListDto.length === 0))
+    //         ) {
+    //             return false;
+    //         }
+    //     }
+    // }
     return true;
   }
 

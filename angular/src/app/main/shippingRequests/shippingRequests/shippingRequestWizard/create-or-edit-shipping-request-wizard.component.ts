@@ -137,6 +137,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   allRoundTripTypes: SelectItemDto[];
   allOriginPorts: SelectFacilityItemDto[];
   generalGoodsCategoryId: number;
+  ShippingRequestRouteType = ShippingRequestRouteType;
 
   constructor(
     injector: Injector,
@@ -282,15 +283,17 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           break;
         }
         case 4: {
-          console.log('step 4');
+          console.log('step 4', this.step3Form);
           //check validation for vases
           let isVaild = true;
           var tripsCountNotValid = this.selectedVases.filter(
-            (r) => r.numberOfTrips == null || r.numberOfTrips == 0 || r.numberOfTrips > this.step2Dto.numberOfTrips
+            (r) =>
+              this.selectedVasesProperties[r.vasId] &&
+              (r.numberOfTrips == null || r.numberOfTrips == 0 || r.numberOfTrips > this.step2Dto.numberOfTrips)
           ).length;
           this.selectedVases.forEach((element) => {
-            var isDisabledAmount = this.selectedVasesProperties[element.vasId]?.vasAmountDisabled;
-            var isDisabledCount = this.selectedVasesProperties[element.vasId]?.vasCountDisabled;
+            var isDisabledAmount = this.selectedVasesProperties[element.vasId] ? this.selectedVasesProperties[element.vasId].vasAmountDisabled : true;
+            var isDisabledCount = this.selectedVasesProperties[element.vasId] ? this.selectedVasesProperties[element.vasId].vasCountDisabled : true;
             if ((element.requestMaxCount <= 0 && !isDisabledCount) || (element.requestMaxAmount <= 0 && !isDisabledAmount)) {
               isVaild = false;
               return;

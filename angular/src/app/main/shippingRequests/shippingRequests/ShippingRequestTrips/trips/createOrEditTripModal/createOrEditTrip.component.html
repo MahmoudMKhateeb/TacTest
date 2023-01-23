@@ -254,7 +254,17 @@
               <div class="col-lg-6">
                 <div class="form-group">
                   <!--                expected trip Delivery Date-->
-                  <label>{{ l('ContainerNumber') }}</label>
+                  <label
+                    >{{ l('ContainerNumber') }}
+                    <span
+                      class="required-fileds"
+                      *ngIf="
+                        shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                      "
+                      >*</span
+                    ></label
+                  >
                   <input
                     #ContainerNumber
                     id="ContainerNumber"
@@ -263,6 +273,10 @@
                     [(ngModel)]="trip.containerNumber"
                     type="text"
                     [disabled]="trip.id && IsHaveContainerNumberValue && !isTachyonDealer"
+                    [required]="
+                      shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                      shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                    "
                   />
                 </div>
               </div>
@@ -270,7 +284,17 @@
               <div class="col-lg-6">
                 <div class="form-group">
                   <!--                expected trip Delivery Date-->
-                  <label>{{ l('SealNumber') }}</label>
+                  <label
+                    >{{ l('SealNumber') }}
+                    <span
+                      class="required-fileds"
+                      *ngIf="
+                        shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                      "
+                      >*</span
+                    ></label
+                  >
                   <input
                     #SealNumber
                     id="SealNumber"
@@ -279,6 +303,10 @@
                     [(ngModel)]="trip.sealNumber"
                     type="text"
                     [disabled]="trip.id && IsHaveSealNumberValue && !isTachyonDealer"
+                    [required]="
+                      shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                      shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                    "
                   />
                 </div>
               </div>
@@ -484,6 +512,8 @@
                 [class.invalid-trip-points]="isTripPointsInvalid && isFormSubmitted"
                 (wayPointsListChanged)="revalidatePointsFromPointsComponent()"
                 [isHomeDelivery]="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
+                [isPortMovement]="isPortMovement"
+                [shippingRequest]="shippingRequest"
                 #PointsComponent
               ></PointsComponent>
               <!--  end:: RouteSteps -->

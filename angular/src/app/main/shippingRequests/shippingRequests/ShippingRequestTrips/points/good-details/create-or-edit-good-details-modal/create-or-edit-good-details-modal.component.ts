@@ -7,6 +7,7 @@ import {
   DangerousGoodTypesServiceProxy,
   GetAllGoodsCategoriesForDropDownOutput,
   GetAllUnitOfMeasureForDropDownOutput,
+  GetShippingRequestForViewOutput,
   GoodsDetailsServiceProxy,
   PickingType,
   SelectItemDto,
@@ -41,7 +42,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   isDangerousGoodLoading: boolean;
   allDangerousGoodTypes: SelectItemDto[];
 
-  private activeEditId: number;
+  activeEditId: number;
 
   tripServiceSubs$: Subscription;
   goodCategoryId: number;
@@ -56,10 +57,13 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   dimentions: string;
   AllowedWeight: number;
   isForDedicated: boolean;
+  isForPortsMovement: boolean;
+  currentShippingRequest: GetShippingRequestForViewOutput;
+  goodCategoryDefaultId: number;
 
   constructor(
     injector: Injector,
-    private _PointsService: PointsService,
+    public _PointsService: PointsService,
     private _TripService: TripService,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
@@ -69,6 +73,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   }
 
   ngOnInit(): void {
+    this.currentShippingRequest = this._PointsService.currentShippingRequest;
     this.myGoodsDetailList = this.GoodDetailsListInput || [];
     //take the current Active WayPoint From the Shared Service
     this.tripServiceSubs$ = this._TripService.currentShippingRequest.subscribe((res) => (this.GoodCategory = res.shippingRequest.goodCategoryId));
@@ -87,8 +92,9 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.loadGoodDangerousTypes();
   }
 
-  show(id?, isForDedicated = false) {
+  show(id?, isForDedicated = false, isForPortsMovement = false) {
     this.isForDedicated = isForDedicated;
+    this.isForPortsMovement = isForPortsMovement;
     this.active = true;
     this.goodsDetail = new CreateOrEditGoodsDetailDto();
     //if there is an id this is an edit
@@ -105,6 +111,14 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.dangerousGoodsTypeId = this.myGoodsDetailList[id].dangerousGoodTypeId;
       this.otherUnitOfMeasureName = this.myGoodsDetailList[id].otherUnitOfMeasureName;
       this.dimentions = this.myGoodsDetailList[id].dimentions;
+    }
+    if (isForPortsMovement) {
+      if (!isNotNullOrUndefined(id)) {
+        this.amount = this._PointsService.currentShippingRequest.shippingRequest.numberOfPacking;
+        this.weight = this._PointsService.currentShippingRequest.shippingRequest.totalWeight;
+        this.goodCategoryId = this.allSubGoodCategorys[0].id;
+      }
+      this.loadGoodSubCategory(null);
     }
     if (this.weightValidation() || isForDedicated) {
       this.createOrEditGoodDetail.show();
@@ -170,6 +184,17 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
    */
   loadGoodSubCategory(FatherID) {
     //Get All Sub-Good Category
+    if (this.isForPortsMovement && this._PointsService.currentPointIndex > 1) {
+      this._goodsDetailsServiceProxy
+        .getEmptyGoodsCategoryForDropDown()
+        .pipe(retry(3))
+        .subscribe((result) => {
+          this.allSubGoodCategorys = [result];
+          this.goodCategoryId = this.allSubGoodCategorys[0].id;
+          this.description = this.l('EmptyContainer');
+        });
+      return;
+    }
     if (FatherID) {
       this._goodsDetailsServiceProxy
         .getAllGoodCategoryForTableDropdown(FatherID)
@@ -199,6 +224,11 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     let totalWeightGoodDetails: number = 0;
     let wayPointList: CreateOrEditRoutPointDto[];
     let allowedeight: number;
+
+    if (this.isForPortsMovement) {
+      this.AllowedWeight = this._PointsService.currentShippingRequest.shippingRequest.totalWeight;
+      return true;
+    }
 
     //get the Total Allowed Weight From the Shipping Request
     this._TripService.currentShippingRequest.subscribe((res) => {

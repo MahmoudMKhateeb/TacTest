@@ -32,6 +32,7 @@ import {
   ShippingRequestsTripServiceProxy,
   ShippingRequestTripCancelStatus,
   ShippingRequestTripStatus,
+  ShippingTypeEnum,
 } from '@shared/service-proxies/service-proxies';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
 import { TripService } from '../trip.service';
@@ -93,6 +94,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   ShippingRequestTripStatus = ShippingRequestTripStatus;
   showBtnAddTrips: boolean;
   ShippingRequestFlagEnum = ShippingRequestFlag;
+  ShippingTypeEnum = ShippingTypeEnum;
 
   constructor(
     injector: Injector,

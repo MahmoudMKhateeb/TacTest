@@ -1191,8 +1191,11 @@
                               step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
                             "
                           >
-                            {{ l('RouteType') }} : {{ l(shippingRequestReview?.routTypeName) }} {{ l('RoundTripTypeTitle') }} :
-                            {{ l(shippingRequestReview?.roundTripTypeTitle) }}
+                            <span *ngIf="shippingRequestReview?.routeTypeId === ShippingRequestRouteType.SingleDrop">
+                              {{ l('RouteType') }} : {{ l(shippingRequestReview?.routTypeName) }}
+                              <br />
+                            </span>
+                            {{ l('RoundTripTypeTitle') }} :{{ l(shippingRequestReview?.roundTripTypeTitle) }}
                           </ng-container>
                           <br />
                           {{ l('NumberOfDrops') }} : {{ shippingRequestReview?.shippingRequest?.numberOfDrops }}

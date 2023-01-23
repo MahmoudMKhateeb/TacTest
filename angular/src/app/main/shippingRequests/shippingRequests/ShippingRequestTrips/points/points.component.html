@@ -7,7 +7,7 @@
         <div class="row">
           <div class="col-lg-6"></div>
           <div class="col-lg-12 mt-4">
-            <div class="row align-items-center">
+            <div class="row align-items-center" *ngIf="!isPortMovement">
               <!--<Primeng-Datatable-Start>-->
               <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
                 <p-table
@@ -241,6 +241,28 @@
               </div>
               <!--<Primeng-Datatable-End>-->
             </div>
+            <PointsForPortsMovementComponent
+              *ngIf="isPortMovement"
+              [wayPointsList]="wayPointsList"
+              [usedIn]="usedIn"
+              [pickupFacilities]="pickupFacilities"
+              [dropFacilities]="dropFacilities"
+              [allPointsSendersAndReceivers]="allPointsSendersAndREcivers"
+              [facilityLoading]="facilityLoading"
+              [receiverLoading]="receiverLoading"
+              [isExportRequest]="shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements"
+              [isImportWithReturnTrip]="
+                shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
+                shippingRequest.roundTripType === RoundTripType.WithReturnTrip
+              "
+              (RouteStepCordSetterEvent)="RouteStepCordSetter($event.index, $event.facilityId)"
+              (wayPointsSetterEvent)="wayPointsSetter()"
+              (loadReceiversEvent)="loadReceivers($event)"
+              (onChangedWayPointsListEvent)="onChangedWayPointsList()"
+              (createOrEditFacilityModalShowEvent)="createOrEditFacilityModal.show()"
+              (createOrEditReceiverModalShowEvent)="createOrEditReceiverModal.show($event.param, $event.facilityId)"
+              (createOrEditPointModalShowEvent)="createOrEditPointModal.show($event.index, $event.goodDetails, $event.goodsDetailListDto)"
+            ></PointsForPortsMovementComponent>
           </div>
         </div>
         <!--  end::table  -->
@@ -271,6 +293,7 @@
     #createOrEditPointModal
     [isForDedicated]="shippingRequestForView.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
     [isHomeDelivery]="isHomeDelivery"
+    [isForPortsMovement]="isPortMovement"
   ></createOrEditPointModal>
   <!--END::Create/Edit Point Modal-->
 </div>

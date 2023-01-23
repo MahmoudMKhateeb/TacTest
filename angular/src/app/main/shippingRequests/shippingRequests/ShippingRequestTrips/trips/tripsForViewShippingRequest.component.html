@@ -509,6 +509,10 @@
   (modalSave)="reloadPage()"
   [shippingRequest]="ShippingRequest"
   [VasListFromFather]="VasListFromFather"
+  [isPortMovement]="
+    shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+    shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+  "
 ></AddNewTripModal>
 <app-view-cancel-reason-modal #ViewCancelReasonModal></app-view-cancel-reason-modal>
 <app-cancel-trip-modal #CancelTripModal (modalSave)="reloadPage()"></app-cancel-trip-modal>

@@ -1,0 +1,183 @@
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
+import { AppComponentBase } from '@shared/common/app-component-base';
+import {
+  CreateOrEditRoutPointDto,
+  FacilityForDropdownDto,
+  FacilityType,
+  PickingType,
+  ReceiverFacilityLookupTableDto,
+} from '@shared/service-proxies/service-proxies';
+import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
+
+@Component({
+  selector: 'PointsForPortsMovementComponent',
+  templateUrl: './points-for-port-movement.component.html',
+  styleUrls: ['./points-for-port-movement.component.scss'],
+})
+export class PointsForPortsMovementComponent extends AppComponentBase implements OnInit {
+  @Input('wayPointsList') wayPointsList: CreateOrEditRoutPointDto[] = [];
+  @Input('usedIn') usedIn: 'view' | 'createOrEdit';
+  @Input('pickupFacilities') pickupFacilities: FacilityForDropdownDto[] = [];
+  @Input('dropFacilities') dropFacilities: FacilityForDropdownDto[] = [];
+  @Input('allPointsSendersAndReceivers') allPointsSendersAndReceivers: ReceiverFacilityLookupTableDto[][] = [];
+  @Input('facilityLoading') facilityLoading: boolean;
+  @Input('receiverLoading') receiverLoading: boolean;
+  @Input('isExportRequest') isExportRequest: boolean;
+  @Input('isImportWithReturnTrip') isImportWithReturnTrip: boolean;
+
+  @Output() RouteStepCordSetterEvent = new EventEmitter<{ index: number; facilityId: number }>();
+  @Output() wayPointsSetterEvent = new EventEmitter<any>();
+  @Output() loadReceiversEvent = new EventEmitter<number>();
+  @Output() onChangedWayPointsListEvent = new EventEmitter<any>();
+  @Output() createOrEditFacilityModalShowEvent = new EventEmitter<any>();
+  @Output() createOrEditReceiverModalShowEvent = new EventEmitter<{ param; facilityId: any }>();
+  @Output() createOrEditPointModalShowEvent = new EventEmitter<{ index: number; goodDetails: string; goodsDetailListDto?: any }>();
+  PickingType = PickingType;
+
+  constructor(injector: Injector, private _PointsService: PointsService) {
+    super(injector);
+  }
+
+  ngOnInit(): void {
+    console.log('PointsForPortsMovementComponent');
+    this.wayPointsList.map((item, index) => (item.pointOrder = index + 1));
+    console.log('wayPointsList', this.wayPointsList);
+    console.log('usedIn', this.usedIn);
+    console.log('pickupFacilities', this.pickupFacilities);
+    console.log('dropFacilities', this.dropFacilities);
+    console.log('allPointsSendersAndReceivers', this.allPointsSendersAndReceivers);
+    console.log('facilityLoading', this.facilityLoading);
+    console.log('receiverLoading', this.receiverLoading);
+  }
+
+  RouteStepCordSetter(index: number, facilityId: number) {
+    this.RouteStepCordSetterEvent.emit({ index, facilityId });
+    if (((index < 3 && !this.isExportRequest) || (index > 0 && index < 5 && this.isExportRequest)) && this.wayPointsList[index + 1]) {
+      this.wayPointsList[index + 1].facilityId = facilityId;
+    }
+    console.log('RouteStepCordSetter', index, facilityId);
+  }
+
+  wayPointsSetter() {
+    this.wayPointsSetterEvent.emit(true);
+    console.log('wayPointsSetter');
+  }
+
+  loadReceivers(facilityId: number) {
+    this.loadReceiversEvent.emit(facilityId);
+    console.log('loadReceivers', facilityId);
+  }
+
+  onChangedWayPointsList() {
+    this.onChangedWayPointsListEvent.emit(true);
+    console.log('onChangedWayPointsList');
+  }
+
+  createOrEditFacilityModalShow() {
+    this.createOrEditFacilityModalShowEvent.emit(true);
+    console.log('createOrEditFacilityModalShow');
+  }
+
+  createOrEditReceiverModalShow(param, facilityId: any) {
+    this.createOrEditReceiverModalShowEvent.emit({ param, facilityId });
+    console.log('createOrEditReceiverModalShow', param, facilityId);
+  }
+
+  createOrEditPointModalShow(index: number, goodDetails: string, goodsDetailListDto?: any) {
+    this._PointsService.currentPointIndex = index;
+    this.createOrEditPointModalShowEvent.emit({ index, goodDetails, goodsDetailListDto });
+    console.log('createOrEditPointModalShow', index, goodDetails, goodsDetailListDto);
+  }
+
+  showVasModal() {
+    console.log('showVasModal');
+  }
+
+  isFacilityDisabled(index: number): boolean {
+    // this.wayPointsList[index];
+    if (this.isExportRequest && index === 0) {
+      return false;
+    }
+    return index % 2 === 0;
+  }
+
+  filterFacilitiesForDropDown(isPickup: boolean, index: number) {
+    if (!this.isExportRequest) {
+      return isPickup
+        ? this.pickupFacilities.filter((fac) => {
+            switch (index) {
+              case 0: {
+                return fac.facilityType === FacilityType.Port;
+              }
+              default:
+              case 2: {
+                return true;
+              }
+            }
+          })
+        : this.dropFacilities.filter((fac) => {
+            switch (index) {
+              case 1: {
+                return fac.facilityType === FacilityType.Facility;
+              }
+              default:
+              case 3: {
+                return true;
+              }
+            }
+          });
+    }
+    return isPickup
+      ? this.pickupFacilities.filter((fac) => {
+          switch (index) {
+            case 0: {
+              return fac.facilityType === FacilityType.Facility;
+            }
+            default: {
+              return true;
+            }
+          }
+        })
+      : this.dropFacilities.filter((fac) => {
+          switch (index) {
+            case 1: {
+              return fac.facilityType === FacilityType.Facility;
+            }
+            default:
+            case 3: {
+              return true;
+            }
+            case 5: {
+              return fac.facilityType === FacilityType.Port;
+            }
+          }
+        });
+  }
+
+  selectContact(index: number) {
+    if (index % 2 === 0) {
+      return;
+    }
+    if (((index < 3 && !this.isExportRequest) || (index > 0 && index < 5 && this.isExportRequest)) && this.wayPointsList[index + 1]) {
+      this.wayPointsList[index + 1].receiverId = this.wayPointsList[index].receiverId;
+    }
+  }
+
+  showAppointmentsAndClearanceButton(index): boolean {
+    if (!this.isExportRequest && !this.isImportWithReturnTrip) {
+      return false;
+    }
+    if (!this.isExportRequest && this.isImportWithReturnTrip) {
+      switch (index) {
+        case 3:
+        case 0: {
+          return true;
+        }
+        default: {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+}

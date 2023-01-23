@@ -9,10 +9,13 @@ import {
   PickingType,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
+  RoundTripType,
   RoutStepsServiceProxy,
   ShippingRequestDestinationCitiesDto,
+  ShippingRequestDto,
   ShippingRequestFlag,
   ShippingRequestRouteType,
+  ShippingTypeEnum,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
@@ -28,6 +31,8 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 })
 export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy, AfterContentChecked {
   // @Output() SelectedWayPointsFromChild = this.wayPointsList;
+  @Input('isPortMovement') isPortMovement = false;
+  @Input() shippingRequest: ShippingRequestDto;
   @Output() wayPointsListChanged: EventEmitter<any> = new EventEmitter<any>();
   shippingRequestId: number;
   DestCitiesDtos: ShippingRequestDestinationCitiesDto[];
@@ -67,6 +72,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   @Input('isHomeDelivery') isHomeDelivery: boolean;
   shippingRequestFlagEnum = ShippingRequestFlag;
   paymentMethodsArray = [];
+  RoundTripType = RoundTripType;
+  ShippingTypeEnum = ShippingTypeEnum;
 
   constructor(
     injector: Injector,
@@ -81,6 +88,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   ngOnInit() {
+    console.log('isPortMovement', this.isPortMovement);
     this.loadSharedServices();
     this.loadDropDowns();
     this.paymentMethodsArray = this.enumToArray.transform(DropPaymentMethod);
@@ -205,6 +213,33 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     //if there is already wayPoints Dont Create Empty Once
     console.log('this.wayPointsList.length == numberOfDrops + 1', this.wayPointsList.length == numberOfDrops + 1);
     if (this.wayPointsList.length == numberOfDrops + 1) return;
+    // for (let i = 0; i <= numberOfDrops; i++) {
+    //   let point = new CreateOrEditRoutPointDto();
+    //   //pickup Point
+    //   if (i === 0) {
+    //     point.pickingType = this.PickingType.Pickup;
+    //   } else {
+    //     point.pickingType = this.PickingType.Dropoff;
+    //   }
+    //   point.dropPaymentMethod = selectedPaymentMethodId;
+    //   point.needsPOD = false;
+    //   point.needsReceiverCode = false;
+    //   this.wayPointsList.push(point);
+    // } //end of for
+    if (!this.isPortMovement) {
+      this.addPointsToWayPointList(numberOfDrops, selectedPaymentMethodId);
+      return;
+    }
+    for (let i = 0; i < numberOfDrops; i++) {
+      this.addPointsToWayPointList(1, selectedPaymentMethodId);
+    }
+    if (this.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements) {
+      this.wayPointsList[0].facilityId = this.shippingRequest.originFacilityId;
+      this.loadReceivers(this.shippingRequest.originFacilityId);
+    }
+  }
+
+  private addPointsToWayPointList(numberOfDrops: number, selectedPaymentMethodId: number) {
     for (let i = 0; i <= numberOfDrops; i++) {
       let point = new CreateOrEditRoutPointDto();
       //pickup Point
@@ -217,7 +252,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       point.needsPOD = false;
       point.needsReceiverCode = false;
       this.wayPointsList.push(point);
-    } //end of for
+    }
   }
 
   private loadSharedServices() {
