@@ -226,6 +226,12 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         this.startTripdate = this.dateFormatterService.ToGregorianDateStruct(gregorian, 'D/M/YYYY');
 
         this.PointsComponent.wayPointsList = this.trip.routPoints;
+        if (
+          this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+          this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements
+        ) {
+          this.PointsComponent.wayPointsList = this.trip.routPoints.sort((a, b) => a.pointOrder - b.pointOrder);
+        }
         this.PointsComponent.loadReceivers(null, true);
         // this._PointsService.updateWayPoints(this.trip.routPoints);
         //this.startTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.startTripDate);

@@ -10,6 +10,7 @@ import {
   GetShippingRequestForViewOutput,
   GoodsDetailsServiceProxy,
   PickingType,
+  RoundTripType,
   SelectItemDto,
   ShippingRequestsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -117,6 +118,12 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
         this.amount = this._PointsService.currentShippingRequest.shippingRequest.numberOfPacking;
         this.weight = this._PointsService.currentShippingRequest.shippingRequest.totalWeight;
         this.goodCategoryId = this.allSubGoodCategorys[0].id;
+        if (
+          this._PointsService.currentShippingRequest.roundTripType === RoundTripType.WithReturnTrip &&
+          this._PointsService.currentPointIndex === 3
+        ) {
+          this.getContainerUOMDefaultId();
+        }
       }
       this.loadGoodSubCategory(null);
     }
@@ -256,6 +263,13 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.AllowedWeight = !this.isForDedicated ? allowedeight : this.weight;
     this.canAddMoreGoods.emit(allowedeight !== 0); // let the other components know
     return allowedeight !== 0;
+  }
+
+  getContainerUOMDefaultId() {
+    this._shippingRequestsServiceProxy.getContainerUOMId().subscribe((res) => {
+      this.amount = 1;
+      this.unitOfMeasureId = res;
+    });
   }
 
   ngOnDestroy() {
