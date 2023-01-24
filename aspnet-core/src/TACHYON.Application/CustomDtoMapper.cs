@@ -997,6 +997,8 @@ namespace TACHYON
 
             configuration.CreateMap<SubmitInvoiceClaimCreateInput, ActorSubmitInvoice>();
             configuration.CreateMap<IHasDocument, ActorSubmitInvoice>().ReverseMap();
+            configuration.CreateMap<TripAppointmentDataDto, IHasDocument>();
+
         }
 
         /// <summary>

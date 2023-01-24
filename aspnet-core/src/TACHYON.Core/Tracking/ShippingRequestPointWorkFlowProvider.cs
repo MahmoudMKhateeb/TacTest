@@ -1163,13 +1163,15 @@ namespace TACHYON.Tracking
         /// <summary>
         /// Insert files to Db
         /// </summary>
-        public void UploadFiles(List<IHasDocument> documents, long pointId, RoutePointDocumentType documentType)
+        public async Task UploadFiles(List<IHasDocument> documents, long pointId, RoutePointDocumentType documentType)
         {
             if (documents != null && !documents.Any())
                 throw new UserFriendlyException(L("File_Empty_Error"));
             if(documentType == RoutePointDocumentType.Appointment)
             {
-                if(_routPointDocumentRepository.FirstOrDefaultAsync(x=>x.RoutPointId == pointId && x.RoutePointDocumentType == RoutePointDocumentType.Appointment) != null){
+                var isExists = await _routPointDocumentRepository.GetAll().AnyAsync(x => x.RoutPointId == pointId && x.RoutePointDocumentType == RoutePointDocumentType.Appointment);
+                if (isExists)
+                {
                     return;
                 }
             }

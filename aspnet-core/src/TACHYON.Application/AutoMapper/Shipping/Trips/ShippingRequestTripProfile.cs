@@ -153,7 +153,6 @@ namespace TACHYON.AutoMapper.Shipping.Trips
 
             CreateMap<ImportTripVasesDto, ShippingRequestTripVas>();
 
-            CreateMap<SetAppointmentDataInput, ShippingRequestTripVas>();
             CreateMap<SetClearancePriceInput, ShippingRequestTripVas>();
         }
 

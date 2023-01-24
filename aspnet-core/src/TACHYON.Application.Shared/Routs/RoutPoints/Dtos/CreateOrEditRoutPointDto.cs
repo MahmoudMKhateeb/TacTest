@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.RegularExpressions;
 using TACHYON.Goods.GoodsDetails.Dtos;
+using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
 {
@@ -54,6 +55,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public bool DropNeedsAppointment { get; set; }
         public bool DropNeedsClearance { get; set; }
 
+        public TripAppointmentDataDto AppointmentDataDto { get; set; }
         #endregion
 
         #endregion

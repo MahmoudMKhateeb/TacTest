@@ -39,6 +39,7 @@ using TACHYON.AddressBook;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Vases.Dtos;
 using TACHYON.Vases;
+using TACHYON.Shipping.ShippingRequestBids;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -639,6 +640,13 @@ namespace TACHYON.Shipping.ShippingRequests
             }
             else
             {
+                //check if exists
+                var SRvasDB =await _shippingRequestVasRepository.FirstOrDefaultAsync(x => x.ShippingRequestId == shippingRequestId && x.VasFk.Name == TACHYONConsts.AppointmentVasName);
+                if (SRvasDB != null)
+                {
+                    return SRvasDB.Id;
+                }
+
                 var SRvas = new ShippingRequestVas { NumberOfTrips = 0, RequestMaxCount = 1, VasId = portVas.Id, ShippingRequestId = shippingRequestId };
                 return await _shippingRequestVasRepository.InsertAndGetIdAsync(SRvas);
             }

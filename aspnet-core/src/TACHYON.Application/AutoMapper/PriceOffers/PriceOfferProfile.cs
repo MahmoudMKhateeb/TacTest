@@ -2,6 +2,7 @@
 using AutoMapper;
 using System;
 using System.Linq;
+using TACHYON.Commission;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
@@ -72,10 +73,11 @@ namespace TACHYON.AutoMapper.PriceOffers
             CreateMap<ActorCarrierPrice, ActorCarrierPriceDto>();
             CreateMap<ActorCarrierPrice, CreateOrEditActorCarrierPrice>().ReverseMap();
 
-            CreateMap<SetAppointmentDataInput, PriceOfferDetail>();
-            CreateMap<SetClearancePriceInput, PriceOfferDetail>();
+            //CreateMap<SetAppointmentDataInput, PriceCommissionDtoBase>();
+            //    //.ForMember(dst => dst.CommissionPercentageOrAddValue, opt => opt.Ignore());
+            //CreateMap<SetClearancePriceInput, PriceOfferDetail>();
 
-            CreateMap<PriceOfferDetail, ShippingRequestTripVas>();
+            CreateMap<PriceCommissionDtoBase, ShippingRequestTripVas>();
 
 
         }

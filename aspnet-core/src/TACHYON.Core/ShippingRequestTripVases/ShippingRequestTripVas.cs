@@ -18,6 +18,10 @@ namespace TACHYON.ShippingRequestTripVases
         public int ShippingRequestTripId { get; set; }
 
         [ForeignKey("ShippingRequestTripId")] public ShippingRequestTrip ShippingRequestTripFk { get; set; }
+        /// <summary>
+        /// This field is for appointment and clearance vas, to identify this vas is for any point
+        /// </summary>
+        public long? RoutePointId { get; set; }
 
         #region Prices
 

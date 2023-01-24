@@ -13,7 +13,6 @@ namespace TACHYON.AutoMapper.Invoices.SubmitInvoices
         {
             CreateMap<SubmitInvoiceClaimCreateInput, DocumentUpload>();
             CreateMap<IHasDocument, SubmitInvoice>().ReverseMap();
-            CreateMap<SetAppointmentDataInput,IHasDocument>();
         }
     }
 }
