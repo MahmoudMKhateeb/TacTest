@@ -64,6 +64,8 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public bool NeedsClearance { get; set; }
 
         public TripAppointmentDataDto AppointmentDataDto { get; set; }
+        public TripClearancePricesDto TripClearancePricesDto { get; set; }
+
 
 
 

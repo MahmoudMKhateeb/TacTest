@@ -1001,6 +1001,7 @@ namespace TACHYON
             configuration.CreateMap<IHasDocument, ActorSubmitInvoice>().ReverseMap();
             configuration.CreateMap<TripAppointmentDataDto, IHasDocument>();
             configuration.CreateMap<ShippingRequestTripVas,TripAppointmentDataDto >();
+            configuration.CreateMap<TripClearancePricesDto, TripAppointmentDataDto>();
 
         }
 

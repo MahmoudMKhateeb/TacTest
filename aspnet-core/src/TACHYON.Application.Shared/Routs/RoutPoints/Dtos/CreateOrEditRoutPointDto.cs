@@ -13,7 +13,7 @@ using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
 {
-    public class CreateOrEditRoutPointDto : EntityDto<long?>, ICreateOrEditRoutPointDtoBase ,ICustomValidate
+    public class CreateOrEditRoutPointDto : EntityDto<long?>, ICreateOrEditRoutPointDtoBase, ICustomValidate
     {
         public string DisplayName { get; set; }
         public PickingType PickingType { get; set; }
@@ -56,6 +56,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public bool DropNeedsClearance { get; set; }
 
         public TripAppointmentDataDto AppointmentDataDto { get; set; }
+        public TripClearancePricesDto TripClearancePricesDto {get; set;}
         #endregion
 
         #endregion

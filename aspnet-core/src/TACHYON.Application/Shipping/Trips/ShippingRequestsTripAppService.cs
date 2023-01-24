@@ -287,16 +287,24 @@ namespace TACHYON.Shipping.Trips
             var trip = await GetTrip(id);
             var shippingRequestTrip = await GetShippingRequestTripForMapper<ShippingRequestsTripForViewDto>(trip);
 
-            var tripPoints = trip.RoutPoints.Where(x => x.NeedsAppointment && x.HasAppointmentVas);
+            var tripPoints = trip.RoutPoints.Where(x => x.NeedsAppointment && x.HasAppointmentVas || (x.NeedsClearance && x.HasClearanceVas));
             foreach (var point in tripPoints)
             {
                 var pointDto = shippingRequestTrip.RoutPoints.FirstOrDefault(x => x.PointOrder == point.PointOrder);
-                pointDto.AppointmentDataDto = new TripAppointmentDataDto();
-                pointDto.AppointmentDataDto.AppointmentDateTime = point.AppointmentDateTime.Value;
-                pointDto.AppointmentDataDto.AppointmentNumber = point.AppointmentNumber;
-                pointDto.AppointmentDataDto.DocumentName = await _shippingRequestPointWorkFlowProvider.GetPointAttachmentName(point.Id, RoutePointDocumentType.Appointment);
-                var appointmentVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName));
-                ObjectMapper.Map(appointmentVas, pointDto.AppointmentDataDto);
+                if (point.HasAppointmentVas)
+                {
+                    pointDto.AppointmentDataDto = new TripAppointmentDataDto();
+                    pointDto.AppointmentDataDto.AppointmentDateTime = point.AppointmentDateTime.Value;
+                    pointDto.AppointmentDataDto.AppointmentNumber = point.AppointmentNumber;
+                    pointDto.AppointmentDataDto.DocumentName = await _shippingRequestPointWorkFlowProvider.GetPointAttachmentName(point.Id, RoutePointDocumentType.Appointment);
+                    var appointmentVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName));
+                    ObjectMapper.Map(appointmentVas, pointDto.AppointmentDataDto);
+                }
+                else if (point.HasClearanceVas)
+                {
+                    var ClearanceVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName));
+                    ObjectMapper.Map(ClearanceVas, pointDto.TripClearancePricesDto);
+                }
             }
 
             if (shippingRequestTrip.HasAttachment)
@@ -324,15 +332,25 @@ namespace TACHYON.Shipping.Trips
             var shippingRequestTrip =
                 await GetShippingRequestTripForMapper<CreateOrEditShippingRequestTripDto>(trip);
 
-            var tripPoints = trip.RoutPoints.Where(x => x.NeedsAppointment && x.HasAppointmentVas);
+            var tripPoints = trip.RoutPoints.Where(x => x.NeedsAppointment && x.HasAppointmentVas || (x.NeedsClearance && x.HasClearanceVas));
             foreach (var point in tripPoints)
             {
                 var pointDto = shippingRequestTrip.RoutPoints.FirstOrDefault(x => x.PointOrder == point.PointOrder);
-                pointDto.AppointmentDataDto.AppointmentDateTime = point.AppointmentDateTime.Value;
-                pointDto.AppointmentDataDto.AppointmentNumber = point.AppointmentNumber;
-                pointDto.AppointmentDataDto.DocumentName =await _shippingRequestPointWorkFlowProvider.GetPointAttachmentName(point.Id, RoutePointDocumentType.Appointment);
-                var appointmentVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName));
-                ObjectMapper.Map(appointmentVas, pointDto.AppointmentDataDto);
+
+                if (point.HasAppointmentVas)
+                {
+                    pointDto.AppointmentDataDto.AppointmentDateTime = point.AppointmentDateTime.Value;
+                    pointDto.AppointmentDataDto.AppointmentNumber = point.AppointmentNumber;
+                    pointDto.AppointmentDataDto.DocumentName = await _shippingRequestPointWorkFlowProvider.GetPointAttachmentName(point.Id, RoutePointDocumentType.Appointment);
+                    var appointmentVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName));
+                    ObjectMapper.Map(appointmentVas, pointDto.AppointmentDataDto);
+                }
+                else if (point.HasClearanceVas)
+                {
+                    var ClearanceVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName));
+                    ObjectMapper.Map(ClearanceVas, pointDto.TripClearancePricesDto);
+                }
+
             }
             // fill Attachment file
             if (shippingRequestTrip.HasAttachment)
@@ -467,37 +485,22 @@ namespace TACHYON.Shipping.Trips
                 var appointmentTripVas = point.ShippingRequestTripFk.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName));
 
                 ObjectMapper.Map(input, appointmentTripVas);
-                
             }
             else // add appointment data and vas for first time
             {
                 // Add shipping request vas if not exits
                 var srVasId = await _shippingRequestManager.AddPortMovementShippingRequestVases(input.ShippingRequestId, true, false);
 
+                //Add vas to trip vas
+                var tripVas = ObjectMapper.Map<ShippingRequestTripVas>(input);
 
-                //check if vas exists
-                var tripVasDB = point.ShippingRequestTripFk.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == input.RoutePointId);
-                if (tripVasDB != null)
-                {
-                    //update vas price
-                    ObjectMapper.Map(input, tripVasDB);
-                }
-                else
-                {
-                    //Add vas to trip vas
-                    var tripVas = ObjectMapper.Map<ShippingRequestTripVas>(input);
-
-                    tripVas.ShippingRequestVasId = srVasId ?? throw new UserFriendlyException(L("VasMissing"));
-                    tripVas.ShippingRequestTripId = point.ShippingRequestTripId;
-                    tripVas.RoutePointId = input.RoutePointId;
+                tripVas.ShippingRequestVasId = srVasId ?? throw new UserFriendlyException(L("VasMissing"));
+                tripVas.ShippingRequestTripId = point.ShippingRequestTripId;
+                tripVas.RoutePointId = input.RoutePointId;
                 
-                    point.ShippingRequestTripFk.ShippingRequestTripVases.Add(tripVas);
-                }
-
-
-                point.HasAppointmentVas = true;
-
+                point.ShippingRequestTripFk.ShippingRequestTripVases.Add(tripVas);
                 
+                point.HasAppointmentVas = true;  
             }
 
             //Set appointment data
@@ -512,47 +515,74 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
+        public async Task SetClearanceData(TripClearancePricesDto input, RoutPoint point)
+        {
+            if (!point.NeedsClearance) { throw new UserFriendlyException(L("DropDoesNotNeedClearance")); }
+            _priceCommissionManager.Calculate(input);
+
+            if (point.HasClearanceVas)
+            {
+                if (!await IsTachyonDealer()) throw new UserFriendlyException(L("UpdateDeniedInfoAlreadyExists"));
+                //appointment vas is exists for this point
+                //here will update appointment vas
+                var appointmentTripVas = point.ShippingRequestTripFk.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName));
+
+                ObjectMapper.Map(input, appointmentTripVas);
+            }
+            else // add appointment data and vas for first time
+            {
+                // Add shipping request vas if not exits
+                var srVasId = await _shippingRequestManager.AddPortMovementShippingRequestVases(input.ShippingRequestId, false, true);
+
+
+                    //Add vas to trip vas
+                    var tripVas = ObjectMapper.Map<ShippingRequestTripVas>(input);
+
+                    tripVas.ShippingRequestVasId = srVasId ?? throw new UserFriendlyException(L("VasMissing"));
+                    tripVas.ShippingRequestTripId = point.ShippingRequestTripId;
+                    tripVas.RoutePointId = point.Id;
+
+                    point.ShippingRequestTripFk.ShippingRequestTripVases.Add(tripVas);
+                
+                point.HasClearanceVas = true;
+            }
+        }
+
         public async Task CarrierSetAppointmentData(TripAppointmentDataDto input)
         {
             //carrier or TMS set appointment prices
+            RoutPoint point = await GetDropPoint(input.RoutePointId);
+
+            await SetAppointmentData(input, point);
+        }
+
+        private async Task<RoutPoint> GetDropPoint(long pointId)
+        {
             DisableTenancyFilters();
             var point = await _routPointRepository.GetAll().Include(x => x.ShippingRequestTripFk)
                 .ThenInclude(x => x.ShippingRequestFk).ThenInclude(x => x.ShippingRequestVases).ThenInclude(x => x.VasFk)
                 .Include(x => x.ShippingRequestTripFk).ThenInclude(x => x.ShippingRequestTripVases)
-                .ThenInclude(x=>x.ShippingRequestVasFk).ThenInclude(x=>x.VasFk)
+                .ThenInclude(x => x.ShippingRequestVasFk).ThenInclude(x => x.VasFk)
                 .WhereIf(await IsTachyonDealer(), x => true)
                 .WhereIf(!await IsTachyonDealer(), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                .FirstOrDefaultAsync(x => x.Id == input.RoutePointId);
+                .FirstOrDefaultAsync(x => x.Id == pointId);
 
             if (point == null) { throw new UserFriendlyException(L("PointNotFound")); }
-            
-                //var priceOffer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(point.ShippingRequestTripFk.ShippingRequestId);
-                
-                await SetAppointmentData(input, point);
-            
+
+            return point;
+        }
+
+        public async Task CarrierSetClearanceData(TripClearancePricesDto input)
+        {
+            RoutPoint point = await GetDropPoint(input.RoutePointId);
+
+            await SetClearanceData(input, point);
         }
 
         public async Task<List<GetAllUploadedFileDto>> GetAppointmentFile(long pointId)
         {
             DisableTenancyFilters();
             return await _shippingRequestPointWorkFlowProvider.GetPointFile(pointId, RoutePointDocumentType.Appointment);
-        }
-        public async Task SetClearancePrice(SetClearancePriceInput input)
-        {
-            //DisableTenancyFilters();
-            //var point = await _routPointRepository.GetAll()
-            //    .WhereIf(await IsTachyonDealer(), x => true)
-            //    .WhereIf(!await IsTachyonDealer(), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-            //    .Include(x => x.ShippingRequestTripFk).FirstOrDefaultAsync(x => x.Id == input.RoutePointId);
-            //if (!point.NeedsClearance) { throw new UserFriendlyException(L("DropDoesNotNeedClearance")); }
-            //if (point.HasClearanceVas) { throw new UserFriendlyException(L("ClearanceVasAlreadyAdded")); }
-
-            //var priceOffer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(point.ShippingRequestTripFk.ShippingRequestId);
-            //var priceDetails = ObjectMapper.Map<PriceOfferDetail>(input);
-            //priceOffer.PriceOfferDetails.Add(priceDetails);
-
-            //_priceOfferManager.CalculatePriceOfferDetails(priceOffer);
-            //point.HasClearanceVas = true;
         }
 
 
@@ -762,7 +792,7 @@ namespace TACHYON.Shipping.Trips
             //appointment data
             if (await IsTachyonDealer())
             {
-                await BindAppointment(input, request, trip);
+                await BindAppointmentAndClearance(input, request, trip);
             }
 
 
@@ -878,7 +908,7 @@ namespace TACHYON.Shipping.Trips
 
             ObjectMapper.Map(input, trip);
             await SetNeedsAppointmentAndClearance(input, trip);
-            await BindAppointment(input, request, trip);
+            await BindAppointmentAndClearance(input, request, trip);
 
             if (request.ShippingRequestFlag == ShippingRequestFlag.Dedicated &&
                 trip.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
@@ -911,7 +941,7 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
-        private async Task BindAppointment(CreateOrEditShippingRequestTripDto input, ShippingRequest request, ShippingRequestTrip trip)
+        private async Task BindAppointmentAndClearance(CreateOrEditShippingRequestTripDto input, ShippingRequest request, ShippingRequestTrip trip)
         {
             foreach (var point in trip.RoutPoints.Where(x => x.NeedsAppointment && input.RoutPoints.First(x => x.PointOrder == x.PointOrder).AppointmentDataDto != null))
             {
@@ -920,6 +950,14 @@ namespace TACHYON.Shipping.Trips
 
                 await SetAppointmentData(inputPoint.AppointmentDataDto, point);
             }
+            var ClearancePoint = trip.RoutPoints.FirstOrDefault(x => x.NeedsClearance && input.RoutPoints.First(x => x.PointOrder == x.PointOrder).TripClearancePricesDto != null);
+            if(ClearancePoint != null)
+            {
+                var inputPoint = input.RoutPoints.First(x => x.PointOrder == ClearancePoint.PointOrder);
+                inputPoint.AppointmentDataDto.ShippingRequestId = request.Id;
+
+            }
+            
         }
 
         private async Task SetNeedsAppointmentAndClearance(CreateOrEditShippingRequestTripDto input, ShippingRequestTrip trip)
