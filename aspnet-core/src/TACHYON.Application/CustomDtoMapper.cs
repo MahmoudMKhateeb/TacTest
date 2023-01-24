@@ -578,7 +578,9 @@ namespace TACHYON
             configuration.CreateMap<RoutPoint, CreateOrEditRoutPointDto>()
                 .ForMember(dest => dest.GoodsDetailListDto, opt => opt.MapFrom(src => src.GoodsDetails))
                 .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
-                .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y));
+                .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
+                .ForPath(dest => dest.AppointmentDataDto.AppointmentNumber, opt => opt.MapFrom(src => src.AppointmentNumber))
+                .ForPath(dest => dest.AppointmentDataDto.AppointmentDateTime, opt => opt.MapFrom(src => src.AppointmentDateTime));
 
             //configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             //configuration.CreateMap<RouteDto, Route>().ReverseMap();
@@ -998,6 +1000,7 @@ namespace TACHYON
             configuration.CreateMap<SubmitInvoiceClaimCreateInput, ActorSubmitInvoice>();
             configuration.CreateMap<IHasDocument, ActorSubmitInvoice>().ReverseMap();
             configuration.CreateMap<TripAppointmentDataDto, IHasDocument>();
+            configuration.CreateMap<ShippingRequestTripVas,TripAppointmentDataDto >();
 
         }
 

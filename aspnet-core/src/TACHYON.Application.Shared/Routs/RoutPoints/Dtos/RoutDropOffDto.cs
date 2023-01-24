@@ -52,6 +52,9 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public long? WaybillNumber { get; set; }
         public bool IsPodUploaded { get; set; }
         public RoutePointCompletedStatus CompletedStatus { get; set; }
+        public DateTime? AppointmentDateTime { get; set; }
+        public string AppointmentNumber { get; set; }
+        public string AppointmentFileName { get; set; }
         public List<PointTransactionDto> AvailableTransactions { get; set; }
 
         // public double TotalWeight { get; set; }

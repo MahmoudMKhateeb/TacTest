@@ -714,6 +714,44 @@ namespace TACHYON.Tracking
             if (!documents.Any()) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
             return await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents), currentUser);
         }
+
+
+        public async Task<List<GetAllUploadedFileDto>> GetPointFile(long id, RoutePointDocumentType routePointDocumentType )
+        {
+            DisableTenancyFilters();
+            var currentUser = await GetCurrentUserAsync();
+            var documents = await _routPointDocumentRepository.GetAll()
+                .Where(x => x.RoutPointId == id && x.RoutePointDocumentType == routePointDocumentType)
+                .WhereIf(
+                    !currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer),
+                    x => true)
+                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier),
+                    x => x.RoutPointFk.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId ==
+                         currentUser.TenantId.Value)
+                .WhereIf(currentUser.IsDriver,
+                    x => x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
+                .ToListAsync();
+            if (!documents.Any()) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
+            return await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents), currentUser);
+        }
+
+        public async Task<string> GetPointAttachmentName(long id, RoutePointDocumentType routePointDocumentType)
+        {
+            DisableTenancyFilters();
+            var currentUser = await GetCurrentUserAsync();
+            var document = await _routPointDocumentRepository.GetAll()
+                .Where(x => x.RoutPointId == id && x.RoutePointDocumentType == routePointDocumentType)
+                .WhereIf(
+                    !currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer),
+                    x => true)
+                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier),
+                    x => x.RoutPointFk.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId ==
+                         currentUser.TenantId.Value)
+                .WhereIf(currentUser.IsDriver,
+                    x => x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
+                .FirstOrDefaultAsync();
+            return document?.DocumentName;
+        }
         public async Task<(bool canAccept, string reason)> CanAcceptTrip(long? driverUserId, ShippingRequestTripStatus tripStatus, ShippingRequestTripDriverStatus driverStatus)
         {
             if (!driverUserId.HasValue)

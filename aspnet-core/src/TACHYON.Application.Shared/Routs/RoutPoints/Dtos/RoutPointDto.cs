@@ -7,6 +7,7 @@ using System.Text;
 using TACHYON.AddressBook.Dtos;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
 {
@@ -61,6 +62,9 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public string AppointmentNumber { get; set; }
         public bool NeedsAppointment { get; set; }
         public bool NeedsClearance { get; set; }
+
+        public TripAppointmentDataDto AppointmentDataDto { get; set; }
+
 
 
         //to do receiver attribute

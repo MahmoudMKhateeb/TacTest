@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.DriverLocationLogs;
 using TACHYON.DriverLocationLogs.dtos;
 using TACHYON.EntityLogs;
@@ -376,7 +377,7 @@ namespace TACHYON.Shipping.Drivers
             if (Point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
             var DropOff = ObjectMapper.Map<RoutDropOffDto>(Point);
-
+            DropOff.AppointmentFileName =await _workFlowProvider.GetPointAttachmentName(PointId, RoutePointDocumentType.Appointment);
             var statuses = await _routPointStatusTransitionRepository.GetAll()
                 .Where(x => x.PointId == PointId && !x.IsReset)
                 .Select(s => s.Status).ToListAsync();
@@ -392,6 +393,12 @@ namespace TACHYON.Shipping.Drivers
                 : _workFlowProvider.GetTransactionsByStatus(Point.WorkFlowVersion, statuses, Point.Status);
 
             return DropOff;
+        }
+
+        public async Task<List<GetAllUploadedFileDto>> GetAppointmentFile(long pointId)
+        {
+            DisableTenancyFilters();
+            return await _workFlowProvider.GetPointFile(pointId, RoutePointDocumentType.Appointment);
         }
 
         /// <summary>
