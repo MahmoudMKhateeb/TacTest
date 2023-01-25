@@ -395,7 +395,7 @@ namespace TACHYON.Routs.RoutSteps
                 .WhereIf(shippingRequest.ShippingTypeId == ShippingTypeEnum.LocalInsideCity, x => x.CityId == shippingRequest.OriginCityId || destinationCities.Contains(x.CityId)) //inside city
                 //.WhereIf(shippingRequest.ShippingTypeId == 2, x => x.CityId == shippingRequest.OriginCityId ); //between city
                 .WhereIf(shippingRequest.ShippingTypeId == ShippingTypeEnum.LocalBetweenCities, x => x.CityId == shippingRequest.OriginCityId || destinationCities.Contains(x.CityId));
-                query = query.Where(x => x.TenantId == shippingRequest.TenantId);
+                query = query.Where(x =>( x.FacilityType == FacilityType.Facility && x.TenantId == shippingRequest.TenantId) || x.FacilityType != FacilityType.Facility);
                 var result = await query.Select(x => new FacilityForDropdownDto
                 {
                     Id = x.Id,

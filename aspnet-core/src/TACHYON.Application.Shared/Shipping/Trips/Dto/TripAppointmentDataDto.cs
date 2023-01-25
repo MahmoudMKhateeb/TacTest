@@ -25,7 +25,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public PriceOfferCommissionType CommissionType { get; set; }
         public decimal CommissionPercentageOrAddValue { get; set; }
 
-        public DateTime AppointmentDateTime { get; set; }
+        public DateTime? AppointmentDateTime { get; set; }
         public string AppointmentNumber { get; set; }
         public Guid? DocumentId { get; set; }
         public string DocumentName { get; set; }

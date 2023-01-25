@@ -1188,7 +1188,9 @@ namespace TACHYON.Shipping.Trips
 
         private async Task RemoveDeletedTripVases(CreateOrEditShippingRequestTripDto input, ShippingRequestTrip trip)
         {
-            foreach (var vas in trip.ShippingRequestTripVases)
+            //delete vases except appointment and clearance, that added manual from back when add appointment and clearance prices
+            foreach (var vas in trip.ShippingRequestTripVases.Where(x=> !x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName) &&
+            !x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName)))
             {
                 if (!input.ShippingRequestTripVases.Any(x => x.Id == vas.Id))
                 {

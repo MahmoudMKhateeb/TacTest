@@ -780,7 +780,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 output.GoodsCategoryName =
                     ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
 
-                output.IsGeneralGoodsCategory = shippingRequest.GoodCategoryFk.Flag.Equals(TACHYONConsts.GeneralGoods);
+                output.IsGeneralGoodsCategory = shippingRequest.GoodCategoryFk.Flag!= null && shippingRequest.GoodCategoryFk.Flag.Equals(TACHYONConsts.GeneralGoods);
 
                 //fill dest city list
                 var index = 1;

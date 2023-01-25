@@ -576,6 +576,7 @@ namespace TACHYON.PriceOffers
                              .ThenInclude(x => x.Translations)
                              .Include(x=>x.OriginFacility)
                              .ThenInclude(x=>x.CityFk)
+                             .Include(x=>x.PackingTypeFk)
                             .WhereIf(AbpSession.TenantId.HasValue && (await IsEnabledAsync(AppFeatures.Shipper) && !await IsEnabledAsync(AppFeatures.CarrierClients)), x => x.TenantId == AbpSession.TenantId && !x.IsTachyonDeal)
                             .FirstOrDefaultAsync(r => r.Id == input.Id/* && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice || r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier)*/);
             long? pricePackageOfferId = default, matchingPricePackageId = default;

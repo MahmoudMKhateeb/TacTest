@@ -69,6 +69,9 @@ namespace TACHYON.AutoMapper.Shipping
                     opt => opt.MapFrom(src => GetDateRange(src.StartTripDate, src.EndTripDate)))
                 .ForMember(dst => dst.OriginFacilityTitle,
                     opt => opt.MapFrom(src => src.OriginFacility != null ? $"{src.OriginFacility.Name} {src.OriginFacility.CityFk.DisplayName}" : ""))
+                .ForMember(dst => dst.ShippingTypeTitle, opt => opt.MapFrom(src => src.ShippingTypeId.GetEnumDescription()))
+                .ForMember(dst => dst.RoundTripTitle, opt => opt.MapFrom(src => src.RoundTripType != null ? src.RoundTripType.GetEnumDescription() :""))
+                .ForMember(dst => dst.PackingTypeTitle, opt => opt.MapFrom(src => src.PackingTypeFk.DisplayName))
                 ;
 
 
