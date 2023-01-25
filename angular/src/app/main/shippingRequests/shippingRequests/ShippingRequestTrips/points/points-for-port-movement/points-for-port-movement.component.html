@@ -235,7 +235,15 @@
           <td *ngIf="!isExportRequest && isImportWithReturnTrip && (isCarrier || isCarrierSaas || isTachyonDealer)">
             <div *ngIf="showAppointmentsAndClearanceButton(i)">
               <button *ngIf="record.dropNeedsClearance || record.dropNeedsAppointment" class="btn btn-primary" (click)="showVasModal(i)">
-                <i [ngClass]="usedIn == 'createOrEdit' ? 'fa fa-plus' : 'fa fa-eye'"></i>
+                <i
+                  [ngClass]="
+                    usedIn == 'createOrEdit'
+                      ? !record.appointmentDataDto || !record.tripClearancePricesDto
+                        ? 'fa fa-plus'
+                        : 'fa fa-pen'
+                      : 'fa fa-eye'
+                  "
+                ></i>
               </button>
             </div>
             <!--                        <span *ngIf="usedIn != 'createOrEdit'">{{ record.dropPaymentMethodTitle ?? '-' }}</span>-->

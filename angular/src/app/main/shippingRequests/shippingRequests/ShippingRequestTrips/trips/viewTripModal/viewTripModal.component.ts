@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   AssignDriverAndTruckToShippmentByCarrierInput,
@@ -19,6 +19,7 @@ import {
   ShippingRequestFlag,
   ShippingRequestTripFlag,
   DropPaymentMethod,
+  ShippingTypeEnum,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -42,6 +43,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   @ViewChild('TripNotesModal', { static: false }) TripNotesModal: ModalDirective;
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
+  @Input('isPortMovement') isPortMovement = false;
 
   canAssignTrucksAndDrivers: boolean;
   fromTime: string;
@@ -129,6 +131,12 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this.trip = res;
         this.fromTime = res.supposedPickupDateFrom?.format('HH:mm');
         this.toTime = res.supposedPickupDateTo?.format('HH:mm');
+        if (
+          this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+          this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements
+        ) {
+          this.trip.routPoints = this.trip.routPoints.sort((a, b) => a.pointOrder - b.pointOrder);
+        }
         //Get The Points From The View Service and send them to the Points Service To Draw Them
         this._PointsService.updateWayPoints(this.trip.routPoints);
         this._PointsService.updateCurrentUsedIn('view');

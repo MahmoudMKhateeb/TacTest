@@ -250,10 +250,10 @@
               [allPointsSendersAndReceivers]="allPointsSendersAndREcivers"
               [facilityLoading]="facilityLoading"
               [receiverLoading]="receiverLoading"
-              [isExportRequest]="shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements"
+              [isExportRequest]="shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements"
               [isImportWithReturnTrip]="
-                shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
-                shippingRequest.roundTripType === RoundTripType.WithReturnTrip
+                shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
+                shippingRequestForView.shippingRequest.roundTripType === RoundTripType.WithReturnTrip
               "
               (RouteStepCordSetterEvent)="RouteStepCordSetter($event.index, $event.facilityId)"
               (wayPointsSetterEvent)="wayPointsSetter()"

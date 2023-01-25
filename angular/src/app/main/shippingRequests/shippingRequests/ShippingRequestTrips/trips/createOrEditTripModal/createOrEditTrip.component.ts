@@ -687,7 +687,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
             );
           }).length === point3.goodsDetailListDto.length
         : false;
-      const pointThreeValid = recieverValid && goodsDetailsValidForPoint3;
+      const pointThreeValid = isNotNullOrUndefined(point3.facilityId) && recieverValid && goodsDetailsValidForPoint3;
       if (!pointThreeValid) {
         return false;
       }

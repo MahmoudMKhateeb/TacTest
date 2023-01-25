@@ -368,7 +368,7 @@
             <dx-button
               type="submit"
               class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
-              [disabled]="saving || !appointmentAndClearanceForm.form.valid"
+              [disabled]="saving || !appointmentAndClearanceForm.form.valid || shouldDisable()"
               [text]="'Save' | localize"
               (onClick)="isFormSubmitted = true"
               [useSubmitBehavior]="true"

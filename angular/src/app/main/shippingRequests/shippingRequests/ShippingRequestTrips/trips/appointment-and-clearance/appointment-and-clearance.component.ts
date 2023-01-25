@@ -62,9 +62,15 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
     this.allPriceOfferCommissionTypes = this._enumService.transform(PriceOfferCommissionType);
   }
 
-  show(dropNeedsClearance: boolean, dropNeedsAppointment: boolean) {
+  show(dropNeedsClearance: boolean, dropNeedsAppointment: boolean, tripAppointment: TripAppointmentDataDto, tripClearance: TripClearancePricesDto) {
     this.needsAppointment = dropNeedsAppointment;
     this.needsClearance = dropNeedsClearance;
+    if (isNotNullOrUndefined(tripClearance)) {
+      this.tripClearance = tripClearance;
+    }
+    if (isNotNullOrUndefined(tripAppointment)) {
+      this.tripAppointment = tripAppointment;
+    }
     this.modal.show();
     this.initDocsUploader();
     this.getTaxVat();
@@ -72,14 +78,18 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
 
   close(): void {
     this.modal.hide();
+    this.tripAppointment = new TripAppointmentDataDto();
+    this.tripClearance = new TripClearancePricesDto();
     this.hasNewUpload = undefined;
+    this.needsAppointment = false;
+    this.needsClearance = false;
   }
 
   save() {
     if (this.isFileInputValid) {
       this.tripAppointment.documentId = this.fileToken;
-      this.tripAppointment.documentName = this.fileType;
       this.tripAppointment.documentName = this.fileName;
+      this.tripAppointment.documentContentType = this.fileType;
     }
     console.log('tripClearance', this.tripClearance);
     console.log('tripAppointment', this.tripAppointment);
@@ -240,19 +250,28 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
         return 0;
     }
   }
-  // calculateSubtotalAmount(commissionType: PriceOfferCommissionType, tripAppointmentOrClearance: TripAppointmentDataDto | TripClearancePricesDto) {
-  //     switch (Number(commissionType)) {
-  //         case PriceOfferCommissionType.CommissionPercentage:
-  //             return (itemPrice * commissionPercentageOrAddValue) / 100;
 
-  //         case PriceOfferCommissionType.CommissionMinimumValue:
-  //         case PriceOfferCommissionType.CommissionValue:
-  //             return itemPrice + commissionPercentageOrAddValue;
-
-  //         default:
-  //             return 0;
-  //     }
-  // }
+  shouldDisable() {
+    const isClearanceNotValid =
+      !this.tripClearance?.itemPrice ||
+      this.tripClearance?.itemPrice?.toString()?.length === 0 ||
+      !this.tripClearance?.commissionType ||
+      !this.tripClearance?.commissionPercentageOrAddValue ||
+      this.tripClearance?.commissionPercentageOrAddValue?.toString()?.length === 0;
+    const isAppointmentNotValid =
+      !this.tripAppointment.itemPrice ||
+      this.tripAppointment?.itemPrice?.toString()?.length === 0 ||
+      !this.tripAppointment?.commissionType ||
+      !this.tripAppointment?.commissionPercentageOrAddValue ||
+      this.tripAppointment?.commissionPercentageOrAddValue?.toString()?.length === 0;
+    if (this.needsClearance && this.needsAppointment) {
+      return isClearanceNotValid || isAppointmentNotValid;
+    }
+    if (this.needsClearance && !this.needsAppointment) {
+      return isClearanceNotValid;
+    }
+    return isAppointmentNotValid;
+  }
 
   ngOnDestroy(): void {}
 }

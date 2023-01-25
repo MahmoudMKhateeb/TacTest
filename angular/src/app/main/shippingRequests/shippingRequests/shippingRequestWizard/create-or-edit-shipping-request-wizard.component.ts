@@ -656,6 +656,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         return selectItem;
       });
     this.step1Dto.roundTripType = Number(this.allRoundTripTypes[0].id);
+    this.step1Form.get('roundTripType').setValue(this.step1Dto.roundTripType);
+    this.step1Form.get('roundTripType').markAsTouched();
+    this.step1Form.get('roundTripType').updateValueAndValidity();
   }
 
   loadCitiesByCountryId(countryId: number, type: 'source' | 'destination') {
@@ -1152,6 +1155,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
 
   removeValidationForExportPortRequestOnStep2Form() {
+    this.step2Form.get('destinationCountry').clearValidators();
+    this.step2Form.get('destinationCountry').updateValueAndValidity();
     this.step2Form.get('routeType').clearValidators();
     this.step2Form.get('routeType').updateValueAndValidity();
     this.step2Form.get('originFacility').clearValidators();

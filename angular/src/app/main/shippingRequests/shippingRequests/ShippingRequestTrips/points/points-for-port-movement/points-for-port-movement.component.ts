@@ -102,7 +102,12 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   showVasModal(index: number) {
     console.log('showVasModal');
     this.activePointIndex = index;
-    this.appointmentAndClearanceModal.show(this.wayPointsList[index].dropNeedsClearance, this.wayPointsList[index].dropNeedsAppointment);
+    this.appointmentAndClearanceModal.show(
+      this.wayPointsList[index].dropNeedsClearance,
+      this.wayPointsList[index].dropNeedsAppointment,
+      this.wayPointsList[index].appointmentDataDto,
+      this.wayPointsList[index].tripClearancePricesDto
+    );
   }
 
   isFacilityDisabled(index: number): boolean {

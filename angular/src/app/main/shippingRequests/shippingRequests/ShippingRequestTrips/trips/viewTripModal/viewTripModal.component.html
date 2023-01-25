@@ -362,6 +362,7 @@
           <!--  start:: RouteSteps -->
           <PointsComponent
             *ngIf="viewTripDetails.isShown"
+            [isPortMovement]="isPortMovement"
             [isHomeDelivery]="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
           ></PointsComponent>
           <!--  end:: RouteSteps -->
