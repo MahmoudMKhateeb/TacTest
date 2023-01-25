@@ -53,6 +53,8 @@ namespace TACHYON.Tracking.Dto
         public bool CanDriveTrip { get; set; }
         public ShippingRequestFlag ShippingRequestFlag { get; set; }
 
+        public bool IsTripImpactEnabled { get; set; }
+
         #region Dedicated
         public int NumberOfTrucks { get; set; }
         #endregion

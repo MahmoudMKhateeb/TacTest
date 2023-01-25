@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Table } from 'primeng/table';
 
 import {
   CreateOrEditShippingRequestTripAccidentResolveDto,
-  IShippingRequestTripAccidentListDto,
   ShippingRequestsTripListDto,
   ShippingRequestsTripServiceProxy,
   ShippingRequestTripAccidentListDto,
@@ -14,23 +13,24 @@ import {
   TripAccidentResolveType,
 } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { LazyLoadEvent } from '@node_modules/primeng/api';
 import { Paginator } from '@node_modules/primeng/paginator';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { finalize } from '@node_modules/rxjs/operators';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './view-trip-accident-modal.component.html',
   selector: 'view-trip-accident-modal',
   styleUrls: ['./view-trip-accident-modal.component.scss'],
 })
-export class ViewTripAccidentModelComponent extends AppComponentBase {
+export class ViewTripAccidentModelComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('modal', { static: false }) modal: ModalDirective;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
   @Output('incidentResolved') tripChangedEvent: EventEmitter<any> = new EventEmitter<any>();
-  Accident: IShippingRequestTripAccidentListDto[] = [];
-  Trip: ShippingRequestsTripListDto = new ShippingRequestsTripListDto();
+  incidentsDataSource: any;
+  currentTrip: ShippingRequestsTripListDto = new ShippingRequestsTripListDto();
   Trsss: TripAccidentResolveType;
   active: boolean = false;
   IsStartSearch = false;
@@ -46,6 +46,9 @@ export class ViewTripAccidentModelComponent extends AppComponentBase {
   tripHasAnyAccidentWithoutResolve = false;
   resolveNotAppliedAtLeastOnce = false;
   readonly defaultRecordsCountPerPage = 5;
+  selectedIncidents: any[];
+  currentIncident;
+  continueTripLoading: boolean;
 
   constructor(
     injector: Injector,
@@ -60,36 +63,46 @@ export class ViewTripAccidentModelComponent extends AppComponentBase {
     this.cancel = TripAccidentResolveType.CancelTrip;
   }
 
-  getAll(trip: ShippingRequestsTripListDto): void {
-    this.primengTableHelper.showLoadingIndicator();
-    this.Trip = trip;
 
-    const defaultSorting = 'CreationTime desc';
+  show(trip: ShippingRequestsTripListDto) {
+    this.currentTrip = trip;
+    this.intiDataSource(trip.id);
+    this.active = true;
+    this.modal.show();
+  }
 
-    this._ServiceProxy.getAll(undefined, this.Trip.id, undefined, defaultSorting, this.defaultRecordsCountPerPage, undefined).subscribe((result) => {
-      this.IsStartSearch = true;
-      this.primengTableHelper.totalRecordsCount = result.totalCount;
-      this.primengTableHelper.records = result.items;
-      this.checkTripAccidentsHasAnyUnAppliedResolve(result.items);
-      this.primengTableHelper.hideLoadingIndicator();
-      this.active = true;
-      this.modal.show();
+  private intiDataSource(tripId: number) {
+    let self = this;
+    this.incidentsDataSource = {};
+    this.incidentsDataSource.store = new CustomStore({
+      load(loadOptions: LoadOptions) {
+        loadOptions.filter = [];
+        (loadOptions.filter as any[]).push(['tripId', '=', tripId]);
+        return self._ServiceProxy
+          .getAll(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
+            };
+          })
+          .catch((error) => {
+            throw new Error('Data Loading Error');
+          });
+      },
     });
   }
-  canShowCancelButton(): boolean {
-    if (this.Trip.status == ShippingRequestTripStatus.Delivered) return false;
-    else if (this.Trip.status == ShippingRequestTripStatus.Canceled) return false;
-    else if (this.feature.isEnabled('App.Shipper')) {
-      return !this.Trip.isApproveCancledByShipper;
-    } else if (this.feature.isEnabled('App.Carrier')) {
-      return !this.Trip.isApproveCancledByCarrier;
-    } else return true;
-  }
+
+
   downloadDocument(id: number): void {
     this._ServiceProxy.getFile(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
   }
+
   close(): void {
     this.modal.hide();
     this.active = false;
@@ -98,106 +111,42 @@ export class ViewTripAccidentModelComponent extends AppComponentBase {
       // so we need to refresh tripsForViewShippingRequest component
       this.tripChangedEvent.emit();
     }
+    this.incidentsDataSource = {};
   }
 
   refreshTable() {
-    this.paginator.changePage(this.paginator.getPage());
+    this.intiDataSource(this.currentTrip.id);
   }
 
-  resolveWithCancelTrip(accident: ShippingRequestTripAccidentListDto): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        let dto = new CreateOrEditShippingRequestTripAccidentResolveDto();
-        dto.accidentId = accident.id;
-        if (accident.resolveListDto.id) {
-          dto.id = accident.resolveListDto.id;
-        }
 
-        dto.resolveType = TripAccidentResolveType.CancelTrip;
-        this._ServiceProxy.createOrEditResolve(dto).subscribe(() => {
-          abp.notify.success(this.l('SavedSuccessfully'));
-          this.refreshTable();
-        });
-      }
-    });
-  }
 
-  approveResolve(accident: ShippingRequestTripAccidentListDto) {
-    if (accident.resolveListDto.id) {
-      this._ServiceProxy.applyResolveChanges(accident.resolveListDto.id).subscribe(() => {
+  approveResolve() {
+    if (this.canApproveResolve()) {
+      this._ServiceProxy.applyResolveChanges(this.currentIncident.resolveListDto.id).subscribe(() => {
         this.notify.info(this.l('SavedSuccessfully'));
         this.refreshTable();
       });
     }
   }
 
-  canViewResolve(accident: ShippingRequestTripAccidentListDto): boolean {
-    return (
-      accident.resolveListDto.resolveType === this.changeDriver ||
-      accident.resolveListDto.resolveType === this.changeTruck ||
-      accident.resolveListDto.resolveType === this.changeDriverAndTruck
-    );
-  }
 
-  canResolveAccident(accident: ShippingRequestTripAccidentListDto): boolean {
-    // note: authorization not added here and this method not created for like this use
-    return !accident.isResolve || !accident.resolveListDto.id || !accident.resolveListDto.isAppliedResolve;
-  }
 
-  getAccidents(event?: LazyLoadEvent) {
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
+  canApproveResolve(): boolean {
+    if (
+      isNotNullOrUndefined(this.currentIncident?.resolveListDto?.id) &&
+      !this.currentIncident.resolveListDto.isAppliedResolve &&
+      !this.currentIncident.isResolve
+    ) {
+      return (
+        (this.isShipper && !this.currentIncident.resolveListDto.approvedByShipper) ||
+        (this.isCarrier && !this.currentIncident.resolveListDto.approvedByCarrier)
+      );
     }
 
-    this.primengTableHelper.showLoadingIndicator();
-
-    this._ServiceProxy
-      .getAll(
-        undefined,
-        this.Trip.id,
-        undefined,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event),
-        this.primengTableHelper.getSkipCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.checkTripAccidentsHasAnyUnAppliedResolve(result.items);
-        this.primengTableHelper.hideLoadingIndicator();
-      });
+    return false;
   }
 
-  resolveWithNoAction(accident: ShippingRequestTripAccidentListDto) {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        let dto = new CreateOrEditShippingRequestTripAccidentResolveDto();
-        dto.accidentId = accident.id;
-        if (accident.resolveListDto.id) {
-          dto.id = accident.resolveListDto.id;
-        }
 
-        dto.resolveType = TripAccidentResolveType.NoActionNeeded;
-        this._ServiceProxy.createOrEditResolve(dto).subscribe(() => {
-          abp.notify.success(this.l('SavedSuccessfully'));
-          this.refreshTable();
-        });
-      }
-    });
-  }
-
-  checkTripAccidentsHasAnyUnAppliedResolve(accidents: ShippingRequestTripAccidentListDto[]) {
-    this.tripHasAnyAccidentWithoutResolve = accidents.some((x) => !x.resolveListDto.id);
-
-    let hasNotAppliedResolve = accidents.some((x) => x.resolveListDto.id && !x.resolveListDto.isAppliedResolve);
-    if (hasNotAppliedResolve) {
-      this.tripHasAnyAccidentResolveNotApplied = true;
-      this.resolveNotAppliedAtLeastOnce = true;
-      return;
-    }
-    this.tripHasAnyAccidentResolveNotApplied = false;
-  }
 
   enforceChange(tripId: number) {
     this.saving = true;
@@ -214,5 +163,23 @@ export class ViewTripAccidentModelComponent extends AppComponentBase {
       });
   }
 
-  approveChange(tripId: number) {} // todo
+  fillCurrentIncident() {
+    this.currentIncident = this.selectedIncidents[0];
+  }
+
+  ngOnInit(): void {
+    this.selectedIncidents = [];
+    this.continueTripLoading = false;
+  }
+
+  continueTrip() {
+    this.continueTripLoading = true;
+    this._ServiceProxy
+      .continueTrip(this.currentIncident.id)
+      .pipe(finalize(() => (this.continueTripLoading = false)))
+      .subscribe(() => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        this.refreshTable();
+      });
+  }
 }

@@ -33,6 +33,7 @@ import { PaginatorModule } from '@node_modules/primeng/paginator';
 import { CascadeSelectModule } from '@node_modules/primeng/cascadeselect';
 import { TripAccidentResolveModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/resolves/trip-accident-resolve-modal.component';
 import { TrackingForceDeliverTripComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-force-deliver-trip/tracking-force-deliver-trip.component';
+import {DxCheckBoxModule, DxDataGridModule} from '@node_modules/devextreme-angular';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,8 @@ import { TrackingForceDeliverTripComponent } from '@app/main/shippingRequests/sh
     BsDropdownModule,
     PaginatorModule,
     CascadeSelectModule,
+    DxDataGridModule,
+    DxCheckBoxModule,
   ],
   exports: [
     CreateOrEditTripAccidentModalComponent,

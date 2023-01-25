@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Extensions;
 using Abp.Runtime.Validation;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,7 @@ namespace TACHYON.Shipping.Trips.Accidents.Dto
     {
         public int AccidentId { get; set; }
 
-        [StringLength(500, MinimumLength = 10)]
+        [StringLength(500, MinimumLength = 3)]
         public string Description { get; set; }
 
         [Required]
@@ -38,6 +39,10 @@ namespace TACHYON.Shipping.Trips.Accidents.Dto
                 case TripAccidentResolveType.NoActionNeeded :
                     break;
                 case TripAccidentResolveType.CancelTrip:
+                    break;
+                case TripAccidentResolveType.ResolveWithoutAction:
+                    if (Description.IsNullOrEmpty())
+                        context.Results.Add(new ValidationResult("You must add description"));
                     break;
                 default:
                     context.Results.Add(new ValidationResult("Resolve type not valid"));
