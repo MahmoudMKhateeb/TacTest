@@ -1,0 +1,383 @@
+<div
+  bsModal
+  #appointmentAndClearanceModal="bs-modal"
+  class="modal fade"
+  role="dialog"
+  tabindex="-1"
+  aria-labelledby="appointmentAndClearanceModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+  (keydown.escape)="close(); $event.stopPropagation()"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">
+          <p class="m-0" *ngIf="needsAppointment && needsClearance">{{ l('AppointmentAndClearanceModal') }}</p>
+          <p class="m-0" *ngIf="needsAppointment && !needsClearance">{{ l('AppointmentModal') }}</p>
+          <p class="m-0" *ngIf="!needsAppointment && needsClearance">{{ l('ClearanceModal') }}</p>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="close()" [disabled]="saving">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #appointmentAndClearanceForm="ngForm" novalidate autocomplete="off" (submit)="save()">
+          <dx-validation-group name="appointmentAndClearanceGroup">
+            <section *ngIf="needsAppointment">
+              <h2>
+                {{ 'AppointmentData' | localize }}
+              </h2>
+              <div class="row">
+                <div class="col-lg-6 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('Date') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-date-box
+                      id="appointmentDate"
+                      name="appointmentDate"
+                      type="datetime"
+                      openOnFieldClick="true"
+                      [(value)]="tripAppointment.appointmentDateTime"
+                    >
+                    </dx-date-box>
+                  </div>
+                </div>
+                <div class="col-lg-6 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('AppointmentNumber') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-text-box id="appointmentNumber" name="appointmentNumber" [(value)]="tripAppointment.appointmentNumber"> </dx-text-box>
+                  </div>
+                </div>
+                <!-- <div class="col-lg-6 form-group">
+                                    <div class="input-group d-inline-block mr-8">
+                                        <label> {{ l('Time') }}</label>
+                                        <dx-date-box
+                                            id="appointmentTime"
+                                            name="appointmentTime"
+                                            type="time"
+                                            openOnFieldClick="true"
+                                        >
+                                        </dx-date-box>
+                                    </div>
+                                </div> -->
+                <div class="col-lg-6 form-group mr-8">
+                  <label> {{ l('SelectFile') }} {{ fileToken }}</label>
+                  <div class="custom-file">
+                    <input
+                      name="file"
+                      (change)="DocFileChangeEvent($event, createOrEditDocumentFileDto)"
+                      type="file"
+                      class="custom-file-input"
+                      accept="image/x-png,image/jpeg,application/pdf"
+                    />
+                    <label class="custom-file-label text-truncate" *ngIf="createOrEditDocumentFileDto" [for]="createOrEditDocumentFileDto.name">
+                      {{ createOrEditDocumentFileDto.name ? createOrEditDocumentFileDto.name : l('SelectFile') }}</label
+                    >
+                  </div>
+                  <div class="margin-top-5">
+                    <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
+                  </div>
+                  <div class="mt-2" *ngIf="createOrEditDocumentFileDto?.name">
+                    <div class="d-flex align-items-center flex-wrap mb-8">
+                      <!--begin::Symbol-->
+                      <div class="symbol symbol-50 symbol-light mr-3 ml-3">
+                        <span class="symbol-label">
+                          <i class="fa-2x fa-file-image fas" style="color: #5cb85c" aria-hidden="true"></i>
+                        </span>
+                      </div>
+                      <!--end::Symbol-->
+                      <!--begin::Text-->
+                      <div class="d-flex flex-column flex-grow-1 mr-2">
+                        <a (click)="downloadAttatchment()" class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">
+                          {{ createOrEditDocumentFileDto?.name }}</a
+                        >
+                        <span class="text-muted font-weight-bold">{{ createOrEditDocumentFileDto?.documentTypeDto?.templateContentType }}</span>
+                      </div>
+                      <!--end::Text-->
+                      <a
+                        *ngIf="createOrEditDocumentFileDto?.binaryObjectId"
+                        (click)="downloadAttatchment()"
+                        class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
+                      >
+                        <i class="flaticon2-download"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <hr *ngIf="needsAppointment" />
+            <section *ngIf="needsAppointment">
+              <h2>
+                {{ 'AppointmentPricesSetup' | localize }}
+              </h2>
+              <div class="row">
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('CarrierPrice') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box
+                      id="AppointmentPricesSetupCarrierPrice"
+                      name="AppointmentPricesSetupCarrierPrice"
+                      [(value)]="tripAppointment.itemPrice"
+                      (onChange)="calculateValues(true)"
+                      [min]="0"
+                    >
+                    </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('VatAmount') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box
+                      id="AppointmentPricesSetupVatAmount"
+                      name="AppointmentPricesSetupVatAmount"
+                      [(value)]="tripAppointment.vatAmount"
+                      [disabled]="true"
+                    >
+                    </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('TotalAmount') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box
+                      id="AppointmentPricesSetupTotalAmount"
+                      name="AppointmentPricesSetupTotalAmount"
+                      [(value)]="tripAppointment.totalAmount"
+                      [disabled]="true"
+                    >
+                    </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('CommessionType') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-select-box
+                      id="AppointmentPricesSetupCommessionType"
+                      name="AppointmentPricesSetupCommessionType"
+                      [dataSource]="allPriceOfferCommissionTypes"
+                      [(value)]="tripAppointment.commissionType"
+                      displayExpr="value"
+                      valueExpr="key"
+                      (onValueChanged)="calculateValues(true)"
+                    >
+                    </dx-select-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('CommessionValue') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box
+                      id="AppointmentPricesSetupCommessionValue"
+                      name="AppointmentPricesSetupCommessionValue"
+                      [(value)]="tripAppointment.commissionPercentageOrAddValue"
+                      (onChange)="calculateValues(true)"
+                      [min]="0"
+                    >
+                    </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('CommessionAmount') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box
+                      id="AppointmentPricesSetupCommessionAmount"
+                      name="AppointmentPricesSetupCommessionAmount"
+                      [(value)]="tripAppointment.commissionAmount"
+                      [disabled]="true"
+                    >
+                    </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('ShipperPrice') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box
+                      id="AppointmentPricesSetupShipperPrice"
+                      name="AppointmentPricesSetupShipperPrice"
+                      [(value)]="tripAppointment.subTotalAmountWithCommission"
+                      [disabled]="true"
+                    >
+                    </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('VatAmount') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box
+                      id="AppointmentPricesSetupVatAmount"
+                      name="AppointmentPricesSetupVatAmount"
+                      [(value)]="tripAppointment.vatAmountWithCommission"
+                      [disabled]="true"
+                    >
+                    </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('TotalAmount') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box
+                      id="AppointmentPricesSetupTotalAmount"
+                      name="AppointmentPricesSetupTotalAmount"
+                      [(value)]="tripAppointment.totalAmountWithCommission"
+                      [disabled]="true"
+                    >
+                    </dx-number-box>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <hr *ngIf="needsAppointment" />
+            <section *ngIf="needsClearance">
+              <h2>
+                {{ 'ClearanceSetup' | localize }}
+              </h2>
+              <div class="row">
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('CarrierPrice') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box
+                      id="CarrierPrice"
+                      name="CarrierPrice"
+                      [(value)]="tripClearance.itemPrice"
+                      (onChange)="calculateValues(false)"
+                      [min]="0"
+                    >
+                    </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('VatAmount') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box id="VatAmount" name="VatAmount" [(value)]="tripClearance.vatAmount" [disabled]="true"> </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('TotalAmount') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box id="TotalAmount" name="TotalAmount" [(value)]="tripClearance.totalAmount" [disabled]="true"> </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('CommessionType') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-select-box
+                      id="CommessionType"
+                      name="CommessionType"
+                      [dataSource]="allPriceOfferCommissionTypes"
+                      [(value)]="tripClearance.commissionType"
+                      displayExpr="value"
+                      valueExpr="key"
+                      (onValueChanged)="calculateValues(false)"
+                    >
+                    </dx-select-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('CommessionValue') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box
+                      id="CommessionValue"
+                      name="CommessionValue"
+                      [(value)]="tripClearance.commissionPercentageOrAddValue"
+                      (onChange)="calculateValues(false)"
+                      [min]="0"
+                    >
+                    </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('CommessionAmount') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box id="CommessionAmount" name="CommessionAmount" [(value)]="tripClearance.commissionAmount" [disabled]="true">
+                    </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('ShipperPrice') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box id="ShipperPrice" name="ShipperPrice" [(value)]="tripClearance.subTotalAmountWithCommission" [disabled]="true">
+                    </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('VatAmount') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box id="VatAmount" name="VatAmount" [(value)]="tripClearance.vatAmountWithCommission" [disabled]="true">
+                    </dx-number-box>
+                  </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                  <div class="input-group d-inline-block mr-8">
+                    <label> {{ l('TotalAmount') }}</label>
+                    <!--                                        [(value)]="trip.expectedDeliveryTime"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <!--                                        [min]="trip.startTripDate"-->
+                    <dx-number-box id="TotalAmount" name="TotalAmount" [(value)]="tripClearance.totalAmountWithCommission" [disabled]="true">
+                    </dx-number-box>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </dx-validation-group>
+          <div class="col-lg-12 mt-4 mb-2">
+            <dx-validation-summary validationGroup="appointmentAndClearanceGroup" id="summary"></dx-validation-summary>
+          </div>
+          <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6" (click)="close()">
+              {{ l('Close') }}
+            </button>
+            <dx-button
+              type="submit"
+              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
+              [disabled]="saving || !appointmentAndClearanceForm.form.valid"
+              [text]="'Save' | localize"
+              (onClick)="isFormSubmitted = true"
+              [useSubmitBehavior]="true"
+              [validationGroup]="'appointmentAndClearanceGroup'"
+            >
+            </dx-button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

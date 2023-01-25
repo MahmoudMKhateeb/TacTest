@@ -135,7 +135,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   entityType = SavedEntityType;
   ShippingTypeEnum = ShippingTypeEnum;
   allRoundTripTypes: SelectItemDto[];
-  allOriginPorts: SelectFacilityItemDto[];
+  allOriginPorts: SelectFacilityItemDto[] = [];
   generalGoodsCategoryId: number;
   ShippingRequestRouteType = ShippingRequestRouteType;
 
@@ -619,7 +619,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
   fillAllRoundTrips(isInit = false) {
     if (!isInit) {
-      this.step1Dto.roundTripType = null;
+      // this.step1Dto.roundTripType = null;
     }
     this.step1Form.get('roundTripType').clearValidators();
     this.step1Form.get('roundTripType').updateValueAndValidity();
@@ -655,6 +655,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         selectItem.displayName = item.value;
         return selectItem;
       });
+    this.step1Dto.roundTripType = Number(this.allRoundTripTypes[0].id);
   }
 
   loadCitiesByCountryId(countryId: number, type: 'source' | 'destination') {
@@ -965,6 +966,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.step2Dto.numberOfDrops = 2;
         break;
       }
+      case RoundTripType.WithoutReturnTrip:
+      case RoundTripType.OneWayRoutWithPortShuttling:
       default: {
         this.step2Dto.routeTypeId = ShippingRequestRouteType.SingleDrop;
         this.step2Dto.numberOfDrops = 1;

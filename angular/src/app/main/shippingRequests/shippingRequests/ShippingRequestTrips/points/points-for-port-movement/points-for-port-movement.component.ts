@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CreateOrEditRoutPointDto,
@@ -6,8 +6,11 @@ import {
   FacilityType,
   PickingType,
   ReceiverFacilityLookupTableDto,
+  TripAppointmentDataDto,
+  TripClearancePricesDto,
 } from '@shared/service-proxies/service-proxies';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
+import { AppointmentAndClearanceModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/appointment-and-clearance/appointment-and-clearance.component';
 
 @Component({
   selector: 'PointsForPortsMovementComponent',
@@ -15,6 +18,7 @@ import { PointsService } from '@app/main/shippingRequests/shippingRequests/Shipp
   styleUrls: ['./points-for-port-movement.component.scss'],
 })
 export class PointsForPortsMovementComponent extends AppComponentBase implements OnInit {
+  @ViewChild('appointmentAndClearanceModal', { static: true }) appointmentAndClearanceModal: AppointmentAndClearanceModalComponent;
   @Input('wayPointsList') wayPointsList: CreateOrEditRoutPointDto[] = [];
   @Input('usedIn') usedIn: 'view' | 'createOrEdit';
   @Input('pickupFacilities') pickupFacilities: FacilityForDropdownDto[] = [];
@@ -32,7 +36,13 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   @Output() createOrEditFacilityModalShowEvent = new EventEmitter<any>();
   @Output() createOrEditReceiverModalShowEvent = new EventEmitter<{ param; facilityId: any }>();
   @Output() createOrEditPointModalShowEvent = new EventEmitter<{ index: number; goodDetails: string; goodsDetailListDto?: any }>();
+  @Output('savedAppointmentsAndClearance') savedAppointmentsAndClearance = new EventEmitter<{
+    tripAppointment: TripAppointmentDataDto;
+    tripClearance: TripClearancePricesDto;
+    pointIndex: number;
+  }>();
   PickingType = PickingType;
+  activePointIndex: number;
 
   constructor(injector: Injector, private _PointsService: PointsService) {
     super(injector);
@@ -89,8 +99,10 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
     console.log('createOrEditPointModalShow', index, goodDetails, goodsDetailListDto);
   }
 
-  showVasModal() {
+  showVasModal(index: number) {
     console.log('showVasModal');
+    this.activePointIndex = index;
+    this.appointmentAndClearanceModal.show(this.wayPointsList[index].dropNeedsClearance, this.wayPointsList[index].dropNeedsAppointment);
   }
 
   isFacilityDisabled(index: number): boolean {
@@ -179,5 +191,9 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
       }
     }
     return true;
+  }
+
+  handleSaveAppointmentsAndClearance(event: { tripAppointment: TripAppointmentDataDto; tripClearance: TripClearancePricesDto }) {
+    this.savedAppointmentsAndClearance.emit({ ...event, pointIndex: this.activePointIndex });
   }
 }

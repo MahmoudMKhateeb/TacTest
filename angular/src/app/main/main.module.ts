@@ -338,6 +338,7 @@ import { PricePackageModule } from '@app/main/pricePackages/price-package.module
 import { InvoicesDedicatedClientsComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients.component';
 import { InvoiceDedicatedClientsModalComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients-modal/invoices-dedicated-clients-modal.component';
 import { PointsForPortsMovementComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points-for-port-movement/points-for-port-movement.component';
+import { AppointmentAndClearanceModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/appointment-and-clearance/appointment-and-clearance.component';
 
 @NgModule({
   imports: [
@@ -645,6 +646,7 @@ import { PointsForPortsMovementComponent } from '@app/main/shippingRequests/ship
     InvoicesDedicatedClientsComponent,
     InvoiceDedicatedClientsModalComponent,
     PointsForPortsMovementComponent,
+    AppointmentAndClearanceModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

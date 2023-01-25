@@ -16,6 +16,8 @@ import {
   ShippingRequestFlag,
   ShippingRequestRouteType,
   ShippingTypeEnum,
+  TripAppointmentDataDto,
+  TripClearancePricesDto,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
@@ -283,6 +285,11 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   RouteStepCordSetter(pointIndex: number, facilityId: number) {
     this.wayPointsList[pointIndex].latitude = this.allFacilities.find((x) => x.id == facilityId)?.lat;
     this.wayPointsList[pointIndex].longitude = this.allFacilities.find((x) => x.id == facilityId)?.long;
+  }
+
+  savedAppointmentsAndClearance($event: { tripAppointment: TripAppointmentDataDto; tripClearance: TripClearancePricesDto; pointIndex: number }) {
+    this.wayPointsList[$event.pointIndex].appointmentDataDto = $event.tripAppointment;
+    this.wayPointsList[$event.pointIndex].tripClearancePricesDto = $event.tripClearance;
   }
 
   ngOnDestroy() {

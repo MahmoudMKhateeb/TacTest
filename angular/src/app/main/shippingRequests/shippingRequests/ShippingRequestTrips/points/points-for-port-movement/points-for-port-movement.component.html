@@ -34,24 +34,36 @@
           <th *ngIf="!isExportRequest && isImportWithReturnTrip">
             <!--                        {{ l('PaymentMethod') }}-->
           </th>
-          <th *ngIf="!isExportRequest && isImportWithReturnTrip">
+          <th *ngIf="!isExportRequest && isImportWithReturnTrip && (isCarrier || isCarrierSaas || isTachyonDealer)">
             {{ l('AppointmentsAndClearance') }}
           </th>
         </tr>
       </ng-template>
       <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
         <tr *ngIf="i === 0">
-          <td [colSpan]="!isExportRequest && isImportWithReturnTrip ? 8 : 6" rowspan="1" class="border-bottom-0">
+          <td
+            [colSpan]="!isExportRequest && isImportWithReturnTrip ? (isCarrier || isCarrierSaas || isTachyonDealer ? 8 : 7) : 6"
+            rowspan="1"
+            class="border-bottom-0"
+          >
             <strong>{{ 'FirstTrip' | localize }}</strong>
           </td>
         </tr>
         <tr *ngIf="i === 2">
-          <td [colSpan]="!isExportRequest && isImportWithReturnTrip ? 8 : 6" rowspan="1" class="pt-8 border-bottom-0">
+          <td
+            [colSpan]="!isExportRequest && isImportWithReturnTrip ? (isCarrier || isCarrierSaas || isTachyonDealer ? 8 : 7) : 6"
+            rowspan="1"
+            class="pt-8 border-bottom-0"
+          >
             <strong>{{ (isExportRequest ? 'SecondTrip' : 'ReturnTrip') | localize }}</strong>
           </td>
         </tr>
         <tr *ngIf="i === 4">
-          <td [colSpan]="!isExportRequest && isImportWithReturnTrip ? 8 : 6" rowspan="1" class="pt-8 border-bottom-0">
+          <td
+            [colSpan]="!isExportRequest && isImportWithReturnTrip ? (isCarrier || isCarrierSaas || isTachyonDealer ? 8 : 7) : 6"
+            rowspan="1"
+            class="pt-8 border-bottom-0"
+          >
             <strong>{{ 'ThirdTrip' | localize }}</strong>
           </td>
         </tr>
@@ -196,11 +208,11 @@
                 <label class="checkbox ml-2">
                   <input
                     type="checkbox"
-                    [(ngModel)]="record.needsClearance"
-                    id="needsPOD-{{ i }}"
-                    name="needsPOD-{{ i }}"
+                    [(ngModel)]="record.dropNeedsClearance"
+                    id="dropNeedsClearance-{{ i }}"
+                    name="dropNeedsClearance-{{ i }}"
                     value="false"
-                    [disabled]="usedIn != 'createOrEdit' && !isTachyonDealer"
+                    [disabled]="usedIn != 'createOrEdit' || !isTachyonDealer"
                   />
                   <span class="ml-2 mt-1"></span>
                   {{ l('needsClearance') }}
@@ -208,11 +220,11 @@
                 <label class="checkbox ml-2">
                   <input
                     type="checkbox"
-                    [(ngModel)]="record.needsAppointment"
-                    id="needsReceiverCode-{{ i }}"
-                    name="needsReceiverCode-{{ i }}"
+                    [(ngModel)]="record.dropNeedsAppointment"
+                    id="dropNeedsAppointment-{{ i }}"
+                    name="dropNeedsAppointment-{{ i }}"
                     value="false"
-                    [disabled]="usedIn != 'createOrEdit' && !isTachyonDealer"
+                    [disabled]="usedIn != 'createOrEdit' || !isTachyonDealer"
                   />
                   <span class="ml-2 mt-1"></span>
                   {{ l('needsAppointment') }}
@@ -220,9 +232,9 @@
               </div>
             </div>
           </td>
-          <td *ngIf="!this.isExportRequest && this.isImportWithReturnTrip">
+          <td *ngIf="!isExportRequest && isImportWithReturnTrip && (isCarrier || isCarrierSaas || isTachyonDealer)">
             <div *ngIf="showAppointmentsAndClearanceButton(i)">
-              <button class="btn btn-primary" (click)="showVasModal()">
+              <button *ngIf="record.dropNeedsClearance || record.dropNeedsAppointment" class="btn btn-primary" (click)="showVasModal(i)">
                 <i [ngClass]="usedIn == 'createOrEdit' ? 'fa fa-plus' : 'fa fa-eye'"></i>
               </button>
             </div>
@@ -248,3 +260,4 @@
   </div>
   <!--<Primeng-Datatable-End>-->
 </div>
+<appointment-and-clearance-modal #appointmentAndClearanceModal (saved)="handleSaveAppointmentsAndClearance($event)"></appointment-and-clearance-modal>

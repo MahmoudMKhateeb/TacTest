@@ -612,7 +612,9 @@
                             </select>
                           </div>
 
-                          <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
+                          <span class="form-text text-muted">{{
+                            step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ? l('SelectaPort') : l('SelectaCity')
+                          }}</span>
                         </div>
                       </div>
                       <div class="col-lg-6" [hidden]="step1Dto.shippingTypeId == ShippingTypeEnum.LocalInsideCity">

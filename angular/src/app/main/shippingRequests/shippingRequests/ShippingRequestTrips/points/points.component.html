@@ -262,6 +262,7 @@
               (createOrEditFacilityModalShowEvent)="createOrEditFacilityModal.show()"
               (createOrEditReceiverModalShowEvent)="createOrEditReceiverModal.show($event.param, $event.facilityId)"
               (createOrEditPointModalShowEvent)="createOrEditPointModal.show($event.index, $event.goodDetails, $event.goodsDetailListDto)"
+              (savedAppointmentsAndClearance)="savedAppointmentsAndClearance($event)"
             ></PointsForPortsMovementComponent>
           </div>
         </div>
