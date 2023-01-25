@@ -1002,8 +1002,10 @@ namespace TACHYON
             configuration.CreateMap<SubmitInvoiceClaimCreateInput, ActorSubmitInvoice>();
             configuration.CreateMap<IHasDocument, ActorSubmitInvoice>().ReverseMap();
             configuration.CreateMap<TripAppointmentDataDto, IHasDocument>();
-            configuration.CreateMap<ShippingRequestTripVas,TripAppointmentDataDto >();
-            configuration.CreateMap<TripClearancePricesDto, TripAppointmentDataDto>();
+            configuration.CreateMap<ShippingRequestTripVas,TripAppointmentDataDto >()
+                .ForMember(dto => dto.ItemPrice, options => options.MapFrom(entity => entity.SubTotalAmount));
+            configuration.CreateMap<ShippingRequestTripVas, TripClearancePricesDto > ()
+                .ForMember(dto => dto.ItemPrice, options => options.MapFrom(entity => entity.SubTotalAmount));
 
         }
 
