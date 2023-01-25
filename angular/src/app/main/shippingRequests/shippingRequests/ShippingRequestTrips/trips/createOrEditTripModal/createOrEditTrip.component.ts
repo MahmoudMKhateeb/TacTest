@@ -123,6 +123,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   isTripPointsInvalid = false;
   routeTypes: any[] = [];
   canEditNumberOfDrops = true;
+  isEdit: boolean;
 
   get isFileInputValid() {
     return this.trip.hasAttachment ? (this.trip.createOrEditDocumentFileDto.name ? true : false) : true;
@@ -215,6 +216,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.maxTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(EndDateGregorian, 'D/M/YYYY');
     }
     if (record) {
+      this.isEdit = true;
       this.activeTripId = record.id;
       this._TripService.updateActiveTripId(this.activeTripId);
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
@@ -314,6 +316,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.isDisabledDriver = false;
     this.IsHaveContainerNumberValue = false;
     this.IsHaveSealNumberValue = false;
+    this.isEdit = false;
   }
 
   createOrEditTrip() {

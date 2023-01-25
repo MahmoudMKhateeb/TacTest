@@ -10,12 +10,14 @@ import {
   TripClearancePricesDto,
   PenaltiesServiceProxy,
   FileDto,
+  ShippingRequestsTripServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 
 @Component({
   selector: 'appointment-and-clearance-modal',
@@ -25,10 +27,13 @@ import { PointsService } from '@app/main/shippingRequests/shippingRequests/Shipp
 export class AppointmentAndClearanceModalComponent extends AppComponentBase implements OnInit, OnDestroy {
   @ViewChild('appointmentAndClearanceModal', { static: true }) modal: ModalDirective;
   @Output('saved') saved = new EventEmitter<{ tripAppointment: TripAppointmentDataDto; tripClearance: TripClearancePricesDto }>();
+  @Input('isEdit') isEdit = false;
   tripAppointment: TripAppointmentDataDto = new TripAppointmentDataDto();
   tripClearance: TripClearancePricesDto = new TripClearancePricesDto();
   isFormSubmitted: boolean;
   saving: boolean;
+  private pointId: number;
+
   get isFileInputValid() {
     return this.createOrEditDocumentFileDto.name ? true : false;
   }
@@ -53,7 +58,8 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
     private _enumService: EnumToArrayPipe,
     private _PenaltiesServiceProxy: PenaltiesServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private _PointsService: PointsService
+    private _PointsService: PointsService,
+    private _shippingRequestsTripServiceProxy: ShippingRequestsTripServiceProxy
   ) {
     super(injector);
   }
@@ -62,14 +68,24 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
     this.allPriceOfferCommissionTypes = this._enumService.transform(PriceOfferCommissionType);
   }
 
-  show(dropNeedsClearance: boolean, dropNeedsAppointment: boolean, tripAppointment: TripAppointmentDataDto, tripClearance: TripClearancePricesDto) {
+  show(
+    pointId: number | null,
+    dropNeedsClearance: boolean,
+    dropNeedsAppointment: boolean,
+    tripAppointment: TripAppointmentDataDto,
+    tripClearance: TripClearancePricesDto
+  ) {
     this.needsAppointment = dropNeedsAppointment;
     this.needsClearance = dropNeedsClearance;
+    this.pointId = pointId;
     if (isNotNullOrUndefined(tripClearance)) {
       this.tripClearance = tripClearance;
     }
     if (isNotNullOrUndefined(tripAppointment)) {
       this.tripAppointment = tripAppointment;
+      if (tripAppointment.documentName) {
+        this.createOrEditDocumentFileDto.name = tripAppointment.documentName;
+      }
     }
     this.modal.show();
     this.initDocsUploader();
@@ -165,6 +181,15 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
   }
 
   downloadAttatchment(): void {
+    if (this.isEdit) {
+      this._shippingRequestsTripServiceProxy.getAppointmentFile(this.pointId).subscribe((res) => {
+        console.log('res');
+        if (res.length > 0) {
+          this._fileDownloadService.downloadFileByBinary(res[0].documentId, res[0].fileName, res[0].fileType);
+        }
+      });
+      return;
+    }
     if (!this.hasNewUpload) {
       this._fileDownloadService.downloadFileByBinary(
         this.createOrEditDocumentFileDto.binaryObjectId,
@@ -172,7 +197,7 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
         this.createOrEditDocumentFileDto.extn
       );
     } else {
-      var fileDto = new FileDto();
+      let fileDto = new FileDto();
       fileDto.fileName = this.fileName;
       fileDto.fileToken = this.fileToken;
       fileDto.fileType = this.fileType;

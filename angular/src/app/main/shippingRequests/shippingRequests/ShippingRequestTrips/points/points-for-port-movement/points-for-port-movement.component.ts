@@ -19,6 +19,7 @@ import { AppointmentAndClearanceModalComponent } from '@app/main/shippingRequest
 })
 export class PointsForPortsMovementComponent extends AppComponentBase implements OnInit {
   @ViewChild('appointmentAndClearanceModal', { static: true }) appointmentAndClearanceModal: AppointmentAndClearanceModalComponent;
+  @Input('isEdit') isEdit = false;
   @Input('wayPointsList') wayPointsList: CreateOrEditRoutPointDto[] = [];
   @Input('usedIn') usedIn: 'view' | 'createOrEdit';
   @Input('pickupFacilities') pickupFacilities: FacilityForDropdownDto[] = [];
@@ -103,6 +104,7 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
     console.log('showVasModal');
     this.activePointIndex = index;
     this.appointmentAndClearanceModal.show(
+      this.wayPointsList[index].id,
       this.wayPointsList[index].dropNeedsClearance,
       this.wayPointsList[index].dropNeedsAppointment,
       this.wayPointsList[index].appointmentDataDto,

@@ -238,7 +238,7 @@
                 <i
                   [ngClass]="
                     usedIn == 'createOrEdit'
-                      ? !record.appointmentDataDto || !record.tripClearancePricesDto
+                      ? (!record.appointmentDataDto || !record.tripClearancePricesDto) && !isEdit
                         ? 'fa fa-plus'
                         : 'fa fa-pen'
                       : 'fa fa-eye'
@@ -268,4 +268,8 @@
   </div>
   <!--<Primeng-Datatable-End>-->
 </div>
-<appointment-and-clearance-modal #appointmentAndClearanceModal (saved)="handleSaveAppointmentsAndClearance($event)"></appointment-and-clearance-modal>
+<appointment-and-clearance-modal
+  #appointmentAndClearanceModal
+  (saved)="handleSaveAppointmentsAndClearance($event)"
+  [isEdit]="isEdit"
+></appointment-and-clearance-modal>

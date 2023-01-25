@@ -34,6 +34,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy, AfterContentChecked {
   // @Output() SelectedWayPointsFromChild = this.wayPointsList;
   @Input('isPortMovement') isPortMovement = false;
+  @Input('isEdit') isEdit = false;
   @Input() shippingRequest: ShippingRequestDto;
   @Output() wayPointsListChanged: EventEmitter<any> = new EventEmitter<any>();
   shippingRequestId: number;

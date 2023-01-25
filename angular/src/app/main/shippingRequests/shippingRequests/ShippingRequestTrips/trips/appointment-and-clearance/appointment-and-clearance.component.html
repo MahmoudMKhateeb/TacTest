@@ -65,8 +65,8 @@
                                     </div>
                                 </div> -->
                 <div class="col-lg-6 form-group mr-8">
-                  <label> {{ l('SelectFile') }} {{ fileToken }}</label>
-                  <div class="custom-file">
+                  <label> {{ !isEdit || (isEdit && !tripAppointment.documentName) ? l('SelectFile') : l('Download') }} {{ fileToken }}</label>
+                  <div class="custom-file" *ngIf="!isEdit || (isEdit && !tripAppointment.documentName)">
                     <input
                       name="file"
                       (change)="DocFileChangeEvent($event, createOrEditDocumentFileDto)"
@@ -78,7 +78,7 @@
                       {{ createOrEditDocumentFileDto.name ? createOrEditDocumentFileDto.name : l('SelectFile') }}</label
                     >
                   </div>
-                  <div class="margin-top-5">
+                  <div class="margin-top-5" *ngIf="!isEdit || (isEdit && !tripAppointment.documentName)">
                     <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
                   </div>
                   <div class="mt-2" *ngIf="createOrEditDocumentFileDto?.name">
@@ -99,7 +99,7 @@
                       </div>
                       <!--end::Text-->
                       <a
-                        *ngIf="createOrEditDocumentFileDto?.binaryObjectId"
+                        *ngIf="createOrEditDocumentFileDto?.binaryObjectId || (isEdit && !tripAppointment.documentName)"
                         (click)="downloadAttatchment()"
                         class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
                       >
