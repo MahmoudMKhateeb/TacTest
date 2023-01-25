@@ -345,9 +345,10 @@ namespace TACHYON.Shipping.Trips
                     var appointmentVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName));
                     ObjectMapper.Map(appointmentVas, pointDto.AppointmentDataDto);
                 }
-                else if (point.HasClearanceVas)
+                if (point.HasClearanceVas)
                 {
                     var ClearanceVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName));
+                    pointDto.TripClearancePricesDto = new TripClearancePricesDto();
                     ObjectMapper.Map(ClearanceVas, pointDto.TripClearancePricesDto);
                 }
 
@@ -496,7 +497,7 @@ namespace TACHYON.Shipping.Trips
 
                 tripVas.ShippingRequestVasId = srVasId ?? throw new UserFriendlyException(L("VasMissing"));
                 tripVas.ShippingRequestTripId = point.ShippingRequestTripId;
-                tripVas.RoutePointId = input.RoutePointId;
+                tripVas.RoutePointId = point.Id;
                 
                 point.ShippingRequestTripFk.ShippingRequestTripVases.Add(tripVas);
                 
@@ -950,12 +951,12 @@ namespace TACHYON.Shipping.Trips
 
                 await SetAppointmentData(inputPoint.AppointmentDataDto, point);
             }
-            var ClearancePoint = trip.RoutPoints.FirstOrDefault(x => x.NeedsClearance && input.RoutPoints.First(x => x.PointOrder == x.PointOrder).TripClearancePricesDto != null);
-            if(ClearancePoint != null)
+            var ClearancePoints = trip.RoutPoints.Where(x => x.NeedsClearance && input.RoutPoints.First(x => x.PointOrder == x.PointOrder).TripClearancePricesDto != null);
+            foreach(var point in ClearancePoints)
             {
-                var inputPoint = input.RoutPoints.First(x => x.PointOrder == ClearancePoint.PointOrder);
-                inputPoint.AppointmentDataDto.ShippingRequestId = request.Id;
-
+                var inputPoint = input.RoutPoints.First(x => x.PointOrder == point.PointOrder);
+                inputPoint.TripClearancePricesDto.ShippingRequestId = request.Id;
+                await SetClearanceData(inputPoint.TripClearancePricesDto, point);
             }
             
         }
