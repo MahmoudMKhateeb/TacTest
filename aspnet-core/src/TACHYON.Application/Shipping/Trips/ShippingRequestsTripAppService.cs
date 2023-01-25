@@ -511,7 +511,7 @@ namespace TACHYON.Shipping.Trips
             if (input.DocumentId != null)
             {
                 var document = ObjectMapper.Map<IHasDocument>(input);
-                await _shippingRequestPointWorkFlowProvider.UploadFiles(new List<IHasDocument> { document }, input.RoutePointId, RoutePointDocumentType.Appointment);
+                await _shippingRequestPointWorkFlowProvider.UploadFiles(new List<IHasDocument> { document }, point.Id, RoutePointDocumentType.Appointment);
             }
         }
 
