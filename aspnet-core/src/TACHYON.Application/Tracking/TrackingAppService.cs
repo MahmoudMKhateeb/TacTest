@@ -48,13 +48,15 @@ namespace TACHYON.Tracking
         private readonly ProfileAppService _ProfileAppService;
         private readonly ForceDeliverTripExcelExporter _deliverTripExcelExporter;
         private readonly IRepository<UserOrganizationUnit,long> _userOrganizationUnitRepository;
+        private readonly IRepository<ShippingRequestTripAccident> _accidentRepository;
 
         public TrackingAppService(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository,
             IRepository<User, long> userRepository,
             ShippingRequestPointWorkFlowProvider workFlowProvider,
             ProfileAppService profileAppService,
             ForceDeliverTripExcelExporter deliverTripExcelExporter,
-            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository)
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+            IRepository<ShippingRequestTripAccident> accidentRepository)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _RoutPointRepository = routPointRepository;
@@ -63,6 +65,7 @@ namespace TACHYON.Tracking
             _ProfileAppService = profileAppService;
             _deliverTripExcelExporter = deliverTripExcelExporter;
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
+            _accidentRepository = accidentRepository;
         }
 
 
@@ -352,6 +355,9 @@ namespace TACHYON.Tracking
                 //    dto.NoActionReason = CanNotStartReason(trip, workingOnAnotherTrip);
             }
             dto.CanDriveTrip = !tenantId.HasValue || tenantId== trip?.ShippingRequestFk?.CarrierTenantId || await IsTachyonDealer();
+            dto.IsTripImpactEnabled = await _accidentRepository.GetAll()
+                .Where(x => !x.IsResolve && x.RoutPointFK.ShippingRequestTripId == trip.Id)
+                .AnyAsync(x => x.ReasoneId.HasValue && x.ResoneFK.IsTripImpactEnabled && !x.ForceContinueTripEnabled);
             return dto;
         }
         private bool CanStartTrip(ShippingRequestTrip trip)

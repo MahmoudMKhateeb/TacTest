@@ -164,28 +164,24 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   }
 
   details(invoice: any): void {
-    if(invoice.channel == InvoiceChannel.Dedicated){
+    if (invoice.channel == InvoiceChannel.Dedicated) {
       this._InvoiceReportServiceProxy.downloadDedicatedDynamicInvoice(invoice.id).subscribe((result) => {
-        let file=this._fileDownloadService.downloadTempFile(result);
+        let file = this._fileDownloadService.downloadTempFile(result);
         this.sharedPdfViewer.show(file, 'pdf');
       });
-    }
-
-    else if(invoice.channel == InvoiceChannel.Trip){
+    } else if (invoice.channel == InvoiceChannel.Trip) {
       this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(invoice.id).subscribe((result) => {
-        let file=this._fileDownloadService.downloadTempFile(result);
+        let file = this._fileDownloadService.downloadTempFile(result);
+        this.sharedPdfViewer.show(file, 'pdf');
+      });
+    } else if (invoice.channel == InvoiceChannel.Penalty) {
+      this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(invoice.id).subscribe((result) => {
+        let file = this._fileDownloadService.downloadTempFile(result);
         this.sharedPdfViewer.show(file, 'pdf');
       });
     }
 
-    else if(invoice.channel == InvoiceChannel.Penalty){
-      this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(invoice.id).subscribe((result) => {
-         let file=this._fileDownloadService.downloadTempFile(result);
-        this.sharedPdfViewer.show(file, 'pdf');
-      });
-    }
-    
-   // if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
+    // if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
     //  this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
     // } else {
     //   this._InvoiceServiceProxy.getById(invoice.id).subscribe((result) => {

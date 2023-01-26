@@ -6,6 +6,7 @@
         public string WayBillNumber { get; set; }
         public decimal SubTotalAmount { get; set; }
         public decimal VatAmount { get; set; }
+        public decimal VatTax { get; set; }
         public decimal TotalAmount { get; set; }
         public string TruckType { get; set; }
         public string Source { get; set; }

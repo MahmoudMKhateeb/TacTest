@@ -67,7 +67,13 @@
                   'spinner spinner-success spinner-right mr-1 ml-1': proposalsLoading
                 }"
               >
-                <select [(ngModel)]="appendix.proposalId" (change)="autoFillByProposal(appendix.proposalId)" required class="form-control" name="appendixProposalId">
+                <select
+                  [(ngModel)]="appendix.proposalId"
+                  (change)="autoFillByProposal(appendix.proposalId)"
+                  required
+                  class="form-control"
+                  name="appendixProposalId"
+                >
                   <option selected disabled [value]="undefined">{{ 'SelectProposal' | localize }}</option>
                   <option *ngFor="let item of proposals" [value]="item.id">{{ item.displayName }}</option>
                 </select>

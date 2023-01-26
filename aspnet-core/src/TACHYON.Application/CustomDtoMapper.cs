@@ -594,6 +594,20 @@ namespace TACHYON
                  .ForPath(x => x.ResolveListDto.ResolveTypeTitle, x => x.MapFrom(i => i.Item2.ResolveType.HasValue ? i.Item2.ResolveType.Value.GetEnumDescription() : null))
                  .AfterMap((src, dto) => _Mapper.Map(src.Item1, dto))
                  .ReverseMap();
+
+            configuration.CreateMap<ShippingRequestTripAccident, TripAccidentListDto>()
+                .ForMember(x => x.Reason,
+                    x => x.MapFrom(i =>
+                        i.ResoneFK.Translations
+                            .FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).Name ??
+                        i.ResoneFK.Key))
+                .ForMember(x => x.TripId, x => x.MapFrom(i => i.RoutPointFK.ShippingRequestTripId))
+                .ForMember(x => x.IsPointStopped, x => x.MapFrom(i => i.RoutPointFK.Status == RoutePointStatus.Issue))
+                .ForMember(x => x.ResolveListDto, x => x.MapFrom(i => i.Resolve));
+            
+            configuration.CreateMap<ShippingRequestTripAccidentResolve, TripAccidentResolveListDto>()
+                .ForMember(x=> x.IsAppliedResolve,x=> x.MapFrom(i=> i.IsApplied))
+                .ForMember(x=> x.ResolveTypeTitle,x=> x.MapFrom(i=> i.ResolveType.GetEnumDescription()));
             configuration.CreateMap<CitiesTranslation, GetCitiesTranslationForViewDto>()
                 .ForMember(x => x.CityDisplayName, x => x.MapFrom(i => i.TranslatedDisplayName));
 
@@ -605,10 +619,9 @@ namespace TACHYON
 
             configuration.CreateMap<City, CityDto>()
                 .ForMember(x => x.HasPolygon, x => x.MapFrom(i => !i.Polygon.IsNullOrEmpty()))
-            .ForMember(x => x.DisplayName, x => x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName))
+            .ForMember(x => x.TranslatedDisplayName, x => x.MapFrom(i => i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName))
             .ForMember(x => x.CountyId, x => x.MapFrom(i => i.CountyId))
             .ForMember(x => x.Code, x => x.MapFrom(i => i.Code))
-            .ForMember(x => x.TranslatedDisplayName, x => x.MapFrom(i => i.CountyFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) == null ? i.DisplayName : i.CountyFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName))
             .ForMember(x => x.Latitude, x => x.MapFrom(i => i.Location.Y))
             .ForMember(x => x.Longitude, x => x.MapFrom(i => i.Location.X)).ReverseMap();
 
@@ -911,10 +924,10 @@ namespace TACHYON
                 .ForMember(dto => dto.StatusTitle, options => options.MapFrom(entity => entity.Status.ToString()))
                 .ForMember(dto => dto.NoteTypeTitle, options => options.MapFrom(entity => entity.NoteType.GetEnumDescription()))
                 .ForMember(dto => dto.GenerationDate, options => options.MapFrom(entity => entity.CreationTime))
-                .ForMember(dto => dto.ComanyName, options => options.MapFrom(entity => entity.Tenant.companyName));
+                .ForMember(dto => dto.ComanyName, options => options.MapFrom(entity => entity.Tenant.Name));
 
             configuration.CreateMap<InvoiceNote, InvoiceNoteInfoDto>()
-                .ForMember(dto => dto.ClientName ,options => options.MapFrom(entity=>entity.Tenant.Name))
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
                 .ForMember(dto => dto.ClientId, options => options.MapFrom(entity => entity.TenantId))
                 .ForMember(dto => dto.Notes, options => options.Ignore())
                 .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
@@ -1150,23 +1163,23 @@ namespace TACHYON
                 .ForMember(x => x.Items, x => x.MapFrom(i => i.Items));
 
             configuration.CreateMap<CreateOrEditDynamicInvoiceItemDto, DynamicInvoiceItem>();
-            
-           configuration.CreateMap<CreateOrEditDynamicInvoiceDto, DynamicInvoice>()
-               .ForMember(x => x.Items, x => x.Ignore())
-                .AfterMap(((dto, invoice) =>
-                {
-                    if (!dto.Id.HasValue) return;
+
+            configuration.CreateMap<CreateOrEditDynamicInvoiceDto, DynamicInvoice>()
+               .ForMember(x => x.Items, x => x.Ignore());
+               // .AfterMap(((dto, invoice) =>
+               // {
+               //     if (!dto.Id.HasValue) return;
                     
-                    foreach (var itemDto in dto.Items)
-                    {
-                        if (!itemDto.Id.HasValue) continue;
-                        var invoiceItem = invoice.Items.FirstOrDefault(x => x.Id == itemDto.Id);
-                        if (invoiceItem == null) continue;
-                        _Mapper.Map(itemDto, invoiceItem);
-                        invoiceItem.VatAmount = 0.15m * invoiceItem.Price;
-                        invoiceItem.TotalAmount = invoiceItem.Price + invoiceItem.VatAmount;
-                    }
-                }));
+               //     foreach (var itemDto in dto.Items)
+               //     {
+               //         if (!itemDto.Id.HasValue) continue;
+               //         var invoiceItem = invoice.Items.FirstOrDefault(x => x.Id == itemDto.Id);
+               //         if (invoiceItem == null) continue;
+               //         _Mapper.Map(itemDto, invoiceItem);
+               //         invoiceItem.VatAmount = 0.15m * invoiceItem.Price;
+               //         invoiceItem.TotalAmount = invoiceItem.Price + invoiceItem.VatAmount;
+               //     }
+               // }));
 
 
             configuration.CreateMap<CreateOrEditDedicatedInvoiceDto, DedicatedDynamicInvoice>()

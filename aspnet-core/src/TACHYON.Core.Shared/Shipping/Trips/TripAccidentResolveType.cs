@@ -13,5 +13,7 @@ namespace TACHYON.Shipping.Trips
         [Description("NoActionNeededResolve")]
         NoActionNeeded,
         CancelTrip,
+        [Description("ResolveWithoutActionResolve")]
+        ResolveWithoutAction
     }
 }

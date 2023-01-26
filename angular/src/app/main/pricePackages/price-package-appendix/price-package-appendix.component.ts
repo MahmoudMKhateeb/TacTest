@@ -57,19 +57,19 @@ export class PricePackageAppendixComponent extends AppComponentBase implements O
     });
   }
 
-    activate(id: number) {
-        this._appendicesServiceProxy.changeActivateStatus(id, true).subscribe(() => {
-            this.notify.success(this.l('ActivatedSuccessfully'));
-            this.getAllPricePackageAppendices();
-        });
-    }
+  activate(id: number) {
+    this._appendicesServiceProxy.changeActivateStatus(id, true).subscribe(() => {
+      this.notify.success(this.l('ActivatedSuccessfully'));
+      this.getAllPricePackageAppendices();
+    });
+  }
 
-    deActivate(id: number) {
-        this._appendicesServiceProxy.changeActivateStatus(id, false).subscribe(() => {
-            this.notify.info(this.l('DeActivatedSuccessfully'));
-            this.getAllPricePackageAppendices();
-        });
-    }
+  deActivate(id: number) {
+    this._appendicesServiceProxy.changeActivateStatus(id, false).subscribe(() => {
+      this.notify.info(this.l('DeActivatedSuccessfully'));
+      this.getAllPricePackageAppendices();
+    });
+  }
 
   getStatusDisplayName(status) {
     let displayName = this.statusList?.find((x) => x.key == status)?.value;

@@ -26,15 +26,21 @@ namespace TACHYON.Net.Sms.UnifonicSms
 
             var client =
                 new RestClient(
-                    $"http://basic.unifonic.com/rest/SMS/messages?SenderID={senderId}&Body={args.Text}&Recipient={args.Recipient}&AppSid={appSid}");
+                    $"https://el.cloud.unifonic.com/rest/SMS/messages?SenderID={senderId}&Body={args.Text}&Recipient={args.Recipient}&AppSid={appSid}");
+
+
             client.Timeout = -1;
+
             var request = new RestRequest(Method.POST);
+
             request.AddHeader("Accept", "application/json");
-            request.AddHeader("Authorization", "Basic Og==");
+
             var body = @"";
+
             request.AddParameter("text/plain", body, ParameterType.RequestBody);
-            //IRestResponse response = client.Execute(request);
-            var response = AsyncHelper.RunSync(() => client.ExecuteTaskAsync<UnifonicResponseRoot>(request));
+
+             var response = AsyncHelper.RunSync(() => client.ExecuteTaskAsync<UnifonicResponseRoot>(request));
+
             if (response.ErrorException != null)
             {
                 const string message =
@@ -42,6 +48,44 @@ namespace TACHYON.Net.Sms.UnifonicSms
                 var exception = new Exception(message, response.ErrorException);
                 throw exception;
             }
+
+
+           // Console.WriteLine(response.Content);
+
+
+           // client.Timeout = -1;
+           // var request = new RestRequest(Method.POST);
+           // request.AddHeader("Accept", "application/json");
+           // request.AddHeader("Authorization", "Basic Og==");
+           // var body = @"";
+           // request.AddParameter("text/plain", body, ParameterType.RequestBody);
+           // //IRestResponse response = client.Execute(request);
+           // var response = AsyncHelper.RunSync(() => client.ExecuteTaskAsync<UnifonicResponseRoot>(request));
+           // if (response.ErrorException != null)
+           // {
+           //     const string message =
+           //         "Error retrieving response from Unifonic SMS API.  Check inner details for more info.";
+           //     var exception = new Exception(message, response.ErrorException);
+           //     throw exception;
+           // }
+
+
+           //// var client = new RestClient($"https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=BmVfvt20uKVsutqH843ZmTfFoySYMl&SenderID=TACHYONHUB&Body=test fake msg 2&Recipient=970598541921&responseType=JSON");
+
+           // client.Timeout = -1;
+
+           // var request = new RestRequest(Method.POST);
+
+           // request.AddHeader("Accept", "application/json");
+
+           // var body = @"";
+
+           // request.AddParameter("text/plain", body, ParameterType.RequestBody);
+
+           // IRestResponse response = client.Execute(request);
+
+           // Console.WriteLine(response.Content);
+
         }
     }
 }

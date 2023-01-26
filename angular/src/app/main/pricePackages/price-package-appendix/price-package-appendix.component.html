@@ -47,26 +47,26 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
-                <dxi-column dataField="subject" caption="{{ l('Subject') }}"></dxi-column>
+              <dxi-column dataField="subject" caption="{{ l('Subject') }}"></dxi-column>
 
               <dxi-column dataField="editionName" caption="{{ l('Edition') }}"></dxi-column>
-                <dxi-column dataField="companyName" caption="{{ l('Company') }}"></dxi-column>
+              <dxi-column dataField="companyName" caption="{{ l('Company') }}"></dxi-column>
               <dxi-column dataField="contractNumber" caption="{{ l('ContractNumber') }}"></dxi-column>
               <dxi-column dataField="appendixNumber" caption="{{ l('AppendixNumber') }}"></dxi-column>
               <dxi-column dataField="Status" caption="{{ l('Status') }}" cellTemplate="cellTemplateStatuses" dataType="text"></dxi-column>
-              <dxi-column dataField="creationTime" caption="{{ l('CreationDate') }}" dataType="date" ></dxi-column>
-              <dxi-column dataField="isActive"  cellTemplate="cellTemplate_IsActive" caption="{{ l('IsActive') }}"></dxi-column>
+              <dxi-column dataField="creationTime" caption="{{ l('CreationDate') }}" dataType="date"></dxi-column>
+              <dxi-column dataField="isActive" cellTemplate="cellTemplate_IsActive" caption="{{ l('IsActive') }}"></dxi-column>
               <dxi-column dataField="numberOfPricePackages" alignment="center" caption="{{ l('NumberOfPricePackages') }}"></dxi-column>
-                <dxo-master-detail [enabled]="true" template="appendixDetails"></dxo-master-detail>
-                <div *dxTemplate="let options of 'appendixDetails'">
-                    <div class="master-detail-caption">{{ 'PricePackages' | localize }}</div>
-                    <app-appendix-detail-grid [appendixId]="options.data.id"></app-appendix-detail-grid>
-                </div>
+              <dxo-master-detail [enabled]="true" template="appendixDetails"></dxo-master-detail>
+              <div *dxTemplate="let options of 'appendixDetails'">
+                <div class="master-detail-caption">{{ 'PricePackages' | localize }}</div>
+                <app-appendix-detail-grid [appendixId]="options.data.id"></app-appendix-detail-grid>
+              </div>
 
-                <div *dxTemplate="let options of 'cellTemplate_IsActive'">
-                    <span *ngIf="options.data.isActive" class="badge badge-success badge-inline">{{ 'Yes' | localize }}</span>
-                    <span *ngIf="!options.data.isActive" class="badge badge-dark badge-inline">{{ 'No' | localize }}</span>
-                </div>
+              <div *dxTemplate="let options of 'cellTemplate_IsActive'">
+                <span *ngIf="options.data.isActive" class="badge badge-success badge-inline">{{ 'Yes' | localize }}</span>
+                <span *ngIf="!options.data.isActive" class="badge badge-dark badge-inline">{{ 'No' | localize }}</span>
+              </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
                   <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
@@ -111,12 +111,12 @@
                         >{{ l('Edit') }}</a
                       >
                     </li>
-                      <li *ngIf="options.data.isActive && isGranted('Pages.PricePackageAppendix.Activation')">
-                          <a (click)="deActivate(options.data.id)" class="dropdown-item">{{ l('Deactivate') }}</a>
-                      </li>
-                      <li *ngIf="!options.data.isActive && isGranted('Pages.PricePackageAppendix.Activation')">
-                          <a (click)="activate(options.data.id)" class="dropdown-item">{{ l('Activate') }}</a>
-                      </li>
+                    <li *ngIf="options.data.isActive && isGranted('Pages.PricePackageAppendix.Activation')">
+                      <a (click)="deActivate(options.data.id)" class="dropdown-item">{{ l('Deactivate') }}</a>
+                    </li>
+                    <li *ngIf="!options.data.isActive && isGranted('Pages.PricePackageAppendix.Activation')">
+                      <a (click)="activate(options.data.id)" class="dropdown-item">{{ l('Activate') }}</a>
+                    </li>
                   </ul>
                 </div>
               </div>

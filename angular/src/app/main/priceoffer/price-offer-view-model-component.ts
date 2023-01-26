@@ -37,8 +37,8 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
   Items: PriceOfferItem[] = [];
   isPostPriceOffer: boolean;
   isForDedicated: boolean;
-  ShipperValueOfGoods : Number;
-  CarrierInsuranceCoverage : Number;
+  ShipperValueOfGoods: Number;
+  CarrierInsuranceCoverage: Number;
   constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy) {
     super(injector);
     this.offerForEditOutput.priceOfferViewDto = new PriceOfferViewDto();

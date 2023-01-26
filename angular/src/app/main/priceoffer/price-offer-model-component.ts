@@ -53,8 +53,8 @@ export class PriceOfferModelComponent extends AppComponentBase {
   CreateSrUpdateActionInput: CreateSrUpdateActionInputDto = new CreateSrUpdateActionInputDto();
   AllActorsCarriers: SelectItemDto[];
   isForDedicated: boolean;
-  ShipperValueOfGoods : Number;
-  CarrierInsuranceCoverage : Number;
+  ShipperValueOfGoods: Number;
+  CarrierInsuranceCoverage: Number;
   hasMatchesPricePackage: boolean;
 
   constructor(
@@ -124,7 +124,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
         });
       }
       if (this.hasMatchesPricePackage) {
-          this.calculator();
+        this.calculator();
       }
       (this.offer.carrierActorId as any) = this.offer.carrierActorId?.toString();
       this.active = true;

@@ -86,7 +86,8 @@
               <th>{{ l('WaybillNumber') }}</th>
               <!--              <th>{{ l('Price') }}</th>-->
               <th>{{ l('Price') }} {{ l('SAR') }}</th>
-              <th>({{ l('Vat') }} {{ 15 }}%)</th>
+              <th>{{ l('VatTax') }}</th>
+              <th>{{ l('VatAmount') }}</th>
               <th>
                 {{ l('Total') }}
               </th>
@@ -110,8 +111,10 @@
                 <!--                <br *ngIf="row.price > 0"/>-->
                 <!--                <span *ngIf="row.price > 0"> {{ l('Total') }}: {{ row.price + row.price * 0.15 }} </span>-->
               </td>
-              <td>{{ row.price * 0.15 }} {{ l('SAR') }}</td>
-              <td>{{ row.price + row.price * 0.15 }} {{ l('SAR') }}</td>
+
+              <td>{{ row.vatTax }} {{ l('%') }}</td>
+              <td>{{ row.vatAmount }} {{ l('SAR') }}</td>
+              <td>{{ row.totalAmount }} {{ l('SAR') }}</td>
               <td>{{ row.description }}</td>
               <td>{{ getCityToDisplay(row.originCityId) }}</td>
               <td>{{ getCityToDisplay(row.destinationCityId) }}</td>
@@ -193,6 +196,15 @@
                   <span class="required-fileds"> *</span>
                 </label>
                 <input required type="number" class="form-control" name="price" id="price" [(ngModel)]="dataSourceForEdit.price" />
+              </div>
+            </div>
+            <div class="col-6 mb-4">
+              <div>
+                <label class="form-label" for="vatTax">
+                  {{ l('vatTax') }} {{ '%' }}
+                  <span class="required-fileds"> *</span>
+                </label>
+                <input required type="number" class="form-control" name="vatTax" id="vatTax" [(ngModel)]="dataSourceForEdit.vatTax" />
               </div>
             </div>
             <div class="col-6 mb-4">

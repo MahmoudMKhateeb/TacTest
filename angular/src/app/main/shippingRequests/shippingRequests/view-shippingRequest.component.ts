@@ -145,7 +145,6 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       return false;
     } else if (this.feature.isEnabled('App.TachyonDealer')) {
       //if Tachyon Dealer
-      console.log('true');
 
       return true;
     }
