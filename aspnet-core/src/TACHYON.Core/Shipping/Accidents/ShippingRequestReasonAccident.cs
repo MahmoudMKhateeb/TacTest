@@ -17,6 +17,12 @@ namespace TACHYON.Shipping.Accidents
         [StringLength(60, MinimumLength = 3)]
         public string Key { get; set; }
 
+        /// <summary>
+        /// if <para>IsTripImpactEnabled</para> enabled
+        /// this will take an effect for trip `Can not continue trip`
+        /// and the active point will stuck on `RoutPointStatus.Issue`
+        /// </summary>
+        public bool IsTripImpactEnabled { get; set; }
         public ICollection<ShippingRequestReasonAccidentTranslation> Translations { get; set; }
     }
 }

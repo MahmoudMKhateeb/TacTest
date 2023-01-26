@@ -334,7 +334,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
 
   canDoActionsOnPoints(point: TrackingRoutePointDto): boolean {
     //prevent any Points Actions if the trip hasAccident
-    if (this.trip.hasAccident) {
+    if (this.trip.hasAccident && this.trip.isTripImpactEnabled) {
       return false;
     }
     //singleDrop and there is available transactions

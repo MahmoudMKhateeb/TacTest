@@ -590,6 +590,20 @@ namespace TACHYON
                  .ForPath(x => x.ResolveListDto.ResolveTypeTitle, x => x.MapFrom(i => i.Item2.ResolveType.HasValue ? i.Item2.ResolveType.Value.GetEnumDescription() : null))
                  .AfterMap((src, dto) => _Mapper.Map(src.Item1, dto))
                  .ReverseMap();
+
+            configuration.CreateMap<ShippingRequestTripAccident, TripAccidentListDto>()
+                .ForMember(x => x.Reason,
+                    x => x.MapFrom(i =>
+                        i.ResoneFK.Translations
+                            .FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).Name ??
+                        i.ResoneFK.Key))
+                .ForMember(x => x.TripId, x => x.MapFrom(i => i.RoutPointFK.ShippingRequestTripId))
+                .ForMember(x => x.IsPointStopped, x => x.MapFrom(i => i.RoutPointFK.Status == RoutePointStatus.Issue))
+                .ForMember(x => x.ResolveListDto, x => x.MapFrom(i => i.Resolve));
+            
+            configuration.CreateMap<ShippingRequestTripAccidentResolve, TripAccidentResolveListDto>()
+                .ForMember(x=> x.IsAppliedResolve,x=> x.MapFrom(i=> i.IsApplied))
+                .ForMember(x=> x.ResolveTypeTitle,x=> x.MapFrom(i=> i.ResolveType.GetEnumDescription()));
             configuration.CreateMap<CitiesTranslation, GetCitiesTranslationForViewDto>()
                 .ForMember(x => x.CityDisplayName, x => x.MapFrom(i => i.TranslatedDisplayName));
 

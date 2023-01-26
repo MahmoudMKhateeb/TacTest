@@ -30,5 +30,6 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         [DefaultValue(false)]
         public bool ApprovedByCarrier { get; set; }
 
+        public string Description { get; set; }
     }
 }

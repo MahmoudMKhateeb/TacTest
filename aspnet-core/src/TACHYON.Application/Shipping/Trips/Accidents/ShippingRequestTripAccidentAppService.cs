@@ -7,6 +7,8 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -42,7 +44,7 @@ namespace TACHYON.Shipping.Trips.Accidents
         private readonly IRepository<ShippingRequestTrip> _TripRepository;
         private readonly IRepository<ShippingRequest, long> _ShippingRequestRepository;
         private readonly IRepository<ShippingRequestTripAccidentResolve> _ResolveRepository;
-        private readonly IRepository<ShippingRequestReasonAccidentTranslation> _shippingRequestReasonAccidentRepository;
+        private readonly IRepository<ShippingRequestReasonAccidentTranslation> _shippingRequestReasonAccidentTranslationRepository;
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<User,long> _userRepository;
         private readonly IRepository<Truck,long> _truckRepository;
@@ -51,6 +53,7 @@ namespace TACHYON.Shipping.Trips.Accidents
         private readonly IAppNotifier _appNotifier;
         private readonly UserManager _userManager;
         private readonly IShippingRequestsTripAppService _tripAppService;
+        private readonly IRepository<ShippingRequestReasonAccident> _shippingRequestReasonAccidentRepository;
 
         public ShippingRequestTripAccidentAppService(
             IRepository<ShippingRequestTripAccident> ShippingRequestTripAccidentRepository,
@@ -58,7 +61,7 @@ namespace TACHYON.Shipping.Trips.Accidents
             IRepository<ShippingRequestTrip> TripRepository,
             IRepository<ShippingRequestTripAccidentResolve> ResolveRepository,
             IRepository<ShippingRequest, long> ShippingRequestRepository,
-            IRepository<ShippingRequestReasonAccidentTranslation> shippingRequestReasonAccidentRepository,
+            IRepository<ShippingRequestReasonAccidentTranslation> shippingRequestReasonAccidentTranslationRepository,
             ShippingRequestDriverManager shippingRequestDriverManager,
             CommonManager CommonManager,
             UserManager userManager,
@@ -66,7 +69,8 @@ namespace TACHYON.Shipping.Trips.Accidents
             IRepository<Tenant> tenantRepository,
             IRepository<User, long> userRepository,
             IRepository<Truck, long> truckRepository,
-            IShippingRequestsTripAppService tripAppService)
+            IShippingRequestsTripAppService tripAppService,
+            IRepository<ShippingRequestReasonAccident> shippingRequestReasonAccidentRepository)
         {
             _ShippingRequestTripAccidentRepository = ShippingRequestTripAccidentRepository;
             _RoutPointRepository = RoutPointRepository;
@@ -74,7 +78,7 @@ namespace TACHYON.Shipping.Trips.Accidents
             _TripRepository = TripRepository;
             _ResolveRepository = ResolveRepository;
             _ShippingRequestRepository = ShippingRequestRepository;
-            _shippingRequestReasonAccidentRepository = shippingRequestReasonAccidentRepository;
+            _shippingRequestReasonAccidentTranslationRepository = shippingRequestReasonAccidentTranslationRepository;
             _shippingRequestDriverManager = shippingRequestDriverManager;
             _userManager = userManager;
             _appNotifier = appNotifier;
@@ -82,11 +86,11 @@ namespace TACHYON.Shipping.Trips.Accidents
             _userRepository = userRepository;
             _truckRepository = truckRepository;
             _tripAppService = tripAppService;
+            _shippingRequestReasonAccidentRepository = shippingRequestReasonAccidentRepository;
         }
         // [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents)]
 
-        public async Task<PagedResultDto<ShippingRequestTripAccidentListDto>> GetAll(
-            GetAllForShippingRequestTripAccidentFilterInput input)
+        public async Task<LoadResult> GetAll(LoadOptionsInput input)
         {
             CheckIfCanAccessService(true, AppFeatures.Carrier, AppFeatures.TachyonDealer, AppFeatures.Shipper);
             DisableTenancyFilters();
@@ -97,41 +101,15 @@ namespace TACHYON.Shipping.Trips.Accidents
             var accidents = _ShippingRequestTripAccidentRepository
                 .GetAll()
                 .AsNoTracking()
-                .Include(t => t.RoutPointFK)
-                .ThenInclude(f => f.FacilityFk)
-                .ThenInclude(c => c.CityFk)
-                .Include(r => r.ResoneFK)
-                .ThenInclude(t => t.Translations)
-                .Where(x => x.RoutPointFK.ShippingRequestTripId == input.TripId)
-                .WhereIf(input.PointId.HasValue, x => x.PointId == input.PointId)
-                .WhereIf(input.IsResolve.HasValue, x => x.IsResolve == input.IsResolve)
                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier),
                     x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper),
                     x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
                 .WhereIf(isCurrentUserDriver,
                     x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
-                .OrderBy(input.Sorting ?? "id desc");
+                .ProjectTo<TripAccidentListDto>(AutoMapperConfigurationProvider);
 
-            var myQuery = await (from accident in accidents.PageBy(input)
-                from resolve in _ResolveRepository.GetAll().Where(x => x.AccidentId == accident.Id).DefaultIfEmpty()
-                select new Tuple<ShippingRequestTripAccident, TripAccidentResolveListDto>(accident, new TripAccidentResolveListDto()
-                {
-                    Id = resolve.Id,
-                    IsAppliedResolve = resolve != null && resolve.IsApplied,
-                    ResolveType = resolve.ResolveType,
-                    ApprovedByCarrier = resolve.ApprovedByCarrier,
-                    ApprovedByShipper = resolve.ApprovedByShipper,
-                })).ToListAsync();
-            var myResult = myQuery.GroupBy(x => x.Item1.Id)
-                .Select(x => x.FirstOrDefault(i => !i.Item2.IsAppliedResolve) ?? x.FirstOrDefault())
-                .ToList();
-
-            return new PagedResultDto<ShippingRequestTripAccidentListDto>()
-            {
-                Items = ObjectMapper.Map<List<ShippingRequestTripAccidentListDto>>(myResult),
-                TotalCount = await accidents.CountAsync()
-            };
+            return await LoadResultAsync(accidents, input.LoadOptions);
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Edit)]
@@ -219,21 +197,18 @@ namespace TACHYON.Shipping.Trips.Accidents
         public async Task CreateOrEditResolve(CreateOrEditShippingRequestTripAccidentResolveDto input)
         {
             DisableTenancyFilters();
-            var accident = await _ShippingRequestTripAccidentRepository
-                .GetAll()
-                .AsNoTracking()
-                .Include(t => t.RoutPointFK)
-                .ThenInclude(T => T.ShippingRequestTripFk)
-                .ThenInclude(r => r.ShippingRequestFk)
-                .Where(x => x.Id == input.AccidentId).FirstAsync();
+            bool isAccidentResolved = await _ShippingRequestTripAccidentRepository
+                .GetAll().Where(x => x.Id == input.AccidentId)
+                .Select(x=> x.IsResolve).SingleAsync();
 
-            if (accident.IsResolve)
+            
+            if (isAccidentResolved)
                 throw new UserFriendlyException(L("CanNotCreateOrEditResolveForAlreadyResolvedAccident"));
 
 
             if (!input.Id.HasValue)
             {
-                await CreateResolve(input, accident);
+                await CreateResolve(input);
                 return;
             }
 
@@ -292,6 +267,13 @@ namespace TACHYON.Shipping.Trips.Accidents
             await CheckTripOrShippingRequestHasAnyAccident(trip.ShippingRequestId,trip.Id,tripAccidentResolves.Select(x=> x.Id).ToArray());
         }
 
+        public async Task ContinueTrip(int accidentId)
+        {
+            DisableTenancyFilters();
+            var accident = await _ShippingRequestTripAccidentRepository.FirstOrDefaultAsync(accidentId);
+            accident.ForceContinueTripEnabled = true;
+            _RoutPointRepository.Update(accident.PointId, x => x.Status = accident.LastPointStatus);
+        }
         
         private async Task HandleResolve(ShippingRequestTripAccidentResolve resolve, ShippingRequestTrip trip
             ,bool shipperEnabled = false, bool carrierEnabled = false)
@@ -308,6 +290,7 @@ namespace TACHYON.Shipping.Trips.Accidents
                 case TripAccidentResolveType.ChangeDriverAndTruck:
                     await ChangeDriverAndTruck(trip, resolve);
                     break;
+                case TripAccidentResolveType.ResolveWithoutAction:
                 case TripAccidentResolveType.NoActionNeeded:
                     // there is no action here ... we don't need any update on the trip
                     break;
@@ -451,7 +434,14 @@ namespace TACHYON.Shipping.Trips.Accidents
             var accidentId = await _ShippingRequestTripAccidentRepository.InsertAndGetIdAsync(accident);
             trip.HasAccident = true;
             request.HasAccident = true;
-            await _shippingRequestDriverManager.SetRoutStatusTransition(routPoint, RoutePointStatus.Issue);
+            accident.LastPointStatus = routPoint.Status;
+            bool isTripImpactEnabled = await _shippingRequestReasonAccidentRepository.GetAll()
+                .Where(x => x.Id == accident.ReasoneId)
+                .Select(x => x.IsTripImpactEnabled).SingleAsync();
+            
+            if (isTripImpactEnabled) 
+                await _shippingRequestDriverManager.SetRoutStatusTransition(routPoint, RoutePointStatus.Issue);
+            
             await SentNotification(routPoint, accidentId);
         }
 
@@ -497,18 +487,13 @@ namespace TACHYON.Shipping.Trips.Accidents
         
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents_Resolve_Create)]
-        private async Task CreateResolve(CreateOrEditShippingRequestTripAccidentResolveDto input,
-            ShippingRequestTripAccident accident)
+        private async Task CreateResolve(CreateOrEditShippingRequestTripAccidentResolveDto input)
         {
-            var document =
-                await _CommonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(input),
-                    AbpSession.TenantId);
-            ObjectMapper.Map(document, input);
-
-            var resolveIssue = ObjectMapper.Map<ShippingRequestTripAccidentResolve>(input);
-            await _ResolveRepository.InsertAsync(resolveIssue);
             
-            await _ShippingRequestTripAccidentRepository.UpdateAsync(accident);
+            var resolveIssue = ObjectMapper.Map<ShippingRequestTripAccidentResolve>(input);
+            int createdResolveId = await _ResolveRepository.InsertAndGetIdAsync(resolveIssue);
+            
+            _ShippingRequestTripAccidentRepository.Update(resolveIssue.AccidentId,x=> x.ResolveId = createdResolveId);
 
         }
 
@@ -647,7 +632,7 @@ namespace TACHYON.Shipping.Trips.Accidents
         {
             if (input.ReasoneId != null)
             {
-                var reason = await _shippingRequestReasonAccidentRepository
+                var reason = await _shippingRequestReasonAccidentTranslationRepository
                     .FirstOrDefaultAsync(x => x.CoreId == input.ReasoneId);
 
                 if (reason.Name.ToLower().Contains(TACHYONConsts.OthersDisplayName.ToLower()) &&

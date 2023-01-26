@@ -3178,5 +3178,14 @@
     <text name="viewAttendance">View attendance</text>
     <text name="AllNumberOfDays">All number of days</text>
     <text name="PricePerDay">Price per day</text>
+    <text name="ClickRowToViewActions">Select a row by clicking on it to view actions if available</text>
+    <text name="ContinueTripAndResolveLater">Continue trip and resolve later</text>
+    <text name="UpdateResolve">Update Resolve</text>
+    <text name="ResolvingAction">ResolvingAction</text>
+    <text name="ResolveWithoutActionResolve">Resolve without action</text>
+    <text name="NoActionNeeded">No Action Needed</text>
+    <text name="TripImpact">Trip Impact</text>
+    <text name="CanNotContinueTripTip">if trip impact is enabled the trip will stopped once has accident with this reason</text>
+    <text name="TripImpactEnabled">Trip Impact Enabled</text>
 	</texts>
 </localizationDictionary>

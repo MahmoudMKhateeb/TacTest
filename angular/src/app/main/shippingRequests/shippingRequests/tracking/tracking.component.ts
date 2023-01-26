@@ -132,7 +132,6 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
       trip.isApproveCancledByCarrier = item.isApproveCancledByCarrier;
       trip.isApproveCancledByShipper = item.isApproveCancledByShipper;
       trip.status = item.status;
-      this.modelIncident.getAll(trip);
     }
   }
 

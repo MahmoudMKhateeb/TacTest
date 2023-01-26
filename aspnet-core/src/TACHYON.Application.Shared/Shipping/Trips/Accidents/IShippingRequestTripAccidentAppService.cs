@@ -1,8 +1,10 @@
 ﻿using Abp.Application.Services.Dto;
+using DevExtreme.AspNet.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Shipping.Accidents.Dto;
 using TACHYON.Shipping.Trips.Accidents.Dto;
@@ -11,7 +13,7 @@ namespace TACHYON.Shipping.Trips.Accidents
 {
     public interface IShippingRequestTripAccidentAppService
     {
-        Task<PagedResultDto<ShippingRequestTripAccidentListDto>> GetAll(GetAllForShippingRequestTripAccidentFilterInput input);
+        Task<LoadResult> GetAll(LoadOptionsInput input);
 
         Task CreateOrEdit(CreateOrEditShippingRequestTripAccidentDto input);
         Task<CreateOrEditShippingRequestTripAccidentDto> GetForEdit(EntityDto input);

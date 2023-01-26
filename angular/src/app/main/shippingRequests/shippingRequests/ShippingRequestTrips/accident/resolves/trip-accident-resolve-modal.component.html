@@ -20,47 +20,101 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-group" *ngIf="isDriverRequired()">
-            <label for="driversDropDownList"> {{ l('ChangeDriver') }}<span class="text-danger">*</span></label>
+          <div class="row mb-5">
+            <div class="col-md-4">
 
-            <div
-              [ngClass]="{
-                'spinner spinner-success spinner-right mr-1 ml-1': driversLoading
-              }"
-            >
-              <select
-                [disabled]="driversLoading || viewModeEnabled"
-                [required]="isDriverRequired()"
-                [(ngModel)]="resolve.driverId"
-                name="driverId"
-                class="form-control"
-                id="driversDropDownList"
-              >
-                <option [value]="undefined" selected disabled>{{ l('SelectADriver') }}</option>
-                <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.displayName }}</option>
-              </select>
+                <label class="pr-3" for="driverCheckbox"> {{ l('ChangeDriver') }}</label>
+                <dx-check-box (onValueChanged)="validateChangeDriverOption()" [disabled]="viewModeEnabled" id="driverCheckbox" [(value)]="changeDriverEnabled"></dx-check-box>
+
+            </div>
+
+            <div class="col-md-8">
+              <div class="form-group">
+                <div
+                  [ngClass]="{
+                    'spinner spinner-success spinner-right mr-1 ml-1': driversLoading
+                  }"
+                >
+                  <select
+                    [disabled]="driversLoading || viewModeEnabled || !changeDriverEnabled"
+                    [required]="changeDriverEnabled"
+                    [(ngModel)]="resolve.driverId"
+                    name="driverId"
+                    class="form-control"
+                    id="driversDropDownList"
+                  >
+                    <option [value]="undefined" selected disabled>{{ l('SelectADriver') }}</option>
+                    <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.displayName }}</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="form-group" *ngIf="isTruckRequired()">
-            <label for="trucksDropDownList"> {{ l('ChangeTruck') }}<span class="text-danger">*</span></label>
-            <div
-              [ngClass]="{
-                'spinner spinner-success spinner-right mr-1 ml-1': trucksLoading
-              }"
-            >
-              <select
-                [disabled]="trucksLoading || viewModeEnabled"
-                [required]="isTruckRequired()"
-                [(ngModel)]="resolve.truckId"
-                name="truckId"
-                class="form-control"
-                id="trucksDropDownList"
-              >
-                <option [value]="undefined" selected disabled>{{ l('SelectATruck') }}</option>
-                <option *ngFor="let truck of trucks" [value]="truck.id">{{ truck.displayName }}</option>
-              </select>
+
+          <div class="row mb-5">
+            <div class="col-md-4">
+
+                <label class="pr-3" for="truckCheckbox"> {{ l('ChangeTruck') }}</label>
+                <dx-check-box id="truckCheckbox" [disabled]="viewModeEnabled" (onValueChanged)="validateChangeTruckOption()" [(value)]="changeTruckEnabled"></dx-check-box>
+
+            </div>
+
+            <div class="col-md-8">
+              <div class="form-group">
+                <div
+                  [ngClass]="{
+                    'spinner spinner-success spinner-right mr-1 ml-1': trucksLoading
+                  }"
+                >
+                  <select
+                    [disabled]="trucksLoading || viewModeEnabled || !changeTruckEnabled"
+                    [required]="changeTruckEnabled"
+                    [(ngModel)]="resolve.truckId"
+                    name="truckId"
+                    class="form-control"
+                    id="trucksDropDownList"
+                  >
+                    <option [value]="undefined" selected disabled>{{ l('SelectATruck') }}</option>
+                    <option *ngFor="let truck of trucks" [value]="truck.id">{{ truck.displayName }}</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
+
+
+
+            <div class="row mb-5">
+                <div class="col-md-4">
+
+                    <label class="pr-3" for="resolveWithoutActionCheckbox"> {{ l('ResolveWithoutAction') }}</label>
+                    <dx-check-box [disabled]="viewModeEnabled" id="resolveWithoutActionCheckbox" (onValueChanged)="validateResolveWithoutActionOption()" [(value)]="resolveWithoutActionEnabled"></dx-check-box>
+
+                </div>
+
+                <div class="col-md-8">
+                    <input [disabled]="!resolveWithoutActionEnabled || viewModeEnabled" [minlength]="resolveWithoutActionEnabled ? 3 : 0" [(ngModel)]="resolve.description" [required]="resolveWithoutActionEnabled" type="text" class="form-control" name="resolveDescription" />
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-md-4">
+
+                    <label class="pr-3" for="cancelTripCheckbox"> {{ l('CancelTrip') }}</label>
+                    <dx-check-box id="cancelTripCheckbox" [disabled]="viewModeEnabled" (onValueChanged)="validateCancelTripOption();" [(value)]="cancelTripEnabled"></dx-check-box>
+
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-md-4">
+
+                    <label class="pr-3" for="noActionNeededCheckbox"> {{ l('NoActionNeeded') }}</label>
+                    <dx-check-box id="noActionNeededCheckbox" [disabled]="viewModeEnabled" (onValueChanged)="validateNoActionNeededOption();" [(value)]="noActionNeededEnabled"></dx-check-box>
+
+                </div>
+            </div>
+
         </div>
 
         <div class="modal-footer">
@@ -69,7 +123,7 @@
             *ngIf="!viewModeEnabled"
             type="submit"
             class="btn btn-primary"
-            [disabled]="!Form.form.valid"
+            [disabled]="!Form.form.valid && !cancelTripEnabled && !noActionNeededEnabled"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot' | localize)"
           >

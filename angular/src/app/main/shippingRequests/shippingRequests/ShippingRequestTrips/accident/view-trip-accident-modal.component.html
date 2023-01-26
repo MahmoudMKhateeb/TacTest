@@ -14,9 +14,6 @@
         <h4 class="modal-title">
           <span>{{ l('TripIncident') }}</span>
         </h4>
-        <button type="button" class="close" (click)="close()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
       </div>
       <div class="modal-body">
         <div class="content d-flex flex-column flex-column-fluid">
@@ -24,178 +21,94 @@
             <div class="card card-custom">
               <div>
                 <div class="row align-items-center">
-                  <!--<Primeng-Datatable-Start>-->
-                  <div class="primeng-datatable-container w-100 p-1" [busyIf]="primengTableHelper.isLoading">
-                    <p-table
-                      #dataTable
-                      [value]="primengTableHelper.records"
-                      rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-                      [paginator]="false"
-                      [lazy]="true"
-                      [scrollable]="true"
-                      (onLazyLoad)="getAccidents($event)"
-                      ScrollWidth="100%"
-                      [responsive]="primengTableHelper.isResponsive"
-                      [resizableColumns]="primengTableHelper.resizableColumns"
-                    >
-                      <ng-template pTemplate="header">
-                        <tr>
-                          <th>
-                            {{ l('Actions') }}
-                          </th>
-                          <th pSortableColumn="CreationTime">
-                            {{ l('CreationTime') }}
-                            <p-sortIcon field="CreationTime"></p-sortIcon>
-                          </th>
-                          <th
-                            *ngIf="tripHasAnyAccidentResolveNotApplied || (tripHasAnyAccidentWithoutResolve && isTachyonDealerOrHost)"
-                            style="width: 200px"
-                          >
-                            {{ l('ResolveActions') }}
-                          </th>
-                          <th>
-                            {{ l('ResolveStatus') }}
-                          </th>
-                          <th pSortableColumn="ReasonId">
-                            {{ l('Reason') }}
-                            <p-sortIcon field="ReasonId"></p-sortIcon>
-                          </th>
-                        </tr>
-                      </ng-template>
-                      <ng-template pTemplate="body" let-record="$implicit">
-                        <tr>
-                          <td>
-                            <div class="btn-group dropdown" dropdown container="body">
-                              <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                                <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                              </button>
-                              <ul class="dropdown-menu" *dropdownMenu>
-                                <li>
-                                  <a
-                                    href="javascript:;"
-                                    *ngIf="permission.isGranted('Pages.ShippingRequest.Accidents.Edit') && this.Trip.status != 3"
-                                    class="dropdown-item"
-                                    (click)="EditTripAccidentModal.show(record.TripId, record.id)"
-                                    >{{ l('Edit') }}</a
-                                  >
-                                </li>
-                                <li>
-                                  <a href="javascript:;" class="dropdown-item" (click)="AddTripAccidentCommentModal.show(record.id)">{{
-                                    l('Comments')
-                                  }}</a>
-                                </li>
-                                <li>
-                                  <a href="javascript:;" class="dropdown-item" (click)="viewAccidentDetails.show(record.id)">{{ l('View') }}</a>
-                                </li>
-                              </ul>
-                            </div>
-                          </td>
+                    <p>{{'ClickRowToViewActions' | localize}}</p>
+                  <dx-data-grid
+                    id="gridContainer"
+                    [dataSource]="incidentsDataSource"
+                    keyExpr="Id"
+                    (onSelectionChanged)="fillCurrentIncident()"
+                    [(selectedRowKeys)]="selectedIncidents"
+                    [showBorders]="true"
+                  >
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxo-paging [pageSize]="10"></dxo-paging>
+                    <dxo-pager [visible]="true" [allowedPageSizes]="[5, 10, 15, 20]" [showPageSizeSelector]="true" [showNavigationButtons]="true">
+                    </dxo-pager>
+                    <dxi-column
+                      cellTemplate="cellTemplateActions"
+                      [allowFiltering]="false"
+                      [allowSorting]="false"
+                      [allowEditing]="false"
+                      [editorOptions]="{ visible: false }"
+                      [width]="70"
+                      caption="{{ l('Actions') }}"
+                    ></dxi-column>
+                    <dxi-column dataField="creationTime" cellTemplate="creationTimeTemplate" caption="{{ l('CreationTime') }}"></dxi-column>
+                    <dxi-column
+                      dataField="resolveListDto.resolveTypeTitle"
+                      caption="{{ l('ResolvingAction') }}"
+                      cellTemplate="resolveTypeTemplate"
+                    ></dxi-column>
+                    <dxi-column
+                      dataField="resolveListDto.resolveStatus"
+                      cellTemplate="resolveStatusTemplate"
+                      caption="{{ l('ResolveStatus') }}"
+                    ></dxi-column>
+                    <dxi-column dataField="reason" caption="{{ l('Reason') }}"></dxi-column>
 
-                          <td>
-                            <span class="ui-column-title"> {{ l('CreationTime') }}</span>
-                            <span>{{ record.creationTime | momentFormat: 'L' }}</span>
-                          </td>
-                          <td
-                            *ngIf="tripHasAnyAccidentResolveNotApplied || (tripHasAnyAccidentWithoutResolve && isTachyonDealerOrHost)"
-                            style="width: 200px"
-                          >
-                            <div
-                              class="btn-group dropdown"
-                              dropdown
-                              container="body"
-                              *ngIf="canResolveAccident(record) && !(!record.resolveListDto.id && (isShipper || isCarrier))"
+                    <div *dxTemplate="let options of 'resolveStatusTemplate'">
+                      {{ options.data?.resolveListDto?.resolveStatus | localize }}
+                    </div>
+                    <div *dxTemplate="let options of 'creationTimeTemplate'">
+                      {{ options.data.creationTime | momentFormat: 'DD/MMM/YYYY' }}
+                    </div>
+                    <div *dxTemplate="let options of 'resolveTypeTemplate'">
+                      {{ options.data?.resolveListDto?.resolveTypeTitle | localize }}
+                    </div>
+                    <div *dxTemplate="let options of 'cellTemplateActions'">
+                      <div class="btn-group dropdown" dropdown container="body">
+                        <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
+                          <span class="svg-icon svg-icon-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24"></rect>
+                                <path
+                                  d="M5,8.6862915 L5,5 L8.6862915,5 L11.5857864,2.10050506 L14.4852814,5 L19,5 L19,9.51471863 L21.4852814,12 L19,14.4852814 L19,19 L14.4852814,19 L11.5857864,21.8994949 L8.6862915,19 L5,19 L5,15.3137085 L1.6862915,12 L5,8.6862915 Z M12,15 C13.6568542,15 15,13.6568542 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,13.6568542 10.3431458,15 12,15 Z"
+                                  fill="#000000"
+                                ></path>
+                              </g>
+                            </svg>
+                          </span>
+                        </a>
+
+                        <ul class="dropdown-menu" *dropdownMenu>
+                          <li>
+                            <a
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.ShippingRequest.Accidents.Edit') && this.currentTrip.status != 3"
+                              class="dropdown-item"
+                              (click)="EditTripAccidentModal.show(currentTrip.id, options.data.id)"
+                              >{{ l('Edit') }}</a
                             >
-                              <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                                {{ record.resolveListDto.resolveTypeTitle ?? 'Resolve' | localize }}
-                              </button>
-                              <!--  Start Of Tachyon Dealer Dropdown-->
-                              <div
-                                *ngIf="isGrantedAny('Pages.ShippingRequest.Accidents.Resolve.Create', 'Pages.ShippingRequest.Accidents.Resolve.Edit')"
-                              >
-                                <ul class="dropdown-menu" *dropdownMenu>
-                                  <li>
-                                    <a href="javascript:;" class="dropdown-item" (click)="TripAccidentResolveModal.show(this.changeDriver, record)">{{
-                                      l('ChangeDriverResolve')
-                                    }}</a>
-                                  </li>
-                                  <li>
-                                    <a href="javascript:;" class="dropdown-item" (click)="TripAccidentResolveModal.show(this.changeTruck, record)">{{
-                                      l('ChangeTruckResolve')
-                                    }}</a>
-                                  </li>
-                                  <li>
-                                    <a
-                                      href="javascript:;"
-                                      class="dropdown-item"
-                                      (click)="TripAccidentResolveModal.show(this.changeDriverAndTruck, record)"
-                                      >{{ l('ChangeDriverAndTruckResolve') }}</a
-                                    >
-                                  </li>
-                                  <li>
-                                    <a href="javascript:;" class="dropdown-item" (click)="resolveWithNoAction(record)">{{
-                                      l('NoActionNeededResolve')
-                                    }}</a>
-                                  </li>
-                                  <li>
-                                    <a href="javascript:;" class="dropdown-item" (click)="resolveWithCancelTrip(record)">{{ l('CancelTrip') }}</a>
-                                  </li>
-                                </ul>
-                              </div>
-                              <!--  End Of Tachyon Dealer Dropdown-->
-                              <!--  Start Of Shipper&Carrie Dropdown-->
-                              <div *ngIf="isCarrier || isShipper">
-                                <ul class="dropdown-menu" *dropdownMenu>
-                                  <li *ngIf="canViewResolve(record)">
-                                    <a href="javascript:;" class="dropdown-item" (click)="TripAccidentResolveModal.showForView(record)">{{
-                                      l('ViewResolve')
-                                    }}</a>
-                                  </li>
-                                  <li
-                                    *ngIf="
-                                      record.resolveListDto.id &&
-                                      ((isShipper && !record.resolveListDto.approvedByShipper) ||
-                                        (isCarrier && !record.resolveListDto.approvedByCarrier))
-                                    "
-                                  >
-                                    <a href="javascript:;" class="dropdown-item" (click)="approveResolve(record)">{{ l('ApproveResolve') }}</a>
-                                  </li>
-                                </ul>
-                              </div>
-                              <!--  End Of Shipper&Carrier Dropdown-->
-                            </div>
-                          </td>
-                          <td>
-                            {{ record.resolveListDto.resolveStatus | localize }}
-                          </td>
-
-                          <td>
-                            <span class="ui-column-title"> {{ l('Reason') }}</span>
-                            {{ record.reason }}
-                            <a *ngIf="record.documentName" (click)="downloadDocument(record.id)">
-                              <i class="flaticon-download justify-content-center"></i>
-                            </a>
-                          </td>
-                        </tr>
-                      </ng-template>
-                    </p-table>
-                    <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0 && IsStartSearch">
-                      {{ l('NoData') }}
+                          </li>
+                          <li>
+                            <a href="javascript:;" class="dropdown-item" (click)="AddTripAccidentCommentModal.show(options.data.id)">{{
+                              l('Comments')
+                            }}</a>
+                          </li>
+                          <li>
+                            <a href="javascript:;" class="dropdown-item" (click)="viewAccidentDetails.show(options.data.id)">{{ l('View') }}</a>
+                          </li>
+                          <li
+                            [busyIf]="continueTripLoading"
+                            *ngIf="permission.isGranted('Pages.ShippingRequest.Accidents.Edit') && currentIncident.isPointStopped"
+                          >
+                            <a href="javascript:;" class="dropdown-item" (click)="continueTrip()">{{ l('ContinueTripAndResolveLater') }}</a>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
-                    <div class="primeng-paging-container">
-                      <p-paginator
-                        [rows]="defaultRecordsCountPerPage"
-                        #paginator
-                        (onPageChange)="getAccidents($event)"
-                        [totalRecords]="primengTableHelper.totalRecordsCount"
-                        [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
-                      >
-                      </p-paginator>
-                      <span class="total-records-count">
-                        {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
-                      </span>
-                    </div>
-                  </div>
-                  <!--<Primeng-Datatable-End>-->
+                  </dx-data-grid>
                 </div>
               </div>
             </div>
@@ -204,20 +117,54 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="close()">{{ l('Close') }}</button>
-        <button
-          *ngIf="Trip.status == 1 && feature.isEnabled('App.TachyonDealer') && tripHasAnyAccidentResolveNotApplied"
-          type="button"
-          class="btn btn-danger"
-          [buttonBusy]="saving"
-          [busyText]="l('SavingWithThreeDot')"
-          (click)="enforceChange(Trip.id)"
-        >
-          {{ l('EnforceChange') }}
-        </button>
+        <!--    Carrier & Shipper Resolve Actions-->
+        <div *ngIf="isShipper || isCarrier">
+          <button
+            *ngIf="currentIncident?.resolveListDto?.id"
+            type="button"
+            class="btn btn-primary"
+            (click)="TripAccidentResolveModal.showForView(currentIncident)"
+          >
+            {{ l('ViewResolve') }}
+          </button>
+
+            <button
+                *ngIf="canApproveResolve()"
+                type="button"
+                class="btn btn-primary"
+                (click)="approveResolve()"
+                [buttonBusy]="saving"
+                [busyText]="l('SavingWithThreeDot' | localize)"
+            >
+                <i class="fa fa-save"></i> <span>{{ 'ApproveChange' | localize }}</span>
+            </button>
+        </div>
+
+        <!--   Tachyon Dealer Resolve Actions-->
+        <div *ngIf="isTachyonDealerOrHost">
+          <button
+            (click)="TripAccidentResolveModal.show(currentIncident)"
+            *ngIf="isTachyonDealer && currentIncident?.id && !currentIncident?.isResolve"
+            type="button"
+            class="btn btn-primary btn-wide"
+          >
+            {{ currentIncident?.resolveListDto?.id ? 'UpdateResolve' : ('ResolveIncident' | localize) }}
+          </button>
+          <button
+            *ngIf="currentTrip.status == 1 && currentIncident?.resolveListDto?.id && !currentIncident?.isResolve"
+            type="button"
+            class="btn btn-danger"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+            (click)="enforceChange(currentTrip.id)"
+          >
+            {{ l('EnforceChange') }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
-  <trip-accident-modal #EditTripAccidentModal (modalSave)="refreshTable()" [Trip]="Trip"></trip-accident-modal>
+  <trip-accident-modal #EditTripAccidentModal (modalSave)="refreshTable()" [Trip]="currentTrip"></trip-accident-modal>
   <app-view-details-accident-modal #viewAccidentDetails [allReasons]="allReasons"></app-view-details-accident-modal>
   <app-add-accident-comment-modal #AddTripAccidentCommentModal></app-add-accident-comment-modal>
   <trip-accident-resolve-modal (modalSave)="refreshTable()" #TripAccidentResolveModal></trip-accident-resolve-modal>
