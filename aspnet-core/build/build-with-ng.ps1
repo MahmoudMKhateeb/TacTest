@@ -20,7 +20,7 @@ dotnet restore
 ## PUBLISH WEB HOST PROJECT ###################################################
 
 Set-Location $webHostFolder
-dotnet publish /p:EnvironmentName=Development --output (Join-Path $outputFolder "Host")
+dotnet publish /p:EnvironmentName=production --output (Join-Path $outputFolder "Host")
 
 ## PUBLISH WEB PUBLIC PROJECT ###################################################
 

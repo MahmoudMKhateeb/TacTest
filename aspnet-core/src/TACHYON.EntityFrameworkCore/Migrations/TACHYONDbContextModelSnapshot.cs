@@ -6517,6 +6517,9 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsTripImpactEnabled")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasColumnType("nvarchar(60)")
@@ -7398,6 +7401,9 @@ namespace TACHYON.Migrations
                     b.Property<string>("DocumentName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("ForceContinueTripEnabled")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -7409,6 +7415,9 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<byte>("LastPointStatus")
+                        .HasColumnType("tinyint");
 
                     b.Property<Point>("Location")
                         .HasColumnType("geography");
@@ -7422,6 +7431,9 @@ namespace TACHYON.Migrations
                     b.Property<int?>("ReasoneId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ResolveId")
+                        .HasColumnType("int");
+
                     b.Property<long>("ShippingRequestId")
                         .HasColumnType("bigint");
 
@@ -7430,6 +7442,8 @@ namespace TACHYON.Migrations
                     b.HasIndex("PointId");
 
                     b.HasIndex("ReasoneId");
+
+                    b.HasIndex("ResolveId");
 
                     b.ToTable("ShippingRequestTripAccidents");
                 });
@@ -7507,6 +7521,9 @@ namespace TACHYON.Migrations
 
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("DriverId")
                         .HasColumnType("bigint");
@@ -11034,6 +11051,10 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Shipping.Accidents.ShippingRequestReasonAccident", "ResoneFK")
                         .WithMany()
                         .HasForeignKey("ReasoneId");
+
+                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccidentResolve", "Resolve")
+                        .WithMany()
+                        .HasForeignKey("ResolveId");
                 });
 
             modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccidentComment", b =>
