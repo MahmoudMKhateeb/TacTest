@@ -344,8 +344,9 @@
                             step1Form.get('roundTripType').invalid && (step1Form.get('roundTripType').dirty || step1Form.get('roundTripType').touched)
                           "
                           required
-                          (change)="resetStep2Inputs(); prepareStep2Inputs()"
+                          (ngModelChange)="resetStep2Inputs(); prepareStep2Inputs()"
                         >
+                          <option disabled [ngValue]="null">{{ l('SelectARoundTripType') }}</option>
                           <option *ngFor="let item of allRoundTripTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                         </select>
                       </div>
@@ -636,9 +637,8 @@
                                 (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
                               "
                               [disabled]="
-                                step1Dto.shippingTypeId == ShippingTypeEnum.LocalInsideCity || !step2Dto.originCityId
-                                  ? true
-                                  : null || step2Dto.routeTypeId == null
+                                (step1Dto.shippingTypeId == ShippingTypeEnum.LocalInsideCity || !step2Dto.originCityId ? true : false) ||
+                                step2Dto.routeTypeId == null
                               "
                               [selectedItemsLabel]="'{0} items selected'"
                               (ngModelChange)="validateShippingRequestType()"

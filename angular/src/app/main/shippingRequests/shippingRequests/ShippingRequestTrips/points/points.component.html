@@ -256,6 +256,7 @@
                 shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
                 shippingRequestForView.shippingRequest.roundTripType === RoundTripType.WithReturnTrip
               "
+              [roundTripType]="shippingRequestForView.shippingRequest.roundTripType"
               (RouteStepCordSetterEvent)="RouteStepCordSetter($event.index, $event.facilityId)"
               (wayPointsSetterEvent)="wayPointsSetter()"
               (loadReceiversEvent)="loadReceivers($event)"

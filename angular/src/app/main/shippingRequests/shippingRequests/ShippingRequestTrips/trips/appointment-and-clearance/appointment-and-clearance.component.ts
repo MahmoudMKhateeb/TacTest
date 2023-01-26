@@ -18,6 +18,7 @@ import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'appointment-and-clearance-modal',
@@ -36,6 +37,16 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
 
   get isFileInputValid() {
     return this.createOrEditDocumentFileDto.name ? true : false;
+  }
+
+  get canEdit(): boolean {
+    if (this.isTachyonDealer) {
+      return true;
+    }
+    if (this.isCarrier || this.isCarrierSaas) {
+      return true;
+    }
+    return false;
   }
   alldocumentsValid: boolean;
   public DocsUploader: FileUploader;
@@ -65,7 +76,10 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
   }
 
   ngOnInit(): void {
-    this.allPriceOfferCommissionTypes = this._enumService.transform(PriceOfferCommissionType);
+    this.allPriceOfferCommissionTypes = this._enumService.transform(PriceOfferCommissionType).map((item) => {
+      item.key = Number(item.key);
+      return item;
+    });
   }
 
   show(
@@ -109,6 +123,7 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
     }
     console.log('tripClearance', this.tripClearance);
     console.log('tripAppointment', this.tripAppointment);
+    this.tripAppointment.appointmentDateTime = moment(this.tripAppointment.appointmentDateTime);
     this.tripAppointment.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
     this.tripClearance.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
     this.saved.emit({ tripAppointment: this.tripAppointment, tripClearance: this.tripClearance });

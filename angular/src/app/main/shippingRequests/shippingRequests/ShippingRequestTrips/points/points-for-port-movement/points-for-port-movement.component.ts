@@ -6,11 +6,13 @@ import {
   FacilityType,
   PickingType,
   ReceiverFacilityLookupTableDto,
+  RoundTripType,
   TripAppointmentDataDto,
   TripClearancePricesDto,
 } from '@shared/service-proxies/service-proxies';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { AppointmentAndClearanceModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/appointment-and-clearance/appointment-and-clearance.component';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'PointsForPortsMovementComponent',
@@ -29,6 +31,7 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   @Input('receiverLoading') receiverLoading: boolean;
   @Input('isExportRequest') isExportRequest: boolean;
   @Input('isImportWithReturnTrip') isImportWithReturnTrip: boolean;
+  @Input('roundTripType') roundTripType: RoundTripType;
 
   @Output() RouteStepCordSetterEvent = new EventEmitter<{ index: number; facilityId: number }>();
   @Output() wayPointsSetterEvent = new EventEmitter<any>();
@@ -66,6 +69,7 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
     if (((index < 3 && !this.isExportRequest) || (index > 0 && index < 5 && this.isExportRequest)) && this.wayPointsList[index + 1]) {
       this.wayPointsList[index + 1].facilityId = facilityId;
     }
+    this.wayPointsList[index].dropNeedsAppointment = this.wayPointsList[index].dropNeedsClearance = false;
     console.log('RouteStepCordSetter', index, facilityId);
   }
 
@@ -183,24 +187,67 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   }
 
   showAppointmentsAndClearanceButton(index): boolean {
-    if (!this.isExportRequest && !this.isImportWithReturnTrip) {
+    if (this.usedIn != 'createOrEdit') {
+      return (this.wayPointsList[index] as any).needsClearance || (this.wayPointsList[index] as any).needsAppointment;
+    }
+    if (
+      index === 4 &&
+      (this.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling || this.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling)
+    ) {
       return false;
     }
-    if (!this.isExportRequest && this.isImportWithReturnTrip) {
-      switch (index) {
-        case 3:
-        case 0: {
-          return true;
-        }
-        default: {
-          return false;
-        }
-      }
+    if (this.wayPointsList.length > 0 && this.pickupFacilities.concat(this.dropFacilities).length > 0) {
+      const foundFacility = this.pickupFacilities.concat(this.dropFacilities).find((item) => item.id == this.wayPointsList[index].facilityId);
+      const isPort = isNotNullOrUndefined(foundFacility) && foundFacility.facilityType === FacilityType.Port;
+      return isPort;
     }
-    return true;
+    // if (!this.isExportRequest && !this.isImportWithReturnTrip) {
+    //   return false;
+    // }
+    // if (!this.isExportRequest && this.isImportWithReturnTrip) {
+    //   switch (index) {
+    //     case 3:
+    //     case 0: {
+    //     }
+    //     default: {
+    //       return false;
+    //     }
+    //   }
+    // }
+    return false;
   }
 
   handleSaveAppointmentsAndClearance(event: { tripAppointment: TripAppointmentDataDto; tripClearance: TripClearancePricesDto }) {
     this.savedAppointmentsAndClearance.emit({ ...event, pointIndex: this.activePointIndex });
+  }
+
+  showClearanceCheckbox(i: number) {
+    switch (this.roundTripType) {
+      case RoundTripType.WithReturnTrip: {
+        if (i === 0) {
+          return !this.wayPointsList[3].dropNeedsClearance;
+        }
+        if (i === 3) {
+          return !this.wayPointsList[0].dropNeedsClearance;
+        }
+        break;
+      }
+      case RoundTripType.OneWayRoutWithPortShuttling:
+      case RoundTripType.WithoutReturnTrip: {
+        return true;
+      }
+      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
+      case RoundTripType.TwoWayRoutsWithPortShuttling: {
+        if (i === 3) {
+          return !this.wayPointsList[5].dropNeedsClearance;
+        }
+        if (i === 5) {
+          return !this.wayPointsList[3].dropNeedsClearance;
+        }
+        break;
+      }
+      default:
+        return true;
+    }
   }
 }

@@ -619,10 +619,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
   fillAllRoundTrips(isInit = false) {
     if (!isInit) {
-      // this.step1Dto.roundTripType = null;
+      this.step1Dto.roundTripType = null;
     }
-    this.step1Form.get('roundTripType').clearValidators();
-    this.step1Form.get('roundTripType').updateValueAndValidity();
+    // this.step1Form.get('roundTripType').clearValidators();
+    // this.step1Form.get('roundTripType').updateValueAndValidity();
     console.log(
       'this.step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements',
       this.step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements
@@ -655,10 +655,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         selectItem.displayName = item.value;
         return selectItem;
       });
-    this.step1Dto.roundTripType = Number(this.allRoundTripTypes[0].id);
-    this.step1Form.get('roundTripType').setValue(this.step1Dto.roundTripType);
-    this.step1Form.get('roundTripType').markAsTouched();
-    this.step1Form.get('roundTripType').updateValueAndValidity();
+    // this.step1Dto.roundTripType = Number(this.allRoundTripTypes[0].id);
+    // this.step1Form.get('roundTripType').setValue(this.step1Dto.roundTripType);
+    // this.step1Form.get('roundTripType').markAsTouched();
+    // this.step1Form.get('roundTripType').updateValueAndValidity();
   }
 
   loadCitiesByCountryId(countryId: number, type: 'source' | 'destination') {
@@ -960,8 +960,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    */
   prepareStep2Inputs() {
     console.log('prepareStep2Inputs');
-    this.step1Dto.roundTripType = Number(this.step1Dto.roundTripType);
-    switch (this.step1Dto.roundTripType) {
+    switch (Number(this.step1Dto.roundTripType)) {
       case RoundTripType.TwoWayRoutsWithoutPortShuttling:
       case RoundTripType.TwoWayRoutsWithPortShuttling:
       case RoundTripType.WithReturnTrip: {

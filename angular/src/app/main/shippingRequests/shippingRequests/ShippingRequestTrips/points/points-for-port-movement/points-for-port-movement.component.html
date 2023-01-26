@@ -31,39 +31,27 @@
           <th>
             {{ l('Notes') }}
           </th>
-          <th *ngIf="!isExportRequest && isImportWithReturnTrip">
+          <th>
             <!--                        {{ l('PaymentMethod') }}-->
           </th>
-          <th *ngIf="!isExportRequest && isImportWithReturnTrip && (isCarrier || isCarrierSaas || isTachyonDealer)">
+          <th>
             {{ l('AppointmentsAndClearance') }}
           </th>
         </tr>
       </ng-template>
       <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
         <tr *ngIf="i === 0">
-          <td
-            [colSpan]="!isExportRequest && isImportWithReturnTrip ? (isCarrier || isCarrierSaas || isTachyonDealer ? 8 : 7) : 6"
-            rowspan="1"
-            class="border-bottom-0"
-          >
+          <td [colSpan]="8" rowspan="1" class="border-bottom-0">
             <strong>{{ 'FirstTrip' | localize }}</strong>
           </td>
         </tr>
         <tr *ngIf="i === 2">
-          <td
-            [colSpan]="!isExportRequest && isImportWithReturnTrip ? (isCarrier || isCarrierSaas || isTachyonDealer ? 8 : 7) : 6"
-            rowspan="1"
-            class="pt-8 border-bottom-0"
-          >
+          <td [colSpan]="8" rowspan="1" class="pt-8 border-bottom-0">
             <strong>{{ (isExportRequest ? 'SecondTrip' : 'ReturnTrip') | localize }}</strong>
           </td>
         </tr>
         <tr *ngIf="i === 4">
-          <td
-            [colSpan]="!isExportRequest && isImportWithReturnTrip ? (isCarrier || isCarrierSaas || isTachyonDealer ? 8 : 7) : 6"
-            rowspan="1"
-            class="pt-8 border-bottom-0"
-          >
+          <td [colSpan]="8" rowspan="1" class="pt-8 border-bottom-0">
             <strong>{{ 'ThirdTrip' | localize }}</strong>
           </td>
         </tr>
@@ -202,10 +190,10 @@
               {{ wayPointsList[i]?.note?.length > 18 ? (wayPointsList[i].note | slice: 0:18) + ' ....' : wayPointsList[i].note }}
             </a>
           </td>
-          <td *ngIf="!isExportRequest && isImportWithReturnTrip">
+          <td>
             <div *ngIf="showAppointmentsAndClearanceButton(i)">
               <div class="checkbox-list mb-2">
-                <label class="checkbox ml-2">
+                <label class="checkbox ml-2" *ngIf="showClearanceCheckbox(i)">
                   <input
                     type="checkbox"
                     [(ngModel)]="record.dropNeedsClearance"
@@ -232,12 +220,12 @@
               </div>
             </div>
           </td>
-          <td *ngIf="!isExportRequest && isImportWithReturnTrip && (isCarrier || isCarrierSaas || isTachyonDealer)">
+          <td>
             <div *ngIf="showAppointmentsAndClearanceButton(i)">
               <button *ngIf="record.dropNeedsClearance || record.dropNeedsAppointment" class="btn btn-primary" (click)="showVasModal(i)">
                 <i
                   [ngClass]="
-                    usedIn == 'createOrEdit'
+                    !isShipper
                       ? (!record.appointmentDataDto || !record.tripClearancePricesDto) && !isEdit
                         ? 'fa fa-plus'
                         : 'fa fa-pen'
