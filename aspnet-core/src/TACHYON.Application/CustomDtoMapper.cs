@@ -580,9 +580,9 @@ namespace TACHYON
                 .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
                 .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
                 .ForPath(dest => dest.DropNeedsAppointment, opt => opt.MapFrom(src => src.NeedsAppointment))
-                .ForPath(dest => dest.DropNeedsClearance, opt => opt.MapFrom(src => src.NeedsClearance))
-                .ForPath(dest => dest.AppointmentDataDto.AppointmentNumber, opt => opt.MapFrom(src => src.AppointmentNumber))
-                .ForPath(dest => dest.AppointmentDataDto.AppointmentDateTime, opt => opt.MapFrom(src => src.AppointmentDateTime));
+                .ForPath(dest => dest.DropNeedsClearance, opt => opt.MapFrom(src => src.NeedsClearance));
+                //.ForPath(dest => dest.AppointmentDataDto.AppointmentNumber, opt => opt.MapFrom(src => src.AppointmentNumber))
+                //.ForPath(dest => dest.AppointmentDataDto.AppointmentDateTime, opt => opt.MapFrom(src => src.AppointmentDateTime));
 
             //configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             //configuration.CreateMap<RouteDto, Route>().ReverseMap();

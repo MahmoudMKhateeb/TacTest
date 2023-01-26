@@ -40,11 +40,12 @@ namespace TACHYON.Receivers
         public async Task<PagedResultDto<GetReceiverForViewDto>> GetAll(GetAllReceiversInput input)
         {
 
-            await DisableTenancyFilterIfTachyonDealerOrHost();
-            
+            DisableTenancyFilters();
+
             var filteredReceivers = _receiverRepository.GetAll()
                 .Include(e => e.FacilityFk)
-                .Include(x=>x.Tenant)
+                .Include(x => x.Tenant)
+                .WhereIf(!await IsTachyonDealer(), x => x.TenantId == AbpSession.TenantId)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,
                     i => i.CreationTime >= input.FromDate && i.CreationTime <= input.ToDate)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
@@ -206,9 +207,10 @@ namespace TACHYON.Receivers
         [AbpAuthorize(AppPermissions.Pages_Receivers)]
         public async Task<List<ReceiverFacilityLookupTableDto>> GetAllFacilityForTableDropdown(int? tenantId)
         {
-            await DisableTenancyFilterIfTachyonDealerOrHost();
+            DisableTenancyFilters();
             return await _lookup_facilityRepository.GetAll()
-                .WhereIf(tenantId!=null, x=>x.TenantId==tenantId)
+                .WhereIf(await IsTachyonDealer(), x=> (x.FacilityType == FacilityType.Facility && x.TenantId == tenantId) || x.FacilityType != FacilityType.Facility)
+                .WhereIf(!await IsTachyonDealer(), x => (x.FacilityType == FacilityType.Facility && x.TenantId == AbpSession.TenantId) || x.FacilityType != FacilityType.Facility)
                 .Select(facility => new ReceiverFacilityLookupTableDto
                 {
                     Id = facility.Id,
@@ -219,7 +221,9 @@ namespace TACHYON.Receivers
         [RequiresFeature(AppFeatures.ShipperClients)]
         public async Task<List<ReceiverFacilityLookupTableDto>> GetAllFacilitiesByActorId(int actorId)
         {
+            DisableTenancyFilters();
             return await _lookup_facilityRepository.GetAll()
+                .Where(x => (x.TenantId == AbpSession.TenantId) || x.FacilityType != FacilityType.Facility)
                 .Where(x=> x.ShipperActorId == actorId)
                 .Select(facility => new ReceiverFacilityLookupTableDto
                 {
@@ -231,13 +235,14 @@ namespace TACHYON.Receivers
         public async Task<List<ReceiverFacilityLookupTableDto>> GetAllReceiversByFacilityForTableDropdown(
             long facilityId)
         {
-            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
-            {
+            //if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            //{
                 DisableTenancyFilters();
-            }
+           // }
 
             return await _receiverRepository.GetAll()
-                .Where(x => x.FacilityId == facilityId)
+                .WhereIf(!await IsTachyonDealer(), x => (x.FacilityFk.FacilityType == FacilityType.Facility && x.FacilityFk.TenantId == AbpSession.TenantId) || x.FacilityFk.FacilityType != FacilityType.Facility)
+                .Where( x => x.FacilityId == facilityId )
                 .Select(r => new ReceiverFacilityLookupTableDto { Id = r.Id, DisplayName = r.FullName }).ToListAsync();
         }
     }

@@ -735,7 +735,7 @@ namespace TACHYON.Tracking
             return await _commonManager.GetDocuments(ObjectMapper.Map<List<IHasDocument>>(documents), currentUser);
         }
 
-        public async Task<string> GetPointAttachmentName(long id, RoutePointDocumentType routePointDocumentType)
+        public async Task<RoutPointDocument> GetPointAttachment(long id, RoutePointDocumentType routePointDocumentType)
         {
             DisableTenancyFilters();
             var currentUser = await GetCurrentUserAsync();
@@ -750,7 +750,7 @@ namespace TACHYON.Tracking
                 .WhereIf(currentUser.IsDriver,
                     x => x.RoutPointFk.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
-            return document?.DocumentName;
+            return document;
         }
         public async Task<(bool canAccept, string reason)> CanAcceptTrip(long? driverUserId, ShippingRequestTripStatus tripStatus, ShippingRequestTripDriverStatus driverStatus)
         {

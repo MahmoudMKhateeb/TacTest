@@ -153,7 +153,6 @@ namespace TACHYON.AutoMapper.Shipping.Trips
 
             CreateMap<ImportTripVasesDto, ShippingRequestTripVas>();
 
-            CreateMap<SetClearancePriceInput, ShippingRequestTripVas>();
         }
 
         private static ShippingRequestTripDriverLoadStatusDto GetMobileTripStatus(ShippingRequestTrip trip)

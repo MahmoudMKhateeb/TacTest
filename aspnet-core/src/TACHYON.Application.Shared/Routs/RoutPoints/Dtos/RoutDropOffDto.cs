@@ -8,6 +8,7 @@ using TACHYON.AddressBook.Dtos;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Receivers.Dtos;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Tracking.Dto.WorkFlow;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
@@ -52,9 +53,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public long? WaybillNumber { get; set; }
         public bool IsPodUploaded { get; set; }
         public RoutePointCompletedStatus CompletedStatus { get; set; }
-        public DateTime? AppointmentDateTime { get; set; }
-        public string AppointmentNumber { get; set; }
-        public string AppointmentFileName { get; set; }
+        public DropAppointmentDataDto DropAppointmentData { get; set; } = new DropAppointmentDataDto();
         public List<PointTransactionDto> AvailableTransactions { get; set; }
 
         // public double TotalWeight { get; set; }

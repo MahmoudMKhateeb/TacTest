@@ -24,7 +24,7 @@
 
           <div class="modal-body">
             <div class="row">
-              <div *ngIf="isTachyonDealerOrHost" class="form-group col-md-12">
+              <div *ngIf="appSession.tenantId" class="form-group col-md-12">
                 <label>{{ l('Company') }} <span class="required-fileds">*</span></label>
                 <div
                   [ngClass]="{
@@ -95,7 +95,7 @@
                   </dx-validator>
                 </dx-text-box>
               </div>
-              <div class="form-group col-md-6">
+              <div *ngIf="!appSession.tenantId" class="form-group col-md-6">
                 <label>{{ l('FacilityType') }} <span class="required-fileds">*</span></label>
                 <dx-select-box
                   id="FacilityType"

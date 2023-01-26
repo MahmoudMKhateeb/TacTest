@@ -294,9 +294,9 @@ namespace TACHYON.Shipping.Trips
                 if (point.HasAppointmentVas)
                 {
                     pointDto.AppointmentDataDto = new TripAppointmentDataDto();
-                    pointDto.AppointmentDataDto.AppointmentDateTime = point.AppointmentDateTime.Value;
+                    pointDto.AppointmentDataDto.AppointmentDateTime = point.AppointmentDateTime;
                     pointDto.AppointmentDataDto.AppointmentNumber = point.AppointmentNumber;
-                    pointDto.AppointmentDataDto.DocumentName = await _shippingRequestPointWorkFlowProvider.GetPointAttachmentName(point.Id, RoutePointDocumentType.Appointment);
+                    pointDto.AppointmentDataDto.DocumentName = (await _shippingRequestPointWorkFlowProvider.GetPointAttachment(point.Id, RoutePointDocumentType.Appointment))?.DocumentName;
                     var appointmentVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName));
                     ObjectMapper.Map(appointmentVas, pointDto.AppointmentDataDto);
                 }
@@ -342,9 +342,10 @@ namespace TACHYON.Shipping.Trips
 
                 if (point.HasAppointmentVas)
                 {
+                    pointDto.AppointmentDataDto = new TripAppointmentDataDto();
                     pointDto.AppointmentDataDto.AppointmentDateTime = point.AppointmentDateTime;
                     pointDto.AppointmentDataDto.AppointmentNumber = point.AppointmentNumber;
-                    pointDto.AppointmentDataDto.DocumentName = await _shippingRequestPointWorkFlowProvider.GetPointAttachmentName(point.Id, RoutePointDocumentType.Appointment);
+                    pointDto.AppointmentDataDto.DocumentName = (await _shippingRequestPointWorkFlowProvider.GetPointAttachment(point.Id, RoutePointDocumentType.Appointment))?.DocumentName;
                     var appointmentVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName));
                     ObjectMapper.Map(appointmentVas, pointDto.AppointmentDataDto);
                 }
@@ -483,7 +484,7 @@ namespace TACHYON.Shipping.Trips
 
             if (point.HasAppointmentVas) 
             {
-                if (!await IsTachyonDealer()) throw new UserFriendlyException(L("UpdateDeniedAppointmentInfoAlreadyExists"));
+                if (!await IsTachyonDealer()) return;
                 //appointment vas is exists for this point
                 //here will update appointment vas
                 var appointmentTripVas = point.ShippingRequestTripFk.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName));
@@ -514,6 +515,7 @@ namespace TACHYON.Shipping.Trips
             // appointment attachment
             if (input.DocumentId != null)
             {
+                input.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.DocumentId.ToString(), AbpSession.TenantId);
                 var document = ObjectMapper.Map<IHasDocument>(input);
                 await _shippingRequestPointWorkFlowProvider.UploadFiles(new List<IHasDocument> { document }, point.Id, RoutePointDocumentType.Appointment);
             }
@@ -526,7 +528,7 @@ namespace TACHYON.Shipping.Trips
 
             if (point.HasClearanceVas)
             {
-                if (!await IsTachyonDealer()) throw new UserFriendlyException(L("UpdateDeniedInfoAlreadyExists"));
+                if (!await IsTachyonDealer()) return;
                 //appointment vas is exists for this point
                 //here will update appointment vas
                 var appointmentTripVas = point.ShippingRequestTripFk.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName));
@@ -552,11 +554,11 @@ namespace TACHYON.Shipping.Trips
             }
         }
 
-        public async Task CarrierSetAppointmentData(TripAppointmentDataDto input)
+        public async Task CarrierSetAppointmentData(TripAppointmentDataDto input, long RoutePointId)
         {
             //carrier or TMS set appointment prices
-            RoutPoint point = await GetDropPoint(input.RoutePointId);
-
+            RoutPoint point = await GetDropPoint(RoutePointId);
+            input.ShippingRequestId = point.ShippingRequestTripFk.ShippingRequestId;
             await SetAppointmentData(input, point);
         }
 
@@ -576,10 +578,10 @@ namespace TACHYON.Shipping.Trips
             return point;
         }
 
-        public async Task CarrierSetClearanceData(TripClearancePricesDto input)
+        public async Task CarrierSetClearanceData(TripClearancePricesDto input, long RoutePointId)
         {
-            RoutPoint point = await GetDropPoint(input.RoutePointId);
-
+            RoutPoint point = await GetDropPoint(RoutePointId);
+            input.ShippingRequestId = point.ShippingRequestTripFk.ShippingRequestId;
             await SetClearanceData(input, point);
         }
 
@@ -947,6 +949,10 @@ namespace TACHYON.Shipping.Trips
 
         private async Task BindAppointmentAndClearance(CreateOrEditShippingRequestTripDto input, ShippingRequest request, ShippingRequestTrip trip)
         {
+            if (request.Status != ShippingRequestStatus.PostPrice)
+            {
+                throw new UserFriendlyException(L("RequestMustBeConfirmedToAddAppointmentAndClearanceVases"));
+            }
             foreach (var point in trip.RoutPoints.Where(x => x.NeedsAppointment && input.RoutPoints.First(x => x.PointOrder == x.PointOrder).AppointmentDataDto != null))
             {
                 var inputPoint = input.RoutPoints.First(x => x.PointOrder == point.PointOrder);
@@ -1398,7 +1404,7 @@ namespace TACHYON.Shipping.Trips
                 {
                     if (request.RoundTripType == RoundTripType.TwoWayRoutsWithPortShuttling)
                     {
-                        if (firstStep[0].ReceiverId != null || secondStep[0].ReceiverId == null || thirdStep[0].ReceiverId == null)
+                        if (firstStep[0].ReceiverId == null || secondStep[0].ReceiverId == null || thirdStep[0].ReceiverId == null)
                         {
                             throw new UserFriendlyException(L("SenderIsRequired"));
                         }

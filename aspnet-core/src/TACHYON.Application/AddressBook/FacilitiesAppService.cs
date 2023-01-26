@@ -16,6 +16,7 @@ using TACHYON.AddressBook.Exporting;
 using TACHYON.Authorization;
 using TACHYON.Cities;
 using TACHYON.Dto;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.AddressBook
 {
@@ -40,8 +41,7 @@ namespace TACHYON.AddressBook
 
         public async Task<PagedResultDto<GetFacilityForViewOutput>> GetAll(GetAllFacilitiesInput input)
         {
-            DisableTenancyFiltersIfHost();
-            await DisableTenancyFiltersIfTachyonDealer();
+            DisableTenancyFilters();
 
 
             var filteredFacilities = _facilityRepository.GetAll()
@@ -50,6 +50,7 @@ namespace TACHYON.AddressBook
                 .ThenInclude(t => t.Translations)
                 .Include(x=>x.FacilityWorkingHours)
                 .Include(x=>x.Tenant)
+                .WhereIf(!await IsTachyonDealer(), x => (x.FacilityType == FacilityType.Facility && x.TenantId == AbpSession.TenantId) || x.FacilityType != FacilityType.Facility)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,
                     i => i.CreationTime >= input.FromDate && i.CreationTime <= input.ToDate)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
@@ -139,6 +140,10 @@ namespace TACHYON.AddressBook
         public async Task<long> CreateOrEdit(CreateOrEditFacilityDto input)
         {
             await ValidateFacilityName(input);
+            if(AbpSession.TenantId != null)
+            {
+                input.FacilityType = FacilityType.Facility;
+            }
             if(!await IsTachyonDealer())
             {
                 input.ShipperId = null;
@@ -251,6 +256,7 @@ namespace TACHYON.AddressBook
 
         public async Task<List<SelectFacilityItemDto>> GetAllPortsForTableDropdown()
         {
+            DisableTenancyFilters();
             return await _facilityRepository.GetAll().Include(x=>x.CityFk).Where(x=>x.FacilityType == FacilityType.Port)
                 .Select(item => new SelectFacilityItemDto
                 {

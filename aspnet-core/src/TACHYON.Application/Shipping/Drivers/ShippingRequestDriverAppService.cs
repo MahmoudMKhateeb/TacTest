@@ -372,12 +372,19 @@ namespace TACHYON.Shipping.Drivers
                 .Include(i => i.GoodsDetails)
                  .ThenInclude(i => i.UnitOfMeasureFk)
                  .ThenInclude(x => x.Translations)
-            .SingleOrDefaultAsync(t => t.Id == PointId && t.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && t.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && t.ShippingRequestTripFk.DriverStatus != ShippingRequestTripDriverStatus.Rejected);
+            .SingleOrDefaultAsync(t => t.Id == PointId && t.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled 
+            && t.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId 
+            && t.ShippingRequestTripFk.DriverStatus != ShippingRequestTripDriverStatus.Rejected);
 
             if (Point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
             var DropOff = ObjectMapper.Map<RoutDropOffDto>(Point);
-            DropOff.AppointmentFileName =await _workFlowProvider.GetPointAttachmentName(PointId, RoutePointDocumentType.Appointment);
+            var appointDocument = await _workFlowProvider.GetPointAttachment(PointId, RoutePointDocumentType.Appointment);
+            DropOff.DropAppointmentData.AppointmentNumber = Point.AppointmentNumber;
+            DropOff.DropAppointmentData.AppointmentDateTime = Point.AppointmentDateTime;
+            DropOff.DropAppointmentData.AppointmentFileName = appointDocument?.DocumentName;
+            DropOff.DropAppointmentData.AppointmentDocumentId = appointDocument?.DocumentId;
+            DropOff.DropAppointmentData.AppointmentDocumentContentType = appointDocument?.DocumentContentType;
             var statuses = await _routPointStatusTransitionRepository.GetAll()
                 .Where(x => x.PointId == PointId && !x.IsReset)
                 .Select(s => s.Status).ToListAsync();

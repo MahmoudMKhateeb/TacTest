@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using TACHYON.Commission;
 using TACHYON.PriceOffers;
@@ -9,7 +10,7 @@ namespace TACHYON.Shipping.Trips.Dto
     public class TripClearancePricesDto : PriceCommissionDtoBase
     {
         public long ShippingRequestId { get; set; }
-        public long RoutePointId { get; set; }
+        [Required]
         public decimal ItemPrice {get; set;}
         public decimal TotalAmount {get; set;}
         public decimal SubTotalAmount {get; set;}
