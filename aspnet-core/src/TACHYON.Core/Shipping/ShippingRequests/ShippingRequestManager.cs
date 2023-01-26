@@ -235,6 +235,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task ValidatePortMovementInputs(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
         {
+            DisableTenancyFilters();
             if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements)
             {
                 if (input.OriginFacilityId == null) throw new UserFriendlyException(L("OriginPortIsRequired"));
@@ -641,7 +642,10 @@ namespace TACHYON.Shipping.ShippingRequests
             else
             {
                 //check if exists
-                var SRvasDB =await _shippingRequestVasRepository.FirstOrDefaultAsync(x => x.ShippingRequestId == shippingRequestId && x.VasFk.Name == TACHYONConsts.AppointmentVasName);
+                var SRvasDB =await _shippingRequestVasRepository.GetAll()
+                    .WhereIf(isAppointmentVas,x=> x.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName))
+                    .WhereIf(isClearanceVas, x=> x.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName))
+                    .FirstOrDefaultAsync(x => x.ShippingRequestId == shippingRequestId);
                 if (SRvasDB != null)
                 {
                     return SRvasDB.Id;

@@ -300,11 +300,14 @@ namespace TACHYON.Shipping.Trips
                     var appointmentVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName));
                     ObjectMapper.Map(appointmentVas, pointDto.AppointmentDataDto);
                 }
-                else if (point.HasClearanceVas)
+
+                if (point.HasClearanceVas)
                 {
                     var ClearanceVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName));
+                    pointDto.TripClearancePricesDto = new TripClearancePricesDto();
                     ObjectMapper.Map(ClearanceVas, pointDto.TripClearancePricesDto);
                 }
+                
             }
 
             if (shippingRequestTrip.HasAttachment)
@@ -339,7 +342,7 @@ namespace TACHYON.Shipping.Trips
 
                 if (point.HasAppointmentVas)
                 {
-                    pointDto.AppointmentDataDto.AppointmentDateTime = point.AppointmentDateTime.Value;
+                    pointDto.AppointmentDataDto.AppointmentDateTime = point.AppointmentDateTime;
                     pointDto.AppointmentDataDto.AppointmentNumber = point.AppointmentNumber;
                     pointDto.AppointmentDataDto.DocumentName = await _shippingRequestPointWorkFlowProvider.GetPointAttachmentName(point.Id, RoutePointDocumentType.Appointment);
                     var appointmentVas = trip.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName));
