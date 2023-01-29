@@ -53,6 +53,7 @@ namespace TACHYON.PriceOffers.Dto
         public string BidStatusTitle { get; set; }
         public string DirectRequestStatusTitle { get; set; }
         public ShippingRequestRouteType RouteTypeId { get; set; }
+        public ShippingTypeEnum ShippingTypeId { get; set; }
         public string RouteType { get { return RouteTypeId.GetEnumDescription(); } }
         public decimal? Price { get; set; }
 

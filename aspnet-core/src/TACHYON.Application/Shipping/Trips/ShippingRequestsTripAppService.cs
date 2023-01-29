@@ -956,6 +956,7 @@ namespace TACHYON.Shipping.Trips
             foreach (var point in trip.RoutPoints.Where(x => x.NeedsAppointment && input.RoutPoints.First(x => x.PointOrder == x.PointOrder).AppointmentDataDto != null))
             {
                 var inputPoint = input.RoutPoints.First(x => x.PointOrder == point.PointOrder);
+                if (inputPoint.AppointmentDataDto == null) inputPoint.AppointmentDataDto = new TripAppointmentDataDto();
                 inputPoint.AppointmentDataDto.ShippingRequestId = request.Id;
 
                 await SetAppointmentData(inputPoint.AppointmentDataDto, point);
@@ -964,6 +965,7 @@ namespace TACHYON.Shipping.Trips
             foreach(var point in ClearancePoints)
             {
                 var inputPoint = input.RoutPoints.First(x => x.PointOrder == point.PointOrder);
+                if (inputPoint.TripClearancePricesDto == null) inputPoint.TripClearancePricesDto = new TripClearancePricesDto();
                 inputPoint.TripClearancePricesDto.ShippingRequestId = request.Id;
                 await SetClearanceData(inputPoint.TripClearancePricesDto, point);
             }

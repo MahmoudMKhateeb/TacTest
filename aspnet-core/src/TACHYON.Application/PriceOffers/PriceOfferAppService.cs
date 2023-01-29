@@ -857,7 +857,7 @@ namespace TACHYON.PriceOffers
                 dto.OriginCity = dto.OriginFacilityId !=null ?$"{request.ShippingRequestFK.OriginFacility.Name} - {request.ShippingRequestFK.OriginCityFk.DisplayName}" : ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.OriginCityFk)?.DisplayName;
                 //dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.DestinationCityFk).DisplayName;
                 dto.NotesCount = await GetRequestNotesCount(request.Id);
-
+                dto.ShippingTypeId = request.ShippingRequestFK.ShippingTypeId;
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }
@@ -1122,6 +1122,7 @@ namespace TACHYON.PriceOffers
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFk.GoodCategoryFk).DisplayName;
                 dto.GoodCategoryId = request.ShippingRequestFk.GoodCategoryId;
                 dto.NotesCount = await GetRequestNotesCount(request.Id);
+                dto.ShippingTypeId = request.ShippingRequestFk.ShippingTypeId;
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }
