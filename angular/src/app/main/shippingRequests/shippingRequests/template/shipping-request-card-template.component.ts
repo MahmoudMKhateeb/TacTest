@@ -5,11 +5,14 @@ import {
   GetShippingRequestForViewOutput,
   PriceOfferChannel,
   PriceOfferServiceProxy,
+  RoundTripType,
   ShippingRequestDirectRequestServiceProxy,
   ShippingRequestDirectRequestStatus,
   ShippingRequestFlag,
+  ShippingRequestRouteType,
   ShippingRequestStatus,
   ShippingRequestType,
+  ShippingTypeEnum,
 } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
@@ -58,6 +61,10 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   activeShippingRequestId!: number;
   selectedShippingRequest: GetShippingRequestForPriceOfferListDto;
   shippingRequestStatusEnum = ShippingRequestStatus;
+
+  ShippingTypeEnum = ShippingTypeEnum;
+  RoundTripType = RoundTripType;
+  ShippingRequestRouteType = ShippingRequestRouteType;
 
   constructor(
     injector: Injector,
