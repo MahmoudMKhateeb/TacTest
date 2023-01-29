@@ -10,5 +10,9 @@ namespace TACHYON.ShippingRequestTripVases.Dtos
         public long? ShippingRequestVasId { get; set; }
         public int? ShippingRequestTripId { get; set; }
         public string Name { get; set; }
+        /// <summary>
+        /// This field in helper for front to hide specific vases "appointment, clearance" from user
+        /// </summary>
+        public bool ShouldHide { get; set; }
     }
 }
