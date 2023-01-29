@@ -108,6 +108,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
 
   show(id, shippingRequestForView?: GetShippingRequestForViewOutput): void {
     this.shippingRequestForView = shippingRequestForView;
+    this._PointsService.currentShippingRequest = this.shippingRequestForView;
     if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Dedicated) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();

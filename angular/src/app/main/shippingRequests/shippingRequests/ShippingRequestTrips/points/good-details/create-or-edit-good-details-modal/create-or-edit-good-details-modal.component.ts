@@ -62,6 +62,47 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   currentShippingRequest: GetShippingRequestForViewOutput;
   goodCategoryDefaultId: number;
 
+  get shouldDisableCategoryForPortsMovement() {
+    return (
+      this.isForPortsMovement &&
+      ((this._PointsService?.currentPointIndex > 1 &&
+        this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType === RoundTripType.WithReturnTrip) ||
+        (this._PointsService?.currentPointIndex == 1 &&
+          this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType != RoundTripType.OneWayRoutWithPortShuttling))
+    );
+    // return this.isForPortsMovement && this._PointsService?.currentPointIndex > 1;
+  }
+
+  get isWeightRequiredForPortMovement() {
+    if (this.isForPortsMovement && isNotNullOrUndefined(this._PointsService?.currentPointIndex)) {
+      if (
+        this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType == RoundTripType.WithReturnTrip &&
+        this._PointsService?.currentPointIndex == 1
+      ) {
+        return false;
+      }
+      if (
+        this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType !== RoundTripType.WithoutReturnTrip &&
+        this._PointsService?.currentPointIndex > 0
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+  get isQtyRequiredForPortMovement() {
+    if (this.isForPortsMovement && isNotNullOrUndefined(this._PointsService?.currentPointIndex)) {
+      if (
+        this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType !== RoundTripType.WithReturnTrip &&
+        this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType !== RoundTripType.WithoutReturnTrip &&
+        this._PointsService?.currentPointIndex > 0
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   constructor(
     injector: Injector,
     public _PointsService: PointsService,
@@ -117,7 +158,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       if (!isNotNullOrUndefined(id)) {
         this.amount = this._PointsService.currentShippingRequest.shippingRequest.numberOfPacking;
         this.weight = this._PointsService.currentShippingRequest.shippingRequest.totalWeight;
-        this.goodCategoryId = this.allSubGoodCategorys[0].id;
+        this.goodCategoryId = this.allSubGoodCategorys?.length > 0 ? this.allSubGoodCategorys[0].id : null;
         if (
           this._PointsService.currentShippingRequest.roundTripType === RoundTripType.WithReturnTrip &&
           this._PointsService.currentPointIndex === 3
@@ -191,7 +232,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
    */
   loadGoodSubCategory(FatherID) {
     //Get All Sub-Good Category
-    if (this.isForPortsMovement && this._PointsService.currentPointIndex > 1) {
+    if (this.shouldDisableCategoryForPortsMovement) {
       this._goodsDetailsServiceProxy
         .getEmptyGoodsCategoryForDropDown()
         .pipe(retry(3))

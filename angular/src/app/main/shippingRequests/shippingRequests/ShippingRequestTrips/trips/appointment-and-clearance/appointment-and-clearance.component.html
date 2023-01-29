@@ -10,7 +10,7 @@
   (keydown.escape)="close(); $event.stopPropagation()"
 >
   <div class="modal-dialog modal-dialog-centered modal-xl">
-    <div class="modal-content">
+    <div class="modal-content" *ngIf="appointmentAndClearanceModal.isShown">
       <div class="modal-header">
         <div class="modal-title">
           <p class="m-0" *ngIf="needsAppointment && needsClearance">{{ l('AppointmentAndClearanceModal') }}</p>
@@ -108,9 +108,9 @@
                 {{ 'AppointmentPricesSetup' | localize }}
               </h2>
               <div class="row">
-                <div class="col-lg-4 form-group" *ngIf="!isShipper">
+                <div class="col-lg-4 form-group" *ngIf="!isShipper || (isCarrierSaas && !isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
-                    <label> {{ l('CarrierPrice') }}</label>
+                    <label> {{ isCarrier || (isCarrierSaas && !isSaasRequest) ? l('Price') : l('CarrierPrice') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
                     <!--                                        [min]="trip.startTripDate"-->
                     <dx-number-box
@@ -119,11 +119,16 @@
                       [(value)]="tripAppointment.itemPrice"
                       (onChange)="calculateValues(true)"
                       [min]="0"
+                      [disabled]="
+                        (isCarrier || (isCarrierSaas && !isSaasRequest)) &&
+                        isNotNullOrUndefined(tripAppointment?.itemPrice) &&
+                        isNotNullOrUndefined(oldTripAppointment?.itemPrice)
+                      "
                     >
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isShipper">
+                <div class="col-lg-4 form-group" *ngIf="!isShipper || (isCarrierSaas && !isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('VatAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -137,7 +142,7 @@
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isShipper">
+                <div class="col-lg-4 form-group" *ngIf="!isShipper || (isCarrierSaas && !isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('TotalAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -151,7 +156,7 @@
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isShipper">
+                <div class="col-lg-4 form-group" *ngIf="isTachyonDealer">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('CommessionType') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -168,7 +173,7 @@
                     </dx-select-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isShipper">
+                <div class="col-lg-4 form-group" *ngIf="isTachyonDealer">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('CommessionValue') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -183,7 +188,7 @@
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isShipper">
+                <div class="col-lg-4 form-group" *ngIf="isTachyonDealer">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('CommessionAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -197,9 +202,9 @@
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isCarrier || !isCarrierSaas">
+                <div class="col-lg-4 form-group" *ngIf="!isCarrier || (isCarrierSaas && isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
-                    <label> {{ l('ShipperPrice') }}</label>
+                    <label> {{ isShipper || (isCarrierSaas && isSaasRequest) ? l('Price') : l('ShipperPrice') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
                     <!--                                        [min]="trip.startTripDate"-->
                     <dx-number-box
@@ -211,7 +216,7 @@
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isCarrier || !isCarrierSaas">
+                <div class="col-lg-4 form-group" *ngIf="!isCarrier || (isCarrierSaas && isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('VatAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -225,7 +230,7 @@
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isCarrier || !isCarrierSaas">
+                <div class="col-lg-4 form-group" *ngIf="!isCarrier || (isCarrierSaas && isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('TotalAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -239,6 +244,24 @@
                     </dx-number-box>
                   </div>
                 </div>
+                <div
+                  class="col-lg-12"
+                  *ngIf="
+                    ((isCarrier || (isCarrierSaas && !isSaasRequest)) &&
+                      !isNotNullOrUndefined(oldTripAppointment?.itemPrice) &&
+                      !updatedAppointment) ||
+                    (usedIn != 'createOrEdit' && isTachyonDealer)
+                  "
+                >
+                  <button
+                    [disabled]="saving || shouldDisableAppointment() || updatedAppointment"
+                    type="button"
+                    class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
+                    (click)="carrierSaveAppointment()"
+                  >
+                    {{ l('Save') }}
+                  </button>
+                </div>
               </div>
             </section>
             <hr *ngIf="needsAppointment" />
@@ -247,9 +270,9 @@
                 {{ 'ClearanceSetup' | localize }}
               </h2>
               <div class="row">
-                <div class="col-lg-4 form-group" *ngIf="!isShipper">
+                <div class="col-lg-4 form-group" *ngIf="!isShipper || (isCarrierSaas && !isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
-                    <label> {{ l('CarrierPrice') }}</label>
+                    <label> {{ isCarrier || (isCarrierSaas && !isSaasRequest) ? l('Price') : l('CarrierPrice') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
                     <!--                                        [min]="trip.startTripDate"-->
                     <dx-number-box
@@ -258,11 +281,16 @@
                       [(value)]="tripClearance.itemPrice"
                       (onChange)="calculateValues(false)"
                       [min]="0"
+                      [disabled]="
+                        (isCarrier || (isCarrierSaas && !isSaasRequest)) &&
+                        isNotNullOrUndefined(tripClearance?.itemPrice) &&
+                        isNotNullOrUndefined(oldTripClearance?.itemPrice)
+                      "
                     >
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isShipper">
+                <div class="col-lg-4 form-group" *ngIf="!isShipper || (isCarrierSaas && !isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('VatAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -270,7 +298,7 @@
                     <dx-number-box id="VatAmount" name="VatAmount" [(value)]="tripClearance.vatAmount" [disabled]="true"> </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isShipper">
+                <div class="col-lg-4 form-group" *ngIf="!isShipper || (isCarrierSaas && !isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('TotalAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -278,7 +306,7 @@
                     <dx-number-box id="TotalAmount" name="TotalAmount" [(value)]="tripClearance.totalAmount" [disabled]="true"> </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isShipper">
+                <div class="col-lg-4 form-group" *ngIf="isTachyonDealer">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('CommessionType') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -295,7 +323,7 @@
                     </dx-select-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isShipper">
+                <div class="col-lg-4 form-group" *ngIf="isTachyonDealer">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('CommessionValue') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -310,7 +338,7 @@
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isShipper">
+                <div class="col-lg-4 form-group" *ngIf="isTachyonDealer">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('CommessionAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -319,16 +347,16 @@
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isCarrier || !isCarrierSaas">
+                <div class="col-lg-4 form-group" *ngIf="!isCarrier || (isCarrierSaas && isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
-                    <label> {{ l('ShipperPrice') }}</label>
+                    <label> {{ isShipper || (isCarrierSaas && isSaasRequest) ? l('Price') : l('ShipperPrice') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
                     <!--                                        [min]="trip.startTripDate"-->
                     <dx-number-box id="ShipperPrice" name="ShipperPrice" [(value)]="tripClearance.subTotalAmountWithCommission" [disabled]="true">
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isCarrier || !isCarrierSaas">
+                <div class="col-lg-4 form-group" *ngIf="!isCarrier || (isCarrierSaas && isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('VatAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -337,7 +365,7 @@
                     </dx-number-box>
                   </div>
                 </div>
-                <div class="col-lg-4 form-group" *ngIf="!isCarrier || !isCarrierSaas">
+                <div class="col-lg-4 form-group" *ngIf="!isCarrier || (isCarrierSaas && isSaasRequest)">
                   <div class="input-group d-inline-block mr-8">
                     <label> {{ l('TotalAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
@@ -346,6 +374,22 @@
                     <dx-number-box id="TotalAmount" name="TotalAmount" [(value)]="tripClearance.totalAmountWithCommission" [disabled]="true">
                     </dx-number-box>
                   </div>
+                </div>
+                <div
+                  class="col-lg-12"
+                  *ngIf="
+                    ((isCarrier || (isCarrierSaas && !isSaasRequest)) && !isNotNullOrUndefined(oldTripClearance?.itemPrice) && !updatedClearance) ||
+                    (usedIn != 'createOrEdit' && isTachyonDealer)
+                  "
+                >
+                  <button
+                    [disabled]="saving || shouldDisableClearance() || updatedClearance"
+                    type="button"
+                    class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
+                    (click)="carrierSaveClearance()"
+                  >
+                    {{ l('Save') }}
+                  </button>
                 </div>
               </div>
             </section>
@@ -358,7 +402,7 @@
               {{ l('Close') }}
             </button>
             <dx-button
-              *ngIf="isCarrierSaas || isCarrier || isTachyonDealer"
+              *ngIf="usedIn == 'createOrEdit' && isTachyonDealer"
               type="submit"
               class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
               [disabled]="saving || !appointmentAndClearanceForm.form.valid || shouldDisable()"

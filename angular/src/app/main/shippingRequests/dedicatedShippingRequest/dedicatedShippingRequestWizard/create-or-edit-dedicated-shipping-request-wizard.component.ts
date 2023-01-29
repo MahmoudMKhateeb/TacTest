@@ -28,7 +28,6 @@ import {
   GetShippingRequestForViewOutput,
   GoodsDetailsServiceProxy,
   ISelectItemDto,
-  RoundTripType,
   RoutStepsServiceProxy,
   SavedEntityType,
   SelectItemDto,
@@ -170,7 +169,6 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
     ActorShipper: [''],
     ActorCarrier: [''],
     IsInternalBrokerRequest: [''],
-    roundTripType: [''],
   });
   rentalDurationUnits: any[];
   rentalRangeDates: any;
@@ -179,9 +177,7 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
   selectedDestCitiesForEdit: ShippingRequestDestinationCitiesDto[] = [];
   AllActorsShippers: SelectItemDto[];
   AllActorsCarriers: SelectItemDto[];
-  allRoundTripTypes: SelectItemDto[];
   ShippingTypeEnum = ShippingTypeEnum;
-  generalGoodsCategoryId: number;
 
   constructor(
     injector: Injector,
@@ -465,7 +461,6 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
         this.selectedDestCitiesForEdit = [...res.shippingRequestDestinationCities];
         this.step1Form.controls['destinationCity'].setValue(res.shippingRequestDestinationCities);
         this.step1Form.controls['rentalRangeDates'].setValue([moment(res.rentalStartDate).toDate(), moment(res.rentalEndDate).toDate()]);
-        this.fillAllRoundTrips(true);
       });
   }
 
@@ -535,19 +530,19 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
       });
     });
 
-    // this._shippingRequestsServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
-    //   this.allShippingTypes = result?.map((item) => {
-    //     (item.id as any) = Number(item.id);
-    //     return item;
-    //   });
-    // });
-
-    this.allShippingTypes = this.enumToArray.transform(ShippingTypeEnum).map((item) => {
-      const selectItem = new SelectItemDto();
-      (selectItem.id as any) = Number(item.key);
-      selectItem.displayName = item.value;
-      return selectItem;
+    this._shippingRequestsServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
+      this.allShippingTypes = result?.map((item) => {
+        (item.id as any) = Number(item.id);
+        return item;
+      });
     });
+
+    // this.allShippingTypes = this.enumToArray.transform(ShippingTypeEnum).map((item) => {
+    //   const selectItem = new SelectItemDto();
+    //   (selectItem.id as any) = Number(item.key);
+    //   selectItem.displayName = item.value;
+    //   return selectItem;
+    // });
 
     this._shippingRequestsServiceProxy.getAllPackingTypesForDropdown().subscribe((result) => {
       this.allpackingTypes = result?.map((item) => {
@@ -873,14 +868,17 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
    * Validates Shipping Request Origing&Dest According to Shipping Type
    */
   validateShippingRequestType() {
-    this.validatePortsMovement();
     //check if user choose local-inside city  but the origin&des same
     if (this.step1Dto.shippingTypeId === ShippingTypeEnum.LocalInsideCity) {
       //local inside city
       this.destinationCountry = this.originCountry;
+      this.step1Form.get('destinationCountry').clearValidators();
+      this.step1Form.get('destinationCountry').updateValueAndValidity();
     } else if (this.step1Dto.shippingTypeId === ShippingTypeEnum.LocalBetweenCities) {
       // if route type is local between cities check if user select same city in source and destination
       this.destinationCountry = this.originCountry;
+      this.step1Form.get('destinationCountry').clearValidators();
+      this.step1Form.get('destinationCountry').updateValueAndValidity();
 
       //if destination city one item selected and equals to origin, while shipping type is between cities
       if (isNotNullOrUndefined(this.step1Dto.shippingRequestDestinationCities) && this.step1Dto.shippingRequestDestinationCities.length === 1) {
@@ -902,17 +900,6 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
         this.clearValidation('originCountry');
         this.clearValidation('destinationCountry');
       }
-    }
-  }
-
-  validatePortsMovement() {
-    if (
-      this.step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-      this.step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
-    ) {
-      this.step1Form.get('destinationCountry').clearValidators();
-      this.step1Form.get('destinationCountry').updateValueAndValidity();
-      this.removeRequiredGoodDetailsValidationForPortsMovement();
     }
   }
 
@@ -964,8 +951,8 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
   }
 
   shippingTypeChanged() {
-    this.validatePortsMovement();
     this.step1Dto.shippingRequestDestinationCities = [];
+    this.validateShippingRequestType();
   }
 
   removeCarrierInputFromForm1() {
@@ -988,71 +975,5 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
         this.step1Dto.carrierTenantIdForDirectRequest = null;
       }
     }
-  }
-
-  fillAllRoundTrips(isInit = false) {
-    if (!isInit) {
-      this.step1Dto.roundTripType = null;
-    }
-    this.step1Form.get('roundTripType').clearValidators();
-    this.step1Form.get('roundTripType').updateValueAndValidity();
-    console.log(
-      'this.step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements',
-      this.step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements
-    );
-    console.log(
-      'this.step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements',
-      this.step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
-    );
-    if (
-      this.step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
-      this.step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
-    ) {
-      return;
-    }
-    this.step1Form.get('roundTripType').setValidators([Validators.required]);
-    this.step1Form.get('roundTripType').updateValueAndValidity();
-    this.allRoundTripTypes = this.enumToArray
-      .transform(RoundTripType)
-      .filter((item) => {
-        if (this.step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
-          return item.key == RoundTripType.WithoutReturnTrip || item.key == RoundTripType.WithReturnTrip;
-        }
-        if (this.step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) {
-          return item.key != RoundTripType.WithoutReturnTrip && item.key != RoundTripType.WithReturnTrip;
-        }
-      })
-      .map((item) => {
-        const selectItem = new SelectItemDto();
-        (selectItem.id as any) = Number(item.key);
-        selectItem.displayName = item.value;
-        return selectItem;
-      });
-  }
-
-  private getGeneralGoodsId() {
-    this._goodsDetailsServiceProxy.getGeneralGoodsCategoryId().subscribe((result) => {
-      this.generalGoodsCategoryId = result;
-      this.step1Dto.goodCategoryId = this.generalGoodsCategoryId;
-      console.log('getGeneralGoodsId this.step3Dto', this.step1Dto);
-    });
-  }
-
-  private removeRequiredGoodDetailsValidationForPortsMovement() {
-    if (
-      this.step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements ||
-      this.step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements
-    ) {
-      this.getGeneralGoodsId();
-      this.step1Form.get('goodCategoryId').clearValidators();
-      this.step1Form.get('goodCategoryId').updateValueAndValidity();
-    } else {
-      this.step1Form.get('goodCategoryId').setValidators([Validators.required]);
-      this.step1Form.get('goodCategoryId').updateValueAndValidity();
-    }
-  }
-
-  print() {
-    console.log('this.step1Dto', this.step1Dto);
   }
 }

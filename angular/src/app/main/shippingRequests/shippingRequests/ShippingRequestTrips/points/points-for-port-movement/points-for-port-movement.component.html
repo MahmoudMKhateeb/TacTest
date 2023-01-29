@@ -191,16 +191,16 @@
             </a>
           </td>
           <td>
-            <div *ngIf="showAppointmentsAndClearanceButton(i)">
+            <div *ngIf="showAppointmentsAndClearanceButton(i) && usedIn == 'createOrEdit'">
               <div class="checkbox-list mb-2">
-                <label class="checkbox ml-2" *ngIf="showClearanceCheckbox(i)">
+                <label class="checkbox ml-2">
                   <input
                     type="checkbox"
                     [(ngModel)]="record.dropNeedsClearance"
                     id="dropNeedsClearance-{{ i }}"
                     name="dropNeedsClearance-{{ i }}"
                     value="false"
-                    [disabled]="usedIn != 'createOrEdit' || !isTachyonDealer"
+                    [disabled]="!isTachyonDealer"
                   />
                   <span class="ml-2 mt-1"></span>
                   {{ l('needsClearance') }}
@@ -212,7 +212,35 @@
                     id="dropNeedsAppointment-{{ i }}"
                     name="dropNeedsAppointment-{{ i }}"
                     value="false"
-                    [disabled]="usedIn != 'createOrEdit' || !isTachyonDealer"
+                    [disabled]="!isTachyonDealer"
+                  />
+                  <span class="ml-2 mt-1"></span>
+                  {{ l('needsAppointment') }}
+                </label>
+              </div>
+            </div>
+            <div *ngIf="showAppointmentsAndClearanceButton(i) && usedIn != 'createOrEdit'">
+              <div class="checkbox-list mb-2">
+                <label class="checkbox ml-2">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="record.needsClearance"
+                    id="dropNeedsClearance-{{ i }}"
+                    name="dropNeedsClearance-{{ i }}"
+                    value="false"
+                    [disabled]="!isTachyonDealer"
+                  />
+                  <span class="ml-2 mt-1"></span>
+                  {{ l('needsClearance') }}
+                </label>
+                <label class="checkbox ml-2">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="record.needsAppointment"
+                    id="dropNeedsAppointment-{{ i }}"
+                    name="dropNeedsAppointment-{{ i }}"
+                    value="false"
+                    [disabled]="!isTachyonDealer"
                   />
                   <span class="ml-2 mt-1"></span>
                   {{ l('needsAppointment') }}
@@ -221,7 +249,7 @@
             </div>
           </td>
           <td>
-            <div *ngIf="showAppointmentsAndClearanceButton(i)">
+            <div *ngIf="showAppointmentsAndClearanceButton(i) && usedIn == 'createOrEdit'">
               <button *ngIf="record.dropNeedsClearance || record.dropNeedsAppointment" class="btn btn-primary" (click)="showVasModal(i)">
                 <i
                   [ngClass]="
@@ -232,6 +260,11 @@
                       : 'fa fa-eye'
                   "
                 ></i>
+              </button>
+            </div>
+            <div *ngIf="showAppointmentsAndClearanceButton(i) && usedIn != 'createOrEdit'">
+              <button *ngIf="record.needsClearance || record.needsAppointment" class="btn btn-primary" (click)="showVasModal(i)">
+                <i class="fa fa-eye"></i>
               </button>
             </div>
             <!--                        <span *ngIf="usedIn != 'createOrEdit'">{{ record.dropPaymentMethodTitle ?? '-' }}</span>-->
@@ -259,5 +292,7 @@
 <appointment-and-clearance-modal
   #appointmentAndClearanceModal
   (saved)="handleSaveAppointmentsAndClearance($event)"
+  (carrierSetClearanceData)="carrierSetClearanceData($event)"
+  (carrierSetAppointmentData)="carrierSetAppointmentData($event)"
   [isEdit]="isEdit"
 ></appointment-and-clearance-modal>

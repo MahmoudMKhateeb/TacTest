@@ -7,12 +7,12 @@ import {
   PickingType,
   ReceiverFacilityLookupTableDto,
   RoundTripType,
+  ShippingRequestsTripServiceProxy,
   TripAppointmentDataDto,
   TripClearancePricesDto,
 } from '@shared/service-proxies/service-proxies';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { AppointmentAndClearanceModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/appointment-and-clearance/appointment-and-clearance.component';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'PointsForPortsMovementComponent',
@@ -48,7 +48,11 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   PickingType = PickingType;
   activePointIndex: number;
 
-  constructor(injector: Injector, private _PointsService: PointsService) {
+  constructor(
+    injector: Injector,
+    private _PointsService: PointsService,
+    private _shippingRequestsTripServiceProxy: ShippingRequestsTripServiceProxy
+  ) {
     super(injector);
   }
 
@@ -109,10 +113,11 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
     this.activePointIndex = index;
     this.appointmentAndClearanceModal.show(
       this.wayPointsList[index].id,
-      this.wayPointsList[index].dropNeedsClearance,
-      this.wayPointsList[index].dropNeedsAppointment,
+      this.usedIn == 'createOrEdit' ? this.wayPointsList[index].dropNeedsClearance : (this.wayPointsList[index] as any).needsClearance,
+      this.usedIn == 'createOrEdit' ? this.wayPointsList[index].dropNeedsAppointment : (this.wayPointsList[index] as any).needsAppointment,
       this.wayPointsList[index].appointmentDataDto,
-      this.wayPointsList[index].tripClearancePricesDto
+      this.wayPointsList[index].tripClearancePricesDto,
+      this.usedIn
     );
   }
 
@@ -164,11 +169,13 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
       : this.dropFacilities.filter((fac) => {
           switch (index) {
             case 1: {
-              return fac.facilityType === FacilityType.Facility;
+              return this.roundTripType === RoundTripType.OneWayRoutWithPortShuttling
+                ? fac.facilityType === FacilityType.Port
+                : fac.facilityType === FacilityType.Facility;
             }
             default:
             case 3: {
-              return true;
+              return fac.facilityType === FacilityType.Facility;
             }
             case 5: {
               return fac.facilityType === FacilityType.Port;
@@ -187,33 +194,36 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   }
 
   showAppointmentsAndClearanceButton(index): boolean {
+    if (this.usedIn == 'createOrEdit' && !this.isTachyonDealer && !this.isEdit) {
+      return false;
+    }
     if (this.usedIn != 'createOrEdit') {
       return (this.wayPointsList[index] as any).needsClearance || (this.wayPointsList[index] as any).needsAppointment;
     }
-    if (
-      index === 4 &&
-      (this.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling || this.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling)
-    ) {
-      return false;
+    if (!this.isExportRequest) {
+      switch (index) {
+        case 3:
+        case 0: {
+          return true;
+        }
+        default: {
+          return false;
+        }
+      }
     }
-    if (this.wayPointsList.length > 0 && this.pickupFacilities.concat(this.dropFacilities).length > 0) {
-      const foundFacility = this.pickupFacilities.concat(this.dropFacilities).find((item) => item.id == this.wayPointsList[index].facilityId);
-      const isPort = isNotNullOrUndefined(foundFacility) && foundFacility.facilityType === FacilityType.Port;
-      return isPort;
+    if (this.isExportRequest) {
+      switch (index) {
+        case 1: {
+          return this.roundTripType === RoundTripType.OneWayRoutWithPortShuttling;
+        }
+        case 5: {
+          return this.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling;
+        }
+        default: {
+          return false;
+        }
+      }
     }
-    // if (!this.isExportRequest && !this.isImportWithReturnTrip) {
-    //   return false;
-    // }
-    // if (!this.isExportRequest && this.isImportWithReturnTrip) {
-    //   switch (index) {
-    //     case 3:
-    //     case 0: {
-    //     }
-    //     default: {
-    //       return false;
-    //     }
-    //   }
-    // }
     return false;
   }
 
@@ -221,33 +231,15 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
     this.savedAppointmentsAndClearance.emit({ ...event, pointIndex: this.activePointIndex });
   }
 
-  showClearanceCheckbox(i: number) {
-    switch (this.roundTripType) {
-      case RoundTripType.WithReturnTrip: {
-        if (i === 0) {
-          return !this.wayPointsList[3].dropNeedsClearance;
-        }
-        if (i === 3) {
-          return !this.wayPointsList[0].dropNeedsClearance;
-        }
-        break;
-      }
-      case RoundTripType.OneWayRoutWithPortShuttling:
-      case RoundTripType.WithoutReturnTrip: {
-        return true;
-      }
-      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
-      case RoundTripType.TwoWayRoutsWithPortShuttling: {
-        if (i === 3) {
-          return !this.wayPointsList[5].dropNeedsClearance;
-        }
-        if (i === 5) {
-          return !this.wayPointsList[3].dropNeedsClearance;
-        }
-        break;
-      }
-      default:
-        return true;
-    }
+  carrierSetClearanceData($event: TripClearancePricesDto) {
+    this._shippingRequestsTripServiceProxy.carrierSetClearanceData(this.wayPointsList[this.activePointIndex].id, $event).subscribe((res) => {
+      this.wayPointsList[this.activePointIndex].tripClearancePricesDto = $event;
+    });
+  }
+
+  carrierSetAppointmentData($event: TripAppointmentDataDto) {
+    this._shippingRequestsTripServiceProxy.carrierSetAppointmentData(this.wayPointsList[this.activePointIndex].id, $event).subscribe((res) => {
+      this.wayPointsList[this.activePointIndex].appointmentDataDto = $event;
+    });
   }
 }

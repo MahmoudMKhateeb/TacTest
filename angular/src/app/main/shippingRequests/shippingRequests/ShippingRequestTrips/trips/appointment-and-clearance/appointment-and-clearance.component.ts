@@ -28,12 +28,20 @@ import * as moment from '@node_modules/moment';
 export class AppointmentAndClearanceModalComponent extends AppComponentBase implements OnInit, OnDestroy {
   @ViewChild('appointmentAndClearanceModal', { static: true }) modal: ModalDirective;
   @Output('saved') saved = new EventEmitter<{ tripAppointment: TripAppointmentDataDto; tripClearance: TripClearancePricesDto }>();
+  @Output('carrierSetClearanceData') carrierSetClearanceData = new EventEmitter<TripClearancePricesDto>();
+  @Output('carrierSetAppointmentData') carrierSetAppointmentData = new EventEmitter<TripAppointmentDataDto>();
   @Input('isEdit') isEdit = false;
+  @Input('isSaasRequest') isSaasRequest = false;
   tripAppointment: TripAppointmentDataDto = new TripAppointmentDataDto();
   tripClearance: TripClearancePricesDto = new TripClearancePricesDto();
   isFormSubmitted: boolean;
   saving: boolean;
   private pointId: number;
+  oldTripAppointment: TripAppointmentDataDto;
+  oldTripClearance: TripClearancePricesDto;
+  updatedAppointment: boolean;
+  updatedClearance: boolean;
+  usedIn: 'view' | 'createOrEdit';
 
   get isFileInputValid() {
     return this.createOrEditDocumentFileDto.name ? true : false;
@@ -87,19 +95,29 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
     dropNeedsClearance: boolean,
     dropNeedsAppointment: boolean,
     tripAppointment: TripAppointmentDataDto,
-    tripClearance: TripClearancePricesDto
+    tripClearance: TripClearancePricesDto,
+    usedIn: 'view' | 'createOrEdit'
   ) {
+    this.usedIn = usedIn;
     this.needsAppointment = dropNeedsAppointment;
     this.needsClearance = dropNeedsClearance;
     this.pointId = pointId;
     if (isNotNullOrUndefined(tripClearance)) {
-      this.tripClearance = tripClearance;
+      this.tripClearance = TripClearancePricesDto.fromJS(tripClearance);
+      this.oldTripClearance = TripClearancePricesDto.fromJS(tripClearance);
+    } else {
+      this.tripClearance = new TripClearancePricesDto();
+      this.oldTripClearance = new TripClearancePricesDto();
     }
     if (isNotNullOrUndefined(tripAppointment)) {
-      this.tripAppointment = tripAppointment;
+      this.tripAppointment = TripAppointmentDataDto.fromJS(tripAppointment);
+      this.oldTripAppointment = TripAppointmentDataDto.fromJS(tripAppointment);
       if (tripAppointment.documentName) {
         this.createOrEditDocumentFileDto.name = tripAppointment.documentName;
       }
+    } else {
+      this.tripAppointment = new TripAppointmentDataDto();
+      this.oldTripAppointment = new TripAppointmentDataDto();
     }
     this.modal.show();
     this.initDocsUploader();
@@ -107,12 +125,14 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
   }
 
   close(): void {
-    this.modal.hide();
-    this.tripAppointment = new TripAppointmentDataDto();
-    this.tripClearance = new TripClearancePricesDto();
+    this.tripAppointment = null;
+    this.oldTripAppointment = null;
+    this.tripClearance = null;
+    this.oldTripClearance = null;
     this.hasNewUpload = undefined;
     this.needsAppointment = false;
     this.needsClearance = false;
+    this.modal.hide();
   }
 
   save() {
@@ -123,9 +143,19 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
     }
     console.log('tripClearance', this.tripClearance);
     console.log('tripAppointment', this.tripAppointment);
-    this.tripAppointment.appointmentDateTime = moment(this.tripAppointment.appointmentDateTime);
-    this.tripAppointment.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
-    this.tripClearance.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
+    if (!this.isEdit && isNotNullOrUndefined(this.tripAppointment.appointmentDateTime)) {
+      this.tripAppointment.appointmentDateTime = moment(this.tripAppointment.appointmentDateTime);
+    }
+    if (this.tripAppointment.itemPrice) {
+      this.tripAppointment.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
+    } else {
+      this.tripAppointment = null;
+    }
+    if (this.tripClearance.itemPrice) {
+      this.tripClearance.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
+    } else {
+      this.tripClearance = null;
+    }
     this.saved.emit({ tripAppointment: this.tripAppointment, tripClearance: this.tripClearance });
     this.close();
   }
@@ -292,20 +322,16 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
   }
 
   shouldDisable() {
-    const isClearanceNotValid =
-      !this.tripClearance?.itemPrice ||
-      this.tripClearance?.itemPrice?.toString()?.length === 0 ||
-      !this.tripClearance?.commissionType ||
-      !this.tripClearance?.commissionPercentageOrAddValue ||
-      this.tripClearance?.commissionPercentageOrAddValue?.toString()?.length === 0;
-    const isAppointmentNotValid =
-      !this.tripAppointment.itemPrice ||
-      this.tripAppointment?.itemPrice?.toString()?.length === 0 ||
-      !this.tripAppointment?.commissionType ||
-      !this.tripAppointment?.commissionPercentageOrAddValue ||
-      this.tripAppointment?.commissionPercentageOrAddValue?.toString()?.length === 0;
+    const isClearanceNotValid = this.shouldDisableClearance(); // ||
+    // !this.tripClearance?.commissionType ||
+    // !this.tripClearance?.commissionPercentageOrAddValue ||
+    // this.tripClearance?.commissionPercentageOrAddValue?.toString()?.length === 0;
+    const isAppointmentNotValid = this.shouldDisableAppointment(); // ||
+    // !this.tripAppointment?.commissionType ||
+    // !this.tripAppointment?.commissionPercentageOrAddValue ||
+    // this.tripAppointment?.commissionPercentageOrAddValue?.toString()?.length === 0;
     if (this.needsClearance && this.needsAppointment) {
-      return isClearanceNotValid || isAppointmentNotValid;
+      return isClearanceNotValid && isAppointmentNotValid;
     }
     if (this.needsClearance && !this.needsAppointment) {
       return isClearanceNotValid;
@@ -313,5 +339,33 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
     return isAppointmentNotValid;
   }
 
+  shouldDisableAppointment() {
+    const isAppointmentNotValid =
+      isNotNullOrUndefined(this.tripAppointment) && (!this.tripAppointment?.itemPrice || this.tripAppointment?.itemPrice?.toString()?.length === 0);
+    return isAppointmentNotValid;
+  }
+
+  shouldDisableClearance() {
+    const isClearanceNotValid =
+      isNotNullOrUndefined(this.tripClearance) && (!this.tripClearance?.itemPrice || this.tripClearance?.itemPrice?.toString()?.length === 0);
+    return isClearanceNotValid;
+  }
+
   ngOnDestroy(): void {}
+
+  carrierSaveClearance() {
+    this.updatedClearance = true;
+    this.tripClearance.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
+    this.carrierSetClearanceData.emit(this.tripClearance);
+  }
+
+  carrierSaveAppointment() {
+    this.updatedAppointment = true;
+    this.tripAppointment.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
+    this.carrierSetAppointmentData.emit(this.tripAppointment);
+  }
+
+  isNotNullOrUndefined(item: any) {
+    return isNotNullOrUndefined(item);
+  }
 }

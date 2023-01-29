@@ -563,6 +563,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
       this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
     ) {
+      this.checkIfShouldSendAppointmentAndClearance();
       return this.validatePointsFromPointsComponentForPortsMovement();
     }
     let isSingleDropTrip = this.shippingRequest.routeTypeId === this.RouteTypesEnum.SingleDrop;
@@ -652,49 +653,42 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     return true;
   }
 
-  private validatePointsFromPointsComponentForPortsMovement() {
+  private validatePointsFromPointsComponentForPortsMovement(): boolean {
     // debugger;
     if (!isNotNullOrUndefined(this.PointsComponent) || !isNotNullOrUndefined(this.PointsComponent.wayPointsList)) {
       return false;
     }
     if (this.shippingRequestForView.shippingRequest.roundTripType === RoundTripType.WithReturnTrip && this.PointsComponent.wayPointsList.length > 0) {
-      const point1 = this.PointsComponent.wayPointsList[1];
-      const point2 = this.PointsComponent.wayPointsList[2];
-      const point3 = this.PointsComponent.wayPointsList[3];
-      const goodDetailsValidForPoint1 = isNotNullOrUndefined(point1.goodsDetailListDto)
-        ? point1.goodsDetailListDto.filter((goodDetail) => {
-            return isNotNullOrUndefined(goodDetail.description) && goodDetail.description?.length > 0;
-          }).length === point1.goodsDetailListDto.length
-        : false;
-
-      const pointOneValid = isNotNullOrUndefined(point1.receiverId) && goodDetailsValidForPoint1;
-      if (!pointOneValid) {
-        return false;
-      }
-
-      const pointTwoValid = isNotNullOrUndefined(point2.receiverId);
-      if (!pointTwoValid) {
-        return false;
-      }
-
-      const foundFacility = this.PointsComponent.allFacilities.find((fac) => fac.id === point3.facilityId);
-      const recieverValid =
-        foundFacility?.facilityType === FacilityType.Facility ? point3.facilityId && isNotNullOrUndefined(point3.receiverId) : true;
-      const goodsDetailsValidForPoint3 = isNotNullOrUndefined(point3.goodsDetailListDto)
-        ? point3.goodsDetailListDto.filter((goodDetail) => {
-            return (
-              isNotNullOrUndefined(goodDetail.weight) &&
-              goodDetail.weight?.toString()?.length > 0 &&
-              isNotNullOrUndefined(goodDetail.description) &&
-              goodDetail.description?.length > 0
-            );
-          }).length === point3.goodsDetailListDto.length
-        : false;
-      const pointThreeValid = isNotNullOrUndefined(point3.facilityId) && recieverValid && goodsDetailsValidForPoint3;
-      if (!pointThreeValid) {
-        return false;
-      }
+      return this.validateImportWithReturnTrip();
     }
+    if (
+      this.shippingRequestForView.shippingRequest.roundTripType === RoundTripType.WithoutReturnTrip &&
+      this.PointsComponent.wayPointsList.length > 0
+    ) {
+      return this.validateImportWithoutReturnTrip();
+    }
+    if (
+      this.shippingRequestForView.shippingRequest.roundTripType === RoundTripType.OneWayRoutWithPortShuttling &&
+      this.PointsComponent.wayPointsList.length > 0
+    ) {
+      return this.validateOneWayRoutWithPortShuttling();
+    }
+    if (
+      this.shippingRequestForView.shippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling &&
+      this.PointsComponent.wayPointsList.length > 0
+    ) {
+      return this.validateTwoWayRoutsWithoutPortShuttling();
+    }
+    if (
+      this.shippingRequestForView.shippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling &&
+      this.PointsComponent.wayPointsList.length > 0
+    ) {
+      return this.validateTwoWayRoutsWithPortShuttling();
+    }
+    return true;
+  }
+
+  private checkIfShouldSendAppointmentAndClearance() {
     if (this.trip?.routPoints) {
       this.trip?.routPoints?.map((item) => {
         if (!item.dropNeedsAppointment) {
@@ -705,7 +699,155 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         }
       });
     }
+  }
+
+  validateImportWithReturnTrip(): boolean {
+    const point1 = this.PointsComponent.wayPointsList[1];
+    const point2 = this.PointsComponent.wayPointsList[2];
+    const point3 = this.PointsComponent.wayPointsList[3];
+    const goodDetailsValidForPoint1 = this.isGoodDetailsValidForPoint(point1, false, false, true);
+    //     isNotNullOrUndefined(point1.goodsDetailListDto) && point1.goodsDetailListDto.length > 0
+    //     ? point1.goodsDetailListDto.filter((goodDetail) => {
+    //     return isNotNullOrUndefined(goodDetail.description) && goodDetail.description?.length > 0;
+    // }).length === point1.goodsDetailListDto.length
+    //     : false;
+
+    const pointOneValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId) && goodDetailsValidForPoint1;
+    if (!pointOneValid) {
+      return false;
+    }
+
+    const pointTwoValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point2.receiverId);
+    if (!pointTwoValid) {
+      return false;
+    }
+
+    const foundFacility = this.PointsComponent.allFacilities.find((fac) => fac.id === point3.facilityId);
+    const recieverValid =
+      foundFacility?.facilityType === FacilityType.Facility
+        ? point3.facilityId && this.isReceiverIdOrSenderIdOrFacilityIdValid(point3.receiverId)
+        : true;
+    const goodsDetailsValidForPoint3 = this.isGoodDetailsValidForPoint(point3, true, false, true);
+    // isNotNullOrUndefined(point3.goodsDetailListDto) && point3.goodsDetailListDto.length > 0
+    // ? point3.goodsDetailListDto.filter((goodDetail) => {
+    // return (
+    //     isNotNullOrUndefined(goodDetail.weight) &&
+    //     goodDetail.weight?.toString()?.length > 0 &&
+    //     isNotNullOrUndefined(goodDetail.description) &&
+    //     goodDetail.description?.length > 0
+    // );
+    // }).length === point3.goodsDetailListDto.length
+    //     : false;
+    const pointThreeValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point3.facilityId) && recieverValid && goodsDetailsValidForPoint3;
+    if (!pointThreeValid) {
+      return false;
+    }
     return true;
+  }
+  validateImportWithoutReturnTrip(): boolean {
+    const point1 = this.PointsComponent.wayPointsList[1];
+    const goodDetailsValidForPoint1 = this.isGoodDetailsValidForPoint(point1, false, false, true);
+
+    const pointOneValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId) && goodDetailsValidForPoint1;
+    if (!pointOneValid) {
+      return false;
+    }
+
+    return true;
+  }
+
+  validateOneWayRoutWithPortShuttling(): boolean {
+    const point1 = this.PointsComponent.wayPointsList[0];
+    const point2 = this.PointsComponent.wayPointsList[1];
+    const goodDetailsValidForPoint2 = this.isGoodDetailsValidForPoint(point2, true, true, true);
+
+    const pointOneValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId);
+    const pointTwoValid = goodDetailsValidForPoint2;
+    if (!pointOneValid || !pointTwoValid) {
+      return false;
+    }
+
+    return true;
+  }
+
+  validateTwoWayRoutsWithoutPortShuttling(): boolean {
+    const point1 = this.PointsComponent.wayPointsList[0];
+    const point2 = this.PointsComponent.wayPointsList[1];
+    const point3 = this.PointsComponent.wayPointsList[2];
+    const point4 = this.PointsComponent.wayPointsList[3];
+    const goodDetailsValidForPoint2 = this.isGoodDetailsValidForPoint(point2, true, true, true);
+    const goodDetailsValidForPoint4 = this.isGoodDetailsValidForPoint(point4, true, true, true);
+
+    const point1Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId);
+    const point2Valid = goodDetailsValidForPoint2;
+    const point3Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point3.receiverId);
+    const point4Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point4.receiverId) && goodDetailsValidForPoint4;
+    if (!point1Valid || !point2Valid || !point3Valid || !point4Valid) {
+      return false;
+    }
+
+    return true;
+  }
+
+  validateTwoWayRoutsWithPortShuttling(): boolean {
+    const point1 = this.PointsComponent.wayPointsList[0];
+    const point2 = this.PointsComponent.wayPointsList[1];
+    const point3 = this.PointsComponent.wayPointsList[2];
+    const point4 = this.PointsComponent.wayPointsList[3];
+    const point5 = this.PointsComponent.wayPointsList[4];
+    const point6 = this.PointsComponent.wayPointsList[5];
+    const goodDetailsValidForPoint2 = this.isGoodDetailsValidForPoint(point2, true, true, true);
+    const goodDetailsValidForPoint4 = this.isGoodDetailsValidForPoint(point4, true, true, true);
+    const goodDetailsValidForPoint6 = this.isGoodDetailsValidForPoint(point6, true, true, true);
+
+    const point1Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId);
+    const point2Valid = goodDetailsValidForPoint2;
+    const point3Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point3.receiverId);
+    const point4Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point4.receiverId) && goodDetailsValidForPoint4;
+    const point5Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point5.receiverId);
+    const point6Valid = goodDetailsValidForPoint6;
+    if (!point1Valid || !point2Valid || !point3Valid || !point4Valid || !point5Valid || !point6Valid) {
+      return false;
+    }
+    return true;
+  }
+
+  isReceiverIdOrSenderIdOrFacilityIdValid(facilitOrReceiverId: number) {
+    return isNotNullOrUndefined(facilitOrReceiverId) && facilitOrReceiverId?.toString() != '';
+  }
+
+  isGoodDetailsValidForPoint(point: CreateOrEditRoutPointDto, isWeightRequired: boolean, isQtyRequired: boolean, isDescRequired: boolean) {
+    return isNotNullOrUndefined(point.goodsDetailListDto) && point.goodsDetailListDto.length > 0
+      ? point.goodsDetailListDto.filter((goodDetail) => {
+          if (isWeightRequired && isQtyRequired && isDescRequired) {
+            return (
+              isNotNullOrUndefined(goodDetail.amount) &&
+              goodDetail.amount?.toString()?.length > 0 &&
+              isNotNullOrUndefined(goodDetail.weight) &&
+              goodDetail.weight?.toString()?.length > 0 &&
+              isNotNullOrUndefined(goodDetail.description) &&
+              goodDetail.description?.length > 0
+            );
+          }
+          if (isWeightRequired && isDescRequired) {
+            return (
+              isNotNullOrUndefined(goodDetail.weight) &&
+              goodDetail.weight?.toString()?.length > 0 &&
+              isNotNullOrUndefined(goodDetail.description) &&
+              goodDetail.description?.length > 0
+            );
+          }
+          if (isWeightRequired) {
+            return isNotNullOrUndefined(goodDetail.weight) && goodDetail.weight?.toString().length > 0;
+          }
+          if (isQtyRequired) {
+            return isNotNullOrUndefined(goodDetail.amount) && goodDetail.amount?.toString().length > 0;
+          }
+          if (isDescRequired) {
+            return isNotNullOrUndefined(goodDetail.description) && goodDetail.description?.length > 0;
+          }
+        }).length === point.goodsDetailListDto.length
+      : false;
   }
 
   /**
