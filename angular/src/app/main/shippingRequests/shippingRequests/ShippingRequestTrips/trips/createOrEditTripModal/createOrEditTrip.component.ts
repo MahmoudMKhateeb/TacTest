@@ -185,7 +185,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   vasesHandler() {
     if (this.VasListFromFather) {
-      this.VasListFromFather.forEach((x) => {
+      this.VasListFromFather.filter((item) => !item.shouldHide).forEach((x) => {
         //Get the Vase List From Father And Attach Them to new Array
         const vas: CreateOrEditShippingRequestTripVasDto = new CreateOrEditShippingRequestTripVasDto();
         vas.id = undefined; // vas id in shipping Request trip (Required for edit trip)
