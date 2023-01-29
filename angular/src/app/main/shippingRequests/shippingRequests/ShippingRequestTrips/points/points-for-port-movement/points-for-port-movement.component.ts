@@ -131,14 +131,13 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
 
   filterFacilitiesForDropDown(isPickup: boolean, index: number) {
     if (!this.isExportRequest) {
-      return isPickup
+      return isPickup && index === 0
         ? this.pickupFacilities.filter((fac) => {
             switch (index) {
               case 0: {
                 return fac.facilityType === FacilityType.Port;
               }
-              default:
-              case 2: {
+              default: {
                 return true;
               }
             }
@@ -149,13 +148,14 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
                 return fac.facilityType === FacilityType.Facility;
               }
               default:
+              case 2:
               case 3: {
                 return true;
               }
             }
           });
     }
-    return isPickup
+    return isPickup && index === 0
       ? this.pickupFacilities.filter((fac) => {
           switch (index) {
             case 0: {
@@ -185,7 +185,7 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   }
 
   selectContact(index: number) {
-    if (index % 2 === 0) {
+    if (index % 2 === 0 || this.roundTripType === RoundTripType.WithReturnTrip) {
       return;
     }
     if (((index < 3 && !this.isExportRequest) || (index > 0 && index < 5 && this.isExportRequest)) && this.wayPointsList[index + 1]) {
