@@ -523,9 +523,8 @@ namespace TACHYON
             configuration.CreateMap<ShippingRequestTrip, TrackingShippingRequestTripDto>();
 
             configuration.CreateMap<ShippingRequestTripVas, CreateOrEditShippingRequestTripVasDto>()
-                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Key))
-                .ForMember(dst => dst.ShouldHide, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName) ||
-                src.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName) ? true : false));
+                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Key));
+                
             configuration.CreateMap<CreateOrEditShippingRequestTripVasDto, ShippingRequestTripVas>();
 
             configuration.CreateMap<ShippingRequestTripVas, ShippingRequestTripVasDto>()

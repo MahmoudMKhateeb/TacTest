@@ -747,8 +747,10 @@ namespace TACHYON.Shipping.ShippingRequests
                         new GetShippingRequestVasForViewDto
                         {
                             ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e),
-                            VasName = e.VasFk.Key
-                        }).ToListAsync();
+                            VasName = e.VasFk.Key, 
+                            ShouldHide = e.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName) ||
+                e.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName) ? true : false
+            }).ToListAsync();
 
                 //Bids
                 List<ShippingRequestBidDto> shippingRequestBidDtoList = new List<ShippingRequestBidDto>();

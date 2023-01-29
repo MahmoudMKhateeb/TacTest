@@ -13,6 +13,5 @@ namespace TACHYON.ShippingRequestTripVases.Dtos
         /// <summary>
         /// This field in helper for front to hide specific vases "appointment, clearance" from user
         /// </summary>
-        public bool ShouldHide { get; set; }
     }
 }

@@ -49,6 +49,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public long? OriginFacilityId { get; set; }
 
         public string OriginFacilityTitle { get; set; }
+        public ShippingTypeEnum ShippingTypeId { get; set; }
         public string ShippingTypeTitle { get; set; }
         public string RoundTripTitle { get; set; }
         public string PackingTypeTitle { get; set; }
