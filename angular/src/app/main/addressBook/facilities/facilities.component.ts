@@ -1,6 +1,6 @@
 import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FacilitiesServiceProxy, FacilityDto } from '@shared/service-proxies/service-proxies';
+import { FacilitiesServiceProxy, FacilityDto, FacilityType } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -41,6 +41,7 @@ export class FacilitiesComponent extends AppComponentBase {
   minLatitudeFilterEmpty: number;
   countyDisplayNameFilter = '';
   cityDisplayNameFilter = '';
+  FacilityTypeEnum = FacilityType;
 
   fromDate: moment.Moment | null | undefined;
   toDate: moment.Moment | null | undefined;

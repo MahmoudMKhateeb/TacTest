@@ -914,7 +914,10 @@ namespace TACHYON.Shipping.Trips
 
             ObjectMapper.Map(input, trip);
             await SetNeedsAppointmentAndClearance(input, trip);
-            await BindAppointmentAndClearance(input, request, trip);
+            if (await IsTachyonDealer())
+            {
+                await BindAppointmentAndClearance(input, request, trip);
+            }
 
             if (request.ShippingRequestFlag == ShippingRequestFlag.Dedicated &&
                 trip.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)

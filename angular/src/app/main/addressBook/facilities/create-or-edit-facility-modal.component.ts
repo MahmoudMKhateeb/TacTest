@@ -61,6 +61,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   mapCenterLat: number;
   mapCenterLng: number;
   AllTenants: ShippersForDropDownDto[];
+  FacilityTypeEnum = FacilityType;
 
   callbacks: any[] = [];
   adapterConfig = {
@@ -205,7 +206,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     this.revalidateWorkingHours();
     this.saving = true;
     console.log(this.facility.shipperId);
-
+    if (this.isTachyonDealer && this.facility.facilityType != FacilityType.Facility) this.facility.shipperId = null;
     this.facility.facilityWorkingHours = this.FacilityWorkingHours.filter((r) => r.startTime && r.endTime && r.hasTime).map(
       (fh) =>
         new CreateOrEditFacilityWorkingHourDto({

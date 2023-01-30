@@ -24,7 +24,7 @@
 
           <div class="modal-body">
             <div class="row">
-              <div *ngIf="appSession.tenantId" class="form-group col-md-12">
+              <div *ngIf="isTachyonDealerOrHost && facility.facilityType == FacilityTypeEnum.Facility" class="form-group col-md-12">
                 <label>{{ l('Company') }} <span class="required-fileds">*</span></label>
                 <div
                   [ngClass]="{
@@ -48,7 +48,26 @@
                 </div>
                 <span class="form-text text-muted">{{ l('SelectCompany') }} {{ facility.shipperId }}</span>
               </div>
-
+              <div *ngIf="isTachyonDealerOrHost && !isHomeDelivery" class="form-group col-md-6">
+                <label>{{ l('FacilityType') }} <span class="required-fileds">*</span></label>
+                <dx-select-box
+                  id="FacilityType"
+                  name="facilityType"
+                  [dataSource]="allFacilityTypes"
+                  [searchEnabled]="true"
+                  [(value)]="facility.facilityType"
+                  displayExpr="value"
+                  valueExpr="key"
+                  required
+                >
+                  <dx-validator [validationGroup]="'createFacilityGroup'">
+                    <dxi-validation-rule
+                      type="required"
+                      message="{{ l('FacilityType') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                    ></dxi-validation-rule>
+                  </dx-validator>
+                </dx-select-box>
+              </div>
               <div class="form-group col-md-6">
                 <label>{{ l('FacilityName') }} <span *ngIf="isRequiredFacilityName" class="required-fileds">*</span></label>
                 <!--              <input-->
@@ -95,26 +114,7 @@
                   </dx-validator>
                 </dx-text-box>
               </div>
-              <div *ngIf="!appSession.tenantId" class="form-group col-md-6">
-                <label>{{ l('FacilityType') }} <span class="required-fileds">*</span></label>
-                <dx-select-box
-                  id="FacilityType"
-                  name="facilityType"
-                  [dataSource]="allFacilityTypes"
-                  [searchEnabled]="true"
-                  [(value)]="facility.facilityType"
-                  displayExpr="value"
-                  valueExpr="key"
-                  required
-                >
-                  <dx-validator [validationGroup]="'createFacilityGroup'">
-                    <dxi-validation-rule
-                      type="required"
-                      message="{{ l('FacilityType') }}: {{ 'ThisFieldIsRequired' | localize }}"
-                    ></dxi-validation-rule>
-                  </dx-validator>
-                </dx-select-box>
-              </div>
+
               <div *ngIf="this.feature.isEnabled('App.ShipperClients')" class="form-group col-md-12">
                 <label>{{ l('ActorShipper') }} <span class="required-fileds">*</span></label>
                 <div

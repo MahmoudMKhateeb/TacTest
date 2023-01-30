@@ -40,6 +40,7 @@ namespace TACHYON.Vases
         public async Task<LoadResult> GetAll(GetAllVasesInput input)
         {
             var query = _vasRepository.GetAll()
+                .Where(x=> !x.Name.Equals(TACHYONConsts.AppointmentVasName) && !x.Name.Equals(TACHYONConsts.ClearanceVasName))
                 .ProjectTo<VasDto>(AutoMapperConfigurationProvider);
 
             return await LoadResultAsync(query, input.LoadOptions);

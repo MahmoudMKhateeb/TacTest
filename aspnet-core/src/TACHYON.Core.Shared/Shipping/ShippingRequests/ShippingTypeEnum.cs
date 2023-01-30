@@ -9,10 +9,10 @@ namespace TACHYON.Shipping.ShippingRequests
     {
         LocalInsideCity = 1,
         LocalBetweenCities = 2,
-        [Description("Import port movement")]
+        [Description("port movements - Import")]
         ImportPortMovements = 3,
         CrossBorderMovements = 4,
-        [Description("export port movement")]
+        [Description("port movements - export")]
         ExportPortMovements = 5,
 
     }

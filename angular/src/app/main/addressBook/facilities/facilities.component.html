@@ -235,7 +235,11 @@
                           <li>
                             <a
                               href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Facilities.Edit')"
+                              *ngIf="
+                                permission.isGranted('Pages.Facilities.Edit') &&
+                                (record.facilityType == FacilityTypeEnum.Facility ||
+                                  (record.facilityType != FacilityTypeEnum.Facility && isTachyonDealerOrHost))
+                              "
                               class="dropdown-item"
                               (click)="createOrEditFacilityModal.show(record.facility.id)"
                               >{{ l('Edit') }}</a
@@ -245,7 +249,11 @@
                             <a
                               class="dropdown-item"
                               href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Facilities.Delete')"
+                              *ngIf="
+                                permission.isGranted('Pages.Facilities.Delete') &&
+                                (record.facilityType == FacilityTypeEnum.Facility ||
+                                  (record.facilityType != FacilityTypeEnum.Facility && isTachyonDealerOrHost))
+                              "
                               (click)="deleteFacility(record.facility)"
                               >{{ l('Delete') }}</a
                             >

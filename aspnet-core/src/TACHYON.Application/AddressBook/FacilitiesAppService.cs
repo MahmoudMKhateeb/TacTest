@@ -114,6 +114,7 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Edit)]
         public async Task<GetFacilityForEditOutput> GetFacilityForEdit(EntityDto<long> input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var facility = await _facilityRepository.GetAll()
                 .Include(x=>x.FacilityWorkingHours)
                 .FirstOrDefaultAsync(x=> x.Id==input.Id);
@@ -140,10 +141,7 @@ namespace TACHYON.AddressBook
         public async Task<long> CreateOrEdit(CreateOrEditFacilityDto input)
         {
             await ValidateFacilityName(input);
-            if(AbpSession.TenantId != null)
-            {
-                input.FacilityType = FacilityType.Facility;
-            }
+            
             if(!await IsTachyonDealer())
             {
                 input.ShipperId = null;
@@ -161,6 +159,10 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Create)]
         protected virtual async Task<long> Create(CreateOrEditFacilityDto input)
         {
+            if (!await IsTachyonDealer() && AbpSession.TenantId != null)
+            {
+                input.FacilityType = FacilityType.Facility;
+            }
             var point = default(Point);
             if (input.Longitude!=null && input.Latitude != null)
             {
@@ -178,7 +180,10 @@ namespace TACHYON.AddressBook
             }
             else
             {
-                facility.TenantId = AbpSession.TenantId;
+                if(await IsTachyonDealer() && facility.FacilityType != FacilityType.Facility)
+                {
+                    facility.TenantId = null;
+                }
             }
 
             return await _facilityRepository.InsertAndGetIdAsync(facility);
@@ -187,6 +192,11 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Edit)]
         protected virtual async Task<long> Update(CreateOrEditFacilityDto input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
+            if(!await IsTachyonDealer() && AbpSession.TenantId != null && input.FacilityType != FacilityType.Facility)
+            {
+                throw new UserFriendlyException(L("UpdateDenied"));
+            }
             var facility = await _facilityRepository.GetAll().Include(x => x.FacilityWorkingHours).FirstOrDefaultAsync(x => x.Id == (long)input.Id);
 
             await RemoveDeletedWorkingHours(input, facility);
@@ -194,6 +204,13 @@ namespace TACHYON.AddressBook
             if((await IsTachyonDealer() || AbpSession.TenantId == null) && input.ShipperId!=null)
             {
                 facility.TenantId = input.ShipperId;
+            }
+            else
+            {
+                if (await IsTachyonDealer() && facility.FacilityType != FacilityType.Facility)
+                {
+                    facility.TenantId = null;
+                }
             }
             return facility.Id;
         }
