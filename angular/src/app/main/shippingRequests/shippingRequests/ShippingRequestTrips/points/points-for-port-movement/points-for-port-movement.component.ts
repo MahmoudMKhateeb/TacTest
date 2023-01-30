@@ -233,12 +233,14 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
 
   carrierSetClearanceData($event: TripClearancePricesDto) {
     this._shippingRequestsTripServiceProxy.carrierSetClearanceData(this.wayPointsList[this.activePointIndex].id, $event).subscribe((res) => {
+      this.notify.success(this.l('SavedSuccessfully'));
       this.wayPointsList[this.activePointIndex].tripClearancePricesDto = $event;
     });
   }
 
   carrierSetAppointmentData($event: TripAppointmentDataDto) {
     this._shippingRequestsTripServiceProxy.carrierSetAppointmentData(this.wayPointsList[this.activePointIndex].id, $event).subscribe((res) => {
+      this.notify.success(this.l('SavedSuccessfully'));
       this.wayPointsList[this.activePointIndex].appointmentDataDto = $event;
     });
   }

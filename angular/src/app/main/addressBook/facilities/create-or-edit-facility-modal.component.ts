@@ -179,6 +179,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
       this.modal.show();
     } else {
       this._facilitiesServiceProxy.getFacilityForEdit(facilityId).subscribe((result) => {
+        this.selectedCountryId = result.countryId;
         this.cityId = result.facility.cityId;
         this.facility = result.facility;
         this.FacilityWorkingHours = [];
@@ -187,13 +188,9 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
         } else {
           this.FacilityWorkingHours = this.getEnumsAsFillList(result.facility.facilityWorkingHours);
         }
-        this.selectedCountryId = result.countryId;
-        this.loadCitiesByCountryId(result.countryId);
         if (isNotNullOrUndefined(this.facility.shipperActorId)) {
           (this.facility.shipperActorId as any) = this.facility.shipperActorId?.toString();
         }
-
-        (this.facility.cityId as any) = this.facility.cityId.toString();
       });
     }
     this.modal.show();
@@ -389,6 +386,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
 
       if (this.cityId != null) {
         this.facility.cityId = this.cityId;
+        (this.facility.cityId as any) = this.facility.cityId.toString();
         this.cityId = null;
       } else {
         this.facility.cityId = null;

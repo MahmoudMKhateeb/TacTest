@@ -165,6 +165,15 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
           this._PointsService.currentShippingRequest.roundTripType === RoundTripType.WithReturnTrip &&
           this._PointsService.currentPointIndex === 3
         ) {
+          this.weight = null;
+          this.getContainerUOMDefaultId();
+        }
+        if (
+          (this._PointsService.currentShippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling ||
+            this._PointsService.currentShippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling) &&
+          this._PointsService.currentPointIndex === 1
+        ) {
+          this.weight = null;
           this.getContainerUOMDefaultId();
         }
       }

@@ -264,7 +264,14 @@
             </div>
             <div *ngIf="showAppointmentsAndClearanceButton(i) && usedIn != 'createOrEdit'">
               <button *ngIf="record.needsClearance || record.needsAppointment" class="btn btn-primary" (click)="showVasModal(i)">
-                <i class="fa fa-eye"></i>
+                <i
+                  [ngClass]="
+                    !isShipper &&
+                    ((record.needsAppointment && !record.appointmentDataDto) || (record.needsClearance && !record.tripClearancePricesDto))
+                      ? 'fa fa-pen'
+                      : 'fa fa-eye'
+                  "
+                ></i>
               </button>
             </div>
             <!--                        <span *ngIf="usedIn != 'createOrEdit'">{{ record.dropPaymentMethodTitle ?? '-' }}</span>-->

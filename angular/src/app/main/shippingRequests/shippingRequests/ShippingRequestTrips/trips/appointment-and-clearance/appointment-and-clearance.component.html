@@ -13,9 +13,9 @@
     <div class="modal-content" *ngIf="appointmentAndClearanceModal.isShown">
       <div class="modal-header">
         <div class="modal-title">
-          <p class="m-0" *ngIf="needsAppointment && needsClearance">{{ l('AppointmentAndClearanceModal') }}</p>
-          <p class="m-0" *ngIf="needsAppointment && !needsClearance">{{ l('AppointmentModal') }}</p>
-          <p class="m-0" *ngIf="!needsAppointment && needsClearance">{{ l('ClearanceModal') }}</p>
+          <p class="m-0" *ngIf="needsAppointment && needsClearance">{{ l('AppointmentAndClearance') }}</p>
+          <p class="m-0" *ngIf="needsAppointment && !needsClearance">{{ l('Appointment') }}</p>
+          <p class="m-0" *ngIf="!needsAppointment && needsClearance">{{ l('Clearance') }}</p>
         </div>
         <button type="button" class="close" aria-label="Close" (click)="close()" [disabled]="saving">
           <i class="fa fa-times"></i>
@@ -51,18 +51,21 @@
                   </div>
                 </div>
                 <div class="col-lg-6 form-group mr-8">
-                  <label> {{ !isEdit || (isEdit && !tripAppointment.documentName) ? l('SelectFile') : l('Download') }} {{ fileToken }}</label>
-                  <div class="custom-file" *ngIf="!isEdit || (isEdit && !tripAppointment.documentName)">
+                  <label>
+                    {{ isShipper ? l('Attachments') : !isEdit || (isEdit && !tripAppointment.documentName) ? l('SelectFile') : l('Download') }}
+                    {{ fileToken }}
+                  </label>
+                  <div class="custom-file" *ngIf="!isShipper && (!isEdit || (isEdit && !tripAppointment.documentName))">
                     <input
                       name="file"
                       (change)="DocFileChangeEvent($event, createOrEditDocumentFileDto)"
                       type="file"
                       class="custom-file-input"
                       accept="image/x-png,image/jpeg,application/pdf"
-                      [disabled]="isShipper"
+                      [disabled]="isShipper || ((isCarrier || isCarrierSaas) && tripAppointment.documentName)"
                     />
                     <label
-                      [attr.disabled]="isShipper"
+                      [attr.disabled]="isShipper || ((isCarrier || isCarrierSaas) && tripAppointment.documentName)"
                       class="custom-file-label text-truncate"
                       *ngIf="createOrEditDocumentFileDto"
                       [for]="createOrEditDocumentFileDto.name"
@@ -70,7 +73,7 @@
                       {{ createOrEditDocumentFileDto.name ? createOrEditDocumentFileDto.name : l('SelectFile') }}</label
                     >
                   </div>
-                  <div class="margin-top-5" *ngIf="!isEdit || (isEdit && !tripAppointment.documentName)">
+                  <div class="margin-top-5" *ngIf="!isShipper && (!isEdit || (isEdit && !tripAppointment.documentName))">
                     <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
                   </div>
                   <div class="mt-2" *ngIf="createOrEditDocumentFileDto?.name">
@@ -158,12 +161,12 @@
                 </div>
                 <div class="col-lg-4 form-group" *ngIf="isTachyonDealer">
                   <div class="input-group d-inline-block mr-8">
-                    <label> {{ l('CommessionType') }}</label>
+                    <label> {{ l('CommissionType') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
                     <!--                                        [min]="trip.startTripDate"-->
                     <dx-select-box
-                      id="AppointmentPricesSetupCommessionType"
-                      name="AppointmentPricesSetupCommessionType"
+                      id="AppointmentPricesSetupCommissionType"
+                      name="AppointmentPricesSetupCommissionType"
                       [dataSource]="allPriceOfferCommissionTypes"
                       [(value)]="tripAppointment.commissionType"
                       displayExpr="value"
@@ -175,12 +178,12 @@
                 </div>
                 <div class="col-lg-4 form-group" *ngIf="isTachyonDealer">
                   <div class="input-group d-inline-block mr-8">
-                    <label> {{ l('CommessionValue') }}</label>
+                    <label> {{ l('CommissionValue') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
                     <!--                                        [min]="trip.startTripDate"-->
                     <dx-number-box
-                      id="AppointmentPricesSetupCommessionValue"
-                      name="AppointmentPricesSetupCommessionValue"
+                      id="AppointmentPricesSetupCommissionValue"
+                      name="AppointmentPricesSetupCommissionValue"
                       [(value)]="tripAppointment.commissionPercentageOrAddValue"
                       (onChange)="calculateValues(true)"
                       [min]="0"
@@ -190,12 +193,12 @@
                 </div>
                 <div class="col-lg-4 form-group" *ngIf="isTachyonDealer">
                   <div class="input-group d-inline-block mr-8">
-                    <label> {{ l('CommessionAmount') }}</label>
+                    <label> {{ l('CommissionAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
                     <!--                                        [min]="trip.startTripDate"-->
                     <dx-number-box
-                      id="AppointmentPricesSetupCommessionAmount"
-                      name="AppointmentPricesSetupCommessionAmount"
+                      id="AppointmentPricesSetupCommissionAmount"
+                      name="AppointmentPricesSetupCommissionAmount"
                       [(value)]="tripAppointment.commissionAmount"
                       [disabled]="true"
                     >
@@ -267,7 +270,7 @@
             <hr *ngIf="needsAppointment" />
             <section *ngIf="needsClearance">
               <h2>
-                {{ 'ClearanceSetup' | localize }}
+                {{ 'ClearancePricesSetup' | localize }}
               </h2>
               <div class="row">
                 <div class="col-lg-4 form-group" *ngIf="!isShipper || (isCarrierSaas && !isSaasRequest)">
@@ -308,12 +311,12 @@
                 </div>
                 <div class="col-lg-4 form-group" *ngIf="isTachyonDealer">
                   <div class="input-group d-inline-block mr-8">
-                    <label> {{ l('CommessionType') }}</label>
+                    <label> {{ l('CommissionType') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
                     <!--                                        [min]="trip.startTripDate"-->
                     <dx-select-box
-                      id="CommessionType"
-                      name="CommessionType"
+                      id="CommissionType"
+                      name="CommissionType"
                       [dataSource]="allPriceOfferCommissionTypes"
                       [(value)]="tripClearance.commissionType"
                       displayExpr="value"
@@ -325,12 +328,12 @@
                 </div>
                 <div class="col-lg-4 form-group" *ngIf="isTachyonDealer">
                   <div class="input-group d-inline-block mr-8">
-                    <label> {{ l('CommessionValue') }}</label>
+                    <label> {{ l('CommissionValue') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
                     <!--                                        [min]="trip.startTripDate"-->
                     <dx-number-box
-                      id="CommessionValue"
-                      name="CommessionValue"
+                      id="CommissionValue"
+                      name="CommissionValue"
                       [(value)]="tripClearance.commissionPercentageOrAddValue"
                       (onChange)="calculateValues(false)"
                       [min]="0"
@@ -340,10 +343,10 @@
                 </div>
                 <div class="col-lg-4 form-group" *ngIf="isTachyonDealer">
                   <div class="input-group d-inline-block mr-8">
-                    <label> {{ l('CommessionAmount') }}</label>
+                    <label> {{ l('CommissionAmount') }}</label>
                     <!--                                        [(value)]="trip.expectedDeliveryTime"-->
                     <!--                                        [min]="trip.startTripDate"-->
-                    <dx-number-box id="CommessionAmount" name="CommessionAmount" [(value)]="tripClearance.commissionAmount" [disabled]="true">
+                    <dx-number-box id="CommissionAmount" name="CommissionAmount" [(value)]="tripClearance.commissionAmount" [disabled]="true">
                     </dx-number-box>
                   </div>
                 </div>
@@ -405,7 +408,7 @@
               *ngIf="usedIn == 'createOrEdit' && isTachyonDealer"
               type="submit"
               class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
-              [disabled]="saving || !appointmentAndClearanceForm.form.valid || shouldDisable()"
+              [disabled]="saving || shouldDisable()"
               [text]="'Save' | localize"
               (onClick)="isFormSubmitted = true"
               [useSubmitBehavior]="true"

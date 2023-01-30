@@ -226,7 +226,7 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
   }
 
   downloadAttatchment(): void {
-    if (this.isEdit) {
+    if (this.isEdit || ((this.isCarrier || this.isCarrierSaas) && this.usedIn != 'createOrEdit')) {
       this._shippingRequestsTripServiceProxy.getAppointmentFile(this.pointId).subscribe((res) => {
         console.log('res');
         if (res.length > 0) {
@@ -341,13 +341,21 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
 
   shouldDisableAppointment() {
     const isAppointmentNotValid =
-      isNotNullOrUndefined(this.tripAppointment) && (!this.tripAppointment?.itemPrice || this.tripAppointment?.itemPrice?.toString()?.length === 0);
+      !isNotNullOrUndefined(this.tripAppointment) ||
+      !isNotNullOrUndefined(this.tripAppointment?.itemPrice) ||
+      (isNotNullOrUndefined(this.tripAppointment) &&
+        isNotNullOrUndefined(this.tripAppointment?.itemPrice) &&
+        this.tripAppointment?.itemPrice?.toString()?.length === 0);
     return isAppointmentNotValid;
   }
 
   shouldDisableClearance() {
     const isClearanceNotValid =
-      isNotNullOrUndefined(this.tripClearance) && (!this.tripClearance?.itemPrice || this.tripClearance?.itemPrice?.toString()?.length === 0);
+      !isNotNullOrUndefined(this.tripClearance) ||
+      !isNotNullOrUndefined(this.tripClearance?.itemPrice) ||
+      (isNotNullOrUndefined(this.tripClearance) &&
+        isNotNullOrUndefined(this.tripClearance?.itemPrice) &&
+        this.tripClearance?.itemPrice?.toString()?.length === 0);
     return isClearanceNotValid;
   }
 
