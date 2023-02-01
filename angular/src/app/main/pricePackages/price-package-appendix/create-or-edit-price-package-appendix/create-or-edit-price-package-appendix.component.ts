@@ -73,7 +73,7 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
           this.loadPricePackages();
           this.loadAllCarriers();
         }
-          this.modal.show();
+        this.modal.show();
       });
     }
     if (!this.appendix.id && this.currentCompanyType === DestinationCompanyType.Shipper) {
@@ -88,7 +88,7 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
   }
 
   createOrEdit() {
-     this.isLoading = true;
+    this.isLoading = true;
 
     this.appendix.destinationCompanyId = this.companyId;
 

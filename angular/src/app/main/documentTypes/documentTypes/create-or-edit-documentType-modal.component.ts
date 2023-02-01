@@ -33,7 +33,6 @@ import { Table } from '@node_modules/primeng/table';
 import { IAjaxResponse, NotifyService, TokenService } from '@node_modules/abp-ng2-module';
 import { ActivatedRoute } from '@angular/router';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { AppConsts } from '@shared/AppConsts';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 const toBase64 = (file) =>
@@ -69,6 +68,8 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase imp
   documentNameisAvaliable = true;
   documentType: CreateOrEditDocumentTypeDto = new CreateOrEditDocumentTypeDto();
   allDocumentsEntities: [];
+
+  documentsEntitiesEnum = DocumentsEntitiesEnum;
   buttonOptions: any = {
     text: 'Add',
     type: 'success',

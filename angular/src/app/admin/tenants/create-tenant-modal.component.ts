@@ -7,16 +7,15 @@ import {
   CreateTenantInput,
   PasswordComplexitySetting,
   ProfileServiceProxy,
-  TenantServiceProxy,
   SubscribableEditionComboboxItemDto,
-  TenantCountryLookupTableDto,
   TenantCityLookupTableDto,
+  TenantCountryLookupTableDto,
   TenantRegistrationServiceProxy,
+  TenantServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { DateType } from '../required-document-files/hijri-gregorian-datepicker/consts';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 
 @Component({
@@ -259,8 +258,8 @@ export class CreateTenantModalComponent extends AppComponentBase {
     this.checkIfIsEmailAvailable();
   }
   checkIfIsCompanyUniqueMoiNumber() {
-    this._tenantRegistrationService
-      .isCompanyUniqueMoiNumber(this.tenant.moiNumber, undefined)
-      .subscribe((result) => (this.isMoiNumberAvailable = result));
+    // this._tenantRegistrationService
+    //   .isCompanyUniqueMoiNumber(this.tenant.moiNumber, undefined)
+    //   .subscribe((result) => (this.isMoiNumberAvailable = result));
   }
 }

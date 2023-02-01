@@ -73,6 +73,11 @@
               <dxi-column dataField="actorInvoiceChannel" cellTemplate="channelCellTemplate" caption="{{ l('InvoiceChannel') }}"> </dxi-column>
               <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('Status') }}"> </dxi-column>
 
+                <dxo-master-detail [enabled]="true" template="actorInvoiceDetails"></dxo-master-detail>
+                <div *dxTemplate="let options of 'actorInvoiceDetails'">
+                    <app-actor-invoice-item-detail [actorInvoiceId]="options.data.id"></app-actor-invoice-item-detail>
+                </div>
+
               <div *dxTemplate="let options of 'channelCellTemplate'">
                 <span style="width: 137px">
                   <span

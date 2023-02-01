@@ -128,7 +128,7 @@ export class DashboardCustomizationConst {
       application: 'Angular',
       pages: [
         {
-          id: 'Page190addd5a073425fb455b4bb7b91b5c9',
+          id: 'tttt1',
           name: 'General',
           widgets: [
             {
@@ -204,7 +204,7 @@ export class DashboardCustomizationConst {
           ],
         },
         {
-          id: 'Page38080c9450894938bfd2eb832a3e57c9',
+          id: 'ttt2',
           name: 'Tracking',
           widgets: [
             {

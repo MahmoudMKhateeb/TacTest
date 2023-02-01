@@ -29,6 +29,7 @@ import { NgForm } from '@angular/forms';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
+import { MultiSelect } from 'primeng/multiselect';
 
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
@@ -38,6 +39,7 @@ import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
 })
 export class CreateOrEditShippingRequestComponent extends AppComponentBase implements OnInit {
   @ViewChild('shippingRequestForm') shippingRequestForm: NgForm;
+  @ViewChild('sel') MulltiSelectDest: MultiSelect;
   breadcrumbs: BreadcrumbItem[] = [
     new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests'),
     // new BreadcrumbItem(this.l('Entity_Name_Plural_Here') + '' + this.l('Details')),
@@ -139,6 +141,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           this.totalOffers = result.totalOffers;
           this.shippingRequest.shippingRequestDestinationCities = result.shippingRequest.shippingRequestDestinationCities;
           this.loadAllDropDownLists();
+          this.MulltiSelectDest.updateLabel();
         });
     }
   }

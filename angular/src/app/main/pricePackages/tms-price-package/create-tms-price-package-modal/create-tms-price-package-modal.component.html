@@ -27,7 +27,7 @@
               <label>{{ l('TransportType') }} <span class="text-danger">*</span></label>
               <select
                 [(ngModel)]="tmsPricePackage.transportTypeId"
-                (change)="loadAllTruckTypeByTransportType(tmsPricePackage.transportTypeId)"
+                (change)="loadAllTruckTypeByTransportType(tmsPricePackage.transportTypeId); applyFilters()"
                 required
                 class="form-control"
                 name="tmsPP_TransportType"
@@ -42,6 +42,7 @@
                 [(ngModel)]="tmsPricePackage.trucksTypeId"
                 required
                 class="form-control"
+                (ngModelChange)="applyFilters()"
                 name="tmsPP_TruckType"
                 [disabled]="!tmsPricePackage.transportTypeId || !truckTypes"
               >
@@ -53,14 +54,26 @@
           <div class="row">
             <div class="form-group col-md-6">
               <label>{{ l('OriginCity') }} <span class="text-danger">*</span></label>
-              <select [(ngModel)]="tmsPricePackage.originCityId" required class="form-control" name="tmsPP_OriginCity">
+              <select
+                [(ngModel)]="tmsPricePackage.originCityId"
+                (ngModelChange)="applyFilters()"
+                required
+                class="form-control"
+                name="tmsPP_OriginCity"
+              >
                 <option selected disabled [value]="undefined">{{ 'SelectanOriginCity' | localize }}</option>
                 <option *ngFor="let item of cities" [value]="item.id">{{ item.displayName }}</option>
               </select>
             </div>
             <div class="form-group col-md-6">
               <label>{{ l('DestinationCity') }} <span class="text-danger">*</span></label>
-              <select [(ngModel)]="tmsPricePackage.destinationCityId" required class="form-control" name="tmsPP_DestinationCity">
+              <select
+                [(ngModel)]="tmsPricePackage.destinationCityId"
+                (ngModelChange)="applyFilters()"
+                required
+                class="form-control"
+                name="tmsPP_DestinationCity"
+              >
                 <option selected disabled [value]="undefined">{{ 'SelectaDestination' | localize }}</option>
                 <option *ngFor="let item of cities" [value]="item.id">{{ item.displayName }}</option>
               </select>
@@ -78,36 +91,41 @@
               <label>{{ l('PricePackageType') }} <span class="text-danger">*</span></label>
               <select [(ngModel)]="tmsPricePackage.type" required class="form-control" name="tmsPP_PricePackageType">
                 <option selected disabled [value]="undefined">{{ 'SelectPricePackageType' | localize }}</option>
-                <option *ngFor="let item of pricePackageTypes" [disabled]="item.key != pricePackageType.PerTrip" [value]='item.key'>
+                <option *ngFor="let item of pricePackageTypes" [disabled]="item.key != pricePackageType.PerTrip" [value]="item.key">
                   {{ item.value }}
                 </option>
               </select>
             </div>
           </div>
           <div class="row">
-              <div class="form-group col-md-6">
-                  <label>{{ l('ShippingType') }} <span class="text-danger">*</span></label>
-                  <select [(ngModel)]="tmsPricePackage.shippingTypeId" required class="form-control" name="tmsPP_ShippingType">
-                      <option selected disabled [value]="undefined">{{ 'SelectShippingType' | localize }}</option>
-                      <option *ngFor="let item of shippingTypes" [value]="item.id">
-                          {{ item.displayName }}
-                      </option>
-                  </select>
-              </div>
-            <div class="form-group col-md-4">
-              <label>{{ l('TotalPrice') }} </label>
-              <input
-                [(ngModel)]="tmsPricePackage.totalPrice"
-                min="0"
-                (keypress)="numberOnly($event)"
-                name="tmsPP_TotalPrice"
-                type="number"
-                class="form-control"
-              />
+            <div class="form-group col-md-6">
+              <label>{{ l('ShippingType') }} <span class="text-danger">*</span></label>
+              <select [(ngModel)]="tmsPricePackage.shippingTypeId" required class="form-control" name="tmsPP_ShippingType">
+                <option selected disabled [value]="undefined">{{ 'SelectShippingType' | localize }}</option>
+                <option *ngFor="let item of shippingTypes" [value]="item.id">
+                  {{ item.displayName }}
+                </option>
+              </select>
             </div>
-
+            <div class="form-group col-md-6">
+              <label>{{ l('SelectCarriers') }} </label>
+              <p-multiSelect
+                dropdownIcon="fa fa-caret-down"
+                name="carriers"
+                [options]="carriers"
+                [(ngModel)]="selectedCarriers"
+                [selectedItemsLabel]="'{0} items selected'"
+                (ngModelChange)="applyFilters()"
+                [style]="{ width: '100%' }"
+                styleClass="form-control pt-1"
+                [dataKey]="'id'"
+                optionLabel="displayName"
+              >
+              </p-multiSelect>
+            </div>
           </div>
 
+          <h3>{{ l('SelectTheMatchingPricePackages') }}</h3>
           <!-- devExtream Table  -->
           <div [class]="'row'">
             <div class="card card-custom gutter-b">
@@ -117,6 +135,8 @@
                     #grid
                     id="dataGrid"
                     [dataSource]="dataSource"
+                    (onSelectionChanged)="calculatePriceForSelection()"
+                    [(selectedRowKeys)]="selectedRows"
                     [remoteOperations]="{ groupPaging: false, sorting: true, filtering: true }"
                     [showColumnLines]="true"
                     [showRowLines]="false"
@@ -125,6 +145,7 @@
                     keyExpr="id"
                     [wordWrapEnabled]="true"
                   >
+                    <dxo-selection [showCheckBoxesMode]="'always'" mode="multiple"></dxo-selection>
                     <dxo-filter-row [visible]="true"></dxo-filter-row>
                     <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
                     <dxo-filter-panel [visible]="true"></dxo-filter-panel>
@@ -133,13 +154,13 @@
                     <!--                    <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>-->
                     <!--                    <dxo-grouping #expand [autoExpandAll]="true"></dxo-grouping>-->
                     <!--                    <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>-->
-                    <dxi-column dataField="displayName" caption="{{ l('PricePackageName') }}"> </dxi-column>
+                    <dxi-column dataField="displayName" caption="{{ l('PricePackageName') }}"></dxi-column>
                     <dxi-column dataField="tenantName" caption="{{ l('Carrier') }} "></dxi-column>
-                    <dxi-column dataField="truckType" caption="{{ l('TruckType') }}" [groupIndex]="0"> </dxi-column>
-                    <dxi-column dataField="tachyonMSRequestPrice" caption="{{ l('TachyonMSRequestPrice') }}"> </dxi-column>
-                    <dxi-column dataField="isMultiDrop" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"> </dxi-column>
-                    <dxi-column dataField="origin" caption="{{ l('Origin') }}"> </dxi-column>
-                    <dxi-column dataField="destination" caption="{{ l('Destination') }}"> </dxi-column>
+                    <dxi-column dataField="truckType" caption="{{ l('TruckType') }}" [groupIndex]="0"></dxi-column>
+                    <dxi-column dataField="tachyonMSRequestPrice" caption="{{ l('TachyonMSRequestPrice') }}"></dxi-column>
+                    <dxi-column dataField="isMultiDrop" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"></dxi-column>
+                    <dxi-column dataField="origin" caption="{{ l('Origin') }}"></dxi-column>
+                    <dxi-column dataField="destination" caption="{{ l('Destination') }}"></dxi-column>
 
                     <div *dxTemplate="let options of 'cellTemplate_RoutType'">
                       <span *ngIf="options.data.isMultiDrop" class="badge badge-success badge-inline">{{ 'MultipleDrops' | localize }}</span>
@@ -152,10 +173,72 @@
           </div>
 
           <!-- end::DevExtream Table -->
+
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label>{{ l('PricingMethod') }} <span class="text-danger">*</span></label>
+              <select [(ngModel)]="pricingMethod" (ngModelChange)="updatePricingMethod()" required class="form-control" name="pricingMethod">
+                <option *ngFor="let item of pricingMethods" [value]="item.key">{{ item.value }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ calculatedPriceTitle }} <span class="text-danger">*</span></label>
+              <input
+                [(ngModel)]="calculatedPrice"
+                (keypress)="numberOnly($event)"
+                name="calculatedPrice"
+                type="number"
+                class="form-control"
+                [disabled]="pricingMethod != pricingMethodEnum.FinalPrice"
+              />
+            </div>
+          </div>
+
+          <div class="row" *ngIf="pricingMethod != pricingMethodEnum.FinalPrice">
+            <div class="form-group col-md-6">
+              <label>{{ l('CommissionType') }} <span class="text-danger">*</span></label>
+              <select
+                [(ngModel)]="commissionType"
+                (ngModelChange)="calculateTotalCommissionAndTotalPrice()"
+                required
+                class="form-control"
+                name="commissionType"
+              >
+                <option selected disabled [value]="undefined">{{ 'SelectCommissionType' | localize }}</option>
+                <option *ngFor="let item of commissionTypes" [value]="item.key">{{ item.value }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('CommissionAmount') }} <span class="text-danger">*</span></label>
+              <input
+                [(ngModel)]="commissionAmount"
+                min="0"
+                [disabled]="!commissionType"
+                (change)="calculateTotalCommissionAndTotalPrice()"
+                (keypress)="numberOnly($event)"
+                name="commissionAmount"
+                type="number"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="row" *ngIf="pricingMethod != pricingMethodEnum.FinalPrice">
+            <div class="form-group col-md-6">
+              <label>{{ l('TotalCommission') }} <span class="text-danger">*</span></label>
+              <input [(ngModel)]="totalCommission" disabled name="totalCommission" type="number" class="form-control" />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('TotalPrice') }} </label>
+              <input [(ngModel)]="totalPrice" disabled name="tmsPP_TotalPrice" type="number" class="form-control" />
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="close()">{{ 'Close' | localize }}</button>
-          <button type="submit" [buttonBusy]="isFormSaving" [disabled]="tmsPPForm.invalid || !tmsPricePackage.type" class="btn btn-primary">{{ 'Save' | localize }}</button>
+          <button type="submit" [buttonBusy]="isFormSaving" [disabled]="tmsPPForm.invalid || !tmsPricePackage.type" class="btn btn-primary">
+            {{ 'Save' | localize }}
+          </button>
         </div>
       </form>
     </div>

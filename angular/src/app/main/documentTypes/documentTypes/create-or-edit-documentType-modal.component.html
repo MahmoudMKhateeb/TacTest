@@ -39,7 +39,7 @@
             <div class="dx-field">
               <div class="dx-field-label">{{ l('Entity') }}</div>
               <div class="dx-field-value">
-                <dx-select-box [(value)]="documentType.documentsEntityId" [dataSource]="allDocumentsEntities" displayExpr="value" valueExpr="value">
+                <dx-select-box [(value)]="documentType.documentsEntityId" [dataSource]="allDocumentsEntities" displayExpr="value" valueExpr="key">
                   <dx-validator>
                     <dxi-validation-rule type="required" message="documentsEntity is required"></dxi-validation-rule>
                   </dx-validator>
@@ -52,7 +52,7 @@
                 <dx-select-box [(value)]="documentType.flag" [dataSource]="DocumentTypeFlags" displayExpr="value" valueExpr="value"> </dx-select-box>
               </div>
             </div>
-            <div class="dx-field" *ngIf="documentType.documentsEntityId == 1">
+            <div class="dx-field" *ngIf="documentType.documentsEntityId == documentsEntitiesEnum.Tenant">
               <div class="dx-field-label">{{ l('edition') }}</div>
               <div class="dx-field-value">
                 <dx-select-box
@@ -67,7 +67,7 @@
               </div>
             </div>
 
-            <div *ngIf="documentType.documentsEntityId == 1" class="dx-field">
+            <div *ngIf="documentType.documentsEntityId == documentsEntitiesEnum.Tenant" class="dx-field">
               <div class="dx-field-label">{{ l('tenant') }}</div>
               <div class="dx-field-value">
                 <dx-select-box

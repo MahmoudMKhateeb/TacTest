@@ -19,16 +19,16 @@ namespace TACHYON.BayanIntegration
             _bayanIntegrationService = bayanIntegrationService;
         }
 
-        //public async Task<string> CreateTrip(int shippingRequestTripId)
-        //{
-        //    using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
-        //    {
-        //        return await _bayanIntegrationService.CreateTrip(shippingRequestTripId);
+        public async Task CreateTrip(int shippingRequestTripId)
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            {
+                await _bayanIntegrationService.CreateTrip(shippingRequestTripId);
 
 
-        //    }
+            }
 
-        //}
+        }
     }
 
 

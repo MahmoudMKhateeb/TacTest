@@ -34,5 +34,19 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         public long ShippingRequestId { get; set; }
         public Point Location { get; set; }
+
+        /// <summary>
+        /// This property is give you the value of
+        /// the last route point status before an incident occured
+        /// `Value of Last Status Before point status changed to `Issue` ` 
+        /// </summary>
+        public RoutePointStatus LastPointStatus { get; set; }
+
+        public bool ForceContinueTripEnabled { get; set; }
+
+        public int? ResolveId { get; set; }
+
+        [ForeignKey(nameof(ResolveId))]
+        public ShippingRequestTripAccidentResolve Resolve { get; set; }
     }
 }

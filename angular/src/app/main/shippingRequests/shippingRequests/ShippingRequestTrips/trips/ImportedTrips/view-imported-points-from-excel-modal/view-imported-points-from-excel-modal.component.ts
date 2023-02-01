@@ -3,6 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { ImportRoutePointDto, ImportShipmentFromExcelServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
+import { DxPopoverComponent } from '@node_modules/devextreme-angular';
 
 @Component({
   selector: 'app-view-imported-points-from-excel-modal',
@@ -15,6 +16,9 @@ export class ViewImportedPointsFromExcelModalComponent extends AppComponentBase 
   saving = false;
   @ViewChild('ViewImportedPointsModal', { static: false }) modal: ModalDirective;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  @ViewChild('popOver', { static: false }) popOver: DxPopoverComponent;
+  popoverTarget: any;
+  popOverText: any;
 
   constructor(injector: Injector, private ImportShipmentFromExcelService: ImportShipmentFromExcelServiceProxy) {
     super(injector);
@@ -37,5 +41,16 @@ export class ViewImportedPointsFromExcelModalComponent extends AppComponentBase 
         this.close();
         this.modalSave.emit(null);
       });
+  }
+
+  onCellHoverChanged(e) {
+    if (e.rowType === 'data' && e.column.dataField === 'exception' && e?.text?.length > 0 && e.eventType === 'mouseover') {
+      this.popOverText = e.text;
+      this.popoverTarget = e.cellElement;
+      this.popOver.instance.show();
+    }
+    if (e.rowType === 'data' && e.eventType === 'mouseout') {
+      this.popOver.instance.hide();
+    }
   }
 }

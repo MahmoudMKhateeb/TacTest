@@ -21,9 +21,9 @@ namespace TACHYON.DynamicInvoices
         {
             var dynamicInvoice = await _dynamicInvoiceRepository.GetAllIncluding(x => x.Items)
                 .FirstOrDefaultAsync(x => x.Id == dynamicInvoiceId);
-            var taxVat = await SettingManager.GetSettingValueAsync<decimal>(AppSettings.HostManagement.TaxVat);
+            //var taxVat = await SettingManager.GetSettingValueAsync<decimal>(AppSettings.HostManagement.TaxVat);
             dynamicInvoice.SubTotalAmount = dynamicInvoice.Items.Sum(x => x.Price);
-            dynamicInvoice.VatAmount = dynamicInvoice.SubTotalAmount * (taxVat/100); // 15/100 => 15% || 0.15
+            dynamicInvoice.VatAmount = dynamicInvoice.Items.Sum(x => x.VatAmount);
             dynamicInvoice.TotalAmount = dynamicInvoice.SubTotalAmount + dynamicInvoice.VatAmount;
         }
     }

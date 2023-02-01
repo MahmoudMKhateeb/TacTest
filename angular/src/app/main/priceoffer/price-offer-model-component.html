@@ -18,7 +18,12 @@
       </div>
       <div class="modal-body">
         <form #Form="ngForm" novalidate (ngSubmit)="type == 'Reprice' ? Reprice(SRUpdateId) : confirmSendOffer()">
-          <div *ngIf="isTachyonDealer && CarrierInsuranceCoverage && ShipperValueOfGoods && CarrierInsuranceCoverage < ShipperValueOfGoods" class="row alert alert-warning" style="background-color: #fff3cd; color:#856404 ;border-color:#ffeeba" role="alert">
+          <div
+            *ngIf="isTachyonDealer && CarrierInsuranceCoverage && ShipperValueOfGoods && CarrierInsuranceCoverage < ShipperValueOfGoods"
+            class="row alert alert-warning"
+            style="background-color: #fff3cd; color: #856404; border-color: #ffeeba"
+            role="alert"
+          >
             {{l('Note that Carrier insurance coverage {0} less than shipper value of goods {1}', CarrierInsuranceCoverage, ShipperValueOfGoods)}}
           </div>
           <div class="form-group row" *ngIf="this.feature.isEnabled('App.CarrierClients')">
@@ -265,7 +270,6 @@
               <span>{{ (hasMatchesPricePackage ? 'Acknowledge' : 'SendOffer') | localize }}</span>
             </button>
           </div>
-
         </form>
       </div>
     </div>

@@ -319,6 +319,10 @@ namespace TACHYON.PriceOffers
         public async Task<GetOfferForViewOutput> GetPriceOfferForView(long offerId)
         {
             DisableTenancyFilters();
+
+            bool hasCarrierClients = await HasCarrierClients();
+            bool isShipper = await IsShipper();
+            
             var offer = await _priceOfferRepository
                 .GetAll()
                 .Include(i => i.Tenant)
@@ -329,9 +333,9 @@ namespace TACHYON.PriceOffers
                  .ThenInclude(v => v.ShippingRequestVases)
                   .ThenInclude(v => v.VasFk)
                   .Where(x => x.Id == offerId)
-                .WhereIf(await IsShipper() && !await HasCarrierClients(), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId.Value && (!x.ShippingRequestFk.IsTachyonDeal || x.Channel == PriceOfferChannel.TachyonManageService))
-                .WhereIf(await IsCarrier() && !await HasCarrierClients(), x => x.TenantId == AbpSession.TenantId.Value)
-                .WhereIf(await HasCarrierClients(),x=> (x.ShippingRequestFk.TenantId == AbpSession.TenantId && (!x.ShippingRequestFk.IsTachyonDeal || x.Channel == PriceOfferChannel.TachyonManageService) )  || x.TenantId == AbpSession.TenantId)
+                .WhereIf(isShipper && !hasCarrierClients,x => x.ShippingRequestFk.TenantId == AbpSession.TenantId.Value && (!x.ShippingRequestFk.IsTachyonDeal || x.Channel == PriceOfferChannel.TachyonManageService))
+                .WhereIf(await IsCarrier() && !hasCarrierClients, x => x.TenantId == AbpSession.TenantId.Value)
+                .WhereIf(hasCarrierClients,x=> (x.ShippingRequestFk.TenantId == AbpSession.TenantId && (!x.ShippingRequestFk.IsTachyonDeal || x.Channel == PriceOfferChannel.TachyonManageService) )  || x.TenantId == AbpSession.TenantId)
                 .SingleAsync();
 
 
@@ -347,14 +351,14 @@ namespace TACHYON.PriceOffers
             {
                 item.ItemName = offer.ShippingRequestFk?.ShippingRequestVases?.FirstOrDefault(x => x.Id == item.SourceId)?
                     .VasFk?.Name ?? L("VasRemoved");
-                if (AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper))
+                if (AbpSession.TenantId.HasValue && isShipper)
                 {
                     item.ItemPrice = item.ItemSubTotalAmountWithCommission;
                     item.ItemTotalAmount = item.ItemTotalAmountWithCommission;
                 }
 
             }
-            if (await IsShipper())
+            if (isShipper)
             {
                 priceOfferDto.ItemPrice = offer.ItemSubTotalAmountWithCommission;
                 priceOfferDto.ItemTotalAmount = offer.ItemTotalAmountWithCommission;

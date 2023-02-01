@@ -21,7 +21,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-group col-md-12">
+          <div class="form-group col-md-8">
             <label>{{ l('Key') }} <span class="required-fileds">*</span></label>
             <input
               #Key="ngModel"
@@ -35,6 +35,21 @@
               [class.is-valid]="Form.submitted && Key.valid"
               required
             />
+          </div>
+
+          <div class="form-group row">
+            <label class="col-3 col-form-label"
+              ><i [tooltip]="l('CanNotContinueTripTip')" class="flaticon-exclamation-1 icon-nm px-1"></i> {{ l('TripImpact') }}
+            </label>
+            <div class="col-9 col-form-label">
+              <div class="checkbox-inline">
+                <label class="checkbox checkbox-primary">
+                  <input type="checkbox" name="isTripImpactEnabled" [(ngModel)]="reason.isTripImpactEnabled" />
+                  <span></span>
+                  {{ 'TripImpactEnabled' | localize }}
+                </label>
+              </div>
+            </div>
           </div>
 
           <div class="row" *ngFor="let t of Translations; let i = index">

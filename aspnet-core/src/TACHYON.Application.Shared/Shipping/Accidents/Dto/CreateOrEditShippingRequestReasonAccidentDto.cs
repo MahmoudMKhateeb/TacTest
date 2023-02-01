@@ -9,6 +9,8 @@ namespace TACHYON.Shipping.Accidents.Dto
     public class CreateOrEditShippingRequestReasonAccidentDto : EntityDto
     {
         public string Key { get; set; }
+        
+        public bool IsTripImpactEnabled { get; set; }
         public ICollection<ShippingRequestReasonAccidentTranslationDto> Translations { get; set; }
     }
 }
