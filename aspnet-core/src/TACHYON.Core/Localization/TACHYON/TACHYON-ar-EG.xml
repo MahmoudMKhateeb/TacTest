@@ -2925,5 +2925,7 @@
 	<text name="TripImpactEnabled">تفعيل تأثير الرحلة</text>
 	<text name="CommissionPerTrip">العمولة لكل رحلة</text>
 	<text name="SelectTheMatchingPricePackages">أختر حزم الأسعار المتطابقة</text>
+	<text name="AppointmentNumber">رقم الموعد</text>
+	<text name="AppointmentDetails">تفاصيل الموعد</text>
 	</texts>
 </localizationDictionary>

@@ -3194,5 +3194,7 @@
     <text name="TripImpactEnabled">Trip Impact Enabled</text>
     <text name="CommissionPerTrip">Commission Per Trip</text>
     <text name="SelectTheMatchingPricePackages">Select The Matching Price Packages</text>
+    <text name="AppointmentNumber">Appointment number</text>
+    <text name="AppointmentDetails">Appointment details</text>
 	</texts>
 </localizationDictionary>
