@@ -1,11 +1,11 @@
 <div class="row" style="height: 100%">
-  <div class="col-12">
-    <div class="card card-custom card-stretch w-100 h-100">
-      <div class="card-body p-4">
+  <div class="w-100 h-100 col-12">
+    <div class="card card-custom card-stretch">
+      <div class="card-body p-4 d-flex flex-column">
         <div class="card-title mb-4">
           <div class="card-label">{{ 'NeedsAction' | localize }}</div>
         </div>
-        <div class="overflow-auto">
+        <div appMakeScrollable class="overflow-auto">
           <div
             class="card card-custom dashboard-plain-card mb-2 clickable-item"
             *ngFor="let trip of needsActionTrips"
