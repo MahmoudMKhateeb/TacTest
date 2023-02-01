@@ -193,3 +193,24 @@ gridster-item {
 ::ng-deep .card.card-custom.card-stretch {
   border-radius: 0.9rem;
 }
+
+::ng-deep customizable-dashboard .overflow-auto::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 6px;
+}
+
+/* Track */
+::ng-deep customizable-dashboard .overflow-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::ng-deep customizable-dashboard .overflow-auto::-webkit-scrollbar-thumb {
+  background: #aaa;
+  border-radius: 6px;
+}
+
+/* Handle on hover */
+::ng-deep customizable-dashboard .overflow-auto::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}

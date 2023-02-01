@@ -339,6 +339,7 @@ import { InvoicesDedicatedClientsComponent } from '@app/main/Invoices/invoices-d
 import { InvoiceDedicatedClientsModalComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients-modal/invoices-dedicated-clients-modal.component';
 import { ActorSubmitInvoiceItemDetailComponent } from './Invoices/actor-submit-invoices/actor-submit-invoice-item-detail/actor-submit-invoice-item-detail.component';
 import { ActorInvoiceItemDetailComponent } from './Invoices/ActorInvoices/actor-invoice-list/actor-invoice-item-detail/actor-invoice-item-detail.component';
+import { MakeScrollableDirective } from '@app/shared/common/make-scrollable-directive/make-scrollable.directive';
 
 @NgModule({
   imports: [
@@ -647,6 +648,7 @@ import { ActorInvoiceItemDetailComponent } from './Invoices/ActorInvoices/actor-
     InvoiceDedicatedClientsModalComponent,
     ActorSubmitInvoiceItemDetailComponent,
     ActorInvoiceItemDetailComponent,
+    MakeScrollableDirective,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
