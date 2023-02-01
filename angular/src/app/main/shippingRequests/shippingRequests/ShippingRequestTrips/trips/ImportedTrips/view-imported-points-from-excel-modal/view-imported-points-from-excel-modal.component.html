@@ -22,63 +22,37 @@
             <div class="row align-items-center">
               <!--<Primeng-Datatable-Start>-->
               <div [busyIf]="primengTableHelper.isLoading" class="table primeng-datatable-container col-12">
-                <p-table
-                  ScrollWidth="100%"
-                  [paginator]="false"
-                  [resizableColumns]="primengTableHelper.resizableColumns"
-                  [responsive]="primengTableHelper.isResponsive"
-                  [scrollable]="true"
-                  [value]="ImportedPointsList"
-                  rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                <dx-data-grid
+                  id="gridContainer"
+                  [dataSource]="ImportedPointsList"
+                  [columnAutoWidth]="true"
+                  [wordWrapEnabled]="true"
+                  [showBorders]="true"
+                  (onCellHoverChanged)="onCellHoverChanged($event)"
                 >
-                  <ng-template pTemplate="header">
-                    <tr>
-                      <th>{{ l('TripReferenceID') }}</th>
-                      <th>
-                        {{ l('PointReferenceID') }}
-                      </th>
-                      <th>
-                        {{ l('PointType') }}
-                      </th>
-                      <th>
-                        {{ l('Facility') }}
-                      </th>
-                      <th>
-                        {{ l('Agent') }}
-                      </th>
-                    </tr>
-                  </ng-template>
-                  <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
-                    <tr [ngClass]="record.exception ? 'alert customDangerAlert' : 'alert customSuccessAlert'">
-                      <td>
-                        <span class="ui-column-title"> {{ l('TripReference') }}</span>
-                        {{ record.tripReference }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('PointReference') }}</span>
-                        {{ record.bulkUploadReference }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('PickingType') }}</span>
-                        {{ record.pickingTypeDisplayName }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('Facility') }}</span>
-                        {{ record.facility }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('Receiver') }}</span>
-                        {{ record.receiver }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="5" *ngIf="record.exception">
-                        <span class="required-fileds font-weight-bolder"> {{ l('Exception') }} : </span>
-                        {{ record.exception }}
-                      </td>
-                    </tr>
-                  </ng-template>
-                </p-table>
+                  <dxi-column dataField="tripReference" [caption]="'TripReferenceID' | localize"></dxi-column>
+                  <dxi-column dataField="bulkUploadReference" [caption]="'PointReferenceID' | localize"></dxi-column>
+                  <dxi-column dataField="pickingTypeDisplayName" [caption]="'PointType' | localize"></dxi-column>
+                  <dxi-column dataField="facility" [caption]="'Facility' | localize"></dxi-column>
+                  <dxi-column dataField="receiver" [caption]="'Agent' | localize"></dxi-column>
+                  <dxi-column
+                    dataField="exception"
+                    [caption]="'HasErrors' | localize"
+                    cellTemplate="errorsCellTemplate"
+                    alignment="center"
+                  ></dxi-column>
+
+                  <div *dxTemplate="let item of 'errorsCellTemplate'">
+                    <div *ngIf="item.data.exception">
+                      <i class="fa fa-2x fa-exclamation-circle text-danger"></i>
+                    </div>
+                  </div>
+                </dx-data-grid>
+                <dx-popover #popOver [(target)]="popoverTarget" position="{{ isRtl ? 'right' : 'left' }}" [width]="300">
+                  <div *dxTemplate="let data of 'content'">
+                    <span class="required-fileds font-weight-bolder"> {{ l('Exception') }}: </span><span>{{ popOverText }}</span>
+                  </div>
+                </dx-popover>
               </div>
               <!--<Primeng-Datatable-End>-->
             </div>
