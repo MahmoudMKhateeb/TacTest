@@ -213,12 +213,13 @@ namespace TACHYON.Tracking
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                             .WhereIf(AbpSession.TenantId.HasValue && !hasCarrierClient && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                             .WhereIf(AbpSession.TenantId.HasValue && hasCarrierClient,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                            .ProjectTo<TrackingShippingRequestTripDto>(AutoMapperConfigurationProvider)
                             .FirstOrDefaultAsync();
 
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
-            var mappedTrip = ObjectMapper.Map<TrackingShippingRequestTripDto>(trip);
+            
 
-            mappedTrip.RoutPoints = await _RoutPointRepository.GetAll()
+            trip.RoutPoints = await _RoutPointRepository.GetAll()
                 .Where(x => x.ShippingRequestTripId == id)
                 .Select(a => new TrackingRoutePointDto
                 {
@@ -245,16 +246,16 @@ namespace TACHYON.Tracking
                     Statues = _workFlowProvider.GetStatuses(a.WorkFlowVersion,
                             a.RoutPointStatusTransitions.Where(x => !x.IsReset)
                             .Select(x => new RoutPointTransactionArgDto { Status = x.Status, CreationTime = x.CreationTime }).ToList()),
-                    AvailableTransactions = !a.IsResolve || mappedTrip.DriverStatus != ShippingRequestTripDriverStatus.Accepted
+                    AvailableTransactions = !a.IsResolve || trip.DriverStatus != ShippingRequestTripDriverStatus.Accepted
                         ? new List<PointTransactionDto>()
                         : _workFlowProvider.GetTransactionsByStatus(a.WorkFlowVersion,
                             a.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
                             a.Status),
                 }).ToListAsync();
-            mappedTrip.RoutPoints =(trip.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || trip.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
-                ? mappedTrip.RoutPoints.OrderBy(x => x.PointOrder).ToList()
-                : mappedTrip.RoutPoints.OrderBy(x => x.PickingType).ToList();
-            return mappedTrip;
+            trip.RoutPoints =(trip.ShippingType == ShippingTypeEnum.ImportPortMovements || trip.ShippingType == ShippingTypeEnum.ExportPortMovements)
+                ? trip.RoutPoints.OrderBy(x => x.PointOrder).ToList()
+                : trip.RoutPoints.OrderBy(x => x.PickingType).ToList();
+            return trip;
         }
 
         public async Task<FileDto> GetForceDeliverTripExcelFile(int tripId)

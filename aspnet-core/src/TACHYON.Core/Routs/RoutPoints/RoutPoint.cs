@@ -54,6 +54,7 @@ namespace TACHYON.Routs.RoutPoints
         public bool CanGoToNextLocation { get; set; }
 
         public int WorkFlowVersion { get; set; }
+        public int? AdditionalStepWorkFlowVersion { get; set; }
 
         [CanBeNull] public string ReceiverNote { get; set; }
         //to do receiver attribute
