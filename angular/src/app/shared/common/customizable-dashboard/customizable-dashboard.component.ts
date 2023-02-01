@@ -532,11 +532,12 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
     this.busy = true;
     let savePageInput = new SavePageInput({
       dashboardName: dashboardName,
-      pages: dashboardDefault.pages.map((page) => {
+      pages: this.userDashboard.pages.map((page) => {
+        const widgets = dashboardDefault.pages.find((item) => item.name === page.name).widgets;
         return new Page({
           id: page.id,
           name: page.name,
-          widgets: page.widgets.map((widget) => {
+          widgets: widgets.map((widget) => {
             return new Widget({
               widgetId: widget.widgetId,
               height: widget.height,
