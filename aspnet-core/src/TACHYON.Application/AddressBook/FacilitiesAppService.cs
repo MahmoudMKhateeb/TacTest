@@ -75,7 +75,8 @@ namespace TACHYON.AddressBook
                         Address = o.Address,
                         Longitude = o.Location.X,
                         Latitude = o.Location.Y,
-                        Id = o.Id
+                        Id = o.Id,
+                        FacilityType = o.FacilityType,
                     },
                     CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
                     Country = o.CityFk.CountyFk.DisplayName ?? "",

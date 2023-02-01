@@ -28,6 +28,8 @@ namespace TACHYON.Tracking.Dto
         public long? WaybillNumber { get; set; }
 
         public string ReceiverCode { get; set; }
+        public int? PointOrder { get; set; }
+
         public List<RoutPointTransactionDto> Statues { get; set; }
         public List<PointTransactionDto> AvailableTransactions { get; set; }
     }

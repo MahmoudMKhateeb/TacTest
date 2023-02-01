@@ -241,6 +241,7 @@ namespace TACHYON.Tracking
                     IsPodUploaded = a.IsPodUploaded,
                     FacilityRate = a.FacilityFk.Rate,
                     ReceiverCode = AbpSession.TenantId.HasValue ? null : a.Code,
+                    PointOrder = a.PointOrder,
                     Statues = _workFlowProvider.GetStatuses(a.WorkFlowVersion,
                             a.RoutPointStatusTransitions.Where(x => !x.IsReset)
                             .Select(x => new RoutPointTransactionArgDto { Status = x.Status, CreationTime = x.CreationTime }).ToList()),
@@ -250,7 +251,9 @@ namespace TACHYON.Tracking
                             a.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
                             a.Status),
                 }).ToListAsync();
-            mappedTrip.RoutPoints = mappedTrip.RoutPoints.OrderBy(x => x.PickingType).ToList();
+            mappedTrip.RoutPoints =(trip.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || trip.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+                ? mappedTrip.RoutPoints.OrderBy(x => x.PointOrder).ToList()
+                : mappedTrip.RoutPoints.OrderBy(x => x.PickingType).ToList();
             return mappedTrip;
         }
 

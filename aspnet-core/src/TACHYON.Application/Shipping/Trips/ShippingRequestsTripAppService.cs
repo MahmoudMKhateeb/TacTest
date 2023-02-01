@@ -952,12 +952,13 @@ namespace TACHYON.Shipping.Trips
 
         private async Task BindAppointmentAndClearance(CreateOrEditShippingRequestTripDto input, ShippingRequest request, ShippingRequestTrip trip)
         {
-            if (request.Status != ShippingRequestStatus.PostPrice)
-            {
-                throw new UserFriendlyException(L("RequestMustBeConfirmedToAddAppointmentAndClearanceVases"));
-            }
+           
             foreach (var point in trip.RoutPoints.Where(x => x.NeedsAppointment && input.RoutPoints.First(y => y.PointOrder == x.PointOrder).AppointmentDataDto != null))
             {
+                if (request.Status != ShippingRequestStatus.PostPrice)
+                {
+                    throw new UserFriendlyException(L("RequestMustBeConfirmedToAddAppointmentAndClearanceVases"));
+                }
                 var inputPoint = input.RoutPoints.First(x => x.PointOrder == point.PointOrder);
                 if (inputPoint.AppointmentDataDto == null) inputPoint.AppointmentDataDto = new TripAppointmentDataDto();
                 inputPoint.AppointmentDataDto.ShippingRequestId = request.Id;
@@ -967,6 +968,10 @@ namespace TACHYON.Shipping.Trips
             var ClearancePoints = trip.RoutPoints.Where(x => x.NeedsClearance && input.RoutPoints.First(y => y.PointOrder == x.PointOrder).TripClearancePricesDto != null);
             foreach(var point in ClearancePoints)
             {
+                if (request.Status != ShippingRequestStatus.PostPrice)
+                {
+                    throw new UserFriendlyException(L("RequestMustBeConfirmedToAddAppointmentAndClearanceVases"));
+                }
                 var inputPoint = input.RoutPoints.First(x => x.PointOrder == point.PointOrder);
                 if (inputPoint.TripClearancePricesDto == null) inputPoint.TripClearancePricesDto = new TripClearancePricesDto();
                 inputPoint.TripClearancePricesDto.ShippingRequestId = request.Id;

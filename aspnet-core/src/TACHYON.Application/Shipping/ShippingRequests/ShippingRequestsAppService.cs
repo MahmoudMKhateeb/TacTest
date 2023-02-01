@@ -1768,9 +1768,10 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             foreach (var destinationCity in destinationCitiesDtos)
             {
+                DisableDraftedFilter();
                 //destinationCity.ShippingRequestId = shippingRequest.Id;
                 var exists = await _shippingRequestDestinationCityRepository.GetAll().AnyAsync(c => c.CityId == destinationCity.CityId &&
-                c.ShippingRequestId == destinationCity.ShippingRequestId);
+                c.ShippingRequestId == shippingRequest.Id);
 
                 if (!exists)
                 {
