@@ -3193,5 +3193,6 @@
     <text name="CanNotContinueTripTip">if trip impact is enabled the trip will stopped once has accident with this reason</text>
     <text name="TripImpactEnabled">Trip Impact Enabled</text>
     <text name="CommissionPerTrip">Commission Per Trip</text>
+    <text name="SelectTheMatchingPricePackages">Select The Matching Price Packages</text>
 	</texts>
 </localizationDictionary>

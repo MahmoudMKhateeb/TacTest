@@ -2924,5 +2924,6 @@
 	<text name="CanNotContinueTripTip">في حال كان تأثير الرحلة مفعل ستتوقف الرحلة اذا كان لديها حادث من هذا السبب</text>
 	<text name="TripImpactEnabled">تفعيل تأثير الرحلة</text>
 	<text name="CommissionPerTrip">العمولة لكل رحلة</text>
+	<text name="SelectTheMatchingPricePackages">أختر حزم الأسعار المتطابقة</text>
 	</texts>
 </localizationDictionary>

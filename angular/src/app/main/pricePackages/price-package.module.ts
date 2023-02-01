@@ -25,6 +25,7 @@ import { SplitButtonModule } from '@node_modules/primeng/splitbutton';
 import { ViewMatchingTmsPricePackageComponent } from './tms-price-package/view-matching-tms-price-package/view-matching-tms-price-package.component';
 import { ProposalDetailGridComponent } from './price-packeges-proposal/proposal-detail-grid/proposal-detail-grid.component';
 import { AppendixDetailGridComponent } from './price-package-appendix/appendix-detail-grid/appendix-detail-grid.component';
+import { MultiSelectModule } from '@node_modules/primeng/multiselect';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { AppendixDetailGridComponent } from './price-package-appendix/appendix-d
     BsDropdownModule.forRoot(),
     BsDatepickerModule,
     SplitButtonModule,
+    MultiSelectModule,
   ],
   exports: [ViewMatchingTmsPricePackageComponent],
 })
