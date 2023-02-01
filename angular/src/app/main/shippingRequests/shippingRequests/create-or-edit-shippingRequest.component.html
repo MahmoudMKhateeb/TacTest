@@ -402,6 +402,7 @@
                               </option>
                             </select> -->
                             <p-multiSelect
+                              #sel
                               name="destinationCity"
                               [options]="destinationCities"
                               [(ngModel)]="shippingRequest.shippingRequestDestinationCities"
@@ -412,6 +413,7 @@
                                   : null || shippingRequest.routeTypeId == null
                               "
                               [selectedItemsLabel]="l('{0} items selected')"
+                              [maxSelectedLabels]="0"
                               (ngModelChange)="validateShippingRequestType()"
                               [style]="{ width: '100%' }"
                               styleClass="form-control pt-1"
