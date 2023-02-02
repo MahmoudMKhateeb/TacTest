@@ -23,6 +23,7 @@ using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Tracking;
+using TACHYON.Tracking.AdditionalSteps;
 using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.ShippingRequestTrips
@@ -367,7 +368,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
-        public void AssignWorkFlowVersionToRoutPoints(List<RoutPoint> routPoints, bool tripNeedsDeliveryNote, ShippingRequestTripFlag tripFlag)
+        public void AssignWorkFlowVersionToRoutPoints(List<RoutPoint> routPoints, bool tripNeedsDeliveryNote, ShippingRequestTripFlag tripFlag,ShippingTypeEnum? shippingType = null,RoundTripType? roundTrip = null)
         {
             if (routPoints == null || !routPoints.Any()) return;
             
@@ -380,11 +381,33 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                     PickingType.Pickup => tripFlag == ShippingRequestTripFlag.HomeDelivery ? WorkflowVersionConst.PickupHomeDeliveryWorkflowVersion : WorkflowVersionConst.PickupPointWorkflowVersion,
                     _ => throw new ArgumentOutOfRangeException(nameof(point.PickingType))
                 };
+                  if (roundTrip is null || point.PointOrder is null || point.PickingType is PickingType.Pickup) continue;
                   
+                  point.AdditionalStepWorkFlowVersion = roundTrip.Value switch
+                  {
+                      RoundTripType.WithReturnTrip when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripVersion,
+                      RoundTripType.WithReturnTrip when IsSecondTrip(point.PointOrder.Value)  => AdditionalStepWorkflowVersionConst.PortsMovementImportReturnTripVersion,
+                      
+                      RoundTripType.WithoutReturnTrip when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementImportFirstTripVersion,
+                      
+                      RoundTripType.TwoWayRoutsWithPortShuttling when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportFirstTripVersion,
+                      RoundTripType.TwoWayRoutsWithPortShuttling when IsSecondTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportSecondTripVersion,
+                      RoundTripType.TwoWayRoutsWithPortShuttling when IsThirdTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripVersion,
+                      
+                      RoundTripType.TwoWayRoutsWithoutPortShuttling when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportFirstTripVersion,
+                      RoundTripType.TwoWayRoutsWithoutPortShuttling when IsSecondTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportSecondTripVersion,
+                      
+                      RoundTripType.OneWayRoutWithPortShuttling when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripVersion,
+                      _ => null
+                  };
+
             }
             
             int GetDropOffWorkflowVersion(RoutPoint point)
             {
+                if (shippingType is ShippingTypeEnum.ExportPortMovements or ShippingTypeEnum.ImportPortMovements)
+                    return WorkflowVersionConst.DropOffPortsMovementWorkflowVersion;
+
                 switch (tripFlag)
                 {
                     case ShippingRequestTripFlag.Normal:
@@ -411,6 +434,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
                 throw new UserFriendlyException(L("TripTypeIsNotValid"));
             }
+            
+            // note: point order <= 2 mean that the point is in first trip and point order <= 4 then the point in second/return trip and so on
+            bool IsFirstTrip(int pointOrder) => pointOrder <= 2;
+            bool IsSecondTrip(int pointOrder) => pointOrder is <= 4 and > 2 ;
+            bool IsThirdTrip(int pointOrder) => pointOrder is <= 6 and > 4 ;
         }
 
         public async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip,

@@ -922,6 +922,16 @@ namespace TACHYON.Invoices
 
         }
 
+        public async Task GenertateInvoiceWhenShipmintDelivery(int tripId)
+        {
+            var trip = await _shippingRequestTrip
+                .GetAllIncluding(d => d.ShippingRequestTripVases)
+                .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
+                .FirstOrDefaultAsync(t => t.Id == tripId);
+
+           await GenertateInvoiceWhenShipmintDelivery(trip);
+        }
+
         /// <summary>
         /// When the shipper billing interval  after delivry run this method to generate invoice
         /// </summary>

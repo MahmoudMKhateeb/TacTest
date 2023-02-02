@@ -4,6 +4,7 @@ using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.EntityFrameworkCore.EFPlus;
 using Abp.EntityHistory;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Validation;
@@ -47,6 +48,7 @@ using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Storage;
 using TACHYON.Tracking;
+using TACHYON.Tracking.AdditionalSteps;
 using TACHYON.Tracking.Dto;
 using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Trucks.TrucksTypes.Dtos;
@@ -71,6 +73,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
 
         private readonly IRepository<User, long> _userRepository;
+        private readonly IRepository<AdditionalStepTransition, long> _additionalStepTransitionRepository;
         public ShippingRequestDriverAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTrip,
             IRepository<RoutPoint, long> RoutPointRepository,
@@ -82,7 +85,8 @@ namespace TACHYON.Shipping.Drivers
             RatingLogManager ratingLogManager,
             IRepository<DriverLocationLog, long> driverLocationLogRepository,
             ShippingRequestPointWorkFlowProvider workFlowProvider,
-            IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository)
+            IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository,
+            IRepository<AdditionalStepTransition, long> additionalStepTransitionRepository)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
@@ -95,6 +99,7 @@ namespace TACHYON.Shipping.Drivers
             _driverLocationLogRepository = driverLocationLogRepository;
             _workFlowProvider = workFlowProvider;
             _routPointStatusTransitionRepository = routPointStatusTransitionRepository;
+            _additionalStepTransitionRepository = additionalStepTransitionRepository;
         }
         /// <summary>
         /// list all trips realted with drivers
@@ -614,6 +619,9 @@ namespace TACHYON.Shipping.Drivers
                 request.Status = ShippingRequestStatus.PostPrice;
 
                 await _shippingRequestTripTransitionRepository.DeleteAsync(x => x.ToPoint.ShippingRequestTripId == trip.Id);
+                // todo test this
+                await _additionalStepTransitionRepository.BatchUpdateAsync(
+                    x => new AdditionalStepTransition{ IsReset = true} , x => x.RoutePoint.ShippingRequestTripId == trip.Id);
 
                 trip.HasAccident = false;
                 //to save current trip incident

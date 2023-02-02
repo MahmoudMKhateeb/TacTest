@@ -12,6 +12,7 @@ using TACHYON.Rating;
 using TACHYON.Receivers;
 using TACHYON.Shipping.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Tracking.AdditionalSteps;
 
 namespace TACHYON.Routs.RoutPoints
 {
@@ -90,6 +91,8 @@ namespace TACHYON.Routs.RoutPoints
         
         //integrations
         public string BayanId { get; set; }
+
+        public List<AdditionalStepTransition> AdditionalStepTransitions { get; set; }
 
         #region Home delivery
         public DropPaymentMethod? DropPaymentMethod { get; set; }

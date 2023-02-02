@@ -12,5 +12,6 @@ namespace TACHYON.Routs.RoutPoints
         Appointment = 4,
         Manifest = 5,
         ConfirmationDocuments = 6,
+        Eir = 7,
     }
 }

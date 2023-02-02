@@ -6,6 +6,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.EntityHistory;
 using Abp.Linq.Extensions;
+using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nito.AsyncEx;
 using System.Threading;
 using TACHYON.Authorization.Users;
+using TACHYON.Tracking.AdditionalSteps;
 
 namespace TACHYON.Tracking
 {
@@ -48,13 +50,17 @@ namespace TACHYON.Tracking
         private readonly ProfileAppService _ProfileAppService;
         private readonly ForceDeliverTripExcelExporter _deliverTripExcelExporter;
         private readonly IRepository<UserOrganizationUnit,long> _userOrganizationUnitRepository;
+        private readonly AdditionalStepWorkflowProvider _stepWorkflowProvider;
 
-        public TrackingAppService(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository,
+        public TrackingAppService(
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository,
+            IRepository<RoutPoint, long> routPointRepository,
             IRepository<User, long> userRepository,
             ShippingRequestPointWorkFlowProvider workFlowProvider,
             ProfileAppService profileAppService,
             ForceDeliverTripExcelExporter deliverTripExcelExporter,
-            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository)
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+            AdditionalStepWorkflowProvider stepWorkflowProvider)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _RoutPointRepository = routPointRepository;
@@ -63,6 +69,7 @@ namespace TACHYON.Tracking
             _ProfileAppService = profileAppService;
             _deliverTripExcelExporter = deliverTripExcelExporter;
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
+            _stepWorkflowProvider = stepWorkflowProvider;
         }
 
 
@@ -243,18 +250,33 @@ namespace TACHYON.Tracking
                     FacilityRate = a.FacilityFk.Rate,
                     ReceiverCode = AbpSession.TenantId.HasValue ? null : a.Code,
                     PointOrder = a.PointOrder,
+                    IsHasAdditionalSteps = a.AdditionalStepWorkFlowVersion.HasValue,
+                    AdditionalStepWorkFlowVersion = a.AdditionalStepWorkFlowVersion,
                     Statues = _workFlowProvider.GetStatuses(a.WorkFlowVersion,
-                            a.RoutPointStatusTransitions.Where(x => !x.IsReset)
-                            .Select(x => new RoutPointTransactionArgDto { Status = x.Status, CreationTime = x.CreationTime }).ToList()),
-                    AvailableTransactions = !a.IsResolve || trip.DriverStatus != ShippingRequestTripDriverStatus.Accepted
-                        ? new List<PointTransactionDto>()
-                        : _workFlowProvider.GetTransactionsByStatus(a.WorkFlowVersion,
-                            a.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
-                            a.Status),
+                        a.RoutPointStatusTransitions.Where(x => !x.IsReset)
+                            .Select(x =>
+                                new RoutPointTransactionArgDto { Status = x.Status, CreationTime = x.CreationTime })
+                            .ToList()),
+                    AvailableTransactions =
+                        !a.IsResolve || trip.DriverStatus != ShippingRequestTripDriverStatus.Accepted
+                            ? new List<PointTransactionDto>()
+                            : _workFlowProvider.GetTransactionsByStatus(a.WorkFlowVersion,
+                                a.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
+                                a.Status),
                 }).ToListAsync();
             trip.RoutPoints =(trip.ShippingType == ShippingTypeEnum.ImportPortMovements || trip.ShippingType == ShippingTypeEnum.ExportPortMovements)
                 ? trip.RoutPoints.OrderBy(x => x.PointOrder).ToList()
                 : trip.RoutPoints.OrderBy(x => x.PickingType).ToList();
+
+            foreach (var routePoint in trip.RoutPoints.Where(routePoint => routePoint.AdditionalStepWorkFlowVersion is { }))
+            {
+                var steps =
+                    await _stepWorkflowProvider.GetPointAdditionalSteps(routePoint.AdditionalStepWorkFlowVersion.Value,
+                        routePoint.Id);
+                routePoint.AvailableSteps = steps.Select(x =>
+                        new AdditionalStepDto { Action = x.Action, Name = x.Name, StepType = x.AdditionalStepType })
+                    .ToList();
+            }
             return trip;
         }
 
@@ -295,6 +317,20 @@ namespace TACHYON.Tracking
                 Code = input.Code
             };
             await _workFlowProvider.Invoke(args, input.Action);
+        }
+
+        // todo add permission here
+        public async Task InvokeAdditionalStep(InvokeStepInputDto input)
+        {
+            var args = new AdditionalStepArgs
+            {
+                CurrentUser = AbpSession.ToUserIdentifier(),
+                PointId = input.Id,
+                Code = input.Code,
+                Document = input.Document
+            };
+            
+            await _stepWorkflowProvider.Invoke(args, input.Action);
         }
         public async Task NextLocation(long id)
         {

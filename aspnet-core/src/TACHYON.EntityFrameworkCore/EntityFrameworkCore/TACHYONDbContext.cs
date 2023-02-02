@@ -104,6 +104,7 @@ using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 using TACHYON.PricePackages.TmsPricePackageOffers;
 using TACHYON.DedicatedDynamicActorInvoices;
 using TACHYON.DedicatedDynamicActorInvoices.DedicatedDynamicActorInvoiceItems;
+using TACHYON.Tracking.AdditionalSteps;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -352,6 +353,8 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<PricePackageAppendix> Appendixes { get; set; }
 
         public DbSet<TmsPricePackageOffer> TmsPricePackageOffers { get; set; }
+        
+        public DbSet<AdditionalStepTransition> AdditionalStepTransitions { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;

@@ -12,6 +12,7 @@
 		<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
 		<UserSecretsId>MyCompanyName-TACHYON-894FDFC1-6482-4A56-926A-3C46C9FE0329</UserSecretsId>
 		<RootNamespace>TACHYON</RootNamespace>
+		<LangVersion>9</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

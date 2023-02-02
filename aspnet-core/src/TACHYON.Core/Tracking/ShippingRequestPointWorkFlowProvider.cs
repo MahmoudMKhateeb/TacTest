@@ -1,7 +1,6 @@
 ﻿using Abp;
 using Abp.Application.Features;
 using Abp.Authorization;
-using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
 using Abp.Linq.Extensions;
@@ -10,18 +9,14 @@ using Abp.Threading;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
-using MimeKit;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
-using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
-using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Firebases;
 using TACHYON.Integration.BayanIntegration.V3;
@@ -52,9 +47,9 @@ namespace TACHYON.Tracking
     /// <typeparam name="TArgs">transaction args object warper</typeparam>
     /// <typeparam name="TEnum">statuses Enum</typeparam>
     public class ShippingRequestPointWorkFlowProvider : TACHYONDomainServiceBase,
-        IWorkFlow<PointTransactionArgs, RoutePointStatus>
+        IWorkFlowProvider<WorkflowTransaction<PointTransactionArgs,RoutePointStatus>,PointTransactionArgs,RoutePointStatus>
     {
-        public List<WorkFlow<PointTransactionArgs, RoutePointStatus>> Flows { get; set; }
+        public List<WorkFlow<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>> Flows { get; set; }
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
@@ -122,10 +117,10 @@ namespace TACHYON.Tracking
             _permissionChecker = permissionChecker;
             _reasonProvider = reasonProvider;
             _shippingRequestRepository = shippingRequestRepository;
-            Flows = new List<WorkFlow<PointTransactionArgs, RoutePointStatus>>
+            Flows = new List<WorkFlow<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>>
             {
                 // Pick up workflow 
-                new WorkFlow<PointTransactionArgs, RoutePointStatus>
+                new()
                 {
                     Version = WorkflowVersionConst.PickupPointWorkflowVersion,
                     Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
@@ -173,7 +168,7 @@ namespace TACHYON.Tracking
                     },
                 },
                 // Drop Off workflow without uplode delivery note
-                new WorkFlow<PointTransactionArgs, RoutePointStatus>
+                new()
                 {
                     Version = WorkflowVersionConst.DropOffWithoutDeliveryNotePointWorkflowVersion,
                     Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
@@ -271,7 +266,7 @@ namespace TACHYON.Tracking
                     },
                 },
                 // Drop Off workflow with uplode delivery note
-                new WorkFlow<PointTransactionArgs, RoutePointStatus>
+                new()
                 {
                     Version = WorkflowVersionConst.DropOffWithDeliveryNotePointWorkflowVersion,
                     Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
@@ -378,7 +373,7 @@ namespace TACHYON.Tracking
                         },
                     },
                 },
-                new WorkFlow<PointTransactionArgs, RoutePointStatus>()
+                new()
                 {
                     Version = WorkflowVersionConst.PickupHomeDeliveryWorkflowVersion,
                     Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
@@ -395,7 +390,7 @@ namespace TACHYON.Tracking
                         },
                     }
                 },
-                new WorkFlow<PointTransactionArgs, RoutePointStatus>()
+                new()
                 {
                     Version = WorkflowVersionConst.DropOffHomeDeliveryWorkflowVersion,
                     Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
@@ -412,7 +407,7 @@ namespace TACHYON.Tracking
                         }
                     }
                 },
-                new WorkFlow<PointTransactionArgs, RoutePointStatus>()
+                new()
                 {
                     Version = WorkflowVersionConst.DropOffHomeDeliveryWithPodWorkflowVersion,
                     Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
@@ -439,7 +434,7 @@ namespace TACHYON.Tracking
                         },
                     }
                 },
-                new WorkFlow<PointTransactionArgs, RoutePointStatus>()
+                new()
                 {
                     Version = WorkflowVersionConst.DropOffHomeDeliveryWithReceiverCodeWorkflowVersion,
                     Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
@@ -466,7 +461,7 @@ namespace TACHYON.Tracking
                         },
                     }
                 },
-                new WorkFlow<PointTransactionArgs, RoutePointStatus>()
+                new()
                 {
                     Version = WorkflowVersionConst.DropOffHomeDeliveryWithPodAndReceiverCodeWorkflowVersion,
                     Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
@@ -522,7 +517,54 @@ namespace TACHYON.Tracking
                             Features = new List<string>(),
                         }
                     }
-                }
+                },
+                new()
+                {
+                    Version = WorkflowVersionConst.DropOffPortsMovementWorkflowVersion,
+                    Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
+                    {
+                        new()
+                        {
+                            Action = WorkFlowActionConst.StartedMovingToOfLoadingLocation,
+                            FromStatus = RoutePointStatus.StandBy,
+                            ToStatus = RoutePointStatus.StartedMovingToOffLoadingLocation,
+                            Func = StartedMovingToOfLoadingLocation,
+                            Name = "StartedMovingToOfLoadingLocation",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        },
+                        new()
+                        {
+                            Action = WorkFlowActionConst.ArrivedToDestination,
+                            FromStatus = RoutePointStatus.StartedMovingToOffLoadingLocation,
+                            ToStatus = RoutePointStatus.ArrivedToDestination,
+                            Func = ArrivedToDestination,
+                            Name = "ArrivedToDestination",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        },
+                        new()
+                        {
+                            Action = WorkFlowActionConst.StartOffloading,
+                            FromStatus = RoutePointStatus.ArrivedToDestination,
+                            ToStatus = RoutePointStatus.StartOffloading,
+                            Func = StartOffloading,
+                            Name = "StartOffloading",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        },
+                        new()
+                        {
+                            Action = WorkFlowActionConst.FinishOffLoadShipment,
+                            FromStatus = RoutePointStatus.StartOffloading,
+                            ToStatus = RoutePointStatus.FinishOffLoadShipment,
+                            Func = FinishOffLoadShipment,
+                            Name = "FinishOffLoadShipment",
+                            Permissions = new List<string> { },
+                            Features = new List<string> { },
+                        }
+                    },
+                },
             };
             _penaltyManager = penaltyManager;
             _normalPricePackageManager = normalPricePackageManager;
@@ -1355,9 +1397,12 @@ namespace TACHYON.Tracking
         /// </summary>
         private async Task<RoutPoint> GetPickUpPointToStart(int tripId)
         {
-            return await _routPointRepository.GetAll().Include(x => x.FacilityFk)
-                .SingleAsync(x =>
-                    x.ShippingRequestTripId == tripId && x.PickingType == Routs.RoutPoints.PickingType.Pickup);
+
+            var pickupPoint = await _routPointRepository.GetAll().Include(x => x.FacilityFk)
+                .OrderBy(x=> x.PointOrder ?? x.Id).FirstOrDefaultAsync(x=> x.ShippingRequestTripId == tripId && x.PickingType == PickingType.Pickup);
+            if (pickupPoint is not { }) throw new UserFriendlyException(L("PickupPointNotFound")); 
+
+            return pickupPoint;
         }
 
         /// <summary>
@@ -1404,7 +1449,9 @@ namespace TACHYON.Tracking
                 .WhereIf(!forceMode,x => x.Id == pointId
                          && x.Status == RoutePointStatus.StandBy && !x.IsActive && !x.IsResolve && !x.IsComplete
                          && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.InTransit
-                         && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
+                         && (x.PickingType == PickingType.Dropoff 
+                             || x.ShippingRequestTripFk.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                             || x.ShippingRequestTripFk.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements))
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
                 .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
@@ -1593,7 +1640,7 @@ namespace TACHYON.Tracking
                 trip.ShippingRequestFk.Status = ShippingRequestStatus.Completed;
                 await _appNotifier.ShipperShippingRequestFinish(
                     new UserIdentifier(trip.ShippingRequestFk.TenantId, trip.ShippingRequestFk.CreatorUserId.Value),
-                    trip.ShippingRequestFk);
+                    trip.ShippingRequestId);
             }
         }
 

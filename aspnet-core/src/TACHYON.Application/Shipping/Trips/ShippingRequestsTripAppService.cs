@@ -788,7 +788,7 @@ namespace TACHYON.Shipping.Trips
                  
             }
             //AssignWorkFlowVersionToRoutPoints(trip);
-            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.RoutPoints.ToList(), trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag);
+            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.RoutPoints.ToList(), trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,request.ShippingTypeId,request.RoundTripType);
             //insert trip 
             var shippingRequestTripId = await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
 
@@ -817,7 +817,7 @@ namespace TACHYON.Shipping.Trips
 
             //Notify Carrier with trip details
             if(request.ShippingRequestFlag==ShippingRequestFlag.Normal)
-            await _shippingRequestTripManager.NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true, true);
+             await _shippingRequestTripManager.NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true, true);
         }
         public async Task AddRemarks(RemarksInputDto input)
         {
@@ -930,7 +930,7 @@ namespace TACHYON.Shipping.Trips
                     trip.RoutPoints?.Where(x => x.Status == RoutePointStatus.StandBy).ToList();
 
                 if (pointHasAbilityToChangeWorkflow != null && pointHasAbilityToChangeWorkflow.Count > 0)
-                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(pointHasAbilityToChangeWorkflow, trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag);
+                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(pointHasAbilityToChangeWorkflow, trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag, request.ShippingTypeId,request.RoundTripType);
             }
 
             if (!trip.BayanId.IsNullOrEmpty())
