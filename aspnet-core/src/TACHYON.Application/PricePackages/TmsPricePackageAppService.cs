@@ -231,7 +231,7 @@ namespace TACHYON.PricePackages
                 where hasNormalDirectRequest ||
                       (pricePackageOffer != null && (pricePackageOffer.TmsPricePackageId == pricePackageDto.Id ||
                                                      pricePackageOffer.NormalPricePackageId == pricePackageDto.Id) &&
-                       (!pricePackageOffer.DirectRequestId.HasValue ||
+                       (pricePackageOffer.DirectRequest == null ||
                         pricePackageOffer.DirectRequest.ShippingRequestId == input.ShippingRequestId) &&
                        (!pricePackageOffer.PriceOfferId.HasValue ||
                         pricePackageOffer.PriceOffer.ShippingRequestId == input.ShippingRequestId))
