@@ -1,16 +1,18 @@
-import { Component, ElementRef, Injector, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   GetAllUploadedFileDto,
   InvokeStatusInputDto,
   PickingType,
   PointTransactionDto,
+  RoutePointStatus,
   RoutPointTransactionDto,
   ShippingRequestRouteType,
   ShippingRequestTripDriverStatus,
   ShippingRequestTripFlag,
   ShippingRequestTripStatus,
   ShippingRequestType,
+  ShippingTypeEnum,
   TrackingListDto,
   TrackingRoutePointDto,
   TrackingServiceProxy,
@@ -27,6 +29,9 @@ import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { DriverLocation, FirebaseHelperClass, trackingIconsList } from '@app/main/shippingRequests/shippingRequests/tracking/firebaseHelper.class';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
+import { Timeline } from '@node_modules/primeng/timeline';
+import { CustomStep } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-timeline/custom-step';
+import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'new-tracking-conponent',
@@ -35,11 +40,12 @@ import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.com
   providers: [NgbDropdownConfig],
   animations: [appModuleAnimation()],
 })
-export class NewTrackingConponent extends AppComponentBase implements OnChanges {
+export class NewTrackingConponent extends AppComponentBase implements OnChanges, OnInit {
   @ViewChild('modelconfirm', { static: false }) modelConfirmCode: TrackingConfirmModalComponent;
   @ViewChild('modelpod', { static: false }) modelpod: TrackingPODModalComponent;
   @ViewChild('appEntityLog', { static: false }) activityLogModal: EntityLogComponent;
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
+  @ViewChild('timeline', { static: false }) timeline: Timeline;
 
   @Input() trip: TrackingListDto = new TrackingListDto();
   active = false;
@@ -79,6 +85,9 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   trackingIconsList = trackingIconsList;
   driverOnline: boolean;
   TripFlag = ShippingRequestTripFlag;
+  shippingType: ShippingTypeEnum;
+  ShippingTypeEnum = ShippingTypeEnum;
+  RoutePointStatus = RoutePointStatus;
 
   constructor(
     injector: Injector,
@@ -93,6 +102,8 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     config.autoClose = true;
     config.container = 'body';
   }
+
+  ngOnInit() {}
 
   /**
    * to Detect Changes On Variables
@@ -182,6 +193,21 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         this.trip.driverStatus = result.driverStatus;
         this.trip.statusTitle = result.statusTitle;
         this.routePoints = result.routPoints;
+        this.shippingType = result.shippingType;
+        if (this.shippingType === ShippingTypeEnum.ExportPortMovements || this.shippingType === ShippingTypeEnum.ImportPortMovements) {
+          result.routPoints.filter((item) => {
+            if (item.pickingType === PickingType.Dropoff) {
+              item.statues.push(
+                RoutPointTransactionDto.fromJS({
+                  status: 0,
+                  isDone: false,
+                  name: 'UploadRequiredFiles',
+                  creationTime: null,
+                })
+              );
+            }
+          });
+        }
         if (result.status === this.tripStatusesEnum.Delivered) {
           this.emitToMobileApplication('TripIsDelivered', null, 'delete');
         }
@@ -499,5 +525,33 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     } else if (mode === 'write') {
       helper.assignDriverToTrip(this.trip, point, this.appSession.tenantId, transaction);
     }
+  }
+
+  isClickable(point: TrackingRoutePointDto, event: CustomStep): { class: string; canClick: boolean } {
+    if (this.shippingType != this.ShippingTypeEnum.ImportPortMovements && this.shippingType != this.ShippingTypeEnum.ExportPortMovements) {
+      return { class: '', canClick: false };
+    }
+    if (!point.availableTransactions.length) {
+      return { class: '', canClick: false };
+    }
+    if (point.availableTransactions.length > 0) {
+      const currentStatus = point.statues[event.index - 1];
+      for (let i = 0; i < point.availableTransactions.length; i++) {
+        const transaction = point.availableTransactions[i];
+        if (transaction.name === currentStatus.name) {
+          return { class: 'active-status clickable-item', canClick: true };
+        }
+      }
+    }
+    return { class: '', canClick: false };
+  }
+
+  clickedOnStep(point: TrackingRoutePointDto, canClick: boolean) {
+    console.log('clickedOnStep canClick', canClick);
+    console.log('clickedOnStep point', point);
+    if (!canClick) {
+      return;
+    }
+    this.invokeStatus(point, point.availableTransactions[0]);
   }
 }

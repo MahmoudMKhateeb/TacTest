@@ -1,0 +1,52 @@
+<div class="p-timeline p-component p-timeline-top p-timeline-horizontal d-flex flex-grow-1 w-100">
+  <div
+    class="p-timeline-event d-flex flex-column flex-grow-1"
+    *ngFor="let step of steps; let i = index; let first = first; let last = last; trackBy: itemTrackBy"
+  >
+    <div class="p-timeline-event-opposite"></div>
+    <div class="p-timeline-event-separator d-flex">
+      <div class="p-timeline-event-connector flex-grow-1" *ngIf="last"></div>
+      <app-custom-marker
+        [isDone]="step.isDone"
+        [point]="point"
+        [index]="step.index"
+        [color]="step.color"
+        [styleClass]="isClickable(point, step).class"
+        [canClick]="isClickable(point, step).canClick"
+        (invokeStatus)="statusInvoked($event)"
+      ></app-custom-marker>
+
+      <div class="p-timeline-event-connector flex-grow-1" *ngIf="!last"></div>
+    </div>
+    <div class="p-timeline-event-content" [class.text-left]="last && isRtl" [class.text-right]="last && !isRtl">
+      <div
+        *ngIf="!isClickable(point, step).canClick"
+        class="{{ isClickable(point, step).canClick ? 'btn btn-primary text-white' : 'text-dark' }}"
+        (click)="clickedOnStep($event, point, isClickable(point, step).canClick)"
+      >
+        <span class="font-weight-bolder  {{ step.isDone ? 'p-disabled' : '' }}">
+          {{ step.status }}
+        </span>
+        <br />
+        <span class="text-muted mt-3 font-weight-bold font-size-sm">
+          {{ step.time | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}
+        </span>
+      </div>
+      <button
+        *ngIf="isClickable(point, step).canClick"
+        class="{{ isClickable(point, step).canClick ? 'btn btn-primary text-white' : 'text-dark' }}"
+        [buttonBusy]="isClickable(point, step).canClick && saving"
+        [busyText]="l('SavingWithThreeDot')"
+        (click)="clickedOnStep($event, point, isClickable(point, step).canClick)"
+      >
+        <span class="font-weight-bolder  {{ step.isDone ? 'p-disabled' : '' }}">
+          {{ step.status }}
+        </span>
+        <br />
+        <span class="text-muted mt-3 font-weight-bold font-size-sm">
+          {{ step.time | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
