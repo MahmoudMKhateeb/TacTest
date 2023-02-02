@@ -52,6 +52,8 @@ namespace TACHYON.Authorization
 
             var hostDashboard = pages.CreateChildPermission(AppPermissions.Pages_HostDashboard, L("HostDashboard"));
             var shipperDashboard = pages.CreateChildPermission(AppPermissions.Pages_ShipperDashboard, L("ShipperDashboard"), multiTenancySides: MultiTenancySides.Tenant);
+            shipperDashboard.CreateChildPermission(AppPermissions.Pages_ShipperDashboard_trackingMap, L("ShipperTrackingMap"));
+            shipperDashboard.CreateChildPermission(AppPermissions.Pages_ShipperDashboard_tripDetails, L("ShipperTripDetails"));
             var CarrierDashboard = pages.CreateChildPermission(AppPermissions.Pages_CarrierDashboard, L("CarrierDashboard"), multiTenancySides: MultiTenancySides.Tenant);
 
             var receivers = pages.CreateChildPermission(AppPermissions.Pages_Receivers, L("Receivers"));
@@ -264,6 +266,7 @@ namespace TACHYON.Authorization
             facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Delete, L("DeleteFacility"),multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
 
             var shipper = pages.CreateChildPermission(AppPermissions.App_Shipper, L("Shipper"));
+            
             var carrier = pages.CreateChildPermission(AppPermissions.App_Carrier, L("Carrier"));
             var tachyonDealer = pages.CreateChildPermission(AppPermissions.App_TachyonDealer, L("TachyonDealer"));
 
@@ -437,6 +440,8 @@ namespace TACHYON.Authorization
                 multiTenancySides: MultiTenancySides.Host);
             trackingPermission.CreateChildPermission(AppPermissions.Pages_Tracking_BulkDeliverTrip, L("BulkDeliverTrip"),
                 featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer));
+            trackingPermission.CreateChildPermission(AppPermissions.Pages_Tracking_Drive, L("DriveTrackingPermission"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.ShipperClients));
 
             var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("Administration"));
 
@@ -457,6 +462,10 @@ namespace TACHYON.Authorization
 
 
             var actorInvoices = administration.CreateChildPermission(AppPermissions.Pages_Administration_ActorsInvoice, L("ActorInvoices"),
+                multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host,
+                featureDependency: new SimpleFeatureDependency(AppFeatures.ShipperClients, AppFeatures.TachyonDealer));
+
+            var actorSubmitInvoices = administration.CreateChildPermission(AppPermissions.Pages_Administration_SubmitActorsInvoice, L("ActorSubmitInvoicesPermission"),
                 multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host,
                 featureDependency: new SimpleFeatureDependency(AppFeatures.ShipperClients, AppFeatures.TachyonDealer));
 
@@ -924,7 +933,17 @@ namespace TACHYON.Authorization
            #endregion
 
            var penaltiesPermission = pages.CreateChildPermission(AppPermissions.Pages_Penalties, L("Penalties"));
-           // note : to do use penalties permission to add some missing permission like create, update, and delete
+
+            #region Dedicated Attendance Sheet
+            var attendaceSheet = pages.CreateChildPermission(AppPermissions.Pages_DedicatedAttendanceSheet,
+              L("DedicatedAttendanceSheetPermission"),
+              featureDependency: brokerFeatureDependency);
+            attendaceSheet.CreateChildPermission(AppPermissions.Pages_DedicatedFillAttendanceSheet,
+              L("DedicatedFillAttendanceSheetPermission"),
+              featureDependency: brokerFeatureDependency);
+
+            #endregion
+            // note : to do use penalties permission to add some missing permission like create, update, and delete
         }
 
         private static ILocalizableString L(string name)

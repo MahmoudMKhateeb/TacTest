@@ -185,19 +185,32 @@ namespace TACHYON.Actors
             organizationUnit.Code = await _organizationUnitManager.GetNextChildCodeAsync(organizationUnit.ParentId);
 
             var organizationUnitId = await _organizationUnitRepository.InsertAndGetIdAsync(organizationUnit);
-            
-            bool isExists = await _roleManager.RoleExistsAsync(StaticRoleNames.Tenants.InternalClients);
-            if (!isExists)
-                await CreateInternalClientsRole();
+            if (input.ActorType == ActorTypesEnum.Shipper)
+            {
+
+                bool isExists = await _roleManager.RoleExistsAsync(StaticRoleNames.Tenants.InternalShipperClients);
+                if (!isExists)
+                    await CreateInternalShipperClientsRole();
+            }
+            else if(input.ActorType == ActorTypesEnum.Carrier)
+            {
+                bool isExists = await _roleManager.RoleExistsAsync(StaticRoleNames.Tenants.InternalCarrierClients);
+                if (!isExists)
+                    await CreateInternalCarrierClientsRole();
+            }
+
 
             await CurrentUnitOfWork.SaveChangesAsync();
 
 
-            
-            int internalClientsRoleId = await _roleManager.Roles.Where(x =>
-                    x.TenantId == AbpSession.TenantId && x.Name == StaticRoleNames.Tenants.InternalClients)
+
+            int internalClientsRoleId = input.ActorType == ActorTypesEnum.Shipper ? await _roleManager.Roles.Where(x =>
+                    x.TenantId == AbpSession.TenantId && x.Name == StaticRoleNames.Tenants.InternalShipperClients)
+                .Select(x => x.Id).SingleAsync() : await _roleManager.Roles.Where(x =>
+                    x.TenantId == AbpSession.TenantId && x.Name == StaticRoleNames.Tenants.InternalCarrierClients)
                 .Select(x => x.Id).SingleAsync();
-            
+
+
             await _roleManager.AddToOrganizationUnitAsync(internalClientsRoleId, organizationUnitId,AbpSession.TenantId);
 
             var actor = ObjectMapper.Map<Actor>(input);
@@ -261,13 +274,13 @@ namespace TACHYON.Actors
             }
         }
 
-        private async Task CreateInternalClientsRole()
+        private async Task CreateInternalShipperClientsRole()
         {
             await _roleManager.CreateAsync(new Role()
             {
                 TenantId = AbpSession.TenantId,
-                DisplayName = "Internal Client",
-                Name = StaticRoleNames.Tenants.InternalClients,
+                DisplayName = "Internal Shipper Client",
+                Name = StaticRoleNames.Tenants.InternalShipperClients,
                 IsStatic = true,
                 Permissions = new List<RolePermissionSetting>()
                 {
@@ -276,13 +289,47 @@ namespace TACHYON.Actors
                     new RolePermissionSetting() { Name = AppPermissions.Pages_Administration_ActorsInvoice, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_Invoices, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequests, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Facilities, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Receivers, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_DocumentFiles, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_DocumentFiles_Actors, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequestTrips, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Tenant_Dashboard, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ActorPrices, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ActorPrices_Shipper, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShipperDashboard, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShipperDashboard_trackingMap, TenantId = AbpSession.TenantId },
+
+
+                }
+            });
+        }
+
+        private async Task CreateInternalCarrierClientsRole()
+        {
+            await _roleManager.CreateAsync(new Role()
+            {
+                TenantId = AbpSession.TenantId,
+                DisplayName = "Internal Carrier Client",
+                Name = StaticRoleNames.Tenants.InternalCarrierClients,
+                IsStatic = true,
+                Permissions = new List<RolePermissionSetting>()
+                {
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Tracking, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Administration, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Administration_SubmitActorsInvoice, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Invoices, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequests, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_Trucks, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_Administration_Users, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_Administration_Drivers, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_DocumentFiles, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_DocumentFiles_Actors, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequestTrips, TenantId = AbpSession.TenantId },
-                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequestAndTripNotes, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Tenant_Dashboard, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ActorPrices, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ActorPrices_Carrier, TenantId = AbpSession.TenantId },
+                    //new RolePermissionSetting() { Name = AppPermissions.Pages_CarrierDashboard, TenantId = AbpSession.TenantId },
                 }
             });
         }

@@ -3192,5 +3192,9 @@
     <text name="TripImpact">Trip Impact</text>
     <text name="CanNotContinueTripTip">if trip impact is enabled the trip will stopped once has accident with this reason</text>
     <text name="TripImpactEnabled">Trip Impact Enabled</text>
+    <text name="DriveTrackingPermission">Drive tracking</text>
+    <text name="ActorSubmitInvoicesPermission">Actor submit invoices</text>
+    <text name="DedicatedAttendanceSheetPermission">Dedicated attendace sheet</text>
+    <text name="DedicatedFillAttendanceSheetPermission">Dedicated fill attendance sheet</text>
 	</texts>
 </localizationDictionary>

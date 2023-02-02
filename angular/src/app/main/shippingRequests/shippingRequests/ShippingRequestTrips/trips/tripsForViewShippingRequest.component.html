@@ -13,7 +13,7 @@
           primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips &&
           shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Normal
         "
-        *ngIf="showBtnAddTrips"
+        *ngIf="isGranted('Pages.ShippingRequestTrips.Create') && showBtnAddTrips"
       >
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
       </button>
@@ -26,7 +26,7 @@
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
-          *ngIf="ShippingRequest.canAddTrip"
+          *ngIf="isGranted('Pages.ShippingRequestTrips.Create') && ShippingRequest.canAddTrip"
         >
           <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
         </button>
@@ -352,7 +352,8 @@
                   <ul *dropdownMenu class="dropdown-menu">
                     <li
                       *ngIf="
-                        (record.status == 0 && CanEditTrip) || (record.shippingRequestTripFlag === 1 && (record.status == 0 || record.status == 1))
+                        (isGranted('Pages.ShippingRequestTrips.Edit') && record.status == 0 && CanEditTrip) ||
+                        (record.shippingRequestTripFlag === 1 && (record.status == 0 || record.status == 1))
                       "
                     >
                       <a class="dropdown-item" (click)="AddNewTripModal.show(record, shippingRequestForView)">{{ l('Edit') }}</a>
@@ -364,7 +365,10 @@
                         *ngIf="shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
                         (click)="ViewTripModal.show(record.id, shippingRequestForView)"
                         >{{
-                          record.canAssignTrucksAndDrivers && !isTachyonDealer && !shippingRequestForView.shippingRequest.isSaas
+                          record.canAssignTrucksAndDrivers &&
+                          !isTachyonDealer &&
+                          !shippingRequestForView.shippingRequest.isSaas &&
+                          isGranted('Pages.ShippingRequestTrips.Edit')
                             ? l('ViewOrAssignDriver')
                             : l('View')
                         }}</a
@@ -373,11 +377,14 @@
                         class="dropdown-item"
                         *ngIf="shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Normal"
                         (click)="ViewTripModal.show(record.id, shippingRequestForView)"
-                        >{{ record.canAssignTrucksAndDrivers ? l('ViewOrAssignDriver') : l('View') }}</a
+                        >{{
+                          record.canAssignTrucksAndDrivers && isGranted('Pages.ShippingRequestTrips.Edit') ? l('ViewOrAssignDriver') : l('View')
+                        }}</a
                       >
                     </li>
                     <li
                       *ngIf="
+                        isGranted('Pages.ShippingRequestTrips.Edit') &&
                         record.status == ShippingRequestTripStatusEnum.Delivered &&
                         !ShippingRequest.isSaas &&
                         !record.isTripRateBefore &&
@@ -386,14 +393,15 @@
                     >
                       <a class="dropdown-item" (click)="shippingRequestRatingModal.show(record.id)">{{ l('Rating') }}</a>
                     </li>
-                    <li *ngIf="canResetTrip(record)">
+                    <li *ngIf="isGranted('Pages.ShippingRequestTrips.Edit') && canResetTrip(record)">
                       <a class="dropdown-item" (click)="ViewTripModal.ResetTrip(record.id)">{{ l('Reset') }}</a>
                     </li>
-                    <li *ngIf="record.status != ShippingRequestTripStatusEnum.New">
+                    <li *ngIf="isGranted('Pages.ShippingRequestResoneAccidents.Create') && record.status != ShippingRequestTripStatusEnum.New">
                       <a class="dropdown-item" (click)="TripAccidentModal.show(record.id, null)">{{ l('CreateAccident') }}</a>
                     </li>
                     <li
                       *ngIf="
+                        isGranted('Pages.ShippingRequestTrips.Cancel') &&
                         ShippingRequest.status == ShippingRequestStatusEnum.PrePrice &&
                         record.status == ShippingRequestTripStatusEnum.New &&
                         ((!feature.isEnabled('App.TachyonDealer') && record.cancelStatus == ShippingRequestTripCancelStatusEnum.None) ||
@@ -427,6 +435,7 @@
                     </li>
                     <li
                       *ngIf="
+                        isGranted('Pages.ShippingRequestTrips.Edit') &&
                         shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Normal &&
                         record.canCreateTemplate &&
                         (isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestForView.shippingRequest.isSaas))
@@ -434,14 +443,14 @@
                     >
                       <a class="dropdown-item" (click)="saveAsTemplateModal.show(record.id)">{{ l('SaveAsTemplate') }}</a>
                     </li>
-                    <li>
+                    <li *ngIf="isGranted('Pages.ShippingRequestTrips.Edit')">
                       <a class="dropdown-item" (click)="AddRemarksModal.show(record.id)">{{ l('Remarks') }}</a>
                     </li>
-                    <li>
+                    <li *ngIf="isGranted('Pages.ShippingRequestTrips.Edit')">
                       <a class="dropdown-item" (click)="createBayanTrip(record.id)">{{ l('createBayanTrip') }}</a>
                     </li>
 
-                    <li>
+                    <li *ngIf="isGranted('Pages.ShippingRequestTrips.Edit')">
                       <a class="dropdown-item" (click)="printBayanTrip(record.id)">{{ l('PrintBayanTrip') }}</a>
                     </li>
                   </ul>

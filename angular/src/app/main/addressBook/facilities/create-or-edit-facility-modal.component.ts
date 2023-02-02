@@ -100,7 +100,9 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   ngOnInit() {
     console.log('isHomeDelivery', this.isHomeDelivery);
     this.loadAllCountries();
-    this.loadAllCompaniesForDropDown();
+    if (this.isTachyonDealerOrHost) {
+      this.loadAllCompaniesForDropDown();
+    }
     if (this.feature.isEnabled('App.ShipperClients')) {
       this._shippingRequestsServiceProxy.getAllShippersActorsForDropDown().subscribe((result) => {
         this.AllActorsShippers = result;

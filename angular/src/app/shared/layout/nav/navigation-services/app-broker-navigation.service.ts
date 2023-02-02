@@ -67,7 +67,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
         [
           new AppMenuItem('FacilitiesSetup', 'Pages.Facilities', '', '/app/main/addressBook/facilities'),
           //TODO: Missing permission need to give host this permission Pages.Receivers
-          new AppMenuItem('ReceiversSetup', 'Pages.Facilities', '', '/app/main/receivers/receivers', undefined, undefined, undefined, undefined),
+          new AppMenuItem('ReceiversSetup', 'Pages.Receivers', '', '/app/main/receivers/receivers', undefined, undefined, undefined, undefined),
         ],
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
         undefined,
@@ -125,7 +125,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
           ),
           new AppMenuItem(
             'ActorCarrierInvoicesList',
-            'Pages.Administration.ActorsInvoice',
+            'Pages.Administration.SubmitActorsInvoice',
             '',
             '/app/main/actors/carrierInvoices',
             undefined,
@@ -133,7 +133,16 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
             undefined,
             undefined
           ),
-          new AppMenuItem('ClientsDedicatedInvoices', '', '', '/app/main/invoices/dedicatedClients', undefined, undefined, undefined, undefined),
+          new AppMenuItem(
+            'ClientsDedicatedInvoices',
+            'Pages.Invoices.View',
+            '',
+            '/app/main/invoices/dedicatedClients',
+            undefined,
+            undefined,
+            undefined,
+            undefined
+          ),
         ]
       ),
       // end of  Invoices

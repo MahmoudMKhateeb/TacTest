@@ -985,7 +985,7 @@ namespace TACHYON.Authorization.Users
                 join organizationUnitRole in _organizationUnitRoleRepository.GetAll() on userOrganizationUnit
                     .OrganizationUnitId equals organizationUnitRole.OrganizationUnitId
                 join role in _roleRepository.GetAll() on organizationUnitRole.RoleId equals role.Id
-                where role.TenantId == tenantId && role.Name == StaticRoleNames.Tenants.InternalClients
+                where role.TenantId == tenantId && (role.Name == StaticRoleNames.Tenants.InternalCarrierClients || role.Name == StaticRoleNames.Tenants.InternalCarrierClients)
                 select role);
         }
     }

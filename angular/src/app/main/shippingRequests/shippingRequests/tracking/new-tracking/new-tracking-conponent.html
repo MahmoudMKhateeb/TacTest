@@ -165,7 +165,7 @@
                               <div
                                 class="d-inline-block"
                                 ngbDropdown
-                                *ngIf="point.pickingType == pickingTypeEnum.Pickup &&  trip.status === tripStatusesEnum.New && trip.canDriveTrip"
+                                *ngIf="isGranted('Pages.shipment.Tracking.Drive') && point.pickingType == pickingTypeEnum.Pickup &&  trip.status === tripStatusesEnum.New && trip.canDriveTrip"
                               >
                                 <button class="btn btn-sm btn-danger" ngbDropdownToggle [buttonBusy]="saving">{{l('Actions')}}</button>
 
@@ -189,6 +189,7 @@
                                 ngbDropdown
                               >
                                 <button
+                                  *ngIf="isGranted('Pages.shipment.Tracking.Drive')"
                                   [disabled]="!canDoActionsOnPoints(point)"
                                   class="btn btn-sm btn-danger"
                                   id="dropdownConfig"

@@ -586,6 +586,7 @@
                 </a>
                 <a
                   *ngIf="
+                    isGranted('Pages.ShippingRequests.Edit') &&
                     item.canAssignDedicatedDriversAndTrucks &&
                     !Channel &&
                     !item.isDriversAndTrucksAssigned &&
@@ -598,7 +599,12 @@
                   {{ l('AssignTrucksAndDrivers') }}
                 </a>
                 <a
-                  *ngIf="item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned"
+                  *ngIf="
+                    isGranted('Pages.DedicatedAttendaceSheet') &&
+                    item.canAssignDedicatedDriversAndTrucks &&
+                    !Channel &&
+                    item.isDriversAndTrucksAssigned
+                  "
                   href="javascript:void(0)"
                   (click)="openAttendanceModal(item)"
                   class="red"
@@ -606,7 +612,9 @@
                   {{ l('viewAttendance') }}
                 </a>
                 <a
-                  *ngIf="item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned"
+                  *ngIf="
+                    isGranted('Pages.ShippingRequests.Edit') && item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned
+                  "
                   href="javascript:void(0)"
                   (click)="viewTrucksOrDrivers(item, false)"
                   class="red"
@@ -614,7 +622,9 @@
                   {{ l('ReplaceDrivers') }}
                 </a>
                 <a
-                  *ngIf="item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned"
+                  *ngIf="
+                    isGranted('Pages.ShippingRequests.Edit') && item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned
+                  "
                   href="javascript:void(0)"
                   (click)="viewTrucksOrDrivers(item, true)"
                   class="red"

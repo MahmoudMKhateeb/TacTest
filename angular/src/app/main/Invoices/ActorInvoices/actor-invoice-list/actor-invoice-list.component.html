@@ -114,10 +114,10 @@
                     <li>
                       <a class="dropdown-item" (click)="downloadReport(options.data.id)">{{ l('DownloadInvoice') }}</a>
                     </li>
-                    <li *ngIf="!options.data.isPaid && options.data.actorInvoiceChannel != 1">
+                    <li *ngIf="isGranted('Pages.Invoices.View') && !options.data.isPaid && options.data.actorInvoiceChannel != 1">
                       <a class="dropdown-item" href="javascript:;" (click)="MakePaid(options.data)">{{ l('MakePaid') }}</a>
                     </li>
-                    <li *ngIf="options.data.isPaid && options.data.actorInvoiceChannel != 1">
+                    <li *ngIf="isGranted('Pages.Invoices.View') && options.data.isPaid && options.data.actorInvoiceChannel != 1">
                       <a class="dropdown-item" href="javascript:;" (click)="MakeUnPaid(options.data)">{{ l('MakeUnPaid') }}</a>
                     </li>
                   </ul>
