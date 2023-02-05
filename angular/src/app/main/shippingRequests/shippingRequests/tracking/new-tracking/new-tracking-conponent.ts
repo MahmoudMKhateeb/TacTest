@@ -32,6 +32,7 @@ import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.com
 import { Timeline } from '@node_modules/primeng/timeline';
 import { CustomStep } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-timeline/custom-step';
 import * as moment from '@node_modules/moment';
+import { UploadAdditionalDocumentsComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/upload-additional-documents/upload-additional-documents.component';
 
 @Component({
   selector: 'new-tracking-conponent',
@@ -46,6 +47,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
   @ViewChild('appEntityLog', { static: false }) activityLogModal: EntityLogComponent;
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
   @ViewChild('timeline', { static: false }) timeline: Timeline;
+  @ViewChild('additionalDocumentsComponent', { static: false }) additionalDocumentsComponent: UploadAdditionalDocumentsComponent;
 
   @Input() trip: TrackingListDto = new TrackingListDto();
   active = false;
@@ -103,7 +105,14 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
     config.container = 'body';
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    abp.event.on('FileUploadedSuccessFromAdditionalSteps', () => {
+      this.getForView();
+    });
+    abp.event.on('trackingConfirmCodeSubmittedFromAdditionalSteps', () => {
+      this.getForView();
+    });
+  }
 
   /**
    * to Detect Changes On Variables
@@ -527,31 +536,10 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
     }
   }
 
-  isClickable(point: TrackingRoutePointDto, event: CustomStep): { class: string; canClick: boolean } {
-    if (this.shippingType != this.ShippingTypeEnum.ImportPortMovements && this.shippingType != this.ShippingTypeEnum.ExportPortMovements) {
-      return { class: '', canClick: false };
-    }
-    if (!point.availableTransactions.length) {
-      return { class: '', canClick: false };
-    }
-    if (point.availableTransactions.length > 0) {
-      const currentStatus = point.statues[event.index - 1];
-      for (let i = 0; i < point.availableTransactions.length; i++) {
-        const transaction = point.availableTransactions[i];
-        if (transaction.name === currentStatus.name) {
-          return { class: 'active-status clickable-item', canClick: true };
-        }
-      }
-    }
-    return { class: '', canClick: false };
-  }
-
-  clickedOnStep(point: TrackingRoutePointDto, canClick: boolean) {
-    console.log('clickedOnStep canClick', canClick);
-    console.log('clickedOnStep point', point);
-    if (!canClick) {
-      return;
-    }
-    this.invokeStatus(point, point.availableTransactions[0]);
+  invokeUploadStep(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
+    console.log('invokeUploadStep', true);
+    console.log('invokeUploadStep point', point);
+    console.log('invokeUploadStep transaction', transaction);
+    this.additionalDocumentsComponent.show(point);
   }
 }

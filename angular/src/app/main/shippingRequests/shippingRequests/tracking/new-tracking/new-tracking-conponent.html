@@ -339,7 +339,7 @@
                                   [steps]="getStepperSteps(point.statues)"
                                   [point]="point"
                                   [shippingType]="shippingType"
-                                  (invokeStatus)="invokeStatus($event.point, $event.transaction)"
+                                  (invokeStatus)="!$event.isUploadStep ? invokeStatus($event.point, $event.transaction): invokeUploadStep($event.point, $event.transaction)"
                                   [saving]="saving"
                                 ></app-custom-timeline>
                                 <!--                                              <p-timeline #timeline [value]="getStepperSteps(point.statues)" layout="horizontal" align="top">-->
@@ -397,4 +397,5 @@
   <app-entity-log #appEntityLog [entityType]="1"></app-entity-log>
   <tacking-pod-model #modelpod (modalConfirm)="getForView()"></tacking-pod-model>
   <shared-file-viewer #fileViwerComponent></shared-file-viewer>
+  <app-upload-additional-documents #additionalDocumentsComponent></app-upload-additional-documents>
 </div>

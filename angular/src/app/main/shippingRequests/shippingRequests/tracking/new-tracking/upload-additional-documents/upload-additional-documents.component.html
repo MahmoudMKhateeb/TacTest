@@ -1,0 +1,158 @@
+<div
+  bsModal
+  #uploadAdditionalDocumentsModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{ l('UploadAdditionalDocuments') }}</span>
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row d-flex" *ngIf="showReceiverCode">
+          <div class="col-10 form-group d-flex flex-column">
+            <label for="receiverCode">{{ l('ReceiverCode') }}</label>
+            <input type="text" id="receiverCode" class="form-control" [(ngModel)]="receiverCode" name="receiverCode" />
+          </div>
+          <div class="col-2 d-flex flex-column justify-content-center">
+            <button class="btn btn-primary btn-sm" (click)="confirmReceiverCode()">
+              {{ l('Confirm') }}
+            </button>
+          </div>
+        </div>
+        <div class="row d-flex" *ngIf="showUploadManifestFile">
+          <div class="col-10 form-group d-flex flex-column">
+            <!--                        <label for="receiverCode">{{ l('ReceiverCode') }}</label>-->
+            <!--                        <input type="text" id="uploadManifestFile" class="form-control" [(ngModel)]="receiverCode"-->
+            <!--                               name="uploadManifestFile"/>-->
+            <label> {{ l('SelectFile') }} {{ manifestFileToken }} </label>
+            <div class="custom-file">
+              <input
+                name="file"
+                (change)="DocFileChangeEvent($event, createOrEditDocumentManifestFileDto)"
+                type="file"
+                class="custom-file-input"
+                accept="image/x-png,image/jpeg,application/pdf"
+              />
+              <label class="custom-file-label text-truncate" [for]="createOrEditDocumentManifestFileDto.name">
+                {{ createOrEditDocumentManifestFileDto.name ? createOrEditDocumentManifestFileDto.name : l('SelectFile') }}
+              </label>
+            </div>
+            <div class="margin-top-5">
+              <p-progressBar [value]="manifestFileDocProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
+            </div>
+            <div class="mt-2" *ngIf="createOrEditDocumentManifestFileDto.name">
+              <div class="d-flex align-items-center flex-wrap mb-8">
+                <!--begin::Symbol-->
+                <div class="symbol symbol-50 symbol-light mr-3 ml-3">
+                  <span class="symbol-label">
+                    <i class="fa-2x fa-file-image fas" style="color: #5cb85c" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <!--end::Symbol-->
+                <!--begin::Text-->
+                <div class="d-flex flex-column flex-grow-1 mr-2">
+                  <a (click)="downloadAttatchment()" class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">
+                    {{ createOrEditDocumentManifestFileDto?.name }}
+                  </a>
+                  <span class="text-muted font-weight-bold">{{ createOrEditDocumentManifestFileDto?.documentTypeDto?.templateContentType }}</span>
+                </div>
+                <!--end::Text-->
+                <a
+                  *ngIf="createOrEditDocumentManifestFileDto?.binaryObjectId"
+                  (click)="downloadAttatchment()"
+                  class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
+                >
+                  <i class="flaticon2-download"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-2 d-flex flex-column justify-content-center">
+            <button class="btn btn-primary btn-sm" (click)="uploadManifest()">
+              {{ l('Confirm') }}
+            </button>
+          </div>
+        </div>
+        <div class="row d-flex" *ngIf="showUploadPodFile">
+          <div class="col-10 form-group d-flex flex-column">
+            <!--                        <label for="receiverCode">{{ l('ReceiverCode') }}</label>-->
+            <!--                        <input type="text" id="uploadManifestFile" class="form-control" [(ngModel)]="receiverCode"-->
+            <!--                               name="uploadManifestFile"/>-->
+            <label> {{ l('SelectFile') }} {{ podFileToken }} </label>
+            <div class="custom-file">
+              <input
+                name="createOrEditDocumentPodFileDto"
+                (change)="PodDocFileChangeEvent($event, createOrEditDocumentPodFileDto)"
+                type="file"
+                class="custom-file-input"
+                accept="image/x-png,image/jpeg,application/pdf"
+              />
+              <label class="custom-file-label text-truncate" [for]="createOrEditDocumentPodFileDto.name">
+                {{ createOrEditDocumentPodFileDto.name ? createOrEditDocumentPodFileDto.name : l('SelectFile') }}
+              </label>
+            </div>
+            <div class="margin-top-5">
+              <p-progressBar [value]="podFileDocProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
+            </div>
+            <div class="mt-2" *ngIf="createOrEditDocumentPodFileDto.name">
+              <div class="d-flex align-items-center flex-wrap mb-8">
+                <!--begin::Symbol-->
+                <div class="symbol symbol-50 symbol-light mr-3 ml-3">
+                  <span class="symbol-label">
+                    <i class="fa-2x fa-file-image fas" style="color: #5cb85c" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <!--end::Symbol-->
+                <!--begin::Text-->
+                <div class="d-flex flex-column flex-grow-1 mr-2">
+                  <a (click)="downloadAttatchmentPod()" class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">
+                    {{ createOrEditDocumentPodFileDto?.name }}</a
+                  >
+                  <span class="text-muted font-weight-bold">
+                    {{ createOrEditDocumentPodFileDto?.documentTypeDto?.templateContentType }}
+                  </span>
+                </div>
+                <!--end::Text-->
+                <a
+                  *ngIf="createOrEditDocumentPodFileDto?.binaryObjectId"
+                  (click)="downloadAttatchmentPod()"
+                  class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
+                >
+                  <i class="flaticon2-download"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-2 d-flex flex-column justify-content-center">
+            <button class="btn btn-primary btn-sm" (click)="uploadPod()">
+              {{ l('Confirm') }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+        <!--                <button-->
+        <!--                    type="submit"-->
+        <!--                    class="btn btn-save blue"-->
+        <!--                    [disabled]="!documentsForm.form.valid"-->
+        <!--                    [buttonBusy]="saving"-->
+        <!--                    [busyText]="l('SavingWithThreeDot')"-->
+        <!--                >-->
+        <!--                    <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>-->
+        <!--                </button>-->
+      </div>
+    </div>
+  </div>
+</div>

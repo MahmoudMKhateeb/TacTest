@@ -35,6 +35,7 @@ import { TripAccidentResolveModalComponent } from '@app/main/shippingRequests/sh
 import { TrackingForceDeliverTripComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-force-deliver-trip/tracking-force-deliver-trip.component';
 import { CustomMarkerComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-marker/custom-marker.component';
 import { CustomTimelineComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-timeline/custom-timeline.component';
+import { UploadAdditionalDocumentsComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/upload-additional-documents/upload-additional-documents.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { CustomTimelineComponent } from '@app/main/shippingRequests/shippingRequ
     TrackingForceDeliverTripComponent,
     CustomMarkerComponent,
     CustomTimelineComponent,
+    UploadAdditionalDocumentsComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
