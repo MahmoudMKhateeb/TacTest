@@ -17,7 +17,7 @@ namespace TACHYON.Tracking
         /// Home delivery with pod & receiver code
         public const int DropOffHomeDeliveryWithPodAndReceiverCodeWorkflowVersion = 7;
         /// ports movements drop off point workflow version
-        public const int DropOffPortsMovementWorkflowVersion = 7;
+        public const int DropOffPortsMovementWorkflowVersion = 8;
         
         
     }
