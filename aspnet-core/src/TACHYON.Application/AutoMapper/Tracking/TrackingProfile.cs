@@ -5,6 +5,7 @@ using System.Text;
 using TACHYON.Common;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Tracking.AdditionalSteps;
 using TACHYON.Tracking.Dto;
 
 namespace TACHYON.AutoMapper.Tracking
@@ -34,6 +35,7 @@ namespace TACHYON.AutoMapper.Tracking
 
 
             CreateMap<IHasDocument, RoutPointDocument>().ReverseMap();
+            CreateMap<IHasDocument, AdditionalStepArgs>().ReverseMap();
         }
     }
 }

@@ -5,7 +5,6 @@ import {
   AdditionalStepType,
   CreateOrEditDocumentFileDto,
   FileDto,
-  IHasDocument,
   InvokeStatusInputDto,
   InvokeStepInputDto,
   TrackingRoutePointDto,
@@ -342,11 +341,11 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
     invokeRequestBody.code = this.receiverCode;
     invokeRequestBody.id = this.point.id;
     invokeRequestBody.action = this.point.availableSteps.find((item) => item.stepType === AdditionalStepType.Manifest)?.action;
-    const document = new IHasDocument();
-    document.documentId = this.manifestFileToken;
-    document.documentName = this.fileNameManifest;
-    document.documentContentType = this.fileTypeManifest;
-    invokeRequestBody.document = document;
+
+    invokeRequestBody.documentId = this.manifestFileToken;
+    invokeRequestBody.documentName = this.fileNameManifest;
+    invokeRequestBody.documentContentType = this.fileTypeManifest;
+
     this._trackingServiceProxy
       .invokeAdditionalStep(invokeRequestBody)
       .pipe(
@@ -373,11 +372,11 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
     invokeRequestBody.code = this.receiverCode;
     invokeRequestBody.id = this.point.id;
     invokeRequestBody.action = this.point.availableSteps.find((item) => item.stepType === AdditionalStepType.Pod)?.action;
-    const document = new IHasDocument();
-    document.documentId = this.podFileToken;
-    document.documentName = this.fileNamePod;
-    document.documentContentType = this.fileTypePod;
-    invokeRequestBody.document = document;
+
+    invokeRequestBody.documentId = this.podFileToken;
+    invokeRequestBody.documentName = this.fileNamePod;
+    invokeRequestBody.documentContentType = this.fileTypePod;
+
     this._trackingServiceProxy
       .invokeAdditionalStep(invokeRequestBody)
       .pipe(

@@ -327,7 +327,9 @@ namespace TACHYON.Tracking
                 CurrentUser = AbpSession.ToUserIdentifier(),
                 PointId = input.Id,
                 Code = input.Code,
-                Document = input.Document
+                DocumentId = input.DocumentId,
+                DocumentContentType = input.DocumentContentType,
+                DocumentName = input.DocumentName
             };
             
             await _stepWorkflowProvider.Invoke(args, input.Action);

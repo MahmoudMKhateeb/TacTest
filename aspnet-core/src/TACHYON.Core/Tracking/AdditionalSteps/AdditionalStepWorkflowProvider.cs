@@ -243,14 +243,15 @@ namespace TACHYON.Tracking.AdditionalSteps
 
         private async Task<string> ReceiverConfirmation(AdditionalStepArgs args)
         {
-            var pointCode = await _routePointRepository.GetAll().Where(x => x.Id == args.PointId)
-                .Select(x=> x.Code).SingleAsync();
+            var point = await _routePointRepository.GetAll().Include(x=>x.ShippingRequestTripFk).Where(x => x.Id == args.PointId)
+                .SingleAsync();
             
-            if (string.IsNullOrEmpty(args.Code) || !pointCode.Equals(args.Code))
+            if (string.IsNullOrEmpty(args.Code) || !point.Code.Equals(args.Code))
                 throw new UserFriendlyException(L("TheReceiverCodeIsIncorrect"));
 
-            _routePointRepository.Update(args.PointId,
-                routPoint => routPoint.ShippingRequestTripFk.EndWorking = Clock.Now);
+            //_routePointRepository.Update(args.PointId,
+            //    routPoint => routPoint.ShippingRequestTripFk.EndWorking = Clock.Now);
+            point.ShippingRequestTripFk.EndWorking = Clock.Now;
 
             return AdditionalStepWorkflowActionConst.ReceiverConfirmation;
         }
@@ -260,8 +261,8 @@ namespace TACHYON.Tracking.AdditionalSteps
             bool isExist = await _routePointRepository.GetAll().AnyAsync(x => x.Id == args.PointId);
 
             if (!isExist) throw new UserFriendlyException(L("PointIsNotFound"));
-            
-            await UploadFile(args.Document, args.PointId, RoutePointDocumentType.POD);
+            var document = ObjectMapper.Map<IHasDocument>(args);
+            await UploadFile(document, args.PointId, RoutePointDocumentType.POD);
             
             _routePointRepository.Update(args.PointId, point => point.IsPodUploaded = true);
             
@@ -271,8 +272,8 @@ namespace TACHYON.Tracking.AdditionalSteps
         private async Task<string> UploadEirFile(AdditionalStepArgs args)
         {
             await CheckIfPointExist(args.PointId);
-            
-            await UploadFile(args.Document, args.PointId, RoutePointDocumentType.Eir);
+            var document = ObjectMapper.Map<IHasDocument>(args);
+            await UploadFile(document, args.PointId, RoutePointDocumentType.Eir);
             
             return AdditionalStepWorkflowActionConst.UploadEirFile;
         }
@@ -280,8 +281,8 @@ namespace TACHYON.Tracking.AdditionalSteps
         private async Task<string> UploadManifestFile(AdditionalStepArgs args)
         {
             await CheckIfPointExist(args.PointId);
-
-            await UploadFile(args.Document, args.PointId, RoutePointDocumentType.Manifest);
+            var document = ObjectMapper.Map<IHasDocument>(args);
+            await UploadFile(document, args.PointId, RoutePointDocumentType.Manifest);
             
             return AdditionalStepWorkflowActionConst.UploadManifestFile;
         }
@@ -291,8 +292,8 @@ namespace TACHYON.Tracking.AdditionalSteps
         private async Task<string> UploadConfirmationDocument(AdditionalStepArgs args)
         {
             await CheckIfPointExist(args.PointId);
-
-            await UploadFile(args.Document, args.PointId, RoutePointDocumentType.ConfirmationDocuments);
+            var document = ObjectMapper.Map<IHasDocument>(args);
+            await UploadFile(document, args.PointId, RoutePointDocumentType.ConfirmationDocuments);
             
             return AdditionalStepWorkflowActionConst.UploadConfirmationDocument;
         }
