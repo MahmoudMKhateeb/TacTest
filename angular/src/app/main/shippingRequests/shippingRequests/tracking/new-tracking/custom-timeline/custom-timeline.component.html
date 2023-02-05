@@ -13,7 +13,7 @@
         [color]="step.color"
         [styleClass]="isClickable(point, step).class"
         [canClick]="isClickable(point, step).canClick"
-        (invokeStatus)="statusInvoked($event)"
+        (invokeStatus)="$event.isUploadStep = isClickable(point, step).isUploadStep; statusInvoked($event)"
       ></app-custom-marker>
 
       <div class="p-timeline-event-connector flex-grow-1" *ngIf="!last"></div>

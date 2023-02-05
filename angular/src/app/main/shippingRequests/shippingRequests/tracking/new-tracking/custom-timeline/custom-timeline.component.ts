@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { PointTransactionDto, ShippingTypeEnum, TrackingRoutePointDto } from '@shared/service-proxies/service-proxies';
+import { PointTransactionDto, RoutePointStatus, ShippingTypeEnum, TrackingRoutePointDto } from '@shared/service-proxies/service-proxies';
 import { CustomStep } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-timeline/custom-step';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
@@ -31,20 +31,21 @@ export class CustomTimelineComponent extends AppComponentBase implements OnInit 
       return { class: '', canClick: false };
     }
     if (!point.availableTransactions.length) {
+      if (
+        event.index === point.statues.length &&
+        point.isHasAdditionalSteps &&
+        isNotNullOrUndefined(point.availableSteps) &&
+        point.availableSteps?.length > 0 &&
+        point.status >= RoutePointStatus.FinishOffLoadShipment
+      ) {
+        return { class: 'active-status clickable-item', canClick: true, isUploadStep: true };
+      }
       return { class: '', canClick: false };
     }
     if (point.availableTransactions.length > 0) {
       const currentStatus = point.statues[event.index - 1];
       for (let i = 0; i < point.availableTransactions.length; i++) {
         const transaction = point.availableTransactions[i];
-        if (
-          event.index === point.statues.length &&
-          point.isHasAdditionalSteps &&
-          isNotNullOrUndefined(point.availableSteps) &&
-          point.availableSteps?.length > 0
-        ) {
-          return { class: 'active-status clickable-item', canClick: true, isUploadStep: true };
-        }
         if (transaction.toStatus === currentStatus.status) {
           return { class: 'active-status clickable-item', canClick: true };
         }
@@ -66,6 +67,9 @@ export class CustomTimelineComponent extends AppComponentBase implements OnInit 
   }
 
   statusInvoked(value: { point: TrackingRoutePointDto; transaction: PointTransactionDto; isUploadStep: boolean }) {
+    if (!value.isUploadStep && !value.point.availableTransactions.length) {
+      return;
+    }
     this.invokeStatus.emit(value);
   }
 

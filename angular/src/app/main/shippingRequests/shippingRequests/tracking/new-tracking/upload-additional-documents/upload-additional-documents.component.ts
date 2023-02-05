@@ -30,33 +30,43 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
   showReceiverCode: boolean;
   showUploadManifestFile: boolean;
   showUploadPodFile: boolean;
-  manifestFileToken: string;
-  createOrEditDocumentManifestFileDto: CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
-  manifestFileDocProgress: any;
-  podFileToken: string;
-  createOrEditDocumentPodFileDto: CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
-  podFileDocProgress: any;
-  public DocsUploaderManifest: FileUploader;
-  public DocsUploaderPod: FileUploader;
-  private _DocsUploaderOptions: FileUploaderOptions = {};
-  hasNewUploadManifest: boolean;
-  hasNewUploadPod: boolean;
-  fileTypeManifest: any;
-  fileTypePod: any;
-  fileNameManifest: any;
-  fileNamePod: any;
-  docProgressFileName: string;
-  docProgressFileNameManifest: string;
-  alldocumentsValidManifest: boolean;
-  alldocumentsValidPod: boolean;
-  private point: TrackingRoutePointDto;
+  // manifestFileToken: string;
+  // createOrEditDocumentManifestFileDto: CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
+  // manifestFileDocProgress: any;
+  // podFileToken: string;
+  // createOrEditDocumentPodFileDto: CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
+  // podFileDocProgress: any;
+  // public DocsUploaderManifest: FileUploader;
+  // public DocsUploaderPod: FileUploader;
+  // private _DocsUploaderOptions: FileUploaderOptions = {};
+  // hasNewUploadManifest: boolean;
+  // hasNewUploadPod: boolean;
+  // fileTypeManifest: any;
+  // fileTypePod: any;
+  // fileNameManifest: any;
+  // fileNamePod: any;
+  // docProgressFileName: string;
+  // docProgressFileNameManifest: string;
+  // alldocumentsValidManifest: boolean;
+  // alldocumentsValidPod: boolean;
 
-  get isFileInputManifestValid() {
-    return this.createOrEditDocumentManifestFileDto.name ? true : false;
-  }
-  get isFileInputPodValid() {
-    return this.createOrEditDocumentPodFileDto.name ? true : false;
-  }
+  point: TrackingRoutePointDto;
+
+  // get isFileInputPodValid() {
+  //   return this.createOrEditDocumentPodFileDto.name ? true : false;
+  // }
+
+  fileTokens: string[] = [];
+  createOrEditDocumentFileDtos: CreateOrEditDocumentFileDto[] = [];
+  FileDocProgresses: any[] = [];
+  public DocsUploaders: FileUploader[] = [];
+  private _DocsUploadersOptions: FileUploaderOptions[] = [];
+  hasNewUploads: boolean[] = [];
+  fileTypes: any[] = [];
+  fileNames: any[] = [];
+  docProgressFileNames: string[] = [];
+  alldocumentsValid: boolean[] = [];
+  AdditionalStepType = AdditionalStepType;
 
   constructor(
     injector: Injector,
@@ -72,177 +82,193 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
   /**
    * initialize required documents fileUploader
    */
-  initDocsUploaderManifest(): void {
-    this.DocsUploaderManifest = new FileUploader({ url: AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile' });
-    this._DocsUploaderOptions.autoUpload = false;
-    this._DocsUploaderOptions.authToken = 'Bearer ' + this._tokenService.getToken();
-    this._DocsUploaderOptions.removeAfterUpload = true;
+  initDocsUploaders(): void {
+    this.DocsUploaders = [];
+    this.createOrEditDocumentFileDtos = [];
+    this.hasNewUploads = [];
+    this.fileTokens = [];
+    this.fileTypes = [];
+    this.fileNames = [];
+    this.FileDocProgresses = [];
+    this.docProgressFileNames = [];
+    for (let i = 0; i < this.point.availableSteps.length; i++) {
+      this.createOrEditDocumentFileDtos.push(new CreateOrEditDocumentFileDto());
+      const uploader = new FileUploader({ url: AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile' });
+      const options: any = {};
+      options.autoUpload = false;
+      options.authToken = 'Bearer ' + this._tokenService.getToken();
+      options.removeAfterUpload = true;
+      this._DocsUploadersOptions.push(options);
 
-    this.DocsUploaderManifest.onAfterAddingFile = (file) => {
-      file.withCredentials = false;
-    };
+      uploader.onAfterAddingFile = (file) => {
+        file.withCredentials = false;
+      };
 
-    this.DocsUploaderManifest.onBuildItemForm = (fileItem: FileItem, form: any) => {
-      form.append('FileType', fileItem.file.type);
-      form.append('FileName', fileItem.file.name);
-      form.append('FileToken', this.guid());
-    };
+      uploader.onBuildItemForm = (fileItem: FileItem, form: any) => {
+        form.append('FileType', fileItem.file.type);
+        form.append('FileName', fileItem.file.name);
+        form.append('FileToken', this.guid());
+      };
 
-    this.DocsUploaderManifest.onSuccessItem = (item, response, status) => {
-      const resp = <IAjaxResponse>JSON.parse(response);
-      if (resp.success) {
-        //attach each fileToken to his CreateOrEditDocumentFileDto
-        this.createOrEditDocumentManifestFileDto.updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
-        this.hasNewUploadManifest = true;
-        this.manifestFileToken = resp.result.fileToken;
-        this.fileTypeManifest = resp.result.fileType;
-        this.fileNameManifest = resp.result.fileName;
-      } else {
-        this.message.error(resp.error.message);
-      }
-    };
+      uploader.onSuccessItem = (item, response, status) => {
+        const resp = <IAjaxResponse>JSON.parse(response);
+        if (resp.success) {
+          //attach each fileToken to his CreateOrEditDocumentFileDto
+          this.createOrEditDocumentFileDtos[i].updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
+          this.hasNewUploads[i] = true;
+          this.fileTokens[i] = resp.result.fileToken;
+          this.fileTypes[i] = resp.result.fileType;
+          this.fileNames[i] = resp.result.fileName;
+        } else {
+          this.message.error(resp.error.message);
+        }
+      };
 
-    this.DocsUploaderManifest.onErrorItem = (item, response, status) => {
-      const resp = <IAjaxResponse>JSON.parse(response);
-    };
+      uploader.onErrorItem = (item, response, status) => {
+        const resp = <IAjaxResponse>JSON.parse(response);
+      };
 
-    this.DocsUploaderManifest.onCompleteAll = () => {
-      // this.documentFile.updateDocumentFileInput = new UpdateDocumentFileInput();
-      // this.documentFile.updateDocumentFileInput.fileToken = this.fileToken;
-      // if (this.documentFile.id) {
-      //   this._documentFilesServiceProxy
-      //     .createOrEdit(this.documentFile)
-      //     .pipe(
-      //       finalize(() => {
-      //         this.saving = false;
-      //       })
-      //     )
-      //     .subscribe(() => {
-      //       this.saving = false;
-      //       this.notify.info(this.l('UpdatedSuccessfully'));
-      //       this.close();
-      //       this.modalSave.emit(null);
-      //     });
-      // } else if (!this.documentFile.id) {
-      //   this.createDocumentFile();
-      // }
-    };
+      uploader.onCompleteAll = () => {
+        // this.documentFile.updateDocumentFileInput = new UpdateDocumentFileInput();
+        // this.documentFile.updateDocumentFileInput.fileToken = this.fileToken;
+        // if (this.documentFile.id) {
+        //   this._documentFilesServiceProxy
+        //     .createOrEdit(this.documentFile)
+        //     .pipe(
+        //       finalize(() => {
+        //         this.saving = false;
+        //       })
+        //     )
+        //     .subscribe(() => {
+        //       this.saving = false;
+        //       this.notify.info(this.l('UpdatedSuccessfully'));
+        //       this.close();
+        //       this.modalSave.emit(null);
+        //     });
+        // } else if (!this.documentFile.id) {
+        //   this.createDocumentFile();
+        // }
+      };
 
-    //for progressBar
-    this.DocsUploaderManifest.onProgressItem = (fileItem: FileItem, progress: any) => {
-      this.manifestFileDocProgress = progress;
-      this.docProgressFileNameManifest = fileItem.file.name;
-    };
+      //for progressBar
+      uploader.onProgressItem = (fileItem: FileItem, progress: any) => {
+        this.FileDocProgresses[i] = progress;
+        console.log('this.manifestFileDocProgress', this.FileDocProgresses);
+        this.docProgressFileNames[i] = fileItem.file.name;
+      };
 
-    this.DocsUploaderManifest.setOptions(this._DocsUploaderOptions);
+      this.DocsUploaders.push(uploader);
+      this.DocsUploaders[i].setOptions(this._DocsUploadersOptions[i]);
+    }
   }
 
-  initDocsUploaderPod(): void {
-    this.DocsUploaderPod = new FileUploader({ url: AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile' });
-    this._DocsUploaderOptions.autoUpload = false;
-    this._DocsUploaderOptions.authToken = 'Bearer ' + this._tokenService.getToken();
-    this._DocsUploaderOptions.removeAfterUpload = true;
-
-    this.DocsUploaderPod.onAfterAddingFile = (file) => {
-      file.withCredentials = false;
-    };
-
-    this.DocsUploaderPod.onBuildItemForm = (fileItem: FileItem, form: any) => {
-      form.append('FileType', fileItem.file.type);
-      form.append('FileName', fileItem.file.name);
-      form.append('FileToken', this.guid());
-    };
-
-    this.DocsUploaderPod.onSuccessItem = (item, response, status) => {
-      const resp = <IAjaxResponse>JSON.parse(response);
-      if (resp.success) {
-        //attach each fileToken to his CreateOrEditDocumentFileDto
-        this.createOrEditDocumentPodFileDto.updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
-        this.hasNewUploadPod = true;
-        this.podFileToken = resp.result.fileToken;
-        this.fileTypePod = resp.result.fileType;
-        this.fileNamePod = resp.result.fileName;
-      } else {
-        this.message.error(resp.error.message);
-      }
-    };
-
-    this.DocsUploaderPod.onErrorItem = (item, response, status) => {
-      const resp = <IAjaxResponse>JSON.parse(response);
-    };
-
-    this.DocsUploaderPod.onCompleteAll = () => {
-      // this.documentFile.updateDocumentFileInput = new UpdateDocumentFileInput();
-      // this.documentFile.updateDocumentFileInput.fileToken = this.fileToken;
-      // if (this.documentFile.id) {
-      //   this._documentFilesServiceProxy
-      //     .createOrEdit(this.documentFile)
-      //     .pipe(
-      //       finalize(() => {
-      //         this.saving = false;
-      //       })
-      //     )
-      //     .subscribe(() => {
-      //       this.saving = false;
-      //       this.notify.info(this.l('UpdatedSuccessfully'));
-      //       this.close();
-      //       this.modalSave.emit(null);
-      //     });
-      // } else if (!this.documentFile.id) {
-      //   this.createDocumentFile();
-      // }
-    };
-
-    //for progressBar
-    this.DocsUploaderPod.onProgressItem = (fileItem: FileItem, progress: any) => {
-      this.podFileDocProgress = progress;
-      this.docProgressFileName = fileItem.file.name;
-    };
-
-    this.DocsUploaderPod.setOptions(this._DocsUploaderOptions);
-  }
-  downloadAttatchment(): void {
-    if (!this.hasNewUploadManifest) {
+  // initDocsUploaderPod(): void {
+  //   this.DocsUploaderPod = new FileUploader({ url: AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile' });
+  //   this._DocsUploaderOptions.autoUpload = false;
+  //   this._DocsUploaderOptions.authToken = 'Bearer ' + this._tokenService.getToken();
+  //   this._DocsUploaderOptions.removeAfterUpload = true;
+  //
+  //   this.DocsUploaderPod.onAfterAddingFile = (file) => {
+  //     file.withCredentials = false;
+  //   };
+  //
+  //   this.DocsUploaderPod.onBuildItemForm = (fileItem: FileItem, form: any) => {
+  //     form.append('FileType', fileItem.file.type);
+  //     form.append('FileName', fileItem.file.name);
+  //     form.append('FileToken', this.guid());
+  //   };
+  //
+  //   this.DocsUploaderPod.onSuccessItem = (item, response, status) => {
+  //     const resp = <IAjaxResponse>JSON.parse(response);
+  //     if (resp.success) {
+  //       //attach each fileToken to his CreateOrEditDocumentFileDto
+  //       this.createOrEditDocumentPodFileDto.updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
+  //       this.hasNewUploadPod = true;
+  //       this.podFileToken = resp.result.fileToken;
+  //       this.fileTypePod = resp.result.fileType;
+  //       this.fileNamePod = resp.result.fileName;
+  //     } else {
+  //       this.message.error(resp.error.message);
+  //     }
+  //   };
+  //
+  //   this.DocsUploaderPod.onErrorItem = (item, response, status) => {
+  //     const resp = <IAjaxResponse>JSON.parse(response);
+  //   };
+  //
+  //   this.DocsUploaderPod.onCompleteAll = () => {
+  //     // this.documentFile.updateDocumentFileInput = new UpdateDocumentFileInput();
+  //     // this.documentFile.updateDocumentFileInput.fileToken = this.fileToken;
+  //     // if (this.documentFile.id) {
+  //     //   this._documentFilesServiceProxy
+  //     //     .createOrEdit(this.documentFile)
+  //     //     .pipe(
+  //     //       finalize(() => {
+  //     //         this.saving = false;
+  //     //       })
+  //     //     )
+  //     //     .subscribe(() => {
+  //     //       this.saving = false;
+  //     //       this.notify.info(this.l('UpdatedSuccessfully'));
+  //     //       this.close();
+  //     //       this.modalSave.emit(null);
+  //     //     });
+  //     // } else if (!this.documentFile.id) {
+  //     //   this.createDocumentFile();
+  //     // }
+  //   };
+  //
+  //   //for progressBar
+  //   this.DocsUploaderPod.onProgressItem = (fileItem: FileItem, progress: any) => {
+  //     this.podFileDocProgress = progress;
+  //     console.log('this.podFileDocProgress', this.podFileDocProgress);
+  //     this.docProgressFileName = fileItem.file.name;
+  //   };
+  //
+  //   this.DocsUploaderPod.setOptions(this._DocsUploaderOptions);
+  // }
+  downloadAttatchment(index: number): void {
+    if (!this.hasNewUploads[index]) {
       this._fileDownloadService.downloadFileByBinary(
-        this.createOrEditDocumentManifestFileDto.binaryObjectId,
-        this.createOrEditDocumentManifestFileDto.name,
-        this.createOrEditDocumentManifestFileDto.extn
+        this.createOrEditDocumentFileDtos[index].binaryObjectId,
+        this.createOrEditDocumentFileDtos[index].name,
+        this.createOrEditDocumentFileDtos[index].extn
       );
     } else {
       let fileDto = new FileDto();
-      fileDto.fileName = this.fileNameManifest;
-      fileDto.fileToken = this.manifestFileToken;
-      fileDto.fileType = this.fileTypeManifest;
+      fileDto.fileName = this.fileNames[index];
+      fileDto.fileToken = this.fileTokens[index];
+      fileDto.fileType = this.fileTypes[index];
       this._fileDownloadService.downloadTempFile(fileDto);
     }
   }
 
-  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
+  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto, index: number): void {
     if (event.target.files[0].size > 5242880) {
       //5MB
       this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
       item.name = '';
-      this.alldocumentsValidManifest = false;
+      this.alldocumentsValid[index] = false;
       return;
     }
     item.extn = event.target.files[0].type;
     if (item.extn != 'image/jpeg' && item.extn != 'image/png' && item.extn != 'application/pdf') {
       item.name = '';
-      this.alldocumentsValidManifest = false;
+      this.alldocumentsValid[index] = false;
       return;
     }
-    this.alldocumentsValidManifest = true;
+    this.alldocumentsValid[index] = true;
     item.name = event.target.files[0].name;
 
-    this.DocsUploaderManifest.addToQueue(event.target.files);
-    this.DocsUploaderManifest.uploadAll();
+    this.DocsUploaders[index].addToQueue(event.target.files);
+    this.DocsUploaders[index].uploadAll();
   }
 
   show(point: TrackingRoutePointDto) {
-    this.initDocsUploaderManifest();
-    this.initDocsUploaderPod();
+    // this.initDocsUploaderPod();
     this.active = true;
     this.point = point;
+    this.initDocsUploaders();
     this.showReceiverCode = point.availableSteps.filter((item) => item.stepType === AdditionalStepType.ReceiverCode).length > 0;
     this.showUploadManifestFile =
       point.availableSteps.filter(
@@ -254,22 +280,22 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
 
   close() {
     this.active = false;
-    this.createOrEditDocumentPodFileDto = new CreateOrEditDocumentFileDto();
-    this.createOrEditDocumentManifestFileDto = new CreateOrEditDocumentFileDto();
+    // this.createOrEditDocumentPodFileDto = new CreateOrEditDocumentFileDto();
+    // this.createOrEditDocumentManifestFileDto = new CreateOrEditDocumentFileDto();
     this.receiverCode = null;
     this.showReceiverCode = null;
     this.showUploadManifestFile = null;
     this.showUploadPodFile = null;
-    this.manifestFileToken = null;
-    this.podFileToken = null;
-    this.fileTypeManifest = null;
-    this.fileTypePod = null;
-    this.fileNameManifest = null;
-    this.fileNamePod = null;
-    this.manifestFileDocProgress = null;
-    this.podFileDocProgress = null;
-    this.docProgressFileNameManifest = null;
-    this.docProgressFileName = null;
+    // this.manifestFileToken = null;
+    // this.podFileToken = null;
+    // this.fileTypeManifest = null;
+    // this.fileTypePod = null;
+    // this.fileNameManifest = null;
+    // this.fileNamePod = null;
+    // this.manifestFileDocProgress = null;
+    // this.podFileDocProgress = null;
+    // this.docProgressFileNameManifest = null;
+    // this.docProgressFileName = null;
     this.modal.hide();
   }
 
@@ -296,55 +322,55 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
       );
   }
 
-  downloadAttatchmentPod(): void {
-    if (!this.hasNewUploadPod) {
-      this._fileDownloadService.downloadFileByBinary(
-        this.createOrEditDocumentPodFileDto.binaryObjectId,
-        this.createOrEditDocumentPodFileDto.name,
-        this.createOrEditDocumentPodFileDto.extn
-      );
-    } else {
-      let fileDto = new FileDto();
-      fileDto.fileName = this.fileNamePod;
-      fileDto.fileToken = this.podFileToken;
-      fileDto.fileType = this.fileTypePod;
-      this._fileDownloadService.downloadTempFile(fileDto);
-    }
-  }
+  // downloadAttatchmentPod(): void {
+  //   if (!this.hasNewUploadPod) {
+  //     this._fileDownloadService.downloadFileByBinary(
+  //       this.createOrEditDocumentPodFileDto.binaryObjectId,
+  //       this.createOrEditDocumentPodFileDto.name,
+  //       this.createOrEditDocumentPodFileDto.extn
+  //     );
+  //   } else {
+  //     let fileDto = new FileDto();
+  //     fileDto.fileName = this.fileNamePod;
+  //     fileDto.fileToken = this.podFileToken;
+  //     fileDto.fileType = this.fileTypePod;
+  //     this._fileDownloadService.downloadTempFile(fileDto);
+  //   }
+  // }
 
-  PodDocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
-    if (event.target.files[0].size > 5242880) {
-      //5MB
-      this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
-      item.name = '';
-      this.alldocumentsValidPod = false;
-      return;
-    }
-    item.extn = event.target.files[0].type;
-    if (item.extn != 'image/jpeg' && item.extn != 'image/png' && item.extn != 'application/pdf') {
-      item.name = '';
-      this.alldocumentsValidPod = false;
-      return;
-    }
-    this.alldocumentsValidPod = true;
-    item.name = event.target.files[0].name;
+  // PodDocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
+  //   if (event.target.files[0].size > 5242880) {
+  //     //5MB
+  //     this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
+  //     item.name = '';
+  //     this.alldocumentsValidPod = false;
+  //     return;
+  //   }
+  //   item.extn = event.target.files[0].type;
+  //   if (item.extn != 'image/jpeg' && item.extn != 'image/png' && item.extn != 'application/pdf') {
+  //     item.name = '';
+  //     this.alldocumentsValidPod = false;
+  //     return;
+  //   }
+  //   this.alldocumentsValidPod = true;
+  //   item.name = event.target.files[0].name;
+  //
+  //   this.DocsUploaderPod.addToQueue(event.target.files);
+  //   this.DocsUploaderPod.uploadAll();
+  // }
 
-    this.DocsUploaderPod.addToQueue(event.target.files);
-    this.DocsUploaderPod.uploadAll();
-  }
-
-  uploadManifest() {
-    if (!this.isFileInputManifestValid) {
+  upload(index: number) {
+    if (!this.isFileInputValid(index)) {
       return;
     }
     const invokeRequestBody = new InvokeStepInputDto();
     invokeRequestBody.code = this.receiverCode;
     invokeRequestBody.id = this.point.id;
-    invokeRequestBody.action = this.point.availableSteps.find((item) => item.stepType === AdditionalStepType.Manifest)?.action;
+    invokeRequestBody.action = this.point.availableSteps[index].action;
 
-    invokeRequestBody.documentId = this.manifestFileToken;
-    invokeRequestBody.documentName = this.fileNameManifest;
-    invokeRequestBody.documentContentType = this.fileTypeManifest;
+    invokeRequestBody.documentId = this.fileTokens[index];
+    invokeRequestBody.documentName = this.fileNames[index];
+    invokeRequestBody.documentContentType = this.fileTypes[index];
 
     this._trackingServiceProxy
       .invokeAdditionalStep(invokeRequestBody)
@@ -364,8 +390,8 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
       );
   }
 
-  uploadPod() {
-    if (!this.isFileInputPodValid) {
+  uploadPod(index: number) {
+    if (!this.isFileInputValid(index)) {
       return;
     }
     const invokeRequestBody = new InvokeStepInputDto();
@@ -373,9 +399,9 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
     invokeRequestBody.id = this.point.id;
     invokeRequestBody.action = this.point.availableSteps.find((item) => item.stepType === AdditionalStepType.Pod)?.action;
 
-    invokeRequestBody.documentId = this.podFileToken;
-    invokeRequestBody.documentName = this.fileNamePod;
-    invokeRequestBody.documentContentType = this.fileTypePod;
+    invokeRequestBody.documentId = this.fileTokens[index];
+    invokeRequestBody.documentName = this.fileNames[index];
+    invokeRequestBody.documentContentType = this.fileTypes[index];
 
     this._trackingServiceProxy
       .invokeAdditionalStep(invokeRequestBody)
@@ -393,5 +419,9 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
           this.notify.error(this.l('ErrorWhenUploadingFile'));
         }
       );
+  }
+
+  isFileInputValid(index: number) {
+    return this.createOrEditDocumentFileDtos[index].name ? true : false;
   }
 }

@@ -9,9 +9,10 @@ import { PointTransactionDto, TrackingRoutePointDto } from '@shared/service-prox
   encapsulation: ViewEncapsulation.None,
 })
 export class CustomMarkerComponent extends AppComponentBase implements OnInit {
-  @Output() invokeStatus: EventEmitter<{ point: TrackingRoutePointDto; transaction: PointTransactionDto }> = new EventEmitter<{
+  @Output() invokeStatus: EventEmitter<{ point: TrackingRoutePointDto; transaction: PointTransactionDto; isUploadStep: boolean }> = new EventEmitter<{
     point: TrackingRoutePointDto;
     transaction: PointTransactionDto;
+    isUploadStep: boolean;
   }>();
   @Input('styleClass') styleClass: string;
   @Input('canClick') canClick: boolean;
@@ -34,6 +35,6 @@ export class CustomMarkerComponent extends AppComponentBase implements OnInit {
     if (!this.canClick) {
       return;
     }
-    this.invokeStatus.emit({ point: this.point, transaction: this.point.availableTransactions[0] });
+    this.invokeStatus.emit({ point: this.point, transaction: this.point.availableTransactions[0], isUploadStep: false });
   }
 }

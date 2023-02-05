@@ -156,7 +156,10 @@
                           </div>
                         </div>
                       </ng-container>
-                      <div class="timeline-item ribbon ribbon-top index-{{i}}">
+                      <div
+                        class="timeline-item ribbon ribbon-top
+                        {{shippingType === ShippingTypeEnum.ExportPortMovements || shippingType === ShippingTypeEnum.ImportPortMovements ? 'index-'+i : ''}} "
+                      >
                         <!--                        Start Of Point Card-->
                         <div *ngIf="trip.tripFlag === TripFlag.Normal || point.pickingType === pickingTypeEnum.Dropoff">
                           <div *ngIf="point.isComplete" class="ribbon-target bg-success" style="top: -2px; right: 3%; left: auto">
