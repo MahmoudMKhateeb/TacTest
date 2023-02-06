@@ -1,21 +1,25 @@
 using Abp;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
+using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
 using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Common;
+using TACHYON.Documents;
 using TACHYON.Invoices;
 using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
+using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.WorkFlows;
 
 namespace TACHYON.Tracking.AdditionalSteps
@@ -32,6 +36,10 @@ namespace TACHYON.Tracking.AdditionalSteps
         private readonly IRepository<ShippingRequestTrip> _tripRepository;
         private readonly InvoiceManager _invoiceManager;
         private readonly IAppNotifier _appNotifier;
+        private readonly DocumentFilesManager _documentFilesManager;
+        public IAbpSession AbpSession { set; get; }
+
+
 
         public AdditionalStepWorkflowProvider(
             IRepository<RoutPoint, long> routePointRepository,
@@ -40,7 +48,9 @@ namespace TACHYON.Tracking.AdditionalSteps
             IRepository<AdditionalStepTransition, long> additionalStepTransition,
             IRepository<ShippingRequestTrip> tripRepository,
             InvoiceManager invoiceManager,
-            IAppNotifier appNotifier)
+            IAppNotifier appNotifier,
+            DocumentFilesManager documentFilesManager,
+            IAbpSession abpSession)
         {
             _routePointRepository = routePointRepository;
             _reasonProvider = reasonProvider;
@@ -69,6 +79,7 @@ namespace TACHYON.Tracking.AdditionalSteps
                         {
                             Action = AdditionalStepWorkflowActionConst.DeliveryConfirmation,
                             AdditionalStepType = AdditionalStepType.Pod,
+                            RoutePointDocumentType = RoutePointDocumentType.POD,
                             Name = "DeliveryConfirmation",
                             IsRequired = true,
                             Func = DeliveryConfirmation
@@ -93,6 +104,7 @@ namespace TACHYON.Tracking.AdditionalSteps
                         {
                             Action = AdditionalStepWorkflowActionConst.UploadEirFile,
                             AdditionalStepType = AdditionalStepType.Eir,
+                            RoutePointDocumentType = RoutePointDocumentType.Eir,
                             Name = "UploadEirFile",
                             IsRequired = true,
                             Func = UploadEirFile
@@ -117,6 +129,7 @@ namespace TACHYON.Tracking.AdditionalSteps
                         {
                             Action = AdditionalStepWorkflowActionConst.UploadManifestFile,
                             AdditionalStepType = AdditionalStepType.Manifest,
+                            RoutePointDocumentType = RoutePointDocumentType.Manifest,
                             Name = "UploadManifestFile",
                             IsRequired = true,
                             Func = UploadManifestFile
@@ -141,6 +154,7 @@ namespace TACHYON.Tracking.AdditionalSteps
                         {
                             Action = AdditionalStepWorkflowActionConst.DeliveryConfirmation,
                             AdditionalStepType = AdditionalStepType.Pod,
+                            RoutePointDocumentType = RoutePointDocumentType.POD,
                             Name = "DeliveryConfirmation",
                             IsRequired = true,
                             Func = DeliveryConfirmation
@@ -165,6 +179,7 @@ namespace TACHYON.Tracking.AdditionalSteps
                         {
                             Action = AdditionalStepWorkflowActionConst.UploadConfirmationDocument,
                             AdditionalStepType = AdditionalStepType.ConfirmationDocument,
+                            RoutePointDocumentType = RoutePointDocumentType.ConfirmationDocuments,
                             Name = "UploadConfirmationDocument",
                             IsRequired = true,
                             Func = UploadConfirmationDocument
@@ -172,6 +187,8 @@ namespace TACHYON.Tracking.AdditionalSteps
                     }
                 }
             };
+            _documentFilesManager = documentFilesManager;
+            AbpSession = abpSession;
         }
 
 
@@ -187,7 +204,7 @@ namespace TACHYON.Tracking.AdditionalSteps
 
            string reason = await transaction.Func(args);
 
-           await LogAdditionalStepTransition(args.PointId, transaction.AdditionalStepType);
+           await LogAdditionalStepTransition(args.PointId, transaction.AdditionalStepType, transaction.RoutePointDocumentType);
            if (transaction.IsRequired)
            {
                await HandlePointDelivery(point, args.CurrentUser);
@@ -238,6 +255,20 @@ namespace TACHYON.Tracking.AdditionalSteps
                 ? new List<AdditionalStepTransaction<AdditionalStepArgs, AdditionalStepType>>()
                 : transactions.Where(x => availableAdditionalStepTypes.Contains(x.AdditionalStepType)).ToList();
         }
+        /// <summary>
+        /// This API returns all point transitions, steps that done in tracking including receiver code, files
+        /// </summary>
+        /// <param name="workflowVersion"></param>
+        /// <param name="pointId"></param>
+        /// <returns></returns>
+        public async Task<List<AdditionalStepTransitionDto>> GetAllPointAdditionalFilesTransitions(long pointId)
+        {
+            var point= await _routePointRepository.FirstOrDefaultAsync(pointId);
+
+            var transitions = await _additionalStepTransition.GetAll()
+                .Where(x => x.RoutePointId == pointId && !x.IsReset && x.IsFile).ToListAsync();
+            return ObjectMapper.Map<List<AdditionalStepTransitionDto>>(transitions);
+        }
 
         #region Actions
 
@@ -261,6 +292,7 @@ namespace TACHYON.Tracking.AdditionalSteps
             bool isExist = await _routePointRepository.GetAll().AnyAsync(x => x.Id == args.PointId);
 
             if (!isExist) throw new UserFriendlyException(L("PointIsNotFound"));
+            args.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(args.DocumentId.ToString(), AbpSession.TenantId);
             var document = ObjectMapper.Map<IHasDocument>(args);
             await UploadFile(document, args.PointId, RoutePointDocumentType.POD);
             
@@ -272,34 +304,37 @@ namespace TACHYON.Tracking.AdditionalSteps
         private async Task<string> UploadEirFile(AdditionalStepArgs args)
         {
             await CheckIfPointExist(args.PointId);
+            args.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(args.DocumentId.ToString(), AbpSession.TenantId);
             var document = ObjectMapper.Map<IHasDocument>(args);
             await UploadFile(document, args.PointId, RoutePointDocumentType.Eir);
             
             return AdditionalStepWorkflowActionConst.UploadEirFile;
         }
-        
+
         private async Task<string> UploadManifestFile(AdditionalStepArgs args)
         {
             await CheckIfPointExist(args.PointId);
+            args.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(args.DocumentId.ToString(), AbpSession.TenantId);
             var document = ObjectMapper.Map<IHasDocument>(args);
             await UploadFile(document, args.PointId, RoutePointDocumentType.Manifest);
-            
+
             return AdditionalStepWorkflowActionConst.UploadManifestFile;
         }
 
-        
+
 
         private async Task<string> UploadConfirmationDocument(AdditionalStepArgs args)
         {
             await CheckIfPointExist(args.PointId);
+            args.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(args.DocumentId.ToString(), AbpSession.TenantId);
             var document = ObjectMapper.Map<IHasDocument>(args);
             await UploadFile(document, args.PointId, RoutePointDocumentType.ConfirmationDocuments);
-            
+
             return AdditionalStepWorkflowActionConst.UploadConfirmationDocument;
         }
 
         #endregion
-        
+
         #region Helpers
 
         private AdditionalStepTransaction<AdditionalStepArgs, AdditionalStepType> GetTransaction(int workflowVersion,
@@ -340,9 +375,11 @@ namespace TACHYON.Tracking.AdditionalSteps
             if (!isExist) throw new UserFriendlyException(L("PointIsNotFound"));
         }
 
-        private async Task LogAdditionalStepTransition(long pointId, AdditionalStepType type)
+        private async Task LogAdditionalStepTransition(long pointId, AdditionalStepType type, RoutePointDocumentType? routePointDocumentType)
         {
-            var transition = new AdditionalStepTransition() { AdditionalStepType = type, RoutePointId = pointId };
+            var transition = new AdditionalStepTransition() { AdditionalStepType = type, RoutePointId = pointId, 
+                RoutePointDocumentType = routePointDocumentType,
+                IsFile = type != AdditionalStepType.ReceiverCode};
 
             await _additionalStepTransition.InsertAsync(transition);
         }
@@ -380,7 +417,7 @@ namespace TACHYON.Tracking.AdditionalSteps
              // if point is not completed execute the below
              
 
-             bool isAllRequiredStepsCompleted = await IsAllRequiredStepsCompleted(point.WorkFlowVersion, point.Id);
+             bool isAllRequiredStepsCompleted = await IsAllRequiredStepsCompleted(point.AdditionalStepWorkFlowVersion.Value, point.Id);
            
              // don't mark trip as can be invoiced until all required transactions is completed
              if (!isAllRequiredStepsCompleted) return; 

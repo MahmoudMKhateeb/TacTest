@@ -288,6 +288,16 @@ namespace TACHYON.Shipping.Trips
             var shippingRequestTrip = await GetShippingRequestTripForMapper<ShippingRequestsTripForViewDto>(trip);
 
             var tripPoints = trip.RoutPoints.Where(x => x.NeedsAppointment && x.HasAppointmentVas || (x.NeedsClearance && x.HasClearanceVas));
+
+            var pointHasManifest = await _shippingRequestPointWorkFlowProvider.GetPointHasManifest(id);
+            if(pointHasManifest != null)
+            {
+                shippingRequestTrip.TripManifestDataDto = new TripManifestDataDto();
+                var document = await _shippingRequestPointWorkFlowProvider.GetPointAttachment(pointHasManifest.Value, RoutePointDocumentType.Manifest);
+                ObjectMapper.Map(document, shippingRequestTrip.TripManifestDataDto);
+
+            }
+
             foreach (var point in tripPoints)
             {
                 var pointDto = shippingRequestTrip.RoutPoints.FirstOrDefault(x => x.PointOrder == point.PointOrder);
@@ -307,7 +317,7 @@ namespace TACHYON.Shipping.Trips
                     pointDto.TripClearancePricesDto = new TripClearancePricesDto();
                     ObjectMapper.Map(ClearanceVas, pointDto.TripClearancePricesDto);
                 }
-                
+
             }
 
             if (shippingRequestTrip.HasAttachment)

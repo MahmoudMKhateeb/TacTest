@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.WorkFlows;
 
 namespace TACHYON.Tracking.AdditionalSteps
@@ -10,6 +11,7 @@ namespace TACHYON.Tracking.AdditionalSteps
         public string Action { get; set; }
         public string Name { get; set; }
         public TEnum AdditionalStepType { get; set; }
+        public RoutePointDocumentType? RoutePointDocumentType { get; set; }
         public Func<TArgs, Task<string>> Func { get; set; }
 
         /// <summary>

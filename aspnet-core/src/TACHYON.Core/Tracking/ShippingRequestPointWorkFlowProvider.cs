@@ -794,6 +794,14 @@ namespace TACHYON.Tracking
                 .FirstOrDefaultAsync();
             return document;
         }
+
+        public async Task<long?> GetPointHasManifest(int tripId)
+        {
+            DisableTenancyFilters();
+            return (await _routPointDocumentRepository.GetAll()
+                .Select(x => new { RoutePointDocumentType = x.RoutePointDocumentType, ShippingRequestTripId = x.RoutPointFk.ShippingRequestTripId, pointId = x.RoutPointId })
+                .FirstOrDefaultAsync(x => x.ShippingRequestTripId == tripId && x.RoutePointDocumentType == RoutePointDocumentType.Manifest))?.pointId;
+        }
         public async Task<(bool canAccept, string reason)> CanAcceptTrip(long? driverUserId, ShippingRequestTripStatus tripStatus, ShippingRequestTripDriverStatus driverStatus)
         {
             if (!driverUserId.HasValue)

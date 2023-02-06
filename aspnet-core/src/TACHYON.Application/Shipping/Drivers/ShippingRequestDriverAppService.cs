@@ -74,6 +74,8 @@ namespace TACHYON.Shipping.Drivers
 
         private readonly IRepository<User, long> _userRepository;
         private readonly IRepository<AdditionalStepTransition, long> _additionalStepTransitionRepository;
+        private readonly AdditionalStepWorkflowProvider _stepWorkflowProvider;
+
         public ShippingRequestDriverAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTrip,
             IRepository<RoutPoint, long> RoutPointRepository,
@@ -86,7 +88,8 @@ namespace TACHYON.Shipping.Drivers
             IRepository<DriverLocationLog, long> driverLocationLogRepository,
             ShippingRequestPointWorkFlowProvider workFlowProvider,
             IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository,
-            IRepository<AdditionalStepTransition, long> additionalStepTransitionRepository)
+            IRepository<AdditionalStepTransition, long> additionalStepTransitionRepository,
+            AdditionalStepWorkflowProvider stepWorkflowProvider)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
@@ -100,6 +103,7 @@ namespace TACHYON.Shipping.Drivers
             _workFlowProvider = workFlowProvider;
             _routPointStatusTransitionRepository = routPointStatusTransitionRepository;
             _additionalStepTransitionRepository = additionalStepTransitionRepository;
+            _stepWorkflowProvider = stepWorkflowProvider;
         }
         /// <summary>
         /// list all trips realted with drivers
@@ -352,10 +356,19 @@ namespace TACHYON.Shipping.Drivers
                  IsPodUploaded = x.IsPodUploaded,
                  WaybillNumber = x.WaybillNumber,
                  IsSaas = x.ShippingRequestTripFk.ShippingRequestFk.IsSaas(),
-                 AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
+                 AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status),
+                 AdditionalStepWorkFlowVersion = x.AdditionalStepWorkFlowVersion
              }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             routes.ForEach(x => x.StatusTitle = x.Status == RoutePointStatus.StandBy ? L("PointStandBy") : L(x.Status.ToString()));
+            foreach (var routePoint in routes.Where(routePoint => routePoint.AdditionalStepWorkFlowVersion is { }))
+            {
+                routePoint.AdditionalSteps =
+                    (await _stepWorkflowProvider.GetPointAdditionalSteps(routePoint.AdditionalStepWorkFlowVersion.Value,
+                        routePoint.Id)).Select(x =>
+                        new AdditionalStepDto { Action = x.Action, Name = x.Name, StepType = x.AdditionalStepType })
+                    .ToList();
+            }
             var trip = _ShippingRequestTrip.Get(id);
             var mapper = ObjectMapper.Map<DriverRoutPointDto>(trip);
             mapper.RoutPoint = routes;
@@ -411,6 +424,17 @@ namespace TACHYON.Shipping.Drivers
         {
             DisableTenancyFilters();
             return await _workFlowProvider.GetPointFile(pointId, RoutePointDocumentType.Appointment);
+        }
+
+        public async Task<List<AdditionalStepTransitionDto>> GetAllPointAdditionalFilesTransitions(long pointId)
+        {
+            return await _stepWorkflowProvider.GetAllPointAdditionalFilesTransitions(pointId);
+        }
+
+        public async Task<List<GetAllUploadedFileDto>> GetPointFile(long pointId, RoutePointDocumentType type)
+        {
+            DisableTenancyFilters();
+            return await _workFlowProvider.GetPointFile(pointId, type);
         }
 
         /// <summary>

@@ -13,7 +13,9 @@ namespace TACHYON.Tracking.AdditionalSteps
         public RoutPoint RoutePoint { get; set; }
         
         public AdditionalStepType AdditionalStepType { get; set; }
-        
+        public RoutePointDocumentType? RoutePointDocumentType { get; set; }
+        public bool IsFile { get; set; }
+
         public bool IsReset { get; set; }
     }
 }

@@ -345,7 +345,18 @@ namespace TACHYON.Tracking
             return await _workFlowProvider.GetPOD(id);
         }
 
-        [AbpAuthorize(AppPermissions.Pages_Tracking_ResetPointReceiverCode)]
+        public async Task<List<GetAllUploadedFileDto>> GetPointFile(long pointId, RoutePointDocumentType type)
+        {
+            DisableTenancyFilters();
+            return await _workFlowProvider.GetPointFile(pointId, type);
+        }
+
+        public async Task<List<AdditionalStepTransitionDto>> GetAllPointAdditionalFilesTransitions(long pointId)
+        {
+            return await _stepWorkflowProvider.GetAllPointAdditionalFilesTransitions(pointId);
+        }
+
+            [AbpAuthorize(AppPermissions.Pages_Tracking_ResetPointReceiverCode)]
         public string ResetPointReceiverCode(long pointId)
         {
 

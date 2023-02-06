@@ -74,7 +74,11 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.IsSaas, opt => opt.MapFrom(src => src.ShippingRequestFk.IsSaas()))
                 .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointStatus), src.RoutePointStatus)))
                 .ForMember(dst => dst.TripStatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
-                .ForMember(dst => dst.DriverLoadStatus, opt => opt.MapFrom(src => GetMobileTripStatus(src)));
+                .ForMember(dst => dst.DriverLoadStatus, opt => opt.MapFrom(src => GetMobileTripStatus(src)))
+                .ForMember(dst => dst.IsPortMovementRequest, opt => opt.MapFrom(src => src.ShippingRequestFk.ShippingTypeId == TACHYON.Shipping.ShippingRequests.ShippingTypeEnum.ImportPortMovements ||
+                src.ShippingRequestFk.ShippingTypeId == TACHYON.Shipping.ShippingRequests.ShippingTypeEnum.ExportPortMovements
+                ))
+                .ForMember(dst => dst.RoundTripType, opt => opt.MapFrom(src => src.ShippingRequestFk.RoundTripType));
 
 
             CreateMap<ShippingRequestTrip, ShippingRequestTripDriverDetailsDto>()
