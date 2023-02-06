@@ -169,6 +169,19 @@
                     </div>
                     <!-- End::Shipping Type-->
 
+                    <!--  Start::Round Trip                 -->
+                    <div
+                      class="mt-5 col-lg-6"
+                      *ngIf="
+                        shippingRequestforView?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        shippingRequestforView?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                      "
+                    >
+                      <label><span class="required-fileds"></span> {{ l('RoundTrip') }}</label>
+                      <input class="form-control" type="text" name="RoundTrip" [value]="shippingRequestforView.roundTripTypeTitle" disabled />
+                    </div>
+                    <!-- End::Round Trip-->
+
                     <div class="col-lg-3 mt-5" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('ShipperReference') }}</label>

@@ -215,7 +215,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
                 RoutPointTransactionDto.fromJS({
                   status: 0,
                   isDone: false,
-                  name: 'UploadRequiredFiles',
+                  name: this.l('UploadRequiredFiles'),
                   creationTime: null,
                 })
               );

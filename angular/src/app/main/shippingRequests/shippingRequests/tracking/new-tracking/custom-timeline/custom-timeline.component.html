@@ -35,8 +35,10 @@
       <button
         *ngIf="isClickable(point, step).canClick"
         class="{{ isClickable(point, step).canClick ? 'btn btn-primary text-white' : 'text-dark' }}"
+        [class.p-disabled]="!!busyPointId"
         [buttonBusy]="isClickable(point, step).canClick && saving"
         [busyText]="l('SavingWithThreeDot')"
+        [disabled]="!!busyPointId"
         (click)="clickedOnStep($event, point, isClickable(point, step).canClick, isClickable(point, step).isUploadStep)"
       >
         <span class="font-weight-bolder  {{ step.isDone ? 'p-disabled' : '' }}">

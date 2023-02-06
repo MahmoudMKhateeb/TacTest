@@ -374,6 +374,7 @@
                                   [steps]="getStepperSteps(point.statues)"
                                   [point]="point"
                                   [shippingType]="shippingType"
+                                  [busyPointId]="busyPointId"
                                   (invokeStatus)="!$event.isUploadStep ? invokeStatus($event.point, $event.transaction): invokeUploadStep($event.point, $event.transaction)"
                                   [saving]="saving"
                                 ></app-custom-timeline>

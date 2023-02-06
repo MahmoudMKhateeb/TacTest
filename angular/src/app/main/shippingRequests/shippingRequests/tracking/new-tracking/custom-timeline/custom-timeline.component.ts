@@ -29,6 +29,7 @@ export class CustomTimelineComponent extends AppComponentBase implements OnInit,
   @Input('steps') steps: CustomStep[];
   @Input('point') point: TrackingRoutePointDto;
   @Input('shippingType') shippingType: ShippingTypeEnum;
+  @Input('busyPointId') busyPointId: number;
   @Input('saving') saving: boolean;
 
   constructor(injector: Injector, private cdRef: ChangeDetectorRef) {
@@ -86,7 +87,7 @@ export class CustomTimelineComponent extends AppComponentBase implements OnInit,
   }
 
   statusInvoked(value: { point: TrackingRoutePointDto; transaction: PointTransactionDto; isUploadStep: boolean }) {
-    if (!value.isUploadStep && !value.point.availableTransactions.length) {
+    if ((!value.isUploadStep && !value.point.availableTransactions.length) || isNotNullOrUndefined(this.busyPointId)) {
       return;
     }
     this.invokeStatus.emit(value);

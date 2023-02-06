@@ -3214,5 +3214,12 @@
     <text name="AppointmentPricesSetup">Appointment Prices Setup</text>
     <text name="AppointmentData">Appointment Data</text>
     <text name="ClearancePricesSetup">Clearance Prices Setup</text>
+	<text name="UploadAdditionalDocuments">Upload Additional Documents</text>
+	<text name="UploadRequiredFiles">Upload Required Files</text>
+	<text name="ReceiverConfirmation">Receiver Confirmation</text>
+	<text name="UploadEirFile">Upload EIR File</text>
+	<text name="UploadManifestFile">Upload Manifest File</text>
+	<text name="UploadConfirmationDocument">Upload Confirmation Document</text>
+	<text name="ConfirmationDocument">Confirmation Document</text>
 	</texts>
 </localizationDictionary>

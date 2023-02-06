@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { PointTransactionDto, TrackingRoutePointDto } from '@shared/service-proxies/service-proxies';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-custom-marker',
@@ -31,6 +32,7 @@ export class CustomMarkerComponent extends AppComponentBase implements OnInit, A
   @Input('index') index: any;
   @Input('color') color: string;
   @Input('point') point: TrackingRoutePointDto;
+  @Input('busyPointId') busyPointId: number;
 
   constructor(injector: Injector, private cdRef: ChangeDetectorRef) {
     super(injector);
@@ -52,7 +54,7 @@ export class CustomMarkerComponent extends AppComponentBase implements OnInit, A
     console.log('clickedOnStep point', this.point);
     event.preventDefault();
     event.stopPropagation();
-    if (!this.canClick) {
+    if (!this.canClick || isNotNullOrUndefined(this.busyPointId)) {
       return;
     }
     this.invokeStatus.emit({ point: this.point, transaction: this.point.availableTransactions[0], isUploadStep: false });

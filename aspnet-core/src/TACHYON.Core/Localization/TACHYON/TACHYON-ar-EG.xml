@@ -2945,5 +2945,12 @@
 	<text name="AppointmentPricesSetup">إعداد أسعار الموعد</text>
 	<text name="AppointmentData">بيانات الموعد</text>
 	<text name="ClearancePricesSetup">إعداد أسعار التخليص</text>
+	<text name="UploadAdditionalDocuments">تحميل المستندات الإضافية</text>
+	<text name="UploadRequiredFiles">تحميل الملفات المطلوبة</text>
+	<text name="ReceiverConfirmation">تأكيد المتلقي</text>
+	<text name="UploadEirFile">تحميل ملف EIR</text>
+	<text name="UploadManifestFile">تحميل ملف البيان</text>
+	<text name="UploadConfirmationDocument">تحميل وثيقة التأكيد</text>
+	<text name="ConfirmationDocument">وثيقة التأكيد</text>
 	</texts>
 </localizationDictionary>
