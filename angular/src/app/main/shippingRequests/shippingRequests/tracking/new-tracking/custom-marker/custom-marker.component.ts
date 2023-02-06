@@ -1,4 +1,15 @@
-import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import {
+  AfterContentChecked,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Injector,
+  Input,
+  OnInit,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { PointTransactionDto, TrackingRoutePointDto } from '@shared/service-proxies/service-proxies';
 
@@ -8,7 +19,7 @@ import { PointTransactionDto, TrackingRoutePointDto } from '@shared/service-prox
   styleUrls: ['./custom-marker.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CustomMarkerComponent extends AppComponentBase implements OnInit {
+export class CustomMarkerComponent extends AppComponentBase implements OnInit, AfterViewInit, AfterContentChecked {
   @Output() invokeStatus: EventEmitter<{ point: TrackingRoutePointDto; transaction: PointTransactionDto; isUploadStep: boolean }> = new EventEmitter<{
     point: TrackingRoutePointDto;
     transaction: PointTransactionDto;
@@ -21,11 +32,20 @@ export class CustomMarkerComponent extends AppComponentBase implements OnInit {
   @Input('color') color: string;
   @Input('point') point: TrackingRoutePointDto;
 
-  constructor(injector: Injector) {
+  constructor(injector: Injector, private cdRef: ChangeDetectorRef) {
     super(injector);
   }
 
   ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    this.isDone = this.isDone;
+    this.cdRef.detectChanges();
+  }
+
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
+  }
 
   clickedOnStep(event: any) {
     console.log('clickedOnStep canClick', this.canClick);

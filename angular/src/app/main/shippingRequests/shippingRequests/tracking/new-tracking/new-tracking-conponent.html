@@ -196,8 +196,40 @@
                               </div>
 
                               <div class="btn-group mt-6" *ngIf="trip.driver ">
+                                <!--   Additional steps file transactions       -->
+                                <div
+                                  class="d-inline-block"
+                                  ngbDropdown
+                                  *ngIf="additionalFilesTransitions.length > 0 &&
+                                        (shippingType == ShippingTypeEnum.ImportPortMovements || shippingType == ShippingTypeEnum.ExportPortMovements)"
+                                >
+                                  <button
+                                    class="btn btn-sm btn-danger mx-2"
+                                    ngbDropdownToggle
+                                    [buttonBusy]="loadPodForPointId == point.id"
+                                    (click)="getPointFile(point.id, transaction)"
+                                    *ngFor="let transaction of getTransactionsForPoint(point.id)"
+                                  >
+                                    {{ transaction.additionalStepTypeTitle | localize}}
+                                  </button>
+                                  <div ngbDropdownMenu aria-labelledby="dropdownManual" dropdownConfig>
+                                    <button
+                                      ngbDropdownItem
+                                      class="overflow-hidden"
+                                      *ngFor="let pod of pointAdditionalFilesList; let x = index"
+                                      (click)="downloadPOD(pod)"
+                                    >
+                                      {{ pod.fileName | slice:0:20 }}{{ '...'}}
+                                    </button>
+                                  </div>
+                                </div>
                                 <!--   POD       -->
-                                <div class="d-inline-block" ngbDropdown *ngIf="point.isPodUploaded">
+                                <div
+                                  class="d-inline-block"
+                                  ngbDropdown
+                                  *ngIf="point.isPodUploaded &&
+                                        (shippingType != ShippingTypeEnum.ImportPortMovements && shippingType != ShippingTypeEnum.ExportPortMovements)"
+                                >
                                   <button
                                     class="btn btn-sm btn-danger mx-2"
                                     ngbDropdownToggle

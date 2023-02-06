@@ -20,6 +20,7 @@ import {
   ShippingRequestTripFlag,
   DropPaymentMethod,
   ShippingTypeEnum,
+  GetAllUploadedFileDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -299,5 +300,14 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         if (!isNotNullOrUndefined(this.assignDriverAndTruck.assignedDriverUserId)) this.assignDriverAndTruck.assignedDriverUserId = result;
       });
     }
+  }
+
+  downloadTripManifest() {
+    let image = this._fileDownloadService.downloadFileByBinary(
+      this.trip.tripManifestDataDto.documentId,
+      this.trip.tripManifestDataDto.documentName,
+      this.trip.tripManifestDataDto.documentContentType
+    );
+    this.fileViwerComponent.show(image, this.trip.tripManifestDataDto.documentContentType == 'application/pdf' ? 'pdf' : 'img');
   }
 }

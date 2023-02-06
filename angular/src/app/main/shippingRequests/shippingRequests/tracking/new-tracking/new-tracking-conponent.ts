@@ -1,6 +1,7 @@
 import { Component, ElementRef, Injector, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
+  AdditionalStepTransitionDto,
   GetAllUploadedFileDto,
   InvokeStatusInputDto,
   PickingType,
@@ -73,6 +74,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
   busyPointId: number;
   loadPodForPointId: number;
   pointPodList: GetAllUploadedFileDto[];
+  pointAdditionalFilesList: GetAllUploadedFileDto[] = [];
   deliveryGoodPictureId: number;
   mapToggle = true;
   newReceiverCode: string;
@@ -90,6 +92,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
   shippingType: ShippingTypeEnum;
   ShippingTypeEnum = ShippingTypeEnum;
   RoutePointStatus = RoutePointStatus;
+  additionalFilesTransitions: { pointId: number; transactions: AdditionalStepTransitionDto[] }[] = [];
 
   constructor(
     injector: Injector,
@@ -189,6 +192,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
    */
   getForView() {
     this.pointsIsLoading = true;
+    this.additionalFilesTransitions = [];
     this._trackingServiceProxy
       .getForView(this.trip.id)
       .pipe(
@@ -206,6 +210,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
         if (this.shippingType === ShippingTypeEnum.ExportPortMovements || this.shippingType === ShippingTypeEnum.ImportPortMovements) {
           result.routPoints.filter((item) => {
             if (item.pickingType === PickingType.Dropoff) {
+              this.getAllPointAdditionalFilesTransitions(item);
               item.statues.push(
                 RoutPointTransactionDto.fromJS({
                   status: 0,
@@ -415,7 +420,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
    */
   downloadPOD(pod: GetAllUploadedFileDto): void {
     let image = this._fileDownloadService.downloadFileByBinary(pod.documentId, pod.fileName, pod.fileType);
-    this.fileViwerComponent.show(image, 'img');
+    this.fileViwerComponent.show(image, pod.fileType == 'application/pdf' ? 'pdf' : 'img');
   }
 
   showPointLog(pointId: number) {
@@ -541,5 +546,28 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
     console.log('invokeUploadStep point', point);
     console.log('invokeUploadStep transaction', transaction);
     this.additionalDocumentsComponent.show(point);
+  }
+
+  getAllPointAdditionalFilesTransitions(point: TrackingRoutePointDto) {
+    this._trackingServiceProxy.getAllPointAdditionalFilesTransitions(point.id).subscribe((res) => {
+      this.additionalFilesTransitions.push({ pointId: point.id, transactions: res });
+      console.log('point', point);
+    });
+  }
+
+  getPointFile(pointId: number, transition: AdditionalStepTransitionDto) {
+    this._trackingServiceProxy.getPointFile(pointId, transition.routePointDocumentType).subscribe((res) => {
+      this.pointAdditionalFilesList = res;
+    });
+  }
+
+  getTransactionsForPoint(pointId): AdditionalStepTransitionDto[] {
+    if (this.additionalFilesTransitions.length > 0) {
+      const found = this.additionalFilesTransitions.find((point) => point.pointId == pointId);
+      if (isNotNullOrUndefined(found)) {
+        return found.transactions;
+      }
+    }
+    return [];
   }
 }

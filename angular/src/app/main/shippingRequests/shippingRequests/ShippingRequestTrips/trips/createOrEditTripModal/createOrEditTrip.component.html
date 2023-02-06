@@ -233,7 +233,7 @@
               <!--  end::Trip Goods Approximate Value -->
               <div class="col-lg-6">
                 <div class="form-group row">
-                  <div class="col-6 col-form-label" *ngIf="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal">
+                  <div class="col-6 col-form-label" *ngIf="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal && !isPortMovement">
                     <label for="DeliveryNote"> {{ l('NeedsDeliveryNote') }} </label>
                     <select #DeliveryNote="ngModel" name="DeliveryNote" id="DeliveryNote" [(ngModel)]="trip.needsDeliveryNote" class="form-control">
                       <option [ngValue]="true">{{ l('Yes') }}</option>
@@ -241,7 +241,11 @@
                     </select>
                   </div>
                   <div
-                    [class]="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal ? 'col-6 col-form-label' : 'col-12 col-form-label'"
+                    [class]="
+                      trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal && !isPortMovement
+                        ? 'col-6 col-form-label'
+                        : 'col-12 col-form-label'
+                    "
                   >
                     <label for="Attachment"> {{ l('Attachment') }} </label>
                     <select #Attachment="ngModel" name="Attachment" id="Attachment" [(ngModel)]="trip.hasAttachment" class="form-control">

@@ -141,14 +141,20 @@
           <!--  end::Trip Goods Approximate Value -->
           <div class="col-lg-6">
             <div class="form-group row">
-              <div class="col-6 col-form-label">
+              <div class="col-6 col-form-label" *ngIf="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal && !isPortMovement">
                 <label for="DeliveryNote"> {{ l('DeliveryNote') }} </label>
                 <select name="DeliveryNote" id="DeliveryNote" [(ngModel)]="trip.needsDeliveryNote" class="form-control" disabled>
                   <option [ngValue]="true">{{ l('Yes') }}</option>
                   <option [ngValue]="false">{{ l('No') }}</option>
                 </select>
               </div>
-              <div class="col-6 col-form-label">
+              <div
+                [class]="
+                  trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal && !isPortMovement
+                    ? 'col-6 col-form-label'
+                    : 'col-12 col-form-label'
+                "
+              >
                 <label for="Attachment">{{ l('Attachment') }} </label>
                 <select name="Attachment" id="Attachment" [(ngModel)]="trip.hasAttachment" class="form-control" disabled>
                   <option [ngValue]="true">{{ l('Yes') }}</option>
@@ -295,6 +301,19 @@
               >
                 {{ l('Save') }}
               </button>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="isPortMovement && trip.tripManifestDataDto">
+            <div class="col-12">
+              <div class="row">
+                <div class="form-group col-lg-6 mt-7 align-items-end">{{ l('TripManifest') }}: {{ trip.tripManifestDataDto.documentName }}</div>
+                <div class="form-group col-lg-6 mt-7 align-items-end">
+                  <button class="btn btn-danger btn-shadow-hover font-weight-bold mr-2" (click)="downloadTripManifest()">
+                    <i class="fa fa-download"></i>
+                    {{ l('Download') }}
+                  </button>
+                </div>
+              </div>
             </div>
           </ng-container>
 

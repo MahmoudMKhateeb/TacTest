@@ -67,6 +67,7 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
   docProgressFileNames: string[] = [];
   alldocumentsValid: boolean[] = [];
   AdditionalStepType = AdditionalStepType;
+  fileUploading: boolean[];
 
   constructor(
     injector: Injector,
@@ -90,6 +91,7 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
     this.fileTypes = [];
     this.fileNames = [];
     this.FileDocProgresses = [];
+    this.fileUploading = [];
     this.docProgressFileNames = [];
     for (let i = 0; i < this.point.availableSteps.length; i++) {
       this.createOrEditDocumentFileDtos.push(new CreateOrEditDocumentFileDto());
@@ -158,6 +160,7 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
       };
 
       this.DocsUploaders.push(uploader);
+      this.fileUploading.push(false);
       this.DocsUploaders[i].setOptions(this._DocsUploadersOptions[i]);
     }
   }
@@ -304,6 +307,7 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
     invokeRequestBody.code = this.receiverCode;
     invokeRequestBody.id = this.point.id;
     invokeRequestBody.action = this.point.availableSteps.find((item) => item.stepType === AdditionalStepType.ReceiverCode)?.action;
+    this.saving = true;
     this._trackingServiceProxy
       .invokeAdditionalStep(invokeRequestBody)
       .pipe(
@@ -363,6 +367,7 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
     if (!this.isFileInputValid(index)) {
       return;
     }
+    this.fileUploading[index] = true;
     const invokeRequestBody = new InvokeStepInputDto();
     invokeRequestBody.code = this.receiverCode;
     invokeRequestBody.id = this.point.id;
@@ -377,6 +382,7 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
       .pipe(
         finalize(() => {
           this.saving = false;
+          this.fileUploading[index] = false;
         })
       )
       .subscribe(
