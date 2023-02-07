@@ -10,7 +10,8 @@ namespace TACHYON.Tracking.AdditionalSteps
         public const int PortsMovementExportFirstTripVersion = 3;
         /// Ports Movement - Export -> Two way Route with/out port shuttling -> `Second Trip`
         public const int PortsMovementExportSecondTripVersion = 4;
-        /// Ports Movement - Export -> One/Two way Route with port shuttling  -> `One Trip Only, Third Trip`
+        /// Ports Movement - Export -> Two way Route with port shuttling  -> `One Trip Only, Third Trip`
         public const int PortsMovementExportThirdTripVersion = 5;
+        public const int PortsMovementExportOneWayFirstTripVersion = 6;
     }
 }

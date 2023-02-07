@@ -161,7 +161,7 @@ namespace TACHYON.Tracking.AdditionalSteps
                         }
                     }
                 },
-                // Ports Movement - Export -> One/Two way Route with port shuttling  -> `One Trip Only, Third Trip`
+                // Ports Movement - Export -> Two way Route with port shuttling  -> `One Trip Only, Third Trip`
                 new()
                 {
                     Version = AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripVersion,
@@ -177,10 +177,35 @@ namespace TACHYON.Tracking.AdditionalSteps
                         },
                         new()
                         {
+                            Action = AdditionalStepWorkflowActionConst.DeliveryConfirmation,
+                            AdditionalStepType = AdditionalStepType.Pod,
+                            RoutePointDocumentType = RoutePointDocumentType.POD,
+                            Name = "DeliveryConfirmation",
+                            IsRequired = true,
+                            Func = DeliveryConfirmation
+                        }
+                    }
+                },
+                // Ports Movement - Export -> One way Route with port shuttling  -> `One Trip Only`
+                new()
+                {
+                    Version = AdditionalStepWorkflowVersionConst.PortsMovementExportOneWayFirstTripVersion,
+                    Transactions = new List<AdditionalStepTransaction<AdditionalStepArgs, AdditionalStepType>>
+                    {
+                        new()
+                        {
+                            Action = AdditionalStepWorkflowActionConst.ReceiverConfirmation,
+                            AdditionalStepType = AdditionalStepType.ReceiverCode,
+                            Name = "ReceiverCode",
+                            IsRequired = false,
+                            Func = ReceiverConfirmation
+                        },
+                        new()
+                        {
                             Action = AdditionalStepWorkflowActionConst.UploadConfirmationDocument,
                             AdditionalStepType = AdditionalStepType.ConfirmationDocument,
                             RoutePointDocumentType = RoutePointDocumentType.ConfirmationDocuments,
-                            Name = "UploadConfirmationDocument",
+                            Name = "ConfirmationDocument",
                             IsRequired = true,
                             Func = UploadConfirmationDocument
                         }

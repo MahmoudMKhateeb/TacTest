@@ -1441,7 +1441,7 @@ namespace TACHYON.Shipping.Trips
                     else if (request.RoundTripType == RoundTripType.TwoWayRoutsWithoutPortShuttling)
                     {
                         await ValidateGoodsCategory(secondStep, request.GoodCategoryId);
-                        if (firstStep[0].ReceiverId != null || secondStep[0].ReceiverId == null)
+                        if (firstStep[0].ReceiverId == null || secondStep[0].ReceiverId == null)
                         {
                             throw new UserFriendlyException(L("SenderIsRequired"));
                         }

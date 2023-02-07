@@ -185,6 +185,10 @@ namespace TACHYON.AddressBook
                 {
                     facility.TenantId = null;
                 }
+                else
+                {
+                    facility.TenantId = AbpSession.TenantId;
+                }
             }
 
             return await _facilityRepository.InsertAndGetIdAsync(facility);
@@ -211,6 +215,10 @@ namespace TACHYON.AddressBook
                 if (await IsTachyonDealer() && facility.FacilityType != FacilityType.Facility)
                 {
                     facility.TenantId = null;
+                }
+                else
+                {
+                    facility.TenantId = AbpSession.TenantId;
                 }
             }
             return facility.Id;
