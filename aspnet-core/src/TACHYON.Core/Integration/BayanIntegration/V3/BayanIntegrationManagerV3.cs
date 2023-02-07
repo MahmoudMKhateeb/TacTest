@@ -534,13 +534,16 @@ namespace TACHYON.Integration.BayanIntegration.V3
         private async Task<Tuple<Root, ShippingRequestTrip>> GetRootForCreate(int id)
         {
 
-            ShippingRequestTrip trip = await _shippingRequestTripTripRepository.GetAsync(id);
+            ShippingRequestTrip trip = await _shippingRequestTripTripRepository.GetAll()
+                .Include(x => x.AssignedTruckFk)
+                .Where(x => x.Id == id)
+                .FirstAsync();
 
 
 
             var driverIdentityNumber = (await _documentFilesManager.GetDriverIqamaActiveDocumentAsync(trip.AssignedDriverUserId.Value))?.Number;
 
-
+            var plateNumber = NormalizePlateNumber(trip.AssignedTruckFk.PlateNumber);
 
             //var vehicleSequenceNumber = (await _documentFilesManager.GetTruckIstimaraActiveDocumentAsync(trip.AssignedTruckId.Value))?.Number;
 
@@ -558,18 +561,18 @@ namespace TACHYON.Integration.BayanIntegration.V3
                     vehicle = new Vehicle
                     {
                         plateTypeId = x.AssignedTruckFk.PlateTypeFk.BayanIntegrationId,
-                        vehiclePlate = new VehiclePlate
-                        {
-                            rightLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(2, 1),
-                            middleLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(1, 1),
-                            leftLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(0, 1),
-                            number = Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value
-                        }
+                        //vehiclePlate = new VehiclePlate
+                        //{
+                        //    rightLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(2, 1),
+                        //    middleLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(1, 1),
+                        //    leftLetter = x.AssignedTruckFk.PlateNumber.Replace(" ", "").Replace(Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(0, 1),
+                        //    number = Regex.Match(x.AssignedTruckFk.PlateNumber.Replace(" ", ""), @"\d+").Value
+                        //}
                     },
                     driver = new Driver
                     {
-                        //identityNumber = driverIdentityNumber.IfNullOrWhiteSpace(""),
-                        identityNumber = "1000000005",
+                        identityNumber = driverIdentityNumber.IfNullOrWhiteSpace(""),
+                        //identityNumber = "1000000005",
                         issueNumber = x.AssignedDriverUserFk.DriverIssueNumber.Value, // todo add this
                                                                                       //issueNumber = 11, // todo add this
                         mobile = "+966" + x.AssignedDriverUserFk.PhoneNumber
@@ -653,6 +656,13 @@ namespace TACHYON.Integration.BayanIntegration.V3
                 }
                 ).FirstOrDefaultAsync();
 
+            root.vehicle.vehiclePlate = new VehiclePlate
+            {
+                rightLetter = plateNumber.Replace(" ", "").Replace(Regex.Match(plateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(2, 1),
+                middleLetter = plateNumber.Replace(" ", "").Replace(Regex.Match(plateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(1, 1),
+                leftLetter = plateNumber.Replace(" ", "").Replace(Regex.Match(plateNumber.Replace(" ", ""), @"\d+").Value, "").Substring(0, 1),
+                number = Regex.Match(plateNumber.Replace(" ", ""), @"\d+").Value
+            };
 
 
             return new Tuple<Root, ShippingRequestTrip>(root, trip);
