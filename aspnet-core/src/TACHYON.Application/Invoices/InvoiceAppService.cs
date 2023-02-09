@@ -923,7 +923,7 @@ namespace TACHYON.Invoices
                     TaxVat = item.TaxVat,
                     Date = item.CreationTime.ToString("dd/MM/yyyy"),
                     From = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.First().CityFk.DisplayName,
-                    To = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.Count() > 0 ? "Multiple dedtinations"
+                    To = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.Count() > 1 ? "Multiple destinations"
                     : item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.First().CityFk.DisplayName,
                 };
                 Items.Add(invoiceItemDto);
