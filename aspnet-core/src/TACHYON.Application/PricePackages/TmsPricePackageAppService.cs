@@ -231,14 +231,14 @@ namespace TACHYON.PricePackages
                 where hasNormalDirectRequest ||
                       (pricePackageOffer != null && (pricePackageOffer.TmsPricePackageId == pricePackageDto.Id ||
                                                      pricePackageOffer.NormalPricePackageId == pricePackageDto.Id) &&
-                       (!pricePackageOffer.DirectRequestId.HasValue ||
+                       (pricePackageOffer.DirectRequest == null ||
                         pricePackageOffer.DirectRequest.ShippingRequestId == input.ShippingRequestId) &&
-                       (!pricePackageOffer.PriceOfferId.HasValue ||
+                       (pricePackageOffer.PriceOffer == null ||
                         pricePackageOffer.PriceOffer.ShippingRequestId == input.ShippingRequestId))
                 select new
                 {
-                    HasDirectRequest = pricePackageOffer.DirectRequestId.HasValue || hasNormalDirectRequest,
-                    HasOffer = pricePackageOffer.PriceOfferId.HasValue,
+                    HasDirectRequest = pricePackageOffer.DirectRequest != null || hasNormalDirectRequest,
+                    HasOffer = pricePackageOffer.PriceOffer != null,
                     pricePackageDto.PricePackageId
                 }).ToList();
 
