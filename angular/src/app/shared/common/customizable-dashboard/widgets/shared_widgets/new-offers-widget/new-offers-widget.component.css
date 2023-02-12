@@ -1,0 +1,14 @@
+.new-price-offers-img {
+  width: 5rem;
+  height: 5rem;
+  margin: auto;
+}
+
+.border-bottom-dashed {
+  border-bottom: 1px dashed #707070;
+  opacity: 0.3;
+}
+
+.flex-grow-2 {
+  flex-grow: 2;
+}

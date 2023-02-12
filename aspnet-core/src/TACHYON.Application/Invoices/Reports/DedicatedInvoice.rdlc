@@ -3323,7 +3323,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>التاريخ هو تاريخ تسليم الشحنة الفعلي</Value>
+                    <Value />
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Cairo</FontFamily>
@@ -3334,7 +3334,6 @@
                     </Style>
                   </TextRun>
                 </TextRuns>
-                <ListStyle>Bulleted</ListStyle>
                 <ListLevel>1</ListLevel>
                 <Style>
                   <TextAlign>Right</TextAlign>
@@ -3383,7 +3382,6 @@
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
-              
               <Paragraph>
                 <TextRuns>
                   <TextRun>

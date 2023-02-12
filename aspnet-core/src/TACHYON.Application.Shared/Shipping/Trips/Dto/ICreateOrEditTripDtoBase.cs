@@ -24,6 +24,8 @@ namespace TACHYON.Shipping.Trips.Dto
          string Note { get; set; }
 
          string TotalValue { get; set; }
+        long? TruckId { get; set; }
+        long? DriverUserId { get; set; }
 
 
     }

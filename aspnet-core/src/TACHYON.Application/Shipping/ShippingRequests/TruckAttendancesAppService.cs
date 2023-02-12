@@ -46,7 +46,7 @@ namespace TACHYON.Shipping.ShippingRequests
             return await LoadResultAsync(query, filter);
         }
 
-        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Shipper)]
+        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Shipper, AppFeatures.ShipperClients)]
         public async Task CreateOrEdit(CreateOrEditTruckAttendanceDto input)
         {
             await ValidateRequest(input);

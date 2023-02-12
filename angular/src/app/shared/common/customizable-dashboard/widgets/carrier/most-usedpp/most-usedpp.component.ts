@@ -11,6 +11,8 @@ import { finalize } from 'rxjs/operators';
 })
 export class MostUsedppComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptionsBars>;
+  pricePackages: { ppName: string; value: number }[] = [];
+  total = 0;
   loading = false;
 
   constructor(private injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy) {
@@ -31,6 +33,10 @@ export class MostUsedppComponent extends AppComponentBase implements OnInit {
         })
       )
       .subscribe((result) => {
+        this.pricePackages = result.map((item) => {
+          return { ppName: item.x, value: item.y };
+        });
+        this.total = result.reduce((accumulator, currentValue) => accumulator + currentValue.y, 0);
         this.chartOptions = {
           series: [
             {

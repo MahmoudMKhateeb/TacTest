@@ -3,6 +3,7 @@ import { AfterContentChecked, ChangeDetectorRef, Component, EventEmitter, Inject
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CreateOrEditRoutPointDto,
+  DropPaymentMethod,
   FacilityForDropdownDto,
   GetShippingRequestForViewOutput,
   PickingType,
@@ -10,6 +11,7 @@ import {
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
   ShippingRequestDestinationCitiesDto,
+  ShippingRequestFlag,
   ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
@@ -17,6 +19,7 @@ import { PointsService } from '@app/main/shippingRequests/shippingRequests/Shipp
 import { Subscription } from 'rxjs';
 import { finalize } from '@node_modules/rxjs/operators';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'PointsComponent',
@@ -29,9 +32,9 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   shippingRequestId: number;
   DestCitiesDtos: ShippingRequestDestinationCitiesDto[];
   SRDestionationCity: number;
-  allFacilities: FacilityForDropdownDto[];
-  pickupFacilities: FacilityForDropdownDto[];
-  dropFacilities: FacilityForDropdownDto[];
+  allFacilities: FacilityForDropdownDto[] = [];
+  pickupFacilities: FacilityForDropdownDto[] = [];
+  dropFacilities: FacilityForDropdownDto[] = [];
   allPointsSendersAndREcivers: ReceiverFacilityLookupTableDto[][] = [];
   receiverLoading: boolean;
   shippingRequestForView: GetShippingRequestForViewOutput;
@@ -61,6 +64,9 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   private pointServiceSubs$: Subscription;
   usedIn: 'view' | 'createOrEdit';
   @Output() SelectedWayPointsFromChild = this.wayPointsList;
+  @Input('isHomeDelivery') isHomeDelivery: boolean;
+  shippingRequestFlagEnum = ShippingRequestFlag;
+  paymentMethodsArray = [];
 
   constructor(
     injector: Injector,
@@ -68,7 +74,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     private _receiversServiceProxy: ReceiversServiceProxy,
     public _tripService: TripService,
     private _PointsService: PointsService,
-    private cdref: ChangeDetectorRef
+    private cdref: ChangeDetectorRef,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
   }
@@ -76,6 +83,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   ngOnInit() {
     this.loadSharedServices();
     this.loadDropDowns();
+    this.paymentMethodsArray = this.enumToArray.transform(DropPaymentMethod);
     this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => {
       this.onChangedWayPointsList();
     });
@@ -101,6 +109,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       });
     }
     if (this.usedIn === 'createOrEdit') {
+      this.facilityLoading = true;
       this._routStepsServiceProxy
         .getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestForView.shippingRequest.id)
         .pipe(
@@ -111,7 +120,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         .subscribe((result) => {
           this.allFacilities = result;
           this.pickupFacilities = result.filter((r) => {
-            return this.shippingRequestForView.shippingRequestFlag === 0
+            return this.shippingRequestForView.shippingRequestFlag === this.shippingRequestFlagEnum.Normal
               ? r.cityId == this.shippingRequestForView.originalCityId
               : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
           });
@@ -190,7 +199,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   /**
    * creates empty points for the trip based on number of drops
    */
-  createEmptyPoints() {
+  createEmptyPoints(selectedPaymentMethodId?: number) {
     console.log('createEmptyPoints', this.shippingRequestForView);
     let numberOfDrops = this.shippingRequestForView.shippingRequest.numberOfDrops;
     //if there is already wayPoints Dont Create Empty Once
@@ -204,6 +213,9 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       } else {
         point.pickingType = this.PickingType.Dropoff;
       }
+      point.dropPaymentMethod = selectedPaymentMethodId;
+      point.needsPOD = false;
+      point.needsReceiverCode = false;
       this.wayPointsList.push(point);
     } //end of for
   }

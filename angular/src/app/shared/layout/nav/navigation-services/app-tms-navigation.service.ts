@@ -20,18 +20,13 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
   getMenu(): AppMenu {
     console.log('AppTMSNavigationService');
     let menu = new AppMenu('MainMenu', 'MainMenu', [
-      new AppMenuItem(
-        'Dashboard',
-        '',
-        'interaction, interact, preferences, preformance, computer, online, rating, review.svg',
-        '/app/main/dashboard'
-      ),
+      new AppMenuItem('Dashboard', '', 'Dashboards.svg', '/app/main/dashboard'),
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Invoices
       new AppMenuItem(
         'Financials',
         'Pages.Invoices',
-        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        'Financials.svg',
         '',
         [],
         [
@@ -97,7 +92,7 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'DocumentManagement',
         '',
-        'interaction, interact, preferences, preformance, customer, rating, rate, questions.svg',
+        'Document.svg',
         '',
         [],
         [
@@ -146,7 +141,7 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Operations',
         'Pages',
-        'digital marketing, marketing, content marketing, launch, startup, laptop.svg',
+        'Operations.svg',
         '',
         [],
         [
@@ -154,7 +149,7 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking'),
           new AppMenuItem(
             'SavedTemplates',
-            'Pages.ShippingRequests',
+            'Pages.EntityTemplate',
             '',
             '/app/main/shippingRequests/requestsTemplates',
             undefined,
@@ -215,11 +210,11 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMSSettings',
         '',
-        'digital marketing, marketing, content marketing, puzzle, piece, strategy.svg',
+        'TMS Settings.svg',
         '',
         [],
         [
-          new AppMenuItem('Drivers', 'Pages.Administration.Users', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
+          new AppMenuItem('Drivers', 'Pages.Administration.Drivers', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
           new AppMenuItem('Trucks', 'Pages.Trucks', '', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined),
         ],
         undefined,
@@ -232,7 +227,7 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'AddressBook',
         '',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        'Facility Managment.svg',
         '',
         [],
         [
@@ -250,7 +245,7 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Settings',
         'Pages.Administration.Tenant.Settings',
-        'user, interface, agent, usability, settings, options, preferences, gears.svg',
+        'Settings.svg',
         '',
         [],
         [new AppMenuItem('GeneralSettings', 'Pages.Administration.Tenant.Settings', '', '/app/admin/tenantSettings')]
@@ -262,12 +257,12 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'UserManagement',
         '',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
+        'User Management.svg',
         '',
         [],
         [
           new AppMenuItem('Roles', 'Pages.Administration.Roles', '', '/app/admin/roles'),
-          new AppMenuItem('Users', 'Pages.Administration.Users', '', '/app/admin/users'),
+          new AppMenuItem('Users', 'Pages.Administration.Users.View', '', '/app/admin/users'),
         ]
       ),
 

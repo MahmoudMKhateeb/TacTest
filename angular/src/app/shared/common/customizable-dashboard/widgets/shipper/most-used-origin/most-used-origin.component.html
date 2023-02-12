@@ -1,30 +1,60 @@
 <!--begin::Card-->
 <div class="card card-custom card-stretch w-100 h-100" [busyIf]="loading">
   <div class="card-header border-0">
-    <div class="card-title text-center">
-      <h3 class="card-label">{{ l('MostUsedOrigins') }}</h3>
+    <div class="card-title m-0">
+      <h3 class="card-label m-0">{{ l('MostUsedOrigins') }}</h3>
     </div>
   </div>
-  <div class="card-body p-0">
+  <div class="card-body p-4">
     <!--begin::Body-->
-    <div class="card-body pt-2">
-      <p-table [value]="data">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>{{ l('CityName') }}</th>
-            <th>{{ l('NumberOfTrips') }}</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-record>
-          <tr>
-            <td>{{ record.cityName }}</td>
-            <td>{{ record.numberOfRequests }}</td>
-          </tr>
-        </ng-template>
-      </p-table>
-      <div class="pd-5 text-center" *ngIf="!data || data.length == 0">
-        {{ l('NoData') }}
+    <div class="row">
+      <div class="col-12 pb-3 text-center">
+        <img src="assets/SVG/saudi-arabia-map.svg" style="width: 200px; max-height: 140px" />
       </div>
+      <div class="col-12">
+        <ng-container *ngFor="let item of data">
+          <div class="d-flex justify-content-between">
+            <div>
+              {{ item.cityName }}
+            </div>
+            <div>
+              {{ item.numberOfRequests }}
+            </div>
+          </div>
+          <div class="progress w-100" style="height: 2px">
+            <div
+              class="progress-bar accepted"
+              role="progressbar"
+              [ngStyle]="{
+                width: (item.numberOfRequests > 0 && total > 0 ? (item.numberOfRequests / total) * 100 : 100) + '%',
+                height: '2px',
+                'background-color': '#a8c5da'
+              }"
+              [attr.aria-valuenow]="item.numberOfRequests > 0 && total > 0 ? (item.numberOfRequests / total) * 100 : 100"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+          <!--                         style="width: {{item.numberOfRequests > 0 && total > 0 ? item.numberOfRequests / total : 100}}%"-->
+        </ng-container>
+      </div>
+      <!--      <p-table [value]="data">-->
+      <!--        <ng-template pTemplate="header">-->
+      <!--          <tr>-->
+      <!--            <th>{{ l('CityName') }}</th>-->
+      <!--            <th>{{ l('NumberOfTrips') }}</th>-->
+      <!--          </tr>-->
+      <!--        </ng-template>-->
+      <!--        <ng-template pTemplate="body" let-record>-->
+      <!--          <tr>-->
+      <!--            <td>{{ record.cityName }}</td>-->
+      <!--            <td>{{ record.numberOfRequests }}</td>-->
+      <!--          </tr>-->
+      <!--        </ng-template>-->
+      <!--      </p-table>-->
+      <!--      <div class="pd-5 text-center" *ngIf="!data || data.length == 0">-->
+      <!--        {{ l('NoData') }}-->
+      <!--      </div>-->
     </div>
     <!--end::Body-->
   </div>

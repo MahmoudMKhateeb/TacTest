@@ -57,6 +57,8 @@ namespace TACHYON.Tracking.Dto
 
         #region Dedicated
         public int NumberOfTrucks { get; set; }
+
+        public ShippingRequestTripFlag TripFlag { get; set; }
         #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
@@ -11,6 +12,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.Authorization;
 using TACHYON.Common;
 using TACHYON.Configuration;
 using TACHYON.Extension;
@@ -22,6 +24,7 @@ using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Penalties
 {
+    [AbpAuthorize(AppPermissions.Pages_Penalties)]
     public class PenaltiesAppService : TACHYONAppServiceBase, IPenaltiesAppService
     {
         private readonly IRepository<Penalty> _penaltyRepository;

@@ -96,7 +96,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         }
 
-        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task<long> CreateOrEditStep1(CreateOrEditDedicatedStep1Dto input)
         {
             await _shippingRequestManager.ValidateShippingRequestStep1(input);
@@ -113,13 +113,13 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task<CreateOrEditDedicatedStep1Dto> GetStep1ForEdit(long id)
         {
             var shippingRequest=await GetDraftedDedicatedShippingRequestForStep1(id);
                 return ObjectMapper.Map<CreateOrEditDedicatedStep1Dto>(shippingRequest);
         }
-        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task EditStep2(EditDedicatedStep2Dto input)
         {
             ShippingRequest shippingRequest = await GetDraftedDedicatedShippingRequestForStep2(input.Id);
@@ -134,14 +134,14 @@ namespace TACHYON.Shipping.ShippingRequests
 
             ObjectMapper.Map(input, shippingRequest);
         }
-        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task<EditDedicatedStep2Dto> GetStep2ForEdit(long id)
         {
             var shippingRequest = await GetDraftedDedicatedShippingRequestForStep2(id);
             return ObjectMapper.Map<EditDedicatedStep2Dto>(shippingRequest);
         }
 
-        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task PublishDedicatedShippingRequest(long id)
         {
             ShippingRequest shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(id);
@@ -286,7 +286,7 @@ namespace TACHYON.Shipping.ShippingRequests
         #endregion
 
         #region trip
-        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task<List<GetAllDedicatedDriversOrTrucksForDropDownDto>> GetAllDedicatedDriversForDropDown(long shippingRequestId)
         {
             DisableTenancyFilters();
@@ -303,7 +303,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .ToListAsync();
         }
 
-        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task<List<GetAllDedicatedDriversOrTrucksForDropDownDto>> GetAllDedicateTrucksForDropDown(long shippingRequestId)
         {
             DisableTenancyFilters();
@@ -350,7 +350,9 @@ namespace TACHYON.Shipping.ShippingRequests
             return await _shippingRequestRepository.GetAll()
                 .Where(x => (x.TenantId == tenantId || x.CarrierTenantId == tenantId) &&
             x.Status != ShippingRequestStatus.PrePrice &&
-            x.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+            x.ShippingRequestFlag == ShippingRequestFlag.Dedicated &&
+            //not saas
+            x.TenantId != x.CarrierTenantId)
                 .Select(x => new SelectItemDto
                 {
                     DisplayName = x.ReferenceNumber,
@@ -358,7 +360,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 }).ToListAsync();
         }
 
-        [RequiresFeature(AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.ShipperClients, AppFeatures.CarrierClients)]
         public async Task<List<SelectItemDto>> GetDedicateTrucksByRequest(long shippingRequestId)
         {
             DisableTenancyFilters();
@@ -375,18 +377,22 @@ namespace TACHYON.Shipping.ShippingRequests
         #endregion
 
         #region KPI
-        [RequiresFeature(AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.ShipperClients, AppFeatures.CarrierClients)]
         public async Task UpdateRequestKPI(UpdateRequestKPIInput input)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
-            var request = await _shippingRequestRepository.FirstOrDefaultAsync(input.ShippingRequestId);
+            var request = await _shippingRequestRepository.GetAll()
+                .WhereIf(!await IsTachyonDealer(), x=>x.TenantId == x.CarrierTenantId)
+                .FirstOrDefaultAsync(x=>x.Id == input.ShippingRequestId);
             request.DedicatedKPI = input.KPI;
         }
-        [RequiresFeature(AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.ShipperClients, AppFeatures.CarrierClients)]
         public async Task UpdateTruckKPI(UpdateTruckKPIInput input)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
-            var dedicatedTruck = await _dedicatedShippingRequestTruckRepository.FirstOrDefaultAsync(input.DedicatedTruckId);
+            var dedicatedTruck = await _dedicatedShippingRequestTruckRepository.GetAll()
+                .WhereIf(!await IsTachyonDealer(), x => x.ShippingRequest.TenantId == x.ShippingRequest.CarrierTenantId)
+                .FirstOrDefaultAsync(x=>x.Id == input.DedicatedTruckId);
             dedicatedTruck.KPI = input.KPI;
         }
 

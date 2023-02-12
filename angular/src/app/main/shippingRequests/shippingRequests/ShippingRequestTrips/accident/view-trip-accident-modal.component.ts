@@ -63,7 +63,6 @@ export class ViewTripAccidentModelComponent extends AppComponentBase implements 
     this.cancel = TripAccidentResolveType.CancelTrip;
   }
 
-
   show(trip: ShippingRequestsTripListDto) {
     this.currentTrip = trip;
     this.intiDataSource(trip.id);
@@ -96,7 +95,6 @@ export class ViewTripAccidentModelComponent extends AppComponentBase implements 
     });
   }
 
-
   downloadDocument(id: number): void {
     this._ServiceProxy.getFile(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
@@ -118,8 +116,6 @@ export class ViewTripAccidentModelComponent extends AppComponentBase implements 
     this.intiDataSource(this.currentTrip.id);
   }
 
-
-
   approveResolve() {
     if (this.canApproveResolve()) {
       this._ServiceProxy.applyResolveChanges(this.currentIncident.resolveListDto.id).subscribe(() => {
@@ -128,8 +124,6 @@ export class ViewTripAccidentModelComponent extends AppComponentBase implements 
       });
     }
   }
-
-
 
   canApproveResolve(): boolean {
     if (
@@ -145,8 +139,6 @@ export class ViewTripAccidentModelComponent extends AppComponentBase implements 
 
     return false;
   }
-
-
 
   enforceChange(tripId: number) {
     this.saving = true;

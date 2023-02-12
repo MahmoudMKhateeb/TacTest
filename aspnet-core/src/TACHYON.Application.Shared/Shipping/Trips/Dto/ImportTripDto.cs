@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Shipping.Trips.Dto
 {
@@ -47,5 +48,15 @@ namespace TACHYON.Shipping.Trips.Dto
         /// </summary>
         public string Receiver { get; set; }
         public int? ReceiverId { get; set; }
+        #region dedicated
+        public string RouteTypeTitle { get; set; }
+        public ShippingRequestRouteType RouteType { get; set; }
+        public int NumberOfDrops { get; set; }
+        public string Driver { get; set; }
+        public string Truck { get; set; }
+
+        public long? TruckId { set; get; }
+        public long? DriverUserId { set; get; }
+        #endregion
     }
 }

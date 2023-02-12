@@ -11,7 +11,9 @@ import { finalize } from 'rxjs/operators';
 })
 export class MostUsedVasesComponent extends AppComponentBase implements OnInit {
   public chartOptions: Partial<ChartOptionsBars>;
+  vases: { vasName: string; value: number }[] = [];
   loading = false;
+  total = 0;
 
   constructor(private injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy) {
     super(injector);
@@ -31,6 +33,10 @@ export class MostUsedVasesComponent extends AppComponentBase implements OnInit {
         })
       )
       .subscribe((result) => {
+        this.vases = result.map((item) => {
+          return { vasName: item.x, value: item.y };
+        });
+        this.total = result.reduce((accumulator, currentValue) => accumulator + currentValue.y, 0);
         this.chartOptions = {
           series: [
             {

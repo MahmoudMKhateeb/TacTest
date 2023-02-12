@@ -57,13 +57,30 @@ namespace TACHYON.AutoMapper.PricePackages
             CreateMap<PricePackageOffer, PricePackageOfferDto>()
                 .ReverseMap();
             CreateMap<PricePackageOfferItemDto, PricePackageOfferItem>().ReverseMap();
+            const string activeKey = "Active", notActiveKey = "NotActive";
             CreateMap<TmsPricePackage, TmsPricePackageListDto>()
                 .ForMember(x => x.HasProposal, x => x.MapFrom(i => i.ProposalId.HasValue))
                 .ForMember(x => x.OriginCity, x => x.MapFrom(i => i.OriginCity.DisplayName))
                 .ForMember(x => x.DestinationCity, x => x.MapFrom(i => i.DestinationCity.DisplayName))
                 .ForMember(x => x.Shipper, x => x.MapFrom(i => i.DestinationTenant.Name))
                 .ForMember(x => x.TruckType, x => x.MapFrom(i => i.TrucksTypeFk.Key))
-                .ForMember(x => x.TransportType, x => x.MapFrom(i => i.TransportTypeFk.Key));
+                .ForMember(x => x.Status,
+                    x => x.MapFrom(i =>
+                        (i.ProposalId.HasValue && i.Proposal.AppendixId.HasValue && i.Proposal.Appendix.IsActive)
+                            ?
+                            activeKey
+                            : (i.AppendixId.HasValue && i.Appendix.IsActive)
+                                ? activeKey
+                                : notActiveKey))
+                .ForMember(x => x.ProposalName,
+                    x => x.MapFrom(i => i.ProposalId.HasValue ? i.Proposal.ProposalName : string.Empty))
+                .ForMember(x => x.Appendix,
+                    x => x.MapFrom(i =>
+                        i.ProposalId.HasValue && i.Proposal.AppendixId.HasValue ? i.Proposal.Appendix.ContractName :
+                        i.AppendixId.HasValue ? i.Appendix.ContractName : string.Empty))
+                .ForMember(x => x.EditionName, x => x.MapFrom(i => i.DestinationTenant.Edition.DisplayName))
+                .ForMember(x => x.RouteType,
+                    x => x.MapFrom(i => i.RouteType.ToString()));
 
             CreateMap<CreateOrEditTmsPricePackageDto, TmsPricePackage>().ReverseMap();
             CreateMap<CreateOrEditProposalDto, PricePackageProposal>()
@@ -73,11 +90,14 @@ namespace TACHYON.AutoMapper.PricePackages
                     if (!dto.Id.HasValue)
                         proposal.Status = ProposalStatus.New;
                 });
+            
             CreateMap<PricePackageProposal, CreateOrEditProposalDto>()
                 .ForMember(x => x.TmsPricePackages, x => x.MapFrom(i => i.TmsPricePackages.Select(t => t.Id)));
 
             CreateMap<PricePackageProposal, ProposalListItemDto>()
-                .ForMember(x => x.ShipperName, x => x.MapFrom(i => i.Shipper.Name));
+                .ForMember(x => x.ShipperName, x => x.MapFrom(i => i.Shipper.Name))
+                .ForMember(x => x.NumberOfPricePackages, x => x.MapFrom(i => i.TmsPricePackages.Count))
+                .ForMember(x => x.AppendixNumber, x => x.MapFrom(i => i.AppendixId.HasValue ? i.Appendix.Version : string.Empty));
             CreateMap<PricePackageProposal, ProposalForViewDto>()
                 .ForMember(x => x.StatusTitle, x => x.MapFrom(i => Enum.GetName(typeof(ProposalStatus), i.Status)))
                 .ForMember(x => x.Shipper, x => x.MapFrom(i => i.Shipper.companyName));
@@ -134,6 +154,9 @@ namespace TACHYON.AutoMapper.PricePackages
             CreateMap<PricePackageAppendix, AppendixListDto>()
                 .ForMember(x => x.CompanyName,
                     x => x.MapFrom(i => i.ProposalId.HasValue ? i.Proposal.Shipper.Name : i.DestinationTenant.Name))
+                .ForMember(x=> x.EditionName,x=> x.MapFrom(i=> i.ProposalId.HasValue ? i.Proposal.Shipper.Edition.DisplayName : i.DestinationTenant.Edition.DisplayName))
+                .ForMember(x=> x.AppendixNumber,x=> x.MapFrom(i=> i.Version))
+                .ForMember(x=> x.NumberOfPricePackages,x=> x.MapFrom(i=> i.ProposalId.HasValue ? i.Proposal.TmsPricePackages.Count : i.NormalPricePackages.Count + i.TmsPricePackages.Count))
                 .ForMember(x => x.ContractNumber,
                     x => x.MapFrom(i =>
                         i.ProposalId.HasValue
@@ -141,7 +164,6 @@ namespace TACHYON.AutoMapper.PricePackages
                             : i.DestinationTenant.ContractNumber));
 
             CreateMap<PricePackageAppendix, AppendixForViewDto>()
-                .ForMember(x => x.Version, x => x.MapFrom(i => $"{i.MajorVersion}.{i.MinorVersion}"))
                 .ForMember(x => x.ProposalName, x => x.MapFrom(i => i.Proposal.ProposalName))
                 .ForMember(x => x.ContractNumber,
                     x => x.MapFrom(i =>
@@ -171,6 +193,7 @@ namespace TACHYON.AutoMapper.PricePackages
 
             CreateMap<TmsPricePackage, TmsPricePackageForViewDto>()
                 .ForMember(x => x.CompanyName, x => x.MapFrom(i => i.DestinationTenant.Name))
+                .ForMember(x => x.AppendixId, x => x.MapFrom(i => i.ProposalId.HasValue ? i.Proposal.AppendixId : i.AppendixId))
                 .ForMember(x => x.FinalPrice, x => x.MapFrom(i => i.TotalPrice))
                 .ForMember(x => x.TruckType,
                     x => x.MapFrom(i =>

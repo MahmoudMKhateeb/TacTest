@@ -162,7 +162,7 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
   }
 
   onAppointmentFormOpening(e: any): void {
-    if (this.isCarrier) {
+    if (this.isCarrier && !this.isCarrierSaas) {
       e.cancel = true;
       return;
     }
@@ -170,7 +170,7 @@ export class DedicatedShippingRequestAttendanceSheetModalComponent extends AppCo
       e.cancel = true;
       return;
     }
-    if (this.isShipper && this.isRequestStatusCompleted) {
+    if ((this.isCarrierSaas || this.isShipper) && this.isRequestStatusCompleted) {
       e.cancel = true;
       return;
     }

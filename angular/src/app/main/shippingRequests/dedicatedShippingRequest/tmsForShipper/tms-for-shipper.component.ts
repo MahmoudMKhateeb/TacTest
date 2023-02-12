@@ -38,6 +38,7 @@ export class TmsForShipperComponent extends AppComponentBase implements OnInit, 
   @ViewChild('card', { static: true }) cardEl: ElementRef;
   @Input('shippingRequestId') shippingRequestId: number;
   @Input('isRequestStatusCompleted') isRequestStatusCompleted: boolean;
+  @Input('isRequestSaas') isRequestSaas: boolean;
   @Input('rentalRange') rentalRange: { rentalStartDate: moment.Moment; rentalEndDate: moment.Moment } = {
     rentalStartDate: null,
     rentalEndDate: null,

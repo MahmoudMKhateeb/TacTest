@@ -18,26 +18,30 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
 
   getMenu(): AppMenu {
     let menu = new AppMenu('MainMenu', 'MainMenu', [
-      new AppMenuItem(
-        'Dashboard',
-        '',
-        'interaction, interact, preferences, preformance, computer, online, rating, review.svg',
-        '/app/main/dashboard'
-      ),
+      new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'Dashboards.svg', '/app/main/dashboard'),
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Operations
       new AppMenuItem(
         'Operations',
         'Pages.ShippingRequests',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        'Operations.svg',
         '/app/main/comingSoon',
         [],
         [
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
-          new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined),
+          new AppMenuItem(
+            'Marketplace',
+            'Pages.ShippingRequests.Marketplace',
+            '',
+            '/app/main/marketplace/list',
+            undefined,
+            undefined,
+            undefined,
+            undefined
+          ),
           new AppMenuItem(
             'SavedTemplates',
-            'Pages.ShippingRequests',
+            'Pages.EntityTemplate',
             '',
             '/app/main/shippingRequests/requestsTemplates',
             undefined,
@@ -45,10 +49,8 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
             undefined,
             undefined
           ),
-          new AppMenuItem('DirectShippingRequests', '', '', '/app/main/directrequest/list', undefined, undefined, undefined, undefined, () =>
-            this.isEnabled('App.SendDirectRequest')
-          ),
-          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking', undefined, undefined, undefined, undefined),
+          new AppMenuItem('DirectShippingRequests', 'Pages.ShippingRequests.DirectRequests', '', '/app/main/directrequest/list'),
+          new AppMenuItem('ShipmentTracking', 'Pages.shipment.Tracking', '', '/app/main/tracking', undefined, undefined, undefined, undefined),
         ],
         undefined,
         undefined
@@ -59,7 +61,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'AddressBook',
         '',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        'Facility Managment.svg',
         '',
         [],
         [
@@ -77,11 +79,11 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMS',
         '',
-        'logistic, delivery, warehouse, storage, empty, vacant.svg',
+        'TMS Settings.svg',
         '',
         [],
         [
-          new AppMenuItem('Drivers', 'Pages.Administration.Users', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
+          new AppMenuItem('Drivers', 'Pages.Administration.Drivers', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
           new AppMenuItem('Trucks', 'Pages.Trucks', '', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined),
         ],
         undefined,
@@ -93,14 +95,23 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Financials',
         'Pages.Invoices',
-        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        'Financials.svg',
         '',
         [],
         [
-          new AppMenuItem('PenaltiesList', 'Pages.Invoices', '', '/app/main/penalties/view'),
-          new AppMenuItem('InvoicesNoteList', 'Pages.Invoices', '', '/app/main/invoicenote/view'),
-          new AppMenuItem('SubmitInvoice', 'Pages.Invoices', '', '/app/main/invoices/submitinvoice', undefined, undefined, undefined, undefined),
-          new AppMenuItem('InvoicesList', 'Pages.Invoices', '', '/app/main/invoices/view', undefined, undefined, undefined, undefined),
+          new AppMenuItem('PenaltiesList', 'Pages.Penalties', '', '/app/main/penalties/view'),
+          new AppMenuItem('InvoicesNoteList', 'Pages.Invoices.InvoiceNote', '', '/app/main/invoicenote/view'),
+          new AppMenuItem(
+            'SubmitInvoice',
+            'Pages.Invoices.SubmitInvoices',
+            '',
+            '/app/main/invoices/submitinvoice',
+            undefined,
+            undefined,
+            undefined,
+            undefined
+          ),
+          new AppMenuItem('InvoicesList', 'Pages.Invoices.View', '', '/app/main/invoices/view', undefined, undefined, undefined, undefined),
           new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', '', '/app/main/invoices/transaction'),
           new AppMenuItem(
             'ActorInvoicesList',
@@ -122,6 +133,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
             undefined,
             undefined
           ),
+          new AppMenuItem('ClientsDedicatedInvoices', '', '', '/app/main/invoices/dedicatedClients', undefined, undefined, undefined, undefined),
         ]
       ),
       // end of  Invoices
@@ -129,7 +141,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       //start of TMS for shipper
       new AppMenuItem(
         'TMSForShipper',
-        'Pages.ShippingRequests',
+        'Pages.ShippingRequests.TmsForShipper',
         'logistic, delivery, warehouse, storage, empty, vacant.svg',
         '/app/main/tmsforshipper',
         [],
@@ -143,14 +155,14 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'DocumentManagement',
         '',
-        'interaction, interact, preferences, preformance, customer, rating, rate, questions.svg',
+        'Document.svg',
         '',
         [],
         [
-          new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', '', '/app/main/documentFiles/documentFiles'),
+          new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles.Submitted', '', '/app/main/documentFiles/documentFiles'),
           new AppMenuItem(
             'NonMandatoryDocuments',
-            'Pages.DocumentFiles',
+            'Pages.DocumentFiles.Additional',
             '',
             '/tenantNotRequiredDocuments/tenantNotRequiredDocuments',
             [],
@@ -160,7 +172,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
           ),
           new AppMenuItem(
             'TrucksSubmittedDocuments',
-            'Pages.DocumentFiles',
+            'Pages.DocumentFiles.Trucks',
             '',
             '/app/main/documentFiles/TrucksSubmittedDocuments',
             [],
@@ -170,7 +182,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
           ),
           new AppMenuItem(
             'DriversSubmittedDocuments',
-            'Pages.DocumentFiles',
+            'Pages.DocumentFiles.Drivers',
             '',
             '/app/main/documentFiles/DriversSubmittedDocuments',
             [],
@@ -197,7 +209,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMSSettings',
         '',
-        'digital marketing, marketing, content marketing, puzzle, piece, strategy.svg',
+        'TMS Settings.svg',
         '',
         [],
         [
@@ -212,23 +224,19 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
         undefined
       ),
       //  ---------------------------------------------------------------------------------------------------------------------
-      new AppMenuItem(
-        'Actors',
-        'Pages.Administration.Actors',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
-        '/app/main/actors/actors',
-        [],
-        []
-      ),
+      new AppMenuItem('Actors', 'Pages.Administration.Actors', 'User Management.svg', '/app/main/actors/actors', [], []),
 
       //start of Settings
       new AppMenuItem(
         'Settings',
         'Pages.Administration.Tenant.Settings',
-        'user, interface, agent, usability, settings, options, preferences, gears.svg',
+        'Settings.svg',
         '',
         [],
-        [new AppMenuItem('GeneralSettings', 'Pages.Administration.Tenant.Settings', '', '/app/admin/tenantSettings')]
+        [
+          new AppMenuItem('GeneralSettings', 'Pages.Administration.Tenant.Settings', '', '/app/admin/tenantSettings'),
+          new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', '', '/app/admin/organization-units'),
+        ]
       ),
       //end of Settings
       //  ---------------------------------------------------------------------------------------------------------------------
@@ -237,12 +245,12 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'UserManagement',
         '',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
+        'User Management.svg',
         '',
         [],
         [
           new AppMenuItem('Roles', 'Pages.Administration.Roles', '', '/app/admin/roles'),
-          new AppMenuItem('Users', 'Pages.Administration.Users', '', '/app/admin/users'),
+          new AppMenuItem('Users', 'Pages.Administration.Users.View', '', '/app/admin/users'),
         ]
       ),
 

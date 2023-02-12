@@ -54,7 +54,7 @@
               </div>
 
               <div class="form-group col-md-12">
-                <label>{{ l('FacilityName') }} <span class="required-fileds">*</span></label>
+                <label>{{ l('FacilityName') }} <span *ngIf="isRequiredFacilityName" class="required-fileds">*</span></label>
                 <!--              <input-->
                 <!--                #FacilityName="ngModel"-->
                 <!--                type="text"-->
@@ -76,19 +76,22 @@
                   name="Name"
                   minlength="0"
                   maxlength="256"
-                  required
+                  [required]="isRequiredFacilityName"
                 >
                   <dx-validator [validationGroup]="'createFacilityGroup'">
                     <dxi-validation-rule
+                      *ngIf="isRequiredFacilityName"
                       type="required"
                       message="{{ l('FacilityName') }}: {{ 'ThisFieldIsRequired' | localize }}"
                     ></dxi-validation-rule>
                     <dxi-validation-rule
+                      *ngIf="isRequiredFacilityName"
                       type="stringLength"
                       [min]="0"
                       message="{{ l('FacilityName') }}: {{ l('PleaseEnterAtLeastNCharacter', 0) }}"
                     ></dxi-validation-rule>
                     <dxi-validation-rule
+                      *ngIf="isRequiredFacilityName"
                       type="stringLength"
                       [max]="256"
                       message="{{ l('FacilityName') }}: {{ l('PleaseEnterNoMoreThanNCharacter', 256) }}"
@@ -150,7 +153,6 @@
                     [showClearButton]="true"
                     (onSelectionChanged)="loadCitiesByCountryId(selectedCountryId)"
                     (onItemClick)="facility.cityId = null"
-                    required
                   >
                     <dx-validator [validationGroup]="'createFacilityGroup'">
                       <dxi-validation-rule type="required" message="{{ l('Country') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
@@ -190,7 +192,6 @@
                     [searchEnabled]="true"
                     (onSelectionChanged)="handleCityPolygon()"
                     (reset)="handleCityPolygon()"
-                    required
                     itemTemplate="item"
                   >
                     <div *dxTemplate="let data of 'item'">
@@ -242,7 +243,7 @@
                 <div *ngIf="!lat.valid" class="invalid-feedback">{{ l('HasToBeWithInCityBounds') }}</div>
               </div>
               <div class="form-group col-md-12">
-                <label>{{ l('Address') }} <span class="required-fileds">*</span></label>
+                <label>{{ l('Address') }} <span *ngIf="isRequiredAddress" class="required-fileds">*</span></label>
                 <!--              <input-->
                 <!--                #search="ngModel"-->
                 <!--                type="text"-->
@@ -263,10 +264,14 @@
                   autocorrect="off"
                   [disabled]="!facility.cityId || citiesLoading"
                   name="searchForAddress"
-                  required
+                  [required]="isRequiredAddress"
                 >
                   <dx-validator [validationGroup]="'createFacilityGroup'">
-                    <dxi-validation-rule type="required" message="{{ l('Address') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
+                    <dxi-validation-rule
+                      *ngIf="isRequiredAddress"
+                      type="required"
+                      message="{{ l('Address') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                    ></dxi-validation-rule>
                   </dx-validator>
                 </dx-text-box>
               </div>

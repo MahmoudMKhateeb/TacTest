@@ -173,6 +173,18 @@ namespace TACHYON.Shipping.Drivers
             return DropOff;
         }
 
+        public async Task UpdateHomeDeliveryFacilityLocation(UpdateHomeDeliveryFacilityLocationInput input)
+        {
+            DisableTenancyFilters();
+            var facility =await _RoutPointRepository.GetAll().Where(x => x.ShippingRequestTripFk.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery &&
+            x.Id == input.PointId && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.InTransit
+            && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId
+            ).Select(x => x.FacilityFk).FirstOrDefaultAsync();
+            if (facility == null) throw new UserFriendlyException(L("DropNotFoundOrTripNotStarted"));
+            facility.Location = new Point (input.Longitude, input.Latitude) { SRID = 4326 };
+            facility.Address = input.Address;
+        }
+
         public async Task<List<UserOtpDto>> GetUserOtps(long userId)
         {
             var otps = await _userOtpRepository.GetAll().Where(x => x.UserId == userId).ToListAsync();
@@ -558,7 +570,7 @@ namespace TACHYON.Shipping.Drivers
             {
                 trip.Status = ShippingRequestTripStatus.New;
                 trip.RoutePointStatus = RoutePointStatus.StandBy;
-                trip.DriverStatus = ShippingRequestTripDriverStatus.None;
+                trip.DriverStatus = trip.ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery? ShippingRequestTripDriverStatus.None: ShippingRequestTripDriverStatus.Accepted;
                 trip.RejectedReason = string.Empty;
                 trip.RejectReasonId = default(int?);
                 trip.ActualDeliveryDate = trip.ActualPickupDate = null;

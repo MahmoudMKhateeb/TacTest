@@ -2,7 +2,7 @@ import { Component, Injector, OnInit, Pipe, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import { PricePackageType, TmsPricePackageServiceProxy } from '@shared/service-proxies/service-proxies';
+import { TmsPricePackageServiceProxy } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { CreateTmsPricePackageModalComponent } from '@app/main/pricePackages/tms-price-package/create-tms-price-package-modal/create-tms-price-package-modal.component';
 
@@ -13,7 +13,6 @@ import { CreateTmsPricePackageModalComponent } from '@app/main/pricePackages/tms
 })
 export class TmsPricePackageComponent extends AppComponentBase implements OnInit {
   dataSource: any;
-  pricePackageTypeNames = this.enumToArray.transform(PricePackageType);
   @ViewChild('TmsPricePackageModal', { static: true }) tmsPricePackageModal: CreateTmsPricePackageModalComponent;
 
   constructor(private injector: Injector, private _tmsPricePackageProxy: TmsPricePackageServiceProxy, private enumToArray: EnumToArrayPipe) {
@@ -46,10 +45,5 @@ export class TmsPricePackageComponent extends AppComponentBase implements OnInit
           });
       },
     });
-  }
-
-  getPricePackageTypeName(type): string {
-    let typeName = this.pricePackageTypeNames.find((x) => x.key == type.value).value;
-    return this.l(typeName);
   }
 }

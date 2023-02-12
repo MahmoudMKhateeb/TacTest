@@ -2,6 +2,7 @@
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -81,6 +82,7 @@ namespace TACHYON.Trucks
         private readonly IRepository<ShippingRequest,long> _shippingRequestRepository;
         private readonly IRepository<User,long> _userRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
+        private readonly IRepository<UserOrganizationUnit,long> _userOrganizationUnitRepository;
 
 
 
@@ -95,7 +97,7 @@ namespace TACHYON.Trucks
             WaslIntegrationManager waslIntegrationManager,
             IRepository<ShippingRequest, long> shippingRequestRepository,
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
-            IRepository<User, long> userRepository)
+            IRepository<User, long> userRepository, IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -115,13 +117,24 @@ namespace TACHYON.Trucks
             _waslIntegrationManager = waslIntegrationManager;
             _shippingRequestRepository = shippingRequestRepository;
             _userRepository = userRepository;
-             _shippingRequestTripRepository = shippingRequestTripRepository;
+            _userOrganizationUnitRepository = userOrganizationUnitRepository;
+            _shippingRequestTripRepository = shippingRequestTripRepository;
         }
 
         public async Task<LoadResult> GetAll(GetAllTrucksInput input)
         {
 
             DisableTenancyFilters();
+            
+            bool isCmsEnabled = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            
+            List<long> userOrganizationUnits = null;
+            if (isCmsEnabled)
+            {
+                userOrganizationUnits = await _userOrganizationUnitRepository.GetAll().Where(x => x.UserId == AbpSession.UserId)
+                    .Select(x => x.OrganizationUnitId).ToListAsync();
+            }
+            
             var documentQuery = _documentFileRepository.GetAll()
                                                .Where(x => x.DocumentTypeFk.SpecialConstant == TACHYONConsts.TruckIstimaraDocumentTypeSpecialConstant.ToLower());
             var query = from truck in _truckRepository.GetAll()
@@ -129,6 +142,8 @@ namespace TACHYON.Trucks
                                                .Include(x=>x.DedicatedShippingRequestTrucks)
                                                .ThenInclude(x=>x.ShippingRequest)
                                                .Include((x=>x.DriverUserFk))
+                                               .WhereIf(isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(),
+                                                   x=> x.CarrierActorId.HasValue && userOrganizationUnits.Contains(x.CarrierActorFk.OrganizationUnitId))
                         join tenant in _lookupTenantRepository.GetAll() on truck.TenantId equals tenant.Id
                         join document in documentQuery on truck.Id equals document.TruckId
 

@@ -36,7 +36,7 @@
         ></apx-chart>
       </div>
     </div>
-    <div class="row" *ngIf="isTachyonDealer && !!selectedTruckId && !shippingRequestId">
+    <div class="row" *ngIf="(isTachyonDealer || isRequestSaas) && !!selectedTruckId && !shippingRequestId">
       <div class="col-12">
         <label class="form-label" for="truckKPI">{{ l('truckKPI') }} </label>
         <div class="input-group">

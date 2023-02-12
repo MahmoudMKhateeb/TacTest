@@ -63,7 +63,7 @@
         [shippingRequestId]="activeShippingRequestId"
       ></app-view-matching-tms-price-package>
 
-      <div class="card card-custom gutter-b" *ngIf="feature.isEnabled('App.CarrierClients') || feature.isEnabled('App.ShipperClients')">
+      <div class="card card-custom gutter-b" *ngIf="isGrantedAny('Pages.ActorPrices.Carrier', 'Pages.ActorPrices.Shipper')">
         <div class="card-header">
           <h3 class="card-title">{{ l('Actors') }}</h3>
           <div class="card-toolbar">
@@ -89,16 +89,16 @@
               </div>
             </div>
           </div>
+          <app-create-or-edit-actors-price
+            #actorsPricing
+            [numberOfCreatedTrips]="shippingRequestforView.totalsTripsAddByShippier"
+            [shippingRequestId]="activeShippingRequestId"
+            [tenantId]="shippingRequestforView.tenantId"
+            [carrierTenantId]="shippingRequestforView.shippingRequest.carrierTenantId"
+            [actorCarrierId]="shippingRequestforView.carrierActorId"
+            [actorShipperId]="shippingRequestforView.shipperActorId"
+          ></app-create-or-edit-actors-price>
         </div>
-        <app-create-or-edit-actors-price
-          #actorsPricing
-          [numberOfCreatedTrips]="shippingRequestforView.totalsTripsAddByShippier"
-          [shippingRequestId]="activeShippingRequestId"
-          [tenantId]="shippingRequestforView.tenantId"
-          [carrierTenantId]="shippingRequestforView.shippingRequest.carrierTenantId"
-          [actorCarrierId]="shippingRequestforView.carrierActorId"
-          [actorShipperId]="shippingRequestforView.shipperActorId"
-        ></app-create-or-edit-actors-price>
       </div>
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->
@@ -545,6 +545,7 @@
         [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
         [rentalRange]="rentalRange"
         [isRequestStatusCompleted]="shippingRequestforView?.shippingRequest?.status === 5"
+        [isRequestSaas]="shippingRequestforView?.shippingRequest?.isSaas"
       ></tms-for-shipper>
       <!--  end:Tms for shipper     -->
 
@@ -555,6 +556,7 @@
           [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
           [KPI]="shippingRequestforView?.dedicatedKPI"
           [numberOfTrips]="shippingRequestforView?.totalsTripsAddByShippier"
+          [isRequestSaas]="shippingRequestforView?.shippingRequest?.isSaas"
         >
         </app-project-performance>
 

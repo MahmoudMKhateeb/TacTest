@@ -231,14 +231,14 @@ namespace TACHYON.PricePackages
                 where hasNormalDirectRequest ||
                       (pricePackageOffer != null && (pricePackageOffer.TmsPricePackageId == pricePackageDto.Id ||
                                                      pricePackageOffer.NormalPricePackageId == pricePackageDto.Id) &&
-                       (!pricePackageOffer.DirectRequestId.HasValue ||
+                       (pricePackageOffer.DirectRequest == null ||
                         pricePackageOffer.DirectRequest.ShippingRequestId == input.ShippingRequestId) &&
-                       (!pricePackageOffer.PriceOfferId.HasValue ||
+                       (pricePackageOffer.PriceOffer == null ||
                         pricePackageOffer.PriceOffer.ShippingRequestId == input.ShippingRequestId))
                 select new
                 {
-                    HasDirectRequest = pricePackageOffer.DirectRequestId.HasValue || hasNormalDirectRequest,
-                    HasOffer = pricePackageOffer.PriceOfferId.HasValue,
+                    HasDirectRequest = pricePackageOffer.DirectRequest != null || hasNormalDirectRequest,
+                    HasOffer = pricePackageOffer.PriceOffer != null,
                     pricePackageDto.PricePackageId
                 }).ToList();
 
@@ -261,6 +261,28 @@ namespace TACHYON.PricePackages
                 Items = pageResult, TotalCount = pageResult.Count
             };
             
+        }
+
+        public async Task<LoadResult> GetAppendixPricePackages(LoadOptionsInput input)
+        {
+            var isTmsOrHost = !AbpSession.TenantId.HasValue || await IsTachyonDealer();
+            var tmsPricePackages = await _tmsPricePackageRepository.GetAll().AsNoTracking()
+                .WhereIf(!isTmsOrHost,
+                    x => x.DestinationTenantId == AbpSession.TenantId &&
+                         (x.Proposal.Appendix.Status == AppendixStatus.Confirmed ||
+                          x.Appendix.Status == AppendixStatus.Confirmed) && (x.Proposal.Appendix.IsActive || x.Appendix.IsActive))
+                .ProjectTo<TmsPricePackageForViewDto>(AutoMapperConfigurationProvider).ToListAsync();
+            
+            var normalPricePackages = await _normalPricePackageRepository.GetAll().AsNoTracking()
+                .WhereIf(!isTmsOrHost,
+                    x => x.TenantId == AbpSession.TenantId && (x.Appendix.Status == AppendixStatus.Confirmed) && x.Appendix.IsActive)
+                .ProjectTo<TmsPricePackageForViewDto>(AutoMapperConfigurationProvider).ToListAsync();
+
+            var pageResult = new List<TmsPricePackageForViewDto>();
+            pageResult.AddRange(tmsPricePackages);
+            pageResult.AddRange(normalPricePackages);
+
+            return LoadResult(pageResult, input.LoadOptions); 
         }
 
         public async Task<List<SelectItemDto>> GetCompanies()

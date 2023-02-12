@@ -6,6 +6,7 @@ import {
   ActorInvoiceServiceProxy,
   CommonLookupServiceProxy,
   InvoiceAccountType,
+  InvoiceChannel,
   InvoiceReportServiceServiceProxy,
   ISelectItemDto,
 } from '@shared/service-proxies/service-proxies';
@@ -44,6 +45,7 @@ export class ActorInvoiceListComponent extends AppComponentBase implements OnIni
   duteDateRangeActive = false;
   accountType: InvoiceAccountType | undefined = undefined;
   dataSource: any = {};
+  actorInvoiceChannelEnum = InvoiceChannel;
   constructor(
     injector: Injector,
     private _InvoiceServiceProxy: ActorInvoiceServiceProxy,

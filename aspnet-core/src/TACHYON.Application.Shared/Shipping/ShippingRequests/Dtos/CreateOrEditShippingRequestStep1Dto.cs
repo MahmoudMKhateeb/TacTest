@@ -9,7 +9,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class CreateOrEditShippingRequestStep1Dto : CreateOrEditShippingRequestStep1BaseDto, ICustomValidate, IShouldNormalize
+    public class CreateOrEditShippingRequestStep1Dto : CreateOrEditShippingRequestStep1BaseDto, ICustomValidate
     {
         public string ShipperReference { get; set; }
         public string ShipperInvoiceNo { get; set; }
@@ -18,52 +18,12 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-            //if (this.StartTripDate.Date < Clock.Now.Date)
-            //{
-            //    context.Results.Add(new ValidationResult("Start trip date cannot be before today"));
-            //}
 
             if (EndTripDate.HasValue && StartTripDate.Date > EndTripDate.Value.Date)
             {
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));
             }
-
-            if (IsInternalBrokerRequest)
-            {
-                IsTachyonDeal = false;
-                IsBid = false;
-                RequestType = ShippingRequestType.DirectRequest;
-            }
-            else if (IsBid)
-            {
-                RequestType = ShippingRequestType.Marketplace;
-                IsTachyonDeal=false;
-                IsInternalBrokerRequest=false;
-            }
-            else if (IsTachyonDeal)
-            {
-                RequestType = ShippingRequestType.TachyonManageService;
-                IsBid = false;
-                IsInternalBrokerRequest = false;
-            }
-
-            else
-            {
-                RequestType = ShippingRequestType.DirectRequest;
-                IsTachyonDeal = false;
-                IsBid = false;
-            }
-
-            //if (IsDirectRequest && CarrierTenantIdForDirectRequest == null)
-            //{
-            //    context.Results.Add(new ValidationResult("You must choose one carrier to send direct request"));
-            //}
         }
 
-        public void Normalize()
-        {
-            // to get date only without time
-            BidStartDate = BidStartDate?.Date;
-        }
     }
 }

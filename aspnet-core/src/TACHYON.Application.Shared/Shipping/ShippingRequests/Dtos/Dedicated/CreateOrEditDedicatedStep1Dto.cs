@@ -40,19 +40,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos.Dedicated
             {
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));
             }
-
-            if (IsBid)
-            {
-                RequestType = ShippingRequestType.Marketplace;
-            }
-            else if (IsTachyonDeal)
-            {
-                RequestType = ShippingRequestType.TachyonManageService;
-            }
-            else
-            {
-                RequestType = ShippingRequestType.DirectRequest;
-            }
+            
         }
     }
 }

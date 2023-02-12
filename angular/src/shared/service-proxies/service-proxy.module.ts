@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
 import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.service';
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
-import { DedicatedDynamiceInvoicesServiceProxy, TruckAttendancesServiceProxy } from './service-proxies';
+import { DedicatedDynamicActorInvoicesServiceProxy, DedicatedDynamiceInvoicesServiceProxy, TruckAttendancesServiceProxy } from './service-proxies';
 
 @NgModule({
   providers: [
@@ -170,6 +170,7 @@ import { DedicatedDynamiceInvoicesServiceProxy, TruckAttendancesServiceProxy } f
     ApiServiceProxies.TruckAttendancesServiceProxy,
     ApiServiceProxies.DedicatedDynamiceInvoicesServiceProxy,
     ApiServiceProxies.PricePackageAppendixServiceProxy,
+    ApiServiceProxies.DedicatedDynamicActorInvoicesServiceProxy,
 
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },

@@ -9,6 +9,7 @@ using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Integration.WaslIntegration;
 using TACHYON.Invoices.ActorInvoices;
+using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Penalties;
 using TACHYON.PriceOffers;
 using TACHYON.Rating;
@@ -174,6 +175,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public bool IsActorShipperHaveInvoice { get; set; }
         
         public bool IsActorCarrierHaveInvoice { get; set; }
+        #endregion
+
+        #region Home delivery
+        public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
+
         #endregion
     }
 }

@@ -2,3 +2,7 @@ th,
 td {
   text-align: center !important;
 }
+
+.card-label {
+  font-size: 1.1rem !important;
+}

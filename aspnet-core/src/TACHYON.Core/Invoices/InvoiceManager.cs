@@ -283,7 +283,7 @@ namespace TACHYON.Invoices
             var trips = _shippingRequestTrip.GetAll()
                 .Include(trip => trip.ShippingRequestTripVases)
                 .Include(trip => trip.ShippingRequestFk)
-                .Where(x => x.ShippingRequestFk.ShippingRequestFlag == Shipping.ShippingRequests.ShippingRequestFlag.Normal)
+                .Where(x => x.ShippingRequestFk.ShippingRequestFlag == Shipping.ShippingRequests.ShippingRequestFlag.Normal || x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId)
                 .Where(trip => trip.ShippingRequestFk.TenantId == tenant.Id)
                 .Where(trip => !trip.IsShipperHaveInvoice)
                 .Where
@@ -493,27 +493,62 @@ namespace TACHYON.Invoices
                 }
             }
 
-            var invoice = new Invoice
-            {
-                TenantId = tenant.Id,
-                PeriodId = period.Id,
-                DueDate = dueDate,
-                IsPaid = period.PeriodType == InvoicePeriodType.PayInAdvance,
-                TotalAmount = totalAmount,
-                VatAmount = vatAmount,
-                SubTotalAmount = subTotalAmount,
-                TaxVat = trips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
-                AccountType = InvoiceAccountType.AccountReceivable,
-                Channel = InvoiceChannel.Trip,
-                Status = InvoiceStatus.Drafted,
-                Trips = trips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
-            };
-            invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
 
-            foreach (var trip in trips)
+            //generate normal trips
+            var normalTrips = trips.Where(x => !x.ShippingRequestFk.IsSaas());
+            if (normalTrips != null && normalTrips.Count() > 0)
             {
-                trip.IsShipperHaveInvoice = true;
+                var invoice = new Invoice
+                {
+                    TenantId = tenant.Id,
+                    PeriodId = period.Id,
+                    DueDate = dueDate,
+                    IsPaid = period.PeriodType == InvoicePeriodType.PayInAdvance,
+                    TotalAmount = totalAmount,
+                    VatAmount = vatAmount,
+                    SubTotalAmount = subTotalAmount,
+                    TaxVat = normalTrips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
+                    AccountType = InvoiceAccountType.AccountReceivable,
+                    Channel = InvoiceChannel.Trip,
+                    Status = InvoiceStatus.Drafted,
+                    Trips = normalTrips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
+                };
+                invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
+
+                foreach (var trip in normalTrips)
+                {
+                    trip.IsShipperHaveInvoice = true;
+                }
             }
+
+
+            //generate SAAS invoices
+            var shipperSAAStrips = trips.Where(x => x.ShippingRequestFk.IsSaas());
+            if (shipperSAAStrips != null && shipperSAAStrips.Count() > 0)
+            {
+                var invoice = new Invoice
+                {
+                    TenantId = tenant.Id,
+                    PeriodId = period.Id,
+                    DueDate = dueDate,
+                    IsPaid = period.PeriodType == InvoicePeriodType.PayInAdvance,
+                    TotalAmount = totalAmount,
+                    VatAmount = vatAmount,
+                    SubTotalAmount = subTotalAmount,
+                    TaxVat = shipperSAAStrips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
+                    AccountType = InvoiceAccountType.AccountReceivable,
+                    Channel = InvoiceChannel.SaasTrip,
+                    Status = InvoiceStatus.Drafted,
+                    Trips = shipperSAAStrips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
+                };
+                invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
+
+                foreach (var trip in shipperSAAStrips)
+                {
+                    trip.IsShipperHaveInvoice = true;
+                }
+            }
+
             
         }
 

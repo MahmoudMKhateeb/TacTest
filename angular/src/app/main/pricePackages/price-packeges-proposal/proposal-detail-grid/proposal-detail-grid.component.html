@@ -1,0 +1,8 @@
+<dx-data-grid [dataSource]="pricePackageDataSource" [showBorders]="true" [columnAutoWidth]="true">
+  <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"></dxo-remote-operations>
+  <dxi-column dataField="displayName" caption="{{ l('Subject') }}"></dxi-column>
+  <dxi-column dataField="truckType" caption="{{ l('TruckType') }}"></dxi-column>
+  <dxi-column dataField="originCity" caption="{{ l('Origin') }}"></dxi-column>
+  <dxi-column dataField="destinationCity" caption="{{ l('Destination') }}"></dxi-column>
+  <dxi-column dataField="totalPrice" caption="{{ l('Price') }}"></dxi-column>
+</dx-data-grid>

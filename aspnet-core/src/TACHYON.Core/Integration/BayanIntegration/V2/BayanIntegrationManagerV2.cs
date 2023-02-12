@@ -225,7 +225,7 @@ namespace TACHYON.Integration.BayanIntegration.V2
                             //todo make it required => can i take it if expired  ?
                             // Abu Rabee3 said det it 1 
                             Price = 1,
-                            Quantity = g.Amount,
+                            Quantity = g.Amount!= null ?g.Amount.Value :0,
                             Weight = g.Weight
 
                         }).ToList(),
@@ -342,7 +342,7 @@ namespace TACHYON.Integration.BayanIntegration.V2
                             //todo make it required => can i take it if expired  ?
                             // Abu Rabee3 said det it 1 
                             Price = 1,
-                            Quantity = g.Amount,
+                            Quantity = g.Amount != null ? g.Amount.Value : 0,
                             Weight = g.Weight
 
                         }).ToList(),

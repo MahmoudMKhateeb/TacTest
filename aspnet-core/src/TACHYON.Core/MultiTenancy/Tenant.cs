@@ -15,6 +15,7 @@ using TACHYON.Editions;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.Rating;
+using TACHYON.DedicatedDynamicActorInvoices;
 
 namespace TACHYON.MultiTenancy
 {
@@ -89,6 +90,8 @@ namespace TACHYON.MultiTenancy
 
         [NotMapped]
         public ICollection<DedicatedDynamicInvoice> DedicatedDynamicInvoices { get; set; }
+        public ICollection<DedicatedDynamicActorInvoice> DedicatedDynamicActorInvoices { get; set; }
+
         protected Tenant()
         {
         }

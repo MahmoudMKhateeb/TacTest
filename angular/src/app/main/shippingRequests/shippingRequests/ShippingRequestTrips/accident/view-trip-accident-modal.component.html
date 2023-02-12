@@ -21,7 +21,7 @@
             <div class="card card-custom">
               <div>
                 <div class="row align-items-center">
-                    <p>{{'ClickRowToViewActions' | localize}}</p>
+                  <p>{{ 'ClickRowToViewActions' | localize }}</p>
                   <dx-data-grid
                     id="gridContainer"
                     [dataSource]="incidentsDataSource"
@@ -128,16 +128,16 @@
             {{ l('ViewResolve') }}
           </button>
 
-            <button
-                *ngIf="canApproveResolve()"
-                type="button"
-                class="btn btn-primary"
-                (click)="approveResolve()"
-                [buttonBusy]="saving"
-                [busyText]="l('SavingWithThreeDot' | localize)"
-            >
-                <i class="fa fa-save"></i> <span>{{ 'ApproveChange' | localize }}</span>
-            </button>
+          <button
+            *ngIf="canApproveResolve()"
+            type="button"
+            class="btn btn-primary"
+            (click)="approveResolve()"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot' | localize)"
+          >
+            <i class="fa fa-save"></i> <span>{{ 'ApproveChange' | localize }}</span>
+          </button>
         </div>
 
         <!--   Tachyon Dealer Resolve Actions-->

@@ -12,7 +12,7 @@ namespace TACHYON.Shipping.Trips.Importing.Dto
         public string PointReference { get; set; }
         public long RoutPointId { get; set; }
         public string Description { get; set; }
-        public int Amount { get; set; }
+        public int? Amount { get; set; }
         public double Weight { get; set; }
         public string Dimentions { get; set; }
         public bool IsDangerousGood { get; set; }
@@ -22,7 +22,7 @@ namespace TACHYON.Shipping.Trips.Importing.Dto
         public int? GoodCategoryId { get; set; }
         public string GoodsSubCategory { get; set; }
         public string OtherGoodsCategoryName { get; set; }
-        public int UnitOfMeasureId { get; set; }
+        public int? UnitOfMeasureId { get; set; }
         public string OtherUnitOfMeasureName { get; set; }
         public string UnitOfMeasure { get; set; }
         public string Exception { get; set; }

@@ -22,109 +22,51 @@
             <div class="row align-items-center">
               <!--<Primeng-Datatable-Start>-->
               <div [busyIf]="primengTableHelper.isLoading" class="table primeng-datatable-container col-12">
-                <p-table
-                  ScrollWidth="100%"
-                  [paginator]="false"
-                  [resizableColumns]="primengTableHelper.resizableColumns"
-                  [responsive]="primengTableHelper.isResponsive"
-                  [scrollable]="true"
-                  [value]="ImportedGoodDetailsList"
-                  rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                <dx-data-grid
+                  id="gridContainer"
+                  [dataSource]="ImportedGoodDetailsList"
+                  [columnAutoWidth]="true"
+                  [wordWrapEnabled]="true"
+                  [showBorders]="true"
+                  (onCellHoverChanged)="onCellHoverChanged($event)"
                 >
-                  <ng-template pTemplate="header">
-                    <tr>
-                      <th>{{ l('TripReferenceID') }}</th>
-                      <th>{{ l('GoodsSubCategory') }}</th>
-                      <th>
-                        {{ l('Amount') }}
-                      </th>
-                      <th>
-                        {{ l('Weight') }}
-                      </th>
-                      <th>{{ l('Dimentions') }}</th>
-                      <th>
-                        {{ l('Description') }}
-                      </th>
-                      <th>
-                        {{ l('IsDangerousGood') }}
-                      </th>
-                      <th>
-                        {{ l('DangerousGoodsCode') }}
-                      </th>
-                      <th>
-                        {{ l('DangerousGoodsType') }}
-                      </th>
-                      <th>
-                        {{ l('otherGoodsCategoryName') }}
-                      </th>
-                      <th>
-                        {{ l('UnitOfMeasure') }}
-                      </th>
-                      <th>
-                        {{ l('otherUnitOfMeasure') }}
-                      </th>
-                    </tr>
-                  </ng-template>
-                  <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
-                    <tr [ngClass]="record.exception ? 'alert customDangerAlert' : 'alert customSuccessAlert'">
-                      <td>
-                        <span class="ui-column-title"> {{ l('TripReference') }}</span>
-                        {{ record.tripReference }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('goodsSubCategory') }}</span>
-                        {{ record.goodsSubCategory }}
-                      </td>
+                  <dxi-column dataField="tripReference" [caption]="'TripReferenceID' | localize"></dxi-column>
+                  <dxi-column dataField="goodsSubCategory" [caption]="'GoodsSubCategory' | localize"></dxi-column>
+                  <dxi-column dataField="amount" [caption]="'Amount' | localize"></dxi-column>
+                  <dxi-column dataField="weight" [caption]="'Weight' | localize"></dxi-column>
+                  <dxi-column dataField="dimentions" [caption]="'Dimentions' | localize"></dxi-column>
+                  <dxi-column dataField="description" [caption]="'Description' | localize"></dxi-column>
+                  <dxi-column
+                    dataField="isDangerousGood"
+                    [caption]="'IsDangerousGood' | localize"
+                    cellTemplate="isDangerousGoodTemplate"
+                  ></dxi-column>
+                  <dxi-column dataField="dangerousGoodsCode" [caption]="'DangerousGoodsCode' | localize"></dxi-column>
+                  <dxi-column dataField="dangerousGoodsType" [caption]="'DangerousGoodsType' | localize"></dxi-column>
+                  <dxi-column dataField="otherGoodsCategoryName" [caption]="'otherGoodsCategoryName' | localize"></dxi-column>
+                  <dxi-column dataField="unitOfMeasure" [caption]="'UnitOfMeasure' | localize"></dxi-column>
+                  <dxi-column dataField="otherUnitOfMeasureName" [caption]="'otherUnitOfMeasure' | localize"></dxi-column>
+                  <dxi-column
+                    dataField="exception"
+                    [caption]="'HasErrors' | localize"
+                    cellTemplate="errorsCellTemplate"
+                    alignment="center"
+                  ></dxi-column>
 
-                      <td>
-                        <span class="ui-column-title"> {{ l('amount') }}</span>
-                        {{ record.amount }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('weight') }}</span>
-                        {{ record.weight }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('dimentions') }}</span>
-                        {{ record.dimentions }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('description') }}</span>
-                        {{ record.description }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('isDangerousGood') }}</span>
-                        {{ record.isDangerousGood ? l('Yes') : l('No') }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('dangerousGoodsCode') }}</span>
-                        {{ record.dangerousGoodsCode }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('dangerousGoodsType') }}</span>
-                        {{ record.dangerousGoodsType }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('otherGoodsCategoryName') }}</span>
-                        {{ record.otherGoodsCategoryName }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('unitOfMeasure') }}</span>
-                        {{ record.unitOfMeasure }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('otherUnitOfMeasure') }}</span>
-                        {{ record.otherUnitOfMeasureName }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="12" *ngIf="record.exception">
-                        <span class="required-fileds font-weight-bolder"> {{ l('Exception') }} : </span>
-                        {{ record.exception }}
-                      </td>
-                    </tr>
-                  </ng-template>
-                </p-table>
+                  <div *dxTemplate="let item of 'errorsCellTemplate'">
+                    <div *ngIf="item.data.exception">
+                      <i class="fa fa-2x fa-exclamation-circle text-danger"></i>
+                    </div>
+                  </div>
+                  <div *dxTemplate="let item of 'isDangerousGoodTemplate'">
+                    {{ item.data.needsDeliveryNote ? l('Yes') : l('No') }}
+                  </div>
+                </dx-data-grid>
+                <dx-popover #popOver [(target)]="popoverTarget" position="{{ isRtl ? 'right' : 'left' }}" [width]="300">
+                  <div *dxTemplate="let data of 'content'">
+                    <span class="required-fileds font-weight-bolder"> {{ l('Exception') }}: </span><span>{{ popOverText }}</span>
+                  </div>
+                </dx-popover>
               </div>
               <!--<Primeng-Datatable-End>-->
             </div>

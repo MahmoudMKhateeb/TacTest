@@ -9,7 +9,10 @@
       <button
         class="btn btn-primary mr-2"
         (click)="AddNewTripModal.show(null, shippingRequestForView)"
-        [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips && shippingRequestForView.shippingRequestFlag === 0"
+        [disabled]="
+          primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips &&
+          shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Normal
+        "
         *ngIf="showBtnAddTrips"
       >
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
@@ -41,19 +44,31 @@
                 (uploadHandler)="uploadExcel($event)"
                 (onError)="onUploadExcelError()"
                 chooseLabel="{{ 'ImportTripFromExcel' | localize }}"
-                [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
+                [disabled]="
+                  shippingRequestForView.shippingRequestFlag == shippingRequestFlagEnum.Normal &&
+                  primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips
+                "
               >
               </p-fileUpload>
               <span class="dropdown-item-text text-muted pl-3" href="#">
                 <small
-                  *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
+                  *ngIf="ShippingRequest.routeTypeId != null && ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
                   [innerHTML]="
                     l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/Import_trip_details.xlsx>' + l('ClickHere') + '</a>')
                   "
                 ></small>
+                <small
+                  *ngIf="shippingRequestForView.shippingRequestFlag == shippingRequestFlagEnum.Dedicated"
+                  [innerHTML]="
+                    l(
+                      'ImportToExcelSampleFileDownloadInfo',
+                      '<a href=/assets/sampleFiles/Import_dedicated_Trip_details.xlsx>' + l('ClickHere') + '</a>'
+                    )
+                  "
+                ></small>
 
                 <small
-                  *ngIf="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+                  *ngIf="ShippingRequest.routeTypeId != null && ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
                   [innerHTML]="
                     l(
                       'ImportToExcelSampleFileDownloadInfo',
@@ -107,7 +122,16 @@
               </p-fileUpload>
               <span class="dropdown-item-text text-muted pl-3" href="#">
                 <small
-                  *ngIf="ShippingRequest.routeTypeId != ShippingRequestRouteTypeEnum.SingleDrop"
+                  *ngIf="shippingRequestForView.shippingRequestFlag == shippingRequestFlagEnum.Dedicated"
+                  [innerHTML]="
+                    l(
+                      'ImportToExcelSampleFileDownloadInfo',
+                      '<a href=/assets/sampleFiles/Import_goods_details_dedicated.xlsx>' + l('ClickHere') + '</a>'
+                    )
+                  "
+                ></small>
+                <small
+                  *ngIf="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.MultipleDrops"
                   [innerHTML]="
                     l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/Import_goods_details.xlsx>' + l('ClickHere') + '</a>')
                   "
@@ -138,7 +162,11 @@
                 (uploadHandler)="uploadVasesExcel($event)"
                 (onError)="onUploadExcelError()"
                 chooseLabel="{{ 'ImportVasesFromExcel' | localize }}"
-                [disabled]="primengTableHelper.totalRecordsCount == 0 || VasListFromFather.length == 0"
+                [disabled]="
+                  primengTableHelper.totalRecordsCount == 0 ||
+                  VasListFromFather.length == 0 ||
+                  shippingRequestForView.shippingRequestFlag == shippingRequestFlagEnum.Dedicated
+                "
               >
               </p-fileUpload>
               <span class="dropdown-item-text text-muted pl-3" href="#">
@@ -322,20 +350,28 @@
                     <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                   </a>
                   <ul *dropdownMenu class="dropdown-menu">
-                    <li *ngIf="record.status == 0 && CanEditTrip">
+                    <li
+                      *ngIf="
+                        (record.status == 0 && CanEditTrip) || (record.shippingRequestTripFlag === 1 && (record.status == 0 || record.status == 1))
+                      "
+                    >
                       <a class="dropdown-item" (click)="AddNewTripModal.show(record, shippingRequestForView)">{{ l('Edit') }}</a>
                     </li>
 
                     <li>
                       <a
                         class="dropdown-item"
-                        *ngIf="shippingRequestForView.shippingRequestFlag === 1"
+                        *ngIf="shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
                         (click)="ViewTripModal.show(record.id, shippingRequestForView)"
-                        >{{ record.canAssignTrucksAndDrivers && !isTachyonDealer ? l('ViewOrAssignDriver') : l('View') }}</a
+                        >{{
+                          record.canAssignTrucksAndDrivers && !isTachyonDealer && !shippingRequestForView.shippingRequest.isSaas
+                            ? l('ViewOrAssignDriver')
+                            : l('View')
+                        }}</a
                       >
                       <a
                         class="dropdown-item"
-                        *ngIf="shippingRequestForView.shippingRequestFlag === 0"
+                        *ngIf="shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Normal"
                         (click)="ViewTripModal.show(record.id, shippingRequestForView)"
                         >{{ record.canAssignTrucksAndDrivers ? l('ViewOrAssignDriver') : l('View') }}</a
                       >
@@ -391,7 +427,7 @@
                     </li>
                     <li
                       *ngIf="
-                        shippingRequestForView.shippingRequestFlag === 0 &&
+                        shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Normal &&
                         record.canCreateTemplate &&
                         (isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestForView.shippingRequest.isSaas))
                       "
@@ -445,6 +481,7 @@
   <app-view-imported-trips-from-excel-modal
     [ImportedTripsList]="list"
     [isSingleDdrop]="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
+    [isDedicatedRequest]="shippingRequestForView.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
     #ViewImportedTripsModal
     (modalSave)="reloadPage()"
   ></app-view-imported-trips-from-excel-modal>
