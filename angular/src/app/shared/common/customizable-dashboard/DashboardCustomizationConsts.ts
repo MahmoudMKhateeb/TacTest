@@ -108,6 +108,19 @@ export class DashboardCustomizationConst {
       //TachyonDealerRequestsHeatMapWidget: 'Widgets_Tenant_TachyonDealer_RequestsHeatMapWidget',
       //TachyonDealerNormalVsRentalRequestsWidget: 'Widgets_Tenant_TachyonDealer_NormalVsRentalRequestsWidget',
     },
+    Broker: {
+      NewActorsThisMonthWidget: 'Widgets_Tenant_Broker_New_Actors_This_Month',
+      NumberOfActors: 'Widgets_Tenant_Broker_Number_Of_Actors',
+      MostActiveActorShipper: 'Widgets_Tenant_Broker_Most_Active_Actor_Shipper',
+      MostActiveActorCarrier: 'Widgets_Tenant_Broker_Most_Active_Actor_Carrier',
+      NumberOfActiveActors: 'Widgets_Tenant_Broker_Number_Of_Active_Actors',
+      MostTruckTypeUsed: 'Widgets_Tenant_Broker_Most_Truck_Type_Used',
+      ActorNextDocDueDate: 'Widgets_Tenant_Broker_Actor_Next_Doc_Due_Date',
+      ActorNextInvoiceDueDate: 'Widgets_Tenant_Broker_Actor_Next_Invoice_Due_Date',
+      NewInvoicesVsPaidInvoices: 'Widgets_Tenant_Broker_New_Invoices_Vs_Paid_Invoices',
+      PendingPriceOffers: 'Widgets_Tenant_Broker_Pending_Price_Offers',
+      ActorsPaidInvoiceVsClaimedInvoice: 'Widgets_Tenant_Broker_Actors_Paid_Invoice_Vs_Claimed_Invoice',
+    },
   };
   static filters = {
     filterDateRangePicker: 'Filters_DateRangePicker',
