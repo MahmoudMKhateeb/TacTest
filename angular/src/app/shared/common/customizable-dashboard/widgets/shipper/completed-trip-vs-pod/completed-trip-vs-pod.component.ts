@@ -6,6 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { ApexLegend } from '@node_modules/ng-apexcharts';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { DashboardCustomizationService } from '@app/shared/common/customizable-dashboard/dashboard-customization.service';
 
 @Component({
   selector: 'app-completed-trip-vs-pod',
@@ -35,11 +36,17 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
   options: { key: any; value: any }[] = [];
   selectedOption = FilterDatePeriod.Monthly;
 
-  constructor(injector: Injector, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy, private _enumService: EnumToArrayPipe) {
+  constructor(
+    injector: Injector,
+    private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy,
+    private _enumService: EnumToArrayPipe,
+    private dashboardCustomizationService: DashboardCustomizationService
+  ) {
     super(injector);
   }
 
   ngOnInit() {
+    this.dashboardCustomizationService.setColors(this.hasShipperClients && this.hasCarrierClients);
     this.getTrips();
     this.options = this._enumService.transform(FilterDatePeriod).map((item) => {
       item.key = Number(item.key);
@@ -105,12 +112,12 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
             {
               name: this.l('Completed'),
               data: completedSeries,
-              color: 'rgba(105, 228, 94, 0.89)',
+              color: this.dashboardCustomizationService.acceptedColor,
             },
             {
               name: this.l('POD'),
               data: podSeries,
-              color: '#d82631',
+              color: this.dashboardCustomizationService.rejectedColor,
             },
           ],
           chart: {

@@ -4,6 +4,7 @@ import { ChartOptions, ChartOptionsBars } from '@app/shared/common/customizable-
 import { CarrierDashboardServiceProxy, ChartCategoryPairedValuesDto } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { DashboardCustomizationService } from '@app/shared/common/customizable-dashboard/dashboard-customization.service';
 
 @Component({
   selector: 'app-carrier-invoices-details-widget',
@@ -26,11 +27,16 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
     },
   ];
 
-  constructor(injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy,
+    private dashboardCustomizationService: DashboardCustomizationService
+  ) {
     super(injector);
   }
 
   ngOnInit(): void {
+    this.dashboardCustomizationService.setColors(this.hasShipperClients && this.hasCarrierClients);
     this.getInvoices();
   }
 
@@ -85,11 +91,11 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
               // data: [6, 8, 25, 15, 10, 18, 22, 23, 25, 30, 38], // result.shipperInvoices,
               data: unpaidSeries,
               // color: 'rgba(187, 41, 41, 0.847)',
-              color: '#d7dadc',
+              color: this.dashboardCustomizationService.unpaidColor,
             },
             {
               name: this.isShipper ? this.l('PaidInvoice') : this.l('Paid'),
-              color: '#dc2434',
+              color: this.dashboardCustomizationService.paidColor,
               // data: [4, 6, 20, 11, 8, 15, 19, 21, 20, 25, 32], //result.paidInvoices,
               data: paidSeries,
             },

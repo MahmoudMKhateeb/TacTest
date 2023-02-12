@@ -5,7 +5,9 @@
       <h3 class="card-label">{{ 'Paid Vs Claimed Invoices' }}</h3>
     </div>
     <div class="row border-left pl-4">
-      <div class="col-6 d-flex"><i class="fa fa-circle text-red mx-1"></i> {{ 'Paid' | localize }}</div>
+      <div class="col-6 d-flex">
+        <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i> {{ 'Paid' | localize }}
+      </div>
       <div class="col-6 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
     </div>
   </div>

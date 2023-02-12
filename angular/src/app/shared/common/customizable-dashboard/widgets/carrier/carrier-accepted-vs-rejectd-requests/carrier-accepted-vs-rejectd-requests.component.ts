@@ -6,6 +6,7 @@ import { finalize } from '@node_modules/rxjs/operators';
 import { ApexLegend } from '@node_modules/ng-apexcharts';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { DashboardCustomizationService } from '@app/shared/common/customizable-dashboard/dashboard-customization.service';
 
 @Component({
   selector: 'app-carrier-accepted-vs-rejectd-requests',
@@ -27,13 +28,19 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
   options: { key: any; value: any }[] = [];
   selectedOption = FilterDatePeriod.Monthly;
 
-  constructor(injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy, private _enumService: EnumToArrayPipe) {
+  constructor(
+    injector: Injector,
+    private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy,
+    private _enumService: EnumToArrayPipe,
+    private dashboardCustomizationService: DashboardCustomizationService
+  ) {
     super(injector);
   }
 
   ngOnInit() {
     this.getRequests();
     this.options = this._enumService.transform(FilterDatePeriod);
+    this.dashboardCustomizationService.setColors(this.hasShipperClients && this.hasCarrierClients);
   }
 
   getRequests() {
@@ -94,12 +101,12 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
             {
               name: this.l('Accepted'),
               data: acceptedSeries,
-              color: 'rgba(105, 228, 94, 0.89)',
+              color: this.dashboardCustomizationService.acceptedColor,
             },
             {
               name: this.l('Rejected'),
               data: rejectedSeries,
-              color: '#d82631',
+              color: this.dashboardCustomizationService.rejectedColor,
             },
           ],
           chart: {

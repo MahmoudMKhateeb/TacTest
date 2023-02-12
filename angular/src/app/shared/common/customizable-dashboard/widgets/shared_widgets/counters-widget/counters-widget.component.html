@@ -1,5 +1,5 @@
 <!--[busyIf]="loading"-->
-<div [ngClass]="hasCarrierClients && hasShipperClients ? 'd-flex flex-column h-100 w-100 justify-content-between' : ''">
+<div [ngClass]="hasCarrierClients && hasShipperClients ? 'd-flex flex-column h-100 w-100 justify-content-between' : 'w-100 h-100'">
   <div
     class="card card-custom card-stretch w-100"
     [class.h-100]="!(hasCarrierClients && hasShipperClients)"
