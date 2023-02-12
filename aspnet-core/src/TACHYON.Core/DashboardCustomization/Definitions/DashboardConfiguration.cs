@@ -359,6 +359,29 @@ namespace TACHYON.DashboardCustomization.Definitions
 
             DashboardDefinitions.Add(defaultHostDashboard);
 
+            //broker
+            var defaultBrokerDashboard = new DashboardDefinition(
+                TACHYONDashboardCustomizationConsts.DashboardNames.DefaultBrokerDashboard,
+                new List<string>
+                {
+                    shipperAcceptedVsRejectedRequestsWidget.Id,
+                    shipperCompletedTripsVsPodWidget.Id,
+                    shipperInvoicesVsPaidInvoicesWidget.Id,
+                    shipperMostUsedOriginsWidget.Id,
+                    shipperMostUsedDestinationsWidget.Id,
+                    shipperTrackingMapWidget.Id,
+                    shipperCountersWidget.Id,
+                    shipperUpcomingTripsWidget.Id,
+                    shipperNeedsActionWidget.Id,
+                    shipperNewOffersWidget.Id,
+                    
+                    carrierAcceptedVsRejectedPricingWidget.Id,
+                    carrierMostUsedVasWidget.Id,
+                    carrierInvoicesVsPaidInvoicesWidget.Id,
+                    CarrierActiveDriversAndTrucksWidget.Id,
+                    CarrierNewDirectRequestsWidget.Id,
+                });
+            DashboardDefinitions.Add(defaultBrokerDashboard);
             // Add your dashboard definiton here
 
             #endregion

@@ -160,6 +160,7 @@
             public const string DefaultCarrierDashboard = "CarrierDashboard";
             public const string DefaultShipperDashboard = "ShipperDashboard";
             public const string DefaultTachyonMangedServiceDashboard = "TachyonMangedServiceDashboard";
+            public const string DefaultBrokerDashboard = "BrokerDashboard";
         }
 
         public class Applications

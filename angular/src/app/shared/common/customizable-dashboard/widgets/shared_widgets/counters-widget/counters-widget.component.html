@@ -1,41 +1,52 @@
 <!--[busyIf]="loading"-->
-<div class="card card-custom card-stretch w-100 h-100">
-  <div class="card-body p-4 d-flex flex-column justify-content-center">
-    <div class="d-flex">
-      <div class="text-center col-4 p-0">
-        <img class="counter-icon" src="assets/SVG/Delivered_Trips.svg" alt="" />
+<div [ngClass]="hasCarrierClients && hasShipperClients ? 'd-flex flex-column h-100 w-100 justify-content-between' : ''">
+  <div
+    class="card card-custom card-stretch w-100"
+    [class.h-100]="!(hasCarrierClients && hasShipperClients)"
+    [class.mb-4]="hasCarrierClients && hasShipperClients"
+  >
+    <div class="card-body p-4 d-flex flex-column justify-content-center">
+      <div class="d-flex">
+        <div class="text-center col-4 p-0">
+          <img class="counter-icon" src="assets/SVG/Delivered_Trips.svg" alt="" />
+        </div>
+        <div>
+          <span class="counter-title">{{ 'DeliveredTrips' | localize }}</span> <br />
+          <span class="counter-details">{{ deliveredTripsCount }} / {{ 'Week' | localize }}</span>
+        </div>
       </div>
-      <div>
-        <span class="counter-title">{{ 'DeliveredTrips' | localize }}</span> <br />
-        <span class="counter-details">{{ deliveredTripsCount }} / {{ 'Week' | localize }}</span>
-      </div>
+      <hr class="custom-hr" />
+      <ng-container *ngIf="isShipper || (hasCarrierClients && hasShipperClients)">
+        <div class="d-flex">
+          <div class="text-center col-4 p-0">
+            <img class="counter-icon" src="assets/SVG/In_Transit_Trips.svg" alt="" />
+          </div>
+          <div>
+            <span class="counter-title">{{ 'InTransitTrips' | localize }}</span> <br />
+            <span class="counter-details">{{ inTransitTripsCount }} {{ 'Trip' | localize }}</span>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="(isCarrier || isCarrierSaas || isSaaS) && !(hasCarrierClients && hasShipperClients)">
+        <div class="d-flex">
+          <div class="text-center col-4 p-0">
+            <img class="counter-icon" src="assets/SVG/Generated_invoice.svg" alt="" />
+          </div>
+          <div>
+            <span class="counter-title">{{ 'GeneratedInvoice' | localize }}</span> <br />
+            <span class="counter-details">{{ numberOfGeneratedInvoices }} {{ 'Invoice' | localize }}</span>
+          </div>
+        </div>
+      </ng-container>
+      <hr class="custom-hr" *ngIf="!(hasCarrierClients && hasShipperClients)" />
+      <app-invoice-due-date *ngIf="!(hasCarrierClients && hasShipperClients)"></app-invoice-due-date>
+      <hr class="custom-hr" />
+      <app-shipper-due-date-in-days></app-shipper-due-date-in-days>
     </div>
-    <hr class="custom-hr" />
-    <ng-container *ngIf="isShipper || hasCarrierClients || hasShipperClients">
-      <div class="d-flex">
-        <div class="text-center col-4 p-0">
-          <img class="counter-icon" src="assets/SVG/In_Transit_Trips.svg" alt="" />
-        </div>
-        <div>
-          <span class="counter-title">{{ 'InTransitTrips' | localize }}</span> <br />
-          <span class="counter-details">{{ inTransitTripsCount }} {{ 'Trip' | localize }}</span>
-        </div>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="isCarrier || isCarrierSaas || isSaaS || hasCarrierClients || hasShipperClients">
-      <div class="d-flex">
-        <div class="text-center col-4 p-0">
-          <img class="counter-icon" src="assets/SVG/Generated_invoice.svg" alt="" />
-        </div>
-        <div>
-          <span class="counter-title">{{ 'GeneratedInvoice' | localize }}</span> <br />
-          <span class="counter-details">{{ numberOfGeneratedInvoices }} {{ 'Invoice' | localize }}</span>
-        </div>
-      </div>
-    </ng-container>
-    <hr class="custom-hr" />
-    <app-invoice-due-date></app-invoice-due-date>
-    <hr class="custom-hr" />
-    <app-shipper-due-date-in-days></app-shipper-due-date-in-days>
+  </div>
+  <div *ngIf="hasCarrierClients && hasShipperClients" class="card card-custom card-stretch w-100 h-25">
+    <div class="card-body justify-content-between p-4 d-flex flex-column justify-content-center">
+      <app-invoice-due-date></app-invoice-due-date>
+    </div>
   </div>
 </div>
