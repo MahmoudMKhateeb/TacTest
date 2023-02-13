@@ -77,9 +77,18 @@
               >
                 <dxo-editing
                   #editingOptions
-                  [allowAdding]="isShipper || isTachyonDealerOrHost || isCarrierSaas || (hasShipperClients && hasCarrierClients)"
-                  [allowDeleting]="isShipper || isTachyonDealerOrHost || isCarrierSaas || (hasShipperClients && hasCarrierClients)"
-                  [allowUpdating]="isShipper || isTachyonDealerOrHost || isCarrierSaas || (hasShipperClients && hasCarrierClients)"
+                  [allowAdding]="
+                    isGranted('Pages.DedicatedFillAttendaceSheet') &&
+                    (isShipper || isTachyonDealerOrHost || isCarrierSaas || (hasShipperClients && hasCarrierClients))
+                  "
+                  [allowDeleting]="
+                    isGranted('Pages.DedicatedFillAttendaceSheet') &&
+                    (isShipper || isTachyonDealerOrHost || isCarrierSaas || (hasShipperClients && hasCarrierClients))
+                  "
+                  [allowUpdating]="
+                    isGranted('Pages.DedicatedFillAttendaceSheet') &&
+                    (isShipper || isTachyonDealerOrHost || isCarrierSaas || (hasShipperClients && hasCarrierClients))
+                  "
                   [allowResizing]="false"
                   [allowDragging]="false"
                 ></dxo-editing>

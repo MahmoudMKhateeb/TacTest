@@ -131,7 +131,7 @@ export class CreateOrEditActorModalComponent extends AppComponentBase {
 
   createOrEd(): void {
     this.saving = true;
-    if (!this.actor.createOrEditDocumentFileDto.updateDocumentFileInput) this.actor.createOrEditDocumentFileDto = null;
+    if (!this.actor.createOrEditDocumentFileDto?.updateDocumentFileInput) this.actor.createOrEditDocumentFileDto = null;
 
     this._actorsServiceProxy
       .createOrEdit(this.actor)

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
 	<texts>
     <text name="Actors">Actors</text>
@@ -3196,5 +3196,9 @@
     <text name="SelectTheMatchingPricePackages">Select The Matching Price Packages</text>
     <text name="AppointmentNumber">Appointment number</text>
     <text name="AppointmentDetails">Appointment details</text>
+    <text name="DriveTrackingPermission">Drive tracking</text>
+    <text name="ActorSubmitInvoicesPermission">Actor submit invoices</text>
+    <text name="DedicatedAttendanceSheetPermission">Dedicated attendace sheet</text>
+    <text name="DedicatedFillAttendanceSheetPermission">Dedicated fill attendance sheet</text>
 	</texts>
 </localizationDictionary>

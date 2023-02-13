@@ -112,6 +112,7 @@
                 type="datetime"
                 [min]="trip.startTripDate"
                 openOnFieldClick="true"
+                [disabled]="!isGranted('Pages.ShippingRequestTrips.Edit')"
               >
               </dx-date-box>
             </div>
@@ -235,7 +236,7 @@
                 [(ngModel)]="assignDriverAndTruck.assignedDriverUserId"
                 (click)="checkData('driver')"
                 class="form-control"
-                [disabled]="saving"
+                [disabled]="saving || !isGranted('Pages.ShippingRequestTrips.Edit')"
                 (change)="DriverOrTruckSelected(assignDriverAndTruck.assignedDriverUserId, null)"
               >
                 <option [ngValue]="null">{{ l('SelectaDriver') }}</option>
@@ -250,7 +251,7 @@
                 [(ngModel)]="assignDriverAndTruck.assignedTruckId"
                 (click)="checkData('truck')"
                 class="form-control"
-                [disabled]="saving"
+                [disabled]="!isGranted('Pages.ShippingRequestTrips.Edit') || saving"
                 (change)="DriverOrTruckSelected(null, assignDriverAndTruck.assignedTruckId)"
               >
                 <option [ngValue]="null">{{ l('Selectatruck') }}</option>
@@ -268,7 +269,7 @@
                   name="ContainerNumber"
                   [(ngModel)]="assignDriverAndTruck.containerNumber"
                   type="text"
-                  [disabled]="saving || (trip.containerNumber && trip.containerNumber.length > 0)"
+                  [disabled]="!isGranted('Pages.ShippingRequestTrips.Edit') || saving || (trip.containerNumber && trip.containerNumber.length > 0)"
                 />
               </div>
             </div>
@@ -283,12 +284,13 @@
                   name="SealNumber"
                   [(ngModel)]="assignDriverAndTruck.sealNumber"
                   type="text"
-                  [disabled]="saving || (trip.sealNumber && trip.sealNumber.length > 0)"
+                  [disabled]="!isGranted('Pages.ShippingRequestTrips.Edit') || saving || (trip.sealNumber && trip.sealNumber.length > 0)"
                 />
               </div>
             </div>
             <div class="form-group col-lg-1 mt-7 align-items-end">
               <button
+                *ngIf="isGranted('Pages.ShippingRequestTrips.Edit')"
                 class="btn btn-danger btn-shadow-hover font-weight-bold mr-2"
                 (click)="assignDriverandTruck()"
                 [disabled]="saving || !assignDriverAndTruck.assignedDriverUserId || !assignDriverAndTruck.assignedTruckId"

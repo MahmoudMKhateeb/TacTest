@@ -2927,5 +2927,10 @@
 	<text name="SelectTheMatchingPricePackages">أختر حزم الأسعار المتطابقة</text>
 	<text name="AppointmentNumber">رقم الموعد</text>
 	<text name="AppointmentDetails">تفاصيل الموعد</text>
+  <text name="DriveTrackingPermission">التحكم بمسير الشحنات</text>
+  <text name="ActorSubmitInvoicesPermission">تحصيل فواتير المرسلة للعميل</text>
+  <text name="DedicatedAttendanceSheetPermission">حضور الشاحنة</text>
+  <text name="DedicatedFillAttendanceSheetPermission">ملئ حضور الشاحنة</text>
+
 	</texts>
 </localizationDictionary>

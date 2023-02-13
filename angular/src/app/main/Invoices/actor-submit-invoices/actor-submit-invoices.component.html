@@ -74,10 +74,10 @@
               <dxi-column dataField="status" cellTemplate="cellTemplate_status" caption="{{ l('Status') }}">
                 <dxo-lookup [dataSource]="SubmitStatus" displayExpr="value" valueExpr="key"></dxo-lookup>
               </dxi-column>
-                <dxo-master-detail [enabled]="true" template="actorSubmitInvoiceDetails"></dxo-master-detail>
-                <div *dxTemplate="let options of 'actorSubmitInvoiceDetails'">
-                    <app-actor-submit-invoice-item-detail [actorSubmitInvoiceId]="options.data.id"></app-actor-submit-invoice-item-detail>
-                </div>
+              <dxo-master-detail [enabled]="true" template="actorSubmitInvoiceDetails"></dxo-master-detail>
+              <div *dxTemplate="let options of 'actorSubmitInvoiceDetails'">
+                <app-actor-submit-invoice-item-detail [actorSubmitInvoiceId]="options.data.id"></app-actor-submit-invoice-item-detail>
+              </div>
 
               <div *dxTemplate="let options of 'channelCellTemplate'">
                 <span style="width: 137px">
@@ -136,13 +136,13 @@
                         {{ l('View') }}
                       </a>
                     </li>
-                    <li *ngIf="options.data.status == 'New' || options.data.status == 'Rejected'">
+                    <li *ngIf="(isGranted('Pages.Invoices.SubmitInvoices') && options.data.status == 'New') || options.data.status == 'Rejected'">
                       <a class="dropdown-item" href="javascript:;" (click)="ClaimModel.show(options.data.id)">{{ l('Claim') }}</a>
                     </li>
-                    <li *ngIf="!options.data.isPaid && options.data.actorInvoiceChannel != 1">
+                    <li *ngIf="isGranted('Pages.Invoices.SubmitInvoices') && !options.data.isPaid && options.data.actorInvoiceChannel != 1">
                       <a class="dropdown-item" href="javascript:;" (click)="MakePaid(options.data)">{{ l('MakePaid') }}</a>
                     </li>
-                    <li *ngIf="options.data.isPaid && options.data.actorInvoiceChannel != 1">
+                    <li *ngIf="isGranted('Pages.Invoices.SubmitInvoices') && options.data.isPaid && options.data.actorInvoiceChannel != 1">
                       <a class="dropdown-item" href="javascript:;" (click)="MakeUnPaid(options.data)">{{ l('MakeUnPaid') }}</a>
                     </li>
                   </ul>
