@@ -214,3 +214,10 @@ gridster-item {
 ::ng-deep customizable-dashboard .overflow-auto::-webkit-scrollbar-thumb:hover {
   background: #999;
 }
+
+::ng-deep customizable-dashboard .w-45 {
+  width: 45%;
+}
+::ng-deep customizable-dashboard .w-55 {
+  width: 55%;
+}
