@@ -24,10 +24,12 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Invoices;
+using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Offers;
 using TACHYON.PriceOffers;
 using TACHYON.Routs.RoutPoints;
+using TACHYON.Shipping.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
@@ -48,6 +50,8 @@ namespace TACHYON.Dashboards.Shipper
         private readonly IRepository<ShippingRequestTripAccident> _accidentRepository;
         private readonly IRepository<TrucksType,long> _truckTypesRepository;
         private readonly IRepository<RoutPoint,long> _routePointRepository;
+        private readonly IRepository<RoutPointStatusTransition> _transitionRepository;
+        private readonly IRepository<SubmitInvoice, long> _submitInvoiceRepository;
 
         public ShipperDashboardAppService(
              IRepository<ShippingRequest, long> shippingRequestRepository,
@@ -57,7 +61,9 @@ namespace TACHYON.Dashboards.Shipper
              IRepository<PriceOffer, long> priceOffersRepository,
              IRepository<ShippingRequestTripAccident> accidentRepository,
              IRepository<TrucksType, long> truckTypesRepository,
-             IRepository<RoutPoint, long> routePointRepository)
+             IRepository<RoutPoint, long> routePointRepository,
+             IRepository<RoutPointStatusTransition> transitionRepository,
+             IRepository<SubmitInvoice, long> submitInvoiceRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
@@ -67,29 +73,42 @@ namespace TACHYON.Dashboards.Shipper
             _accidentRepository = accidentRepository;
             _truckTypesRepository = truckTypesRepository;
             _routePointRepository = routePointRepository;
+            _transitionRepository = transitionRepository;
+            _submitInvoiceRepository = submitInvoiceRepository;
         }
 
 
 
         public async Task<int> GetDeliveredTripsCountForCurrentWeek()
         {
+            bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            
             DateTime startOfCurrentWeek = Clock.Now.StartOfWeek(DayOfWeek.Sunday).Date;
             DateTime endOfCurrentWeek = startOfCurrentWeek.AddDays(7).Date;
             DisableTenancyFilters();
             
-            return await _shippingRequestTripRepository.GetAll()
-                .Where(x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                .CountAsync(x =>
-                    x.Status == ShippingRequestTripStatus.Delivered && x.EndWorking.HasValue &&
-                   ( x.EndWorking.Value.Date >= startOfCurrentWeek && x.EndWorking.Value.Date <= endOfCurrentWeek));
+            return await (from trip in _shippingRequestTripRepository.GetAll()
+                where ((!isBroker && trip.ShippingRequestFk.TenantId == AbpSession.TenantId) || (isBroker &&
+                          (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                           trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)))
+                      && trip.Status == ShippingRequestTripStatus.Delivered
+                let lastWorkingDate = _transitionRepository.GetAll()
+                    .Where(x => x.RoutPointFK.ShippingRequestTripId == trip.Id && !x.IsReset)
+                    .OrderByDescending(x => x.CreationTime)
+                    .Select(x => x.CreationTime).FirstOrDefault()
+                where lastWorkingDate >= startOfCurrentWeek && lastWorkingDate <= endOfCurrentWeek
+                select trip).CountAsync();
         }
         
         public async Task<int> GetInTransitTripsCount()
         {
             DisableTenancyFilters();
             
+            bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            
             return await _shippingRequestTripRepository.GetAll()
-                .Where(x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(!isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .CountAsync(x =>x.Status == ShippingRequestTripStatus.InTransit);
         }
         
@@ -97,13 +116,18 @@ namespace TACHYON.Dashboards.Shipper
         {
             DateTime currentDay = Clock.Now.Date;
             DateTime endOfCurrentWeek = currentDay.AddDays(7).Date; 
+            bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
             
             DisableTenancyFilters();
 
+            // todo hide actors date when broker is request this service
             var trips = await (from trip in _shippingRequestTripRepository.GetAll().AsNoTracking()
                     .Include(x => x.OriginFacilityFk).ThenInclude(x => x.CityFk)
                     .Include(x => x.DestinationFacilityFk).ThenInclude(x => x.CityFk)
-                where trip.ShippingRequestFk.TenantId == AbpSession.TenantId &&
+                where ((!isBroker && trip.ShippingRequestFk.TenantId == AbpSession.TenantId) || (isBroker &&
+                          (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                           trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId))) &&
+                      (!trip.ShippingRequestFk.CarrierActorId.HasValue && !trip.ShippingRequestFk.ShipperActorId.HasValue)&&
                       trip.Status == ShippingRequestTripStatus.New && trip.StartTripDate.Date >= currentDay &&
                       trip.StartTripDate.Date <= endOfCurrentWeek
                 select new
@@ -140,8 +164,14 @@ namespace TACHYON.Dashboards.Shipper
         
         public async Task<List<NeedsActionTripDto>> GetNeedsActionTrips()
         {
+            bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            if (isBroker) DisableTenancyFilters();
+            
             var trips = await (from point in _routePointRepository.GetAll()
-                where point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId
+                where ((!isBroker && point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId) || (isBroker &&
+                    (point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                     point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)))&&
+                    (!point.ShippingRequestTripFk.ShippingRequestFk.CarrierActorId.HasValue && !point.ShippingRequestTripFk.ShippingRequestFk.ShipperActorId.HasValue)
                       && point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
                       && point.PickingType == PickingType.Dropoff && !point.IsComplete && (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue)
                 select new NeedsActionTripDto()
@@ -205,13 +235,15 @@ namespace TACHYON.Dashboards.Shipper
         {
             DisableTenancyFilters();
 
-        DateTime startOfCurrentWeek = Clock.Now.StartOfWeek(DayOfWeek.Sunday).Date;
-        DateTime endOfCurrentWeek = startOfCurrentWeek.AddDays(7).Date;
+            bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            DateTime startOfCurrentWeek = Clock.Now.StartOfWeek(DayOfWeek.Sunday).Date;
+            DateTime endOfCurrentWeek = startOfCurrentWeek.AddDays(7).Date;
         
             var query = _priceOffersRepository
                 .GetAll()
                 .AsNoTracking()
-                .Where(x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(!isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
                 .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year && x.CreationTime.Month == Clock.Now.Month )
                 .WhereIf(period == FilterDatePeriod.Monthly,x=>  x.CreationTime.Year == Clock.Now.Year )
@@ -308,6 +340,7 @@ namespace TACHYON.Dashboards.Shipper
         {
             DisableTenancyFilters();
 
+            bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
 
             DateTime startOfCurrentWeek = Clock.Now.StartOfWeek(DayOfWeek.Sunday).Date;
             DateTime endOfCurrentWeek = startOfCurrentWeek.AddDays(7).Date;
@@ -315,7 +348,8 @@ namespace TACHYON.Dashboards.Shipper
             var query = _shippingRequestTripRepository
                 .GetAll()
                 .AsNoTracking()
-                .Where(x => x.ShippingRequestFk.Tenant.Id == AbpSession.TenantId)
+                .WhereIf(!isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf(isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
                 .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year && x.CreationTime.Month == Clock.Now.Month )
                 .WhereIf(period == FilterDatePeriod.Monthly,x=>  x.CreationTime.Year == Clock.Now.Year )
@@ -355,7 +389,6 @@ namespace TACHYON.Dashboards.Shipper
             
             if (period == FilterDatePeriod.Weekly)
             {
-                int dayOfCurrentMonth = Clock.Now.Day;
                 DateTime firstMonthDay = new DateTime(Clock.Now.Year, Clock.Now.Month, 1);
                 DateTime firstMonthSunday = firstMonthDay.AddDays((DayOfWeek.Sunday + 7 - firstMonthDay.DayOfWeek) % 7);
                 
@@ -511,16 +544,22 @@ namespace TACHYON.Dashboards.Shipper
         }
 
 
-        public async Task<long> GetInvoiceDueDateInDays()
+        public async Task<long> GetInvoiceDueDateInDays(BrokerInvoiceType? invoiceType)
         {
             DisableTenancyFilters();
 
-            return await _invoiceRepository.GetAll()
-            .AsNoTracking()
-            .Where(r => r.TenantId == AbpSession.TenantId)
-            .Where(r => !r.IsPaid)
-            .Where(r => r.DueDate <= Clock.Now.Date.AddDays(5)).CountAsync();
+            bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
 
+            return isBroker switch
+            {
+                true when !invoiceType.HasValue => throw new UserFriendlyException(L("YouMustProvideInvoiceType")),
+                true when invoiceType == BrokerInvoiceType.SubmitInvoice => await _submitInvoiceRepository.GetAll()
+                    .Where(x => x.TenantId == AbpSession.TenantId && x.DueDate.HasValue &&
+                                x.DueDate <= Clock.Now.Date.AddDays(5)).CountAsync(),
+                _ => await _invoiceRepository.GetAll()
+                    .AsNoTracking()
+                    .Where(r => r.TenantId == AbpSession.TenantId && !r.IsPaid && r.DueDate <= Clock.Now.Date.AddDays(5)).CountAsync()
+            };
         }
 
         // Tracking Map
