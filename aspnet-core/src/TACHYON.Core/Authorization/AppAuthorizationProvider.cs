@@ -925,6 +925,10 @@ namespace TACHYON.Authorization
 
            var penaltiesPermission = pages.CreateChildPermission(AppPermissions.Pages_Penalties, L("Penalties"));
            // note : to do use penalties permission to add some missing permission like create, update, and delete
+
+           pages.CreateChildPermission(AppPermissions.Pages_BrokerDashboard,L("BrokerDashboardPermission"),
+               // only for broker
+               featureDependency: new SimpleFeatureDependency(true,AppFeatures.CarrierClients,AppFeatures.ShipperClients));
         }
 
         private static ILocalizableString L(string name)

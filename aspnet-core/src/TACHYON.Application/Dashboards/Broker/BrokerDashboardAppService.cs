@@ -10,7 +10,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Actors;
+using TACHYON.Authorization;
 using TACHYON.Dashboards.Shipper.Dto;
+using TACHYON.Documents.DocumentFiles;
+using TACHYON.PriceOffers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -18,22 +21,27 @@ using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Dashboards.Broker
 {
-    // todo: add permission here (broker)
-    [AbpAuthorize()]
+    [AbpAuthorize(AppPermissions.Pages_BrokerDashboard)]
     public class BrokerDashboardAppService : TACHYONAppServiceBase
     {
         private readonly IRepository<Actor> _actorRepository;
         private readonly IRepository<ShippingRequestTrip> _tripRepository;
         private readonly IRepository<RoutPoint,long> _routePointRepository;
+        private readonly IRepository<PriceOffer,long> _priceOfferRepository;
+        private readonly IRepository<DocumentFile,Guid> _documentFileRepository;
 
         public BrokerDashboardAppService(
             IRepository<Actor> actorRepository,
             IRepository<ShippingRequestTrip> tripRepository,
-            IRepository<RoutPoint, long> routePointRepository)
+            IRepository<RoutPoint, long> routePointRepository,
+            IRepository<PriceOffer, long> priceOfferRepository,
+            IRepository<DocumentFile, Guid> documentFileRepository)
         {
             _actorRepository = actorRepository;
             _tripRepository = tripRepository;
             _routePointRepository = routePointRepository;
+            _priceOfferRepository = priceOfferRepository;
+            _documentFileRepository = documentFileRepository;
         }
 
         public async Task<ActorsNumbersDto> GetNumbersOfActors()
@@ -44,11 +52,13 @@ namespace TACHYON.Dashboards.Broker
                     .CountAsync(x => x.ActorType == ActorTypesEnum.Shipper);
 
             int totalActorsCount = carrierActorsCount + shipperActorsCount;
+            double carrierActorPercentage = ((Convert.ToDouble(carrierActorsCount) / Convert.ToDouble(totalActorsCount))) * 100;
+            double shipperActorPercentage = ((Convert.ToDouble(shipperActorsCount) / Convert.ToDouble(totalActorsCount))) * 100;
 
             return new ActorsNumbersDto()
             {
-                CarrierActorPercentage = (carrierActorsCount / totalActorsCount) * 100,
-                ShipperActorPercentage = (shipperActorsCount / totalActorsCount) * 100,
+                CarrierActorPercentage = carrierActorPercentage,
+                ShipperActorPercentage = shipperActorPercentage,
                 TotalActors = totalActorsCount
             };
         }
@@ -56,22 +66,34 @@ namespace TACHYON.Dashboards.Broker
         public async Task<ActorsForCurrentMonthDto> GetNewActorsStatistics()
         {
             int carrierActorsCount = await _actorRepository.GetAll()
-                .Where(x=> x.CreationTime.Month == Clock.Now.Month)
+                .Where(x => x.CreationTime.Month == Clock.Now.Month)
                 .CountAsync(x => x.ActorType == ActorTypesEnum.Carrier);
             int shipperActorsCount = await _actorRepository.GetAll()
-                .Where(x=> x.CreationTime.Month == Clock.Now.Month)
+                .Where(x => x.CreationTime.Month == Clock.Now.Month)
                 .CountAsync(x => x.ActorType == ActorTypesEnum.Shipper);
-
+            // this (totalActorsForCurrentMonth) named CTG --> stand for Current Total Growth
             int totalActorsForCurrentMonth = carrierActorsCount + shipperActorsCount;
-            
-            // todo add GrowthChangePercentage
 
+            int totalActorsCountInLastMonths = await _actorRepository.GetAll().CountAsync(x =>
+                x.CreationTime.Year == Clock.Now.Year && x.CreationTime.Month > Clock.Now.Month);
+            // this (growthAverageِInLastMonths) named TGA --> stand for Total Growth Average ... in last months
+            int growthAverageِInLastMonths = (totalActorsCountInLastMonths / Clock.Now.AddMonths(-1).Month);
+
+            // GrowthChangePercentage = ( ( (CTG * 100) / TAG) - 100 ) ;
             return new ActorsForCurrentMonthDto()
             {
-                CarrierActorsPercentage = (carrierActorsCount / totalActorsForCurrentMonth) * 100,
-                ShipperActorsPercentage = (shipperActorsCount / totalActorsForCurrentMonth) * 100,
+                CarrierActorsPercentage =
+                    totalActorsForCurrentMonth > 0
+                        ? ((carrierActorsCount / totalActorsForCurrentMonth) * 100)
+                        : totalActorsForCurrentMonth,
+                ShipperActorsPercentage =
+                    totalActorsForCurrentMonth > 0
+                        ? ((shipperActorsCount / totalActorsForCurrentMonth) * 100)
+                        : totalActorsForCurrentMonth,
                 TotalActorsForCurrentMonth = totalActorsForCurrentMonth,
-                // todo GrowthChangePercentage = 
+                GrowthChangePercentage = growthAverageِInLastMonths > 0
+                    ? (((totalActorsForCurrentMonth * 100) / growthAverageِInLastMonths) - 100)
+                    : growthAverageِInLastMonths
             };
         }
 
@@ -219,5 +241,41 @@ namespace TACHYON.Dashboards.Broker
                     select new MostUsedOriginsDto{CityName = tripsGroup.Key, NumberOfRequests = tripsGroup.Count()})
                 .OrderByDescending(x=> x.NumberOfRequests).ToListAsync();
         }
+        
+        public async Task<List<MostUsedOriginsDto>> GetMostUsedDestinations()
+        {
+            DisableTenancyFilters();
+
+            return await (from trip in _tripRepository.GetAll()
+                    where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                           trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
+                          (trip.ShippingRequestFk.CarrierActorId.HasValue ||
+                           trip.ShippingRequestFk.ShipperActorId.HasValue)
+                    group trip by trip.DestinationFacilityFk.CityFk.DisplayName into tripsGroup
+                    select new MostUsedOriginsDto{CityName = tripsGroup.Key, NumberOfRequests = tripsGroup.Count()})
+                .OrderByDescending(x=> x.NumberOfRequests).ToListAsync();
+        }
+
+        public async Task<List<NewPriceOfferListDto>> GetPendingPriceOffers()
+        {
+            DisableTenancyFilters();
+
+            return await _priceOfferRepository.GetAll()
+                .Where(x => x.TenantId == AbpSession.TenantId && x.CarrierActorId.HasValue &&
+                            x.Status == PriceOfferStatus.New && x.Status == PriceOfferStatus.Pending)
+                .Select(x => new NewPriceOfferListDto
+                {
+                    CompanyName = x.CarrierActorFk.CompanyName,
+                    ReferenceNumber = x.ShippingRequestFk.ReferenceNumber,
+                    ShippingRequestId = x.ShippingRequestId
+                }).ToListAsync();
+        }
+
+        // public async Task GetNextDocumentsDueDate(ActorTypesEnum type)
+        // {
+        //     _documentFileRepository.GetAll().Where(x =>
+        //         x.IsAccepted && x.ExpirationDate.HasValue && x.ExpirationDate.Value.Date > Clock.Now.Date)
+        //         
+        // }
     }
 }
