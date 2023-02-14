@@ -368,7 +368,8 @@
                           record.canAssignTrucksAndDrivers &&
                           !isTachyonDealer &&
                           !shippingRequestForView.shippingRequest.isSaas &&
-                          isGranted('Pages.ShippingRequestTrips.Edit')
+                          isGranted('Pages.ShippingRequestTrips.Edit') &&
+                          record.statusTitle != 'Delivered'
                             ? l('ViewOrAssignDriver')
                             : l('View')
                         }}</a
@@ -378,7 +379,9 @@
                         *ngIf="shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Normal"
                         (click)="ViewTripModal.show(record.id, shippingRequestForView)"
                         >{{
-                          record.canAssignTrucksAndDrivers && isGranted('Pages.ShippingRequestTrips.Edit') ? l('ViewOrAssignDriver') : l('View')
+                          record.canAssignTrucksAndDrivers && isGranted('Pages.ShippingRequestTrips.Edit') && record.statusTitle != 'Delivered'
+                            ? l('ViewOrAssignDriver')
+                            : l('View')
                         }}</a
                       >
                     </li>
