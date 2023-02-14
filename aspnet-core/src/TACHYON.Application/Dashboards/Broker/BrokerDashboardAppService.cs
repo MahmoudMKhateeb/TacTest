@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Actors;
 using TACHYON.Authorization;
+using TACHYON.Dashboards.Broker.Dto;
 using TACHYON.Dashboards.Carrier;
 using TACHYON.Dashboards.Shipper.Dto;
 using TACHYON.Documents.DocumentFiles;
@@ -23,6 +24,7 @@ using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
+using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.Dashboards.Broker
 {
@@ -36,6 +38,7 @@ namespace TACHYON.Dashboards.Broker
         private readonly IRepository<DocumentFile,Guid> _documentFileRepository;
         private readonly IRepository<ActorInvoice,long> _actorInvoiceRepository;
         private readonly IRepository<ActorSubmitInvoice,long> _actorSubmitInvoiceRepository;
+        private readonly IRepository<TrucksType,long> _truckTypeRepository;
 
         public BrokerDashboardAppService(
             IRepository<Actor> actorRepository,
@@ -44,7 +47,8 @@ namespace TACHYON.Dashboards.Broker
             IRepository<PriceOffer, long> priceOfferRepository,
             IRepository<DocumentFile, Guid> documentFileRepository,
             IRepository<ActorInvoice, long> actorInvoiceRepository,
-            IRepository<ActorSubmitInvoice, long> actorSubmitInvoiceRepository)
+            IRepository<ActorSubmitInvoice, long> actorSubmitInvoiceRepository,
+            IRepository<TrucksType, long> truckTypeRepository)
         {
             _actorRepository = actorRepository;
             _tripRepository = tripRepository;
@@ -53,6 +57,7 @@ namespace TACHYON.Dashboards.Broker
             _documentFileRepository = documentFileRepository;
             _actorInvoiceRepository = actorInvoiceRepository;
             _actorSubmitInvoiceRepository = actorSubmitInvoiceRepository;
+            _truckTypeRepository = truckTypeRepository;
         }
 
         public async Task<ActorsNumbersDto> GetNumbersOfActors()
@@ -414,5 +419,33 @@ namespace TACHYON.Dashboards.Broker
         }
 
 
+        public async Task<List<MostUsedTruckTypeDto>> GetMostTruckTypesUsed(int transportTypeId)
+        {
+            var truckTypes = await (from trip in _tripRepository.GetAll()
+                where (trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId &&
+                       trip.ShippingRequestFk.TenantId == AbpSession.TenantId) &&
+                      (trip.ShippingRequestFk.ShipperActorId.HasValue ||
+                       trip.ShippingRequestFk.CarrierActorId.HasValue) &&
+                      (trip.ShippingRequestFk.TransportTypeId == transportTypeId)
+                select new
+                {
+                    TruckTypeId = trip.ShippingRequestFk.TrucksTypeId,
+                    TruckTypeName = trip.ShippingRequestFk.TrucksTypeFk.Key,
+                    CapacityName = trip.ShippingRequestFk.CapacityFk.DisplayName,
+                    trip.ShippingRequestFk.CapacityId
+                }).ToListAsync();
+
+            return (from truckType in truckTypes
+                group truckType by truckType.TruckTypeId
+                into truckGroup
+                let capacity = truckGroup.Select(x => new { x.CapacityName, x.CapacityId, x.TruckTypeName })
+                    .GroupBy(x => x.CapacityId).OrderByDescending(x => x.Count()).FirstOrDefault()
+                select new MostUsedTruckTypeDto
+                {
+                    TruckTypeName = capacity.Select(x => x.TruckTypeName).FirstOrDefault(),
+                    CapacityName = capacity.Select(x => x.CapacityName).FirstOrDefault(),
+                    NumberOfTrips = capacity.Count()
+                }).ToList();
+        }
     }
 }
