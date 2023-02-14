@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Actors;
 using TACHYON.Authorization;
+using TACHYON.Dashboards.Carrier;
 using TACHYON.Dashboards.Shipper.Dto;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Invoices;
@@ -242,45 +243,56 @@ namespace TACHYON.Dashboards.Broker
         {
             DisableTenancyFilters();
 
-            return await (from trip in _tripRepository.GetAll()
-                    where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                           trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
-                          (trip.ShippingRequestFk.CarrierActorId.HasValue ||
-                           trip.ShippingRequestFk.ShipperActorId.HasValue)
-                    group trip by trip.OriginFacilityFk.CityFk.DisplayName
+            var cityLookups = await (from trip in _tripRepository.GetAll()
+                where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                       trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
+                      (trip.ShippingRequestFk.CarrierActorId.HasValue ||
+                       trip.ShippingRequestFk.ShipperActorId.HasValue)
+                select new
+                {
+                    CityName = trip.OriginFacilityFk.CityFk.DisplayName,
+                    CompanyName = trip.ShippingRequestFk.CarrierActorId.HasValue
+                        ? trip.ShippingRequestFk.CarrierActorFk.CompanyName
+                        : trip.ShippingRequestFk.ShipperActorFk.CompanyName
+                }).ToListAsync();
+            return (from city in cityLookups
+                    group city by city.CityName
                     into tripsGroup
                     select new MostUsedCityDto
                     {
-                        CityName = tripsGroup.Key,
+                        CityName = tripsGroup.Select(x => x.CityName).FirstOrDefault(),
                         NumberOfTrips = tripsGroup.Count(),
-                        ActorCompanyName = tripsGroup.Select(i =>
-                            i.ShippingRequestFk.CarrierActorId.HasValue
-                                ? i.ShippingRequestFk.CarrierActorFk.CompanyName
-                                : i.ShippingRequestFk.ShipperActorFk.CompanyName).FirstOrDefault()
+                        ActorCompanyName = tripsGroup.Select(i => i.CompanyName).FirstOrDefault(),
                     })
-                .OrderByDescending(x => x.NumberOfTrips).ToListAsync();
+                .OrderByDescending(x => x.NumberOfTrips).ToList();
         }
         
         public async Task<List<MostUsedCityDto>> GetMostUsedDestinations()
         {
             DisableTenancyFilters();
 
-            return await (from trip in _tripRepository.GetAll()
-                    where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                           trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
-                          (trip.ShippingRequestFk.CarrierActorId.HasValue ||
-                           trip.ShippingRequestFk.ShipperActorId.HasValue)
-                    group trip by trip.DestinationFacilityFk.CityFk.DisplayName into tripsGroup
+            var cityLookups = await (from trip in _tripRepository.GetAll()
+                where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                       trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
+                      (trip.ShippingRequestFk.CarrierActorId.HasValue ||
+                       trip.ShippingRequestFk.ShipperActorId.HasValue)
+                select new
+                {
+                    CityName = trip.DestinationFacilityFk.CityFk.DisplayName,
+                    CompanyName = trip.ShippingRequestFk.CarrierActorId.HasValue
+                        ? trip.ShippingRequestFk.CarrierActorFk.CompanyName
+                        : trip.ShippingRequestFk.ShipperActorFk.CompanyName
+                }).ToListAsync();
+            return (from city in cityLookups
+                    group city by city.CityName
+                    into tripsGroup
                     select new MostUsedCityDto
                     {
-                        CityName = tripsGroup.Key,
+                        CityName = tripsGroup.Select(x => x.CityName).FirstOrDefault(),
                         NumberOfTrips = tripsGroup.Count(),
-                        ActorCompanyName = tripsGroup.Select(i =>
-                            i.ShippingRequestFk.CarrierActorId.HasValue
-                                ? i.ShippingRequestFk.CarrierActorFk.CompanyName
-                                : i.ShippingRequestFk.ShipperActorFk.CompanyName).FirstOrDefault()
+                        ActorCompanyName = tripsGroup.Select(i => i.CompanyName).FirstOrDefault(),
                     })
-                .OrderByDescending(x=> x.NumberOfTrips).ToListAsync();
+                .OrderByDescending(x => x.NumberOfTrips).ToList();
         }
 
         public async Task<List<NewPriceOfferListDto>> GetPendingPriceOffers()
@@ -366,6 +378,41 @@ namespace TACHYON.Dashboards.Broker
 
             return dto;
         }
-        
+
+
+        public async Task<GetCarrierInvoicesDetailsOutput> GetPaidVsClaimedInvoices(int carrierActorId)
+        {
+            var query = _actorSubmitInvoiceRepository.GetAll().Where(x => x.CarrierActorId == carrierActorId);
+
+            var paid = await query
+                .Where(x => x.Status == SubmitInvoiceStatus.Paid).GroupBy(x => x.CreationTime.Date.Month)
+                .Select(x => new { x.Key, Count = x.Count() })
+                .ToListAsync();
+            var outputDto = new GetCarrierInvoicesDetailsOutput();
+
+            outputDto.PaidInvoices = paid.Select(g => new ChartCategoryPairedValuesDto
+                {
+                    X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key), Y = g.Count
+                })
+                .OrderBy(x => x.X)
+                .ToList();
+
+
+            var claimed = await query
+                .Where(x => x.Status == SubmitInvoiceStatus.Claim).GroupBy(x => x.CreationTime.Date.Month)
+                .Select(x => new { x.Key, Count = x.Count() })
+                .ToListAsync();
+
+            outputDto.Claimed = claimed.Select(g => new ChartCategoryPairedValuesDto
+                {
+                    X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key), Y = g.Count
+                })
+                .OrderBy(x => x.X)
+                .ToList();
+
+            return outputDto;
+        }
+
+
     }
 }
