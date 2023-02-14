@@ -614,6 +614,15 @@ namespace TACHYON.PriceOffers
             getShippingRequestForPricingOutput.ShipperRatingNumber = shippingRequest.Tenant.RateNumber;
             getShippingRequestForPricingOutput.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(shippingRequest.OriginCityFk)?.DisplayName;
             //getShippingRequestForPricingOutput.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(shippingRequest.DestinationCityFk).DisplayName;
+            int index = 1;
+            foreach(var dest in shippingRequest.ShippingRequestDestinationCities)
+            {
+                if (index == 1)
+                    getShippingRequestForPricingOutput.DestinationCity = dest.CityFk.DisplayName;
+                else
+                    getShippingRequestForPricingOutput.DestinationCity += ", "+ dest.CityFk.DisplayName;
+                index++;
+            }
             getShippingRequestForPricingOutput.PricePackageOfferId = pricePackageOfferId;
             getShippingRequestForPricingOutput.MatchingPricePackageId = matchingPricePackageId;
             if (isCarrier)

@@ -59,7 +59,7 @@ namespace TACHYON.AutoMapper.Shipping
             CreateMap<ShippingRequest, GetShippingRequestForPricingOutput>()
                 .ForMember(dst => dst.Shipper, opt => opt.MapFrom(src => src.Tenant.Name))
                 .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
-                .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities.First().CityFk.DisplayName))
+                //.ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities.First().CityFk.DisplayName))
                 .ForMember(dst => dst.RangeDate,
                     opt => opt.MapFrom(src => GetDateRange(src.StartTripDate, src.EndTripDate)));
 
