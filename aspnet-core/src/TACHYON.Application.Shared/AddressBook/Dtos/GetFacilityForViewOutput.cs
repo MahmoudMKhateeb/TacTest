@@ -13,6 +13,7 @@ namespace TACHYON.AddressBook.Dtos
         public double? Latitude { get; set; }
         public DateTime CreationTime { get; set; }
         public string ShipperName { get; set; }
+        public string ActorName { get; set; }
         public List<FacilityWorkingHourDto> FacilityWorkingHours { get; set; }
     }
 }

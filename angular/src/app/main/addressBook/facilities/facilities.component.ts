@@ -58,6 +58,7 @@ export class FacilitiesComponent extends AppComponentBase {
   }
 
   getFacilities(event?: LazyLoadEvent) {
+    this.isCarrierSaas;
     if (this.primengTableHelper.shouldResetPaging(event)) {
       this.paginator.changePage(0);
       return;
