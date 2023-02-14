@@ -259,7 +259,7 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
-        [RequiresFeature(AppFeatures.Shipper, AppFeatures.CarrierAsASaas)]
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.CarrierAsASaas, AppFeatures.TachyonDealer)]
         public async Task<GetShippingRequestForEditOutput> GetShippingRequestForEdit(EntityDto<long> input)
         {
             if (await IsEnabledAsync(AppFeatures.TachyonDealer))
@@ -993,7 +993,7 @@ namespace TACHYON.Shipping.ShippingRequests
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)
         {
             _reasonProvider.Use(nameof(UpdateShippingRequestTransaction));
-
+            await DisableTenancyFiltersIfTachyonDealer();
             ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
                 .Include(x=>x.ShippingRequestDestinationCities)
