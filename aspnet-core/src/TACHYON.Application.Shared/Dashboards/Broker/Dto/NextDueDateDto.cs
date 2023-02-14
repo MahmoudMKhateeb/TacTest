@@ -6,8 +6,6 @@ namespace TACHYON.Dashboards.Broker
     {
         public string CompanyName { get; set; }
 
-        public int PeriodAmount { get; set; }
-
-        public FilterDatePeriod PeriodType { get; set; } 
+        public string RemainingWeeks { get; set; }
     }
 }

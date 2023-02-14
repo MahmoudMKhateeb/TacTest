@@ -13,6 +13,9 @@ using TACHYON.Actors;
 using TACHYON.Authorization;
 using TACHYON.Dashboards.Shipper.Dto;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Invoices;
+using TACHYON.Invoices.ActorInvoices;
+using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.PriceOffers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
@@ -29,19 +32,25 @@ namespace TACHYON.Dashboards.Broker
         private readonly IRepository<RoutPoint,long> _routePointRepository;
         private readonly IRepository<PriceOffer,long> _priceOfferRepository;
         private readonly IRepository<DocumentFile,Guid> _documentFileRepository;
+        private readonly IRepository<ActorInvoice,long> _actorInvoiceRepository;
+        private readonly IRepository<ActorSubmitInvoice,long> _actorSubmitInvoiceRepository;
 
         public BrokerDashboardAppService(
             IRepository<Actor> actorRepository,
             IRepository<ShippingRequestTrip> tripRepository,
             IRepository<RoutPoint, long> routePointRepository,
             IRepository<PriceOffer, long> priceOfferRepository,
-            IRepository<DocumentFile, Guid> documentFileRepository)
+            IRepository<DocumentFile, Guid> documentFileRepository,
+            IRepository<ActorInvoice, long> actorInvoiceRepository,
+            IRepository<ActorSubmitInvoice, long> actorSubmitInvoiceRepository)
         {
             _actorRepository = actorRepository;
             _tripRepository = tripRepository;
             _routePointRepository = routePointRepository;
             _priceOfferRepository = priceOfferRepository;
             _documentFileRepository = documentFileRepository;
+            _actorInvoiceRepository = actorInvoiceRepository;
+            _actorSubmitInvoiceRepository = actorSubmitInvoiceRepository;
         }
 
         public async Task<ActorsNumbersDto> GetNumbersOfActors()
@@ -228,21 +237,30 @@ namespace TACHYON.Dashboards.Broker
             };
         }
 
-        public async Task<List<MostUsedOriginsDto>> GetMostUsedOrigins()
+        public async Task<List<MostUsedCityDto>> GetMostUsedOrigins()
         {
             DisableTenancyFilters();
 
             return await (from trip in _tripRepository.GetAll()
-                where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                       trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
-                      (trip.ShippingRequestFk.CarrierActorId.HasValue ||
-                       trip.ShippingRequestFk.ShipperActorId.HasValue)
-                       group trip by trip.OriginFacilityFk.CityFk.DisplayName into tripsGroup
-                    select new MostUsedOriginsDto{CityName = tripsGroup.Key, NumberOfRequests = tripsGroup.Count()})
-                .OrderByDescending(x=> x.NumberOfRequests).ToListAsync();
+                    where (trip.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                           trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
+                          (trip.ShippingRequestFk.CarrierActorId.HasValue ||
+                           trip.ShippingRequestFk.ShipperActorId.HasValue)
+                    group trip by trip.OriginFacilityFk.CityFk.DisplayName
+                    into tripsGroup
+                    select new MostUsedCityDto
+                    {
+                        CityName = tripsGroup.Key,
+                        NumberOfTrips = tripsGroup.Count(),
+                        ActorCompanyName = tripsGroup.Select(i =>
+                            i.ShippingRequestFk.CarrierActorId.HasValue
+                                ? i.ShippingRequestFk.CarrierActorFk.CompanyName
+                                : i.ShippingRequestFk.ShipperActorFk.CompanyName).FirstOrDefault()
+                    })
+                .OrderByDescending(x => x.NumberOfTrips).ToListAsync();
         }
         
-        public async Task<List<MostUsedOriginsDto>> GetMostUsedDestinations()
+        public async Task<List<MostUsedCityDto>> GetMostUsedDestinations()
         {
             DisableTenancyFilters();
 
@@ -252,8 +270,16 @@ namespace TACHYON.Dashboards.Broker
                           (trip.ShippingRequestFk.CarrierActorId.HasValue ||
                            trip.ShippingRequestFk.ShipperActorId.HasValue)
                     group trip by trip.DestinationFacilityFk.CityFk.DisplayName into tripsGroup
-                    select new MostUsedOriginsDto{CityName = tripsGroup.Key, NumberOfRequests = tripsGroup.Count()})
-                .OrderByDescending(x=> x.NumberOfRequests).ToListAsync();
+                    select new MostUsedCityDto
+                    {
+                        CityName = tripsGroup.Key,
+                        NumberOfTrips = tripsGroup.Count(),
+                        ActorCompanyName = tripsGroup.Select(i =>
+                            i.ShippingRequestFk.CarrierActorId.HasValue
+                                ? i.ShippingRequestFk.CarrierActorFk.CompanyName
+                                : i.ShippingRequestFk.ShipperActorFk.CompanyName).FirstOrDefault()
+                    })
+                .OrderByDescending(x=> x.NumberOfTrips).ToListAsync();
         }
 
         public async Task<List<NewPriceOfferListDto>> GetPendingPriceOffers()
@@ -271,11 +297,50 @@ namespace TACHYON.Dashboards.Broker
                 }).ToListAsync();
         }
 
-        // public async Task GetNextDocumentsDueDate(ActorTypesEnum type)
-        // {
-        //     _documentFileRepository.GetAll().Where(x =>
-        //         x.IsAccepted && x.ExpirationDate.HasValue && x.ExpirationDate.Value.Date > Clock.Now.Date)
-        //         
-        // }
+        public async Task<List<NextDueDateDto>> GetNextDocumentsDueDate(ActorTypesEnum type)
+        {
+            var documents = await _documentFileRepository.GetAll().Where(x =>
+                    x.IsAccepted && x.ExpirationDate.HasValue && x.ExpirationDate.Value.Date > Clock.Now.Date &&
+                    x.ActorFk.ActorType == type).Select(x=> new {ExpirationDate = x.ExpirationDate.Value,x.ActorFk.CompanyName}).ToListAsync();
+
+
+            return documents.GroupBy(x => (x.ExpirationDate.Date - DateTime.Now.Date).TotalDays / 7)
+                .Select(x => new NextDueDateDto
+                {
+                    RemainingWeeks = $"{x.Key} {LocalizationSource.GetString("Week")}",
+                    CompanyName = x.Select(i => i.CompanyName).FirstOrDefault()
+                }).ToList();
+        }
+
+        public async Task<List<NextDueDateDto>> GetNextInvoicesDueDate(BrokerInvoiceType invoiceType)
+        {
+            if (invoiceType == BrokerInvoiceType.SubmitInvoice)
+            {
+                 var actorSubmitInvoices = await _actorSubmitInvoiceRepository.GetAll()
+                    .Where(x => x.DueDate.Date > Clock.Now.Date)
+                    .Select(x => new { CompanyName = x.CarrierActorFk.CompanyName, x.DueDate }).ToListAsync();
+                
+                return actorSubmitInvoices.GroupBy(x => (x.DueDate.Date - DateTime.Now.Date).TotalDays / 7)
+                    .Select(x => new NextDueDateDto
+                    {
+                        RemainingWeeks = $"{x.Key} {LocalizationSource.GetString("Week")}",
+                        CompanyName = x.Select(i => i.CompanyName).FirstOrDefault()
+                    }).ToList();
+            }
+            
+            var actorInvoices = await _actorInvoiceRepository.GetAll()
+                .Where(x => !x.IsPaid && x.DueDate.Date > Clock.Now.Date)
+                .Select(x => new { CompanyName = x.ShipperActorFk.CompanyName, x.DueDate }).ToListAsync();
+                
+            return actorInvoices.GroupBy(x => (x.DueDate.Date - DateTime.Now.Date).TotalDays / 7)
+                .Select(x => new NextDueDateDto
+                {
+                    RemainingWeeks = $"{x.Key} {LocalizationSource.GetString("Week")}",
+                    CompanyName = x.Select(i => i.CompanyName).FirstOrDefault()
+                }).ToList();
+            
+        }
+        
+        
     }
 }
