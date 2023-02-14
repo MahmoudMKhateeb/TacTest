@@ -7,6 +7,7 @@ using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Actors;
@@ -340,7 +341,31 @@ namespace TACHYON.Dashboards.Broker
                 }).ToList();
             
         }
-        
+
+        public async Task<InvoicesVsPaidInvoicesDto> GetInvoicesVsPaidInvoices(int shipperActorId)
+        {
+            var query = _actorInvoiceRepository.GetAll().Where(x => x.ShipperActorId == shipperActorId).AsNoTracking();
+
+            var dto = new InvoicesVsPaidInvoicesDto();
+
+            var paid = await query.Where(x => x.IsPaid)
+                .GroupBy(x => x.CreationTime.Date.Month).Select(x => new { x.Key, Count = x.Count() }).ToListAsync();
+
+            dto.PaidInvoices = paid.Select(g => new ChartCategoryPairedValuesDto
+            {
+                X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key), Y = g.Count
+            }).OrderBy(x => x.X).ToList();
+
+            var total = await query
+                .GroupBy(x => x.CreationTime.Date.Month).Select(x => new { x.Key, Count = x.Count() }).ToListAsync();
+
+            dto.ShipperInvoices = total.Select(g => new ChartCategoryPairedValuesDto
+            {
+                X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key), Y = g.Count
+            }).OrderBy(x => x.X).ToList();
+
+            return dto;
+        }
         
     }
 }
