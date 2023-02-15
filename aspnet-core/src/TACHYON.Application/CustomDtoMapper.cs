@@ -1038,6 +1038,11 @@ namespace TACHYON
                 .EntityMap
                 .ReverseMap();
 
+            
+             configuration.CreateMultiLingualMap<County, CountriesTranslation, CountriesTranslationDto>(context)
+                .EntityMap
+                .ReverseMap();
+
             configuration.CreateMultiLingualMap<County, CountriesTranslation, TenantCountryLookupTableDto>(context)
                 .EntityMap
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))

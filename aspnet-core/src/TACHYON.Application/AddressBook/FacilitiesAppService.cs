@@ -15,7 +15,10 @@ using TACHYON.AddressBook.Dtos;
 using TACHYON.AddressBook.Exporting;
 using TACHYON.Authorization;
 using TACHYON.Cities;
+using TACHYON.Cities.Dtos;
+using TACHYON.Countries.CountriesTranslations.Dtos;
 using TACHYON.Dto;
+using TACHYON.MultiTenancy.Dto;
 
 namespace TACHYON.AddressBook
 {
@@ -48,6 +51,8 @@ namespace TACHYON.AddressBook
                 .Include(e => e.CityFk)
                 .ThenInclude(c => c.CountyFk)
                 .ThenInclude(t => t.Translations)
+                .Include(e => e.CityFk)
+                .ThenInclude(x=>x.Translations)
                 .Include(x=>x.FacilityWorkingHours)
                 .Include(x=>x.Tenant)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,
@@ -64,8 +69,8 @@ namespace TACHYON.AddressBook
                 .PageBy(input);
 
             var facilities = from o in pagedAndFilteredFacilities
-                join o2 in _lookup_cityRepository.GetAll() on o.CityId equals o2.Id into j2
-                from s2 in j2.DefaultIfEmpty()
+                //join o2 in _lookup_cityRepository.GetAll().Include(x=>x.Translations) on o.CityId equals o2.Id into j2
+               // from s2 in j2.DefaultIfEmpty()
                 select new GetFacilityForViewOutput()
                 {
                     Facility = new FacilityDto
@@ -76,8 +81,8 @@ namespace TACHYON.AddressBook
                         Latitude = o.Location.Y,
                         Id = o.Id
                     },
-                    CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
-                    Country = o.CityFk.CountyFk.DisplayName ?? "",
+                    CityDisplayName =  ObjectMapper.Map<CityDto>(o.CityFk).TranslatedDisplayName,
+                    Country = ObjectMapper.Map<CountriesTranslationDto>(o.CityFk.CountyFk).TranslatedDisplayName ,
                     CreationTime = o.CreationTime,
                     ShipperName = o.Tenant.TenancyName,
                     FacilityWorkingHours = ObjectMapper.Map<List<FacilityWorkingHourDto>>(o.FacilityWorkingHours)
