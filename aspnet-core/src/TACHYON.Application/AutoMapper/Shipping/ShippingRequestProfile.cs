@@ -29,7 +29,7 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dest => dest.ShippingRequestBidDtoList, opt => opt.Ignore())
                 .ForMember(dest => dest.AssignedTruckDto, opt => opt.MapFrom(src => src.AssignedTruckFk))
                 .ForMember(dest => dest.VasCount, opt => opt.MapFrom(src => src.ShippingRequestVases.Count))
-                .ForMember(dest => dest.OriginalCityName, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
+                //.ForMember(dest => dest.OriginalCityName, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
                 .ForMember(dest => dest.OriginalCityId, opt => opt.MapFrom(src => src.OriginCityFk.Id))
                 //.ForMember(dest => dest.DestinationCityName,
                 //    opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
@@ -43,8 +43,8 @@ namespace TACHYON.AutoMapper.Shipping
                 //.ForMember(dest => dest.TruckTypeDisplayName, opt => opt.MapFrom(src => src.TrucksTypeFk.DisplayName))
                 .ForMember(dest => dest.TruckTypeFullName, opt => opt.Ignore())
                 .ForMember(dest => dest.CapacityDisplayName, opt => opt.MapFrom(src => src.CapacityFk.DisplayName))
-                .ForMember(dest => dest.TransportTypeDisplayName,
-                    opt => opt.MapFrom(src => src.TransportTypeFk.DisplayName))
+                //.ForMember(dest => dest.TransportTypeDisplayName,
+                //    opt => opt.MapFrom(src => src.TransportTypeFk.DisplayName))
                 .ForMember(dest => dest.ShippingTypeDisplayName,
                     opt => opt.MapFrom(src => src.ShippingTypeFk.DisplayName))
                 .ForMember(dest => dest.packingTypeDisplayName,
