@@ -174,6 +174,10 @@ namespace TACHYON.PriceOffers
                     price.CarrierRate = offer.Tenant.Rate;
                     price.CarrierRateNumber = offer.Tenant.RateNumber;
                 }
+                if(await IsTachyonDealer() && price.Channel == PriceOfferChannel.TachyonManageService)
+                {
+                    price.TotalAmount = offer.TotalAmountWithCommission;
+                }
                 PriceOfferList.Add(price);
             }
 
