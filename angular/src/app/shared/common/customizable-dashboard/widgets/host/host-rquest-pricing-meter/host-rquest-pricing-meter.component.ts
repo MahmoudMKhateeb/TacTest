@@ -78,6 +78,9 @@ export class HostRquestPricingMeterComponent extends AppComponentBase implements
           },
           labels: [''],
         };
+        (this.chartOptions.chart as any).yaxis = {
+          opposite: this.isRtl,
+        };
         (this.chartOptions.chart.locales as any[]) = [
           {
             name: 'en',

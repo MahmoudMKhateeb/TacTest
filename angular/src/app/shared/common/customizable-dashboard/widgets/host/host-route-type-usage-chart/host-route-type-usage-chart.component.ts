@@ -68,6 +68,9 @@ export class HostRouteTypeUsageChartComponent extends AppComponentBase implement
           xaxis: {
             categories: this.routes,
           },
+          yaxis: {
+            opposite: this.isRtl,
+          },
           tooltip: {
             y: {
               formatter: function (val) {

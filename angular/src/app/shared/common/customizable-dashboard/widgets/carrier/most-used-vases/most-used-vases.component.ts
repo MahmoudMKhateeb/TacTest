@@ -54,6 +54,9 @@ export class MostUsedVasesComponent extends AppComponentBase implements OnInit {
           xaxis: {
             type: 'category',
           },
+          yaxis: {
+            opposite: this.isRtl,
+          },
         };
         (this.chartOptions.chart.locales as any[]) = [
           {

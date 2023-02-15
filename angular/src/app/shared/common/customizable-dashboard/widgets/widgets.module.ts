@@ -59,7 +59,7 @@ import { CarrierAcceptedVsRejectdRequestsComponent } from './carrier/carrier-acc
 import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoices-details-widget/carrier-invoices-details-widget.component';
 import { ProjectPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/project-performance/project-performance.component';
 import { TruckPerformanceChartComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance-chart/truck-performance-chart.component';
-import { DxSelectBoxModule } from '@node_modules/devextreme-angular';
+import { DxDateBoxModule, DxSelectBoxModule } from '@node_modules/devextreme-angular';
 import { CountersWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/counters-widget/counters-widget.component';
 import { UpcomingTripsWidgetsComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/upcoming-trips-widgets/upcoming-trips-widgets.component';
 import { NeedsActionWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/needs-action-widget/needs-action-widget.component';
@@ -70,7 +70,22 @@ import { NewDirectRequestsWidgetComponent } from '@app/shared/common/customizabl
 import { TabsModule } from '@node_modules/ngx-bootstrap/tabs';
 import { FromToComponent } from '@app/shared/common/from-to/from-to.component';
 import { DriverTucksActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/driver-tucks-activity/driver-tucks-activity.component';
-import { NewActorsThisMonthComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/new-actors-this-month.component';
+import { NewActorsThisMonthComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/new-actors-this-month/new-actors-this-month.component';
+import { NumberOfActorsComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/number-of-actors/number-of-actors.component';
+import { MostActiveActorComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/most-active-actor/most-active-actor.component';
+import { MostActiveActorShipperComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/most-active-actor-shipper/most-active-actor-shipper.component';
+import { MostActiveActorCarrierComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/most-active-actor-carrier/most-active-actor-carrier.component';
+import { NumberOfActiveActorsComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/number-of-active-actors/number-of-active-actors.component';
+import { MostUsedDestinationsActorsComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/most-used-destinations-actors/most-used-destinations-actors.component';
+import { MostUsedOriginsActorsComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/most-used-origins-actors/most-used-origins-actors.component';
+import { ActorUpcomingTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-upcoming-trips/actor-upcoming-trips.component';
+import { ActorNeedsActionsComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-needs-actions/actor-needs-actions.component';
+import { ActorPendingPriceOffersComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-pending-price-offers/actor-pending-price-offers.component';
+import { ActorMostTruckTypeUsedComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-most-truck-type-used/actor-most-truck-type-used.component';
+import { ActorNextDocDueDateComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-next-doc-due-date/actor-next-doc-due-date.component';
+import { ActorNextInvoiceDueDateComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-next-invoice-due-date/actor-next-invoice-due-date.component';
+import { ActorNewInvoiceVsPaidInvoiceComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-new-invoice-vs-paid-invoice/actor-new-invoice-vs-paid-invoice.component';
+import { ActorPaidInvoiceVsClaimedInvoiceComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-paid-invoice-vs-claimed-invoice/actor-paid-invoice-vs-claimed-invoice.component';
 
 const widgets = [
   CompletedTripsWidgetComponent,
@@ -129,6 +144,21 @@ const widgets = [
   FromToComponent,
   DriverTucksActivityComponent,
   NewActorsThisMonthComponent,
+  NumberOfActorsComponent,
+  MostActiveActorComponent,
+  MostActiveActorShipperComponent,
+  MostActiveActorCarrierComponent,
+  NumberOfActiveActorsComponent,
+  MostUsedOriginsActorsComponent,
+  MostUsedDestinationsActorsComponent,
+  ActorUpcomingTripsComponent,
+  ActorNeedsActionsComponent,
+  ActorPendingPriceOffersComponent,
+  ActorMostTruckTypeUsedComponent,
+  ActorNextDocDueDateComponent,
+  ActorNextInvoiceDueDateComponent,
+  ActorNewInvoiceVsPaidInvoiceComponent,
+  ActorPaidInvoiceVsClaimedInvoiceComponent,
 ];
 @NgModule({
   declarations: [...widgets],
@@ -148,6 +178,7 @@ const widgets = [
     AngularFirestoreModule,
     RouterModule,
     DxSelectBoxModule,
+    DxDateBoxModule,
   ],
   entryComponents: [...widgets],
   exports: [...widgets],

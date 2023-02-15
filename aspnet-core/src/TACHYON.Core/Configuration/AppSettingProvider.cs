@@ -1098,7 +1098,7 @@ namespace TACHYON.Configuration
                     {
                         new Page
                         {
-                            Name = "General",
+                            Name = "MySelf",
                             Widgets = new List<Widget>()
                             {
                                 new Widget
@@ -1236,33 +1236,132 @@ namespace TACHYON.Configuration
                             Name = "Actors",
                             Widgets = new List<Widget>()
                             {
-                                // new Widget
-                                // {
-                                //     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
-                                //         .ShipperInvoicesVsPaidInvoicesWidget,
-                                //     Height =12,
-                                //     Width = 15,
-                                //     PositionX = 0,
-                                //     PositionY = 9
-                                // },
                                 new Widget
                                 {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
-                                        .ShipperDocumentDueDateInDaysWidget,
-                                    Height = 2,
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .NewActorsThisMonthWidget,
+                                    Height = 5,
+                                    Width = 12,
+                                    PositionX = 0,
+                                    PositionY = 0
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .NumberOfActors,
+                                    Height = 5,
                                     Width = 12,
                                     PositionX = 12,
                                     PositionY = 0
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
-                                        .ShipperInvoiceDueDateInDaysWidget,
-                                    Height = 2,
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .MostActiveActorShipper,
+                                    Height = 10,
+                                    Width = 12,
+                                    PositionX = 0,
+                                    PositionY = 5
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .MostActiveActorCarrier,
+                                    Height = 10,
                                     Width = 12,
                                     PositionX = 12,
-                                    PositionY = 3
-                                },
+                                    PositionY = 5
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .ActorsMostUsedDestinations,
+                                    Height = 10,
+                                    Width = 6,
+                                    PositionX = 24,
+                                    PositionY = 15
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .ActorsUpcomingTrips,
+                                    Height = 8,
+                                    Width = 6,
+                                    PositionX = 24,
+                                    PositionY = 0
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .ActorsNeedsActions,
+                                    Height = 7,
+                                    Width = 6,
+                                    PositionX = 24,
+                                    PositionY = 8
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .MostTruckTypeUsed,
+                                    Height = 12,
+                                    Width = 16,
+                                    PositionX = 8,
+                                    PositionY = 15
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .ActorNextDocDueDate,
+                                    Height = 10,
+                                    Width = 6,
+                                    PositionX = 24,
+                                    PositionY = 25
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .ActorNextInvoiceDueDate,
+                                    Height = 10,
+                                    Width = 6,
+                                    PositionX = 24,
+                                    PositionY = 35
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .NewInvoicesVsPaidInvoices,
+                                    Height = 10,
+                                    Width = 16,
+                                    PositionX = 8,
+                                    PositionY = 27
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .ActorsPaidInvoiceVsClaimedInvoice,
+                                    Height = 10,
+                                    Width = 16,
+                                    PositionX = 0,
+                                    PositionY = 37
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .NumberOfActiveActors,
+                                    Height = 10,
+                                    Width = 8,
+                                    PositionX = 0,
+                                    PositionY = 15
+                                  },
+                                  new Widget
+                                  {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Broker
+                                        .ActorsMostUsedOrigins,
+                                    Height = 12,
+                                    Width = 8,
+                                    PositionX = 0,
+                                    PositionY = 25
+                                  }
                         
                             }
                         },

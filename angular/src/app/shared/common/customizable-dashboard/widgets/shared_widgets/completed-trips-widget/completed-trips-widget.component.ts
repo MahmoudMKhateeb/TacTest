@@ -53,6 +53,9 @@ export class CompletedTripsWidgetComponent extends WidgetComponentBase implement
           xaxis: {
             type: 'category',
           },
+          yaxis: {
+            opposite: this.isRtl,
+          },
         };
         (this.chartOptions.chart.locales as any[]) = [
           {

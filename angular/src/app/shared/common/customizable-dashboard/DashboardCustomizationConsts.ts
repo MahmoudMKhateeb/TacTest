@@ -120,6 +120,10 @@ export class DashboardCustomizationConst {
       NewInvoicesVsPaidInvoices: 'Widgets_Tenant_Broker_New_Invoices_Vs_Paid_Invoices',
       PendingPriceOffers: 'Widgets_Tenant_Broker_Pending_Price_Offers',
       ActorsPaidInvoiceVsClaimedInvoice: 'Widgets_Tenant_Broker_Actors_Paid_Invoice_Vs_Claimed_Invoice',
+      ActorsMostUsedOrigins: 'Widgets_Tenant_Broker_Actors_Most_Used_Origins',
+      ActorsMostUsedDestinations: 'Widgets_Tenant_Broker_Actors_Most_Used_Destinations',
+      ActorsUpcomingTrips: 'Widgets_Tenant_Broker_Actors_Upcoming_Trips',
+      ActorsNeedsActions: 'Widgets_Tenant_Broker_Actors_Needs_Actions',
     },
   };
   static filters = {
@@ -333,7 +337,7 @@ export class DashboardCustomizationConst {
       pages: [
         {
           id: 'Page99b576fd6a6b4313ae90ee6b3d5b3d4a',
-          name: 'General',
+          name: 'MySelf',
           widgets: [
             {
               widgetId: 'Widgets_Tenant_shipper_CompletedTripsVsPodWidget',
@@ -438,7 +442,106 @@ export class DashboardCustomizationConst {
         {
           id: 'Page46396cfc947141cf91ebf09d493d1455',
           name: 'Actors',
-          widgets: [],
+          widgets: [
+            {
+              widgetId: 'Widgets_Tenant_Broker_New_Actors_This_Month',
+              height: 5,
+              width: 12,
+              positionX: 0,
+              positionY: 0,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_Number_Of_Actors',
+              height: 5,
+              width: 12,
+              positionX: 12,
+              positionY: 0,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_Most_Active_Actor_Shipper',
+              height: 10,
+              width: 12,
+              positionX: 0,
+              positionY: 5,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_Most_Active_Actor_Carrier',
+              height: 10,
+              width: 12,
+              positionX: 12,
+              positionY: 5,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_Actors_Most_Used_Destinations',
+              height: 10,
+              width: 6,
+              positionX: 24,
+              positionY: 15,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_Actors_Upcoming_Trips',
+              height: 8,
+              width: 6,
+              positionX: 24,
+              positionY: 0,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_Actors_Needs_Actions',
+              height: 7,
+              width: 6,
+              positionX: 24,
+              positionY: 8,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_Most_Truck_Type_Used',
+              height: 12,
+              width: 16,
+              positionX: 8,
+              positionY: 15,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_Actor_Next_Doc_Due_Date',
+              height: 10,
+              width: 6,
+              positionX: 24,
+              positionY: 25,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_Actor_Next_Invoice_Due_Date',
+              height: 10,
+              width: 6,
+              positionX: 24,
+              positionY: 35,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_New_Invoices_Vs_Paid_Invoices',
+              height: 10,
+              width: 16,
+              positionX: 8,
+              positionY: 27,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_Actors_Paid_Invoice_Vs_Claimed_Invoice',
+              height: 10,
+              width: 16,
+              positionX: 0,
+              positionY: 37,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_Number_Of_Active_Actors',
+              height: 10,
+              width: 8,
+              positionX: 0,
+              positionY: 15,
+            },
+            {
+              widgetId: 'Widgets_Tenant_Broker_Actors_Most_Used_Origins',
+              height: 12,
+              width: 8,
+              positionX: 0,
+              positionY: 25,
+            },
+          ],
         },
         {
           id: 'Pagefd4b23e192914ca885c1a53ad0598d7b',

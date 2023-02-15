@@ -80,6 +80,9 @@ export class MostWorkedWithShippersComponent extends AppComponentBase implements
             },
           ],
         };
+        (this.chartOptions.chart as any).yaxis = {
+          opposite: this.isRtl,
+        };
         this.legend = {
           formatter: function (legendName: string, opts?: any) {
             console.log('legendName', legendName);

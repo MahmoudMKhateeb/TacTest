@@ -3196,5 +3196,65 @@
     <text name="SelectTheMatchingPricePackages">Select The Matching Price Packages</text>
     <text name="AppointmentNumber">Appointment number</text>
     <text name="AppointmentDetails">Appointment details</text>
+    <text name="NewDirectRequest">New Direct Request</text>
+    <text name="NewPriceOffer">New Price Offer</text>
+    <text name="UpcomingTrips">Upcoming Trips</text>
+    <text name="DeliveredTrips">Delivered Trips</text>
+    <text name="InTransitTrips">In Transit Trips</text>
+    <text name="NextDocDueDate">Next Doc Due Date</text>
+	<text name="NextInvoiceDueDate">Next Invoice Due Date</text>
+	<text name="withinAWeek">with in a week</text>
+	<text name="PaidVsClaimedInvoices">Paid Vs Claimed Invoices</text>
+	<text name="NewActorsThisMonth">New Actors This Month</text>
+	<text name="NumberOfActors">Number Of Actors</text>
+	<text name="MostActiveActorCarrier">Most Active Actor Carrier</text>
+	<text name="MostActiveActorShipper">Most Active Actor Shipper</text>
+	<text name="LastYear">Last Year</text>
+	<text name="MostTruckTypeUsed">Most Truck Type Used</text>
+	<text name="NumberOfActiveActors">Number Of Active Actors</text>
+	<text name="NumberOfNonActiveActors">Number Of Non Active Actors</text>
+	<text name="Shippers">Shippers</text>
+	<text name="NewInvoicesVsPaidInvoices">New Invoices Vs Paid Invoices</text>
+	<text name="PaidInvoiceVsClaimedInvoice">Paid Invoice Vs Claimed Invoice</text>
+	<text name="Claimed">Claimed</text>
+	<text name="Week">Week</text>
+	<text name="Sun">Sun</text>
+	<text name="Mon">Mon</text>
+	<text name="Tue">Tue</text>
+	<text name="Wed">Wed</text>
+	<text name="Thu">Thu</text>
+	<text name="Fri">Fri</text>
+	<text name="Sat">Sat</text>
+		
+	<text name="Jan">Jan</text>
+	<text name="Feb">Feb</text>
+	<text name="Mar">Mar</text>
+	<text name="Apr">Apr</text>
+	<text name="May">May</text>
+	<text name="Jun">Jun</text>
+	<text name="Jul">Jul</text>
+	<text name="Aug">Aug</text>
+	<text name="Sep">Sep</text>
+	<text name="Oct">Oct</text>
+	<text name="Nov">Nov</text>
+	<text name="Dec">Dec</text>
+
+	<text name="CarrierActiveDriversAndTrucksWidget">Carrier Active Drivers And Trucks</text>
+	<text name="NewDirectRequestsWidget">New Direct Requests</text>
+	<text name="NewActorsThisMonthWidget">New Actors This Month</text>
+	<text name="ActorNextDocDueDate">Actor Next Doc Due Date</text>
+	<text name="ActorNextInvoiceDueDate">Actor Next Invoice Due Date</text>
+	<text name="PendingPriceOffers">Pending Price Offers</text>
+	<text name="ActorsPaidInvoiceVsClaimedInvoice">Actors Paid Invoice Vs Claimed Invoice</text>
+	<text name="ActorsMostUsedOrigins">Actors Most Used Origins</text>
+	<text name="ActorsMostUsedDestinations">Actors Most Used Destinations</text>
+	<text name="ActorsUpcomingTrips">Actors Upcoming Trips</text>
+	<text name="ActorsNeedsActions">Actors Needs Actions</text>
+	<text name="ShipperCountersWidget">Counters</text>
+	<text name="ShipperUpcomingTripsWidget">Upcoming Trips</text>
+	<text name="ShipperNeedsActionWidget">Needs Action</text>
+	<text name="ShipperNewOffersWidget">New Offers</text>
+	<text name="RestoreDashboardDefaults">Restore Dashboard Defaults</text>
+		
 	</texts>
 </localizationDictionary>

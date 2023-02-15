@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="ar-EG">
 	<texts>
+		<text name="Actors">العملاء</text>
+		<text name="Actor">العميل</text>
 		<text name="{0}IsInvalid">"{0}" غير صالح</text>
 		<text name="{0}IsRequired">مطلوب</text>
 		<text name="{0}UserCannotBeDeleted">لا يمكن حذف المستخدم {0}.</text>
@@ -2927,5 +2929,63 @@
 	<text name="SelectTheMatchingPricePackages">أختر حزم الأسعار المتطابقة</text>
 	<text name="AppointmentNumber">رقم الموعد</text>
 	<text name="AppointmentDetails">تفاصيل الموعد</text>
+	<text name="NewDirectRequest">طلب مباشر جديد</text>
+	<text name="NewPriceOffer">عرض سعر جديد</text>
+	<text name="UpcomingTrips">الرحلات القادمة</text>
+	<text name="DeliveredTrips">الرحلات التي تم تسليمها</text>
+	<text name="InTransitTrips">في رحلات العبور</text>
+	<text name="NextDocDueDate">تاريخ الاستحقاق التالي للمستند</text>
+	<text name="NextInvoiceDueDate">تاريخ استحقاق الفاتورة التالي</text>
+	<text name="withinAWeek">خلال أسبوع</text>
+	<text name="PaidVsClaimedInvoices">الفواتير المدفوعة مقابل المطالب بها</text>
+	<text name="NewActorsThisMonth">العملاء الجدد هذا الشهر</text>
+	<text name="NumberOfActors">عدد العملاء</text>
+	<text name="MostActiveActorCarrier">العميل الناقل الأكثر نشاطا</text>
+	<text name="MostActiveActorShipper">العميل الشاحن الأكثر نشاطا</text>
+	<text name="LastYear">العام الماضي</text>
+	<text name="MostTruckTypeUsed">معظم أنواع الشاحنات المستخدمة</text>
+	<text name="NumberOfActiveActors">عدد العملاء النشطين</text>
+	<text name="NumberOfNonActiveActors">عدد العملاء غير النشطين</text>
+	<text name="Shippers">الشاحنون</text>
+	<text name="NewInvoicesVsPaidInvoices">الفواتير الجديدة مقابل الفواتير المدفوعة</text>
+	<text name="PaidInvoiceVsClaimedInvoice">الفاتورة المدفوعة مقابل الفاتورة المطالب بها</text>
+	<text name="Claimed">مطالب بها</text>
+	<text name="Week">أسبوع</text>
+	<text name="Sun">الأحد</text>
+	<text name="Mon">الإثنين</text>
+	<text name="Tue">الثلاثاء</text>
+	<text name="Wed">الأربعاء</text>
+	<text name="Thu">الخميس</text>
+	<text name="Fri">الجمعة</text>
+	<text name="Sat">السبت</text>
+	<text name="Jan">يناير</text>
+	<text name="Feb">فبراير</text>
+	<text name="Mar">مارس</text>
+	<text name="Apr">أبريل</text>
+	<text name="May">مايو</text>
+	<text name="Jun">يونيو</text>
+	<text name="Jul">يوليو</text>
+	<text name="Aug">أغسطس</text>
+	<text name="Sep">سبتمبر</text>
+	<text name="Oct">أكتوبر</text>
+	<text name="Nov">نوفمبر</text>
+	<text name="Dec">ديسمبر</text>
+
+	<text name="CarrierActiveDriversAndTrucksWidget">السائقين والشاحنات النشطين للناقل</text>
+	<text name="NewDirectRequestsWidget">طلبات مباشرة جديدة</text>
+	<text name="NewActorsThisMonthWidget">العملاء الجدد هذا الشهر</text>
+	<text name="ActorNextDocDueDate">تاريخ استحقاق المستند التالي للممثل</text>
+	<text name="ActorNextInvoiceDueDate">تاريخ استحقاق الفاتورة التالية للممثل</text>
+	<text name="PendingPriceOffers">عروض الأسعار المعلقة</text>
+	<text name="ActorsPaidInvoiceVsClaimedInvoice">الفاتورة المدفوعة مقابل الفاتورة المطالب بها للعملاء</text>
+	<text name="ActorsMostUsedOrigins">الأصول الأكثر استخدامًا للعملاء</text>
+	<text name="ActorsMostUsedDestinations">الوجهات الأكثر استخدامًا للعملاء</text>
+	<text name="ActorsUpcomingTrips">الرحلات القادمة للعملاء</text>
+	<text name="ActorsNeedsActions">بانتظار قرار للعملاء</text>
+	<text name="ShipperCountersWidget">عدادات</text>
+	<text name="ShipperUpcomingTripsWidget">الرحلات القادمة</text>
+	<text name="ShipperNeedsActionWidget">بانتظار قرار</text>
+	<text name="ShipperNewOffersWidget">عروض جديدة</text>
+	<text name="RestoreDashboardDefaults">استعادة الإعدادات الافتراضية للوحة العمل</text>
 	</texts>
 </localizationDictionary>

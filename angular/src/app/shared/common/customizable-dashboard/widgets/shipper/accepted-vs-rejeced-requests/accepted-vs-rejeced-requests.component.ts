@@ -26,6 +26,7 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
   // this.l('Daily'), this.l('Weekly'), this.l('Monthly')
   options: { key: any; value: any }[] = [];
   yaxis = [
+    { opposite: this.isRtl },
     // {
     //     labels: {
     //         formatter: function(val) {
@@ -75,7 +76,20 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
         };
         let categories = [];
         if (this.selectedOption == FilterDatePeriod.Monthly) {
-          categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          categories = [
+            this.l('Jan'),
+            this.l('Feb'),
+            this.l('Mar'),
+            this.l('Apr'),
+            this.l('May'),
+            this.l('Jun'),
+            this.l('Jul'),
+            this.l('Aug'),
+            this.l('Sep'),
+            this.l('Oct'),
+            this.l('Nov'),
+            this.l('Dec'),
+          ];
         }
         if (this.selectedOption == FilterDatePeriod.Weekly) {
           categories = Array.from(
@@ -83,7 +97,7 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
           );
         }
         if (this.selectedOption == FilterDatePeriod.Daily) {
-          categories = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+          categories = [this.l('Sun'), this.l('Mon'), this.l('Tue'), this.l('Wed'), this.l('Thu'), this.l('Fri'), this.l('Sat')];
         }
         const acceptedSeries = categories.map((item) => {
           const foundFromResponse = result.acceptedOffers.find((accepted) => {

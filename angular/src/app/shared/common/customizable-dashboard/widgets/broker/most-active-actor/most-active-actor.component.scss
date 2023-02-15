@@ -1,0 +1,30 @@
+.shipper-carrier-count {
+    position: relative;
+    &:before {
+        content: " ";
+        width: 20px;
+        height: 10px;
+        background: #000;
+        position: absolute;
+        left: -25px;
+        top: 20%;
+        border-radius: 10px;
+    }
+    &:first-of-type {
+        &:before {
+            background: #DC2434;
+        }
+    }
+}
+.dashed-line {
+    width: 5%;
+    border-bottom: 1px dashed #707070;
+}
+.font-35 {
+    font-size: 35px;
+}
+::ng-deep {
+    .apexcharts-gridline {
+        display: none !important;
+    }
+}

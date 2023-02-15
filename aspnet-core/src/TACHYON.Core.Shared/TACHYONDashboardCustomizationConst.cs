@@ -144,6 +144,25 @@
                 public const string RequestsHeatMapWidget = "Widgets_Tenant_TachyonDealer_RequestsHeatMapWidget";
                 public const string NormalVsRentalRequestsWidget = "Widgets_Tenant_TachyonDealer_NormalVsRentalRequestsWidget";
             }
+            
+            public class Broker
+            {
+                public const string NewActorsThisMonthWidget = "Widgets_Tenant_Broker_New_Actors_This_Month";
+                public const string NumberOfActors = "Widgets_Tenant_Broker_Number_Of_Actors";
+                public const string MostActiveActorShipper = "Widgets_Tenant_Broker_Most_Active_Actor_Shipper";
+                public const string MostActiveActorCarrier = "Widgets_Tenant_Broker_Most_Active_Actor_Carrier";
+                public const string NumberOfActiveActors = "Widgets_Tenant_Broker_Number_Of_Active_Actors";
+                public const string MostTruckTypeUsed = "Widgets_Tenant_Broker_Most_Truck_Type_Used";
+                public const string ActorNextDocDueDate = "Widgets_Tenant_Broker_Actor_Next_Doc_Due_Date";
+                public const string ActorNextInvoiceDueDate = "Widgets_Tenant_Broker_Actor_Next_Invoice_Due_Date";
+                public const string NewInvoicesVsPaidInvoices = "Widgets_Tenant_Broker_New_Invoices_Vs_Paid_Invoices";
+                public const string PendingPriceOffers = "Widgets_Tenant_Broker_Pending_Price_Offers";
+                public const string ActorsPaidInvoiceVsClaimedInvoice = "Widgets_Tenant_Broker_Actors_Paid_Invoice_Vs_Claimed_Invoice";
+                public const string ActorsMostUsedOrigins = "Widgets_Tenant_Broker_Actors_Most_Used_Origins";
+                public const string ActorsMostUsedDestinations = "Widgets_Tenant_Broker_Actors_Most_Used_Destinations";
+                public const string ActorsUpcomingTrips = "Widgets_Tenant_Broker_Actors_Upcoming_Trips";
+                public const string ActorsNeedsActions = "Widgets_Tenant_Broker_Actors_Needs_Actions";
+            }
         }
 
         public class Filters

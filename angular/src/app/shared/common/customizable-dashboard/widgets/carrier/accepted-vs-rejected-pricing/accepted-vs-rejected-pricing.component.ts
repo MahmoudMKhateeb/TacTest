@@ -20,7 +20,20 @@ import { DashboardCustomizationService } from '@app/shared/common/customizable-d
 })
 export class AcceptedVsRejectedPricingComponent extends AppComponentBase implements OnInit {
   // public chartOptions: Partial<ChartOptions>;
-  months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  months: string[] = [
+    this.l('Jan'),
+    this.l('Feb'),
+    this.l('Mar'),
+    this.l('Apr'),
+    this.l('May'),
+    this.l('Jun'),
+    this.l('Jul'),
+    this.l('Aug'),
+    this.l('Sep'),
+    this.l('Oct'),
+    this.l('Nov'),
+    this.l('Dec'),
+  ];
   // acceptedReqs: number[];
   // rejectedReqs: number[];
   // loading = false;
@@ -75,7 +88,20 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
         };
         let categories = [];
         if (this.selectedOption == FilterDatePeriod.Monthly) {
-          categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          categories = [
+            this.l('Jan'),
+            this.l('Feb'),
+            this.l('Mar'),
+            this.l('Apr'),
+            this.l('May'),
+            this.l('Jun'),
+            this.l('Jul'),
+            this.l('Aug'),
+            this.l('Sep'),
+            this.l('Oct'),
+            this.l('Nov'),
+            this.l('Dec'),
+          ];
         }
         if (this.selectedOption == FilterDatePeriod.Weekly) {
           categories = Array.from(
@@ -83,7 +109,7 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
           );
         }
         if (this.selectedOption == FilterDatePeriod.Daily) {
-          categories = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+          categories = [this.l('Sun'), this.l('Mon'), this.l('Tue'), this.l('Wed'), this.l('Thu'), this.l('Fri'), this.l('Sat')];
         }
         const acceptedSeries = categories.map((item) => {
           const foundFromResponse = result.acceptedOffers.find((accepted) => {
@@ -134,6 +160,7 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
             categories,
           },
           yaxis: {
+            opposite: this.isRtl,
             min: 0,
             tickAmount: 1,
             floating: false,

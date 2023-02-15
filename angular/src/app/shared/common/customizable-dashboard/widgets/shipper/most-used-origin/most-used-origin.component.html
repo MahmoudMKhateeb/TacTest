@@ -13,15 +13,18 @@
       </div>
       <div class="col-12">
         <ng-container *ngFor="let item of data">
-          <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between position-relative">
             <div>
               {{ item.cityName }}
             </div>
             <div>
-              {{ item.numberOfRequests }}
+              {{ isForActors ? item.actorCompanyName : item.numberOfRequests }}
+            </div>
+            <div class="actor-number-of-trips text-danger" *ngIf="isForActors">
+              {{ item.numberOfTrips }}
             </div>
           </div>
-          <div class="progress w-100" style="height: 2px">
+          <div class="progress w-100 mb-4" style="height: 2px">
             <div
               class="progress-bar accepted"
               role="progressbar"

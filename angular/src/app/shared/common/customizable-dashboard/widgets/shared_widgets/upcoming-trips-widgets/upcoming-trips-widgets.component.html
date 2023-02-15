@@ -6,7 +6,7 @@
           <div class="month-name">
             {{ today | date: 'MMMM' }}
           </div>
-          <div class="upcoming-trips">Upcoming Trips</div>
+          <div class="upcoming-trips">{{ 'UpcomingTrips' | localize }}</div>
         </div>
         <div class="d-flex justify-content-between">
           <button class="btn btn-default week-day-btn" *ngFor="let day of weekDates" (click)="selectDay(day)">

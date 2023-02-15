@@ -171,6 +171,7 @@ import { DedicatedDynamicActorInvoicesServiceProxy, DedicatedDynamiceInvoicesSer
     ApiServiceProxies.DedicatedDynamiceInvoicesServiceProxy,
     ApiServiceProxies.PricePackageAppendixServiceProxy,
     ApiServiceProxies.DedicatedDynamicActorInvoicesServiceProxy,
+    ApiServiceProxies.BrokerDashboardServiceProxy,
 
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
