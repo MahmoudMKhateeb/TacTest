@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, Input, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { CreateOrEditEntityTemplateInputDto, EntityTemplateServiceProxy, SavedEntityType } from '@shared/service-proxies/service-proxies';
@@ -13,7 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class CreateOrEditTemplateDropDownButtonComponent extends AppComponentBase {
   @Input() entityType: SavedEntityType;
-  @Input() sourceEntityId: string;
+  @Input() sourceEntityId: any;
   @Input() customClass: string;
   @Input() jsonData: string;
   @Input() dropDirection: 'up' | 'down';

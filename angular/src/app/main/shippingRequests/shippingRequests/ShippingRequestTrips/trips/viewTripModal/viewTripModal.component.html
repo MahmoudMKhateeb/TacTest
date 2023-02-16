@@ -20,13 +20,13 @@
             "
             type="button"
             class="btn btn-primary blue"
-            (click)="ResetTrip(currentTripId)"
+            (click)="ResetTrip(_TripService.activeTripId)"
             [buttonBusy]="isResetTripLoading"
           >
             <i class="fa flaticon2-reload-1"></i>
             {{ l('Reset') }}
           </button>
-          <button class="btn btn-primary" (click)="DownloadSingleDropWaybillPdf(currentTripId)" [buttonBusy]="wayBillIsDownloading">
+          <button class="btn btn-primary" (click)="DownloadSingleDropWaybillPdf(_TripService.activeTripId)" [buttonBusy]="wayBillIsDownloading">
             <i class="fa flaticon2-print"></i>
             {{ l('PrintWaybill') }}
           </button>
@@ -381,4 +381,4 @@
 </div>
 <shared-file-viewer #fileViwerComponent></shared-file-viewer>
 
-<app-trip-notes-modal #TripNotesModal [tripId]="currentTripId" [type]="type"> </app-trip-notes-modal>
+<app-trip-notes-modal #TripNotesModal [tripId]="_TripService.activeTripId" [type]="type"> </app-trip-notes-modal>

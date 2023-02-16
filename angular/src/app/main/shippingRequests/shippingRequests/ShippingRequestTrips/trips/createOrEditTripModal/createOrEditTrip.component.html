@@ -25,10 +25,11 @@
                 [dropup]="false"
                 [insideClick]="true"
                 *ngIf="
-                  !trip.id &&
+                  !_TripService.CreateOrEditShippingRequestTripDto.id &&
                   (isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas')) &&
-                  shippingRequestForView &&
-                  shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
+                  _TripService.GetShippingRequestForViewOutput &&
+                  _TripService.GetShippingRequestForViewOutput &&
+                  _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
                 "
               >
                 <button
@@ -55,9 +56,9 @@
 
               <button
                 class="btn btn-primary"
-                *ngIf="trip.id"
-                [disabled]="!trip.id"
-                (click)="DownloadSingleDropWaybillPdf(trip.id)"
+                *ngIf="_TripService.CreateOrEditShippingRequestTripDto.id"
+                [disabled]="!_TripService.CreateOrEditShippingRequestTripDto.id"
+                (click)="DownloadSingleDropWaybillPdf(_TripService.CreateOrEditShippingRequestTripDto.id)"
                 [buttonBusy]="wayBillIsDownloading"
               >
                 <i class="fa flaticon2-print"></i>
@@ -66,7 +67,7 @@
             </div>
           </div>
           <div class="modal-body" [busyIf]="loading">
-            <div class="row" *ngIf="shippingRequestForView?.shippingRequestFlag == ShippingRequestFlagEnum.Dedicated">
+            <div class="row" *ngIf="_TripService.GetShippingRequestForViewOutput?.shippingRequestFlag == ShippingRequestFlagEnum.Dedicated">
               <div class="col-lg-6">
                 <div class="form-group">
                   <label for="TripType"> {{ l('TripType') }} </label>
@@ -74,7 +75,7 @@
                     #TripType="ngModel"
                     name="TripType"
                     id="TripType"
-                    [(ngModel)]="trip.shippingRequestTripFlag"
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag"
                     class="form-control"
                     (change)="onRouteTypeChange()"
                   >
@@ -84,6 +85,121 @@
               </div>
             </div>
 
+            <div class="row" [hidden]="!this.feature.isEnabled('App.CarrierClients')">
+              <div class="col-6">
+                <div class="form-group">
+                  <label>{{ l('ActorShipper') }}</label>
+                  <div
+                    [ngClass]="{
+                      'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsShippers
+                    }"
+                  >
+                    <dx-select-box
+                      id="ActorShipper"
+                      name="ActorShipper"
+                      formControlName="ActorShipper"
+                      [(value)]="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId"
+                      [dataSource]="AllActorsShippers"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      [required]="true"
+                      placeholder="{{ l('SelectActor') }}"
+                    >
+                    </dx-select-box>
+                  </div>
+                  <span class="form-text text-muted">{{ l('SelectShipperActor') }}</span>
+                </div>
+                <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId">
+                  <label>{{ l('Price') }} <span class="text-danger">*</span></label>
+                  <input
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice.subTotalAmountWithCommission"
+                    min="0"
+                    (keypress)="numberOnly($event)"
+                    required
+                    type="number"
+                    class="form-control"
+                    name="subTotalAmountWithCommission"
+                    (change)="calculatePrices(_TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice)"
+                  />
+                </div>
+                <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId">
+                  <label>{{ l('TripVatAmount') }} <span class="text-danger">*</span></label>
+                  <input
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice.vatAmountWithCommission"
+                    required
+                    min="0"
+                    type="number"
+                    class="form-control"
+                    name="vatAmountWithCommission"
+                    disabled
+                  />
+                </div>
+
+                <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId">
+                  <label>{{ l('TotalAmount') }} <span class="text-danger">*</span></label>
+                  <input
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto?.actorShipperPrice.totalAmountWithCommission"
+                    required
+                    min="0"
+                    type="number"
+                    class="form-control"
+                    name="totalAmountWithCommission"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="form-group">
+                  <label>{{ l('ActorCarrier') }}</label>
+                  <div
+                    [ngClass]="{
+                      'spinner spinner-success spinner-right mr-1 ml-1': !AllActorsCarriers
+                    }"
+                  >
+                    <dx-select-box
+                      id="ActorCarrier"
+                      name="ActorCarrier"
+                      formControlName="ActorCarrier"
+                      [(value)]="_TripService.CreateOrEditShippingRequestTripDto.carrierActorId"
+                      [dataSource]="AllActorsCarriers"
+                      [searchEnabled]="true"
+                      displayExpr="displayName"
+                      valueExpr="id"
+                      placeholder="{{ l('SelectActor') }}"
+                    >
+                    </dx-select-box>
+                  </div>
+                  <span class="form-text text-muted">{{ l('SelectCarrierActor') }}</span>
+                </div>
+                <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.carrierActorId">
+                  <label>{{ l('Price') }} <span class="text-danger">*</span></label>
+                  <input
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice.subTotalAmount"
+                    min="0"
+                    (keypress)="numberOnly($event)"
+                    required
+                    type="number"
+                    class="form-control"
+                    name="subTotalAmount"
+                    (change)="calculateCarrierPrices(_TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice)"
+                  />
+                </div>
+                <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.carrierActorId">
+                  <label>{{ l('TripVatAmount') }} <span class="text-danger">*</span></label>
+                  <input
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice.vatAmount"
+                    required
+                    min="0"
+                    type="number"
+                    class="form-control"
+                    name="vatAmount"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
             <div class="row">
               <!--begin::Body-->
               <!--  begin:: Source Dest Facilitys  -->
@@ -130,7 +246,7 @@
                   <label> {{ l('supposedPickupTimeFrom') }} <span class="required-fileds">*</span></label>
                   <dx-date-box
                     name="supposedPickupDateFrom"
-                    [(value)]="trip.supposedPickupDateFrom"
+                    [(value)]="_TripService.CreateOrEditShippingRequestTripDto.supposedPickupDateFrom"
                     type="time"
                     pickerType="list"
                     openOnFieldClick="true"
@@ -149,7 +265,7 @@
                   <label> {{ l('supposedPickupTimeTo') }} <span class="required-fileds">*</span></label>
                   <dx-date-box
                     name="supposedPickupDateTo"
-                    [(value)]="trip.supposedPickupDateTo"
+                    [(value)]="_TripService.CreateOrEditShippingRequestTripDto.supposedPickupDateTo"
                     type="time"
                     pickerType="list"
                     openOnFieldClick="true"
@@ -172,9 +288,9 @@
                   <dx-date-box
                     id="tripExpectedDeliveryTime"
                     name="tripStartDate"
-                    [(value)]="trip.expectedDeliveryTime"
+                    [(value)]="_TripService.CreateOrEditShippingRequestTripDto.expectedDeliveryTime"
                     type="datetime"
-                    [min]="trip.startTripDate"
+                    [min]="_TripService.CreateOrEditShippingRequestTripDto.startTripDate"
                     openOnFieldClick="true"
                   >
                   </dx-date-box>
@@ -184,14 +300,17 @@
               <!-- begin::Vas's  -->
               <div
                 class="col-lg-6"
-                *ngIf="VasListFromFather?.length > 0 && shippingRequestForView?.shippingRequestFlag != ShippingRequestFlagEnum.Dedicated"
+                *ngIf="
+                  VasListFromFather?.length > 0 &&
+                  _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag != ShippingRequestFlagEnum.Dedicated
+                "
               >
                 <div class="form-group">
                   <label>{{ l('vases') }}</label>
                   <p-multiSelect
                     name="shippingRequestTripVases"
                     [options]="cleanVasesList"
-                    [(ngModel)]="trip.shippingRequestTripVases"
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripVases"
                     (ngModelChange)="isSelectedVasesHasinsurance($event)"
                     [style]="{ width: '100%' }"
                     styleClass="form-control pt-1"
@@ -216,7 +335,7 @@
                       class="form-control"
                       name="approximateGoodsTotalValue"
                       (keypress)="numberOnly($event)"
-                      [(ngModel)]="trip.totalValue"
+                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.totalValue"
                       [min]="1"
                       [class.is-invalid]="isApproximateValueRequired && approximateGoodsTotalValue.touched && !approximateGoodsTotalValue.valid"
                       [class.is-valid]="isApproximateValueRequired && approximateGoodsTotalValue.touched && approximateGoodsTotalValue.valid"
@@ -233,18 +352,37 @@
               <!--  end::Trip Goods Approximate Value -->
               <div class="col-lg-6">
                 <div class="form-group row">
-                  <div class="col-6 col-form-label" *ngIf="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal">
+                  <div
+                    class="col-6 col-form-label"
+                    *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal"
+                  >
                     <label for="DeliveryNote"> {{ l('NeedsDeliveryNote') }} </label>
-                    <select #DeliveryNote="ngModel" name="DeliveryNote" id="DeliveryNote" [(ngModel)]="trip.needsDeliveryNote" class="form-control">
+                    <select
+                      #DeliveryNote="ngModel"
+                      name="DeliveryNote"
+                      id="DeliveryNote"
+                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.needsDeliveryNote"
+                      class="form-control"
+                    >
                       <option [ngValue]="true">{{ l('Yes') }}</option>
                       <option [ngValue]="false">{{ l('No') }}</option>
                     </select>
                   </div>
                   <div
-                    [class]="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal ? 'col-6 col-form-label' : 'col-12 col-form-label'"
+                    [class]="
+                      _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal
+                        ? 'col-6 col-form-label'
+                        : 'col-12 col-form-label'
+                    "
                   >
                     <label for="Attachment"> {{ l('Attachment') }} </label>
-                    <select #Attachment="ngModel" name="Attachment" id="Attachment" [(ngModel)]="trip.hasAttachment" class="form-control">
+                    <select
+                      #Attachment="ngModel"
+                      name="Attachment"
+                      id="Attachment"
+                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.hasAttachment"
+                      class="form-control"
+                    >
                       <option [ngValue]="true">{{ l('Yes') }}</option>
                       <option [ngValue]="false">{{ l('No') }}</option>
                     </select>
@@ -260,9 +398,9 @@
                     id="ContainerNumber"
                     class="form-control"
                     name="ContainerNumber"
-                    [(ngModel)]="trip.containerNumber"
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.containerNumber"
                     type="text"
-                    [disabled]="trip.id && IsHaveContainerNumberValue && !isTachyonDealer"
+                    [disabled]="_TripService.CreateOrEditShippingRequestTripDto.id && IsHaveContainerNumberValue && !isTachyonDealer"
                   />
                 </div>
               </div>
@@ -276,20 +414,29 @@
                     id="SealNumber"
                     class="form-control"
                     name="SealNumber"
-                    [(ngModel)]="trip.sealNumber"
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.sealNumber"
                     type="text"
-                    [disabled]="trip.id && IsHaveSealNumberValue && !isTachyonDealer"
+                    [disabled]="_TripService.CreateOrEditShippingRequestTripDto.id && IsHaveSealNumberValue && !isTachyonDealer"
                   />
                 </div>
               </div>
               <!--   StartOf::Driver&Truck for DedicatedSR -->
-              <ng-container *ngIf="shippingRequestForView && shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated">
-                <div class="form-group col-lg-6" *ngIf="trip.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery">
+              <ng-container
+                *ngIf="
+                  (_TripService.GetShippingRequestForViewOutput &&
+                    _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated) ||
+                  !_TripService.GetShippingRequestForViewOutput
+                "
+              >
+                <div
+                  class="form-group col-lg-6"
+                  *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery"
+                >
                   <label>{{ l('RouteType') }}</label>
                   <select
                     name="routeType"
                     type="text"
-                    [(ngModel)]="trip.routeType"
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.routeType"
                     class="form-control"
                     [disabled]="saving"
                     required
@@ -303,7 +450,10 @@
                 </div>
                 <div
                   class="form-group col-lg-6"
-                  *ngIf="trip.routeType == RouteTypesEnum.MultipleDrops && trip.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery"
+                  *ngIf="
+                    _TripService.CreateOrEditShippingRequestTripDto.routeType == RouteTypesEnum.MultipleDrops &&
+                    _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery
+                  "
                 >
                   <label>{{ l('NumberOfDrops') }}</label>
                   <input
@@ -312,7 +462,7 @@
                     class="form-control"
                     name="numberOfDrops"
                     (keypress)="numberOnly($event); onRouteTypeChange()"
-                    [(ngModel)]="trip.numberOfDrops"
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.numberOfDrops"
                     (ngModelChange)="onRouteTypeChange()"
                     (change)="onRouteTypeChange()"
                     [min]="2"
@@ -322,41 +472,77 @@
                     required
                   />
                 </div>
-                <div class="form-group col-lg-6">
-                  <label>{{ l('Driver') }}</label>
-                  <select
-                    name="driverUserId"
-                    type="text"
-                    (change)="GetTruckOrDriver(trip.driverUserId, null)"
-                    [(ngModel)]="trip.driverUserId"
-                    class="form-control"
-                    [disabled]="saving || isDisabledDriver"
-                    required
-                  >
-                    <option disabled [ngValue]="null">{{ l('SelectaDriver') }}</option>
-                    <option *ngFor="let item of allDedicatedDrivers" [value]="item.id" [disabled]="!item.isAvailable">{{ item.displayName }}</option>
-                  </select>
-                </div>
-                <div class="form-group col-lg-6">
-                  <label>{{ l('Truck') }}</label>
-                  <select
-                    name="truckId"
-                    type="text"
-                    [(ngModel)]="trip.truckId"
-                    (change)="GetTruckOrDriver(null, trip.truckId)"
-                    class="form-control"
-                    [disabled]="saving || isDisabledTruck"
-                    required
-                  >
-                    <option disabled [ngValue]="null">{{ l('Selectatruck') }}</option>
-                    <option *ngFor="let item of allDedicatedTrucks" [value]="item.id" [disabled]="!item.isAvailable">{{ item.displayName }}</option>
-                  </select>
-                </div>
+
+                <ng-container *ngIf="_TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated">
+                  <div class="form-group col-lg-6">
+                    <label>{{ l('Driver') }}</label>
+                    <select
+                      name="driverUserId"
+                      type="text"
+                      (change)="GetTruckOrDriver(_TripService.CreateOrEditShippingRequestTripDto.driverUserId, null)"
+                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.driverUserId"
+                      class="form-control"
+                      [disabled]="saving || isDisabledDriver"
+                      required
+                    >
+                      <option disabled [ngValue]="null">{{ l('SelectaDriver') }}</option>
+                      <option *ngFor="let item of allDedicatedDrivers" [value]="item.id" [disabled]="!item.isAvailable">
+                        {{ item.displayName }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>{{ l('Truck') }}</label>
+                    <select
+                      name="truckId"
+                      type="text"
+                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.truckId"
+                      (change)="GetTruckOrDriver(null, _TripService.CreateOrEditShippingRequestTripDto.truckId)"
+                      class="form-control"
+                      [disabled]="saving || isDisabledTruck"
+                      required
+                    >
+                      <option disabled [ngValue]="null">{{ l('Selectatruck') }}</option>
+                      <option *ngFor="let item of allDedicatedTrucks" [value]="item.id" [disabled]="!item.isAvailable">{{ item.displayName }}</option>
+                    </select>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="!_TripService.GetShippingRequestForViewOutput">
+                  <div class="form-group col-lg-6">
+                    <label>{{ l('Driver') }}</label>
+                    <select
+                      name="driverUserId"
+                      type="text"
+                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.driverUserId"
+                      class="form-control"
+                      [disabled]="saving || isDisabledDriver"
+                      required
+                    >
+                      <option disabled [ngValue]="null">{{ l('SelectaDriver') }}</option>
+                      <option *ngFor="let item of allDrivers" [value]="item.id">{{ item.displayName }}</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>{{ l('Truck') }}</label>
+                    <select
+                      name="truckId"
+                      type="text"
+                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.truckId"
+                      class="form-control"
+                      [disabled]="saving || isDisabledTruck"
+                      required
+                    >
+                      <option disabled [ngValue]="null">{{ l('Selectatruck') }}</option>
+                      <option *ngFor="let item of allTrucks" [value]="item.truckId">{{ item.truckName }}</option>
+                    </select>
+                  </div>
+                </ng-container>
               </ng-container>
               <!--   EndOf::Driver&Truck for DedicatedSR -->
 
               <!--       start:: Notes       -->
-              <div [class]="trip.hasAttachment ? 'col-lg-6' : 'col-lg-12'">
+              <div [class]="_TripService.CreateOrEditShippingRequestTripDto.hasAttachment ? 'col-lg-6' : 'col-lg-12'">
                 <label>{{ l('Notes') }}</label>
                 <div class="input-group">
                   <textarea
@@ -364,32 +550,39 @@
                     name="notes"
                     class="form-control"
                     [maxlength]="512"
-                    [(ngModel)]="trip.note"
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.note"
                     [class.is-valid]="notes.touched && notes.valid && notes.value?.length != 0"
                     [class.is-invalid]="notes.touched && !notes.valid"
                   ></textarea>
                 </div>
               </div>
               <!--End :: notes-->
-              <div *ngIf="trip.hasAttachment" class="col-lg-6">
+              <div *ngIf="_TripService.CreateOrEditShippingRequestTripDto.hasAttachment" class="col-lg-6">
                 <label>{{ l('SelectFile') }} {{ fileToken }} </label>
                 <div class="custom-file">
                   <input
                     name="file"
-                    (change)="DocFileChangeEvent($event, trip.createOrEditDocumentFileDto)"
+                    (change)="DocFileChangeEvent($event, _TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto)"
                     type="file"
                     class="custom-file-input"
                     accept="image/x-png,image/jpeg,application/pdf"
-                    [required]="trip.hasAttachment"
+                    [required]="_TripService.CreateOrEditShippingRequestTripDto.hasAttachment"
                   />
-                  <label class="custom-file-label text-truncate" [for]="trip.createOrEditDocumentFileDto.name">
-                    {{ trip.createOrEditDocumentFileDto.name ? trip.createOrEditDocumentFileDto.name : l('SelectFile') }}</label
+                  <label
+                    class="custom-file-label text-truncate"
+                    [for]="_TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.name"
+                  >
+                    {{
+                      _TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.name
+                        ? _TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.name
+                        : l('SelectFile')
+                    }}</label
                   >
                 </div>
                 <div class="margin-top-5">
                   <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
                 </div>
-                <div class="mt-2" *ngIf="trip.createOrEditDocumentFileDto.name">
+                <div class="mt-2" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.name">
                   <div class="d-flex align-items-center flex-wrap mb-8">
                     <!--begin::Symbol-->
                     <div class="symbol symbol-50 symbol-light mr-3 ml-3">
@@ -401,13 +594,15 @@
                     <!--begin::Text-->
                     <div class="d-flex flex-column flex-grow-1 mr-2">
                       <a (click)="downloadAttatchment()" class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">
-                        {{ trip.createOrEditDocumentFileDto?.name }}</a
+                        {{ _TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto?.name }}</a
                       >
-                      <span class="text-muted font-weight-bold">{{ trip.createOrEditDocumentFileDto?.documentTypeDto?.templateContentType }}</span>
+                      <span class="text-muted font-weight-bold">{{
+                        _TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto?.documentTypeDto?.templateContentType
+                      }}</span>
                     </div>
                     <!--end::Text-->
                     <a
-                      *ngIf="trip.createOrEditDocumentFileDto?.binaryObjectId"
+                      *ngIf="_TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto?.binaryObjectId"
                       (click)="downloadAttatchment()"
                       class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
                     >
@@ -420,9 +615,9 @@
               <!--        begin of home delivery for dedicated request special fields          -->
               <ng-container
                 *ngIf="
-                  shippingRequestForView &&
-                  shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated &&
-                  trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery
+                  _TripService.GetShippingRequestForViewOutput &&
+                  _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated &&
+                  _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery
                 "
               >
                 <div class="form-group col-lg-4 mt-3">
@@ -436,7 +631,7 @@
                   <select
                     name="routeType"
                     type="text"
-                    [(ngModel)]="trip.routeType"
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.routeType"
                     class="form-control"
                     [disabled]="saving"
                     required
@@ -457,7 +652,7 @@
                         type="number"
                         class="form-control"
                         name="numberOfDrops"
-                        [(ngModel)]="trip.numberOfDrops"
+                        [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.numberOfDrops"
                         [class.is-invalid]="numberOfDrops.touched && !numberOfDrops.valid"
                         [class.is-valid]="numberOfDrops.touched && numberOfDrops.valid"
                         disabled
@@ -466,7 +661,10 @@
                     </div>
                     <div class="d-flex flex-column justify-content-center align-items-end p-6">
                       <button
-                        [disabled]="trip.routeType == RouteTypesEnum.SingleDrop && trip.numberOfDrops == 1"
+                        [disabled]="
+                          _TripService.CreateOrEditShippingRequestTripDto.routeType == RouteTypesEnum.SingleDrop &&
+                          _TripService.CreateOrEditShippingRequestTripDto.numberOfDrops == 1
+                        "
                         type="button"
                         class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
                         (click)="addAdditionalDrop()"
@@ -483,7 +681,7 @@
               <PointsComponent
                 [class.invalid-trip-points]="isTripPointsInvalid && isFormSubmitted"
                 (wayPointsListChanged)="revalidatePointsFromPointsComponent()"
-                [isHomeDelivery]="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
+                [isHomeDelivery]="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
                 #PointsComponent
               ></PointsComponent>
               <!--  end:: RouteSteps -->
@@ -504,8 +702,8 @@
               <create-or-edit-template-drop-down-button
                 *ngIf="
                   (isShipper || isTachyonDealer || isCarrierSaas) &&
-                  shippingRequestForView &&
-                  shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
+                  _TripService.GetShippingRequestForViewOutput &&
+                  _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
                 "
                 [entityType]="SavedEntityType.TripTemplate"
                 [jsonData]="tripAsJson"
@@ -518,7 +716,7 @@
                 type="submit"
                 class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
                 [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"
-                text="{{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}"
+                text="{{ _TripService.CreateOrEditShippingRequestTripDto.id ? l('UpdateTrip') : l('AddNewTrip') }}"
                 (onClick)="isFormSubmitted = true"
                 [useSubmitBehavior]="true"
                 [validationGroup]="'shippingRequestTripsGroup'"
@@ -530,7 +728,7 @@
               <!--              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"-->
               <!--              (click)="createOrEditTrip()"-->
               <!--            >-->
-              <!--              {{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}-->
+              <!--              {{ _TripService.CreateOrEditShippingRequestTripDto.id ? l('UpdateTrip') : l('AddNewTrip') }}-->
               <!--            </button>-->
               <!--end::Buttons-->
             </div>

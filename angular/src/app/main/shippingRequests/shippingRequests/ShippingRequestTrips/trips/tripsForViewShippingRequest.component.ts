@@ -18,12 +18,7 @@ import { Paginator } from '@node_modules/primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
 
 import {
-  GetShippingRequestForViewOutput,
   GetShippingRequestVasForViewDto,
-  ImportGoodsDetailsDto,
-  ImportRoutePointDto,
-  ImportTripDto,
-  ImportTripVasesFromExcelInput,
   ShippingRequestDto,
   ShippingRequestFlag,
   ShippingRequestRouteType,
@@ -67,7 +62,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @Input() ShippingRequest: ShippingRequestDto;
-  @Input() shippingRequestForView: GetShippingRequestForViewOutput;
+  //@Input() shippingRequestForView: GetShippingRequestForViewOutput;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   tripsByTmsEnabled = false;
   ShippingRequestTripStatusEnum = ShippingRequestTripStatus;
@@ -80,10 +75,10 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   tripVases: string;
   isArabic = false;
   active = false;
-  list: ImportTripDto;
-  pointsList: ImportRoutePointDto;
-  goodDetailsList: ImportGoodsDetailsDto;
-  vasesList: ImportTripVasesFromExcelInput;
+  list: any;
+  pointsList: any;
+  goodDetailsList: any;
+  vasesList: any;
   loading = false;
   uploadGoodDetailsUrl: string;
   ShippingRequestRouteTypeEnum = ShippingRequestRouteType;
@@ -97,7 +92,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
 
   constructor(
     injector: Injector,
-    private _TripService: TripService,
+    public _TripService: TripService,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private changeDetectorRef: ChangeDetectorRef,
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
@@ -114,12 +109,12 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   ngOnInit() {
     // update Trip Service and send vases list to trip component
     this._shippingRequestsServiceProxy.getShippingRequestForView(this.ShippingRequest.id).subscribe((result) => {
-      this.shippingRequestForView = result;
+      //this.shippingRequestForView = result;
       this.ShippingRequest = result.shippingRequest;
       this.VasListFromFather = result.shippingRequestVasDtoList;
       this.modifyShowBtnAddTrips(result.shippingRequest.canAddTrip);
       this.tripsByTmsEnabled = true;
-      this._TripService.updateShippingRequest(result);
+      this._TripService.GetShippingRequestForViewOutput = result;
     });
   }
 
@@ -132,7 +127,8 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
     return (
       this.feature.isEnabled('App.Shipper') ||
       this.isTachyonDealer ||
-      (this.feature.isEnabled('App.CarrierAsASaas') && this.ShippingRequest.carrierTenantId === this.shippingRequestForView.tenantId)
+      (this.feature.isEnabled('App.CarrierAsASaas') &&
+        this.ShippingRequest.carrierTenantId === this._TripService.GetShippingRequestForViewOutput.tenantId)
     );
   }
 
@@ -195,21 +191,21 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   }
 
   private modifyShowBtnAddTrips(canAddTrip: boolean) {
-    if (this.shippingRequestForView.shippingRequestFlag === ShippingRequestFlag.Normal) {
+    if (this._TripService.GetShippingRequestForViewOutput.shippingRequestFlag === ShippingRequestFlag.Normal) {
       this.showBtnAddTrips = canAddTrip;
     } else {
       const isBroker = this.hasCarrierClients && this.hasShipperClients;
       this.showBtnAddTrips =
         (this.isTachyonDealer &&
-          (this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.Completed ||
-            this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.PrePrice ||
-            this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.PostPrice ||
-            this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.NeedsAction)) ||
+          (this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.Completed ||
+            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.PrePrice ||
+            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.PostPrice ||
+            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.NeedsAction)) ||
         ((this.isShipper || isBroker || this.isCarrierSaas) &&
           canAddTrip &&
-          (this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.PrePrice ||
-            this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.PostPrice ||
-            this.shippingRequestForView.shippingRequest.status === ShippingRequestStatus.NeedsAction));
+          (this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.PrePrice ||
+            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.PostPrice ||
+            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.NeedsAction));
     }
   }
 
