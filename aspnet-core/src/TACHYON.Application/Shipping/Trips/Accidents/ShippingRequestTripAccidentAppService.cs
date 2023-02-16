@@ -263,8 +263,11 @@ namespace TACHYON.Shipping.Trips.Accidents
             
             foreach (var resolve in tripAccidentResolves)
                 await HandleResolve(resolve,trip);
-            
-            await CheckTripOrShippingRequestHasAnyAccident(trip.ShippingRequestId,trip.Id,tripAccidentResolves.Select(x=> x.Id).ToArray());
+            if (trip.ShippingRequestId.HasValue)
+            {
+                await CheckTripOrShippingRequestHasAnyAccident(trip.ShippingRequestId.Value, trip.Id, tripAccidentResolves.Select(x => x.Id).ToArray());
+
+            }
         }
 
         public async Task ContinueTrip(int accidentId)
@@ -333,7 +336,11 @@ namespace TACHYON.Shipping.Trips.Accidents
             if (resolve.ApprovedByCarrier && resolve.ApprovedByShipper)
             {
                 await HandleResolve(resolve,trip,shipperEnabled,carrierEnabled);
-                await CheckTripOrShippingRequestHasAnyAccident(trip.ShippingRequestId,trip.Id,resolve.AccidentId);
+                if (trip.ShippingRequestId.HasValue)
+                {
+                    await CheckTripOrShippingRequestHasAnyAccident(trip.ShippingRequestId.Value, trip.Id, resolve.AccidentId);
+
+                }
             }
 
         }
@@ -397,8 +404,14 @@ namespace TACHYON.Shipping.Trips.Accidents
             var requestHasAnyOtherAccident = _ShippingRequestRepository.GetAll().Any(x => x.Id != trip.Id && x.HasAccident);
             
             if (!requestHasAnyOtherAccident)
-                _ShippingRequestRepository.Update(trip.ShippingRequestId, x => x.HasAccident = false);
-            
+            {
+                if (trip.ShippingRequestId.HasValue)
+                {
+                    _ShippingRequestRepository.Update(trip.ShippingRequestId.Value, x => x.HasAccident = false);
+
+                }
+            }
+
 
             trip.Status = ShippingRequestTripStatus.Canceled;
 
@@ -430,7 +443,12 @@ namespace TACHYON.Shipping.Trips.Accidents
             var trip = routPoint.ShippingRequestTripFk;
             var request = trip.ShippingRequestFk;
             accident.PointId = routPoint.Id;
-            accident.ShippingRequestId = trip.ShippingRequestId;
+            if (trip.ShippingRequestId.HasValue)
+            {
+                accident.ShippingRequestId = trip.ShippingRequestId.Value;
+
+            }
+
             var accidentId = await _ShippingRequestTripAccidentRepository.InsertAndGetIdAsync(accident);
             trip.HasAccident = true;
             request.HasAccident = true;

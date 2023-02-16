@@ -85,6 +85,10 @@
     <Compile Remove="Migrations\20220330112454_ShippingRequestAndNotes_Tbl.Designer.cs" />
     <Compile Remove="Migrations\20220801185140_test.cs" />
     <Compile Remove="Migrations\20220801185140_test.Designer.cs" />
+    <Compile Remove="Migrations\20230214095415_ add_trip_to_actorprice.cs" />
+    <Compile Remove="Migrations\20230214095415_ add_trip_to_actorprice.Designer.cs" />
+    <Compile Remove="Migrations\20230215100404_add_tripId_ont_to_one_actorShipperPrice.cs" />
+    <Compile Remove="Migrations\20230215100404_add_tripId_ont_to_one_actorShipperPrice.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />

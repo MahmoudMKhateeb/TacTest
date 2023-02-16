@@ -766,6 +766,9 @@ namespace TACHYON.Notifications
 
         public async Task NotifyTripUpdated(ShippingRequestTrip trip)
         {
+            if (! trip.ShippingRequestId.HasValue)
+                return;
+
             #region AllRequiredData
 
             var shipperTenantId = trip.ShippingRequestFk.TenantId;
@@ -774,7 +777,7 @@ namespace TACHYON.Notifications
 
             var input = new NotifyTripUpdatedInput()
             {
-                ShippingRequestId = trip.ShippingRequestId,
+                ShippingRequestId = trip.ShippingRequestId.Value,
                 ShipperTenantId = shipperTenantId,
                 TripId = trip.Id,
                 WaybillNumber = waybillNo.ToString()

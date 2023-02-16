@@ -1,23 +1,23 @@
 <!--suppress XmlInvalidId -->
-<div [@routerTransition] [busyIfFullscreen]="loading || !shippingRequestforView.shippingRequest.id">
+<div [@routerTransition] [busyIfFullscreen]="loading || !_trip.GetShippingRequestForViewOutput.shippingRequest.id">
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [breadcrumbs]="breadcrumbs" [title]="'ShippingRequestsView' | localize">
       <!--      <div role="actions" *ngIf="feature.isEnabled('App.TachyonDealer')">-->
-      <!--        <button class="btn btn-danger" (click)="pricingOffer.sendPricingOfferModal.show(shippingRequestforView.shippingRequest.id)">-->
+      <!--        <button class="btn btn-danger" (click)="pricingOffer.sendPricingOfferModal.show(_trip.GetShippingRequestForViewOutput.shippingRequest.id)">-->
       <!--          <i class="fa fa-money-bill"></i> {{ l('sendPricingOfferToShipper') }}-->
       <!--        </button>-->
       <!--      </div>-->
       <div role="actions">
         <create-or-edit-template-drop-down-button
           *ngIf="
-            shippingRequestforView.shippingRequestFlag === 0 &&
-            (isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestforView.shippingRequest.isSaas))
+            _trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0 &&
+            (isShipper || isTachyonDealer || (isCarrierSaas && _trip.GetShippingRequestForViewOutput.shippingRequest.isSaas))
           "
           [entityType]="entityTypes.ShippingRequestTemplate"
           [sourceEntityId]="activeShippingRequestId"
         ></create-or-edit-template-drop-down-button>
         <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'ActivityLog' | localize }} </a>
-        <ng-container *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid">
+        <ng-container *ngIf="feature.isEnabled('App.TachyonDealer') && !_trip.GetShippingRequestForViewOutput.shippingRequest.isBid">
           <a class="btn btn-outline-success" (click)="scrollToDirectRequests()">{{ l('SendDirectRequests') }}</a>
           <a class="btn btn-outline-success margin-right-5" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">{{
             l('StartBidding')
@@ -25,8 +25,8 @@
         </ng-container>
         <a
           class="btn btn-outline-primary"
-          *ngIf="!shippingRequestforView.shippingRequest.isSaas"
-          (click)="srPostPriceUpdatesModal.show(activeShippingRequestId, shippingRequestforView.shippingRequestFlag === 1)"
+          *ngIf="!_trip.GetShippingRequestForViewOutput.shippingRequest.isSaas"
+          (click)="srPostPriceUpdatesModal.show(activeShippingRequestId, _trip.GetShippingRequestForViewOutput.shippingRequestFlag === 1)"
         >
           <i class="flaticon-edit-1"></i> {{ l('ShippingRequestUpdates') }}
         </a>
@@ -39,7 +39,7 @@
           <button (click)="updateShippingRequestInvoiceFlag()" class="btn btn-primary" type="button">save</button>
         </div>
         <input
-          [(ngModel)]="shippingRequestforView.shippingRequest.splitInvoiceFlag"
+          [(ngModel)]="_trip.GetShippingRequestForViewOutput.shippingRequest.splitInvoiceFlag"
           style="width: 200px"
           type="text"
           class="form-control"
@@ -50,10 +50,9 @@
       <ng-template [ngIf]="canSeePriceOffers()">
         <shipping-request-offers-list
           [shippingRequestId]="activeShippingRequestId"
-          [shippingRequestId]="activeShippingRequestId"
-          [isTachyonDeal]="shippingRequestforView.shippingRequest.isTachyonDeal"
-          [isForDedicated]="shippingRequestforView.shippingRequestFlag === 1"
-          [Channel]="shippingRequestforView.shippingRequest.isBid ? 1 : 2"
+          [isTachyonDeal]="_trip.GetShippingRequestForViewOutput.shippingRequest.isTachyonDeal"
+          [isForDedicated]="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 1"
+          [Channel]="_trip.GetShippingRequestForViewOutput.shippingRequest.isBid ? 1 : 2"
         ></shipping-request-offers-list>
       </ng-template>
       <!--  end:: PricOfferingSection -->
@@ -63,7 +62,7 @@
         [shippingRequestId]="activeShippingRequestId"
       ></app-view-matching-tms-price-package>
 
-      <div class="card card-custom gutter-b" *ngIf="isGrantedAny('Pages.ActorPrices.Carrier','Pages.ActorPrices.Shipper')">
+      <div class="card card-custom gutter-b" *ngIf="isGrantedAny('Pages.ActorPrices.Carrier', 'Pages.ActorPrices.Shipper')">
         <div class="card-header">
           <h3 class="card-title">{{ l('Actors') }}</h3>
           <div class="card-toolbar">
@@ -78,28 +77,48 @@
               <div class="form-group">
                 <label>{{ l('ActorShipperName') }}</label>
                 <!--                          [(ngModel)]="carrierPriceInput.actorCarrierPrice.vatAmount"-->
-                <input type="text" [value]="shippingRequestforView.shipperActorName" class="form-control" name="ActorShipperName" disabled />
+                <input
+                  type="text"
+                  [value]="_trip.GetShippingRequestForViewOutput.shipperActorName"
+                  class="form-control"
+                  name="ActorShipperName"
+                  disabled
+                />
               </div>
             </div>
             <div class="col-6">
               <div class="form-group">
                 <label>{{ l('ActorCarrierName') }}</label>
                 <!--                          [(ngModel)]="carrierPriceInput.actorCarrierPrice.vatAmount"-->
-                <input type="text" [value]="shippingRequestforView.carrierActorName" class="form-control" name="ActorCarrierName" disabled />
+                <input
+                  type="text"
+                  [value]="_trip.GetShippingRequestForViewOutput.carrierActorName"
+                  class="form-control"
+                  name="ActorCarrierName"
+                  disabled
+                />
               </div>
             </div>
           </div>
-            <app-create-or-edit-actors-price
-                #actorsPricing
-                [numberOfCreatedTrips]="shippingRequestforView.totalsTripsAddByShippier"
-                [shippingRequestId]="activeShippingRequestId"
-                [tenantId]="shippingRequestforView.tenantId"
-                [carrierTenantId]="shippingRequestforView.shippingRequest.carrierTenantId"
-                [actorCarrierId]="shippingRequestforView.carrierActorId"
-                [actorShipperId]="shippingRequestforView.shipperActorId"
-            ></app-create-or-edit-actors-price>
+          <app-create-or-edit-actors-price
+            #actorsPricing
+            [numberOfCreatedTrips]="_trip.GetShippingRequestForViewOutput.totalsTripsAddByShippier"
+            [shippingRequestId]="activeShippingRequestId"
+            [tenantId]="_trip.GetShippingRequestForViewOutput.tenantId"
+            [carrierTenantId]="_trip.GetShippingRequestForViewOutput.shippingRequest.carrierTenantId"
+            [actorCarrierId]="_trip.GetShippingRequestForViewOutput.carrierActorId"
+            [actorShipperId]="_trip.GetShippingRequestForViewOutput.shipperActorId"
+          ></app-create-or-edit-actors-price>
         </div>
-
+        <app-create-or-edit-actors-price
+          #actorsPricing
+          [numberOfCreatedTrips]="_trip.GetShippingRequestForViewOutput.totalsTripsAddByShippier"
+          [shippingRequestId]="activeShippingRequestId"
+          [tenantId]="_trip.GetShippingRequestForViewOutput.tenantId"
+          [carrierTenantId]="_trip.GetShippingRequestForViewOutput.shippingRequest.carrierTenantId"
+          [actorCarrierId]="_trip.GetShippingRequestForViewOutput.carrierActorId"
+          [actorShipperId]="_trip.GetShippingRequestForViewOutput.shipperActorId"
+        ></app-create-or-edit-actors-price>
       </div>
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->
@@ -108,7 +127,7 @@
         </div>
         <!--  start of card::body-->
         <div class="card-body">
-          <div *ngIf="shippingRequestforView.shippingRequest.hasAccident" class="alert alert-custom alert-light-warning" role="alert">
+          <div *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequest.hasAccident" class="alert alert-custom alert-light-warning" role="alert">
             <div class="alert-icon"><i class="flaticon-warning"></i></div>
             <div class="alert-text">You have trips that contain accidents</div>
           </div>
@@ -123,22 +142,40 @@
                     class="form-control"
                     type="text"
                     name="numberOfDrops"
-                    value="{{ shippingRequestforView.transportTypeDisplayName }}"
+                    value="{{ _trip.GetShippingRequestForViewOutput.transportTypeDisplayName }}"
                     disabled
                   />
                 </div>
 
                 <div class="col-lg-6">
                   <label>{{ l('TruckType') }}</label>
-                  <input class="form-control" type="text" name="numberOfDrops" value="{{ shippingRequestforView.truckTypeDisplayName }}" disabled />
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="numberOfDrops"
+                    value="{{ _trip.GetShippingRequestForViewOutput.truckTypeDisplayName }}"
+                    disabled
+                  />
                 </div>
                 <div class="col-lg-6 mt-5">
                   <label>{{ l('Capacity') }}</label>
-                  <input class="form-control" type="text" name="numberOfDrops" value="{{ shippingRequestforView.capacityDisplayName }}" disabled />
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="numberOfDrops"
+                    value="{{ _trip.GetShippingRequestForViewOutput.capacityDisplayName }}"
+                    disabled
+                  />
                 </div>
-                <div class="col-lg-6 mt-5" *ngIf="shippingRequestforView.shippingRequestFlag === 1">
+                <div class="col-lg-6 mt-5" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 1">
                   <label>{{ l('NumberOfTrucks') }}</label>
-                  <input class="form-control" type="number" name="expectedMileage" value="{{ shippingRequestforView.numberOfTrucks }}" disabled />
+                  <input
+                    class="form-control"
+                    type="number"
+                    name="expectedMileage"
+                    value="{{ _trip.GetShippingRequestForViewOutput.numberOfTrucks }}"
+                    disabled
+                  />
                 </div>
               </div>
             </div>
@@ -166,16 +203,22 @@
                     <!--  Start::Shipping Type                 -->
                     <div class="col-lg-6">
                       <label><span class="required-fileds"></span> {{ l('ShippingType') }}</label>
-                      <input class="form-control" type="text" name="ShippingType" [value]="shippingRequestforView.shippingTypeDisplayName" disabled />
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="ShippingType"
+                        [value]="_trip.GetShippingRequestForViewOutput.shippingTypeDisplayName"
+                        disabled
+                      />
                     </div>
                     <!-- End::Shipping Type-->
 
-                    <div class="col-lg-3 mt-5" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
+                    <div class="col-lg-3 mt-5" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('ShipperReference') }}</label>
                         <div class="input-group date">
                           <input
-                            [value]="shippingRequestforView.shippingRequest.shipperReference"
+                            [value]="_trip.GetShippingRequestForViewOutput.shippingRequest.shipperReference"
                             class="form-control"
                             type="ShipperReference"
                             placeholder="{{ l('ShipperReference') }}"
@@ -185,12 +228,12 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-3 mt-5" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
+                    <div class="col-lg-3 mt-5" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('ShipperInvoiceNumber') }}</label>
                         <div class="input-group date">
                           <input
-                            [value]="shippingRequestforView.shippingRequest.shipperInvoiceNo"
+                            [value]="_trip.GetShippingRequestForViewOutput.shippingRequest.shipperInvoiceNo"
                             class="form-control"
                             type="ShipperInvoiceNumber"
                             placeholder="{{ l('ShipperInvoiceNumber') }}"
@@ -200,7 +243,7 @@
                         </div>
                       </div>
                     </div>
-                    <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3 mt-5">
+                    <div *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequest.isBid" class="col-lg-3 mt-5">
                       <div class="form-group">
                         <label>{{ l('DiddingStartDate') }}</label>
                         <div class="input-group date">
@@ -208,7 +251,7 @@
                             class="form-control"
                             placeholder="{{ l('DatePlaceholder') }}"
                             name="shippingrequestBidStratDate"
-                            [(date)]="shippingRequestforView.shippingRequest.bidStartDate"
+                            [(date)]="_trip.GetShippingRequestForViewOutput.shippingRequest.bidStartDate"
                             [disabled]="true"
                             bsDatepicker
                             datePickerMomentModifier
@@ -221,14 +264,14 @@
                         </div>
                       </div>
                     </div>
-                    <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3 mt-5">
+                    <div *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequest.isBid" class="col-lg-3 mt-5">
                       <label> {{ l('BiddingEndDate') }}</label>
                       <div class="input-group date">
                         <input
                           class="form-control"
                           placeholder="{{ l('DatePlaceholder') }}"
                           name="shippingrequestBidEndDate"
-                          [(date)]="shippingRequestforView.shippingRequest.bidEndDate"
+                          [(date)]="_trip.GetShippingRequestForViewOutput.shippingRequest.bidEndDate"
                           [disabled]="true"
                           bsDatepicker
                           datePickerMomentModifier
@@ -263,11 +306,17 @@
               <div class="mb-3">
                 <div class="mb-2">
                   <div class="row">
-                    <div class="col-lg-6" [class.mt-4]="shippingRequestforView.shippingRequestFlag === 1">
+                    <div class="col-lg-6" [class.mt-4]="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 1">
                       <label><span class="required-fileds"></span> {{ l('MainGoodCategory') }} </label>
-                      <input class="form-control" type="text" name="MainGoodCategory" [value]="shippingRequestforView.goodsCategoryName" disabled />
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="MainGoodCategory"
+                        [value]="_trip.GetShippingRequestForViewOutput.goodsCategoryName"
+                        disabled
+                      />
                     </div>
-                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
+                    <div class="col-lg-6" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <label><span class="required-fileds"></span> {{ l('TotalWeight') }}</label>
                       <div>
                         <div class="input-group">
@@ -278,7 +327,7 @@
                             type="number"
                             name="Weight"
                             class="form-control"
-                            [value]="shippingRequestforView.shippingRequest.totalWeight"
+                            [value]="_trip.GetShippingRequestForViewOutput.shippingRequest.totalWeight"
                             disabled
                           />
                         </div>
@@ -288,17 +337,23 @@
                     <div class="col-lg-6 mt-4">
                       <div class="form-group">
                         <label> {{ l('PackingType') }}</label>
-                        <input class="form-control" type="text" name="packingType" [value]="shippingRequestforView.packingTypeDisplayName" disabled />
+                        <input
+                          class="form-control"
+                          type="text"
+                          name="packingType"
+                          [value]="_trip.GetShippingRequestForViewOutput.packingTypeDisplayName"
+                          disabled
+                        />
                       </div>
                     </div>
-                    <div class="col-lg-6 mt-4" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
+                    <div class="col-lg-6 mt-4" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('NumberOfPacking') }}</label>
                         <input
                           class="form-control"
                           type="text"
                           name="numberOfPacking"
-                          [value]="shippingRequestforView.shippingRequest.numberOfPacking"
+                          [value]="_trip.GetShippingRequestForViewOutput.shippingRequest.numberOfPacking"
                           disabled
                         />
                       </div>
@@ -331,31 +386,37 @@
                 <div class="mb-2">
                   <div class="row">
                     <!-- Start of Select Source -->
-                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
+                    <div class="col-lg-6" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('OriginCity') }}</label>
-                        <input class="form-control" type="text" name="originCity" [value]="shippingRequestforView.originalCityName" disabled />
+                        <input
+                          class="form-control"
+                          type="text"
+                          name="originCity"
+                          [value]="_trip.GetShippingRequestForViewOutput.originalCityName"
+                          disabled
+                        />
                       </div>
                     </div>
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label> {{ l(shippingRequestforView.shippingRequestFlag === 0 ? 'DestinationCity' : 'ServiceAreas') }}</label>
+                        <label> {{ l(_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0 ? 'DestinationCity' : 'ServiceAreas') }}</label>
                         <input
                           class="form-control"
                           type="text"
                           name="destinationCity"
-                          [value]="shippingRequestforView.destinationCityName"
+                          [value]="_trip.GetShippingRequestForViewOutput.destinationCityName"
                           disabled
                         />
                       </div>
                     </div>
 
-                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
+                    <div class="col-lg-6" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('TripsStartDate') }}</label>
                         <div class="input-group date">
                           <input
-                            [(date)]="shippingRequestforView.shippingRequest.startTripDate"
+                            [(date)]="_trip.GetShippingRequestForViewOutput.shippingRequest.startTripDate"
                             class="form-control"
                             type="datetime"
                             placeholder="{{ l('DatePlaceholder') }}"
@@ -373,12 +434,12 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
+                    <div class="col-lg-6" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('TripsEndDate') }}</label>
                         <div class="input-group date">
                           <input
-                            [(date)]="shippingRequestforView.shippingRequest.endTripDate"
+                            [(date)]="_trip.GetShippingRequestForViewOutput.shippingRequest.endTripDate"
                             class="form-control"
                             placeholder="{{ l('DatePlaceholder') }}"
                             name="endDate"
@@ -394,48 +455,60 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-3" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
+                    <div class="col-lg-3" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <label>{{ l('RouteType') }}</label>
-                      <input class="form-control" type="text" name="routeType" value="{{ l(shippingRequestforView.routTypeName) }}" disabled />
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="routeType"
+                        value="{{ l(_trip.GetShippingRequestForViewOutput.routTypeName) }}"
+                        disabled
+                      />
                     </div>
-                    <div class="col-lg-3" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
+                    <div class="col-lg-3" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label><span class="required-fileds"></span> {{ l('NumberOfDrops') }} </label>
                         <input
                           class="form-control"
                           type="number"
                           name="numberOfDrops"
-                          [value]="shippingRequestforView.shippingRequest.numberOfDrops"
+                          [value]="_trip.GetShippingRequestForViewOutput.shippingRequest.numberOfDrops"
                           disabled
                         />
                       </div>
                     </div>
-                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 0">
+                    <div class="col-lg-6" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <div class="form-group">
                         <label> {{ l('NumberOfTrips') }}</label>
                         <input
                           class="form-control"
                           type="number"
                           name="numberOfTrips"
-                          [value]="shippingRequestforView.shippingRequest.numberOfTrips"
+                          [value]="_trip.GetShippingRequestForViewOutput.shippingRequest.numberOfTrips"
                           disabled
                         />
                       </div>
                     </div>
-                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 1">
+                    <div class="col-lg-6" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 1">
                       <div class="form-group">
                         <label> {{ l('ServiceAreaNotes') }}</label>
-                        <input class="form-control" type="text" name="serviceAreaNotes" [value]="shippingRequestforView.serviceAreaNotes" disabled />
+                        <input
+                          class="form-control"
+                          type="text"
+                          name="serviceAreaNotes"
+                          [value]="_trip.GetShippingRequestForViewOutput.serviceAreaNotes"
+                          disabled
+                        />
                       </div>
                     </div>
-                    <div class="col-lg-6" *ngIf="shippingRequestforView.shippingRequestFlag === 1">
+                    <div class="col-lg-6" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 1">
                       <div class="form-group">
                         <label>{{ l('ExpectedMileage') }}</label>
                         <input
                           class="form-control"
                           type="text"
                           name="expectedMileage"
-                          value="{{ shippingRequestforView.expectedMileage }}"
+                          value="{{ _trip.GetShippingRequestForViewOutput.expectedMileage }}"
                           disabled
                         />
                       </div>
@@ -452,7 +525,7 @@
       <!--   End::RouteDetails   -->
 
       <!--   start::RentalDetails     -->
-      <div class="card card-custom gutter-b" *ngIf="shippingRequestforView.shippingRequestFlag === 1">
+      <div class="card card-custom gutter-b" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 1">
         <!--  start of card::form-->
         <div class="card-header">
           <h3 class="card-title">{{ l('RentalDetails') }}</h3>
@@ -473,7 +546,7 @@
                           class="form-control"
                           type="text"
                           name="rentalDurationUnitTitle"
-                          [value]="shippingRequestforView.rentalDurationUnitTitle"
+                          [value]="_trip.GetShippingRequestForViewOutput.rentalDurationUnitTitle"
                           disabled
                         />
                       </div>
@@ -481,7 +554,13 @@
                     <div class="col-lg-6">
                       <div class="form-group">
                         <label> {{ l('RentalDuration') }}</label>
-                        <input class="form-control" type="text" name="rentalDuration" [value]="shippingRequestforView.rentalDuration" disabled />
+                        <input
+                          class="form-control"
+                          type="text"
+                          name="rentalDuration"
+                          [value]="_trip.GetShippingRequestForViewOutput.rentalDuration"
+                          disabled
+                        />
                       </div>
                     </div>
 
@@ -490,7 +569,7 @@
                         <label> {{ l('RentalStartDate') }}</label>
                         <div class="input-group date">
                           <input
-                            [(date)]="shippingRequestforView.rentalStartDate"
+                            [(date)]="_trip.GetShippingRequestForViewOutput.rentalStartDate"
                             class="form-control"
                             type="datetime"
                             placeholder="{{ l('DatePlaceholder') }}"
@@ -513,7 +592,7 @@
                         <label> {{ l('RentalEndDate') }}</label>
                         <div class="input-group date">
                           <input
-                            [(date)]="shippingRequestforView.rentalEndDate"
+                            [(date)]="_trip.GetShippingRequestForViewOutput.rentalEndDate"
                             class="form-control"
                             placeholder="{{ l('DatePlaceholder') }}"
                             name="endDate"
@@ -542,29 +621,29 @@
 
       <!--  start:Tms for shipper     -->
       <tms-for-shipper
-        *ngIf="shippingRequestforView.shippingRequestFlag === 1"
-        [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
+        *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 1"
+        [shippingRequestId]="_trip.GetShippingRequestForViewOutput?.shippingRequest?.id"
         [rentalRange]="rentalRange"
-        [isRequestStatusCompleted]="shippingRequestforView?.shippingRequest?.status === 5"
-        [isRequestSaas]="shippingRequestforView?.shippingRequest?.isSaas"
+        [isRequestStatusCompleted]="_trip.GetShippingRequestForViewOutput?.shippingRequest?.status === 5"
+        [isRequestSaas]="_trip.GetShippingRequestForViewOutput?.shippingRequest?.isSaas"
       ></tms-for-shipper>
       <!--  end:Tms for shipper     -->
 
       <div class="row gutter-b">
         <app-project-performance
           class="col-6"
-          *ngIf="shippingRequestforView.shippingRequestFlag === 1"
-          [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
-          [KPI]="shippingRequestforView?.dedicatedKPI"
-          [numberOfTrips]="shippingRequestforView?.totalsTripsAddByShippier"
-          [isRequestSaas]="shippingRequestforView?.shippingRequest?.isSaas"
+          *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 1"
+          [shippingRequestId]="_trip.GetShippingRequestForViewOutput?.shippingRequest?.id"
+          [KPI]="_trip.GetShippingRequestForViewOutput?.dedicatedKPI"
+          [numberOfTrips]="_trip.GetShippingRequestForViewOutput?.totalsTripsAddByShippier"
+          [isRequestSaas]="_trip.GetShippingRequestForViewOutput?.shippingRequest?.isSaas"
         >
         </app-project-performance>
 
         <app-truck-performance-chart
           class="col-6"
-          *ngIf="shippingRequestforView.shippingRequestFlag === 1"
-          [shippingRequestId]="shippingRequestforView?.shippingRequest?.id"
+          *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 1"
+          [shippingRequestId]="_trip.GetShippingRequestForViewOutput?.shippingRequest?.id"
         ></app-truck-performance-chart>
       </div>
 
@@ -574,7 +653,7 @@
         <direct-request
           #directRequestComponent
           [shippingRequestId]="activeShippingRequestId"
-          [ShippingRequestStatus]="shippingRequestforView.shippingRequest.status"
+          [ShippingRequestStatus]="_trip.GetShippingRequestForViewOutput.shippingRequest.status"
         ></direct-request>
       </ng-template>
       <!--  end:: DirectOffers        -->
@@ -586,10 +665,9 @@
       <!--        !feature.isEnabled('App.TachyonDealer') || -->
       <ng-template [ngIf]="canSeeShippingRequestTrips()">
         <TripsForViewShippingRequest
-          *ngIf="shippingRequestforView.shippingRequest.id && bidsloading == false"
-          [ShippingRequest]="shippingRequestforView.shippingRequest"
-          [shippingRequestForView]="shippingRequestforView"
-          [VasListFromFather]="shippingRequestforView.shippingRequestVasDtoList"
+          *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequest.id && bidsloading == false"
+          [ShippingRequest]="_trip.GetShippingRequestForViewOutput.shippingRequest"
+          [VasListFromFather]="_trip.GetShippingRequestForViewOutput.shippingRequestVasDtoList"
           (incidentResolved)="reloadCurrentPage()"
         ></TripsForViewShippingRequest>
       </ng-template>
@@ -598,7 +676,7 @@
       <!--  End of the First Container      -->
     </div>
 
-    <app-entity-log #appEntityLog [entityType]="3" [entityId]="shippingRequestforView.shippingRequest.id"></app-entity-log>
+    <app-entity-log #appEntityLog [entityType]="3" [entityId]="_trip.GetShippingRequestForViewOutput.shippingRequest.id"></app-entity-log>
   </div>
   <!--  <sendDirectRequestsModal #sendDirectRequestsModal [shippingRequestId]="activeShippingRequestId"></sendDirectRequestsModal>-->
   <tachyonDealToBiddingModal #tachyonDealToBiddingModal (modalsave)="reloadCurrentPage()"></tachyonDealToBiddingModal>

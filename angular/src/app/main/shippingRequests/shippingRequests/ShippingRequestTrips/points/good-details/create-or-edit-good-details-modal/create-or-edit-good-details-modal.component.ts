@@ -14,7 +14,6 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
-import { Subscription } from '@node_modules/rxjs';
 import Swal from 'sweetalert2';
 import { retry } from '@node_modules/rxjs/internal/operators';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
@@ -43,7 +42,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
 
   private activeEditId: number;
 
-  tripServiceSubs$: Subscription;
+  //tripServiceSubs$: Subscription;
   goodCategoryId: number;
   weight: number;
   amount: number;
@@ -71,7 +70,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   ngOnInit(): void {
     this.myGoodsDetailList = this.GoodDetailsListInput || [];
     //take the current Active WayPoint From the Shared Service
-    this.tripServiceSubs$ = this._TripService.currentShippingRequest.subscribe((res) => (this.GoodCategory = res.shippingRequest.goodCategoryId));
+    //this.tripServiceSubs$ = this._TripService.currentShippingRequest.subscribe((res) => (this.GoodCategory = res.shippingRequest.goodCategoryId));
     //sync the singleWayPoint From the Service
     this.loadAllDropDowns();
   }
@@ -170,7 +169,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
    */
   loadGoodSubCategory(FatherID) {
     //Get All Sub-Good Category
-    if (FatherID) {
+    if (FatherID || !this._TripService.GetShippingRequestForViewOutput?.shippingRequest) {
       this._goodsDetailsServiceProxy
         .getAllGoodCategoryForTableDropdown(FatherID)
         .pipe(retry(3))
@@ -201,9 +200,9 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     let allowedeight: number;
 
     //get the Total Allowed Weight From the Shipping Request
-    this._TripService.currentShippingRequest.subscribe((res) => {
-      return (shippingRequestWeight = res.shippingRequest.totalWeight);
-    });
+
+    shippingRequestWeight = this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.totalWeight;
+
     //get the Way Points from the shared service
     this._PointsService.currentWayPointsList.subscribe((res) => {
       return (wayPointList = res);
@@ -229,6 +228,6 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   }
 
   ngOnDestroy() {
-    this.tripServiceSubs$.unsubscribe();
+    //this.tripServiceSubs$.unsubscribe();
   }
 }

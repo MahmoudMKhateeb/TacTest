@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
@@ -74,7 +74,7 @@ namespace TACHYON.Tracking
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
 
             bool isCmsEnabled = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
-            
+
             List<long> userOrganizationUnits = null;
             if (isCmsEnabled)
             {
@@ -84,21 +84,23 @@ namespace TACHYON.Tracking
             }
 
 
-            var hasCarrierClient = await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierClients);
+            bool hasCarrierClient = await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierClients);
             DisableTenancyFilters();
-            var query = _ShippingRequestTripRepository
-            .GetAll()
-            .AsNoTracking()
-            .Include(x => x.OriginFacilityFk)
-            .Include(x => x.DestinationFacilityFk)
-            .Include(x => x.AssignedTruckFk)
-             .ThenInclude(t => t.TrucksTypeFk)
-               .ThenInclude(t => t.Translations)
-            .Include(x => x.AssignedDriverUserFk)
-            .Include(x => x.ShippingRequestTripRejectReason)
+            List<ShippingRequestTrip> query = _ShippingRequestTripRepository
+                .GetAll()
+                .AsNoTracking()
+                .Include(x => x.ShipperTenantFk)
+                .Include(x => x.CarrierTenantFk)
+                .Include(x => x.OriginFacilityFk)
+                .Include(x => x.DestinationFacilityFk)
+                .Include(x => x.AssignedTruckFk)
+                .ThenInclude(t => t.TrucksTypeFk)
                 .ThenInclude(t => t.Translations)
-            .Include(r => r.ShippingRequestFk)
-              .ThenInclude(c => c.GoodCategoryFk)
+                .Include(x => x.AssignedDriverUserFk)
+                .Include(x => x.ShippingRequestTripRejectReason)
+                .ThenInclude(t => t.Translations)
+                .Include(r => r.ShippingRequestFk)
+                .ThenInclude(c => c.GoodCategoryFk)
                 .ThenInclude(t => t.Translations)
                 .Include(r => r.ShippingRequestFk)
                 .ThenInclude(c => c.GoodCategoryFk)
@@ -107,63 +109,133 @@ namespace TACHYON.Tracking
                 .ThenInclude(s => s.Tenant)
                 .Include(r => r.ShippingRequestFk)
                 .ThenInclude(c => c.CarrierTenantFk)
-                .WhereIf(!await IsTachyonDealer(),x=>x.ShippingRequestFk.ShippingRequestFlag==ShippingRequestFlag.Normal ||
-                (x.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated && AbpSession.TenantId == x.ShippingRequestFk.TenantId))
-                .Where(x => x.ShippingRequestFk.Status == ShippingRequestStatus.PostPrice || x.ShippingRequestFk.CarrierTenantId.HasValue)
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper) && !hasCarrierClient,
-                    x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                .WhereIf
+                (
+                    !await IsTachyonDealer(),
+                    x => x.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Normal ||
+                         (x.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated && AbpSession.TenantId == x.ShippingRequestFk.TenantId) ||
+                         AbpSession.TenantId == x.CarrierTenantId
+                )
+                .Where
+                (
+                    x => (x.ShippingRequestFk != null &&
+                          (x.ShippingRequestFk.Status == ShippingRequestStatus.PostPrice || x.ShippingRequestFk.CarrierTenantId.HasValue)) ||
+                         x.CarrierTenantId.HasValue
+                )
+                .WhereIf
+                (
+                    AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper) && !hasCarrierClient,
+                    x => x.ShippingRequestFk.TenantId == AbpSession.TenantId
+                )
                 .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier) && !hasCarrierClient,
-                    x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-            .WhereIf(AbpSession.TenantId.HasValue && hasCarrierClient,x=> x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.ShippingRequestFk.TenantId == AbpSession.TenantId)
-                .WhereIf(input.PickupFromDate.HasValue && input.PickupToDate.HasValue,
+                .WhereIf
+                (
+                    AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier) && !hasCarrierClient,
+                    x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId
+                )
+                .WhereIf
+                (
+                    AbpSession.TenantId.HasValue && hasCarrierClient,
+                    x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId ||
+                         x.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                         x.CarrierTenantId == AbpSession.TenantId
+                )
+                .WhereIf
+                (
+                    input.PickupFromDate.HasValue && input.PickupToDate.HasValue,
                     x => x.ShippingRequestFk.StartTripDate >= input.PickupFromDate.Value &&
-                         x.ShippingRequestFk.StartTripDate <= input.PickupToDate.Value)
-                .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,
-                    x => x.StartTripDate >= input.FromDate.Value && x.StartTripDate <= input.ToDate.Value)
-                .WhereIf(input.OriginId.HasValue, x => x.ShippingRequestFk.OriginCityId == input.OriginId)
-                .WhereIf(input.DestinationId.HasValue,
-                    x => x.ShippingRequestFk.ShippingRequestDestinationCities.Any(y=>y.CityId == input.DestinationId))
+                         x.ShippingRequestFk.StartTripDate <= input.PickupToDate.Value
+                )
+                .WhereIf
+                (
+                    input.FromDate.HasValue && input.ToDate.HasValue,
+                    x => x.StartTripDate >= input.FromDate.Value && x.StartTripDate <= input.ToDate.Value
+                )
+                 .WhereIf(input.OriginId.HasValue, x => x.ShippingRequestFk.OriginCityId == input.OriginId)
+                .WhereIf
+                (
+                    input.DestinationId.HasValue,
+                    x => x.ShippingRequestFk.ShippingRequestDestinationCities.Any(y => y.CityId == input.DestinationId)
+                )
                 .WhereIf(input.RouteTypeId.HasValue, x => x.ShippingRequestFk.RouteTypeId == input.RouteTypeId)
-                .WhereIf(input.TransportTypeId.HasValue, x=>x.ShippingRequestFk.TransportTypeId == input.TransportTypeId)
+                .WhereIf(input.TransportTypeId.HasValue, x => x.ShippingRequestFk.TransportTypeId == input.TransportTypeId)
                 .WhereIf(input.TruckTypeId.HasValue, x => x.ShippingRequestFk.TrucksTypeId == input.TruckTypeId)
                 .WhereIf(input.TruckCapacityId.HasValue, x => x.ShippingRequestFk.CapacityId == input.TruckCapacityId)
                 .WhereIf(input.Status.HasValue, x => x.Status == input.Status)
-                .WhereIf(input.WaybillNumber.HasValue, x => x.WaybillNumber == input.WaybillNumber ||
-                x.RoutPoints.Any(y=>y.WaybillNumber == input.WaybillNumber))
-                .WhereIf(!string.IsNullOrEmpty(input.Shipper),
+                .WhereIf
+                (
+                    input.WaybillNumber.HasValue,
+                    x => x.WaybillNumber == input.WaybillNumber ||
+                         x.RoutPoints.Any(y => y.WaybillNumber == input.WaybillNumber)
+                )
+                .WhereIf
+                (
+                    !string.IsNullOrEmpty(input.Shipper),
                     x => x.ShippingRequestFk.Tenant.Name.ToLower().Contains(input.Shipper) ||
                          x.ShippingRequestFk.Tenant.companyName.ToLower().Contains(input.Shipper) ||
-                         x.ShippingRequestFk.Tenant.TenancyName.ToLower().Contains(input.Shipper))
+                         x.ShippingRequestFk.Tenant.TenancyName.ToLower().Contains(input.Shipper)
+                )
                 .WhereIf(!string.IsNullOrEmpty(input.ReferenceNumber), x => x.ShippingRequestFk.ReferenceNumber.Contains(input.ReferenceNumber))
-                .WhereIf(!string.IsNullOrEmpty(input.Carrier),
+                .WhereIf
+                (
+                    !string.IsNullOrEmpty(input.Carrier),
                     x => x.ShippingRequestFk.CarrierTenantFk.Name.ToLower().Contains(input.Carrier) ||
                          x.ShippingRequestFk.CarrierTenantFk.companyName.ToLower().Contains(input.Carrier) ||
-                         x.ShippingRequestFk.CarrierTenantFk.TenancyName.ToLower().Contains(input.Carrier))
+                         x.ShippingRequestFk.CarrierTenantFk.TenancyName.ToLower().Contains(input.Carrier)
+                )
                 .WhereIf(input.PackingTypeId.HasValue, x => x.ShippingRequestFk.PackingTypeId == input.PackingTypeId)
                 .WhereIf(input.GoodsOrSubGoodsCategoryId.HasValue, x => x.ShippingRequestFk.GoodCategoryId == input.GoodsOrSubGoodsCategoryId)
-                .WhereIf(!string.IsNullOrEmpty(input.PlateNumberId), x=>x.ShippingRequestFk.AssignedTruckFk.PlateNumber == input.PlateNumberId)
-                .WhereIf(!string.IsNullOrEmpty(input.DriverNameOrMobile), x => x.ShippingRequestFk.AssignedDriverUserFk.PhoneNumber == input.DriverNameOrMobile ||
-                (x.ShippingRequestFk.AssignedDriverUserFk!=null && 
-                (x.ShippingRequestFk.AssignedDriverUserFk.Name.ToLower().Contains(input.DriverNameOrMobile) ||
-                x.ShippingRequestFk.AssignedDriverUserFk.Surname.ToLower().Contains(input.DriverNameOrMobile))))
-                .WhereIf(input.DeliveryFromDate.HasValue && input.DeliveryToDate.HasValue, x=>x.ShippingRequestFk.ShippingRequestTrips.Any(y=> y.ActualDeliveryDate>= input.DeliveryFromDate &&
-                y.ActualDeliveryDate<= input.DeliveryToDate))
-                .WhereIf(!string.IsNullOrEmpty(input.ContainerNumber), x => x.ShippingRequestFk.ShippingRequestTrips.Any(y=>y.ContainerNumber == input.ContainerNumber))
-                .WhereIf(input.IsInvoiceIssued !=null, x => x.ShippingRequestFk.ShippingRequestTrips.Any(y => y.IsShipperHaveInvoice == input.IsInvoiceIssued))
-                .WhereIf(input.IsSubmittedPOD !=null, x => x.ShippingRequestFk.ShippingRequestTrips.Any(y => y.RoutPoints.Any(x=>x.IsPodUploaded == input.IsSubmittedPOD)))
+                //.WhereIf(!string.IsNullOrEmpty(input.PlateNumberId), x => x.ShippingRequestFk.AssignedTruckFk.PlateNumber == input.PlateNumberId)
+                .WhereIf
+                (
+                    !string.IsNullOrEmpty(input.DriverNameOrMobile),
+                    x => x.ShippingRequestFk.AssignedDriverUserFk.PhoneNumber == input.DriverNameOrMobile ||
+                         (x.ShippingRequestFk.AssignedDriverUserFk != null &&
+                          (x.ShippingRequestFk.AssignedDriverUserFk.Name.ToLower().Contains(input.DriverNameOrMobile) ||
+                           x.ShippingRequestFk.AssignedDriverUserFk.Surname.ToLower().Contains(input.DriverNameOrMobile)))
+                )
+                .WhereIf
+                (
+                    input.DeliveryFromDate.HasValue && input.DeliveryToDate.HasValue,
+                    x => x.ShippingRequestFk.ShippingRequestTrips.Any
+                    (
+                        y => y.ActualDeliveryDate >= input.DeliveryFromDate &&
+                             y.ActualDeliveryDate <= input.DeliveryToDate
+                    )
+                )
+                .WhereIf
+                (
+                    !string.IsNullOrEmpty(input.ContainerNumber),
+                    x => x.ShippingRequestFk.ShippingRequestTrips.Any(y => y.ContainerNumber == input.ContainerNumber)
+                )
+                .WhereIf(input.IsInvoiceIssued != null, x => x.ShippingRequestFk.ShippingRequestTrips.Any(y => y.IsShipperHaveInvoice == input.IsInvoiceIssued))
+                .WhereIf
+                (
+                    input.IsSubmittedPOD != null,
+                    x => x.ShippingRequestFk.ShippingRequestTrips.Any(y => y.RoutPoints.Any(x => x.IsPodUploaded == input.IsSubmittedPOD))
+                )
                 //todo for tasneem will update request type after dediced
-                .WhereIf(input.RequestTypeId ==1, x=>x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId)
+                .WhereIf(input.RequestTypeId == 1, x => x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId)
                 .WhereIf(input.RequestTypeId == 2, x => x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId)
-            .WhereIf(isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(),
-                x=> (x.ShippingRequestFk.CarrierActorId.HasValue && userOrganizationUnits.Contains(x.ShippingRequestFk.CarrierActorFk.OrganizationUnitId)) || (x.ShippingRequestFk.ShipperActorId.HasValue && userOrganizationUnits.Contains(x.ShippingRequestFk.ShipperActorFk.OrganizationUnitId)))    
-            .OrderBy(input.Sorting ?? "id desc").PageBy(input).ToList();
+                .WhereIf
+                (
+                    isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(),
+                    x =>
+                        (x.ShippingRequestFk.CarrierActorId.HasValue && userOrganizationUnits.Contains
+                            (x.ShippingRequestFk.CarrierActorFk.OrganizationUnitId)) || (x.ShippingRequestFk.ShipperActorId.HasValue &&
+                                                                                         userOrganizationUnits.Contains
+                                                                                             (x.ShippingRequestFk.ShipperActorFk.OrganizationUnitId))
+                )
+                .OrderBy(input.Sorting ?? "id desc").PageBy(input).ToList();
+
+
+
 
             List<TrackingListDto> trackingLists = new List<TrackingListDto>();
 
             foreach (var item in query)
             {
-                  trackingLists.Add(await GetMap(item));
+                trackingLists.Add(await GetMap(item));
             }
 
 
@@ -177,16 +249,16 @@ namespace TACHYON.Tracking
         public async Task<PagedResultDto<TrackingByWaybillDto>> GetDropsOffByMasterWaybill(long waybillNumber)
         {
             DisableTenancyFilters();
-            var query =  await _RoutPointRepository
+            var query = await _RoutPointRepository
              .GetAll().AsNoTracking()
-             .Where(x =>x.ShippingRequestTripFk.WaybillNumber == waybillNumber ||
-             (x.WaybillNumber==waybillNumber && 
-             x.ShippingRequestTripFk.ShippingRequestFk.RouteTypeId==ShippingRequestRouteType.MultipleDrops &&
+             .Where(x => x.ShippingRequestTripFk.WaybillNumber == waybillNumber ||
+             (x.WaybillNumber == waybillNumber &&
+             x.ShippingRequestTripFk.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops &&
              x.PickingType == PickingType.Dropoff))
              .ProjectTo<TrackingByWaybillDto>(AutoMapperConfigurationProvider).ToListAsync();
             if (!query.Any()) throw new UserFriendlyException(L("InCorrectWaybillNumber"));
 
-             return new PagedResultDto<TrackingByWaybillDto>(query.Count, query);
+            return new PagedResultDto<TrackingByWaybillDto>(query.Count, query);
 
         }
 
@@ -194,7 +266,7 @@ namespace TACHYON.Tracking
         public async Task<TrackingByWaybillRoutPointDto> GetDropOffBySubWaybill(string waybillNumber)
         {
             DisableTenancyFilters();
-            var dropOff =  await _RoutPointRepository
+            var dropOff = await _RoutPointRepository
              .GetAll().AsNoTracking()
              .ProjectTo<TrackingByWaybillRoutPointDto>(AutoMapperConfigurationProvider)
              .FirstOrDefaultAsync(x => x.WaybillNumber.Equals(waybillNumber));
@@ -208,14 +280,19 @@ namespace TACHYON.Tracking
             DisableTenancyFilters();
 
             var hasCarrierClient = await IsEnabledAsync(AppFeatures.CarrierClients);
-            
+
             var trip =
                  await _ShippingRequestTripRepository.GetAll()
-                            .Where(x => x.Id == id && x.ShippingRequestFk.CarrierTenantId.HasValue)
+                            .Where(x => x.Id == id)
+                            .Where(x => x.ShippingRequestFk.CarrierTenantId.HasValue || x.CarrierTenantId.HasValue)
                             .WhereIf(AbpSession.TenantId.HasValue && !hasCarrierClient && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                            .WhereIf(AbpSession.TenantId.HasValue && !hasCarrierClient && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
-                            .WhereIf(AbpSession.TenantId.HasValue && hasCarrierClient,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                            .WhereIf(AbpSession.TenantId.HasValue && !hasCarrierClient && await IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId || x.CarrierTenantId == AbpSession.TenantId)
+                            .WhereIf(AbpSession.TenantId.HasValue && hasCarrierClient,
+                                            x => x.ShippingRequestFk.TenantId == AbpSession.TenantId ||
+                                                 x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId ||
+                                                 x.CarrierTenantId == AbpSession.TenantId)
+
                             .FirstOrDefaultAsync();
 
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
@@ -261,14 +338,14 @@ namespace TACHYON.Tracking
         {
             DisableTenancyFilters();
             var tripPoints = await _RoutPointRepository.GetAll()
-                .Where(x=> x.ShippingRequestTripId == tripId)
-                .Select(x => new ExportPointExcelDto() {Id = x.Id, PickingType = x.PickingType, WorkFlowVersion = x.WorkFlowVersion})
+                .Where(x => x.ShippingRequestTripId == tripId)
+                .Select(x => new ExportPointExcelDto() { Id = x.Id, PickingType = x.PickingType, WorkFlowVersion = x.WorkFlowVersion })
                 .ToListAsync();
-            
+
             tripPoints.ForEach(point =>
             {
                 point.Transactions = _workFlowProvider.Flows.Where(x => x.Version == point.WorkFlowVersion)
-                    .SelectMany(x => x.Transactions).GroupBy(x=> x.ToStatus)
+                    .SelectMany(x => x.Transactions).GroupBy(x => x.ToStatus)
                     .Select(x => L(x.Key.ToString())).ToList();
             });
 
@@ -287,7 +364,7 @@ namespace TACHYON.Tracking
         }
         public async Task InvokeStatus(InvokeStatusInputDto input)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier,  AppFeatures.CarrierClients);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.CarrierClients);
             var args = new PointTransactionArgs
             {
                 PointId = input.Id,
@@ -297,7 +374,7 @@ namespace TACHYON.Tracking
         }
         public async Task NextLocation(long id)
         {
-            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier,  AppFeatures.CarrierClients);
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.CarrierClients);
             await _workFlowProvider.GoToNextLocation(id);
         }
         public async Task<List<GetAllUploadedFileDto>> POD(long id)
@@ -334,10 +411,18 @@ namespace TACHYON.Tracking
                     dto.TenantPhoto = (await _ProfileAppService.GetProfilePictureByUser((long)trip.CreatorUserId))
                         .ProfilePicture;
             }
-            
-            dto.NumberOfDrops = trip.ShippingRequestFk.NumberOfDrops;
+
+            if (trip.ShippingRequestFk != null)
+            {
+                dto.NumberOfDrops = trip.ShippingRequestFk.NumberOfDrops;
+            }
+            else
+            {
+                dto.NumberOfDrops = trip.NumberOfDrops;
+            }
+
             if (trip.AssignedTruckFk != null) dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk)?.TranslatedDisplayName ?? "";
-            dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk)?.DisplayName;
+            dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk?.GoodCategoryFk ?? trip.GoodCategoryFk)?.DisplayName;
             if (trip.ShippingRequestTripRejectReason != null)
             {
                 dto.Reason = ObjectMapper.Map<ShippingRequestTripRejectReasonListDto>(trip.ShippingRequestTripRejectReason).Name ?? "";
@@ -345,7 +430,19 @@ namespace TACHYON.Tracking
             var tenantId = AbpSession.TenantId;
             if (!tenantId.HasValue || (tenantId.HasValue && !await IsEnabledAsync(AppFeatures.Shipper)))
             {
-                dto.Name = tenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestFk.Tenant.Name : dto.Name = $"{trip.ShippingRequestFk?.Tenant?.Name}-{trip.ShippingRequestFk?.CarrierTenantFk?.Name}";
+                if (trip.ShippingRequestFk != null)
+                {
+                    dto.Name = tenantId.HasValue && IsEnabled(AppFeatures.Carrier)
+                        ? trip.ShippingRequestFk.Tenant.Name
+                        : $"{trip.ShippingRequestFk?.Tenant?.Name}-{trip.ShippingRequestFk?.CarrierTenantFk?.Name}";
+                }
+                else
+                {
+                    dto.Name = tenantId.HasValue && IsEnabled(AppFeatures.Carrier)
+                        ? trip.ShipperTenantFk.Name
+                        : $"{trip.ShipperTenantFk?.Name}-{trip.CarrierTenantFk?.Name}";
+                }
+
                 dto.IsAssign = true;
                 dto.CanStartTrip = CanStartTrip(trip);
                 // dto.CanAcceptTrip = CanAcceptTrip(trip, workingOnAnotherTrip);

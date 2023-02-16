@@ -20,12 +20,14 @@ namespace TACHYON.PriceOffers.Dto
         public decimal? VatAmountWithCommission { get; set; }
         public decimal? TaxVat { get; set; }
 
+        public int? ShippingRequestTripId { get; set; }
+
         public void AddValidationErrors(CustomValidationContext context)
         {
             if (ShippingRequestId.HasValue && ShippingRequestVasId.HasValue)
                 context.Results.Add(new ValidationResult("Actor shipper price can't be for shipping request and for vas at the same time"));
-            if (!ShippingRequestId.HasValue && !ShippingRequestVasId.HasValue)
-                context.Results.Add(new ValidationResult("you must set actor shipper price for shipping request or for vas"));
+            //if (!ShippingRequestId.HasValue && ShippingRequestVasId.HasValue)
+            //    context.Results.Add(new ValidationResult("you must set actor shipper price for shipping request or for vas"));
         }
     }
 }

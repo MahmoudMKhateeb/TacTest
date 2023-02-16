@@ -393,7 +393,7 @@ namespace TACHYON.Invoices
                 int relatedCarrierId = default;
 
 
-                if(await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
+                if (await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
                 {
                     int.TryParse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier), out relatedCarrierId);
                     if (carrierId == relatedCarrierId)
@@ -402,7 +402,7 @@ namespace TACHYON.Invoices
                     }
                 }
 
-                
+
                 //saas SR 
                 if (trip.ShippingRequestFk.IsSaas())
                 {
@@ -465,7 +465,7 @@ namespace TACHYON.Invoices
                 (r => r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
 
             //saas trips
-            var saasTrips = trips.Where(x => x.ShippingRequestFk.IsSaas());
+            var saasTrips = trips.Where(x => x.ShippingRequestFk.IsSaas() || x.CarrierTenantId == x.ShipperTenantId);
 
             decimal SaasTotalAmount = (decimal)saasTrips.Sum(r => r.TotalAmountWithCommission);
             decimal SaasVatAmount = (decimal)saasTrips.Sum(r => r.VatAmountWithCommission);
@@ -523,8 +523,8 @@ namespace TACHYON.Invoices
 
 
             //generate SAAS invoices
-            var shipperSAAStrips = trips.Where(x => x.ShippingRequestFk.IsSaas());
-            if (shipperSAAStrips != null && shipperSAAStrips.Count() > 0)
+           // var shipperSAAStrips = trips.Where(x => x.ShippingRequestFk.IsSaas());
+            if (saasTrips != null && saasTrips.Count() > 0)
             {
                 var invoice = new Invoice
                 {
@@ -535,21 +535,21 @@ namespace TACHYON.Invoices
                     TotalAmount = totalAmount,
                     VatAmount = vatAmount,
                     SubTotalAmount = subTotalAmount,
-                    TaxVat = shipperSAAStrips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
+                    TaxVat = saasTrips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.SaasTrip,
                     Status = InvoiceStatus.Drafted,
-                    Trips = shipperSAAStrips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
+                    Trips = saasTrips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
                 };
                 invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
 
-                foreach (var trip in shipperSAAStrips)
+                foreach (var trip in saasTrips)
                 {
                     trip.IsShipperHaveInvoice = true;
                 }
             }
 
-            
+
         }
 
 
@@ -929,20 +929,23 @@ namespace TACHYON.Invoices
         /// <returns></returns>
         public async Task GenertateInvoiceWhenShipmintDelivery(ShippingRequestTrip trip)
         {
-            var tenant = trip.ShippingRequestFk.Tenant;
+            var tenant = trip.ShippingRequestFk?.Tenant ?? trip.ShipperTenantFk;
             InvoicePeriod period = default;
             ///If the shipemnt pay in advance get the period entity for pay in advance else get from the features
-            if (trip.ShippingRequestFk.IsPrePayed.HasValue && trip.ShippingRequestFk.IsPrePayed.Value)
+            if (trip.ShippingRequestFk != null && trip.ShippingRequestFk.IsPrePayed.HasValue && trip.ShippingRequestFk.IsPrePayed.Value)
                 period = await _periodRepository.FirstOrDefaultAsync
                 (
                     x => x.PeriodType == InvoicePeriodType.PayInAdvance
                 );
             else
+            {
+                var shipperPeriodsString = await _featureChecker.GetValueAsync(tenant.Id, AppFeatures.ShipperPeriods);
+                var shipperPeriods = int.Parse(shipperPeriodsString);
                 period = await _periodRepository.FirstOrDefaultAsync
                 (
-                    x =>
-                        x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods))
+                    x => x.Id == shipperPeriods
                 );
+            }
 
             if (period.PeriodType == InvoicePeriodType.PayuponDelivery ||
                 period.PeriodType == InvoicePeriodType.PayInAdvance)

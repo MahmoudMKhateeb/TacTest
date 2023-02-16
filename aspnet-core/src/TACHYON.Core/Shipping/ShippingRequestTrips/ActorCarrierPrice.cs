@@ -25,5 +25,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public decimal? VatAmount { get; set; }
         public decimal? TaxVat { get; set; }
 
+
+          [ForeignKey(nameof(ShippingRequestTrip))]
+        public int? ShippingRequestTripId { get; set; }
+
+      
+        public ShippingRequestTrip ShippingRequestTrip { get; set; }
+
     }
 }
