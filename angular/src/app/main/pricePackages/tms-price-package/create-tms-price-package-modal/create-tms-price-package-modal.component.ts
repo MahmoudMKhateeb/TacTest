@@ -382,4 +382,21 @@ export class CreateTmsPricePackageModalComponent extends AppComponentBase implem
 
     return filter;
   }
+
+  validateOriginAndDestination() {
+    if (this.tmsPricePackage.shippingTypeId == 1) {
+      this.tmsPricePackage.destinationCityId = this.tmsPricePackage.originCityId;
+    } else {
+      this.tmsPricePackage.destinationCityId = undefined;
+      this.tmsPricePackage.originCityId = undefined;
+    }
+      console.log('validateOriginAndDestination ==>  ' + JSON.stringify(this.tmsPricePackage));
+  }
+
+  checkShippingTypeWhenOriginCityChanged() {
+    if (this.tmsPricePackage.shippingTypeId == 1) {
+      this.tmsPricePackage.destinationCityId = this.tmsPricePackage.originCityId;
+    }
+    console.log('checkShippingTypeWhenOriginCityChanged ==>  ' + JSON.stringify(this.tmsPricePackage));
+  }
 }

@@ -51,34 +51,7 @@
               </select>
             </div>
           </div>
-          <div class="row">
-            <div class="form-group col-md-6">
-              <label>{{ l('OriginCity') }} <span class="text-danger">*</span></label>
-              <select
-                [(ngModel)]="tmsPricePackage.originCityId"
-                (ngModelChange)="applyFilters()"
-                required
-                class="form-control"
-                name="tmsPP_OriginCity"
-              >
-                <option selected disabled [value]="undefined">{{ 'SelectanOriginCity' | localize }}</option>
-                <option *ngFor="let item of cities" [value]="item.id">{{ item.displayName }}</option>
-              </select>
-            </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('DestinationCity') }} <span class="text-danger">*</span></label>
-              <select
-                [(ngModel)]="tmsPricePackage.destinationCityId"
-                (ngModelChange)="applyFilters()"
-                required
-                class="form-control"
-                name="tmsPP_DestinationCity"
-              >
-                <option selected disabled [value]="undefined">{{ 'SelectaDestination' | localize }}</option>
-                <option *ngFor="let item of cities" [value]="item.id">{{ item.displayName }}</option>
-              </select>
-            </div>
-          </div>
+
           <div class="row">
             <div class="form-group col-md-6">
               <label>{{ l('RouteType') }} <span class="text-danger">*</span></label>
@@ -100,7 +73,13 @@
           <div class="row">
             <div class="form-group col-md-6">
               <label>{{ l('ShippingType') }} <span class="text-danger">*</span></label>
-              <select [(ngModel)]="tmsPricePackage.shippingTypeId" required class="form-control" name="tmsPP_ShippingType">
+              <select
+                [(ngModel)]="tmsPricePackage.shippingTypeId"
+                (ngModelChange)="validateOriginAndDestination();applyFilters();"
+                required
+                class="form-control"
+                name="tmsPP_ShippingType"
+              >
                 <option selected disabled [value]="undefined">{{ 'SelectShippingType' | localize }}</option>
                 <option *ngFor="let item of shippingTypes" [value]="item.id">
                   {{ item.displayName }}
@@ -122,6 +101,48 @@
                 optionLabel="displayName"
               >
               </p-multiSelect>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label>{{ l('OriginCity') }} <span class="text-danger">*</span></label>
+              <select
+                [(ngModel)]="tmsPricePackage.originCityId"
+                (ngModelChange)="applyFilters(); checkShippingTypeWhenOriginCityChanged()"
+                required
+                [disabled]="!tmsPricePackage.shippingTypeId"
+                class="form-control"
+                name="tmsPP_OriginCity"
+              >
+                <option selected disabled [value]="undefined">{{ 'SelectanOriginCity' | localize }}</option>
+                <option
+                  [disabled]="tmsPricePackage.shippingTypeId == 2 && tmsPricePackage.destinationCityId == item.id"
+                  *ngFor="let item of cities"
+                  [value]="item.id"
+                >
+                  {{ item.displayName }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-md-6" *ngIf="tmsPricePackage.shippingTypeId != 1">
+              <label>{{ l('DestinationCity') }} <span class="text-danger">*</span></label>
+              <select
+                [(ngModel)]="tmsPricePackage.destinationCityId"
+                (ngModelChange)="applyFilters()"
+                [disabled]="!tmsPricePackage.shippingTypeId"
+                required
+                class="form-control"
+                name="tmsPP_DestinationCity"
+              >
+                <option selected disabled [value]="undefined">{{ 'SelectaDestination' | localize }}</option>
+                <option
+                  [disabled]="tmsPricePackage.shippingTypeId == 2 && tmsPricePackage.originCityId == item.id"
+                  *ngFor="let item of cities"
+                  [value]="item.id"
+                >
+                  {{ item.displayName }}
+                </option>
+              </select>
             </div>
           </div>
 
