@@ -159,7 +159,7 @@ namespace TACHYON.Shipping.Trips
                     StartWorking = x.StartWorking,
                     EndWorking = x.EndTripDate,
                     Status = x.Status,
-                    Driver = x.AssignedDriverUserFk.FullName,
+                    Driver = x.AssignedDriverUserFk.Name + " " + x.AssignedDriverUserFk.Surname,
                     Truck = x.AssignedTruckFk.PlateNumber,
                     Origin = x.OriginFacilityFk.Name,
                     Destination = x.DestinationFacilityFk.Name,
