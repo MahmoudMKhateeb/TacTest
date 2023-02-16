@@ -197,7 +197,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
         [],
         [
           new AppMenuItem('DocumentManagement', 'Pages.DocumentTypes', '', '/app/main/documentTypes/documentTypes'),
-          new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', '', '/app/main/documentsEntities/documentsEntities'),
+          // new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', '', '/app/main/documentsEntities/documentsEntities'),
           //TODO: the contracts subMenu Need Permission and Route
           new AppMenuItem(
             'NonMandatoryDocuments',
