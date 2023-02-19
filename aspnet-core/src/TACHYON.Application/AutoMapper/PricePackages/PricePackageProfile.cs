@@ -28,9 +28,15 @@ namespace TACHYON.AutoMapper.PricePackages
                     opt => opt.MapFrom(des =>
                         des.PricePerExtraDrop.HasValue ? des.PricePerExtraDrop.ToString() : "---"))
                 .ForMember(src => src.TenantName, opt => opt.MapFrom(des => des.Tenant.Name))
-                .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))
-                .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.DisplayName))
-                .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.DisplayName));
+                .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.Translations.Where(x => x.CoreId == des.TrucksTypeId && x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault() != null  
+                ?des.TrucksTypeFk.Translations.Where(x => x.CoreId == des.TrucksTypeId && x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault().TranslatedDisplayName
+                : des.TrucksTypeFk.DisplayName))
+                .ForMember(src => src.Origin, opt => opt.MapFrom(des => des.OriginCityFK.Translations.Where(x => x.CoreId == des.OriginCityId && x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault() != null
+                ? des.OriginCityFK.Translations.Where(x => x.CoreId == des.OriginCityId && x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault().TranslatedDisplayName
+                : des.OriginCityFK.DisplayName))
+                .ForMember(src => src.Destination, opt => opt.MapFrom(des => des.DestinationCityFK.Translations.Where(x => x.CoreId == des.DestinationCityId && x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault() != null 
+                ?des.DestinationCityFK.Translations.Where(x => x.CoreId == des.DestinationCityId && x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault().TranslatedDisplayName
+                : des.DestinationCityFK.DisplayName));
 
             CreateMap<NormalPricePackage, NormalPricePackageProfileDto>()
                 .ForMember(src => src.TruckType, opt => opt.MapFrom(des => des.TrucksTypeFk.DisplayName))

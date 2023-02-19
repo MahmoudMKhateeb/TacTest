@@ -2931,6 +2931,30 @@
   <text name="ActorSubmitInvoicesPermission">تحصيل فواتير المرسلة للعميل</text>
   <text name="DedicatedAttendanceSheetPermission">حضور الشاحنة</text>
   <text name="DedicatedFillAttendanceSheetPermission">ملئ حضور الشاحنة</text>
+    <text name="Sunday">الأحد</text>
+    <text name="Monday">الإثنين</text>
+    <text name="Tuesday">الثلاثاء</text>
+    <text name="Wednesday">الأربعاء</text>
+    <text name="Thursday">الخميس</text>
+    <text name="Friday">الجمعة</text>
+    <text name="Saturday">السبت</text>
+  <text name="EditContact">تعديل المنشأة</text>
+  <text name="Months">شهور</text>
+  <text name="Weeks">أسابيع</text>
+  <!--<text name=""></text>
+  <text name=""></text>
+  <text name=""></text>
+  <text name=""></text>
+  <text name=""></text>
+  <text name=""></text>
+  <text name=""></text>
+  <text name=""></text>
+  <text name=""></text>
+  <text name=""></text>
+  <text name=""></text>
+  <text name=""></text>
+  <text name=""></text>
+  <text name=""></text>-->
 
 	</texts>
 </localizationDictionary>

@@ -3200,5 +3200,21 @@
     <text name="ActorSubmitInvoicesPermission">Actor submit invoices</text>
     <text name="DedicatedAttendanceSheetPermission">Dedicated attendace sheet</text>
     <text name="DedicatedFillAttendanceSheetPermission">Dedicated fill attendance sheet</text>
+    <text name="Sunday">Sunday</text>
+    <text name="Monday">Monday</text>
+    <text name="Tuesday">Tuesday</text>
+    <text name="Wednesday">Wednesday</text>
+    <text name="Thursday">Thursday</text>
+    <text name="Friday">Friday</text>
+    <text name="Saturday">Saturday</text>
+    <text name="EditContact">Edit contact</text>
+    <text name="Months">Months</text>
+    <text name="Weeks">Weeks</text>
+    <!--<text name=""></text>
+    <text name=""></text>
+    <text name=""></text>
+    <text name=""></text>
+    <text name=""></text>
+    <text name=""></text>-->
 	</texts>
 </localizationDictionary>
