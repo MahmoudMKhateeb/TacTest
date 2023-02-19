@@ -334,6 +334,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.input.isPostPrice = this.isPostPriceOffer;
     const parentId = this.offer.parentId;
     this._CurrentServ.initPriceOffer(this.input).subscribe((result) => {
+      (result.carrierActorId as any) = this.offer.carrierActorId?.toString();
       this.offer = result;
       this.offer.parentId = parentId;
       this.Items = this.offer.items;
