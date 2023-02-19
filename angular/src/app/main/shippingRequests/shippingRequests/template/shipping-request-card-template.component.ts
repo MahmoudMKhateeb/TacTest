@@ -112,9 +112,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
       )
       .subscribe((result) => {
         this.IsLoading = false;
-        if (result.items.length < this.maxResultCount) {
-          this.StopLoading = true;
-        }
+        this.StopLoading = result.items.length < this.maxResultCount;
         result.items.forEach((r) => {
           this.origin = null;
           this.destination = null;
@@ -240,6 +238,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     this.IsLoading = true;
     this.skipCount = 0;
     this.items = [];
+    this.resetScrolling();
     this.LoadData();
   }
 
