@@ -180,8 +180,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy
   ) {
     super(injector);
-    //this._TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice = new CreateOrEditActorShipperPriceDto();
-    //this._TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice = new CreateOrEditActorCarrierPrice();
   }
 
   ngOnInit() {
@@ -214,6 +212,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   show(record?: CreateOrEditShippingRequestTripDto, shippingRequestForView?: GetShippingRequestForViewOutput): void {
     this._TripService.GetShippingRequestForViewOutput = shippingRequestForView;
+    // this._TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice = new CreateOrEditActorShipperPriceDto();
+    // this._TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice = new CreateOrEditActorCarrierPrice();
 
     if (shippingRequestForView?.shippingRequestFlag === 1) {
       this.getAllDedicatedDriversForDropDown();
@@ -900,11 +900,15 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   calculatePrices(dto: CreateOrEditActorShipperPriceDto) {
-    dto.vatAmountWithCommission = dto.subTotalAmountWithCommission * 0.15;
-    dto.totalAmountWithCommission = dto.vatAmountWithCommission + dto.subTotalAmountWithCommission;
+    if (dto) {
+      dto.vatAmountWithCommission = dto.subTotalAmountWithCommission * 0.15;
+      dto.totalAmountWithCommission = dto.vatAmountWithCommission + dto.subTotalAmountWithCommission;
+    }
   }
 
   calculateCarrierPrices(dto: CreateOrEditActorCarrierPrice) {
-    dto.vatAmount = dto.subTotalAmount * 0.15;
+    if (dto) {
+      dto.vatAmount = dto.subTotalAmount * 0.15;
+    }
   }
 }

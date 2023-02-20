@@ -85,7 +85,7 @@
               </div>
             </div>
 
-            <div class="row" [hidden]="!this.feature.isEnabled('App.CarrierClients')">
+            <div class="row" [hidden]="!this.feature.isEnabled('App.CarrierClients') || _TripService.GetShippingRequestForViewOutput">
               <div class="col-6">
                 <div class="form-group">
                   <label>{{ l('ActorShipper') }}</label>
@@ -97,13 +97,11 @@
                     <dx-select-box
                       id="ActorShipper"
                       name="ActorShipper"
-                      formControlName="ActorShipper"
                       [(value)]="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId"
                       [dataSource]="AllActorsShippers"
                       [searchEnabled]="true"
                       displayExpr="displayName"
                       valueExpr="id"
-                      [required]="true"
                       placeholder="{{ l('SelectActor') }}"
                     >
                     </dx-select-box>
@@ -161,7 +159,6 @@
                     <dx-select-box
                       id="ActorCarrier"
                       name="ActorCarrier"
-                      formControlName="ActorCarrier"
                       [(value)]="_TripService.CreateOrEditShippingRequestTripDto.carrierActorId"
                       [dataSource]="AllActorsCarriers"
                       [searchEnabled]="true"
