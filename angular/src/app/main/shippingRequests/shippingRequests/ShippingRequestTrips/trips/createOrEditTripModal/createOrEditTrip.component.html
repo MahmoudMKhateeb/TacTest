@@ -321,6 +321,22 @@
               </div>
               <!--      end:Vas's      -->
 
+              <div class="col-lg-6" *ngIf="!_TripService.GetShippingRequestForViewOutput">
+                <label>{{ l('MainGoodCategory') }} <span class="required-fileds">*</span></label>
+                <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
+                  <select
+                    class="form-control"
+                    name="goodCategoryId"
+                    [disabled]="!allGoodCategorys"
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.goodCategoryId"
+                    required
+                  >
+                    <!--                            <option [ngValue]="undefined" disabled selected>{{ l('SelectAGoodCategory') }}</option>-->
+                    <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
+                  </select>
+                  <span class="form-text text-muted">{{ l('SelectaGoodCategory') }}</span>
+                </div>
+              </div>
               <!--  begin::Trip Goods Approximate Value -->
               <div class="col-lg-6 mt-3">
                 <div class="form-group">

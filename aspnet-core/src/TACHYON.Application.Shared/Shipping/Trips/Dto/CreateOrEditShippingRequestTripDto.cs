@@ -73,6 +73,9 @@ namespace TACHYON.Shipping.Trips.Dto
 
         public CreateOrEditActorCarrierPrice ActorCarrierPrice { get; set; }
 
+        public int? GoodCategoryId { get; set; }
+
+
 
         #endregion
         public void AddValidationErrors(CustomValidationContext context)

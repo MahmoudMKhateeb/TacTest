@@ -15,9 +15,11 @@ import {
   EntityTemplateServiceProxy,
   FileDto,
   GetAllDedicatedDriversOrTrucksForDropDownDto,
+  GetAllGoodsCategoriesForDropDownOutput,
   GetAllTrucksWithDriversListDto,
   GetShippingRequestForViewOutput,
   GetShippingRequestVasForViewDto,
+  GoodsDetailsServiceProxy,
   PickingType,
   SavedEntityType,
   SelectItemDto,
@@ -129,6 +131,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   numberOfDrops: number;
   allDrivers: any;
   allTrucks: GetAllTrucksWithDriversListDto[];
+  allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
 
   get isFileInputValid() {
     return this._TripService.CreateOrEditShippingRequestTripDto.hasAttachment
@@ -177,7 +180,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     private _templates: EntityTemplateServiceProxy,
     private enumToArray: EnumToArrayPipe,
     private _dedicatedShippingRequestService: DedicatedShippingRequestsServiceProxy,
-    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy
+    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
+    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy
   ) {
     super(injector);
   }
@@ -223,6 +227,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     if (!shippingRequestForView) {
       this.getAllDrivers();
       this.getAllTrucks(undefined);
+      this.getAllGoodCategories();
       this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
       this.getActors();
     }
@@ -884,6 +889,12 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   getAllTrucks(truckTypeId) {
     this._dedicatedShippingRequestService.getAllTrucksWithDriversList(truckTypeId, undefined).subscribe((res) => {
       this.allTrucks = res;
+    });
+  }
+
+  getAllGoodCategories() {
+    this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
+      this.allGoodCategorys = result;
     });
   }
 
