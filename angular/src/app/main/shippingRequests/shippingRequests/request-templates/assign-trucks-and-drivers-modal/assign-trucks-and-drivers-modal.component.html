@@ -22,7 +22,7 @@
             <dx-data-grid
               #dataGrid
               [dataSource]="allTrucks"
-              valueExpr="truckId"
+              [keyExpr]="'truckId'"
               [hoverStateEnabled]="true"
               [paging]="{ enabled: true, pageSize: 10 }"
               [filterRow]="{ visible: true }"
