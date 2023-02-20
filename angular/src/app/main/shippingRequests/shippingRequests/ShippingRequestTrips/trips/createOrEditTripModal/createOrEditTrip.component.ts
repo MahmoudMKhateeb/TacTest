@@ -233,13 +233,22 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     }
     if (this.shippingRequest) {
       this.setStartTripDate(this.shippingRequest.startTripDate);
-      const endDate =
-        isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Normal
-          ? this.shippingRequest.endTripDate
-          : this._TripService.GetShippingRequestForViewOutput?.rentalEndDate;
-      const EndDateGregorian = moment(endDate).locale('en').format('D/M/YYYY');
-      this.maxTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(EndDateGregorian, 'D/M/YYYY');
-      this.maxTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(EndDateGregorian, 'D/M/YYYY');
+      let endDate: moment.Moment;
+      if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Normal) {
+        endDate = this.shippingRequest.endTripDate;
+      } else {
+        endDate = this._TripService.GetShippingRequestForViewOutput?.rentalEndDate;
+      }
+
+      if (!this._TripService.GetShippingRequestForViewOutput) {
+        const EndDateGregorian = moment().add(3, 'years').locale('en').format('D/M/YYYY');
+        this.maxTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(EndDateGregorian, 'D/M/YYYY');
+        this.maxTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(EndDateGregorian, 'D/M/YYYY');
+      } else {
+        const EndDateGregorian = moment(endDate).locale('en').format('D/M/YYYY');
+        this.maxTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(EndDateGregorian, 'D/M/YYYY');
+        this.maxTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(EndDateGregorian, 'D/M/YYYY');
+      }
     }
     if (record) {
       // this.activeTripId = record.id;
