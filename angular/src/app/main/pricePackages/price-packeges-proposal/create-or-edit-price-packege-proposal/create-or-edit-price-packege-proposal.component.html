@@ -60,7 +60,7 @@
                 <div *dxTemplate="let data of 'content'">
                   <dx-data-grid
                     [dataSource]="dataSource"
-                    [columns]="['displayName', 'truckType', 'originCity', 'destinationCity', 'directRequestTotalPrice', 'tachyonManageTotalPrice']"
+                    [columns]="['displayName', 'truckType', 'originCity', 'destinationCity', 'totalPrice']"
                     [selection]="{ mode: 'multiple' }"
                     [hoverStateEnabled]="true"
                     [paging]="{ enabled: true, pageSize: 10 }"

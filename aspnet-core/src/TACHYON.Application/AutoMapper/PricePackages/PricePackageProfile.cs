@@ -127,6 +127,7 @@ namespace TACHYON.AutoMapper.PricePackages
                             : i.DestinationCity.DisplayName));
            
             CreateMap<NormalPricePackage, PricePackageSelectItemDto>()
+                .ForMember(x=> x.TotalPrice,x=> x.MapFrom(i=> i.TachyonMSRequestPrice))
                 .ForMember(x => x.TruckType,
                     x => x.MapFrom(i =>
                         i.TrucksTypeFk.Translations.FirstOrDefault(t =>

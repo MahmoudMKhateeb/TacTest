@@ -504,7 +504,7 @@ namespace TACHYON.PriceOffers
                         // check if have any matched price package
                         // if the offer tenant is not carrier this method will return false
                         // if the shipping request of offer have not any matched price package (that means shipping request not linked to any price package) will return false
-                        bool isLinkedToAnyPricePackage = await _tmsPricePackageManager.IsHaveMatchedPricePackage(offer.ShippingRequestId, offer.TenantId);
+                        bool isLinkedToAnyPricePackage = await _tmsPricePackageManager.IsHaveMatchedPricePackage(offer.ShippingRequestId, offer.SourceId);
                         
                         return !isLinkedToAnyPricePackage;
                     }

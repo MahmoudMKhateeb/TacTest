@@ -37,5 +37,7 @@ namespace TACHYON.PricePackages.Dto.TmsPricePackages
         public string TruckType { get; set; }
 
         public int? AppendixId { get; set; }
+
+        public bool HasParentOffer { get; set; }
     }
 }
