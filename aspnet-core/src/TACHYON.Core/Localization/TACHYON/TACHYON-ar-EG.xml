@@ -2914,5 +2914,8 @@
 	<text name="YouMustUpdateTheVersionOfTheApplication">يجب عليك تحديث نسخة التطبيق</text>
 	<text name="UpdateTheApplication">تحديث التطبيق</text>
 	<text name="ChangeStatus">تغيير الحالة</text>
+	<text name="DedicatedShippingRequestSavedTemplate">قوالب طلب تأجير الشاحنات</text>
+	<text name="ShippingRequestSavedTemplate">قوالب طلب الشحن</text>
+	<text name="TripSavedTemplate">فوالب الرحلة</text>
 	</texts>
 </localizationDictionary>

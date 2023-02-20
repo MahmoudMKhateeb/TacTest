@@ -27,9 +27,7 @@
                 *ngIf="
                   !trip.id &&
                   (isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas')) &&
-                  shippingRequestForView &&
-                  shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
-                "
+                  shippingRequestForView"
               >
                 <button
                   dropdownToggle
@@ -502,11 +500,7 @@
                 {{ l('Close') }}
               </button>
               <create-or-edit-template-drop-down-button
-                *ngIf="
-                  (isShipper || isTachyonDealer || isCarrierSaas) &&
-                  shippingRequestForView &&
-                  shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
-                "
+                *ngIf="(isShipper || isTachyonDealer || isCarrierSaas) && shippingRequestForView"
                 [entityType]="SavedEntityType.TripTemplate"
                 [jsonData]="tripAsJson"
                 [dropDirection]="'up'"

@@ -133,6 +133,7 @@ namespace TACHYON.EntityTemplates
             {
                 SavedEntityType.ShippingRequestTemplate => await GetShippingRequest(template.SavedEntityId),
                 SavedEntityType.TripTemplate => await GetTrip(template.SavedEntityId),
+                SavedEntityType.DedicatedShippingRequestTemplate => await GetDedicatedShippingRequest(template.SavedEntityId),
                 _ => throw new ArgumentOutOfRangeException()
             };
             if (savedEntity == null)
@@ -148,7 +149,7 @@ namespace TACHYON.EntityTemplates
 
             template.CreatorTenantId = AbpSession.TenantId;
 
-            if (template.EntityType == SavedEntityType.ShippingRequestTemplate)
+            if (template.EntityType == SavedEntityType.ShippingRequestTemplate || template.EntityType == SavedEntityType.DedicatedShippingRequestTemplate)
             {
                 template.TenantId = savedEntity.As<dynamic>().TenantId;
                 return;
@@ -185,6 +186,15 @@ namespace TACHYON.EntityTemplates
                 .AsNoTracking().FirstOrDefaultAsync(x => x.Id.ToString().Equals(savedEntityId));
             return ObjectMapper.Map<CreateOrEditShippingRequestTemplateInputDto>(shippingRequest);
         }
+        private async Task<DedicatedShippingRequestTemplateDto> GetDedicatedShippingRequest(string savedEntityId)
+        {
+            await DisableTenancyFilterIfTms();
+            
+            var shippingRequest = await _shippingRequestRepository.GetAllIncluding(x=> x.ShippingRequestVases,x=> x.OriginCityFk)
+                .Include(x=> x.ShippingRequestDestinationCities).ThenInclude(x=> x.CityFk)
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id.ToString().Equals(savedEntityId));
+            return ObjectMapper.Map<DedicatedShippingRequestTemplateDto>(shippingRequest);
+        }
 
         private static string SerializeEntityWithFormatting(object entity,SavedEntityType type)
         {
@@ -195,6 +205,7 @@ namespace TACHYON.EntityTemplates
             {
                 SavedEntityType.ShippingRequestTemplate => JsonConvert.DeserializeObject(entityJson,typeof(CreateOrEditShippingRequestTemplateInputDto)),
                 SavedEntityType.TripTemplate => JsonConvert.DeserializeObject(entityJson,typeof(CreateOrEditShippingRequestTripDto)),
+                SavedEntityType.DedicatedShippingRequestTemplate => JsonConvert.DeserializeObject(entityJson,typeof(DedicatedShippingRequestTemplateDto)),
                 _ => throw new ArgumentOutOfRangeException()
             };
             
@@ -209,7 +220,7 @@ namespace TACHYON.EntityTemplates
         /// <param name="tripTemplates"></param>
         /// <param name="srId"></param>
         /// <returns></returns>
-        public async Task<List<SelectItemDto>> FilterTripTemplatesByParentEntity(List<EntityTemplate> tripTemplates,string srId)
+        public async Task<List<TemplateSelectItemDto>> FilterTripTemplatesByParentEntity(List<EntityTemplate> tripTemplates,string srId)
         {
             var shippingRequest = await _shippingRequestRepository.GetAll().AsNoTracking()
                 .Where(x => x.Id.ToString().Equals(srId))
@@ -219,13 +230,21 @@ namespace TACHYON.EntityTemplates
                     x.GoodCategoryId,
                     SourceCityId = x.OriginCityId, 
                     x.ShippingRequestDestinationCities,
-                    x.NumberOfDrops
+                    x.NumberOfDrops, x.ShippingRequestFlag
                 }).FirstOrDefaultAsync();
 
             if (shippingRequest == null) throw new UserFriendlyException(L("ThereIsNoShippingRequest"));
 
             var templatesList = ToTripTemplateDropdownItem(tripTemplates);
 
+            if (shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+            {
+                return templatesList.Where(x => x.Trip.RoutPoints != null).Select(x =>
+                    new TemplateSelectItemDto()
+                    {
+                        DisplayName = x.TemplateName, Id = x.Id.ToString(), Type = SavedEntityType.TripTemplate
+                    }).ToList();
+            }
             var filteredByRoutTypeItems = shippingRequest.RoutType switch
             {
                 ShippingRequestRouteType.SingleDrop => (from item in templatesList
@@ -254,7 +273,7 @@ namespace TACHYON.EntityTemplates
                     on template.Trip.DestinationFacilityId equals destinationFacility.Id
                     where originFacility.CityId == shippingRequest.SourceCityId 
                 && shippingRequest.ShippingRequestDestinationCities.Any(x=>x.CityId == destinationFacility.CityId)
-                select new SelectItemDto() {DisplayName = template.TemplateName, Id = template.Id.ToString()});
+                select new TemplateSelectItemDto() {DisplayName = template.TemplateName, Id = template.Id.ToString(),Type = SavedEntityType.TripTemplate});
             
             return matchesOriginAndDestinationItems.ToList();
         }

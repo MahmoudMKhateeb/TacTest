@@ -426,9 +426,7 @@
                       <a class="dropdown-item" (click)="AddNewTripModal.deleteTrip(record.id)">{{ l('Delete') }}</a>
                     </li>
                     <li
-                      *ngIf="
-                        shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Normal &&
-                        record.canCreateTemplate &&
+                      *ngIf=" record.canCreateTemplate &&
                         (isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestForView.shippingRequest.isSaas))
                       "
                     >

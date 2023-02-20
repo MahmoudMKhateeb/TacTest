@@ -1,12 +1,12 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
 import {
-  GetShippingRequestForViewOutput,
-  GetShippingRequestVasForViewDto,
-  ShippingRequestDto,
-  ShippingRequestsServiceProxy,
-  ShippingRequestStatus,
-  ShippingRequestType,
-  SavedEntityType,
+    GetShippingRequestForViewOutput,
+    GetShippingRequestVasForViewDto,
+    ShippingRequestDto,
+    ShippingRequestsServiceProxy,
+    ShippingRequestStatus,
+    ShippingRequestType,
+    SavedEntityType, ShippingRequestFlag,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
@@ -39,6 +39,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   type = 'ShippingRequest';
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequests'), '/app/main/shippingRequests/shippingRequests')];
   rentalRange: { rentalStartDate: moment.Moment; rentalEndDate: moment.Moment } = null;
+  requestFlag = ShippingRequestFlag;
 
   constructor(
     injector: Injector,

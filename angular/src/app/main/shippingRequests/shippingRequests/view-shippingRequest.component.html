@@ -9,11 +9,9 @@
       <!--      </div>-->
       <div role="actions">
         <create-or-edit-template-drop-down-button
-          *ngIf="
-            shippingRequestforView.shippingRequestFlag === 0 &&
-            (isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestforView.shippingRequest.isSaas))
+          *ngIf="(isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestforView.shippingRequest.isSaas))
           "
-          [entityType]="entityTypes.ShippingRequestTemplate"
+          [entityType]="shippingRequestforView.shippingRequestFlag === requestFlag.Dedicated ? entityTypes.DedicatedShippingRequestTemplate : entityTypes.ShippingRequestTemplate "
           [sourceEntityId]="activeShippingRequestId"
         ></create-or-edit-template-drop-down-button>
         <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'ActivityLog' | localize }} </a>
@@ -49,7 +47,6 @@
       <!--  start:: PriceOfferingSection -->
       <ng-template [ngIf]="canSeePriceOffers()">
         <shipping-request-offers-list
-          [shippingRequestId]="activeShippingRequestId"
           [shippingRequestId]="activeShippingRequestId"
           [isTachyonDeal]="shippingRequestforView.shippingRequest.isTachyonDeal"
           [isForDedicated]="shippingRequestforView.shippingRequestFlag === 1"
