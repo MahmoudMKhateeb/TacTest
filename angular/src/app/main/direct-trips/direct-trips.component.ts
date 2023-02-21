@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
   selector: 'app-direct-trips',
   templateUrl: './direct-trips.component.html',
   styleUrls: ['./direct-trips.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class DirectTripsComponent extends AppComponentBase implements OnInit {
   @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
