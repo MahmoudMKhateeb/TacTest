@@ -15,9 +15,11 @@ import {
   EntityTemplateServiceProxy,
   FileDto,
   GetAllDedicatedDriversOrTrucksForDropDownDto,
+  GetAllGoodsCategoriesForDropDownOutput,
   GetAllTrucksWithDriversListDto,
   GetShippingRequestForViewOutput,
   GetShippingRequestVasForViewDto,
+  GoodsDetailsServiceProxy,
   PickingType,
   SavedEntityType,
   SelectItemDto,
@@ -129,6 +131,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   numberOfDrops: number;
   allDrivers: any;
   allTrucks: GetAllTrucksWithDriversListDto[];
+  allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
 
   get isFileInputValid() {
     return this._TripService.CreateOrEditShippingRequestTripDto.hasAttachment
@@ -177,11 +180,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     private _templates: EntityTemplateServiceProxy,
     private enumToArray: EnumToArrayPipe,
     private _dedicatedShippingRequestService: DedicatedShippingRequestsServiceProxy,
-    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy
+    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
+    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy
   ) {
     super(injector);
-    //this._TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice = new CreateOrEditActorShipperPriceDto();
-    //this._TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice = new CreateOrEditActorCarrierPrice();
   }
 
   ngOnInit() {
@@ -214,6 +216,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   show(record?: CreateOrEditShippingRequestTripDto, shippingRequestForView?: GetShippingRequestForViewOutput): void {
     this._TripService.GetShippingRequestForViewOutput = shippingRequestForView;
+    // this._TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice = new CreateOrEditActorShipperPriceDto();
+    // this._TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice = new CreateOrEditActorCarrierPrice();
 
     if (shippingRequestForView?.shippingRequestFlag === 1) {
       this.getAllDedicatedDriversForDropDown();
@@ -223,18 +227,28 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     if (!shippingRequestForView) {
       this.getAllDrivers();
       this.getAllTrucks(undefined);
+      this.getAllGoodCategories();
       this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
       this.getActors();
     }
     if (this.shippingRequest) {
       this.setStartTripDate(this.shippingRequest.startTripDate);
-      const endDate =
-        isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Normal
-          ? this.shippingRequest.endTripDate
-          : this._TripService.GetShippingRequestForViewOutput?.rentalEndDate;
-      const EndDateGregorian = moment(endDate).locale('en').format('D/M/YYYY');
-      this.maxTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(EndDateGregorian, 'D/M/YYYY');
-      this.maxTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(EndDateGregorian, 'D/M/YYYY');
+      let endDate: moment.Moment;
+      if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Normal) {
+        endDate = this.shippingRequest.endTripDate;
+      } else {
+        endDate = this._TripService.GetShippingRequestForViewOutput?.rentalEndDate;
+      }
+
+      if (!this._TripService.GetShippingRequestForViewOutput) {
+        const EndDateGregorian = moment().add(3, 'years').locale('en').format('D/M/YYYY');
+        this.maxTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(EndDateGregorian, 'D/M/YYYY');
+        this.maxTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(EndDateGregorian, 'D/M/YYYY');
+      } else {
+        const EndDateGregorian = moment(endDate).locale('en').format('D/M/YYYY');
+        this.maxTripDateAsGrorg = this.dateFormatterService.ToGregorianDateStruct(EndDateGregorian, 'D/M/YYYY');
+        this.maxTripDateAsHijri = this.dateFormatterService.ToHijriDateStruct(EndDateGregorian, 'D/M/YYYY');
+      }
     }
     if (record) {
       // this.activeTripId = record.id;
@@ -245,8 +259,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.loading = true;
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this._TripService.CreateOrEditShippingRequestTripDto = res;
-        this.IsHaveSealNumberValue = res.sealNumber.length > 0;
-        this.IsHaveContainerNumberValue = res.containerNumber.length > 0;
+        this.IsHaveSealNumberValue = res.sealNumber?.length > 0;
+        this.IsHaveContainerNumberValue = res.containerNumber?.length > 0;
         console.log('res', res.containerNumber);
         const gregorian = moment(res.startTripDate).locale('en').format('D/M/YYYY');
         this.startTripdate = this.dateFormatterService.ToGregorianDateStruct(gregorian, 'D/M/YYYY');
@@ -887,6 +901,12 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     });
   }
 
+  getAllGoodCategories() {
+    this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
+      this.allGoodCategorys = result;
+    });
+  }
+
   getActors() {
     this._shippingRequestsServiceProxy.getAllCarriersActorsForDropDown().subscribe((result) => {
       this.AllActorsCarriers = result;
@@ -900,11 +920,15 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   calculatePrices(dto: CreateOrEditActorShipperPriceDto) {
-    dto.vatAmountWithCommission = dto.subTotalAmountWithCommission * 0.15;
-    dto.totalAmountWithCommission = dto.vatAmountWithCommission + dto.subTotalAmountWithCommission;
+    if (dto) {
+      dto.vatAmountWithCommission = dto.subTotalAmountWithCommission * 0.15;
+      dto.totalAmountWithCommission = dto.vatAmountWithCommission + dto.subTotalAmountWithCommission;
+    }
   }
 
   calculateCarrierPrices(dto: CreateOrEditActorCarrierPrice) {
-    dto.vatAmount = dto.subTotalAmount * 0.15;
+    if (dto) {
+      dto.vatAmount = dto.subTotalAmount * 0.15;
+    }
   }
 }

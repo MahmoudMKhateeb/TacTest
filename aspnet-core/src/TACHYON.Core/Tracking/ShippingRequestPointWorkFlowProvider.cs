@@ -19,6 +19,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
+using TACHYON.Configuration;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Dto;
@@ -28,6 +29,7 @@ using TACHYON.Integration.BayanIntegration.V3;
 using TACHYON.Invoices;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
+using TACHYON.Offers;
 using TACHYON.Penalties;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Base;
@@ -76,6 +78,7 @@ namespace TACHYON.Tracking
         private readonly PenaltyManager _penaltyManager;
         private readonly BayanIntegrationManagerV3 _banIntegrationManagerV3;
         private readonly IRepository<User, long> _userRepository;
+
         public IAbpSession AbpSession { set; get; }
 
 
@@ -1092,7 +1095,7 @@ namespace TACHYON.Tracking
                 var trip = await _shippingRequestTripRepository
                     .GetAllIncluding(d => d.ShippingRequestTripVases)
                     .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
-                    .Include(x=> x.ShipperTenantFk)
+                    .Include(x => x.ShipperTenantFk)
                     .FirstOrDefaultAsync(t => t.Id == point.ShippingRequestTripId);
                 await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
             }
@@ -1234,11 +1237,42 @@ namespace TACHYON.Tracking
         /// </summary>
         public async Task TransferPricesToTrip(ShippingRequestTrip trip)
         {
-            if (!trip.ShippingRequestId.HasValue)
-                return;
-
 
             DisableTenancyFilters();
+
+
+            if (!trip.ShippingRequestId.HasValue) // direct create shipments 
+            {
+                decimal carrierAsSaasSingleDropCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(trip.ShipperTenantId.Value, AppFeatures.SingleDropSaasCommission));
+                decimal carrierAsSaasMultipleDropsCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(trip.ShipperTenantId.Value, AppFeatures.MultipleDropsSaasCommission));
+
+                trip.CommissionType = PriceOfferCommissionType.CommissionValue;// always value
+                trip.TaxVat = TaxVat;
+                trip.SubTotalAmount = 0;
+                trip.VatAmount = TaxVat / 100;
+                trip.TotalAmount = 0;
+
+                if (trip.RouteType == ShippingRequestRouteType.SingleDrop)
+                {
+                    trip.CommissionAmount = carrierAsSaasSingleDropCommissionValue;
+                    trip.CommissionPercentageOrAddValue = carrierAsSaasSingleDropCommissionValue;
+                }
+                else //multiple drop
+                {
+                    trip.CommissionAmount = carrierAsSaasMultipleDropsCommissionValue;
+                    trip.CommissionPercentageOrAddValue = carrierAsSaasMultipleDropsCommissionValue;
+                }
+
+                trip.SubTotalAmountWithCommission = trip.CommissionPercentageOrAddValue;
+                trip.VatAmountWithCommission = TaxVat / 100 * trip.CommissionPercentageOrAddValue;
+                trip.TotalAmountWithCommission = trip.SubTotalAmountWithCommission + trip.VatAmountWithCommission;
+
+
+                return;
+            }
+
+
+
 
             var priceOffer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId.Value);
             if (priceOffer != null)
@@ -1483,7 +1517,7 @@ namespace TACHYON.Tracking
             var trip = await _shippingRequestTripRepository
                     .GetAllIncluding(d => d.ShippingRequestTripVases)
                     .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
-                    .Include(x=> x.ShipperTenantFk)
+                    .Include(x => x.ShipperTenantFk)
                     .FirstOrDefaultAsync(t => t.Id == point.ShippingRequestTripId);
 
             if (isCompleted)

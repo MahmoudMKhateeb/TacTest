@@ -149,8 +149,8 @@ namespace TACHYON.Shipping.Trips
             DisableTenancyFilters();
             var queryable = _shippingRequestTripRepository
                 .GetAll()
-                .Where(x=> x.ShippingRequestId == null)
-                .Where(x=> x.CarrierTenantId == AbpSession.TenantId || x.ShipperTenantId == AbpSession.TenantId)
+                .Where(x => x.ShippingRequestId == null)
+                .Where(x => x.CarrierTenantId == AbpSession.TenantId || x.ShipperTenantId == AbpSession.TenantId)
                 .Select(x => new
                 {
                     Id = x.Id,
@@ -158,7 +158,7 @@ namespace TACHYON.Shipping.Trips
                     EndTripDate = x.EndTripDate,
                     StartWorking = x.StartWorking,
                     EndWorking = x.EndTripDate,
-                    Status = x.Status,
+                    Status = x.Status.ToString(),
                     Driver = x.AssignedDriverUserFk.Name + " " + x.AssignedDriverUserFk.Surname,
                     Truck = x.AssignedTruckFk.PlateNumber,
                     Origin = x.OriginFacilityFk.Name,
@@ -434,7 +434,7 @@ namespace TACHYON.Shipping.Trips
 
                 }
             }
-            else 
+            else
 
             {
                 await Update(input, request);
@@ -642,8 +642,8 @@ namespace TACHYON.Shipping.Trips
         private async Task Create(CreateOrEditShippingRequestTripDto input, [CanBeNull] ShippingRequest request)
         {
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
-            
-            
+
+
 
             if (request == null) // direct shipment 
             {
@@ -745,7 +745,7 @@ namespace TACHYON.Shipping.Trips
         {
             var trip = await GetTrip((int)input.Id, input.ShippingRequestId);
             TripCanEditOrDelete(trip);
-            if (trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+            if (trip.ShippingRequestFk is { ShippingRequestFlag: ShippingRequestFlag.Dedicated } || trip.ShippingRequestFk == null)
             {
                 trip.AssignedDriverUserId = input.DriverUserId;
                 trip.AssignedTruckId = input.TruckId;
@@ -778,8 +778,7 @@ namespace TACHYON.Shipping.Trips
             ObjectMapper.Map(input, trip);
 
 
-            if (request.ShippingRequestFlag == ShippingRequestFlag.Dedicated &&
-                trip.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
+            if (request != null && request.ShippingRequestFlag == ShippingRequestFlag.Dedicated && trip.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
             {
                 // Note: if the trip is normal and changed to Home delivery 
                 // the driver status must updated
@@ -963,7 +962,11 @@ namespace TACHYON.Shipping.Trips
         private void TripCanEditOrDelete(ShippingRequestTrip trip)
         {
             // When Edit Or Delete, Allow Home delivery to edit trip even if it is intransit
-            if (trip.ShippingRequestTripFlag == ShippingRequestTripFlag.Normal && trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Normal && trip.Status != ShippingRequestTripStatus.New)
+            if (trip.ShippingRequestFk != null && trip.ShippingRequestTripFlag == ShippingRequestTripFlag.Normal && trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Normal)
+            {
+                throw new UserFriendlyException(L("CanNotEditOrDeleteTrip"));
+            }
+            else if (trip.ShippingRequestFk == null && trip.Status != ShippingRequestTripStatus.New)
             {
                 throw new UserFriendlyException(L("CanNotEditOrDeleteTrip"));
             }
@@ -996,6 +999,8 @@ namespace TACHYON.Shipping.Trips
                     .Include(x => x.ShippingRequestTripVases)
                     .ThenInclude(v => v.ShippingRequestVasFk)
                     .ThenInclude(v => v.VasFk)
+                    .Include(x => x.ActorCarrierPrice)
+                    .Include(x => x.ActorShipperPrice)
                     .WhereIf(requestId.HasValue, x => x.ShippingRequestId == requestId)
                     .FirstOrDefaultAsync(x => x.Id == tripid);
                 trip.RoutPoints = trip.RoutPoints.OrderBy(x => x.PickingType).ToList();
@@ -1043,16 +1048,17 @@ namespace TACHYON.Shipping.Trips
 
             var userHasAccess = await _shippingRequestRepository.GetAll()
                 .Where(x => x.Id == trip.ShippingRequestId)
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper) && !hasCarrierClients,x => x.TenantId == AbpSession.TenantId)
-                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier) && !hasCarrierClients,x => x.CarrierTenantId == AbpSession.TenantId)
-                .WhereIf(AbpSession.TenantId.HasValue && hasCarrierClients,x => x.CarrierTenantId == AbpSession.TenantId || x.TenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper) && !hasCarrierClients, x => x.TenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier) && !hasCarrierClients, x => x.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(AbpSession.TenantId.HasValue && hasCarrierClients, x => x.CarrierTenantId == AbpSession.TenantId || x.TenantId == AbpSession.TenantId)
                 .AnyAsync();
 
 
             if (trip.CarrierTenantId == AbpSession.TenantId && trip.ShipperTenantId == AbpSession.TenantId)
             {
-                
-            }else if (!userHasAccess)
+
+            }
+            else if (!userHasAccess)
             {
                 throw new UserFriendlyException(L("YouDoNotHaveAccess"));
             }

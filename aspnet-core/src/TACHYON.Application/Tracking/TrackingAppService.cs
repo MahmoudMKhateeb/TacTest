@@ -451,7 +451,7 @@ namespace TACHYON.Tracking
                 //if (trip.Status == ShippingRequestTripStatus.New && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted && !dto.CanStartTrip)
                 //    dto.NoActionReason = CanNotStartReason(trip, workingOnAnotherTrip);
             }
-            dto.CanDriveTrip = !tenantId.HasValue || tenantId== trip?.ShippingRequestFk?.CarrierTenantId || await IsTachyonDealer();
+            dto.CanDriveTrip = !tenantId.HasValue || tenantId== trip?.ShippingRequestFk?.CarrierTenantId || await IsTachyonDealer() || tenantId == trip?.CarrierTenantId;
             dto.IsTripImpactEnabled = await _accidentRepository.GetAll()
                 .Where(x => !x.IsResolve && x.RoutPointFK.ShippingRequestTripId == trip.Id)
                 .AnyAsync(x => x.ReasoneId.HasValue && x.ResoneFK.IsTripImpactEnabled && !x.ForceContinueTripEnabled);
@@ -461,7 +461,8 @@ namespace TACHYON.Tracking
         {
             if (trip.StartTripDate.Date <= Clock.Now.Date
                && trip.Status == ShippingRequestTripStatus.New
-               && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
+               && trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted
+               )
                 return true;
 
             return false;

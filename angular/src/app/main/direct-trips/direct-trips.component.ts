@@ -1,9 +1,10 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import { ShippingRequestDto, ShippingRequestsTripServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CreateOrEditShippingRequestTripDto, ShippingRequestDto, ShippingRequestsTripServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
+import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 
 @Component({
   selector: 'app-direct-trips',
@@ -11,6 +12,7 @@ import * as moment from 'moment';
   styleUrls: ['./direct-trips.component.css'],
 })
 export class DirectTripsComponent extends AppComponentBase implements OnInit {
+  @ViewChild('AddNewTripModal', { static: true }) addNewTripModal: CreateOrEditTripComponent;
   popupPosition: any = { of: window, at: 'top', my: 'top', offset: { y: 10 } };
   dataSource: any = {};
   shippingRequest: ShippingRequestDto = new ShippingRequestDto({
@@ -83,4 +85,10 @@ export class DirectTripsComponent extends AppComponentBase implements OnInit {
   }
 
   reloadPage() {}
+
+  showEdit(id) {
+    let record = new CreateOrEditShippingRequestTripDto();
+    record.id = id;
+    this.addNewTripModal.show(record);
+  }
 }
