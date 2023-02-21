@@ -49,6 +49,7 @@
                   <dxi-column dataField="driver" [caption]="'Driver' | localize" *ngIf="isDedicatedRequest"></dxi-column>
                   <dxi-column dataField="truck" [caption]="'Truck' | localize" *ngIf="isDedicatedRequest"></dxi-column>
                   <dxi-column dataField="totalValue" [caption]="'TotalValue' | localize"></dxi-column>
+                  <dxi-column dataField="goodCategory" [caption]="'GoodCategory' | localize" *ngIf="!shippingRequestId"></dxi-column>
                   <dxi-column
                     dataField="exception"
                     [caption]="'HasErrors' | localize"

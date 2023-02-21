@@ -20,7 +20,7 @@ namespace TACHYON.Shipping.Trips.Importing
         private readonly ShippingRequestTripManager _shippingRequestTripManager;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
 
-        private long ShippingRequestId;
+        private long? ShippingRequestId;
         public RoutePointListDataReader(TachyonExcelDataReaderHelper tachyonExcelDataReaderHelper, IRepository<ShippingRequestTrip> shippingRequestTripRepository, ShippingRequestTripManager shippingRequestTripManager)
         {
             _tachyonExcelDataReaderHelper = tachyonExcelDataReaderHelper;
@@ -28,7 +28,7 @@ namespace TACHYON.Shipping.Trips.Importing
             _shippingRequestTripManager = shippingRequestTripManager;
         }
 
-        public List<ImportRoutePointDto> GetPointsFromExcel(byte[] fileBytes, long shippingRequestId)
+        public List<ImportRoutePointDto> GetPointsFromExcel(byte[] fileBytes, long? shippingRequestId)
         {
             ShippingRequestId = shippingRequestId;
             return ProcessExcelFile(fileBytes, ProcessPointsExcelRow);
@@ -120,7 +120,7 @@ namespace TACHYON.Shipping.Trips.Importing
             var facility = _shippingRequestTripManager.GetFacilityByPermission(text, ShippingRequestId);
                 //_facilityRepository.FirstOrDefault(x => x.Name == text);
             if (facility != null)
-                return facility.Id;
+                return facility;
 
             exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Facility"));
             return null;
@@ -138,7 +138,7 @@ namespace TACHYON.Shipping.Trips.Importing
             var receiver = _shippingRequestTripManager.GetReceiverByPermissionAndFacility(text, ShippingRequestId, facilityId);
                 //_receiverRepository.FirstOrDefault(x => x.FullName == text);
             if (receiver != null)
-                return receiver.Id;
+                return receiver;
 
             exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Receiver"));
             return null;
