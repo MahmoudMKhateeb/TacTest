@@ -21,6 +21,7 @@ export class ViewImportedTripsFromExcelModalComponent extends AppComponentBase {
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   popoverTarget: any;
   popOverText: any;
+  shippingRequestId: number;
 
   constructor(injector: Injector, private ImportShipmentFromExcelService: ImportShipmentFromExcelServiceProxy) {
     super(injector);
@@ -31,6 +32,7 @@ export class ViewImportedTripsFromExcelModalComponent extends AppComponentBase {
   }
 
   show() {
+    this.shippingRequestId = this.ImportedTripsList[0].shippingRequestId;
     this.modal.show();
   }
 

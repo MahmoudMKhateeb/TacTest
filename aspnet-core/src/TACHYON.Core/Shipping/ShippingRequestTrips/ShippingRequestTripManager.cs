@@ -1,8 +1,11 @@
 ﻿using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
+using Abp.Timing;
 using Abp.UI;
+using DevExpress.Data.ODataLinq.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,6 +17,7 @@ using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Features;
 using TACHYON.Goods.Dtos;
+using TACHYON.Goods.GoodCategories;
 using TACHYON.Notifications;
 using TACHYON.Receivers;
 using TACHYON.Routs.RoutPoints;
@@ -42,23 +46,25 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         private readonly IRepository<Truck, long> _truckRepository;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
         private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTruckRepository;
+        private readonly IRepository<GoodCategory> _goodCategoryRepository;
+
 
         private IAbpSession _AbpSession { get; set; }
 
 
         public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository,
-            IRepository<ShippingRequest, long> shippingRequestRepository, 
-            IFeatureChecker featureChecker, IAbpSession abpSession, 
+            IRepository<ShippingRequest, long> shippingRequestRepository,
+            IFeatureChecker featureChecker, IAbpSession abpSession,
             IRepository<RoutPoint, long> routePointRepository,
             IRepository<Facility, long> facilityRepository,
-            IRepository<Receiver> receiverRepository, 
+            IRepository<Receiver> receiverRepository,
             IAppNotifier appNotifier,
-            IRepository<ShippingRequestVas, long> shippingRequestVasRepository, 
+            IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
             ShippingRequestPointWorkFlowProvider shippingRequestPointWorkFlowProvider,
-            UserManager userManager, 
+            UserManager userManager,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriver,
             IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTruck,
-            IRepository<User, long> userRepository, IRepository<Truck, long> truckRepository)
+            IRepository<User, long> userRepository, IRepository<Truck, long> truckRepository, IRepository<GoodCategory> goodCategoryRepository)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -74,6 +80,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             _dedicatedShippingRequestTruckRepository = dedicatedShippingRequestTruck;
             _userRepository = userRepository;
             _truckRepository = truckRepository;
+            _goodCategoryRepository = goodCategoryRepository;
         }
 
         public async Task DriverAcceptTrip(ShippingRequestTrip trip )
@@ -120,9 +127,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
             }
 
-            if (sr.ShippingRequestFlag == ShippingRequestFlag.Normal)
+            if (importTripDto.ShippingRequestId != null && sr.ShippingRequestFlag == ShippingRequestFlag.Normal)
             {
-                if(importTripDto.StartTripDate?.Date == null)
+                if (importTripDto.StartTripDate?.Date == null)
                 {
                     importTripDto.StartTripDate = sr.StartTripDate;
                 }
@@ -137,10 +144,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                 }
                 catch (UserFriendlyException e)
                 {
-                    exceptionMessage.Append(e.Message+";");
+                    exceptionMessage.Append(e.Message + ";");
                 }
             }
-            else //dedicated
+            else if (importTripDto.ShippingRequestId != null && sr.ShippingRequestFlag == ShippingRequestFlag.Dedicated)//dedicated
             {
                 if (importTripDto.StartTripDate?.Date == null)
                 {
@@ -161,14 +168,22 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                 }
 
                 //number of drops
-                if(importTripDto.RouteType == ShippingRequestRouteType.SingleDrop)
+                if (importTripDto.RouteType == ShippingRequestRouteType.SingleDrop)
                 {
                     importTripDto.NumberOfDrops = 1;
                 }
 
                 //validate truck and driver
-               // await ValidateTruckAndDriver(importTripDto);
+                // await ValidateTruckAndDriver(importTripDto);
             }
+            if(importTripDto.ShippingRequestId == null)
+            {
+                if (importTripDto.RouteType == ShippingRequestRouteType.SingleDrop)
+                {
+                    importTripDto.NumberOfDrops = 1;
+                }
+            }
+      
 
 
             ValidateDuplicateBulkReferenceFromDB(importTripDto, exceptionMessage);
@@ -271,47 +286,56 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             return tripVasNumber <= tripsNumber;
         }
 
-        public Facility GetFacilityByPermission(string name,long shippingRequestId)
+        public long? GetFacilityByPermission(string name,long? shippingRequestId)
         {
-            var request=GetShippingRequestByPermission(shippingRequestId);
+            var request = shippingRequestId != null ? GetShippingRequestByPermission(shippingRequestId.Value) :null;
             return _facilityRepository.GetAll()
-                .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer),x=>x.TenantId==request.TenantId )
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer) && request != null,x=>x.TenantId==request.TenantId )
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.CarrierAsASaas), x => x.TenantId == _AbpSession.TenantId)
-                .FirstOrDefault(x => x.Name.Trim() == name.Trim());
+                .Select(x=> new { x.Id, x.Name })
+                .FirstOrDefault(x => x.Name.Trim().Equals(name.Trim()))?.Id;
         }
 
-        public Receiver GetReceiverByPermissionAndFacility(string name, long shippingRequestId, long facilityId)
+        public int? GetReceiverByPermissionAndFacility(string name, long? shippingRequestId, long facilityId)
         {
-            var request = GetShippingRequestByPermission(shippingRequestId);
+            var request = shippingRequestId!= null ? GetShippingRequestByPermission(shippingRequestId.Value) :null;
             return _receiverRepository.GetAll()
                 .Where(x=>x.FacilityId==facilityId)
-                .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x => x.TenantId == request.TenantId)
+                .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer) && request != null, x => x.TenantId == request.TenantId)
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.CarrierAsASaas), x => x.TenantId == _AbpSession.TenantId)
-                .FirstOrDefault(x => x.FullName.Trim() == name.Trim());
+                .Select(x=> new { x.Id, x.FullName})
+                .FirstOrDefault(x => x.FullName.Trim().Equals(name.Trim()))?.Id;
         }
 
 
-        public long GeDriverIdByPermission(string text, long shippingRequestId, int tenantId)
+        public long GeDriverIdByPermission(string text, long? shippingRequestId, int? tenantId)
         {
             string firstname = text.Split(" ")[0];
             string surname = text.Split(" ")?[1];
 
             DisableTenancyFilters();
-            return _dedicatedShippingRequestDriverRepository.GetAll().FirstOrDefault(x => x.DriverUser.TenantId == tenantId &&
+            if (shippingRequestId != null) return _dedicatedShippingRequestDriverRepository.GetAll().FirstOrDefault(x => x.DriverUser.TenantId == tenantId &&
             x.ShippingRequestId == shippingRequestId &&
-            ((x.DriverUser.Name.ToLower() == firstname.ToLower() && x.DriverUser.Surname.ToLower() == surname.ToLower()) ||
+            ((x.DriverUser.Name.ToLower().Equals(firstname.ToLower()) && x.DriverUser.Surname.ToLower().Equals(surname.ToLower())) ||
             x.DriverUser.PhoneNumber == text)
             ).DriverUserId;
+            else return _userRepository.GetAll().Select(x=> new { x.Id, x.TenantId, x.Name, x.Surname, x.PhoneNumber }).FirstOrDefault(x => x.TenantId == _AbpSession.TenantId && (x.Name.Equals(firstname) && x.Surname.Equals(surname)) ||
+            x.PhoneNumber == text).Id;
         }
 
 
-        public long GetTruckIdByPermission(string text, long shippingRequestId, int tenantId)
+        public long GetTruckIdByPermission(string text, long? shippingRequestId, int? tenantId)
         {
             DisableTenancyFilters();
-            return _dedicatedShippingRequestTruckRepository.GetAll().FirstOrDefault(x => x.Truck.TenantId == tenantId && x.ShippingRequestId == shippingRequestId && x.Truck.PlateNumber == text).TruckId;
-               
+            if (shippingRequestId != null) return _dedicatedShippingRequestTruckRepository.GetAll().FirstOrDefault(x => x.Truck.TenantId == tenantId && x.ShippingRequestId == shippingRequestId && x.Truck.PlateNumber.Equals(text)).TruckId;
+            else return _truckRepository.GetAll().Select(x=> new { x.Id, x.PlateNumber, x.TenantId}).FirstOrDefault(x => x.PlateNumber.Equals(text) && x.TenantId == _AbpSession.TenantId).Id;
+        }
+
+        public int GetGoodsCategoryId(string text)
+        {
+            return _goodCategoryRepository.GetAll().Select(x=> new { x.Id, x.Key, x.Translations, x.FatherId }).FirstOrDefault(x => x.FatherId == null && ( x.Key.Trim().Equals(text) || x.Translations.Any(y => y.DisplayName.Trim().Equals(text)))).Id;
         }
 
 
@@ -434,8 +458,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, StringBuilder exceptionMessage)
         {
             var trip = _shippingRequestTripRepository.GetAll()
-               .Where(x => x.ShippingRequestId == importTripDto.ShippingRequestId && x.BulkUploadRef == importTripDto.BulkUploadRef).FirstOrDefault();
-            if (trip != null)
+               .WhereIf(importTripDto.ShippingRequestId != null, x => x.ShippingRequestId == importTripDto.ShippingRequestId && x.BulkUploadRef == importTripDto.BulkUploadRef)
+               .WhereIf(importTripDto.ShippingRequestId == null,x=> x.BulkUploadRef == importTripDto.BulkUploadRef && x.ShipperTenantId == _AbpSession.TenantId)
+               .Any();
+            if (trip)
             {
                 exceptionMessage.Append(L("TheBulkReferenceIsAlreadyExists")+";");
                 importTripDto.Exception = exceptionMessage.ToString();
