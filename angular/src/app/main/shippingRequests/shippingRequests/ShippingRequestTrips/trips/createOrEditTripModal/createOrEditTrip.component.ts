@@ -259,8 +259,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.loading = true;
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this._TripService.CreateOrEditShippingRequestTripDto = res;
-        this.IsHaveSealNumberValue = res.sealNumber.length > 0;
-        this.IsHaveContainerNumberValue = res.containerNumber.length > 0;
+        this.IsHaveSealNumberValue = res.sealNumber?.length > 0;
+        this.IsHaveContainerNumberValue = res.containerNumber?.length > 0;
         console.log('res', res.containerNumber);
         const gregorian = moment(res.startTripDate).locale('en').format('D/M/YYYY');
         this.startTripdate = this.dateFormatterService.ToGregorianDateStruct(gregorian, 'D/M/YYYY');
