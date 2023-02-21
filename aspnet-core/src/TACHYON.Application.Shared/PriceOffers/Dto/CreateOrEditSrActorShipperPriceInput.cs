@@ -15,7 +15,7 @@ namespace TACHYON.PriceOffers.Dto
         {
             if (VasActorShipperPriceDto.Any(x=> !x.ShippingRequestVasId.HasValue))
                 context.Results.Add(new ValidationResult("You must add vas id for each vas price"));
-            
+
             if (!ActorShipperPriceDto.ShippingRequestId.HasValue)
                 context.Results.Add(new ValidationResult("You must add shipping Request id for each shipping Request price"));
         }

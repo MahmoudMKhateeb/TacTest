@@ -283,8 +283,11 @@ namespace TACHYON.Invoices
             var trips = _shippingRequestTrip.GetAll()
                 .Include(trip => trip.ShippingRequestTripVases)
                 .Include(trip => trip.ShippingRequestFk)
-                .Where(x => x.ShippingRequestFk.ShippingRequestFlag == Shipping.ShippingRequests.ShippingRequestFlag.Normal || x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId)
-                .Where(trip => trip.ShippingRequestFk.TenantId == tenant.Id)
+                .Where(x => (x.ShippingRequestFk.ShippingRequestFlag == Shipping.ShippingRequests.ShippingRequestFlag.Normal ||
+                             x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId) ||
+                             x.ShipperTenantId == tenant.Id
+                )
+                .Where(trip => trip.ShippingRequestFk.TenantId == tenant.Id || trip.ShipperTenantId == tenant.Id)
                 .Where(trip => !trip.IsShipperHaveInvoice)
                 .Where
                 (
@@ -293,19 +296,20 @@ namespace TACHYON.Invoices
                 )
                 .ToList();
 
-            var tripsGroups = trips.GroupBy(x => x.ShippingRequestFk.SplitInvoiceFlag);
+            var tripsGroups = trips.GroupBy(x => x.ShippingRequestFk?.SplitInvoiceFlag);
             foreach (IGrouping<string, ShippingRequestTrip> group in tripsGroups)
             {
                 foreach (ShippingRequestTrip trip in group.ToList().ToList())
                 {
 
-                    var shipperId = trip.ShippingRequestFk.TenantId;
-                    var carrierId = trip.ShippingRequestFk.CarrierTenantId;
-                    if (!await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
+                    var shipperId = trip.ShippingRequestFk?.TenantId ?? trip.ShipperTenantId;
+                    var carrierId = trip.ShippingRequestFk?.CarrierTenantId ?? trip.CarrierTenantId;
+
+                    if (!await _featureChecker.IsEnabledAsync(shipperId.Value, AppFeatures.Saas))
                     {
                         continue;
                     }
-                    var relatedCarrierId = int.Parse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier));
+                    var relatedCarrierId = int.Parse(await _featureChecker.GetValueAsync(shipperId.Value, AppFeatures.SaasRelatedCarrier));
                     if (carrierId == relatedCarrierId)
                     {
                         group.ToList().Remove(trip);
@@ -393,7 +397,7 @@ namespace TACHYON.Invoices
                 int relatedCarrierId = default;
 
 
-                if(await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
+                if (await _featureChecker.IsEnabledAsync(shipperId, AppFeatures.Saas))
                 {
                     int.TryParse(await _featureChecker.GetValueAsync(shipperId, AppFeatures.SaasRelatedCarrier), out relatedCarrierId);
                     if (carrierId == relatedCarrierId)
@@ -402,7 +406,7 @@ namespace TACHYON.Invoices
                     }
                 }
 
-                
+
                 //saas SR 
                 if (trip.ShippingRequestFk.IsSaas())
                 {
@@ -455,7 +459,7 @@ namespace TACHYON.Invoices
             InvoicePeriod period)
         {
             //not saas trips
-            var notSaasTrips = trips.Where(x => !x.ShippingRequestFk.IsSaas());
+            var notSaasTrips = trips.Where(x =>  x.ShippingRequestFk != null && !x.ShippingRequestFk.IsSaas());
 
             decimal notSaasTotalAmount = (decimal)notSaasTrips.Sum
                 (r => r.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.TotalAmountWithCommission));
@@ -465,7 +469,7 @@ namespace TACHYON.Invoices
                 (r => r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
 
             //saas trips
-            var saasTrips = trips.Where(x => x.ShippingRequestFk.IsSaas());
+            var saasTrips = trips.Where(x => (x.ShippingRequestFk != null &&  x.ShippingRequestFk.IsSaas()) || x.CarrierTenantId == x.ShipperTenantId);
 
             decimal SaasTotalAmount = (decimal)saasTrips.Sum(r => r.TotalAmountWithCommission);
             decimal SaasVatAmount = (decimal)saasTrips.Sum(r => r.VatAmountWithCommission);
@@ -495,7 +499,7 @@ namespace TACHYON.Invoices
 
 
             //generate normal trips
-            var normalTrips = trips.Where(x => !x.ShippingRequestFk.IsSaas());
+            var normalTrips = trips.Where(x => x.ShippingRequestFk != null && !x.ShippingRequestFk.IsSaas());
             if (normalTrips != null && normalTrips.Count() > 0)
             {
                 var invoice = new Invoice
@@ -523,9 +527,11 @@ namespace TACHYON.Invoices
 
 
             //generate SAAS invoices
-            var shipperSAAStrips = trips.Where(x => x.ShippingRequestFk.IsSaas());
-            if (shipperSAAStrips != null && shipperSAAStrips.Count() > 0)
+            // var shipperSAAStrips = trips.Where(x => x.ShippingRequestFk.IsSaas());
+            if (saasTrips != null && saasTrips.Count() > 0)
             {
+                //decimal taxVat = saasTrips.FirstOrDefault(x => x.TaxVat.HasValue).TaxVat.Value;
+                decimal taxVat = 0.15m;
                 var invoice = new Invoice
                 {
                     TenantId = tenant.Id,
@@ -535,21 +541,21 @@ namespace TACHYON.Invoices
                     TotalAmount = totalAmount,
                     VatAmount = vatAmount,
                     SubTotalAmount = subTotalAmount,
-                    TaxVat = shipperSAAStrips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
+                    TaxVat = taxVat,
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.SaasTrip,
                     Status = InvoiceStatus.Drafted,
-                    Trips = shipperSAAStrips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
+                    Trips = saasTrips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
                 };
                 invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
 
-                foreach (var trip in shipperSAAStrips)
+                foreach (var trip in saasTrips)
                 {
                     trip.IsShipperHaveInvoice = true;
                 }
             }
 
-            
+
         }
 
 
@@ -929,20 +935,23 @@ namespace TACHYON.Invoices
         /// <returns></returns>
         public async Task GenertateInvoiceWhenShipmintDelivery(ShippingRequestTrip trip)
         {
-            var tenant = trip.ShippingRequestFk.Tenant;
+            var tenant = trip.ShippingRequestFk?.Tenant ?? trip.ShipperTenantFk;
             InvoicePeriod period = default;
             ///If the shipemnt pay in advance get the period entity for pay in advance else get from the features
-            if (trip.ShippingRequestFk.IsPrePayed.HasValue && trip.ShippingRequestFk.IsPrePayed.Value)
+            if (trip.ShippingRequestFk != null && trip.ShippingRequestFk.IsPrePayed.HasValue && trip.ShippingRequestFk.IsPrePayed.Value)
                 period = await _periodRepository.FirstOrDefaultAsync
                 (
                     x => x.PeriodType == InvoicePeriodType.PayInAdvance
                 );
             else
+            {
+                var shipperPeriodsString = await _featureChecker.GetValueAsync(tenant.Id, AppFeatures.ShipperPeriods);
+                var shipperPeriods = int.Parse(shipperPeriodsString);
                 period = await _periodRepository.FirstOrDefaultAsync
                 (
-                    x =>
-                        x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods))
+                    x => x.Id == shipperPeriods
                 );
+            }
 
             if (period.PeriodType == InvoicePeriodType.PayuponDelivery ||
                 period.PeriodType == InvoicePeriodType.PayInAdvance)

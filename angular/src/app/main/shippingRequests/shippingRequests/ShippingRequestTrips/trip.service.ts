@@ -1,66 +1,26 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import {
+  CreateOrEditActorCarrierPrice,
+  CreateOrEditActorShipperPriceDto,
   CreateOrEditShippingRequestTripDto,
-  FacilityForDropdownDto,
   GetShippingRequestForViewOutput,
   RoutStepsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
-import { FeatureCheckerService } from '@node_modules/abp-ng2-module';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TripService {
-  //shippingRequest RouteType
-  private shippingRequest = new BehaviorSubject<GetShippingRequestForViewOutput>(new GetShippingRequestForViewOutput());
-  currentShippingRequest = this.shippingRequest.asObservable();
-  private activeTrip = new BehaviorSubject<CreateOrEditShippingRequestTripDto>(new CreateOrEditShippingRequestTripDto());
-  currentActiveTrip = this.activeTrip.asObservable();
-  private activeTripId = new BehaviorSubject<number>(null);
-  currentActiveTripId = this.activeTripId.asObservable();
-  //Source And Dest Facility
-  private sourceFacility = new BehaviorSubject<number>(null);
-  currentSourceFacility = this.sourceFacility.asObservable();
-  private destFacility = new BehaviorSubject<number>(null);
-  currentDestFacility = this.destFacility.asObservable();
+  public GetShippingRequestForViewOutput = new GetShippingRequestForViewOutput();
+  public CreateOrEditShippingRequestTripDto = new CreateOrEditShippingRequestTripDto();
 
-  //private FacilitiesItems: BehaviorSubject<any> = new BehaviorSubject(new Array<DropDownMenu>());
-  //currentFacilitiesItems = this.FacilitiesItems.asObservable();
+  public activeTripId: number = null;
 
-  public currentSourceFacilitiesItems: FacilityForDropdownDto[];
-  public currentDestinationFacilitiesItems: FacilityForDropdownDto[];
+  public currentSourceFacility: number = null;
+  public destFacility: number = null;
 
-  facilitiesLodaing: boolean;
-  citySourceId: number;
-  cityDestenationId: number;
-  shippingTypeId: number;
-  routeTypeId: number;
-
-  constructor(private _routStepsServiceProxy: RoutStepsServiceProxy, private feature: FeatureCheckerService) {
-    //this.GetOrRefreshFacilities();
+  constructor(private _routStepsServiceProxy: RoutStepsServiceProxy) {
+    this.CreateOrEditShippingRequestTripDto.actorShipperPrice = new CreateOrEditActorShipperPriceDto();
+    this.CreateOrEditShippingRequestTripDto.actorCarrierPrice = new CreateOrEditActorCarrierPrice();
   }
-
-  updateShippingRequest(shippingRequest: GetShippingRequestForViewOutput) {
-    this.shippingRequest.next(shippingRequest);
-  }
-  updateActiveTripId(TripId: number) {
-    this.activeTripId.next(TripId);
-  }
-  updateActiveTrip(Trip: CreateOrEditShippingRequestTripDto) {
-    this.activeTrip.next(Trip);
-  }
-
-  //Source And Dest Facility
-  updateSourceFacility(id: number) {
-    this.sourceFacility.next(id);
-  }
-  updateDestFacility(id: number) {
-    this.destFacility.next(id);
-  }
-}
-
-export interface DropDownMenu {
-  isLoading: boolean;
-  items: FacilityForDropdownDto[];
 }

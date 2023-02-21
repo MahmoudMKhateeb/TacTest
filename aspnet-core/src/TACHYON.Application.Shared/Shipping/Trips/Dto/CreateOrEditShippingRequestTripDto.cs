@@ -7,8 +7,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Numerics;
 using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.PriceOffers.Dto;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequests;
@@ -23,7 +26,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public DateTime? EndTripDate { get; set; }
 
 
-        public long ShippingRequestId { get; set; }
+        public long? ShippingRequestId { get; set; }
 
         public bool HasAttachment { get; set; }
 
@@ -61,6 +64,18 @@ namespace TACHYON.Shipping.Trips.Dto
         public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
         public long? TruckId { set; get; }
         public long? DriverUserId { set; get; }
+        public int? ShipperActorId { get; set; }
+
+
+        public int? CarrierActorId { get; set; }
+
+        public CreateOrEditActorShipperPriceDto ActorShipperPrice { get; set; }
+
+        public CreateOrEditActorCarrierPrice ActorCarrierPrice { get; set; }
+
+        public int? GoodCategoryId { get; set; }
+
+
 
         #endregion
         public void AddValidationErrors(CustomValidationContext context)

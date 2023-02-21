@@ -111,13 +111,20 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public void ValidateTripDto(ImportTripDto importTripDto, StringBuilder exceptionMessage)
         {
             DisableTenancyFilters();
-            var SR = GetShippingRequestByPermission(importTripDto.ShippingRequestId);
 
-            if(SR.ShippingRequestFlag == ShippingRequestFlag.Normal)
+            ShippingRequest sr = null;
+
+            if (importTripDto.ShippingRequestId.HasValue)
+            {
+                sr = GetShippingRequestByPermission(importTripDto.ShippingRequestId.Value);
+
+            }
+
+            if (sr.ShippingRequestFlag == ShippingRequestFlag.Normal)
             {
                 if(importTripDto.StartTripDate?.Date == null)
                 {
-                    importTripDto.StartTripDate = SR.StartTripDate;
+                    importTripDto.StartTripDate = sr.StartTripDate;
                 }
                 if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
                 {
@@ -126,7 +133,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
                 try
                 {
-                    ValidateTripDates(importTripDto, SR);
+                    ValidateTripDates(importTripDto, sr);
                 }
                 catch (UserFriendlyException e)
                 {
@@ -137,7 +144,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             {
                 if (importTripDto.StartTripDate?.Date == null)
                 {
-                    importTripDto.StartTripDate = SR.RentalStartDate;
+                    importTripDto.StartTripDate = sr.RentalStartDate;
                 }
                 if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
                 {
@@ -146,7 +153,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
                 try
                 {
-                    ValidateDedicatedRequestTripDates(importTripDto, SR);
+                    ValidateDedicatedRequestTripDates(importTripDto, sr);
                 }
                 catch (UserFriendlyException e)
                 {

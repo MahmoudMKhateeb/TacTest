@@ -68,7 +68,7 @@ namespace TACHYON.Shipping.Trips.Importing
         public async Task CreateShipmentsFromDto(List<ImportTripDto> importTripDtoList)
         {
             await DisableTenancyFiltersIfTachyonDealer();
-            var request = _shippingRequestTripManager.GetShippingRequestByPermission(importTripDtoList.First().ShippingRequestId);
+            var request = _shippingRequestTripManager.GetShippingRequestByPermission(importTripDtoList.First().ShippingRequestId.Value);
 
             List<ImportTripDto> SuccessImportTripDtoList = new List<ImportTripDto>();
             List<ImportTripDto> InvalidShipments = new List<ImportTripDto>();

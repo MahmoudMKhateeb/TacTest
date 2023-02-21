@@ -21,12 +21,12 @@ using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Invoices.ActorInvoices
 {
-    public class ActorInvoicesManager :TACHYONDomainServiceBase
+    public class ActorInvoicesManager : TACHYONDomainServiceBase
     {
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IRepository<Actor> _actorRepository;
         private readonly IFeatureChecker _featureChecker;
-        private readonly IRepository<ActorInvoice,long> _actorInvoiceRepository;
+        private readonly IRepository<ActorInvoice, long> _actorInvoiceRepository;
         private readonly IRepository<ActorSubmitInvoice, long> _actorSubmitInvoiceRepository;
         private readonly IAbpSession _session;
 
@@ -42,7 +42,7 @@ namespace TACHYON.Invoices.ActorInvoices
             _session = session;
         }
 
-        public async Task<bool> BuildActorShipperInvoices(int  actorId, List<SelectItemDto> SelectedTrips )
+        public async Task<bool> BuildActorShipperInvoices(int actorId, List<SelectItemDto> SelectedTrips)
         {
 
             var actor = await _actorRepository.FirstOrDefaultAsync(actorId);
@@ -54,13 +54,50 @@ namespace TACHYON.Invoices.ActorInvoices
 
 
 
-             if (trips != null && trips.Count() > 0)
+            if (trips != null && trips.Count() > 0)
             {
-                decimal totalAmount = (decimal)trips.Sum(r => r.ShippingRequestFk.ActorShipperPrice.TotalAmountWithCommission + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorShipperPrice.TotalAmountWithCommission));
-                decimal vatAmount = (decimal)trips.Sum(r => r.ShippingRequestFk.ActorShipperPrice.VatAmountWithCommission + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorShipperPrice.VatAmountWithCommission));
-                decimal subTotalAmount = (decimal)trips.Sum(r => r.ShippingRequestFk.ActorShipperPrice.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorShipperPrice.SubTotalAmountWithCommission));
-                decimal taxVat = (decimal)trips.Select(x => x.ShippingRequestFk).FirstOrDefault().ActorShipperPrice.TaxVat;
 
+                var nonDirectTrips = trips.Where(x => x.ShippingRequestId.HasValue).ToList();
+                var directTrips = trips.Where(x => !x.ShippingRequestId.HasValue).ToList();
+
+
+                decimal nonDirectTripsTotalAmount = 0;
+                decimal nonDirectTripsVatAmount = 0;
+                decimal nonDirectTripsSubTotalAmount = 0;
+                //decimal nonDirectTripsTaxVat = 0;
+
+
+                decimal directTripsTotalAmount = 0;
+                decimal directTripsVatAmount = 0;
+                decimal directTripsSubTotalAmount = 0;
+                //decimal directTripsTaxVat = 0;
+
+
+
+                if (nonDirectTrips.Any())
+                {
+                    nonDirectTripsTotalAmount = (decimal)nonDirectTrips.Sum(r => r.ShippingRequestFk.ActorShipperPrice.TotalAmountWithCommission + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorShipperPrice.TotalAmountWithCommission));
+                    nonDirectTripsVatAmount = (decimal)nonDirectTrips.Sum(r => r.ShippingRequestFk.ActorShipperPrice.VatAmountWithCommission + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorShipperPrice.VatAmountWithCommission));
+                    nonDirectTripsSubTotalAmount = (decimal)nonDirectTrips.Sum(r => r.ShippingRequestFk.ActorShipperPrice.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorShipperPrice.SubTotalAmountWithCommission));
+                   // nonDirectTripsTaxVat = (decimal)nonDirectTrips.Select(x => x.ShippingRequestFk).FirstOrDefault().ActorShipperPrice.TaxVat;
+
+                }
+
+                if (directTrips.Any())
+                {
+                    directTripsTotalAmount = (decimal)directTrips.Sum(r => r.ActorShipperPrice.TotalAmountWithCommission + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorShipperPrice.TotalAmountWithCommission));
+                    directTripsVatAmount = (decimal)directTrips.Sum(r => r.ActorShipperPrice.VatAmountWithCommission + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorShipperPrice.VatAmountWithCommission));
+                    directTripsSubTotalAmount = (decimal)directTrips.Sum(r => r.ActorShipperPrice.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorShipperPrice.SubTotalAmountWithCommission));
+                   // directTripsTaxVat = (decimal)directTrips.FirstOrDefault().ActorShipperPrice.TaxVat;
+
+
+                }
+
+
+                decimal totalAmount = nonDirectTripsTotalAmount + directTripsTotalAmount;
+                decimal vatAmount = nonDirectTripsVatAmount + directTripsVatAmount;
+                decimal subTotalAmount = nonDirectTripsSubTotalAmount + directTripsSubTotalAmount;
+                decimal taxVat = 0.15m;
 
                 var actorInvoice = new ActorInvoice()
                 {
@@ -92,19 +129,38 @@ namespace TACHYON.Invoices.ActorInvoices
         public async Task<List<ShippingRequestTrip>> GetAllShipperActorUnInvoicedTrips(int actorId, List<SelectItemDto> trips)
         {
 
-            return await _shippingRequestTripRepository.GetAll()
+            var tripsList = await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.ShippingRequestId.HasValue)
              .Include(trip => trip.ShippingRequestTripVases)
-             .ThenInclude(x=> x.ShippingRequestVasFk)
+             .ThenInclude(x => x.ShippingRequestVasFk)
              .ThenInclude(v => v.ActorShipperPrice)
              .Include(trip => trip.ShippingRequestFk)
              .ThenInclude(request => request.ActorShipperPrice)
-             .WhereIf(trips != null , x=> trips.Select(y=>y.Id).Select(int.Parse).Contains(x.Id))
+             .WhereIf(trips != null, x => trips.Select(y => y.Id).Select(int.Parse).Contains(x.Id))
              .Where(trip => trip.ShippingRequestFk.ShippingRequestFlag == Shipping.ShippingRequests.ShippingRequestFlag.Normal)
              .Where(trip => trip.ShippingRequestFk.ShipperActorId == actorId)
              .Where(trip => trip.ShippingRequestFk.ActorShipperPriceId.HasValue)
              .Where(trip => !trip.IsActorShipperHaveInvoice)
              .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
              trip.Status == Shipping.Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation).ToListAsync();
+
+            var directTrips = await _shippingRequestTripRepository.GetAll()
+            .Where(x => !x.ShippingRequestId.HasValue)
+            .Include(trip => trip.ShippingRequestTripVases)
+            .ThenInclude(x => x.ShippingRequestVasFk)
+            .ThenInclude(v => v.ActorShipperPrice)
+            .Include(x => x.ActorCarrierPrice)
+            .Include(x => x.ActorShipperPrice)
+            .WhereIf(trips != null, x => trips.Select(y => y.Id).Select(int.Parse).Contains(x.Id))
+            .Where(trip => trip.ShipperActorId == actorId)
+            .Where(trip => trip.ActorShipperPrice != null)
+            .Where(trip => !trip.IsActorShipperHaveInvoice)
+            .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
+            trip.Status == Shipping.Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation).ToListAsync();
+
+            var result = tripsList.Concat(directTrips);
+
+            return result.ToList();
         }
 
         public async Task<bool> BuildActorCarrierInvoices(int actorId, List<SelectItemDto> SelectedTrips)
@@ -117,12 +173,48 @@ namespace TACHYON.Invoices.ActorInvoices
             var dueDate = Clock.Now.AddDays(actor.InvoiceDueDays);
 
 
-            if (trips != null && trips.Count>0)
+            if (trips != null && trips.Count > 0)
             {
-                decimal totalAmount = (decimal)trips.Sum(r => r.ShippingRequestFk.ActorCarrierPrice.SubTotalAmount + r.ShippingRequestFk.ActorCarrierPrice.VatAmount + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorCarrierPrice.SubTotalAmount + v.ActorCarrierPrice.VatAmount));
-                decimal vatAmount = (decimal)trips.Sum(r => r.ShippingRequestFk.ActorCarrierPrice.VatAmount + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorCarrierPrice.SubTotalAmount));
-                decimal subTotalAmount = (decimal)trips.Sum(r => r.ShippingRequestFk.ActorCarrierPrice.SubTotalAmount + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorCarrierPrice.SubTotalAmount));
-                decimal taxVat = (decimal)trips.Select(x => x.ShippingRequestFk).FirstOrDefault().ActorCarrierPrice.TaxVat;
+                var nonDirectTrips = trips.Where(x => x.ShippingRequestId.HasValue).ToList();
+                var directTrips = trips.Where(x => !x.ShippingRequestId.HasValue);
+
+
+
+                decimal nonDirectTripsTotalAmount = 0;
+                decimal nonDirectTripsVatAmount = 0;
+                decimal nonDirectTripsSubTotalAmount = 0;
+                decimal nonDirectTripsTaxVat = 0;
+
+                decimal directTripsTotalAmount = 0;
+                decimal directTripsVatAmount = 0;
+                decimal directTripsSubTotalAmount = 0;
+                //decimal directTripsTaxVat = 0;
+
+
+
+                if (nonDirectTrips != null)
+                {
+                    nonDirectTripsTotalAmount = (decimal)nonDirectTrips.Sum(r => r.ShippingRequestFk.ActorCarrierPrice.SubTotalAmount + r.ShippingRequestFk.ActorCarrierPrice.VatAmount + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorCarrierPrice.SubTotalAmount + v.ActorCarrierPrice.VatAmount));
+                    nonDirectTripsVatAmount = (decimal)nonDirectTrips.Sum(r => r.ShippingRequestFk.ActorCarrierPrice.VatAmount + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorCarrierPrice.SubTotalAmount));
+                    nonDirectTripsSubTotalAmount = (decimal)nonDirectTrips.Sum(r => r.ShippingRequestFk.ActorCarrierPrice.SubTotalAmount + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorCarrierPrice.SubTotalAmount));
+                    //nonDirectTripsTaxVat = (decimal)nonDirectTrips.Select(x => x.ShippingRequestFk).FirstOrDefault()?.ActorCarrierPrice?.TaxVat;
+
+                }
+
+                if (directTrips != null)
+                {
+                    directTripsTotalAmount = (decimal)directTrips.Sum(r => r.ActorCarrierPrice.SubTotalAmount + r.ActorCarrierPrice.VatAmount + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorCarrierPrice.SubTotalAmount + v.ActorCarrierPrice.VatAmount));
+                    directTripsVatAmount = (decimal)directTrips.Sum(r => r.ActorCarrierPrice.VatAmount + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorCarrierPrice.SubTotalAmount));
+                    directTripsSubTotalAmount = (decimal)directTrips.Sum(r => r.ActorCarrierPrice.SubTotalAmount + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorCarrierPrice.SubTotalAmount));
+                    //directTripsTaxVat = (decimal)directTrips.First()?.TaxVat;
+
+
+                }
+
+                decimal totalAmount = nonDirectTripsTotalAmount + directTripsTotalAmount;
+                decimal vatAmount = nonDirectTripsVatAmount + directTripsVatAmount;
+                decimal subTotalAmount = nonDirectTripsSubTotalAmount + directTripsSubTotalAmount;
+                decimal taxVat = 0.15m; 
 
 
 
@@ -135,7 +227,7 @@ namespace TACHYON.Invoices.ActorInvoices
                     VatAmount = vatAmount,
                     SubTotalAmount = subTotalAmount,
                     TaxVat = taxVat,
-                    ActorInvoiceChannel= ActorInvoiceChannel.trip,
+                    ActorInvoiceChannel = ActorInvoiceChannel.trip,
                     Trips = trips
                 };
 
@@ -143,6 +235,8 @@ namespace TACHYON.Invoices.ActorInvoices
 
                 //Generate submit invoice number
                 await GenerateSubmitReferenceNumber(invoice);
+
+
 
                 foreach (var trip in trips)
                 {
@@ -156,25 +250,45 @@ namespace TACHYON.Invoices.ActorInvoices
         public async Task<List<ShippingRequestTrip>> GetAllCarrierActorUnInvoicedTrips(int actorId, List<SelectItemDto> trips)
         {
             DisableTenancyFilters();
-            return await _shippingRequestTripRepository.GetAll()
+            var tripsList = await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.ShippingRequestId.HasValue)
              .Include(trip => trip.ShippingRequestTripVases)
-             .ThenInclude(x=> x.ShippingRequestVasFk)
+             .ThenInclude(x => x.ShippingRequestVasFk)
              .ThenInclude(v => v.ActorCarrierPrice)
              .Include(trip => trip.ShippingRequestFk)
              .ThenInclude(request => request.ActorCarrierPrice)
              .WhereIf(trips != null, x => trips.Select(y => y.Id).Select(int.Parse).Contains(x.Id))
-             .Where(trip=>trip.ShippingRequestFk.ShippingRequestFlag == Shipping.ShippingRequests.ShippingRequestFlag.Normal)
+             .Where(trip => trip.ShippingRequestFk.ShippingRequestFlag == Shipping.ShippingRequests.ShippingRequestFlag.Normal)
              .Where(trip => trip.ShippingRequestFk.CarrierActorId == actorId)
              .Where(trip => trip.ShippingRequestFk.ActorCarrierPriceId.HasValue)
              .Where(trip => !trip.IsActorCarrierHaveInvoice)
-             .Where(x=>x.ShippingRequestFk.CarrierTenantId == _session.TenantId && x.ShippingRequestFk.CarrierActorFk.TenantId == _session.TenantId)
+             .Where(x => x.ShippingRequestFk.CarrierTenantId == _session.TenantId && x.ShippingRequestFk.CarrierActorFk.TenantId == _session.TenantId)
              .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
              trip.Status == Shipping.Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
              .ToListAsync();
+
+            var directShipments = await _shippingRequestTripRepository.GetAll()
+              .Include(trip => trip.ShippingRequestTripVases)
+              .ThenInclude(x => x.ShippingRequestVasFk)
+              .ThenInclude(v => v.ActorCarrierPrice)
+              .Include(trip => trip.ActorCarrierPrice)
+              .Include(trip => trip.ActorShipperPrice)
+              .Where(x => !x.ShippingRequestId.HasValue)
+              .Where(trip => trip.ActorCarrierPrice != null)
+              .WhereIf(trips != null, x => trips.Select(y => y.Id).Select(int.Parse).Contains(x.Id))
+              .Where(trip => trip.CarrierActorId == actorId)
+              .Where(trip => !trip.IsActorCarrierHaveInvoice)
+              .Where(trip => trip.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
+                             trip.Status == Shipping.Trips.ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
+              .ToListAsync();
+
+            var result = tripsList.Concat(directShipments);
+
+            return result.ToList();
         }
 
         //shipper actor invoice
-        public async Task GenerateDedicatedDynamicActorInvoice (DedicatedDynamicActorInvoice dedicatedDynamicActorInvoice)
+        public async Task GenerateDedicatedDynamicActorInvoice(DedicatedDynamicActorInvoice dedicatedDynamicActorInvoice)
         {
             decimal subTotalAmount = dedicatedDynamicActorInvoice.SubTotalAmount;
             var tax = 15;
