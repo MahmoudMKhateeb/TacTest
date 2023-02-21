@@ -1140,7 +1140,10 @@ namespace TACHYON.Notifications
 
         public async Task DriverAcceptTrip(ShippingRequestTrip Trip, string driver)
         {
-            var notifiedUser = await GetAdminUser(Trip.ShippingRequestFk.CarrierTenantId);
+            int? carrierTenantId = Trip.ShippingRequestId.HasValue
+                ? Trip.ShippingRequestFk.CarrierTenantId
+                : Trip.CarrierTenantId;
+            var notifiedUser = await GetAdminUser(carrierTenantId);
             var isNotificationSubscribed = await _notificationSubscriptionManager
                 .IsSubscribedAsync(notifiedUser, AppNotificationNames.DriverAcceptTrip);
             
