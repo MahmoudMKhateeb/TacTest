@@ -84,7 +84,9 @@ export class DirectTripsComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  reloadPage() {}
+  reloadPage() {
+    // this.grid.instance.refresh();
+  }
 
   showEdit(id) {
     let record = new CreateOrEditShippingRequestTripDto();

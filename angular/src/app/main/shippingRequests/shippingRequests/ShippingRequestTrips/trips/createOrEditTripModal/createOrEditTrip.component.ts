@@ -259,6 +259,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.loading = true;
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this._TripService.CreateOrEditShippingRequestTripDto = res;
+        (this._TripService.CreateOrEditShippingRequestTripDto.shipperActorId as any) = res.shipperActorId.toString();
+        (this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId as any) = res.carrierActorId.toString();
         this.IsHaveSealNumberValue = res.sealNumber?.length > 0;
         this.IsHaveContainerNumberValue = res.containerNumber?.length > 0;
         console.log('res', res.containerNumber);

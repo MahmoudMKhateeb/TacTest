@@ -96,5 +96,5 @@
   </div>
 </div>
 
-<AddNewTripModal [shippingRequest]="shippingRequest" #AddNewTripModal></AddNewTripModal>
-<viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
+<AddNewTripModal [shippingRequest]="shippingRequest" #AddNewTripModal (modalSave)="grid.instance.refresh()"></AddNewTripModal>
+<viewTripModal #ViewTripModal (modalSave)="grid.instance.refresh()"></viewTripModal>
