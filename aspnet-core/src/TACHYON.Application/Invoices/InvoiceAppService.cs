@@ -766,21 +766,27 @@ namespace TACHYON.Invoices
 
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
-            var groupedTrips = invoice.Trips.GroupBy(x =>new
-            {
-                RouteType = x.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId != null
-            ? (x.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop ?"Single Drop" :"Multiple Drops")
-            : (x.ShippingRequestTripFK.RouteType == ShippingRequestRouteType.SingleDrop ? "Single Drop" : "Multiple Drops"),
-                IsIntegratedWithBayan = x.ShippingRequestTripFK.BayanId !=null ?"Yes" :"No",
-                ItemPrice = x.ShippingRequestTripFK.SubTotalAmountWithCommission
-            })
-                .Select(g=> new
-                {
-                    RouteType = g.Key.RouteType,
-                    IsIntegratedWithBayan = g.Key.IsIntegratedWithBayan,
-                    ItemPrice = g.Key.ItemPrice,
-                    List = g,
-                });
+            var groupedTrips = invoice.Trips.GroupBy
+                (
+                    x => new
+                    {
+                        RouteType = x.ShippingRequestTripFK.ShippingRequestFk?.RouteTypeId != null
+                            ? (x.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop ? "Single Drop" : "Multiple Drops")
+                            : (x.ShippingRequestTripFK.RouteType == ShippingRequestRouteType.SingleDrop ? "Single Drop" : "Multiple Drops"),
+                        IsIntegratedWithBayan = x.ShippingRequestTripFK.BayanId != null ? "Yes" : "No",
+                        ItemPrice = x.ShippingRequestTripFK.SubTotalAmountWithCommission
+                    }
+                )
+                .Select
+                (
+                    g => new
+                    {
+                        RouteType = g.Key.RouteType,
+                        IsIntegratedWithBayan = g.Key.IsIntegratedWithBayan,
+                        ItemPrice = g.Key.ItemPrice,
+                        List = g,
+                    }
+                );
 
             var TotalItem = groupedTrips.Count();
             int Sequence = 1;
