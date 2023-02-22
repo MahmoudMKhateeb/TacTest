@@ -213,8 +213,7 @@ namespace TACHYON.PricePackages
                       (isTmsOrHost || normalPricePackage.TenantId == AbpSession.TenantId) &&
                       normalPricePackage.OriginCityId == shippingRequest.OriginCityId
                       && shippingRequest.ShippingRequestDestinationCities.Any(c =>
-                          c.CityId == normalPricePackage.DestinationCityId)
-                select normalPricePackage)
+                          c.CityId == normalPricePackage.DestinationCityId) select normalPricePackage)
                 .ProjectTo<TmsPricePackageForViewDto>(AutoMapperConfigurationProvider).ToListAsync();
 
             matchedPricePackages.AddRange(matchedNormalPricePackage);
@@ -226,20 +225,32 @@ namespace TACHYON.PricePackages
                 let hasNormalDirectRequest = _directRequestRepository.GetAll().Any(x =>
                     x.ShippingRequestId == input.ShippingRequestId &&
                     x.CarrierTenantId == pricePackageDto.CompanyTenantId)
-                from pricePackageOffer in _tmsOfferRepository.GetAllIncluding(x => x.DirectRequest, x => x.PriceOffer)
-                    .AsNoTracking().Include(x => x.TmsPricePackage).Include(x => x.NormalPricePackage).DefaultIfEmpty()
+                let hasParentOffer = ( from priceOffer in _priceOfferRepository.GetAll()
+                    where priceOffer.ShippingRequestId == input.ShippingRequestId
+                          && (priceOffer.Status == PriceOfferStatus.Accepted 
+                              || priceOffer.Status == PriceOfferStatus.Pending
+                              || priceOffer.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier 
+                              || priceOffer.Status == PriceOfferStatus.AcceptedAndWaitingForShipper)
+                          && _tmsOfferRepository.GetAll()
+                              .Any(x => x.DirectRequestId.HasValue &&
+                                        x.DirectRequest.ShippingRequestId == input.ShippingRequestId &&
+                                        x.DirectRequest.CarrierTenantId == priceOffer.TenantId)
+                          select priceOffer).Any()
+               let ppOffer = (from pricePackageOffer in _tmsOfferRepository.GetAll()
+                    .AsNoTracking()
                 where hasNormalDirectRequest ||
                       (pricePackageOffer != null && (pricePackageOffer.TmsPricePackageId == pricePackageDto.Id ||
                                                      pricePackageOffer.NormalPricePackageId == pricePackageDto.Id) &&
                        (pricePackageOffer.DirectRequest == null ||
                         pricePackageOffer.DirectRequest.ShippingRequestId == input.ShippingRequestId) &&
                        (pricePackageOffer.PriceOffer == null ||
-                        pricePackageOffer.PriceOffer.ShippingRequestId == input.ShippingRequestId))
+                        pricePackageOffer.PriceOffer.ShippingRequestId == input.ShippingRequestId)) select pricePackageOffer).FirstOrDefault()
                 select new
                 {
-                    HasDirectRequest = pricePackageOffer.DirectRequest != null || hasNormalDirectRequest,
-                    HasOffer = pricePackageOffer.PriceOffer != null,
-                    pricePackageDto.PricePackageId
+                    HasDirectRequest = ppOffer is { DirectRequestId: { } } || hasNormalDirectRequest,
+                    HasOffer = ppOffer is { PriceOfferId: { } },
+                    pricePackageDto.PricePackageId,
+                    HasParentOffer = hasParentOffer
                 }).ToList();
 
             var offerId = await _tmsPricePackageOfferManager.GetParentOfferId(input.ShippingRequestId);
@@ -252,6 +263,7 @@ namespace TACHYON.PricePackages
                 item.HasOffer = pricingLookupItem.HasOffer;
                 item.HasDirectRequest = pricingLookupItem.HasDirectRequest;
                 item.IsRequestPriced = offerId != default;
+                item.HasParentOffer = pricingLookupItem.HasParentOffer;
             }
                 
             
@@ -265,6 +277,7 @@ namespace TACHYON.PricePackages
 
         public async Task<LoadResult> GetAppendixPricePackages(LoadOptionsInput input)
         {
+            DisableTenancyFilters();
             var isTmsOrHost = !AbpSession.TenantId.HasValue || await IsTachyonDealer();
             var tmsPricePackages = await _tmsPricePackageRepository.GetAll().AsNoTracking()
                 .WhereIf(!isTmsOrHost,
@@ -315,6 +328,7 @@ namespace TACHYON.PricePackages
         }
         
         
+        // don't use this method ... need improvements
         private async Task CreateOfferAndAcceptOnBehalfOfCarrier(int pricePackageId, long shippingRequestId,bool isTmsPricePackage)
         {
             int? carrierTenantId;
@@ -343,7 +357,7 @@ namespace TACHYON.PricePackages
             long createdOfferId;
             using (AbpSession.Use(carrierTenantId,carrierUserId))
             {
-                var priceOfferDto = await _priceOfferAppService.GetPriceOfferForCreateOrEdit(shippingRequestId, null);
+                var priceOfferDto = new PriceOfferDto(); // await _priceOfferAppService.GetPriceOfferForCreateOrEdit(shippingRequestId, null,null);
 
                 
                 var priceOffer = ObjectMapper.Map<PriceOffer>(priceOfferDto);

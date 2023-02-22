@@ -42,12 +42,6 @@ namespace TACHYON.PricePackages.PricePackageProposals
         public async Task<int> CreateProposal(PricePackageProposal createdProposal,List<int> tmsPricePackages,string emailAddress)
         {
             
-            // check name if already used before
-
-            bool isNameDuplicated = await _proposalRepository.GetAll()
-                .AnyAsync(x => x.ProposalName.Equals(createdProposal.ProposalName));
-
-            if (isNameDuplicated) throw new UserFriendlyException(L("ProposalNameAlreadyUsedBefore"));
             // check items if them used in any another proposal
 
             bool anyItemUsedInAnotherProposal = await _tmsPricePackageRepository.GetAll()

@@ -53,6 +53,7 @@
                   *ngIf="isTachyonDealer && !record.hasOffer && !record.hasDirectRequest"
                   (click)="handlePricePackageAction(record)"
                   [buttonBusy]="loadingPricePackageId === record.pricePackageId"
+                  [disabled]="record.isShipperPricePackage && !record.hasParentOffer"
                 >
                   <i class="flaticon-eye"></i> {{ (record.isShipperPricePackage ? 'Acknowledge' : 'SendRequest') | localize }}
                 </button>

@@ -165,10 +165,10 @@ namespace TACHYON.PricePackages.TmsPricePackageOffers
             var priceOfferDto = new CreateOrEditPriceOfferInput()
             {
                 ShippingRequestId = shippingRequest.Id, 
-                ItemPrice = parentPriceOffer.ItemPrice,
+                ItemPrice = pricePackage.TotalPrice,
                 ItemDetails = itemDetails,
                 CommissionType = PriceOfferCommissionType.CommissionValue,
-                CommissionPercentageOrAddValue = pricePackage.TotalPrice - parentPriceOffer.ItemPrice,
+                CommissionPercentageOrAddValue = 0,
                 ParentId = parentPriceOffer.Id,
                 VasCommissionType = PriceOfferCommissionType.CommissionValue, VasCommissionPercentageOrAddValue = 0
             };
@@ -201,7 +201,7 @@ namespace TACHYON.PricePackages.TmsPricePackageOffers
         {
             return await (from priceOffer in _priceOfferRepository.GetAll()
                           where priceOffer.ShippingRequestId == shippingRequestId
-                                && (priceOffer.Status == PriceOfferStatus.Accepted || priceOffer.Status == PriceOfferStatus.Pending || priceOffer.Status == PriceOfferStatus.Pending
+                                && (priceOffer.Status == PriceOfferStatus.Accepted || priceOffer.Status == PriceOfferStatus.Pending
                                     || priceOffer.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier ||
                                     priceOffer.Status == PriceOfferStatus.AcceptedAndWaitingForShipper)
                                 && _tmsOfferRepository.GetAll()

@@ -10,8 +10,8 @@ namespace TACHYON.PricePackages.TmsPricePackages
 
         Task<List<PricePackageSelectItemDto>> GetPricePackagesForCarrierAppendix(int carrierId, int? appendixId = null);
 
-        Task<decimal?> GetItemPriceByMatchedPricePackage(long shippingRequestId, decimal quantity, int carrierId);
+        Task<decimal?> GetItemPriceByMatchedPricePackage(long shippingRequestId, long directRequestId);
 
-        Task<bool> IsHaveMatchedPricePackage(long shippingRequestId, int carrierId);
+        Task<bool> IsHaveMatchedPricePackage(long shippingRequestId, long? directRequestId);
     }
 }

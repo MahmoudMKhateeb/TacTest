@@ -256,7 +256,7 @@
             <ng-template [ngIf]="canSetPrice()">
               <div class="divirCard"></div>
               <div class="setPrice">
-                <button type="button" (click)="ModelPrice.show(request.id, null, null, null, false, request.shippingRequestFlag === 1)">
+                <button type="button" (click)="ModelPrice.show(request.id, null, null, null, false, request.shippingRequestFlag === 1, shippingrequest.directRequestId)">
                   {{ l('SetPriceOffer') }}
                 </button>
               </div>

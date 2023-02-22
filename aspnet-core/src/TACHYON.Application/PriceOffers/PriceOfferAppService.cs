@@ -196,16 +196,17 @@ namespace TACHYON.PriceOffers
 
             return searchList;
         }
-        
+
 
         /// <summary>
         /// Get the price offer when the user need to create offer or edit
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="directRequestId"></param>
         /// <returns></returns>
         /// 
         [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier,AppFeatures.CarrierClients)]
-        public async Task<PriceOfferDto> GetPriceOfferForCreateOrEdit(long id, long? OfferId)
+        public async Task<PriceOfferDto> GetPriceOfferForCreateOrEdit(long id, long? OfferId, long directRequestId)
         {
             DisableTenancyFilters();
             var shippingRequest = await _shippingRequestsRepository.GetAll()
@@ -268,10 +269,7 @@ namespace TACHYON.PriceOffers
                     priceOfferDto.PriceType = PriceOfferType.Trip;
                     priceOfferDto.Quantity = shippingRequest.NumberOfTrips;
                     SetCommssionSettingsForTachyonDealer(priceOfferDto, shippingRequest);
-                    
-                    if (await HasDirectRequestByPricePackage(shippingRequest.Id))
-                        await ApplyPriceFromPricePackage(priceOfferDto,shippingRequest.Id);
-                    
+
                 }
                 else if(shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
                 {
@@ -284,6 +282,12 @@ namespace TACHYON.PriceOffers
                
 
             }
+            
+            if (await HasDirectRequestByPricePackage(directRequestId))
+            {
+                await ApplyPriceFromPricePackage(priceOfferDto,shippingRequest.Id,directRequestId);
+            }
+            
             if (IsEnabled(AppFeatures.TachyonDealer))
             {
                 priceOfferDto.CommissionSettings = SetTenantCommssionSettingsForTachyonDealer(shippingRequest.TenantId);
@@ -292,17 +296,17 @@ namespace TACHYON.PriceOffers
             return priceOfferDto;
         }
 
-        private async Task<bool> HasDirectRequestByPricePackage(long shippingRequestId)
+        private async Task<bool> HasDirectRequestByPricePackage(long directRequestId)
         {
             DisableTenancyFilters();
-            return await _tmsOfferRepository.GetAll().AnyAsync(x => x.DirectRequestId.HasValue && x.DirectRequest.ShippingRequestId == shippingRequestId);
+            return await _tmsOfferRepository.GetAll().AnyAsync(x => x.DirectRequestId.HasValue && x.DirectRequestId == directRequestId);
         }
 
-        private async Task ApplyPriceFromPricePackage(PriceOfferDto priceOfferDto,long requestId)
+        private async Task ApplyPriceFromPricePackage(PriceOfferDto priceOfferDto,long requestId, long directRequestId)
         {
             if (!AbpSession.TenantId.HasValue) return;
             DisableTenancyFilters();
-            var itemPrice = await _tmsPricePackageManager.GetItemPriceByMatchedPricePackage(requestId,priceOfferDto.Quantity,AbpSession.TenantId.Value);
+            var itemPrice = await _tmsPricePackageManager.GetItemPriceByMatchedPricePackage(requestId,directRequestId);
             
             if (itemPrice is null) return;
 
@@ -374,7 +378,7 @@ namespace TACHYON.PriceOffers
                 CanIAcceptOffer = await _priceOfferManager.CanAcceptOrRejectOffer(offer),
                 CanIAcceptOrRejectOfferOnBehalf = await _priceOfferManager.canAcceptOrRejectOfferOnBehalf(offer),
                 CanIEditOffer = await _priceOfferManager.CanEditOffer(offer),
-                HasMatchedPricePackage = await _tmsPricePackageManager.IsHaveMatchedPricePackage(offer.ShippingRequestId,offer.TenantId)
+                HasMatchedPricePackage = await _tmsPricePackageManager.IsHaveMatchedPricePackage(offer.ShippingRequestId,offer.SourceId)
             };
         }
 
