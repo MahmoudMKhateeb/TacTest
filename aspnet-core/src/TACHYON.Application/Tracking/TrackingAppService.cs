@@ -336,7 +336,7 @@ namespace TACHYON.Tracking
             }
             
             dto.NumberOfDrops = trip.ShippingRequestFk.NumberOfDrops;
-            if (trip.AssignedTruckFk != null) dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk)?.TranslatedDisplayName ?? "";
+            if (trip.AssignedTruckFk != null) dto.TruckType = ObjectMapper.Map<TrucksTypeSelectItemDto>(trip.AssignedTruckFk.TrucksTypeFk)?.DisplayName ?? "";
             dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk)?.DisplayName;
             if (trip.ShippingRequestTripRejectReason != null)
             {

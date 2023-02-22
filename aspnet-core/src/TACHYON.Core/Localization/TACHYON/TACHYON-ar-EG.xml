@@ -2941,7 +2941,13 @@
   <text name="EditContact">تعديل المنشأة</text>
   <text name="Months">شهور</text>
   <text name="Weeks">أسابيع</text>
-  <!--<text name=""></text>
+    <text name="TransportTypeId">نوع النقل</text>
+    <text name="TrucksTypeId">نوع الشاحنة</text>
+    <text name="CapacityId">نوع الحمولة</text>
+    <text name="ShippingRequestDestinationCities">مدن الوصول</text>
+    <text name="GoodsCategoryId">نوع البضاعة</text>
+
+    <!--<text name=""></text>
   <text name=""></text>
   <text name=""></text>
   <text name=""></text>

@@ -3210,11 +3210,12 @@
     <text name="EditContact">Edit contact</text>
     <text name="Months">Months</text>
     <text name="Weeks">Weeks</text>
+    <text name="TransportTypeId">Transport type</text>
+    <text name="TrucksTypeId">Trucks type</text>
+    <text name="CapacityId">Capacity</text>
+    <text name="GoodsCategoryId">Good category</text>
+    <text name="ShippingRequestDestinationCities">Destination cities</text>
     <!--<text name=""></text>
-    <text name=""></text>
-    <text name=""></text>
-    <text name=""></text>
-    <text name=""></text>
     <text name=""></text>-->
 	</texts>
 </localizationDictionary>

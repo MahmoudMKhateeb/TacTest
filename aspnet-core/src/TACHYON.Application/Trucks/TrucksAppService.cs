@@ -155,7 +155,8 @@ namespace TACHYON.Trucks
                             ModelName = truck.ModelName,
                             ModelYear = truck.ModelYear,
                             Length = truck.Length,
-                            TruckStatusDisplayName = truck.TruckStatusFk != null ? truck.TruckStatusFk.DisplayName : "",
+                            TruckStatusDisplayName = truck.TruckStatusFk != null ? truck.TruckStatusFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                .TranslatedDisplayName : truck.TruckStatusFk.DisplayName,
                             TransportTypeDisplayName = truck.TransportTypeFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
                                             ? truck.TransportTypeFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName
                                             : truck.TransportTypeFk.DisplayName,

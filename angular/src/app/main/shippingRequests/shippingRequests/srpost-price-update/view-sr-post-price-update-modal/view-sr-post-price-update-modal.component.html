@@ -93,7 +93,7 @@
                 <tbody>
                   <tr *ngFor="let item of srUpdateDto.changes; let i = index">
                     <td>{{ i + 1 }}</td>
-                    <td>{{ item.changeName }}</td>
+                    <td>{{ item.changeName | localize }}</td>
                     <td>{{ item.changeMsg }}</td>
                   </tr>
                 </tbody>

@@ -789,9 +789,10 @@ namespace TACHYON
             configuration.CreateMap<DriverListDto, DriverMappingEntity>()
                 .ForMember(x => x.User, x => x.MapFrom(y => y))
                 .ForPath(x => x.User.CarrierActorFk.CompanyName, x => x.MapFrom(y => y.CarrierActorName))
-                .ForPath(x => x.User.NationalityFk.Name, x => x.MapFrom(y => y.Nationality))
-                .ForMember(x => x.CompanyName, x => x.MapFrom(y => y.CompanyName))
-             .ReverseMap();
+                .ForPath(x => x.Nationality, x => x.MapFrom(y => y.Nationality))
+                .ForMember(x => x.CompanyName, x => x.MapFrom(y => y.CompanyName)).ReverseMap();
+
+             
             configuration.CreateMap<User, DriverListDto>();
             configuration.CreateMap<User, ChatUserDto>();
             configuration.CreateMap<User, OrganizationUnitUserListDto>();
@@ -1446,5 +1447,6 @@ namespace TACHYON
         public string RentedShippingRequestReference { get; set; }
         public long AssignedTruckId { get; set; }
         public string AssignedTruck { get; set; }
+        public string Nationality { get; set; }
     }
 }
