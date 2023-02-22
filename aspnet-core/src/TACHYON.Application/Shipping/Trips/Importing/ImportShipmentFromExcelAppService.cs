@@ -75,7 +75,7 @@ namespace TACHYON.Shipping.Trips.Importing
             }
             else
             {
-                if(!await IsBroker()  && !await IsEnabledAsync(AppFeatures.CarrierClients)) { throw new UserFriendlyException(L("PermssionForDirectShipmentDenied")); }
+                if(!await IsBroker()  && !await IsEnabledAsync(AppFeatures.ShipperClients)) { throw new UserFriendlyException(L("PermissionForDirectShipmentDenied")); }
                 trips = await GetShipmentListFromExcelOrNull(importShipmentFromExcelInput, false,true);
 
             }

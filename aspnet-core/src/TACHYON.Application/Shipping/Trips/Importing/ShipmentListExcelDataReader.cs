@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Threading;
+using Abp.Timing;
 using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
@@ -63,18 +64,12 @@ namespace TACHYON.Shipping.Trips.Importing
                 var startDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
                     row, 1, "Trip Pick up Date Start *", exceptionMessage);
                 var startTripDate = GetDateTimeValueFromTextOrNull(startDate);
-                if(startTripDate == null && ShippingRequestId != null)
+                if(startTripDate == null )
                 {
-                    startTripDate = !IsDedicatedRequest ?  SR.StartTripDate : SR.RentalStartDate;
+                    startTripDate = Clock.Now.Date;
                 }
-                if((startTripDate == null || startTripDate == default(DateTime)))
-                {
-                    exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("StartTripDate"));
-                }
-                else
-                {
+
                     trip.StartTripDate = startTripDate;
-                }
 
                 //2
                 var endDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
@@ -229,19 +224,19 @@ namespace TACHYON.Shipping.Trips.Importing
                 else
                 {
                     var originFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                        row, 9, "Original Facility*", exceptionMessage);
+                        row, 7, "Original Facility*", exceptionMessage);
                     trip.OriginalFacility = originFacility;
                     trip.OriginFacilityId = GetFacilityId(originFacility, exceptionMessage);
 
                     var destinationFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                       row, 10, "Destination Facility*", exceptionMessage);
+                       row, 8, "Destination Facility*", exceptionMessage);
                     trip.DestinationFacility = destinationFacility;
                     trip.DestinationFacilityId = GetFacilityId(destinationFacility, exceptionMessage);
 
                     if (IsSingleDropRequest)
                     {
                         var sender = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                        row, 11, "Sender*", exceptionMessage);
+                        row, 9, "Sender*", exceptionMessage);
                         trip.sender = sender.Trim();
                         if (trip.OriginFacilityId != null)
                         {
@@ -249,7 +244,7 @@ namespace TACHYON.Shipping.Trips.Importing
                         }
 
                         var receiver = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                        row, 12, "Receiver*", exceptionMessage);
+                        row, 10, "Receiver*", exceptionMessage);
                         trip.Receiver = receiver.Trim();
                         if (trip.DestinationFacilityId != null)
                         {
