@@ -119,15 +119,20 @@ namespace TACHYON.Invoices.ActorInvoices
                 where trip.ActorInvoiceId == invoiceId
                 select new
                 {
-                    trip.Id,VasCount = trip.ShippingRequestTripVases.Count,
-                    SubTotalAmount = trip.ShippingRequestFk.ActorShipperPrice.SubTotalAmountWithCommission.Value,VatAmount = trip.ShippingRequestFk.ActorShipperPrice.VatAmountWithCommission.Value,
+                    trip.Id,
+                    VasCount = trip.ShippingRequestTripVases.Count,
+                    SubTotalAmount = trip.ShippingRequestId.HasValue? trip.ShippingRequestFk.ActorShipperPrice.SubTotalAmountWithCommission.Value : trip.ActorShipperPrice.SubTotalAmountWithCommission.Value,
+                    VatAmount = trip.ShippingRequestId.HasValue ? trip.ShippingRequestFk.ActorShipperPrice.VatAmountWithCommission.Value : trip.ActorShipperPrice.VatAmountWithCommission.Value,
                     WaybillNumber = trip.WaybillNumber.ToString(),
                     TruckType = trip.AssignedTruckFk.TrucksTypeFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName,
-                    Source = trip.ShippingRequestFk.OriginCityFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName,
-                    Destination = trip.DestinationFacilityFk.CityFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName,
+                    Source = trip.ShippingRequestId.HasValue ? trip.ShippingRequestFk.OriginCityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : trip.OriginFacilityFk.CityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName,
+                    Destination = trip.ShippingRequestId.HasValue ? trip.ShippingRequestFk.DestinationCityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : trip.DestinationFacilityFk.CityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName,
                     DateWork = trip.EndWorking.HasValue ? trip.EndWorking.Value.ToString("dd MMM, yyyy") : string.Empty,
-                    Remarks = trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops ?
-                        LocalizationSource.GetString("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops) : string.Empty,
+                    Remarks = trip.ShippingRequestId.HasValue ? (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops
+                        ? LocalizationSource.GetString("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops)
+                        : string.Empty) : (trip.RouteType == ShippingRequestRouteType.MultipleDrops
+                        ? LocalizationSource.GetString("TotalOfDrop", trip.NumberOfDrops)
+                        : string.Empty),
                     Vases = trip.ShippingRequestTripVases.Select(x=> new
                     {
                         VasName = x.ShippingRequestVasFk.VasFk.Key, SubTotalAmount = x.ShippingRequestVasFk.ActorShipperPrice.SubTotalAmountWithCommission.Value,
