@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import Swal from 'sweetalert2';
+import { ViewImportedTripsFromExcelModalComponent } from '../shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
 
 @Component({
   selector: 'app-direct-trips',
@@ -21,7 +22,7 @@ import Swal from 'sweetalert2';
 export class DirectTripsComponent extends AppComponentBase implements OnInit {
   @ViewChild('AddNewTripModal', { static: true }) addNewTripModal: CreateOrEditTripComponent;
   @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
-  @ViewChild('ViewImportedTripsModal', { static: false }) modal: ModalDirective;
+  @ViewChild('ViewImportedTripsModal', { static: false }) modal: ViewImportedTripsFromExcelModalComponent;
   @ViewChild('PointExcelFileUpload', { static: false }) PointExcelFileUpload: FileUpload;
   @ViewChild('GoodDetailsExcelFileUpload', { static: false }) GoodDetailsExcelFileUpload: FileUpload;
   @ViewChild('ViewImportedPointsModal', { static: false }) pointModal: ModalDirective;
@@ -33,7 +34,7 @@ export class DirectTripsComponent extends AppComponentBase implements OnInit {
   uploadUrl: string;
   uploadPointUrl: string;
   uploadGoodDetailsUrl: string;
-  list: any;
+  list: any[] = [];
   saving = false;
   pointsList: any;
   goodDetailsList: any;
@@ -136,7 +137,7 @@ export class DirectTripsComponent extends AppComponentBase implements OnInit {
           this.loading = false;
           this.notify.success(this.l('ImportProcessStart'));
           this.saving = true;
-          this.modal.show();
+          this.modal.show(this.list);
         } else if (response.error != null) {
           this.loading = false;
           //this.notify.error(this.l('ImportFailed'));

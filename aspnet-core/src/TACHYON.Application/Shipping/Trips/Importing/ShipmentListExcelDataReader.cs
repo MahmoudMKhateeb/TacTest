@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Threading;
+using Abp.Timing;
 using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
@@ -63,18 +64,12 @@ namespace TACHYON.Shipping.Trips.Importing
                 var startDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
                     row, 1, "Trip Pick up Date Start *", exceptionMessage);
                 var startTripDate = GetDateTimeValueFromTextOrNull(startDate);
-                if(startTripDate == null && ShippingRequestId != null)
+                if(startTripDate == null )
                 {
-                    startTripDate = !IsDedicatedRequest ?  SR.StartTripDate : SR.RentalStartDate;
+                    startTripDate = Clock.Now.Date;
                 }
-                if((startTripDate == null || startTripDate == default(DateTime)))
-                {
-                    exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("StartTripDate"));
-                }
-                else
-                {
+
                     trip.StartTripDate = startTripDate;
-                }
 
                 //2
                 var endDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,

@@ -4,6 +4,7 @@ import { ImportTripDto, ImportShipmentFromExcelServiceProxy, ShippingRequestRout
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { DxPopoverComponent } from '@node_modules/devextreme-angular';
+import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-view-imported-trips-from-excel-modal',
@@ -31,8 +32,10 @@ export class ViewImportedTripsFromExcelModalComponent extends AppComponentBase {
     this.modal.hide();
   }
 
-  show() {
-    this.shippingRequestId = this.ImportedTripsList[0].shippingRequestId;
+  show(importTripDto: ImportTripDto[]) {
+    if (isNotNullOrUndefined(importTripDto)) {
+      this.shippingRequestId = importTripDto[0].shippingRequestId;
+    }
     this.modal.show();
   }
 
