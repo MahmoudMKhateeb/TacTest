@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using TACHYON.Actors;
 using TACHYON.Common;
+using TACHYON.DedicatedDynamicInvocies;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -24,6 +25,7 @@ namespace TACHYON.Invoices.ActorInvoices
         public decimal TotalAmount { get; set; }
         public decimal VatAmount { get; set; }
         public decimal TaxVat { get; set; }
+        public ActorInvoiceChannel ActorInvoiceChannel { get; set; }
         public ICollection<ShippingRequestTrip> Trips { get; set; }
         public ActorSubmitInvoice()
         {

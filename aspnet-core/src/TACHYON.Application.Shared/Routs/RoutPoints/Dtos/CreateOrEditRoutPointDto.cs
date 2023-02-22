@@ -21,12 +21,12 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         /// <summary>
         /// is for UI helpping only and will be ignored in mapping
         /// </summary>
-        public double Longitude { get; set; }
+        public double? Longitude { get; set; }
 
         /// <summary>
         /// is for UI helpping only and will be ignored in mapping
         /// </summary>
-        public double Latitude { get; set; }
+        public double? Latitude { get; set; }
 
         public int? ReceiverId { get; set; }
         [JsonIgnore] public string Code { get; set; } = (new Random().Next(100000, 999999)).ToString();
@@ -43,6 +43,13 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         [CanBeNull] public string ReceiverCardIdNumber { get; set; }
 
         [CanBeNull] public string Note { get; set; }
+
+        #region HomeDelivery
+        public DropPaymentMethod? DropPaymentMethod { get; set; }
+        public bool? NeedsReceiverCode { get; set; }
+        public bool? NeedsPOD { get; set; }
+
+        #endregion
 
         public List<CreateOrEditGoodsDetailDto> GoodsDetailListDto { get; set; }
 

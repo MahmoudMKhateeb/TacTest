@@ -3,13 +3,14 @@ import { AfterContentChecked, ChangeDetectorRef, Component, EventEmitter, Inject
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   CreateOrEditRoutPointDto,
+  DropPaymentMethod,
   FacilityForDropdownDto,
-  GetShippingRequestForViewOutput,
   PickingType,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
   RoutStepsServiceProxy,
   ShippingRequestDestinationCitiesDto,
+  ShippingRequestFlag,
   ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
@@ -17,6 +18,7 @@ import { PointsService } from '@app/main/shippingRequests/shippingRequests/Shipp
 import { Subscription } from 'rxjs';
 import { finalize } from '@node_modules/rxjs/operators';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'PointsComponent',
@@ -29,13 +31,13 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   shippingRequestId: number;
   DestCitiesDtos: ShippingRequestDestinationCitiesDto[];
   SRDestionationCity: number;
-  allFacilities: FacilityForDropdownDto[];
-  pickupFacilities: FacilityForDropdownDto[];
-  dropFacilities: FacilityForDropdownDto[];
+  allFacilities: FacilityForDropdownDto[] = [];
+  pickupFacilities: FacilityForDropdownDto[] = [];
+  dropFacilities: FacilityForDropdownDto[] = [];
   allPointsSendersAndREcivers: ReceiverFacilityLookupTableDto[][] = [];
   receiverLoading: boolean;
-  shippingRequestForView: GetShippingRequestForViewOutput;
-  activeTripId: number;
+  //shippingRequestForView: GetShippingRequestForViewOutput;
+  //activeTripId: number;
   RouteTypes = ShippingRequestRouteType;
   wayPointsList: CreateOrEditRoutPointDto[] = [];
 
@@ -56,11 +58,14 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   Point: CreateOrEditRoutPointDto;
   private pointsServiceSubscription$: Subscription;
   private tripDestFacilitySub$: Subscription;
-  private tripSourceFacilitySub$: Subscription;
+  //private tripSourceFacilitySub$: Subscription;
   private currentActiveTripSubs$: Subscription;
   private pointServiceSubs$: Subscription;
   usedIn: 'view' | 'createOrEdit';
   @Output() SelectedWayPointsFromChild = this.wayPointsList;
+  @Input('isHomeDelivery') isHomeDelivery: boolean;
+  shippingRequestFlagEnum = ShippingRequestFlag;
+  paymentMethodsArray = [];
 
   constructor(
     injector: Injector,
@@ -68,7 +73,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     private _receiversServiceProxy: ReceiversServiceProxy,
     public _tripService: TripService,
     private _PointsService: PointsService,
-    private cdref: ChangeDetectorRef
+    private cdref: ChangeDetectorRef,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
   }
@@ -76,6 +82,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   ngOnInit() {
     this.loadSharedServices();
     this.loadDropDowns();
+    this.paymentMethodsArray = this.enumToArray.transform(DropPaymentMethod);
     this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => {
       this.onChangedWayPointsList();
     });
@@ -89,20 +96,10 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
    * loads Facilities with validation on it related to source and destination in SR
    */
   loadFacilities() {
-    if (!this.shippingRequestForView.shippingRequest.id) {
-      return;
-    }
-    if (this.shippingRequestForView.shippingRequest.id != null) {
-      this._tripService.currentShippingRequest.subscribe((res) => {
-        if (isNotNullOrUndefined(res)) {
-          //   this.shippingRequestForView = res;
-          this.DestCitiesDtos = res.destinationCitiesDtos;
-        }
-      });
-    }
-    if (this.usedIn === 'createOrEdit') {
+    if (!this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id) {
+      // direct trip
       this._routStepsServiceProxy
-        .getAllFacilitiesByCityAndTenantForDropdown(this.shippingRequestForView.shippingRequest.id)
+        .getAllFacilitiesForDirectTrip()
         .pipe(
           finalize(() => {
             this.facilityLoading = false;
@@ -110,14 +107,29 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         )
         .subscribe((result) => {
           this.allFacilities = result;
-          this.pickupFacilities = result.filter((r) => {
-            return this.shippingRequestForView.shippingRequestFlag === 0
-              ? r.cityId == this.shippingRequestForView.originalCityId
-              : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
-          });
-          this.dropFacilities = result.filter((r) => this.DestCitiesDtos.some((y) => y.cityId == r.cityId));
+          this.dropFacilities = result;
+          this.pickupFacilities = result;
         });
+
+      return;
     }
+    this.DestCitiesDtos = this._tripService.GetShippingRequestForViewOutput.destinationCitiesDtos;
+
+    this._routStepsServiceProxy
+      .getAllFacilitiesByCityAndTenantForDropdown(this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id)
+      .pipe(
+        finalize(() => {
+          this.facilityLoading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.allFacilities = result;
+        this.pickupFacilities = result.filter((r) => {
+          return this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === 0
+            ? r.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId
+            : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
+        });
+      });
   }
 
   /**
@@ -190,9 +202,15 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   /**
    * creates empty points for the trip based on number of drops
    */
-  createEmptyPoints() {
-    console.log('createEmptyPoints', this.shippingRequestForView);
-    let numberOfDrops = this.shippingRequestForView.shippingRequest.numberOfDrops;
+  createEmptyPoints(selectedPaymentMethodId?: number) {
+    console.log('createEmptyPoints', this._tripService.GetShippingRequestForViewOutput);
+    let numberOfDrops = 0;
+    if (this._tripService.GetShippingRequestForViewOutput) {
+      numberOfDrops = this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.numberOfDrops;
+    } else {
+      numberOfDrops = this._tripService.CreateOrEditShippingRequestTripDto?.numberOfDrops;
+    }
+
     //if there is already wayPoints Dont Create Empty Once
     console.log('this.wayPointsList.length == numberOfDrops + 1', this.wayPointsList.length == numberOfDrops + 1);
     if (this.wayPointsList.length == numberOfDrops + 1) return;
@@ -204,6 +222,9 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       } else {
         point.pickingType = this.PickingType.Dropoff;
       }
+      point.dropPaymentMethod = selectedPaymentMethodId;
+      point.needsPOD = false;
+      point.needsReceiverCode = false;
       this.wayPointsList.push(point);
     } //end of for
   }
@@ -216,13 +237,14 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       }
     });
     //if action is edit trip get active Trip id
-    this.currentActiveTripSubs$ = this._tripService.currentActiveTripId.subscribe((res) => (this.activeTripId = res));
+    //this.currentActiveTripSubs$ = this._tripService.currentActiveTripId.subscribe((res) => (this.activeTripId = res));
     //get some Stuff from ShippingRequest Dto
-    this.tripSourceFacilitySub$ = this._tripService.currentShippingRequest.subscribe((res) => {
-      if (res.shippingRequest) {
-        this.shippingRequestForView = res;
-      }
-    });
+    // this._tripService.currentShippingRequest.subscribe((res) => {
+
+    //   if (res?.shippingRequest) {
+    //     this._tripService.GetShippingRequestForViewOutput = res;
+    //   }
+    // });
 
     this._PointsService.currentUsedIn.subscribe((res) => {
       this.usedIn = res;
@@ -242,7 +264,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     this.pointServiceSubs$?.unsubscribe();
     this.pointsServiceSubscription$?.unsubscribe();
     this.tripDestFacilitySub$?.unsubscribe();
-    this.tripSourceFacilitySub$?.unsubscribe();
+    // this.tripSourceFacilitySub$?.unsubscribe();
     this.currentActiveTripSubs$?.unsubscribe();
   }
 

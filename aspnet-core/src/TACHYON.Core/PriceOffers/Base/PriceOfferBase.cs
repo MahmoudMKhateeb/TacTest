@@ -103,6 +103,14 @@ namespace TACHYON.PriceOffers.Base
 
         public decimal ItemCommissionAmount { get; set; }
         public decimal CommissionPercentageOrAddValue { get; set; }
+        /// <summary>
+        /// This field commission is for requests that hasn't route type, store multiple drop commission
+        /// </summary>
+        public decimal CommissionPercentageOrAddValueForMultipleDrop { get; set; }
+        /// <summary>
+        /// This field commission is for requests that hasn't route type, store single drop commission
+        /// </summary>
+        public decimal CommissionPercentageOrAddValueForSingleDrop { get; set; }
 
         /// <summary>
         /// ( ItemCommissionAmount *  Quantity) + PriceOfferDetails.Sum(x => x.CommissionAmount)

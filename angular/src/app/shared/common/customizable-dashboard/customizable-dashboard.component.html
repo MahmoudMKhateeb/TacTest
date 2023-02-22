@@ -25,7 +25,9 @@
     </sub-header>
 
     <div [class]="containerClass" *ngIf="!loading">
-      <div class="row">
+      <!--      <app-shipper-dashboard *ngIf="dashboardName === dashboardCustomizationConst.dashboardNames.defaultShipperDashboard"></app-shipper-dashboard>-->
+      <!--      <app-carrier-dashboard *ngIf="dashboardName === dashboardCustomizationConst.dashboardNames.defaultCarrierDashboard"></app-carrier-dashboard>-->
+      <div class="row gutter-b">
         <div class="col-md-12" style="z-index: 0">
           <tabset #dashboardTabs [justified]="true" [ngClass]="{ 'nav-hidden': !moreThanOnePage() }">
             <tab
@@ -41,7 +43,7 @@
                     *ngIf="editModeEnabled"
                     (click)="removeItem(widget.gridInformation)"
                   >
-                    <i class="fa fa-times"></i>
+                    <i class="fa fa-times text-white"></i>
                   </button>
                 </gridster-item>
               </gridster>
@@ -122,6 +124,10 @@
           </div>
           <button type="button" class="btn btn-sm btn-success btn-elevate-hover btn-pill" (click)="savePage()">
             <i class="fa fa-save"></i>{{ 'Save' | localize }}
+          </button>
+          <button id="ResetPageButton" class="btn btn-sm btn-primary btn-elevate-hover btn-pill" (click)="resetPageToDefault()">
+            <i class="fas fa-sync"></i>
+            <span>{{ 'RestoreDashboardDefaults' | localize }}</span>
           </button>
         </div>
       </div>

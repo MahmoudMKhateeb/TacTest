@@ -68,7 +68,6 @@ import { DriversSubmittedDocumentsComponent } from '@app/main/documentFiles/docu
 import { ShipmentHistoryComponent } from '@app/main/shippingRequests/shippingRequests/shipment-history/shipment-history.component';
 import { RequestTemplatesComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/request-templates.component';
 import { PenaltiesListComponent } from './Penalties/penalties-list/penalties-list.component';
-import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking.component';
 import { InvoiceNoteListComponent } from './invoices/invoice-note/invoice-note-list/invoice-note-list.component';
 import { InvoicesDynamicComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic.component';
 import { ActorsSubmittedDocumentsComponent } from '@app/main/documentFiles/documentFiles/actors-submitted-documents/actors-submitted-documents.component';
@@ -78,6 +77,8 @@ import { InvoicesDedicatedComponent } from '@app/main/Invoices/invoices-dedicate
 import { ActorsComponent } from './actors/actors/actors.component';
 import { ActorInvoiceListComponent } from './Invoices/ActorInvoices/actor-invoice-list/actor-invoice-list.component';
 import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/actor-submit-invoices.component';
+import { InvoicesDedicatedClientsComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients.component';
+import { DirectTripsComponent } from '@app/main/direct-trips/direct-trips.component';
 
 @NgModule({
   imports: [
@@ -300,12 +301,14 @@ import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/a
           { path: 'invoices/view', component: InvoicesListComponent, data: { permission: 'Pages.Invoices' } },
           { path: 'invoices/dynamic', component: InvoicesDynamicComponent, data: { permission: 'Pages.DynamicInvoices' } },
           { path: 'invoices/dedicated', component: InvoicesDedicatedComponent, data: { permission: 'Pages.DedicatedDynamicInvoices' } },
+          // data: { permission: 'Pages.DedicatedDynamicInvoices' }
+          { path: 'invoices/dedicatedClients', component: InvoicesDedicatedClientsComponent },
           { path: 'penalties/view', component: PenaltiesListComponent, data: { permission: 'Pages.Invoices' } },
 
           { path: 'invoicenote/view', component: InvoiceNoteListComponent, data: { permission: 'Pages.Invoices' } },
           { path: 'actors/actors', component: ActorsComponent, data: { permission: 'Pages.Administration.Actors' } },
-          { path: 'actors/invoices', component: ActorInvoiceListComponent, data: { permission: 'Pages.Administration.Actors' } },
-          { path: 'actors/carrierInvoices', component: ActorSubmitInvoicesComponent, data: { permission: 'Pages.Administration.Actors' } },
+          { path: 'actors/invoices', component: ActorInvoiceListComponent, data: { permission: 'Pages.Administration.ActorsInvoice' } },
+          { path: 'actors/carrierInvoices', component: ActorSubmitInvoicesComponent, data: { permission: 'Pages.Administration.ActorsInvoice' } },
 
           {
             path: 'invoices/detail/:id',
@@ -353,6 +356,7 @@ import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/a
             data: { preload: true },
           },
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
+          { path: 'directShipments', component: DirectTripsComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           //TODO:// to be removed after menu Structure work is complete
           //
           { path: 'page-not-found', component: ComingSoonComponent },

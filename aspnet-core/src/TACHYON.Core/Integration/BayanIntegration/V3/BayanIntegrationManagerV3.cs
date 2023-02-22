@@ -342,7 +342,7 @@ namespace TACHYON.Integration.BayanIntegration.V3
                                 {
                                     unitId = g.UnitOfMeasureFk.BayanIntegrationId, // todo ask
                                     valid = true, // todo ask 
-                                    quantity = g.Amount,
+                                    quantity = g.Amount != null ? g.Amount.Value : 0,
                                     price = "",
                                     goodTypeId = g.GoodCategoryFk.BayanIntegrationId.IfNullOrWhiteSpace(""),
                                     dangerousGoodTypeId = g.DangerousGoodTypeFk.BayanIntegrationId.HasValue ? g.DangerousGoodTypeFk.BayanIntegrationId.Value.ToString() : "",
@@ -635,7 +635,7 @@ namespace TACHYON.Integration.BayanIntegration.V3
                                     {
                                         unitId = g.UnitOfMeasureFk.BayanIntegrationId, // todo ask
                                         valid = true, // todo ask 
-                                        quantity = g.Amount,
+                                        quantity = g.Amount!=null ?g.Amount.Value :0 ,
                                         price = "",
                                         goodTypeId = g.GoodCategoryFk.BayanIntegrationId.IfNullOrWhiteSpace(""),
                                         dangerousGoodTypeId = g.DangerousGoodTypeFk.BayanIntegrationId.HasValue ? g.DangerousGoodTypeFk.BayanIntegrationId.Value.ToString() : "",

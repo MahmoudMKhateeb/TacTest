@@ -22,105 +22,58 @@
             <div class="row align-items-center">
               <!--<Primeng-Datatable-Start>-->
               <div [busyIf]="primengTableHelper.isLoading" class="table primeng-datatable-container col-12">
-                <p-table
-                  ScrollWidth="100%"
-                  [paginator]="false"
-                  [resizableColumns]="primengTableHelper.resizableColumns"
-                  [responsive]="primengTableHelper.isResponsive"
-                  [scrollable]="true"
-                  [value]="ImportedTripsList"
-                  rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                <dx-data-grid
+                  id="gridContainer"
+                  [dataSource]="ImportedTripsList"
+                  keyExpr="id"
+                  [showBorders]="true"
+                  [columnAutoWidth]="true"
+                  [wordWrapEnabled]="true"
+                  (onCellHoverChanged)="onCellHoverChanged($event)"
                 >
-                  <ng-template pTemplate="header">
-                    <tr>
-                      <th>{{ l('TripReferenceID') }}</th>
-                      <th>
-                        {{ l('TripStartDate') }}
-                      </th>
-                      <th>
-                        {{ l('TripEndDate') }}
-                      </th>
-                      <th>
-                        {{ l('HasAttachment') }}
-                      </th>
-                      <th>{{ l('NeedsDeliveryNote') }}</th>
-                      <th>
-                        {{ l('Origin') }}
-                      </th>
-                      <th>
-                        {{ l('Destination') }}
-                      </th>
-                      <th *ngIf="isSingleDdrop">
-                        {{ l('Sender') }}
-                      </th>
-                      <th *ngIf="isSingleDdrop">
-                        {{ l('Receiver') }}
-                      </th>
-                      <th>
-                        {{ l('totalValue') }}
-                      </th>
-                      <th>
-                        {{ l('Note') }}
-                      </th>
-                    </tr>
-                  </ng-template>
-                  <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
-                    <tr [ngClass]="record.exception ? 'alert customDangerAlert' : 'alert customSuccessAlert'">
-                      <td>
-                        <span class="ui-column-title"> {{ l('bulkUploadReference') }}</span>
-                        {{ record.bulkUploadRef }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('startTripDate') }}</span>
-                        {{ record.startTripDate | momentFormat: 'YYYY-MM-DD' }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('endTripDate') }}</span>
-                        {{ record.endTripDate | momentFormat: 'YYYY-MM-DD' }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('hasAttachment') }}</span>
-                        {{ record.hasAttachment ? l('Yes') : l('No') }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('needsDeliveryNote') }}</span>
-                        {{ record.needsDeliveryNote ? l('Yes') : l('No') }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('originFacility') }}</span>
-                        {{ record.originalFacility }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('destinationFacility') }}</span>
-                        {{ record.destinationFacility }}
-                      </td>
-                      <td *ngIf="isSingleDdrop">
-                        <span class="ui-column-title"> {{ l('sender') }}</span>
-                        {{ record.sender }}
-                      </td>
-                      <td *ngIf="isSingleDdrop">
-                        <span class="ui-column-title"> {{ l('receiver') }}</span>
-                        {{ record.receiver }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('totalValue') }}</span>
-                        {{ record.totalValue }}
-                      </td>
-                      <td>
-                        <span class="ui-column-title"> {{ l('note') }}</span>
-                        {{ record.note }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td [attr.colspan]="isSingleDdrop ? '11' : '9'" *ngIf="record.exception">
-                        <span class="required-fileds font-weight-bolder"> {{ l('Exception') }} : </span>
-                        {{ record.exception }}
-                      </td>
-                    </tr>
-                  </ng-template>
-                </p-table>
+                  <dxi-column dataField="bulkUploadRef" [caption]="'TripReferenceID' | localize"></dxi-column>
+                  <dxi-column dataField="startTripDate" [caption]="'TripStartDate' | localize" dataType="date"></dxi-column>
+                  <dxi-column dataField="endTripDate" [caption]="'TripEndDate' | localize" dataType="date"></dxi-column>
+                  <dxi-column dataField="hasAttachment" [caption]="'HasAttachment' | localize" cellTemplate="needsDeliveryNoteTemplate"></dxi-column>
+                  <dxi-column
+                    dataField="needsDeliveryNote"
+                    [caption]="'NeedsDeliveryNote' | localize"
+                    cellTemplate="hasAttachmentsTemplate"
+                  ></dxi-column>
+                  <dxi-column dataField="originalFacility" [caption]="'Origin' | localize"></dxi-column>
+                  <dxi-column dataField="destinationFacility" [caption]="'Destination' | localize"></dxi-column>
+                  <dxi-column dataField="routeTypeTitle" [caption]="'RouteType' | localize" *ngIf="isDedicatedRequest"></dxi-column>
+                  <dxi-column dataField="numberOfDrops" [caption]="'NumberOfDrops' | localize" *ngIf="isDedicatedRequest"></dxi-column>
+                  <dxi-column dataField="sender" [caption]="'Sender' | localize" *ngIf="isSingleDdrop || isDedicatedRequest"></dxi-column>
+                  <dxi-column dataField="receiver" [caption]="'Receiver' | localize" *ngIf="isSingleDdrop || isDedicatedRequest"></dxi-column>
+                  <dxi-column dataField="driver" [caption]="'Driver' | localize" *ngIf="isDedicatedRequest"></dxi-column>
+                  <dxi-column dataField="truck" [caption]="'Truck' | localize" *ngIf="isDedicatedRequest"></dxi-column>
+                  <dxi-column dataField="totalValue" [caption]="'TotalValue' | localize"></dxi-column>
+                  <dxi-column
+                    dataField="exception"
+                    [caption]="'HasErrors' | localize"
+                    cellTemplate="errorsCellTemplate"
+                    alignment="center"
+                  ></dxi-column>
+
+                  <div *dxTemplate="let item of 'errorsCellTemplate'">
+                    <div *ngIf="item.data.exception">
+                      <i class="fa fa-2x fa-exclamation-circle text-danger"></i>
+                    </div>
+                  </div>
+                  <div *dxTemplate="let item of 'needsDeliveryNoteTemplate'">
+                    {{ item.data.needsDeliveryNote ? l('Yes') : l('No') }}
+                  </div>
+                  <div *dxTemplate="let item of 'hasAttachmentsTemplate'">
+                    {{ item.data.hasAttachment ? l('Yes') : l('No') }}
+                  </div>
+                </dx-data-grid>
+                <dx-popover #popOver [(target)]="popoverTarget" position="{{ isRtl ? 'right' : 'left' }}" [width]="300">
+                  <div *dxTemplate="let data of 'content'">
+                    <span class="required-fileds font-weight-bolder"> {{ l('Exception') }}: </span><span>{{ popOverText }}</span>
+                  </div>
+                </dx-popover>
               </div>
-              <!--<Primeng-Datatable-End>-->
             </div>
           </div>
         </div>

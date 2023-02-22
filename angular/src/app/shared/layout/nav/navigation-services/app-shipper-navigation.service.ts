@@ -20,18 +20,13 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
   getMenu(): AppMenu {
     console.log('AppShipperNavigationService');
     let menu = new AppMenu('MainMenu', 'MainMenu', [
-      new AppMenuItem(
-        'Dashboard',
-        '',
-        'interaction, interact, preferences, preformance, computer, online, rating, review.svg',
-        '/app/main/dashboard'
-      ),
+      new AppMenuItem('Dashboard', '', 'Dashboards.svg', '/app/main/dashboard'),
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Operations
       new AppMenuItem(
         'Operations',
         'Pages.ShippingRequests',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        'Operations.svg',
         '/app/main/comingSoon',
         [],
 
@@ -52,7 +47,7 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
           new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
             'SavedTemplates',
-            'Pages.ShippingRequests',
+            'Pages.EntityTemplate',
             '',
             '/app/main/shippingRequests/requestsTemplates',
             undefined,
@@ -76,7 +71,7 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'AddressBook',
         '',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        'Facility Managment.svg',
         '',
         [],
         [
@@ -95,7 +90,7 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Financials',
         'Pages.Invoices',
-        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        'Financials.svg',
         '',
         [],
         [
@@ -122,23 +117,14 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
       //end of  Invoices
       //  ---------------------------------------------------------------------------------------------------------------------
       //start of TMS for shipper
-      new AppMenuItem(
-        'TMSForShipper',
-        'Pages.ShippingRequests',
-        'logistic, delivery, warehouse, storage, empty, vacant.svg',
-        '/app/main/tmsforshipper',
-        [],
-        undefined,
-        undefined,
-        undefined
-      ),
+      new AppMenuItem('TMSForShipper', 'Pages.ShippingRequests', 'TMS Settings.svg', '/app/main/tmsforshipper', [], undefined, undefined, undefined),
       //end of TMS for shipper
       // ----------------------------------------------------------------------------------------------------------------------
       //start of Documents
       new AppMenuItem(
         'DocumentManagement',
         '',
-        'interaction, interact, preferences, preformance, customer, rating, rate, questions.svg',
+        'Document.svg',
         '',
         [],
         [
@@ -180,7 +166,7 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Settings',
         'Pages.Administration.Tenant.Settings',
-        'user, interface, agent, usability, settings, options, preferences, gears.svg',
+        'Settings.svg',
         '',
         [],
         [new AppMenuItem('GeneralSettings', 'Pages.Administration.Tenant.Settings', '', '/app/admin/tenantSettings')]
@@ -192,7 +178,7 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'UserManagement',
         '',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
+        'User Management.svg',
         '',
         [],
         [

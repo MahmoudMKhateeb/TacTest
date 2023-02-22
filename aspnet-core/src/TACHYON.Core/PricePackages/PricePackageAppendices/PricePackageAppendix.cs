@@ -43,5 +43,8 @@ namespace TACHYON.PricePackages.PricePackageAppendices
         public List<NormalPricePackage> NormalPricePackages { get; set; }
         
         public bool IsActive { get; set; }
+
+        [NotMapped]
+        public string Version { get => $"{MajorVersion}.{MinorVersion}"; }
     }
 }

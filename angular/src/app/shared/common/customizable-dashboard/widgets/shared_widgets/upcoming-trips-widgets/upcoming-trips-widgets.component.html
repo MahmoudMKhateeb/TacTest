@@ -1,0 +1,52 @@
+<div class="card card-custom card-stretch w-100 h-100" [busyIf]="loading">
+  <div class="card-body p-4">
+    <div class="month-section">
+      <div class="d-flex flex-column">
+        <div class="d-flex justify-content-between pb-4">
+          <div class="month-name">
+            {{ today | date: 'MMMM' }}
+          </div>
+          <div class="upcoming-trips">Upcoming Trips</div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-default week-day-btn" *ngFor="let day of weekDates" (click)="selectDay(day)">
+            <span class="week-day-number">{{ day | date: 'd' }} </span><br />
+            {{ day | date: 'EEE' }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="trips-section overflow-auto pt-4">
+      <div
+        class="card card-custom ribbon ribbon-top dashboard-plain-card mb-2 clickable-item"
+        *ngFor="let trip of upcomingTripsForSelectedDay"
+        (click)="goToTrackingPage(trip)"
+      >
+        <div class="ribbon-target bg-primary" style="top: -2px; right: 20px">{{ trip.tripType }}</div>
+        <div class="card-body p-4 d-flex justify-content-between align-items-end">
+          <!--          <div class="from-to flex-column px-4">-->
+          <!--              <div class="from pb-4">-->
+          <!--                  <span class="red-circle"></span>-->
+          <!--                  Riyadh-->
+          <!--              </div>-->
+          <!--              <div class="to pt-4">-->
+          <!--                  <img class="pin-icon" src="assets/SVG/location.svg" alt="">-->
+          <!--                  Jeddah-->
+          <!--              </div>-->
+          <!--          </div>-->
+          <app-from-to [from]="trip.origin" [to]="trip.destinations"></app-from-to>
+          <div class="title">{{ trip.waybillNumber }}</div>
+          <!--          <div class="details">10:00am - 12:00pm</div>-->
+        </div>
+      </div>
+      <!--      <div class="card card-custom ribbon ribbon-top dashboard-plain-card">-->
+      <!--        <div class="ribbon-target bg-primary" style="top: -2px; right: 20px">SaaS</div>-->
+      <!--        <div class="card-body p-4 d-flex justify-content-between align-items-end">-->
+      <!--          <app-from-to from="Riyadh" to="Jeddah"></app-from-to>-->
+      <!--          <div class="title">221123018844</div>-->
+      <!--          &lt;!&ndash;          <div class="details">10:00am - 12:00pm</div>&ndash;&gt;-->
+      <!--        </div>-->
+      <!--      </div>-->
+    </div>
+  </div>
+</div>

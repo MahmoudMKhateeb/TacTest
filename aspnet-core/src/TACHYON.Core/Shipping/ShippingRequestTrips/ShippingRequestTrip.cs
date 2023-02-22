@@ -5,10 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Actors;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
+using TACHYON.Goods.GoodCategories;
 using TACHYON.Integration.WaslIntegration;
 using TACHYON.Invoices.ActorInvoices;
+using TACHYON.MultiTenancy;
 using TACHYON.Penalties;
 using TACHYON.PriceOffers;
 using TACHYON.Rating;
@@ -22,8 +25,24 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 {
     [Audited]
     [Table("ShippingRequestTrips")]
-    public class ShippingRequestTrip : FullAuditedEntity, IWaslIntegrated
+    public class ShippingRequestTrip : FullAuditedEntity, IWaslIntegrated, IMayHaveShipperActor, IMayHaveCarrierActor
     {
+        /// <summary>
+        /// the carrier who will take this Trip
+        /// </summary>
+        public int? CarrierTenantId { get; set; }
+        [ForeignKey("CarrierTenantId")] public Tenant CarrierTenantFk { get; set; }
+
+
+
+        /// <summary>
+        /// the Shipper who will take this Trip
+        /// </summary>
+        public int? ShipperTenantId { get; set; }
+        [ForeignKey("ShipperTenantId")] public Tenant ShipperTenantFk { get; set; }
+
+
+
         public long? WaybillNumber { get; set; }
         public DateTime StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
@@ -73,8 +92,18 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public string RejectedCancelingReason { get; set; }
         public long? AssignedTruckId { get; set; }
         [ForeignKey("AssignedTruckId")] public Truck AssignedTruckFk { get; set; }
-        public long ShippingRequestId { get; set; }
+        public long? ShippingRequestId { get; set; }
         [ForeignKey("ShippingRequestId")] public ShippingRequest ShippingRequestFk { get; set; }
+
+        /// <summary>
+        /// goods category that will be is this trip, which is base category that doesn't have father category
+        /// </summary>
+
+        public int? GoodCategoryId { get; set; }
+
+        [ForeignKey("GoodCategoryId")] public GoodCategory GoodCategoryFk { get; set; }
+
+
 
 
         //Facility
@@ -144,7 +173,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         /// This reference is for import shipment from excel, it is unique reference for user to know the trips whick contains errors,
         /// it is either entered menual or auto generated. it is unique in each request.
         /// </summary>
-        public string BulkUploadRef { get; set; } 
+        public string BulkUploadRef { get; set; }
             = DateTime.Now.ToString("dd") + DateTime.Now.ToString("HH") + RandomHelper.GetRandom(10, 99);
 
         #region Remarks
@@ -155,8 +184,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         #endregion
         public string SplitInvoiceFlag { get; set; }
 
-        
-        
+
+
         public long? ActorInvoiceId { get; set; }
 
         [ForeignKey("ActorInvoiceId")]
@@ -172,8 +201,31 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public int NumberOfDrops { get; set; }
 
         public bool IsActorShipperHaveInvoice { get; set; }
-        
+
         public bool IsActorCarrierHaveInvoice { get; set; }
         #endregion
+
+        #region Home delivery
+        public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
+
+        #endregion
+
+        public int? ShipperActorId { get; set; }
+
+        [ForeignKey("ShipperActorId")]
+        public Actor ShipperActorFk { get; set; }
+
+        public int? CarrierActorId { get; set; }
+
+        [ForeignKey("CarrierActorId")]
+        public Actor CarrierActorFk { get; set; }
+
+
+        public ActorShipperPrice ActorShipperPrice { get; set; }
+
+
+        public ActorCarrierPrice ActorCarrierPrice { get; set; }
+
+
     }
 }

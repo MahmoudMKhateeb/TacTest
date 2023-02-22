@@ -98,51 +98,51 @@ namespace TACHYON.Routs.RoutSteps
                 .PageBy(input);
 
             var routSteps = from o in pagedAndFilteredRoutSteps.ToList()
-                //join o1 in _lookup_cityRepository.GetAll() on o.SourceRoutPointFk.FacilityFk.CityId equals o1.Id into j1
-                //from s1 in j1.DefaultIfEmpty()
+                                //join o1 in _lookup_cityRepository.GetAll() on o.SourceRoutPointFk.FacilityFk.CityId equals o1.Id into j1
+                                //from s1 in j1.DefaultIfEmpty()
 
-                //join o2 in _lookup_cityRepository.GetAll() on o.DestinationRoutPointFk.FacilityFk.CityId equals o2.Id into j2
-                //from s2 in j2.DefaultIfEmpty()
+                                //join o2 in _lookup_cityRepository.GetAll() on o.DestinationRoutPointFk.FacilityFk.CityId equals o2.Id into j2
+                                //from s2 in j2.DefaultIfEmpty()
 
-                //join o4 in _lookup_trucksTypeRepository.GetAll() on o.TrucksTypeId equals o4.Id into j4
-                //from s4 in j4.DefaultIfEmpty()
+                                //join o4 in _lookup_trucksTypeRepository.GetAll() on o.TrucksTypeId equals o4.Id into j4
+                                //from s4 in j4.DefaultIfEmpty()
 
-                // join o5 in _lookup_trailerTypeRepository.GetAll() on o.TrailerTypeId equals o5.Id into j5
-                // from s5 in j5.DefaultIfEmpty()
-                select new GetRoutStepForViewOutput()
-                {
-                    //RoutStep = new RoutStepDto
-                    //{
-                    //    DisplayName = o.DisplayName,
-                    //    Order = o.Order,
-                    //    Id = o.Id
-                    //},
-                    RoutStep = ObjectMapper.Map<RoutStepDto>(o),
-                    SourceRoutPointDto = new GetRoutPointForViewOutput
-                    {
-                        //PickingTypeDisplayName = o.SourceRoutPointFk.PickingTypeFk?.DisplayName,
-                        RoutPointDto = ObjectMapper.Map<RoutPointDto>(o.SourceRoutPointFk),
-                        //RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(o.SourceRoutPointFk.RoutPointGoodsDetails),
-                        facilityDto = new GetFacilityForViewOutput
-                        {
-                            Facility = ObjectMapper.Map<FacilityDto>(o.SourceRoutPointFk.FacilityFk),
-                            CityDisplayName = o.SourceRoutPointFk.FacilityFk.CityFk.DisplayName,
-                            FacilityName = o.SourceRoutPointFk.FacilityFk.Name
-                        }
-                    },
-                    DestinationRoutPointDto = new GetRoutPointForViewOutput
-                    {
-                        //PickingTypeDisplayName = o.DestinationRoutPointFk.PickingTypeFk?.DisplayName,
-                        RoutPointDto = ObjectMapper.Map<RoutPointDto>(o.DestinationRoutPointFk),
-                        // RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(o.DestinationRoutPointFk.RoutPointGoodsDetails),
-                        facilityDto = new GetFacilityForViewOutput
-                        {
-                            Facility = ObjectMapper.Map<FacilityDto>(o.SourceRoutPointFk.FacilityFk),
-                            CityDisplayName = o.DestinationRoutPointFk.FacilityFk.CityFk.DisplayName,
-                            FacilityName = o.DestinationRoutPointFk.FacilityFk.Name
-                        }
-                    }
-                };
+                                // join o5 in _lookup_trailerTypeRepository.GetAll() on o.TrailerTypeId equals o5.Id into j5
+                                // from s5 in j5.DefaultIfEmpty()
+                            select new GetRoutStepForViewOutput()
+                            {
+                                //RoutStep = new RoutStepDto
+                                //{
+                                //    DisplayName = o.DisplayName,
+                                //    Order = o.Order,
+                                //    Id = o.Id
+                                //},
+                                RoutStep = ObjectMapper.Map<RoutStepDto>(o),
+                                SourceRoutPointDto = new GetRoutPointForViewOutput
+                                {
+                                    //PickingTypeDisplayName = o.SourceRoutPointFk.PickingTypeFk?.DisplayName,
+                                    RoutPointDto = ObjectMapper.Map<RoutPointDto>(o.SourceRoutPointFk),
+                                    //RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(o.SourceRoutPointFk.RoutPointGoodsDetails),
+                                    facilityDto = new GetFacilityForViewOutput
+                                    {
+                                        Facility = ObjectMapper.Map<FacilityDto>(o.SourceRoutPointFk.FacilityFk),
+                                        CityDisplayName = o.SourceRoutPointFk.FacilityFk.CityFk.DisplayName,
+                                        FacilityName = o.SourceRoutPointFk.FacilityFk.Name
+                                    }
+                                },
+                                DestinationRoutPointDto = new GetRoutPointForViewOutput
+                                {
+                                    //PickingTypeDisplayName = o.DestinationRoutPointFk.PickingTypeFk?.DisplayName,
+                                    RoutPointDto = ObjectMapper.Map<RoutPointDto>(o.DestinationRoutPointFk),
+                                    // RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(o.DestinationRoutPointFk.RoutPointGoodsDetails),
+                                    facilityDto = new GetFacilityForViewOutput
+                                    {
+                                        Facility = ObjectMapper.Map<FacilityDto>(o.SourceRoutPointFk.FacilityFk),
+                                        CityDisplayName = o.DestinationRoutPointFk.FacilityFk.CityFk.DisplayName,
+                                        FacilityName = o.DestinationRoutPointFk.FacilityFk.Name
+                                    }
+                                }
+                            };
 
             var totalCount = await filteredRoutSteps.CountAsync();
 
@@ -378,7 +378,10 @@ namespace TACHYON.Routs.RoutSteps
                 .WhereIf(shipperId.HasValue, x => x.TenantId == shipperId.Value)
                 .Select(x => new FacilityForDropdownDto
                 {
-                    Id = x.Id, DisplayName = x.Name, Long = x.Location.X, Lat = x.Location.Y
+                    Id = x.Id,
+                    DisplayName = x.Name,
+                    Long = x.Location.X,
+                    Lat = x.Location.Y
                 }).ToListAsync();
         }
 
@@ -387,8 +390,8 @@ namespace TACHYON.Routs.RoutSteps
             ShippingRequest shippingRequest;
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
-                shippingRequest = await _shippingRequestRepository.GetAll().Include(y=>y.ShippingRequestDestinationCities).FirstOrDefaultAsync(x=>x.Id == shippingRequestId);
-                var destinationCities = shippingRequest.ShippingRequestDestinationCities.Select(y=>y.CityId).ToList();
+                shippingRequest = await _shippingRequestRepository.GetAll().Include(y => y.ShippingRequestDestinationCities).FirstOrDefaultAsync(x => x.Id == shippingRequestId);
+                var destinationCities = shippingRequest.ShippingRequestDestinationCities.Select(y => y.CityId).ToList();
                 var query = _lookup_FacilityRepository
                 .GetAll()
                 .AsNoTracking()
@@ -399,7 +402,7 @@ namespace TACHYON.Routs.RoutSteps
                 var result = await query.Select(x => new FacilityForDropdownDto
                 {
                     Id = x.Id,
-                    DisplayName = x.Name,
+                    DisplayName = !string.IsNullOrEmpty(x.Name) ?x.Name :x.Address,
                     Long = x.Location.X,
                     Lat = x.Location.Y,
                     CityId = x.CityId
@@ -414,13 +417,35 @@ namespace TACHYON.Routs.RoutSteps
 
         }
 
+
+        public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesForDirectTrip()
+        {
+            return await _lookup_FacilityRepository
+                .GetAll()
+                .Select
+                (
+                    x => new FacilityForDropdownDto
+                    {
+                        Id = x.Id,
+                        DisplayName = x.Name,
+                        Long = x.Location.X,
+                        Lat = x.Location.Y,
+                        CityId = x.CityId
+                    }
+                ).ToListAsync();
+        }
+
+
         public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesByCityIdForDropdown(long cityId)
         {
             return await _lookup_FacilityRepository.GetAll()
                 .Where(x => x.CityId == cityId)
                 .Select(x => new FacilityForDropdownDto
                 {
-                    Id = x.Id, DisplayName = x.Name, Long = x.Location.X, Lat = x.Location.Y
+                    Id = x.Id,
+                    DisplayName = x.Name,
+                    Long = x.Location.X,
+                    Lat = x.Location.Y
                 }).ToListAsync();
         }
 

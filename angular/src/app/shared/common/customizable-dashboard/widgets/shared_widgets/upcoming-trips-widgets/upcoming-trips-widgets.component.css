@@ -1,0 +1,53 @@
+::ng-deep [dir='rtl'] .week-day-btn {
+  font-size: 0.767rem !important;
+}
+
+.month-section {
+  margin: 0 1px 1px 0;
+  padding: 12px 15px 15.8px 13px;
+  border-radius: 5px;
+  background-color: #f1eef6;
+}
+
+.month-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000;
+}
+
+.upcoming-trips {
+  padding: 7px 9px;
+  border-radius: 7px;
+  background-color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  color: #dc2434;
+}
+
+.week-day-btn {
+  width: 34px;
+  font-size: 0.534vw !important;
+  background: transparent;
+  padding: 0.1rem;
+  border: none;
+  color: #757575;
+}
+.week-day-btn .week-day-number {
+  font-size: 1vw !important;
+  font-weight: 800 !important;
+  color: #000 !important;
+}
+
+.week-day-btn.btn.btn-default:hover:not(.btn-text):not(:disabled):not(.disabled) .week-day-number,
+.week-day-btn.btn.btn-default:focus:not(.btn-text) .week-day-number,
+.week-day-btn.btn.btn-default.focus:not(.btn-text) .week-day-number {
+  color: #fff !important;
+}
+
+.week-day-btn.btn.btn-default:hover:not(.btn-text):not(:disabled):not(.disabled),
+.week-day-btn.btn.btn-default:focus:not(.btn-text),
+.week-day-btn.btn.btn-default.focus:not(.btn-text),
+.week-day-btn:active {
+  background: #dc2434 !important;
+  color: #fff !important;
+}

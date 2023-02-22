@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en">
 	<texts>
     <text name="Actors">Actors</text>
@@ -3178,6 +3178,11 @@
     <text name="viewAttendance">View attendance</text>
     <text name="AllNumberOfDays">All number of days</text>
     <text name="PricePerDay">Price per day</text>
+    <text name="ConfirmDelivery">Confirm Delivery</text>
+    <text name="DropOffConfirmDelivery">Confirm drop-off delivery</text>
+    <text name="YouMustUpdateTheVersionOfTheApplication">You Must Update The Version Of The Application</text>
+    <text name="UpdateTheApplication">Update The Application</text>
+    <text name="ChangeStatus">Change Status</text>
     <text name="ClickRowToViewActions">Select a row by clicking on it to view actions if available</text>
     <text name="ContinueTripAndResolveLater">Continue trip and resolve later</text>
     <text name="UpdateResolve">Update Resolve</text>
@@ -3187,5 +3192,15 @@
     <text name="TripImpact">Trip Impact</text>
     <text name="CanNotContinueTripTip">if trip impact is enabled the trip will stopped once has accident with this reason</text>
     <text name="TripImpactEnabled">Trip Impact Enabled</text>
+    <text name="CommissionPerTrip">Commission Per Trip</text>
+    <text name="SelectTheMatchingPricePackages">Select The Matching Price Packages</text>
+    <text name="AppointmentNumber">Appointment number</text>
+    <text name="AppointmentDetails">Appointment details</text>
+    <text name="RentedShippingRequestReference">Rented shipping request reference</text>
+    <text name="NewWaybill">New waybill</text>
+    <text name="directShipments">Direct shipments</text>
+    <text name="DeliveryNote">Delivery note</text>
+    <text name="SealNumber">Seal number</text>
+
 	</texts>
 </localizationDictionary>

@@ -6,7 +6,7 @@ namespace TACHYON.Goods.Dtos
 {
     public interface ICreateOrEditGoodsDetailDtoBase
     {
-        int Amount { get; set; }
+        int? Amount { get; set; }
         double Weight { get; set; }
         long RoutPointId { get; set; }
         string Description { get; set; }
@@ -15,7 +15,7 @@ namespace TACHYON.Goods.Dtos
         string DangerousGoodsCode { get; set; }
         int? DangerousGoodTypeId { get; set; }
         int? GoodCategoryId { get; set; }
-        int UnitOfMeasureId { get; set; }
+        int? UnitOfMeasureId { get; set; }
         string Exception { get; set; }
 
     }

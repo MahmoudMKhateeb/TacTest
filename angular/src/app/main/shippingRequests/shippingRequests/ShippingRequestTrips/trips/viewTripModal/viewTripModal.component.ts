@@ -4,18 +4,20 @@ import {
   AssignDriverAndTruckToShippmentByCarrierInput,
   CreateOrEditShippingRequestTripVasDto,
   DedicatedShippingRequestsServiceProxy,
+  GetAllDedicatedDriversOrTrucksForDropDownDto,
   GetShippingRequestForViewOutput,
   RoutStepsServiceProxy,
   SelectItemDto,
   ShippingRequestDriverServiceProxy,
+  ShippingRequestFlag,
   ShippingRequestRouteType,
   ShippingRequestsTripForViewDto,
   ShippingRequestsTripServiceProxy,
+  ShippingRequestTripFlag,
   ShippingRequestTripStatus,
   TrucksServiceProxy,
   UpdateExpectedDeliveryTimeInput,
   WaybillsServiceProxy,
-  GetAllDedicatedDriversOrTrucksForDropDownDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -50,7 +52,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   allTrucks: SelectItemDto[] = [];
   saving = false;
   loading = true;
-  currentTripId: number;
+  //currentTripId: number;
   wayBillIsDownloading = false;
   isResetTripLoading = false;
   private TruckTypeId: number;
@@ -66,6 +68,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   allDedicatedTrucks: GetAllDedicatedDriversOrTrucksForDropDownDto[];
   routeTypes: any[] = [];
   RouteTypesEnum = ShippingRequestRouteType;
+  ShippingRequestFlagEnum = ShippingRequestFlag;
+  ShippingRequestTripFlagEnum = ShippingRequestTripFlag;
+  ShippingRequestTripFlagArray = [];
 
   constructor(
     injector: Injector,
@@ -77,7 +82,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     private _trucksServiceProxy: TrucksServiceProxy,
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
     private _PointsService: PointsService,
-    private _TripService: TripService,
+    public _TripService: TripService,
     private _Router: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private enumToArray: EnumToArrayPipe
@@ -86,9 +91,9 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   }
 
   ngOnInit() {
-    this._TripService.currentShippingRequest.subscribe((res) => {
-      this.TruckTypeId = res?.truckTypeId;
-    });
+    this.TruckTypeId = this._TripService.GetShippingRequestForViewOutput?.truckTypeId;
+    this.activeTripId = this._Router.snapshot.queryParams['tripId'];
+    this.ShippingRequestTripFlagArray = this.enumToArray.transform(ShippingRequestTripFlag);
   }
 
   ngAfterViewInit() {
@@ -99,17 +104,19 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
 
   show(id, shippingRequestForView?: GetShippingRequestForViewOutput): void {
     this.shippingRequestForView = shippingRequestForView;
-    if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === 1) {
+    if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Dedicated) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
       this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
     }
     this.loading = true;
-    this.currentTripId = id;
+
     //update the active trip id in TripsService
-    this._TripService.updateActiveTripId(id);
-    this.getAllTrucks(this.TruckTypeId);
-    this.getAllDrivers();
+    this._TripService.activeTripId = id;
+    if (this.shippingRequestForView) {
+      this.getAllTrucks(this.TruckTypeId);
+      this.getAllDrivers();
+    }
 
     this._shippingRequestTripsService
       .getShippingRequestTripForView(id)
@@ -206,7 +213,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    */
   assignDriverandTruck() {
     this.saving = true;
-    this.assignDriverAndTruck.id = this.currentTripId;
+    this.assignDriverAndTruck.id = this._TripService.activeTripId;
     this._shippingRequestTripsService
       .assignDriverAndTruckToShippmentByCarrier(this.assignDriverAndTruck)
       .pipe(
@@ -246,14 +253,14 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * update the expected Delivery Time Of the Trip
    */
   updateTripExpectedDeliveryTime() {
-    if (!isNotNullOrUndefined(this.currentTripId)) {
+    if (!isNotNullOrUndefined(this._TripService.activeTripId)) {
       return;
     }
     if (this.expectedDeliveryTime === this.originalExpectedDeliveryTime) return;
     // console.log('Trip Expected Delivery time Was Updated');
     this.expectedDeliveryTimeLoading = true;
     let body = new UpdateExpectedDeliveryTimeInput();
-    body.id = this.currentTripId;
+    body.id = this._TripService.activeTripId;
     body.expectedDeliveryTime = this.expectedDeliveryTime;
     this._shippingRequestTripsService.updateExpectedDeliveryTimeForTrip(body).subscribe((res) => {
       this.expectedDeliveryTimeLoading = false;

@@ -67,7 +67,13 @@
                   >
                     {{ item.statusTitle | localize }}
                   </div>
-                  <div *ngIf="item.isSass" class="ribbon-target bg-info" style="top: -1rem" [ngClass]="{ left: !isRtl, right: isRtl }">
+                  <div
+                    *ngIf="item.isSass"
+                    class="ribbon-target bg-info"
+                    [class.for-dedicated]="item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
+                    style="top: -1rem"
+                    [ngClass]="{ left: !isRtl, right: isRtl }"
+                  >
                     {{ 'SAASTrip' | localize }}
                   </div>
                 </div>
@@ -141,6 +147,17 @@
                           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                             <button ngbDropdownItem *ngIf="item.driverStatus == DriverStatusEnum.None" (click)="accept(item)">
                               {{ l('Accept') }}
+                            </button>
+                            <button
+                              ngbDropdownItem
+                              *ngIf="
+                                item.tripFlag === TripFlag.HomeDelivery &&
+                                item.driverStatus == DriverStatusEnum.Accepted &&
+                                item.status === ShippingRequestTripStatusEnum.New
+                              "
+                              (click)="start(item)"
+                            >
+                              {{ l('Start') }}
                             </button>
                             <button ngbDropdownItem *ngIf="canCreateAccident(item)" (click)="TripAccidentModal.show(item.id, null)">
                               {{ l('CreateAccident') }}

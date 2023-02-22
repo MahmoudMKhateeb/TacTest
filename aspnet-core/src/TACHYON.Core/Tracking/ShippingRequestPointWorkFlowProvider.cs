@@ -19,6 +19,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
+using TACHYON.Configuration;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Dto;
@@ -28,6 +29,7 @@ using TACHYON.Integration.BayanIntegration.V3;
 using TACHYON.Invoices;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
+using TACHYON.Offers;
 using TACHYON.Penalties;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Base;
@@ -76,6 +78,7 @@ namespace TACHYON.Tracking
         private readonly PenaltyManager _penaltyManager;
         private readonly BayanIntegrationManagerV3 _banIntegrationManagerV3;
         private readonly IRepository<User, long> _userRepository;
+
         public IAbpSession AbpSession { set; get; }
 
 
@@ -98,7 +101,7 @@ namespace TACHYON.Tracking
             IWebUrlService webUrlService,
             IPermissionChecker permissionChecker,
             IEntityChangeSetReasonProvider reasonProvider,
-            IRepository<ShippingRequest, long> shippingRequestRepository, 
+            IRepository<ShippingRequest, long> shippingRequestRepository,
             PenaltyManager penaltyManager,
             BayanIntegrationManagerV3 banIntegrationManagerV3,
             NormalPricePackageManager normalPricePackageManager,
@@ -127,7 +130,7 @@ namespace TACHYON.Tracking
                 // Pick up workflow 
                 new WorkFlow<PointTransactionArgs, RoutePointStatus>
                 {
-                    Version = 0,
+                    Version = WorkflowVersionConst.PickupPointWorkflowVersion,
                     Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
                     {
                         new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
@@ -175,7 +178,7 @@ namespace TACHYON.Tracking
                 // Drop Off workflow without uplode delivery note
                 new WorkFlow<PointTransactionArgs, RoutePointStatus>
                 {
-                    Version = 1,
+                    Version = WorkflowVersionConst.DropOffWithoutDeliveryNotePointWorkflowVersion,
                     Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
                     {
                         new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
@@ -273,7 +276,7 @@ namespace TACHYON.Tracking
                 // Drop Off workflow with uplode delivery note
                 new WorkFlow<PointTransactionArgs, RoutePointStatus>
                 {
-                    Version = 2,
+                    Version = WorkflowVersionConst.DropOffWithDeliveryNotePointWorkflowVersion,
                     Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
                     {
                         new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
@@ -378,6 +381,151 @@ namespace TACHYON.Tracking
                         },
                     },
                 },
+                new WorkFlow<PointTransactionArgs, RoutePointStatus>()
+                {
+                    Version = WorkflowVersionConst.PickupHomeDeliveryWorkflowVersion,
+                    Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
+                    {
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>()
+                        {
+                            Action = WorkFlowActionConst.PickupConfirmDelivery,
+                            FromStatus = RoutePointStatus.StandBy,
+                            ToStatus = RoutePointStatus.FinishLoading,
+                            Func = PickupConfirmDelivery,
+                            Name = "ConfirmPickupDelivery",
+                            Permissions = new List<string>(),
+                            Features = new List<string>()
+                        },
+                    }
+                },
+                new WorkFlow<PointTransactionArgs, RoutePointStatus>()
+                {
+                    Version = WorkflowVersionConst.DropOffHomeDeliveryWorkflowVersion,
+                    Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
+                    {
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>()
+                        {
+                            Action = WorkFlowActionConst.DropOffConfirmDelivery,
+                            FromStatus = RoutePointStatus.StandBy,
+                            ToStatus = RoutePointStatus.ConfirmDelivery,
+                            Func = DropOffConfirmDelivery,
+                            Name = "ConfirmDropOffDelivery",
+                            Permissions = new List<string>(),
+                            Features = new List<string>()
+                        }
+                    }
+                },
+                new WorkFlow<PointTransactionArgs, RoutePointStatus>()
+                {
+                    Version = WorkflowVersionConst.DropOffHomeDeliveryWithPodWorkflowVersion,
+                    Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
+                    {
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>()
+                        {
+                            Action = WorkFlowActionConst.DropOffConfirmDelivery,
+                            FromStatus = RoutePointStatus.StandBy,
+                            ToStatus = RoutePointStatus.ConfirmDelivery,
+                            Func = DropOffConfirmDelivery,
+                            Name = "ConfirmDropOffDelivery",
+                            Permissions = new List<string>(),
+                            Features = new List<string>()
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.FinishOffLoadShipmentDeliveryConfirmation,
+                            FromStatus = RoutePointStatus.ConfirmDelivery,
+                            ToStatus = RoutePointStatus.DeliveryConfirmation,
+                            Func = DeliveryConfirmation,
+                            Name = "UploadDeliveryConfirmation",
+                            Permissions = new List<string>(),
+                            Features = new List<string>(),
+                        },
+                    }
+                },
+                new WorkFlow<PointTransactionArgs, RoutePointStatus>()
+                {
+                    Version = WorkflowVersionConst.DropOffHomeDeliveryWithReceiverCodeWorkflowVersion,
+                    Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
+                    {
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>()
+                        {
+                            Action = WorkFlowActionConst.DropOffConfirmDelivery,
+                            FromStatus = RoutePointStatus.StandBy,
+                            ToStatus = RoutePointStatus.ConfirmDelivery,
+                            Func = DropOffConfirmDelivery,
+                            Name = "ConfirmDropOffDelivery",
+                            Permissions = new List<string>(),
+                            Features = new List<string>()
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.ReceiverConfirmed,
+                            FromStatus = RoutePointStatus.ConfirmDelivery,
+                            ToStatus = RoutePointStatus.ReceiverConfirmed,
+                            Func = ReceiverConfirmed,
+                            Name = "EnterReceiverCode",
+                            Permissions = new List<string>(),
+                            Features = new List<string>(),
+                        },
+                    }
+                },
+                new WorkFlow<PointTransactionArgs, RoutePointStatus>()
+                {
+                    Version = WorkflowVersionConst.DropOffHomeDeliveryWithPodAndReceiverCodeWorkflowVersion,
+                    Transactions = new List<WorkflowTransaction<PointTransactionArgs, RoutePointStatus>>
+                    {
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>()
+                        {
+                            Action = WorkFlowActionConst.DropOffConfirmDelivery,
+                            FromStatus = RoutePointStatus.StandBy,
+                            ToStatus = RoutePointStatus.ConfirmDelivery,
+                            Func = DropOffConfirmDelivery,
+                            Name = "ConfirmDropOffDelivery",
+                            Permissions = new List<string>(),
+                            Features = new List<string>()
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.ReceiverConfirmed,
+                            FromStatus = RoutePointStatus.ConfirmDelivery,
+                            ToStatus = RoutePointStatus.ReceiverConfirmed,
+                            Func = ReceiverConfirmed,
+                            Name = "EnterReceiverCode",
+                            Permissions = new List<string>(),
+                            Features = new List<string>(),
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.FinishOffLoadShipmentDeliveryConfirmation,
+                            FromStatus = RoutePointStatus.ConfirmDelivery,
+                            ToStatus = RoutePointStatus.DeliveryConfirmation,
+                            Func = DeliveryConfirmation,
+                            Name = "UploadDeliveryConfirmation",
+                            Permissions = new List<string>(),
+                            Features = new List<string>(),
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.DeliveryConfirmation,
+                            FromStatus = RoutePointStatus.ReceiverConfirmed,
+                            ToStatus = RoutePointStatus.DeliveryConfirmation,
+                            Func = DeliveryConfirmation,
+                            Name = "UploadDeliveryConfirmation",
+                            Permissions = new List<string>(),
+                            Features = new List<string>(),
+                        },
+                        new WorkflowTransaction<PointTransactionArgs, RoutePointStatus>
+                        {
+                            Action = WorkFlowActionConst.DeliveryConfirmationReceiverConfirmed,
+                            FromStatus = RoutePointStatus.DeliveryConfirmation,
+                            ToStatus = RoutePointStatus.ReceiverConfirmed,
+                            Func = ReceiverConfirmed,
+                            Name = "EnterReceiverCode",
+                            Permissions = new List<string>(),
+                            Features = new List<string>(),
+                        }
+                    }
+                }
             };
             _penaltyManager = penaltyManager;
             _normalPricePackageManager = normalPricePackageManager;
@@ -445,7 +593,6 @@ namespace TACHYON.Tracking
         public async Task Start(ShippingRequestTripDriverStartInputDto Input)
         {
             DisableTenancyFilters();
-            var currentUser = await GetCurrentUserAsync();
 
             var trip = await CheckIfCanStartTrip(Input.Id);
             if (trip == null) throw new UserFriendlyException(L("YouCannotStartWithTheTripSelected"));
@@ -466,6 +613,12 @@ namespace TACHYON.Tracking
             trip.StartTripDate = Clock.Now;
 
             await StartTransition(routeStart, new Point(Input.lng, Input.lat));
+
+            if (trip.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
+            {
+                await Invoke(new PointTransactionArgs() { PointId = routeStart.Id, ForceDeliverModeEnabled = true },
+                    WorkFlowActionConst.PickupConfirmDelivery);
+            }
             // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
         }
 
@@ -476,7 +629,7 @@ namespace TACHYON.Tracking
             var point = args.ForceDeliverModeEnabled
                 ? await _routPointRepository.FirstOrDefaultAsync(args.PointId)
                 : await GetPointForInvoke(args.PointId);
-            
+
             if (point == null) throw new UserFriendlyException(L("YouCanNotChangeTheStatus"));
 
             var transaction = CheckIfTransactionIsExist(point.WorkFlowVersion, point.Status, action);
@@ -508,7 +661,7 @@ namespace TACHYON.Tracking
             //    if (minutes < 1)
             //        throw new UserFriendlyException(L("YouCanNotChangeTheStatusMultipleTimes"));
             //}
-            
+
         }
 
         public async Task GoToNextLocation(long nextPointId, bool forceMode = false)
@@ -597,125 +750,125 @@ namespace TACHYON.Tracking
 
             return (true, null);
         }
-       
+
         public void ForceDeliverTrip(ImportTripTransactionFromExcelDto importTripDto)
         {
-           var currentTrip = _shippingRequestTripRepository.GetAll().FirstOrDefault(x => x.WaybillNumber == importTripDto.WaybillNumber);
+            var currentTrip = _shippingRequestTripRepository.GetAll().FirstOrDefault(x => x.WaybillNumber == importTripDto.WaybillNumber);
 
-           #region Deliver Trip / MasterWaybill
+            #region Deliver Trip / MasterWaybill
 
-           if (currentTrip != null)
-           {
-               AsyncHelper.RunSync(() => Accepted(currentTrip.Id));
-               CurrentUnitOfWork.SaveChanges();
-               AsyncHelper.RunSync(()=> Start(new ShippingRequestTripDriverStartInputDto(){Id = currentTrip.Id,ForceDeliverModeEnabled = true}));
-               CurrentUnitOfWork.SaveChanges();
-               CompleteTripPoints();
-               return;
-           }
+            if (currentTrip != null)
+            {
+                AsyncHelper.RunSync(() => Accepted(currentTrip.Id));
+                CurrentUnitOfWork.SaveChanges();
+                AsyncHelper.RunSync(() => Start(new ShippingRequestTripDriverStartInputDto() { Id = currentTrip.Id, ForceDeliverModeEnabled = true }));
+                CurrentUnitOfWork.SaveChanges();
+                CompleteTripPoints();
+                return;
+            }
 
-           #endregion
+            #endregion
 
-           #region Deliver Point / SubWaybill
+            #region Deliver Point / SubWaybill
 
-           var point = _routPointRepository.GetAllIncluding(x=> x.RoutPointStatusTransitions)
-               .Single(x => x.WaybillNumber == importTripDto.WaybillNumber);
+            var point = _routPointRepository.GetAllIncluding(x => x.RoutPointStatusTransitions)
+                .Single(x => x.WaybillNumber == importTripDto.WaybillNumber);
 
-           currentTrip = _shippingRequestTripRepository.FirstOrDefault(point.ShippingRequestTripId);
-           var isPickupPointCompleted = _routPointRepository.GetAll()
-               .Any(x => x.ShippingRequestTripId == point.ShippingRequestTripId &&
-                         x.PickingType == PickingType.Pickup && x.Status == RoutePointStatus.FinishLoading);
+            currentTrip = _shippingRequestTripRepository.FirstOrDefault(point.ShippingRequestTripId);
+            var isPickupPointCompleted = _routPointRepository.GetAll()
+                .Any(x => x.ShippingRequestTripId == point.ShippingRequestTripId &&
+                          x.PickingType == PickingType.Pickup && x.Status == RoutePointStatus.FinishLoading);
 
-           if (!isPickupPointCompleted)
-           {
+            if (!isPickupPointCompleted)
+            {
 
-               var isTripStarted = currentTrip.Status == ShippingRequestTripStatus.InTransit;
-               
-               if (!isTripStarted)
-               {
-                   var isTripAccepted = currentTrip.DriverStatus == ShippingRequestTripDriverStatus.Accepted;
-                   
-                   if (!isTripAccepted)
-                   {
-                       AsyncHelper.RunSync(() => Accepted(point.ShippingRequestTripId));
-                       CurrentUnitOfWork.SaveChanges();
-                   }
-                   AsyncHelper.RunSync(()=> Start(new ShippingRequestTripDriverStartInputDto(){Id = point.ShippingRequestTripId,ForceDeliverModeEnabled = true}));
-                   CurrentUnitOfWork.SaveChanges();
-               }
-               
-               var pickupPoint = _routPointRepository.GetAllIncluding(x=> x.RoutPointStatusTransitions).Single(x =>
-                   x.ShippingRequestTripId == point.ShippingRequestTripId && x.PickingType == PickingType.Pickup);
-               CompletePoint(pickupPoint);
-           }
-           AsyncHelper.RunSync(()=> GoToNextLocation(point.Id));
-           CurrentUnitOfWork.SaveChanges();
-           CompletePoint(point);
+                var isTripStarted = currentTrip.Status == ShippingRequestTripStatus.InTransit;
 
-           #endregion
+                if (!isTripStarted)
+                {
+                    var isTripAccepted = currentTrip.DriverStatus == ShippingRequestTripDriverStatus.Accepted;
 
-           void CompleteTripPoints()
-           {
-               var points =  _routPointRepository.GetAllIncluding(x=> x.RoutPointStatusTransitions)
-                   .OrderBy(x=> x.PickingType)
-                   .Where(x => x.ShippingRequestTripId == currentTrip.Id).ToArray();
-                
-               for (int i = 0; i < points.Length; i++)
-               {
-                   if (i > 0)
-                   {
-                       AsyncHelper.RunSync(()=> GoToNextLocation(points[i].Id));
-                       CurrentUnitOfWork.SaveChanges();
-                   }
-                    
-                   CompletePoint(points[i]);
-               }
+                    if (!isTripAccepted)
+                    {
+                        AsyncHelper.RunSync(() => Accepted(point.ShippingRequestTripId));
+                        CurrentUnitOfWork.SaveChanges();
+                    }
+                    AsyncHelper.RunSync(() => Start(new ShippingRequestTripDriverStartInputDto() { Id = point.ShippingRequestTripId, ForceDeliverModeEnabled = true }));
+                    CurrentUnitOfWork.SaveChanges();
+                }
 
-           }
+                var pickupPoint = _routPointRepository.GetAllIncluding(x => x.RoutPointStatusTransitions).Single(x =>
+                    x.ShippingRequestTripId == point.ShippingRequestTripId && x.PickingType == PickingType.Pickup);
+                CompletePoint(pickupPoint);
+            }
+            AsyncHelper.RunSync(() => GoToNextLocation(point.Id));
+            CurrentUnitOfWork.SaveChanges();
+            CompletePoint(point);
 
-           void CompletePoint(RoutPoint routPoint)
-           {
-               List<DateTime> pointDates = routPoint.PickingType switch
-               {
-                   PickingType.Pickup => importTripDto.TransactionsDates.Take(4).ToList(),
-                   PickingType.Dropoff when currentTrip.NeedsDeliveryNote => 
-                       importTripDto.TransactionsDates.Skip(4).Take(4).ToList(),
-                   _ => importTripDto.TransactionsDates.Skip(4).ToList()
-               };
+            #endregion
 
-               // if point transactions contains upload delivery note 
-               // we need to skip upload delivery note transaction
-               // (see skipped transaction ... if (deliveryNote) continue)
+            void CompleteTripPoints()
+            {
+                var points = _routPointRepository.GetAllIncluding(x => x.RoutPointStatusTransitions)
+                    .OrderBy(x => x.PickingType)
+                    .Where(x => x.ShippingRequestTripId == currentTrip.Id).ToArray();
 
-               for (int i = 0; i < pointDates.Count; i++)
-               {
-                   List<PointTransactionDto> availableTransactions = GetTransactionsByStatus(
-                       routPoint.WorkFlowVersion,
-                       routPoint.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
-                       routPoint.Status);
-                   PointTransactionDto transaction = availableTransactions?.FirstOrDefault();
-                   if (transaction == null || transaction.Action.Contains("DeliveryConfirmation") 
-                                           || transaction.Action.Contains("UplodeDeliveryNote")) break;
+                for (int i = 0; i < points.Length; i++)
+                {
+                    if (i > 0)
+                    {
+                        AsyncHelper.RunSync(() => GoToNextLocation(points[i].Id));
+                        CurrentUnitOfWork.SaveChanges();
+                    }
 
-                   AsyncHelper.RunSync((() => Invoke(new PointTransactionArgs {PointId = routPoint.Id, Code = routPoint.Code,ForceDeliverModeEnabled = true},
-                       transaction.Action)));
-                   CurrentUnitOfWork.SaveChanges();
-               }
+                    CompletePoint(points[i]);
+                }
 
-               var pointTransitions = _routPointStatusTransitionRepository.GetAll()
-                   .Where(x => x.PointId == routPoint.Id && !x.IsReset).ToList();
+            }
 
-               for (var i = 0; i < pointDates.Count; i++)
-               {
-                   var realIndex = routPoint.PickingType == PickingType.Pickup ? i + 1 : i;
-                   pointTransitions[realIndex].CreationTime = pointDates[i];
-               }
-                    
+            void CompletePoint(RoutPoint routPoint)
+            {
+                List<DateTime> pointDates = routPoint.PickingType switch
+                {
+                    PickingType.Pickup => importTripDto.TransactionsDates.Take(4).ToList(),
+                    PickingType.Dropoff when currentTrip.NeedsDeliveryNote =>
+                        importTripDto.TransactionsDates.Skip(4).Take(4).ToList(),
+                    _ => importTripDto.TransactionsDates.Skip(4).ToList()
+                };
 
-           }
-            
+                // if point transactions contains upload delivery note 
+                // we need to skip upload delivery note transaction
+                // (see skipped transaction ... if (deliveryNote) continue)
+
+                for (int i = 0; i < pointDates.Count; i++)
+                {
+                    List<PointTransactionDto> availableTransactions = GetTransactionsByStatus(
+                        routPoint.WorkFlowVersion,
+                        routPoint.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
+                        routPoint.Status);
+                    PointTransactionDto transaction = availableTransactions?.FirstOrDefault();
+                    if (transaction == null || transaction.Action.Contains("DeliveryConfirmation")
+                                            || transaction.Action.Contains("UplodeDeliveryNote")) break;
+
+                    AsyncHelper.RunSync((() => Invoke(new PointTransactionArgs { PointId = routPoint.Id, Code = routPoint.Code, ForceDeliverModeEnabled = true },
+                        transaction.Action)));
+                    CurrentUnitOfWork.SaveChanges();
+                }
+
+                var pointTransitions = _routPointStatusTransitionRepository.GetAll()
+                    .Where(x => x.PointId == routPoint.Id && !x.IsReset).ToList();
+
+                for (var i = 0; i < pointDates.Count; i++)
+                {
+                    var realIndex = routPoint.PickingType == PickingType.Pickup ? i + 1 : i;
+                    pointTransitions[realIndex].CreationTime = pointDates[i];
+                }
+
+
+            }
+
         }
-        
+
         #endregion
 
         #region Transactions Functions
@@ -740,7 +893,11 @@ namespace TACHYON.Tracking
                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
-            await _penaltyManager.NotficationBeforeViolateDetention(point.ShippingRequestTripFk.ShippingRequestFk.TenantId, args.PointId);
+            if (point.ShippingRequestTripFk.ShippingRequestFk != null)
+            {
+                await _penaltyManager.NotficationBeforeViolateDetention(point.ShippingRequestTripFk.ShippingRequestFk.TenantId, args.PointId);
+            }
+
             return nameof(RoutPointPickUpStep2);
         }
 
@@ -761,7 +918,7 @@ namespace TACHYON.Tracking
                 .GetAll()
                 .Include(x => x.ShippingRequestTripFk)
                 .ThenInclude(c => c.ShippingRequestFk)
-                .Include(x=> x.FacilityFk)
+                .Include(x => x.FacilityFk)
                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
 
             point.Status = status;
@@ -778,13 +935,17 @@ namespace TACHYON.Tracking
                 .Select(x => x.CreationTime)
                 .FirstOrDefaultAsync();
 
-            await _penaltyManager.ApplyDetentionPenalty(shippingRequest.TenantId,
-                shippingRequest.CarrierTenantId.Value,
-                arrviceTime, point.ShippingRequestTripId,
-                point.FacilityFk.Name,
-                point.ShippingRequestTripFk.WaybillNumber);
+            if (shippingRequest != null)
+            {
+                await _penaltyManager.ApplyDetentionPenalty(shippingRequest.TenantId,
+                    shippingRequest.CarrierTenantId.Value,
+                    arrviceTime, point.ShippingRequestTripId,
+                    point.FacilityFk.Name,
+                    point.ShippingRequestTripFk.WaybillNumber);
+            }
 
-            await SendSmsToReceivers(point.ShippingRequestTripId, point.ShippingRequestTripFk.WaybillNumber, point.ShippingRequestTripFk.ShippingRequestFk.RouteTypeId);
+
+            await SendSmsToReceivers(point.ShippingRequestTripId, point.ShippingRequestTripFk.WaybillNumber, point.ShippingRequestTripFk.ShippingRequestFk?.RouteTypeId ?? point.ShippingRequestTripFk.RouteType);
             return nameof(RoutPointPickUpStep4);
         }
 
@@ -809,7 +970,11 @@ namespace TACHYON.Tracking
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
 
-            await _penaltyManager.NotficationBeforeViolateDetention(point.ShippingRequestTripFk.ShippingRequestFk.TenantId, args.PointId);
+            if (point.ShippingRequestTripFk.ShippingRequestFk != null)
+            {
+                await _penaltyManager.NotficationBeforeViolateDetention(point.ShippingRequestTripFk.ShippingRequestFk.TenantId, args.PointId);
+            }
+
             return nameof(RoutPointDropOffStep2);
         }
 
@@ -830,7 +995,7 @@ namespace TACHYON.Tracking
                .GetAll()
                .Include(x => x.ShippingRequestTripFk)
                .ThenInclude(c => c.ShippingRequestFk)
-               .Include(x=> x.FacilityFk)
+               .Include(x => x.FacilityFk)
                .FirstOrDefaultAsync(x => x.Id == args.PointId);
 
             var shippingRequest = point.ShippingRequestTripFk.ShippingRequestFk;
@@ -861,17 +1026,27 @@ namespace TACHYON.Tracking
                .Select(x => x.CreationTime)
                .FirstOrDefaultAsync();
 
-            await _penaltyManager.ApplyDetentionPenalty(shippingRequest.TenantId,
-                shippingRequest.CarrierTenantId.Value,
-                arrviceTime, point.ShippingRequestTripId,
-                point.FacilityFk.Name,
-                point.ShippingRequestTripFk.WaybillNumber);
-
-            if (point.ShippingRequestTripFk.EndTripDate.HasValue)
-                await _penaltyManager.ApplyNotDeliveringAllDropsPenalty(shippingRequest.CarrierTenantId.Value,
+            if (shippingRequest != null)
+            {
+                await _penaltyManager.ApplyDetentionPenalty
+                (
                     shippingRequest.TenantId,
-                    point.ShippingRequestTripFk.EndTripDate.Value,
-                    point.ShippingRequestTripId);
+                    shippingRequest.CarrierTenantId.Value,
+                    arrviceTime,
+                    point.ShippingRequestTripId,
+                    point.FacilityFk.Name,
+                    point.ShippingRequestTripFk.WaybillNumber
+                );
+
+                if (point.ShippingRequestTripFk.EndTripDate.HasValue)
+                    await _penaltyManager.ApplyNotDeliveringAllDropsPenalty
+                    (
+                        shippingRequest.CarrierTenantId.Value,
+                        shippingRequest.TenantId,
+                        point.ShippingRequestTripFk.EndTripDate.Value,
+                        point.ShippingRequestTripId
+                    );
+            }
 
             await _banIntegrationManagerV3.QueueCloseWaybillJob(point.Id);
 
@@ -914,12 +1089,13 @@ namespace TACHYON.Tracking
             && x.Id != point.Id);
 
             await HandlePointDelivery(args.PointId);
-            
+
             if (allPointsHasDeliveryConfirmation)
             {
                 var trip = await _shippingRequestTripRepository
                     .GetAllIncluding(d => d.ShippingRequestTripVases)
                     .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
+                    .Include(x => x.ShipperTenantFk)
                     .FirstOrDefaultAsync(t => t.Id == point.ShippingRequestTripId);
                 await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
             }
@@ -956,6 +1132,54 @@ namespace TACHYON.Tracking
             await HandlePointDelivery(args.PointId);
 
             return nameof(RoutPointDropOffStep8);
+        }
+
+        private async Task<string> PickupConfirmDelivery(PointTransactionArgs arg)
+        {
+            var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
+                .SingleAsync(x => x.Id == arg.PointId);
+
+            point.Status = RoutePointStatus.FinishLoading;
+            point.ShippingRequestTripFk.RoutePointStatus = RoutePointStatus.FinishLoading;
+            point.IsComplete = true;
+            point.EndTime = Clock.Now;
+            point.ActualPickupOrDeliveryDate = Clock.Now;
+            point.ShippingRequestTripFk.ActualPickupDate = Clock.Now;
+            point.CanGoToNextLocation = true;
+            // no need to check arrival time (there is no penalty here)
+
+            return nameof(RoutPointPickUpStep4);
+        }
+
+
+        private async Task<string> DropOffConfirmDelivery(PointTransactionArgs arg)
+        {
+            var point = await _routPointRepository
+               .GetAllIncluding(x => x.ShippingRequestTripFk)
+               .FirstOrDefaultAsync(x => x.Id == arg.PointId);
+
+            point.Status = RoutePointStatus.ConfirmDelivery;
+            point.ShippingRequestTripFk.RoutePointStatus = RoutePointStatus.ConfirmDelivery;
+            point.ActualPickupOrDeliveryDate = Clock.Now;
+
+            point.CanGoToNextLocation = await _routPointRepository.GetAll().AnyAsync(x =>
+                !x.IsComplete && !x.IsResolve && x.ShippingRequestTripId == point.ShippingRequestTripId);
+
+            var otherPoints = await _routPointRepository.GetAll()
+                .Where(x => x.ShippingRequestTripId == point.ShippingRequestTripId)
+                .Where(x => x.Id != point.Id)
+                .ToListAsync();
+
+            if (otherPoints.All(x => x.ActualPickupOrDeliveryDate.HasValue))
+                point.ShippingRequestTripFk.ActualDeliveryDate = Clock.Now;
+
+            if (otherPoints.All(x => x.IsResolve))
+                point.ShippingRequestTripFk.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
+
+            await HandlePointDelivery(point);
+            await _banIntegrationManagerV3.QueueCloseWaybillJob(point.Id);
+
+            return nameof(RoutPointDropOffStep4);
         }
 
         #endregion
@@ -998,9 +1222,10 @@ namespace TACHYON.Tracking
             var currentUser = await GetCurrentUserAsync();
             var trip = await _shippingRequestTripRepository
                             .GetAllIncluding(o => o.OriginFacilityFk, d => d.DestinationFacilityFk, x => x.ShippingRequestFk, x => x.ShippingRequestTripVases)
-                            .Where(x => x.Id == tripId && x.ShippingRequestFk.CarrierTenantId.HasValue && x.ShippingRequestFk.Status != ShippingRequestStatus.Cancled && x.AssignedDriverUserId.HasValue)
+                            .Where(x => x.Id == tripId)
+                            .Where(x => (x.ShippingRequestFk.CarrierTenantId.HasValue || x.CarrierTenantId.HasValue) && x.ShippingRequestFk.Status != ShippingRequestStatus.Cancled && x.AssignedDriverUserId.HasValue)
                             .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                            .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
+                            .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value || x.CarrierTenantId == currentUser.TenantId.Value)
                             .WhereIf(currentUser.IsDriver, x => x.AssignedDriverUserId == currentUser.Id)
                             .FirstOrDefaultAsync();
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
@@ -1010,11 +1235,46 @@ namespace TACHYON.Tracking
         /// <summary>
         /// Transfer the prices from price offer to trip
         /// </summary>
-        private async Task TransferPricesToTrip(ShippingRequestTrip trip)
+        public async Task TransferPricesToTrip(ShippingRequestTrip trip)
         {
+
             DisableTenancyFilters();
 
-            var priceOffer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId);
+
+            if (!trip.ShippingRequestId.HasValue) // direct create shipments 
+            {
+                decimal carrierAsSaasSingleDropCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(trip.ShipperTenantId.Value, AppFeatures.SingleDropSaasCommission));
+                decimal carrierAsSaasMultipleDropsCommissionValue = Convert.ToDecimal(_featureChecker.GetValue(trip.ShipperTenantId.Value, AppFeatures.MultipleDropsSaasCommission));
+
+                trip.CommissionType = PriceOfferCommissionType.CommissionValue;// always value
+                trip.TaxVat = TaxVat;
+                trip.SubTotalAmount = 0;
+                trip.VatAmount = TaxVat / 100;
+                trip.TotalAmount = 0;
+
+                if (trip.RouteType == ShippingRequestRouteType.SingleDrop)
+                {
+                    trip.CommissionAmount = carrierAsSaasSingleDropCommissionValue;
+                    trip.CommissionPercentageOrAddValue = carrierAsSaasSingleDropCommissionValue;
+                }
+                else //multiple drop
+                {
+                    trip.CommissionAmount = carrierAsSaasMultipleDropsCommissionValue;
+                    trip.CommissionPercentageOrAddValue = carrierAsSaasMultipleDropsCommissionValue;
+                }
+
+                trip.SubTotalAmountWithCommission = trip.CommissionPercentageOrAddValue;
+                trip.VatAmountWithCommission = TaxVat / 100 * trip.CommissionPercentageOrAddValue;
+                trip.TotalAmountWithCommission = trip.SubTotalAmountWithCommission + trip.VatAmountWithCommission;
+
+
+                return;
+            }
+
+
+
+
+            var priceOffer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId.Value);
             if (priceOffer != null)
             {
                 var items = ObjectMapper.Map<List<PricePackageOfferItem>>(priceOffer.PriceOfferDetails);
@@ -1022,7 +1282,7 @@ namespace TACHYON.Tracking
             }
             else
             {
-                var pricePackageOffer = await _normalPricePackageManager.GetOfferByShippingRequestId(trip.ShippingRequestId);
+                var pricePackageOffer = await _normalPricePackageManager.GetOfferByShippingRequestId(trip.ShippingRequestId.Value);
                 TransferPrices(trip, pricePackageOffer, pricePackageOffer.Items, pricePackageOffer.TaxVat);
             }
         }
@@ -1031,16 +1291,45 @@ namespace TACHYON.Tracking
         /// </summary>
         private void TransferPrices(ShippingRequestTrip trip, PriceOfferBase offer, List<PricePackageOfferItem> items, decimal taxVat)
         {
-            trip.CommissionType = offer.CommissionType;
-            trip.SubTotalAmount = offer.ItemPrice;
-            trip.VatAmount = offer.ItemVatAmount;
-            trip.TotalAmount = offer.ItemTotalAmount;
-            trip.SubTotalAmountWithCommission = offer.ItemSubTotalAmountWithCommission;
-            trip.VatAmountWithCommission = offer.ItemVatAmountWithCommission;
-            trip.TotalAmountWithCommission = offer.ItemTotalAmountWithCommission;
-            trip.CommissionAmount = offer.ItemCommissionAmount;
-            trip.CommissionPercentageOrAddValue = offer.CommissionPercentageOrAddValue;
-            trip.TaxVat = taxVat;
+            if (trip.ShippingRequestFk.RouteTypeId == null && trip.ShippingRequestFk.IsSaas())
+            {
+                trip.CommissionType = PriceOfferCommissionType.CommissionValue;// always value
+                trip.TaxVat = taxVat;
+                trip.SubTotalAmount = offer.ItemPrice;
+                trip.VatAmount = offer.ItemVatAmount;
+                trip.TotalAmount = offer.ItemTotalAmount;
+
+                if (trip.RouteType == ShippingRequestRouteType.SingleDrop)
+                {
+                    trip.CommissionAmount = offer.CommissionPercentageOrAddValueForSingleDrop;
+                    trip.CommissionPercentageOrAddValue = offer.CommissionPercentageOrAddValueForSingleDrop;
+                }
+                else //multiple drop
+                {
+                    trip.CommissionAmount = offer.CommissionPercentageOrAddValueForMultipleDrop;
+                    trip.CommissionPercentageOrAddValue = offer.CommissionPercentageOrAddValueForMultipleDrop;
+                }
+
+                trip.SubTotalAmountWithCommission = trip.CommissionPercentageOrAddValue;
+                trip.VatAmountWithCommission = taxVat / 100 * trip.CommissionPercentageOrAddValue;
+                trip.TotalAmountWithCommission = trip.SubTotalAmountWithCommission + trip.VatAmountWithCommission;
+
+            }
+            else
+            {
+                trip.CommissionType = offer.CommissionType;
+                trip.SubTotalAmount = offer.ItemPrice;
+                trip.VatAmount = offer.ItemVatAmount;
+                trip.TotalAmount = offer.ItemTotalAmount;
+                trip.SubTotalAmountWithCommission = offer.ItemSubTotalAmountWithCommission;
+                trip.VatAmountWithCommission = offer.ItemVatAmountWithCommission;
+                trip.TotalAmountWithCommission = offer.ItemTotalAmountWithCommission;
+                trip.CommissionAmount = offer.ItemCommissionAmount;
+                trip.CommissionPercentageOrAddValue = offer.CommissionPercentageOrAddValue;
+                trip.TaxVat = taxVat;
+
+            }
+
             if (trip.ShippingRequestTripVases == null || trip.ShippingRequestTripVases.Count == 0) return;
 
             foreach (var vas in trip.ShippingRequestTripVases)
@@ -1057,21 +1346,32 @@ namespace TACHYON.Tracking
                 vas.CommissionAmount = item.ItemCommissionAmount;
                 vas.Quantity = 1;
             }
+
         }
         /// <summary>
         /// Check If user Can Start the trip
         /// </summary>
         private async Task<ShippingRequestTrip> CheckIfCanStartTrip(int tripId)
         {
-            var currentUser = await GetCurrentUserAsync();
+            User currentUser = await GetCurrentUserAsync();
             return await _shippingRequestTripRepository
-                            .GetAll().Include(s => s.ShippingRequestFk).Where(x => x.Id == tripId &&
-                                x.Status == ShippingRequestTripStatus.New &&
-                                x.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
-                            .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                            .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
-                            .WhereIf(currentUser.IsDriver, x => x.AssignedDriverUserId == currentUser.Id)
-                            .FirstOrDefaultAsync();
+                .GetAll()
+                .Include(s => s.ShippingRequestFk)
+                .Where
+                (x => x.Id == tripId)
+                .Where
+                (
+                    x => x.Status == ShippingRequestTripStatus.New &&
+                         x.DriverStatus == ShippingRequestTripDriverStatus.Accepted
+                )
+                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
+                .WhereIf
+                (
+                    currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier),
+                    x => x.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value || x.CarrierTenantId == currentUser.TenantId.Value
+                )
+                .WhereIf(currentUser.IsDriver, x => x.AssignedDriverUserId == currentUser.Id)
+                .FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -1091,9 +1391,16 @@ namespace TACHYON.Tracking
         {
             var currentUser = await GetCurrentUserAsync();
             return await _routPointRepository
-                .GetAll().Where(x => x.IsResolve && !x.IsComplete && x.Id == pointId)
+                .GetAll()
+                .Where(x => x.Id == pointId)
+                .Where(x => x.IsResolve && !x.IsComplete)
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
+                .WhereIf
+                (
+                    currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier),
+                    x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value ||
+                         x.ShippingRequestTripFk.CarrierTenantId == currentUser.TenantId.Value
+                )
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
         }
@@ -1118,19 +1425,27 @@ namespace TACHYON.Tracking
         /// <summary>
         /// Get next Point and check if it Available to Open
         /// </summary>
-        private async Task<RoutPoint> GetNextLocationInTrip(long pointId,bool forceMode = false)
+        private async Task<RoutPoint> GetNextLocationInTrip(long pointId, bool forceMode = false)
         {
             var currentUser = await GetCurrentUserAsync();
             return await _routPointRepository
                 .GetAll().Include(c => c.ShippingRequestTripFk)
                 .ThenInclude(s => s.ShippingRequestFk).Include(x => x.FacilityFk)
-                .WhereIf(forceMode,x=> x.Id == pointId)
-                .WhereIf(!forceMode,x => x.Id == pointId
-                         && x.Status == RoutePointStatus.StandBy && !x.IsActive && !x.IsResolve && !x.IsComplete
+                .Where(x => x.Id == pointId)
+                .WhereIf
+                (
+                    !forceMode,
+                    x => x.Status == RoutePointStatus.StandBy && !x.IsActive && !x.IsResolve && !x.IsComplete
                          && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.InTransit
-                         && x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
+                         && x.PickingType == PickingType.Dropoff
+                )
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
+                .WhereIf
+                (
+                    currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier),
+                    x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value ||
+                         x.ShippingRequestTripFk.CarrierTenantId == currentUser.TenantId.Value
+                )
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
         }
@@ -1145,22 +1460,64 @@ namespace TACHYON.Tracking
                 .GetAll().Where(x => x.ShippingRequestTripId == tripId &&
                 x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.InTransit && x.CanGoToNextLocation)
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
-                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
+                .WhereIf
+                (
+                    currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier),
+                    x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value ||
+                         x.ShippingRequestTripFk.CarrierTenantId == currentUser.TenantId.Value
+                )
                 .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
                 .FirstOrDefaultAsync();
         }
 
+        private async Task HandlePointDelivery(long pointId)
+        {
+            var point = await _routPointRepository.GetAsync(pointId);
+            await HandlePointDelivery(point);
+        }
         /// <summary>
         /// check if point is complete and mark it as complete & check if trip is complete and mark it as delivered
         /// </summary>
-        private async Task HandlePointDelivery(long pointId)
+        private async Task HandlePointDelivery(RoutPoint point)
         {
+            bool IsMultipleDrops(ShippingRequestTrip shippingRequestTrip)
+            {
+
+
+                if (shippingRequestTrip.RouteType != null)
+                {
+                    return shippingRequestTrip.RouteType == ShippingRequestRouteType.MultipleDrops;
+                }
+                if (shippingRequestTrip.ShippingRequestFk != null)
+                {
+                    return shippingRequestTrip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops;
+                }
+
+                return false;
+
+            }
+
+            bool IsSingleDrop(ShippingRequestTrip shippingRequestTrip)
+            {
+
+                if (shippingRequestTrip.RouteType != null)
+                {
+                    return shippingRequestTrip.RouteType == ShippingRequestRouteType.SingleDrop;
+                }
+                if (shippingRequestTrip.ShippingRequestFk != null)
+                {
+                    return shippingRequestTrip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
+                }
+
+                return false;
+            }
+
             var currentUser = await GetCurrentUserAsync();
-            var point = await _routPointRepository.GetAsync(pointId);
             var isCompleted = CheckIfPointIsCompleted(point);
             var trip = await _shippingRequestTripRepository
                     .GetAllIncluding(d => d.ShippingRequestTripVases)
                     .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
+                    .Include(x => x.ShipperTenantFk)
                     .FirstOrDefaultAsync(t => t.Id == point.ShippingRequestTripId);
 
             if (isCompleted)
@@ -1183,26 +1540,29 @@ namespace TACHYON.Tracking
             }
             else
             {
-                if (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop)
+                bool isSingleDrop = IsSingleDrop(trip);
+                bool isMultipleDrops = IsMultipleDrops(trip);
+
+                if (isSingleDrop)
                 {
                     trip.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
                     await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);//we will create invoice in this case if shipper period is PayInAdvance
                 }
-                else if (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops)
+                else if (isMultipleDrops)
                 {
                     var allPointHasProofDelivery = await _routPointRepository.GetAll()
-                                        .Where(c => c.Id != pointId && c.PickingType == PickingType.Dropoff && c.ShippingRequestTripId == point.ShippingRequestTripId)
-                                        .AllAsync(x => x.RoutPointStatusTransitions.Any(x => !x.IsReset
-                                         && (x.Status == RoutePointStatus.ReceiverConfirmed
-                                         || x.Status == RoutePointStatus.DeliveryConfirmation)));
+                        .Where(c => c.Id != point.Id && c.PickingType == PickingType.Dropoff && c.ShippingRequestTripId == point.ShippingRequestTripId)
+                        .AllAsync(x => x.RoutPointStatusTransitions.Any(x => !x.IsReset
+                                                                             && (x.Status == RoutePointStatus.ReceiverConfirmed
+                                                                                 || x.Status == RoutePointStatus.DeliveryConfirmation)));
 
                     if (allPointHasProofDelivery)
                     {
                         trip.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
                         await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);//we will create invoice in this case if shipper period is PayInAdvance
                     }
-                }
 
+                }
             }
         }
 
@@ -1293,8 +1653,15 @@ namespace TACHYON.Tracking
 
             string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, waybillNumber, point.Code, ratingLink);
 
-            if (point.ShippingRequestTripFk.ShippingRequestFk.IsSaas())
+            if (point.ShippingRequestTripFk.ShippingRequestFk != null && point.ShippingRequestTripFk.ShippingRequestFk.IsSaas())
+            {
                 message = L(TACHYONConsts.SMSSaasShippingRequestReceiverCode, waybillNumber, point.Code);
+
+            }
+            else if (point.ShippingRequestTripFk.CarrierTenantId == point.ShippingRequestTripFk.ShipperTenantId) // saas trip
+            {
+                message = L(TACHYONConsts.SMSSaasShippingRequestReceiverCode, waybillNumber, point.Code);
+            }
 
 
             if (point.ReceiverFk != null)
@@ -1341,7 +1708,7 @@ namespace TACHYON.Tracking
         /// <summary>
         /// Get Currnent user
         /// </summary>
-        protected virtual async Task<User> GetCurrentUserAsync()
+        public virtual async Task<User> GetCurrentUserAsync()
         {
             var user = await UserManager.FindByIdAsync(AbpSession.GetUserId().ToString());
             if (user == null)
@@ -1353,10 +1720,10 @@ namespace TACHYON.Tracking
             DisableTenancyFilters();
             var tenantId = AbpSession.TenantId;
             return await _shippingRequestRepository.GetAll()
-                        .Where(x=> x.CarrierTenantId.HasValue)
+                        .Where(x => x.CarrierTenantId.HasValue)
                         .WhereIf(tenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == tenantId.Value)
                         .WhereIf(tenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == tenantId.Value)
-                        .Select(x => new ShippingRequestFilterListDto { ReferenceNumber = x.ReferenceNumber, Id = x.Id}).ToListAsync();
+                        .Select(x => new ShippingRequestFilterListDto { ReferenceNumber = x.ReferenceNumber, Id = x.Id }).ToListAsync();
         }
 
         #endregion

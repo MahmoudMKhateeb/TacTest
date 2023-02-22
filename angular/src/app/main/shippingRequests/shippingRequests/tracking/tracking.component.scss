@@ -94,8 +94,30 @@ agm-map {
 .left {
     left: 2% !important;
     right: auto !important;
+    &.for-dedicated {
+        left: 17% !important;
+    }
 }
 .right {
     right: 2% !important;
     left: auto !important;
+    &.for-dedicated {
+        right: 12% !important;
+    }
+}
+
+@media (min-width: 1201px) and (max-width: 1440px) {
+    .left {
+        &.for-dedicated {
+            left: 20% !important;
+        }
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .left {
+        &.for-dedicated {
+            left: 25% !important;
+        }
+    }
 }

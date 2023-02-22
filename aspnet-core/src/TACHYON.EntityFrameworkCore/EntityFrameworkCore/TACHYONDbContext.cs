@@ -102,6 +102,8 @@ using TACHYON.Shipping.Dedicated;
 using TACHYON.DedicatedInvoices;
 using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 using TACHYON.PricePackages.TmsPricePackageOffers;
+using TACHYON.DedicatedDynamicActorInvoices;
+using TACHYON.DedicatedDynamicActorInvoices.DedicatedDynamicActorInvoiceItems;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -341,6 +343,8 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<DedicatedDynamicInvoice> DedicatedDynamicInvoices { get; set; }
         public DbSet<DedicatedDynamicInvoiceItem> DedicatedDynamicInvoiceItems { get; set; }
 
+        public DbSet<DedicatedDynamicActorInvoice> DedicatedDynamicActorInvoices { get; set; }
+        public DbSet<DedicatedDynamicActorInvoiceItem> DedicatedDynamicActorInvoiceItems { get; set; }
         public DbSet<TmsPricePackage> TmsPricePackages { get; set; }
         
         public DbSet<PricePackageProposal> Proposals { get; set; }
@@ -377,7 +381,6 @@ namespace TACHYON.EntityFrameworkCore
         public TACHYONDbContext(DbContextOptions<TACHYONDbContext> options)
             : base(options)
         {
-            this.Database.SetCommandTimeout(18000);
         }
 
         protected override bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType)
@@ -598,6 +601,30 @@ namespace TACHYON.EntityFrameworkCore
                 .HasOne(e => e.DedicatedShippingRequestTruck)
                 .WithMany(e => e.DedicatedDynamicInvoiceItems)
                 .OnDelete(DeleteBehavior.ClientNoAction);
+
+            modelBuilder
+               .Entity<DedicatedShippingRequestDriver>()
+               .HasOne(e => e.DriverUser)
+               .WithMany(e => e.DedicatedShippingRequestDrivers)
+               .OnDelete(DeleteBehavior.ClientNoAction);
+
+            
+            modelBuilder
+               .Entity<DedicatedDynamicActorInvoice>()
+               .HasOne(e => e.Tenant)
+               .WithMany(e => e.DedicatedDynamicActorInvoices)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<DedicatedDynamicActorInvoiceItem>()
+                .HasOne(e => e.DedicatedShippingRequestTruck)
+                .WithMany(e => e.DedicatedDynamicActorInvoiceItems)
+                .OnDelete(DeleteBehavior.ClientNoAction);
+
+            //        modelBuilder.Entity<DedicatedDynamicActorInvoice>()
+            //.HasOne(s => s.Tenant)
+            //.WithMany(e => e.DedicatedDynamicActorInvoices)
+            //.IsRequired();
 
 
 

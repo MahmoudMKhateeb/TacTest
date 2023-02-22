@@ -3,9 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using TACHYON.DedicatedDynamicActorInvoices;
+using TACHYON.DedicatedDynamicActorInvoices.DedicatedDynamicActorInvoiceItems;
 using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 using TACHYON.DedicatedInvoices;
 using TACHYON.Invoices;
+using TACHYON.Invoices.ActorInvoices;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trucks;
@@ -26,6 +29,8 @@ namespace TACHYON.Shipping.Dedicated
         public ICollection<DedicatedShippingRequestTruckAttendance> DedicatedShippingRequestTruckAttendances { get; set; }
         [NotMapped]
         public ICollection<DedicatedDynamicInvoiceItem> DedicatedDynamicInvoiceItems { get; set; }
+        [NotMapped]
+        public ICollection<DedicatedDynamicActorInvoiceItem> DedicatedDynamicActorInvoiceItems { get; set; }
         public double? KPI { get; set; }
         /// <summary>
         /// dedicated driver users have seperated table "DedicatedShippingRequestDrivers" we have this field as a helper in trip details to get driver or truck automatically
@@ -51,5 +56,13 @@ namespace TACHYON.Shipping.Dedicated
         public long? SubmitInvoiceId { get; set; }
         [ForeignKey("SubmitInvoiceId")]
         public SubmitInvoice SubmitInvoice { get; set; }
+
+        // internal invoices for saas
+        public long? ActorInvoiceId { get; set; }
+        [ForeignKey("ActorInvoiceId")]
+        public ActorInvoice ActorInvoice { get; set; }
+        public long? ActorSubmitInvoiceId { get; set; }
+        [ForeignKey("ActorSubmitInvoiceId")]
+        public ActorSubmitInvoice ActorSubmitInvoice { get; set; }
     }
 }

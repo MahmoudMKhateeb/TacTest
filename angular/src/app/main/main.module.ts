@@ -335,6 +335,12 @@ import { ClientDemandModelComponent } from './Invoices/actor-submit-invoices/cli
 import { ReplaceTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/replace-trucks-and-drivers-modal/replace-trucks-and-drivers-modal.component';
 import { TruckAndDriverReplacementComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-and-driver-replacement/truck-and-driver-replacement.component';
 import { PricePackageModule } from '@app/main/pricePackages/price-package.module';
+import { InvoicesDedicatedClientsComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients.component';
+import { InvoiceDedicatedClientsModalComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients-modal/invoices-dedicated-clients-modal.component';
+import { ActorSubmitInvoiceItemDetailComponent } from './Invoices/actor-submit-invoices/actor-submit-invoice-item-detail/actor-submit-invoice-item-detail.component';
+import { ActorInvoiceItemDetailComponent } from './Invoices/ActorInvoices/actor-invoice-list/actor-invoice-item-detail/actor-invoice-item-detail.component';
+import { MakeScrollableDirective } from '@app/shared/common/make-scrollable-directive/make-scrollable.directive';
+import { DirectTripsComponent } from './direct-trips/direct-trips.component';
 
 @NgModule({
   imports: [
@@ -639,6 +645,12 @@ import { PricePackageModule } from '@app/main/pricePackages/price-package.module
     ReplaceTrucksAndDriversModalComponent,
     TruckAndDriverReplacementComponent,
     ClientDemandModelComponent,
+    InvoicesDedicatedClientsComponent,
+    InvoiceDedicatedClientsModalComponent,
+    ActorSubmitInvoiceItemDetailComponent,
+    ActorInvoiceItemDetailComponent,
+    MakeScrollableDirective,
+    DirectTripsComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

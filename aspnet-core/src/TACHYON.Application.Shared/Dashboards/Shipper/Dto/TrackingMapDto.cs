@@ -27,6 +27,7 @@ namespace TACHYON.Dashboards.Shipper.Dto
         public string DriverName { get; set; }
         public string TruckType { get; set; }
         public bool HasIncident { get; set; }
+        public string ContainerNumber { get; set; }
         public List<RoutePointsTripDto> RoutPoints { get; set; }
     }
 }

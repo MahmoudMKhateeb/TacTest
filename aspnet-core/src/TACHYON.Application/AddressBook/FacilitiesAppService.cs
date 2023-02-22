@@ -154,8 +154,14 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Create)]
         protected virtual async Task<long> Create(CreateOrEditFacilityDto input)
         {
-            var point = new Point
-                (input.Longitude, input.Latitude) { SRID = 4326 };
+            var point = default(Point);
+            if (input.Longitude!=null && input.Latitude != null)
+            {
+                 point = new Point
+                    (input.Longitude.Value, input.Latitude.Value)
+                { SRID = 4326 };
+            }
+
 
             var facility = ObjectMapper.Map<Facility>(input);
             facility.Location = point;
@@ -243,13 +249,16 @@ namespace TACHYON.AddressBook
 
         private async Task ValidateFacilityName(CreateOrEditFacilityDto input)
         {
-            var ExsistItem = await _facilityRepository.GetAll().AsNoTracking()
+            if (!string.IsNullOrEmpty(input.Name))
+            {
+                var ExsistItem = await _facilityRepository.GetAll().AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Name.Equals(input.Name) && e.TenantId == AbpSession.TenantId);
-            if (input.Id != null)
-                ExsistItem = await _facilityRepository.GetAll().AsNoTracking().FirstOrDefaultAsync(e =>
-                    e.Name.Equals(input.Name) && e.Id != input.Id && e.TenantId == AbpSession.TenantId);
-            if (ExsistItem != null)
-                throw new UserFriendlyException(L("facilityNameIsAlreadyExistsForThisTenant"));
+                if (input.Id != null)
+                    ExsistItem = await _facilityRepository.GetAll().AsNoTracking().FirstOrDefaultAsync(e =>
+                        e.Name.Equals(input.Name) && e.Id != input.Id && e.TenantId == AbpSession.TenantId);
+                if (ExsistItem != null)
+                    throw new UserFriendlyException(L("facilityNameIsAlreadyExistsForThisTenant"));
+            }
         }
 
         private async Task RemoveDeletedWorkingHours(CreateOrEditFacilityDto input, Facility facility)

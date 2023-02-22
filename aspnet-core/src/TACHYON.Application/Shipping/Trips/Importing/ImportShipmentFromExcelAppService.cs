@@ -18,6 +18,7 @@ using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Shipping.Trips.Importing.Dto;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.Storage;
+using TACHYON.Tracking;
 
 namespace TACHYON.Shipping.Trips.Importing
 {
@@ -54,9 +55,12 @@ namespace TACHYON.Shipping.Trips.Importing
         {
             await DisableTenancyFiltersIfTachyonDealer();
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(importShipmentFromExcelInput.ShippingRequestId);
-            var trips = await GetShipmentListFromExcelOrNull(importShipmentFromExcelInput, IsSingleDropRequest(request));
+            var trips = await GetShipmentListFromExcelOrNull(importShipmentFromExcelInput, IsSingleDropRequest(request), request.ShippingRequestFlag == ShippingRequestFlag.Dedicated);
 
-            await _shippingRequestTripManager.ValidateNumberOfTrips(request, trips.Count);
+            if (request.ShippingRequestFlag == ShippingRequestFlag.Normal)
+            {
+                await _shippingRequestTripManager.ValidateNumberOfTrips(request, trips.Count);
+            }
             ValidateDuplicatedReferenceFromList(trips);
             return trips;
         }
@@ -64,7 +68,7 @@ namespace TACHYON.Shipping.Trips.Importing
         public async Task CreateShipmentsFromDto(List<ImportTripDto> importTripDtoList)
         {
             await DisableTenancyFiltersIfTachyonDealer();
-            var request = _shippingRequestTripManager.GetShippingRequestByPermission(importTripDtoList.First().ShippingRequestId);
+            var request = _shippingRequestTripManager.GetShippingRequestByPermission(importTripDtoList.First().ShippingRequestId.Value);
 
             List<ImportTripDto> SuccessImportTripDtoList = new List<ImportTripDto>();
             List<ImportTripDto> InvalidShipments = new List<ImportTripDto>();
@@ -76,7 +80,7 @@ namespace TACHYON.Shipping.Trips.Importing
             foreach (var trip in importTripDtoList)
             {
                 StringBuilder exceptionMessage = new StringBuilder();
-                _shippingRequestTripManager.ValidateTripDto(trip, exceptionMessage);
+                 _shippingRequestTripManager.ValidateTripDto(trip, exceptionMessage);
                 if (exceptionMessage.Length == 0)
                 {
                     SuccessImportTripDtoList.Add(trip);
@@ -94,7 +98,7 @@ namespace TACHYON.Shipping.Trips.Importing
                 throw new UserFriendlyException(L("DataMustBeValid"));
 
             //save
-            await CreateShipments(SuccessImportTripDtoList, IsSingleDropRequest(request));
+            await CreateShipments(SuccessImportTripDtoList,request);
             request.TotalsTripsAddByShippier += SuccessImportTripDtoList.Count;
 
 
@@ -147,7 +151,7 @@ namespace TACHYON.Shipping.Trips.Importing
         {
             await DisableTenancyFiltersIfTachyonDealer();
             var request = _shippingRequestTripManager.GetShippingRequestByPermission(input.ShippingRequestId);
-            var goodsDetails = await GetGoodsDetailsListFromExcelOrNull(input, request.GoodCategoryId.Value,IsSingleDropRequest(request));
+            var goodsDetails = await GetGoodsDetailsListFromExcelOrNull(input, request.GoodCategoryId.Value,IsSingleDropRequest(request) , request.ShippingRequestFlag == ShippingRequestFlag.Dedicated);
             BindTripIdFromReference(goodsDetails, request);
             ValidateGoodsDetails(request, goodsDetails);
 
@@ -198,14 +202,14 @@ namespace TACHYON.Shipping.Trips.Importing
 
         #region Helper
 
-        private async Task CreateShipments(List<ImportTripDto> Trips, bool isSingleDropRequest)
+        private async Task CreateShipments(List<ImportTripDto> Trips, ShippingRequest request)
         {
             foreach (var trip in Trips)
             {
                 var tripItem = ObjectMapper.Map<ShippingRequestTrip>(trip);
 
                 
-                if (isSingleDropRequest)
+                if (request.RouteTypeId == ShippingRequestRouteType.SingleDrop || trip.RouteType == ShippingRequestRouteType.SingleDrop)
                 {
                     //create points
                     var pickup = new RoutPoint
@@ -213,7 +217,7 @@ namespace TACHYON.Shipping.Trips.Importing
                         PickingType = PickingType.Pickup,
                         ReceiverId = trip.SenderId,
                         FacilityId = trip.OriginFacilityId.Value,
-                        WorkFlowVersion = TACHYONConsts.PickUpRoutPointWorkflowVersion,
+                        WorkFlowVersion = WorkflowVersionConst.PickupPointWorkflowVersion,
                         Code = (new Random().Next(100000, 999999)).ToString(),
                     };
 
@@ -225,8 +229,8 @@ namespace TACHYON.Shipping.Trips.Importing
                         FacilityId = trip.DestinationFacilityId.Value,
                         Code = (new Random().Next(100000, 999999)).ToString(),
                         WorkFlowVersion = trip.NeedsDeliveryNote
-                            ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
-                            : TACHYONConsts.DropOfRoutPointWorkflowVersion
+                            ? WorkflowVersionConst.DropOffWithDeliveryNotePointWorkflowVersion
+                            : WorkflowVersionConst.DropOffWithoutDeliveryNotePointWorkflowVersion
                     };
                     tripItem.RoutPoints = new List<RoutPoint>
                     {
@@ -235,10 +239,33 @@ namespace TACHYON.Shipping.Trips.Importing
                     };
                     tripItem.RoutPoints = tripItem.RoutPoints.OrderBy(x => x.PickingType).ToList();
                 }
+                if(request.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+                {
+                    tripItem.AssignedDriverUserId = trip.DriverUserId;
+                    tripItem.AssignedTruckId = trip.TruckId;
+                    // if trip is dedicated, insert all request vases automatic
+                    AddRequestVasesAutomaticToDedicatedTrip(request, tripItem);
+                }
+
                 var r = await  _shippingRequestTripRepoitory.InsertAndGetIdAsync(tripItem);
 
             }
 
+        }
+
+        private static void AddRequestVasesAutomaticToDedicatedTrip(ShippingRequest request, ShippingRequestTrip tripItem)
+        {
+            var vasList = new List<ShippingRequestTripVas>();
+            foreach (var requestVas in request.ShippingRequestVases)
+            {
+                var tripVas = new ShippingRequestTripVas
+                {
+                    ShippingRequestVasId = requestVas.Id
+                };
+                vasList.Add(tripVas);
+            }
+            tripItem.ShippingRequestTripVases = new List<ShippingRequestTripVas>();
+            tripItem.ShippingRequestTripVases = vasList;
         }
 
         private async Task<long> CreatePointAsync(ImportRoutePointDto input)
@@ -264,18 +291,18 @@ namespace TACHYON.Shipping.Trips.Importing
             //assign workflow version
             foreach (var point in groupedPointsByDeliverNote)
             {
-                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(ObjectMapper.Map<List<RoutPoint>>(point.points.ToList()), point.TripNeedsDeliveryNote);
+                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(ObjectMapper.Map<List<RoutPoint>>(point.points.ToList()), point.TripNeedsDeliveryNote,ShippingRequestTripFlag.Normal);
             }
         }
 
-        private async Task<List<ImportTripDto>> GetShipmentListFromExcelOrNull(ImportShipmentFromExcelInput importShipmentFromExcelInput, bool isSingleDropRequest)
+        private async Task<List<ImportTripDto>> GetShipmentListFromExcelOrNull(ImportShipmentFromExcelInput importShipmentFromExcelInput, bool isSingleDropRequest, bool isDedicatedRequest)
         {
             using (CurrentUnitOfWork.SetTenantId(importShipmentFromExcelInput.TenantId))
             {
                 try
                 {
                     var file = await _binaryObjectManager.GetOrNullAsync(importShipmentFromExcelInput.BinaryObjectId);
-                    return _shipmentListExcelDataReader.GetShipmentsFromExcel(file.Bytes, importShipmentFromExcelInput.ShippingRequestId, isSingleDropRequest);
+                    return _shipmentListExcelDataReader.GetShipmentsFromExcel(file.Bytes, importShipmentFromExcelInput.ShippingRequestId, isSingleDropRequest, isDedicatedRequest);
                 }
                 catch
                 {
@@ -287,7 +314,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
         private async Task ValidateRoutePoints(List<ImportRoutePointDto> points, ShippingRequest request)
         {
-            if (IsSingleDropRequest(request))
+            if (request.ShippingRequestFlag == ShippingRequestFlag.Normal && IsSingleDropRequest(request))
             {
                 throw new UserFriendlyException(L("RequestShouldnotBeSingleDrop"));
             }
@@ -300,32 +327,47 @@ namespace TACHYON.Shipping.Trips.Importing
                     importPointsDtoList = g.ToList()
                 }).ToList();
 
-            foreach (var tripGoodsDetails in GroupedPointssByTrip)
+            foreach (var tripDto in GroupedPointssByTrip)
             {
-                ValidatePointsDuplicatedReferenceFromList(tripGoodsDetails.importPointsDtoList);
-    
+                ValidatePointsDuplicatedReferenceFromList(tripDto.importPointsDtoList);
+
+                var trip = await _shippingRequestTripRepoitory.GetAll()
+                            .FirstOrDefaultAsync(x => x.BulkUploadRef == tripDto.tripRef && x.ShippingRequestId == request.Id);
                 try
                 {
-                    _shippingRequestTripManager.ValidateNumberOfDrops(tripGoodsDetails.importPointsDtoList.Count(x => x.PickingType == PickingType.Dropoff), request);
+                    if(request.ShippingRequestFlag == ShippingRequestFlag.Normal)
+                    {
+                        _shippingRequestTripManager.ValidateNumberOfDrops(tripDto.importPointsDtoList.Count(x => x.PickingType == PickingType.Dropoff), request);
+                    }
+                    else
+                    {
+                        // get trip
+                        DisableTenancyFilters();
+                        
+                        _shippingRequestTripManager.ValidateDedicatedNumberOfDrops(tripDto.importPointsDtoList.Count(x => x.PickingType == PickingType.Dropoff), trip.NumberOfDrops);
+                    }
                 }
                 catch (UserFriendlyException exception)
                 {
-                    points.Where(x=>x.TripReference== tripGoodsDetails.tripRef).ToList().ForEach(x => x.Exception += exception.Message);
+                    points.Where(x=>x.TripReference== tripDto.tripRef).ToList().ForEach(x => x.Exception += exception.Message);
                 }
+
+                //validate points facility
+                 ValidatePickupPointsFacility(points, trip);
+
             }
 
             CheckExistPointsInDB(points);
 
-            await ValidatePickupPointsFacility(points);
 
         }
 
-        private async Task ValidatePickupPointsFacility(List<ImportRoutePointDto> points)
+        private void ValidatePickupPointsFacility(List<ImportRoutePointDto> points, ShippingRequestTrip trip)
         {
             var pickupPoints = points.Where(x => x.PickingType == PickingType.Pickup).ToList();
             foreach (var pickupPoint in pickupPoints)
             {
-                var trip = await _shippingRequestTripRepoitory.GetAsync(pickupPoint.ShippingRequestTripId);
+                //var trip = await _shippingRequestTripRepoitory.GetAsync(pickupPoint.ShippingRequestTripId);
                 if (trip.OriginFacilityId != pickupPoint.FacilityId)
                 {
                     pickupPoint.Exception += L("PickupPointFacilityMustBeSameToOriginalTripFacility") + ";";
@@ -349,14 +391,14 @@ namespace TACHYON.Shipping.Trips.Importing
             }
         }
 
-        private async Task<List<ImportGoodsDetailsDto>> GetGoodsDetailsListFromExcelOrNull(ImportGoodsDetailsFromExcelInput input, int requestGoodsCategory, bool isSingleDropRequest)
+        private async Task<List<ImportGoodsDetailsDto>> GetGoodsDetailsListFromExcelOrNull(ImportGoodsDetailsFromExcelInput input, int requestGoodsCategory, bool isSingleDropRequest, bool isDedicatedRequest)
         {
             using (CurrentUnitOfWork.SetTenantId(input.TenantId))
             {
                 try
                 {
                     var file = await _binaryObjectManager.GetOrNullAsync(input.BinaryObjectId);
-                    return _goodsDetailsListExcelDataReader.GetGoodsDetailsFromExcel(file.Bytes, input.ShippingRequestId, requestGoodsCategory, isSingleDropRequest);
+                    return _goodsDetailsListExcelDataReader.GetGoodsDetailsFromExcel(file.Bytes, input.ShippingRequestId, requestGoodsCategory, isSingleDropRequest, isDedicatedRequest);
                 }
                 catch
                 {
@@ -458,6 +500,11 @@ namespace TACHYON.Shipping.Trips.Importing
                     list.Where(x => x.TripReference == tripRef)
                     .ToList()
                     .ForEach(y => y.ShippingRequestTripId = trip.Id);
+
+                    if(trip.RouteType == ShippingRequestRouteType.MultipleDrops && list.Where(x=>x.TripReference == tripRef).Any(x=> string.IsNullOrEmpty(x.PointReference)))
+                    {
+                        list.Where(x => x.TripReference == tripRef && string.IsNullOrEmpty(x.PointReference)).ForEach(x => x.Exception += L("InvalidPointReference"));
+                    }
                 }
             }
         }
@@ -500,17 +547,18 @@ namespace TACHYON.Shipping.Trips.Importing
 
             foreach (var tripGoodsDetails in GroupedGoodsDetailsByTrip)
             {
-                ValidateAllDropGoodsExists(goodsDetails, tripGoodsDetails);
+                ValidateAllDropGoodsExists(goodsDetails, tripGoodsDetails, request.Id);
                 GoodsDetailsExistsInDB(tripGoodsDetails, request.Id);
                 ValidateTotalWeight(request, tripGoodsDetails);
             }
         }
 
-        private void ValidateAllDropGoodsExists(List<ImportGoodsDetailsDto> goodsDetails, GroupedGoodsDetailsDto tripGoodsDetails)
+        private void ValidateAllDropGoodsExists(List<ImportGoodsDetailsDto> goodsDetails, GroupedGoodsDetailsDto tripGoodsDetails, long ShippingRequestId)
         {
             var allDropPoints = _routPointRepository
                 .GetAll()
-                .Where(x => x.ShippingRequestTripFk.BulkUploadRef == tripGoodsDetails.tripRef &&
+                .Where(x => x.ShippingRequestTripFk.BulkUploadRef == tripGoodsDetails.tripRef && 
+                x.ShippingRequestTripFk.ShippingRequestId == ShippingRequestId &&
                 x.PickingType == PickingType.Dropoff)
                 .Select(x => x.BulkUploadReference)
                 .ToList();

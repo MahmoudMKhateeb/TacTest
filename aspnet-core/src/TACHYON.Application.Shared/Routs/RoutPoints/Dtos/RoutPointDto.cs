@@ -51,6 +51,10 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public string ReceiverAddress { get; set; }
         public List<GoodsDetailDto> GoodsDetailListDto { get; set; }
         [CanBeNull] public string Note { get; set; }
+        public DropPaymentMethod? DropPaymentMethod { get; set; }
+        public string DropPaymentMethodTitle { get; set; }
+        public bool NeedsReceiverCode { get; set; }
+        public bool NeedsPOD { get; set; }
 
         //to do receiver attribute
     }

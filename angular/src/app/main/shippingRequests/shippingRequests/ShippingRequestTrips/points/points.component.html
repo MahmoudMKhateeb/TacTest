@@ -43,6 +43,10 @@
                       <th>
                         {{ l('Notes') }}
                       </th>
+                      <th *ngIf="isHomeDelivery">
+                        {{ l('PaymentMethod') }}
+                      </th>
+                      <th *ngIf="isHomeDelivery"></th>
                     </tr>
                   </ng-template>
                   <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
@@ -74,7 +78,7 @@
                             <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
                             <option
                               *ngFor="let item of record.pickingType === PickingType.Pickup ? pickupFacilities : dropFacilities"
-                              [value]="item.id"
+                              [ngValue]="item.id"
                             >
                               {{ item.displayName }}
                             </option>
@@ -144,7 +148,7 @@
                         <!--      td Additional reciver -->
                         <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.receiverFullName }} - {{ record.receiverPhoneNumber }}</span>
                         <a
-                          *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff"
+                          *ngIf="this.usedIn == 'createOrEdit' && (record.pickingType === PickingType.Dropoff || isHomeDelivery)"
                           (click)="createOrEditPointModal.show(i, 'receiver')"
                           class="btn btn-sm mr-3"
                           [ngClass]="{
@@ -183,6 +187,50 @@
                           {{ wayPointsList[i]?.note?.length > 18 ? (wayPointsList[i].note | slice: 0:18) + ' ....' : wayPointsList[i].note }}
                         </a>
                       </td>
+                      <td *ngIf="isHomeDelivery">
+                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.dropPaymentMethodTitle ?? '-' }}</span>
+                        <div *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff" class="input-group">
+                          <select
+                            name="PaymentMethod-{{ i }}"
+                            id="PaymentMethod-{{ i }}"
+                            [(ngModel)]="wayPointsList[i].dropPaymentMethod"
+                            class="form-control"
+                          >
+                            <option *ngFor="let flag of paymentMethodsArray" [value]="flag.key">{{ flag.value }}</option>
+                          </select>
+                        </div>
+                      </td>
+                      <td *ngIf="isHomeDelivery">
+                        <!--                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.note ?? '-' }}</span>-->
+                        <div *ngIf="record.pickingType === PickingType.Dropoff">
+                          <div class="checkbox-list mb-2">
+                            <label class="checkbox ml-2">
+                              <input
+                                type="checkbox"
+                                [(ngModel)]="wayPointsList[i].needsPOD"
+                                id="needsPOD-{{ i }}"
+                                name="needsPOD-{{ i }}"
+                                value="false"
+                                [disabled]="this.usedIn != 'createOrEdit'"
+                              />
+                              <span class="ml-2 mt-1"></span>
+                              {{ l('needsPOD') }}
+                            </label>
+                            <label class="checkbox ml-2">
+                              <input
+                                type="checkbox"
+                                [(ngModel)]="wayPointsList[i].needsReceiverCode"
+                                id="needsReceiverCode-{{ i }}"
+                                name="needsReceiverCode-{{ i }}"
+                                value="false"
+                                [disabled]="this.usedIn != 'createOrEdit'"
+                              />
+                              <span class="ml-2 mt-1"></span>
+                              {{ l('needsReceiverCode') }}
+                            </label>
+                          </div>
+                        </div>
+                      </td>
                     </tr>
                   </ng-template>
                 </p-table>
@@ -219,12 +267,21 @@
     <!--end::Form-->
   </div>
   <!--Create/Edit Point Modal-->
-  <createOrEditPointModal #createOrEditPointModal [isForDedicated]="shippingRequestForView.shippingRequestFlag === 1"></createOrEditPointModal>
+  <createOrEditPointModal
+    #createOrEditPointModal
+    [isForDedicated]="_tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
+    [isHomeDelivery]="isHomeDelivery"
+  ></createOrEditPointModal>
   <!--END::Create/Edit Point Modal-->
 </div>
 
 <!--begin::CreateOrEditFacilityModal -->
-<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="loadFacilities()"></createOrEditFacilityModal>
+<createOrEditFacilityModal
+  #createOrEditFacilityModal
+  (modalSave)="loadFacilities()"
+  [isForDedicated]="this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
+  [isHomeDelivery]="isHomeDelivery"
+></createOrEditFacilityModal>
 <!-- End::CreateOrEditFacilityModal -->
 <!-- begin::CreateOrEditReceiver -->
 <createOrEditReceiverModal #createOrEditReceiverModal (modalSave)="loadReceivers($event)"> </createOrEditReceiverModal>

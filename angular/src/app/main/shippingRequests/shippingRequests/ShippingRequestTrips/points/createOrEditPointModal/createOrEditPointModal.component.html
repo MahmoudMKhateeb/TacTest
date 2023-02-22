@@ -20,7 +20,7 @@
               <!-- StartOf::Receiver -->
               <ng-container *ngIf="modalOpenedFor == 'receiver'">
                 <div class="form-group col-lg-6">
-                  <label>{{ l('ReceiverFullName') }}</label>
+                  <label>{{ l('ReceiverFullName') }} <span *ngIf="isHomeDelivery" class="required-fileds">*</span></label>
                   <input
                     #receiverFullName="ngModel"
                     name="receiverFullName"
@@ -32,6 +32,7 @@
                       'is-valid': receiverFullName.touched && receiverFullName.valid,
                       'is-invalid': receiverFullName.touched && receiverFullName.value && !receiverFullName.valid
                     }"
+                    [required]="isHomeDelivery"
                   />
                 </div>
                 <div class="form-group col-lg-6">
@@ -54,7 +55,7 @@
                 </div>
 
                 <div class="form-group col-lg-6">
-                  <label for="userPhone"> {{ 'ReceiverPhoneNumber' | localize }}</label>
+                  <label for="userPhone"> {{ 'ReceiverPhoneNumber' | localize }} <span *ngIf="isHomeDelivery" class="required-fileds">*</span></label>
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text">+966</span>
@@ -74,6 +75,7 @@
                         'is-valid': userPhoneInput.touched && userPhoneInput.valid,
                         'is-invalid': userPhoneInput.touched && userPhoneInput.value && !userPhoneInput.valid
                       }"
+                      [required]="isHomeDelivery"
                     />
                   </div>
                   <span *ngIf="userPhoneInput.value?.length == 9 && userPhoneInput.invalid" class="form-text text-danger">{{
@@ -124,12 +126,22 @@
                 *ngIf="modalOpenedFor === 'goodDetails'"
                 [goodDetailsListForView]="this.goodDetailsListForView"
                 [isForDedicated]="isForDedicated"
+                [isHomeDelivery]="isHomeDelivery"
               ></PointGoodDetailsComponent>
               <!--   End::GoodDetails           -->
             </div>
           </div>
         </div>
         <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-primary"
+            *ngIf="isHomeDelivery && usedIn === 'createOrEdit'"
+            [disabled]="createOrEditPintForm.invalid"
+            (click)="close()"
+          >
+            {{ l('Save') }}
+          </button>
           <button type="button" class="btn btn-secondary" (click)="close()">{{ l('Close') }}</button>
         </div>
       </form>

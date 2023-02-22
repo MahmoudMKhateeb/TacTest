@@ -92,7 +92,12 @@ namespace TACHYON.DataExporting.Excel
             return _localizationSource.GetString("{0}IsInvalid", _localizationSource.GetString(Filter(parameter))) + "; ";
         }
 
-       
+        public string GetLocalizedMessagePart(string parameter)
+        {
+            return _localizationSource.GetString(_localizationSource.GetString(Filter(parameter))) + "; ";
+        }
+
+
         public bool IsRowEmpty(ISheet worksheet, int row)
         {
             var cell = worksheet.GetRow(row)?.Cells.FirstOrDefault();

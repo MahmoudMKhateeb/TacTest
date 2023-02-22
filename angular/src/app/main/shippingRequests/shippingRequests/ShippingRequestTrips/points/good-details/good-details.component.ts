@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, OnDestroy, Input } from '@angular/core';
+import { Component, Injector, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   CreateOrEditGoodsDetailDto,
   CreateOrEditRoutPointDto,
@@ -9,7 +9,7 @@ import { TripService } from '@app/main/shippingRequests/shippingRequests/Shippin
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { Subscription } from 'rxjs';
-import { first, retry } from '@node_modules/rxjs/internal/operators';
+import { retry } from '@node_modules/rxjs/internal/operators';
 
 @Component({
   selector: 'PointGoodDetailsComponent',
@@ -20,6 +20,7 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   //inCase Of View Point
   @Input() goodDetailsListForView: GoodsDetailDto[];
   @Input() isForDedicated = false;
+  @Input() isHomeDelivery = false;
   usedIn: 'view' | 'createOrEdit';
   //For Create/Edit
   Point: CreateOrEditRoutPointDto;
@@ -27,11 +28,11 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   MainGoodsCategory: number;
   allSubGoodCategorys: any;
   allSubGoodCategorysLoading = true;
-  tripServiceSubs$: Subscription;
+  //tripServiceSubs$: Subscription;
   pointServiceSubs$: Subscription;
   usedInSubs$: Subscription;
   canAddMoreGoods = true;
-
+  isDirectTrip = false;
   constructor(
     injector: Injector,
     private _TripService: TripService,
@@ -42,14 +43,15 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   }
 
   ngOnInit(): void {
+    this.isDirectTrip = !this._TripService.GetShippingRequestForViewOutput?.shippingRequest;
+
     this.usedInSubs$ = this._PointsService.currentUsedIn.subscribe((res) => (this.usedIn = res));
     if (this.usedIn !== 'view') {
       //take the Good Category From the Shared Service and bind it
-      this.tripServiceSubs$ = this._TripService.currentShippingRequest.pipe(first()).subscribe((res) => {
-        this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
-        this.loadGoodSubCategory(res.shippingRequest.goodCategoryId);
-        //get the value of the single way point fron the Shared Service
-      });
+
+      this.MainGoodsCategory = this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.goodCategoryId;
+      this.loadGoodSubCategory(this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.goodCategoryId);
+
       //get the value of the single way point fron the Shared Service
       this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => {
         this.Point = res;
@@ -78,7 +80,7 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
    */
   loadGoodSubCategory(FatherID) {
     //Get All Sub-Good Category
-    if (FatherID) {
+    if (FatherID || this.isDirectTrip) {
       this.allSubGoodCategorysLoading = true;
       this._goodsDetailsServiceProxy
         .getAllGoodCategoryForTableDropdown(FatherID)
@@ -91,7 +93,7 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   }
 
   ngOnDestroy() {
-    this.tripServiceSubs$?.unsubscribe();
+    // this.tripServiceSubs$?.unsubscribe();
     this.pointServiceSubs$?.unsubscribe();
     this.usedInSubs$.unsubscribe();
   }

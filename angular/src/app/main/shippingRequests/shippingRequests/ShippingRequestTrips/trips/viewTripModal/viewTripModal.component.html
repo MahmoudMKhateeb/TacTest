@@ -20,13 +20,13 @@
             "
             type="button"
             class="btn btn-primary blue"
-            (click)="ResetTrip(currentTripId)"
+            (click)="ResetTrip(_TripService.activeTripId)"
             [buttonBusy]="isResetTripLoading"
           >
             <i class="fa flaticon2-reload-1"></i>
             {{ l('Reset') }}
           </button>
-          <button class="btn btn-primary" (click)="DownloadSingleDropWaybillPdf(currentTripId)" [buttonBusy]="wayBillIsDownloading">
+          <button class="btn btn-primary" (click)="DownloadSingleDropWaybillPdf(_TripService.activeTripId)" [buttonBusy]="wayBillIsDownloading">
             <i class="fa flaticon2-print"></i>
             {{ l('PrintWaybill') }}
           </button>
@@ -37,6 +37,16 @@
         </div>
       </div>
       <div class="modal-body" [busyIf]="loading">
+        <div class="row" *ngIf="shippingRequestForView?.shippingRequestFlag == ShippingRequestFlagEnum.Dedicated">
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="TripType"> {{ l('TripType') }} </label>
+              <select #TripType="ngModel" name="TripType" id="TripType" [(ngModel)]="trip.shippingRequestTripFlag" class="form-control" disabled>
+                <option *ngFor="let flag of ShippingRequestTripFlagArray" [value]="flag.key">{{ flag.value }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <!--begin::Body-->
           <div class="col-lg-6">
@@ -208,12 +218,13 @@
             *ngIf="
               (canAssignTrucksAndDrivers &&
                 trip.status !== shippingRequestTripStatusEnum.Delivered &&
-                shippingRequestForView?.shippingRequestFlag === 0) ||
+                shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Normal) ||
               (canAssignTrucksAndDrivers &&
                 trip.status !== shippingRequestTripStatusEnum.Delivered &&
                 isShipper &&
                 shippingRequestForView &&
-                shippingRequestForView?.shippingRequestFlag === 1)
+                shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated &&
+                trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal)
             "
           >
             <div class="form-group col-lg-6">
@@ -298,6 +309,39 @@
           </div>
           <!--  end:: Notes-->
 
+          <!--        begin of home delivery for dedicated request special fields          -->
+          <ng-container
+            *ngIf="
+              shippingRequestForView &&
+              shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated &&
+              trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery
+            "
+          >
+            <div class="form-group col-lg-3">
+              <label>{{ l('RouteType') }}</label>
+              <select name="routeType" type="text" [(ngModel)]="trip.routeType" class="form-control" disabled>
+                <option disabled [ngValue]="null">{{ l('SelectRouteType') }}</option>
+                <option [value]="r.key" *ngFor="let r of routeTypes">
+                  {{ l(r.value) | localize }}
+                </option>
+              </select>
+            </div>
+            <div class="col-lg-3 form-group">
+              <label>{{ l('NumberOfDrops') }}</label>
+              <input
+                #numberOfDrops="ngModel"
+                type="number"
+                class="form-control"
+                name="numberOfDrops"
+                [(ngModel)]="trip.numberOfDrops"
+                [class.is-invalid]="numberOfDrops.touched && !numberOfDrops.valid"
+                [class.is-valid]="numberOfDrops.touched && numberOfDrops.valid"
+                disabled
+              />
+            </div>
+          </ng-container>
+          <!--        end of home delivery for dedicated request special fields          -->
+
           <!-- begin::Vas's  -->
           <!--          <div class="col-lg-6" *ngIf="VasListFromFather.length > 0">-->
           <!--            <div class="form-group" *ngIf="selectedVases != []">-->
@@ -316,7 +360,10 @@
 
           <!--      end:Vas's      -->
           <!--  start:: RouteSteps -->
-          <PointsComponent *ngIf="viewTripDetails.isShown"></PointsComponent>
+          <PointsComponent
+            *ngIf="viewTripDetails.isShown"
+            [isHomeDelivery]="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
+          ></PointsComponent>
           <!--  end:: RouteSteps -->
           <!--end::Body-->
         </div>
@@ -334,4 +381,4 @@
 </div>
 <shared-file-viewer #fileViwerComponent></shared-file-viewer>
 
-<app-trip-notes-modal #TripNotesModal [tripId]="currentTripId" [type]="type"> </app-trip-notes-modal>
+<app-trip-notes-modal #TripNotesModal [tripId]="_TripService.activeTripId" [type]="type"> </app-trip-notes-modal>

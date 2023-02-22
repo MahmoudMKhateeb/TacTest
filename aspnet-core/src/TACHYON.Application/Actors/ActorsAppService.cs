@@ -13,9 +13,11 @@ using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
+using Abp.Authorization.Roles;
 using Abp.Organizations;
 using Microsoft.EntityFrameworkCore;
 using Abp.UI;
+using TACHYON.Authorization.Roles;
 using TACHYON.Organizations.Dto;
 using TACHYON.Storage;
 using TACHYON.Documents.DocumentFiles;
@@ -35,11 +37,17 @@ namespace TACHYON.Actors
         private readonly DocumentFilesAppService _documentFilesAppService;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly ActorInvoicesManager _actorInvoicesManager;
+        private readonly RoleManager _roleManager;
 
 
-        public ActorsAppService(IRepository<Actor> actorRepository, OrganizationUnitManager organizationUnitManager,
-            IRepository<OrganizationUnit, long> organizationUnitRepository, DocumentFilesAppService documentFilesAppService, IRepository<DocumentFile, Guid> documentFileRepository,
-            ActorInvoicesManager actorInvoicesManager)
+        public ActorsAppService(
+            IRepository<Actor> actorRepository,
+            OrganizationUnitManager organizationUnitManager,
+            IRepository<OrganizationUnit, long> organizationUnitRepository,
+            DocumentFilesAppService documentFilesAppService,
+            IRepository<DocumentFile, Guid> documentFileRepository,
+            ActorInvoicesManager actorInvoicesManager,
+            RoleManager roleManager)
         {
             _actorRepository = actorRepository;
             _organizationUnitManager = organizationUnitManager;
@@ -47,6 +55,7 @@ namespace TACHYON.Actors
             _documentFilesAppService = documentFilesAppService;
             _documentFileRepository = documentFileRepository;
             _actorInvoicesManager = actorInvoicesManager;
+            _roleManager = roleManager;
         }
 
         public async Task<PagedResultDto<GetActorForViewDto>> GetAll(GetAllActorsInput input)
@@ -176,9 +185,20 @@ namespace TACHYON.Actors
             organizationUnit.Code = await _organizationUnitManager.GetNextChildCodeAsync(organizationUnit.ParentId);
 
             var organizationUnitId = await _organizationUnitRepository.InsertAndGetIdAsync(organizationUnit);
+            
+            bool isExists = await _roleManager.RoleExistsAsync(StaticRoleNames.Tenants.InternalClients);
+            if (!isExists)
+                await CreateInternalClientsRole();
 
             await CurrentUnitOfWork.SaveChangesAsync();
 
+
+            
+            int internalClientsRoleId = await _roleManager.Roles.Where(x =>
+                    x.TenantId == AbpSession.TenantId && x.Name == StaticRoleNames.Tenants.InternalClients)
+                .Select(x => x.Id).SingleAsync();
+            
+            await _roleManager.AddToOrganizationUnitAsync(internalClientsRoleId, organizationUnitId,AbpSession.TenantId);
 
             var actor = ObjectMapper.Map<Actor>(input);
             actor.OrganizationUnitId = organizationUnitId;
@@ -241,6 +261,32 @@ namespace TACHYON.Actors
             }
         }
 
+        private async Task CreateInternalClientsRole()
+        {
+            await _roleManager.CreateAsync(new Role()
+            {
+                TenantId = AbpSession.TenantId,
+                DisplayName = "Internal Client",
+                Name = StaticRoleNames.Tenants.InternalClients,
+                IsStatic = true,
+                Permissions = new List<RolePermissionSetting>()
+                {
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Tracking, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Administration, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Administration_ActorsInvoice, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Invoices, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequests, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Trucks, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Administration_Users, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Administration_Drivers, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_DocumentFiles, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_DocumentFiles_Actors, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequestTrips, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequestAndTripNotes, TenantId = AbpSession.TenantId },
+                }
+            });
+        }
+
         [AbpAuthorize(AppPermissions.Pages_Administration_Actors_Edit)]
         protected virtual async Task Update(CreateOrEditActorDto input)
         {
@@ -259,6 +305,12 @@ namespace TACHYON.Actors
         [AbpAuthorize(AppPermissions.Pages_Administration_Actors_Delete)]
         public async Task Delete(EntityDto input)
         {
+            long organizationUnit = await _actorRepository.GetAll().Where(x => x.Id == input.Id)
+                .Select(x => x.OrganizationUnitId).FirstOrDefaultAsync();
+
+            if (organizationUnit != default)
+                await _organizationUnitRepository.DeleteAsync(organizationUnit);
+            
             await _actorRepository.DeleteAsync(input.Id);
         }
 

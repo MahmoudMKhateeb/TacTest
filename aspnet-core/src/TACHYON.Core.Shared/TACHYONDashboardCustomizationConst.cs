@@ -38,8 +38,8 @@
                 public const string ShipperDocumentDueDateInDaysWidget =
                     "Widgets_Tenant_shipper_DocumentDueDateInDaysWidget";
 
-                public const string ShipperMostWorkedWithCarriersWidget =
-                    "Widgets_Tenant_shipper_MostWorkedWithCarriersWidget";
+                // public const string ShipperMostWorkedWithCarriersWidget =
+                //     "Widgets_Tenant_shipper_MostWorkedWithCarriersWidget";
 
                 public const string ShipperMostUsedOriginsWidget = "Widgets_Tenant_shipper_MostUsedOriginsWidget";
 
@@ -50,6 +50,10 @@
                     "Widgets_Tenant_shipper_RequestsInMarketplaceWidget";
 
                 public const string ShipperTrackingMapWidget = "Widgets_Tenant_shipper_TrackingMapWidget";
+                public const string ShipperCountersWidget = "Widgets_Tenant_shipper_Counters_Widget";
+                public const string ShipperUpcomingTripsWidget = "Widgets_Tenant_shipper_Upcoming_Trips_Widget";
+                public const string ShipperNeedsActionWidget = "Widgets_Tenant_shipper_Needs_Action_Widget";
+                public const string ShipperNewOffersWidget = "Widgets_Tenant_shipper_New_Offers_Widget";
             }
 
             public class Carrier
@@ -69,8 +73,8 @@
                 public const string CarrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget =
                     "Widgets_Tenant_carrier_NumberOfCompletedTripsTotalMonthlyIncreaseWidget";
 
-                public const string CarrierMostWorkedWithShipperWidget =
-                    "Widgets_Tenant_carrier_MostWorkedWithShipperWidget";
+                // public const string CarrierMostWorkedWithShipperWidget =
+                //     "Widgets_Tenant_carrier_MostWorkedWithShipperWidget";
 
                 public const string CarrierNextInvoiceFrequenctEndDateWidget =
                     "Widgets_Tenant_carrier_NextInvoiceFrequenctEndDateWidget";
@@ -78,7 +82,11 @@
                 public const string CarrierDueDateInDaysWidget = "Widgets_Tenant_carrier_DueDateInDaysWidget";
                 public const string CarrierTrackingMapWidget = "Widgets_Tenant_carrier_TrackingMapWidget";
                 public const string CarrierMostUsedPPWidget = "Widgets_Tenant_carrier_MostUsedPPWidget";
-
+                public const string CarrierActiveDriversAndTrucksWidget = "Widgets_Tenant_carrier_active_drivers_and_trucks_Widget";
+                public const string CarrierUpcomingTripsWidget = "Widgets_Tenant_carrier_Upcoming_Trips_Widget";
+                public const string CarrierCountersWidget = "Widgets_Tenant_carrier_Counters_Widget";
+                public const string NeedsActionWidget = "Widgets_Tenant_carrier_Needs_Action_Widget";
+                public const string NewDirectRequestsWidget = "Widgets_Tenant_carrier_New_Direct_request";
             }
 
             public class TachyonDealer

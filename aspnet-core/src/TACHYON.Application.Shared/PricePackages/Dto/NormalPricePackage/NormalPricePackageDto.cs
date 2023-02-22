@@ -18,5 +18,15 @@ namespace TACHYON.PricePackages.Dto.NormalPricePackage
         public string Origin { get; set; }
         public string Destination { get; set; }
         public string TenantName { get; set; }
+
+        public int TenantId { get; set; }
+        
+        public int TransportTypeId { get; set; }
+        
+        public long TrucksTypeId { get; set; }
+        
+        public int? OriginCityId { get; set; }
+        
+        public int? DestinationCityId { get; set; }
     }
 }

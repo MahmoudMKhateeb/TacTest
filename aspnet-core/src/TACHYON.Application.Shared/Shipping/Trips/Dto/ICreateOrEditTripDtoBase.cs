@@ -11,7 +11,7 @@ namespace TACHYON.Shipping.Trips.Dto
 {
     public interface ICreateOrEditTripDtoBase 
     {
-        long ShippingRequestId { get; set; }
+        long? ShippingRequestId { get; set; }
         [Required]  DateTime? StartTripDate { get; set; }
 
          DateTime? EndTripDate { get; set; }
@@ -24,6 +24,8 @@ namespace TACHYON.Shipping.Trips.Dto
          string Note { get; set; }
 
          string TotalValue { get; set; }
+        long? TruckId { get; set; }
+        long? DriverUserId { get; set; }
 
 
     }

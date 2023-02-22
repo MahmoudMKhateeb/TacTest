@@ -113,7 +113,7 @@
                           {{ 'FillAttendance' | localize }}
                         </a>
                       </li>
-                      <li *ngIf="isTachyonDealer">
+                      <li *ngIf="isTachyonDealer || isRequestSaas">
                         <a href="javascript:;" class="dropdown-item" (click)="openTruckPerformanceModal(options.data)">
                           {{ 'updateTruckPerformance' | localize }}
                         </a>
@@ -242,5 +242,5 @@
   [trucks]="trucks"
 ></dedicated-shipping-request-attendance-sheet-modal>
 
-<app-truck-performance #truckPerformance></app-truck-performance>
+<app-truck-performance [isRequestSaas]="isRequestSaas" #truckPerformance></app-truck-performance>
 <app-truck-and-driver-replacement #appTruckAndDriverReplacement></app-truck-and-driver-replacement>

@@ -11,15 +11,19 @@ using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.AddressBook;
+using TACHYON.Authorization.Users;
 using TACHYON.Features;
 using TACHYON.Goods.Dtos;
 using TACHYON.Notifications;
 using TACHYON.Receivers;
 using TACHYON.Routs.RoutPoints;
-using TACHYON.Routs.RoutPoints.Dtos;
+using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.ShippingRequestVases;
+using TACHYON.Tracking;
+using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.ShippingRequestTrips
 {
@@ -33,11 +37,28 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         private readonly IRepository<Receiver> _receiverRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
+        private readonly ShippingRequestPointWorkFlowProvider _shippingRequestPointWorkFlowProvider;
+        private readonly IRepository<User, long> _userRepository;
+        private readonly IRepository<Truck, long> _truckRepository;
+        private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
+        private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTruckRepository;
 
         private IAbpSession _AbpSession { get; set; }
 
 
-        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession, IRepository<RoutPoint, long> routePointRepository, IRepository<Facility, long> facilityRepository, IRepository<Receiver> receiverRepository, IAppNotifier appNotifier, IRepository<ShippingRequestVas, long> shippingRequestVasRepository)
+        public ShippingRequestTripManager(IRepository<ShippingRequestTrip> shippingRequestTripRepository,
+            IRepository<ShippingRequest, long> shippingRequestRepository, 
+            IFeatureChecker featureChecker, IAbpSession abpSession, 
+            IRepository<RoutPoint, long> routePointRepository,
+            IRepository<Facility, long> facilityRepository,
+            IRepository<Receiver> receiverRepository, 
+            IAppNotifier appNotifier,
+            IRepository<ShippingRequestVas, long> shippingRequestVasRepository, 
+            ShippingRequestPointWorkFlowProvider shippingRequestPointWorkFlowProvider,
+            UserManager userManager, 
+            IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriver,
+            IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTruck,
+            IRepository<User, long> userRepository, IRepository<Truck, long> truckRepository)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -48,8 +69,21 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             _receiverRepository = receiverRepository;
             _appNotifier = appNotifier;
             _shippingRequestVasRepository = shippingRequestVasRepository;
+            _shippingRequestPointWorkFlowProvider = shippingRequestPointWorkFlowProvider;
+            _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriver;
+            _dedicatedShippingRequestTruckRepository = dedicatedShippingRequestTruck;
+            _userRepository = userRepository;
+            _truckRepository = truckRepository;
         }
 
+        public async Task DriverAcceptTrip(ShippingRequestTrip trip )
+        {
+            trip.DriverStatus = ShippingRequestTripDriverStatus.Accepted;
+            await _shippingRequestPointWorkFlowProvider.TransferPricesToTrip(trip);
+            var currentUser = await _shippingRequestPointWorkFlowProvider.GetCurrentUserAsync();
+            if (currentUser.IsDriver) await _appNotifier.DriverAcceptTrip(trip, currentUser.FullName);
+
+        }
         public async Task<int> CreateAndGetIdAsync(ShippingRequestTrip trip)
         {
             //var existedTrip = await _shippingRequestTripRepository.FirstOrDefaultAsync(x => x.BulkUploadRef == trip.BulkUploadRef);
@@ -77,26 +111,65 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public void ValidateTripDto(ImportTripDto importTripDto, StringBuilder exceptionMessage)
         {
             DisableTenancyFilters();
-            var SR = GetShippingRequestByPermission(importTripDto.ShippingRequestId);
 
-            //StringBuilder exceptionMessage = new StringBuilder();
-            if(importTripDto.StartTripDate?.Date == null)
+            ShippingRequest sr = null;
+
+            if (importTripDto.ShippingRequestId.HasValue)
             {
-                importTripDto.StartTripDate = GetShippingRequestById(importTripDto.ShippingRequestId).StartTripDate;
-            }
-            if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
-            {
-                exceptionMessage.Append("The start date must be or equal to end date." + "; ");
+                sr = GetShippingRequestByPermission(importTripDto.ShippingRequestId.Value);
+
             }
 
-            try
+            if (sr.ShippingRequestFlag == ShippingRequestFlag.Normal)
             {
-                ValidateTripDates(importTripDto, SR);
+                if(importTripDto.StartTripDate?.Date == null)
+                {
+                    importTripDto.StartTripDate = sr.StartTripDate;
+                }
+                if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
+                {
+                    exceptionMessage.Append("The start date must be less or equal to end date." + "; ");
+                }
+
+                try
+                {
+                    ValidateTripDates(importTripDto, sr);
+                }
+                catch (UserFriendlyException e)
+                {
+                    exceptionMessage.Append(e.Message+";");
+                }
             }
-            catch (UserFriendlyException e)
+            else //dedicated
             {
-                exceptionMessage.Append(e.Message+";");
+                if (importTripDto.StartTripDate?.Date == null)
+                {
+                    importTripDto.StartTripDate = sr.RentalStartDate;
+                }
+                if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
+                {
+                    exceptionMessage.Append("The start date must be less or equal to end date." + "; ");
+                }
+
+                try
+                {
+                    ValidateDedicatedRequestTripDates(importTripDto, sr);
+                }
+                catch (UserFriendlyException e)
+                {
+                    exceptionMessage.Append(e.Message + ";");
+                }
+
+                //number of drops
+                if(importTripDto.RouteType == ShippingRequestRouteType.SingleDrop)
+                {
+                    importTripDto.NumberOfDrops = 1;
+                }
+
+                //validate truck and driver
+               // await ValidateTruckAndDriver(importTripDto);
             }
+
 
             ValidateDuplicateBulkReferenceFromDB(importTripDto, exceptionMessage);
             //ValidateDuplicatedReference(importTripDtoList, exceptionMessage);
@@ -106,9 +179,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         public ShippingRequest GetShippingRequestByPermission(long id)
         {
+            DisableTenancyFilters();
             return _shippingRequestRepository.GetAll()
+                .Include(x=>x.ShippingRequestVases)
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
-                .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
+                .WhereIf(!_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x => x.TenantId == _AbpSession.TenantId)
                 .FirstOrDefault(x => x.Id == id);
         }
 
@@ -218,6 +293,28 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         }
 
 
+        public long GeDriverIdByPermission(string text, long shippingRequestId, int tenantId)
+        {
+            string firstname = text.Split(" ")[0];
+            string surname = text.Split(" ")?[1];
+
+            DisableTenancyFilters();
+            return _dedicatedShippingRequestDriverRepository.GetAll().FirstOrDefault(x => x.DriverUser.TenantId == tenantId &&
+            x.ShippingRequestId == shippingRequestId &&
+            ((x.DriverUser.Name.ToLower() == firstname.ToLower() && x.DriverUser.Surname.ToLower() == surname.ToLower()) ||
+            x.DriverUser.PhoneNumber == text)
+            ).DriverUserId;
+        }
+
+
+        public long GetTruckIdByPermission(string text, long shippingRequestId, int tenantId)
+        {
+            DisableTenancyFilters();
+            return _dedicatedShippingRequestTruckRepository.GetAll().FirstOrDefault(x => x.Truck.TenantId == tenantId && x.ShippingRequestId == shippingRequestId && x.Truck.PlateNumber == text).TruckId;
+               
+        }
+
+
         public ShippingRequestTrip GetShippingRequestTripIdByBulkRef(string tripReference, long shippingRequestId)
         {
            return _shippingRequestTripRepository.FirstOrDefault(x => x.BulkUploadRef == tripReference && x.ShippingRequestId==shippingRequestId);
@@ -230,10 +327,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         public ShippingRequest GetShippingRequestById(long id)
         {
+            DisableTenancyFilters();
             return _shippingRequestRepository.GetAll()
                 .WhereIf(_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
-                .WhereIf(_featureChecker.IsEnabled(AppFeatures.Shipper), x => x.TenantId == _AbpSession.TenantId)
-                .WhereIf(_featureChecker.IsEnabled(AppFeatures.CarrierAsASaas), x => x.TenantId == _AbpSession.TenantId)
+                .WhereIf(!_featureChecker.IsEnabled(AppFeatures.TachyonDealer), x => x.TenantId == _AbpSession.TenantId)
                 .FirstOrDefault(x => x.Id == id);
         }
 
@@ -252,18 +349,49 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
-        public void AssignWorkFlowVersionToRoutPoints(List<RoutPoint> routPoints, bool tripNeedsDeliveryNote)
+        public void AssignWorkFlowVersionToRoutPoints(List<RoutPoint> routPoints, bool tripNeedsDeliveryNote, ShippingRequestTripFlag tripFlag)
         {
-            if (routPoints != null && routPoints.Any())
+            if (routPoints == null || !routPoints.Any()) return;
+            
+
+            foreach (var point in routPoints)
             {
-                foreach (var point in routPoints)
+                  point.WorkFlowVersion = point.PickingType switch
                 {
-                    point.WorkFlowVersion = point.PickingType == PickingType.Pickup
-                        ? TACHYONConsts.PickUpRoutPointWorkflowVersion
-                        : tripNeedsDeliveryNote
-                            ? TACHYONConsts.DropOfWithDeliveryNoteRoutPointWorkflowVersion
-                            : TACHYONConsts.DropOfRoutPointWorkflowVersion;
+                    PickingType.Dropoff => GetDropOffWorkflowVersion(point),
+                    PickingType.Pickup => tripFlag == ShippingRequestTripFlag.HomeDelivery ? WorkflowVersionConst.PickupHomeDeliveryWorkflowVersion : WorkflowVersionConst.PickupPointWorkflowVersion,
+                    _ => throw new ArgumentOutOfRangeException(nameof(point.PickingType))
+                };
+                  
+            }
+            
+            int GetDropOffWorkflowVersion(RoutPoint point)
+            {
+                switch (tripFlag)
+                {
+                    case ShippingRequestTripFlag.Normal:
+                        return tripNeedsDeliveryNote
+                            ? WorkflowVersionConst.DropOffWithDeliveryNotePointWorkflowVersion
+                            : WorkflowVersionConst.DropOffWithoutDeliveryNotePointWorkflowVersion;
+                    case ShippingRequestTripFlag.HomeDelivery:
+
+                        switch (point.NeedsReceiverCode)
+                        {
+                            case true when point.NeedsPOD:
+                                return WorkflowVersionConst.DropOffHomeDeliveryWithPodAndReceiverCodeWorkflowVersion;
+                            case true when !point.NeedsPOD:
+                                return WorkflowVersionConst.DropOffHomeDeliveryWithReceiverCodeWorkflowVersion;
+                            case false when point.NeedsPOD:
+                                return WorkflowVersionConst.DropOffHomeDeliveryWithPodWorkflowVersion;
+                            case false when !point.NeedsPOD:
+                                return WorkflowVersionConst.DropOffHomeDeliveryWorkflowVersion;
+                        }
+
+                        break;
+                    default: throw new UserFriendlyException(L("TripTypeIsNotValid"));
                 }
+
+                throw new UserFriendlyException(L("TripTypeIsNotValid"));
             }
         }
 
@@ -282,6 +410,25 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             if (trip.ShippingRequestFk.CarrierTenantId != null && trip.NeedsDeliveryNote && needseliverNoteNotification)
             {
                 await _appNotifier.NotifyCarrierWhenTripNeedsDeliverNote(trip.Id, carrierTenantId);
+            }
+        }
+
+        public async Task ValidateTruckAndDriver(ICreateOrEditTripDtoBase input)
+        {
+            if (input.DriverUserId != null)
+            {
+                //Check if driver user is from assigned
+                if (!await _dedicatedShippingRequestDriverRepository.GetAll().AnyAsync(x => x.ShippingRequestId == input.ShippingRequestId && x.DriverUserId == input.DriverUserId))
+                {
+                    throw new UserFriendlyException(L("DriverUserMustBeFromAssigned"));
+                }
+            }
+            if (input.TruckId != null)
+            {
+                if (!await _dedicatedShippingRequestTruckRepository.GetAll().AnyAsync(x => x.ShippingRequestId == input.ShippingRequestId && x.TruckId == input.TruckId))
+                {
+                    throw new UserFriendlyException(L("TruckMustBeFromAssigned"));
+                }
             }
         }
         private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, StringBuilder exceptionMessage)

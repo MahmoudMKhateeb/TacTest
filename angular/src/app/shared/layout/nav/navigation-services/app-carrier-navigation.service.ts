@@ -4,7 +4,6 @@ import { AppMenu } from '../app-menu';
 import { AppMenuItem } from '../app-menu-item';
 import { FeatureCheckerService } from '@node_modules/abp-ng2-module';
 import { PermissionCheckerService } from 'abp-ng2-module';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { AppBaseNavigationService } from './app-base-navigation.service';
 
 @Injectable({ providedIn: 'root' })
@@ -20,18 +19,13 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
   getMenu(): AppMenu {
     console.log('AppCarrierNavigationService');
     let menu = new AppMenu('MainMenu', 'MainMenu', [
-      new AppMenuItem(
-        'Dashboard',
-        '',
-        'interaction, interact, preferences, preformance, computer, online, rating, review.svg',
-        '/app/main/dashboard'
-      ),
+      new AppMenuItem('Dashboard', '', 'Dashboards.svg', '/app/main/dashboard'),
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Operations
       new AppMenuItem(
         'Operations',
         'Pages.ShippingRequests',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        'Operations.svg',
         '/app/main/comingSoon',
         [],
         [
@@ -41,7 +35,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
           ),
           new AppMenuItem(
             'SavedTemplates',
-            'Pages.ShippingRequests',
+            'Pages.EntityTemplate',
             '',
             '/app/main/shippingRequests/requestsTemplates',
             undefined,
@@ -67,7 +61,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'AddressBook',
         '',
-        'map, navigation, location, navigate, book, bookmark, pin.svg',
+        'Facility Managment.svg',
         '',
         [],
         [
@@ -78,9 +72,22 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
         undefined,
         undefined,
-        () => this.isEnabled('App.ShipperClients')
+        () => this.isEnabled('App.ShipperClients') || this.isEnabled('App.CarrierAsASaas')
       ),
       //end  Of AddressBook  "Facilities Management"
+
+      new AppMenuItem(
+        'directShipments',
+        '',
+        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        '/app/main/directShipments',
+        [],
+        //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
+        undefined,
+        undefined,
+        () => this.isEnabled('App.TachyonDealer')
+      ),
+
       // start of PricePackages
       new AppMenuItem(
         'PricePackages',
@@ -101,11 +108,11 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMS',
         '',
-        'logistic, delivery, warehouse, storage, empty, vacant.svg',
+        'TMS Settings.svg',
         '',
         [],
         [
-          new AppMenuItem('Drivers', 'Pages.Administration.Users', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
+          new AppMenuItem('Drivers', 'Pages.Administration.Drivers', '', '/app/admin/drivers', undefined, undefined, undefined, undefined, undefined),
           new AppMenuItem(
             'Trucks',
             'Pages.Trucks',
@@ -129,7 +136,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Financials',
         'Pages.Invoices',
-        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        'Financials.svg',
         '',
         [],
         [
@@ -182,6 +189,9 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.CarrierClients')
           ),
+          new AppMenuItem('ClientsDedicatedInvoices', '', '', '/app/main/invoices/dedicatedClients', undefined, undefined, undefined, undefined, () =>
+            this.isEnabled('App.ShipperClients')
+          ),
         ]
       ),
       // end of  Invoices
@@ -190,7 +200,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'DocumentManagement',
         '',
-        'interaction, interact, preferences, preformance, customer, rating, rate, questions.svg',
+        'Document.svg',
         '',
         [],
         [
@@ -243,16 +253,8 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
         undefined
       ),
       /////Start of Actors
-      new AppMenuItem(
-        'Actors',
-        'Pages.Administration.Actors',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
-        '/app/main/actors/actors',
-        [],
-        [],
-        undefined,
-        undefined,
-        () => this.isEnabled('App.ShipperClients')
+      new AppMenuItem('Actors', 'Pages.Administration.Actors', 'User Management.svg', '/app/main/actors/actors', [], [], undefined, undefined, () =>
+        this.isEnabled('App.ShipperClients')
       ),
       //end of actors
       //end of Documents
@@ -261,7 +263,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Settings',
         'Pages.Administration.Tenant.Settings',
-        'user, interface, agent, usability, settings, options, preferences, gears.svg',
+        'Settings.svg',
         '',
         [],
         [new AppMenuItem('GeneralSettings', 'Pages.Administration.Tenant.Settings', '', '/app/admin/tenantSettings')]
@@ -273,12 +275,12 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'UserManagement',
         '',
-        'marketing, content marketing, digital marketing, strategy, statistics, analytics, user.svg',
+        'User Management.svg',
         '',
         [],
         [
           new AppMenuItem('Roles', 'Pages.Administration.Roles', '', '/app/admin/roles'),
-          new AppMenuItem('Users', 'Pages.Administration.Users', '', '/app/admin/users'),
+          new AppMenuItem('Users', 'Pages.Administration.Users.View', '', '/app/admin/users'),
         ]
       ),
 

@@ -22,8 +22,7 @@ namespace TACHYON.Goods.GoodsDetails
         /// <summary>
         ///  Amount for this Category of Goods 
         /// </summary>
-        [Required]
-        public int Amount { get; set; }
+        public int? Amount { get; set; }
 
         /// <summary>
         /// Weight of this category of goods
@@ -58,8 +57,7 @@ namespace TACHYON.Goods.GoodsDetails
         /// <summary>
         /// unit of measure for the total amount, ex: litre
         /// </summary>
-        [Required]
-        public int UnitOfMeasureId { get; set; }
+        public int? UnitOfMeasureId { get; set; }
 
         [ForeignKey("UnitOfMeasureId")] public UnitOfMeasure UnitOfMeasureFk { get; set; }
 

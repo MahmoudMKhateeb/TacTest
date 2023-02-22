@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TACHYON.DedicatedDynamicInvocies;
 
 namespace TACHYON.Invoices.ActorInvoices.Dto
 {
@@ -18,5 +19,7 @@ namespace TACHYON.Invoices.ActorInvoices.Dto
 
         public string ShipperActorName { get; set; }
         public int? ShipperActorId { get; set; }
+        public ActorInvoiceChannel ActorInvoiceChannel { get; set; }
+        public string ActorInvoiceChannelTitle { get; set; }
     }
 }

@@ -3,7 +3,14 @@
     <!--begin::Subheader-->
     <sub-header [title]="Title | localize" [description]="'' | localize">
       <div role="actions" *ngIf="isShipper || isTachyonDealer || isCarrierSaas">
-        <div class="btn-group mr-2" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true">
+        <div
+          *ngIf="isGranted('Pages.ShippingRequests.Create')"
+          class="btn-group mr-2"
+          dropdown
+          #dropdownAddPage="bs-dropdown"
+          [dropup]="false"
+          [insideClick]="true"
+        >
           <button dropdownToggle type="button" class="btn btn-success" aria-controls="dropdown-basic">
             <i class="fas fa-plus"></i> {{ 'CreateNewRequest' | localize }}<span class="caret"></span>
           </button>
@@ -13,7 +20,7 @@
                 <i class="fas fa-plus"></i> {{ l('New') }}
               </button>
             </li>
-            <li *ngIf="!hasCarrierClients && !hasShipperClients && !isCarrierSaas" role="menuitem">
+            <li role="menuitem">
               <button (click)="createNewDedicatedRequest()" class="btn btn-outline-success btn-elevate-hover mt-2 w-100">
                 <i class="fas fa-plus"></i> {{ l('NewDedicated') }}
               </button>
@@ -381,15 +388,15 @@
                 <span class="ribbon-inner bg-warning"></span>{{ 'DedicatedShippingRequest' | localize }}
               </div>
               <div class="row w-100">
-                <div class="col-md-4 col-lg-2">
+                <div class="col-md-4 col-lg-2" *ngIf="!item.isSaas">
                   <div class="symbol symbol-50 symbol-lg-120">
                     <img alt="Pic" src="assets/common/images/default-profile-picture.png" />
                   </div>
                 </div>
-                <div class="col-md-8 col-lg-10 p-0 align-content-end">
-                  <div class="w-100 row custom-header-details">
-                    <div [class]="Channel !== PriceOfferChannelEnum.DirectRequest ? 'col-4' : 'col-6'">
-                      <div>
+                <div [class]="!item.isSaas ? 'col-md-8 col-lg-10 p-0 align-content-end' : 'col-md-12 col-lg-12 p-0 align-content-center'">
+                  <div class="w-100 row custom-header-details" [class.align-items-center]="item.isSaas">
+                    <div [class]="Channel !== PriceOfferChannelEnum.DirectRequest && !feature.isEnabled('App.CarrierAsASaas') ? 'col-4' : 'col-6'">
+                      <div *ngIf="!item.isSaas">
                         <a
                           *ngIf="setTitle(item).length > 0"
                           [routerLink]="item.isTachyonDeal ? [] : ['/app/main/profile', item.tenantId, 'view']"
@@ -409,12 +416,18 @@
                           class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3"
                         ></span>
                       </div>
-                      <div class="serialNumber">
+                      <div *ngIf="item.isSaas" class="serialNumber">
+                        <p>
+                          <i class="flaticon2-telegram-logo mr-2"></i>
+                          <a href="javascript:void(0)" class="font-weight-bold">{{ l('ReferenceNo') }}: {{ item.referenceNumber }}</a>
+                        </p>
+                      </div>
+                      <div *ngIf="!item.isSaas" class="serialNumber">
                         <i class="flaticon2-telegram-logo mr-2"></i>
                         <a href="javascript:void(0)" class="font-weight-bold">{{ l('ReferenceNo') }}: {{ item.referenceNumber }}</a>
                       </div>
                     </div>
-                    <div [class]="Channel !== PriceOfferChannelEnum.DirectRequest ? 'col-4' : 'col-6'">
+                    <div [class]="Channel !== PriceOfferChannelEnum.DirectRequest && !feature.isEnabled('App.CarrierAsASaas') ? 'col-4' : 'col-6'">
                       <p>
                         <b>
                           {{ 'Status' | localize }}:
@@ -422,7 +435,7 @@
                         </b>
                       </p>
                     </div>
-                    <div class="col-4" *ngIf="Channel !== PriceOfferChannelEnum.DirectRequest">
+                    <div class="col-4" *ngIf="Channel !== PriceOfferChannelEnum.DirectRequest && !feature.isEnabled('App.CarrierAsASaas')">
                       <p>
                         <b *ngIf="isShipper">
                           {{ 'RentedFrom' | localize }}:
@@ -552,6 +565,11 @@
                   <a *ngIf="Channel == 10 && canViewBrokerPrice(item)" href="javascript:void(0)" class="infoHighLight red"
                     >{{ item.price | number }} {{ l('SAR') }}</a
                   >
+                  <b *ngIf="item.isSaas" class="infoHighLight blue stautsTruck">
+                    {{ l('saas') }}
+                  </b>
+                  <b *ngIf="item.carrierActor" class="infoHighLight blue stautsTruck"> {{ l('carrierActor') }}: {{ item.carrierActor }} </b>
+                  <b *ngIf="item.shipperActor" class="infoHighLight blue stautsTruck"> {{ l('shipperActor') }}: {{ item.shipperActor }} </b>
                 </div>
               </div>
               <div class="w-100 d-flex p-0 actions justify-content-end">
@@ -621,7 +639,11 @@
                   (click)="moreRedirectTo(item)"
                   class="red"
                   *ngIf="
-                    (!Channel && (feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)) ||
+                    (!Channel &&
+                      (feature.isEnabled('App.Shipper') ||
+                        feature.isEnabled('App.TachyonDealer') ||
+                        (item.isSaas && feature.isEnabled('App.CarrierAsASaas')) ||
+                        !appSession.tenantId)) ||
                     ((Channel == PriceOfferChannelEnum.MarketPlace || Channel == PriceOfferChannelEnum.DirectRequest) &&
                       (feature.isEnabled('App.Carrier') || feature.isEnabled('App.CarrierClients') || feature.isEnabled('App.CarrierAsASaas')))
                   "

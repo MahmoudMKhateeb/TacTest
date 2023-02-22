@@ -1,26 +1,36 @@
 ﻿using Abp.Application.Features;
 using Abp.Application.Services;
 using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.Localization.Sources;
 using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
+using IdentityServer4.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Cities.Dtos;
 using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Invoices.ActorInvoices.Dto;
 using TACHYON.Invoices.Balances;
+using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.Invoices.SubmitInvoices.Dto;
 using TACHYON.Invoices.Transactions;
+using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Invoices.ActorInvoices
 {
@@ -31,20 +41,40 @@ namespace TACHYON.Invoices.ActorInvoices
     public class ActorSubmitInvoiceAppService : TACHYONAppServiceBase, IApplicationService
     {
         private readonly IRepository<ActorSubmitInvoice, long> _actorSubmitInvoiceRepository;
+        private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly CommonManager _commonManager;
+        private readonly IRepository<ShippingRequestTrip> _tripRepository;
 
-        public ActorSubmitInvoiceAppService(IRepository<ActorSubmitInvoice, long> actorSubmitInvoiceRepository,
-            CommonManager commonManager)
+        public ActorSubmitInvoiceAppService(
+            IRepository<ActorSubmitInvoice, long> actorSubmitInvoiceRepository,
+            CommonManager commonManager,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+            IRepository<ShippingRequestTrip> tripRepository)
         {
             _actorSubmitInvoiceRepository = actorSubmitInvoiceRepository;
             _commonManager = commonManager;
+            _userOrganizationUnitRepository = userOrganizationUnitRepository;
+            _tripRepository = tripRepository;
         }
 
         public async Task<LoadResult> GetAll(string filter)
 
         {
+            
+            bool isCmsEnabled = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+            
+            List<long> userOrganizationUnits = null;
+            if (isCmsEnabled)
+            {
+                userOrganizationUnits = await _userOrganizationUnitRepository.GetAll().Where(x => x.UserId == AbpSession.UserId)
+                    .Select(x => x.OrganizationUnitId).ToListAsync();
+            }
+            
+            
             var query = _actorSubmitInvoiceRepository
                 .GetAll()
+                .WhereIf(isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(),
+                    x=> x.CarrierActorId.HasValue && userOrganizationUnits.Contains(x.CarrierActorFk.OrganizationUnitId))
                 .ProjectTo<ActorSubmitInvoiceListDto>(AutoMapperConfigurationProvider)
                 .AsNoTracking();
             if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
@@ -112,6 +142,124 @@ namespace TACHYON.Invoices.ActorInvoices
                 .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer), e => e.TenantId == AbpSession.TenantId.Value)
                 .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), e => true)
                 .FirstOrDefaultAsync(g => g.Id == id);
+        }
+
+        public async Task<SubmitInvoiceInfoDto> GetActorSubmitInvoiceDetails(long submitInvoiceId)
+        {
+            var submitInvoiceDetails = await _actorSubmitInvoiceRepository.GetAll()
+                .Where(x => x.Id == submitInvoiceId).Select(x => new SubmitInvoiceInfoDto()
+                {
+                    SubTotalAmount = x.SubTotalAmount,
+                    VatAmount = x.VatAmount,
+                    TotalAmount = x.TotalAmount,
+                    TaxVat = x.TaxVat
+                }).FirstOrDefaultAsync();
+
+            submitInvoiceDetails.Items = await GetActorSubmitInvoiceItems(submitInvoiceId);
+            return submitInvoiceDetails;
+        }
+        private async Task<List<InvoiceItemDto>> GetActorSubmitInvoiceItems (long submitInvoiceId)
+        {
+
+            
+            var submitInvoiceTrips = await (from trip in _tripRepository.GetAll().AsNoTracking()
+                where trip.ActorSubmitInvoiceId == submitInvoiceId
+                select  new
+                {
+                    trip.Id,
+                    VasCount = trip.ShippingRequestTripVases.Count,
+                    SubTotalAmount = trip.ShippingRequestId.HasValue? trip.ShippingRequestFk.ActorCarrierPrice.SubTotalAmount.Value : trip.ActorCarrierPrice.SubTotalAmount.Value,
+                    VatAmount = trip.ShippingRequestId.HasValue ? trip.ShippingRequestFk.ActorCarrierPrice.VatAmount.Value : trip.ActorCarrierPrice.VatAmount.Value,
+                    WaybillNumber = trip.WaybillNumber.ToString(),
+                    TruckType = trip.AssignedTruckFk.TrucksTypeFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).DisplayName,
+                    Source = trip.ShippingRequestId.HasValue ? trip.ShippingRequestFk.OriginCityFk.Translations.FirstOrDefault(t=> t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : trip.OriginFacilityFk.CityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName,
+                    Destination = trip.ShippingRequestId.HasValue ? trip.ShippingRequestFk.DestinationCityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName : trip.DestinationFacilityFk.CityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName,
+                    DateWork = trip.EndWorking.HasValue ? trip.EndWorking.Value.ToString("dd MMM, yyyy") : string.Empty,
+                    Remarks = trip.ShippingRequestId.HasValue ? (trip.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.MultipleDrops
+                        ? LocalizationSource.GetString("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops)
+                        : string.Empty) : (trip.RouteType == ShippingRequestRouteType.MultipleDrops
+                        ? LocalizationSource.GetString("TotalOfDrop", trip.NumberOfDrops)
+                        : string.Empty),
+                    Vases = trip.ShippingRequestTripVases.Select(x=> new
+                    {
+                        VasName = x.ShippingRequestVasFk.VasFk.Key, SubTotalAmount = x.ShippingRequestVasFk.ActorCarrierPrice.SubTotalAmount.Value,
+                        VatAmount = x.ShippingRequestVasFk.ActorCarrierPrice.VatAmount.Value, 
+                        TotalAmount = x.ShippingRequestVasFk.ActorCarrierPrice.VatAmount.Value + x.ShippingRequestVasFk.ActorCarrierPrice.SubTotalAmount.Value,
+                        Remarks = x.Quantity > 1 ? x.Quantity.ToString() : string.Empty
+                    })
+                    
+                }).ToListAsync();
+            
+            
+            var totalItems = submitInvoiceTrips.Count +
+                             submitInvoiceTrips.Sum(x=> x.VasCount);
+            
+            int sequence = 1;
+            List<InvoiceItemDto> items = new List<InvoiceItemDto>();
+
+            foreach (var trip in submitInvoiceTrips)
+            {
+                int vasCounter = trip.VasCount > 1 ? 1 : 0;
+
+                var invoiceItem = new InvoiceItemDto
+                {
+                    Sequence = $"{sequence}/{totalItems}",
+                    SubTotalAmount = trip.SubTotalAmount,
+                    VatAmount = trip.VatAmount,
+                    TotalAmount = trip.SubTotalAmount + trip.VatAmount,
+                    WayBillNumber = trip.WaybillNumber,
+                    TruckType = trip.TruckType,
+                    Source = trip.Source,
+                    Destination = trip.Destination,
+                    DateWork = trip.DateWork,
+                    Remarks = trip.Remarks
+                };
+
+                if (!trip.Vases.IsNullOrEmpty())
+                {
+                    invoiceItem.TotalAmount += trip.Vases.Sum(i => i.TotalAmount);
+                }
+                
+                items.Add(invoiceItem);
+                
+                sequence++;
+                
+                
+
+                foreach (var vas in trip.Vases)
+                {
+                    string waybillNumber;
+                    if (vasCounter == 0)
+                    {
+                        waybillNumber = $"{trip.WaybillNumber}VAS";
+                    }
+                    else
+                    {
+                        waybillNumber = $"{trip.WaybillNumber}VAS{vasCounter}";
+                        vasCounter++;
+                    }
+
+                    var item = new InvoiceItemDto
+                    {
+                        Sequence = $"{sequence}/{totalItems}",
+                        SubTotalAmount = vas.SubTotalAmount,
+                        VatAmount = vas.VatAmount,
+                        TotalAmount = vas.TotalAmount,
+                        WayBillNumber = waybillNumber,
+                        TruckType = L("InvoiceVasType", vas.VasName),
+                        Source = "-",
+                        Destination = "-",
+                        DateWork = "-",
+                        Remarks = vas.Remarks
+                    };
+                    items.Add(item);
+
+                    sequence++;
+                }
+
+            }
+            
+            return items;
         }
 
     }

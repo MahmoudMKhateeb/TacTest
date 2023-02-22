@@ -2909,6 +2909,11 @@
     <text name="viewAttendance">عرض الحضور</text>
     <text name="AllNumberOfDays">عدد الأيام الكلي</text>
     <text name="PricePerDay">سعر اليوم الواحد</text>
+	<text name="ConfirmDelivery">تأكيد التوصيل</text>
+	<text name="DropOffConfirmDelivery">تأكيد توصيل نقطة التنزيل</text>
+	<text name="YouMustUpdateTheVersionOfTheApplication">يجب عليك تحديث نسخة التطبيق</text>
+	<text name="UpdateTheApplication">تحديث التطبيق</text>
+	<text name="ChangeStatus">تغيير الحالة</text>
 	<text name="ClickRowToViewActions">حدد صفًا بالنقر فوقه لعرض الإجراءات إذا كانت متوفرة</text>
 	<text name="ContinueTripAndResolveLater">اكمال الرحلة وحل الحادث لاحقاً</text>
 	<text name="UpdateResolve">تحديث حل الحادث</text>
@@ -2918,5 +2923,15 @@
 	<text name="TripImpact">تأثير الرحلة</text>
 	<text name="CanNotContinueTripTip">في حال كان تأثير الرحلة مفعل ستتوقف الرحلة اذا كان لديها حادث من هذا السبب</text>
 	<text name="TripImpactEnabled">تفعيل تأثير الرحلة</text>
+	<text name="CommissionPerTrip">العمولة لكل رحلة</text>
+	<text name="SelectTheMatchingPricePackages">أختر حزم الأسعار المتطابقة</text>
+	<text name="AppointmentNumber">رقم الموعد</text>
+	<text name="AppointmentDetails">تفاصيل الموعد</text>
+    <text name="RentedShippingRequestReference">الرقم المرجعي للطلب</text>
+    <text name="NewWaybill">وثيقة شحن جديدة</text>
+    <text name="directShipments">الشحنات</text>
+    <text name="DeliveryNote">مذكرة التسليم</text>
+    <text name="SealNumber">رقم القفل</text>
+
 	</texts>
 </localizationDictionary>

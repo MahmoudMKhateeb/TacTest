@@ -13,6 +13,7 @@ export class ProjectPerformanceComponent extends AppComponentBase implements OnI
   @Input('shippingRequestId') shippingRequestId: number;
   @Input('KPI') kpi: number;
   @Input('numberOfTrips') numberOfTrips: number;
+  @Input('isRequestSaas') isRequestSaas: boolean;
   public chartOptions: Partial<ChartOptions>;
   loading = false;
   showModifyKpi: boolean;

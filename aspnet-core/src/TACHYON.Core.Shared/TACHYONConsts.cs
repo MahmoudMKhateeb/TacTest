@@ -123,13 +123,7 @@
 
         public const string OthersDisplayName = "Others";
 
-        #region WorkFlow Const
 
-        public const int PickUpRoutPointWorkflowVersion = 0;
-        public const int DropOfRoutPointWorkflowVersion = 1;
-        public const int DropOfWithDeliveryNoteRoutPointWorkflowVersion = 2;
-
-        #endregion
 
         public const string ProposalTemplateFullNamespace =
             "TACHYON.Net.Emailing.PricePackageTemplates.TachyonProposal.docx";        

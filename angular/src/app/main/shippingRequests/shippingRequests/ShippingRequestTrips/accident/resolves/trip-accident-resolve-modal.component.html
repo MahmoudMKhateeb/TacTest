@@ -22,10 +22,13 @@
         <div class="modal-body">
           <div class="row mb-5">
             <div class="col-md-4">
-
-                <label class="pr-3" for="driverCheckbox"> {{ l('ChangeDriver') }}</label>
-                <dx-check-box (onValueChanged)="validateChangeDriverOption()" [disabled]="viewModeEnabled" id="driverCheckbox" [(value)]="changeDriverEnabled"></dx-check-box>
-
+              <label class="pr-3" for="driverCheckbox"> {{ l('ChangeDriver') }}</label>
+              <dx-check-box
+                (onValueChanged)="validateChangeDriverOption()"
+                [disabled]="viewModeEnabled"
+                id="driverCheckbox"
+                [(value)]="changeDriverEnabled"
+              ></dx-check-box>
             </div>
 
             <div class="col-md-8">
@@ -53,10 +56,13 @@
 
           <div class="row mb-5">
             <div class="col-md-4">
-
-                <label class="pr-3" for="truckCheckbox"> {{ l('ChangeTruck') }}</label>
-                <dx-check-box id="truckCheckbox" [disabled]="viewModeEnabled" (onValueChanged)="validateChangeTruckOption()" [(value)]="changeTruckEnabled"></dx-check-box>
-
+              <label class="pr-3" for="truckCheckbox"> {{ l('ChangeTruck') }}</label>
+              <dx-check-box
+                id="truckCheckbox"
+                [disabled]="viewModeEnabled"
+                (onValueChanged)="validateChangeTruckOption()"
+                [(value)]="changeTruckEnabled"
+              ></dx-check-box>
             </div>
 
             <div class="col-md-8">
@@ -82,39 +88,53 @@
             </div>
           </div>
 
-
-
-            <div class="row mb-5">
-                <div class="col-md-4">
-
-                    <label class="pr-3" for="resolveWithoutActionCheckbox"> {{ l('ResolveWithoutAction') }}</label>
-                    <dx-check-box [disabled]="viewModeEnabled" id="resolveWithoutActionCheckbox" (onValueChanged)="validateResolveWithoutActionOption()" [(value)]="resolveWithoutActionEnabled"></dx-check-box>
-
-                </div>
-
-                <div class="col-md-8">
-                    <input [disabled]="!resolveWithoutActionEnabled || viewModeEnabled" [minlength]="resolveWithoutActionEnabled ? 3 : 0" [(ngModel)]="resolve.description" [required]="resolveWithoutActionEnabled" type="text" class="form-control" name="resolveDescription" />
-                </div>
+          <div class="row mb-5">
+            <div class="col-md-4">
+              <label class="pr-3" for="resolveWithoutActionCheckbox"> {{ l('ResolveWithoutAction') }}</label>
+              <dx-check-box
+                [disabled]="viewModeEnabled"
+                id="resolveWithoutActionCheckbox"
+                (onValueChanged)="validateResolveWithoutActionOption()"
+                [(value)]="resolveWithoutActionEnabled"
+              ></dx-check-box>
             </div>
 
-            <div class="row mb-5">
-                <div class="col-md-4">
-
-                    <label class="pr-3" for="cancelTripCheckbox"> {{ l('CancelTrip') }}</label>
-                    <dx-check-box id="cancelTripCheckbox" [disabled]="viewModeEnabled" (onValueChanged)="validateCancelTripOption();" [(value)]="cancelTripEnabled"></dx-check-box>
-
-                </div>
+            <div class="col-md-8">
+              <input
+                [disabled]="!resolveWithoutActionEnabled || viewModeEnabled"
+                [minlength]="resolveWithoutActionEnabled ? 3 : 0"
+                [(ngModel)]="resolve.description"
+                [required]="resolveWithoutActionEnabled"
+                type="text"
+                class="form-control"
+                name="resolveDescription"
+              />
             </div>
+          </div>
 
-            <div class="row mb-5">
-                <div class="col-md-4">
-
-                    <label class="pr-3" for="noActionNeededCheckbox"> {{ l('NoActionNeeded') }}</label>
-                    <dx-check-box id="noActionNeededCheckbox" [disabled]="viewModeEnabled" (onValueChanged)="validateNoActionNeededOption();" [(value)]="noActionNeededEnabled"></dx-check-box>
-
-                </div>
+          <div class="row mb-5">
+            <div class="col-md-4">
+              <label class="pr-3" for="cancelTripCheckbox"> {{ l('CancelTrip') }}</label>
+              <dx-check-box
+                id="cancelTripCheckbox"
+                [disabled]="viewModeEnabled"
+                (onValueChanged)="validateCancelTripOption()"
+                [(value)]="cancelTripEnabled"
+              ></dx-check-box>
             </div>
+          </div>
 
+          <div class="row mb-5">
+            <div class="col-md-4">
+              <label class="pr-3" for="noActionNeededCheckbox"> {{ l('NoActionNeeded') }}</label>
+              <dx-check-box
+                id="noActionNeededCheckbox"
+                [disabled]="viewModeEnabled"
+                (onValueChanged)="validateNoActionNeededOption()"
+                [(value)]="noActionNeededEnabled"
+              ></dx-check-box>
+            </div>
+          </div>
         </div>
 
         <div class="modal-footer">

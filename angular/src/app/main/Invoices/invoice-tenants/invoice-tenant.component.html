@@ -57,7 +57,7 @@
               </dxi-column>
 
               <dxi-column dataField="totalAmount" caption="  {{ l('TotalAmount') }}"> </dxi-column>
-              <dxi-column dataField="creationTime" caption="  {{ l('IssuanceDate') }}" dataType="datetime"> </dxi-column>
+              <dxi-column dataField="creationTime" caption="  {{ l('IssuanceDate') }}" dataType="date"> </dxi-column>
               <dxi-column dataField="dueDate" caption="{{ l('DueDate') }}" dataType="date"> </dxi-column>
               <dxi-column cellTemplate="statusCellTemplate" dataField="status" caption=" {{ l('Status') }}">
                 <dxo-lookup [dataSource]="SubmitStatus" displayExpr="value" valueExpr="key"></dxo-lookup>
