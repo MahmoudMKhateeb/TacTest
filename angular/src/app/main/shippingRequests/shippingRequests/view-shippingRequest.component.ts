@@ -1,4 +1,4 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, Inject, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   GetShippingRequestForViewOutput,
   GetShippingRequestVasForViewDto,
@@ -25,7 +25,7 @@ import * as moment from '@node_modules/moment';
   styleUrls: ['./view-shippingRequest.component.scss'],
   animations: [appModuleAnimation()],
 })
-export class ViewShippingRequestComponent extends AppComponentBase implements OnInit, AfterViewChecked {
+export class ViewShippingRequestComponent extends AppComponentBase implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild('directRequestComponent') public directRequestComponent: DirectRequestComponent;
   @ViewChild('NotesComponent') public NotesComponent: NotesComponent;
   active = false;
@@ -230,5 +230,8 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       .subscribe(() => {
         this.notify.success(this.l('success'));
       });
+  }
+  ngOnDestroy() {
+    this._trip = undefined;
   }
 }
