@@ -2946,9 +2946,10 @@
     <text name="CapacityId">نوع الحمولة</text>
     <text name="ShippingRequestDestinationCities">مدن الوصول</text>
     <text name="GoodsCategoryId">نوع البضاعة</text>
-
-    <!--<text name=""></text>
-  <text name=""></text>
+    <text name="RentedShippingRequestReference">الرقم المرجعي لطب الشحن المؤجر</text>
+    <text name="RentedStatus">حالة التأجير</text>
+    <text name="Busy">مشغول</text>
+  <!--<text name=""></text>
   <text name=""></text>
   <text name=""></text>
   <text name=""></text>

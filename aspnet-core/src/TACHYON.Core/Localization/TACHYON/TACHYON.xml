@@ -3215,6 +3215,9 @@
     <text name="CapacityId">Capacity</text>
     <text name="GoodsCategoryId">Good category</text>
     <text name="ShippingRequestDestinationCities">Destination cities</text>
+    <text name="RentedShippingRequestReference">Rented shipping request reference</text>
+    <text name="RentedStatus">Rented status</text>
+    <text name="Busy">Busy</text>
     <!--<text name=""></text>
     <text name=""></text>-->
 	</texts>
