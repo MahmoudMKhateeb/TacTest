@@ -52,7 +52,7 @@
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
               >
               </dxi-column>
-              <dxi-column dataField="periodId" caption=" {{ l('period') }}">
+              <dxi-column dataField="periodId" caption=" {{ l('Period') }}" cellTemplate="PeriodCellTemplate">
                 <dxo-lookup [dataSource]="Periods" displayExpr="displayName" valueExpr="id"></dxo-lookup>
               </dxi-column>
 
@@ -86,6 +86,12 @@
                     }"
                     >{{ l(options.data.statusTitle) }}</span
                   ></span
+                >
+              </div>
+
+              <div *dxTemplate="let options of 'PeriodCellTemplate'">
+                <span style="width: 137px"
+                  ><span> {{ l(options.data.periodId) }}</span></span
                 >
               </div>
               <div *dxTemplate="let options of 'channelCellTemplate'">

@@ -103,7 +103,7 @@ namespace TACHYON.Documents.DocumentFiles
         }
 
 
-        [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Submitted)]
+        [AbpAuthorize(AppPermissions.Pages_DocumentFiles)]
         public async Task<LoadResult> GetAllTenantsSubmittedDocuments(GetAllForListDocumentFilesInput input)
         {
             DisableTenancyFiltersIfHost();
@@ -116,7 +116,7 @@ namespace TACHYON.Documents.DocumentFiles
             return result;
         }
 
-        [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Trucks)]
+        [AbpAuthorize(AppPermissions.Pages_DocumentFiles)]
         public async Task<LoadResult> GetAllTrucksSubmittedDocuments(GetAllTrucksSubmittedDocumentsInput input)
         {
             DisableTenancyFiltersIfHost();
@@ -130,7 +130,7 @@ namespace TACHYON.Documents.DocumentFiles
             return result;
         }
 
-        [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Drivers)]
+        [AbpAuthorize(AppPermissions.Pages_DocumentFiles)]
         public async Task<LoadResult> GetAllDriversSubmittedDocuments(GetAllDriversSubmittedDocumentsInput input)
         {
             DisableTenancyFiltersIfHost();

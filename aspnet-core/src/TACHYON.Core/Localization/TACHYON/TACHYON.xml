@@ -3218,7 +3218,8 @@
     <text name="RentedShippingRequestReference">Rented shipping request reference</text>
     <text name="RentedStatus">Rented status</text>
     <text name="Busy">Busy</text>
-    <!--<text name=""></text>
-    <text name=""></text>-->
+    <text name="Dedicated">Dedicated</text>
+    <text name="CreateFilter">Create filter</text>
+    <text name="DxCount">Count</text>
 	</texts>
 </localizationDictionary>

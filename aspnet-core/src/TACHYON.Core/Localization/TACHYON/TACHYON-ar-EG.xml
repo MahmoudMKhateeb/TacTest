@@ -2949,9 +2949,11 @@
     <text name="RentedShippingRequestReference">الرقم المرجعي لطب الشحن المؤجر</text>
     <text name="RentedStatus">حالة التأجير</text>
     <text name="Busy">مشغول</text>
+    <text name="Dedicated">إيجار</text>
+
+    <text name="CreateFilter">إنشاء تصفية</text>
+  <text name="DxCount">العدد</text>
   <!--<text name=""></text>
-  <text name=""></text>
-  <text name=""></text>
   <text name=""></text>
   <text name=""></text>
   <text name=""></text>
