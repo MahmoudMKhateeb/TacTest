@@ -216,6 +216,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   show(record?: CreateOrEditShippingRequestTripDto, shippingRequestForView?: GetShippingRequestForViewOutput): void {
     this._TripService.GetShippingRequestForViewOutput = shippingRequestForView;
+    console.log(this._TripService.GetShippingRequestForViewOutput.toJSON());
+    console.log(shippingRequestForView.toJSON());
     // this._TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice = new CreateOrEditActorShipperPriceDto();
     // this._TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice = new CreateOrEditActorCarrierPrice();
 
@@ -225,6 +227,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
     }
     if (!shippingRequestForView) {
+      console.log('!shippingRequestForView');
       this.getAllDrivers();
       this.getAllTrucks(undefined);
       this.getAllGoodCategories();
@@ -259,8 +262,13 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.loading = true;
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this._TripService.CreateOrEditShippingRequestTripDto = res;
-        (this._TripService.CreateOrEditShippingRequestTripDto.shipperActorId as any) = res.shipperActorId.toString();
-        (this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId as any) = res.carrierActorId.toString();
+        if (this._TripService.CreateOrEditShippingRequestTripDto.shipperActorId) {
+          (this._TripService.CreateOrEditShippingRequestTripDto.shipperActorId as any) = res.shipperActorId.toString();
+        }
+        if (this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId) {
+          (this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId as any) = res.carrierActorId.toString();
+        }
+
         this.IsHaveSealNumberValue = res.sealNumber?.length > 0;
         this.IsHaveContainerNumberValue = res.containerNumber?.length > 0;
         console.log('res', res.containerNumber);

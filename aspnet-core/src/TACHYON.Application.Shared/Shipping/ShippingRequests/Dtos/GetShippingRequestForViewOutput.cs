@@ -47,6 +47,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         //public int DestinationCityId { get; set; }
         public List<ShippingRequestDestinationCitiesDto> DestinationCitiesDtos { get; set; }
         public string GoodsCategoryName { get; set; }
+
+        public int? GoodCategoryId { get; set; }
+
         public string TruckTypeFullName { get; set; }
         public string ShippingRequestStatusName { get; set; }
         public string packingTypeDisplayName { get; set; }
