@@ -820,25 +820,15 @@ namespace TACHYON.Authorization
                 featureDependency: shipperOrCarrierClientsFeatureDependency);
             #endregion
 
-            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Actors, L("ActorDocumentFiles"),
-               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
-                   AppFeatures.DocumentsManagement));
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Actors, L("ActorDocumentFiles"));
             
-            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Submitted, L("SubmittedDocument"),
-               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
-                   AppFeatures.DocumentsManagement));
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Submitted, L("SubmittedDocument"));
             
-            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Additional, L("AdditionalDocumentFiles"),
-               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
-                   AppFeatures.DocumentsManagement));
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Additional, L("AdditionalDocumentFiles"));
             
-            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Drivers, L("DriversDocumentFiles"),
-               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
-                   AppFeatures.DocumentsManagement));
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Drivers, L("DriversDocumentFiles"));
             
-            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Trucks, L("TrucksDocumentFiles"),
-               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
-                   AppFeatures.DocumentsManagement));
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Trucks, L("TrucksDocumentFiles"));
 
            // For Host/TMS
            pages.CreateChildPermission(AppPermissions.Pages_Invoices_ConfirmInvoice, L("ConfirmInvoicePermission"),
