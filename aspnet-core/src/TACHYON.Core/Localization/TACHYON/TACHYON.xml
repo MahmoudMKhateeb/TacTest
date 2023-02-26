@@ -3221,5 +3221,7 @@
     <text name="Dedicated">Dedicated</text>
     <text name="CreateFilter">Create filter</text>
     <text name="DxCount">Count</text>
+  <text name="MemoNo">Memo No</text>
+  <text name="CarrierInvoiceNumber">Carrier invoice number</text>
 	</texts>
 </localizationDictionary>
