@@ -420,6 +420,7 @@ namespace TACHYON.Documents.DocumentFiles
 
         private async Task<GetDocumentFileForEditOutput> _GetDocumentFileForEdit(EntityDto<Guid> input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var documentFile = await _documentFileRepository
                 .GetAll()
                 .Include(a => a.DocumentTypeFk)
