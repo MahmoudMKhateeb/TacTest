@@ -124,6 +124,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       )
       .subscribe((result) => {
         this.allFacilities = result;
+        this.dropFacilities = result;
         this.pickupFacilities = result.filter((r) => {
           return this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === 0
             ? r.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId
