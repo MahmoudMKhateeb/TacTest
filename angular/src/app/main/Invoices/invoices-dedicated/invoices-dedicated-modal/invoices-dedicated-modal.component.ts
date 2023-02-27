@@ -137,7 +137,7 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
   }
 
   search(event, initValue = false) {
-    this._CommonServ.getAutoCompleteTenants(event.query, null).subscribe((result) => {
+    this._CommonServ.getAutoCompleteTenantsByAccountType(event.query, this.root.invoiceAccountType).subscribe((result) => {
       this.Tenants = result;
       if (initValue) {
         const tenant = this.Tenants.find((item) => Number(item.id) === this.root.tenantId);
