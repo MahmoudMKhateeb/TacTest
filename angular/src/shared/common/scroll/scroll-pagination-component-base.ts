@@ -26,4 +26,8 @@ export abstract class ScrollPagnationComponentBase extends AppComponentBase {
   bottomReached(): boolean {
     return window.innerHeight + Math.ceil(window.scrollY) > document.body.offsetHeight + this.scrollY;
   }
+
+  resetScrolling() {
+    this.scrollY = 10;
+  }
 }
