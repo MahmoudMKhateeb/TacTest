@@ -6,3 +6,10 @@ td {
 .card-label {
   font-size: 1.1rem !important;
 }
+
+.actor-number-of-trips {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  bottom: 0;
+}

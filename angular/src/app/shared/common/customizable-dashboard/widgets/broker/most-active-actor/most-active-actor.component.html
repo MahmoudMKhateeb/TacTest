@@ -1,0 +1,45 @@
+<div class="card card-custom card-stretch w-100 h-100">
+  <div class="card-body p-4 d-flex flex-column justify-content-center">
+    <div class="row">
+      <div class="col-8">
+        <h2>
+          {{ (isForShipperActor ? 'MostActiveActorShipper' : 'MostActiveActorCarrier') | localize }}
+        </h2>
+      </div>
+      <div class="col-4">
+        <div class="w-100">
+          <dx-select-box
+            id="invoiceType"
+            name="invoiceType"
+            [(value)]="selectedDateRangeType"
+            [dataSource]="selectionList"
+            [searchEnabled]="true"
+            displayExpr="value"
+            valueExpr="key"
+            placeholder="{{ l('SelectADateType') }}"
+            (onValueChanged)="fetchData(false)"
+          ></dx-select-box>
+        </div>
+        <div class="row mt-2" *ngIf="selectedDateRangeType == DateRangeType.CustomRange">
+          <div class="col"><dx-date-box (onValueChanged)="fetchData(true)" type="date" [(value)]="from" [max]="today"></dx-date-box> &nbsp;</div>
+          <div class="col">
+            <dx-date-box (onValueChanged)="fetchData(true)" type="date" [(value)]="to" [max]="today"></dx-date-box>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="chart" *ngIf="chartOptions">
+      <apx-chart
+        #chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [labels]="chartOptions.labels"
+        [responsive]="chartOptions.responsive"
+        [plotOptions]="chartOptions.plotOptions"
+        [legend]="legend"
+        [dataLabels]="{ enabled: false }"
+      ></apx-chart>
+      <!--                [fill]="{colors}"-->
+    </div>
+  </div>
+</div>

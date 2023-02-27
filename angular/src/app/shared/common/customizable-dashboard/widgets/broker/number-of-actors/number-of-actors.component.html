@@ -1,0 +1,48 @@
+<div class="card card-custom card-stretch w-100 h-100">
+  <div class="card-body p-4 d-flex flex-column justify-content-center">
+    <div class="row px-8">
+      <div class="col-4">
+        <div id="chart" *ngIf="chartOptions">
+          <!--                                *ngIf="Shippers && Shippers.length > 0"-->
+          <apx-chart
+            #chart
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [labels]="chartOptions.labels"
+            [responsive]="chartOptions.responsive"
+            [legend]="legend"
+            [dataLabels]="{ enabled: false }"
+            [fill]="{colors}"
+            [tooltip]="tooltip"
+          ></apx-chart>
+          <!--                        [tooltip]="{fillSeriesColor: true, marker: { fillColors: ['#DC2434', '#000']}}"-->
+          <!--                                [plotOptions]="plotOptions"-->
+        </div>
+      </div>
+      <div class="col d-flex flex-column justify-content-center">
+        <div class="row">
+          <h2>
+            {{ 'NumberOfActors' | localize }}
+          </h2>
+        </div>
+        <div class="d-flex align-items-center">
+          <!--                            <img src="assets/SVG/group_of_people.svg" alt="">&nbsp;&nbsp;-->
+          <strong class="font-35">{{ actorsCount }}</strong> &nbsp;
+          <span class="text-danger">{{ 'Total' | localize }}</span>
+        </div>
+      </div>
+      <!--                    <div class="col pt-4" *ngIf="percentage">-->
+      <!--                        +{{ percentage }}% <img src="assets/SVG/actors-increase-arrow.svg" alt="">-->
+      <!--                    </div>-->
+      <!--            <div class="col">-->
+      <!--                -->
+      <!--&lt;!&ndash;                <div class="row">&ndash;&gt;-->
+      <!--            </div>-->
+      <div class="col d-flex flex-column justify-content-center pt-8">
+        <div class="row shipper-carrier-count">{{ 'Shippers' | localize }}&nbsp;<span class="dashed-line"></span>&nbsp;{{ shipperCount }}%</div>
+        <div class="row shipper-carrier-count">{{ 'Carriers' | localize }}&nbsp;<span class="dashed-line"></span>&nbsp;{{ carrierCount }}%</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--</div>-->

@@ -97,6 +97,9 @@ export class TruckPerformanceChartComponent extends AppComponentBase implements 
       },
     };
 
+    (this.chartOptions.chart as any).yaxis = {
+      opposite: this.isRtl,
+    };
     (this.chartOptions.chart.locales as any[]) = [
       {
         name: 'en',

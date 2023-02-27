@@ -65,6 +65,7 @@
         public const string Pages_ShipperDashboard_trackingMap = "Pages.ShipperDashboard.trackingMap";
 
         public const string Pages_CarrierDashboard = "Pages.CarrierDashboard";
+        public const string Pages_BrokerDashboard = "Pages.BrokerDashboard";
 
 
         public const string Pages_CitiesTranslations = "Pages.CitiesTranslations";

@@ -40,6 +40,7 @@ using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Dashboards.Carrier
 {
+    // todo fix auth asap
     //[AbpAuthorize(AppPermissions.Pages_CarrierDashboard)]
     public class CarrierDashboardAppService : TACHYONAppServiceBase, ICarrierDashboardAppService
     {

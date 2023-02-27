@@ -1,4 +1,4 @@
-﻿using Abp.Application.Features;
+using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Localization;
@@ -933,6 +933,11 @@ namespace TACHYON.Authorization
            #endregion
 
            var penaltiesPermission = pages.CreateChildPermission(AppPermissions.Pages_Penalties, L("Penalties"));
+           // note : to do use penalties permission to add some missing permission like create, update, and delete
+
+           pages.CreateChildPermission(AppPermissions.Pages_BrokerDashboard,L("BrokerDashboardPermission"),
+               // only for broker
+               featureDependency: new SimpleFeatureDependency(true,AppFeatures.CarrierClients,AppFeatures.ShipperClients));
 
             #region Dedicated Attendance Sheet
             var attendaceSheet = pages.CreateChildPermission(AppPermissions.Pages_DedicatedAttendanceSheet,
