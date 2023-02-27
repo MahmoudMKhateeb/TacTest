@@ -184,7 +184,9 @@
                         class="dropdown-item"
                         href="javascript:;"
                         (click)="voidModal.show(options.data.id, 1)"
-                        *ngIf="!feature.isEnabled('App.Carrier') && !feature.isEnabled('App.Shipper')"
+                        *ngIf="
+                          !feature.isEnabled('App.Carrier') && !feature.isEnabled('App.Shipper') && options.data.status == InvoiceStatusEnum.Confirmed
+                        "
                         >{{ l('Void') }}</a
                       >
                     </li>
