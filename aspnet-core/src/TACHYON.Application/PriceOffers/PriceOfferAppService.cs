@@ -467,16 +467,7 @@ namespace TACHYON.PriceOffers
             var dedictedDrivers =await _dedicatedShippingRequestDriverRepository.GetAll().ToListAsync();
 
             foreach (var request in query)
-            {
-                var index = 1;
-                foreach(var destCity in request.destinationCities)
-                {
-                    if (index == 1)
-                        request.DestinationCity = destCity.CityName;
-                    else
-                        request.DestinationCity = request.DestinationCity + ", " + destCity.CityName;
-                    index++;
-                }
+            {                
                 request.IsDriversAndTrucksAssigned = dedictedDrivers.Any(x => x.ShippingRequestId == request.Id);
                 
             }
@@ -802,6 +793,7 @@ namespace TACHYON.PriceOffers
                             .Include(r => r.ShippingRequestFK)
                                 .ThenInclude(dc => dc.ShippingRequestDestinationCities)
                                 .ThenInclude(x=>x.CityFk)
+                                .ThenInclude(x=>x.Translations)
                             .Include(r => r.ShippingRequestFK)
                                 .ThenInclude(c => c.GoodCategoryFk)
                                     .ThenInclude(x => x.Translations)
@@ -861,7 +853,9 @@ namespace TACHYON.PriceOffers
                 dto.DirectRequestStatus = request.Status;
                 dto.BidStatusTitle = string.Empty;
                 dto.BidNormalPricePackageId = request.PricePackageOfferId;
-                dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk).TranslatedDisplayName;
+                dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFK.TrucksTypeFk)?.TranslatedDisplayName;
+                dto.TruckType = request.ShippingRequestFK.TrucksTypeFk.Translations.Where(x => x.CoreId == request.ShippingRequestFK.TrucksTypeId && x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault()?.TranslatedDisplayName;
+
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFK.GoodCategoryFk).DisplayName;
                 dto.NumberOfCompletedTrips = await getCompletedRequestTripsCount(request.ShippingRequestFK);
                 //dto.Longitude = (request.ShippingRequestFK.DestinationCityFk.Location != null ?
@@ -870,6 +864,15 @@ namespace TACHYON.PriceOffers
                 //    request.ShippingRequestFK.DestinationCityFk.Location.Y : 0);
                 dto.GoodCategoryId = request.ShippingRequestFK.GoodCategoryId;
                 dto.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.OriginCityFk)?.DisplayName;
+                int index = 1;
+                foreach (var destCity in dto.destinationCities)
+                {
+                    if (index == 1)
+                        dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.ShippingRequestDestinationCities.Where(x => x.CityId == destCity.CityId).FirstOrDefault()?.CityFk)?.DisplayName;
+                    else
+                        dto.DestinationCity += ", " + ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.ShippingRequestDestinationCities.Where(x => x.CityId == destCity.CityId).FirstOrDefault()?.CityFk)?.DisplayName;
+                    index++;
+                }
                 //dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.DestinationCityFk).DisplayName;
                 dto.NotesCount = await GetRequestNotesCount(request.Id);
 
@@ -896,6 +899,7 @@ namespace TACHYON.PriceOffers
                      .ThenInclude(x => x.Translations)
                     .Include(dc => dc.ShippingRequestDestinationCities)
                     .ThenInclude(x=>x.CityFk)
+                    .ThenInclude(x=>x.Translations)
                     .Include(c => c.GoodCategoryFk)
                      .ThenInclude(x => x.Translations)
                     .Include(t => t.TrucksTypeFk)
@@ -949,7 +953,16 @@ namespace TACHYON.PriceOffers
                // dto.Longitude = (request.DestinationCityFk != null ? (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.X : 0) : 0);
                // dto.Latitude = (request.DestinationCityFk != null ? (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.Y : 0) : 0);
                 dto.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.OriginCityFk)?.DisplayName;
-               // dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.DestinationCityFk).DisplayName;
+                int index = 1;
+                foreach (var destCity in dto.destinationCities)
+                {
+                    if (index == 1)
+                        dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestDestinationCities.Where(x => x.CityId == destCity.CityId).FirstOrDefault()?.CityFk)?.DisplayName;
+                    else
+                        dto.DestinationCity += ", " + ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestDestinationCities.Where(x => x.CityId == destCity.CityId).FirstOrDefault()?.CityFk)?.DisplayName;
+                    index++;
+                }
+                // dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.DestinationCityFk).DisplayName;
                 dto.NotesCount = await GetRequestNotesCount(request.Id);
                 ShippingRequestForPriceOfferList.Add(dto);
 
@@ -977,8 +990,10 @@ namespace TACHYON.PriceOffers
                 .Include(t => t.Tenant)
                 .Include(c => c.CarrierTenantFk)
                 .Include(oc => oc.OriginCityFk)
+                .ThenInclude(x=>x.Translations)
                 .Include(dc => dc.ShippingRequestDestinationCities)
                 .ThenInclude(x=>x.CityFk)
+                .ThenInclude(x=>x.Translations)
                 .Include(c => c.GoodCategoryFk)
                  .ThenInclude(x => x.Translations)
                 .Include(t => t.TrucksTypeFk)
@@ -1045,6 +1060,16 @@ namespace TACHYON.PriceOffers
                     }
                 }
 
+                dto.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.OriginCityFk)?.DisplayName;
+                int index = 1;
+                foreach (var destCity in dto.destinationCities)
+                {
+                    if (index == 1)
+                        dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestDestinationCities.Where(x=>x.CityId == destCity.CityId).FirstOrDefault()?.CityFk)?.DisplayName;
+                    else
+                        dto.DestinationCity +=  ", " + ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestDestinationCities.Where(x => x.CityId == destCity.CityId).FirstOrDefault()?.CityFk)?.DisplayName;
+                    index++;
+                }
                 //dto.Longitude = (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.X : 0);
                 //dto.Latitude = (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.Y : 0);
                 dto.NotesCount = await GetRequestNotesCount(request.Id);
@@ -1132,9 +1157,21 @@ namespace TACHYON.PriceOffers
                 //    request.ShippingRequestFk.DestinationCityFk.Location.Y : 0);
                 dto.BidStatusTitle = string.Empty;
                 dto.TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequestFk.TrucksTypeFk).TranslatedDisplayName;
+                dto.TruckType = request.ShippingRequestFk.TrucksTypeFk.Translations.Where(x => x.CoreId == request.ShippingRequestFk.TrucksTypeId && x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault()?.TranslatedDisplayName;
+
                 dto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(request.ShippingRequestFk.GoodCategoryFk).DisplayName;
                 dto.GoodCategoryId = request.ShippingRequestFk.GoodCategoryId;
                 dto.NotesCount = await GetRequestNotesCount(request.Id);
+                dto.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFk.OriginCityFk)?.DisplayName;
+                int index = 1;
+                foreach (var destCity in dto.destinationCities)
+                {
+                    if (index == 1)
+                        dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFk.ShippingRequestDestinationCities.Where(x => x.CityId == destCity.CityId).FirstOrDefault()?.CityFk)?.DisplayName;
+                    else
+                        dto.DestinationCity += ", " + ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFk.ShippingRequestDestinationCities.Where(x => x.CityId == destCity.CityId).FirstOrDefault()?.CityFk)?.DisplayName;
+                    index++;
+                }
                 ShippingRequestForPriceOfferList.Add(dto);
 
             }

@@ -8,7 +8,7 @@ using Abp.Domain.Entities;
 namespace TACHYON.Nationalities.NationalitiesTranslation
 {
     [Table("NationalityTranslations")]
-    public class NationalityTranslation : FullAuditedEntity
+    public class NationalityTranslation : FullAuditedEntity, IEntityTranslation<Nationality>
     {
         [Required] public virtual string TranslatedName { get; set; }
 

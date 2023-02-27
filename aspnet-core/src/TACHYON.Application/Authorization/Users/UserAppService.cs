@@ -49,6 +49,7 @@ using TACHYON.Organizations.Dto;
 using TACHYON.Url;
 using static TACHYON.Authorization.Users.Nationalites;
 using TACHYON.Trucks;
+using TACHYON.Nationalities;
 
 namespace TACHYON.Authorization.Users
 {
@@ -184,7 +185,7 @@ namespace TACHYON.Authorization.Users
                     .Select(x => x.OrganizationUnitId).ToListAsync();
             }
             
-            var drivers = (from user in _userRepository.GetAllIncluding(x => x.NationalityFk)
+            var drivers = (from user in _userRepository.GetAll().Include(x => x.NationalityFk).ThenInclude(x=>x.Translations)
                            .Include(x => x.DedicatedShippingRequestDrivers)
                            .ThenInclude(x => x.ShippingRequest).AsNoTracking()
                            .WhereIf(isCmsEnabled && !userOrganizationUnits.IsNullOrEmpty(),
@@ -197,7 +198,10 @@ namespace TACHYON.Authorization.Users
                     CompanyName = tenant.companyName,
                     RentedStatus=user.DedicatedShippingRequestDrivers.Any(x=>x.Status==Shipping.Dedicated.WorkingStatus.Busy)? "Busy" :"Active",
                     RentedShippingRequestReference = dedicatedDriver != null 
-                ? dedicatedDriver.ShippingRequest.ReferenceNumber : string.Empty, })
+                ? dedicatedDriver.ShippingRequest.ReferenceNumber : string.Empty, 
+                           Nationality = user.NationalityFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                .TranslatedName ?? user.NationalityFk.Name
+                           })
                 .Where(x=> x.User != null )
                 .ProjectTo<DriverListDto>(AutoMapperConfigurationProvider);
 

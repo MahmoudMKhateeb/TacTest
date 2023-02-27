@@ -1338,7 +1338,7 @@
 		<text name="RechargeAmount">إدارة الرصيد</text>
 		<text name="ReciverName">اسم المستلم</text>
 		<text name="RecurringSubscriptionUpgradeNote">سيتم فرض رسوم على فرق السعر بين نسختك الحالية والنسخه المرتقى لها.</text>
-		<text name="ReferenceNo" />
+    <text name="ReferenceNo">الرقم المرجعي</text>>
 		<text name="Refresh">تحديث</text>
 		<text name="RegisterFormUserNameInvalidMessage">الرجاء عدم ادخال بريدك الإلكتروني كاسم مستخدم</text>
 		<text name="Reject">رفض</text>
@@ -2990,6 +2990,30 @@
 	<text name="ShipperNeedsActionWidget">بانتظار قرار</text>
 	<text name="ShipperNewOffersWidget">عروض جديدة</text>
 	<text name="RestoreDashboardDefaults">استعادة الإعدادات الافتراضية للوحة العمل</text>
+    <text name="Sunday">الأحد</text>
+    <text name="Monday">الإثنين</text>
+    <text name="Tuesday">الثلاثاء</text>
+    <text name="Wednesday">الأربعاء</text>
+    <text name="Thursday">الخميس</text>
+    <text name="Friday">الجمعة</text>
+    <text name="Saturday">السبت</text>
+  <text name="EditContact">تعديل المنشأة</text>
+  <text name="Months">شهور</text>
+  <text name="Weeks">أسابيع</text>
+    <text name="TransportTypeId">نوع النقل</text>
+    <text name="TrucksTypeId">نوع الشاحنة</text>
+    <text name="CapacityId">نوع الحمولة</text>
+    <text name="ShippingRequestDestinationCities">مدن الوصول</text>
+    <text name="GoodsCategoryId">نوع البضاعة</text>
+    <text name="RentedShippingRequestReference">الرقم المرجعي لطب الشحن المؤجر</text>
+    <text name="RentedStatus">حالة التأجير</text>
+    <text name="Busy">مشغول</text>
+    <text name="Dedicated">إيجار</text>
+    <text name="CreateFilter">إنشاء تصفية</text>
+  <text name="DxCount">العدد</text>
+  <text name="InvoicesNoteList">ملاحظات الفواتير</text>
+    <text name="MemoNo">رقم المذكرة</text>
+    <text name="CarrierInvoiceNumber">رقم فاتورة الشاحن</text>
 
 	</texts>
 </localizationDictionary>

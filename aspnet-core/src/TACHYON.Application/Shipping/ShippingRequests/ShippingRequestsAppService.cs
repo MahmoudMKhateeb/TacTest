@@ -14,6 +14,7 @@ using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using Castle.Core.Internal;
+using DevExpress.Office.Utils;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Rest;
@@ -39,6 +40,7 @@ using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Invoices;
 using TACHYON.MultiTenancy;
+using TACHYON.MultiTenancy.Dto;
 using TACHYON.Notifications;
 using TACHYON.Offers;
 using TACHYON.Packing.PackingTypes;
@@ -665,6 +667,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.TrucksTypeFk)
                     .ThenInclude(e => e.Translations)
                     .Include(e => e.TransportTypeFk)
+                    .ThenInclude(x=>x.Translations)
                     .Include(e => e.CapacityFk)
                     .Include(e => e.AssignedTruckFk)
                     .ThenInclude(e => e.TruckStatusFk)
@@ -676,6 +679,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.CarrierTenantFk)
                     .Include(x=>x.ShippingRequestDestinationCities)
                     .ThenInclude(x=>x.CityFk)
+                    .ThenInclude(x=>x.Translations)
                     .Include(x=> x.CarrierActorFk)
                     .Include(x=> x.ShipperActorFk)
                     .FirstOrDefaultAsync();
@@ -770,18 +774,19 @@ namespace TACHYON.Shipping.ShippingRequests
                 output.GoodsCategoryName =
                     ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
 
-
+                output.OriginalCityName = ObjectMapper.Map<TenantCityLookupTableDto>(shippingRequest.OriginCityFk)?.DisplayName;
                 //fill dest city list
                 var index = 1;
                 foreach(var destCity in shippingRequest.ShippingRequestDestinationCities)
                 {
+                    var city = ObjectMapper.Map<TenantCityLookupTableDto>(destCity.CityFk).DisplayName;
                     if (index == 1)
                     {
-                        output.DestinationCityName = destCity.CityFk.DisplayName;
+                        output.DestinationCityName = city;
                     }
                     else
                     {
-                        output.DestinationCityName = output.DestinationCityName + ", " + destCity.CityFk.DisplayName;
+                        output.DestinationCityName = output.DestinationCityName + ", " + city;
                     }
                     index++;
                 }
@@ -796,12 +801,14 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 //return translated truck type by default language
                 output.TruckTypeDisplayName =
-                    ObjectMapper.Map<TrucksTypeDto>(shippingRequest.TrucksTypeFk).TranslatedDisplayName;
+                    ObjectMapper.Map<TrucksTypeSelectItemDto>(shippingRequest.TrucksTypeFk)?.DisplayName;
                 output.TruckTypeFullName = ObjectMapper.Map<TransportTypeDto>(shippingRequest.TransportTypeFk)
                                                .TranslatedDisplayName
                                            + "-" + output.TruckTypeDisplayName
                                            + "-" + ObjectMapper.Map<CapacityDto>(shippingRequest.CapacityFk)
                                                .TranslatedDisplayName;
+                output.TransportTypeDisplayName = ObjectMapper.Map<TransportTypeDto>(shippingRequest.TransportTypeFk)?.TranslatedDisplayName
+                    ?? shippingRequest.TransportTypeFk.DisplayName;
 
                 return output;
             }

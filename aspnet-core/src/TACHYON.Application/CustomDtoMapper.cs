@@ -789,9 +789,10 @@ namespace TACHYON
             configuration.CreateMap<DriverListDto, DriverMappingEntity>()
                 .ForMember(x => x.User, x => x.MapFrom(y => y))
                 .ForPath(x => x.User.CarrierActorFk.CompanyName, x => x.MapFrom(y => y.CarrierActorName))
-                .ForPath(x => x.User.NationalityFk.Name, x => x.MapFrom(y => y.Nationality))
-                .ForMember(x => x.CompanyName, x => x.MapFrom(y => y.CompanyName))
-             .ReverseMap();
+                .ForPath(x => x.Nationality, x => x.MapFrom(y => y.Nationality))
+                .ForMember(x => x.CompanyName, x => x.MapFrom(y => y.CompanyName)).ReverseMap();
+
+             
             configuration.CreateMap<User, DriverListDto>();
             configuration.CreateMap<User, ChatUserDto>();
             configuration.CreateMap<User, OrganizationUnitUserListDto>();
@@ -1034,7 +1035,16 @@ namespace TACHYON
                 .ForMember(x => x.DisplayName, x =>
                     x.MapFrom(i => i.GetTranslatedDisplayName<TransportType, TransportTypesTranslation>()));
 
+            //configuration.CreateMultiLingualMap<TrucksType, TrucksTypesTranslation, TrucksTypeDto>(context)
+            //    .EntityMap
+            //    .ReverseMap();
+
             configuration.CreateMultiLingualMap<County, CountriesTranslation, CountyDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            
+             configuration.CreateMultiLingualMap<County, CountriesTranslation, CountriesTranslationDto>(context)
                 .EntityMap
                 .ReverseMap();
 
@@ -1059,6 +1069,7 @@ namespace TACHYON
             configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckStatusDto>(context)
                 .EntityMap
                 .ReverseMap();
+            
 
             // goto:#Map_TruckStatus_TruckTruckStatusLookupTableDto
             configuration
@@ -1135,8 +1146,8 @@ namespace TACHYON
             configuration.
                 CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GetAllGoodsCategoriesForDropDownOutput>(context)
                 .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
-            //configuration.
-            //    CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GoodCategoryDto>(context);
+            configuration.
+                CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GoodCategoryDto>(context);
             configuration.
                 CreateMultiLingualMap<UnitOfMeasure, UnitOfMeasureTranslation, UnitOfMeasureDto>(context);
             
@@ -1422,5 +1433,6 @@ namespace TACHYON
         public string RentedShippingRequestReference { get; set; }
         public long AssignedTruckId { get; set; }
         public string AssignedTruck { get; set; }
+        public string Nationality { get; set; }
     }
 }

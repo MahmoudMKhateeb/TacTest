@@ -3257,6 +3257,29 @@
 	<text name="ShipperNeedsActionWidget">Needs Action</text>
 	<text name="ShipperNewOffersWidget">New Offers</text>
 	<text name="RestoreDashboardDefaults">Restore Dashboard Defaults</text>
+    <text name="Sunday">Sunday</text>
+    <text name="Monday">Monday</text>
+    <text name="Tuesday">Tuesday</text>
+    <text name="Wednesday">Wednesday</text>
+    <text name="Thursday">Thursday</text>
+    <text name="Friday">Friday</text>
+    <text name="Saturday">Saturday</text>
+    <text name="EditContact">Edit contact</text>
+    <text name="Months">Months</text>
+    <text name="Weeks">Weeks</text>
+    <text name="TransportTypeId">Transport type</text>
+    <text name="TrucksTypeId">Trucks type</text>
+    <text name="CapacityId">Capacity</text>
+    <text name="GoodsCategoryId">Good category</text>
+    <text name="ShippingRequestDestinationCities">Destination cities</text>
+    <text name="RentedShippingRequestReference">Rented shipping request reference</text>
+    <text name="RentedStatus">Rented status</text>
+    <text name="Busy">Busy</text>
+    <text name="Dedicated">Dedicated</text>
+    <text name="CreateFilter">Create filter</text>
+    <text name="DxCount">Count</text>
+  <text name="MemoNo">Memo No</text>
+  <text name="CarrierInvoiceNumber">Carrier invoice number</text>
 		
 	</texts>
 </localizationDictionary>
