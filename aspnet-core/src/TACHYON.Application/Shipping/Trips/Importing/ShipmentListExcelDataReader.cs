@@ -175,19 +175,19 @@ namespace TACHYON.Shipping.Trips.Importing
                 else
                 {
                     var originFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                        row, 9, "Original Facility*", exceptionMessage);
+                        row, 7, "Original Facility*", exceptionMessage);
                     trip.OriginalFacility = originFacility;
                     trip.OriginFacilityId = GetFacilityId(originFacility, exceptionMessage);
 
                     var destinationFacility = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                       row, 10, "Destination Facility*", exceptionMessage);
+                       row, 8, "Destination Facility*", exceptionMessage);
                     trip.DestinationFacility = destinationFacility;
                     trip.DestinationFacilityId = GetFacilityId(destinationFacility, exceptionMessage);
 
                     if (IsSingleDropRequest)
                     {
                         var sender = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                        row, 11, "Sender*", exceptionMessage);
+                        row, 9, "Sender*", exceptionMessage);
                         trip.sender = sender.Trim();
                         if (trip.OriginFacilityId != null)
                         {
@@ -195,7 +195,7 @@ namespace TACHYON.Shipping.Trips.Importing
                         }
 
                         var receiver = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                        row, 12, "Receiver*", exceptionMessage);
+                        row, 10, "Receiver*", exceptionMessage);
                         trip.Receiver = receiver.Trim();
                         if (trip.DestinationFacilityId != null)
                         {
