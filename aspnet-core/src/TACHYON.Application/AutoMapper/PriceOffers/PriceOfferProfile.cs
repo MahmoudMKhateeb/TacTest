@@ -62,7 +62,7 @@ namespace TACHYON.AutoMapper.PriceOffers
                  .ForMember(dst => dst.ShippingRequestFlagTitle,
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
                 .ForMember(dst => dst.RentalDurationUnitTitle,
-                    opt => opt.MapFrom(src => src.RentalDurationUnit != null ? GetDurationUnit(src.RentalDurationUnit.Value) : ""));
+                    opt => opt.MapFrom(src => src.RentalDurationUnit != null ? src.RentalDurationUnit.GetEnumDescription() : ""));
 
             CreateMap<ActorShipperPrice, ActorShipperPriceDto>();
             CreateMap<CreateOrEditActorShipperPriceDto, ActorShipperPrice>().ReverseMap();
@@ -96,19 +96,6 @@ namespace TACHYON.AutoMapper.PriceOffers
             return "";
         }
 
-        private static string GetDurationUnit(TimeUnit timeUnit)
-        {
-            switch (timeUnit)
-            {
-                case TimeUnit.Daily:
-                    return "Days";
-                case TimeUnit.Monthly:
-                    return "Months";
-                case TimeUnit.Weekly:
-                    return "Weeks";
-                default:
-                    return "";
-            }
-        }
+
     }
 }

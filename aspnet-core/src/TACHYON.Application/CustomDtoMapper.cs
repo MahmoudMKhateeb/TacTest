@@ -471,7 +471,7 @@ namespace TACHYON
                 .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.DriverUser.AccountNumber))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.DriverUser.PhoneNumber))
                 .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.CarrierTenantFk.TenancyName))
-                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}- {GetDurationUnit(src.ShippingRequest.RentalDurationUnit.Value)}"))
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}- {src.ShippingRequest.RentalDurationUnit.GetEnumDescription()}"))
                 .ForMember(dest => dest.ShippingRequestReference, opt => opt.MapFrom(src => src.ShippingRequest.ReferenceNumber))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
                 .ForMember(dest => dest.OriginalDedicatedDriverName, opt => opt.MapFrom(src => src.OriginalDedicatedDriverId !=null ? $"{src.OriginalDriver.DriverUser.Name} {src.OriginalDriver.DriverUser.Surname}" :""));
@@ -484,7 +484,7 @@ namespace TACHYON
                 .ForMember(dest => dest.ShippingRequestReference, opt => opt.MapFrom(src => src.ShippingRequest.ReferenceNumber))
                 .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.CarrierTenantFk.TenancyName))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}-" +
-                $" {GetDurationUnit(src.ShippingRequest.RentalDurationUnit.Value)}"))
+                $" {src.ShippingRequest.RentalDurationUnit.GetEnumDescription()}"))
                 .ForMember(dest => dest.NumberOfTrips, opt => opt.MapFrom(src => src.ShippingRequest.ShippingRequestTrips.Where(x=>x.AssignedTruckId == src.TruckId).Count()))
                 .ForMember(dest => dest.OriginalDedicatedTruckName, opt => opt.MapFrom(src => src.OriginalDedicatedTruckId.HasValue ?src.OriginalTruck.Truck.GetDisplayName() :""));
 
@@ -1411,20 +1411,6 @@ namespace TACHYON
             }
         }
 
-        private static string GetDurationUnit(TimeUnit timeUnit)
-        {
-            switch (timeUnit)
-            {
-                case TimeUnit.Daily:
-                    return "Days";
-                case TimeUnit.Monthly:
-                    return "Months";
-                case TimeUnit.Weekly:
-                    return "Weeks";
-                default:
-                    return "";
-            }
-        }
     }
 
     public class DriverMappingEntity

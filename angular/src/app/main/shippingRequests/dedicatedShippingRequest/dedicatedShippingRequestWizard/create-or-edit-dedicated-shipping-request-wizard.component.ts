@@ -918,15 +918,15 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
       date = this.today;
     }
     switch (this.step1Dto.rentalDurationUnit) {
-      case TimeUnit.Daily: {
+      case TimeUnit.Days: {
         this.maxSelectableDate = moment(date).add(this.step1Dto.rentalDuration, 'd').toDate();
         break;
       }
-      case TimeUnit.Weekly: {
+      case TimeUnit.Weeks: {
         this.maxSelectableDate = moment(date).add(this.step1Dto.rentalDuration, 'w').toDate();
         break;
       }
-      case TimeUnit.Monthly: {
+      case TimeUnit.Months: {
         this.maxSelectableDate = moment(date).add(this.step1Dto.rentalDuration, 'M').toDate();
         break;
       }

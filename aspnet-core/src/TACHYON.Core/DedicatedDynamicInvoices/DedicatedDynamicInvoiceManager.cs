@@ -23,11 +23,11 @@ namespace TACHYON.DedicatedDynamicInvoices
 
             switch (shippingRequest.RentalDurationUnit)
             {
-                case TimeUnit.Daily:
+                case TimeUnit.Days:
                     return shippingRequest.RentalDuration;
-                case TimeUnit.Monthly:
+                case TimeUnit.Months:
                     return shippingRequest.RentalDuration * 26;
-                case TimeUnit.Weekly:
+                case TimeUnit.Weeks:
                     return shippingRequest.RentalDuration * 7;
                 default:
                     return 0;
