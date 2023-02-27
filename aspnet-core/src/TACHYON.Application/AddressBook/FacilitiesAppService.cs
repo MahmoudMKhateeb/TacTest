@@ -80,6 +80,7 @@ namespace TACHYON.AddressBook
                     Country = o.CityFk.CountyFk.DisplayName ?? "",
                     CreationTime = o.CreationTime,
                     ShipperName = o.Tenant.TenancyName,
+                    ActorName = o.ShipperActorFk != null ?o.ShipperActorFk.CompanyName :"",
                     FacilityWorkingHours = ObjectMapper.Map<List<FacilityWorkingHourDto>>(o.FacilityWorkingHours)
                 };
 

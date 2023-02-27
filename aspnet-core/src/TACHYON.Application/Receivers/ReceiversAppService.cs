@@ -44,6 +44,7 @@ namespace TACHYON.Receivers
             
             var filteredReceivers = _receiverRepository.GetAll()
                 .Include(e => e.FacilityFk)
+                .ThenInclude(x=>x.ShipperActorFk)
                 .Include(x=>x.Tenant)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,
                     i => i.CreationTime >= input.FromDate && i.CreationTime <= input.ToDate)
@@ -73,7 +74,8 @@ namespace TACHYON.Receivers
                     },
                     FacilityName = s1 == null || s1.Name == null ? "" : s1.Name.ToString(),
                     CreationTime = o.CreationTime,
-                    TenantName=o.Tenant.TenancyName
+                    TenantName=o.Tenant.TenancyName,
+                    ActorName = o.FacilityFk.ShipperActorFk != null ? o.FacilityFk.ShipperActorFk.CompanyName : ""
                 };
 
             var totalCount = await filteredReceivers.CountAsync();
