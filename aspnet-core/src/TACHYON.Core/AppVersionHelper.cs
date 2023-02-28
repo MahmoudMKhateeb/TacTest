@@ -1,4 +1,4 @@
-﻿using Abp.Reflection.Extensions;
+using Abp.Reflection.Extensions;
 using System;
 using System.IO;
 
