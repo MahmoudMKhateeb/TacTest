@@ -292,7 +292,7 @@ namespace TACHYON.Shipping.Trips.Importing
             tripItem.ShippingRequestTripVases = vasList;
         }
 
-        private async Task<long> CreatePointAsync(ImportRoutePointDto input)
+        private async Task<RoutPoint> CreatePointAsync(ImportRoutePointDto input)
         {
             var point = ObjectMapper.Map<RoutPoint>(input);
             return await _shippingRequestTripManager.CreatePointAsync(point);
@@ -300,23 +300,24 @@ namespace TACHYON.Shipping.Trips.Importing
 
         private async Task CreatePoints(List<ImportRoutePointDto> points)
         {
-            List<RoutPoint> RoutPointList = new List<RoutPoint>();
             foreach (var point in points)
             {
-                point.Id=await CreatePointAsync(point);
+                var pointDB = await CreatePointAsync(point);
+                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(point.TripNeedsDeliveryNote, ShippingRequestTripFlag.Normal, pointDB);
+
             }
 
-            var groupedPointsByDeliverNote = points.GroupBy(x => x.TripNeedsDeliveryNote,
-              (k, g) => new
-              {
-                  TripNeedsDeliveryNote = k,
-                  points = g
-              });
-            //assign workflow version
-            foreach (var point in groupedPointsByDeliverNote)
-            {
-                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(ObjectMapper.Map<List<RoutPoint>>(point.points.ToList()), point.TripNeedsDeliveryNote,ShippingRequestTripFlag.Normal);
-            }
+            //var groupedPointsByDeliverNote = points.GroupBy(x => x.TripNeedsDeliveryNote,
+            //  (k, g) => new
+            //  {
+            //      TripNeedsDeliveryNote = k,
+            //      points = g
+            //  });
+            ////assign workflow version
+            //foreach (var point in groupedPointsByDeliverNote)
+            //{
+            //    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(ObjectMapper.Map<List<RoutPoint>>(point.points.ToList()), point.TripNeedsDeliveryNote,ShippingRequestTripFlag.Normal);
+            //}
         }
 
         private async Task<List<ImportTripDto>> GetShipmentListFromExcelOrNull(ImportShipmentFromExcelInput importShipmentFromExcelInput, bool isSingleDropRequest, bool isDedicatedRequest)

@@ -113,9 +113,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                 throw new UserFriendlyException(L("The number of trips " + request.NumberOfTrips));
         }
 
-        public async Task<long> CreatePointAsync(RoutPoint point)
+        public async Task<RoutPoint> CreatePointAsync(RoutPoint point)
         {
-            return await _routePointRepository.InsertAndGetIdAsync(point);
+            return await _routePointRepository.InsertAsync(point);
         }
 
         public void ValidateTripDto(ImportTripDto importTripDto, StringBuilder exceptionMessage)
@@ -401,7 +401,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             }
         }
 
-        public void AssignWorkFlowVersionToRoutPoints(List<RoutPoint> routPoints, bool tripNeedsDeliveryNote, ShippingRequestTripFlag tripFlag,ShippingTypeEnum? shippingType = null,RoundTripType? roundTrip = null)
+        public void AssignWorkFlowVersionToRoutPoints(bool tripNeedsDeliveryNote, ShippingRequestTripFlag tripFlag,ShippingTypeEnum? shippingType = null,RoundTripType? roundTrip = null, params RoutPoint[] routPoints)
         {
             if (routPoints == null || !routPoints.Any()) return;
             
