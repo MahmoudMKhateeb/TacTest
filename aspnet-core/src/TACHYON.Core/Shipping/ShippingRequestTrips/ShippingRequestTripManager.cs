@@ -150,24 +150,27 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                     exceptionMessage.Append(e.Message + ";");
                 }
             }
-            else if (importTripDto.ShippingRequestId != null && sr.ShippingRequestFlag == ShippingRequestFlag.Dedicated)//dedicated
+            else if (importTripDto.ShippingRequestId == null || sr.ShippingRequestFlag == ShippingRequestFlag.Dedicated)//dedicated
             {
-                if (importTripDto.StartTripDate?.Date == null)
+                if (importTripDto.ShippingRequestId != null)
                 {
-                    importTripDto.StartTripDate = sr.RentalStartDate;
-                }
-                if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
-                {
-                    exceptionMessage.Append("The start date must be less or equal to end date." + "; ");
-                }
+                    if (importTripDto.StartTripDate?.Date == null)
+                    {
+                        importTripDto.StartTripDate = sr.RentalStartDate;
+                    }
+                    if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
+                    {
+                        exceptionMessage.Append("The start date must be less or equal to end date." + "; ");
+                    }
 
-                try
-                {
-                    ValidateDedicatedRequestTripDates(importTripDto, sr);
-                }
-                catch (UserFriendlyException e)
-                {
-                    exceptionMessage.Append(e.Message + ";");
+                    try
+                    {
+                        ValidateDedicatedRequestTripDates(importTripDto, sr);
+                    }
+                    catch (UserFriendlyException e)
+                    {
+                        exceptionMessage.Append(e.Message + ";");
+                    }
                 }
 
                 //number of drops
@@ -176,14 +179,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                     importTripDto.NumberOfDrops = 1;
                 }
 
-                //validate truck and driver
-                // await ValidateTruckAndDriver(importTripDto);
-            }
-            if(importTripDto.ShippingRequestId == null)
-            {
-                if (importTripDto.RouteType == ShippingRequestRouteType.SingleDrop)
+                else if(importTripDto.RouteType == ShippingRequestRouteType.MultipleDrops && importTripDto.NumberOfDrops < 2)
                 {
-                    importTripDto.NumberOfDrops = 1;
+                    exceptionMessage.Append("Number of drops must be at least 2");
                 }
             }
       
