@@ -57,10 +57,26 @@
                 'spinner spinner-success spinner-right mr-1 ml-1': !AllTenants
               }"
             >
-              <select class="form-control" name="Shipper" [(ngModel)]="receiver.tenantId" required (ngModelChange)="loadAllFacilities()">
+              <!-- <select class="form-control" name="Shipper" [(ngModel)]="receiver.tenantId" (onChange)="LoadFacilitiesByTenant()" required>
                 <option [value]="undefined" disabled>{{ l('SelectCompany') }}</option>
                 <option *ngFor="let item of AllTenants" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
+              </select> -->
+
+              <dx-select-box
+                name="Shipper"
+                [(ngModel)]="receiver.tenantId"
+                [dataSource]="AllTenants"
+                [searchEnabled]="true"
+                displayExpr="displayName"
+                valueExpr="id"
+                required
+                (onValueChanged)="LoadFacilitiesByTenant()"
+                placeholder="{{ l('SelectCompany') }}"
+              >
+                <dx-validator [validationGroup]="'createContactGroup'">
+                  <dxi-validation-rule type="required" message="{{ l('Company') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
+                </dx-validator>
+              </dx-select-box>
             </div>
             <span class="form-text text-muted">{{ l('SelectCompany') }} {{ receiver.tenantId }}</span>
           </div>

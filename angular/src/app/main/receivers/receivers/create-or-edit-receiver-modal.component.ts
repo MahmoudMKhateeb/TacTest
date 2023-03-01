@@ -181,6 +181,10 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     }
   }
 
+  LoadFacilitiesByTenant() {
+    this.loadAllFacilities();
+  }
+
   isActorRequired(): boolean {
     // broker in this cases need to fill actor
     return !this.receiver.id || isNotNullOrUndefined(this.shipperActorId);
