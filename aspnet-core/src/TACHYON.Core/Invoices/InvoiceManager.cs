@@ -459,25 +459,22 @@ namespace TACHYON.Invoices
             InvoicePeriod period)
         {
             //not saas trips
-            var notSaasTrips = trips.Where(x =>  x.ShippingRequestFk != null && !x.ShippingRequestFk.IsSaas());
+            var normalTrips = trips.Where(x => x.ShippingRequestFk != null && !x.ShippingRequestFk.IsSaas());
 
-            decimal notSaasTotalAmount = (decimal)notSaasTrips.Sum
-                (r => r.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.TotalAmountWithCommission));
-            decimal notSaasVatAmount = (decimal)notSaasTrips.Sum
-                (r => r.VatAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.VatAmountWithCommission));
-            decimal notSaaSubTotalAmount = (decimal)notSaasTrips.Sum
-                (r => r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
+            decimal normalTripsTotalAmount = (decimal)normalTrips.Sum(r => r.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.TotalAmountWithCommission));
+            decimal normalTripsVatAmount = (decimal)normalTrips.Sum(r => r.VatAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.VatAmountWithCommission));
+            decimal normalTripsSubTotalAmount = (decimal)normalTrips.Sum(r => r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
 
             //saas trips
-            var saasTrips = trips.Where(x => (x.ShippingRequestFk != null &&  x.ShippingRequestFk.IsSaas()) || x.CarrierTenantId == x.ShipperTenantId);
+            var saasTrips = trips.Where(x => (x.ShippingRequestFk != null && x.ShippingRequestFk.IsSaas()) || (x.ShipperTenantId != null && x.CarrierTenantId != null && x.CarrierTenantId == x.ShipperTenantId));
 
             decimal SaasTotalAmount = (decimal)saasTrips.Sum(r => r.TotalAmountWithCommission);
             decimal SaasVatAmount = (decimal)saasTrips.Sum(r => r.VatAmountWithCommission);
             decimal SaasSubTotalAmount = (decimal)saasTrips.Sum(r => r.SubTotalAmountWithCommission);
 
-            var totalAmount = notSaasTotalAmount + SaasTotalAmount;
-            var vatAmount = notSaasVatAmount + SaasVatAmount;
-            var subTotalAmount = notSaaSubTotalAmount + SaasSubTotalAmount;
+            //var totalAmount = notSaasTotalAmount + SaasTotalAmount;
+            //var vatAmount = notSaasVatAmount + SaasVatAmount;
+            //var subTotalAmount = notSaaSubTotalAmount + SaasSubTotalAmount;
 
 
 
@@ -499,7 +496,7 @@ namespace TACHYON.Invoices
 
 
             //generate normal trips
-            var normalTrips = trips.Where(x => x.ShippingRequestFk != null && !x.ShippingRequestFk.IsSaas());
+            //var normalTrips = trips.Where(x => x.ShippingRequestFk != null && !x.ShippingRequestFk.IsSaas());
             if (normalTrips != null && normalTrips.Count() > 0)
             {
                 var invoice = new Invoice
@@ -508,9 +505,9 @@ namespace TACHYON.Invoices
                     PeriodId = period.Id,
                     DueDate = dueDate,
                     IsPaid = period.PeriodType == InvoicePeriodType.PayInAdvance,
-                    TotalAmount = totalAmount,
-                    VatAmount = vatAmount,
-                    SubTotalAmount = subTotalAmount,
+                    TotalAmount = normalTripsTotalAmount,
+                    VatAmount = normalTripsVatAmount,
+                    SubTotalAmount = normalTripsSubTotalAmount,
                     TaxVat = normalTrips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.Trip,
@@ -538,9 +535,9 @@ namespace TACHYON.Invoices
                     PeriodId = period.Id,
                     DueDate = dueDate,
                     IsPaid = period.PeriodType == InvoicePeriodType.PayInAdvance,
-                    TotalAmount = totalAmount,
-                    VatAmount = vatAmount,
-                    SubTotalAmount = subTotalAmount,
+                    TotalAmount = SaasTotalAmount,
+                    VatAmount = SaasVatAmount,
+                    SubTotalAmount = SaasSubTotalAmount,
                     TaxVat = taxVat,
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.SaasTrip,
