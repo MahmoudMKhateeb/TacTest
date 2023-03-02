@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -18,6 +19,7 @@ using TACHYON.Authorization.Users;
 using TACHYON.Features;
 using TACHYON.Goods.Dtos;
 using TACHYON.Goods.GoodCategories;
+using TACHYON.Invoices;
 using TACHYON.Notifications;
 using TACHYON.Receivers;
 using TACHYON.Routs.RoutPoints;
@@ -454,6 +456,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                     throw new UserFriendlyException(L("TruckMustBeFromAssigned"));
                 }
             }
+        }
+
+        public async Task<bool> GetSaasInvoicingActivation(int tenantId)
+        {
+            return await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.CMS) && await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.SaasInvoicingActivation);
         }
         private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, StringBuilder exceptionMessage)
         {

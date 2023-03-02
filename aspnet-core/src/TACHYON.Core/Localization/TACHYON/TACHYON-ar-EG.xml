@@ -3020,6 +3020,7 @@
     <text name="directShipments">الشحنات</text>
     <text name="DeliveryNote">مذكرة التسليم</text>
     <text name="SealNumber">رقم القفل</text>
+    <text name="SaasInvoicingActivation">تفعيل الفواتير </text>
 
 	</texts>
 </localizationDictionary>

@@ -6,11 +6,13 @@ using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Runtime.Validation;
 using Abp.UI.Inputs;
+using DevExpress.DataAccess.Wizard.Presenters;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TACHYON.Configuration;
+using TACHYON.Invoices;
 using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy;
@@ -182,6 +184,13 @@ namespace TACHYON.Features
                 AppFeatures.DocumentsManagement,
                 "false",
                 L("DocumentsManagement"),
+                inputType: new CheckboxInputType()
+            );
+
+            cms.CreateChildFeature(
+                AppFeatures.SaasInvoicingActivation,
+                "false",
+                L("SaasInvoicingActivation"),
                 inputType: new CheckboxInputType()
             );
 

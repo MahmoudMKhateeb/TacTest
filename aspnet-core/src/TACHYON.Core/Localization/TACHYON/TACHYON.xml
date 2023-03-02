@@ -3285,6 +3285,7 @@
     <text name="directShipments">Direct shipments</text>
     <text name="DeliveryNote">Delivery note</text>
     <text name="SealNumber">Seal number</text>
+    <text name="SaasInvoicingActivation">SAAS invoicing activation</text>
 
 	</texts>
 </localizationDictionary>

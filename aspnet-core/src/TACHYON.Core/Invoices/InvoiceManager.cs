@@ -3,6 +3,7 @@ using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.Net.Mail;
 using Abp.Quartz;
 using Abp.Timing;
@@ -466,7 +467,9 @@ namespace TACHYON.Invoices
             decimal normalTripsSubTotalAmount = (decimal)normalTrips.Sum(r => r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
 
             //saas trips
-            var saasTrips = trips.Where(x => (x.ShippingRequestFk != null && x.ShippingRequestFk.IsSaas()) || (x.ShipperTenantId != null && x.CarrierTenantId != null && x.CarrierTenantId == x.ShipperTenantId));
+            var saasTrips = trips.Where(x => (x.ShippingRequestFk != null && x.ShippingRequestFk.IsSaas()) || (x.ShipperTenantId != null && x.CarrierTenantId != null && x.CarrierTenantId == x.ShipperTenantId))
+                //Select only the waybills that saas invoicing activation is "On" from feature in creation process
+                .Where(x => x.SaasInvoicingActivation != null && x.SaasInvoicingActivation.Value);
 
             decimal SaasTotalAmount = (decimal)saasTrips.Sum(r => r.TotalAmountWithCommission);
             decimal SaasVatAmount = (decimal)saasTrips.Sum(r => r.VatAmountWithCommission);
@@ -524,7 +527,6 @@ namespace TACHYON.Invoices
 
 
             //generate SAAS invoices
-            // var shipperSAAStrips = trips.Where(x => x.ShippingRequestFk.IsSaas());
             if (saasTrips != null && saasTrips.Count() > 0)
             {
                 //decimal taxVat = saasTrips.FirstOrDefault(x => x.TaxVat.HasValue).TaxVat.Value;
