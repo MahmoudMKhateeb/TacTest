@@ -27,6 +27,7 @@
         public const string Receiver = "App.Receiver";
         public const string TachyonDealer = "App.TachyonDealer";
         public const string NumberOfWaybills = "App.NumberOfWaybills";
+        public const string ImportFunctionality = "App.ImportFunctionality";
         public const string MaxNumberOfWaybills = "App.NumberOfWaybills.MaxNumberOfWaybills";
         public const string AdditionalWaybillPrice = "App.NumberOfWaybills.AdditionalWaybillPrice";
         public const string ShippingRequest = "App.shippingRequest";

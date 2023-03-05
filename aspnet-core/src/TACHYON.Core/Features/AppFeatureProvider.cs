@@ -205,6 +205,13 @@ namespace TACHYON.Features
                 L("AdditionalWaybillPriceFeature"), 
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
                 );
+
+            var ImportFunctionality = context.Create(
+                AppFeatures.ImportFunctionality,
+                "true",
+                L("ImportFunctionalityFeature"),
+                inputType: new CheckboxInputType()
+            );
             #endregion
 
 
