@@ -1,7 +1,5 @@
-﻿using Abp;
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Application.Services.Dto;
-using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
@@ -9,14 +7,11 @@ using Abp.Extensions;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
-using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
-using NUglify.Html;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.EntityLogs.Transactions;
@@ -25,8 +20,8 @@ using TACHYON.Invoices.Balances;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.PriceOffers.Dto;
-using TACHYON.PricePackages.TmsPricePackageOffers;
-using TACHYON.PricePackages.TmsPricePackages;
+using TACHYON.PricePackages;
+using TACHYON.PricePackages.PricePackageOffers;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
 
@@ -45,10 +40,10 @@ namespace TACHYON.PriceOffers
         private ShippingRequestDirectRequest _directRequest;
         private readonly TenantManager _tenantManager;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
-        private readonly ITmsPricePackageManager _tmsPricePackageManager;
-        private readonly IRepository<TmsPricePackageOffer,long> _tmsPricePackageOfferRepository;
+        private readonly IPricePackageManager _pricePackageManager;
+        private readonly IRepository<PricePackageOffer,long> _pricePackageOfferRepository;
 
-        public PriceOfferManager(IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IRepository<ShippingRequest, long> shippingRequestsRepository, IAbpSession abpSession, BalanceManager balanceManager, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, IRepository<PriceOffer, long> priceOfferRepository, TenantManager tenantManager, IEntityChangeSetReasonProvider reasonProvider, ITmsPricePackageManager tmsPricePackageManager, IRepository<TmsPricePackageOffer, long> tmsPricePackageOfferRepository)
+        public PriceOfferManager(IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IRepository<ShippingRequest, long> shippingRequestsRepository, IAbpSession abpSession, BalanceManager balanceManager, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, IRepository<PriceOffer, long> priceOfferRepository, TenantManager tenantManager, IEntityChangeSetReasonProvider reasonProvider, IPricePackageManager pricePackageManager, IRepository<PricePackageOffer, long> pricePackageOfferRepository)
         {
             _appNotifier = appNotifier;
             _settingManager = settingManager;
@@ -60,8 +55,8 @@ namespace TACHYON.PriceOffers
             _priceOfferRepository = priceOfferRepository;
             _tenantManager = tenantManager;
             _reasonProvider = reasonProvider;
-            _tmsPricePackageManager = tmsPricePackageManager;
-            _tmsPricePackageOfferRepository = tmsPricePackageOfferRepository;
+            _pricePackageManager = pricePackageManager;
+            _pricePackageOfferRepository = pricePackageOfferRepository;
         }
 
         /// <summary>
@@ -295,7 +290,7 @@ namespace TACHYON.PriceOffers
             DisableTenancyFilters();
             var offer = await GetOffer(id);
 
-            bool isPricePackageOffer = await _tmsPricePackageOfferRepository.GetAll().AnyAsync(x => x.PriceOfferId == offer.Id);
+            bool isPricePackageOffer = await _pricePackageOfferRepository.GetAll().AnyAsync(x => x.PriceOfferId == offer.Id);
             if (!isPricePackageOffer)
             {
                 var canAcceptOrRejectOffer = await canAcceptOrRejectOfferOnBehalf(offer);
@@ -504,7 +499,7 @@ namespace TACHYON.PriceOffers
                         // check if have any matched price package
                         // if the offer tenant is not carrier this method will return false
                         // if the shipping request of offer have not any matched price package (that means shipping request not linked to any price package) will return false
-                        bool isLinkedToAnyPricePackage = await _tmsPricePackageManager.IsHaveMatchedPricePackage(offer.ShippingRequestId, offer.SourceId);
+                        bool isLinkedToAnyPricePackage = await _pricePackageManager.IsHaveMatchedPricePackage(offer.ShippingRequestId, offer.SourceId);
                         
                         return !isLinkedToAnyPricePackage;
                     }

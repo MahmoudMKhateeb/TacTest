@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import {
-  CarriersForDropDownDto,
-  CreateOrEditAppendixDto,
-  PricePackageAppendixServiceProxy,
-  PricePackageProposalServiceProxy,
-  SelectItemDto,
-  ShippersForDropDownDto,
-  ShippingRequestsServiceProxy,
-  TmsPricePackageServiceProxy,
+    CarriersForDropDownDto,
+    CreateOrEditAppendixDto,
+    PricePackageAppendixServiceProxy,
+    PricePackageProposalServiceProxy, PricePackageServiceProxy,
+    SelectItemDto,
+    ShippersForDropDownDto,
+    ShippingRequestsServiceProxy,
+
 } from '@shared/service-proxies/service-proxies';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -41,7 +41,7 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
     private _appendixServiceProxy: PricePackageAppendixServiceProxy,
     private _shippingRequestServiceProxy: ShippingRequestsServiceProxy,
     private _proposalServiceProxy: PricePackageProposalServiceProxy,
-    private _tmsPricePackageServiceProxy: TmsPricePackageServiceProxy,
+    private _pricePackageServiceProxy: PricePackageServiceProxy,
     private injector: Injector
   ) {
     super(injector);
@@ -142,7 +142,7 @@ export class CreateOrEditPricePackageAppendixComponent extends AppComponentBase 
   }
 
   loadPricePackages() {
-    this._tmsPricePackageServiceProxy.getPricePackagesForCarrierAppendix(this.companyId, this.appendix.id).subscribe((result) => {
+    this._pricePackageServiceProxy.getPricePackagesForCarrierAppendix(this.companyId, this.appendix.id).subscribe((result) => {
       this.dataSource = result.items;
     });
   }

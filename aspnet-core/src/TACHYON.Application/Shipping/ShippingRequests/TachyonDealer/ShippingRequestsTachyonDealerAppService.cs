@@ -14,14 +14,14 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
         IShippingRequestsTachyonDealerAppService
     {
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
-        private readonly NormalPricePackageManager _normalPricePackageManager;
+        private readonly IPricePackageManager _pricePackageManager;
 
         public ShippingRequestsTachyonDealerAppService(
-            IRepository<ShippingRequest, long> shippingRequestRepository
-, NormalPricePackageManager normalPricePackageManager)
+            IRepository<ShippingRequest, long> shippingRequestRepository,
+            IPricePackageManager pricePackageManager)
         {
             _shippingRequestRepository = shippingRequestRepository;
-            _normalPricePackageManager = normalPricePackageManager;
+            _pricePackageManager = pricePackageManager;
         }
 
         [RequiresFeature(AppFeatures.TachyonDealer)]
@@ -54,7 +54,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
                 throw new UserFriendlyException(L("NoShippingRequest"));
             }
 
-            await _normalPricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
+            await _pricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
         }
     }
 }

@@ -57,10 +57,10 @@
       </ng-template>
       <!--  end:: PricOfferingSection -->
 
-      <app-view-matching-tms-price-package
+      <app-view-matching-price-package
         *ngIf="canSeePricePackages()"
         [shippingRequestId]="activeShippingRequestId"
-      ></app-view-matching-tms-price-package>
+      ></app-view-matching-price-package>
 
       <div class="card card-custom gutter-b" *ngIf="isGrantedAny('Pages.ActorPrices.Carrier', 'Pages.ActorPrices.Shipper')">
         <div class="card-header">

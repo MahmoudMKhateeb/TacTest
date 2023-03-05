@@ -1,14 +1,12 @@
 using Abp;
 using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
-using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Notifications;
 using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
-using NUglify.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -21,7 +19,7 @@ using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
-using TACHYON.PricePackages.Dto.NormalPricePackage;
+using TACHYON.PricePackages.Dto;
 using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
@@ -502,7 +500,7 @@ namespace TACHYON.Notifications
             {
                 var notificationData = new LocalizableMessageNotificationData(
                                 new LocalizableString(
-                                    L("ShippingRequestAsBidWithMatchingPricePackage", shippingRequestReferance, carrier.PricePackageReferance),
+                                    L("ShippingRequestAsBidWithMatchingPricePackage", shippingRequestReferance, carrier.PricePackageReference),
                                     TACHYONConsts.LocalizationSourceName
                                     )
                                 );

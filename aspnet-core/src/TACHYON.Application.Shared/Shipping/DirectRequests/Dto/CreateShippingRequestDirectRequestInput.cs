@@ -1,4 +1,4 @@
-﻿using TACHYON.PricePackages.Dto.NormalPricePackage;
+﻿using TACHYON.PricePackages.Dto;
 
 namespace TACHYON.Shipping.DirectRequests.Dto
 {
@@ -6,7 +6,10 @@ namespace TACHYON.Shipping.DirectRequests.Dto
     {
         public long ShippingRequestId { get; set; }
         public int CarrierTenantId { get; set; }
-        public PricePackageOfferDto BidNormalPricePackage { get; set; }
+
+        public PricePackageForPriceCalculationDto PriceCalculationDto { get; set; }
+        
+        public int? PricePackageId { get; set; }
 
     }
 }

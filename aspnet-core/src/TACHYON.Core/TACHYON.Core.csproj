@@ -58,5 +58,7 @@
 	<ItemGroup>
 	  <Compile Remove="EntityLogs\EntityLogProvider.cs" />
 	  <Compile Remove="EntityLogs\LogUseCase.cs" />
+	  <Compile Remove="PricePackages\TmsPricePackages\TmsPricePackageManager.cs" />
+	  <Compile Remove="PricePackages\NormalPricePackage.cs" />
 	</ItemGroup>
 </Project>

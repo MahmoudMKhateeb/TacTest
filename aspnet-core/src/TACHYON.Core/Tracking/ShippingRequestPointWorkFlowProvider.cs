@@ -1,7 +1,6 @@
-﻿using Abp;
+using Abp;
 using Abp.Application.Features;
 using Abp.Authorization;
-using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
 using Abp.Linq.Extensions;
@@ -10,21 +9,17 @@ using Abp.Threading;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
-using MimeKit;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
 using TACHYON.Configuration;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
-using TACHYON.Dto;
 using TACHYON.Features;
-using TACHYON.Firebases;
 using TACHYON.Integration.BayanIntegration.V3;
 using TACHYON.Invoices;
 using TACHYON.Net.Sms;
@@ -33,6 +28,7 @@ using TACHYON.Offers;
 using TACHYON.Penalties;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Base;
+using TACHYON.PriceOffers.Dto;
 using TACHYON.PricePackages;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.RoutPointSmartEnum;
@@ -61,13 +57,11 @@ namespace TACHYON.Tracking
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly PriceOfferManager _priceOfferManager;
-        private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFeatureChecker _featureChecker;
         private readonly IRepository<RoutPointDocument, long> _routPointDocumentRepository;
         private readonly IRepository<ShippingRequestTripTransition> _shippingRequestTripTransitionRepository;
         private readonly IRepository<RoutPointStatusTransition> _routPointStatusTransitionRepository;
-        private readonly FirebaseNotifier _firebaseNotifier;
         private readonly ISmsSender _smsSender;
         private readonly InvoiceManager _invoiceManager;
         private readonly CommonManager _commonManager;
@@ -77,7 +71,6 @@ namespace TACHYON.Tracking
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
         private readonly PenaltyManager _penaltyManager;
         private readonly BayanIntegrationManagerV3 _banIntegrationManagerV3;
-        private readonly IRepository<User, long> _userRepository;
 
         public IAbpSession AbpSession { set; get; }
 
@@ -93,7 +86,6 @@ namespace TACHYON.Tracking
             IRepository<RoutPointDocument, long> routPointDocumentRepository,
             IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository,
             IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository,
-            FirebaseNotifier firebaseNotifier,
             ISmsSender smsSender,
             InvoiceManager invoiceManager,
             CommonManager commonManager,
@@ -103,9 +95,7 @@ namespace TACHYON.Tracking
             IEntityChangeSetReasonProvider reasonProvider,
             IRepository<ShippingRequest, long> shippingRequestRepository,
             PenaltyManager penaltyManager,
-            BayanIntegrationManagerV3 banIntegrationManagerV3,
-            NormalPricePackageManager normalPricePackageManager,
-            IRepository<User, long> userRepository)
+            BayanIntegrationManagerV3 banIntegrationManagerV3)
         {
             _routPointRepository = routPointRepository;
             _shippingRequestTripRepository = shippingRequestTrip;
@@ -116,7 +106,6 @@ namespace TACHYON.Tracking
             _routPointDocumentRepository = routPointDocumentRepository;
             _shippingRequestTripTransitionRepository = shippingRequestTripTransitionRepository;
             _routPointStatusTransitionRepository = routPointStatusTransitionRepository;
-            _firebaseNotifier = firebaseNotifier;
             _smsSender = smsSender;
             _invoiceManager = invoiceManager;
             _commonManager = commonManager;
@@ -528,9 +517,7 @@ namespace TACHYON.Tracking
                 }
             };
             _penaltyManager = penaltyManager;
-            _normalPricePackageManager = normalPricePackageManager;
             _banIntegrationManagerV3 = banIntegrationManagerV3;
-            _userRepository = userRepository;
         }
 
         #endregion
@@ -1272,24 +1259,20 @@ namespace TACHYON.Tracking
             }
 
 
-
-
-            var priceOffer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId.Value);
-            if (priceOffer != null)
-            {
-                var items = ObjectMapper.Map<List<PricePackageOfferItem>>(priceOffer.PriceOfferDetails);
-                TransferPrices(trip, priceOffer, items, priceOffer.TaxVat);
-            }
-            else
-            {
-                var pricePackageOffer = await _normalPricePackageManager.GetOfferByShippingRequestId(trip.ShippingRequestId.Value);
-                TransferPrices(trip, pricePackageOffer, pricePackageOffer.Items, pricePackageOffer.TaxVat);
-            }
+            var priceOffer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId);
+            
+            if (priceOffer is null) throw new UserFriendlyException(); // todo review this 
+            
+            var items = ObjectMapper.Map<List<PriceOfferItem>>(priceOffer.PriceOfferDetails);
+            TransferPrices(trip, priceOffer, items, priceOffer.TaxVat);
+            
+            
+            // TODO: ASK ISLAM TO GIVE AN ADVICE HERE !!
         }
         /// <summary>
         /// Transfer the prices from price offer to trip
         /// </summary>
-        private void TransferPrices(ShippingRequestTrip trip, PriceOfferBase offer, List<PricePackageOfferItem> items, decimal taxVat)
+        private void TransferPrices(ShippingRequestTrip trip, PriceOfferBase offer, List<PriceOfferItem> items, decimal taxVat)
         {
             if (trip.ShippingRequestFk.RouteTypeId == null && trip.ShippingRequestFk.IsSaas())
             {

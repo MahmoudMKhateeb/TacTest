@@ -11,7 +11,6 @@ using TACHYON.Authorization;
 using TACHYON.Common;
 using TACHYON.PricePackages.Dto.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageAppendices;
-using TACHYON.PricePackages.TmsPricePackages;
 
 namespace TACHYON.PricePackages
 {
@@ -55,9 +54,8 @@ namespace TACHYON.PricePackages
         {
             DisableTenancyFilters();
             
-            var appendix = await _appendixRepository.GetAll()
-                .Include(x=> x.Proposal).Include(x=> x.NormalPricePackages)
-                .Include(x=> x.TmsPricePackages).AsNoTracking().SingleAsync(x => x.Id == id);
+            var appendix = await _appendixRepository.GetAllIncluding(x=> x.PricePackages,x=> x.Proposal)
+                .AsNoTracking().SingleAsync(x => x.Id == id);
 
             return ObjectMapper.Map<CreateOrEditAppendixDto>(appendix);
         }

@@ -1,4 +1,4 @@
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Localization;
@@ -710,11 +710,6 @@ namespace TACHYON.Authorization
                 L("DeleteEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant
                 , featureDependency: templateFeatureDependency);
 
-            var normalPricePackage = pages.CreateChildPermission(AppPermissions.Pages_NormalPricePackages, L("NormalPricePackages"));
-            normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Create, L("CreateNewNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
-            normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Edit, L("EditNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
-            normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Delete, L("DeleteNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
-
             #region SrPostPricePermissions
 
             var srPostPrice = context.CreatePermission(AppPermissions.Pages_SrPostPriceUpdate, L("SrPostPriceUpdates"),
@@ -836,21 +831,21 @@ namespace TACHYON.Authorization
            
            #region TMS Price Packages
 
-           var tmsPricePackagePermission = pages.CreateChildPermission(AppPermissions.Pages_TmsPricePackages,
-               L("TmsPricePackagesPermission"),
+           var tmsPricePackagePermission = pages.CreateChildPermission(AppPermissions.Pages_PricePackages,
+               L("PricePackagesPermission"),
                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Shipper,AppFeatures.Carrier));
            
-           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Create,
-               L("CreateTmsPricePackage"),
-               featureDependency: tmsFeatureDependency,multiTenancySides: MultiTenancySides.Tenant);
+           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_PricePackages_Create,
+               L("CreatePricePackage"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Carrier));
            
-           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Update,
-               L("UpdateTmsPricePackage"),
-               featureDependency: tmsFeatureDependency,multiTenancySides: MultiTenancySides.Tenant);
+           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_PricePackages_Update,
+               L("UpdatePricePackage"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Carrier));
            
-           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Delete,
-               L("DeleteTmsPricePackage"),
-               featureDependency: tmsFeatureDependency,multiTenancySides: MultiTenancySides.Tenant);
+           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_PricePackages_Delete,
+               L("DeletePricePackage"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Carrier));
            
 
            #endregion
@@ -902,7 +897,7 @@ namespace TACHYON.Authorization
 
            pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Activation,
                L("PricePackageAppendicesActivationPermission"),
-               featureDependency: tmsFeatureDependency, multiTenancySides: MultiTenancySides.Tenant);
+               featureDependency: tmsFeatureDependency);
            #endregion
 
            #region Actor Prices

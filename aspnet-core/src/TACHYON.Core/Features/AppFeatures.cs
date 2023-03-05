@@ -160,8 +160,6 @@
 
         public const string SaasRelatedCarrier = "App.Shipper.SaaSCarrier";
         public const string Saas = "App.Shipper.Saas";
-
-        public const string NormalPricePackages = "App.NormalPricePackage";
         #endregion
 
         public const string Bidding = "App.Pay.Bidding";

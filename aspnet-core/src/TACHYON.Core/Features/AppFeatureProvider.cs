@@ -254,12 +254,6 @@ namespace TACHYON.Features
                 TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
-            var normalPricePackage = context.Create(
-            AppFeatures.NormalPricePackages,
-             "false",
-             L("NormalPricePackages"),
-               inputType: new CheckboxInputType());
-
             #endregion
 
 

@@ -1,11 +1,8 @@
 ﻿using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
-using Abp.IO.Extensions;
 using Abp.Reflection.Extensions;
 using Abp.UI;
 using DevExpress.XtraRichEdit;
-using DevExpress.XtraRichEdit.API.Native;
-using MailKit.Search;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,7 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.PricePackages.PricePackageProposals.Jobs;
-using TACHYON.PricePackages.TmsPricePackages;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Storage;
 using SearchOptions = DevExpress.XtraRichEdit.API.Native.SearchOptions;
@@ -23,45 +19,45 @@ namespace TACHYON.PricePackages.PricePackageProposals
     public class PricePackageProposalManager : TACHYONDomainServiceBase, IPricePackageProposalManager
     {
         private readonly IRepository<PricePackageProposal> _proposalRepository;
-        private readonly IRepository<TmsPricePackage> _tmsPricePackageRepository;
+        private readonly IRepository<PricePackage,long> _pricePackageRepository;
         private readonly IRepository<BinaryObject,Guid> _binaryObjectRepository;
         private readonly IBackgroundJobManager _jobManager;
 
         public PricePackageProposalManager(
             IRepository<PricePackageProposal> proposalRepository,
-            IRepository<TmsPricePackage> tmsPricePackageRepository, 
+            IRepository<PricePackage,long> pricePackageRepository, 
             IRepository<BinaryObject, Guid> binaryObjectRepository,
             IBackgroundJobManager jobManager)
         {
             _proposalRepository = proposalRepository;
-            _tmsPricePackageRepository = tmsPricePackageRepository;
+            _pricePackageRepository = pricePackageRepository;
             _binaryObjectRepository = binaryObjectRepository;
             _jobManager = jobManager;
         }
 
-        public async Task<int> CreateProposal(PricePackageProposal createdProposal,List<int> tmsPricePackages,string emailAddress)
+        public async Task<int> CreateProposal(PricePackageProposal createdProposal,List<long> pricePackages,string emailAddress)
         {
             
             // check items if them used in any another proposal
 
-            bool anyItemUsedInAnotherProposal = await _tmsPricePackageRepository.GetAll()
-                .AnyAsync(x => tmsPricePackages.Any(i => i == x.Id) && x.ProposalId.HasValue);
+            bool anyItemUsedInAnotherProposal = await _pricePackageRepository.GetAll()
+                .AnyAsync(x => pricePackages.Any(i => i == x.Id) && x.ProposalId.HasValue);
 
             if (anyItemUsedInAnotherProposal)
                 throw new UserFriendlyException(L("YouCanNotAddItemUsedInAnotherProposal"));
             
             // check items if them for another shipper 
-            bool anyItemNotForSelectedShipper = await _tmsPricePackageRepository.GetAll()
-                .AnyAsync(x => tmsPricePackages.Any(i => i == x.Id) && x.DestinationTenantId != createdProposal.ShipperId);
+            bool anyItemNotForSelectedShipper = await _pricePackageRepository.GetAll()
+                .AnyAsync(x => pricePackages.Any(i => i == x.Id) && x.DestinationTenantId != createdProposal.ShipperId);
             
             if (anyItemNotForSelectedShipper) 
                 throw new UserFriendlyException(L("YouMustSelectItemForSelectedShipper"));
             
             var createdProposalId = await _proposalRepository.InsertAndGetIdAsync(createdProposal);
             
-            tmsPricePackages.ForEach(tmsPricePackageId=>
+            pricePackages.ForEach(tmsPricePackageId=>
             {
-                _tmsPricePackageRepository.Update(tmsPricePackageId, x => x.ProposalId = createdProposalId);
+                _pricePackageRepository.Update(tmsPricePackageId, x => x.ProposalId = createdProposalId);
             });
             await _jobManager.EnqueueAsync<GenerateProposalFileJob, GenerateProposalFileJobArgument>(
                 new GenerateProposalFileJobArgument()
@@ -93,13 +89,13 @@ namespace TACHYON.PricePackages.PricePackageProposals
             await documentProcessor.LoadDocumentAsync(documentStream, DocumentFormat.Rtf);
             var document = documentProcessor.Document;
             string proposalDate = proposal.ProposalDate?.ToString("dd-MM-yyyy");
-            var truckTypes = proposal.TmsPricePackages?.Select(x => x.TrucksTypeFk?.Key)
+            var truckTypes = proposal.PricePackages?.Select(x => x.TrucksTypeFk?.Key)
                 .Distinct().ToArray();
-            var routeTypes = proposal.TmsPricePackages
+            var routeTypes = proposal.PricePackages
                 ?.Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType))
                 .Distinct().ToArray();
             
-            var shippingTypes = proposal.TmsPricePackages?
+            var shippingTypes = proposal.PricePackages?
                 .Where(x=> x.ShippingTypeId.HasValue)
                 .Select(x => x.ShippingType?.DisplayName)
                 .Distinct().ToArray();
@@ -123,7 +119,7 @@ namespace TACHYON.PricePackages.PricePackageProposals
 
             var routeDetailsTable = document.Tables[1];
 
-            var routeDetails = proposal?.TmsPricePackages?.Select(x => new
+            var routeDetails = proposal.PricePackages?.Select(x => new
             {
                 OriginCity = x.OriginCity?.DisplayName,DestinationCity = x.DestinationCity?.DisplayName,
                 x.TotalPrice, TruckType = x.TrucksTypeFk?.DisplayName 

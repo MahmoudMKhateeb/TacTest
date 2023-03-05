@@ -24,7 +24,7 @@ namespace TACHYON.PricePackages.Dto.PricePackageAppendices
 
         public int? DestinationCompanyId { get; set; }
         
-        public List<string> PricePackages { get; set; }
+        public List<long> PricePackages { get; set; }
         
         public void AddValidationErrors(CustomValidationContext context)
         {

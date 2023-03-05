@@ -13,7 +13,6 @@ import {
   InvoiceAccountType,
   InvoiceServiceProxy,
   ISelectItemDto,
-  NormalPricePackagesServiceProxy,
   SelectItemDto,
   ShippingRequestsServiceProxy,
   TenantCityLookupTableDto,
@@ -63,7 +62,6 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
   constructor(
     injector: Injector,
     private _currentSrv: InvoiceServiceProxy,
-    private _NormalPricePackagesServiceProxy: NormalPricePackagesServiceProxy,
     private _ShippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _TenantRegistration: TenantRegistrationServiceProxy,
     private _DynamicInvoiceServiceProxy: DynamicInvoiceServiceProxy,

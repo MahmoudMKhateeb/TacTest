@@ -13,9 +13,6 @@ namespace TACHYON.Shipping.DirectRequests
         public int TenantId { get; set; }
         [ForeignKey(nameof(TenantId))]
         public Tenant Tenant { get; set; }
-        public long? PricePackageOfferId { get; set; }
-        [ForeignKey(nameof(PricePackageOfferId))]
-        public PricePackageOffer PricePackageOfferFK { get; set; }
         public int CarrierTenantId { get; set; }
 
         [ForeignKey(nameof(CarrierTenantId))] public Tenant Carrier { get; set; }

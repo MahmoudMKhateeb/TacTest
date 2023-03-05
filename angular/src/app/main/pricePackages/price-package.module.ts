@@ -2,9 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PricePackageRoutingModule } from './price-package-routing.module';
-import { ViewNormalPricePackageModalComponent } from './normal-price-package/view-normal-price-package-modal.component';
-import { NormalPricePackageComponent } from './normal-price-package/normal-price-package.component';
-import { CreateOrEditNormalPricePackageModalComponent } from './normal-price-package/create-or-edit-normal-price-package-modal.component';
 import { TableModule } from 'primeng/table';
 import { UtilsModule } from '@shared/utils/utils.module';
 import { PaginatorModule } from 'primeng/paginator';
@@ -12,8 +9,8 @@ import { AppCommonModule } from '@app/shared/common/app-common.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { DevExtremeModule, DxButtonModule } from '@node_modules/devextreme-angular';
-import { TmsPricePackageComponent } from '@app/main/pricePackages/tms-price-package/tms-price-package.component';
-import { CreateTmsPricePackageModalComponent } from '@app/main/pricePackages/tms-price-package/create-tms-price-package-modal/create-tms-price-package-modal.component';
+import { PricePackageComponent } from '@app/main/pricePackages/price-package/price-package.component';
+import { CreateOrEditPricePackageModalComponent } from '@app/main/pricePackages/price-package/create-or-edit-price-package-modal/create-or-edit-price-package-modal.component';
 import { PricePackagesProposalComponent } from '@app/main/pricePackages/price-packeges-proposal/price-packages-proposal.component';
 import { CreateOrEditPricePackegeProposalComponent } from './price-packeges-proposal/create-or-edit-price-packege-proposal/create-or-edit-price-packege-proposal.component';
 import { BsDatepickerModule } from '@node_modules/ngx-bootstrap/datepicker';
@@ -22,25 +19,26 @@ import { PricePackageAppendixComponent } from './price-package-appendix/price-pa
 import { CreateOrEditPricePackageAppendixComponent } from './price-package-appendix/create-or-edit-price-package-appendix/create-or-edit-price-package-appendix.component';
 import { ViewPricePackageAppendixComponent } from './price-package-appendix/view-price-package-appendix/view-price-package-appendix.component';
 import { SplitButtonModule } from '@node_modules/primeng/splitbutton';
-import { ViewMatchingTmsPricePackageComponent } from './tms-price-package/view-matching-tms-price-package/view-matching-tms-price-package.component';
+import { ViewMatchingPricePackageComponent } from './price-package/view-matching-price-package/view-matching-price-package.component';
 import { ProposalDetailGridComponent } from './price-packeges-proposal/proposal-detail-grid/proposal-detail-grid.component';
 import { AppendixDetailGridComponent } from './price-package-appendix/appendix-detail-grid/appendix-detail-grid.component';
 import { MultiSelectModule } from '@node_modules/primeng/multiselect';
+import {
+    NormalPricePackageCalculationComponent
+} from '@app/main/shippingRequests/shippingRequests/normal-price-packages/normal-price-package-calculation/normal-price-package-calculation-component';
 
 @NgModule({
   declarations: [
-    ViewNormalPricePackageModalComponent,
-    NormalPricePackageComponent,
-    CreateOrEditNormalPricePackageModalComponent,
-    TmsPricePackageComponent,
-    CreateTmsPricePackageModalComponent,
+    NormalPricePackageCalculationComponent,
+    PricePackageComponent,
+    CreateOrEditPricePackageModalComponent,
     PricePackagesProposalComponent,
     CreateOrEditPricePackegeProposalComponent,
     ViewPricePackageProposalComponent,
     PricePackageAppendixComponent,
     CreateOrEditPricePackageAppendixComponent,
     ViewPricePackageAppendixComponent,
-    ViewMatchingTmsPricePackageComponent,
+    ViewMatchingPricePackageComponent,
     ProposalDetailGridComponent,
     AppendixDetailGridComponent,
   ],
@@ -59,6 +57,6 @@ import { MultiSelectModule } from '@node_modules/primeng/multiselect';
     SplitButtonModule,
     MultiSelectModule,
   ],
-  exports: [ViewMatchingTmsPricePackageComponent],
+  exports: [ViewMatchingPricePackageComponent, NormalPricePackageCalculationComponent],
 })
 export class PricePackageModule {}

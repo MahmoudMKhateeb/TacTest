@@ -47,37 +47,34 @@ namespace TACHYON.Dashboards.Carrier
 
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<Truck, long> _trucksRepository;
-        private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IRepository<SubmitInvoice, long> _submitInvoiceRepository;
-        private readonly IRepository<NormalPricePackage> _pricePackageRepository;
         private readonly IRepository<ShippingRequestDirectRequest,long> _directRequestRepository;
         private readonly IRepository<RoutPoint,long> _routePointRepository;
+        private readonly IRepository<PricePackage,long> _pricePackageRepository;
 
         public CarrierDashboardAppService(
              IRepository<User, long> usersRepository,
              IRepository<Truck, long> trucksRepository,
-             IRepository<ShippingRequest, long> shippingRequestRepository,
              IRepository<ShippingRequestTrip> shippingRequestTripRepository,
              IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
              IRepository<PriceOffer, long> priceOfferRepository,
              IRepository<SubmitInvoice, long> submitInvoiceRepository,
-             IRepository<NormalPricePackage> pricePackageRepository,
              IRepository<ShippingRequestDirectRequest, long> directRequestRepository,
-             IRepository<RoutPoint, long> routePointRepository)
+             IRepository<RoutPoint, long> routePointRepository,
+             IRepository<PricePackage,long> pricePackageRepository)
         {
             _usersRepository = usersRepository;
             _trucksRepository = trucksRepository;
-            _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestVasRepository = shippingRequestVasRepository;
             _priceOfferRepository = priceOfferRepository;
             _submitInvoiceRepository = submitInvoiceRepository;
-            _pricePackageRepository = pricePackageRepository;
             _directRequestRepository = directRequestRepository;
             _routePointRepository = routePointRepository;
+            _pricePackageRepository = pricePackageRepository;
         }
 
 
@@ -286,7 +283,7 @@ namespace TACHYON.Dashboards.Carrier
                 .Distinct()
                 .CountAsync();
 
-            var activeItems = await query.CountAsync(r => r.IsActive); // todo convert to enum 
+            var activeItems = await query.CountAsync(r => r.IsActive);  
             var notActiveItems = await query.CountAsync(r => !r.IsActive);
 
 
@@ -315,7 +312,7 @@ namespace TACHYON.Dashboards.Carrier
                 .Distinct()
                 .CountAsync();
 
-            var activeItems = await query.CountAsync(r => r.TruckStatusId == 1); // todo convert to enum 
+            var activeItems = await query.CountAsync(r => r.TruckStatusId == 1);  
             var notActiveItems = await query.CountAsync(r => r.TruckStatusId == 2);
 
 
