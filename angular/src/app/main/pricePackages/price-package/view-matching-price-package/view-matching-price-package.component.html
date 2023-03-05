@@ -49,7 +49,7 @@
             <tr>
               <td style="width: 160px">
                 <button
-                  class="btn btn-danger btn-sm"
+                  class="btn btn-secondary btn-sm"
                   *ngIf="isTachyonDealer && !record.hasOffer && !record.hasDirectRequest"
                   (click)="handlePricePackageAction(record)"
                   [buttonBusy]="loadingPricePackageId === record.pricePackageId"

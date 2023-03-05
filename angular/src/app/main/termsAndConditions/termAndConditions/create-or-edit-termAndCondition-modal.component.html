@@ -80,7 +80,7 @@
           <!-- <div>
            <p-editor name="Content" [(ngModel)]="termAndCondition.content" [style]="{ height: '320px' }">
             <p-header> </p-header>
-          </p-editor> 
+          </p-editor>
 
           <label for="TermAndCondition_Content">{{ l('Content') }} *</label>
             <p-editor required name="Content" [(ngModel)]="termAndCondition.content" [style]="{ height: '320px' }" #editor>
@@ -107,7 +107,7 @@
                     <option value="24px">24</option>
                     <option value="26px">26</option>
                   </select>
-                </span> 
+                </span>
                 <span class="ql-formats">
                   <button class="ql-bold" aria-label="Bold"></button>
                   <button class="ql-italic" aria-label="Italic"></button>
@@ -145,16 +145,16 @@
           </div>-->
         </div>
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
           <button
             type="submit"
-            class="btn btn-save blue"
+            class="btn btn-primary blue"
             [disabled]="!termAndConditionForm.form.valid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >
             <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
           </button>
+          <button [disabled]="saving" type="button" class="btn btn-outline-danger" (click)="close()">{{ l('Cancel') }}</button>
         </div>
       </form>
     </div>

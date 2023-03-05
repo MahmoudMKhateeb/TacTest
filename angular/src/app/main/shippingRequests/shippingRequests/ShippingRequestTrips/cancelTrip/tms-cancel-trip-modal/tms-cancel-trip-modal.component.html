@@ -24,7 +24,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-success"
+          class="btn btn-primary"
           [disabled]="rejectForm"
           [buttonBusy]="saving"
           [busyText]="l('SavingWithThreeDot' | localize)"
@@ -52,7 +52,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ l('close') }}</button>
+            <button [disabled]="saving" type="button" class="btn btn-light" (click)="close()">{{ l('close') }}</button>
 
             <button
               type="submit"

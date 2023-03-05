@@ -49,11 +49,11 @@
           ></image-cropper>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-light-primary font-weight-bold" (click)="close()" [disabled]="saving">
-            {{ 'Cancel' | localize }}
-          </button>
           <button type="submit" class="btn btn-primary font-weight-bold" [disabled]="!changeProfilePictureModalForm.form.valid || saving">
             <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
+          </button>
+          <button type="button" class="btn btn-outline-danger font-weight-bold" (click)="close()" [disabled]="saving">
+            {{ 'Cancel' | localize }}
           </button>
         </div>
       </form>

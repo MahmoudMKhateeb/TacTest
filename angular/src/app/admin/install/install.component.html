@@ -8,18 +8,14 @@
               <span class="card-icon">
                 <i class="la la-gear"></i>
               </span>
-              <h3 class="card-label">
-                TACHYON Installation
-              </h3>
+              <h3 class="card-label">TACHYON Installation</h3>
             </div>
           </div>
           <form id="installForm" class="form">
             <div class="card-body">
               <div class="form-section">
                 <div class="font-size-lg text-dark font-weight-bold mb-6">
-                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">
-                    Connection String
-                  </h5>
+                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">Connection String</h5>
                 </div>
                 <div class="form-group">
                   <input
@@ -34,9 +30,7 @@
                 </div>
                 <div class="separator separator-dashed my-5"></div>
                 <div class="font-size-lg text-dark font-weight-bold mb-6">
-                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">
-                    Admin Password
-                  </h5>
+                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">Admin Password</h5>
                 </div>
                 <div class="form-group">
                   <input
@@ -50,9 +44,7 @@
                 </div>
                 <div class="separator separator-dashed my-5"></div>
                 <div class="font-size-lg text-dark font-weight-bold mb-6">
-                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">
-                    Client Side URL
-                  </h5>
+                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">Client Side URL</h5>
                 </div>
                 <div class="form-group">
                   <input
@@ -65,9 +57,7 @@
                   />
                 </div>
                 <div class="font-size-lg text-dark font-weight-bold mb-6">
-                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">
-                    Server Side URL
-                  </h5>
+                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">Server Side URL</h5>
                 </div>
                 <div class="form-group">
                   <input
@@ -81,9 +71,7 @@
                 </div>
                 <div class="separator separator-dashed my-5"></div>
                 <div class="font-size-lg text-dark font-weight-bold mb-6">
-                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">
-                    Default Language
-                  </h5>
+                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">Default Language</h5>
                 </div>
                 <div class="form-group">
                   <select class="form-control" [(ngModel)]="setupSettings.defaultLanguage" name="defaultLanguage">
@@ -94,9 +82,7 @@
                 </div>
                 <div class="separator separator-dashed my-5"></div>
                 <div class="font-size-lg text-dark font-weight-bold mb-6">
-                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">
-                    SMTP Settings
-                  </h5>
+                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">SMTP Settings</h5>
                 </div>
                 <div class="form-group">
                   <input
@@ -185,9 +171,7 @@
                 </div>
                 <div class="separator separator-dashed my-5"></div>
                 <div class="font-size-lg text-dark font-weight-bold mb-6">
-                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">
-                    Invoice Info
-                  </h5>
+                  <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">Invoice Info</h5>
                 </div>
                 <div class="form-group">
                   <input type="text" class="form-control" name="legalName" [(ngModel)]="setupSettings.billInfo.legalName" placeholder="Legal name" />
@@ -204,8 +188,8 @@
               </div>
             </div>
             <div class="card-footer">
-              <button id="SaveButton" class="btn btn-save" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')" (click)="saveAll()">
-                Save
+              <button id="SaveButton" class="btn btn-primary" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')" (click)="saveAll()">
+                {{ 'Save' | localize }}
               </button>
             </div>
           </form>

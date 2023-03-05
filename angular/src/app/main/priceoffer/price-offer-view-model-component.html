@@ -156,12 +156,12 @@
           <i class="fas fa-ban"></i>
           {{l('RejectOffer')}}
         </button>
-        <button class="btn btn-success" (click)="acceptoffer()" *ngIf="offerForEditOutput.canIAcceptOffer">
+        <button class="btn btn-primary" (click)="acceptoffer()" *ngIf="offerForEditOutput.canIAcceptOffer">
           <i class="fas fa-check"></i>
           {{l('AcceptPrice')}}
         </button>
 
-        <button class="btn btn-success" (click)="accepTMStoffer()" *ngIf="offerForEditOutput.canIAcceptOrRejectOfferOnBehalf">
+        <button class="btn btn-primary" (click)="accepTMStoffer()" *ngIf="offerForEditOutput.canIAcceptOrRejectOfferOnBehalf">
           <i class="fas fa-check"></i>
           {{l('AcceptPriceOnBehalfShipper')}}
         </button>

@@ -749,12 +749,19 @@
               </div>
               <!--end::Body-->
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer px-0">
               <!--begin::Buttons-->
 
-              <button [disabled]="saving" type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6" (click)="close()">
-                {{ l('Close') }}
-              </button>
+              <dx-button
+                type="submit"
+                class="btn btn-primary font-weight-bolder no-padding-custom"
+                [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"
+                text="{{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}"
+                (onClick)="isFormSubmitted = true"
+                [useSubmitBehavior]="true"
+                [validationGroup]="'shippingRequestTripsGroup'"
+              >
+              </dx-button>
               <create-or-edit-template-drop-down-button
                 *ngIf="
                   (isShipper || isTachyonDealer || isCarrierSaas) &&
@@ -764,20 +771,13 @@
                 [entityType]="SavedEntityType.TripTemplate"
                 [jsonData]="tripAsJson"
                 [dropDirection]="'up'"
-                [customClass]="'btn btn-light-danger font-weight-bold  dropdown-toggle btn-elevate-hover mx-2'"
+                [customClass]="'btn btn-primary primary-invert-on-hover font-weight-bold  dropdown-toggle btn-elevate-hover mx-2'"
                 [disabled]="!CanCreateTemplate() || !shippingRequestTripsForm.form.valid"
               ></create-or-edit-template-drop-down-button>
 
-              <dx-button
-                type="submit"
-                class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
-                [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"
-                text="{{ _TripService.CreateOrEditShippingRequestTripDto.id ? l('UpdateTrip') : l('AddNewTrip') }}"
-                (onClick)="isFormSubmitted = true"
-                [useSubmitBehavior]="true"
-                [validationGroup]="'shippingRequestTripsGroup'"
-              >
-              </dx-button>
+              <button [disabled]="saving" type="button" class="btn btn-light font-weight-bolder" (click)="close()">
+                {{ l('Cancel') }}
+              </button>
               <!--            <button-->
               <!--              type="submit"-->
               <!--              [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"-->

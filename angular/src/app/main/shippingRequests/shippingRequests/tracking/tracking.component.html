@@ -6,14 +6,14 @@
         <div class="btn-group">
           <div *ngIf="permission.isGranted('Pages.Shipment.Tracking.BulkDeliverTrip')" class="mr-2">
             <div ngbDropdown placement="bottom" class="d-inline-block">
-              <button class="btn btn-outline-success" id="dropdownBasic2" ngbDropdownToggle>{{ l('BulkDeliverTrips') }}</button>
+              <button class="btn btn-outline-secondary" id="dropdownBasic2" ngbDropdownToggle>{{ l('BulkDeliverTrips') }}</button>
               <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
                 <a href="assets/sampleFiles/BulkDeliveryTripsSampleFile.xlsx" class="dropdown-item">{{ l('DownloadFileTemplate') }}</a>
                 <button (click)="ForceDeliverTripModal.show()" class="dropdown-item">{{ l('UploadFile') }}</button>
               </div>
             </div>
           </div>
-          <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+          <button (click)="ModelSearch.show(searchInput)" class="btn btn-secondary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
         </div>
       </div>
     </sub-header>
@@ -128,7 +128,7 @@
                       <!--begin::Actions-->
                       <div class="my-lg-0 my-3 mt-8">
                         <a
-                          class="btn btn-sm btn-light-danger font-weight-bolder text-uppercase mr-2"
+                          class="btn btn-sm btn-light-primary font-weight-bolder text-uppercase mr-2"
                           *ngIf="item.driver && (!activePanelId || activePanelId != item.id)"
                           href="javascript:void(0)"
                           (click)="activePanelId = item.id"
@@ -137,7 +137,7 @@
                           <i class="flaticon-pin"></i> {{ l('Track') }}</a
                         >
                         <a
-                          class="btn btn-sm btn-light-danger font-weight-bolder text-uppercase mr-2"
+                          class="btn btn-sm btn-light-primary font-weight-bolder text-uppercase mr-2"
                           *ngIf="activePanelId == item.id"
                           href="javascript:void(0)"
                           (click)="activePanelId = null"

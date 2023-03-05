@@ -215,7 +215,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
       .createOrEdit(this.input)
       .pipe(finalize(() => (this.saving = false)))
       .subscribe((result) => {
-        this.notify.info(this.l('SendSuccessfully'));
+        this.notify.success(this.l('SendSuccessfully'));
         this.close();
         this.modalSave.emit(result);
       });
@@ -250,7 +250,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
       .pipe(finalize(() => (this.saving = false)))
       .subscribe((result) => {
         this.offerRepriced.emit();
-        this.notify.info(this.l('SendSuccessfully'));
+        this.notify.success(this.l('SendSuccessfully'));
         this.close();
       });
 

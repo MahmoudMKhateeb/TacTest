@@ -213,30 +213,30 @@ ngx-spinner .loading-text {
   background-color: #ffeeba !important;
 }
 
-.btn.btn-primary:hover:not(.btn-text):not(:disabled):not(.disabled),
-.btn.btn-primary:focus:not(.btn-text),
-.btn.btn-primary.focus:not(.btn-text) {
-  background-color: #df515a !important;
-  border-color: #df515a !important;
-}
+/*.btn.btn-primary:hover:not(.btn-text):not(:disabled):not(.disabled),*/
+/*.btn.btn-primary:focus:not(.btn-text),*/
+/*.btn.btn-primary.focus:not(.btn-text) {*/
+/*  background-color: #df515a !important;*/
+/*  border-color: #df515a !important;*/
+/*}*/
 
-.btn.btn-primary {
-  background-color: #d82631 !important;
-  border-color: #d82631 !important;
-}
+/*.btn.btn-primary {*/
+/*  background-color: #d82631 !important;*/
+/*  border-color: #d82631 !important;*/
+/*}*/
 
-.btn.btn-save {
-  background-color: #2dc401 !important;
-  border-color: #2dc401 !important;
-}
+/*.btn.btn-save {*/
+/*  background-color: #2dc401 !important;*/
+/*  border-color: #2dc401 !important;*/
+/*}*/
 /*.btn {*/
 /*  color: #ffffff !important;*/
 /*}*/
 
-.fa-save:before {
-  content: '\f0c7';
-  color: #ffffff !important;
-}
+/*.fa-save:before {*/
+/*  content: '\f0c7';*/
+/*  color: #ffffff !important;*/
+/*}*/
 
 /*.btn.btn-light-primary {*/
 /*  color: #ffffff;*/
@@ -301,7 +301,7 @@ a.text-hover-primary:hover,
   transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
   transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
-  color: #d82631 !important;
+  /*color: #d82631 !important;*/
 }
 
 .navi .navi-item .navi-link:hover .navi-text {
@@ -330,7 +330,7 @@ a.text-hover-primary:hover,
   color: #d82631 !important;
 }
 .btn.btn-outline-success {
-  color: #1bc5bd !important;
+  /*color: #1bc5bd !important;*/
 }
 .btn.btn-outline-success:hover:not(.btn-text):not(:disabled):not(.disabled),
 .btn.btn-outline-success:focus:not(.btn-text),
@@ -369,7 +369,7 @@ a.text-hover-primary:hover,
 }
 
 .checkbox > input:checked ~ span {
-  background-color: #d82631 !important;
+  /*background-color: #d82631 !important;*/
 }
 
 /*.btn.btn-success {*/
@@ -388,7 +388,7 @@ a.text-hover-primary:hover,
   transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
   transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
-  color: #d82631 !important;
+  /*color: #d82631 !important;*/
 }
 .text-login-links {
   color: #d82631 !important;
@@ -505,7 +505,7 @@ card-body {
 }
 
 .btn.btn-link-success {
-  color: #1bc5bd !important;
+  /*color: #1bc5bd !important;*/
 }
 .required-fileds {
   color: red;
@@ -536,6 +536,10 @@ card-body {
 
 .input-group-btn button {
   border-radius: 0 0.42rem 0.42rem 0 !important;
+}
+
+.input-group .input-group-btn button {
+  height: 100%;
 }
 
 .incidentDev {
@@ -627,4 +631,33 @@ ngb-datepicker {
 }
 .dashboard .subheader.subheader-solid {
   position: absolute !important;
+}
+
+.primary-invert-on-hover:hover {
+  background: var(--white, #fff) !important;
+  border-color: var(--primary, #da1a32) !important;
+  color: var(--primary, #da1a32) !important;
+}
+
+.primary-invert-on-hover:hover i {
+  color: var(--primary, #da1a32) !important;
+}
+.btn.btn-primary.dropdown-toggle.primary-invert-on-hover:hover:after {
+  color: var(--primary, #da1a32) !important;
+}
+
+dx-button.btn.btn-primary,
+dx-button.btn.btn-success {
+  padding: 0.375rem 0.75rem !important;
+  border-radius: 0.25rem !important;
+}
+
+.p-button,
+.p-button:enabled:hover,
+.p-button:enabled:active {
+  background: var(--primary, #da1a32) !important;
+  border-color: var(--primary, #da1a32) !important;
+}
+.p-button:focus {
+  box-shadow: 0 0 0 0.2rem #faa6a6;
 }

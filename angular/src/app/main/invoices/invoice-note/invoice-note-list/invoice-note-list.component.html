@@ -4,7 +4,7 @@
       <div role="actions">
         <button
           *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId"
-          class="btn btn-danger"
+          class="btn btn-primary"
           (click)="createOrEditNoteModalComponent.show()"
         >
           <i class="fa fa-plus"></i> {{ l('CreateNewInvoiceNote') }}

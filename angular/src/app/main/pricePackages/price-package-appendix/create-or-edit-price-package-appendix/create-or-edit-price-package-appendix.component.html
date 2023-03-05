@@ -119,10 +119,10 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" (click)="close()" class="btn btn-secondary">{{ 'Close' | localize }}</button>
           <button type="submit" [buttonBusy]="isLoading" (click)="createOrEdit()" [disabled]="PPAForm.invalid" class="btn btn-primary">
             {{ 'Save' | localize }}
           </button>
+          <button type="button" (click)="close()" class="btn btn-light">{{ 'Close' | localize }}</button>
         </div>
       </form>
     </div>

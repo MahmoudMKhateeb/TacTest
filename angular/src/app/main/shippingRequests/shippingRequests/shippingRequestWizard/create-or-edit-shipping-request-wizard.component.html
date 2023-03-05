@@ -1257,7 +1257,7 @@
                   <!--begin: Form Actions -->
                   <div class="d-flex justify-content-between border-top pt-10">
                     <div class="mr-2">
-                      <div class="btn btn-light-danger font-weight text-uppercase px-9 py-4" data-wizard-type="action-prev">
+                      <div class="btn btn-light-dark font-weight text-uppercase px-9 py-4" data-wizard-type="action-prev">
                         {{ l('Previous') }}
                       </div>
                     </div>
@@ -1266,9 +1266,9 @@
                         *ngIf="activeStep == 4 && (isShipper || isTachyonDealer || isCarrierSaas)"
                         [entityType]="entityType.ShippingRequestTemplate"
                         [sourceEntityId]="activeShippingRequestId"
-                        [customClass]="'btn btn-light-danger font-weight-bold px-9 py-4 dropdown-toggle btn-elevate-hover mr-2'"
+                        [customClass]="'btn btn-outline-secondary font-weight-bold px-9 py-4 dropdown-toggle btn-elevate-hover mr-2'"
                       ></create-or-edit-template-drop-down-button>
-                      <button (click)="onSubmit()" class="btn btn-success font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-submit">
+                      <button (click)="onSubmit()" class="btn btn-primary font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-submit">
                         {{ l('Publish') }}
                       </button>
                       <button class="btn btn-primary font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-next" [buttonBusy]="saving">
