@@ -3020,6 +3020,9 @@
     <text name="directShipments">الشحنات</text>
     <text name="DeliveryNote">مذكرة التسليم</text>
     <text name="SealNumber">رقم القفل</text>
-
+    <text name="NumberOfWaybillsFeature">عدد الشحنات</text>
+    <text name="AdditionalWaybillPriceFeature">سعر الشحنة الاضافي</text>
+    <text name="MaxNumberOfWaybillsFeature">عدد الشحنات</text>
+    <text name="You are already pass the allowed number of waybills so this waybill will be priced by additional waybill price">لقد تجاوزت الحد المسموح للشحنات لهذا سيتم تسعير هذه الشحنة بحساب السعر الاضافي</text>
 	</texts>
 </localizationDictionary>

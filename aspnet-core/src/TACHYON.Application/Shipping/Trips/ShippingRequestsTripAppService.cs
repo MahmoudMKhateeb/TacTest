@@ -89,6 +89,7 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
         private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTrucksRepository;
         private readonly IRepository<User, long> _userRepository;
+        private readonly IFeatureChecker _featureChecker;
 
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
@@ -115,7 +116,8 @@ namespace TACHYON.Shipping.Trips
             IRepository<ShippingRequestAndTripNote> ShippingRequestAndTripNoteRepository,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
             IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTrucksRepository,
-            IRepository<User, long> userRepository)
+            IRepository<User, long> userRepository,
+            IFeatureChecker featureChecker)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -142,6 +144,7 @@ namespace TACHYON.Shipping.Trips
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
             _dedicatedShippingRequestTrucksRepository = dedicatedShippingRequestTrucksRepository;
             _userRepository = userRepository;
+            _featureChecker = featureChecker;
         }
 
         public async Task<LoadResult> GetAllDx(string filter)
@@ -344,7 +347,7 @@ namespace TACHYON.Shipping.Trips
             return shippingRequestTrip;
         }
 
-        public async Task<CreateOrEditShippingRequestTripDto> GetShippingRequestTripForCreate()
+        public async Task<CreateOrEditShippingRequestTripDto> GetShippingRequestTripForCreate(long? shippingRequestId)
         {
             var shippingRequestTrip =
                 new CreateOrEditShippingRequestTripDto
@@ -357,6 +360,25 @@ namespace TACHYON.Shipping.Trips
             shippingRequestTrip.CreateOrEditDocumentFileDto.DocumentTypeDto =
                 ObjectMapper.Map<DocumentTypeDto>(documentType);
 
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            var tenantId = await IsTachyonDealer() && shippingRequestId != null ? _shippingRequestRepository.GetAll().Select(x => new { x.TenantId, x.Id }).FirstOrDefault(x => x.Id == shippingRequestId)?.TenantId
+                : AbpSession.TenantId;
+
+            if (tenantId != null)
+            {
+                var waybillsFeature = await _featureChecker.IsEnabledAsync(tenantId.Value, AppFeatures.NumberOfWaybills);
+                var MaxWaybillsFeature = await _featureChecker.GetValueAsync(tenantId.Value, AppFeatures.MaxNumberOfWaybills);
+                if (waybillsFeature && MaxWaybillsFeature != null)
+                {
+                    var maxNumber = Convert.ToInt32(MaxWaybillsFeature);
+                    var CreatedWaybillsNo = await _shippingRequestTripRepository.CountAsync(x => (x.ShippingRequestFk.TenantId == tenantId && x.ShipperTenantId == null)
+                    || x.ShipperTenantId == tenantId);
+                    if (CreatedWaybillsNo >= maxNumber)
+                    {
+                        shippingRequestTrip.IsExceedMaxWaybillsNumber = true;
+                    }
+                }
+            }
 
             return shippingRequestTrip;
         }

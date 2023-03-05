@@ -3285,6 +3285,10 @@
     <text name="directShipments">Direct shipments</text>
     <text name="DeliveryNote">Delivery note</text>
     <text name="SealNumber">Seal number</text>
+    <text name="NumberOfWaybillsFeature">Number of waybills</text>
+    <text name="AdditionalWaybillPriceFeature">Additional waybill price</text>
+    <text name="MaxNumberOfWaybillsFeature">Max number of waybills</text>
+    <text name="You are already pass the allowed number of waybills so this waybill will be priced by additional waybill price">You are already pass the allowed number of waybills so this waybill will be priced by additional waybill price</text>
 
 	</texts>
 </localizationDictionary>
