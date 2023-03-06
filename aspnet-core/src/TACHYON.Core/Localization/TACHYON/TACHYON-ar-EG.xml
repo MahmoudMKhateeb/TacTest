@@ -3015,7 +3015,7 @@
     <text name="MemoNo">رقم المذكرة</text>
     <text name="CarrierInvoiceNumber">رقم فاتورة الشاحن</text>
 
-    <text name="RentedShippingRequestReference">الرقم المرجعي للطلب</text>
+
     <text name="NewWaybill">وثيقة شحن جديدة</text>
     <text name="directShipments">الشحنات</text>
     <text name="DeliveryNote">مذكرة التسليم</text>

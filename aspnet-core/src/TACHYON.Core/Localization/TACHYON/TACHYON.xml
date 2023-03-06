@@ -3280,8 +3280,7 @@
     <text name="DxCount">Count</text>
   <text name="MemoNo">Memo No</text>
   <text name="CarrierInvoiceNumber">Carrier invoice number</text>
-		
-    <text name="RentedShippingRequestReference">Rented shipping request reference</text>
+
     <text name="NewWaybill">New waybill</text>
     <text name="directShipments">Direct shipments</text>
     <text name="DeliveryNote">Delivery note</text>
