@@ -21,7 +21,7 @@ namespace TACHYON.Shipping.Trips.Dto
             return string.IsNullOrEmpty(Exception);
         }
 
-        public long ShippingRequestId { get; set; }
+        public long? ShippingRequestId { get; set; }
         public DateTime? StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
         public bool HasAttachment { get; set; }

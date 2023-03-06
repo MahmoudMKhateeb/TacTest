@@ -49,6 +49,7 @@ using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Transactions;
 using TACHYON.MultiTenancy;
 using TACHYON.Penalties;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
@@ -242,6 +243,14 @@ namespace TACHYON.Invoices
                 .Include(i => i.Trips)
                 .ThenInclude(i => i.ShippingRequestTripVases)
                 .ThenInclude(x=> x.ShippingRequestVasFk)
+                .ThenInclude(x=> x.ActorShipperPrice)
+                .Include(x=>x .Trips)
+                .ThenInclude(t=> t.RoutPoints)
+                .ThenInclude(r=> r.FacilityFk)
+                .ThenInclude(f=> f.CityFk)
+                .Include(x=>x.Trips)
+                .ThenInclude(x=>x.ActorCarrierPrice)
+                .Include(x=>x.Trips)
                 .ThenInclude(x=> x.ActorShipperPrice)
                 .FirstOrDefaultAsync(i => i.Id == actorInvoiceId);
             if (actorInvoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
@@ -757,21 +766,27 @@ namespace TACHYON.Invoices
 
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
-            var groupedTrips = invoice.Trips.GroupBy(x =>new
-            {
-                RouteType = x.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId != null
-            ? (x.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop ?"Single Drop" :"Multiple Drops")
-            : (x.ShippingRequestTripFK.RouteType == ShippingRequestRouteType.SingleDrop ? "Single Drop" : "Multiple Drops"),
-                IsIntegratedWithBayan = x.ShippingRequestTripFK.BayanId !=null ?"Yes" :"No",
-                ItemPrice = x.ShippingRequestTripFK.SubTotalAmountWithCommission
-            })
-                .Select(g=> new
-                {
-                    RouteType = g.Key.RouteType,
-                    IsIntegratedWithBayan = g.Key.IsIntegratedWithBayan,
-                    ItemPrice = g.Key.ItemPrice,
-                    List = g,
-                });
+            var groupedTrips = invoice.Trips.GroupBy
+                (
+                    x => new
+                    {
+                        RouteType = x.ShippingRequestTripFK.ShippingRequestFk?.RouteTypeId != null
+                            ? (x.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop ? "Single Drop" : "Multiple Drops")
+                            : (x.ShippingRequestTripFK.RouteType == ShippingRequestRouteType.SingleDrop ? "Single Drop" : "Multiple Drops"),
+                        IsIntegratedWithBayan = x.ShippingRequestTripFK.BayanId != null ? "Yes" : "No",
+                        ItemPrice = x.ShippingRequestTripFK.SubTotalAmountWithCommission
+                    }
+                )
+                .Select
+                (
+                    g => new
+                    {
+                        RouteType = g.Key.RouteType,
+                        IsIntegratedWithBayan = g.Key.IsIntegratedWithBayan,
+                        ItemPrice = g.Key.ItemPrice,
+                        List = g,
+                    }
+                );
 
             var TotalItem = groupedTrips.Count();
             int Sequence = 1;
@@ -1021,7 +1036,7 @@ namespace TACHYON.Invoices
                     TaxVat = item.TaxVat,
                     Date = item.CreationTime.ToString("dd/MM/yyyy"),
                     From = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.First().CityFk.DisplayName,
-                    To = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.Count() > 0 ? "Multiple dedtinations"
+                    To = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.Count() > 1 ? "Multiple destinations"
                     : item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.First().CityFk.DisplayName,
                 };
                 Items.Add(invoiceItemDto);
@@ -1163,22 +1178,49 @@ namespace TACHYON.Invoices
             foreach (var trip in actorInvoice.Trips.ToList())
             {
                 int vasCounter = 0;
-                items.Add(new InvoiceItemDto
+                if (trip.ShippingRequestId.HasValue)
                 {
-                    Sequence = $"{sequence}/{totalItem}",
-                    SubTotalAmount = trip.ShippingRequestFk.ActorShipperPrice.SubTotalAmountWithCommission.Value,
-                    VatAmount = trip.ShippingRequestFk.ActorShipperPrice.VatAmountWithCommission.Value,
-                    TotalAmount = trip.ShippingRequestFk.ActorShipperPrice.TotalAmountWithCommission.Value,
-                    WayBillNumber = trip.WaybillNumber.ToString(),
-                    TruckType = trip.AssignedTruckFk != null ? ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName : "",
-                    Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestFk.OriginCityFk.DisplayName,
-                    Destination = trip.ShippingRequestFk.ShippingRequestDestinationCities.First().CityFk.DisplayName,
-                    DateWork = trip.EndTripDate.HasValue ? trip.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.ActorInvoiceFk.CreationTime.ToString("dd/MM/yyyy"),
-                    Remarks = trip.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
-                       L("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops) : "",
-                    ContainerNumber = trip.CanBePrinted ? trip.ContainerNumber ?? "-" : "-",
-                    RoundTrip = trip.CanBePrinted ? trip.RoundTrip ?? "-" : "-",
-                });
+                    items.Add(new InvoiceItemDto
+                    {
+                        Sequence = $"{sequence}/{totalItem}",
+                        SubTotalAmount = trip.ShippingRequestFk.ActorShipperPrice.SubTotalAmountWithCommission.Value,
+                        VatAmount = trip.ShippingRequestFk.ActorShipperPrice.VatAmountWithCommission.Value,
+                        TotalAmount = trip.ShippingRequestFk.ActorShipperPrice.TotalAmountWithCommission.Value,
+                        WayBillNumber = trip.WaybillNumber.ToString(),
+                        TruckType = trip.AssignedTruckFk != null ? ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName : "",
+                        Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestFk.OriginCityFk.DisplayName,
+                        Destination = trip.ShippingRequestFk.ShippingRequestDestinationCities.First().CityFk.DisplayName,
+                        DateWork = trip.EndTripDate.HasValue ? trip.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.ActorInvoiceFk.CreationTime.ToString("dd/MM/yyyy"),
+                        Remarks = trip.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
+                            L("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops) : "",
+                        ContainerNumber = trip.CanBePrinted ? trip.ContainerNumber ?? "-" : "-",
+                        RoundTrip = trip.CanBePrinted ? trip.RoundTrip ?? "-" : "-",
+                    });
+                }
+                else
+                {
+                    var sourceDto = trip.RoutPoints.FirstOrDefault(p => p.PickingType == PickingType.Pickup).FacilityFk.CityFk;
+                    var source = sourceDto?.DisplayName;
+                    var destinationDto = trip.RoutPoints.LastOrDefault(p => p.PickingType == PickingType.Dropoff).FacilityFk.CityFk;
+                    var destination = destinationDto?.DisplayName;
+                    items.Add(new InvoiceItemDto
+                    {
+                        Sequence = $"{sequence}/{totalItem}",
+                        SubTotalAmount = trip.ActorShipperPrice.SubTotalAmountWithCommission.Value,
+                        VatAmount = trip.ActorShipperPrice.VatAmountWithCommission.Value,
+                        TotalAmount = trip.ActorShipperPrice.TotalAmountWithCommission.Value,
+                        WayBillNumber = trip.WaybillNumber.ToString(),
+                        TruckType = trip.AssignedTruckFk != null ? ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName : "",
+                        Source = source,
+                        Destination = destination,
+                        DateWork = trip.EndTripDate.HasValue ? trip.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.ActorInvoiceFk.CreationTime.ToString("dd/MM/yyyy"),
+                        Remarks = trip.RouteType == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
+                            L("TotalOfDrop", trip.NumberOfDrops) : "",
+                        ContainerNumber = trip.CanBePrinted ? trip.ContainerNumber ?? "-" : "-",
+                        RoundTrip = trip.CanBePrinted ? trip.RoundTrip ?? "-" : "-",
+                    });
+                }
+                
                 sequence++;
                 if (trip.ShippingRequestTripVases != null &&
                     trip.ShippingRequestTripVases.Count > 1)

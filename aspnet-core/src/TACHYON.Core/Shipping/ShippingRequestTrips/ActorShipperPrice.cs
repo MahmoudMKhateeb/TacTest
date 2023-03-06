@@ -21,5 +21,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public decimal? SubTotalAmountWithCommission { get; set; }
         public decimal? VatAmountWithCommission { get; set; }
         public decimal? TaxVat { get; set; }
+
+
+        [ForeignKey(nameof(ShippingRequestTrip))]
+        public int? ShippingRequestTripId { get; set; }
+
+        
+        public ShippingRequestTrip ShippingRequestTrip { get; set; }
     }
 }

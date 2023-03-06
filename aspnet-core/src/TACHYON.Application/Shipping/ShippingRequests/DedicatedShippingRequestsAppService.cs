@@ -267,12 +267,12 @@ namespace TACHYON.Shipping.ShippingRequests
                 .ToListAsync();
         }
 
-        public async Task<List<GetAllTrucksWithDriversListDto>> GetAllTrucksWithDriversList(long truckTypeId, int? tenantId)
+        public async Task<List<GetAllTrucksWithDriversListDto>> GetAllTrucksWithDriversList(long? truckTypeId, int? tenantId)
         {
             await DisableTenancyFilterIfTachyonDealerOrHost();
             return await _truckRepository.GetAll()
                 .WhereIf(await IsTachyonDealer(), x => x.TenantId == tenantId.Value)
-                .Where(x => x.TrucksTypeId == truckTypeId)
+                .WhereIf(truckTypeId.HasValue , x => x.TrucksTypeId == truckTypeId)
                 .Select(x => new GetAllTrucksWithDriversListDto
                 {
                     TruckName = x.GetDisplayName(),

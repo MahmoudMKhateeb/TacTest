@@ -269,7 +269,7 @@
   <!--Create/Edit Point Modal-->
   <createOrEditPointModal
     #createOrEditPointModal
-    [isForDedicated]="shippingRequestForView.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
+    [isForDedicated]="_tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
     [isHomeDelivery]="isHomeDelivery"
   ></createOrEditPointModal>
   <!--END::Create/Edit Point Modal-->
@@ -279,7 +279,7 @@
 <createOrEditFacilityModal
   #createOrEditFacilityModal
   (modalSave)="loadFacilities()"
-  [isForDedicated]="shippingRequestForView.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
+  [isForDedicated]="this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
   [isHomeDelivery]="isHomeDelivery"
 ></createOrEditFacilityModal>
 <!-- End::CreateOrEditFacilityModal -->

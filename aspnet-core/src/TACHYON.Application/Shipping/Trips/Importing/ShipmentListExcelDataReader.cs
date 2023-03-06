@@ -54,7 +54,7 @@ namespace TACHYON.Shipping.Trips.Importing
             try
             {
                 trip.ShippingRequestId = ShippingRequestId;
-                var SR = _shippingRequestTripManager.GetShippingRequestById(trip.ShippingRequestId);
+                var SR = _shippingRequestTripManager.GetShippingRequestById(trip.ShippingRequestId.Value);
 
                 //0
                 trip.BulkUploadRef = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,

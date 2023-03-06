@@ -8,10 +8,10 @@
     <div class="card-toolbar" *ngIf="isShipper || isTachyonDealer || isCarrierSaas">
       <button
         class="btn btn-primary mr-2"
-        (click)="AddNewTripModal.show(null, shippingRequestForView)"
+        (click)="AddNewTripModal.show(null, _TripService.GetShippingRequestForViewOutput)"
         [disabled]="
           primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips &&
-          shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Normal
+          _TripService.GetShippingRequestForViewOutput.shippingRequestFlag === ShippingRequestFlagEnum.Normal
         "
         *ngIf="isGranted('Pages.ShippingRequestTrips.Create') && showBtnAddTrips"
       >
@@ -45,7 +45,7 @@
                 (onError)="onUploadExcelError()"
                 chooseLabel="{{ 'ImportTripFromExcel' | localize }}"
                 [disabled]="
-                  shippingRequestForView.shippingRequestFlag == shippingRequestFlagEnum.Normal &&
+                  _TripService.GetShippingRequestForViewOutput.shippingRequestFlag == shippingRequestFlagEnum.Normal &&
                   primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips
                 "
               >
@@ -58,7 +58,7 @@
                   "
                 ></small>
                 <small
-                  *ngIf="shippingRequestForView.shippingRequestFlag == shippingRequestFlagEnum.Dedicated"
+                  *ngIf="_TripService.GetShippingRequestForViewOutput.shippingRequestFlag == shippingRequestFlagEnum.Dedicated"
                   [innerHTML]="
                     l(
                       'ImportToExcelSampleFileDownloadInfo',
@@ -122,7 +122,7 @@
               </p-fileUpload>
               <span class="dropdown-item-text text-muted pl-3" href="#">
                 <small
-                  *ngIf="shippingRequestForView.shippingRequestFlag == shippingRequestFlagEnum.Dedicated"
+                  *ngIf="_TripService.GetShippingRequestForViewOutput.shippingRequestFlag == shippingRequestFlagEnum.Dedicated"
                   [innerHTML]="
                     l(
                       'ImportToExcelSampleFileDownloadInfo',
@@ -165,7 +165,7 @@
                 [disabled]="
                   primengTableHelper.totalRecordsCount == 0 ||
                   VasListFromFather.length == 0 ||
-                  shippingRequestForView.shippingRequestFlag == shippingRequestFlagEnum.Dedicated
+                  _TripService.GetShippingRequestForViewOutput.shippingRequestFlag == shippingRequestFlagEnum.Dedicated
                 "
               >
               </p-fileUpload>
@@ -356,33 +356,28 @@
                         (record.shippingRequestTripFlag === 1 && (record.status == 0 || record.status == 1))
                       "
                     >
-                      <a class="dropdown-item" (click)="AddNewTripModal.show(record, shippingRequestForView)">{{ l('Edit') }}</a>
+                      <a class="dropdown-item" (click)="AddNewTripModal.show(record, _TripService.GetShippingRequestForViewOutput)">{{
+                        l('Edit')
+                      }}</a>
                     </li>
 
                     <li>
+                      *ngIf="_TripService.GetShippingRequestForViewOutput.shippingRequestFlag === 1"
                       <a
                         class="dropdown-item"
-                        *ngIf="shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
-                        (click)="ViewTripModal.show(record.id, shippingRequestForView)"
+                        *ngIf="_TripService.GetShippingRequestForViewOutput.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
+                        (click)="ViewTripModal.show(record.id, _TripService.GetShippingRequestForViewOutput)"
                         >{{
-                          record.canAssignTrucksAndDrivers &&
-                          !isTachyonDealer &&
-                          !shippingRequestForView.shippingRequest.isSaas &&
-                          isGranted('Pages.ShippingRequestTrips.Edit') &&
-                          record.statusTitle != 'Delivered'
+                          record.canAssignTrucksAndDrivers && !isTachyonDealer && !_TripService.GetShippingRequestForViewOutput.shippingRequest.isSaas
                             ? l('ViewOrAssignDriver')
                             : l('View')
                         }}</a
                       >
                       <a
                         class="dropdown-item"
-                        *ngIf="shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Normal"
-                        (click)="ViewTripModal.show(record.id, shippingRequestForView)"
-                        >{{
-                          record.canAssignTrucksAndDrivers && isGranted('Pages.ShippingRequestTrips.Edit') && record.statusTitle != 'Delivered'
-                            ? l('ViewOrAssignDriver')
-                            : l('View')
-                        }}</a
+                        *ngIf="_TripService.GetShippingRequestForViewOutput.shippingRequestFlag === ShippingRequestFlagEnum.Normal"
+                        (click)="ViewTripModal.show(record.id, _TripService.GetShippingRequestForViewOutput)"
+                        >{{ record.canAssignTrucksAndDrivers ? l('ViewOrAssignDriver') : l('View') }}</a
                       >
                     </li>
                     <li
@@ -439,9 +434,9 @@
                     <li
                       *ngIf="
                         isGranted('Pages.ShippingRequestTrips.Edit') &&
-                        shippingRequestForView.shippingRequestFlag === ShippingRequestFlagEnum.Normal &&
+                        _TripService.GetShippingRequestForViewOutput.shippingRequestFlag === ShippingRequestFlagEnum.Normal &&
                         record.canCreateTemplate &&
-                        (isShipper || isTachyonDealer || (isCarrierSaas && shippingRequestForView.shippingRequest.isSaas))
+                        (isShipper || isTachyonDealer || (isCarrierSaas && _TripService.GetShippingRequestForViewOutput.shippingRequest.isSaas))
                       "
                     >
                       <a class="dropdown-item" (click)="saveAsTemplateModal.show(record.id)">{{ l('SaveAsTemplate') }}</a>
@@ -493,7 +488,7 @@
   <app-view-imported-trips-from-excel-modal
     [ImportedTripsList]="list"
     [isSingleDdrop]="ShippingRequest.routeTypeId == ShippingRequestRouteTypeEnum.SingleDrop"
-    [isDedicatedRequest]="shippingRequestForView.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
+    [isDedicatedRequest]="_TripService.GetShippingRequestForViewOutput.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
     #ViewImportedTripsModal
     (modalSave)="reloadPage()"
   ></app-view-imported-trips-from-excel-modal>

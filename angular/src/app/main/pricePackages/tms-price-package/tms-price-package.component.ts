@@ -46,7 +46,4 @@ export class TmsPricePackageComponent extends AppComponentBase implements OnInit
       },
     });
   }
-
-
-
 }

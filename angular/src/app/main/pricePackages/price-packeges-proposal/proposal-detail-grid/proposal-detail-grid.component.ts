@@ -5,7 +5,7 @@ import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import {isNotNullOrUndefined} from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-proposal-detail-grid',
@@ -26,7 +26,7 @@ export class ProposalDetailGridComponent extends AppComponentBase implements OnI
     this.pricePackageDataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
         if (!isNotNullOrUndefined(loadOptions)) {
-            loadOptions = {};
+          loadOptions = {};
         }
         loadOptions.filter = [];
         (loadOptions.filter as any[]).push(['ProposalId', '=', self.proposalId]);

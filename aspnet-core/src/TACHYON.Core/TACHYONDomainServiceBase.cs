@@ -28,6 +28,11 @@ namespace TACHYON
         protected int CarrierEditionId =>
             Convert.ToInt32(SettingManager.GetSettingValue(AppSettings.Editions.CarrierEditionId));
 
+        protected decimal TaxVat =>
+            Convert.ToDecimal(SettingManager.GetSettingValue(AppSettings.HostManagement.TaxVat));
+
+
+
         protected virtual void DisableTenancyFilters()
         {
             CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);

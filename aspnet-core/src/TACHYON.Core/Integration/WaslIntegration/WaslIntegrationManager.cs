@@ -351,48 +351,6 @@ namespace TACHYON.Integration.WaslIntegration
 
         #endregion
 
-        /// <summary>
-        /// <see href="https://en.m.wikipedia.org/wiki/Vehicle_registration_plates_of_Saudi_Arabia">HERE</see>
-        /// </summary>
-        /// <param name="plateNumber"></param>
-        /// <returns></returns>
-        private string NormalizePlateNumber(string plateNumber)
-        {
-            var plate = plateNumber.ToUpper()
-                .Replace("A", "ا")
-                .Replace("أ", "ا")
-                .Replace("إ", "ا")
-                .Replace("B", "ب")
-                .Replace("J", "ح")
-                .Replace("D", "د")
-                .Replace("R", "ر")
-                .Replace("S", "س")
-                .Replace("X", "ص")
-                .Replace("T", "ط")
-                .Replace("E", "ع")
-                .Replace("G", "ق")
-                .Replace("K", "ك")
-                .Replace("L", "ل")
-                .Replace("Z", "م")
-                .Replace("N", "ن")
-                .Replace("H", "ه")
-                .Replace("U", "و")
-                .Replace("V", "ى");
-
-            plate = plate.Replace(" ", "");
-            plate = plate.Replace("-", "");
-
-            var numbers = String.Join("", plate.Take(4));
-            var letters = String.Join("", plate.Skip(4).Take(3));
-            plate = letters + numbers;
-
-
-            plate = plate.Insert(1, " ");
-            plate = plate.Insert(3, " ");
-            plate = plate.Insert(5, " ");
-
-            return plate;
-        }
 
         private void WaslRequestAddheaders(RestRequest request)
         {
