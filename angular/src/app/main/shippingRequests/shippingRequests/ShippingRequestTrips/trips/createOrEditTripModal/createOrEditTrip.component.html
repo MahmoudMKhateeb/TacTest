@@ -756,7 +756,7 @@
                 type="submit"
                 class="btn btn-primary font-weight-bolder no-padding-custom"
                 [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"
-                text="{{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}"
+                text="{{ _TripService.CreateOrEditShippingRequestTripDto.id ? l('UpdateTrip') : l('AddNewTrip') }}"
                 (onClick)="isFormSubmitted = true"
                 [useSubmitBehavior]="true"
                 [validationGroup]="'shippingRequestTripsGroup'"
