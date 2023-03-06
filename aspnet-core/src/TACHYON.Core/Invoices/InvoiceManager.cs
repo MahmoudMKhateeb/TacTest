@@ -977,6 +977,7 @@ namespace TACHYON.Invoices
                              !x.IsShipperHaveInvoice &&
                              //waybills.Contains(x.Id) &&
                              (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
+                             x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation ||
                               x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
                     );
                 if (trips != null && trips.Count() > 0)

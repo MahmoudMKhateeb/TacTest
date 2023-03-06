@@ -13,6 +13,7 @@ namespace TACHYON.Tracking.Dto.WorkFlow
         public RoutePointDocumentType RoutePointDocumentType { get; set; }
         public string AdditionalStepTypeTitle { get; set; }
         public string RoutePointDocumentTypeTitle { get; set; }
+        public string FileContentType { get; set; }
         public bool IsReset { get; set; }
     }
 }

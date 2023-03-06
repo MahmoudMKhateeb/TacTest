@@ -1189,7 +1189,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var SenderpickupPoint = GetSenderInfo(shippingRequestTripId);
                 var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
-                var mobileNo = SenderpickupPoint != null ? SenderpickupPoint.PhoneNumber : "";
+                var mobileNo = SenderpickupPoint != null ? string.IsNullOrEmpty(SenderpickupPoint.PhoneNumber) ? "" : $"{"+966"}{SenderpickupPoint.PhoneNumber}" : "";
 
                 var query = info.Select(x => new
                 {
@@ -1232,6 +1232,12 @@ namespace TACHYON.Shipping.ShippingRequests
                     ShipperNotes = x.Note,
                     ContainerNumber = x.ContainerNumber,
                     SealNumber = x.SealNumber,
+                    MultipleDropsOrTripsLable = x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                                                ? "Trips" : "Drops",
+                    MultipleDropsOrTripsLableAr = x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                                                ? "الرحلات" : "الحمولات"
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
@@ -1268,6 +1274,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShipperNotes = x.ShipperNotes,
                         ContainerNumber = x.ContainerNumber,
                         SealNumber = x.SealNumber,
+                        MultipleDropsOrTripsLable = x.MultipleDropsOrTripsLable,
+                        MultipleDropsOrTripsLableAr = x.MultipleDropsOrTripsLableAr
                     });
 
                 return finalOutput;
@@ -1279,10 +1287,16 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
+                var shippingType = _shippingRequestTripRepository.GetAll()
+                    .Where(e => e.Id == shippingRequestTripId).Select(x => x.ShippingRequestFk.ShippingTypeId).FirstOrDefault();
+
                 var info = _shippingRequestTripRepository.GetAll()
+                    .Include(x=> x.ShippingRequestFk)
                     .Where(e => e.Id == shippingRequestTripId);
 
-                var dropPoint = dropOffId.HasValue ? AsyncHelper.RunSync(() => _routPointRepository.FirstOrDefaultAsync(dropOffId.Value)) :default;
+                //var dropPoint = dropOffId.HasValue ? AsyncHelper.RunSync(() => _routPointRepository.FirstOrDefaultAsync(dropOffId.Value)) : default;
+                var tripPoints = AsyncHelper.RunSync(() => GetTripPoints(shippingRequestTripId));
+                var dropPoint = dropOffId != null ? tripPoints.FirstOrDefault(x => x.Id == dropOffId) : tripPoints.FirstOrDefault(x=> x.PickingType == PickingType.Dropoff);
 
                 var query = info.Select(x => new
                 {
@@ -1327,20 +1341,53 @@ namespace TACHYON.Shipping.ShippingRequests
                     ShipperNotes = x.Note,
                     ContainerNumber = x.ContainerNumber,
                     SealNumber = x.SealNumber,
+                    ShippingType = x.ShippingRequestFk.ShippingTypeId
                 });
 
-                var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
 
-                var delivery = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Dropoff, dropOffId);
+                
 
-                var routPointWaybillNumber = _routPointRepository.GetAll()
-                    .Where(x => x.Id == dropOffId && x.PickingType == PickingType.Dropoff)
-                    .Select(x => x.WaybillNumber).FirstOrDefault();
+                var pickupFacility = default(Facility);
+                var deliveryFacility = default(Facility);
+                var SenderpickupPoint = default(Receiver);
+                var contactName = "";
+                var mobileNo = "";
+                var pickupPointId = default(long);
+                var pickupPoint = default(RoutPoint);
 
-                var SenderpickupPoint = GetSenderInfo(shippingRequestTripId);
-                var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
-                var mobileNo = SenderpickupPoint != null ? SenderpickupPoint.PhoneNumber : "";
+                if (shippingType == ShippingTypeEnum.ImportPortMovements || shippingType == ShippingTypeEnum.ExportPortMovements)
+                {
+                    pickupPoint = tripPoints.FirstOrDefault(x => x.PointOrder == dropPoint.PointOrder - 1 && x.PickingType == PickingType.Pickup);
+                    pickupPointId = pickupPoint.Id;
 
+                    pickupFacility = pickupPoint.FacilityFk;
+
+                    deliveryFacility = dropPoint.FacilityFk;
+
+
+
+                    SenderpickupPoint = pickupPoint.ReceiverFk;
+                    contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
+                    mobileNo = SenderpickupPoint != null ? string.IsNullOrEmpty(mobileNo) ? "" : $"{"+966"}{SenderpickupPoint.PhoneNumber}" : "";
+                }
+                else
+                {
+                    pickupPoint = tripPoints.FirstOrDefault(x => x.PickingType == PickingType.Pickup);
+                    pickupPointId = pickupPoint.Id;
+                    pickupFacility = pickupPoint.FacilityFk;//GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup, null);
+
+                    deliveryFacility = dropPoint.FacilityFk;//GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Dropoff, dropOffId);
+
+
+
+                    SenderpickupPoint = pickupPoint.ReceiverFk;//GetSenderInfo(shippingRequestTripId);
+                    contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
+                    mobileNo = SenderpickupPoint != null ? string.IsNullOrEmpty(mobileNo) ? "" : $"{"+966"}{SenderpickupPoint.PhoneNumber}" : "";
+                }
+                var dropPointPhoneNumber = dropPoint.ReceiverId != null ? (string.IsNullOrEmpty(dropPoint.ReceiverFk.PhoneNumber) ?"" : $"{"+966"}{dropPoint.ReceiverFk.PhoneNumber}") 
+                    : string.IsNullOrEmpty(dropPoint.ReceiverPhoneNumber) ?"" : $"{"+966"}{dropPoint.ReceiverPhoneNumber}";
+
+                var routPointWaybillNumber = dropPoint.WaybillNumber;
                 var finalOutput = query.ToList().Select(x
                     => new GetDropWaybillOutput
                     {
@@ -1348,28 +1395,28 @@ namespace TACHYON.Shipping.ShippingRequests
                         WaybillNumber = routPointWaybillNumber,
                         Date = NormalizeDateTimeToClientTime(Clock.Now),
                         ShippingRequestStatus = x.ShippingRequestStatus,
-                        SenderCompanyName = GetFacilityPoint(x.Id, null, PickingType.Pickup), // x.SenderCompanyName,
+                        SenderCompanyName = pickupFacility?.Name ,//GetFacilityPoint(x.Id, pickupPointId, PickingType.Pickup), // x.SenderCompanyName,
                         SenderContactName = contactName,
                         SenderMobile = mobileNo,
-                        ReceiverCompanyName = GetFacilityPoint(x.Id, null, PickingType.Dropoff),
-                        ReceiverContactName = GetReceiverName(null, x.Id),
-                        ReceiverMobile = GetReceiverPhone(null, x.Id),
+                        ReceiverCompanyName =  deliveryFacility?.Name ,// GetFacilityPoint(x.Id, dropOffId, PickingType.Dropoff),
+                        ReceiverContactName = dropPoint.ReceiverId != null ? dropPoint.ReceiverFk.FullName : dropPoint.ReceiverFullName,//GetReceiverName(dropOffId, x.Id),
+                        ReceiverMobile = dropPointPhoneNumber,//GetReceiverPhone(dropOffId, x.Id),
                         DriverName = x.DriverName,
                         DriverIqamaNo = GetDriverIqamaNo(x.driverUserId),
                         TruckTypeDisplayName = x.TruckTypeDisplayName,
                         PlateNumber = x.PlateNumber,
                         PackingTypeDisplayName = x.PackingTypeDisplayName,
                         NumberOfPacking = x.NumberOfPacking,
-                        FacilityName = pickup != null ? pickup.Name : "",
-                        CountryName = pickup?.CityFk.CountyFk.DisplayName,
-                        CityName = pickup?.CityFk.DisplayName,
-                        Area = pickup?.Address,
+                        FacilityName = pickupFacility?.Name,
+                        CountryName = pickupFacility?.CityFk.CountyFk.DisplayName,
+                        CityName = pickupFacility?.CityFk.DisplayName,
+                        Area = pickupFacility?.Address,
                         StartTripDate = NormalizeDateTimeToClientTime(x.StartTripDate),
                         ActualPickupDate = NormalizeDateTimeToClientTime(x.ActualPickupDate),
-                        DroppFacilityName = delivery?.Name,
-                        DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
-                        DroppCityName = delivery?.CityFk.DisplayName,
-                        DroppArea = delivery?.Address,
+                        DroppFacilityName = deliveryFacility?.Name,
+                        DroppCountryName = deliveryFacility?.CityFk.CountyFk.DisplayName,
+                        DroppCityName = deliveryFacility?.CityFk.DisplayName,
+                        DroppArea = deliveryFacility?.Address,
                         DeliveryDate = NormalizeDateTimeToClientTime(x.DeliveryDate),
                         TotalWeight = x.TotalWeight,
                         ClientName = x.ClientName,
@@ -1750,7 +1797,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
        
 
-        private Facility GetPickupOrDropPointFacilityForTrip(int id, PickingType type, long? dropOffId = null)
+        private Facility GetPickupOrDropPointFacilityForTrip (int id, PickingType type, long? dropOffId = null)
         {
             var pickupFacility = _routPointRepository
                 .GetAll()
@@ -1762,6 +1809,16 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Select(x => x.FacilityFk)
                 .FirstOrDefault();
             return pickupFacility;
+        }
+
+        private async Task<List<RoutPoint>> GetTripPoints(int tripId)
+        {
+            return await _routPointRepository.GetAll()
+                .Include(x=>x.FacilityFk)
+                .ThenInclude(x=>x.CityFk)
+                .ThenInclude(x => x.CountyFk)
+                .Include(x=>x.ReceiverFk)
+                .Where(x => x.ShippingRequestTripId == tripId).ToListAsync();
         }
 
         private async Task AddOrRemoveDestinationCities(List<ShippingRequestDestinationCitiesDto> destinationCitiesDtos, ShippingRequest shippingRequest)
