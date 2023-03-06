@@ -101,6 +101,7 @@ namespace TACHYON.Notifications
         Task ShippingRequestTripCanceled(List<UserIdentifier> Users, ShippingRequestTrip trip, string tenantName);
         Task ShippingRequestTripRejectCancelByTachyonDealer(List<UserIdentifier> Users, ShippingRequest request);
         Task TripAccidentResolved(ShippingRequest request, string waybillNum, TripAccidentResolveType resolveType);
+        Task NotifyTMSWithMaxWaybillsExceeds(int tenantId);
         #endregion
 
         #region ShippingRequest

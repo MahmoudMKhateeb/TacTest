@@ -73,11 +73,7 @@
               style="background-color: #fff3cd; color: #856404; border-color: #ffeeba"
               role="alert"
             >
-              {{
-                !isTachyonDealer
-                  ? l('You are already passed the allowed number of waybills so this waybill will be priced by additional waybill price')
-                  : l('This company is already passed the allowed number of waybills so this waybill will be priced by additional waybill price')
-              }}
+              {{ l('You are already passed the allowed number of waybills so this waybill will be priced by additional waybill price') }}
             </div>
             <div class="row" *ngIf="_TripService.GetShippingRequestForViewOutput?.shippingRequestFlag == ShippingRequestFlagEnum.Dedicated">
               <div class="col-lg-6">

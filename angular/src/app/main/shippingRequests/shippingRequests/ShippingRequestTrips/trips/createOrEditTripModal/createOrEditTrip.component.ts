@@ -295,7 +295,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       });
     } else {
       this.loading = true;
-      this._shippingRequestTripsService.getShippingRequestTripForCreate(this.shippingRequest?.id).subscribe((result) => {
+      this._shippingRequestTripsService.getShippingRequestTripForCreate().subscribe((result) => {
         this._TripService.CreateOrEditShippingRequestTripDto = result;
         this._TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.extn = '_';
         this._TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.name = '_';

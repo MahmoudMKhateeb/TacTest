@@ -347,7 +347,7 @@ namespace TACHYON.Shipping.Trips
             return shippingRequestTrip;
         }
 
-        public async Task<CreateOrEditShippingRequestTripDto> GetShippingRequestTripForCreate(long? shippingRequestId)
+        public async Task<CreateOrEditShippingRequestTripDto> GetShippingRequestTripForCreate()
         {
             var shippingRequestTrip =
                 new CreateOrEditShippingRequestTripDto
@@ -360,20 +360,15 @@ namespace TACHYON.Shipping.Trips
             shippingRequestTrip.CreateOrEditDocumentFileDto.DocumentTypeDto =
                 ObjectMapper.Map<DocumentTypeDto>(documentType);
 
-            await DisableTenancyFilterIfTachyonDealerOrHost();
-            var tenantId = await IsTachyonDealer() && shippingRequestId != null ? _shippingRequestRepository.GetAll().Select(x => new { x.TenantId, x.Id }).FirstOrDefault(x => x.Id == shippingRequestId)?.TenantId
-                : AbpSession.TenantId;
+            var tenantId = AbpSession.TenantId;
 
             if (tenantId != null)
             {
-                var waybillsFeature = await _featureChecker.IsEnabledAsync(tenantId.Value, AppFeatures.NumberOfWaybills);
-                var MaxWaybillsFeature = await _featureChecker.GetValueAsync(tenantId.Value, AppFeatures.MaxNumberOfWaybills);
-                if (waybillsFeature && MaxWaybillsFeature != null)
+                var MaxWaybillsNo =await _shippingRequestTripManager.getMaxNumberOfWaybills(tenantId.Value);
+                if (MaxWaybillsNo != null)
                 {
-                    var maxNumber = Convert.ToInt32(MaxWaybillsFeature);
-                    var CreatedWaybillsNo = await _shippingRequestTripRepository.CountAsync(x => (x.ShippingRequestFk.TenantId == tenantId && x.ShipperTenantId == null)
-                    || x.ShipperTenantId == tenantId);
-                    if (CreatedWaybillsNo >= maxNumber)
+                    var CreatedWaybillsNo = await _shippingRequestTripManager.getWaybillsNo(tenantId.Value);
+                    if (CreatedWaybillsNo >= MaxWaybillsNo.Value)
                     {
                         shippingRequestTrip.IsExceedMaxWaybillsNumber = true;
                     }
@@ -703,6 +698,18 @@ namespace TACHYON.Shipping.Trips
             //Notify Carrier with trip details
             if (request?.ShippingRequestFlag == ShippingRequestFlag.Normal)
                 await _shippingRequestTripManager.NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true, true);
+
+            //notify TMS if tenant reach max number of waybills
+            var tenant = request == null ? trip.ShipperTenantId.Value : trip.ShippingRequestFk.TenantId;
+            var maxNumberOfWaybills = await _shippingRequestTripManager.getMaxNumberOfWaybills(tenant);
+            if(maxNumberOfWaybills != null)
+            {
+                var createdTrips =await _shippingRequestTripManager.getWaybillsNo(tenant);
+                if(maxNumberOfWaybills.Value == createdTrips)
+                {
+                    await _appNotifier.NotifyTMSWithMaxWaybillsExceeds(tenant);
+                }
+            }
         }
         public async Task AddRemarks(RemarksInputDto input)
         {

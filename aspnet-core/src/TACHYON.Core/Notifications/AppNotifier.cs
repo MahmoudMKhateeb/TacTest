@@ -1272,6 +1272,24 @@ namespace TACHYON.Notifications
             }
         }
 
+        public async Task NotifyTMSWithMaxWaybillsExceeds(int tenantId)
+        {
+            var user = (await _tenantsRepository.FirstOrDefaultAsync(tenantId)).TenancyName;
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("TenantExceedMaxWaybillNo",user),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["tenantId"] = tenantId;
+            var TMSuser = await GetAdminTachyonDealerAsync();
+                await _notificationPublisher.PublishAsync(AppNotificationNames.TripNeedsDeliveryNote, notificationData,
+                    userIds: new[] { TMSuser });
+            
+        }
+
         #endregion
 
         #region Accident
