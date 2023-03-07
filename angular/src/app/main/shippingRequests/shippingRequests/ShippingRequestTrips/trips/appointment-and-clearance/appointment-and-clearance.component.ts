@@ -226,7 +226,8 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
   }
 
   downloadAttatchment(): void {
-    if (this.isEdit || ((this.isCarrier || this.isCarrierSaas) && this.usedIn != 'createOrEdit')) {
+    // ((this.isCarrier || this.isCarrierSaas) && this.usedIn != 'createOrEdit')
+    if (this.isEdit || this.usedIn != 'createOrEdit') {
       this._shippingRequestsTripServiceProxy.getAppointmentFile(this.pointId).subscribe((res) => {
         console.log('res');
         if (res.length > 0) {
@@ -369,6 +370,11 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
 
   carrierSaveAppointment() {
     this.updatedAppointment = true;
+    if (this.isFileInputValid) {
+      this.tripAppointment.documentId = this.fileToken;
+      this.tripAppointment.documentName = this.fileName;
+      this.tripAppointment.documentContentType = this.fileType;
+    }
     this.tripAppointment.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
     this.carrierSetAppointmentData.emit(this.tripAppointment);
   }

@@ -126,22 +126,24 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     }
     this.DestCitiesDtos = this._tripService.GetShippingRequestForViewOutput.destinationCitiesDtos;
 
-    this._routStepsServiceProxy
-      .getAllFacilitiesByCityAndTenantForDropdown(this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id)
-      .pipe(
-        finalize(() => {
-          this.facilityLoading = false;
-        })
-      )
-      .subscribe((result) => {
-        this.allFacilities = result;
-        this.dropFacilities = result;
-        this.pickupFacilities = result.filter((r) => {
-          return this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === 0
-            ? r.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId
-            : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
+    if (!this.isCarrier) {
+      this._routStepsServiceProxy
+        .getAllFacilitiesByCityAndTenantForDropdown(this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id)
+        .pipe(
+          finalize(() => {
+            this.facilityLoading = false;
+          })
+        )
+        .subscribe((result) => {
+          this.allFacilities = result;
+          this.dropFacilities = result;
+          this.pickupFacilities = result.filter((r) => {
+            return this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === 0
+              ? r.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId
+              : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
+          });
         });
-      });
+    }
   }
 
   /**

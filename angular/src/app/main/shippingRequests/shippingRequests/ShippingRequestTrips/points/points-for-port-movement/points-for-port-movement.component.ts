@@ -13,6 +13,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { AppointmentAndClearanceModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/appointment-and-clearance/appointment-and-clearance.component';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 
 @Component({
   selector: 'PointsForPortsMovementComponent',
@@ -51,7 +52,8 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   constructor(
     injector: Injector,
     private _PointsService: PointsService,
-    private _shippingRequestsTripServiceProxy: ShippingRequestsTripServiceProxy
+    private _shippingRequestsTripServiceProxy: ShippingRequestsTripServiceProxy,
+    private _tripService: TripService
   ) {
     super(injector);
   }
@@ -132,56 +134,64 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   filterFacilitiesForDropDown(isPickup: boolean, index: number) {
     if (!this.isExportRequest) {
       return isPickup && index === 0
-        ? this.pickupFacilities.filter((fac) => {
+        ? this.pickupFacilities
+            .filter((fac) => fac.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId)
+            .filter((fac) => {
+              switch (index) {
+                case 0: {
+                  return fac.facilityType === FacilityType.Port;
+                }
+                default: {
+                  return true;
+                }
+              }
+            })
+        : this.dropFacilities
+            .filter((fac) => this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos.map((city) => city.cityId).includes(fac.cityId))
+            .filter((fac) => {
+              switch (index) {
+                case 1: {
+                  return fac.facilityType === FacilityType.Facility;
+                }
+                default:
+                case 2:
+                case 3: {
+                  return true;
+                }
+              }
+            });
+    }
+    return isPickup && index === 0
+      ? this.pickupFacilities
+          .filter((fac) => fac.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId)
+          .filter((fac) => {
             switch (index) {
               case 0: {
-                return fac.facilityType === FacilityType.Port;
+                return fac.facilityType === FacilityType.Facility;
               }
               default: {
                 return true;
               }
             }
           })
-        : this.dropFacilities.filter((fac) => {
+      : this.dropFacilities
+          .filter((fac) => this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos.map((city) => city.cityId).includes(fac.cityId))
+          .filter((fac) => {
             switch (index) {
               case 1: {
-                return fac.facilityType === FacilityType.Facility;
+                return this.roundTripType === RoundTripType.OneWayRoutWithPortShuttling
+                  ? fac.facilityType === FacilityType.Port
+                  : fac.facilityType === FacilityType.Facility;
               }
               default:
-              case 2:
               case 3: {
-                return true;
+                return fac.facilityType === FacilityType.Facility;
+              }
+              case 5: {
+                return fac.facilityType === FacilityType.Port;
               }
             }
           });
-    }
-    return isPickup && index === 0
-      ? this.pickupFacilities.filter((fac) => {
-          switch (index) {
-            case 0: {
-              return fac.facilityType === FacilityType.Facility;
-            }
-            default: {
-              return true;
-            }
-          }
-        })
-      : this.dropFacilities.filter((fac) => {
-          switch (index) {
-            case 1: {
-              return this.roundTripType === RoundTripType.OneWayRoutWithPortShuttling
-                ? fac.facilityType === FacilityType.Port
-                : fac.facilityType === FacilityType.Facility;
-            }
-            default:
-            case 3: {
-              return fac.facilityType === FacilityType.Facility;
-            }
-            case 5: {
-              return fac.facilityType === FacilityType.Port;
-            }
-          }
-        });
   }
 
   selectContact(index: number) {

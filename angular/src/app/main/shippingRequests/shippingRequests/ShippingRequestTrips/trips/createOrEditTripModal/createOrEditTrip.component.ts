@@ -793,12 +793,16 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     // }).length === point1.goodsDetailListDto.length
     //     : false;
 
-    const pointOneValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId) && goodDetailsValidForPoint1;
+    const pointOneValid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.facilityId) &&
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId) &&
+      goodDetailsValidForPoint1;
     if (!pointOneValid) {
       return false;
     }
 
-    const pointTwoValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point2.receiverId);
+    const pointTwoValid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point2.facilityId) && this.isReceiverIdOrSenderIdOrFacilityIdValid(point2.receiverId);
     if (!pointTwoValid) {
       return false;
     }
@@ -826,11 +830,16 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     return true;
   }
   validateImportWithoutReturnTrip(): boolean {
+    const point0 = this.PointsComponent.wayPointsList[0];
     const point1 = this.PointsComponent.wayPointsList[1];
     const goodDetailsValidForPoint1 = this.isGoodDetailsValidForPoint(point1, false, false, true);
 
-    const pointOneValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId) && goodDetailsValidForPoint1;
-    if (!pointOneValid) {
+    const pointOneValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point0.facilityId);
+    const pointTwoValid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.facilityId) &&
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId) &&
+      goodDetailsValidForPoint1;
+    if (!pointOneValid || !pointTwoValid) {
       return false;
     }
 
@@ -842,8 +851,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     const point2 = this.PointsComponent.wayPointsList[1];
     const goodDetailsValidForPoint2 = this.isGoodDetailsValidForPoint(point2, true, true, true);
 
-    const pointOneValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId);
-    const pointTwoValid = goodDetailsValidForPoint2;
+    const pointOneValid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.facilityId) && this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId);
+    const pointTwoValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point2.facilityId) && goodDetailsValidForPoint2;
     if (!pointOneValid || !pointTwoValid) {
       return false;
     }
@@ -859,11 +869,15 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     const goodDetailsValidForPoint2 = this.isGoodDetailsValidForPoint(point2, true, true, true);
     const goodDetailsValidForPoint4 = this.isGoodDetailsValidForPoint(point4, true, true, true);
 
-    const point1Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId);
-    const point2Valid = goodDetailsValidForPoint2;
-    // const point3Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point3.receiverId);
-    const point4Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point4.receiverId) && goodDetailsValidForPoint4;
-    if (!point1Valid || !point2Valid || !point4Valid) {
+    const point1Valid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.facilityId) && this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId);
+    const point2Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point2.facilityId) && goodDetailsValidForPoint2;
+    const point3Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point3.facilityId);
+    const point4Valid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point4.facilityId) &&
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point4.receiverId) &&
+      goodDetailsValidForPoint4;
+    if (!point1Valid || !point2Valid || !point3Valid || !point4Valid) {
       return false;
     }
 
@@ -881,13 +895,18 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     const goodDetailsValidForPoint4 = this.isGoodDetailsValidForPoint(point4, true, true, true);
     const goodDetailsValidForPoint6 = this.isGoodDetailsValidForPoint(point6, true, true, true);
 
-    const point1Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId);
-    const point2Valid = goodDetailsValidForPoint2;
-    // const point3Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point3.receiverId);
-    const point4Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point4.receiverId) && goodDetailsValidForPoint4;
-    const point5Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point5.receiverId);
-    const point6Valid = goodDetailsValidForPoint6;
-    if (!point1Valid || !point2Valid || !point4Valid || !point5Valid || !point6Valid) {
+    const point1Valid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.facilityId) && this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId);
+    const point2Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point2.facilityId) && goodDetailsValidForPoint2;
+    const point3Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point3.facilityId);
+    const point4Valid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point4.facilityId) &&
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point4.receiverId) &&
+      goodDetailsValidForPoint4;
+    const point5Valid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point5.facilityId) && this.isReceiverIdOrSenderIdOrFacilityIdValid(point5.receiverId);
+    const point6Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point6.facilityId) && goodDetailsValidForPoint6;
+    if (!point1Valid || !point2Valid || !point3Valid || !point4Valid || !point5Valid || !point6Valid) {
       return false;
     }
     return true;
