@@ -34,6 +34,12 @@ using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Dedicated;
+using TACHYON.Shipping.ShippingTypes;
+using TACHYON.AddressBook;
+using TACHYON.Shipping.Trips.Dto;
+using TACHYON.Vases.Dtos;
+using TACHYON.Vases;
+using TACHYON.Shipping.ShippingRequestBids;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -55,6 +61,10 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
         private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTrucksRepository;
+        private readonly IRepository<Facility, long> _facilityRepository;
+        private readonly IRepository<Vas, int> _lookup_vasRepository;
+
+
 
 
         private readonly ISmsSender _smsSender;
@@ -77,7 +87,9 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<PriceOffer, long> priceOfferRepository,
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
-            IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTrucksRepository)
+            IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTrucksRepository,
+            IRepository<Facility, long> facilityRepository,
+            IRepository<Vas, int> lookup_vasRepository)
         {
             _smsSender = smsSender;
             _routPointRepository = routPointRepository;
@@ -97,6 +109,8 @@ namespace TACHYON.Shipping.ShippingRequests
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _dedicatedShippingRequestDriverRepository = dedicatedShippingRequestDriverRepository;
             _dedicatedShippingRequestTrucksRepository = dedicatedShippingRequestTrucksRepository;
+            _facilityRepository = facilityRepository;
+            _lookup_vasRepository = lookup_vasRepository;
         }
 
         /// <summary>
@@ -207,6 +221,75 @@ namespace TACHYON.Shipping.ShippingRequests
                 }
             }
 
+            if (input.ShippingTypeId == ShippingTypeEnum.ImportPortMovements && (input.RoundTripType == null && input.RoundTripType != RoundTripType.WithoutReturnTrip && input.RoundTripType != RoundTripType.WithReturnTrip))
+            {
+                throw new UserFriendlyException(L("RoundTripTypeIsRequired"));
+            }
+
+            else if (input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements && (input.RoundTripType == null && input.RoundTripType != RoundTripType.TwoWayRoutsWithoutPortShuttling && input. RoundTripType != RoundTripType.TwoWayRoutsWithPortShuttling && input.RoundTripType != RoundTripType.OneWayRoutWithPortShuttling))
+            {
+                throw new UserFriendlyException(L("RoundTripTypeIsRequired"));
+            }
+
+        }
+
+        public async Task ValidatePortMovementInputs(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
+        {
+            DisableTenancyFilters();
+            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements)
+            {
+                if (input.OriginFacilityId == null) throw new UserFriendlyException(L("OriginPortIsRequired"));
+                if (!await _facilityRepository.GetAll().AnyAsync(x => x.Id == input.OriginFacilityId && x.FacilityType == FacilityType.Port))
+                {
+                    throw new UserFriendlyException(L("OriginMustBePort"));
+                }
+            }
+
+            switch (shippingRequest.RoundTripType)
+            {
+                case RoundTripType.WithoutReturnTrip:
+                case RoundTripType.OneWayRoutWithPortShuttling:
+                    input.RouteTypeId = ShippingRequestRouteType.SingleDrop;
+                    input.NumberOfDrops = 1;
+                    break;
+                case RoundTripType.WithReturnTrip:
+                case RoundTripType.TwoWayRoutsWithoutPortShuttling:
+                    input.RouteTypeId = ShippingRequestRouteType.MultipleDrops;
+                    input.NumberOfDrops = 2;
+                    break;
+
+                case RoundTripType.TwoWayRoutsWithPortShuttling:
+                    input.RouteTypeId = ShippingRequestRouteType.MultipleDrops;
+                    input.NumberOfDrops = 3;
+                    break;
+            }
+
+        }
+
+        public void OverridePortMovementRoutInputsForTrip(CreateOrEditShippingRequestTripDto input, ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || shippingRequest.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+            {
+
+                switch (shippingRequest.RoundTripType)
+                {
+                    case RoundTripType.WithoutReturnTrip:
+                    case RoundTripType.OneWayRoutWithPortShuttling:
+                        input.RouteType = ShippingRequestRouteType.SingleDrop;
+                        input.NumberOfDrops = 1;
+                        break;
+                    case RoundTripType.WithReturnTrip:
+                    case RoundTripType.TwoWayRoutsWithoutPortShuttling:
+                        input.RouteType = ShippingRequestRouteType.MultipleDrops;
+                        input.NumberOfDrops = 2;
+                        break;
+
+                    case RoundTripType.TwoWayRoutsWithPortShuttling:
+                        input.RouteType = ShippingRequestRouteType.MultipleDrops;
+                        input.NumberOfDrops = 3;
+                        break;
+                }
+            }
         }
 
 
@@ -237,14 +320,26 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task EditVasStep(ShippingRequest shippingRequest, EditVasStepBaseDto input)
         {
+            //Add appointment & clearance vases automatically to request when port movements
+            //if (shippingRequest.ShippingRequestVases.Count() == 0)
+            //{
+            //    await AddPortMovementVases(input, shippingRequest);
+            //}
             foreach (var vas in shippingRequest.ShippingRequestVases)
             {
-                if (!input.ShippingRequestVasList.Any(x => x.Id == vas.Id))
+                if (vas.VasFk.Name != TACHYONConsts.AppointmentVasName && vas.VasFk.Name != TACHYONConsts.ClearanceVasName)
                 {
-                    await _shippingRequestVasRepository.DeleteAsync(vas);
+
+                    if (!input.ShippingRequestVasList.Any(x => x.Id == vas.Id))
+                    {
+                        await _shippingRequestVasRepository.DeleteAsync(vas);
+                    }
                 }
+
             }
         }
+
+
 
         public async Task PublishShippingRequestManager(ShippingRequest shippingRequest)
         {
@@ -500,7 +595,67 @@ namespace TACHYON.Shipping.ShippingRequests
             return false;
         }
 
+        public async Task AddPortMovementVases(EditVasStepBaseDto input, ShippingRequest shippingRequest)
+        {
+            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || shippingRequest.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+            {
+                var portVases = await _lookup_vasRepository.GetAll().Where(x => x.Name.ToLower().Equals(TACHYONConsts.AppointmentVasName) ||
+                x.Name.ToLower().Equals(TACHYONConsts.ClearanceVasName)).ToListAsync();
+                var ClearVases = new List<Vas>();
 
+                if (portVases.Count() < 2)
+                {
+                    //await AddNotExistVases(portVases);
+                    throw new UserFriendlyException(L("InvalidVases"));
+                }
+                if (portVases.Count() > 2)
+                {
+                    ClearVases.Add(portVases.Where(x => x.Name == TACHYONConsts.AppointmentVasName).First());
+                    ClearVases.Add(portVases.Where(x => x.Name == TACHYONConsts.ClearanceVasName).First());
+                }
+                else
+                {
+                    ClearVases = portVases;
+                }
+
+                foreach (var vas in ClearVases)
+                {
+                    input.ShippingRequestVasList.Add(new CreateOrEditShippingRequestVasListDto { NumberOfTrips = 0, RequestMaxCount = 1, VasId = vas.Id });
+                }
+            }
+        }
+
+        public async Task<long?> AddPortMovementShippingRequestVases(long shippingRequestId,bool isAppointmentVas,bool isClearanceVas)
+        {
+
+            var portVas = await _lookup_vasRepository.GetAll()
+                .WhereIf(isAppointmentVas, x => x.Name.ToLower().Equals(TACHYONConsts.AppointmentVasName))
+            .WhereIf(isClearanceVas,x=> x.Name.ToLower().Equals(TACHYONConsts.ClearanceVasName))
+            .FirstOrDefaultAsync();
+            //var ClearVases = new Vas();
+
+            if (portVas == null)
+            {
+                //await AddNotExistVases(portVases);
+                throw new UserFriendlyException(L("InvalidVas"));
+            }
+            else
+            {
+                //check if exists
+                var SRvasDB =await _shippingRequestVasRepository.GetAll()
+                    .WhereIf(isAppointmentVas,x=> x.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName))
+                    .WhereIf(isClearanceVas, x=> x.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName))
+                    .FirstOrDefaultAsync(x => x.ShippingRequestId == shippingRequestId);
+                if (SRvasDB != null)
+                {
+                    return SRvasDB.Id;
+                }
+
+                var SRvas = new ShippingRequestVas { NumberOfTrips = 0, RequestMaxCount = 1, VasId = portVas.Id, ShippingRequestId = shippingRequestId };
+                return await _shippingRequestVasRepository.InsertAndGetIdAsync(SRvas);
+            }
+
+        }
 
     }
 }

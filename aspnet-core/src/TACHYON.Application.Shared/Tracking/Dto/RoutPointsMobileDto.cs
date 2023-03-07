@@ -27,5 +27,7 @@ namespace TACHYON.Tracking
         public double lat { get; set; }
         public double lng { get; set; }
         public List<PointTransactionDto> AvailableTransactions { get; set; }
+        public List<AdditionalStepDto> AdditionalSteps { get; set; }
+        public int? AdditionalStepWorkFlowVersion { get; set; }
     }
 }

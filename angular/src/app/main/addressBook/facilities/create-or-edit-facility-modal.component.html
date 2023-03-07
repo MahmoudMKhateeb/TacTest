@@ -24,7 +24,7 @@
 
           <div class="modal-body">
             <div class="row">
-              <div *ngIf="isTachyonDealerOrHost" class="form-group col-md-12">
+              <div *ngIf="isTachyonDealerOrHost && facility.facilityType == FacilityTypeEnum.Facility" class="form-group col-md-12">
                 <label>{{ l('Company') }} <span class="required-fileds">*</span></label>
                 <div
                   [ngClass]="{
@@ -45,15 +45,30 @@
                       <dxi-validation-rule type="required" message="{{ l('Company') }}: {{ 'ThisFieldIsRequired' | localize }}"></dxi-validation-rule>
                     </dx-validator>
                   </dx-select-box>
-                  <!--                  <select class="form-control" name="Shipper" [(ngModel)]="facility.shipperId" required>-->
-                  <!--                    <option [value]="undefined" disabled>{{ l('SelectCompany') }}</option>-->
-                  <!--                    <option *ngFor="let item of AllTenants" value="{{ item.id }}">{{ item.displayName }}</option>-->
-                  <!--                  </select>-->
                 </div>
                 <span class="form-text text-muted">{{ l('SelectCompany') }} {{ facility.shipperId }}</span>
               </div>
-
-              <div class="form-group col-md-12">
+              <div *ngIf="isTachyonDealerOrHost && !isHomeDelivery" class="form-group col-md-6">
+                <label>{{ l('FacilityType') }} <span class="required-fileds">*</span></label>
+                <dx-select-box
+                  id="FacilityType"
+                  name="facilityType"
+                  [dataSource]="allFacilityTypes"
+                  [searchEnabled]="true"
+                  [(value)]="facility.facilityType"
+                  displayExpr="value"
+                  valueExpr="key"
+                  required
+                >
+                  <dx-validator [validationGroup]="'createFacilityGroup'">
+                    <dxi-validation-rule
+                      type="required"
+                      message="{{ l('FacilityType') }}: {{ 'ThisFieldIsRequired' | localize }}"
+                    ></dxi-validation-rule>
+                  </dx-validator>
+                </dx-select-box>
+              </div>
+              <div class="form-group col-md-6">
                 <label>{{ l('FacilityName') }} <span *ngIf="isRequiredFacilityName" class="required-fileds">*</span></label>
                 <!--              <input-->
                 <!--                #FacilityName="ngModel"-->
@@ -99,6 +114,7 @@
                   </dx-validator>
                 </dx-text-box>
               </div>
+
               <div *ngIf="this.feature.isEnabled('App.ShipperClients')" class="form-group col-md-12">
                 <label>{{ l('ActorShipper') }} <span class="required-fileds">*</span></label>
                 <div
@@ -126,21 +142,6 @@
               <div class="form-group col-md-6">
                 <label>{{ l('Country') }} <span class="required-fileds">*</span></label>
                 <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': countriesLoading }">
-                  <!--                <select-->
-                  <!--                  #country="ngModel"-->
-                  <!--                  class="form-control"-->
-                  <!--                  name="fcountry"-->
-                  <!--                  required-->
-                  <!--                  [disabled]="countriesLoading"-->
-                  <!--                  [(ngModel)]="selectedCountryId"-->
-                  <!--                  [class.is-invalid]="country.touched && !country.valid"-->
-                  <!--                  [class.is-valid]="country.touched && country.valid"-->
-                  <!--                  (change)="loadCitiesByCountryId(selectedCountryId)"-->
-                  <!--                >-->
-                  <!--                  <option value="undefined" selected disabled>{{ l('SelectACounty') }}</option>-->
-                  <!--                  <option *ngFor="let item of countries" value="{{ item.id }}">{{ item.translatedDisplayName }}</option>-->
-                  <!--                </select>-->
-                  <!--                <validation-messages [formCtrl]="country"></validation-messages>-->
                   <dx-select-box
                     name="fcountry"
                     [(value)]="selectedCountryId"
@@ -163,23 +164,6 @@
               <div class="form-group col-md-6">
                 <label>{{ l('City') }}<span class="required-fileds"> *</span></label>
                 <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
-                  <!--                <select-->
-                  <!--                  #city="ngModel"-->
-                  <!--                  class="form-control"-->
-                  <!--                  name="fcity"-->
-                  <!--                  required-->
-                  <!--                  [disabled]="citiesLoading || !selectedCountryId"-->
-                  <!--                  [(ngModel)]="facility.cityId"-->
-                  <!--                  [class.is-invalid]="city.touched && !city.valid"-->
-                  <!--                  [class.is-valid]="city.touched && city.valid"-->
-                  <!--                  (change)="handleCityPolygon()"-->
-                  <!--                >-->
-                  <!--                  <option [value]="undefined" disabled>{{ l('SelectaCity') }}</option>-->
-                  <!--                  <option *ngFor="let item of allCities" [ngClass]="{ 'text-danger': !item.hasPolygon }" [ngValue]="Number(item.id)">-->
-                  <!--                    {{ item.displayName }}-->
-                  <!--                  </option>-->
-                  <!--                </select>-->
-                  <!--                <validation-messages [formCtrl]="city"></validation-messages>-->
                   <dx-select-box
                     name="fcity"
                     [(value)]="facility.cityId"
@@ -244,18 +228,6 @@
               </div>
               <div class="form-group col-md-12">
                 <label>{{ l('Address') }} <span *ngIf="isRequiredAddress" class="required-fileds">*</span></label>
-                <!--              <input-->
-                <!--                #search="ngModel"-->
-                <!--                type="text"-->
-                <!--                class="form-control"-->
-                <!--                [(ngModel)]="facility.address"-->
-                <!--                placeholder="{{ l('searchForNearestLocation') }}"-->
-                <!--                autocorrect="off"-->
-                <!--                [disabled]="!facility.cityId || citiesLoading"-->
-                <!--                name="searchForAddress"-->
-                <!--                required-->
-                <!--              />-->
-                <!--              <validation-messages [formCtrl]="search"></validation-messages>-->
                 <dx-text-box
                   #search="ngModel"
                   [(ngModel)]="facility.address"
@@ -322,15 +294,6 @@
           </div>
           <div class="modal-footer">
             <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
-            <!--          <button-->
-            <!--            type="submit"-->
-            <!--            class="btn btn-primary blue"-->
-            <!--            [disabled]="!createFacilityForm.form.valid"-->
-            <!--            [buttonBusy]="saving"-->
-            <!--            [busyText]="l('SavingWithThreeDot')"-->
-            <!--          >-->
-            <!--            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>-->
-            <!--          </button>-->
             <dx-button
               type="submit"
               class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"

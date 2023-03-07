@@ -505,7 +505,14 @@
   </app-view-imported-good-details-from-excel-modal>
   <app-view-import-vases-from-excel-modal [ImportedVasesList]="vasesList" #ViewImportedVasesModal (modalSave)="reloadPage()">
   </app-view-import-vases-from-excel-modal>
-  <viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
+  <viewTripModal
+    #ViewTripModal
+    (modalSave)="reloadPage()"
+    [isPortMovement]="
+      shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+      shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+    "
+  ></viewTripModal>
   <trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
   <view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>
   <app-shipping-request-rating-modal #shippingRequestRatingModal></app-shipping-request-rating-modal>
@@ -516,6 +523,10 @@
   (modalSave)="reloadPage()"
   [shippingRequest]="ShippingRequest"
   [VasListFromFather]="VasListFromFather"
+  [isPortMovement]="
+    shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+    shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+  "
 ></AddNewTripModal>
 <app-view-cancel-reason-modal #ViewCancelReasonModal></app-view-cancel-reason-modal>
 <app-cancel-trip-modal #CancelTripModal (modalSave)="reloadPage()"></app-cancel-trip-modal>

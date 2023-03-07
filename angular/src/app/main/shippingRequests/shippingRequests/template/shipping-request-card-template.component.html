@@ -210,7 +210,16 @@
                   </p>
                   <p class="isNum">{{ item.totalsTripsAddByShippier }}/{{ item.numberOfTrips }}</p>
                 </div>
-                <div class="routeType">
+                <div
+                  class="routeType"
+                  *ngIf="
+                    (item?.shippingTypeId !== ShippingTypeEnum.ImportPortMovements &&
+                      item?.shippingTypeId !== ShippingTypeEnum.ExportPortMovements) ||
+                    ((item?.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                      item?.shippingTypeId === ShippingTypeEnum.ExportPortMovements) &&
+                      item.routeTypeId === ShippingRequestRouteType.SingleDrop)
+                  "
+                >
                   <p>
                     {{ l('RouteType') }}
                   </p>

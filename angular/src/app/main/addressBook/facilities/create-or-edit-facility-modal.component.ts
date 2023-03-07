@@ -8,6 +8,7 @@ import {
   CreateOrEditFacilityWorkingHourDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
+  FacilityType,
   PenaltiesServiceProxy,
   SelectItemDto,
   ShippersForDropDownDto,
@@ -21,6 +22,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 import { Pokedex, styleObject } from '@app/main/addressBook/facilities/facilites-helper';
 import { WeekDay } from '@angular/common';
 import { CreateOrEditWorkingHoursComponent } from '@app/shared/common/workingHours/create-or-edit-working-hours/create-or-edit-working-hours.component';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'createOrEditFacilityModal',
@@ -59,6 +61,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   mapCenterLat: number;
   mapCenterLng: number;
   AllTenants: ShippersForDropDownDto[];
+  FacilityTypeEnum = FacilityType;
 
   callbacks: any[] = [];
   adapterConfig = {
@@ -72,6 +75,8 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   };
   isWorkingHoursInvalid = false;
   private cityId: number;
+  allFacilityTypes: { key: number; value: string }[] = [];
+
   get isRequiredFacilityName(): boolean {
     if (!this.isHomeDelivery) {
       return true;
@@ -92,13 +97,15 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     private ngZone: NgZone,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private mapsAPILoader: MapsAPILoader,
-    private _penaltiesServiceProxy: PenaltiesServiceProxy
+    private _penaltiesServiceProxy: PenaltiesServiceProxy,
+    private _enumService: EnumToArrayPipe
   ) {
     super(injector);
   }
 
   ngOnInit() {
     console.log('isHomeDelivery', this.isHomeDelivery);
+    this.loadAllFacilityTypes();
     this.loadAllCountries();
     if (this.isTachyonDealerOrHost) {
       this.loadAllCompaniesForDropDown();
@@ -174,6 +181,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
       this.modal.show();
     } else {
       this._facilitiesServiceProxy.getFacilityForEdit(facilityId).subscribe((result) => {
+        this.selectedCountryId = result.countryId;
         this.cityId = result.facility.cityId;
         this.facility = result.facility;
         this.FacilityWorkingHours = [];
@@ -182,13 +190,9 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
         } else {
           this.FacilityWorkingHours = this.getEnumsAsFillList(result.facility.facilityWorkingHours);
         }
-        this.selectedCountryId = result.countryId;
-        this.loadCitiesByCountryId(result.countryId);
         if (isNotNullOrUndefined(this.facility.shipperActorId)) {
           (this.facility.shipperActorId as any) = this.facility.shipperActorId?.toString();
         }
-
-        (this.facility.cityId as any) = this.facility.cityId.toString();
       });
     }
     this.modal.show();
@@ -201,7 +205,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
     this.revalidateWorkingHours();
     this.saving = true;
     console.log(this.facility.shipperId);
-
+    if (this.isTachyonDealer && this.facility.facilityType != FacilityType.Facility) this.facility.shipperId = null;
     this.facility.facilityWorkingHours = this.FacilityWorkingHours.filter((r) => r.startTime && r.endTime && r.hasTime).map(
       (fh) =>
         new CreateOrEditFacilityWorkingHourDto({
@@ -384,6 +388,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
 
       if (this.cityId != null) {
         this.facility.cityId = this.cityId;
+        (this.facility.cityId as any) = this.facility.cityId.toString();
         this.cityId = null;
       } else {
         this.facility.cityId = null;
@@ -442,6 +447,16 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   revalidateWorkingHours() {
     this.callbacks.forEach((func) => {
       func();
+    });
+  }
+
+  /**
+   * Loads All Facility types for Facilities CRUD
+   */
+  loadAllFacilityTypes() {
+    this.allFacilityTypes = this._enumService.transform(FacilityType).map((item) => {
+      item.key = Number(item.key);
+      return item;
     });
   }
 }

@@ -4,9 +4,9 @@ using System.Text;
 
 namespace TACHYON.WorkFlows
 {
-    public class WorkFlow<TArgs, TEnum> where TEnum : Enum
+    public class WorkFlow<TTransaction> where TTransaction : IWorkflowTransaction
     {
         public int Version { get; set; }
-        public List<WorkflowTransaction<TArgs, TEnum>> Transactions { get; set; }
+        public List<TTransaction> Transactions { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using TACHYON.Integration.BayanIntegration.Dtos;
+using TACHYON.Integration.BayanIntegration.Dtos;
 using TACHYON.Integration.BayanIntegration;
 using TACHYON.Regions.Dtos;
 using TACHYON.Regions;
@@ -520,10 +520,13 @@ namespace TACHYON
                 .ForMember(d => d.RoutPoints, opt => opt.Ignore())
                 .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTrip);
-            configuration.CreateMap<ShippingRequestTrip, TrackingShippingRequestTripDto>().ReverseMap();
+            configuration.CreateMap<ShippingRequestTrip, TrackingShippingRequestTripDto>()
+                .ForMember(x => x.ShippingType, x => x.MapFrom(i => i.ShippingRequestFk.ShippingTypeId))
+                .ForMember(x => x.RoutPoints, x => x.Ignore());
 
             configuration.CreateMap<ShippingRequestTripVas, CreateOrEditShippingRequestTripVasDto>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Key));
+                
             configuration.CreateMap<CreateOrEditShippingRequestTripVasDto, ShippingRequestTripVas>();
 
             configuration.CreateMap<ShippingRequestTripVas, ShippingRequestTripVasDto>()
@@ -570,13 +573,19 @@ namespace TACHYON
                 .ForPath(dest => dest.DropPaymentMethodTitle , opt => opt.MapFrom(src => src.DropPaymentMethod.GetEnumDescription()));
 
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
+                .ForMember(dest => dest.NeedsClearance, opt => opt.MapFrom(src => src.DropNeedsClearance))
+                .ForMember(dest => dest.NeedsAppointment, opt => opt.MapFrom(src => src.DropNeedsAppointment))
                 .ForMember(x => x.WaybillNumber, otp => otp.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTripRoutePointGoods);
 
             configuration.CreateMap<RoutPoint, CreateOrEditRoutPointDto>()
                 .ForMember(dest => dest.GoodsDetailListDto, opt => opt.MapFrom(src => src.GoodsDetails))
                 .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
-                .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y));
+                .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
+                .ForPath(dest => dest.DropNeedsAppointment, opt => opt.MapFrom(src => src.NeedsAppointment))
+                .ForPath(dest => dest.DropNeedsClearance, opt => opt.MapFrom(src => src.NeedsClearance));
+                //.ForPath(dest => dest.AppointmentDataDto.AppointmentNumber, opt => opt.MapFrom(src => src.AppointmentNumber))
+                //.ForPath(dest => dest.AppointmentDataDto.AppointmentDateTime, opt => opt.MapFrom(src => src.AppointmentDateTime));
 
             //configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             //configuration.CreateMap<RouteDto, Route>().ReverseMap();
@@ -1009,6 +1018,12 @@ namespace TACHYON
 
             configuration.CreateMap<SubmitInvoiceClaimCreateInput, ActorSubmitInvoice>();
             configuration.CreateMap<IHasDocument, ActorSubmitInvoice>().ReverseMap();
+            configuration.CreateMap<TripAppointmentDataDto, IHasDocument>();
+            configuration.CreateMap<ShippingRequestTripVas,TripAppointmentDataDto >()
+                .ForMember(dto => dto.ItemPrice, options => options.MapFrom(entity => entity.SubTotalAmount));
+            configuration.CreateMap<ShippingRequestTripVas, TripClearancePricesDto > ()
+                .ForMember(dto => dto.ItemPrice, options => options.MapFrom(entity => entity.SubTotalAmount));
+
         }
 
         /// <summary>

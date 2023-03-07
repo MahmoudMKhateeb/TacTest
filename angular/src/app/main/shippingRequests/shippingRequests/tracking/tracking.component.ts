@@ -12,6 +12,7 @@ import {
   ShippingRequestTripFlag,
   ShippingRequestTripStatus,
   ShippingRequestType,
+  ShippingTypeEnum,
   TrackingListDto,
   TrackingServiceProxy,
   WaybillsServiceProxy,

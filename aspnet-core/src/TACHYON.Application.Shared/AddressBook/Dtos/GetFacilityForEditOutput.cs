@@ -12,5 +12,7 @@ namespace TACHYON.AddressBook.Dtos
         public string CountryDisplayName { get; set; }
         public int? CountryId { get; set; }
         public string CountryCode { get; set; }
+        public FacilityType FacilityType { get; set; }
+
     }
 }

@@ -110,15 +110,6 @@
             [actorShipperId]="_trip.GetShippingRequestForViewOutput.shipperActorId"
           ></app-create-or-edit-actors-price>
         </div>
-        <app-create-or-edit-actors-price
-          #actorsPricing
-          [numberOfCreatedTrips]="_trip.GetShippingRequestForViewOutput.totalsTripsAddByShippier"
-          [shippingRequestId]="activeShippingRequestId"
-          [tenantId]="_trip.GetShippingRequestForViewOutput.tenantId"
-          [carrierTenantId]="_trip.GetShippingRequestForViewOutput.shippingRequest.carrierTenantId"
-          [actorCarrierId]="_trip.GetShippingRequestForViewOutput.carrierActorId"
-          [actorShipperId]="_trip.GetShippingRequestForViewOutput.shipperActorId"
-        ></app-create-or-edit-actors-price>
       </div>
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->
@@ -212,6 +203,25 @@
                       />
                     </div>
                     <!-- End::Shipping Type-->
+
+                    <!--  Start::Round Trip                 -->
+                    <div
+                      class="mt-5 col-lg-6"
+                      *ngIf="
+                        _trip.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _trip.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                      "
+                    >
+                      <label><span class="required-fileds"></span> {{ l('RoundTrip') }}</label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="RoundTrip"
+                        [value]="_trip.GetShippingRequestForViewOutput.roundTripTypeTitle"
+                        disabled
+                      />
+                    </div>
+                    <!-- End::Round Trip-->
 
                     <div class="col-lg-3 mt-5" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <div class="form-group">
@@ -455,7 +465,17 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-3" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
+                    <div
+                      class="col-lg-3"
+                      *ngIf="
+                        _trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0 &&
+                        ((_trip.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId !== ShippingTypeEnum.ImportPortMovements &&
+                          _trip.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId !== ShippingTypeEnum.ExportPortMovements) ||
+                          ((_trip.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                            _trip.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ExportPortMovements) &&
+                            _trip.GetShippingRequestForViewOutput.routeTypeId === ShippingRequestRouteType.SingleDrop))
+                      "
+                    >
                       <label>{{ l('RouteType') }}</label>
                       <input
                         class="form-control"

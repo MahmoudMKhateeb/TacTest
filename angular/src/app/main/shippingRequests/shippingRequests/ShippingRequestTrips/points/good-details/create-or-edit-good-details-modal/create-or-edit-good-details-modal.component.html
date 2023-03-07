@@ -29,7 +29,7 @@
                 <div class="form-group row fv-plugins-icon-container">
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <label> {{ l('GoodSubCategory') }} <span class="required-fileds">*</span> </label>
+                      <label> {{ l('GoodSubCategory') }} <span class="required-fileds" *ngIf="!isForPortsMovement">*</span> </label>
                       <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allSubGoodCategorys }">
                         <!--                      <select-->
                         <!--                        #subgoodsDetail="ngModel"-->
@@ -50,13 +50,14 @@
                           [dataSource]="allSubGoodCategorys"
                           displayExpr="displayName"
                           valueExpr="id"
-                          [disabled]="!allSubGoodCategorys"
+                          [disabled]="!allSubGoodCategorys || shouldDisableCategoryForPortsMovement"
                           placeholder="{{ l('SelectAGoodSubCategory') }}"
                           [showClearButton]="true"
                           required
                         >
                           <dx-validator [validationGroup]="'goodsDetailGroup'">
                             <dxi-validation-rule
+                              *ngIf="!isForPortsMovement"
                               type="required"
                               message="{{ l('GoodSubCategory') }}: {{ 'ThisFieldIsRequired' | localize }}"
                             ></dxi-validation-rule>
@@ -67,7 +68,10 @@
                   </div>
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <label for="GoodsDetail_Weight">{{ l('Weight') }} <span class="required-fileds">*</span> </label>
+                      <label for="GoodsDetail_Weight"
+                        >{{ l('Weight') }}
+                        <span *ngIf="!isForPortsMovement || isWeightRequiredForPortMovement" class="required-fileds">*</span>
+                      </label>
                       <!--                                  <input-->
                       <!--                                      #GoodsWeight="ngModel"-->
                       <!--                                      [(ngModel)]="weight"-->
@@ -84,29 +88,32 @@
                       <!--                                      required-->
                       <!--                                  />-->
                       <dx-number-box
-                        *ngIf="!isForDedicated"
+                        *ngIf="!isForDedicated || isForPortsMovement"
                         name="Weight"
                         id="GoodsDetail_Weight"
                         maxLength="7"
                         minLength="1"
                         [min]="1"
-                        [max]="AllowedWeight / (amount || 1)"
+                        [max]="!isForPortsMovement ? AllowedWeight / (amount || 1) : AllowedWeight"
                         [(value)]="weight"
                         required
                       >
                         <dx-validator [validationGroup]="'goodsDetailGroup'">
                           <dxi-validation-rule
+                            *ngIf="!isForPortsMovement || isWeightRequiredForPortMovement"
                             type="required"
                             message="{{ l('Weight') }}: {{ 'ThisFieldIsRequired' | localize }}"
                           ></dxi-validation-rule>
                           <dxi-validation-rule
                             type="stringLength"
                             [min]="0"
+                            *ngIf="!isForPortsMovement || isWeightRequiredForPortMovement"
                             message="{{ l('Weight') }}: {{ l('PleaseEnterAtLeastNCharacter', 0) }}"
                           ></dxi-validation-rule>
                           <dxi-validation-rule
                             type="stringLength"
                             [max]="7"
+                            *ngIf="!isForPortsMovement || isWeightRequiredForPortMovement"
                             message="{{ l('Weight') }}: {{ l('PleaseEnterNoMoreThanNCharacter', 7) }}"
                           ></dxi-validation-rule>
                         </dx-validator>
@@ -140,7 +147,9 @@
                       </dx-number-box>
                       <a
                         class="text-muted mt-1"
-                        *ngIf="!isForDedicated && weight > 0 && amount > 0 && !(AllowedWeight - (weight || 0) * (amount || 1) < 0)"
+                        *ngIf="
+                          !isForDedicated && !isForPortsMovement && weight > 0 && amount > 0 && !(AllowedWeight - (weight || 0) * (amount || 1) < 0)
+                        "
                       >
                         {{
                           l('RemainingAllowedWeight') +
@@ -148,15 +157,19 @@
                             (AllowedWeight - (weight || 0) * (amount || 1) < 0 ? 0 : AllowedWeight - (weight || 0) * (amount || 1))
                         }}
                       </a>
-                      <span *ngIf="!isForDedicated && AllowedWeight - (weight || 0) * (amount || 1) < 0"
-                        >{{ l('AllowedWeightShouldBeMaximum') }} : {{ AllowedWeight }}</span
-                      >
+                      <span *ngIf="!isForDedicated && !isForPortsMovement && AllowedWeight - (weight || 0) * (amount || 1) < 0">
+                        {{ l('AllowedWeightShouldBeMaximum') }} : {{ AllowedWeight }}
+                      </span>
+                      <span *ngIf="!isForDedicated && isForPortsMovement"> {{ l('AllowedWeight') }} : {{ AllowedWeight }} </span>
                     </div>
                   </div>
 
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <label for="goodsDetail.amount">{{ l('Quantity') }} <span *ngIf="!isHomeDelivery" class="required-fileds">*</span> </label>
+                      <label for="goodsDetail.amount"
+                        >{{ l('Quantity') }}
+                        <span *ngIf="(!isHomeDelivery && !isForPortsMovement) || isQtyRequiredForPortMovement" class="required-fileds">*</span>
+                      </label>
                       <!--                                  <input-->
                       <!--                                      #GoodsAmount="ngModel"-->
                       <!--                                      [(ngModel)]="amount"-->
@@ -174,13 +187,13 @@
                           <dxi-validation-rule
                             type="required"
                             message="{{ l('Quantity') }}: {{ 'ThisFieldIsRequired' | localize }}"
-                            *ngIf="!isHomeDelivery"
+                            *ngIf="(!isHomeDelivery && !isForPortsMovement) || isQtyRequiredForPortMovement"
                           ></dxi-validation-rule>
                           <dxi-validation-rule
                             type="stringLength"
                             [min]="1"
                             message="{{ l('Quantity') }}: {{ l('PleaseEnterAtLeastNCharacter', 1) }}"
-                            *ngIf="!isHomeDelivery"
+                            *ngIf="(!isHomeDelivery && !isForPortsMovement) || isQtyRequiredForPortMovement"
                           ></dxi-validation-rule>
                         </dx-validator>
                       </dx-number-box>

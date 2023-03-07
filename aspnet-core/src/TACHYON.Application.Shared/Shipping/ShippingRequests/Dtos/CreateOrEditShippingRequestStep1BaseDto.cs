@@ -29,7 +29,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// </summary>
         public int? CarrierTenantIdForDirectRequest { get; set; }
 
-        [Required] public int ShippingTypeId { get; set; }
+        [Required] public ShippingTypeEnum ShippingTypeId { get; set; }
+        public RoundTripType? RoundTripType { get; set; }
+
         public bool IsDrafted { get; set; }
         public int DraftStep { get; set; }
         

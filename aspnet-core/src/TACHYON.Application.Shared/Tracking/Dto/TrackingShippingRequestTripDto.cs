@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using TACHYON.Shipping.Drivers.Dto;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Tracking.Dto
@@ -13,5 +14,7 @@ namespace TACHYON.Tracking.Dto
         public ShippingRequestTripStatus Status { get; set; }
         public string StatusTitle { get { return Status.GetEnumDescription(); } set { } }
         public List<TrackingRoutePointDto> RoutPoints { get; set; }
+
+        public ShippingTypeEnum ShippingType { get; set; }
     }
 }

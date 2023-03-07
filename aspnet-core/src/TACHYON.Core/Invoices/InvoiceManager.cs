@@ -925,6 +925,16 @@ namespace TACHYON.Invoices
 
         }
 
+        public async Task GenertateInvoiceWhenShipmintDelivery(int tripId)
+        {
+            var trip = await _shippingRequestTrip
+                .GetAllIncluding(d => d.ShippingRequestTripVases)
+                .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
+                .FirstOrDefaultAsync(t => t.Id == tripId);
+
+           await GenertateInvoiceWhenShipmintDelivery(trip);
+        }
+
         /// <summary>
         /// When the shipper billing interval  after delivry run this method to generate invoice
         /// </summary>
@@ -973,6 +983,7 @@ namespace TACHYON.Invoices
                              !x.IsShipperHaveInvoice &&
                              //waybills.Contains(x.Id) &&
                              (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
+                             x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation ||
                               x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
                     );
                 if (trips != null && trips.Count() > 0)

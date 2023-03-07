@@ -337,6 +337,8 @@ import { TruckAndDriverReplacementComponent } from '@app/main/shippingRequests/d
 import { PricePackageModule } from '@app/main/pricePackages/price-package.module';
 import { InvoicesDedicatedClientsComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients.component';
 import { InvoiceDedicatedClientsModalComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients-modal/invoices-dedicated-clients-modal.component';
+import { PointsForPortsMovementComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points-for-port-movement/points-for-port-movement.component';
+import { AppointmentAndClearanceModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/appointment-and-clearance/appointment-and-clearance.component';
 import { ActorSubmitInvoiceItemDetailComponent } from './Invoices/actor-submit-invoices/actor-submit-invoice-item-detail/actor-submit-invoice-item-detail.component';
 import { ActorInvoiceItemDetailComponent } from './Invoices/ActorInvoices/actor-invoice-list/actor-invoice-item-detail/actor-invoice-item-detail.component';
 import { MakeScrollableDirective } from '@app/shared/common/make-scrollable-directive/make-scrollable.directive';
@@ -647,6 +649,8 @@ import { DirectTripsComponent } from './direct-trips/direct-trips.component';
     ClientDemandModelComponent,
     InvoicesDedicatedClientsComponent,
     InvoiceDedicatedClientsModalComponent,
+    PointsForPortsMovementComponent,
+    AppointmentAndClearanceModalComponent,
     ActorSubmitInvoiceItemDetailComponent,
     ActorInvoiceItemDetailComponent,
     MakeScrollableDirective,

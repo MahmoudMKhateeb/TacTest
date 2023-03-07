@@ -376,7 +376,7 @@
                           </div>
                           <div
                             class="form-group col-md-6 col-lg-6"
-                            [hidden]="!step1Dto.shippingTypeId || step1Dto.shippingTypeId == 1 || step1Dto.shippingTypeId == 2"
+                            *ngIf="step1Dto.shippingTypeId && step1Dto.shippingTypeId == ShippingTypeEnum.CrossBorderMovements"
                           >
                             <label> {{ l('DestinationCountry') }}<span class="required-fileds">*</span></label>
                             <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
@@ -392,7 +392,7 @@
                                 valueExpr="id"
                                 placeholder="{{ l('SelectanDestinationCountry') }}"
                                 [isValid]="step1Form.controls['destinationCountry'].valid || !step1Form.controls['destinationCountry'].touched"
-                                [disabled]="step1Dto.shippingTypeId == 2 || step1Dto.shippingTypeId == 1 ? true : null"
+                                [disabled]="step1Dto.shippingTypeId != ShippingTypeEnum.CrossBorderMovements ? true : null"
                                 required
                               >
                                 <dx-validator [validationGroup]="'step1FormGroup'">
@@ -660,7 +660,7 @@
                             <span class="form-text text-muted">{{ l('EnterPackingType') }}</span>
                           </div>
                           <div class="form-group col-md-6 col-lg-6">
-                            <label>{{ l('MainGoodCategory') }} <span class="required-fileds">*</span></label>
+                            <label>{{ l('MainGoodCategory') }}</label>
                             <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
                               <dx-select-box
                                 id="goodCategoryId"
@@ -810,43 +810,45 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr *ngFor="let item of selectedVases; index as i">
-                              <td>
-                                {{ selectedVasesProperties[item.vasId].vasName }}
-                              </td>
-                              <td>
-                                <input
-                                  type="number"
-                                  #VasCount="ngModel"
-                                  [attr.disabled]="selectedVasesProperties[item.vasId].vasCountDisabled || null"
-                                  id="VasCount{{ i }}"
-                                  [(ngModel)]="item.requestMaxCount"
-                                  (keypress)="numberOnly($event)"
-                                  [required]="!selectedVasesProperties[item.vasId].vasCountDisabled"
-                                  class="form-control"
-                                  name="VasCount{{ i }}"
-                                  min="0"
-                                  [class.is-invalid]="VasCount.touched && !VasCount.disabled && item.requestMaxCount <= 0"
-                                  [class.is-valid]="VasCount.touched && VasCount.valid && item.requestMaxCount > 0"
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  type="number"
-                                  #VasAmount2="ngModel"
-                                  [attr.disabled]="selectedVasesProperties[item.vasId].vasAmountDisabled || null"
-                                  id="VasAmount2{{ i }}"
-                                  [(ngModel)]="item.requestMaxAmount"
-                                  (keypress)="numberOnly($event)"
-                                  [required]="!selectedVasesProperties[item.vasId].vasAmountDisabled"
-                                  class="form-control"
-                                  name="VasAmount2{{ i }}"
-                                  min="0"
-                                  [class.is-invalid]="VasAmount2.touched && !VasAmount2.disabled && item.requestMaxAmount <= 0"
-                                  [class.is-valid]="VasAmount2.touched && VasAmount2.valid && item.requestMaxAmount > 0"
-                                />
-                              </td>
-                            </tr>
+                            <ng-container *ngFor="let item of selectedVases; index as i">
+                              <tr *ngIf="selectedVasesProperties[item.vasId]">
+                                <td>
+                                  {{ selectedVasesProperties[item.vasId].vasName }}
+                                </td>
+                                <td>
+                                  <input
+                                    type="number"
+                                    #VasCount="ngModel"
+                                    [attr.disabled]="selectedVasesProperties[item.vasId].vasCountDisabled || null"
+                                    id="VasCount{{ i }}"
+                                    [(ngModel)]="item.requestMaxCount"
+                                    (keypress)="numberOnly($event)"
+                                    [required]="!selectedVasesProperties[item.vasId].vasCountDisabled"
+                                    class="form-control"
+                                    name="VasCount{{ i }}"
+                                    min="0"
+                                    [class.is-invalid]="VasCount.touched && !VasCount.disabled && item.requestMaxCount <= 0"
+                                    [class.is-valid]="VasCount.touched && VasCount.valid && item.requestMaxCount > 0"
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="number"
+                                    #VasAmount2="ngModel"
+                                    [attr.disabled]="selectedVasesProperties[item.vasId].vasAmountDisabled || null"
+                                    id="VasAmount2{{ i }}"
+                                    [(ngModel)]="item.requestMaxAmount"
+                                    (keypress)="numberOnly($event)"
+                                    [required]="!selectedVasesProperties[item.vasId].vasAmountDisabled"
+                                    class="form-control"
+                                    name="VasAmount2{{ i }}"
+                                    min="0"
+                                    [class.is-invalid]="VasAmount2.touched && !VasAmount2.disabled && item.requestMaxAmount <= 0"
+                                    [class.is-valid]="VasAmount2.touched && VasAmount2.valid && item.requestMaxAmount > 0"
+                                  />
+                                </td>
+                              </tr>
+                            </ng-container>
                           </tbody>
                         </table>
                       </div>
@@ -951,12 +953,14 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr *ngFor="let vas of selectedVases; let i = index">
-                                <th scope="row">{{ i + 1 }}</th>
-                                <th>{{ selectedVasesProperties[vas.vasId].vasName }}</th>
-                                <td>{{ vas.requestMaxAmount == 0 ? '-' : vas.requestMaxAmount }}</td>
-                                <td>{{ vas.requestMaxCount == 0 ? '-' : vas.requestMaxCount }}</td>
-                              </tr>
+                              <ng-container *ngFor="let vas of selectedVases; let i = index">
+                                <tr *ngIf="selectedVasesProperties[vas.vasId]">
+                                  <th scope="row">{{ i + 1 }}</th>
+                                  <th>{{ selectedVasesProperties[vas.vasId].vasName }}</th>
+                                  <td>{{ vas.requestMaxAmount == 0 ? '-' : vas.requestMaxAmount }}</td>
+                                  <td>{{ vas.requestMaxCount == 0 ? '-' : vas.requestMaxCount }}</td>
+                                </tr>
+                              </ng-container>
                             </tbody>
                           </table>
                         </div>
