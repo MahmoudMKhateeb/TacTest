@@ -509,8 +509,8 @@
     #ViewTripModal
     (modalSave)="reloadPage()"
     [isPortMovement]="
-      shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-      shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+      _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+      _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
     "
   ></viewTripModal>
   <trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
@@ -524,8 +524,8 @@
   [shippingRequest]="ShippingRequest"
   [VasListFromFather]="VasListFromFather"
   [isPortMovement]="
-    shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-    shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+    _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+    _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
   "
 ></AddNewTripModal>
 <app-view-cancel-reason-modal #ViewCancelReasonModal></app-view-cancel-reason-modal>

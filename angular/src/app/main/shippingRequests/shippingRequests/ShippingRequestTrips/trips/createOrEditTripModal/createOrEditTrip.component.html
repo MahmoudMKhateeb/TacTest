@@ -412,8 +412,8 @@
                     <span
                       class="required-fileds"
                       *ngIf="
-                        shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                        shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
                       "
                       >*</span
                     ></label
@@ -427,9 +427,9 @@
                     type="text"
                     [disabled]="_TripService.CreateOrEditShippingRequestTripDto.id && IsHaveContainerNumberValue && !isTachyonDealer"
                     [required]="
-                      shippingRequestForView != null &&
-                      (shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                        shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements)
+                      _TripService.GetShippingRequestForViewOutput != null &&
+                      (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements)
                     "
                   />
                 </div>
@@ -443,8 +443,8 @@
                     <span
                       class="required-fileds"
                       *ngIf="
-                        shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                        shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
                       "
                       >*</span
                     ></label
@@ -458,9 +458,9 @@
                     type="text"
                     [disabled]="_TripService.CreateOrEditShippingRequestTripDto.id && IsHaveSealNumberValue && !isTachyonDealer"
                     [required]="
-                      shippingRequestForView != null &&
-                      (shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                        shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements)
+                      _TripService.GetShippingRequestForViewOutput != null &&
+                      (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements)
                     "
                   />
                 </div>

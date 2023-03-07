@@ -251,12 +251,12 @@
               [allPointsSendersAndReceivers]="allPointsSendersAndREcivers"
               [facilityLoading]="facilityLoading"
               [receiverLoading]="receiverLoading"
-              [isExportRequest]="shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements"
+              [isExportRequest]="_tripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements"
               [isImportWithReturnTrip]="
-                shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
-                shippingRequestForView.shippingRequest.roundTripType === RoundTripType.WithReturnTrip
+                _tripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
+                _tripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.WithReturnTrip
               "
-              [roundTripType]="shippingRequestForView.shippingRequest.roundTripType"
+              [roundTripType]="_tripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType"
               (RouteStepCordSetterEvent)="RouteStepCordSetter($event.index, $event.facilityId)"
               (wayPointsSetterEvent)="wayPointsSetter()"
               (loadReceiversEvent)="loadReceivers($event)"

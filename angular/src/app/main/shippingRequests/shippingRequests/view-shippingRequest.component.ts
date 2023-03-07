@@ -7,7 +7,6 @@ import {
   ShippingRequestsServiceProxy,
   ShippingRequestStatus,
   ShippingRequestType,
-  SavedEntityType,
   ShippingTypeEnum,
   RoundTripType,
   ShippingRequestRouteType,

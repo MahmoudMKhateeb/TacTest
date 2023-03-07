@@ -246,9 +246,12 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     for (let i = 0; i < numberOfDrops; i++) {
       this.addPointsToWayPointList(1, selectedPaymentMethodId);
     }
-    if (this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements && !this.isCarrier) {
-      this.wayPointsList[0].facilityId = this.shippingRequestForView.shippingRequest.originFacilityId;
-      this.loadReceivers(this.shippingRequestForView.shippingRequest.originFacilityId);
+    if (
+      this._tripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
+      !this.isCarrier
+    ) {
+      this.wayPointsList[0].facilityId = this._tripService.GetShippingRequestForViewOutput.shippingRequest.originFacilityId;
+      this.loadReceivers(this._tripService.GetShippingRequestForViewOutput.shippingRequest.originFacilityId);
     }
   }
 

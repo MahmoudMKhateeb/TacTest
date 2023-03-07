@@ -254,7 +254,7 @@
                                   {{ l('ActivityLog') }}
                                 </button>
                                 <!--    trip actions-->
-                                <!-- <ng-container
+                                <ng-container
                                   *ngIf="(shippingType == ShippingTypeEnum.ImportPortMovements || shippingType == ShippingTypeEnum.ExportPortMovements) &&
                                                             i == 0 && point.pickingType == pickingTypeEnum.Pickup && trip.status === tripStatusesEnum.New && trip.canDriveTrip"
                                 >
@@ -265,8 +265,6 @@
                                     [buttonBusy]="saving"
                                   >
                                     {{l('AcceptTrip')}}
-                              <button *ngIf="point.isResolve" (click)="showPointLog(point.id)" class="btn btn-sm btn-danger mr-1 ml-1">
-                                    {{ l('AcceptTrip') }}
                                   </button>
                                   <button
                                     *ngIf="trip.driverStatus === driverStatusesEnum.Accepted"
@@ -293,7 +291,7 @@
                                   >
                                     {{l('StartTrip')}}
                                   </button>
-                                </ng-container> -->
+                                </ng-container>
                                 <div
                                   class="d-inline-block"
                                   ngbDropdown

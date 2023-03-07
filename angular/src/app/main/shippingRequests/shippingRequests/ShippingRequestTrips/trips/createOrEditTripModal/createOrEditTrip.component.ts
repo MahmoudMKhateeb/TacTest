@@ -267,8 +267,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
       this.loading = true;
       this.isEdit = true;
-      this.activeTripId = record.id;
-      this._TripService.updateActiveTripId(this.activeTripId);
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this._TripService.CreateOrEditShippingRequestTripDto = res;
         if (this._TripService.CreateOrEditShippingRequestTripDto.shipperActorId) {
@@ -634,8 +632,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   private validatePointsBeforeAddTrip() {
     if (
-      this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-      this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
     ) {
       this.checkIfShouldSendAppointmentAndClearance();
       return this.validatePointsFromPointsComponentForPortsMovement();
@@ -699,8 +697,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   private validatePointsFromPointsComponent() {
     if (
-      this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-      this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
     ) {
       return this.validatePointsFromPointsComponentForPortsMovement();
     }
@@ -738,29 +736,32 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     if (!isNotNullOrUndefined(this.PointsComponent) || !isNotNullOrUndefined(this.PointsComponent.wayPointsList)) {
       return false;
     }
-    if (this.shippingRequestForView.shippingRequest.roundTripType === RoundTripType.WithReturnTrip && this.PointsComponent.wayPointsList.length > 0) {
+    if (
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.WithReturnTrip &&
+      this.PointsComponent.wayPointsList.length > 0
+    ) {
       return this.validateImportWithReturnTrip();
     }
     if (
-      this.shippingRequestForView.shippingRequest.roundTripType === RoundTripType.WithoutReturnTrip &&
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.WithoutReturnTrip &&
       this.PointsComponent.wayPointsList.length > 0
     ) {
       return this.validateImportWithoutReturnTrip();
     }
     if (
-      this.shippingRequestForView.shippingRequest.roundTripType === RoundTripType.OneWayRoutWithPortShuttling &&
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.OneWayRoutWithPortShuttling &&
       this.PointsComponent.wayPointsList.length > 0
     ) {
       return this.validateOneWayRoutWithPortShuttling();
     }
     if (
-      this.shippingRequestForView.shippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling &&
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling &&
       this.PointsComponent.wayPointsList.length > 0
     ) {
       return this.validateTwoWayRoutsWithoutPortShuttling();
     }
     if (
-      this.shippingRequestForView.shippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling &&
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling &&
       this.PointsComponent.wayPointsList.length > 0
     ) {
       return this.validateTwoWayRoutsWithPortShuttling();
@@ -769,8 +770,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   private checkIfShouldSendAppointmentAndClearance() {
-    if (this.trip?.routPoints) {
-      this.trip?.routPoints?.map((item) => {
+    if (this._TripService.CreateOrEditShippingRequestTripDto?.routPoints) {
+      this._TripService.CreateOrEditShippingRequestTripDto?.routPoints?.map((item) => {
         if (!item.dropNeedsAppointment) {
           item.appointmentDataDto = null;
         }
