@@ -11,6 +11,8 @@ namespace TACHYON.PriceOffers.Dto
         public CreateOrEditActorCarrierPrice ActorCarrierPrice { get; set; }
         
         public List<CreateOrEditActorCarrierPrice> VasActorCarrierPrices { get; set; }
+        public bool IsMyselfActor { get; set; }
+
         public void AddValidationErrors(CustomValidationContext context)
         {
             if (VasActorCarrierPrices.Any(x=> !x.ShippingRequestVasId.HasValue))

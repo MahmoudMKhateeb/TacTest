@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Linq;
+using TACHYON.Actors;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 
@@ -53,7 +54,9 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dst => dst.ShippingRequestFlagTitle,
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
                 .ForMember(dst => dst.RentalDurationUnitTitle,
-                    opt => opt.MapFrom(src => Enum.GetName(typeof(TimeUnit), src.RentalDurationUnit)));
+                    opt => opt.MapFrom(src => Enum.GetName(typeof(TimeUnit), src.RentalDurationUnit)))
+                .ForMember(dest => dest.IsCarrierActorMyself, opt => opt.MapFrom(x => x.CarrierActorFk.ActorType == ActorTypesEnum.MySelf))
+                .ForMember(dest => dest.IsShipperActorMyself, opt => opt.MapFrom(x => x.ShipperActorFk.ActorType == ActorTypesEnum.MySelf));
             //.AfterMap(AssignTruckTypeFullName);
 
             CreateMap<ShippingRequest, GetShippingRequestForPricingOutput>()

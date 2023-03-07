@@ -79,6 +79,10 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         
         public string ShipperActorName { get; set; }
 
+        public bool IsCarrierActorMyself { get; set; }
+        
+        public bool IsShipperActorMyself { get; set; }
+
         #region Dedicated
         public TimeUnit? RentalDurationUnit { get; set; }
         public string RentalDurationUnitTitle { get; set; }

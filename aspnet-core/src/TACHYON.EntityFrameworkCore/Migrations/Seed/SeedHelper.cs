@@ -29,6 +29,7 @@ namespace TACHYON.Migrations.Seed
             new DefaultTenantBuilder(context).Create();
             new TenantRoleAndUserBuilder(context, 1).Create();
             new TrackingPermissionForDriverSeeder(context).GrantTrackingPermissionForDrivers();
+            new DefaultActorBuilder(context).BuildTenantsDefaultActor();
         }
 
         private static void WithDbContext<TDbContext>(IIocResolver iocResolver, Action<TDbContext> contextAction)

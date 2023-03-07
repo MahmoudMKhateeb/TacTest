@@ -87,6 +87,8 @@
 
         public const string TripAttachmentDocumentTypeSpecialConstant = "TripAttachment";
 
+        public const string MyselfCompanyName = "Myself";
+
 
         #region Mobile
 

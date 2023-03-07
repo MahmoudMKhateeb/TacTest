@@ -58,6 +58,11 @@ namespace TACHYON.Actors.Dtos
                 if(VatCertificate is null)
                     context.Results.Add(new ValidationResult("Vat Certificate is required"));
             }
+
+            if (ActorType is ActorTypesEnum.MySelf)
+            {
+                context.Results.Add(new ValidationResult("You can not create or edit an actor with myself type"));
+            }
         }
     }
 }

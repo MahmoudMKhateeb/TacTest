@@ -64,7 +64,7 @@ namespace TACHYON.Actors
                         ? (ActorTypesEnum)input.ActorTypeFilter
                         : default;
 
-            var filteredActors = _actorRepository.GetAll()
+            var filteredActors = _actorRepository.GetAll().Where(x=> x.ActorType != ActorTypesEnum.MySelf)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.CompanyName.Contains(input.Filter) || e.MoiNumber.Contains(input.Filter) || e.Address.Contains(input.Filter) || e.Logo.Contains(input.Filter) || e.MobileNumber.Contains(input.Filter) || e.Email.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CompanyNameFilter), e => e.CompanyName == input.CompanyNameFilter)
                         .WhereIf(input.ActorTypeFilter.HasValue && input.ActorTypeFilter > -1, e => e.ActorType == actorTypeFilter)
@@ -127,7 +127,10 @@ namespace TACHYON.Actors
         public async Task<GetActorForViewDto> GetActorForView(int id)
         {
             var actor = await _actorRepository.GetAsync(id);
-
+            
+            if (actor is { ActorType: ActorTypesEnum.MySelf })
+                throw new UserFriendlyException(L("YouCanNotViewThisActor"));
+            
             var output = new GetActorForViewDto { Actor = ObjectMapper.Map<ActorDto>(actor) };
             var documentFile =
                   await _documentFileRepository.FirstOrDefaultAsync(x => x.ActorId == id);
@@ -143,6 +146,9 @@ namespace TACHYON.Actors
         {
             var actor = await _actorRepository.FirstOrDefaultAsync(input.Id);
 
+            if (actor is { ActorType: ActorTypesEnum.MySelf })
+                throw new UserFriendlyException(L("YouCanNotEditThisActor"));
+            
             var output = new GetActorForEditOutput { Actor = ObjectMapper.Map<CreateOrEditActorDto>(actor) };
 
             var documentFile =
@@ -352,11 +358,13 @@ namespace TACHYON.Actors
         [AbpAuthorize(AppPermissions.Pages_Administration_Actors_Delete)]
         public async Task Delete(EntityDto input)
         {
-            long organizationUnit = await _actorRepository.GetAll().Where(x => x.Id == input.Id)
-                .Select(x => x.OrganizationUnitId).FirstOrDefaultAsync();
+            var actor = await _actorRepository.GetAll().Where(x => x.Id == input.Id)
+                .Select(x => new {x.OrganizationUnitId,x.ActorType}).FirstOrDefaultAsync();
+            if (actor?.ActorType == ActorTypesEnum.MySelf)
+                throw new UserFriendlyException(L("ThisActorCanNotBeDeleted"));
 
-            if (organizationUnit != default)
-                await _organizationUnitRepository.DeleteAsync(organizationUnit);
+            if (actor?.OrganizationUnitId != default)
+                await _organizationUnitRepository.DeleteAsync(actor.OrganizationUnitId);
             
             await _actorRepository.DeleteAsync(input.Id);
         }
@@ -368,6 +376,9 @@ namespace TACHYON.Actors
             var actor = await _actorRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Id == actorId);
 
+            if (actor is { ActorType: ActorTypesEnum.MySelf })
+                throw new UserFriendlyException(L("ThisActorCanNotBeInvoiced"));
+            
             if (actor.ActorType == ActorTypesEnum.Shipper)
             {
                 return await _actorInvoicesManager.BuildActorShipperInvoices(actorId, trips);
@@ -399,6 +410,10 @@ namespace TACHYON.Actors
         {
             var actor= await _actorRepository.GetAll()
                  .FirstOrDefaultAsync(x => x.Id == id);
+            
+            if (actor is { ActorType: ActorTypesEnum.MySelf })
+                throw new UserFriendlyException(L("ThisActorCanNotHaveInvoices"));
+
             if(actor.ActorType == ActorTypesEnum.Shipper)
             {
                 return (await _actorInvoicesManager.GetAllShipperActorUnInvoicedTrips(id, null))

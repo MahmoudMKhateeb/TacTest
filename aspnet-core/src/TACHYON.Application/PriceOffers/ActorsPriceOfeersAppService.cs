@@ -3,6 +3,7 @@ using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.Actors;
 using TACHYON.Authorization;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.Shipping.ShippingRequests;
@@ -61,6 +62,8 @@ namespace TACHYON.PriceOffers
                 where shipperTripPrice.ShippingRequestId == shippingRequestId
                 select shipperTripPrice).FirstOrDefaultAsync();
             input.ActorShipperPriceDto = ObjectMapper.Map<CreateOrEditActorShipperPriceDto>(tripPrice);
+            input.IsMyselfActor = await _shippingRequestRepository.GetAll().Where(x => x.Id == shippingRequestId)
+                .AnyAsync(x => x.ShipperActorId.HasValue && x.ShipperActorFk.ActorType == ActorTypesEnum.MySelf);
 
             return input;
 
@@ -161,6 +164,8 @@ namespace TACHYON.PriceOffers
             
             var actorCarrierPrice = await _actorCarrierPriceRepository.FirstOrDefaultAsync(x => x.ShippingRequestId == shippingRequestId);
             output.ActorCarrierPrice = ObjectMapper.Map<CreateOrEditActorCarrierPrice>(actorCarrierPrice);
+            output.IsMyselfActor = await _shippingRequestRepository.GetAll().Where(x => x.Id == shippingRequestId)
+                .AnyAsync(x => x.CarrierActorId.HasValue && x.CarrierActorFk.ActorType == ActorTypesEnum.MySelf);
 
             return output;
         }
