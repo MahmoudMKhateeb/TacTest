@@ -2943,7 +2943,6 @@
 	<text name="Appointment">الميعاد</text>
 	<text name="Clearance">التخليص</text>
 	<text name="AppointmentAndClearance">الميعاد و التخليص</text>
-	<text name="AppointmentNumber">رقم الموعد</text>
 	<text name="AppointmentPricesSetup">إعداد أسعار الموعد</text>
 	<text name="AppointmentData">بيانات الموعد</text>
 	<text name="ClearancePricesSetup">إعداد أسعار التخليص</text>

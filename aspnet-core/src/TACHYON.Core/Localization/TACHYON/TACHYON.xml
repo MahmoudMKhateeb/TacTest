@@ -3210,7 +3210,6 @@
     <text name="Appointment">Appointment</text>
     <text name="Clearance">Clearance</text>
     <text name="AppointmentAndClearance">Appointment And Clearance</text>
-    <text name="AppointmentNumber">Appointment Number</text>
     <text name="AppointmentPricesSetup">Appointment Prices Setup</text>
     <text name="AppointmentData">Appointment Data</text>
     <text name="ClearancePricesSetup">Clearance Prices Setup</text>
