@@ -446,57 +446,59 @@ namespace TACHYON.Shipping.Trips
 
             if (input.ShippingRequestId.HasValue)
             {
-            if (request.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || request.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
-            {
-                _shippingRequestManager.OverridePortMovementRoutInputsForTrip(input, request);
-            }
-            else
-            {
-                // validate goods category if shipping type not port movements, bcz port movements has sometimes empty container category that breaks normal goods category validation
-                await ValidateGoodsCategory(input.RoutPoints, request.GoodCategoryId);
-
-                //additional receiver must provided
-                ValidateReceiver(input);
-
-                if (input.ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).Any(x => x.Description == null))
+                request = await GetShippingRequestByPermission(input.ShippingRequestId.Value);
+                if (request.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || request.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
                 {
-                    throw new UserFriendlyException("GoodsDescriptionIsRequired");
+                    _shippingRequestManager.OverridePortMovementRoutInputsForTrip(input, request);
+                }
+                else
+                {
+                    // validate goods category if shipping type not port movements, bcz port movements has sometimes empty container category that breaks normal goods category validation
+                    await ValidateGoodsCategory(input.RoutPoints, request.GoodCategoryId);
+
+                    //additional receiver must provided
+                    ValidateReceiver(input);
+
+                    if (input.ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).Any(x => x.Description == null))
+                    {
+                        throw new UserFriendlyException("GoodsDescriptionIsRequired");
+                    }
+
+                    if (input.ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).Any(x => x.Amount == null))
+                    {
+                        throw new UserFriendlyException("GoodsQuantityIsRequired");
+                    }
                 }
 
-                if (input.ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).Any(x => x.Amount == null))
+                if (request.ShippingRequestFlag == ShippingRequestFlag.Normal)
                 {
-                    throw new UserFriendlyException("GoodsQuantityIsRequired");
-                }
-            }
+                    request = await GetShippingRequestByPermission(input.ShippingRequestId.Value);
 
-            if (request.ShippingRequestFlag == ShippingRequestFlag.Normal)
-            {
-                 request = await GetShippingRequestByPermission(input.ShippingRequestId.Value);
-
-                _shippingRequestTripManager.ValidateTripDates(input, request);
-                _shippingRequestTripManager.ValidateNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), request);
-                //if (request.ShippingTypeId != ShippingTypeEnum.ImportPortMovements && request.ShippingTypeId != ShippingTypeEnum.ExportPortMovements)
+                    _shippingRequestTripManager.ValidateTripDates(input, request);
+                    _shippingRequestTripManager.ValidateNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), request);
+                    //if (request.ShippingTypeId != ShippingTypeEnum.ImportPortMovements && request.ShippingTypeId != ShippingTypeEnum.ExportPortMovements)
                     _shippingRequestTripManager.ValidateTotalweight(input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).ToList<ICreateOrEditGoodsDetailDtoBase>(), request);
 
-            }
-            }
-            if (request != null && request.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
-            {
-                if (input.RouteType == ShippingRequestRouteType.SingleDrop) input.NumberOfDrops = 1;
-                _shippingRequestTripManager.ValidateDedicatedRequestTripDates(input, request);
-
-                if (input.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
-                {
-                    input.NumberOfDrops = input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff);
                 }
-                else  //validate number of drops if normal trip
-                {
-                    _shippingRequestTripManager.ValidateDedicatedNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), input.NumberOfDrops);
-                }
-                await _shippingRequestTripManager.ValidateTruckAndDriver(input);
-            }
 
-            await ValidatePortMovementRequest(input, request);
+                if (request != null && request.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+                {
+                    if (input.RouteType == ShippingRequestRouteType.SingleDrop) input.NumberOfDrops = 1;
+                    _shippingRequestTripManager.ValidateDedicatedRequestTripDates(input, request);
+
+                    if (input.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
+                    {
+                        input.NumberOfDrops = input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff);
+                    }
+                    else  //validate number of drops if normal trip
+                    {
+                        _shippingRequestTripManager.ValidateDedicatedNumberOfDrops(input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff), input.NumberOfDrops);
+                    }
+                    await _shippingRequestTripManager.ValidateTruckAndDriver(input);
+                }
+
+                await ValidatePortMovementRequest(input, request);
+            }
 
             if (!input.Id.HasValue)
             {
@@ -1149,7 +1151,7 @@ namespace TACHYON.Shipping.Trips
         private void TripCanEditOrDelete(ShippingRequestTrip trip)
         {
             // When Edit Or Delete, Allow Home delivery to edit trip even if it is intransit
-            if (trip.ShippingRequestFk != null && trip.ShippingRequestTripFlag == ShippingRequestTripFlag.Normal && trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Normal)
+            if (trip.ShippingRequestFk != null && trip.ShippingRequestTripFlag == ShippingRequestTripFlag.Normal && trip.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Normal && trip.Status != ShippingRequestTripStatus.New)
             {
                 throw new UserFriendlyException(L("CanNotEditOrDeleteTrip"));
             }
