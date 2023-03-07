@@ -1353,7 +1353,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShipperInvoiceNo = x.ShippingRequestFk.ShipperInvoiceNo,
                         ShipperNotes = x.Note,
                         ContainerNumber = x.ContainerNumber,
-                        SealNumber = x.SealNumber
+                        SealNumber = x.SealNumber,
+                        ShippingType = x.ShippingRequestFk.ShippingTypeId,
                     }
                     );
                 }
@@ -1400,10 +1401,9 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShipperNotes = x.Note,
                         ContainerNumber = x.ContainerNumber,
                         
-                        update here
+                        //update here
                         SealNumber = x.SealNumber,
-                        ShippingType = x.ShippingRequestFk.ShippingTypeId,
-                        ContainerNumber = x.ContainerNumber,
+                        
 
 
                     }
@@ -1982,5 +1982,6 @@ namespace TACHYON.Shipping.ShippingRequests
         public string ShipperNotes { get; set; }
         public string ContainerNumber { get; set; }
         public string SealNumber { get; set; }
+        public ShippingTypeEnum ShippingType { get; set; }
     }
 }

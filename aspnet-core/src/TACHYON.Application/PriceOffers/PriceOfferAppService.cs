@@ -879,8 +879,7 @@ namespace TACHYON.PriceOffers
                     index++;
                 }
                 dto.OriginFacilityId = request.ShippingRequestFK.OriginFacilityId;
-               update
-                dto.OriginCity = dto.OriginFacilityId !=null ?$"{request.ShippingRequestFK.OriginFacility.Name} - {request.ShippingRequestFK.OriginCityFk.DisplayName}" : ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.OriginCityFk)?.DisplayName;
+                dto.OriginCity = dto.OriginFacilityId !=null ?$"{request.ShippingRequestFK.OriginFacility.Name} - {ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.OriginCityFk)?.DisplayName}" : ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.OriginCityFk)?.DisplayName;
                 //dto.DestinationCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.ShippingRequestFK.DestinationCityFk).DisplayName;
                 dto.NotesCount = await GetRequestNotesCount(request.Id);
                 dto.ShippingTypeId = request.ShippingRequestFK.ShippingTypeId;
@@ -961,7 +960,6 @@ namespace TACHYON.PriceOffers
                // dto.Longitude = (request.DestinationCityFk != null ? (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.X : 0) : 0);
                // dto.Latitude = (request.DestinationCityFk != null ? (request.DestinationCityFk.Location != null ? request.DestinationCityFk.Location.Y : 0) : 0);
                 dto.OriginCity = ObjectMapper.Map<TenantCityLookupTableDto>(request.OriginCityFk)?.DisplayName;
-                update
                 int index = 1;
                 foreach (var destCity in dto.destinationCities)
                 {

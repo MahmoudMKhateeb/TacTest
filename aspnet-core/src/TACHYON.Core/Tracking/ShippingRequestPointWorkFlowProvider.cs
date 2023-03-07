@@ -1636,7 +1636,7 @@ namespace TACHYON.Tracking
                 if (allPointsCompleted)
                 {
                     trip.Status = ShippingRequestTripStatus.Delivered;
-                    await ChangeShippingRequestStatusIfAllTripsDone(trip);
+                    if (trip.ShippingRequestId != null) { await ChangeShippingRequestStatusIfAllTripsDone(trip); }
                     await CloseLastTransitionInComplete(trip.Id);
                     await NotificationWhenShipmentDelivered(point, currentUser);
                 }
@@ -1783,7 +1783,7 @@ namespace TACHYON.Tracking
                 trip.ShippingRequestFk.Status = ShippingRequestStatus.Completed;
                 await _appNotifier.ShipperShippingRequestFinish(
                     new UserIdentifier(trip.ShippingRequestFk.TenantId, trip.ShippingRequestFk.CreatorUserId.Value),
-                    trip.ShippingRequestId);
+                    trip.ShippingRequestId.Value);
             }
         }
 

@@ -9,7 +9,7 @@ namespace TACHYON.Shipping.Trips.Dto
     public class DeliveredTripDto
     {
         public int Id { get; set; }
-        public long ShippingRequestId { get; set; }
+        public long? ShippingRequestId { get; set; }
         public ShippingRequestRouteType? RequestRouteType { get; set; }
         public ShippingRequestRouteType? RouteType { get; set; }
         public ShippingRequestTripStatus Status { get; set; }

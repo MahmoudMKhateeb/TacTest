@@ -1206,8 +1206,8 @@ namespace TACHYON.Invoices
                     //round trip is quantity in report
                     RoundTrip = trip.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
                        (trip.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                    : L("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops)
                     trip.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements) ? trip.ShippingRequestFk.NumberOfDrops.ToString()
+                       : L("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops)
                     : "1",
                     });
                 }

@@ -426,7 +426,10 @@ namespace TACHYON.Tracking.AdditionalSteps
                     {
                         x.Status = ShippingRequestTripStatus.Delivered;
                     });
-                    await HandleDeliveredTrip(trip.ShippingRequestId, trip.Id, trip.ShipperUser);
+                    if (trip.ShippingRequestId != null)
+                    {
+                        await HandleDeliveredTrip(trip.ShippingRequestId.Value, trip.Id, trip.ShipperUser);
+                    }
                 }
                 
                 return;
