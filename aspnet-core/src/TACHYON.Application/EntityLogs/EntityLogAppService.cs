@@ -84,8 +84,7 @@ namespace TACHYON.EntityLogs
                     logs = _logManager.GetAllEntityLogs<PriceOffer, long>(typeof(PriceOffer).ToString(), input.EntityId);
                     break;
                 default:
-                    throw new AbpValidationException(
-                        "Don't Play With Me...Go To Hell"); // Test Msg todo add localization here
+                    throw new AbpValidationException(L("NotSupportedType"));
             }
 
             var entityLogs = await logs.PageBy(input).ToListAsync();

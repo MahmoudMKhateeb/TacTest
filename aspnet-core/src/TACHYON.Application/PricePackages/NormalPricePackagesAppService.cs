@@ -240,7 +240,7 @@
 //         [RequiresFeature(AppFeatures.Carrier)]
 //         public async Task<ShippingRequestDirectRequestStatus> AcceptPricePackageOffer(int pricePackageOfferId)
 //         {
-//             // TODO: FIX THIS PLEASE
+//             
 //             return await _normalPricePackageManager.AcceptPricePackageOffer(pricePackageOfferId);
 //         }
 //         [RequiresFeature(AppFeatures.Carrier)]

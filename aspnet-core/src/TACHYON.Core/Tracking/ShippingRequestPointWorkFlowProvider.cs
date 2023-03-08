@@ -1259,15 +1259,12 @@ namespace TACHYON.Tracking
             }
 
 
-            var priceOffer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId);
+            var priceOffer = await _priceOfferManager.GetOfferAcceptedByShippingRequestId(trip.ShippingRequestId.Value);
             
-            if (priceOffer is null) throw new UserFriendlyException(); // todo review this 
+            if (priceOffer is null) throw new UserFriendlyException(L("ShippingRequestMustHaveAcceptedOffer"));
             
             var items = ObjectMapper.Map<List<PriceOfferItem>>(priceOffer.PriceOfferDetails);
             TransferPrices(trip, priceOffer, items, priceOffer.TaxVat);
-            
-            
-            // TODO: ASK ISLAM TO GIVE AN ADVICE HERE !!
         }
         /// <summary>
         /// Transfer the prices from price offer to trip
