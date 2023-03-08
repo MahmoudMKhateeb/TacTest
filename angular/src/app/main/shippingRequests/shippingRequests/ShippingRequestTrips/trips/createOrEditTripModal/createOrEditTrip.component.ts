@@ -216,8 +216,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   show(record?: CreateOrEditShippingRequestTripDto, shippingRequestForView?: GetShippingRequestForViewOutput): void {
     this._TripService.GetShippingRequestForViewOutput = shippingRequestForView;
-    console.log(this._TripService.GetShippingRequestForViewOutput.toJSON());
-    console.log(shippingRequestForView.toJSON());
+    //console.log(this._TripService.GetShippingRequestForViewOutput.toJSON());
+    //console.log(shippingRequestForView.toJSON());
     // this._TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice = new CreateOrEditActorShipperPriceDto();
     // this._TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice = new CreateOrEditActorCarrierPrice();
 
@@ -227,7 +227,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
     }
     if (!shippingRequestForView) {
-      console.log('!shippingRequestForView');
+      //console.log('!shippingRequestForView');
       this.getAllDrivers();
       this.getAllTrucks(undefined);
       this.getAllGoodCategories();
@@ -271,7 +271,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
         this.IsHaveSealNumberValue = res.sealNumber?.length > 0;
         this.IsHaveContainerNumberValue = res.containerNumber?.length > 0;
-        console.log('res', res.containerNumber);
+        //console.log('res', res.containerNumber);
         const gregorian = moment(res.startTripDate).locale('en').format('D/M/YYYY');
         this.startTripdate = this.dateFormatterService.ToGregorianDateStruct(gregorian, 'D/M/YYYY');
 
@@ -607,7 +607,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.getTripForEditSub?.unsubscribe();
     this.docProgress = undefined;
 
-    console.log('Detsroid From Create/Edit Trip');
+    //console.log('Detsroid From Create/Edit Trip');
   }
 
   /**
@@ -804,7 +804,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 0;
     }
     this.onNumberOfDropsChanged(true);
-    console.log('this.trip.numberOfDrops', this._TripService.CreateOrEditShippingRequestTripDto);
+    //console.log('this.trip.numberOfDrops', this._TripService.CreateOrEditShippingRequestTripDto);
   }
 
   addAdditionalDrop() {
@@ -814,7 +814,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 1;
     }
     this.onNumberOfDropsChanged(false, true);
-    console.log('this.trip.numberOfDrops', this._TripService.CreateOrEditShippingRequestTripDto);
+    //('this.trip.numberOfDrops', this._TripService.CreateOrEditShippingRequestTripDto);
   }
 
   onNumberOfDropsChanged(shouldReset = false, shouldAddNewPoint = false) {
@@ -828,7 +828,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.HomeDelivery
     ) {
       const anyWayPointHasId = this.PointsComponent.wayPointsList.some((item) => isNotNullOrUndefined(item.id));
-      console.log('anyWayPointHasId', anyWayPointHasId);
+      //console.log('anyWayPointHasId', anyWayPointHasId);
       const wayPointsList =
         (this.PointsComponent.wayPointsList.length > 0 && !shouldReset) || anyWayPointHasId
           ? this._TripService.CreateOrEditShippingRequestTripDto.routeType == this.RouteTypesEnum.MultipleDrops
@@ -839,7 +839,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
           : [];
       this.PointsComponent.wayPointsList = [];
       this._PointsService.updateWayPoints([]);
-      console.log('wayPointsList', wayPointsList);
+      //console.log('wayPointsList', wayPointsList);
       if ((wayPointsList.length > 0 && !shouldReset) || anyWayPointHasId) {
         this.PointsComponent.wayPointsList = wayPointsList;
         this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops =
