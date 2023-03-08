@@ -140,7 +140,13 @@
                       </dx-number-box>
                       <a
                         class="text-muted mt-1"
-                        *ngIf="!isForDedicated && weight > 0 && amount > 0 && !(AllowedWeight - (weight || 0) * (amount || 1) < 0)"
+                        *ngIf="
+                          _TripService.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                          !isForDedicated &&
+                          weight > 0 &&
+                          amount > 0 &&
+                          !(AllowedWeight - (weight || 0) * (amount || 1) < 0)
+                        "
                       >
                         {{
                           l('RemainingAllowedWeight') +
