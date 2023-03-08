@@ -604,11 +604,6 @@
         public const string Pages_EntityTemplate_Update = "Pages.EntityTemplate.Update";
         public const string Pages_EntityTemplate_Delete = "Pages.EntityTemplate.Delete";
 
-        public const string Pages_NormalPricePackages = "Pages.NormalPricePackages";
-        public const string Pages_NormalPricePackages_Create = "Pages.NormalPricePackages.Create";
-        public const string Pages_NormalPricePackages_Edit = "Pages.NormalPricePackages.Edit";
-        public const string Pages_NormalPricePackages_Delete = "Pages.NormalPricePackages.Delete";
-
         #region ShippingRequestPostPriceUpdate
 
         public const string Pages_SrPostPriceUpdate = "Pages.SrPostPriceUpdate";
@@ -667,10 +662,10 @@
 
         #region TMS Price Packages
 
-        public const string Pages_TmsPricePackages = "Pages.TmsPricePackages";
-        public const string Pages_TmsPricePackages_Create = "Pages.TmsPricePackages.Create";
-        public const string Pages_TmsPricePackages_Update = "Pages.TmsPricePackages.Update";
-        public const string Pages_TmsPricePackages_Delete = "Pages.TmsPricePackages.Delete";
+        public const string Pages_PricePackages = "Pages.PricePackages";
+        public const string Pages_PricePackages_Create = "Pages.PricePackages.Create";
+        public const string Pages_PricePackages_Update = "Pages.PricePackages.Update";
+        public const string Pages_PricePackages_Delete = "Pages.PricePackages.Delete";
         
 
         #endregion

@@ -1,10 +1,9 @@
 import { Component, Injector, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import {
-  NormalPricePackagesServiceProxy,
-  ProfileServiceProxy,
-  TenantCityLookupTableDto,
-  UpdateTenantProfileInformationInputDto,
+    ProfileServiceProxy,
+    TenantCityLookupTableDto, TenantServiceProxy,
+    UpdateTenantProfileInformationInputDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -28,7 +27,7 @@ export class CompleteProfileComponent extends AppComponentBase implements OnInit
   constructor(
     injector: Injector,
     private _profileServiceProxy: ProfileServiceProxy,
-    private _tenantServiceProxy: NormalPricePackagesServiceProxy,
+    private _tenantServiceProxy: TenantServiceProxy,
     private _ActiveRoute: ActivatedRoute,
     private renderer: Renderer2
   ) {
@@ -88,7 +87,7 @@ export class CompleteProfileComponent extends AppComponentBase implements OnInit
    */
 
   loadAllCities() {
-    this._tenantServiceProxy.getAllCitiesForTableDropdown().subscribe((res) => {
+    this._tenantServiceProxy.getAllCitiesForTableDropdown(undefined).subscribe((res) => {
       this.allCities = res;
     });
   }

@@ -21,19 +21,19 @@
           <div class="row">
             <div class="col-3 mb-3">
               <h6>{{ l('Reference') }}:</h6>
-              {{ offer.pricePackageId }}
+              {{ priceCalculationDto.pricePackageId }}
             </div>
             <div class="col-3 mb-3">
               <h6>{{ l('TruckType') }} :</h6>
-              {{ offer.truckType }}
+              {{ priceCalculationDto.truckType }}
             </div>
             <div class="col-3 mb-3">
               <h6>{{ l('Origin') }}:</h6>
-              {{ offer.origin }}
+              {{ priceCalculationDto.origin }}
             </div>
             <div class="col-3 mb-3">
               <h6>{{ l('Destination') }}:</h6>
-              {{ offer.destination }}
+              {{ priceCalculationDto.destination }}
             </div>
           </div>
           <div class="table-responsive">
@@ -49,13 +49,13 @@
               <tbody>
                 <tr>
                   <td>{{'Trip' | localize}}</td>
-                  <td>{{offer.quantity}}</td>
-                  <td>{{offer.itemPrice}}</td>
-                  <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.quantity}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.itemPrice}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.itemsTotalPricePreCommissionPreVat}}</td>
                 </tr>
                 <tr>
                   <td colspan="3"></td>
-                  <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.itemsTotalPricePreCommissionPreVat}}</td>
                 </tr>
               </tbody>
             </table>
@@ -80,7 +80,7 @@
                 </tr>
                 <tr>
                   <td colspan="3"></td>
-                  <td>{{offer.detailsTotalPricePreCommissionPreVat}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.detailsTotalPricePreCommissionPreVat}}</td>
                 </tr>
               </tbody>
             </table>
@@ -101,19 +101,19 @@
               <tbody>
                 <tr>
                   <td>{{l('Trip')}}</td>
-                  <td>{{offer.itemsTotalPricePreCommissionPreVat}}</td>
-                  <td>{{offer.itemsTotalCommission}}</td>
-                  <td>{{offer.itemsTotalPricePostCommissionPreVat}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.itemsTotalPricePreCommissionPreVat}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.itemsTotalCommission}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.itemsTotalPricePostCommissionPreVat}}</td>
                 </tr>
                 <tr>
                   <td>{{l('VAS')}}</td>
-                  <td>{{offer.detailsTotalPricePreCommissionPreVat}}</td>
-                  <td>{{offer.detailsTotalCommission}}</td>
-                  <td>{{offer.detailsTotalPricePostCommissionPreVat}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.detailsTotalPricePreCommissionPreVat}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.detailsTotalCommission}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.detailsTotalPricePostCommissionPreVat}}</td>
                 </tr>
                 <tr>
                   <td colspan="3"></td>
-                  <td class="table-primary">{{offer.subTotalAmountWithCommission}}</td>
+                  <td class="table-primary">{{priceCalculationDto?.offerDto?.subTotalAmountWithCommission}}</td>
                 </tr>
               </tbody>
             </table>
@@ -133,13 +133,13 @@
                 <tbody>
                   <tr>
                     <td>{{l('Trip')}}</td>
-                    <td>{{offer.quantity}}</td>
-                    <td>{{isCarrier? offer.itemPrice :offer.itemSubTotalAmountWithCommission}}</td>
-                    <td>{{isCarrier? offer.itemsTotalPricePreCommissionPreVat :offer.itemsTotalPricePostCommissionPreVat}}</td>
+                    <td>{{priceCalculationDto?.offerDto?.quantity}}</td>
+                    <td>{{isCarrier? priceCalculationDto?.offerDto?.itemPrice :priceCalculationDto?.offerDto?.itemSubTotalAmountWithCommission}}</td>
+                    <td>{{isCarrier? priceCalculationDto?.offerDto?.itemsTotalPricePreCommissionPreVat :priceCalculationDto?.offerDto?.itemsTotalPricePostCommissionPreVat}}</td>
                   </tr>
                   <tr>
                     <td colspan="3"></td>
-                    <td>{{isCarrier? offer.itemsTotalPricePreCommissionPreVat :offer.itemsTotalPricePostCommissionPreVat}}</td>
+                    <td>{{isCarrier? priceCalculationDto?.offerDto?.itemsTotalPricePreCommissionPreVat :priceCalculationDto?.offerDto?.itemsTotalPricePostCommissionPreVat}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -161,11 +161,12 @@
                     <td>{{item.itemName}}</td>
                     <td>{{item.quantity}}</td>
                     <td>{{isCarrier? item.itemPrice :item.itemSubTotalAmountWithCommission}}</td>
-                    <td>{{isCarrier? item.itemsTotalPricePreCommissionPreVat :item.itemsTotalPricePostCommissionPreVat}}</td>
+                    <td>{{isCarrier? item.itemsTotalPricePreCommissionPreVat : 'item.itemsTotalPricePostCommissionPreVat'}}</td>
+<!--               todo fix this ===>       item.itemsTotalPricePostCommissionPreVat-->
                   </tr>
                   <tr>
                     <td colspan="3"></td>
-                    <td>{{isCarrier? offer.detailsTotalPricePreCommissionPreVat :offer.detailsTotalPricePostCommissionPreVat}}</td>
+                    <td>{{isCarrier? priceCalculationDto?.offerDto?.detailsTotalPricePreCommissionPreVat :priceCalculationDto?.offerDto?.detailsTotalPricePostCommissionPreVat}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -184,16 +185,16 @@
                 <tbody>
                   <tr>
                     <td>{{l('TotalVATForTrip')}}</td>
-                    <td>{{isCarrier? offer.itemsTotalVatAmountPreCommission :offer.itemsTotalVatPostCommission}}</td>
+                    <td>{{isCarrier? priceCalculationDto?.offerDto?.itemsTotalVatAmountPreCommission :priceCalculationDto?.offerDto?.itemsTotalVatPostCommission}}</td>
                   </tr>
                   <tr>
                     <td>{{l('TotalVATForVas')}}</td>
-                    <td>{{isCarrier?offer.detailsTotalVatPostCommission : offer.detailsTotalVatAmountPreCommission}}</td>
+                    <td>{{isCarrier?priceCalculationDto?.offerDto?.detailsTotalVatPostCommission : priceCalculationDto?.offerDto?.detailsTotalVatAmountPreCommission}}</td>
                   </tr>
                   <tr>
                     <td></td>
 
-                    <td class="table-primary">{{isCarrier? offer.vatAmount :offer.vatAmountWithCommission }}</td>
+                    <td class="table-primary">{{isCarrier? priceCalculationDto?.offerDto?.vatAmount :priceCalculationDto?.offerDto?.vatAmountWithCommission }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -212,18 +213,18 @@
               <tbody>
                 <tr>
                   <td>{{l('TotalVATForTrip')}}</td>
-                  <td>{{offer.itemsTotalVatAmountPreCommission}}</td>
-                  <td>{{offer.itemsTotalVatPostCommission}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.itemsTotalVatAmountPreCommission}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.itemsTotalVatPostCommission}}</td>
                 </tr>
                 <tr>
                   <td>{{l('TotalVATForVas')}}</td>
-                  <td>{{offer.detailsTotalVatAmountPreCommission}}</td>
-                  <td>{{offer.detailsTotalVatPostCommission}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.detailsTotalVatAmountPreCommission}}</td>
+                  <td>{{priceCalculationDto?.offerDto?.detailsTotalVatPostCommission}}</td>
                 </tr>
                 <tr>
                   <td colspan="2"></td>
 
-                  <td class="table-primary">{{offer.vatAmountWithCommission}}</td>
+                  <td class="table-primary">{{priceCalculationDto?.offerDto?.vatAmountWithCommission}}</td>
                 </tr>
               </tbody>
             </table>
@@ -242,7 +243,7 @@
                 <tr>
                   <td></td>
                   <td></td>
-                  <td class="table-primary">{{isCarrier?offer.totalAmount : offer.totalAmountWithCommission}}</td>
+                  <td class="table-primary">{{isCarrier?priceCalculationDto?.offerDto?.totalAmount : priceCalculationDto?.offerDto?.totalAmountWithCommission}}</td>
                 </tr>
               </tbody>
             </table>
@@ -251,12 +252,12 @@
           <div class="table-responsive">
             <!-- if TMS or shipper, can send PP offer -->
             <button
-              *ngIf="!isCarrier && !offer.hasDirectRequest"
+              *ngIf="!isCarrier && !priceCalculationDto.hasDirectRequest"
               type="submit"
               class="btn btn-primary"
               (click)="submit(shippingRequestId,pricePackageId)"
               [buttonBusy]="saving"
-              [busyText]="l('SavingWithThreeDot' | localize)"
+              [busyText]="'SavingWithThreeDot' | localize"
             >
               <i class="fa fa-save"></i> <span>{{ 'SendPricePackageOffer' | localize }}</span>
             </button>
@@ -267,7 +268,7 @@
               class="btn btn-primary"
               (click)="accept(pricePackageId)"
               [buttonBusy]="saving"
-              [busyText]="l('SavingWithThreeDot' | localize)"
+              [busyText]="'SavingWithThreeDot' | localize"
             >
               <i class="fa fa-save"></i> <span>{{ 'AcceptPrice' | localize }}</span>
             </button>
@@ -278,7 +279,7 @@
               class="btn btn-primary"
               (click)="sendPriceOfferByPricePackage()"
               [buttonBusy]="saving"
-              [busyText]="l('SavingWithThreeDot' | localize)"
+              [busyText]="'SavingWithThreeDot' | localize"
             >
               <i class="fa fa-save"></i> <span>{{ 'SendPriceOfferByPricePackage' | localize }}</span>
             </button>

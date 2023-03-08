@@ -50,7 +50,6 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
         private readonly IRepository<PackingType, int> _packingTypeRepository;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
-        private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly PriceOfferManager _priceOfferManager;
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriverRepository;
@@ -59,6 +58,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private readonly ISmsSender _smsSender;
         private readonly IAppNotifier _appNotifier;
+        private readonly IPricePackageManager _pricePackageManager;
 
         public ShippingRequestManager(ISmsSender smsSender,
             IRepository<RoutPoint, long> routPointRepository,
@@ -72,7 +72,6 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<TrucksType, long> lookup_trucksTypeRepository,
             IRepository<PackingType, int> packingTypeRepository,
             IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
-            NormalPricePackageManager normalPricePackageManager,
             PriceOfferManager priceOfferManager,
             IRepository<PriceOffer, long> priceOfferRepository,
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
@@ -91,7 +90,6 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_trucksTypeRepository = lookup_trucksTypeRepository;
             _packingTypeRepository = packingTypeRepository;
             _shippingRequestVasRepository = shippingRequestVasRepository;
-            _normalPricePackageManager = normalPricePackageManager;
             _priceOfferManager = priceOfferManager;
             _priceOfferRepository = priceOfferRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
@@ -263,7 +261,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.BidStatus = shippingRequest.BidStartDate.Value.Date == Clock.Now.Date
                     ? ShippingRequestBidStatus.OnGoing
                     : ShippingRequestBidStatus.StandBy;
-                await _normalPricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
+                
+                await _pricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
             }
 
             shippingRequest.IsDrafted = false;

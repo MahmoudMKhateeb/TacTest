@@ -1,0 +1,332 @@
+<div #Modal="bs-modal" bsModal role="dialog" class="modal fade">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form *ngIf="isFormActive" (ngSubmit)="createOrEdit()" [busyIf]="isFormLoading">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="pricePackageDto.id">{{ l('EditPricePackage') }}</span>
+            <span *ngIf="!pricePackageDto.id">{{ l('CreatePricePackage') }}</span>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <form #tmsPPForm="ngForm" novalidate autocomplete="off">
+            <div class="row">
+              <div *ngIf="isTachyonDealerOrHost && !pricePackageDto.id" class="form-group col-md-6">
+                <label>{{ l('CompanyType') }} <span class="text-danger">*</span></label>
+                <select (change)="companyTypeChanged()" [(ngModel)]="companyType" required class="form-control" name="PP_CompanyType">
+                  <option selected disabled [value]="undefined">{{ 'SelectCompanyType' | localize }}</option>
+                  <option *ngFor="let item of companyTypes" [value]="item.key">{{ item.value }}</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>{{ l('DisplayName') }} <span class="text-danger">*</span></label>
+                <input [(ngModel)]="pricePackageDto.displayName" required type="text" class="form-control" name="tmsPP_DisplayName" />
+              </div>
+              <div *ngIf="isTachyonDealerOrHost && !pricePackageDto.id" class="form-group col-md-6">
+                <label>{{ l('Company') }} <span class="text-danger">*</span></label>
+                <div
+                  [ngClass]="{
+                    'spinner spinner-success spinner-right mr-1 ml-1': companiesLoading
+                  }"
+                >
+                  <select
+                    [disabled]="!companyType || companiesLoading"
+                    [(ngModel)]="pricePackageDto.destinationTenantId"
+                    required
+                    class="form-control"
+                    name="tmsPP_Shipper"
+                  >
+                    <option selected disabled [value]="undefined">{{ 'SelectCompany' | localize }}</option>
+                    <option *ngFor="let item of companies" [value]="item.id">{{ item.displayName }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>{{ l('TransportType') }} <span class="text-danger">*</span></label>
+                <select
+                  [(ngModel)]="pricePackageDto.transportTypeId"
+                  (change)="transportTypeChanged()"
+                  required
+                  class="form-control"
+                  name="tmsPP_TransportType"
+                >
+                  <option selected disabled [value]="undefined">{{ 'SelectaTransportType' | localize }}</option>
+                  <option *ngFor="let item of transportTypes" [value]="item.id">{{ item.displayName }}</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label>{{ l('TruckType') }} <span class="text-danger">*</span></label>
+                <div
+                  [ngClass]="{
+                    'spinner spinner-success spinner-right mr-1 ml-1': truckTypeLoading
+                  }"
+                >
+                  <select
+                    [(ngModel)]="pricePackageDto.truckTypeId"
+                    required
+                    class="form-control"
+                    (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"
+                    name="tmsPP_TruckType"
+                    [disabled]="!pricePackageDto.transportTypeId || !truckTypes || truckTypeLoading"
+                  >
+                    <option selected disabled [value]="undefined">{{ 'SelectaTruckType' | localize }}</option>
+                    <option *ngFor="let item of truckTypes" [value]="item.id">{{ item.displayName }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>{{ l('RouteType') }} <span class="text-danger">*</span></label>
+                <select [(ngModel)]="pricePackageDto.routeType" required class="form-control" name="tmsPP_RouteType">
+                  <option selected disabled [value]="undefined">{{ 'SelectRouteType' | localize }}</option>
+                  <option *ngFor="let item of routeTypes" [value]="item.key">{{ item.value }}</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label>{{ l('PricePackageType') }} <span class="text-danger">*</span></label>
+                <select [(ngModel)]="pricePackageDto.type" required class="form-control" name="tmsPP_PricePackageType">
+                  <option selected disabled [value]="undefined">{{ 'SelectPricePackageType' | localize }}</option>
+                  <option *ngFor="let item of pricePackageTypes" [disabled]="item.key != pricePackageType.PerTrip" [value]="item.key">
+                    {{ item.value }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>{{ l('ShippingType') }} <span class="text-danger">*</span></label>
+                <select
+                  [(ngModel)]="pricePackageDto.shippingTypeId"
+                  (ngModelChange)="shippingTypeChanged()"
+                  required
+                  class="form-control"
+                  name="tmsPP_ShippingType"
+                >
+                  <option selected disabled [value]="undefined">{{ 'SelectShippingType' | localize }}</option>
+                  <option *ngFor="let item of shippingTypes" [value]="item.id">
+                    {{ item.displayName }}
+                  </option>
+                </select>
+              </div>
+
+              <div *ngIf="companyType == companyTypeEnum.Shipper" class="form-group col-md-6">
+                <label>{{ l('SelectCarriers') }} </label>
+                <p-multiSelect
+                  dropdownIcon="fa fa-caret-down"
+                  name="carriers"
+                  [options]="carriers"
+                  [(ngModel)]="selectedCarriers"
+                  [selectedItemsLabel]="'{0} items selected'"
+                  (ngModelChange)="applyFilters()"
+                  [style]="{ width: '100%' }"
+                  styleClass="form-control pt-1"
+                  [dataKey]="'id'"
+                  optionLabel="displayName"
+                >
+                </p-multiSelect>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>{{ l('OriginCity') }} <span class="text-danger">*</span></label>
+                <select
+                  [(ngModel)]="pricePackageDto.originCityId"
+                  (ngModelChange)="originCityChanged()"
+                  required
+                  [disabled]="!pricePackageDto.shippingTypeId"
+                  class="form-control"
+                  name="tmsPP_OriginCity"
+                >
+                  <option selected disabled [value]="undefined">{{ 'SelectanOriginCity' | localize }}</option>
+                  <option
+                    [disabled]="pricePackageDto.shippingTypeId == 2 && pricePackageDto.destinationCityId == item.id"
+                    *ngFor="let item of cities"
+                    [value]="item.id"
+                  >
+                    {{ item.displayName }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group col-md-6" *ngIf="pricePackageDto.shippingTypeId != 1">
+                <label>{{ l('DestinationCity') }} <span class="text-danger">*</span></label>
+                <select
+                  [(ngModel)]="pricePackageDto.destinationCityId"
+                  (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"
+                  [disabled]="!pricePackageDto.shippingTypeId"
+                  required
+                  class="form-control"
+                  name="tmsPP_DestinationCity"
+                >
+                  <option selected disabled [value]="undefined">{{ 'SelectaDestination' | localize }}</option>
+                  <option
+                    [disabled]="pricePackageDto.shippingTypeId == 2 && pricePackageDto.originCityId == item.id"
+                    *ngFor="let item of cities"
+                    [value]="item.id"
+                  >
+                    {{ item.displayName }}
+                  </option>
+                </select>
+              </div>
+
+              <div *ngIf="pricePackageDto.routeType == routeTypeEnum.MultipleDrops" class="form-group col-md-6">
+                <label>{{ l('PricePerExtraDrop') }} <span class="text-danger">*</span></label>
+                <input
+                  [(ngModel)]="pricePackageDto.pricePerAdditionalDrop"
+                  min="0"
+                  required
+                  (keypress)="numberOnly($event)"
+                  name="pricePerAdditionalDrop"
+                  type="number"
+                  class="form-control"
+                />
+              </div>
+              <div *ngIf="companyType == companyTypeEnum.Carrier" class="form-group col-md-6">
+                <label>{{ l('TachyonMSRequestPrice') }} <span class="text-danger">*</span></label>
+                <input
+                  [(ngModel)]="pricePackageDto.totalPrice"
+                  min="0"
+                  (keypress)="numberOnly($event)"
+                  name="totalPrice"
+                  type="number"
+                  class="form-control"
+                  required
+                />
+              </div>
+
+              <div *ngIf="companyType == companyTypeEnum.Carrier" class="form-group col-md-6">
+                <label>{{ l('DirectRequestPrice') }} <span class="text-danger">*</span></label>
+                <input
+                  [(ngModel)]="pricePackageDto.directRequestPrice"
+                  min="0"
+                  (keypress)="numberOnly($event)"
+                  name="directRequestPrice"
+                  type="number"
+                  class="form-control"
+                  required
+                />
+              </div>
+            </div>
+
+            <div *ngIf="companyType == companyTypeEnum.Shipper">
+              <h3>{{ l('SelectTheMatchingPricePackages') }}</h3>
+              <!-- devExtream Table  -->
+              <div [class]="'row'">
+                <div class="card card-custom gutter-b">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <dx-data-grid
+                        #grid
+                        id="dataGrid"
+                        [dataSource]="dataSource"
+                        (onSelectionChanged)="calculatePriceForSelection()"
+                        [(selectedRowKeys)]="selectedRows"
+                        [remoteOperations]="{ groupPaging: false, sorting: true, filtering: true }"
+                        [showColumnLines]="true"
+                        [showRowLines]="false"
+                        [showBorders]="false"
+                        [rowAlternationEnabled]="true"
+                        keyExpr="id"
+                        [wordWrapEnabled]="true"
+                      >
+                        <dxo-selection [showCheckBoxesMode]="'always'" mode="multiple"></dxo-selection>
+                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                        <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
+                        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+                        <dxo-filter-builder-popup></dxo-filter-builder-popup>
+                        <dxo-scrolling mode="virtual"></dxo-scrolling>
+                        <!--                    <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>-->
+                        <!--                    <dxo-grouping #expand [autoExpandAll]="true"></dxo-grouping>-->
+                        <!--                    <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>-->
+                        <dxi-column dataField="displayName" caption="{{ l('PricePackageName') }}"></dxi-column>
+                        <dxi-column dataField="company" caption="{{ l('Carrier') }} "></dxi-column>
+                        <dxi-column dataField="truckType" caption="{{ l('TruckType') }}" [groupIndex]="0"></dxi-column>
+                        <dxi-column dataField="totalPrice" caption="{{ l('TachyonMSRequestPrice') }}"></dxi-column>
+                        <dxi-column dataField="isMultiDrop" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"></dxi-column>
+                        <dxi-column dataField="originCity" caption="{{ l('Origin') }}"></dxi-column>
+                        <dxi-column dataField="destinationCity" caption="{{ l('Destination') }}"></dxi-column>
+
+                        <div *dxTemplate="let options of 'cellTemplate_RoutType'">
+                          <span *ngIf="options.data.isMultiDrop" class="badge badge-success badge-inline">{{ 'MultipleDrops' | localize }}</span>
+                          <span *ngIf="!options.data.isMultiDrop" class="badge badge-danger badge-inline">{{ 'SingleDrop' | localize }}</span>
+                        </div>
+                      </dx-data-grid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- end::DevExtream Table -->
+
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label>{{ l('PricingMethod') }} <span class="text-danger">*</span></label>
+                  <select [(ngModel)]="pricingMethod" (ngModelChange)="updatePricingMethod()" required class="form-control" name="pricingMethod">
+                    <option *ngFor="let item of pricingMethods" [value]="item.key">{{ item.value }}</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>{{ calculatedPriceTitle }} <span class="text-danger">*</span></label>
+                  <input
+                    [(ngModel)]="calculatedPrice"
+                    (keypress)="numberOnly($event)"
+                    name="calculatedPrice"
+                    type="number"
+                    class="form-control"
+                    [disabled]="pricingMethod != pricingMethodEnum.FinalPrice"
+                  />
+                </div>
+              </div>
+
+              <div class="row" *ngIf="pricingMethod != pricingMethodEnum.FinalPrice">
+                <div class="form-group col-md-6">
+                  <label>{{ l('CommissionType') }} <span class="text-danger">*</span></label>
+                  <select
+                    [(ngModel)]="commissionType"
+                    (ngModelChange)="calculateTotalCommissionAndTotalPrice()"
+                    required
+                    class="form-control"
+                    name="commissionType"
+                  >
+                    <option selected disabled [value]="undefined">{{ 'SelectCommissionType' | localize }}</option>
+                    <option *ngFor="let item of commissionTypes" [value]="item.key">{{ item.value }}</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>{{ l('CommissionAmount') }} <span class="text-danger">*</span></label>
+                  <input
+                    [(ngModel)]="commissionAmount"
+                    min="0"
+                    [disabled]="!commissionType"
+                    (change)="calculateTotalCommissionAndTotalPrice()"
+                    (keypress)="numberOnly($event)"
+                    name="commissionAmount"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+
+              <div class="row" *ngIf="pricingMethod != pricingMethodEnum.FinalPrice">
+                <div class="form-group col-md-6">
+                  <label>{{ l('TotalCommission') }} <span class="text-danger">*</span></label>
+                  <input [(ngModel)]="totalCommission" disabled name="totalCommission" type="number" class="form-control" />
+                </div>
+                <div class="form-group col-md-6">
+                  <label>{{ l('TotalPrice') }} </label>
+                  <input [(ngModel)]="totalPrice" disabled name="tmsPP_TotalPrice" type="number" class="form-control" />
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="close()">{{ 'Close' | localize }}</button>
+
+          <button type="submit" [buttonBusy]="isFormSaving" [disabled]="tmsPPForm.invalid" class="btn btn-primary">
+            {{ 'Save' | localize }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

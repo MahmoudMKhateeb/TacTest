@@ -110,11 +110,11 @@ namespace TACHYON.Shipping.ShippingRequests
             DocumentFilesManager documentFilesManager,
             IRepository<PriceOffer, long> priceOfferRepository,
             IEntityChangeSetReasonProvider reasonProvider,
-            NormalPricePackageManager normalPricePackageManager,
             SrPostPriceUpdateManager postPriceUpdateManager,
             IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository,
             ShippingRequestManager shippingRequestManager,
-            IRepository<Actor> actorsRepository)
+            IRepository<Actor> actorsRepository, 
+            IPricePackageManager pricePackageManager)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -143,11 +143,11 @@ namespace TACHYON.Shipping.ShippingRequests
             _documentFilesManager = documentFilesManager;
             _priceOfferRepository = priceOfferRepository;
             _reasonProvider = reasonProvider;
-            _normalPricePackageManager = normalPricePackageManager;
             _postPriceUpdateManager = postPriceUpdateManager;
             _shippingRequestDestinationCityRepository = shippingRequestDestinationCityRepository;
             _shippingRequestManager = shippingRequestManager;
             _actorsRepository = actorsRepository;
+            _pricePackageManager = pricePackageManager;
         }
 
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
@@ -178,10 +178,9 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
-        private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly IRepository<ShippingRequestDestinationCity> _shippingRequestDestinationCityRepository;
         private readonly ShippingRequestManager _shippingRequestManager;
-
+        private readonly IPricePackageManager _pricePackageManager;
         private readonly IRepository<Actor> _actorsRepository;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
         {
@@ -949,8 +948,6 @@ namespace TACHYON.Shipping.ShippingRequests
                 // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
             }
 
-            // todo Add this Validation in Update Shipping Request
-
 
             await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
 
@@ -959,7 +956,7 @@ namespace TACHYON.Shipping.ShippingRequests
             if (shippingRequest.IsBid)
             {
                 //Notify Carrier with the same Truck type
-                await _normalPricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
+                await _pricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
             }
 
         }

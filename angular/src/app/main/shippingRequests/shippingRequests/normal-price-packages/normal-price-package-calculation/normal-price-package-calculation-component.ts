@@ -4,12 +4,9 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import {
-  NormalPricePackagesServiceProxy,
-  PricePackageOfferDto,
-  PricePackageOfferItemDto,
-  PriceOfferChannel,
-  ShippingRequestStatus,
-  ShippingRequestBidStatus,
+    PriceOfferChannel,
+    ShippingRequestStatus,
+    ShippingRequestBidStatus, PricePackageServiceProxy, PricePackageForPriceCalculationDto, PriceOfferItem,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 
@@ -27,8 +24,8 @@ export class NormalPricePackageCalculationComponent extends AppComponentBase {
 
   active = false;
   saving = false;
-  offer: PricePackageOfferDto = new PricePackageOfferDto();
-  Items: PricePackageOfferItemDto[] = [];
+  priceCalculationDto: PricePackageForPriceCalculationDto = new PricePackageForPriceCalculationDto();
+  Items: PriceOfferItem[] = [];
   priceOfferCommissionType: any;
   commissionTypeTitle: string;
   shippingRequestId: number;
@@ -40,16 +37,16 @@ export class NormalPricePackageCalculationComponent extends AppComponentBase {
   channel: PriceOfferChannel;
   isTachyonDeal: boolean;
 
-  constructor(injector: Injector, private _CurrentServ: NormalPricePackagesServiceProxy) {
+  constructor(injector: Injector, private _CurrentServ: PricePackageServiceProxy) {
     super(injector);
   }
 
-  show(id: number, pricePackageId: number | undefined = undefined): void {
+  show(id: number, pricePackageId?: number | undefined): void {
     this.shippingRequestId = id;
     this.pricePackageId = pricePackageId;
     this._CurrentServ.getPricePackageOfferForHandle(pricePackageId, id).subscribe((result) => {
-      this.offer = result;
-      this.Items = this.offer.items;
+      this.priceCalculationDto = result;
+      this.Items = this.priceCalculationDto.offerDto.items;
       this.active = true;
       this.modal.show();
     });
@@ -60,12 +57,13 @@ export class NormalPricePackageCalculationComponent extends AppComponentBase {
     this.modal.hide();
   }
 
-  Preview(id: number, pricePackageId: number | undefined = undefined): void {
+  Preview(id: number, pricePackageId?: number | undefined): void {
     this.shippingRequestId = id;
     this.pricePackageId = pricePackageId;
-    this._CurrentServ.getPricePackageOffer(pricePackageId, id).subscribe((result) => {
-      this.offer = result;
-      this.Items = this.offer.items;
+    //todo review this
+    this._CurrentServ.getPricePackageOfferForHandle(pricePackageId, id).subscribe((result) => {
+      this.priceCalculationDto = result;
+      this.Items = this.priceCalculationDto.offerDto.items;
       this.active = true;
       this.modal.show();
     });
@@ -100,8 +98,8 @@ export class NormalPricePackageCalculationComponent extends AppComponentBase {
     this.isBid = isBid;
     this.isTachyonDeal = isTachyonDeal;
     this._CurrentServ.getPricePackageOfferForHandle(matchingPricePackageId, id).subscribe((result) => {
-      this.offer = result;
-      this.Items = this.offer.items;
+      this.priceCalculationDto = result;
+      this.Items = this.priceCalculationDto.offerDto.items;
       this.active = true;
       this.modal.show();
     });

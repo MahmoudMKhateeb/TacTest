@@ -1,29 +1,24 @@
 import { Component, ViewChild, Injector, Output, EventEmitter, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 import {
-  InvoiceServiceProxy,
-  CommonLookupServiceProxy,
-  ISelectItemDto,
-  SelectItemDto,
-  DynamicInvoiceItemDto,
-  DynamicInvoiceServiceProxy,
-  DynamicInvoiceForViewDto,
-  TenantServiceProxy,
-  TenantRegistrationServiceProxy,
-  ShippingRequestsServiceProxy,
-  TrucksTypeSelectItemDto,
-  TenantCityLookupTableDto,
-  NormalPricePackagesServiceProxy,
-  CreateOrEditDynamicInvoiceDto,
-  CreateOrEditDynamicInvoiceItemDto,
-  ListResultDtoOfSelectItemDto,
+    InvoiceServiceProxy,
+    CommonLookupServiceProxy,
+    ISelectItemDto,
+    SelectItemDto,
+    DynamicInvoiceItemDto,
+    DynamicInvoiceServiceProxy,
+    DynamicInvoiceForViewDto,
+    TenantServiceProxy,
+    TenantRegistrationServiceProxy,
+    ShippingRequestsServiceProxy,
+    TenantCityLookupTableDto,
+    CreateOrEditDynamicInvoiceDto,
+    PricePackageServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import * as moment from 'moment';
-import { DateTimeService } from '@app/shared/common/timing/date-time.service';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import Swal from 'sweetalert2';
 import { NgForm } from '@angular/forms';
@@ -62,7 +57,7 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
     injector: Injector,
     private _currentSrv: InvoiceServiceProxy,
     private _TenantServiceproxy: TenantServiceProxy,
-    private _NormalPricePackagesServiceProxy: NormalPricePackagesServiceProxy,
+    private _pricePackageServiceProxy: PricePackageServiceProxy,
     private _ShippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _TenantRegistration: TenantRegistrationServiceProxy,
     private _DynamicInvoiceServiceProxy: DynamicInvoiceServiceProxy,
@@ -104,7 +99,7 @@ export class InvoiceDynamicModalComponent extends AppComponentBase implements On
   }
 
   GetAllCitiesForTableDropdown() {
-    this._NormalPricePackagesServiceProxy.getAllCitiesForTableDropdown().subscribe(
+    this._TenantRegistration.getAllCitiesForTableDropdown(null).subscribe(
       (cities) => {
         this.cities = cities;
       },
