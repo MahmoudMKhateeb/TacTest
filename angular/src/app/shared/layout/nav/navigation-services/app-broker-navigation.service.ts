@@ -31,7 +31,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
           new AppMenuItem(
             'directShipments',
             '',
-            'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+            '',
             '/app/main/directShipments',
             [],
             //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
