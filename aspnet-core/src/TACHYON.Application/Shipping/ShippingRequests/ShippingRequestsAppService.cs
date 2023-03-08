@@ -1729,26 +1729,18 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<SelectItemDto>> GetAllShippersActorsForDropDown()
         {
             return await _actorsRepository.GetAll()
-                 .Where(x => x.ActorType == ActorTypesEnum.Shipper &&
-                 x.IsActive)
-                   .Select(x => new SelectItemDto()
-                   {
-                       Id = x.Id.ToString(),
-                       DisplayName = x.CompanyName
-                   }).ToListAsync();
+                .Where(x => (x.ActorType == ActorTypesEnum.Shipper || x.ActorType == ActorTypesEnum.MySelf) && x.IsActive)
+                .OrderByDescending(x=> x.ActorType).ThenByDescending(x=> x.Id)
+                .Select(x => new SelectItemDto() { Id = x.Id.ToString(), DisplayName = x.CompanyName }).ToListAsync();
         }
 
 
         public async Task<List<SelectItemDto>> GetAllCarriersActorsForDropDown()
         {
             return await _actorsRepository.GetAll()
-                 .Where(x => x.ActorType == ActorTypesEnum.Carrier &&
-                 x.IsActive)
-                   .Select(x => new SelectItemDto()
-                   {
-                       Id = x.Id.ToString(),
-                       DisplayName = x.CompanyName
-                   }).ToListAsync();
+                .Where(x => (x.ActorType == ActorTypesEnum.Carrier || x.ActorType == ActorTypesEnum.MySelf) && x.IsActive)
+                .OrderByDescending(x=> x.ActorType).ThenByDescending(x=> x.Id)
+                .Select(x => new SelectItemDto() { Id = x.Id.ToString(), DisplayName = x.CompanyName }).ToListAsync();
         }
         //end Multiple Drops
 

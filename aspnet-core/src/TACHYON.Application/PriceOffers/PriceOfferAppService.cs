@@ -638,7 +638,8 @@ namespace TACHYON.PriceOffers
         public async Task<List<SelectItemDto>> GetAllCarrierActorsForDropDown()
         {
             return await _actorsRepository.GetAll()
-                .Where(x=> x.ActorType == ActorTypesEnum.Carrier)
+                .Where(x=> x.ActorType == ActorTypesEnum.Carrier || x.ActorType == ActorTypesEnum.MySelf)
+                .OrderByDescending(x=> x.ActorType).ThenByDescending(x=> x.Id)
                    .Select(x => new SelectItemDto()
                    {
                        Id = x.Id.ToString(),

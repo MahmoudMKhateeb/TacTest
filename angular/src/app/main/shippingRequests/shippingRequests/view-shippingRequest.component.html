@@ -62,11 +62,15 @@
         [shippingRequestId]="activeShippingRequestId"
       ></app-view-matching-tms-price-package>
 
-      <div class="card card-custom gutter-b" *ngIf="isGrantedAny('Pages.ActorPrices.Carrier', 'Pages.ActorPrices.Shipper')">
+      <div
+        class="card card-custom gutter-b"
+        *ngIf="
+          isGrantedAny('Pages.ActorPrices.Carrier', 'Pages.ActorPrices.Shipper')"
+      >
         <div class="card-header">
           <h3 class="card-title">{{ l('Actors') }}</h3>
           <div class="card-toolbar">
-            <button type="submit" class="btn btn-primary" (click)="actorsPricing.show()">
+            <button *ngIf="!_trip.GetShippingRequestForViewOutput.isCarrierActorMyself || !_trip.GetShippingRequestForViewOutput.isShipperActorMyself" type="submit" class="btn btn-primary" (click)="actorsPricing.show()">
               <span>{{ l('ActorsPricing') }}</span>
             </button>
           </div>
@@ -110,15 +114,6 @@
             [actorShipperId]="_trip.GetShippingRequestForViewOutput.shipperActorId"
           ></app-create-or-edit-actors-price>
         </div>
-        <app-create-or-edit-actors-price
-          #actorsPricing
-          [numberOfCreatedTrips]="_trip.GetShippingRequestForViewOutput.totalsTripsAddByShippier"
-          [shippingRequestId]="activeShippingRequestId"
-          [tenantId]="_trip.GetShippingRequestForViewOutput.tenantId"
-          [carrierTenantId]="_trip.GetShippingRequestForViewOutput.shippingRequest.carrierTenantId"
-          [actorCarrierId]="_trip.GetShippingRequestForViewOutput.carrierActorId"
-          [actorShipperId]="_trip.GetShippingRequestForViewOutput.shipperActorId"
-        ></app-create-or-edit-actors-price>
       </div>
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->
