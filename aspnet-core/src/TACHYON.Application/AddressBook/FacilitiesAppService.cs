@@ -170,14 +170,8 @@ namespace TACHYON.AddressBook
             {
                 input.FacilityType = FacilityType.Facility;
             }
-            var point = default(Point);
-            if (input.Longitude!=null && input.Latitude != null)
-            {
-                 point = new Point
-                    (input.Longitude.Value, input.Latitude.Value)
-                { SRID = 4326 };
-            }
-
+        
+            Point point = SetPointInfo(input);
 
             var facility = ObjectMapper.Map<Facility>(input);
             facility.Location = point;
@@ -209,10 +203,11 @@ namespace TACHYON.AddressBook
                 throw new UserFriendlyException(L("UpdateDenied"));
             }
             var facility = await _facilityRepository.GetAll().Include(x => x.FacilityWorkingHours).FirstOrDefaultAsync(x => x.Id == (long)input.Id);
-
+            Point point = SetPointInfo(input);
             await RemoveDeletedWorkingHours(input, facility);
             ObjectMapper.Map(input, facility);
-            if((await IsTachyonDealer() || AbpSession.TenantId == null) && input.ShipperId!=null)
+            facility.Location = point;
+            if ((await IsTachyonDealer() || AbpSession.TenantId == null) && input.ShipperId != null)
             {
                 facility.TenantId = input.ShipperId;
             }
@@ -230,7 +225,7 @@ namespace TACHYON.AddressBook
             return facility.Id;
         }
 
-        
+
 
         [AbpAuthorize(AppPermissions.Pages_Facilities_Delete)]
         public async Task Delete(EntityDto<long> input)
@@ -323,6 +318,20 @@ namespace TACHYON.AddressBook
                     await _facilityWorkingHourRepository.DeleteAsync(facilityWorkHour);
                 }
             }
+        }
+
+
+        private static Point SetPointInfo(CreateOrEditFacilityDto input)
+        {
+            var point = default(Point);
+            if (input.Longitude != null && input.Latitude != null)
+            {
+                point = new Point
+                   (input.Longitude.Value, input.Latitude.Value)
+                { SRID = 4326 };
+            }
+
+            return point;
         }
     }
 }
