@@ -148,7 +148,11 @@
                       <a
                         class="text-muted mt-1"
                         *ngIf="
-                          !isForDedicated && !isForPortsMovement && weight > 0 && amount > 0 && !(AllowedWeight - (weight || 0) * (amount || 1) < 0)
+                          _TripService.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                          !isForDedicated &&
+                          weight > 0 &&
+                          amount > 0 &&
+                          !(AllowedWeight - (weight || 0) * (amount || 1) < 0)
                         "
                       >
                         {{
