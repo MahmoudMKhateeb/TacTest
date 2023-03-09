@@ -1,4 +1,4 @@
-﻿using Abp;
+using Abp;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -121,11 +121,9 @@ namespace TACHYON.Shipping.Drivers
         .Include(i => i.ShippingRequestFk)
              .ThenInclude(r => r.ShippingRequestDestinationCities)
              .ThenInclude(x=>x.CityFk)
-       .Include(i => i.ShippingRequestFk)
-              .ThenInclude(r => r.OriginCityFk)
-       .Include(i => i.OriginFacilityFk)
+        .Include(i => i.OriginFacilityFk)
        .ThenInclude(i=>i.CityFk)
-       .Include(i => i.DestinationFacilityFk)
+       .Include(i => i.DestinationFacilityFk).ThenInclude(x=> x.CityFk)
            .Where(t => t.AssignedDriverUserId == AbpSession.UserId && t.Status != ShippingRequestTripStatus.Canceled && t.DriverStatus != ShippingRequestTripDriverStatus.Rejected)
         .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Current, e => e.StartTripDate.Date <= Clock.Now.Date && e.Status != ShippingRequestTripStatus.Delivered && e.Status != ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
         .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Past, e => (e.Status == ShippingRequestTripStatus.Delivered || e.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation))
@@ -209,6 +207,7 @@ namespace TACHYON.Shipping.Drivers
         {
             DisableTenancyFilters();
             var trip = await _ShippingRequestTrip.GetAll()
+            .Include(i => i.GoodCategoryFk)
             .Include(i => i.ShippingRequestFk)
                .ThenInclude(r => r.ShippingRequestDestinationCities)
                .ThenInclude(x=>x.CityFk)
@@ -313,7 +312,10 @@ namespace TACHYON.Shipping.Drivers
             //})));
 
             //return good category name automatic from default language
-            tripDto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk).DisplayName;
+            var goodCategory = trip.ShippingRequestId.HasValue
+                ? trip.ShippingRequestFk.GoodCategoryFk
+                : trip.GoodCategoryFk;
+            tripDto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(goodCategory).DisplayName;
 
             if (trip.Status == ShippingRequestTripStatus.New &&
                 trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted)

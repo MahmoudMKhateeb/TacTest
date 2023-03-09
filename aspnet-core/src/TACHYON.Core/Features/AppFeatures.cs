@@ -24,6 +24,7 @@
         public const string CanClientLoginToSystem = "App.CanClientLoginToSystem";
         public const string CreateDirectTrip = "App.CreateDirectTrip";
         public const string DocumentsManagement = "App.DocumentsManagement";
+        public const string SaasInvoicingActivation = "App.SaasInvoicingActivation";
         public const string Receiver = "App.Receiver";
         public const string TachyonDealer = "App.TachyonDealer";
         public const string ShippingRequest = "App.shippingRequest";

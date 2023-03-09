@@ -875,6 +875,9 @@ namespace TACHYON.Shipping.Trips
                 await _documentFilesAppService.CreateOrEdit(docFileDto);
             }
 
+            // store saas invoicing feature on, off
+            trip.SaasInvoicingActivation = await _shippingRequestTripManager.GetSaasInvoicingActivation(trip.ShippingRequestId != null ? request.TenantId : trip.ShipperTenantId.Value);
+
             //Notify Carrier with trip details
             if (request?.ShippingRequestFlag == ShippingRequestFlag.Normal)
                 await _shippingRequestTripManager.NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true, true);
