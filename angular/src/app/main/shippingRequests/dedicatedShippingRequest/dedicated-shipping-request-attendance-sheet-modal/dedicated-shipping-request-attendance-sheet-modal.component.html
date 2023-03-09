@@ -78,15 +78,15 @@
                 <dxo-editing
                   #editingOptions
                   [allowAdding]="
-                    isGranted('Pages.DedicatedFillAttendaceSheet') &&
+                    (!hasShipperClients || isGranted('Pages.DedicatedFillAttendaceSheet')) &&
                     (isShipper || isTachyonDealerOrHost || isCarrierSaas || (hasShipperClients && hasCarrierClients))
                   "
                   [allowDeleting]="
-                    isGranted('Pages.DedicatedFillAttendaceSheet') &&
+                    (!hasShipperClients || isGranted('Pages.DedicatedFillAttendaceSheet')) &&
                     (isShipper || isTachyonDealerOrHost || isCarrierSaas || (hasShipperClients && hasCarrierClients))
                   "
                   [allowUpdating]="
-                    isGranted('Pages.DedicatedFillAttendaceSheet') &&
+                    (!hasShipperClients || isGranted('Pages.DedicatedFillAttendaceSheet')) &&
                     (isShipper || isTachyonDealerOrHost || isCarrierSaas || (hasShipperClients && hasCarrierClients))
                   "
                   [allowResizing]="false"

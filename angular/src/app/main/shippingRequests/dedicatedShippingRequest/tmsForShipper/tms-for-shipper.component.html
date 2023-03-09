@@ -108,7 +108,7 @@
                       </span>
                     </a>
                     <ul class="dropdown-menu z-index-1000" *dropdownMenu>
-                      <li *ngIf="isGranted('Pages.DedicatedFillAttendaceSheet')">
+                      <li *ngIf="!hasShipperClients || isGranted('Pages.DedicatedFillAttendaceSheet')">
                         <a href="javascript:;" class="dropdown-item" (click)="openFillAttendanceModal(options.data.id)">
                           {{ 'FillAttendance' | localize }}
                         </a>
