@@ -127,12 +127,11 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
    */
   get CanEditTrip(): boolean {
     //check if shipper or  Carrier has a Saas feature and Can edit this trip
-    return (
-      this.feature.isEnabled('App.Shipper') ||
-      this.isTachyonDealer ||
-      (this.feature.isEnabled('App.CarrierAsASaas') &&
-        this.ShippingRequest.carrierTenantId === this._TripService.GetShippingRequestForViewOutput.tenantId)
-    );
+    return this.showBtnAddTrips;
+    //   this.feature.isEnabled('App.Shipper') ||
+    //   this.isTachyonDealer ||
+    //   (this.feature.isEnabled('App.CarrierAsASaas') && this.ShippingRequest.carrierTenantId === this.shippingRequestForView.tenantId)
+    // );
   }
 
   getShippingRequestsTrips(event?: LazyLoadEvent) {
