@@ -99,15 +99,7 @@ namespace TACHYON.Shipping.Trips.Dto
             }
 
             var dropPoints = RoutPoints.Where(x => x.PickingType == PickingType.Dropoff);
-            foreach (var drop in dropPoints)
-            {
-                if (drop.ReceiverId == null &&
-                    (string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
-                     string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
-                {
-                    throw new UserFriendlyException("YouMustEnterReceiver");
-                }
-            }
+            
             if(ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && RoutPoints!=null && RoutPoints.Count(x => x.PickingType == PickingType.Dropoff) > 0)
             {
                 if (RoutPoints.Any(x => x.PickingType == PickingType.Dropoff && x.NeedsPOD == null))
@@ -125,15 +117,7 @@ namespace TACHYON.Shipping.Trips.Dto
                 context.Results.Add(new ValidationResult("GoodsUnitOfMeasureIsRequired"));
             }
 
-            if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).Any(x => x.Description == null))
-            {
-                context.Results.Add(new ValidationResult("GoodsDescriptionIsRequired"));
-            }
 
-            if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.Where(x => x.PickingType == PickingType.Dropoff).SelectMany(x => x.GoodsDetailListDto).Any(x => x.Amount == null))
-            {
-                context.Results.Add(new ValidationResult("GoodsQuantityIsRequired"));
-            }
         }
 
         public void Normalize()

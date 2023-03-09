@@ -1,0 +1,8 @@
+<span
+  (click)="clickedOnStep($event)"
+  class="btn btn-clean custom-marker p-shadow-2 {{ isDone ? 'p-disabled' : styleClass }}"
+  [style.backgroundColor]="color"
+  [class.p-disabled]="!!busyPointId"
+>
+  {{ index }}
+</span>

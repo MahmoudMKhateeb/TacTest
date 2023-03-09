@@ -57,20 +57,18 @@
       </ng-template>
       <!--  end:: PricOfferingSection -->
 
-      <app-view-matching-price-package
-        *ngIf="canSeePricePackages()"
-        [shippingRequestId]="activeShippingRequestId"
-      ></app-view-matching-price-package>
+      <app-view-matching-price-package *ngIf="canSeePricePackages()" [shippingRequestId]="activeShippingRequestId"></app-view-matching-price-package>
 
-      <div
-        class="card card-custom gutter-b"
-        *ngIf="
-          isGrantedAny('Pages.ActorPrices.Carrier', 'Pages.ActorPrices.Shipper')"
-      >
+      <div class="card card-custom gutter-b" *ngIf="isGrantedAny('Pages.ActorPrices.Carrier', 'Pages.ActorPrices.Shipper')">
         <div class="card-header">
           <h3 class="card-title">{{ l('Actors') }}</h3>
           <div class="card-toolbar">
-            <button *ngIf="!_trip.GetShippingRequestForViewOutput.isCarrierActorMyself || !_trip.GetShippingRequestForViewOutput.isShipperActorMyself" type="submit" class="btn btn-primary" (click)="actorsPricing.show()">
+            <button
+              *ngIf="!_trip.GetShippingRequestForViewOutput.isCarrierActorMyself || !_trip.GetShippingRequestForViewOutput.isShipperActorMyself"
+              type="submit"
+              class="btn btn-primary"
+              (click)="actorsPricing.show()"
+            >
               <span>{{ l('ActorsPricing') }}</span>
             </button>
           </div>
@@ -207,6 +205,25 @@
                       />
                     </div>
                     <!-- End::Shipping Type-->
+
+                    <!--  Start::Round Trip                 -->
+                    <div
+                      class="mt-5 col-lg-6"
+                      *ngIf="
+                        _trip.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _trip.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                      "
+                    >
+                      <label><span class="required-fileds"></span> {{ l('RoundTrip') }}</label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="RoundTrip"
+                        [value]="_trip.GetShippingRequestForViewOutput.roundTripTypeTitle"
+                        disabled
+                      />
+                    </div>
+                    <!-- End::Round Trip-->
 
                     <div class="col-lg-3 mt-5" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <div class="form-group">
@@ -450,7 +467,17 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-3" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
+                    <div
+                      class="col-lg-3"
+                      *ngIf="
+                        _trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0 &&
+                        ((_trip.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId !== ShippingTypeEnum.ImportPortMovements &&
+                          _trip.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId !== ShippingTypeEnum.ExportPortMovements) ||
+                          ((_trip.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                            _trip.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ExportPortMovements) &&
+                            _trip.GetShippingRequestForViewOutput.routeTypeId === ShippingRequestRouteType.SingleDrop))
+                      "
+                    >
                       <label>{{ l('RouteType') }}</label>
                       <input
                         class="form-control"

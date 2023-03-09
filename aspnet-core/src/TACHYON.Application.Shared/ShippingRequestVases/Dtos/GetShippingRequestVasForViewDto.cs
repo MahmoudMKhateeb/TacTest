@@ -5,5 +5,7 @@
         public ShippingRequestVasDto ShippingRequestVas { get; set; }
 
         public string VasName { get; set; }
+        public bool ShouldHide { get; set; }
+
     }
 }

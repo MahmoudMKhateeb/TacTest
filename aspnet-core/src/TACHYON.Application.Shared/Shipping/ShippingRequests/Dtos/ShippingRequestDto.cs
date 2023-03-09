@@ -29,7 +29,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public int PackingTypeId { get; set; }
         public int NumberOfPacking { get; set; }
         public double TotalWeight { get; set; }
-        public int ShippingTypeId { get; set; }
+        public ShippingTypeEnum ShippingTypeId { get; set; }
 
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
@@ -56,6 +56,13 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// shipper add his invoice number manually
         /// </summary>
         public string ShipperInvoiceNo { get; set; }
+
+        /// <summary>
+        /// For port movements
+        /// </summary>
+        public long? OriginFacilityId { get; set; }
+        public RoundTripType? RoundTripType { get; set; }
+
 
         public bool IsSaas { get; set; }
 

@@ -203,6 +203,10 @@
                       {{ l('FacilityName') }}
                       <p-sortIcon field="facility.name"></p-sortIcon>
                     </th>
+                    <th pSortableColumn="facilityType">
+                      {{ l('FacilityType') }}
+                      <p-sortIcon field="facilityType"></p-sortIcon>
+                    </th>
                     <th width="20%" pSortableColumn="address">
                       {{ l('Address') }}
                       <p-sortIcon field="facility.address"></p-sortIcon>
@@ -235,7 +239,11 @@
                           <li>
                             <a
                               href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Facilities.Edit')"
+                              *ngIf="
+                                permission.isGranted('Pages.Facilities.Edit') &&
+                                (record.facilityType == FacilityTypeEnum.Facility ||
+                                  (record.facilityType != FacilityTypeEnum.Facility && isTachyonDealerOrHost))
+                              "
                               class="dropdown-item"
                               (click)="createOrEditFacilityModal.show(record.facility.id)"
                               >{{ l('Edit') }}</a
@@ -245,7 +253,11 @@
                             <a
                               class="dropdown-item"
                               href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Facilities.Delete')"
+                              *ngIf="
+                                permission.isGranted('Pages.Facilities.Delete') &&
+                                (record.facilityType == FacilityTypeEnum.Facility ||
+                                  (record.facilityType != FacilityTypeEnum.Facility && isTachyonDealerOrHost))
+                              "
                               (click)="deleteFacility(record.facility)"
                               >{{ l('Delete') }}</a
                             >
@@ -272,6 +284,10 @@
                     <td>
                       <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.facility.name }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('FacilityType') }}</span>
+                      {{ record.facilityTypeTitle }}
                     </td>
                     <td width="20%">
                       <span class="ui-column-title"> {{ l('Address') }}</span>

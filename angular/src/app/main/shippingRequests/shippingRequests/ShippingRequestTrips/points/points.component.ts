@@ -8,10 +8,15 @@ import {
   PickingType,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
+  RoundTripType,
   RoutStepsServiceProxy,
   ShippingRequestDestinationCitiesDto,
+  ShippingRequestDto,
   ShippingRequestFlag,
   ShippingRequestRouteType,
+  ShippingTypeEnum,
+  TripAppointmentDataDto,
+  TripClearancePricesDto,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
@@ -27,6 +32,9 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 })
 export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy, AfterContentChecked {
   // @Output() SelectedWayPointsFromChild = this.wayPointsList;
+  @Input('isPortMovement') isPortMovement = false;
+  @Input('isEdit') isEdit = false;
+  @Input() shippingRequest: ShippingRequestDto;
   @Output() wayPointsListChanged: EventEmitter<any> = new EventEmitter<any>();
   shippingRequestId: number;
   DestCitiesDtos: ShippingRequestDestinationCitiesDto[];
@@ -66,6 +74,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   @Input('isHomeDelivery') isHomeDelivery: boolean;
   shippingRequestFlagEnum = ShippingRequestFlag;
   paymentMethodsArray = [];
+  RoundTripType = RoundTripType;
+  ShippingTypeEnum = ShippingTypeEnum;
 
   constructor(
     injector: Injector,
@@ -80,6 +90,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   ngOnInit() {
+    console.log('isPortMovement', this.isPortMovement);
     this.loadSharedServices();
     this.loadDropDowns();
     this.paymentMethodsArray = this.enumToArray.transform(DropPaymentMethod);
@@ -115,22 +126,24 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     }
     this.DestCitiesDtos = this._tripService.GetShippingRequestForViewOutput.destinationCitiesDtos;
 
-    this._routStepsServiceProxy
-      .getAllFacilitiesByCityAndTenantForDropdown(this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id)
-      .pipe(
-        finalize(() => {
-          this.facilityLoading = false;
-        })
-      )
-      .subscribe((result) => {
-        this.allFacilities = result;
-        this.dropFacilities = result;
-        this.pickupFacilities = result.filter((r) => {
-          return this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === 0
-            ? r.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId
-            : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
+    if (!this.isCarrier) {
+      this._routStepsServiceProxy
+        .getAllFacilitiesByCityAndTenantForDropdown(this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id)
+        .pipe(
+          finalize(() => {
+            this.facilityLoading = false;
+          })
+        )
+        .subscribe((result) => {
+          this.allFacilities = result;
+          this.dropFacilities = result;
+          this.pickupFacilities = result.filter((r) => {
+            return this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === 0
+              ? r.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId
+              : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
+          });
         });
-      });
+    }
   }
 
   /**
@@ -215,6 +228,36 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     //if there is already wayPoints Dont Create Empty Once
     console.log('this.wayPointsList.length == numberOfDrops + 1', this.wayPointsList.length == numberOfDrops + 1);
     if (this.wayPointsList.length == numberOfDrops + 1) return;
+    // for (let i = 0; i <= numberOfDrops; i++) {
+    //   let point = new CreateOrEditRoutPointDto();
+    //   //pickup Point
+    //   if (i === 0) {
+    //     point.pickingType = this.PickingType.Pickup;
+    //   } else {
+    //     point.pickingType = this.PickingType.Dropoff;
+    //   }
+    //   point.dropPaymentMethod = selectedPaymentMethodId;
+    //   point.needsPOD = false;
+    //   point.needsReceiverCode = false;
+    //   this.wayPointsList.push(point);
+    // } //end of for
+    if (!this.isPortMovement) {
+      this.addPointsToWayPointList(numberOfDrops, selectedPaymentMethodId);
+      return;
+    }
+    for (let i = 0; i < numberOfDrops; i++) {
+      this.addPointsToWayPointList(1, selectedPaymentMethodId);
+    }
+    if (
+      this._tripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
+      !this.isCarrier
+    ) {
+      this.wayPointsList[0].facilityId = this._tripService.GetShippingRequestForViewOutput.shippingRequest.originFacilityId;
+      this.loadReceivers(this._tripService.GetShippingRequestForViewOutput.shippingRequest.originFacilityId);
+    }
+  }
+
+  private addPointsToWayPointList(numberOfDrops: number, selectedPaymentMethodId: number) {
     for (let i = 0; i <= numberOfDrops; i++) {
       let point = new CreateOrEditRoutPointDto();
       //pickup Point
@@ -227,7 +270,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
       point.needsPOD = false;
       point.needsReceiverCode = false;
       this.wayPointsList.push(point);
-    } //end of for
+    }
   }
 
   private loadSharedServices() {
@@ -259,6 +302,11 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   RouteStepCordSetter(pointIndex: number, facilityId: number) {
     this.wayPointsList[pointIndex].latitude = this.allFacilities.find((x) => x.id == facilityId)?.lat;
     this.wayPointsList[pointIndex].longitude = this.allFacilities.find((x) => x.id == facilityId)?.long;
+  }
+
+  savedAppointmentsAndClearance($event: { tripAppointment: TripAppointmentDataDto; tripClearance: TripClearancePricesDto; pointIndex: number }) {
+    this.wayPointsList[$event.pointIndex].appointmentDataDto = $event.tripAppointment;
+    this.wayPointsList[$event.pointIndex].tripClearancePricesDto = $event.tripClearance;
   }
 
   ngOnDestroy() {

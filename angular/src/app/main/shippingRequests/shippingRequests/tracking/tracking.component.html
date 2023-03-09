@@ -26,9 +26,11 @@
           <div>
             <div
               [class]="
-                item.shippingRequestFlag === ShippingRequestFlagEnum.Normal
+                item.shippingRequestFlag === ShippingRequestFlagEnum.Normal &&
+                item.shippingType != ShippingTypeEnum.ImportPortMovements &&
+                item.shippingType != ShippingTypeEnum.ExportPortMovements
                   ? 'card card-custom pt-4'
-                  : 'card card-custom ribbon ribbon-clip ribbon-left pt-4'
+                  : 'card card-custom ribbon ribbon-clip ribbon-left pt-6'
               "
               [busyIf]="loadingTripId === item.id"
             >
@@ -37,9 +39,14 @@
                 style="top: 12px"
                 [style.left]="isRtl ? 'auto !important' : ''"
                 [style.right]="isRtl ? '-10px !important' : ''"
-                *ngIf="item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
+                *ngIf="
+                  item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
+                  item.shippingType == ShippingTypeEnum.ImportPortMovements ||
+                  item.shippingType == ShippingTypeEnum.ExportPortMovements
+                "
               >
-                <span class="ribbon-inner bg-warning"></span> {{ 'DedicatedShippingRequest' | localize }}
+                <span class="ribbon-inner {{ item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ? 'bg-warning' : 'bg-danger' }}"></span>
+                {{ (item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ? 'DedicatedShippingRequest' : 'PortsMovement') | localize }}
               </div>
               <div class="card-body ribbon ribbon-top">
                 <!--                <div class="ribbon-target bg-danger" style="top: -2px; right: 20px">Ribbon</div>-->
@@ -235,7 +242,16 @@
                 <!--begin::Bottom-->
                 <div class="d-flex align-items-center flex-wrap">
                   <!--begin: Item-->
-                  <div class="d-flex align-items-center flex-lg-fill mr-5 my-1" *ngIf="item.shippingRequestFlag === ShippingRequestFlagEnum.Normal">
+                  <div
+                    class="d-flex align-items-center flex-lg-fill mr-5 my-1"
+                    *ngIf="
+                      (item.shippingRequestFlag === ShippingRequestFlagEnum.Normal &&
+                        item.shippingType !== ShippingTypeEnum.ImportPortMovements &&
+                        item.shippingType !== ShippingTypeEnum.ExportPortMovements) ||
+                      ((item.shippingType == ShippingTypeEnum.ImportPortMovements || item.shippingType == ShippingTypeEnum.ExportPortMovements) &&
+                        item.routeTypeId == routeTypeEnum.SingleDrop)
+                    "
+                  >
                     <span class="mr-4">
                       <i class="flaticon-map-location icon-2x text-muted font-weight-bold"></i>
                     </span>
@@ -286,7 +302,14 @@
                   </div>
                   <!--end: Item-->
                   <!--begin: Item-->
-                  <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                  <div
+                    class="d-flex align-items-center flex-lg-fill mr-5 my-1"
+                    *ngIf="
+                      (item.shippingType !== ShippingTypeEnum.ImportPortMovements && item.shippingType !== ShippingTypeEnum.ExportPortMovements) ||
+                      ((item.shippingType == ShippingTypeEnum.ImportPortMovements || item.shippingType == ShippingTypeEnum.ExportPortMovements) &&
+                        item.routeTypeId == routeTypeEnum.SingleDrop)
+                    "
+                  >
                     <span class="mr-4">
                       <i class="flaticon-placeholder icon-2x text-muted font-weight-bold"></i>
                     </span>

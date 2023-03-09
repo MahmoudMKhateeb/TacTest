@@ -142,14 +142,20 @@
           <!--  end::Trip Goods Approximate Value -->
           <div class="col-lg-6">
             <div class="form-group row">
-              <div class="col-6 col-form-label">
+              <div class="col-6 col-form-label" *ngIf="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal && !isPortMovement">
                 <label for="DeliveryNote"> {{ l('DeliveryNote') }} </label>
                 <select name="DeliveryNote" id="DeliveryNote" [(ngModel)]="trip.needsDeliveryNote" class="form-control" disabled>
                   <option [ngValue]="true">{{ l('Yes') }}</option>
                   <option [ngValue]="false">{{ l('No') }}</option>
                 </select>
               </div>
-              <div class="col-6 col-form-label">
+              <div
+                [class]="
+                  trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal && !isPortMovement
+                    ? 'col-6 col-form-label'
+                    : 'col-12 col-form-label'
+                "
+              >
                 <label for="Attachment">{{ l('Attachment') }} </label>
                 <select name="Attachment" id="Attachment" [(ngModel)]="trip.hasAttachment" class="form-control" disabled>
                   <option [ngValue]="true">{{ l('Yes') }}</option>
@@ -299,6 +305,22 @@
               </button>
             </div>
           </ng-container>
+          <ng-container *ngIf="isPortMovement && trip.tripManifestDataDto">
+            <div class="col-12">
+              <div class="d-flex">
+                <div class="form-group mt-7 d-flex flex-column justify-content-center">
+                  {{ l('TripManifest') }}: {{ trip.tripManifestDataDto.documentName }}
+                </div>
+                &nbsp;&nbsp;
+                <div class="form-group mt-7 align-items-end">
+                  <button class="btn btn-danger btn-shadow-hover font-weight-bold mr-2" (click)="downloadTripManifest()">
+                    <i class="fa fa-download"></i>
+                    {{ l('Download') }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
 
           <!--   EndOf::Driver&Truck -->
           <!--  start:: Notes-->
@@ -364,6 +386,7 @@
           <!--  start:: RouteSteps -->
           <PointsComponent
             *ngIf="viewTripDetails.isShown"
+            [isPortMovement]="isPortMovement"
             [isHomeDelivery]="trip.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
           ></PointsComponent>
           <!--  end:: RouteSteps -->

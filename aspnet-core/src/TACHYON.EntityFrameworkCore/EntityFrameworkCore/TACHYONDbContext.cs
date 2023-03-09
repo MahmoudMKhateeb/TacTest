@@ -1,4 +1,4 @@
-﻿using TACHYON.Integration.BayanIntegration;
+using TACHYON.Integration.BayanIntegration;
 using TACHYON.Regions;
 using TACHYON.Actors;
 using Abp.IdentityServer4;
@@ -99,6 +99,7 @@ using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
 using TACHYON.DedicatedDynamicActorInvoices;
 using TACHYON.DedicatedDynamicActorInvoices.DedicatedDynamicActorInvoiceItems;
 using TACHYON.PricePackages.PricePackageOffers;
+using TACHYON.Tracking.AdditionalSteps;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -344,6 +345,7 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<PricePackageAppendix> Appendixes { get; set; }
 
         public DbSet<PricePackageOffer> TmsPricePackageOffers { get; set; }
+        public DbSet<AdditionalStepTransition> AdditionalStepTransitions { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;

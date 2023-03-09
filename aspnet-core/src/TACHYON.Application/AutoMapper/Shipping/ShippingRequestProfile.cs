@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using System;
 using System.Linq;
 using TACHYON.Actors;
@@ -30,7 +30,7 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dest => dest.ShippingRequestBidDtoList, opt => opt.Ignore())
                 .ForMember(dest => dest.AssignedTruckDto, opt => opt.MapFrom(src => src.AssignedTruckFk))
                 .ForMember(dest => dest.VasCount, opt => opt.MapFrom(src => src.ShippingRequestVases.Count))
-                //.ForMember(dest => dest.OriginalCityName, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
+                .ForMember(dest => dest.OriginalCityName, opt => opt.MapFrom(src => src.OriginFacilityId !=null ? $"{src.OriginFacility.Name} {src.OriginFacility.CityFk.DisplayName}" : src.OriginCityFk.DisplayName))
                 .ForMember(dest => dest.OriginalCityId, opt => opt.MapFrom(src => src.OriginCityFk.Id))
                 //.ForMember(dest => dest.DestinationCityName,
                 //    opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
@@ -47,7 +47,7 @@ namespace TACHYON.AutoMapper.Shipping
                 //.ForMember(dest => dest.TransportTypeDisplayName,
                 //    opt => opt.MapFrom(src => src.TransportTypeFk.DisplayName))
                 .ForMember(dest => dest.ShippingTypeDisplayName,
-                    opt => opt.MapFrom(src => src.ShippingTypeFk.DisplayName))
+                    opt => opt.MapFrom(src => src.ShippingTypeId.GetEnumDescription()))
                 .ForMember(dest => dest.packingTypeDisplayName,
                     opt => opt.MapFrom(src => src.PackingTypeFk.DisplayName))
                 .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
@@ -55,16 +55,27 @@ namespace TACHYON.AutoMapper.Shipping
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
                 .ForMember(dst => dst.RentalDurationUnitTitle,
                     opt => opt.MapFrom(src => Enum.GetName(typeof(TimeUnit), src.RentalDurationUnit)))
+                 .ForMember(dst => dst.OriginFacilityTitle,
+                    opt => opt.MapFrom(src => src.OriginFacility != null ? $"{src.OriginFacility.Name} {src.OriginFacility.CityFk.DisplayName}" :"" ))
+                 
+                .ForMember(dst => dst.RoundTripTypeTitle,
+                    opt => opt.MapFrom(src => src.RoundTripType != null ? src.RoundTripType.GetEnumDescription() : ""))
                 .ForMember(dest => dest.IsCarrierActorMyself, opt => opt.MapFrom(x => x.CarrierActorFk.ActorType == ActorTypesEnum.MySelf))
                 .ForMember(dest => dest.IsShipperActorMyself, opt => opt.MapFrom(x => x.ShipperActorFk.ActorType == ActorTypesEnum.MySelf));
             //.AfterMap(AssignTruckTypeFullName);
 
             CreateMap<ShippingRequest, GetShippingRequestForPricingOutput>()
                 .ForMember(dst => dst.Shipper, opt => opt.MapFrom(src => src.Tenant.Name))
-                .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
+                .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src =>src.OriginFacilityId !=null ?$"{src.OriginFacility.Name} - {src.OriginCityFk.DisplayName}" : src.OriginCityFk.DisplayName))
                 //.ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities.First().CityFk.DisplayName))
                 .ForMember(dst => dst.RangeDate,
-                    opt => opt.MapFrom(src => GetDateRange(src.StartTripDate, src.EndTripDate)));
+                    opt => opt.MapFrom(src => GetDateRange(src.StartTripDate, src.EndTripDate)))
+                .ForMember(dst => dst.OriginFacilityTitle,
+                    opt => opt.MapFrom(src => src.OriginFacility != null ? $"{src.OriginFacility.Name} {src.OriginFacility.CityFk.DisplayName}" : ""))
+                .ForMember(dst => dst.ShippingTypeTitle, opt => opt.MapFrom(src => src.ShippingTypeId.GetEnumDescription()))
+                .ForMember(dst => dst.RoundTripTitle, opt => opt.MapFrom(src => src.RoundTripType != null ? src.RoundTripType.GetEnumDescription() :""))
+                .ForMember(dst => dst.PackingTypeTitle, opt => opt.MapFrom(src => src.PackingTypeFk.DisplayName))
+                ;
 
 
             CreateMap<CreateOrEditShippingRequestStep1Dto, ShippingRequest>()

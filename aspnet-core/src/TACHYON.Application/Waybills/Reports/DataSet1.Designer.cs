@@ -335,6 +335,10 @@ namespace TACHYON.Waybills.Reports {
             
             private global::System.Data.DataColumn columnSealNumber;
             
+            private global::System.Data.DataColumn columnMultipleDropsOrTripsLable;
+            
+            private global::System.Data.DataColumn columnMultipleDropsOrTripsLableAr;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public TrucksDataTable() {
@@ -594,6 +598,22 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn MultipleDropsOrTripsLableColumn {
+                get {
+                    return this.columnMultipleDropsOrTripsLable;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn MultipleDropsOrTripsLableArColumn {
+                get {
+                    return this.columnMultipleDropsOrTripsLableAr;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -657,7 +677,9 @@ namespace TACHYON.Waybills.Reports {
                         string ShipperNotes, 
                         string ShipperInvoiceNo, 
                         string ContainerNumber, 
-                        string SealNumber) {
+                        string SealNumber, 
+                        string MultipleDropsOrTripsLable, 
+                        string MultipleDropsOrTripsLableAr) {
                 TrucksRow rowTrucksRow = ((TrucksRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Date,
@@ -687,7 +709,9 @@ namespace TACHYON.Waybills.Reports {
                         ShipperNotes,
                         ShipperInvoiceNo,
                         ContainerNumber,
-                        SealNumber};
+                        SealNumber,
+                        MultipleDropsOrTripsLable,
+                        MultipleDropsOrTripsLableAr};
                 rowTrucksRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTrucksRow);
                 return rowTrucksRow;
@@ -738,6 +762,8 @@ namespace TACHYON.Waybills.Reports {
                 this.columnShipperInvoiceNo = base.Columns["ShipperInvoiceNo"];
                 this.columnContainerNumber = base.Columns["ContainerNumber"];
                 this.columnSealNumber = base.Columns["SealNumber"];
+                this.columnMultipleDropsOrTripsLable = base.Columns["MultipleDropsOrTripsLable"];
+                this.columnMultipleDropsOrTripsLableAr = base.Columns["MultipleDropsOrTripsLableAr"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -799,6 +825,10 @@ namespace TACHYON.Waybills.Reports {
                 base.Columns.Add(this.columnContainerNumber);
                 this.columnSealNumber = new global::System.Data.DataColumn("SealNumber", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSealNumber);
+                this.columnMultipleDropsOrTripsLable = new global::System.Data.DataColumn("MultipleDropsOrTripsLable", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnMultipleDropsOrTripsLable);
+                this.columnMultipleDropsOrTripsLableAr = new global::System.Data.DataColumn("MultipleDropsOrTripsLableAr", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnMultipleDropsOrTripsLableAr);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1389,6 +1419,38 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string MultipleDropsOrTripsLable {
+                get {
+                    try {
+                        return ((string)(this[this.tableTrucks.MultipleDropsOrTripsLableColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'MultipleDropsOrTripsLable\' in table \'Trucks\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTrucks.MultipleDropsOrTripsLableColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string MultipleDropsOrTripsLableAr {
+                get {
+                    try {
+                        return ((string)(this[this.tableTrucks.MultipleDropsOrTripsLableArColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'MultipleDropsOrTripsLableAr\' in table \'Trucks\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTrucks.MultipleDropsOrTripsLableArColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsDateNull() {
                 return this.IsNull(this.tableTrucks.DateColumn);
             }
@@ -1721,6 +1783,30 @@ namespace TACHYON.Waybills.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetSealNumberNull() {
                 this[this.tableTrucks.SealNumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsMultipleDropsOrTripsLableNull() {
+                return this.IsNull(this.tableTrucks.MultipleDropsOrTripsLableColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetMultipleDropsOrTripsLableNull() {
+                this[this.tableTrucks.MultipleDropsOrTripsLableColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsMultipleDropsOrTripsLableArNull() {
+                return this.IsNull(this.tableTrucks.MultipleDropsOrTripsLableArColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetMultipleDropsOrTripsLableArNull() {
+                this[this.tableTrucks.MultipleDropsOrTripsLableArColumn] = global::System.Convert.DBNull;
             }
         }
         

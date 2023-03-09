@@ -7,6 +7,9 @@ import {
   ShippingRequestsServiceProxy,
   ShippingRequestStatus,
   ShippingRequestType,
+  ShippingTypeEnum,
+  RoundTripType,
+  ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
@@ -39,6 +42,9 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   type = 'ShippingRequest';
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequests'), '/app/main/shippingRequests/shippingRequests')];
   rentalRange: { rentalStartDate: moment.Moment; rentalEndDate: moment.Moment } = null;
+  ShippingTypeEnum = ShippingTypeEnum;
+  RoundTripType = RoundTripType;
+  ShippingRequestRouteType = ShippingRequestRouteType;
 
   constructor(
     injector: Injector,

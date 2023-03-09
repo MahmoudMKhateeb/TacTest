@@ -67,7 +67,7 @@ namespace TACHYON.Notifications
             long TripId,
             string PickupFacilityName);
 
-        Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request);
+        Task ShipperShippingRequestFinish(UserIdentifier argsUser, long requestId);
 
         #region Trips
 

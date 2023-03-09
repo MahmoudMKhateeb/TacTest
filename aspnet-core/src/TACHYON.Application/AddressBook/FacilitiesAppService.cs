@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
@@ -19,6 +19,7 @@ using TACHYON.Cities.Dtos;
 using TACHYON.Countries.CountriesTranslations.Dtos;
 using TACHYON.Dto;
 using TACHYON.MultiTenancy.Dto;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.AddressBook
 {
@@ -43,8 +44,7 @@ namespace TACHYON.AddressBook
 
         public async Task<PagedResultDto<GetFacilityForViewOutput>> GetAll(GetAllFacilitiesInput input)
         {
-            DisableTenancyFiltersIfHost();
-            await DisableTenancyFiltersIfTachyonDealer();
+            DisableTenancyFilters();
 
 
             var filteredFacilities = _facilityRepository.GetAll()
@@ -55,6 +55,7 @@ namespace TACHYON.AddressBook
                 .ThenInclude(x=>x.Translations)
                 .Include(x=>x.FacilityWorkingHours)
                 .Include(x=>x.Tenant)
+                .WhereIf(!await IsTachyonDealer(), x => (x.FacilityType == FacilityType.Facility && x.TenantId == AbpSession.TenantId) || x.FacilityType != FacilityType.Facility)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue,
                     i => i.CreationTime >= input.FromDate && i.CreationTime <= input.ToDate)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
@@ -79,12 +80,15 @@ namespace TACHYON.AddressBook
                         Address = o.Address,
                         Longitude = o.Location.X,
                         Latitude = o.Location.Y,
-                        Id = o.Id
+                        Id = o.Id,
+                        FacilityType = o.FacilityType,
                     },
                     CityDisplayName =  ObjectMapper.Map<CityDto>(o.CityFk).TranslatedDisplayName,
                     Country = ObjectMapper.Map<CountriesTranslationDto>(o.CityFk.CountyFk).TranslatedDisplayName ,
                     CreationTime = o.CreationTime,
                     ShipperName = o.Tenant.TenancyName,
+                    FacilityType = o.FacilityType,
+                    FacilityTypeTitle = o.FacilityType.GetEnumDescription(),
                     ActorName = o.ShipperActorFk != null ?o.ShipperActorFk.CompanyName :"",
                     FacilityWorkingHours = ObjectMapper.Map<List<FacilityWorkingHourDto>>(o.FacilityWorkingHours)
                 };
@@ -117,6 +121,7 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Edit)]
         public async Task<GetFacilityForEditOutput> GetFacilityForEdit(EntityDto<long> input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
             var facility = await _facilityRepository.GetAll()
                 .Include(x=>x.FacilityWorkingHours)
                 .FirstOrDefaultAsync(x=> x.Id==input.Id);
@@ -143,6 +148,7 @@ namespace TACHYON.AddressBook
         public async Task<long> CreateOrEdit(CreateOrEditFacilityDto input)
         {
             await ValidateFacilityName(input);
+            
             if(!await IsTachyonDealer())
             {
                 input.ShipperId = null;
@@ -160,6 +166,10 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Create)]
         protected virtual async Task<long> Create(CreateOrEditFacilityDto input)
         {
+            if (!await IsTachyonDealer() && AbpSession.TenantId != null)
+            {
+                input.FacilityType = FacilityType.Facility;
+            }
             var point = default(Point);
             if (input.Longitude!=null && input.Latitude != null)
             {
@@ -177,7 +187,14 @@ namespace TACHYON.AddressBook
             }
             else
             {
-                facility.TenantId = AbpSession.TenantId;
+                if(await IsTachyonDealer() && facility.FacilityType != FacilityType.Facility)
+                {
+                    facility.TenantId = null;
+                }
+                else
+                {
+                    facility.TenantId = AbpSession.TenantId;
+                }
             }
 
             return await _facilityRepository.InsertAndGetIdAsync(facility);
@@ -186,6 +203,11 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Edit)]
         protected virtual async Task<long> Update(CreateOrEditFacilityDto input)
         {
+            await DisableTenancyFiltersIfTachyonDealer();
+            if(!await IsTachyonDealer() && AbpSession.TenantId != null && input.FacilityType != FacilityType.Facility)
+            {
+                throw new UserFriendlyException(L("UpdateDenied"));
+            }
             var facility = await _facilityRepository.GetAll().Include(x => x.FacilityWorkingHours).FirstOrDefaultAsync(x => x.Id == (long)input.Id);
 
             await RemoveDeletedWorkingHours(input, facility);
@@ -193,6 +215,17 @@ namespace TACHYON.AddressBook
             if((await IsTachyonDealer() || AbpSession.TenantId == null) && input.ShipperId!=null)
             {
                 facility.TenantId = input.ShipperId;
+            }
+            else
+            {
+                if (await IsTachyonDealer() && facility.FacilityType != FacilityType.Facility)
+                {
+                    facility.TenantId = null;
+                }
+                else
+                {
+                    facility.TenantId = AbpSession.TenantId;
+                }
             }
             return facility.Id;
         }
@@ -252,6 +285,20 @@ namespace TACHYON.AddressBook
                     DisplayName = city == null || city.DisplayName == null ? "" : city.DisplayName.ToString()
                 }).ToListAsync();
         }
+
+        public async Task<List<SelectFacilityItemDto>> GetAllPortsForTableDropdown()
+        {
+            DisableTenancyFilters();
+            return await _facilityRepository.GetAll().Include(x=>x.CityFk).Where(x=>x.FacilityType == FacilityType.Port)
+                .Select(item => new SelectFacilityItemDto
+                {
+                    Id = item.Id.ToString(),
+                    DisplayName = item == null || item.Name == null ? "" : $"{item.Name} - {item.CityFk.DisplayName}",
+                    CityId = item.CityId
+                }).ToListAsync();
+        }
+
+
 
         private async Task ValidateFacilityName(CreateOrEditFacilityDto input)
         {

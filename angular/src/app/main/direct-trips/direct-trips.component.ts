@@ -15,7 +15,7 @@ export class DirectTripsComponent extends AppComponentBase implements OnInit {
   @ViewChild('AddNewTripModal', { static: true }) addNewTripModal: CreateOrEditTripComponent;
   popupPosition: any = { of: window, at: 'top', my: 'top', offset: { y: 10 } };
   dataSource: any = {};
-  shippingRequest: ShippingRequestDto = new ShippingRequestDto({
+  shippingRequest: ShippingRequestDto = ShippingRequestDto.fromJS({
     splitInvoiceFlag: '',
     bidEndDate: undefined,
     bidStartDate: undefined,

@@ -17,6 +17,7 @@ import {
   CreateSrUpdateActionInputDto,
   CreateOrEditPriceOfferInput,
   ShippingRequestFlag,
+  ShippingTypeEnum,
 } from '@shared/service-proxies/service-proxies';
 import { LazyLoadEvent } from 'primeng/api';
 import { Table } from '@node_modules/primeng/table';
@@ -51,6 +52,7 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
   direction: string;
   Items: PriceOfferItemDto[] = [];
   shippingRequestFlagEnum = ShippingRequestFlag;
+  shippingTypeEnum = ShippingTypeEnum;
   shippingrequest: GetShippingRequestForPriceOfferListDto = new GetShippingRequestForPriceOfferListDto();
   constructor(
     injector: Injector,

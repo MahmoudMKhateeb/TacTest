@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using TACHYON.Routs.RoutPoints;
@@ -28,7 +29,15 @@ namespace TACHYON.Tracking.Dto
         public long? WaybillNumber { get; set; }
 
         public string ReceiverCode { get; set; }
+        public int? PointOrder { get; set; }
+
+        public bool IsHasAdditionalSteps { get; set; }
         public List<RoutPointTransactionDto> Statues { get; set; }
         public List<PointTransactionDto> AvailableTransactions { get; set; }
+
+        public List<AdditionalStepDto> AvailableSteps { get; set; }
+
+        [JsonIgnore]
+        public int? AdditionalStepWorkFlowVersion { get; set; }
     }
 }

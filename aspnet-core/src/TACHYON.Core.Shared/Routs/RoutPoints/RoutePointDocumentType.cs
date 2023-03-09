@@ -8,6 +8,10 @@ namespace TACHYON.Routs.RoutPoints
     {
         POD = 1,
         DeliveryNote = 2,
-        DeliveryGood = 3
+        DeliveryGood = 3,
+        Appointment = 4,
+        Manifest = 5,
+        ConfirmationDocuments = 6,
+        Eir = 7,
     }
 }

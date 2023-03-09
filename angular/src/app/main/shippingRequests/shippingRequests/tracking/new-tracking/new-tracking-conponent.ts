@@ -1,16 +1,19 @@
-import { Component, ElementRef, Injector, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
+  AdditionalStepTransitionDto,
   GetAllUploadedFileDto,
   InvokeStatusInputDto,
   PickingType,
   PointTransactionDto,
+  RoutePointStatus,
   RoutPointTransactionDto,
   ShippingRequestRouteType,
   ShippingRequestTripDriverStatus,
   ShippingRequestTripFlag,
   ShippingRequestTripStatus,
   ShippingRequestType,
+  ShippingTypeEnum,
   TrackingListDto,
   TrackingRoutePointDto,
   TrackingServiceProxy,
@@ -27,6 +30,10 @@ import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { DriverLocation, FirebaseHelperClass, trackingIconsList } from '@app/main/shippingRequests/shippingRequests/tracking/firebaseHelper.class';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
+import { Timeline } from '@node_modules/primeng/timeline';
+import { CustomStep } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-timeline/custom-step';
+import * as moment from '@node_modules/moment';
+import { UploadAdditionalDocumentsComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/upload-additional-documents/upload-additional-documents.component';
 
 @Component({
   selector: 'new-tracking-conponent',
@@ -35,11 +42,13 @@ import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.com
   providers: [NgbDropdownConfig],
   animations: [appModuleAnimation()],
 })
-export class NewTrackingConponent extends AppComponentBase implements OnChanges {
+export class NewTrackingConponent extends AppComponentBase implements OnChanges, OnInit {
   @ViewChild('modelconfirm', { static: false }) modelConfirmCode: TrackingConfirmModalComponent;
   @ViewChild('modelpod', { static: false }) modelpod: TrackingPODModalComponent;
   @ViewChild('appEntityLog', { static: false }) activityLogModal: EntityLogComponent;
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
+  @ViewChild('timeline', { static: false }) timeline: Timeline;
+  @ViewChild('additionalDocumentsComponent', { static: false }) additionalDocumentsComponent: UploadAdditionalDocumentsComponent;
 
   @Input() trip: TrackingListDto = new TrackingListDto();
   active = false;
@@ -65,6 +74,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   busyPointId: number;
   loadPodForPointId: number;
   pointPodList: GetAllUploadedFileDto[];
+  pointAdditionalFilesList: GetAllUploadedFileDto[] = [];
   deliveryGoodPictureId: number;
   mapToggle = true;
   newReceiverCode: string;
@@ -79,6 +89,10 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
   trackingIconsList = trackingIconsList;
   driverOnline: boolean;
   TripFlag = ShippingRequestTripFlag;
+  shippingType: ShippingTypeEnum;
+  ShippingTypeEnum = ShippingTypeEnum;
+  RoutePointStatus = RoutePointStatus;
+  additionalFilesTransitions: { pointId: number; transactions: AdditionalStepTransitionDto[] }[] = [];
 
   constructor(
     injector: Injector,
@@ -92,6 +106,15 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     super(injector);
     config.autoClose = true;
     config.container = 'body';
+  }
+
+  ngOnInit() {
+    abp.event.on('FileUploadedSuccessFromAdditionalSteps', () => {
+      this.getForView();
+    });
+    abp.event.on('trackingConfirmCodeSubmittedFromAdditionalSteps', () => {
+      this.getForView();
+    });
   }
 
   /**
@@ -169,6 +192,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    */
   getForView() {
     this.pointsIsLoading = true;
+    this.additionalFilesTransitions = [];
     this._trackingServiceProxy
       .getForView(this.trip.id)
       .pipe(
@@ -182,6 +206,22 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
         this.trip.driverStatus = result.driverStatus;
         this.trip.statusTitle = result.statusTitle;
         this.routePoints = result.routPoints;
+        this.shippingType = result.shippingType;
+        if (this.shippingType === ShippingTypeEnum.ExportPortMovements || this.shippingType === ShippingTypeEnum.ImportPortMovements) {
+          result.routPoints.filter((item) => {
+            if (item.pickingType === PickingType.Dropoff) {
+              this.getAllPointAdditionalFilesTransitions(item);
+              item.statues.push(
+                RoutPointTransactionDto.fromJS({
+                  status: 0,
+                  isDone: false,
+                  name: this.l('UploadRequiredFiles'),
+                  creationTime: null,
+                })
+              );
+            }
+          });
+        }
         if (result.status === this.tripStatusesEnum.Delivered) {
           this.emitToMobileApplication('TripIsDelivered', null, 'delete');
         }
@@ -380,7 +420,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
    */
   downloadPOD(pod: GetAllUploadedFileDto): void {
     let image = this._fileDownloadService.downloadFileByBinary(pod.documentId, pod.fileName, pod.fileType);
-    this.fileViwerComponent.show(image, 'img');
+    this.fileViwerComponent.show(image, pod.fileType == 'application/pdf' ? 'pdf' : 'img');
   }
 
   showPointLog(pointId: number) {
@@ -499,5 +539,35 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges 
     } else if (mode === 'write') {
       helper.assignDriverToTrip(this.trip, point, this.appSession.tenantId, transaction);
     }
+  }
+
+  invokeUploadStep(point: TrackingRoutePointDto, transaction: PointTransactionDto) {
+    console.log('invokeUploadStep', true);
+    console.log('invokeUploadStep point', point);
+    console.log('invokeUploadStep transaction', transaction);
+    this.additionalDocumentsComponent.show(point);
+  }
+
+  getAllPointAdditionalFilesTransitions(point: TrackingRoutePointDto) {
+    this._trackingServiceProxy.getAllPointAdditionalFilesTransitions(point.id).subscribe((res) => {
+      this.additionalFilesTransitions.push({ pointId: point.id, transactions: res });
+      console.log('point', point);
+    });
+  }
+
+  getPointFile(pointId: number, transition: AdditionalStepTransitionDto) {
+    this._trackingServiceProxy.getPointFile(pointId, transition.routePointDocumentType).subscribe((res) => {
+      this.pointAdditionalFilesList = res;
+    });
+  }
+
+  getTransactionsForPoint(pointId): AdditionalStepTransitionDto[] {
+    if (this.additionalFilesTransitions.length > 0) {
+      const found = this.additionalFilesTransitions.find((point) => point.pointId == pointId);
+      if (isNotNullOrUndefined(found)) {
+        return found.transactions;
+      }
+    }
+    return [];
   }
 }

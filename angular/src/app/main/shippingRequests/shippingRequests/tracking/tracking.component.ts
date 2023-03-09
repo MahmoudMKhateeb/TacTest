@@ -12,6 +12,7 @@ import {
   ShippingRequestTripFlag,
   ShippingRequestTripStatus,
   ShippingRequestType,
+  ShippingTypeEnum,
   TrackingListDto,
   TrackingServiceProxy,
   WaybillsServiceProxy,
@@ -63,6 +64,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   loadingTripId: number;
   ShippingRequestFlagEnum = ShippingRequestFlag;
   TripFlag = ShippingRequestTripFlag;
+  ShippingTypeEnum = ShippingTypeEnum;
   private waybillNumber: number;
 
   constructor(

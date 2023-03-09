@@ -533,7 +533,7 @@ namespace TACHYON.Notifications
         }
 
 
-        public async Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request)
+        public async Task ShipperShippingRequestFinish(UserIdentifier argsUser, long requestId)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -541,7 +541,7 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                 )
             );
-            notificationData["requestid"] = Request.Id;
+            notificationData["requestid"] = requestId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperShippingRequestFinish,
                 notificationData,
                 userIds: new[] { argsUser });

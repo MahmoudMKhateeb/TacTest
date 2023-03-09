@@ -1,4 +1,6 @@
-﻿namespace TACHYON
+﻿using System.ComponentModel.Design.Serialization;
+
+namespace TACHYON
 {
     public class TACHYONConsts
     {
@@ -121,6 +123,11 @@
 
         #endregion
 
+        #region Vases
+        public const string AppointmentVasName = "Appointment";
+        public const string ClearanceVasName = "Custom Clearance";
+        public const string ContainerUOM = "Container";
+        #endregion
         #endregion
 
         public const string OthersDisplayName = "Others";
@@ -151,5 +158,8 @@
         public const string AppendixTemplateClientName = "$$ClientName$$";
         public const string AppendixTemplateScopeOverview = "$$ScopeOverview$$";
         public const string AppendixTemplateNotes = "$$Notes$$";
+
+        public const string GeneralGoods = "General Goods";
+        public const string EmptyContainer = "Empty Container";
     }
 }
