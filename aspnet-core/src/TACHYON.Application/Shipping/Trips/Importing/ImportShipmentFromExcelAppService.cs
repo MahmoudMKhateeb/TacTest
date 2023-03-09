@@ -155,7 +155,7 @@ namespace TACHYON.Shipping.Trips.Importing
             ValidateRoutePoints(importRoutePointDtoList,request);
             if (importRoutePointDtoList.All(x => string.IsNullOrEmpty(x.Exception)))
             {
-                await CreatePoints(importRoutePointDtoList);
+                await CreatePoints(importRoutePointDtoList, request);
             }
             else
             {
@@ -298,12 +298,12 @@ namespace TACHYON.Shipping.Trips.Importing
             return await _shippingRequestTripManager.CreatePointAsync(point);
         }
 
-        private async Task CreatePoints(List<ImportRoutePointDto> points)
+        private async Task CreatePoints(List<ImportRoutePointDto> points, ShippingRequest request)
         {
             foreach (var point in points)
             {
                 var pointDB = await CreatePointAsync(point);
-                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(point.TripNeedsDeliveryNote, ShippingRequestTripFlag.Normal, pointDB);
+                _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(point.TripNeedsDeliveryNote, ShippingRequestTripFlag.Normal,request?.ShippingTypeId,request?.RoundTripType, pointDB);
 
             }
 
