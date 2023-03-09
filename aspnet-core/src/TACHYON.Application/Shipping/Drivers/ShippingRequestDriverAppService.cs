@@ -358,7 +358,7 @@ namespace TACHYON.Shipping.Drivers
                  IsPodUploaded = x.IsPodUploaded,
                  WaybillNumber = x.WaybillNumber,
                  IsSaas = x.ShippingRequestTripFk.ShippingRequestId.HasValue ? x.ShippingRequestTripFk.ShippingRequestFk.IsSaas() : (x.ShippingRequestTripFk.CarrierTenantId == x.ShippingRequestTripFk.ShipperTenantId),
-                 AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
+                 AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status),
                  AdditionalStepWorkFlowVersion = x.AdditionalStepWorkFlowVersion
              }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
