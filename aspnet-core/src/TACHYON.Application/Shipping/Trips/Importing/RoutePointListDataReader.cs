@@ -74,11 +74,15 @@ namespace TACHYON.Shipping.Trips.Importing
                 var receiver = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                 row, 4, "Agent*", exceptionMessage);
                 point.Receiver = receiver.Trim();
-                var receiverId = GetReceiverId(receiver, exceptionMessage,facilityId.Value);
-                if (receiverId != null)
+                if (facilityId != null)
                 {
-                    point.ReceiverId = receiverId;
+                    var receiverId = GetReceiverId(receiver, exceptionMessage, facilityId.Value);
+                    if (receiverId != null)
+                    {
+                        point.ReceiverId = receiverId;
+                    }
                 }
+
 
                 //_shippingRequestTripManager.ValidateTripDto(trip, exceptionMessage);
 
@@ -89,7 +93,7 @@ namespace TACHYON.Shipping.Trips.Importing
             }
             catch (Exception exception)
             {
-                point.Exception = exception.Message;
+                point.Exception += exception.Message;
             }
 
             return point;

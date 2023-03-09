@@ -138,18 +138,18 @@ namespace TACHYON.Shipping.Trips.Importing
                     {
                         var sender = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                         row, 11, "Sender", exceptionMessage);
-                        trip.sender = sender.Trim();
-                        if (trip.OriginFacilityId != null)
+                        trip.sender = sender?.Trim();
+                        if (trip.OriginFacilityId != null && !string.IsNullOrEmpty(trip.sender))
                         {
-                            trip.SenderId = GetReceiverId(sender, exceptionMessage, trip.OriginFacilityId.Value);
+                            trip.SenderId = GetReceiverId(sender, exceptionMessage, trip.OriginFacilityId.Value, true);
                         }
 
                         var receiver = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
                         row, 12, "Receiver", exceptionMessage);
-                        trip.Receiver = receiver.Trim();
-                        if (trip.DestinationFacilityId != null)
+                        trip.Receiver = receiver?.Trim();
+                        if (trip.DestinationFacilityId != null && !string.IsNullOrEmpty(trip.Receiver))
                         {
-                            trip.ReceiverId = GetReceiverId(receiver, exceptionMessage, trip.DestinationFacilityId.Value);
+                            trip.ReceiverId = GetReceiverId(receiver, exceptionMessage, trip.DestinationFacilityId.Value, false);
                         }
                     }
 
@@ -213,12 +213,6 @@ namespace TACHYON.Shipping.Trips.Importing
                         if (goodCategoryId != null)
                             trip.GoodCategoryId = goodCategoryId;
                     }
-
-                    //driver
-
-
-
-
                   
                 }
                 else
@@ -240,7 +234,7 @@ namespace TACHYON.Shipping.Trips.Importing
                         trip.sender = sender.Trim();
                         if (trip.OriginFacilityId != null)
                         {
-                            trip.SenderId = GetReceiverId(sender, exceptionMessage, trip.OriginFacilityId.Value);
+                            trip.SenderId = GetReceiverId(sender, exceptionMessage, trip.OriginFacilityId.Value, true);
                         }
 
                         var receiver = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
@@ -248,7 +242,7 @@ namespace TACHYON.Shipping.Trips.Importing
                         trip.Receiver = receiver.Trim();
                         if (trip.DestinationFacilityId != null)
                         {
-                            trip.ReceiverId = GetReceiverId(receiver, exceptionMessage, trip.DestinationFacilityId.Value);
+                            trip.ReceiverId = GetReceiverId(receiver, exceptionMessage, trip.DestinationFacilityId.Value, false);
                         }
                     }
                 }
@@ -285,12 +279,12 @@ namespace TACHYON.Shipping.Trips.Importing
             return null;
         }
 
-        private int? GetReceiverId(string text, StringBuilder exceptionMessage, long facilityId)
+        private int? GetReceiverId(string text, StringBuilder exceptionMessage, long facilityId, bool isSender)
         {
             if (text.IsNullOrEmpty())
             {
                 exceptionMessage.Append(
-                    _tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Receiver"));
+                    _tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart(isSender?"Sender" :"Receiver"));
                 return null;
             }
 
@@ -299,7 +293,7 @@ namespace TACHYON.Shipping.Trips.Importing
             if (receiver != null)
                 return receiver;
 
-            exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Receiver"));
+            exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart(isSender ? "Sender" : "Receiver"));
             return null;
         }
 
