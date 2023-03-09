@@ -8,6 +8,6 @@ namespace TACHYON.Shipping.Trips.Importing.Dto
     {
         public int? TenantId { get; set; }
         public Guid BinaryObjectId { get; set; }
-        public long ShippingRequestId { get; set; }
+        public long? ShippingRequestId { get; set; }
     }
 }

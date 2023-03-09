@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Threading;
+using Abp.Timing;
 using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace TACHYON.Shipping.Trips.Importing
         private readonly ShippingRequestTripManager _shippingRequestTripManager;
         private readonly UserManager _userManager;
 
-        private long ShippingRequestId;
+        private long? ShippingRequestId;
         private bool IsSingleDropRequest;
         private bool IsDedicatedRequest;
 
@@ -35,7 +36,7 @@ namespace TACHYON.Shipping.Trips.Importing
             _userManager = userManager;
         }
 
-        public List<ImportTripDto> GetShipmentsFromExcel(byte[] fileBytes, long shippingRequestId, bool isSingleDropRequest, bool isDedicatedRequest)
+        public List<ImportTripDto> GetShipmentsFromExcel(byte[] fileBytes, long? shippingRequestId, bool isSingleDropRequest, bool isDedicatedRequest)
         {
             ShippingRequestId = shippingRequestId;
             IsSingleDropRequest = isSingleDropRequest;
@@ -54,7 +55,7 @@ namespace TACHYON.Shipping.Trips.Importing
             try
             {
                 trip.ShippingRequestId = ShippingRequestId;
-                var SR = _shippingRequestTripManager.GetShippingRequestById(trip.ShippingRequestId.Value);
+                var SR = trip.ShippingRequestId != null ? _shippingRequestTripManager.GetShippingRequestById(trip.ShippingRequestId.Value) :null;
 
                 //0
                 trip.BulkUploadRef = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
@@ -63,18 +64,12 @@ namespace TACHYON.Shipping.Trips.Importing
                 var startDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
                     row, 1, "Trip Pick up Date Start *", exceptionMessage);
                 var startTripDate = GetDateTimeValueFromTextOrNull(startDate);
-                if(startTripDate == null)
+                if(startTripDate == null )
                 {
-                    startTripDate = !IsDedicatedRequest ?  SR.StartTripDate : SR.RentalStartDate;
+                    startTripDate = Clock.Now.Date;
                 }
-                if((startTripDate == null || startTripDate == default(DateTime)))
-                {
-                    exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("StartTripDate"));
-                }
-                else
-                {
+
                     trip.StartTripDate = startTripDate;
-                }
 
                 //2
                 var endDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
@@ -102,6 +97,8 @@ namespace TACHYON.Shipping.Trips.Importing
                 //6
                 trip.HasAttachment = GetBoolValueFromYesOrNo(_tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
                     row, 6, "Has Attachment ?*", exceptionMessage));
+
+                //is dedicated request or saas trip
                 if (IsDedicatedRequest)
                 {
                     var routeType = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
@@ -156,21 +153,73 @@ namespace TACHYON.Shipping.Trips.Importing
                         }
                     }
 
-                    //driver
-                    var driver = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                        row, 13, "Driver*", exceptionMessage);
-                    trip.Driver = driver.Trim();
-                    var driverId = GetDriverId(driver, SR.CarrierTenantId, exceptionMessage);
-                    if(driverId !=null)
-                        trip.DriverUserId = driverId;
+                    string driver;
+                    string truck;
+                    if(ShippingRequestId != null)
+                    {
+                        //driver
+                         driver = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                             row, 13, "Driver*", exceptionMessage);
+                        //truck
+                         truck = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                        row, 14, "Truck*", exceptionMessage);
 
-                    //truck
-                    var truck = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
-                       row, 14, "Truck*", exceptionMessage);
-                    trip.Truck = truck.Trim();
-                    var truckId = GetTruckId(truck, SR.CarrierTenantId, exceptionMessage);
-                    if (truckId != null)
-                        trip.TruckId = truckId;
+                        trip.Driver = driver?.Trim();
+
+                        var driverId = GetDriverId(driver, SR?.CarrierTenantId, exceptionMessage);
+                        if (driverId != null)
+                            trip.DriverUserId = driverId;
+
+                        trip.Truck = truck?.Trim();
+
+                        var truckId = GetTruckId(truck, SR?.CarrierTenantId, exceptionMessage);
+                        if (truckId != null)
+                            trip.TruckId = truckId;
+                        
+                    }
+                    else
+                    {
+                        //driver
+                         driver = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                             row, 13, "Driver*", exceptionMessage);
+
+                        trip.Driver = driver?.Trim();
+                        if (!string.IsNullOrEmpty(trip.Driver))
+                        {
+                            var driverId = GetDriverId(driver, SR?.CarrierTenantId, exceptionMessage);
+                            if (driverId != null)
+                                trip.DriverUserId = driverId;
+                        }
+
+
+                        //truck
+                        truck = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
+                         row, 14, "Truck*", exceptionMessage);
+
+
+                        trip.Truck = truck?.Trim();
+                        if (!string.IsNullOrEmpty(trip.Truck))
+                        {
+                            var truckId = GetTruckId(truck, SR?.CarrierTenantId, exceptionMessage);
+                            if (truckId != null)
+                                trip.TruckId = truckId;
+                        }
+
+                        //goods category
+                        var goodCategory = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet,
+                           row, 15, "GoodCategory*", exceptionMessage);
+                        trip.GoodCategory = goodCategory.Trim();
+                        var goodCategoryId = GetGoodCategoryId(goodCategory, exceptionMessage);
+                        if (goodCategoryId != null)
+                            trip.GoodCategoryId = goodCategoryId;
+                    }
+
+                    //driver
+
+
+
+
+                  
                 }
                 else
                 {
@@ -230,7 +279,7 @@ namespace TACHYON.Shipping.Trips.Importing
             var facility = _shippingRequestTripManager.GetFacilityByPermission(text, ShippingRequestId);
             //_facilityRepository.FirstOrDefault(x => x.Name == text);
             if (facility != null)
-                return facility.Id;
+                return facility;
 
             exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Facility"));
             return null;
@@ -248,7 +297,7 @@ namespace TACHYON.Shipping.Trips.Importing
             var receiver = _shippingRequestTripManager.GetReceiverByPermissionAndFacility(text, ShippingRequestId, facilityId);
             //_receiverRepository.FirstOrDefault(x => x.FullName == text);
             if (receiver != null)
-                return receiver.Id;
+                return receiver;
 
             exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Receiver"));
             return null;
@@ -258,11 +307,11 @@ namespace TACHYON.Shipping.Trips.Importing
         {
             try
             {
-                return _shippingRequestTripManager.GeDriverIdByPermission(text, ShippingRequestId, tenantId.Value);
+                 return _shippingRequestTripManager.GeDriverIdByPermission(text, ShippingRequestId, tenantId);
             }
             catch
             {
-                exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("DriverIsInvalidOrNotFromAssigned"));
+                exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("DriverIsInvalid"));
                 return null;
             }
         }
@@ -271,12 +320,26 @@ namespace TACHYON.Shipping.Trips.Importing
         {
             try
             {
-                return _shippingRequestTripManager.GetTruckIdByPermission(text, ShippingRequestId, tenantId.Value);
+                return _shippingRequestTripManager.GetTruckIdByPermission(text, ShippingRequestId, tenantId);
                
             }
             catch
             {
-                exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedMessagePart("TruckIsInvalidOrNotFromAssigned"));
+                exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedMessagePart("TruckIsInvalid"));
+                return null;
+            }
+        }
+
+        private int? GetGoodCategoryId(string text, StringBuilder exceptionMessage)
+        {
+            try
+            {
+                return _shippingRequestTripManager.GetGoodsCategoryId(text);
+
+            }
+            catch
+            {
+                exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedMessagePart("GoodsCategoryIsInvalid"));
                 return null;
             }
         }
