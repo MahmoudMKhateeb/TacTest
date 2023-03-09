@@ -311,7 +311,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Waybill</Value>
+                                  <Value>Waybill- Request Id</Value>
                                   <Style>
                                     <FontFamily>Cairo SemiBold</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -327,7 +327,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>وثيقة الشحن</Value>
+                                  <Value>وثيقة الشحن- هوية الطلب</Value>
                                   <Style>
                                     <FontFamily>Cairo SemiBold</FontFamily>
                                     <FontSize>7pt</FontSize>

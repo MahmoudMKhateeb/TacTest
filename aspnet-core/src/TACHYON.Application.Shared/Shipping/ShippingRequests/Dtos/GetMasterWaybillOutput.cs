@@ -55,5 +55,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string ClientName { get; set; }
         public string ContainerNumber { get; set; }
         public string SealNumber { get; set; }
+        public string MultipleDropsOrTripsLable { get; set; }
+        public string MultipleDropsOrTripsLableAr { get; set; }
+
     }
 }

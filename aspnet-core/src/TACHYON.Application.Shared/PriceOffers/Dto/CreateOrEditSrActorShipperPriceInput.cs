@@ -10,6 +10,8 @@ namespace TACHYON.PriceOffers.Dto
         public CreateOrEditActorShipperPriceDto ActorShipperPriceDto { get; set; }
 
         public List<CreateOrEditActorShipperPriceDto> VasActorShipperPriceDto { get; set; }
+
+        public bool IsMyselfActor { get; set; }
         
         public void AddValidationErrors(CustomValidationContext context)
         {

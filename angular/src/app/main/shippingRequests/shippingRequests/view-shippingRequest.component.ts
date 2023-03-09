@@ -1,4 +1,4 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, Inject, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   GetShippingRequestForViewOutput,
   GetShippingRequestVasForViewDto,
@@ -7,6 +7,9 @@ import {
   ShippingRequestsServiceProxy,
   ShippingRequestStatus,
   ShippingRequestType,
+  ShippingTypeEnum,
+  RoundTripType,
+  ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
@@ -25,7 +28,7 @@ import * as moment from '@node_modules/moment';
   styleUrls: ['./view-shippingRequest.component.scss'],
   animations: [appModuleAnimation()],
 })
-export class ViewShippingRequestComponent extends AppComponentBase implements OnInit, AfterViewChecked {
+export class ViewShippingRequestComponent extends AppComponentBase implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild('directRequestComponent') public directRequestComponent: DirectRequestComponent;
   @ViewChild('NotesComponent') public NotesComponent: NotesComponent;
   active = false;
@@ -39,6 +42,9 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   type = 'ShippingRequest';
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequests'), '/app/main/shippingRequests/shippingRequests')];
   rentalRange: { rentalStartDate: moment.Moment; rentalEndDate: moment.Moment } = null;
+  ShippingTypeEnum = ShippingTypeEnum;
+  RoundTripType = RoundTripType;
+  ShippingRequestRouteType = ShippingRequestRouteType;
 
   constructor(
     injector: Injector,
@@ -230,5 +236,8 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       .subscribe(() => {
         this.notify.success(this.l('success'));
       });
+  }
+  ngOnDestroy() {
+    this._trip = undefined;
   }
 }

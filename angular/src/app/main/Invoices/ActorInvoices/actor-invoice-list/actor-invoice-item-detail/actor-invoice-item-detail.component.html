@@ -1,34 +1,34 @@
 <div class="contentSetPrice">
-    <div class="table-sendOffer">
-        <dx-data-grid [dataSource]="actorInvoiceItemsDataSource" [showBorders]="true" [columnAutoWidth]="true">
-            <dxi-column dataField="sequence" caption="{{ l('Sequence') }}"></dxi-column>
-            <dxi-column dataField="dateWork" caption="{{ l('Date') }}"></dxi-column>
-            <dxi-column dataField="wayBillNumber" caption="{{ l('WaybillNumber') }}"></dxi-column>
-            <dxi-column dataField="source" caption="{{ l('Origin') }}"></dxi-column>
-            <dxi-column dataField="destination" caption="{{ l('DestinationDelivery') }}"></dxi-column>
-            <dxi-column dataField="truckType" caption="{{ l('TruckType') }}"></dxi-column>
-            <dxi-column dataField="subTotalAmount" caption="{{ l('Price') }} {{ l('SAR') }}"></dxi-column>
-            <dxi-column dataField="vatAmount" caption="{{ l('Vat') }} {{ actorInvoiceInfo?.taxVat }}%"></dxi-column>
-            <dxi-column dataField="totalAmount" caption="{{ l('Total') }}"></dxi-column>
-            <dxi-column dataField="remarks" caption="{{ l('Quantity') }}"></dxi-column>
-        </dx-data-grid>
-    </div>
+  <div class="table-sendOffer">
+    <dx-data-grid [dataSource]="actorInvoiceItemsDataSource" [showBorders]="true" [columnAutoWidth]="true">
+      <dxi-column dataField="sequence" caption="{{ l('Sequence') }}"></dxi-column>
+      <dxi-column dataField="dateWork" caption="{{ l('Date') }}"></dxi-column>
+      <dxi-column dataField="wayBillNumber" caption="{{ l('WaybillNumber') }}"></dxi-column>
+      <dxi-column dataField="source" caption="{{ l('Origin') }}"></dxi-column>
+      <dxi-column dataField="destination" caption="{{ l('DestinationDelivery') }}"></dxi-column>
+      <dxi-column dataField="truckType" caption="{{ l('TruckType') }}"></dxi-column>
+      <dxi-column dataField="subTotalAmount" caption="{{ l('Price') }} {{ l('SAR') }}"></dxi-column>
+      <dxi-column dataField="vatAmount" caption="{{ l('Vat') }} {{ actorInvoiceInfo?.taxVat }}%"></dxi-column>
+      <dxi-column dataField="totalAmount" caption="{{ l('Total') }}"></dxi-column>
+      <dxi-column dataField="remarks" caption="{{ l('Quantity') }}"></dxi-column>
+    </dx-data-grid>
+  </div>
 
-    <div class="divirCard"></div>
+  <div class="divirCard"></div>
 
-    <table class="table">
-        <tbody>
-        <tr>
-            <td>
-                {{ l('SubTotalAmount') }} &nbsp;<span>{{ actorInvoiceInfo?.subTotalAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
-            </td>
-            <td>
-                {{ l('VatAmount') }} &nbsp;<span>{{ actorInvoiceInfo?.vatAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
-            </td>
-            <td>
-                {{ l('TotalAmount') }} &nbsp; <span>{{ actorInvoiceInfo?.totalAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+  <table class="table">
+    <tbody>
+      <tr>
+        <td>
+          {{ l('SubTotalAmount') }} &nbsp;<span>{{ actorInvoiceInfo?.subTotalAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
+        </td>
+        <td>
+          {{ l('VatAmount') }} &nbsp;<span>{{ actorInvoiceInfo?.vatAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
+        </td>
+        <td>
+          {{ l('TotalAmount') }} &nbsp; <span>{{ actorInvoiceInfo?.totalAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

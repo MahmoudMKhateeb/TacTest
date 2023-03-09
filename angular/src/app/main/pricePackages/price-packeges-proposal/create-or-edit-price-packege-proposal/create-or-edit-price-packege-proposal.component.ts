@@ -3,9 +3,9 @@ import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import {
   CreateOrEditProposalDto,
   PricePackageProposalServiceProxy,
+  PricePackageServiceProxy,
   ShippersForDropDownDto,
   ShippingRequestsServiceProxy,
-  TmsPricePackageServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
@@ -29,7 +29,7 @@ export class CreateOrEditPricePackegeProposalComponent extends AppComponentBase 
     injector: Injector,
     private _shippingRequestServiceProxy: ShippingRequestsServiceProxy,
     private _proposalServiceProxy: PricePackageProposalServiceProxy,
-    private _tmsPricePackageServiceProxy: TmsPricePackageServiceProxy
+    private _pricePackageServiceProxy: PricePackageServiceProxy
   ) {
     super(injector);
   }
@@ -74,7 +74,7 @@ export class CreateOrEditPricePackegeProposalComponent extends AppComponentBase 
       loadMode: 'raw',
       key: 'id',
       load(loadOptions: LoadOptions) {
-        return self._tmsPricePackageServiceProxy
+        return self._pricePackageServiceProxy
           .getAllForDropdown(JSON.stringify(loadOptions), self.pricePackageProposal.shipperId, self.pricePackageProposal.id)
           .toPromise()
           .then((response) => {

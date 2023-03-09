@@ -1,4 +1,5 @@
 ﻿using Abp;
+using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -22,6 +23,7 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
+using TACHYON.Features;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Storage;
@@ -34,6 +36,8 @@ namespace TACHYON.Documents
         private const int MaxDocumentFileBytes = 5242880; //5MB
         private readonly TenantManager TenantManager;
         private readonly IAppNotifier _appNotifier;
+        private readonly IFeatureChecker _featureChecker;
+
 
 
         public DocumentFilesManager(IRepository<DocumentFile, Guid> documentFileRepository,
@@ -42,7 +46,8 @@ namespace TACHYON.Documents
             ITempFileCacheManager tempFileCacheManager,
             IBinaryObjectManager binaryObjectManager,
             IUserEmailer userEmailer,
-            IAppNotifier appNotifier)
+            IAppNotifier appNotifier,
+            IFeatureChecker featureChecker)
         {
             _documentFileRepository = documentFileRepository;
             TenantManager = tenantManager;
@@ -53,6 +58,7 @@ namespace TACHYON.Documents
             _userEmailer = userEmailer;
             AbpSession = NullAbpSession.Instance;
             _appNotifier = appNotifier;
+            _featureChecker = featureChecker;
         }
 
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
@@ -324,6 +330,7 @@ namespace TACHYON.Documents
 
         public async Task UpdateDocumentFile(CreateOrEditDocumentFileDto input)
         {
+            if(_featureChecker.IsEnabled(AppFeatures.TachyonDealer)) DisableTenancyFilters();
             DocumentFile documentFile = await _documentFileRepository
                 .GetAll()
                 .Include(x => x.DocumentTypeFk)

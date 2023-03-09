@@ -119,7 +119,8 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
     return (
       this.hasCarrierClients &&
       (this.carrierTenantId === this.appSession.tenantId || this.tenantId === this.appSession.tenantId) &&
-      isNotNullOrUndefined(this.actorCarrierId)
+      isNotNullOrUndefined(this.actorCarrierId) &&
+      !this.carrierPriceInput.isMyselfActor
     );
   }
 
@@ -127,7 +128,8 @@ export class CreateOrEditActorsPriceComponent extends AppComponentBase implement
     return (
       this.hasShipperClients &&
       (this.carrierTenantId === this.appSession.tenantId || this.tenantId === this.appSession.tenantId) &&
-      isNotNullOrUndefined(this.actorShipperId)
+      isNotNullOrUndefined(this.actorShipperId) &&
+      !this.shipperPriceInput.isMyselfActor
     );
   }
 

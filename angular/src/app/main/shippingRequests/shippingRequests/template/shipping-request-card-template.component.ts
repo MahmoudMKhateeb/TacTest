@@ -5,11 +5,14 @@ import {
   GetShippingRequestForViewOutput,
   PriceOfferChannel,
   PriceOfferServiceProxy,
+  RoundTripType,
   ShippingRequestDirectRequestServiceProxy,
   ShippingRequestDirectRequestStatus,
   ShippingRequestFlag,
+  ShippingRequestRouteType,
   ShippingRequestStatus,
   ShippingRequestType,
+  ShippingTypeEnum,
 } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
@@ -58,6 +61,10 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   activeShippingRequestId!: number;
   selectedShippingRequest: GetShippingRequestForPriceOfferListDto;
   shippingRequestStatusEnum = ShippingRequestStatus;
+
+  ShippingTypeEnum = ShippingTypeEnum;
+  RoundTripType = RoundTripType;
+  ShippingRequestRouteType = ShippingRequestRouteType;
 
   constructor(
     injector: Injector,
@@ -112,9 +119,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
       )
       .subscribe((result) => {
         this.IsLoading = false;
-        if (result.items.length < this.maxResultCount) {
-          this.StopLoading = true;
-        }
+        this.StopLoading = result.items.length < this.maxResultCount;
         result.items.forEach((r) => {
           this.origin = null;
           this.destination = null;
@@ -240,6 +245,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     this.IsLoading = true;
     this.skipCount = 0;
     this.items = [];
+    this.resetScrolling();
     this.LoadData();
   }
 

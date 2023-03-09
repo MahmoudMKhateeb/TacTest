@@ -5,7 +5,10 @@ using System.Text;
 using TACHYON.Common;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips.Dto;
+using TACHYON.Tracking.AdditionalSteps;
 using TACHYON.Tracking.Dto;
+using TACHYON.Tracking.Dto.WorkFlow;
 
 namespace TACHYON.AutoMapper.Tracking
 {
@@ -24,6 +27,7 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.ShippingRequestFlag, opt => opt.MapFrom(src => src.ShippingRequestFk.ShippingRequestFlag))
             .ForMember(dst => dst.NumberOfTrucks, opt => opt.MapFrom(src => src.ShippingRequestFk.NumberOfTrucks))
             .ForMember(dst => dst.TenantId, opt => opt.MapFrom(src => src.ShippingRequestFk.TenantId))
+            .ForMember(dst => dst.ShippingType, opt => opt.MapFrom(src => src.ShippingRequestFk.ShippingTypeId))
             .ForMember(dst => dst.RequestId, opt => opt.MapFrom(src => src.ShippingRequestId))
             .ForMember(dst => dst.DriverRate, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Rate))
             .ForMember(dst => dst.shippingRequestStatus, opt => opt.MapFrom(src => src.ShippingRequestFk.Status))
@@ -33,6 +37,11 @@ namespace TACHYON.AutoMapper.Tracking
 
 
             CreateMap<IHasDocument, RoutPointDocument>().ReverseMap();
+            CreateMap<RoutPointDocument, TripManifestDataDto>().ReverseMap();
+            CreateMap<IHasDocument, AdditionalStepArgs>().ReverseMap();
+            CreateMap<AdditionalStepTransition, AdditionalStepTransitionDto>()
+            .ForMember(dst => dst.AdditionalStepTypeTitle, opt => opt.MapFrom(src => src.AdditionalStepType.GetEnumDescription()))
+            .ForMember(dst => dst.RoutePointDocumentTypeTitle, opt => opt.MapFrom(src => src.RoutePointDocumentType.GetEnumDescription()));
         }
     }
 }

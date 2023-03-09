@@ -12,6 +12,7 @@
 		<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
 		<UserSecretsId>MyCompanyName-TACHYON-894FDFC1-6482-4A56-926A-3C46C9FE0329</UserSecretsId>
 		<RootNamespace>TACHYON</RootNamespace>
+		<LangVersion>9</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -58,5 +59,7 @@
 	<ItemGroup>
 	  <Compile Remove="EntityLogs\EntityLogProvider.cs" />
 	  <Compile Remove="EntityLogs\LogUseCase.cs" />
+	  <Compile Remove="PricePackages\TmsPricePackages\TmsPricePackageManager.cs" />
+	  <Compile Remove="PricePackages\NormalPricePackage.cs" />
 	</ItemGroup>
 </Project>

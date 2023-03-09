@@ -13,7 +13,9 @@
 
             public const string User = "User";
 
-            public const string InternalClients = "InternalClients";
+            public const string InternalShipperClients = "InternalShipperClients";
+
+            public const string InternalCarrierClients = "InternalCarrierClients";
         }
     }
 }

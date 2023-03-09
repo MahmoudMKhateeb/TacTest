@@ -24,7 +24,7 @@ namespace TACHYON.PricePackages.Dto.PricePackageProposals
         [StringLength(500)]
         public string Notes { get; set; }
 
-        public List<int> TmsPricePackages { get; set; }
+        public List<long> PricePackages { get; set; }
         
         public string EmailAddress { get; set; }
 

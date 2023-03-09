@@ -50,7 +50,7 @@
         <div class="d-flex align-items-center justify-content-between">
           <span class="font-weight-bold mr-2 text-hover-primary" routerLink="/app/main/shippingRequests/shippingRequests">
             <i [tooltip]="l('ProfileNumberOfShipmentsTooltipMsg')" class="flaticon-exclamation-1 icon-nm"></i>
-            {{ l('NumberOfShipments') }} :</span
+            {{ isShipper ? l('NumberOfShipments') : l('NumberOfCompletedShipments') }} :</span
           >
           <span class="text-muted">{{ ShipmentCount }}</span>
         </div>

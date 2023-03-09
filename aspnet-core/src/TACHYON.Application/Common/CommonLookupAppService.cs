@@ -15,6 +15,7 @@ using TACHYON.Dto;
 using TACHYON.Editions;
 using TACHYON.Editions.Dto;
 using TACHYON.Features;
+using TACHYON.Invoices;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.Accidents;
@@ -113,7 +114,22 @@ namespace TACHYON.Common
 
             return query;
         }
+        public async Task<IEnumerable<ISelectItemDto>> GetAutoCompleteTenantsByAccountType(string name, InvoiceAccountType invoiceAccountType)
+        {
+            await DisableTenancyFiltersIfTachyonDealer();
+            name = name.ToLower().Trim();
+            var query = await
+                _Tenant.GetAllIncluding(x => x.Edition).Where(t =>
+                        t.IsActive && (t.Name.ToLower().Contains(name) || t.TenancyName.ToLower().Contains(name)) )
+                .WhereIf(invoiceAccountType == InvoiceAccountType.AccountReceivable, x=> x.Edition.DisplayName.Equals(TACHYONConsts.ShipperEdtionName) ||
+                x.Edition.DisplayName.Equals(TACHYONConsts.BrokerEditionName))
+                .WhereIf(invoiceAccountType == InvoiceAccountType.AccountPayable, x => x.Edition.DisplayName.Equals(TACHYONConsts.CarrierEdtionName) ||
+                x.Edition.DisplayName.Equals(TACHYONConsts.CarrierSaasEditionName) ||
+                x.Edition.DisplayName.Equals(TACHYONConsts.BrokerEditionName))
+                    .Select(t => new SelectItemDto { DisplayName = t.Name, Id = t.Id.ToString() }).Take(20).ToListAsync();
 
+            return query;
+        }
 
         public async Task<List<SelectItemDto>> GetPeriods()
         {

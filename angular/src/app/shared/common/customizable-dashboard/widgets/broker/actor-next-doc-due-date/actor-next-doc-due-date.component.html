@@ -1,0 +1,41 @@
+<div class="card card-custom card-stretch w-100 h-100">
+  <div class="card-body p-4 d-flex flex-column pt-8">
+    <div class="row">
+      <div class="col-8">
+        <h3>
+          {{ 'NextDocDueDate' | localize }}
+        </h3>
+      </div>
+      <div class="col-4">
+        <div class="w-100">
+          <dx-select-box
+            id="actorShipper"
+            name="actorShipper"
+            [(value)]="selectedActorShipper"
+            [dataSource]="actorTypes"
+            [searchEnabled]="true"
+            [wrapItemText]="true"
+            displayExpr="value"
+            valueExpr="key"
+            placeholder="{{ l('SelectADateType') }}"
+            (onValueChanged)="fetchData()"
+          ></dx-select-box>
+        </div>
+      </div>
+    </div>
+    <div appMakeScrollable class="overflow-auto" *ngFor="let doc of documents">
+      <div class="d-flex justify-content-between mb-4 px-4">
+        <div class="clickable-item">
+          {{ doc.companyName }}
+        </div>
+        <div class="flex-grow-2 border-bottom-dashed mx-4"></div>
+        <div>
+          <b>{{ doc.remainingWeeks }} {{ 'Week' | localize }}</b>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="documents.length === 0">
+      {{ 'NoData' | localize }}
+    </div>
+  </div>
+</div>

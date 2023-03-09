@@ -23,7 +23,7 @@
             <dx-data-grid
               #dataGrid
               [dataSource]="dataSource"
-              valueExpr="id"
+              [keyExpr]="'id'"
               [hoverStateEnabled]="true"
               [paging]="{ enabled: true, pageSize: 10 }"
               [filterRow]="{ visible: true }"
@@ -31,19 +31,35 @@
               [height]="345"
               [(selectedRowKeys)]="selectedItems"
             >
-              <!--              (onSelectionChanged)="onSelectionChanged($event)"-->
-              <!--              (onCellClick)="onDataGridCellClick($event); print($event)"-->
               <dxo-selection [selectAllMode]="'allPages'" [showCheckBoxesMode]="'always'" mode="multiple"></dxo-selection>
               <dxi-column *ngIf="isForTruck" [allowEditing]="false" dataField="truckName" caption="{{ 'PlateNumber' | localize }}"></dxi-column>
               <dxi-column *ngIf="!isForTruck" [allowEditing]="false" dataField="driverName" caption="{{ 'Driver' | localize }}"></dxi-column>
-              <dxi-column *ngIf="isForTruck" dataField="originalTruckId" caption="{{ 'ReplaceWith' | localize }}" cellTemplate="truckCellTemplate">
+              <dxi-column
+                *ngIf="isForTruck"
+                [allowEditing]="false"
+                dataField="originalTruckId"
+                caption="{{ 'ReplaceWith' | localize }}"
+                cellTemplate="truckCellTemplate"
+              >
                 <dxo-lookup [dataSource]="allTrucks" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
               </dxi-column>
-              <dxi-column *ngIf="!isForTruck" dataField="originalDriverId" caption="{{ 'ReplaceWith' | localize }}" cellTemplate="driverCellTemplate">
+              <dxi-column
+                *ngIf="!isForTruck"
+                [allowEditing]="false"
+                dataField="originalDriverId"
+                caption="{{ 'ReplaceWith' | localize }}"
+                cellTemplate="driverCellTemplate"
+              >
                 <dxo-lookup [dataSource]="allDrivers" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
               </dxi-column>
-              <dxi-column dataField="replacementReason" caption="{{ 'replacementReason' | localize }}" cellTemplate="reasonCellTemplate"></dxi-column>
               <dxi-column
+                [allowEditing]="false"
+                dataField="replacementReason"
+                caption="{{ 'replacementReason' | localize }}"
+                cellTemplate="reasonCellTemplate"
+              ></dxi-column>
+              <dxi-column
+                [allowEditing]="false"
                 dataField="replacementIntervalInDays"
                 caption="{{ 'replacementIntervalInDays' | localize }}"
                 cellTemplate="durationCellTemplate"
@@ -70,7 +86,9 @@
                 <dx-text-area [(value)]="d.data.replacementReason"></dx-text-area>
               </div>
               <div *dxTemplate="let d of 'durationCellTemplate'">
-                <dx-number-box format="### {{ 'Days' | localize }}" [(value)]="d.data.replacementIntervalInDays"></dx-number-box>
+                <div class="d-flex">
+                  <dx-number-box [(value)]="d.data.replacementIntervalInDays"></dx-number-box>&nbsp;<span>{{ 'Days' | localize }}</span>
+                </div>
               </div>
             </dx-data-grid>
             <div class="row pt-4">

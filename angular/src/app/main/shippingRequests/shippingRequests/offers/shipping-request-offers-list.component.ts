@@ -1,10 +1,5 @@
 import { Component, ViewChild, Injector, Input, OnInit } from '@angular/core';
-import {
-  PriceOfferServiceProxy,
-  PriceOfferChannel,
-  TmsPricePackageServiceProxy,
-  TmsPricePackageForViewDto,
-} from '@shared/service-proxies/service-proxies';
+import { PriceOfferServiceProxy, PriceOfferChannel } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { LazyLoadEvent } from 'primeng/api';
 
@@ -25,14 +20,8 @@ export class ShippingRequestOffersList extends AppComponentBase implements OnIni
   @Input() isTachyonDeal: boolean;
   @Input() isForDedicated: boolean;
   IsStartSearch: boolean = false;
-  matchingTmsPricePkgs: TmsPricePackageForViewDto;
 
-  constructor(
-    injector: Injector,
-    private _currentServ: PriceOfferServiceProxy,
-    private _router: Router,
-    private _tmsPricePkgServiceproxy: TmsPricePackageServiceProxy
-  ) {
+  constructor(injector: Injector, private _currentServ: PriceOfferServiceProxy, private _router: Router) {
     super(injector);
   }
 

@@ -1,6 +1,5 @@
 using Abp;
 using Abp.Application.Editions;
-using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Auditing;
 using Abp.Authorization;
@@ -44,7 +43,7 @@ using TACHYON.Invoices.PaymentMethods;
 using TACHYON.MultiTenancy;
 using TACHYON.Net.Sms;
 using TACHYON.PricePackages;
-using TACHYON.PricePackages.Dto.NormalPricePackage;
+using TACHYON.PricePackages.Dto;
 using TACHYON.Security;
 using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -84,8 +83,8 @@ namespace TACHYON.Authorization.Users.Profile
         private readonly IRepository<City> _lookupCityRepository;
         private readonly IRepository<TrucksTypesTranslation> _trucksTypesTranslationRepository;
         private readonly IRepository<TrucksType, long> _truckTypeRepository;
-        private readonly IRepository<NormalPricePackage> _normalPricePackageRepository;
         private readonly IRepository<ServiceArea,long> _serviceAreaRepository;
+        private readonly IRepository<PricePackage,long> _pricePackageRepository;
 
         public ProfileAppService(
             IBinaryObjectManager binaryObjectManager,
@@ -108,8 +107,8 @@ namespace TACHYON.Authorization.Users.Profile
             IRepository<TrucksTypesTranslation> trucksTypesTranslationRepository,
             IRepository<Tenant> tenantRepository,
             IRepository<TrucksType, long> truckTypeRepository,
-            IRepository<NormalPricePackage> normalPricePackageRepository,
-            IRepository<ServiceArea, long> serviceAreaRepository)
+            IRepository<ServiceArea, long> serviceAreaRepository,
+            IRepository<PricePackage,long> pricePackageRepository)
         {
             _binaryObjectManager = binaryObjectManager;
             _timeZoneService = timezoneService;
@@ -131,8 +130,8 @@ namespace TACHYON.Authorization.Users.Profile
             _trucksTypesTranslationRepository = trucksTypesTranslationRepository;
             _tenantRepository = tenantRepository;
             _truckTypeRepository = truckTypeRepository;
-            _normalPricePackageRepository = normalPricePackageRepository;
             _serviceAreaRepository = serviceAreaRepository;
+            _pricePackageRepository = pricePackageRepository;
         }
 
         [DisableAuditing]
@@ -506,17 +505,17 @@ namespace TACHYON.Authorization.Users.Profile
             };
         }
 
-        public async Task<PagedResultDto<NormalPricePackageProfileDto>> GetNormalPricePackages(GetNormalPricePackagesForProfileInputDto input)
+        public async Task<PagedResultDto<PricePackageProfileDto>> GetPricePackages(GetPricePackagesForProfileInput input)
         {
             DisableTenancyFilters();
-            var availableVases = _normalPricePackageRepository.GetAllIncluding(x => x.DestinationCityFK, v => v.OriginCityFK, Z => Z.TrucksTypeFk)
+            var availableVases = _pricePackageRepository.GetAllIncluding(x => x.DestinationCity, v => v.OriginCity, Z => Z.TrucksTypeFk)
                 .Where(x => x.TenantId == input.CarrierTenantId)
                 .OrderBy(input.Sorting ?? "Id desc");
 
             var pageResult = await availableVases.PageBy(input).ToListAsync();
             var totalCount = await availableVases.CountAsync();
 
-            return new PagedResultDto<NormalPricePackageProfileDto>() { Items = ObjectMapper.Map<List<NormalPricePackageProfileDto>>(pageResult), TotalCount = totalCount };
+            return new PagedResultDto<PricePackageProfileDto>() { Items = ObjectMapper.Map<List<PricePackageProfileDto>>(pageResult), TotalCount = totalCount };
         }
 
 

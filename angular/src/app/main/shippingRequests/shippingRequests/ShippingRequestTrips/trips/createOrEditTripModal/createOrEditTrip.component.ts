@@ -13,6 +13,7 @@ import {
   DedicatedShippingRequestsServiceProxy,
   DropPaymentMethod,
   EntityTemplateServiceProxy,
+  FacilityType,
   FileDto,
   GetAllDedicatedDriversOrTrucksForDropDownDto,
   GetAllGoodsCategoriesForDropDownOutput,
@@ -21,6 +22,7 @@ import {
   GetShippingRequestVasForViewDto,
   GoodsDetailsServiceProxy,
   PickingType,
+  RoundTripType,
   SavedEntityType,
   SelectItemDto,
   ShippingRequestDto,
@@ -29,6 +31,7 @@ import {
   ShippingRequestsServiceProxy,
   ShippingRequestsTripServiceProxy,
   ShippingRequestTripFlag,
+  ShippingTypeEnum,
   UpdateDocumentFileInput,
   WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -62,6 +65,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   @ViewChild('PointsComponent') PointsComponent: PointsComponent;
   @ViewChild('userForm', { static: false }) userForm: NgForm;
 
+  @Input('isPortMovement') isPortMovement = false;
   @Input() shippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   @Input() parentForm: NgForm;
@@ -132,6 +136,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   allDrivers: any;
   allTrucks: GetAllTrucksWithDriversListDto[];
   allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
+  isEdit: boolean;
 
   get isFileInputValid() {
     return this._TripService.CreateOrEditShippingRequestTripDto.hasAttachment
@@ -166,6 +171,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   selectedTripType;
   AllActorsShippers: SelectItemDto[];
   AllActorsCarriers: SelectItemDto[];
+  ShippingTypeEnum = ShippingTypeEnum;
 
   constructor(
     injector: Injector,
@@ -187,6 +193,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   ngOnInit() {
+    console.log('isPortMovement', this.isPortMovement);
     //link the trip from the shared service to the this component
     //this.TripsServiceSubscription = this._TripService.currentActiveTrip.subscribe((res) => (this.trip = res));
     //this.trip = this._TripService.CreateOrEditShippingRequestTripDto;
@@ -202,7 +209,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   vasesHandler() {
     if (this.VasListFromFather) {
-      this.VasListFromFather.forEach((x) => {
+      this.VasListFromFather.filter((item) => !item.shouldHide).forEach((x) => {
         //Get the Vase List From Father And Attach Them to new Array
         const vas: CreateOrEditShippingRequestTripVasDto = new CreateOrEditShippingRequestTripVasDto();
         vas.id = undefined; // vas id in shipping Request trip (Required for edit trip)
@@ -216,15 +223,17 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   show(record?: CreateOrEditShippingRequestTripDto, shippingRequestForView?: GetShippingRequestForViewOutput): void {
     this._TripService.GetShippingRequestForViewOutput = shippingRequestForView;
-    // this._TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice = new CreateOrEditActorShipperPriceDto();
-    // this._TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice = new CreateOrEditActorCarrierPrice();
-
-    if (shippingRequestForView?.shippingRequestFlag === 1) {
+    this._PointsService.currentShippingRequest = this._TripService.GetShippingRequestForViewOutput;
+    if (
+      isNotNullOrUndefined(this._TripService.GetShippingRequestForViewOutput) &&
+      this._TripService.GetShippingRequestForViewOutput.shippingRequestFlag === this.ShippingRequestFlagEnum.Dedicated
+    ) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
       this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
     }
     if (!shippingRequestForView) {
+      //console.log('!shippingRequestForView');
       this.getAllDrivers();
       this.getAllTrucks(undefined);
       this.getAllGoodCategories();
@@ -257,15 +266,31 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.activeTripId = record.id;
 
       this.loading = true;
+      this.isEdit = true;
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this._TripService.CreateOrEditShippingRequestTripDto = res;
+        if (this._TripService.CreateOrEditShippingRequestTripDto.shipperActorId) {
+          (this._TripService.CreateOrEditShippingRequestTripDto.shipperActorId as any) = res.shipperActorId.toString();
+        }
+        if (this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId) {
+          (this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId as any) = res.carrierActorId.toString();
+        }
+
         this.IsHaveSealNumberValue = res.sealNumber?.length > 0;
         this.IsHaveContainerNumberValue = res.containerNumber?.length > 0;
-        console.log('res', res.containerNumber);
+        //console.log('res', res.containerNumber);
         const gregorian = moment(res.startTripDate).locale('en').format('D/M/YYYY');
         this.startTripdate = this.dateFormatterService.ToGregorianDateStruct(gregorian, 'D/M/YYYY');
 
         this.PointsComponent.wayPointsList = this._TripService.CreateOrEditShippingRequestTripDto.routPoints;
+        if (
+          this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+          this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements
+        ) {
+          this.PointsComponent.wayPointsList = this._TripService.CreateOrEditShippingRequestTripDto.routPoints.sort(
+            (a, b) => a.pointOrder - b.pointOrder
+          );
+        }
         this.PointsComponent.loadReceivers(null, true);
         // this._PointsService.updateWayPoints(this._TripService.CreateOrEditShippingRequestTripDto.routPoints);
         //this.startTripdate = this.dateFormatterService.MomentToNgbDateStruct(res.startTripDate);
@@ -348,6 +373,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.isDisabledDriver = false;
     this.IsHaveContainerNumberValue = false;
     this.IsHaveSealNumberValue = false;
+    this.isEdit = false;
   }
 
   createOrEditTrip() {
@@ -597,7 +623,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.getTripForEditSub?.unsubscribe();
     this.docProgress = undefined;
 
-    console.log('Detsroid From Create/Edit Trip');
+    //console.log('Detsroid From Create/Edit Trip');
   }
 
   /**
@@ -605,6 +631,13 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * @private
    */
   private validatePointsBeforeAddTrip() {
+    if (
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+    ) {
+      this.checkIfShouldSendAppointmentAndClearance();
+      return this.validatePointsFromPointsComponentForPortsMovement();
+    }
     let isSingleDropTrip = this.shippingRequest.routeTypeId === this.RouteTypesEnum.SingleDrop;
     let isFacilitiesTheSame =
       isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto.routPoints) &&
@@ -663,6 +696,12 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   private validatePointsFromPointsComponent() {
+    if (
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+    ) {
+      return this.validatePointsFromPointsComponentForPortsMovement();
+    }
     if (!isNotNullOrUndefined(this.PointsComponent) || !isNotNullOrUndefined(this.PointsComponent.wayPointsList)) {
       return false;
     }
@@ -690,6 +729,225 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       }
     }
     return true;
+  }
+
+  private validatePointsFromPointsComponentForPortsMovement(): boolean {
+    // debugger;
+    if (!isNotNullOrUndefined(this.PointsComponent) || !isNotNullOrUndefined(this.PointsComponent.wayPointsList)) {
+      return false;
+    }
+    if (
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.WithReturnTrip &&
+      this.PointsComponent.wayPointsList.length > 0
+    ) {
+      return this.validateImportWithReturnTrip();
+    }
+    if (
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.WithoutReturnTrip &&
+      this.PointsComponent.wayPointsList.length > 0
+    ) {
+      return this.validateImportWithoutReturnTrip();
+    }
+    if (
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.OneWayRoutWithPortShuttling &&
+      this.PointsComponent.wayPointsList.length > 0
+    ) {
+      return this.validateOneWayRoutWithPortShuttling();
+    }
+    if (
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling &&
+      this.PointsComponent.wayPointsList.length > 0
+    ) {
+      return this.validateTwoWayRoutsWithoutPortShuttling();
+    }
+    if (
+      this._TripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling &&
+      this.PointsComponent.wayPointsList.length > 0
+    ) {
+      return this.validateTwoWayRoutsWithPortShuttling();
+    }
+    return true;
+  }
+
+  private checkIfShouldSendAppointmentAndClearance() {
+    if (this._TripService.CreateOrEditShippingRequestTripDto?.routPoints) {
+      this._TripService.CreateOrEditShippingRequestTripDto?.routPoints?.map((item) => {
+        if (!item.dropNeedsAppointment) {
+          item.appointmentDataDto = null;
+        }
+        if (!item.dropNeedsClearance) {
+          item.tripClearancePricesDto = null;
+        }
+      });
+    }
+  }
+
+  validateImportWithReturnTrip(): boolean {
+    const point1 = this.PointsComponent.wayPointsList[1];
+    const point2 = this.PointsComponent.wayPointsList[2];
+    const point3 = this.PointsComponent.wayPointsList[3];
+    const goodDetailsValidForPoint1 = this.isGoodDetailsValidForPoint(point1, false, false, true);
+    //     isNotNullOrUndefined(point1.goodsDetailListDto) && point1.goodsDetailListDto.length > 0
+    //     ? point1.goodsDetailListDto.filter((goodDetail) => {
+    //     return isNotNullOrUndefined(goodDetail.description) && goodDetail.description?.length > 0;
+    // }).length === point1.goodsDetailListDto.length
+    //     : false;
+
+    const pointOneValid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.facilityId) &&
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId) &&
+      goodDetailsValidForPoint1;
+    if (!pointOneValid) {
+      return false;
+    }
+
+    const pointTwoValid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point2.facilityId) && this.isReceiverIdOrSenderIdOrFacilityIdValid(point2.receiverId);
+    if (!pointTwoValid) {
+      return false;
+    }
+
+    const foundFacility = this.PointsComponent.allFacilities.find((fac) => fac.id === point3.facilityId);
+    const recieverValid =
+      foundFacility?.facilityType === FacilityType.Facility
+        ? point3.facilityId && this.isReceiverIdOrSenderIdOrFacilityIdValid(point3.receiverId)
+        : true;
+    const goodsDetailsValidForPoint3 = this.isGoodDetailsValidForPoint(point3, true, false, true);
+    // isNotNullOrUndefined(point3.goodsDetailListDto) && point3.goodsDetailListDto.length > 0
+    // ? point3.goodsDetailListDto.filter((goodDetail) => {
+    // return (
+    //     isNotNullOrUndefined(goodDetail.weight) &&
+    //     goodDetail.weight?.toString()?.length > 0 &&
+    //     isNotNullOrUndefined(goodDetail.description) &&
+    //     goodDetail.description?.length > 0
+    // );
+    // }).length === point3.goodsDetailListDto.length
+    //     : false;
+    const pointThreeValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point3.facilityId) && recieverValid && goodsDetailsValidForPoint3;
+    if (!pointThreeValid) {
+      return false;
+    }
+    return true;
+  }
+  validateImportWithoutReturnTrip(): boolean {
+    const point0 = this.PointsComponent.wayPointsList[0];
+    const point1 = this.PointsComponent.wayPointsList[1];
+    const goodDetailsValidForPoint1 = this.isGoodDetailsValidForPoint(point1, false, false, true);
+
+    const pointOneValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point0.facilityId);
+    const pointTwoValid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.facilityId) &&
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId) &&
+      goodDetailsValidForPoint1;
+    if (!pointOneValid || !pointTwoValid) {
+      return false;
+    }
+
+    return true;
+  }
+
+  validateOneWayRoutWithPortShuttling(): boolean {
+    const point1 = this.PointsComponent.wayPointsList[0];
+    const point2 = this.PointsComponent.wayPointsList[1];
+    const goodDetailsValidForPoint2 = this.isGoodDetailsValidForPoint(point2, true, true, true);
+
+    const pointOneValid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.facilityId) && this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId);
+    const pointTwoValid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point2.facilityId) && goodDetailsValidForPoint2;
+    if (!pointOneValid || !pointTwoValid) {
+      return false;
+    }
+
+    return true;
+  }
+
+  validateTwoWayRoutsWithoutPortShuttling(): boolean {
+    const point1 = this.PointsComponent.wayPointsList[0];
+    const point2 = this.PointsComponent.wayPointsList[1];
+    const point3 = this.PointsComponent.wayPointsList[2];
+    const point4 = this.PointsComponent.wayPointsList[3];
+    const goodDetailsValidForPoint2 = this.isGoodDetailsValidForPoint(point2, true, true, true);
+    const goodDetailsValidForPoint4 = this.isGoodDetailsValidForPoint(point4, true, true, true);
+
+    const point1Valid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.facilityId) && this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId);
+    const point2Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point2.facilityId) && goodDetailsValidForPoint2;
+    const point3Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point3.facilityId);
+    const point4Valid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point4.facilityId) &&
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point4.receiverId) &&
+      goodDetailsValidForPoint4;
+    if (!point1Valid || !point2Valid || !point3Valid || !point4Valid) {
+      return false;
+    }
+
+    return true;
+  }
+
+  validateTwoWayRoutsWithPortShuttling(): boolean {
+    const point1 = this.PointsComponent.wayPointsList[0];
+    const point2 = this.PointsComponent.wayPointsList[1];
+    const point3 = this.PointsComponent.wayPointsList[2];
+    const point4 = this.PointsComponent.wayPointsList[3];
+    const point5 = this.PointsComponent.wayPointsList[4];
+    const point6 = this.PointsComponent.wayPointsList[5];
+    const goodDetailsValidForPoint2 = this.isGoodDetailsValidForPoint(point2, true, true, true);
+    const goodDetailsValidForPoint4 = this.isGoodDetailsValidForPoint(point4, true, true, true);
+    const goodDetailsValidForPoint6 = this.isGoodDetailsValidForPoint(point6, true, true, true);
+
+    const point1Valid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.facilityId) && this.isReceiverIdOrSenderIdOrFacilityIdValid(point1.receiverId);
+    const point2Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point2.facilityId) && goodDetailsValidForPoint2;
+    const point3Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point3.facilityId);
+    const point4Valid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point4.facilityId) &&
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point4.receiverId) &&
+      goodDetailsValidForPoint4;
+    const point5Valid =
+      this.isReceiverIdOrSenderIdOrFacilityIdValid(point5.facilityId) && this.isReceiverIdOrSenderIdOrFacilityIdValid(point5.receiverId);
+    const point6Valid = this.isReceiverIdOrSenderIdOrFacilityIdValid(point6.facilityId) && goodDetailsValidForPoint6;
+    if (!point1Valid || !point2Valid || !point3Valid || !point4Valid || !point5Valid || !point6Valid) {
+      return false;
+    }
+    return true;
+  }
+
+  isReceiverIdOrSenderIdOrFacilityIdValid(facilitOrReceiverId: number) {
+    return isNotNullOrUndefined(facilitOrReceiverId) && facilitOrReceiverId?.toString() != '';
+  }
+
+  isGoodDetailsValidForPoint(point: CreateOrEditRoutPointDto, isWeightRequired: boolean, isQtyRequired: boolean, isDescRequired: boolean) {
+    return isNotNullOrUndefined(point.goodsDetailListDto) && point.goodsDetailListDto.length > 0
+      ? point.goodsDetailListDto.filter((goodDetail) => {
+          if (isWeightRequired && isQtyRequired && isDescRequired) {
+            return (
+              isNotNullOrUndefined(goodDetail.amount) &&
+              goodDetail.amount?.toString()?.length > 0 &&
+              isNotNullOrUndefined(goodDetail.weight) &&
+              goodDetail.weight?.toString()?.length > 0 &&
+              isNotNullOrUndefined(goodDetail.description) &&
+              goodDetail.description?.length > 0
+            );
+          }
+          if (isWeightRequired && isDescRequired) {
+            return (
+              isNotNullOrUndefined(goodDetail.weight) &&
+              goodDetail.weight?.toString()?.length > 0 &&
+              isNotNullOrUndefined(goodDetail.description) &&
+              goodDetail.description?.length > 0
+            );
+          }
+          if (isWeightRequired) {
+            return isNotNullOrUndefined(goodDetail.weight) && goodDetail.weight?.toString().length > 0;
+          }
+          if (isQtyRequired) {
+            return isNotNullOrUndefined(goodDetail.amount) && goodDetail.amount?.toString().length > 0;
+          }
+          if (isDescRequired) {
+            return isNotNullOrUndefined(goodDetail.description) && goodDetail.description?.length > 0;
+          }
+        }).length === point.goodsDetailListDto.length
+      : false;
   }
 
   /**
@@ -794,7 +1052,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 0;
     }
     this.onNumberOfDropsChanged(true);
-    console.log('this.trip.numberOfDrops', this._TripService.CreateOrEditShippingRequestTripDto);
+    //console.log('this.trip.numberOfDrops', this._TripService.CreateOrEditShippingRequestTripDto);
   }
 
   addAdditionalDrop() {
@@ -804,7 +1062,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 1;
     }
     this.onNumberOfDropsChanged(false, true);
-    console.log('this.trip.numberOfDrops', this._TripService.CreateOrEditShippingRequestTripDto);
+    //('this.trip.numberOfDrops', this._TripService.CreateOrEditShippingRequestTripDto);
   }
 
   onNumberOfDropsChanged(shouldReset = false, shouldAddNewPoint = false) {
@@ -818,7 +1076,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == this.ShippingRequestTripFlagEnum.HomeDelivery
     ) {
       const anyWayPointHasId = this.PointsComponent.wayPointsList.some((item) => isNotNullOrUndefined(item.id));
-      console.log('anyWayPointHasId', anyWayPointHasId);
+      //console.log('anyWayPointHasId', anyWayPointHasId);
       const wayPointsList =
         (this.PointsComponent.wayPointsList.length > 0 && !shouldReset) || anyWayPointHasId
           ? this._TripService.CreateOrEditShippingRequestTripDto.routeType == this.RouteTypesEnum.MultipleDrops
@@ -829,7 +1087,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
           : [];
       this.PointsComponent.wayPointsList = [];
       this._PointsService.updateWayPoints([]);
-      console.log('wayPointsList', wayPointsList);
+      //console.log('wayPointsList', wayPointsList);
       if ((wayPointsList.length > 0 && !shouldReset) || anyWayPointHasId) {
         this.PointsComponent.wayPointsList = wayPointsList;
         this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops =

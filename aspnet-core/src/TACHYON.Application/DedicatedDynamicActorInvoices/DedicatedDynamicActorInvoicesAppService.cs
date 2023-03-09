@@ -133,8 +133,8 @@ namespace TACHYON.DedicatedDynamicActorInvoices
             var requestActorPrices = await _shippingRequestRepository.GetAll()
                 .Select(x => new {
                     id = x.Id,
-                    shipperPrice = x.ActorShipperPrice.TotalAmountWithCommission,
-                    carrierPrice = x.ActorCarrierPrice != null ? x.ActorCarrierPrice.SubTotalAmount + x.VatAmount : null
+                    shipperPrice = x.ActorShipperPrice.SubTotalAmountWithCommission,
+                    carrierPrice = x.ActorCarrierPrice != null ? x.ActorCarrierPrice.SubTotalAmount : null
                 })
                 .FirstOrDefaultAsync(y => y.id == ShippingRequestId);
 
@@ -200,7 +200,7 @@ namespace TACHYON.DedicatedDynamicActorInvoices
             {
                 if(item.WorkingDayType == DedicatedDynamicInvocies.WorkingDayType.Normal)
                 {
-                    var pricePerDay = GetTruckPricePerDay(input.InvoiceAccountType, item.AllNumberDays, requestActorPrices.shipperPrice.TotalAmountWithCommission, requestActorPrices.carrierPrice?.SubTotalAmount + requestActorPrices.carrierPrice?.VatAmount);
+                    var pricePerDay = GetTruckPricePerDay(input.InvoiceAccountType, item.AllNumberDays, requestActorPrices.shipperPrice.SubTotalAmountWithCommission, requestActorPrices.carrierPrice?.SubTotalAmount );
                     item.PricePerDay = pricePerDay;
                 }
 

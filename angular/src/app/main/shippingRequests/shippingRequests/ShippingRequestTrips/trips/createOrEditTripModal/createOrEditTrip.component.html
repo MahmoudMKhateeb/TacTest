@@ -67,6 +67,14 @@
             </div>
           </div>
           <div class="modal-body" [busyIf]="loading">
+            <div
+              *ngIf="_TripService.CreateOrEditShippingRequestTripDto.isExceedMaxWaybillsNumber"
+              class="row alert alert-warning"
+              style="background-color: #fff3cd; color: #856404; border-color: #ffeeba"
+              role="alert"
+            >
+              {{ l('You are already passed the allowed number of waybills so this waybill will be priced by additional waybill price') }}
+            </div>
             <div class="row" *ngIf="_TripService.GetShippingRequestForViewOutput?.shippingRequestFlag == ShippingRequestFlagEnum.Dedicated">
               <div class="col-lg-6">
                 <div class="form-group">
@@ -367,7 +375,9 @@
                 <div class="form-group row">
                   <div
                     class="col-6 col-form-label"
-                    *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal"
+                    *ngIf="
+                      _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal && !isPortMovement
+                    "
                   >
                     <label for="DeliveryNote"> {{ l('NeedsDeliveryNote') }} </label>
                     <select
@@ -383,7 +393,7 @@
                   </div>
                   <div
                     [class]="
-                      _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal
+                      _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal && !isPortMovement
                         ? 'col-6 col-form-label'
                         : 'col-12 col-form-label'
                     "
@@ -405,7 +415,17 @@
               <div class="col-lg-6">
                 <div class="form-group">
                   <!--                expected trip Delivery Date-->
-                  <label>{{ l('ContainerNumber') }}</label>
+                  <label
+                    >{{ l('ContainerNumber') }}
+                    <span
+                      class="required-fileds"
+                      *ngIf="
+                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                      "
+                      >*</span
+                    ></label
+                  >
                   <input
                     #ContainerNumber
                     id="ContainerNumber"
@@ -414,6 +434,11 @@
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.containerNumber"
                     type="text"
                     [disabled]="_TripService.CreateOrEditShippingRequestTripDto.id && IsHaveContainerNumberValue && !isTachyonDealer"
+                    [required]="
+                      _TripService.GetShippingRequestForViewOutput != null &&
+                      (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements)
+                    "
                   />
                 </div>
               </div>
@@ -421,7 +446,17 @@
               <div class="col-lg-6">
                 <div class="form-group">
                   <!--                expected trip Delivery Date-->
-                  <label>{{ l('SealNumber') }}</label>
+                  <label
+                    >{{ l('SealNumber') }}
+                    <span
+                      class="required-fileds"
+                      *ngIf="
+                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                      "
+                      >*</span
+                    ></label
+                  >
                   <input
                     #SealNumber
                     id="SealNumber"
@@ -430,6 +465,11 @@
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.sealNumber"
                     type="text"
                     [disabled]="_TripService.CreateOrEditShippingRequestTripDto.id && IsHaveSealNumberValue && !isTachyonDealer"
+                    [required]="
+                      _TripService.GetShippingRequestForViewOutput != null &&
+                      (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements)
+                    "
                   />
                 </div>
               </div>
@@ -695,6 +735,9 @@
                 [class.invalid-trip-points]="isTripPointsInvalid && isFormSubmitted"
                 (wayPointsListChanged)="revalidatePointsFromPointsComponent()"
                 [isHomeDelivery]="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
+                [isPortMovement]="isPortMovement"
+                [shippingRequest]="shippingRequest"
+                [isEdit]="isEdit"
                 #PointsComponent
               ></PointsComponent>
               <!--  end:: RouteSteps -->

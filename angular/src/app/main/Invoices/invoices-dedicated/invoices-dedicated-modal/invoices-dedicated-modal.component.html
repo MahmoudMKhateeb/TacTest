@@ -129,13 +129,13 @@
                   id="dedicateTrucks"
                   name="dedicateTrucks"
                   [(value)]="selectedDedicateTruckId"
-                  [dataSource]="dedicateTrucks"
+                  [dataSource]="filteredDedicateTrucks"
                   [searchEnabled]="true"
                   displayExpr="displayName"
                   valueExpr="id"
                   placeholder="{{ l('SelectaTruck') }}"
                   [disabled]="!root.shippingRequestId"
-                  (onValueChanged)="LoadNumberOfDays(null)"
+                  (onValueChanged)="LoadNumberOfDays(null); filterWorkingDayTypes()"
                 >
                 </dx-select-box>
               </div>
@@ -169,7 +169,7 @@
                   id="workingDayType"
                   name="workingDayType"
                   [(value)]="dataSourceForEdit.workingDayType"
-                  [dataSource]="allWorkingDayTypes"
+                  [dataSource]="filteredWorkingDayTypes"
                   [searchEnabled]="true"
                   displayExpr="value"
                   valueExpr="key"

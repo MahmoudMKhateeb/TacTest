@@ -3,6 +3,7 @@ using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Authorization.Users;
+using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
@@ -21,6 +22,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Actors.Jobs;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Cities;
@@ -28,6 +30,7 @@ using TACHYON.Cities.Dtos;
 using TACHYON.Countries;
 using TACHYON.Dto;
 using TACHYON.Editions.Dto;
+using TACHYON.Features;
 using TACHYON.MultiTenancy.Dto;
 using TACHYON.Url;
 
@@ -41,15 +44,17 @@ namespace TACHYON.MultiTenancy
 
         private readonly IRepository<County, int> _lookup_countryRepository;
         private readonly IRepository<City, int> _lookup_cityRepository;
+        private readonly IBackgroundJobManager _jobManager;
 
 
         public TenantAppService(IRepository<County, int> lookup_countryRepository,
-            IRepository<City, int> lookup_cityRepository)
+            IRepository<City, int> lookup_cityRepository, IBackgroundJobManager jobManager)
         {
             AppUrlService = NullAppUrlService.Instance;
             EventBus = NullEventBus.Instance;
             _lookup_countryRepository = lookup_countryRepository;
             _lookup_cityRepository = lookup_cityRepository;
+            _jobManager = jobManager;
         }
 
         public async Task<PagedResultDto<TenantListDto>> GetTenants(GetTenantsInput input)
@@ -160,6 +165,14 @@ namespace TACHYON.MultiTenancy
         {
             await TenantManager.SetFeatureValuesAsync(input.Id,
                 input.FeatureValues.Select(fv => new NameValue(fv.Name, fv.Value)).ToArray());
+            bool isCmsEnabled = input.FeatureValues.Any(x =>
+                x.Name.Equals(AppFeatures.CMS) && x.Value.ToLower().Equals(true.ToString().ToLower()));
+
+            if (isCmsEnabled)
+            {
+                await _jobManager.EnqueueAsync<CreateMyselfActorJob, CreateMyselfActorJobArgs>(
+                    new CreateMyselfActorJobArgs { TenantIds = new[] { input.Id } });
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenants_ChangeFeatures)]

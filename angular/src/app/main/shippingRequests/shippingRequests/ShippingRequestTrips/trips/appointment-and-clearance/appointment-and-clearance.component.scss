@@ -1,0 +1,16 @@
+::ng-deep {
+    appointment-and-clearance-modal {
+        .dx-fileuploader-content {
+            display: flex !important;
+            .dx-fileuploader-input-wrapper {
+                &::before {
+                    padding-top: 0 !important;
+                }
+
+            }
+            .dx-fileuploader-files-container {
+                padding-top: 0 !important;
+            }
+        }
+    }
+}

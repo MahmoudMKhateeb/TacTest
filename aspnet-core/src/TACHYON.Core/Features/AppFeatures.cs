@@ -24,8 +24,13 @@
         public const string CanClientLoginToSystem = "App.CanClientLoginToSystem";
         public const string CreateDirectTrip = "App.CreateDirectTrip";
         public const string DocumentsManagement = "App.DocumentsManagement";
+        public const string SaasInvoicingActivation = "App.SaasInvoicingActivation";
         public const string Receiver = "App.Receiver";
         public const string TachyonDealer = "App.TachyonDealer";
+        public const string NumberOfWaybills = "App.NumberOfWaybills";
+        public const string ImportFunctionality = "App.ImportFunctionality";
+        public const string MaxNumberOfWaybills = "App.NumberOfWaybills.MaxNumberOfWaybills";
+        public const string AdditionalWaybillPrice = "App.NumberOfWaybills.AdditionalWaybillPrice";
         public const string ShippingRequest = "App.shippingRequest";
         public const string MarketPlace = "App.MarketPlace";
         public const string OffersMarketPlace = "App.OffersMarketPlace";
@@ -160,8 +165,6 @@
 
         public const string SaasRelatedCarrier = "App.Shipper.SaaSCarrier";
         public const string Saas = "App.Shipper.Saas";
-
-        public const string NormalPricePackages = "App.NormalPricePackage";
         #endregion
 
         public const string Bidding = "App.Pay.Bidding";

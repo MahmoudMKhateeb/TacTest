@@ -3,6 +3,7 @@ using TACHYON.Common;
 using TACHYON.Invoices.Groups;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.Invoices.SubmitInvoices.Dto;
+using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.AutoMapper.Invoices.SubmitInvoices
 {

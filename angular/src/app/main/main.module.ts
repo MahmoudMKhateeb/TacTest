@@ -284,8 +284,6 @@ import { RequestTemplatesComponent } from './shippingRequests/shippingRequests/r
 import { CreateNewEntityTemplateModalComponent } from './shippingRequests/shippingRequests/request-templates/create-new-entity-template-modal/create-new-entity-template-modal.component';
 import { CreateOrEditTemplateDropDownButtonComponent } from './shippingRequests/shippingRequests/request-templates/create-or-edit-template-drop-down-button/create-or-edit-template-drop-down-button.component';
 import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
-import { NormalPricePackagesList } from '@app/main/shippingRequests/shippingRequests/normal-price-packages/normal-price-packages-list.component';
-import { NormalPricePackageCalculationComponent } from '@app/main/shippingRequests/shippingRequests/normal-price-packages/normal-price-package-calculation/normal-price-package-calculation-component';
 import { SrPostPriceUpdateComponent } from './shippingRequests/shippingRequests/srpost-price-update/sr-post-price-update.component';
 import { ViewSrPostPriceUpdateModalComponent } from './shippingRequests/shippingRequests/srpost-price-update/view-sr-post-price-update-modal/view-sr-post-price-update-modal.component';
 import { CardModule } from '@node_modules/primeng/card';
@@ -337,6 +335,8 @@ import { TruckAndDriverReplacementComponent } from '@app/main/shippingRequests/d
 import { PricePackageModule } from '@app/main/pricePackages/price-package.module';
 import { InvoicesDedicatedClientsComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients.component';
 import { InvoiceDedicatedClientsModalComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients-modal/invoices-dedicated-clients-modal.component';
+import { PointsForPortsMovementComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points-for-port-movement/points-for-port-movement.component';
+import { AppointmentAndClearanceModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/appointment-and-clearance/appointment-and-clearance.component';
 import { ActorSubmitInvoiceItemDetailComponent } from './Invoices/actor-submit-invoices/actor-submit-invoice-item-detail/actor-submit-invoice-item-detail.component';
 import { ActorInvoiceItemDetailComponent } from './Invoices/ActorInvoices/actor-invoice-list/actor-invoice-item-detail/actor-invoice-item-detail.component';
 import { MakeScrollableDirective } from '@app/shared/common/make-scrollable-directive/make-scrollable.directive';
@@ -606,8 +606,6 @@ import { DirectTripsComponent } from './direct-trips/direct-trips.component';
     PenaltiesListComponent,
     RegisterComplaintModalComponent,
     ViewComplaintModalComponent,
-    NormalPricePackagesList,
-    NormalPricePackageCalculationComponent,
     SrPostPriceUpdateComponent,
     ViewSrPostPriceUpdateModalComponent,
     RejectPostPriceUpdateComponent,
@@ -647,6 +645,8 @@ import { DirectTripsComponent } from './direct-trips/direct-trips.component';
     ClientDemandModelComponent,
     InvoicesDedicatedClientsComponent,
     InvoiceDedicatedClientsModalComponent,
+    PointsForPortsMovementComponent,
+    AppointmentAndClearanceModalComponent,
     ActorSubmitInvoiceItemDetailComponent,
     ActorInvoiceItemDetailComponent,
     MakeScrollableDirective,

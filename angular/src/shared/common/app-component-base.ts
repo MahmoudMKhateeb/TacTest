@@ -112,6 +112,10 @@ export abstract class AppComponentBase {
     return this.permission.isGranted(permissionName);
   }
 
+  isEnabled(featureName: string): boolean {
+    return this.feature.isEnabled(featureName);
+  }
+
   isGrantedAny(...permissions: string[]): boolean {
     if (!permissions) {
       return false;

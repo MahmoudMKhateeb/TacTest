@@ -133,6 +133,10 @@
                       {{ l('Facility') }}
                       <p-sortIcon field="facilityName"></p-sortIcon>
                     </th>
+                    <th *ngIf="hasShipperClients" pSortableColumn="shipperActorFk.companyName">
+                      {{ l('CompanyName') }}
+                      <p-sortIcon field="actorName"></p-sortIcon>
+                    </th>
                     <th style="width: 150px" pSortableColumn="fullName">
                       {{ l('ReciverName') }}
                       <p-sortIcon field="receiver.fullName"></p-sortIcon>
@@ -197,6 +201,10 @@
                     <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.facilityName }}
+                    </td>
+                    <td *ngIf="hasShipperClients">
+                      <span class="ui-column-title"> {{ l('CompanyName') }}</span>
+                      {{ record.actorName }}
                     </td>
                     <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('FullName') }}</span>

@@ -101,8 +101,8 @@ namespace TACHYON.DashboardCustomization.Definitions
 
             #region ShipperWidgets
 
-            var shipperWidgetsDefaultPermission = new List<string> { AppPermissions.App_Shipper };
-
+            var shipperWidgetsDefaultPermission = new List<string> { AppPermissions.Pages_ShipperDashboard, AppPermissions.Pages_ShipperDashboard_tripDetails };
+            var shipperWidgetsDefaultPermissionWithTrackingMapOnly = new List<string> { AppPermissions.Pages_ShipperDashboard, AppPermissions.Pages_ShipperDashboard_trackingMap };
 
            
 
@@ -118,7 +118,7 @@ namespace TACHYON.DashboardCustomization.Definitions
             var shipperMostUsedOriginsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperMostUsedOriginsWidget, "ShipperMostUsedOriginsWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperMostUsedDestinationsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperMostUsedDestinationsWidget, "ShipperMostUsedDestinationsWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperRequestsInMarketplaceWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperRequestsInMarketplaceWidget, "ShipperRequestsInMarketplaceWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
-            var shipperTrackingMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperTrackingMapWidget, "ShipperTrackingMapWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
+            var shipperTrackingMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperTrackingMapWidget, "ShipperTrackingMapWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermissionWithTrackingMapOnly);
             var shipperCountersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperCountersWidget, "ShipperCountersWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperUpcomingTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperUpcomingTripsWidget, "ShipperUpcomingTripsWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
             var shipperNeedsActionWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Shipper.ShipperNeedsActionWidget, "ShipperNeedsActionWidget", side: MultiTenancySides.Tenant, permissions: shipperWidgetsDefaultPermission);
@@ -145,7 +145,7 @@ namespace TACHYON.DashboardCustomization.Definitions
 
             #region CarrierWidgets
 
-            var carrierWidgetsDefaultPermission = new List<string> { AppPermissions.App_Carrier };
+            var carrierWidgetsDefaultPermission = new List<string> { AppPermissions.Pages_CarrierDashboard };
 
             var carrierDriversActivityWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierDriversActivityWidget, "CarrierDriversActivityWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
             var carrierTrucksActivityWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Carrier.CarrierTrucksActivityWidget, "CarrierTrucksActivityWidget", side: MultiTenancySides.Tenant, permissions: carrierWidgetsDefaultPermission);
@@ -242,6 +242,49 @@ namespace TACHYON.DashboardCustomization.Definitions
             //WidgetDefinitions.Add(tachyonDealerSearchableMapWidget);
             //WidgetDefinitions.Add(tachyonDealerRequestsHeatMapWidget);
             //WidgetDefinitions.Add(tachyonDealerNormalVsRentalRequestsWidget);
+
+            #endregion
+
+            #region BrokerWidgets
+
+              // todo: add broker permission for widgets
+              var brokerWidgetsDefaultPermission = new List<string>();
+
+              var NewActorsThisMonthWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.NewActorsThisMonthWidget, "NewActorsThisMonthWidget", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var NumberOfActors = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.NumberOfActors, "NumberOfActors", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var MostActiveActorShipper = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.MostActiveActorShipper, "MostActiveActorShipper", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var MostActiveActorCarrier = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.MostActiveActorCarrier, "MostActiveActorCarrier", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var NumberOfActiveActors = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.NumberOfActiveActors, "NumberOfActiveActors", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var MostTruckTypeUsed = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.MostTruckTypeUsed, "MostTruckTypeUsed", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var ActorNextDocDueDate = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.ActorNextDocDueDate, "ActorNextDocDueDate", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var ActorNextInvoiceDueDate = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.ActorNextInvoiceDueDate, "ActorNextInvoiceDueDate", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var NewInvoicesVsPaidInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.NewInvoicesVsPaidInvoices, "NewInvoicesVsPaidInvoices", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var PendingPriceOffers = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.PendingPriceOffers, "PendingPriceOffers", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var ActorsPaidInvoiceVsClaimedInvoice = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.ActorsPaidInvoiceVsClaimedInvoice, "ActorsPaidInvoiceVsClaimedInvoice", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var ActorsMostUsedOrigins = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.ActorsMostUsedOrigins, "ActorsMostUsedOrigins", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var ActorsMostUsedDestinations = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.ActorsMostUsedDestinations, "ActorsMostUsedDestinations", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var ActorsUpcomingTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.ActorsUpcomingTrips, "ActorsUpcomingTrips", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+              var ActorsNeedsActions = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Broker.ActorsNeedsActions, "ActorsNeedsActions", side: MultiTenancySides.Tenant, permissions: brokerWidgetsDefaultPermission);
+
+
+
+
+
+              WidgetDefinitions.Add(NewActorsThisMonthWidget);
+              WidgetDefinitions.Add(NumberOfActors);
+              WidgetDefinitions.Add(MostActiveActorShipper);
+              WidgetDefinitions.Add(MostActiveActorCarrier);
+              WidgetDefinitions.Add(NumberOfActiveActors);
+              WidgetDefinitions.Add(MostTruckTypeUsed);
+              WidgetDefinitions.Add(ActorNextDocDueDate);
+              WidgetDefinitions.Add(ActorNextInvoiceDueDate);
+              WidgetDefinitions.Add(NewInvoicesVsPaidInvoices);
+              WidgetDefinitions.Add(PendingPriceOffers);
+              WidgetDefinitions.Add(ActorsPaidInvoiceVsClaimedInvoice);
+              WidgetDefinitions.Add(ActorsMostUsedOrigins);
+              WidgetDefinitions.Add(ActorsMostUsedDestinations);
+              WidgetDefinitions.Add(ActorsUpcomingTrips);
+              WidgetDefinitions.Add(ActorsNeedsActions);
 
             #endregion
 
@@ -359,6 +402,44 @@ namespace TACHYON.DashboardCustomization.Definitions
 
             DashboardDefinitions.Add(defaultHostDashboard);
 
+            //broker
+            var defaultBrokerDashboard = new DashboardDefinition(
+                TACHYONDashboardCustomizationConsts.DashboardNames.DefaultBrokerDashboard,
+                new List<string>
+                {
+                    shipperAcceptedVsRejectedRequestsWidget.Id,
+                    shipperCompletedTripsVsPodWidget.Id,
+                    shipperInvoicesVsPaidInvoicesWidget.Id,
+                    shipperMostUsedOriginsWidget.Id,
+                    shipperMostUsedDestinationsWidget.Id,
+                    shipperTrackingMapWidget.Id,
+                    shipperCountersWidget.Id,
+                    shipperUpcomingTripsWidget.Id,
+                    shipperNeedsActionWidget.Id,
+                    shipperNewOffersWidget.Id,
+                    
+                    carrierAcceptedVsRejectedPricingWidget.Id,
+                    carrierMostUsedVasWidget.Id,
+                    carrierInvoicesVsPaidInvoicesWidget.Id,
+                    CarrierActiveDriversAndTrucksWidget.Id,
+                    CarrierNewDirectRequestsWidget.Id,
+                    NewActorsThisMonthWidget.Id,
+                    NumberOfActors.Id,
+                    MostActiveActorShipper.Id,
+                    MostActiveActorCarrier.Id,
+                    NumberOfActiveActors.Id,
+                    MostTruckTypeUsed.Id,
+                    ActorNextDocDueDate.Id,
+                    ActorNextInvoiceDueDate.Id,
+                    NewInvoicesVsPaidInvoices.Id,
+                    PendingPriceOffers.Id,
+                    ActorsPaidInvoiceVsClaimedInvoice.Id,
+                    ActorsMostUsedOrigins.Id,
+                    ActorsMostUsedDestinations.Id,
+                    ActorsUpcomingTrips.Id,
+                    ActorsNeedsActions.Id,
+                });
+            DashboardDefinitions.Add(defaultBrokerDashboard);
             // Add your dashboard definiton here
 
             #endregion

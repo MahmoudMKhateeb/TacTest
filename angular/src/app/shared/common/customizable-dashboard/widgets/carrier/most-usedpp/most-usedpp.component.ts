@@ -68,6 +68,7 @@ export class MostUsedppComponent extends AppComponentBase implements OnInit {
             colors: ['transparent'],
           },
           yaxis: {
+            opposite: this.isRtl,
             labels: {
               show: false,
             },

@@ -1,6 +1,7 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
+  BrokerDashboardServiceProxy,
   CarrierDashboardServiceProxy,
   NeedsActionTripDto,
   ShipperDashboardServiceProxy,
@@ -17,6 +18,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./upcoming-trips-widgets.component.css'],
 })
 export class UpcomingTripsWidgetsComponent extends AppComponentBase implements OnInit {
+  @Input('isForActors') isForActors = false;
   today = new Date();
   weekDates: Date[] = [];
   upcomingTrips: UpcomingTripsOutput[];
@@ -28,6 +30,7 @@ export class UpcomingTripsWidgetsComponent extends AppComponentBase implements O
     injector: Injector,
     private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy,
     private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy,
+    private _brokerDashboardServiceProxy: BrokerDashboardServiceProxy,
     private router: Router
   ) {
     super(injector);
@@ -42,6 +45,14 @@ export class UpcomingTripsWidgetsComponent extends AppComponentBase implements O
 
   getUpcomingTripsForShipper(): void {
     this.loading = true;
+    if (this.isForActors) {
+      this._brokerDashboardServiceProxy.getUpcomingTrips().subscribe((res) => {
+        this.upcomingTrips = res;
+        this.selectDay(this.weekDates[0]);
+        this.loading = false;
+      });
+      return;
+    }
     if (this.isShipper) {
       this._shipperDashboardServiceProxy.getUpcomingTrips().subscribe((res) => {
         this.upcomingTrips = res;

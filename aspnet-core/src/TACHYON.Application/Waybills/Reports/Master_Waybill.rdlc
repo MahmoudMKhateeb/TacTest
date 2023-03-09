@@ -143,10 +143,18 @@
           <DataField>SealNumber</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="MultipleDropsOrTripsLable">
+          <DataField>MultipleDropsOrTripsLable</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="MultipleDropsOrTripsLableAr">
+          <DataField>MultipleDropsOrTripsLableAr</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>DataSet1</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\DataSet1.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core1\aspnet-core\src\TACHYON.Application\Waybills\Reports\DataSet1.xsd</rd:SchemaPath>
         <rd:TableName>Trucks</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
@@ -615,7 +623,25 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>:حمولات متعددة</Value>
+                    <Value> : </Value>
+                    <Style>
+                      <FontFamily>cairo</FontFamily>
+                      <FontSize>9pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <Color>#282828</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=First(Fields!MultipleDropsOrTripsLableAr.Value, "DataSet1")</Value>
+                    <Style>
+                      <FontFamily>cairo</FontFamily>
+                      <FontSize>9pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <Color>#282828</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value> متعددة</Value>
                     <Style>
                       <FontFamily>cairo</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -690,7 +716,25 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Multiple Drops:</Value>
+                    <Value>Multiple </Value>
+                    <Style>
+                      <FontFamily>Open Sans</FontFamily>
+                      <FontSize>9pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <Color>#282828</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=First(Fields!MultipleDropsOrTripsLable.Value, "DataSet1")</Value>
+                    <Style>
+                      <FontFamily>Open Sans</FontFamily>
+                      <FontSize>9pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <Color>#282828</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>:</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -1201,12 +1245,6 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>+966</Value>
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                                <TextRun>
                                   <Value>=Fields!Mobile.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
@@ -1332,7 +1370,16 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Drops Details</Value>
+                                  <Value>=First(Fields!MultipleDropsOrTripsLable.Value, "DataSet1")</Value>
+                                  <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Cairo</FontFamily>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value> Details</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Cairo</FontFamily>
@@ -1369,7 +1416,23 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>تفاصيل  الحمولات</Value>
+                                  <Value>تفاصيل </Value>
+                                  <Style>
+                                    <FontFamily>cairo</FontFamily>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=First(Fields!MultipleDropsOrTripsLableAr.Value, "DataSet1")</Value>
+                                  <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Cairo</FontFamily>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value xml:space="preserve">   </Value>
                                   <Style>
                                     <FontFamily>cairo</FontFamily>
                                     <Color>White</Color>
@@ -1462,7 +1525,24 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Total Drops:</Value>
+                                  <Value>Total </Value>
+                                  <Style>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Color>#282828</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=First(Fields!MultipleDropsOrTripsLable.Value, "DataSet1")</Value>
+                                  <Style>
+                                    <FontFamily>open sans</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value> :</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1609,7 +1689,25 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>:مجموع الحمولات</Value>
+                                  <Value>  : مجموع </Value>
+                                  <Style>
+                                    <FontFamily>cairo</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Color>#282828</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=First(Fields!MultipleDropsOrTripsLableAr.Value, "DataSet1")</Value>
+                                  <Style>
+                                    <FontFamily>cairo</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Color>#282828</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value xml:space="preserve"> </Value>
                                   <Style>
                                     <FontFamily>cairo</FontFamily>
                                     <FontSize>8pt</FontSize>

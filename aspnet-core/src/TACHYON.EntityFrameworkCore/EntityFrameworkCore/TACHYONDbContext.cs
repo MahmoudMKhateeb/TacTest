@@ -1,11 +1,9 @@
-﻿using TACHYON.Integration.BayanIntegration;
+using TACHYON.Integration.BayanIntegration;
 using TACHYON.Regions;
-using Abp.Events.Bus.Entities;
-﻿using TACHYON.Actors;
+using TACHYON.Actors;
 using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Linq.Expressions;
@@ -21,7 +19,6 @@ using TACHYON.Countries;
 using TACHYON.Countries.CountriesTranslations;
 using TACHYON.DataFilters;
 using TACHYON.Documents.DocumentFiles;
-using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypeTranslations;
 using TACHYON.DriverLicenseTypes;
@@ -60,7 +57,6 @@ using TACHYON.Routs;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Routs.RoutTypes;
-using TACHYON.Shipping;
 using TACHYON.Shipping.Accidents;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.RoutPoints;
@@ -95,15 +91,15 @@ using TACHYON.Vases;
 using TACHYON.Penalties;
 using TACHYON.PricePackages.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageProposals;
-using TACHYON.PricePackages.TmsPricePackages;
 using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequestAndTripNotes;
 using TACHYON.Shipping.Dedicated;
 using TACHYON.DedicatedInvoices;
 using TACHYON.DedicatedDynamicInvoices.DedicatedDynamicInvoiceItems;
-using TACHYON.PricePackages.TmsPricePackageOffers;
 using TACHYON.DedicatedDynamicActorInvoices;
 using TACHYON.DedicatedDynamicActorInvoices.DedicatedDynamicActorInvoiceItems;
+using TACHYON.PricePackages.PricePackageOffers;
+using TACHYON.Tracking.AdditionalSteps;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -327,9 +323,6 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<EntityLog> EntityLogs { get; set; }
 
         public DbSet<EntityTemplate> EntityTemplates { get; set; }
-        public DbSet<NormalPricePackage> NormalPricePackages { get; set; }
-        public DbSet<PricePackageOffer> PricePackageOffers { get; set; }
-        public DbSet<PricePackageOfferItem> PricePackageOfferItems { get; set; }
 
         public DbSet<ShippingRequestUpdate> ShippingRequestUpdates { get; set; }
 
@@ -345,13 +338,14 @@ namespace TACHYON.EntityFrameworkCore
 
         public DbSet<DedicatedDynamicActorInvoice> DedicatedDynamicActorInvoices { get; set; }
         public DbSet<DedicatedDynamicActorInvoiceItem> DedicatedDynamicActorInvoiceItems { get; set; }
-        public DbSet<TmsPricePackage> TmsPricePackages { get; set; }
+        public DbSet<PricePackage> PricePackages { get; set; }
         
         public DbSet<PricePackageProposal> Proposals { get; set; }
 
         public DbSet<PricePackageAppendix> Appendixes { get; set; }
 
-        public DbSet<TmsPricePackageOffer> TmsPricePackageOffers { get; set; }
+        public DbSet<PricePackageOffer> TmsPricePackageOffers { get; set; }
+        public DbSet<AdditionalStepTransition> AdditionalStepTransitions { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;

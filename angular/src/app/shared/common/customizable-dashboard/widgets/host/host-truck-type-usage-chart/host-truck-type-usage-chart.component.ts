@@ -70,6 +70,9 @@ export class HostTruckTypeUsageChartComponent extends AppComponentBase implement
           xaxis: {
             categories: this.types,
           },
+          yaxis: {
+            opposite: this.isRtl,
+          },
 
           fill: {
             opacity: 1,

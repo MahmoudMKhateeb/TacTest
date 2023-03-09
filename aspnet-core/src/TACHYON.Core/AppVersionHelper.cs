@@ -1,4 +1,4 @@
-﻿using Abp.Reflection.Extensions;
+using Abp.Reflection.Extensions;
 using System;
 using System.IO;
 
@@ -13,7 +13,7 @@ namespace TACHYON
         /// Gets current version of the application.
         /// It's also shown in the web page.
         /// </summary>
-        public const string Version = "3.6.0";
+        public const string Version = "3.8.0";
 
         /// <summary>
         /// Gets release (last build) date of the application.

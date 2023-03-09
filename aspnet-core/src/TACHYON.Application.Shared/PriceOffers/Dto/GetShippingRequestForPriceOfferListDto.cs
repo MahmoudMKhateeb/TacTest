@@ -14,7 +14,7 @@ namespace TACHYON.PriceOffers.Dto
     {
         public long? DirectRequestId { get; set; }
         public long? OfferId { get; set; }
-        public long? BidNormalPricePackageId { get; set; }
+        
         public int? GoodCategoryId { get; set; }
         public string Name { get; set; }
         public decimal ShipperRating { get; set; }
@@ -53,6 +53,7 @@ namespace TACHYON.PriceOffers.Dto
         public string BidStatusTitle { get; set; }
         public string DirectRequestStatusTitle { get; set; }
         public ShippingRequestRouteType RouteTypeId { get; set; }
+        public ShippingTypeEnum ShippingTypeId { get; set; }
         public string RouteType { get { return RouteTypeId.GetEnumDescription(); } }
         public decimal? Price { get; set; }
 
@@ -92,6 +93,8 @@ namespace TACHYON.PriceOffers.Dto
         public int TenantId { get; set; }
         public bool IsDriversAndTrucksAssigned { get; set; }
         public bool CanAssignDedicatedDriversAndTrucks { get; set; }
+
+        public long? OriginFacilityId { get; set; }
 
         public bool IsSaas
         {

@@ -12,6 +12,7 @@ import {
   ShippingRequestTripFlag,
   ShippingRequestTripStatus,
   ShippingRequestType,
+  ShippingTypeEnum,
   TrackingListDto,
   TrackingServiceProxy,
   WaybillsServiceProxy,
@@ -63,6 +64,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   loadingTripId: number;
   ShippingRequestFlagEnum = ShippingRequestFlag;
   TripFlag = ShippingRequestTripFlag;
+  ShippingTypeEnum = ShippingTypeEnum;
   private waybillNumber: number;
 
   constructor(
@@ -123,9 +125,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
       )
       .subscribe((result) => {
         this.IsLoading = false;
-        if (result.items.length < this.maxResultCount) {
-          this.StopLoading = true;
-        }
+        this.StopLoading = result.items.length < this.maxResultCount;
         this.Items.push(...result.items);
       });
   }
@@ -134,6 +134,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     this.IsLoading = true;
     this.skipCount = 0;
     this.Items = [];
+    this.resetScrolling();
     this.LoadData();
   }
 

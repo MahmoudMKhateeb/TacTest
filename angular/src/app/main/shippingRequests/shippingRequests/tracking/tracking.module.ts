@@ -34,6 +34,9 @@ import { CascadeSelectModule } from '@node_modules/primeng/cascadeselect';
 import { TripAccidentResolveModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/resolves/trip-accident-resolve-modal.component';
 import { TrackingForceDeliverTripComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-force-deliver-trip/tracking-force-deliver-trip.component';
 import { DxCheckBoxModule, DxDataGridModule } from '@node_modules/devextreme-angular';
+import { CustomMarkerComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-marker/custom-marker.component';
+import { CustomTimelineComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-timeline/custom-timeline.component';
+import { UploadAdditionalDocumentsComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/upload-additional-documents/upload-additional-documents.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +51,9 @@ import { DxCheckBoxModule, DxDataGridModule } from '@node_modules/devextreme-ang
     AddAccidentCommentModalComponent,
     TripAccidentResolveModalComponent,
     TrackingForceDeliverTripComponent,
+    CustomMarkerComponent,
+    CustomTimelineComponent,
+    UploadAdditionalDocumentsComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),

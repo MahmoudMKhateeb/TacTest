@@ -12,6 +12,7 @@ using TACHYON.Rating;
 using TACHYON.Receivers;
 using TACHYON.Shipping.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Tracking.AdditionalSteps;
 
 namespace TACHYON.Routs.RoutPoints
 {
@@ -54,6 +55,7 @@ namespace TACHYON.Routs.RoutPoints
         public bool CanGoToNextLocation { get; set; }
 
         public int WorkFlowVersion { get; set; }
+        public int? AdditionalStepWorkFlowVersion { get; set; }
 
         [CanBeNull] public string ReceiverNote { get; set; }
         //to do receiver attribute
@@ -90,12 +92,24 @@ namespace TACHYON.Routs.RoutPoints
         //integrations
         public string BayanId { get; set; }
 
+        public List<AdditionalStepTransition> AdditionalStepTransitions { get; set; }
+
         #region Home delivery
         public DropPaymentMethod? DropPaymentMethod { get; set; }
         public bool NeedsReceiverCode { get; set; }
         public bool NeedsPOD { get; set; }
         public bool IsDeliveryConfiremed { get; set; }
 
+        #endregion
+
+        #region port movement
+        public int? PointOrder { get; set; }
+        public bool NeedsAppointment { get; set; }
+        public bool NeedsClearance { get; set; }
+        public DateTime? AppointmentDateTime { get; set; }
+        public string AppointmentNumber { get; set; }
+        public bool HasClearanceVas { get; set; }
+        public bool HasAppointmentVas { get; set; }
         #endregion
 
     }

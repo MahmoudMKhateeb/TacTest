@@ -518,7 +518,8 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
   resetPageToDefault() {
     if (
       this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultShipperDashboard ||
-      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultCarrierDashboard
+      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultCarrierDashboard ||
+      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultBrokerDashboard
     ) {
       this.resetPage(this.dashboardName);
     }

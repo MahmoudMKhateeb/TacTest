@@ -254,7 +254,7 @@
                         <!--                          <option *ngFor="let item of allCarriers" value="{{ item.id }}">{{ item.displayName }}</option>-->
                         <!--                        </select>-->
                       </div>
-                      <span class="form-text text-muted">{{ l('SelectAShippingType') }}</span>
+                      <span class="form-text text-muted">{{ l('SelectACarrier') }}</span>
                     </div>
 
                     <div class="row pb-5" *ngIf="shippingRequestType == 'bidding'" [@grow]>
@@ -304,7 +304,7 @@
                           name="shippingType"
                           formControlName="shippingType"
                           [(ngModel)]="step1Dto.shippingTypeId"
-                          (change)="resetStep2Inputs()"
+                          (change)="resetStep2Inputs(); fillAllRoundTrips()"
                           [class.is-valid]="
                             step1Form.get('shippingType').valid && (step1Form.get('shippingType').dirty || step1Form.get('shippingType').touched)
                           "
@@ -318,6 +318,39 @@
                         </select>
                       </div>
                       <span class="form-text text-muted">{{ l('SelectAShippingType') }}</span>
+                    </div>
+                    <div
+                      class="form-group"
+                      *ngIf="
+                        step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                        step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
+                      "
+                    >
+                      <label>{{ l('RoundTrip') }} <span class="required-fileds">*</span></label>
+                      <div
+                        [ngClass]="{
+                          'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
+                        }"
+                      >
+                        <select
+                          class="form-control"
+                          name="roundTripType"
+                          formControlName="roundTripType"
+                          [(ngModel)]="step1Dto.roundTripType"
+                          [class.is-valid]="
+                            step1Form.get('roundTripType').valid && (step1Form.get('roundTripType').dirty || step1Form.get('roundTripType').touched)
+                          "
+                          [class.is-invalid]="
+                            step1Form.get('roundTripType').invalid && (step1Form.get('roundTripType').dirty || step1Form.get('roundTripType').touched)
+                          "
+                          required
+                          (ngModelChange)="resetStep2Inputs(); prepareStep2Inputs()"
+                        >
+                          <option disabled [ngValue]="null">{{ l('SelectARoundTripType') }}</option>
+                          <option *ngFor="let item of allRoundTripTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                        </select>
+                      </div>
+                      <span class="form-text text-muted">{{ l('SelectARoundTripType') }}</span>
                     </div>
 
                     <div class="row">
@@ -388,7 +421,13 @@
                       <!-- Start of Select Source -->
 
                       <!-- Route type -->
-                      <div class="col-lg-6">
+                      <div
+                        class="col-lg-6"
+                        *ngIf="
+                          step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                          step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
+                        "
+                      >
                         <label> {{ l('RouteType') }} <span class="required-fileds">*</span></label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allRoutTypes }">
                           <select
@@ -420,7 +459,15 @@
                       <!--    Countries    -->
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label>{{ l('OriginCountry') }} <span class="required-fileds">*</span> </label>
+                          <label
+                            >{{
+                              step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                              step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
+                                ? l('OriginCountry')
+                                : l('Country')
+                            }}
+                            <span class="required-fileds">*</span>
+                          </label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
                             <select
                               class="form-control"
@@ -447,7 +494,7 @@
                           <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
                         </div>
                       </div>
-                      <div class="col-lg-6" [hidden]="step1Dto.shippingTypeId == 1 || step1Dto.shippingTypeId == 2">
+                      <div class="col-lg-6" [hidden]="step1Dto.shippingTypeId != ShippingTypeEnum.CrossBorderMovements">
                         <div class="form-group">
                           <label> {{ l('DestinationCountry') }}<span class="required-fileds">*</span></label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
@@ -480,7 +527,13 @@
 
                       <!--    Cities        -->
                       <div class="col-lg-6">
-                        <div class="form-group">
+                        <div
+                          class="form-group"
+                          *ngIf="
+                            step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                            step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
+                          "
+                        >
                           <label>{{ l('OriginCity') }} <span class="required-fileds">*</span> </label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
                             <select
@@ -505,8 +558,67 @@
 
                           <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
                         </div>
+                        <div
+                          class="form-group"
+                          *ngIf="
+                            step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                            step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
+                          "
+                        >
+                          <label>{{ l('Origin') }} <span class="required-fileds">*</span> </label>
+                          <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
+                            <select
+                              class="form-control"
+                              name="originFacility"
+                              formControlName="originFacility"
+                              [(ngModel)]="step2Dto.originFacilityId"
+                              [attr.disabled]="!allOriginPorts ? true : null"
+                              [class.is-valid]="
+                                step2Form.get('originFacility').valid &&
+                                (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)
+                              "
+                              [class.is-invalid]="
+                                step2Form.get('originFacility').invalid &&
+                                (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)
+                              "
+                              (ngModelChange)="
+                                validateShippingRequestType(); getCityIdFromSelectedPort($event); removeValidationForImportPortRequestOnStep2Form()
+                              "
+                              required
+                              *ngIf="step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements"
+                            >
+                              <option [ngValue]="null" disabled selected>{{ l('SelectanOrigin') }}</option>
+                              <option *ngFor="let originPort of allOriginPorts" [ngValue]="Number(originPort.id)">
+                                {{ originPort.displayName }}
+                              </option>
+                            </select>
+                            <select
+                              class="form-control"
+                              name="originCity"
+                              formControlName="originCity"
+                              [(ngModel)]="step2Dto.originCityId"
+                              [attr.disabled]="!sourceCities ? true : null"
+                              [class.is-valid]="
+                                step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
+                              "
+                              [class.is-invalid]="
+                                step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
+                              "
+                              (ngModelChange)="validateShippingRequestType(); removeValidationForExportPortRequestOnStep2Form()"
+                              required
+                              *ngIf="step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements"
+                            >
+                              <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>
+                              <option *ngFor="let originCity of sourceCities" [ngValue]="Number(originCity.id)">{{ originCity.displayName }}</option>
+                            </select>
+                          </div>
+
+                          <span class="form-text text-muted">{{
+                            step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ? l('SelectaPort') : l('SelectaCity')
+                          }}</span>
+                        </div>
                       </div>
-                      <div class="col-lg-6" [hidden]="step1Dto.shippingTypeId == 1">
+                      <div class="col-lg-6" [hidden]="step1Dto.shippingTypeId == ShippingTypeEnum.LocalInsideCity">
                         <div class="form-group">
                           <label> {{ l('DestinationCity') }}<span class="required-fileds">*</span></label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
@@ -524,7 +636,10 @@
                                 step2Form.get('destinationCity').invalid &&
                                 (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
                               "
-                              [disabled]="step1Dto.shippingTypeId == 1 || !step2Dto.originCityId ? true : null || step2Dto.routeTypeId == null"
+                              [disabled]="
+                                (step1Dto.shippingTypeId == ShippingTypeEnum.LocalInsideCity || !step2Dto.originCityId ? true : false) ||
+                                step2Dto.routeTypeId == null
+                              "
                               [selectedItemsLabel]="'{0} items selected'"
                               (ngModelChange)="validateShippingRequestType()"
                               [style]="{ width: '100%' }"
@@ -539,7 +654,13 @@
                         </div>
                       </div>
 
-                      <div class="col-lg-6">
+                      <div
+                        class="col-lg-6"
+                        [hidden]="
+                          step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                          step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
+                        "
+                      >
                         <div class="form-group">
                           <label>{{ l('NumberOfDrops') }} <span class="required-fileds">*</span></label>
                           <input
@@ -597,7 +718,17 @@
                   <div class="pb-5" [formGroup]="step3Form" data-wizard-type="step-content">
                     <div class="row">
                       <div class="col-lg-6">
-                        <label>{{ l('MainGoodCategory') }} <span class="required-fileds">*</span></label>
+                        <label
+                          >{{ l('MainGoodCategory') }}
+                          <span
+                            *ngIf="
+                              step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                              step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
+                            "
+                            class="required-fileds"
+                            >*</span
+                          ></label
+                        >
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
                           <select
                             class="form-control"
@@ -611,7 +742,10 @@
                             [class.is-invalid]="
                               step3Form.get('goodCategory').invalid && (step3Form.get('goodCategory').dirty || step3Form.get('goodCategory').touched)
                             "
-                            required
+                            [required]="
+                              step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                              step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
+                            "
                           >
                             <!--                            <option [ngValue]="undefined" disabled selected>{{ l('SelectAGoodCategory') }}</option>-->
                             <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
@@ -944,62 +1078,64 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr *ngFor="let item of selectedVases; index as i">
-                              <td>
-                                {{ selectedVasesProperties[item.vasId].vasName }}
-                              </td>
-                              <td>
-                                <input
-                                  type="number"
-                                  #VasCount="ngModel"
-                                  [attr.disabled]="selectedVasesProperties[item.vasId].vasCountDisabled || null"
-                                  id="VasCount{{ i }}"
-                                  [(ngModel)]="item.requestMaxCount"
-                                  (keypress)="numberOnly($event)"
-                                  [required]="!selectedVasesProperties[item.vasId].vasCountDisabled"
-                                  class="form-control"
-                                  name="VasCount{{ i }}"
-                                  min="0"
-                                  [class.is-invalid]="VasCount.touched && !VasCount.disabled && item.requestMaxCount <= 0"
-                                  [class.is-valid]="VasCount.touched && VasCount.valid && item.requestMaxCount > 0"
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  type="number"
-                                  #VasAmount2="ngModel"
-                                  [attr.disabled]="selectedVasesProperties[item.vasId].vasAmountDisabled || null"
-                                  id="VasAmount2{{ i }}"
-                                  [(ngModel)]="item.requestMaxAmount"
-                                  (keypress)="numberOnly($event)"
-                                  [required]="!selectedVasesProperties[item.vasId].vasAmountDisabled"
-                                  class="form-control"
-                                  name="VasAmount2{{ i }}"
-                                  min="0"
-                                  [class.is-invalid]="VasAmount2.touched && !VasAmount2.disabled && item.requestMaxAmount <= 0"
-                                  [class.is-valid]="VasAmount2.touched && VasAmount2.valid && item.requestMaxAmount > 0"
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  #numberOfTrips="ngModel"
-                                  type="number"
-                                  id="numberOfTrips{{ i }}"
-                                  [(ngModel)]="item.numberOfTrips"
-                                  (keypress)="numberOnly($event)"
-                                  class="form-control"
-                                  name="numberOfTrips{{ i }}"
-                                  required
-                                  [class.is-invalid]="
-                                    numberOfTrips.touched &&
-                                    (!numberOfTrips.valid || item.numberOfTrips == 0 || step2Dto.numberOfTrips < item.numberOfTrips)
-                                  "
-                                  [class.is-valid]="numberOfTrips.touched && numberOfTrips.valid && step2Dto.numberOfTrips >= item.numberOfTrips"
-                                  [max]="step2Dto.numberOfTrips"
-                                  min="0"
-                                />
-                              </td>
-                            </tr>
+                            <ng-container *ngFor="let item of selectedVases; index as i">
+                              <tr *ngIf="selectedVasesProperties[item.vasId]">
+                                <td>
+                                  {{ selectedVasesProperties[item.vasId].vasName }}
+                                </td>
+                                <td>
+                                  <input
+                                    type="number"
+                                    #VasCount="ngModel"
+                                    [attr.disabled]="selectedVasesProperties[item.vasId].vasCountDisabled || null"
+                                    id="VasCount{{ i }}"
+                                    [(ngModel)]="item.requestMaxCount"
+                                    (keypress)="numberOnly($event)"
+                                    [required]="!selectedVasesProperties[item.vasId].vasCountDisabled"
+                                    class="form-control"
+                                    name="VasCount{{ i }}"
+                                    min="0"
+                                    [class.is-invalid]="VasCount.touched && !VasCount.disabled && item.requestMaxCount <= 0"
+                                    [class.is-valid]="VasCount.touched && VasCount.valid && item.requestMaxCount > 0"
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="number"
+                                    #VasAmount2="ngModel"
+                                    [attr.disabled]="selectedVasesProperties[item.vasId].vasAmountDisabled || null"
+                                    id="VasAmount2{{ i }}"
+                                    [(ngModel)]="item.requestMaxAmount"
+                                    (keypress)="numberOnly($event)"
+                                    [required]="!selectedVasesProperties[item.vasId].vasAmountDisabled"
+                                    class="form-control"
+                                    name="VasAmount2{{ i }}"
+                                    min="0"
+                                    [class.is-invalid]="VasAmount2.touched && !VasAmount2.disabled && item.requestMaxAmount <= 0"
+                                    [class.is-valid]="VasAmount2.touched && VasAmount2.valid && item.requestMaxAmount > 0"
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    #numberOfTrips="ngModel"
+                                    type="number"
+                                    id="numberOfTrips{{ i }}"
+                                    [(ngModel)]="item.numberOfTrips"
+                                    (keypress)="numberOnly($event)"
+                                    class="form-control"
+                                    name="numberOfTrips{{ i }}"
+                                    required
+                                    [class.is-invalid]="
+                                      numberOfTrips.touched &&
+                                      (!numberOfTrips.valid || item.numberOfTrips == 0 || step2Dto.numberOfTrips < item.numberOfTrips)
+                                    "
+                                    [class.is-valid]="numberOfTrips.touched && numberOfTrips.valid && step2Dto.numberOfTrips >= item.numberOfTrips"
+                                    [max]="step2Dto.numberOfTrips"
+                                    min="0"
+                                  />
+                                </td>
+                              </tr>
+                            </ng-container>
                           </tbody>
                         </table>
                       </div>
@@ -1043,9 +1179,28 @@
                           <br />
                           {{ l('DestinationCity') }} : {{ shippingRequestReview?.destinationCityName }}
                           <br />
-                          {{ l('RouteType') }} : {{ l(shippingRequestReview?.routTypeName) }}
-                          <br />
-                          {{ l('NumberOfDrops') }} : {{ shippingRequestReview?.shippingRequest?.numberOfDrops }}
+                          <ng-container
+                            *ngIf="
+                              shippingRequestReview?.shippingRequest?.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                              shippingRequestReview?.shippingRequest?.shippingTypeId != ShippingTypeEnum.ExportPortMovements
+                            "
+                          >
+                            {{ l('RouteType') }} : {{ l(shippingRequestReview?.routTypeName) }}
+                            <br />
+                            {{ l('NumberOfDrops') }} : {{ shippingRequestReview?.shippingRequest?.numberOfDrops }}
+                          </ng-container>
+                          <ng-container
+                            *ngIf="
+                              shippingRequestReview?.shippingRequest?.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                              shippingRequestReview?.shippingRequest?.shippingTypeId == ShippingTypeEnum.ExportPortMovements
+                            "
+                          >
+                            <span *ngIf="shippingRequestReview?.routeTypeId === ShippingRequestRouteType.SingleDrop">
+                              {{ l('RouteType') }} : {{ l(shippingRequestReview?.routTypeName) }}
+                              <br />
+                            </span>
+                            {{ l('RoundTrip') }} : {{ l(shippingRequestReview?.roundTripTypeTitle) }}
+                          </ng-container>
                           <br />
                           {{ l('NumberOfTrips') }} : {{ shippingRequestReview?.shippingRequest?.numberOfTrips }}
                         </div>
@@ -1082,13 +1237,15 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr *ngFor="let vas of selectedVases; let i = index">
-                                <th scope="row">{{ i + 1 }}</th>
-                                <th>{{ selectedVasesProperties[vas.vasId].vasName }}</th>
-                                <td>{{ vas.requestMaxAmount == 0 ? '-' : vas.requestMaxAmount }}</td>
-                                <td>{{ vas.requestMaxCount == 0 ? '-' : vas.requestMaxCount }}</td>
-                                <td>{{ vas.numberOfTrips == 0 ? '-' : vas.numberOfTrips }}</td>
-                              </tr>
+                              <ng-container *ngFor="let vas of selectedVases; let i = index">
+                                <tr *ngIf="selectedVasesProperties[vas.vasId]">
+                                  <th scope="row">{{ i + 1 }}</th>
+                                  <th>{{ selectedVasesProperties[vas.vasId].vasName }}</th>
+                                  <td>{{ vas.requestMaxAmount == 0 ? '-' : vas.requestMaxAmount }}</td>
+                                  <td>{{ vas.requestMaxCount == 0 ? '-' : vas.requestMaxCount }}</td>
+                                  <td>{{ vas.numberOfTrips == 0 ? '-' : vas.numberOfTrips }}</td>
+                                </tr>
+                              </ng-container>
                             </tbody>
                           </table>
                         </div>

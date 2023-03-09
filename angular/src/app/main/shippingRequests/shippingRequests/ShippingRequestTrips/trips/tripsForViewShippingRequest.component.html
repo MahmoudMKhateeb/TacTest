@@ -13,12 +13,12 @@
           primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips &&
           _TripService.GetShippingRequestForViewOutput.shippingRequestFlag === ShippingRequestFlagEnum.Normal
         "
-        *ngIf="showBtnAddTrips"
+        *ngIf="isGranted('Pages.ShippingRequestTrips.Create') && showBtnAddTrips"
       >
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
       </button>
       <!-- <div role="actions"> -->
-      <div class="btn-group" dropdown [busyIf]="loading">
+      <div *ngIf="isEnabled('App.ImportFunctionality')" class="btn-group" dropdown [busyIf]="loading">
         <button
           dropdownToggle
           type="button"
@@ -26,7 +26,7 @@
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
-          *ngIf="ShippingRequest.canAddTrip"
+          *ngIf="isGranted('Pages.ShippingRequestTrips.Create') && ShippingRequest.canAddTrip"
         >
           <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
         </button>
@@ -250,7 +250,7 @@
             <tr
               [ngClass]="{
                 'table-warning': record.hasAccident || record.cancelStatus == ShippingRequestTripCancelStatusEnum.WaitingForTMSApproval,
-                'bg-info':
+                'text-danger':
                   record.cancelStatus == ShippingRequestTripCancelStatusEnum.Rejected ||
                   record.cancelStatus == ShippingRequestTripCancelStatusEnum.Canceled
               }"
@@ -352,7 +352,8 @@
                   <ul *dropdownMenu class="dropdown-menu">
                     <li
                       *ngIf="
-                        (record.status == 0 && CanEditTrip) || (record.shippingRequestTripFlag === 1 && (record.status == 0 || record.status == 1))
+                        (isGranted('Pages.ShippingRequestTrips.Edit') && record.status == 0 && CanEditTrip) ||
+                        (record.shippingRequestTripFlag === 1 && (record.status == 0 || record.status == 1))
                       "
                     >
                       <a class="dropdown-item" (click)="AddNewTripModal.show(record, _TripService.GetShippingRequestForViewOutput)">{{
@@ -361,7 +362,6 @@
                     </li>
 
                     <li>
-                      *ngIf="_TripService.GetShippingRequestForViewOutput.shippingRequestFlag === 1"
                       <a
                         class="dropdown-item"
                         *ngIf="_TripService.GetShippingRequestForViewOutput.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
@@ -381,6 +381,7 @@
                     </li>
                     <li
                       *ngIf="
+                        isGranted('Pages.ShippingRequestTrips.Edit') &&
                         record.status == ShippingRequestTripStatusEnum.Delivered &&
                         !ShippingRequest.isSaas &&
                         !record.isTripRateBefore &&
@@ -389,14 +390,15 @@
                     >
                       <a class="dropdown-item" (click)="shippingRequestRatingModal.show(record.id)">{{ l('Rating') }}</a>
                     </li>
-                    <li *ngIf="canResetTrip(record)">
+                    <li *ngIf="isGranted('Pages.ShippingRequestTrips.Edit') && canResetTrip(record)">
                       <a class="dropdown-item" (click)="ViewTripModal.ResetTrip(record.id)">{{ l('Reset') }}</a>
                     </li>
-                    <li *ngIf="record.status != ShippingRequestTripStatusEnum.New">
+                    <li *ngIf="isGranted('Pages.ShippingRequestResoneAccidents.Create') && record.status != ShippingRequestTripStatusEnum.New">
                       <a class="dropdown-item" (click)="TripAccidentModal.show(record.id, null)">{{ l('CreateAccident') }}</a>
                     </li>
                     <li
                       *ngIf="
+                        isGranted('Pages.ShippingRequestTrips.Cancel') &&
                         ShippingRequest.status == ShippingRequestStatusEnum.PrePrice &&
                         record.status == ShippingRequestTripStatusEnum.New &&
                         ((!feature.isEnabled('App.TachyonDealer') && record.cancelStatus == ShippingRequestTripCancelStatusEnum.None) ||
@@ -430,6 +432,7 @@
                     </li>
                     <li
                       *ngIf="
+                        isGranted('Pages.ShippingRequestTrips.Edit') &&
                         _TripService.GetShippingRequestForViewOutput.shippingRequestFlag === ShippingRequestFlagEnum.Normal &&
                         record.canCreateTemplate &&
                         (isShipper || isTachyonDealer || (isCarrierSaas && _TripService.GetShippingRequestForViewOutput.shippingRequest.isSaas))
@@ -437,14 +440,14 @@
                     >
                       <a class="dropdown-item" (click)="saveAsTemplateModal.show(record.id)">{{ l('SaveAsTemplate') }}</a>
                     </li>
-                    <li>
+                    <li *ngIf="isGranted('Pages.ShippingRequestTrips.Edit')">
                       <a class="dropdown-item" (click)="AddRemarksModal.show(record.id)">{{ l('Remarks') }}</a>
                     </li>
-                    <li>
+                    <li *ngIf="isGranted('Pages.ShippingRequestTrips.Edit')">
                       <a class="dropdown-item" (click)="createBayanTrip(record.id)">{{ l('createBayanTrip') }}</a>
                     </li>
 
-                    <li>
+                    <li *ngIf="isGranted('Pages.ShippingRequestTrips.Edit')">
                       <a class="dropdown-item" (click)="printBayanTrip(record.id)">{{ l('PrintBayanTrip') }}</a>
                     </li>
                   </ul>
@@ -501,7 +504,14 @@
   </app-view-imported-good-details-from-excel-modal>
   <app-view-import-vases-from-excel-modal [ImportedVasesList]="vasesList" #ViewImportedVasesModal (modalSave)="reloadPage()">
   </app-view-import-vases-from-excel-modal>
-  <viewTripModal #ViewTripModal (modalSave)="reloadPage()"></viewTripModal>
+  <viewTripModal
+    #ViewTripModal
+    (modalSave)="reloadPage()"
+    [isPortMovement]="
+      _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+      _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+    "
+  ></viewTripModal>
   <trip-accident-modal #TripAccidentModal (modalSave)="getShippingRequestsTrips($event)"></trip-accident-modal>
   <view-trip-accident-modal #ViewTripAccidentModal (modalcanceltrip)="reloadPage()"></view-trip-accident-modal>
   <app-shipping-request-rating-modal #shippingRequestRatingModal></app-shipping-request-rating-modal>
@@ -512,6 +522,10 @@
   (modalSave)="reloadPage()"
   [shippingRequest]="ShippingRequest"
   [VasListFromFather]="VasListFromFather"
+  [isPortMovement]="
+    _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+    _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+  "
 ></AddNewTripModal>
 <app-view-cancel-reason-modal #ViewCancelReasonModal></app-view-cancel-reason-modal>
 <app-cancel-trip-modal #CancelTripModal (modalSave)="reloadPage()"></app-cancel-trip-modal>

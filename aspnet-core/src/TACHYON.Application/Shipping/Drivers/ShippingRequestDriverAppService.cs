@@ -1,9 +1,10 @@
-﻿using Abp;
+using Abp;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.EntityFrameworkCore.EFPlus;
 using Abp.EntityHistory;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Validation;
@@ -22,6 +23,7 @@ using System.Threading.Tasks;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.DriverLocationLogs;
 using TACHYON.DriverLocationLogs.dtos;
 using TACHYON.EntityLogs;
@@ -46,6 +48,7 @@ using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Storage;
 using TACHYON.Tracking;
+using TACHYON.Tracking.AdditionalSteps;
 using TACHYON.Tracking.Dto;
 using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Trucks.TrucksTypes.Dtos;
@@ -70,6 +73,9 @@ namespace TACHYON.Shipping.Drivers
         private readonly ShippingRequestPointWorkFlowProvider _workFlowProvider;
 
         private readonly IRepository<User, long> _userRepository;
+        private readonly IRepository<AdditionalStepTransition, long> _additionalStepTransitionRepository;
+        private readonly AdditionalStepWorkflowProvider _stepWorkflowProvider;
+
         public ShippingRequestDriverAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTrip,
             IRepository<RoutPoint, long> RoutPointRepository,
@@ -81,7 +87,9 @@ namespace TACHYON.Shipping.Drivers
             RatingLogManager ratingLogManager,
             IRepository<DriverLocationLog, long> driverLocationLogRepository,
             ShippingRequestPointWorkFlowProvider workFlowProvider,
-            IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository)
+            IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository,
+            IRepository<AdditionalStepTransition, long> additionalStepTransitionRepository,
+            AdditionalStepWorkflowProvider stepWorkflowProvider)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
@@ -94,6 +102,8 @@ namespace TACHYON.Shipping.Drivers
             _driverLocationLogRepository = driverLocationLogRepository;
             _workFlowProvider = workFlowProvider;
             _routPointStatusTransitionRepository = routPointStatusTransitionRepository;
+            _additionalStepTransitionRepository = additionalStepTransitionRepository;
+            _stepWorkflowProvider = stepWorkflowProvider;
         }
         /// <summary>
         /// list all trips realted with drivers
@@ -111,11 +121,9 @@ namespace TACHYON.Shipping.Drivers
         .Include(i => i.ShippingRequestFk)
              .ThenInclude(r => r.ShippingRequestDestinationCities)
              .ThenInclude(x=>x.CityFk)
-       .Include(i => i.ShippingRequestFk)
-              .ThenInclude(r => r.OriginCityFk)
-       .Include(i => i.OriginFacilityFk)
+        .Include(i => i.OriginFacilityFk)
        .ThenInclude(i=>i.CityFk)
-       .Include(i => i.DestinationFacilityFk)
+       .Include(i => i.DestinationFacilityFk).ThenInclude(x=> x.CityFk)
            .Where(t => t.AssignedDriverUserId == AbpSession.UserId && t.Status != ShippingRequestTripStatus.Canceled && t.DriverStatus != ShippingRequestTripDriverStatus.Rejected)
         .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Current, e => e.StartTripDate.Date <= Clock.Now.Date && e.Status != ShippingRequestTripStatus.Delivered && e.Status != ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
         .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Past, e => (e.Status == ShippingRequestTripStatus.Delivered || e.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation))
@@ -199,6 +207,7 @@ namespace TACHYON.Shipping.Drivers
         {
             DisableTenancyFilters();
             var trip = await _ShippingRequestTrip.GetAll()
+            .Include(i => i.GoodCategoryFk)
             .Include(i => i.ShippingRequestFk)
                .ThenInclude(r => r.ShippingRequestDestinationCities)
                .ThenInclude(x=>x.CityFk)
@@ -303,7 +312,10 @@ namespace TACHYON.Shipping.Drivers
             //})));
 
             //return good category name automatic from default language
-            tripDto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk).DisplayName;
+            var goodCategory = trip.ShippingRequestId.HasValue
+                ? trip.ShippingRequestFk.GoodCategoryFk
+                : trip.GoodCategoryFk;
+            tripDto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(goodCategory).DisplayName;
 
             if (trip.Status == ShippingRequestTripStatus.New &&
                 trip.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
@@ -345,11 +357,20 @@ namespace TACHYON.Shipping.Drivers
                  PickingType = x.PickingType,
                  IsPodUploaded = x.IsPodUploaded,
                  WaybillNumber = x.WaybillNumber,
-                 IsSaas = x.ShippingRequestTripFk.ShippingRequestFk.IsSaas(),
-                 AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status)
+                 IsSaas = x.ShippingRequestTripFk.ShippingRequestId.HasValue ? x.ShippingRequestTripFk.ShippingRequestFk.IsSaas() : (x.ShippingRequestTripFk.CarrierTenantId == x.ShippingRequestTripFk.ShipperTenantId),
+                 AvailableTransactions = !x.IsResolve ? new List<PointTransactionDto>() : _workFlowProvider.GetTransactionsByStatus(x.WorkFlowVersion, x.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(), x.Status),
+                 AdditionalStepWorkFlowVersion = x.AdditionalStepWorkFlowVersion
              }).ToListAsync();
             if (routes == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             routes.ForEach(x => x.StatusTitle = x.Status == RoutePointStatus.StandBy ? L("PointStandBy") : L(x.Status.ToString()));
+            foreach (var routePoint in routes.Where(routePoint => routePoint.AdditionalStepWorkFlowVersion is { }))
+            {
+                routePoint.AdditionalSteps =
+                    (await _stepWorkflowProvider.GetPointAdditionalSteps(routePoint.AdditionalStepWorkFlowVersion.Value,
+                        routePoint.Id)).Select(x =>
+                        new AdditionalStepDto { Action = x.Action, Name = x.Name, StepType = x.AdditionalStepType })
+                    .ToList();
+            }
             var trip = _ShippingRequestTrip.Get(id);
             var mapper = ObjectMapper.Map<DriverRoutPointDto>(trip);
             mapper.RoutPoint = routes;
@@ -371,12 +392,19 @@ namespace TACHYON.Shipping.Drivers
                 .Include(i => i.GoodsDetails)
                  .ThenInclude(i => i.UnitOfMeasureFk)
                  .ThenInclude(x => x.Translations)
-            .SingleOrDefaultAsync(t => t.Id == PointId && t.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && t.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && t.ShippingRequestTripFk.DriverStatus != ShippingRequestTripDriverStatus.Rejected);
+            .SingleOrDefaultAsync(t => t.Id == PointId && t.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled 
+            && t.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId 
+            && t.ShippingRequestTripFk.DriverStatus != ShippingRequestTripDriverStatus.Rejected);
 
             if (Point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
             var DropOff = ObjectMapper.Map<RoutDropOffDto>(Point);
-
+            var appointDocument = await _workFlowProvider.GetPointAttachment(PointId, RoutePointDocumentType.Appointment);
+            DropOff.DropAppointmentData.AppointmentNumber = Point.AppointmentNumber;
+            DropOff.DropAppointmentData.AppointmentDateTime = Point.AppointmentDateTime;
+            DropOff.DropAppointmentData.AppointmentFileName = appointDocument?.DocumentName;
+            DropOff.DropAppointmentData.AppointmentDocumentId = appointDocument?.DocumentId;
+            DropOff.DropAppointmentData.AppointmentDocumentContentType = appointDocument?.DocumentContentType;
             var statuses = await _routPointStatusTransitionRepository.GetAll()
                 .Where(x => x.PointId == PointId && !x.IsReset)
                 .Select(s => s.Status).ToListAsync();
@@ -392,6 +420,23 @@ namespace TACHYON.Shipping.Drivers
                 : _workFlowProvider.GetTransactionsByStatus(Point.WorkFlowVersion, statuses, Point.Status);
 
             return DropOff;
+        }
+
+        public async Task<List<GetAllUploadedFileDto>> GetAppointmentFile(long pointId)
+        {
+            DisableTenancyFilters();
+            return await _workFlowProvider.GetPointFile(pointId, RoutePointDocumentType.Appointment);
+        }
+
+        public async Task<List<AdditionalStepTransitionDto>> GetAllPointAdditionalFilesTransitions(long pointId)
+        {
+            return await _stepWorkflowProvider.GetAllPointAdditionalFilesTransitions(pointId);
+        }
+
+        public async Task<List<GetAllUploadedFileDto>> GetPointFile(long pointId, RoutePointDocumentType type)
+        {
+            DisableTenancyFilters();
+            return await _workFlowProvider.GetPointFile(pointId, type);
         }
 
         /// <summary>
@@ -600,6 +645,9 @@ namespace TACHYON.Shipping.Drivers
                 request.Status = ShippingRequestStatus.PostPrice;
 
                 await _shippingRequestTripTransitionRepository.DeleteAsync(x => x.ToPoint.ShippingRequestTripId == trip.Id);
+                // todo test this
+                await _additionalStepTransitionRepository.BatchUpdateAsync(
+                    x => new AdditionalStepTransition{ IsReset = true} , x => x.RoutePoint.ShippingRequestTripId == trip.Id);
 
                 trip.HasAccident = false;
                 //to save current trip incident

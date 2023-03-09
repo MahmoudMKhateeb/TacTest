@@ -9,10 +9,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.RegularExpressions;
 using TACHYON.Goods.GoodsDetails.Dtos;
+using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
 {
-    public class CreateOrEditRoutPointDto : EntityDto<long?>, ICreateOrEditRoutPointDtoBase ,ICustomValidate
+    public class CreateOrEditRoutPointDto : EntityDto<long?>, ICreateOrEditRoutPointDtoBase, ICustomValidate
     {
         public string DisplayName { get; set; }
         public PickingType PickingType { get; set; }
@@ -48,6 +49,15 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public DropPaymentMethod? DropPaymentMethod { get; set; }
         public bool? NeedsReceiverCode { get; set; }
         public bool? NeedsPOD { get; set; }
+        #region Port Movements
+        public int? PointOrder { get; set; }
+
+        public bool DropNeedsAppointment { get; set; }
+        public bool DropNeedsClearance { get; set; }
+
+        public TripAppointmentDataDto AppointmentDataDto { get; set; }
+        public TripClearancePricesDto TripClearancePricesDto {get; set;}
+        #endregion
 
         #endregion
 
@@ -56,11 +66,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public void AddValidationErrors(CustomValidationContext context)
         {
             if (PickingType == PickingType.Pickup) return;
-            //additional receiver must provided
-            if (!ReceiverId.HasValue && ReceiverPhoneNumber.IsNullOrEmpty())
-            {
-                context.Results.Add(new ValidationResult("AtLeastOneReceiverShouldBeProvided"));
-            }
+            
 
             //there is additional receiver
             if (ReceiverPhoneNumber != null)

@@ -1,14 +1,12 @@
 using Abp;
 using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
-using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Notifications;
 using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
-using NUglify.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -21,7 +19,7 @@ using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
-using TACHYON.PricePackages.Dto.NormalPricePackage;
+using TACHYON.PricePackages.Dto;
 using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
@@ -502,7 +500,7 @@ namespace TACHYON.Notifications
             {
                 var notificationData = new LocalizableMessageNotificationData(
                                 new LocalizableString(
-                                    L("ShippingRequestAsBidWithMatchingPricePackage", shippingRequestReferance, carrier.PricePackageReferance),
+                                    L("ShippingRequestAsBidWithMatchingPricePackage", shippingRequestReferance, carrier.PricePackageReference),
                                     TACHYONConsts.LocalizationSourceName
                                     )
                                 );
@@ -535,7 +533,7 @@ namespace TACHYON.Notifications
         }
 
 
-        public async Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request)
+        public async Task ShipperShippingRequestFinish(UserIdentifier argsUser, long requestId)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -543,7 +541,7 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                 )
             );
-            notificationData["requestid"] = Request.Id;
+            notificationData["requestid"] = requestId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperShippingRequestFinish,
                 notificationData,
                 userIds: new[] { argsUser });
@@ -1140,7 +1138,10 @@ namespace TACHYON.Notifications
 
         public async Task DriverAcceptTrip(ShippingRequestTrip Trip, string driver)
         {
-            var notifiedUser = await GetAdminUser(Trip.ShippingRequestFk.CarrierTenantId);
+            int? carrierTenantId = Trip.ShippingRequestId.HasValue
+                ? Trip.ShippingRequestFk.CarrierTenantId
+                : Trip.CarrierTenantId;
+            var notifiedUser = await GetAdminUser(carrierTenantId);
             var isNotificationSubscribed = await _notificationSubscriptionManager
                 .IsSubscribedAsync(notifiedUser, AppNotificationNames.DriverAcceptTrip);
             
@@ -1267,6 +1268,24 @@ namespace TACHYON.Notifications
                 await _notificationPublisher.PublishAsync(AppNotificationNames.TripNeedsDeliveryNote, notificationData,
                     userIds: new[] { new UserIdentifier(carrierTenantId, user.Id) });
             }
+        }
+
+        public async Task NotifyTMSWithMaxWaybillsExceeds(int tenantId)
+        {
+            var user = (await _tenantsRepository.FirstOrDefaultAsync(tenantId)).TenancyName;
+
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("TenantExceedMaxWaybillNo",user),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["tenantId"] = tenantId;
+            var TMSuser = await GetAdminTachyonDealerAsync();
+                await _notificationPublisher.PublishAsync(AppNotificationNames.TripNeedsDeliveryNote, notificationData,
+                    userIds: new[] { TMSuser });
+            
         }
 
         #endregion

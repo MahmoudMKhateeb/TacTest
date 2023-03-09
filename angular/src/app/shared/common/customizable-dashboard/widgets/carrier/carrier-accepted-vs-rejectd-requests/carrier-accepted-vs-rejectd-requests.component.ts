@@ -6,6 +6,7 @@ import { finalize } from '@node_modules/rxjs/operators';
 import { ApexLegend } from '@node_modules/ng-apexcharts';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { DashboardCustomizationService } from '@app/shared/common/customizable-dashboard/dashboard-customization.service';
 
 @Component({
   selector: 'app-carrier-accepted-vs-rejectd-requests',
@@ -27,13 +28,19 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
   options: { key: any; value: any }[] = [];
   selectedOption = FilterDatePeriod.Monthly;
 
-  constructor(injector: Injector, private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy, private _enumService: EnumToArrayPipe) {
+  constructor(
+    injector: Injector,
+    private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy,
+    private _enumService: EnumToArrayPipe,
+    private dashboardCustomizationService: DashboardCustomizationService
+  ) {
     super(injector);
   }
 
   ngOnInit() {
     this.getRequests();
     this.options = this._enumService.transform(FilterDatePeriod);
+    this.dashboardCustomizationService.setColors(this.hasShipperClients && this.hasCarrierClients);
   }
 
   getRequests() {
@@ -55,7 +62,20 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
         };
         let categories = [];
         if (this.selectedOption == FilterDatePeriod.Monthly) {
-          categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          categories = [
+            this.l('Jan'),
+            this.l('Feb'),
+            this.l('Mar'),
+            this.l('Apr'),
+            this.l('May'),
+            this.l('Jun'),
+            this.l('Jul'),
+            this.l('Aug'),
+            this.l('Sep'),
+            this.l('Oct'),
+            this.l('Nov'),
+            this.l('Dec'),
+          ];
         }
         if (this.selectedOption == FilterDatePeriod.Weekly) {
           categories = Array.from(
@@ -63,7 +83,7 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
           );
         }
         if (this.selectedOption == FilterDatePeriod.Daily) {
-          categories = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+          categories = [this.l('Sun'), this.l('Mon'), this.l('Tue'), this.l('Wed'), this.l('Thu'), this.l('Fri'), this.l('Sat')];
         }
         const acceptedSeries = categories.map((item) => {
           const foundFromResponse = result.acceptedOffers.find((accepted) => {
@@ -94,12 +114,12 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
             {
               name: this.l('Accepted'),
               data: acceptedSeries,
-              color: 'rgba(105, 228, 94, 0.89)',
+              color: this.dashboardCustomizationService.acceptedColor,
             },
             {
               name: this.l('Rejected'),
               data: rejectedSeries,
-              color: '#d82631',
+              color: this.dashboardCustomizationService.rejectedColor,
             },
           ],
           chart: {
@@ -114,6 +134,7 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
             categories,
           },
           yaxis: {
+            opposite: this.isRtl,
             min: 0,
             tickAmount: 1,
             floating: false,

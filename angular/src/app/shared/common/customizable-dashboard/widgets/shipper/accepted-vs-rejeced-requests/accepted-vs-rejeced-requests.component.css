@@ -10,6 +10,10 @@
   background-color: rgba(105, 228, 94, 0.89);
 }
 
+.accepted.broker {
+  background-color: #000;
+}
+
 .rejected {
   color: #fff;
   background-color: #d82631;
