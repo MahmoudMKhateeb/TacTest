@@ -421,6 +421,10 @@ namespace TACHYON.Shipping.Trips
                     ObjectMapper.Map<DocumentTypeDto>(documentType);
             }
 
+            //Identify the prices objects if the shipment is entered from import, no prices saved in import process
+            if (shippingRequestTrip.ShippingRequestId == null && shippingRequestTrip.ActorCarrierPrice == null) shippingRequestTrip.ActorCarrierPrice = new PriceOffers.Dto.CreateOrEditActorCarrierPrice();
+            if (shippingRequestTrip.ShippingRequestId == null && shippingRequestTrip.ActorShipperPrice == null) shippingRequestTrip.ActorShipperPrice = new PriceOffers.Dto.CreateOrEditActorShipperPriceDto();
+
             return shippingRequestTrip;
         }
 
@@ -864,7 +868,7 @@ namespace TACHYON.Shipping.Trips
 
             }
             //AssignWorkFlowVersionToRoutPoints(trip);
-            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.RoutPoints.ToList(), trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,request.ShippingTypeId,request.RoundTripType);
+            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints( trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,request.ShippingTypeId,request.RoundTripType, trip.RoutPoints.ToArray());
             //insert trip 
             var shippingRequestTripId = await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
 
@@ -1022,7 +1026,7 @@ namespace TACHYON.Shipping.Trips
                     trip.RoutPoints?.Where(x => x.Status == RoutePointStatus.StandBy).ToList();
 
                 if (pointHasAbilityToChangeWorkflow != null && pointHasAbilityToChangeWorkflow.Count > 0)
-                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(pointHasAbilityToChangeWorkflow, trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag, request.ShippingTypeId,request.RoundTripType);
+                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag, request.ShippingTypeId,request.RoundTripType, pointHasAbilityToChangeWorkflow.ToArray());
             }
 
             if (!trip.BayanId.IsNullOrEmpty())
