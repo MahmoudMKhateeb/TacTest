@@ -179,7 +179,8 @@
                     itemTemplate="item"
                   >
                     <div *dxTemplate="let data of 'item'">
-                      <div [class.text-danger]="!data.hasPolygon">{{ data.displayName }}</div>
+                      <!--                      <div [class.text-danger]="!data.hasPolygon">{{ data.displayName }}</div>-->
+                      <div>{{ data.displayName }}</div>
                     </div>
 
                     <dx-validator [validationGroup]="'createFacilityGroup'">
