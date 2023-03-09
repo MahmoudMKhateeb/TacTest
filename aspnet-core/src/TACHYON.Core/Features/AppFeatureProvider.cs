@@ -1,4 +1,4 @@
-﻿using Abp.Application.Features;
+using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
@@ -193,6 +193,34 @@ namespace TACHYON.Features
                 L("SaasInvoicingActivation"),
                 inputType: new CheckboxInputType()
             );
+            #region Saas
+            var NumberOfWaybills = context.Create(
+                AppFeatures.NumberOfWaybills,
+                "false",
+                L("NumberOfWaybillsFeature"),
+                inputType: new CheckboxInputType()
+            );
+            NumberOfWaybills.CreateChildFeature(
+                AppFeatures.MaxNumberOfWaybills,
+                "false",
+                L("MaxNumberOfWaybillsFeature"), 
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+            );
+
+            NumberOfWaybills.CreateChildFeature(
+                AppFeatures.AdditionalWaybillPrice,
+                "false",
+                L("AdditionalWaybillPriceFeature"), 
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+                );
+
+            var ImportFunctionality = context.Create(
+                AppFeatures.ImportFunctionality,
+                "true",
+                L("ImportFunctionalityFeature"),
+                inputType: new CheckboxInputType()
+            );
+            #endregion
 
 
             var receiver = context.Create(

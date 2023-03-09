@@ -3324,5 +3324,10 @@
     <text name="SealNumber">Seal number</text>
     <text name="SaasInvoicingActivation">SAAS invoicing activation</text>
 
+    <text name="NumberOfWaybillsFeature">Number of waybills</text>
+    <text name="AdditionalWaybillPriceFeature">Additional waybill price</text>
+    <text name="MaxNumberOfWaybillsFeature">Max number of waybills</text>
+    <text name="You are already pass the allowed number of waybills so this waybill will be priced by additional waybill price">You are already pass the allowed number of waybills so this waybill will be priced by additional waybill price</text>
+    <text name="TenantExceedMaxWaybillNo">{0} has been reached to the last trip from the allowed number of trips</text>
 	</texts>
 </localizationDictionary>

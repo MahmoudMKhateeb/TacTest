@@ -78,6 +78,13 @@ namespace TACHYON.Shipping.Trips.Dto
 
 
         #endregion
+
+        #region Saas
+        /// <summary>
+        /// Front helper field, to show message that tenant exceed the number of waybills from features
+        /// </summary>
+        public bool IsExceedMaxWaybillsNumber { get; set; }
+        #endregion
         public void AddValidationErrors(CustomValidationContext context)
         {
             //document validation

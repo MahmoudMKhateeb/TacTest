@@ -521,6 +521,22 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         {
             return await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.CMS) && await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.SaasInvoicingActivation);
         }
+
+        public async Task<int?> getWaybillsNo(int tenantId)
+        {
+            return await _shippingRequestTripRepository.CountAsync(x => x.ShippingRequestFk.TenantId == tenantId || x.ShipperTenantId == tenantId);
+        }
+
+        public async Task<int?> getMaxNumberOfWaybills(int tenantId)
+        {
+            var waybillsFeature = await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.NumberOfWaybills);
+            if (waybillsFeature)
+            {
+                var maxWaybills= await _featureChecker.GetValueAsync(tenantId, AppFeatures.MaxNumberOfWaybills);
+                if (maxWaybills != null) return Convert.ToInt32(maxWaybills);
+            }
+                    return null;
+        }
         private void ValidateDuplicateBulkReferenceFromDB(ImportTripDto importTripDto, StringBuilder exceptionMessage)
         {
             var trip = _shippingRequestTripRepository.GetAll()

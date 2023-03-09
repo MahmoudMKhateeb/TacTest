@@ -8,7 +8,7 @@
         <button (click)="AddNewTripModal.show()" class="btn btn-primary blue mr-2"><i class="fa fa-plus"></i> {{ l('NewWaybill') }}</button>
 
         <!-- Excel Operations-->
-        <div class="btn-group" dropdown [busyIf]="loading">
+        <div *ngIf="isEnabled('App.ImportFunctionality')" class="btn-group" dropdown [busyIf]="loading">
           <button
             dropdownToggle
             type="button"

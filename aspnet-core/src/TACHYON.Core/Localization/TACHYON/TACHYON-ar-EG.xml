@@ -3059,5 +3059,10 @@
     <text name="SealNumber">رقم القفل</text>
     <text name="SaasInvoicingActivation">تفعيل الفواتير </text>
 
+    <text name="NumberOfWaybillsFeature">عدد الشحنات</text>
+    <text name="AdditionalWaybillPriceFeature">سعر الشحنة الاضافي</text>
+    <text name="MaxNumberOfWaybillsFeature">عدد الشحنات</text>
+    <text name="You are already pass the allowed number of waybills so this waybill will be priced by additional waybill price">لقد تجاوزت الحد المسموح للشحنات لهذا سيتم تسعير هذه الشحنة بحساب السعر الاضافي</text>
+    <text name="TenantExceedMaxWaybillNo">{0} وصلت الرحلة الأخيرة من عدد الرحلات المسموح بها</text>
 	</texts>
 </localizationDictionary>

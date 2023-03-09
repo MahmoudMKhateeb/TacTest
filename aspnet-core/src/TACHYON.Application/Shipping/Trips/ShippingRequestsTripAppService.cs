@@ -98,6 +98,7 @@ namespace TACHYON.Shipping.Trips
         public readonly ShippingRequestPointWorkFlowProvider _shippingRequestPointWorkFlowProvider;
         public readonly IRepository<Vas, int> _vasRepository;
         public readonly PriceCommissionManager _priceCommissionManager;
+        private readonly IFeatureChecker _featureChecker;
 
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
@@ -128,7 +129,8 @@ namespace TACHYON.Shipping.Trips
             PriceOfferManager priceOfferManager,
             ShippingRequestPointWorkFlowProvider shippingRequestPointWorkFlowProvider,
             IRepository<Vas, int> vasRepository,
-            PriceCommissionManager priceCommissionManager)
+            PriceCommissionManager priceCommissionManager,
+            IFeatureChecker featureChecker)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -159,6 +161,7 @@ namespace TACHYON.Shipping.Trips
             _shippingRequestPointWorkFlowProvider = shippingRequestPointWorkFlowProvider;
             _vasRepository = vasRepository;
             _priceCommissionManager = priceCommissionManager;
+            _featureChecker = featureChecker;
         }
 
         public async Task<LoadResult> GetAllDx(string filter)
@@ -434,6 +437,20 @@ namespace TACHYON.Shipping.Trips
             shippingRequestTrip.CreateOrEditDocumentFileDto.DocumentTypeDto =
                 ObjectMapper.Map<DocumentTypeDto>(documentType);
 
+            var tenantId = AbpSession.TenantId;
+
+            if (tenantId != null)
+            {
+                var MaxWaybillsNo =await _shippingRequestTripManager.getMaxNumberOfWaybills(tenantId.Value);
+                if (MaxWaybillsNo != null)
+                {
+                    var CreatedWaybillsNo = await _shippingRequestTripManager.getWaybillsNo(tenantId.Value);
+                    if (CreatedWaybillsNo >= MaxWaybillsNo.Value)
+                    {
+                        shippingRequestTrip.IsExceedMaxWaybillsNumber = true;
+                    }
+                }
+            }
 
             return shippingRequestTrip;
         }
@@ -881,6 +898,18 @@ namespace TACHYON.Shipping.Trips
             //Notify Carrier with trip details
             if (request?.ShippingRequestFlag == ShippingRequestFlag.Normal)
                 await _shippingRequestTripManager.NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, true, true, true);
+
+            //notify TMS if tenant reach max number of waybills
+            var tenant = request == null ? trip.ShipperTenantId.Value : trip.ShippingRequestFk.TenantId;
+            var maxNumberOfWaybills = await _shippingRequestTripManager.getMaxNumberOfWaybills(tenant);
+            if(maxNumberOfWaybills != null)
+            {
+                var createdTrips =await _shippingRequestTripManager.getWaybillsNo(tenant);
+                if(maxNumberOfWaybills.Value == createdTrips)
+                {
+                    await _appNotifier.NotifyTMSWithMaxWaybillsExceeds(tenant);
+                }
+            }
         }
         public async Task AddRemarks(RemarksInputDto input)
         {
