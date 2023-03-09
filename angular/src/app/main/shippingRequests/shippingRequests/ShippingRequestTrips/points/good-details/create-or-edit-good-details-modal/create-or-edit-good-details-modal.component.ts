@@ -107,7 +107,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   constructor(
     injector: Injector,
     public _PointsService: PointsService,
-    private _TripService: TripService,
+    public _TripService: TripService,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
     private _dangerousGoodTypesAppService: DangerousGoodTypesServiceProxy
