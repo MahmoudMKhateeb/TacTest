@@ -85,7 +85,8 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
         undefined,
         undefined,
-        () => this.isEnabled('App.TachyonDealer')
+        undefined,
+        () => this.isEnabled('App.CarrierAsASaas')
       ),
 
       // start of PricePackages
