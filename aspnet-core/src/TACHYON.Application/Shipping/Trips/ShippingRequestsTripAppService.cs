@@ -63,6 +63,8 @@ using TACHYON.Shipping.ShippingRequests.Dtos.Dedicated;
 using TACHYON.Vases.Dtos;
 using TACHYON.Commission;
 using TACHYON.ShippingRequestVases;
+using TACHYON.Shipping.ShippingRequests.Dtos;
+using TACHYON.MultiTenancy.Dto;
 
 namespace TACHYON.Shipping.Trips
 {
@@ -99,6 +101,8 @@ namespace TACHYON.Shipping.Trips
         public readonly IRepository<Vas, int> _vasRepository;
         public readonly PriceCommissionManager _priceCommissionManager;
         private readonly IFeatureChecker _featureChecker;
+        private readonly IRepository<ShippingRequestDestinationCity> _shippingRequestDestinationCityRepository;
+
 
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
@@ -130,7 +134,8 @@ namespace TACHYON.Shipping.Trips
             ShippingRequestPointWorkFlowProvider shippingRequestPointWorkFlowProvider,
             IRepository<Vas, int> vasRepository,
             PriceCommissionManager priceCommissionManager,
-            IFeatureChecker featureChecker)
+            IFeatureChecker featureChecker,
+            IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -162,6 +167,7 @@ namespace TACHYON.Shipping.Trips
             _vasRepository = vasRepository;
             _priceCommissionManager = priceCommissionManager;
             _featureChecker = featureChecker;
+            _shippingRequestDestinationCityRepository = shippingRequestDestinationCityRepository;
         }
 
         public async Task<LoadResult> GetAllDx(string filter)
@@ -352,6 +358,21 @@ namespace TACHYON.Shipping.Trips
 
             }
 
+            var index = 1;
+            foreach (var destCity in trip.ShippingRequestDestinationCities)
+            {
+                var city = ObjectMapper.Map<TenantCityLookupTableDto>(destCity.CityFk).DisplayName;
+                if (index == 1)
+                {
+                    shippingRequestTrip.DestinationCities = city;
+                }
+                else
+                {
+                    shippingRequestTrip.DestinationCities = shippingRequestTrip.DestinationCities + ", " + city;
+                }
+                index++;
+            }
+
             if (shippingRequestTrip.HasAttachment)
             {
                 var documentFile =
@@ -531,6 +552,14 @@ namespace TACHYON.Shipping.Trips
                 await ValidatePortMovementRequest(input, request);
             }
 
+            else // shipping type validation
+            {
+                if (input.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+                    await _shippingRequestManager.ValidatePortMovementInputs(input.OriginFacilityId, input.RouteType.Value, input.NumberOfDrops, input.ShippingTypeId.Value, input.RoundTripType);
+
+                _shippingRequestManager.ValidateDestinationCities(input.RouteType.Value, input.ShippingRequestDestinationCities, input.ShippingTypeId.Value);
+
+            }
             if (!input.Id.HasValue)
             {
                 
@@ -879,7 +908,9 @@ namespace TACHYON.Shipping.Trips
 
             }
             //AssignWorkFlowVersionToRoutPoints(trip);
-            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints( trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,request?.ShippingTypeId,request?.RoundTripType, trip.RoutPoints.ToArray());
+            var shippingType = request != null ? request.ShippingTypeId : trip.ShippingTypeId;
+            var roundTrip = request!= null ? request.RoundTripType :trip.RoundTripType;
+            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints( trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,shippingType,roundTrip, trip.RoutPoints.ToArray());
             //insert trip 
             var shippingRequestTripId = await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
 
@@ -998,6 +1029,7 @@ namespace TACHYON.Shipping.Trips
             //await ValidateGoodsCategory(input.RoutPoints, request.GoodCategoryId);
             await RemoveDeletedTripPoints(input, trip);
             await RemoveDeletedTripVases(input, trip);
+            await AddOrRemoveDestinationCities(input.ShippingRequestDestinationCities, trip);
 
             await ValidateExpectedDeliveryTime(input.ExpectedDeliveryTime, trip);
 
@@ -1237,6 +1269,7 @@ namespace TACHYON.Shipping.Trips
                     .ThenInclude(v => v.VasFk)
                     .Include(x => x.ActorCarrierPrice)
                     .Include(x => x.ActorShipperPrice)
+                    .Include(x=>x.ShippingRequestDestinationCities)
                     .WhereIf(requestId.HasValue, x => x.ShippingRequestId == requestId)
                     .FirstOrDefaultAsync(x => x.Id == tripid);
                 trip.RoutPoints = trip.RoutPoints.OrderBy(x => x.PickingType).ToList();
@@ -1619,6 +1652,33 @@ namespace TACHYON.Shipping.Trips
                 vasList.Add(tripVas);
             }
             input.ShippingRequestTripVases = vasList;
+        }
+
+
+        private async Task AddOrRemoveDestinationCities(List<ShippingRequestDestinationCitiesDto> destinationCitiesDtos, ShippingRequestTrip trip)
+        {
+            foreach (var destinationCity in destinationCitiesDtos)
+            {
+                DisableDraftedFilter();
+                //destinationCity.ShippingRequestId = shippingRequest.Id;
+                var exists = await _shippingRequestDestinationCityRepository.GetAll().AnyAsync(c => c.CityId == destinationCity.CityId &&
+                c.ShippingRequestTripId == trip.Id);
+
+                if (!exists)
+                {
+                    if (trip.ShippingRequestDestinationCities == null) trip.ShippingRequestDestinationCities = new List<ShippingRequestDestinationCity>();
+                    trip.ShippingRequestDestinationCities.Add(ObjectMapper.Map<ShippingRequestDestinationCity>(destinationCity));
+                }
+            }
+            //remove uncoming destination cities
+            foreach (var destinationCity in trip.ShippingRequestDestinationCities)
+            {
+                var cityId = destinationCity.CityId;
+                if (!destinationCitiesDtos.Any(x => x.CityId == cityId))
+                {
+                    await _shippingRequestDestinationCityRepository.DeleteAsync(destinationCity);
+                }
+            }
         }
         #endregion
     }

@@ -15,6 +15,7 @@ using TACHYON.PriceOffers.Dto;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.ShippingRequestTripVases.Dtos;
 
 namespace TACHYON.Shipping.Trips.Dto
@@ -84,6 +85,18 @@ namespace TACHYON.Shipping.Trips.Dto
         /// Front helper field, to show message that tenant exceed the number of waybills from features
         /// </summary>
         public bool IsExceedMaxWaybillsNumber { get; set; }
+        #endregion
+
+        #region PortSaas
+        public ShippingTypeEnum? ShippingTypeId { get; set; }
+        /// <summary>
+        /// Round trip is used for port movements requests
+        /// </summary>
+        public RoundTripType? RoundTripType { get; set; }
+
+        public virtual int? OriginCityId { get; set; }
+        public List<ShippingRequestDestinationCitiesDto> ShippingRequestDestinationCities { get; set; }
+
         #endregion
         public void AddValidationErrors(CustomValidationContext context)
         {

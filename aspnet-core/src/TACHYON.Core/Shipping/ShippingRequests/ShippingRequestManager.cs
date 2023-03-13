@@ -1,4 +1,4 @@
-﻿using Abp.Application.Features;
+using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -40,6 +40,7 @@ using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Vases.Dtos;
 using TACHYON.Vases;
 using TACHYON.Shipping.ShippingRequestBids;
+using TACHYON.Routs.RoutTypes;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -231,19 +232,19 @@ namespace TACHYON.Shipping.ShippingRequests
 
         }
 
-        public async Task ValidatePortMovementInputs(EditShippingRequestStep2Dto input, ShippingRequest shippingRequest)
+        public async Task ValidatePortMovementInputs(long? OriginFacilityId, ShippingRequestRouteType RouteTypeId, int NumberOfDrops, ShippingTypeEnum shippingType, RoundTripType? roundTripType)
         {
             DisableTenancyFilters();
-            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements)
+            if (shippingType == ShippingTypeEnum.ImportPortMovements)
             {
-                if (input.OriginFacilityId == null) throw new UserFriendlyException(L("OriginPortIsRequired"));
-                if (!await _facilityRepository.GetAll().AnyAsync(x => x.Id == input.OriginFacilityId && x.FacilityType == FacilityType.Port))
+                if (OriginFacilityId == null) throw new UserFriendlyException(L("OriginPortIsRequired"));
+                if (!await _facilityRepository.GetAll().AnyAsync(x => x.Id == OriginFacilityId && x.FacilityType == FacilityType.Port))
                 {
                     throw new UserFriendlyException(L("OriginMustBePort"));
                 }
             }
 
-            switch (shippingRequest.RoundTripType)
+            switch (roundTripType)
             {
                 case RoundTripType.WithoutReturnTrip:
                 case RoundTripType.OneWayRoutWithoutPortShuttling:
@@ -252,16 +253,24 @@ namespace TACHYON.Shipping.ShippingRequests
                     break;
                 case RoundTripType.WithReturnTrip:
                 case RoundTripType.TwoWayRoutsWithoutPortShuttling:
-                    input.RouteTypeId = ShippingRequestRouteType.MultipleDrops;
-                    input.NumberOfDrops = 2;
+                    RouteTypeId = ShippingRequestRouteType.MultipleDrops;
+                    NumberOfDrops = 2;
                     break;
 
                 case RoundTripType.TwoWayRoutsWithPortShuttling:
-                    input.RouteTypeId = ShippingRequestRouteType.MultipleDrops;
-                    input.NumberOfDrops = 3;
+                    RouteTypeId = ShippingRequestRouteType.MultipleDrops;
+                    NumberOfDrops = 3;
                     break;
             }
 
+        }
+
+        public void ValidateDestinationCities(ShippingRequestRouteType routeType, List<ShippingRequestDestinationCitiesDto> shippingRequestDestinationCitiesDtos, ShippingTypeEnum shippingType)
+        {
+            if (shippingType == ShippingTypeEnum.LocalBetweenCities && routeType == ShippingRequestRouteType.SingleDrop && shippingRequestDestinationCitiesDtos.Count > 1)
+            {
+                throw new UserFriendlyException(L("OneDestinationCityAllowed"));
+            }
         }
 
         public void OverridePortMovementRoutInputsForTrip(CreateOrEditShippingRequestTripDto input, ShippingRequest shippingRequest)

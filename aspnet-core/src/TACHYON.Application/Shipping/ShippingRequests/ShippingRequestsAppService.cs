@@ -336,8 +336,9 @@ namespace TACHYON.Shipping.ShippingRequests
             var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id);
 
             //if request between cities and single drop
-            await _shippingRequestManager.ValidatePortMovementInputs(input, shippingRequest);
-            ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest);
+            if(shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || shippingRequest.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+            await _shippingRequestManager.ValidatePortMovementInputs(input.OriginFacilityId, input.RouteTypeId, input.NumberOfDrops, shippingRequest.ShippingTypeId, shippingRequest.RoundTripType);
+            _shippingRequestManager.ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest.ShippingTypeId);
 
             if (shippingRequest.DraftStep < 2)
             {
@@ -1053,7 +1054,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
 
             await ValidateGoodsCategory(input);
-            ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest);
+            _shippingRequestManager.ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest.ShippingTypeId);
             if (shippingRequest.Status == ShippingRequestStatus.NeedsAction)
                 await CheckHasOffersToNotifyCarriers(shippingRequest);
             ObjectMapper.Map(input, shippingRequest);
@@ -1928,13 +1929,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-        private void ValidateDestinationCities(ShippingRequestRouteType routeType, List<ShippingRequestDestinationCitiesDto> shippingRequestDestinationCitiesDtos, ShippingRequest shippingRequest)
-        {
-            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.LocalBetweenCities && routeType == ShippingRequestRouteType.SingleDrop && shippingRequestDestinationCitiesDtos.Count > 1)
-            {
-                throw new UserFriendlyException(L("OneDestinationCityAllowed"));
-            }
-        }
+        
 
         
 

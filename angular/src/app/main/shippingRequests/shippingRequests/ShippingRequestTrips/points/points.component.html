@@ -251,12 +251,21 @@
               [allPointsSendersAndReceivers]="allPointsSendersAndREcivers"
               [facilityLoading]="facilityLoading"
               [receiverLoading]="receiverLoading"
-              [isExportRequest]="_tripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements"
-              [isImportWithReturnTrip]="
-                _tripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
-                _tripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.WithReturnTrip
+              [isExportRequest]="
+                _tripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+                _tripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ExportPortMovements
               "
-              [roundTripType]="_tripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType"
+              [isImportWithReturnTrip]="
+                (_tripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
+                  _tripService.CreateOrEditShippingRequestTripDto.roundTripType === RoundTripType.WithReturnTrip) ||
+                (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
+                  _tripService?.GetShippingRequestForViewOutput?.shippingRequest.roundTripType === RoundTripType.WithReturnTrip)
+              "
+              [roundTripType]="
+                !_tripService.GetShippingRequestForViewOutput
+                  ? _tripService.CreateOrEditShippingRequestTripDto.roundTripType
+                  : _tripService?.GetShippingRequestForViewOutput?.shippingRequest.roundTripType
+              "
               (RouteStepCordSetterEvent)="RouteStepCordSetter($event.index, $event.facilityId)"
               (wayPointsSetterEvent)="wayPointsSetter()"
               (loadReceiversEvent)="loadReceivers($event)"
