@@ -421,8 +421,10 @@ namespace TACHYON.Routs.RoutSteps
 
         public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesForDirectTrip()
         {
+            DisableTenancyFilters();
             return await _lookup_FacilityRepository
                 .GetAll()
+                .Where(x=> (x.FacilityType == FacilityType.Facility && x.TenantId == AbpSession.TenantId) || x.FacilityType != FacilityType.Facility)
                 .Select
                 (
                     x => new FacilityForDropdownDto
