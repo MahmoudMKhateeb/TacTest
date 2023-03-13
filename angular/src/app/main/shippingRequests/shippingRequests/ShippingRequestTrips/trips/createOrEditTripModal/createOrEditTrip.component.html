@@ -25,7 +25,7 @@
                 [dropup]="false"
                 [insideClick]="true"
                 *ngIf="
-                  !_TripService.CreateOrEditShippingRequestTripDto.id &&
+                  !_TripService.CreateOrEditShippingRequestTripDto?.id &&
                   (isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas')) &&
                   _TripService.GetShippingRequestForViewOutput &&
                   _TripService.GetShippingRequestForViewOutput &&
