@@ -433,7 +433,8 @@ namespace TACHYON.Routs.RoutSteps
                         DisplayName = x.Name,
                         Long = x.Location.X,
                         Lat = x.Location.Y,
-                        CityId = x.CityId
+                        CityId = x.CityId,
+                        FacilityType = x.FacilityType
                     }
                 ).ToListAsync();
         }
