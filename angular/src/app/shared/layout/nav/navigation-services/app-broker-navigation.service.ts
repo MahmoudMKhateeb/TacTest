@@ -24,7 +24,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Operations',
         'Pages.ShippingRequests',
-        'Operations.svg',
+        '6 Opertation.svg',
         '/app/main/comingSoon',
         [],
         [
@@ -72,7 +72,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'AddressBook',
         '',
-        'Facility Managment.svg',
+        '9 Facilities managment.svg',
         '',
         [],
         [
@@ -90,7 +90,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMS',
         '',
-        'TMS Settings.svg',
+        '8 TMS Managment.svg',
         '',
         [],
         [
@@ -106,7 +106,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Financials',
         'Pages.Invoices',
-        'Financials.svg',
+        '2 Financials.svg',
         '',
         [],
         [
@@ -162,7 +162,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMSForShipper',
         'Pages.ShippingRequests.TmsForShipper',
-        'logistic, delivery, warehouse, storage, empty, vacant.svg',
+        '3 TMS.svg',
         '/app/main/tmsforshipper',
         [],
         undefined,
@@ -175,7 +175,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'DocumentManagement',
         '',
-        'Document.svg',
+        '4 Documents managment.svg',
         '',
         [],
         [
@@ -229,7 +229,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMSSettings',
         '',
-        'TMS Settings.svg',
+        '8 TMS Managment.svg',
         '',
         [],
         [
@@ -250,7 +250,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Settings',
         'Pages.Administration.Tenant.Settings',
-        'Settings.svg',
+        '10 Setting.svg',
         '',
         [],
         [
@@ -265,7 +265,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'UserManagement',
         '',
-        'User Management.svg',
+        '11 User managment.svg',
         '',
         [],
         [
