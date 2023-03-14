@@ -8,6 +8,7 @@ using TACHYON.PricePackages.Dto.PricePackageAppendices;
 using TACHYON.PricePackages.Dto.PricePackageProposals;
 using TACHYON.PricePackages.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageProposals;
+using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.AutoMapper.PricePackages
@@ -20,6 +21,7 @@ namespace TACHYON.AutoMapper.PricePackages
             const string activeKey = "Active", notActiveKey = "NotActive";
             CreateMap<PricePackage, PricePackageListDto>()
                 .ForMember(x => x.HasProposal, x => x.MapFrom(i => i.ProposalId.HasValue))
+                .ForMember(x => x.ServiceAreas, x => x.MapFrom(i => i.ServiceAreas.Select(x=> x.CityId).ToList()))
                 .ForMember(x => x.HasAppendix, x => x.MapFrom(i => i.AppendixId.HasValue))
                 .ForMember(x => x.OriginCity, x => x.MapFrom(i => i.OriginCity.DisplayName))
                 .ForMember(x => x.DestinationCity, x => x.MapFrom(i => i.DestinationCity.DisplayName))
@@ -43,7 +45,10 @@ namespace TACHYON.AutoMapper.PricePackages
                 .ForMember(x => x.RouteType,
                     x => x.MapFrom(i => i.RouteType.ToString()));
 
-            CreateMap<CreateOrEditPricePackageDto, PricePackage>().ReverseMap();
+            CreateMap<CreateOrEditServiceAreaDto, ServiceArea>().ReverseMap();
+            CreateMap<CreateOrEditPricePackageDto, PricePackage>()
+                .ForMember(x=> x.ServiceAreas,x=> x.MapFrom(i=> i.ServiceAreas)).ReverseMap();
+            
             CreateMap<CreateOrEditProposalDto, PricePackageProposal>()
                 .ForMember(x => x.PricePackages, x => x.Ignore())
                 .AfterMap((dto, proposal) =>

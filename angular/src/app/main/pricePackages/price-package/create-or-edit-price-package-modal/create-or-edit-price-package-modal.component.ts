@@ -6,6 +6,7 @@ import {
   CarriersForDropDownDto,
   CompanyType,
   CreateOrEditPricePackageDto,
+  CreateOrEditServiceAreaDto,
   PricePackageServiceProxy,
   PricePackageType,
   PricePackageUsageType,
@@ -41,6 +42,7 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   transportTypes: SelectItemDto[];
   truckTypes: SelectItemDto[];
   cities: SelectItemDto[];
+  countries: SelectItemDto[];
   companies: SelectItemDto[];
   pricePackageType = PricePackageType;
   pricePackageTypes = this._enumToArrayPipe.transform(this.pricePackageType);
@@ -68,6 +70,8 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   routeTypeEnum = ShippingRequestRouteType;
   truckTypeLoading: boolean;
   companiesLoading: boolean;
+  countriesLoading: boolean;
+  serviceAreasSelectionLimit: number;
 
   constructor(
     private injector: Injector,
@@ -83,6 +87,9 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     this.pricePackageDto = new CreateOrEditPricePackageDto();
     this.isFormActive = false;
     this.isFormSaving = false;
+    this.truckTypeLoading = false;
+    this.companiesLoading = false;
+    this.countriesLoading = false;
     this.loadAllDropDowns();
     this.getAllShippingType();
     this.loadAllCarriers();
@@ -91,8 +98,7 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     this.pricingMethod = TmsPricePackagePricingMethod.Average;
     this.commissionTypes = this._enumToArrayPipe.transform(TmsPricePackageCommissionType);
     this.calculatedPriceTitle = '';
-    this.truckTypeLoading = false;
-    this.companiesLoading = false;
+    this.serviceAreasSelectionLimit = 0;
   }
 
   show(id?: number): void {
@@ -107,6 +113,10 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
           this.pricingMethod = this.pricingMethodEnum.FinalPrice;
           this.calculatedPriceTitle = this.l('FinalPrice');
           this.calculatedPrice = this.pricePackageDto.totalPrice;
+        }
+        if (this.pricePackageDto.type == this.pricePackageType.Dedicated) {
+          this.loadAllCities(this.pricePackageDto.originCountryId);
+          this.loadCountries();
         }
         this.isFormLoading = false;
         this.modal.show();
@@ -139,9 +149,12 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     if (this.isTachyonDealerOrHost && !this.pricePackageDto.id) {
       this.loadAllCompanies();
     }
-
     this.loadAllTransportTypes();
-    this.loadAllCities();
+    if (this.pricePackageDto?.type == this.pricePackageType.Dedicated) {
+      this.loadCountries();
+    } else {
+      this.loadAllCities();
+    }
   }
 
   /**
@@ -188,9 +201,12 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
    * load all cities for DropDown
    * @private
    */
-  private loadAllCities(): void {
-    this._tenantRegistrationServiceProxy.getAllCitiesForTableDropdown(null).subscribe((res) => {
+  private loadAllCities(originCountry?: number | undefined): void {
+    this._tenantRegistrationServiceProxy.getAllCitiesForTableDropdown(originCountry).subscribe((res) => {
       this.cities = res;
+      if (isNotNullOrUndefined(this.pricePackageDto?.id) && isNotNullOrUndefined(this.pricePackageDto?.serviceAreas)) {
+        (this.pricePackageDto.serviceAreas as any[]) = this.cities.filter((x) => this.pricePackageDto?.serviceAreas?.some((s) => s.cityId == +x.id));
+      }
     });
   }
 
@@ -266,6 +282,13 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     } else {
       this.pricePackageDto.usageType = undefined;
     }
+    if (isNotNullOrUndefined(this.pricePackageDto?.serviceAreas)) {
+      this.pricePackageDto.serviceAreas = this.pricePackageDto.serviceAreas.map((item) => {
+        let dto = new CreateOrEditServiceAreaDto();
+        dto.cityId = +(item as any).id;
+        return dto;
+      });
+    }
 
     this._pricePackagesServiceProxy.createOrEdit(this.pricePackageDto).subscribe(() => {
       this.notify.success(this.l('Success'));
@@ -306,24 +329,31 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   }
 
   updatePricingMethod() {
+    this.updateCalculatedPriceInputTitle();
+
+    this.calculatePriceForSelection();
+  }
+
+  updateCalculatedPriceInputTitle() {
     if (this.pricingMethod == this.pricingMethodEnum.Average) {
-      this.calculatedPriceTitle = this.l('AveragePrice');
+      this.calculatedPriceTitle =
+        this.pricePackageDto.type == this.pricePackageType.Dedicated ? this.l('AveragePricePerTruck') : this.l('AveragePrice');
     }
 
     if (this.pricingMethod == this.pricingMethodEnum.Maximum) {
-      this.calculatedPriceTitle = this.l('MaximumPrice');
+      this.calculatedPriceTitle =
+        this.pricePackageDto.type == this.pricePackageType.Dedicated ? this.l('MaximumPricePerTruck') : this.l('MaximumPrice');
     }
 
     if (this.pricingMethod == this.pricingMethodEnum.Minimum) {
-      this.calculatedPriceTitle = this.l('MinimumPrice');
+      this.calculatedPriceTitle =
+        this.pricePackageDto.type == this.pricePackageType.Dedicated ? this.l('MinimumPricePerTruck') : this.l('MinimumPrice');
     }
 
     if (this.pricingMethod == this.pricingMethodEnum.FinalPrice) {
-      this.calculatedPriceTitle = this.l('FinalPrice');
+      this.calculatedPriceTitle = this.pricePackageDto.type == this.pricePackageType.Dedicated ? this.l('FinalPricePerTruck') : this.l('FinalPrice');
       this.calculatedPrice = undefined;
     }
-
-    this.calculatePriceForSelection();
   }
 
   calculateTotalCommissionAndTotalPrice() {
@@ -345,6 +375,7 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   applyFilters() {
     let carriersFilter = this.buildCarriersFilter();
     let pricePackageFilter = this.buildPricePackageFilter();
+    // let serviceAreasFilter = this.buildServiceAreasFilter();
 
     let filter = [];
     if (isNotNullOrUndefined(carriersFilter) && carriersFilter.length > 0) {
@@ -357,6 +388,12 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
       }
       filter.push(pricePackageFilter);
     }
+    /*if (isNotNullOrUndefined(serviceAreasFilter) && serviceAreasFilter.length > 0) {
+          if (filter.length > 0) {
+            filter.push('and');
+          }
+          filter.push(serviceAreasFilter);
+        }*/
 
     this.getAllNormalPricePackages(filter);
   }
@@ -407,11 +444,40 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     return filter;
   }
 
+  private buildServiceAreasFilter(): any[] {
+    let filter = [];
+
+    if (!isNotNullOrUndefined(this.pricePackageDto?.serviceAreas)) {
+      return filter;
+    }
+
+    for (let i = 0; i < this.pricePackageDto.serviceAreas.length; i++) {
+      if (i > 0) {
+        filter.push('or');
+      }
+      filter.push(['ServiceAreas', 'anyof', +this.pricePackageDto.serviceAreas[i].id]);
+    }
+
+    return filter;
+  }
+
   private buildPricePackageFilter(): any[] {
     let filter = [];
 
+    if (isNotNullOrUndefined(this.pricePackageDto.type)) {
+      filter.push(['type', '=', this.pricePackageDto.type]);
+    }
     if (isNotNullOrUndefined(this.pricePackageDto.transportTypeId)) {
+      if (filter.length > 0) {
+        filter.push('and');
+      }
       filter.push(['transportTypeId', '=', this.pricePackageDto.transportTypeId]);
+    }
+    if (isNotNullOrUndefined(this.pricePackageDto.originCountryId)) {
+      if (filter.length > 0) {
+        filter.push('and');
+      }
+      filter.push(['originCountryId', '=', this.pricePackageDto.originCountryId]);
     }
 
     if (isNotNullOrUndefined(this.pricePackageDto.truckTypeId)) {
@@ -462,6 +528,9 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   }
 
   shippingTypeChanged() {
+    this.pricePackageDto.serviceAreas = undefined;
+    this.serviceAreasSelectionLimit = this.pricePackageDto?.shippingTypeId == 1 ? 1 : undefined;
+
     this.validateOriginAndDestination();
 
     if (this.companyType == this.companyTypeEnum.Shipper) {
@@ -482,7 +551,39 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     this.pricePackageDto.destinationTenantId = undefined;
   }
 
-  logForm(tmsPPForm) {
-    console.log(tmsPPForm);
+  originCountryChanged() {
+    if (isNotNullOrUndefined(this.pricePackageDto)) {
+      this.applyFilters();
+      this.pricePackageDto.originCityId = undefined;
+      this.pricePackageDto.destinationCityId = undefined;
+      this.loadAllCities(this.pricePackageDto.originCountryId);
+    }
+  }
+
+  loadCountries() {
+    this.countriesLoading = true;
+
+    this._tenantRegistrationServiceProxy
+      .getAllCountryForTableDropdown()
+      .pipe(
+        finalize(() => {
+          this.countriesLoading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.countries = result;
+      });
+  }
+
+  pricePackageTypeChanged() {
+    this.updateCalculatedPriceInputTitle();
+    this.applyFilters();
+    if (this.pricePackageDto?.type != this.pricePackageType.Dedicated) {
+      return;
+    }
+
+    this.pricePackageDto.originCityId = undefined;
+    this.pricePackageDto.destinationCityId = undefined;
+    this.loadCountries();
   }
 }

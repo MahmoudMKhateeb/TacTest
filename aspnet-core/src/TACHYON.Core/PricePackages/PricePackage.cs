@@ -1,11 +1,14 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Cities;
+using TACHYON.Common;
 using TACHYON.MultiTenancy;
 using TACHYON.PricePackages.PricePackageAppendices;
 using TACHYON.PricePackages.PricePackageProposals;
+using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
@@ -71,6 +74,14 @@ namespace TACHYON.PricePackages
 
         // this will have a value when the P.P created by carrier 
         public decimal? DirectRequestPrice { get; set; }
+
+        public int? OriginCountryId { get; set; }
+
+        public ICollection<ServiceArea> ServiceAreas { get; set; }
+
+        public string ProjectName { get; set; }
+
+        public string ScopeOfWork { get; set; }
 
     }
 }
