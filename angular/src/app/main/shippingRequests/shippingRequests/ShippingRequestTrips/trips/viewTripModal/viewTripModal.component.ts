@@ -104,6 +104,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     if (isNotNullOrUndefined(this.activeTripId)) {
       this.show(this.activeTripId, this.shippingRequestForView);
     }
+    this._changeDetectorRef.detectChanges();
   }
 
   show(id, shippingRequestForView?: GetShippingRequestForViewOutput): void {

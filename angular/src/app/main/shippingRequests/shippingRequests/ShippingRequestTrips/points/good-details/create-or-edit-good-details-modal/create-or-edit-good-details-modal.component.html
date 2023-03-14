@@ -164,7 +164,9 @@
                       <span *ngIf="!isForDedicated && !isForPortsMovement && AllowedWeight - (weight || 0) * (amount || 1) < 0">
                         {{ l('AllowedWeightShouldBeMaximum') }} : {{ AllowedWeight }}
                       </span>
-                      <span *ngIf="!isForDedicated && isForPortsMovement"> {{ l('AllowedWeight') }} : {{ AllowedWeight }} </span>
+                      <span *ngIf="!isForDedicated && isForPortsMovement && !!this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.id">
+                        {{ l('AllowedWeight') }} : {{ AllowedWeight }}
+                      </span>
                     </div>
                   </div>
 

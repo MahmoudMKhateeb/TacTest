@@ -379,10 +379,7 @@
                   <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
                 </div>
               </div>
-              <div
-                class="col-lg-6"
-                [hidden]="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.CrossBorderMovements"
-              >
+              <div class="col-lg-6" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.CrossBorderMovements">
                 <div class="form-group">
                   <label> {{ l('DestinationCountry') }}<span class="required-fileds">*</span></label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
@@ -394,17 +391,17 @@
                         step2Form.get('destinationCountry').invalid &&
                         (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
                       " -->
+                    <!--                      [attr.disabled]="-->
+                    <!--                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId &&-->
+                    <!--                        (_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == 2 ||-->
+                    <!--                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == 1-->
+                    <!--                          ? true-->
+                    <!--                          : null)-->
+                    <!--                      "-->
                     <select
                       class="form-control"
                       name="destinationCountry"
                       [(ngModel)]="destinationCountry"
-                      [attr.disabled]="
-                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId &&
-                        (_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == 2 ||
-                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == 1
-                          ? true
-                          : null)
-                      "
                       (ngModelChange)="validateShippingRequestType()"
                       (change)="loadCitiesByCountryId(destinationCountry, 'destination')"
                       required
@@ -440,7 +437,7 @@
                       name="originCity"
                       [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.originCityId"
                       [attr.disabled]="!sourceCities ? true : null"
-                      (ngModelChange)="validateShippingRequestType()"
+                      (ngModelChange)="validateShippingRequestType(); loadFacilitiesInPointComponent()"
                       required
                     >
                       <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>
@@ -473,7 +470,10 @@
                       [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.originFacilityId"
                       [attr.disabled]="!allOriginPorts ? true : null"
                       (ngModelChange)="
-                        validateShippingRequestType(); getCityIdFromSelectedPort($event); removeValidationForImportPortRequestOnStep2Form()
+                        validateShippingRequestType();
+                        getCityIdFromSelectedPort($event);
+                        removeValidationForImportPortRequestOnStep2Form();
+                        loadFacilitiesInPointComponent()
                       "
                       required
                       *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements"
@@ -494,7 +494,9 @@
                       name="originCity"
                       [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.originCityId"
                       [attr.disabled]="!sourceCities ? true : null"
-                      (ngModelChange)="validateShippingRequestType(); removeValidationForExportPortRequestOnStep2Form()"
+                      (ngModelChange)="
+                        validateShippingRequestType(); removeValidationForExportPortRequestOnStep2Form(); loadFacilitiesInPointComponent()
+                      "
                       required
                       *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements"
                     >
@@ -538,7 +540,7 @@
                           : false
                       "
                       [selectedItemsLabel]="'{0} items selected'"
-                      (ngModelChange)="validateShippingRequestType()"
+                      (ngModelChange)="validateShippingRequestType(); loadFacilitiesInPointComponent()"
                       [style]="{ width: '100%' }"
                       styleClass="form-control pt-1"
                       [dataKey]="'cityId'"
@@ -764,11 +766,12 @@
                     <span
                       class="required-fileds"
                       *ngIf="
-                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+                        (!_TripService.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                          (_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                            _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
                         (_TripService.GetShippingRequestForViewOutput &&
-                          (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                            _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements))
+                          (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                            _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
                       "
                       >*</span
                     ></label
@@ -782,11 +785,12 @@
                     type="text"
                     [disabled]="_TripService.CreateOrEditShippingRequestTripDto.id && IsHaveContainerNumberValue && !isTachyonDealer"
                     [required]="
-                      _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                      _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+                      (!_TripService.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                        (_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                          _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
                       (_TripService.GetShippingRequestForViewOutput &&
-                        (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                          _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements))
+                        (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                          _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
                     "
                   />
                 </div>
@@ -800,11 +804,12 @@
                     <span
                       class="required-fileds"
                       *ngIf="
-                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+                        (!_TripService.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                          (_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                            _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
                         (_TripService.GetShippingRequestForViewOutput &&
-                          (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                            _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements))
+                          (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                            _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
                       "
                       >*</span
                     ></label
@@ -818,11 +823,12 @@
                     type="text"
                     [disabled]="_TripService.CreateOrEditShippingRequestTripDto.id && IsHaveSealNumberValue && !isTachyonDealer"
                     [required]="
-                      _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                      _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+                      (!_TripService.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                        (_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                          _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
                       (_TripService.GetShippingRequestForViewOutput != null &&
-                        (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                          _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements))
+                        (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                          _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
                     "
                   />
                 </div>

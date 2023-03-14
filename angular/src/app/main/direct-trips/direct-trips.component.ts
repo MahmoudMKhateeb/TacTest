@@ -19,12 +19,14 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import Swal from 'sweetalert2';
 import { ViewImportedTripsFromExcelModalComponent } from '../shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular/ui/data-grid';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 @Component({
   selector: 'app-direct-trips',
   templateUrl: './direct-trips.component.html',
   styleUrls: ['./direct-trips.component.css'],
   encapsulation: ViewEncapsulation.None,
+  animations: [appModuleAnimation()],
 })
 export class DirectTripsComponent extends AppComponentBase implements OnInit {
   @ViewChild('grid', { static: true }) dataGrid: DxDataGridComponent;

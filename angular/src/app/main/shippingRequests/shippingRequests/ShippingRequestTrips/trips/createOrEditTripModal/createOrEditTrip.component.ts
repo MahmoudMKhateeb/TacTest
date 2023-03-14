@@ -387,7 +387,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   prepareRoundTripInputs() {
-    debugger;
+    // debugger;
     console.log('prepareStep2Inputs');
     switch (Number(this._TripService.CreateOrEditShippingRequestTripDto.roundTripType)) {
       case RoundTripType.TwoWayRoutsWithoutPortShuttling:
@@ -769,12 +769,15 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   private validatePointsFromPointsComponent() {
+    debugger;
+    console.log('shippingRequestTripsForm', this.shippingRequestTripsForm);
     if (
-      this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-      this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements ||
       (this._TripService.GetShippingRequestForViewOutput &&
         (this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-          this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements))
+          this._TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements)) ||
+      (!this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+        (this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+          this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ExportPortMovements))
     ) {
       return this.validatePointsFromPointsComponentForPortsMovement();
     }
@@ -813,35 +816,35 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       return false;
     }
     if (
-      (this._TripService.CreateOrEditShippingRequestTripDto.roundTripType === RoundTripType.WithReturnTrip ||
+      (this._TripService?.CreateOrEditShippingRequestTripDto?.roundTripType === RoundTripType.WithReturnTrip ||
         this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.roundTripType === RoundTripType.WithReturnTrip) &&
       this.PointsComponent.wayPointsList.length > 0
     ) {
       return this.validateImportWithReturnTrip();
     }
     if (
-      (this._TripService.CreateOrEditShippingRequestTripDto.roundTripType === RoundTripType.WithoutReturnTrip ||
+      (this._TripService?.CreateOrEditShippingRequestTripDto?.roundTripType === RoundTripType.WithoutReturnTrip ||
         this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.roundTripType === RoundTripType.WithoutReturnTrip) &&
       this.PointsComponent.wayPointsList.length > 0
     ) {
       return this.validateImportWithoutReturnTrip();
     }
     if (
-      (this._TripService.CreateOrEditShippingRequestTripDto.roundTripType === RoundTripType.OneWayRoutWithPortShuttling ||
+      (this._TripService?.CreateOrEditShippingRequestTripDto?.roundTripType === RoundTripType.OneWayRoutWithPortShuttling ||
         this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.roundTripType === RoundTripType.OneWayRoutWithPortShuttling) &&
       this.PointsComponent.wayPointsList.length > 0
     ) {
       return this.validateOneWayRoutWithPortShuttling();
     }
     if (
-      (this._TripService.CreateOrEditShippingRequestTripDto.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling ||
+      (this._TripService?.CreateOrEditShippingRequestTripDto?.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling ||
         this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling) &&
       this.PointsComponent.wayPointsList.length > 0
     ) {
       return this.validateTwoWayRoutsWithoutPortShuttling();
     }
     if (
-      (this._TripService.CreateOrEditShippingRequestTripDto.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling ||
+      (this._TripService?.CreateOrEditShippingRequestTripDto?.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling ||
         this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling) &&
       this.PointsComponent.wayPointsList.length > 0
     ) {
@@ -1309,7 +1312,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   fillAllRoundTrips(isInit = false) {
     console.log(this._TripService.CreateOrEditShippingRequestTripDto);
-    debugger;
+    // debugger;
 
     if (!isInit) {
       this._TripService.CreateOrEditShippingRequestTripDto.roundTripType = null;
@@ -1448,6 +1451,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   getCityIdFromSelectedPort($event: any) {
     this._TripService.CreateOrEditShippingRequestTripDto.originCityId = this.allOriginPorts?.find((port) => port.id == $event)?.cityId;
+    this.PointsComponent.wayPointsList[0].facilityId = $event;
   }
 
   removeValidationForExportPortRequestOnStep2Form() {
@@ -1466,5 +1470,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     // this.step2Form.get('originCity').updateValueAndValidity();
     // this.step2Form.get('routeType').clearValidators();
     // this.step2Form.get('routeType').updateValueAndValidity();
+  }
+
+  loadFacilitiesInPointComponent() {
+    if (isNotNullOrUndefined(this.PointsComponent) && !this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.id) {
+      this.PointsComponent.loadFacilities();
+    }
   }
 }

@@ -135,7 +135,12 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
     if (!this.isExportRequest) {
       return isPickup && index === 0
         ? this.pickupFacilities
-            .filter((fac) => fac.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId)
+            .filter((fac) => {
+              if (!this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id) {
+                return fac.cityId == this._tripService.CreateOrEditShippingRequestTripDto?.originCityId;
+              }
+              return fac.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId;
+            })
             .filter((fac) => {
               switch (index) {
                 case 0: {
@@ -147,7 +152,14 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
               }
             })
         : this.dropFacilities
-            .filter((fac) => this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos.map((city) => city.cityId).includes(fac.cityId))
+            .filter((fac) => {
+              if (!this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id) {
+                return this._tripService.CreateOrEditShippingRequestTripDto?.shippingRequestDestinationCities
+                  .map((city) => city.cityId)
+                  .includes(fac.cityId);
+              }
+              return this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos.map((city) => city.cityId).includes(fac.cityId);
+            })
             .filter((fac) => {
               switch (index) {
                 case 1: {
@@ -163,7 +175,12 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
     }
     return isPickup && index === 0
       ? this.pickupFacilities
-          .filter((fac) => fac.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId)
+          .filter((fac) => {
+            if (!this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id) {
+              return fac.cityId == this._tripService.CreateOrEditShippingRequestTripDto?.originCityId;
+            }
+            return fac.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId;
+          })
           .filter((fac) => {
             switch (index) {
               case 0: {
@@ -175,7 +192,14 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
             }
           })
       : this.dropFacilities
-          .filter((fac) => this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos.map((city) => city.cityId).includes(fac.cityId))
+          .filter((fac) => {
+            if (!this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.id) {
+              return this._tripService.CreateOrEditShippingRequestTripDto?.shippingRequestDestinationCities
+                .map((city) => city.cityId)
+                .includes(fac.cityId);
+            }
+            return this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos.map((city) => city.cityId).includes(fac.cityId);
+          })
           .filter((fac) => {
             switch (index) {
               case 1: {

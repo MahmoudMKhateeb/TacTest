@@ -76,10 +76,8 @@
                             [class.is-invalid]="pointFacility.touched && !wayPointsList[i].facilityId && !pointFacility.valid"
                           >
                             <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
-                            <option
-                              *ngFor="let item of record.pickingType === PickingType.Pickup ? pickupFacilities : dropFacilities"
-                              [ngValue]="item.id"
-                            >
+                            <!--                              *ngFor="let item of record.pickingType === PickingType.Pickup ? pickupFacilities : dropFacilities"-->
+                            <option *ngFor="let item of filterFacilitiesForDropDown(record.pickingType === PickingType.Pickup)" [ngValue]="item.id">
                               {{ item.displayName }}
                             </option>
                           </select>
