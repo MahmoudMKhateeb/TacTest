@@ -137,6 +137,11 @@ namespace TACHYON.Shipping.Trips.Dto
                 context.Results.Add(new ValidationResult("GoodsUnitOfMeasureIsRequired"));
             }
 
+            if ((ShippingTypeId == ShippingTypeEnum.ImportPortMovements || ShippingTypeId == ShippingTypeEnum.ExportPortMovements) && dropPoints.Any(x=>x.PointOrder == null))
+            {
+                context.Results.Add(new ValidationResult("InvalidPointOrder"));
+            }
+
 
         }
 
