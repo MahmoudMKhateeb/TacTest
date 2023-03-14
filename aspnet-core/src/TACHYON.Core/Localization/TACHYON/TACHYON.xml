@@ -3329,5 +3329,26 @@
     <text name="MaxNumberOfWaybillsFeature">Max number of waybills</text>
     <text name="You are already pass the allowed number of waybills so this waybill will be priced by additional waybill price">You are already pass the allowed number of waybills so this waybill will be priced by additional waybill price</text>
     <text name="TenantExceedMaxWaybillNo">{0} has been reached to the last trip from the allowed number of trips</text>
+	
+	<text name="PricePackageInvalidCompanyTypeMsg">Please select the company type, for whom you create a price package (shipper or carrier)</text>
+	<text name="PricePackageInvalidDisplayNameMsg">Please add the price package display name</text>
+	<text name="PricePackageInvalidShipperMsg">Please select a shipper you want to create a price package for him</text>
+	<text name="PricePackageInvalidCarrierMsg">Please select a carrier you want to create a price package on behalf of him</text>
+	<text name="PricePackageInvalidTransportTypeMsg">Please select a transport type</text>
+	<text name="PricePackageInvalidTruckTypeMsg">Please select a truck type</text>
+	<text name="PricePackageInvalidRouteTypeMsg">Please select a route type</text>
+	<text name="PricePackageInvalidPricePackageTypeMsg">Please select a price package type</text>
+	<text name="PricePackageInvalidProjectNameMsg">Please fill the project name at a minimum of 3, and a maximum of 300 characters</text>
+	<text name="PricePackageInvalidScopeOfWorkMsg">Please fill the scope of work at a minimum of 3, and a maximum of 300 characters</text>
+	<text name="PricePackageInvalidOriginCountryMsg">Please select the origin country</text>
+	<text name="PricePackageInvalidServiceAreasMsg">Please select the price package service areas</text>
+	<text name="PricePackageInvalidShippingTypeMsg">Please select a shipping type</text>
+	<text name="UseCarriersFilterMsg">select carriers you want to view their price package</text>
+	<text name="PricePackageInvalidOriginCityMsg">Please select an origin city for the price package</text>
+	<text name="PricePackageInvalidDestinationCityMsg">Please select a destination city for the price package</text>
+	<text name="PricePackageInvalidPricePerAdditionalDropMsg">When the price package route type is multiple drops you must fill in the Price Per Extra Drop</text>
+	<text name="PricePackageInvalidTachyonMSRequestPriceMsg">Please fill in the price package price for the tachyon manage service</text>
+	<text name="PricePackageInvalidDirectRequestPriceMsg">Please fill in the price package price that is used in matching direct requests</text>
+		
 	</texts>
 </localizationDictionary>

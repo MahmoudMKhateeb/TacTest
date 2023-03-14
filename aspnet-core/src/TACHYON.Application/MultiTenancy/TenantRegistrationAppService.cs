@@ -352,7 +352,7 @@ namespace TACHYON.MultiTenancy
         {
             List<City> cities = await _lookupCityRepository
                 .GetAllIncluding(x => x.Translations)
-                .WhereIf(input.HasValue,x => x.CountyFk.Id == input)
+                .WhereIf(input.HasValue,x => x.CountyId == input)
                 .OrderBy(x => x.DisplayName)
                 .ToListAsync();
 
