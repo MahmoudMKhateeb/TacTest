@@ -560,6 +560,7 @@ namespace TACHYON.Shipping.Trips
                 _shippingRequestManager.ValidateDestinationCities(input.RouteType.Value, input.ShippingRequestDestinationCities, input.ShippingTypeId.Value);
 
             }
+
             if (!input.Id.HasValue)
             {
                 
@@ -1271,6 +1272,7 @@ namespace TACHYON.Shipping.Trips
                     .Include(x => x.ActorShipperPrice)
                     .Include(x=>x.ShippingRequestDestinationCities)
                     .ThenInclude(x=>x.CityFk)
+                     .Include(x => x.OriginCityFk)
                     .WhereIf(requestId.HasValue, x => x.ShippingRequestId == requestId)
                     .FirstOrDefaultAsync(x => x.Id == tripid);
                 trip.RoutPoints = trip.RoutPoints.OrderBy(x => x.PickingType).ToList();

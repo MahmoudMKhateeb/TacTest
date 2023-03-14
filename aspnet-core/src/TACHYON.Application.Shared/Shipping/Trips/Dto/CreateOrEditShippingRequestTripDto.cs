@@ -96,6 +96,7 @@ namespace TACHYON.Shipping.Trips.Dto
 
         public virtual int? OriginCityId { get; set; }
         public List<ShippingRequestDestinationCitiesDto> ShippingRequestDestinationCities { get; set; }
+        public int? CountryId { get; set; }
 
         #endregion
         public void AddValidationErrors(CustomValidationContext context)

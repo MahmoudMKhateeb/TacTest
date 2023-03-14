@@ -1252,11 +1252,15 @@ namespace TACHYON.Shipping.ShippingRequests
                     ShipperNotes = x.Note,
                     ContainerNumber = x.ContainerNumber,
                     SealNumber = x.SealNumber,
-                    MultipleDropsOrTripsLable = x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                    MultipleDropsOrTripsLable = x.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+                                                (x.ShippingRequestFk != null && x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
                                                 ? "Trips" : "Drops",
-                    MultipleDropsOrTripsLableAr = x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                    MultipleDropsOrTripsLableAr = x.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+                                               ( x.ShippingRequestFk != null && x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
                                                 ? "الرحلات" : "الحمولات"
                 });
 
@@ -1365,7 +1369,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShipperNotes = x.Note,
                         ContainerNumber = x.ContainerNumber,
                         SealNumber = x.SealNumber,
-                        ShippingType = x.ShippingRequestFk.ShippingTypeId,
+                        ShippingType = x.ShippingTypeId != null ?x.ShippingTypeId.Value :x.ShippingRequestFk.ShippingTypeId,
                     }
                     );
                 }
@@ -1411,10 +1415,8 @@ namespace TACHYON.Shipping.ShippingRequests
                        // ShipperInvoiceNo = x.ShipperInvoiceNo,
                         ShipperNotes = x.Note,
                         ContainerNumber = x.ContainerNumber,
-                        
-                        //update here
                         SealNumber = x.SealNumber,
-                        
+                        ShippingType = x.ShippingTypeId.Value,
 
 
                     }
