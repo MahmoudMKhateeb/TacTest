@@ -263,7 +263,7 @@
                       name="roundTripType"
                       [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.roundTripType"
                       required
-                      (ngModelChange)="resetShippingInputs(); prepareRoundTripInputs()"
+                      (ngModelChange)="resetShippingInputs(); prepareRoundTripInputs(); onRouteTypeChange()"
                     >
                       <!-- [class.is-valid]="
                     roundTripType.valid && (roundTripType.dirty || roundTripType.touched)

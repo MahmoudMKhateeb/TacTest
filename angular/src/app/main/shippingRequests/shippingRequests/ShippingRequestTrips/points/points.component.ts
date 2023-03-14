@@ -246,12 +246,13 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
    * creates empty points for the trip based on number of drops
    */
   createEmptyPoints(selectedPaymentMethodId?: number) {
-    console.log('createEmptyPoints', this._tripService.GetShippingRequestForViewOutput);
+    console.log('createEmptyPoints this._tripService.GetShippingRequestForViewOutput', this._tripService.GetShippingRequestForViewOutput);
+    console.log('createEmptyPoints this._tripService.CreateOrEditShippingRequestTripDto', this._tripService.CreateOrEditShippingRequestTripDto);
     let numberOfDrops = 0;
-    if (this._tripService.GetShippingRequestForViewOutput) {
-      numberOfDrops = this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.numberOfDrops;
-    } else {
+    if (!this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id) {
       numberOfDrops = this._tripService.CreateOrEditShippingRequestTripDto?.numberOfDrops;
+    } else {
+      numberOfDrops = this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.numberOfDrops;
     }
 
     //if there is already wayPoints Dont Create Empty Once
@@ -273,6 +274,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     if (!this.isPortMovement) {
       this.addPointsToWayPointList(numberOfDrops, selectedPaymentMethodId);
       return;
+    } else {
+      this.wayPointsList.map((item, index) => (item.pointOrder = index + 1));
     }
     for (let i = 0; i < numberOfDrops; i++) {
       this.addPointsToWayPointList(1, selectedPaymentMethodId);

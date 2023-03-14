@@ -70,7 +70,7 @@
                 name="facility{{ i }}"
                 class="form-control"
                 [(ngModel)]="wayPointsList[i].facilityId"
-                (change)="
+                (ngModelChange)="
                   RouteStepCordSetter(i, wayPointsList[i].facilityId);
                   wayPointsSetter();
                   loadReceivers(wayPointsList[i].facilityId);

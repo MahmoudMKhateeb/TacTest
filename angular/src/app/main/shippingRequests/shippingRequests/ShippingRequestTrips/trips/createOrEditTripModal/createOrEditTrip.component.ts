@@ -390,8 +390,14 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     // debugger;
     console.log('prepareStep2Inputs');
     switch (Number(this._TripService.CreateOrEditShippingRequestTripDto.roundTripType)) {
+      case RoundTripType.TwoWayRoutsWithPortShuttling: {
+        this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
+        this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = !this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id
+          ? 3
+          : 2;
+        break;
+      }
       case RoundTripType.TwoWayRoutsWithoutPortShuttling:
-      case RoundTripType.TwoWayRoutsWithPortShuttling:
       case RoundTripType.WithReturnTrip: {
         this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
         this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 2;
@@ -1452,6 +1458,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   getCityIdFromSelectedPort($event: any) {
     this._TripService.CreateOrEditShippingRequestTripDto.originCityId = this.allOriginPorts?.find((port) => port.id == $event)?.cityId;
     this.PointsComponent.wayPointsList[0].facilityId = $event;
+    this.PointsComponent.loadReceivers($event);
   }
 
   removeValidationForExportPortRequestOnStep2Form() {

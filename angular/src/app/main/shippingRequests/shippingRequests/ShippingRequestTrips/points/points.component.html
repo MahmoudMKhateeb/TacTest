@@ -250,7 +250,8 @@
               [facilityLoading]="facilityLoading"
               [receiverLoading]="receiverLoading"
               [isExportRequest]="
-                _tripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+                (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                  _tripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ExportPortMovements) ||
                 _tripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ExportPortMovements
               "
               [isImportWithReturnTrip]="
@@ -260,7 +261,7 @@
                   _tripService?.GetShippingRequestForViewOutput?.shippingRequest.roundTripType === RoundTripType.WithReturnTrip)
               "
               [roundTripType]="
-                !_tripService.GetShippingRequestForViewOutput
+                !_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id
                   ? _tripService.CreateOrEditShippingRequestTripDto.roundTripType
                   : _tripService?.GetShippingRequestForViewOutput?.shippingRequest.roundTripType
               "
