@@ -315,6 +315,13 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         if (this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId) {
           (this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId as any) = res.carrierActorId.toString();
         }
+        if (
+          this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+          this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ImportPortMovements
+        ) {
+          this.fillAllRoundTrips(true);
+          this.isPortMovement = true;
+        }
 
         this.IsHaveSealNumberValue = res.sealNumber?.length > 0;
         this.IsHaveContainerNumberValue = res.containerNumber?.length > 0;
@@ -324,6 +331,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
         this.PointsComponent.wayPointsList = this._TripService.CreateOrEditShippingRequestTripDto.routPoints;
         if (
+          (!this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+            (this._TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+              this._TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId === ShippingTypeEnum.ImportPortMovements)) ||
           this._TripService?.GetShippingRequestForViewOutput?.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
           this._TripService?.GetShippingRequestForViewOutput?.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements
         ) {
@@ -387,7 +397,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   prepareRoundTripInputs() {
-    // debugger;
     console.log('prepareStep2Inputs');
     switch (Number(this._TripService.CreateOrEditShippingRequestTripDto.roundTripType)) {
       case RoundTripType.TwoWayRoutsWithPortShuttling: {
@@ -468,6 +477,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestId = this.shippingRequest.id;
     }
     this._TripService.CreateOrEditShippingRequestTripDto.routPoints = this.PointsComponent.wayPointsList;
+    this._TripService.CreateOrEditShippingRequestTripDto.routPoints.map((item, index) => (item.pointOrder = index + 1));
     if (this._TripService.CreateOrEditShippingRequestTripDto.roundTripType != RoundTripType.WithReturnTrip) {
       this._TripService.CreateOrEditShippingRequestTripDto.originFacilityId =
         this._TripService.CreateOrEditShippingRequestTripDto.routPoints[0].facilityId;
@@ -775,7 +785,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   private validatePointsFromPointsComponent() {
-    debugger;
     console.log('shippingRequestTripsForm', this.shippingRequestTripsForm);
     if (
       (this._TripService.GetShippingRequestForViewOutput &&
@@ -817,7 +826,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   private validatePointsFromPointsComponentForPortsMovement(): boolean {
-    // debugger;
     if (!isNotNullOrUndefined(this.PointsComponent) || !isNotNullOrUndefined(this.PointsComponent.wayPointsList)) {
       return false;
     }
@@ -1318,7 +1326,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   fillAllRoundTrips(isInit = false) {
     console.log(this._TripService.CreateOrEditShippingRequestTripDto);
-    // debugger;
 
     if (!isInit) {
       this._TripService.CreateOrEditShippingRequestTripDto.roundTripType = null;

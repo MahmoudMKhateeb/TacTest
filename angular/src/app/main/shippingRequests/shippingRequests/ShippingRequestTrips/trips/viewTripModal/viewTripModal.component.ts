@@ -135,10 +135,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this.trip = res;
         this.fromTime = res.supposedPickupDateFrom?.format('HH:mm');
         this.toTime = res.supposedPickupDateTo?.format('HH:mm');
-        if (
-          this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
-          this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements
-        ) {
+        if (res.shippingTypeId === ShippingTypeEnum.ExportPortMovements || res.shippingTypeId === ShippingTypeEnum.ImportPortMovements) {
+          this.isPortMovement = true;
           this.trip.routPoints = this.trip.routPoints.sort((a, b) => a.pointOrder - b.pointOrder);
         }
         //Get The Points From The View Service and send them to the Points Service To Draw Them
