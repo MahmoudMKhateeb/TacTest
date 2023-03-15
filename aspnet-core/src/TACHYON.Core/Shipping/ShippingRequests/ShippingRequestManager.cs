@@ -633,36 +633,56 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-        public async Task<long?> AddPortMovementShippingRequestVases(long shippingRequestId,bool isAppointmentVas,bool isClearanceVas)
+        public async Task<long?> AddPortMovementShippingRequestVases(long? shippingRequestId,bool isAppointmentVas,bool isClearanceVas)
         {
+            if (shippingRequestId != null)
+            {
+                var portVas = await _lookup_vasRepository.GetAll()
+                 .WhereIf(isAppointmentVas, x => x.Name.ToLower().Equals(TACHYONConsts.AppointmentVasName))
+                 .WhereIf(isClearanceVas, x => x.Name.ToLower().Equals(TACHYONConsts.ClearanceVasName))
+                  .FirstOrDefaultAsync();
+                //var ClearVases = new Vas();
 
+                if (portVas == null)
+                {
+                    //await AddNotExistVases(portVases);
+                    throw new UserFriendlyException(L("InvalidVas"));
+                }
+                else
+                {
+                    //check if exists
+                    var SRvasDB = await _shippingRequestVasRepository.GetAll()
+                        .WhereIf(isAppointmentVas, x => x.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName))
+                        .WhereIf(isClearanceVas, x => x.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName))
+                        .FirstOrDefaultAsync(x => x.ShippingRequestId == shippingRequestId);
+                    if (SRvasDB != null)
+                    {
+                        return SRvasDB.Id;
+                    }
+
+                    var SRvas = new ShippingRequestVas { NumberOfTrips = 0, RequestMaxCount = 1, VasId = portVas.Id, ShippingRequestId = shippingRequestId.Value };
+                    return await _shippingRequestVasRepository.InsertAndGetIdAsync(SRvas);
+                }
+            }
+            return null;
+
+        }
+
+        public async Task<int> GetPortMovementVasId( bool isAppointmentVas, bool isClearanceVas)
+        {
             var portVas = await _lookup_vasRepository.GetAll()
                 .WhereIf(isAppointmentVas, x => x.Name.ToLower().Equals(TACHYONConsts.AppointmentVasName))
-            .WhereIf(isClearanceVas,x=> x.Name.ToLower().Equals(TACHYONConsts.ClearanceVasName))
-            .FirstOrDefaultAsync();
-            //var ClearVases = new Vas();
+                .WhereIf(isClearanceVas, x => x.Name.ToLower().Equals(TACHYONConsts.ClearanceVasName))
+                .FirstOrDefaultAsync();
 
             if (portVas == null)
             {
-                //await AddNotExistVases(portVases);
                 throw new UserFriendlyException(L("InvalidVas"));
             }
             else
             {
-                //check if exists
-                var SRvasDB =await _shippingRequestVasRepository.GetAll()
-                    .WhereIf(isAppointmentVas,x=> x.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName))
-                    .WhereIf(isClearanceVas, x=> x.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName))
-                    .FirstOrDefaultAsync(x => x.ShippingRequestId == shippingRequestId);
-                if (SRvasDB != null)
-                {
-                    return SRvasDB.Id;
-                }
-
-                var SRvas = new ShippingRequestVas { NumberOfTrips = 0, RequestMaxCount = 1, VasId = portVas.Id, ShippingRequestId = shippingRequestId };
-                return await _shippingRequestVasRepository.InsertAndGetIdAsync(SRvas);
+                 return portVas.Id;
             }
-
         }
 
     }
