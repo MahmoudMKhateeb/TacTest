@@ -202,7 +202,7 @@ namespace TACHYON.MultiTenancy
                     if (tenant.EditionId.HasValue)
                     {
                        string featureValue = await EditionManager.GetFeatureValueOrNullAsync(tenant.EditionId.Value, AppFeatures.CMS);
-                       if (featureValue.ToLower().Equals(true.ToString().ToLower()))
+                       if (featureValue != null && featureValue.ToLower().Equals(true.ToString().ToLower()))
                        {
                           await _jobManager.EnqueueAsync<CreateMyselfActorJob, CreateMyselfActorJobArgs>(
                                new CreateMyselfActorJobArgs { TenantIds = new[] { tenant.Id } });
