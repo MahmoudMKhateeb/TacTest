@@ -367,8 +367,7 @@
                       class="form-control"
                       name="originCountry"
                       [(ngModel)]="originCountry"
-                      (ngModelChange)="validateShippingRequestType()"
-                      (change)="loadCitiesByCountryId(originCountry, 'source')"
+                      (ngModelChange)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'source')"
                       required
                     >
                       <option value="undefined" selected disabled>{{ l('SelectanOriginCountry') }}</option>
@@ -402,8 +401,7 @@
                       class="form-control"
                       name="destinationCountry"
                       [(ngModel)]="destinationCountry"
-                      (ngModelChange)="validateShippingRequestType()"
-                      (change)="loadCitiesByCountryId(destinationCountry, 'destination')"
+                      (ngModelChange)="validateShippingRequestType(); loadCitiesByCountryId(destinationCountry, 'destination')"
                       required
                     >
                       <option value="undefined" selected disabled>{{ l('SelectanDestinationCountry') }}</option>

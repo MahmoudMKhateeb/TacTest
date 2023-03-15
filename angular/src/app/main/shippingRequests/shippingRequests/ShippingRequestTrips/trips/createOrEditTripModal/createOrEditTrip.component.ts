@@ -118,7 +118,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   selectedPaymentMethod: number;
   allShippingTypes: SelectItemDto[];
   allRoundTripTypes: SelectItemDto[];
-  originCountry: number;
+  originCountry: number = null;
   destinationCities: ShippingRequestDestinationCitiesDto[] = [];
   citiesLoading = false;
   sourceCities: TenantCityLookupTableDto[];
@@ -155,6 +155,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
   isEdit: boolean;
   allOriginPorts: SelectFacilityItemDto[] = [];
+  selectedShippingRequestDestinationCities: ShippingRequestDestinationCitiesDto[];
 
   get isFileInputValid() {
     return this._TripService.CreateOrEditShippingRequestTripDto.hasAttachment
@@ -308,7 +309,16 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.loading = true;
       this.isEdit = true;
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
+        this.selectedShippingRequestDestinationCities = res.shippingRequestDestinationCities;
         this._TripService.CreateOrEditShippingRequestTripDto = res;
+        (this.originCountry as any) = res.countryId + '';
+        if (!shippingRequestForView) {
+          this.loadCitiesByCountryId(this.originCountry, 'source', true);
+          if (res.shippingTypeId != ShippingTypeEnum.CrossBorderMovements) {
+            this.loadCitiesByCountryId(this.originCountry, 'destination', true);
+          }
+          this.loadFacilitiesInPointComponent();
+        }
         if (this._TripService.CreateOrEditShippingRequestTripDto.shipperActorId) {
           (this._TripService.CreateOrEditShippingRequestTripDto.shipperActorId as any) = res.shipperActorId.toString();
         }
@@ -445,6 +455,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this._TripService.CreateOrEditShippingRequestTripDto = new CreateOrEditShippingRequestTripDto();
     this.fileToken = undefined;
     this.hasNewUpload = undefined;
+    this.originCountry = null;
     this._TripService.currentSourceFacility = null;
     this._TripService.destFacility = null;
     this._TripService.CreateOrEditShippingRequestTripDto.routPoints = [];
@@ -1364,7 +1375,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * resets step2 inputs if the Route Type Change
    */
   resetShippingInputs() {
-    this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities = [];
+    // this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities = [];
     this._TripService.CreateOrEditShippingRequestTripDto.originFacilityId = this._TripService.CreateOrEditShippingRequestTripDto.originCityId =
       undefined;
     // this.originCountry = this.destinationCountry = undefined;
@@ -1426,8 +1437,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     }
   }
 
-  loadCitiesByCountryId(countryId: number, type: 'source' | 'destination') {
-    this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities = [];
+  loadCitiesByCountryId(countryId: number, type: 'source' | 'destination', isInit = false) {
+    if (!isInit) {
+      this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities = [];
+    }
     this.destinationCities = [];
     this.citiesLoading = true;
     this._countriesServiceProxy
