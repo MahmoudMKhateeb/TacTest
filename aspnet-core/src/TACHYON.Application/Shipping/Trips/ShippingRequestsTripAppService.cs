@@ -597,7 +597,7 @@ namespace TACHYON.Shipping.Trips
 
             if (point.HasAppointmentVas) 
             {
-                if (!await IsTachyonDealer()) return;
+                if (!await IsTachyonDealer() && point.ShippingRequestTripFk.ShippingRequestId != null) return;
                 //appointment vas is exists for this point
                 //here will update appointment vas
                 var appointmentTripVas = point.ShippingRequestTripFk.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName));
@@ -641,7 +641,7 @@ namespace TACHYON.Shipping.Trips
 
             if (point.HasClearanceVas)
             {
-                if (!await IsTachyonDealer()) return;
+                if (!await IsTachyonDealer() && point.ShippingRequestTripFk.ShippingRequestId != null) return;
                 //appointment vas is exists for this point
                 //here will update appointment vas
                 var appointmentTripVas = point.ShippingRequestTripFk.ShippingRequestTripVases.FirstOrDefault(x => x.RoutePointId == point.Id && x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName));
@@ -919,7 +919,7 @@ namespace TACHYON.Shipping.Trips
             await SetNeedsAppointmentAndClearance(input, trip);
 
             //appointment data
-            if (await IsTachyonDealer())
+            if (await IsTachyonDealer() || request== null)
             {
                 await BindAppointmentAndClearance(input, request, trip);
             }

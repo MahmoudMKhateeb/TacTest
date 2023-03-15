@@ -513,7 +513,7 @@ namespace TACHYON
                 .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTrip);
             configuration.CreateMap<ShippingRequestTrip, TrackingShippingRequestTripDto>()
-                .ForMember(x => x.ShippingType, x => x.MapFrom(i => i.ShippingRequestFk.ShippingTypeId))
+                .ForMember(x => x.ShippingType, x => x.MapFrom(i => i.ShippingTypeId != null ?i.ShippingTypeId :i.ShippingRequestFk.ShippingTypeId))
                 .ForMember(x => x.RoutPoints, x => x.Ignore());
 
             configuration.CreateMap<ShippingRequestTripVas, CreateOrEditShippingRequestTripVasDto>()

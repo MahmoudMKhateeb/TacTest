@@ -932,6 +932,7 @@ namespace TACHYON.Invoices
             var trip = await _shippingRequestTrip
                 .GetAllIncluding(d => d.ShippingRequestTripVases)
                 .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
+                .Include(x=>x.ShipperTenantFk)
                 .FirstOrDefaultAsync(t => t.Id == tripId);
 
            await GenertateInvoiceWhenShipmintDelivery(trip);
