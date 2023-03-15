@@ -78,7 +78,8 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
     private _PenaltiesServiceProxy: PenaltiesServiceProxy,
     private _fileDownloadService: FileDownloadService,
     private _PointsService: PointsService,
-    private _shippingRequestsTripServiceProxy: ShippingRequestsTripServiceProxy
+    private _shippingRequestsTripServiceProxy: ShippingRequestsTripServiceProxy,
+    public _tripService: TripService
   ) {
     super(injector);
   }
@@ -147,12 +148,12 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
       this.tripAppointment.appointmentDateTime = moment(this.tripAppointment.appointmentDateTime);
     }
     if (this.tripAppointment.itemPrice) {
-      this.tripAppointment.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
+      this.tripAppointment.shippingRequestId = this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id;
     } else {
       this.tripAppointment = null;
     }
     if (this.tripClearance.itemPrice) {
-      this.tripClearance.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
+      this.tripClearance.shippingRequestId = this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id;
     } else {
       this.tripClearance = null;
     }
@@ -364,7 +365,7 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
 
   carrierSaveClearance() {
     this.updatedClearance = true;
-    this.tripClearance.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
+    this.tripClearance.shippingRequestId = this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id;
     this.carrierSetClearanceData.emit(this.tripClearance);
   }
 
@@ -375,7 +376,7 @@ export class AppointmentAndClearanceModalComponent extends AppComponentBase impl
       this.tripAppointment.documentName = this.fileName;
       this.tripAppointment.documentContentType = this.fileType;
     }
-    this.tripAppointment.shippingRequestId = this._PointsService.currentShippingRequest.shippingRequest.id;
+    this.tripAppointment.shippingRequestId = this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id;
     this.carrierSetAppointmentData.emit(this.tripAppointment);
   }
 

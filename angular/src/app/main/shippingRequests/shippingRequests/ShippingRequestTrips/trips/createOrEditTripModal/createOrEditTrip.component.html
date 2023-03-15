@@ -537,7 +537,8 @@
                           ? true
                           : false
                       "
-                      [selectedItemsLabel]="'{0} items selected'"
+                      [maxSelectedLabels]="0"
+                      [selectedItemsLabel]="l('{0} items selected')"
                       (ngModelChange)="validateShippingRequestType(); loadFacilitiesInPointComponent()"
                       [style]="{ width: '100%' }"
                       styleClass="form-control pt-1"

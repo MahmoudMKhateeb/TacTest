@@ -14,6 +14,7 @@ import {
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { AppointmentAndClearanceModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/appointment-and-clearance/appointment-and-clearance.component';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'PointsForPortsMovementComponent',
@@ -53,7 +54,7 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
     injector: Injector,
     private _PointsService: PointsService,
     private _shippingRequestsTripServiceProxy: ShippingRequestsTripServiceProxy,
-    private _tripService: TripService
+    public _tripService: TripService
   ) {
     super(injector);
   }
@@ -228,7 +229,12 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
   }
 
   showAppointmentsAndClearanceButton(index): boolean {
-    if (this.usedIn == 'createOrEdit' && !this.isTachyonDealer && !this.isEdit) {
+    if (
+      this.usedIn == 'createOrEdit' &&
+      ((isNotNullOrUndefined(this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id) && !this.isTachyonDealer) ||
+        (!this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !this.hasShipperClients && !this.hasCarrierClients)) &&
+      !this.isEdit
+    ) {
       return false;
     }
     if (this.usedIn != 'createOrEdit') {
