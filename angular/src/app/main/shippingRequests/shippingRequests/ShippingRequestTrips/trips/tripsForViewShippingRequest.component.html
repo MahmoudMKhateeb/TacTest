@@ -423,9 +423,17 @@
                     <li
                       *ngIf="
                         (permission.isGranted('Pages.ShippingRequestTrips.Delete') &&
-                          (feature.isEnabled('App.Shipper') || isTachyonDealer) &&
+                          ((isShipper && !hasCarrierClients && !hasShipperClients) || isTachyonDealer) &&
                           record.status == ShippingRequestTripStatusEnum.New) ||
-                        (isCarrierSaas && record.status == ShippingRequestTripStatusEnum.New)
+                        (isCarrierSaas &&
+                          !hasCarrierClients &&
+                          hasShipperClients &&
+                          _TripService.GetShippingRequestForViewOutput.shippingRequest.isSaas &&
+                          record.status == ShippingRequestTripStatusEnum.New) ||
+                        (hasCarrierClients &&
+                          hasShipperClients &&
+                          _TripService.GetShippingRequestForViewOutput.shippingRequest.isSaas &&
+                          record.status == ShippingRequestTripStatusEnum.New)
                       "
                     >
                       <a class="dropdown-item" (click)="AddNewTripModal.deleteTrip(record.id)">{{ l('Delete') }}</a>
