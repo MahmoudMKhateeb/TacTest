@@ -445,10 +445,10 @@ namespace TACHYON.Shipping.Trips
 
             if (tenantId != null)
             {
-                var MaxWaybillsNo =await _shippingRequestTripManager.getMaxNumberOfWaybills(tenantId.Value);
+                var MaxWaybillsNo =await _shippingRequestTripManager.GetMaxNumberOfWaybills(tenantId.Value);
                 if (MaxWaybillsNo != null)
                 {
-                    var CreatedWaybillsNo = await _shippingRequestTripManager.getWaybillsNo(tenantId.Value);
+                    var CreatedWaybillsNo = await _shippingRequestTripManager.GetWaybillsNo(tenantId.Value);
                     if (CreatedWaybillsNo >= MaxWaybillsNo.Value)
                     {
                         shippingRequestTrip.IsExceedMaxWaybillsNumber = true;
@@ -906,10 +906,10 @@ namespace TACHYON.Shipping.Trips
 
             //notify TMS if tenant reach max number of waybills
             var tenant = request == null ? trip.ShipperTenantId.Value : trip.ShippingRequestFk.TenantId;
-            var maxNumberOfWaybills = await _shippingRequestTripManager.getMaxNumberOfWaybills(tenant);
+            var maxNumberOfWaybills = await _shippingRequestTripManager.GetMaxNumberOfWaybills(tenant);
             if(maxNumberOfWaybills != null)
             {
-                var createdTrips =await _shippingRequestTripManager.getWaybillsNo(tenant);
+                var createdTrips =await _shippingRequestTripManager.GetWaybillsNo(tenant);
                 if(maxNumberOfWaybills.Value == createdTrips)
                 {
                     await _appNotifier.NotifyTMSWithMaxWaybillsExceeds(tenant);

@@ -194,6 +194,8 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             );
             #region Saas
+
+            //waybills
             var NumberOfWaybills = context.Create(
                 AppFeatures.NumberOfWaybills,
                 "false",
@@ -214,12 +216,35 @@ namespace TACHYON.Features
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
                 );
 
+            //import
             var ImportFunctionality = context.Create(
                 AppFeatures.ImportFunctionality,
                 "true",
                 L("ImportFunctionalityFeature"),
                 inputType: new CheckboxInputType()
             );
+
+
+            //number of trucks
+            var NumberOfTrucks = context.Create(
+                AppFeatures.NumberOfTrucks,
+                "false",
+                L("NumberOfTrucksFeature"),
+                inputType: new CheckboxInputType()
+            );
+            NumberOfTrucks.CreateChildFeature(
+                AppFeatures.MaxNumberOfTrucks,
+                "false",
+                L("MaxNumberOfTrucksFeature"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+            );
+
+            NumberOfTrucks.CreateChildFeature(
+                AppFeatures.AdditionalTruckPrice,
+                "false",
+                L("AdditionalTruckPriceFeature"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+                );
             #endregion
 
 

@@ -3349,6 +3349,10 @@
 	<text name="PricePackageInvalidPricePerAdditionalDropMsg">When the price package route type is multiple drops you must fill in the Price Per Extra Drop</text>
 	<text name="PricePackageInvalidTachyonMSRequestPriceMsg">Please fill in the price package price for the tachyon manage service</text>
 	<text name="PricePackageInvalidDirectRequestPriceMsg">Please fill in the price package price that is used in matching direct requests</text>
-		
+
+  <text name="NumberOfTrucksFeature">Number of trucks</text>
+  <text name="AdditionalTruckPriceFeature">Additional truck price</text>
+  <text name="MaxNumberOfTrucksFeature">Max number of trucks</text>
+    <text name="You are already passed the allowed number of trucks">You are already passed the allowed number of trucks</text>
 	</texts>
 </localizationDictionary>

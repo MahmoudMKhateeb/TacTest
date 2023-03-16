@@ -31,6 +31,11 @@
         public const string ImportFunctionality = "App.ImportFunctionality";
         public const string MaxNumberOfWaybills = "App.NumberOfWaybills.MaxNumberOfWaybills";
         public const string AdditionalWaybillPrice = "App.NumberOfWaybills.AdditionalWaybillPrice";
+
+        public const string NumberOfTrucks = "App.NumberOfTrucks";
+        public const string MaxNumberOfTrucks = "App.NumberOfTrucks.MaxNumberOfTrucks";
+        public const string AdditionalTruckPrice = "App.NumberOfTrucks.AdditionalTruckPrice";
+
         public const string ShippingRequest = "App.shippingRequest";
         public const string MarketPlace = "App.MarketPlace";
         public const string OffersMarketPlace = "App.OffersMarketPlace";

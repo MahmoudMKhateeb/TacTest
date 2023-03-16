@@ -53,7 +53,7 @@
           </div>
         </div>
 
-        <button *ngIf="isGranted('Pages.Trucks.Create')" (click)="createTruck()" class="btn btn-primary blue">
+        <button *ngIf="isGranted('Pages.Trucks.Create') && CanAddTruck" (click)="createTruck()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewTruck') }}
         </button>
       </div>
@@ -62,6 +62,15 @@
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <div class="card-body">
+          <div
+            *ngIf="IsExceedsMaxNumberOfWaybills"
+            class="row alert alert-warning"
+            style="background-color: #fff3cd; color: #856404; border-color: #ffeeba"
+            role="alert"
+          >
+            {{ l('You are already passed the allowed number of trucks') }}
+          </div>
+
           <div class="row align-items-center">
             <dx-data-grid
               style="height: 45vw"

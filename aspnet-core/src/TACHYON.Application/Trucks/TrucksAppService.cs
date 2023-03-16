@@ -83,6 +83,8 @@ namespace TACHYON.Trucks
         private readonly IRepository<User,long> _userRepository;
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IRepository<UserOrganizationUnit,long> _userOrganizationUnitRepository;
+        private readonly IFeatureChecker _featureChecker;
+
 
 
 
@@ -97,7 +99,7 @@ namespace TACHYON.Trucks
             WaslIntegrationManager waslIntegrationManager,
             IRepository<ShippingRequest, long> shippingRequestRepository,
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
-            IRepository<User, long> userRepository, IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository)
+            IRepository<User, long> userRepository, IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository, IFeatureChecker featureChecker)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -119,6 +121,7 @@ namespace TACHYON.Trucks
             _userRepository = userRepository;
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
+            _featureChecker = featureChecker;
         }
 
         public async Task<LoadResult> GetAll(GetAllTrucksInput input)
@@ -181,44 +184,27 @@ namespace TACHYON.Trucks
 
             var result = await LoadResultAsync(query, input.Filter);
             await FillIsMissingDocumentFiles(result);
+            
             return result;
         }
 
-        private async Task FillIsMissingDocumentFiles(LoadResult pagedResultDto)
+        public async Task<GetTenantExceedsNumberOfTrucksDto> GetTenantExceedsNumberOfTrucks()
         {
-            var ids = pagedResultDto.data.ToDynamicList<TruckDto>().Select(x => x.Id);
-            var documentTypesCount = await _documentTypeRepository.GetAll()
-                .Where(doc => doc.DocumentsEntityId == DocumentsEntitiesEnum.Truck)
-                .Where(x => x.IsRequired)
-                .CountAsync();
+            var dto = new GetTenantExceedsNumberOfTrucksDto();
 
-            if (documentTypesCount == 0)
-                return;
-
-            var submittedDocuments = await (_documentFileRepository.GetAll()
-                    .Where(x => ids.Contains((long)x.TruckId))
-                    .Where(x => x.DocumentTypeFk.IsRequired)
-                    .GroupBy(x => x.TruckId)
-                    .Select(x => new { TruckId = x.Key, IsMissingDocumentFiles = x.Count() == documentTypesCount }))
-                .ToListAsync();
-
-            foreach (TruckDto truckDto in pagedResultDto.data.ToDynamicList<TruckDto>())
+            if (!await IsTachyonDealer() && AbpSession.TenantId.HasValue)
             {
-                if (submittedDocuments == null)
-                    continue;
-
-
-                var t = submittedDocuments.FirstOrDefault(x => x.TruckId == truckDto.Id);
-                if (t != null)
+                var trucksCount =await GetTrucksNo(AbpSession.TenantId.Value);
+                var maxNumberOfTrucks = await GetMaxNumberOfTrucks(AbpSession.TenantId.Value);
+                if (maxNumberOfTrucks >= trucksCount)
                 {
-                    truckDto.IsMissingDocumentFiles = t.IsMissingDocumentFiles;
-                }
-                else
-                {
-                    truckDto.IsMissingDocumentFiles = true;
+                    dto.IsTenantExceedsNumberOfTrucks = true;
+                    dto.CanAddTruck =await HaveAdditionalPrice(AbpSession.TenantId.Value);
                 }
             }
+            return dto;
         }
+        
 
 
         public async Task<GetTruckForViewOutput> GetTruckForView(long id)
@@ -778,7 +764,68 @@ namespace TACHYON.Trucks
 
         }
 
+        private async Task<int?> GetMaxNumberOfTrucks(int tenantId)
+        {
+            var trucksFeature = await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.NumberOfTrucks);
+            if (trucksFeature)
+            {
+                var maxTrucks = await _featureChecker.GetValueAsync(tenantId, AppFeatures.MaxNumberOfTrucks);
+                if (maxTrucks != null) return Convert.ToInt32(maxTrucks);
+            }
+            return null;
+        }
 
+        private async Task<bool> HaveAdditionalPrice(int tenantId)
+        {
+            var trucksFeature = await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.NumberOfTrucks);
+            if (trucksFeature)
+            {
+                return Convert.ToInt32(await _featureChecker.GetValueAsync(tenantId, AppFeatures.AdditionalTruckPrice)) > 0 ?true :false;
+            }
+            return false;
+        }
+
+        private async Task<int?> GetTrucksNo(int tenantId)
+        {
+            DisableTenancyFilters();
+            return await _truckRepository.CountAsync(x => x.TenantId == tenantId);
+        }
+
+        private async Task FillIsMissingDocumentFiles(LoadResult pagedResultDto)
+        {
+            var ids = pagedResultDto.data.ToDynamicList<TruckDto>().Select(x => x.Id);
+            var documentTypesCount = await _documentTypeRepository.GetAll()
+                .Where(doc => doc.DocumentsEntityId == DocumentsEntitiesEnum.Truck)
+                .Where(x => x.IsRequired)
+                .CountAsync();
+
+            if (documentTypesCount == 0)
+                return;
+
+            var submittedDocuments = await (_documentFileRepository.GetAll()
+                    .Where(x => ids.Contains((long)x.TruckId))
+                    .Where(x => x.DocumentTypeFk.IsRequired)
+                    .GroupBy(x => x.TruckId)
+                    .Select(x => new { TruckId = x.Key, IsMissingDocumentFiles = x.Count() == documentTypesCount }))
+                .ToListAsync();
+
+            foreach (TruckDto truckDto in pagedResultDto.data.ToDynamicList<TruckDto>())
+            {
+                if (submittedDocuments == null)
+                    continue;
+
+
+                var t = submittedDocuments.FirstOrDefault(x => x.TruckId == truckDto.Id);
+                if (t != null)
+                {
+                    truckDto.IsMissingDocumentFiles = t.IsMissingDocumentFiles;
+                }
+                else
+                {
+                    truckDto.IsMissingDocumentFiles = true;
+                }
+            }
+        }
         #endregion
     }
 }
