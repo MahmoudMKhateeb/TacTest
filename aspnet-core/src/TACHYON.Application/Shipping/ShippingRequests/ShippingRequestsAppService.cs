@@ -1642,6 +1642,7 @@ namespace TACHYON.Shipping.ShippingRequests
             var vases = _shippingRequestTripVasRepository.GetAll()
                 .Include(x => x.ShippingRequestVasFk)
                 .Include(x => x.ShippingRequestVasFk.VasFk)
+                .Include(x => x.VasFk)
                 .Where(x => x.ShippingRequestTripId == shippingRequestTripId)
                 .ToList();
 
@@ -1649,9 +1650,9 @@ namespace TACHYON.Shipping.ShippingRequests
             (
                 x => new GetAllShippingRequestVasesOutput
                 {
-                    VasName = x.ShippingRequestVasFk.VasFk.Key,
-                    Amount = x.ShippingRequestVasFk.RequestMaxAmount,
-                    Count = x.ShippingRequestVasFk.RequestMaxCount
+                    VasName = x.VasFk !=null ?x.VasFk.Key :x.ShippingRequestVasFk.VasFk.Key,
+                    Amount = x.VasFk!= null ?1 :x.ShippingRequestVasFk.RequestMaxAmount,
+                    Count = x.VasFk != null ?1 : x.ShippingRequestVasFk.RequestMaxCount
                 }
             );
 

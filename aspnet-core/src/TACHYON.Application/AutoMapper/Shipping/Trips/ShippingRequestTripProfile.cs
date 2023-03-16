@@ -145,7 +145,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     opt => opt.MapFrom(src => src.ShippingRequestTripVases))
                 .ForMember(dest => dest.DriverUserId, opt => opt.MapFrom(src => src.AssignedDriverUserId))
                 .ForMember(dest => dest.TruckId, opt => opt.MapFrom(src => src.AssignedTruckId))
-                .ForMember(dest => dest.CountryId, opt => opt.MapFrom(src => src.OriginCityFk.CountyId));
+                .ForMember(dest => dest.CountryId, opt => opt.MapFrom(src => src.OriginCityFk.CountyId))
+                .ForMember(dest => dest.ShippingRequestDestinationCities, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities));
 
             CreateMap<ShippingRequestTrip, ShippingRequestTripDto>().ReverseMap();
             

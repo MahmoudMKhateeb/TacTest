@@ -906,6 +906,9 @@ namespace TACHYON.Shipping.Trips
             {
                 trip.CarrierTenantId = AbpSession.TenantId;
                 trip.ShipperTenantId = AbpSession.TenantId;
+
+                await AddOrRemoveDestinationCities(input.ShippingRequestDestinationCities, trip);
+
             }
 
             // if dedicated or direct trip 
