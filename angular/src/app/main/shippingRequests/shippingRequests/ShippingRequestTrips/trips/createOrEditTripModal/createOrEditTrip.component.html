@@ -215,7 +215,11 @@
             <!--begin::Body-->
             <!--  begin:: Source Dest Facilitys  -->
             <!-- begin Shipping Type -->
-            <div class="row" [hidden]="_TripService.GetShippingRequestForViewOutput">
+            <div
+              class="row"
+              *ngIf="!_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id"
+              [hidden]="_TripService.GetShippingRequestForViewOutput"
+            >
               <div class="col-lg-6">
                 <div class="form-group">
                   <label> {{ l('ShippingType') }}<span class="required-fileds">*</span></label>
@@ -343,7 +347,7 @@
               <!-- End route type -->
               <!-- Origin & destination -->
               <!--    Countries    -->
-              <div class="col-lg-6">
+              <div class="col-lg-6" *ngIf="!_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id">
                 <div class="form-group">
                   <label
                     >{{
@@ -414,7 +418,7 @@
               </div>
 
               <!--    Cities        -->
-              <div class="col-lg-6">
+              <div class="col-lg-6" *ngIf="!_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id">
                 <div
                   class="form-group"
                   *ngIf="
