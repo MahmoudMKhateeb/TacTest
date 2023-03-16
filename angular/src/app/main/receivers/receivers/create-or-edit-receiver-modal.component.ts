@@ -2,13 +2,13 @@ import { Component, ViewChild, Injector, Output, EventEmitter, Input } from '@an
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
-  ReceiversServiceProxy,
-  CreateOrEditReceiverDto,
-  ReceiverFacilityLookupTableDto,
-  ShippersForDropDownDto,
-  PenaltiesServiceProxy,
-  SelectItemDto,
-  ShippingRequestsServiceProxy,
+    ReceiversServiceProxy,
+    CreateOrEditReceiverDto,
+    ReceiverFacilityLookupTableDto,
+    ShippersForDropDownDto,
+    PenaltiesServiceProxy,
+    SelectItemDto,
+    ShippingRequestsServiceProxy, ActorSelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
@@ -36,7 +36,7 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   isShippersActorsLoading: boolean;
   isFacilitiesLoading: boolean;
   shipperActorId: number;
-  shipperActors: SelectItemDto[];
+  shipperActors: ActorSelectItemDto[];
   canManageShipperClients: boolean;
 
   constructor(

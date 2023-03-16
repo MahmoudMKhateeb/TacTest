@@ -4,36 +4,37 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
-  CreateOrEditActorCarrierPrice,
-  CreateOrEditActorShipperPriceDto,
-  CreateOrEditDocumentFileDto,
-  CreateOrEditRoutPointDto,
-  CreateOrEditShippingRequestTripDto,
-  CreateOrEditShippingRequestTripVasDto,
-  DedicatedShippingRequestsServiceProxy,
-  DropPaymentMethod,
-  EntityTemplateServiceProxy,
-  FacilityType,
-  FileDto,
-  GetAllDedicatedDriversOrTrucksForDropDownDto,
-  GetAllGoodsCategoriesForDropDownOutput,
-  GetAllTrucksWithDriversListDto,
-  GetShippingRequestForViewOutput,
-  GetShippingRequestVasForViewDto,
-  GoodsDetailsServiceProxy,
-  PickingType,
-  RoundTripType,
-  SavedEntityType,
-  SelectItemDto,
-  ShippingRequestDto,
-  ShippingRequestFlag,
-  ShippingRequestRouteType,
-  ShippingRequestsServiceProxy,
-  ShippingRequestsTripServiceProxy,
-  ShippingRequestTripFlag,
-  ShippingTypeEnum,
-  UpdateDocumentFileInput,
-  WaybillsServiceProxy,
+    ActorSelectItemDto,
+    CreateOrEditActorCarrierPrice,
+    CreateOrEditActorShipperPriceDto,
+    CreateOrEditDocumentFileDto,
+    CreateOrEditRoutPointDto,
+    CreateOrEditShippingRequestTripDto,
+    CreateOrEditShippingRequestTripVasDto,
+    DedicatedShippingRequestsServiceProxy,
+    DropPaymentMethod,
+    EntityTemplateServiceProxy,
+    FacilityType,
+    FileDto,
+    GetAllDedicatedDriversOrTrucksForDropDownDto,
+    GetAllGoodsCategoriesForDropDownOutput,
+    GetAllTrucksWithDriversListDto,
+    GetShippingRequestForViewOutput,
+    GetShippingRequestVasForViewDto,
+    GoodsDetailsServiceProxy,
+    PickingType,
+    RoundTripType,
+    SavedEntityType,
+    SelectItemDto,
+    ShippingRequestDto,
+    ShippingRequestFlag,
+    ShippingRequestRouteType,
+    ShippingRequestsServiceProxy,
+    ShippingRequestsTripServiceProxy,
+    ShippingRequestTripFlag,
+    ShippingTypeEnum,
+    UpdateDocumentFileInput,
+    WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -169,8 +170,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   allDedicatedTrucks: GetAllDedicatedDriversOrTrucksForDropDownDto[] = [];
   //shippingRequestForView: GetShippingRequestForViewOutput = null;
   selectedTripType;
-  AllActorsShippers: SelectItemDto[];
-  AllActorsCarriers: SelectItemDto[];
+  AllActorsShippers: ActorSelectItemDto[];
+  AllActorsCarriers: ActorSelectItemDto[];
   ShippingTypeEnum = ShippingTypeEnum;
 
   constructor(
@@ -1190,5 +1191,19 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     if (dto) {
       dto.vatAmount = dto.subTotalAmount * 0.15;
     }
+  }
+
+  canSetPriceForShipperActor(): boolean {
+    if (isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto.shipperActorId)) {
+      return !this.AllActorsShippers?.find((x) => x.id == this._TripService.CreateOrEditShippingRequestTripDto?.shipperActorId?.toString())?.isMySelf;
+    }
+    return false;
+  }
+
+  canSetPriceForCarrierActor(): boolean {
+    if (isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId)) {
+      return !this.AllActorsCarriers?.find((x) => x.id == this._TripService.CreateOrEditShippingRequestTripDto?.carrierActorId?.toString())?.isMySelf;
+    }
+    return false;
   }
 }
