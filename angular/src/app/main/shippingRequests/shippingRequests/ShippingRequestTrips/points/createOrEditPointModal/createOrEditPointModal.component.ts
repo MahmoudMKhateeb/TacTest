@@ -103,7 +103,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
 
   ngOnDestroy() {
     //this.tripServiceSubscription$.unsubscribe();
-    this.pointsServiceSubscription$.unsubscribe();
-    this.usedInSubscription$.unsubscribe();
+    this.pointsServiceSubscription$?.unsubscribe();
+    this.usedInSubscription$?.unsubscribe();
   }
 }

@@ -1,4 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
+using System.Collections.Generic;
+using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.PricePackages.Dto
@@ -44,5 +46,11 @@ namespace TACHYON.PricePackages.Dto
         public bool HasAppendix { get; set; }
 
         public decimal? DirectRequestPrice { get; set; }
+
+        public PricePackageType Type { get; set; }
+
+        public int? OriginCountryId { get; set; }
+
+        public List<int> ServiceAreas { get; set; }
     }
 }

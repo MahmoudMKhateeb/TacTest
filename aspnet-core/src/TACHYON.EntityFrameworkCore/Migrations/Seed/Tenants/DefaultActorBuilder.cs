@@ -54,7 +54,7 @@ namespace TACHYON.Migrations.Seed.Tenants
                     CompanyName = TACHYONConsts.MyselfCompanyName,
                     MoiNumber = tenant.MoiNumber ?? string.Empty,
                     Email = adminUser.EmailAddress,
-                    Address = tenant.Address,
+                    Address = tenant.Address ?? string.Empty,
                     MobileNumber = adminUser.PhoneNumber ?? string.Empty,
                     IsActive = true,
                 }).ToList();

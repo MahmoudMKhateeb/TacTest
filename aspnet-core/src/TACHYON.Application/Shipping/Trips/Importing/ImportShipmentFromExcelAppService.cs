@@ -376,9 +376,9 @@ namespace TACHYON.Shipping.Trips.Importing
                             throw new UserFriendlyException(L("TripShouldnotBeSingleDrop"));
                         }
                         _shippingRequestTripManager.ValidateDedicatedNumberOfDrops(tripDto.importPointsDtoList.Count(x => x.PickingType == PickingType.Dropoff), trip.NumberOfDrops);
-                        if (request.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || request.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+                        if (request != null && (request.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || request.ShippingTypeId == ShippingTypeEnum.ExportPortMovements))
                         {
-                            _shippingRequestTripManager.ValidateDedicatedNumberOfDrops(tripDto.importPointsDtoList.Count(x => x.PickingType == PickingType.Pickup), trip.NumberOfDrops);
+                            _shippingRequestTripManager.ValidateDedicatedNumberOfPickups(tripDto.importPointsDtoList.Count(x => x.PickingType == PickingType.Pickup), trip.NumberOfDrops);
                         }
                     }
                 }

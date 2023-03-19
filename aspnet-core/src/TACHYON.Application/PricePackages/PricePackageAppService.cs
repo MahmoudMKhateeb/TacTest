@@ -2,6 +2,7 @@ using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Authorization.Users;
+using Abp.Collections.Extensions;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -11,6 +12,8 @@ using AutoMapper.QueryableExtensions;
 using DevExpress.XtraRichEdit.Model;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using NUglify.Helpers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -25,6 +28,7 @@ using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.PricePackages.Dto;
 using TACHYON.PricePackages.PricePackageOffers;
+using TACHYON.ServiceAreas;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
@@ -84,7 +88,7 @@ namespace TACHYON.PricePackages
         {
             DisableTenancyFilters();
             var isTmsOrHost = !AbpSession.TenantId.HasValue || await IsTachyonDealer();
-            var pricePackages = _pricePackageRepository.GetAll().AsNoTracking()
+            var pricePackages = _pricePackageRepository.GetAllIncluding(x=> x.ServiceAreas).AsNoTracking()
                 .WhereIf(!isTmsOrHost,
                     x => (x.UsageType == PricePackageUsageType.AsTachyonManageService &&
                           (x.DestinationTenantId == AbpSession.TenantId &&
@@ -155,29 +159,44 @@ namespace TACHYON.PricePackages
 
         private async Task CheckPricePackageImpersonate(PricePackage pricePackage)
         {
-            if (pricePackage.UsageType == PricePackageUsageType.AsCarrier && await IsTachyonDealer())
+            if (!AbpSession.TenantId.HasValue || await IsTachyonDealer())
             {
-                if (!pricePackage.DestinationTenantId.HasValue)
-                    throw new UserFriendlyException(L("YouMustSelectACompany"));
-                
-                pricePackage.TenantId = pricePackage.DestinationTenantId.Value;
-                pricePackage.DestinationTenantId = default; // default means null
+                switch (pricePackage.UsageType)
+                {
+                    case PricePackageUsageType.AsCarrier when !pricePackage.DestinationTenantId.HasValue:
+                        throw new UserFriendlyException(L("YouMustSelectACompany"));
+                    case PricePackageUsageType.AsCarrier:
+                        pricePackage.TenantId = pricePackage.DestinationTenantId.Value;
+                        pricePackage.DestinationTenantId = default; // default means null
+                        break;
+                    case PricePackageUsageType.AsTachyonManageService when !AbpSession.TenantId.HasValue:
+                        pricePackage.TenantId = await _tenantRepository.GetAll().Where(x => x.Edition.Id == TachyonEditionId).Select(x => x.Id)
+                            .FirstOrDefaultAsync();
+                        if (!pricePackage.ServiceAreas.IsNullOrEmpty())
+                        {
+                            pricePackage.ServiceAreas.ForEach(x=> x.TenantId = pricePackage.TenantId);
+                        }
+                        break;
+                }
             }
+
+            
         }
 
         [AbpAuthorize(AppPermissions.Pages_PricePackages_Update)]
         protected virtual async Task Update(CreateOrEditPricePackageDto input)
         {
             if (!input.Id.HasValue) return;
-            
-            var updatedPricePackage = await _pricePackageRepository.FirstOrDefaultAsync(input.Id.Value);
-            
-            await CheckPricePackageImpersonate(updatedPricePackage);
-            
+            var updatedPricePackage = await _pricePackageRepository.GetAllIncluding(x => x.ServiceAreas)
+                .FirstOrDefaultAsync(x => x.Id == input.Id.Value);
+            if (updatedPricePackage.Type != input.Type)
+                throw new UserFriendlyException(L("YouCanNotChangeThePricePackageType"));
+
             if (updatedPricePackage.UsageType != input.UsageType)
                 throw new UserFriendlyException(L("YouCanNotChangeTheUsageType"));
 
             ObjectMapper.Map(input, updatedPricePackage);
+            await CheckPricePackageImpersonate(updatedPricePackage);
         }
         
         [AbpAuthorize(AppPermissions.Pages_PricePackages_Update)]
@@ -185,7 +204,7 @@ namespace TACHYON.PricePackages
         {
             DisableTenancyFilterIfTachyonDealerOrHost();
             
-            var pricePackage = await _pricePackageRepository.GetAll().AsNoTracking()
+            var pricePackage = await _pricePackageRepository.GetAllIncluding(x=> x.ServiceAreas).AsNoTracking()
                 .FirstOrDefaultAsync(x=> x.Id == pricePackageId);
             
             if (pricePackage == null) throw new EntityNotFoundException(L("NotFound"));

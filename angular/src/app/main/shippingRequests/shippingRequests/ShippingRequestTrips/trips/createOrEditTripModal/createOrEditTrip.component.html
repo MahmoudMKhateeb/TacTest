@@ -25,7 +25,7 @@
                 [dropup]="false"
                 [insideClick]="true"
                 *ngIf="
-                  !_TripService.CreateOrEditShippingRequestTripDto.id &&
+                  !_TripService.CreateOrEditShippingRequestTripDto?.id &&
                   (isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas')) &&
                   _TripService.GetShippingRequestForViewOutput &&
                   _TripService.GetShippingRequestForViewOutput &&
@@ -420,8 +420,8 @@
                     <span
                       class="required-fileds"
                       *ngIf="
-                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                        _TripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _TripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ExportPortMovements
                       "
                       >*</span
                     ></label
@@ -436,8 +436,8 @@
                     [disabled]="_TripService.CreateOrEditShippingRequestTripDto.id && IsHaveContainerNumberValue && !isTachyonDealer"
                     [required]="
                       _TripService.GetShippingRequestForViewOutput != null &&
-                      (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements)
+                      (_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _TripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ExportPortMovements)
                     "
                   />
                 </div>
@@ -451,8 +451,8 @@
                     <span
                       class="required-fileds"
                       *ngIf="
-                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements
+                        _TripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _TripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ExportPortMovements
                       "
                       >*</span
                     ></label
@@ -467,8 +467,8 @@
                     [disabled]="_TripService.CreateOrEditShippingRequestTripDto.id && IsHaveSealNumberValue && !isTachyonDealer"
                     [required]="
                       _TripService.GetShippingRequestForViewOutput != null &&
-                      (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
-                        _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements)
+                      (_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                        _TripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ExportPortMovements)
                     "
                   />
                 </div>

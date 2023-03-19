@@ -524,13 +524,14 @@ namespace TACHYON.Shipping.Trips
             if (!input.Id.HasValue)
             {
                 
-                if (request.ShippingRequestFlag == ShippingRequestFlag.Normal)
-                {
-                    await _shippingRequestTripManager.ValidateNumberOfTrips(request, 1);
-                }
 
                 if (request != null)
                 {
+                    if (request.ShippingRequestFlag == ShippingRequestFlag.Normal)
+                    {
+                        await _shippingRequestTripManager.ValidateNumberOfTrips(request, 1);
+                    }
+
                     request.TotalsTripsAddByShippier += 1;
                 }
 
@@ -868,7 +869,7 @@ namespace TACHYON.Shipping.Trips
 
             }
             //AssignWorkFlowVersionToRoutPoints(trip);
-            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints( trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,request.ShippingTypeId,request.RoundTripType, trip.RoutPoints.ToArray());
+            _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints( trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag,request?.ShippingTypeId,request?.RoundTripType, trip.RoutPoints.ToArray());
             //insert trip 
             var shippingRequestTripId = await _shippingRequestTripRepository.InsertAndGetIdAsync(trip);
 

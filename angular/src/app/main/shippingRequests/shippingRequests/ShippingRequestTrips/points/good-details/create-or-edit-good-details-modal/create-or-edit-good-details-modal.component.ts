@@ -118,7 +118,11 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   ngOnInit(): void {
     this.currentShippingRequest = this._PointsService.currentShippingRequest;
     this.myGoodsDetailList = this.GoodDetailsListInput || [];
-    this.GoodCategory = this._TripService.GetShippingRequestForViewOutput?.goodCategoryId;
+    if (this._TripService.GetShippingRequestForViewOutput) {
+      this.GoodCategory = this._TripService.GetShippingRequestForViewOutput?.goodCategoryId;
+    } else {
+      this.GoodCategory = this._TripService.CreateOrEditShippingRequestTripDto?.goodCategoryId;
+    }
     //take the current Active WayPoint From the Shared Service
     //this.tripServiceSubs$ = this._TripService.currentShippingRequest.subscribe((res) => (this.GoodCategory = res.shippingRequest.goodCategoryId));
     //sync the singleWayPoint From the Service
@@ -243,6 +247,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
    */
   loadGoodSubCategory(FatherID) {
     //Get All Sub-Good Category
+    console.log('FatherID', FatherID);
     if (this.shouldDisableCategoryForPortsMovement) {
       this._goodsDetailsServiceProxy
         .getEmptyGoodsCategoryForDropDown()
