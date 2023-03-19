@@ -3360,5 +3360,6 @@
     <text name="ImportDriverFeature">Import driver</text>
     <text name="ImportSaasShipmentFeature">Import SAAS shipment</text>
     <text name="DedicatedTruckFeature">Dedicated truck</text>
+    <text name="SaveTemplateFeature">Save template</text>
 	</texts>
 </localizationDictionary>

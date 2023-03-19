@@ -41,7 +41,8 @@
         public const string MaxNumberOfTrucks = "App.NumberOfTrucks.MaxNumberOfTrucks";
         public const string AdditionalTruckPrice = "App.NumberOfTrucks.AdditionalTruckPrice";
 
-        public const string DedicatedTruckFeature = "App.DedicatedTruckFeature";
+        public const string DedicatedTruck = "App.DedicatedTruckFeature";
+        public const string SaveTemplate = "App.SaveTemplateFeature";
 
         public const string ShippingRequest = "App.shippingRequest";
         public const string MarketPlace = "App.MarketPlace";

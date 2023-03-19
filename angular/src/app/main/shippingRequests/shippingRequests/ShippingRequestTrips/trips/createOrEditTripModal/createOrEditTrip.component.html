@@ -33,6 +33,7 @@
                 "
               >
                 <button
+                  *ngIf="isEnabled('App.SaveTemplateFeature')"
                   dropdownToggle
                   type="button"
                   class="btn btn-outline-danger dropdown-toggle btn-elevate-hover mr-2"
@@ -758,6 +759,7 @@
               <create-or-edit-template-drop-down-button
                 *ngIf="
                   (isShipper || isTachyonDealer || isCarrierSaas) &&
+                  isEnabled('App.SaveTemplateFeature') &&
                   _TripService.GetShippingRequestForViewOutput &&
                   _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
                 "

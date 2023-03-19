@@ -102,7 +102,7 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task<long> CreateOrEditStep1(CreateOrEditDedicatedStep1Dto input)
         {
-            if (!await IsTachyonDealer() && !_featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.DedicatedTruckFeature))
+            if (!await IsTachyonDealer() && !_featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.DedicatedTruck))
             {
                 throw new UserFriendlyException(L("YouDonnotHavePermission"));
             }

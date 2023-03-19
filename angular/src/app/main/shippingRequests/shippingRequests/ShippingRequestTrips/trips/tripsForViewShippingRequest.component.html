@@ -438,6 +438,7 @@
                     <li
                       *ngIf="
                         isGranted('Pages.ShippingRequestTrips.Edit') &&
+                        isEnabled('App.SaveTemplateFeature') &&
                         _TripService.GetShippingRequestForViewOutput.shippingRequestFlag === ShippingRequestFlagEnum.Normal &&
                         record.canCreateTemplate &&
                         (isShipper || isTachyonDealer || (isCarrierSaas && _TripService.GetShippingRequestForViewOutput.shippingRequest.isSaas))

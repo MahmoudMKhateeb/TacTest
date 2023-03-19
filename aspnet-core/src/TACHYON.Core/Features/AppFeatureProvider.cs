@@ -275,9 +275,16 @@ namespace TACHYON.Features
 
             //dedicated
             var DedicatedTruck = context.Create(
-               AppFeatures.DedicatedTruckFeature,
+               AppFeatures.DedicatedTruck,
                "true",
                L("DedicatedTruckFeature"),
+               inputType: new CheckboxInputType()
+               );
+
+            var SaveTemplate = context.Create(
+               AppFeatures.SaveTemplate,
+               "true",
+               L("SaveTemplateFeature"),
                inputType: new CheckboxInputType()
                );
 
