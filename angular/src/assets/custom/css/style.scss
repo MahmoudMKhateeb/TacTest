@@ -255,18 +255,18 @@
 }
 
 .shipCard .infoHighLight.green {
-  background-color: #cef1cd;
-  color: #0bb805;
+  //background-color: #cef1cd;
+  //color: #0bb805;
 }
 
 .shipCard .infoHighLight.red {
-  background-color: #f3cfd1;
-  color: #d82631;
+  //background-color: #f3cfd1;
+  //color: #d82631;
 }
 
 .shipCard .infoHighLight.blue {
-  background-color: #c3dcf6;
-  color: #0069d9;
+  //background-color: #c3dcf6;
+  //color: #0069d9;
 }
 
 .shipCard .actionsShip > div:nth-child(1) {
@@ -301,6 +301,7 @@
 
 .shipCard.rtl .actions a {
   margin: 10px 0 10px 12px;
+  color: var(--white);
 }
 
 .shipCard .actions a:hover {

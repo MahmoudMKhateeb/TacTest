@@ -162,14 +162,14 @@
                       >
                         <!--                        Start Of Point Card-->
                         <div *ngIf="trip.tripFlag === TripFlag.Normal || point.pickingType === pickingTypeEnum.Dropoff">
-                          <div *ngIf="point.isComplete" class="ribbon-target bg-success" style="top: -2px; right: 3%; left: auto">
+                          <div *ngIf="point.isComplete" class="ribbon-target bg-dark" style="top: -2px; right: 3%; left: auto">
                             {{ l('Completed')}}
                           </div>
                           <a
                             (click)="downloadMultiDropPointWaybill(point.id)"
                             [buttonBusy]="dropWaybillLoadingId == point.id"
                             *ngIf="trip.routeTypeId === routeTypeEnum.MultipleDrops && point.pickingType == pickingTypeEnum.Dropoff"
-                            class="ribbon-target bg-danger"
+                            class="ribbon-target bg-dark"
                             style="top: -2px; right: 12%; background-color: #6c757d !important; left: auto"
                           >
                             <i class="fas fa-download text-white mr-2 mb-1"></i>

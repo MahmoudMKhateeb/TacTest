@@ -79,8 +79,8 @@
               <dxi-column dataField="userListDto.isEmailConfirmed" caption="{{ l('IsEmailConfirmed') }}"> </dxi-column>
 
               <div *dxTemplate="let options of 'cellTemplate_IsActive'">
-                <span *ngIf="options.data.tenantListDto.isActive" class="badge badge-success badge-inline">{{ 'Yes' | localize }}</span>
-                <span *ngIf="!options.data.tenantListDto.isActive" class="badge badge-dark badge-inline">{{ 'No' | localize }}</span>
+                <span *ngIf="options.data.tenantListDto.isActive">{{ 'Yes' | localize }}</span>
+                <span *ngIf="!options.data.tenantListDto.isActive">{{ 'No' | localize }}</span>
               </div>
 
               <div *dxTemplate="let options of 'cellTemplateSubscriptionEndDateUtc'">

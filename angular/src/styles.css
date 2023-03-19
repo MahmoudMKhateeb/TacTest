@@ -661,3 +661,10 @@ dx-button.btn.btn-success {
 .p-button:focus {
   box-shadow: 0 0 0 0.2rem #faa6a6;
 }
+
+.label-gray,
+.bg-gray,
+.badge-gray {
+  color: var(--white);
+  background-color: var(--gray-dark-55c);
+}

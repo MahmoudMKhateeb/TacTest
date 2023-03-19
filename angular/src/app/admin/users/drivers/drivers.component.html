@@ -129,7 +129,7 @@
                 [allowSorting]="false"
               ></dxi-column>
               <div *dxTemplate="let options of 'cellTemplate_IsActive'">
-                <span *ngIf="options.data.isActive" class="badge badge-success badge-inline">{{ 'Active' | localize }}</span>
+                <span *ngIf="options.data.isActive" class="badge badge-primary badge-inline">{{ 'Active' | localize }}</span>
                 <span *ngIf="!options.data.isActive" class="badge badge-dark badge-inline">{{ 'InActive' | localize }}</span>
               </div>
 
