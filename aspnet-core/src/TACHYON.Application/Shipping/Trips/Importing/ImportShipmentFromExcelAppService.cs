@@ -1,4 +1,5 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
@@ -40,8 +41,9 @@ namespace TACHYON.Shipping.Trips.Importing
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepoitory;
         private readonly IRepository<ShippingRequest,long> _shippingRequestRepoitory;
         private readonly IRepository<GoodCategory> _goodCategoryRepoitory;
+        private readonly IFeatureChecker _featureChecker;
 
-        public ImportShipmentFromExcelAppService(IBinaryObjectManager binaryObjectManager, IShipmentListExcelDataReader shipmentListExcelDataReader, ShippingRequestTripManager shippingRequestTripManager, IRoutePointListDataReader routePointListExcelDataReader, IRepository<RoutPoint, long> routPointRepository, IGoodsDetailsListExcelDataReader goodsDetailsListExcelDataReader, IRepository<GoodsDetail, long> goodsDetailRepository, IImportTripVasesDataReader importTripVasesDataReader, IRepository<ShippingRequestTripVas, long> shippingRequestTripVas, IRepository<ShippingRequestTrip> shippingRequestTripRepoitory, IRepository<ShippingRequest, long> shippingRequestRepoitory, IRepository<GoodCategory> goodCategoryRepoitory)
+        public ImportShipmentFromExcelAppService(IBinaryObjectManager binaryObjectManager, IShipmentListExcelDataReader shipmentListExcelDataReader, ShippingRequestTripManager shippingRequestTripManager, IRoutePointListDataReader routePointListExcelDataReader, IRepository<RoutPoint, long> routPointRepository, IGoodsDetailsListExcelDataReader goodsDetailsListExcelDataReader, IRepository<GoodsDetail, long> goodsDetailRepository, IImportTripVasesDataReader importTripVasesDataReader, IRepository<ShippingRequestTripVas, long> shippingRequestTripVas, IRepository<ShippingRequestTrip> shippingRequestTripRepoitory, IRepository<ShippingRequest, long> shippingRequestRepoitory, IRepository<GoodCategory> goodCategoryRepoitory, IFeatureChecker featureChecker)
         {
             _binaryObjectManager = binaryObjectManager;
             _shipmentListExcelDataReader = shipmentListExcelDataReader;
@@ -55,12 +57,17 @@ namespace TACHYON.Shipping.Trips.Importing
             _shippingRequestTripRepoitory = shippingRequestTripRepoitory;
             _shippingRequestRepoitory = shippingRequestRepoitory;
             _goodCategoryRepoitory = goodCategoryRepoitory;
+            _featureChecker = featureChecker;
         }
 
         #region ImportTrips
         public async Task<List<ImportTripDto>> ImportShipmentFromExcel(ImportShipmentFromExcelInput importShipmentFromExcelInput)
         {
             await DisableTenancyFiltersIfTachyonDealer();
+            if(!await IsTachyonDealer() && !_featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.ImportFunctionality))
+            {
+                throw new UserFriendlyException(L("YouDonnotHaveAccessToImportFunctionality"));
+            }
             List<ImportTripDto> trips;
             if (importShipmentFromExcelInput.ShippingRequestId != null)
             {

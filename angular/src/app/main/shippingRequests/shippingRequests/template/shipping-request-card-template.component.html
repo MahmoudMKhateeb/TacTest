@@ -20,7 +20,7 @@
                 <i class="fas fa-plus"></i> {{ l('New') }}
               </button>
             </li>
-            <li role="menuitem">
+            <li *ngIf="isEnabled('App.DedicatedTruckFeature')" role="menuitem">
               <button (click)="createNewDedicatedRequest()" class="btn btn-outline-success btn-elevate-hover mt-2 w-100">
                 <i class="fas fa-plus"></i> {{ l('NewDedicated') }}
               </button>

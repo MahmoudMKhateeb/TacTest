@@ -224,6 +224,33 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             );
 
+            ImportFunctionality.CreateChildFeature(
+                AppFeatures.ImportTripFeature,
+                "true",
+                L("ImportTripFeature"),
+                inputType: new CheckboxInputType()
+                );
+
+            ImportFunctionality.CreateChildFeature(
+                AppFeatures.ImportTruckFeature,
+                "true",
+                L("ImportTruckFeature"),
+                inputType: new CheckboxInputType()
+                );
+
+            ImportFunctionality.CreateChildFeature(
+                AppFeatures.ImportDriverFeature,
+                "true",
+                L("ImportDriverFeature"),
+                inputType: new CheckboxInputType()
+                );
+
+            ImportFunctionality.CreateChildFeature(
+                AppFeatures.ImportSaasShipmentFeature,
+                "true",
+                L("ImportSaasShipmentFeature"),
+                inputType: new CheckboxInputType()
+                );
 
             //number of trucks
             var NumberOfTrucks = context.Create(
@@ -245,6 +272,15 @@ namespace TACHYON.Features
                 L("AdditionalTruckPriceFeature"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
                 );
+
+            //dedicated
+            var DedicatedTruck = context.Create(
+               AppFeatures.DedicatedTruckFeature,
+               "true",
+               L("DedicatedTruckFeature"),
+               inputType: new CheckboxInputType()
+               );
+
             #endregion
 
 

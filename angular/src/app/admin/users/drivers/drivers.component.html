@@ -19,7 +19,15 @@
               <i class="fa fa-download mr-2 mt-1" style="font-size: 1rem"></i>
               {{ 'ExportToExcel' | localize }}
             </a>
-            <a href="javascript:;" *ngIf="'Pages.Administration.Users.Create' | permission" class="no-padding">
+            <a
+              href="javascript:;"
+              *ngIf="
+                ('Pages.Administration.Users.Create' | permission) &&
+                isEnabled('App.ImportFunctionality') &&
+                isEnabled('App.ImportFunctionality.ImportDriverFeature')
+              "
+              class="no-padding"
+            >
               <span class="fileinput-button">
                 <p-fileUpload
                   customUpload="true"

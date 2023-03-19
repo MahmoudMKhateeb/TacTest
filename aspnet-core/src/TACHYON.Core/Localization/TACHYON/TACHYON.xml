@@ -3354,5 +3354,11 @@
   <text name="AdditionalTruckPriceFeature">Additional truck price</text>
   <text name="MaxNumberOfTrucksFeature">Max number of trucks</text>
     <text name="You are already passed the allowed number of trucks">You are already passed the allowed number of trucks</text>
+    <text name="ImportFunctionalityFeature">Import functionality</text>
+    <text name="ImportTripFeature">Import trip</text>
+    <text name="ImportTruckFeature">Import truck</text>
+    <text name="ImportDriverFeature">Import driver</text>
+    <text name="ImportSaasShipmentFeature">Import SAAS shipment</text>
+    <text name="DedicatedTruckFeature">Dedicated truck</text>
 	</texts>
 </localizationDictionary>

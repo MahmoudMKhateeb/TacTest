@@ -3069,5 +3069,11 @@
     <text name="AdditionalTruckPriceFeature">سعر الشاحنة الاضافي</text>
     <text name="MaxNumberOfTrucksFeature">عدد الشاحنات</text>
     <text name="You are already passed the allowed number of trucks">وصلت الشاحنةالأخيرة من عدد الشاحنات المسموح بها</text>
+    <text name="ImportFunctionalityFeature">الإستيراد من اكسل</text>
+    <text name="ImportTripFeature">إستيراد الرحلات</text>
+    <text name="ImportTruckFeature">إستيراد الشاحنات</text>
+    <text name="ImportDriverFeature">إستيراد السائقين</text>
+    <text name="ImportSaasShipmentFeature">إستيراد رحلات SAAS</text>
+    <text name="DedicatedTruckFeature">تأجير شاحنات</text>
 	</texts>
 </localizationDictionary>

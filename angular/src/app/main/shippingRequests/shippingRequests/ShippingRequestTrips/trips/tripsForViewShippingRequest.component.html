@@ -18,7 +18,12 @@
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
       </button>
       <!-- <div role="actions"> -->
-      <div *ngIf="isEnabled('App.ImportFunctionality')" class="btn-group" dropdown [busyIf]="loading">
+      <div
+        *ngIf="isEnabled('App.ImportFunctionality') && isEnabled('App.ImportFunctionality.ImportTripFeature')"
+        class="btn-group"
+        dropdown
+        [busyIf]="loading"
+      >
         <button
           dropdownToggle
           type="button"

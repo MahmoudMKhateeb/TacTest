@@ -29,12 +29,19 @@
         public const string TachyonDealer = "App.TachyonDealer";
         public const string NumberOfWaybills = "App.NumberOfWaybills";
         public const string ImportFunctionality = "App.ImportFunctionality";
+        public const string ImportTripFeature = "App.ImportFunctionality.ImportTripFeature";
+        public const string ImportTruckFeature = "App.ImportFunctionality.ImportTruckFeature";
+        public const string ImportDriverFeature = "App.ImportFunctionality.ImportDriverFeature";
+        public const string ImportSaasShipmentFeature = "App.ImportFunctionality.ImportSaasShipmentFeature";
+
         public const string MaxNumberOfWaybills = "App.NumberOfWaybills.MaxNumberOfWaybills";
         public const string AdditionalWaybillPrice = "App.NumberOfWaybills.AdditionalWaybillPrice";
 
         public const string NumberOfTrucks = "App.NumberOfTrucks";
         public const string MaxNumberOfTrucks = "App.NumberOfTrucks.MaxNumberOfTrucks";
         public const string AdditionalTruckPrice = "App.NumberOfTrucks.AdditionalTruckPrice";
+
+        public const string DedicatedTruckFeature = "App.DedicatedTruckFeature";
 
         public const string ShippingRequest = "App.shippingRequest";
         public const string MarketPlace = "App.MarketPlace";
