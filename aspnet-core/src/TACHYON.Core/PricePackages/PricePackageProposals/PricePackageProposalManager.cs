@@ -96,8 +96,7 @@ namespace TACHYON.PricePackages.PricePackageProposals
                 .Distinct().ToArray();
             
             var shippingTypes = proposal.PricePackages?
-                .Where(x=> x.ShippingTypeId.HasValue)
-                .Select(x => x.ShippingType?.DisplayName)
+                .Select(x => LocalizationSource.GetString(x.ShippingTypeId.ToString()))
                 .Distinct().ToArray();
             
             document.ReplaceAll(TACHYONConsts.ProposalTemplateCompanyName, proposal.Shipper?.companyName,SearchOptions.None);

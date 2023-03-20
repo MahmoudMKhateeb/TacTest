@@ -52,5 +52,7 @@ namespace TACHYON.PricePackages.Dto
         public int? OriginCountryId { get; set; }
 
         public List<int> ServiceAreas { get; set; }
+
+        public RoundTripType? RoundTrip { get; set; }
     }
 }

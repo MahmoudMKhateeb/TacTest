@@ -51,9 +51,7 @@ namespace TACHYON.PricePackages
 
         public ShippingRequestRouteType RouteType { get; set; }
 
-        public int? ShippingTypeId { get; set; }
-
-        [ForeignKey(nameof(ShippingTypeId))] public ShippingType ShippingType { get; set; }
+        public ShippingTypeEnum ShippingTypeId { get; set; }
 
         // when the price package creator is carrier the total price is the Tachyon manage service price
         public decimal TotalPrice { get; set; }
@@ -82,6 +80,12 @@ namespace TACHYON.PricePackages
         public string ProjectName { get; set; }
 
         public string ScopeOfWork { get; set; }
+
+        public RoundTripType? RoundTrip { get; set; }
+
+        public long? OriginFacilityPortId { get; set; }
+        
+        public long? DestinationFacilityPortId { get; set; }
 
     }
 }

@@ -38,7 +38,6 @@ namespace TACHYON.PricePackages.PricePackageProposals.Jobs
                 .Include(x => x.PricePackages).ThenInclude(x=> x.DestinationCity)
                 .Include(x => x.PricePackages).ThenInclude(x=> x.OriginCity)
                 .Include(x => x.PricePackages).ThenInclude(x=> x.TrucksTypeFk)
-                .Include(x => x.PricePackages).ThenInclude(x=> x.ShippingType)
                 .FirstOrDefaultAsync(x => x.Id == args.ProposalId);
             var file = await _proposalManager.GenerateProposalPdfFile(proposal);
 
