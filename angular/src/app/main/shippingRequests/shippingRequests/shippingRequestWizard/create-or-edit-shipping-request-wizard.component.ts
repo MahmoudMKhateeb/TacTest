@@ -594,6 +594,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       return selectItem;
     });
 
+    // if port movement feature not set, remove it from list
+    if (!this.isEnabled('App.PortMovement')) {
+      this.allShippingTypes = this.allShippingTypes.filter((x) => x.id.toString() != '3' && x.id.toString() != '5');
+    }
+
     this._shippingRequestsServiceProxy.getAllPackingTypesForDropdown().subscribe((result) => {
       this.allpackingTypes = result;
     });

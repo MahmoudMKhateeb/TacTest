@@ -102,10 +102,8 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task<long> CreateOrEditStep1(CreateOrEditDedicatedStep1Dto input)
         {
-            if (!await IsTachyonDealer() && !_featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.DedicatedTruck))
-            {
-                throw new UserFriendlyException(L("YouDonnotHavePermission"));
-            }
+            await CheckPermissions(input);
+
             await _shippingRequestManager.ValidateShippingRequestStep1(input);
             ValidateDestinationCities(input);
             await _shippingRequestManager.OthersNameValidation(input);
@@ -119,6 +117,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 return await UpdateStep1(input);
             }
         }
+
+       
 
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task<CreateOrEditDedicatedStep1Dto> GetStep1ForEdit(long id)
@@ -769,6 +769,20 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Where(x => input.ReplaceDriverDtos.Select(x => x.OriginalDedicatedDriverId).Contains(x.Id) &&
                 x.ShippingRequestId == input.ShippingRequestId)
                 .ToListAsync();
+        }
+
+        private async Task CheckPermissions(CreateOrEditDedicatedStep1Dto input)
+        {
+            if (!await IsTachyonDealer() && !_featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.DedicatedTruck))
+            {
+                throw new UserFriendlyException(L("YouDon'tHavePermissionToDedicatedTruck"));
+            }
+
+            if ((input.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+                && _featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.PortMovement))
+            {
+                throw new UserFriendlyException(L("YouDon'tHavePermissionToPortMovements"));
+            }
         }
         #endregion
     }

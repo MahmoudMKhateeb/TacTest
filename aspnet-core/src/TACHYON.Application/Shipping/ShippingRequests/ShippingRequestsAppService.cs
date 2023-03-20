@@ -113,9 +113,10 @@ namespace TACHYON.Shipping.ShippingRequests
             SrPostPriceUpdateManager postPriceUpdateManager,
             IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository,
             ShippingRequestManager shippingRequestManager,
-            IRepository<Actor> actorsRepository, 
+            IRepository<Actor> actorsRepository,
             IPricePackageManager pricePackageManager,
-            IRepository<Facility, long> facilityRepository)
+            IRepository<Facility, long> facilityRepository,
+            IFeatureChecker featureChecker)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -150,6 +151,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _actorsRepository = actorsRepository;
             _pricePackageManager = pricePackageManager;
             _facilityRepository = facilityRepository;
+            _featureChecker = featureChecker;
         }
 
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
@@ -184,6 +186,8 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly ShippingRequestManager _shippingRequestManager;
         private readonly IPricePackageManager _pricePackageManager;
         private readonly IRepository<Facility, long> _facilityRepository;
+        private readonly IFeatureChecker _featureChecker;
+
 
         private readonly IRepository<Actor> _actorsRepository;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
@@ -291,6 +295,13 @@ namespace TACHYON.Shipping.ShippingRequests
             if (!await IsTachyonDealer() && input.StartTripDate.Date < Clock.Now.Date)
             {
                 throw new UserFriendlyException(L("Start trip date cannot be before today"));
+            }
+
+            //check port movements feature enabled
+            if ((input.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+                && _featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.PortMovement))
+            {
+                throw new UserFriendlyException(L("YouDon'tHavePermissionToPortMovements"));
             }
 
             if (input.Id == null)

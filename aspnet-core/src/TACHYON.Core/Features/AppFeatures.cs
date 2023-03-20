@@ -43,6 +43,9 @@
 
         public const string DedicatedTruck = "App.DedicatedTruckFeature";
         public const string SaveTemplate = "App.SaveTemplateFeature";
+        public const string PortMovement = "App.PortMovement";
+        public const string HomeDelivery = "App.HomeDelivery";
+
 
         public const string ShippingRequest = "App.shippingRequest";
         public const string MarketPlace = "App.MarketPlace";

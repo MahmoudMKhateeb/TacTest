@@ -463,6 +463,11 @@ namespace TACHYON.Shipping.Trips
         {
             await DisableTenancyFiltersIfTachyonDealer();
 
+            if(input.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery && !_featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.HomeDelivery))
+            {
+                throw new UserFriendlyException(L("YounDon'tHavePermissionToHomeDelivery"));
+            }
+
             ShippingRequest request = null;
 
             if (input.ShippingRequestId.HasValue)

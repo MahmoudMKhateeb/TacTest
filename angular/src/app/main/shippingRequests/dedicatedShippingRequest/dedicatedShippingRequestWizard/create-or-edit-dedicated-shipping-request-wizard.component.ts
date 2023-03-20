@@ -530,12 +530,21 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
       });
     });
 
-    this._shippingRequestsServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
-      this.allShippingTypes = result?.map((item) => {
-        (item.id as any) = Number(item.id);
-        return item;
+    this._shippingRequestsServiceProxy
+      .getAllShippingTypesForDropdown()
+      .pipe(
+        finalize(() => {
+          if (!this.isEnabled('App.PortMovement')) {
+            this.allShippingTypes = this.allShippingTypes.filter((x) => x.id.toString() != '3');
+          }
+        })
+      )
+      .subscribe((result) => {
+        this.allShippingTypes = result?.map((item) => {
+          (item.id as any) = Number(item.id);
+          return item;
+        });
       });
-    });
 
     // this.allShippingTypes = this.enumToArray.transform(ShippingTypeEnum).map((item) => {
     //   const selectItem = new SelectItemDto();

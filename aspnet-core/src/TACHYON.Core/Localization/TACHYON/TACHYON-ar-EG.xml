@@ -3076,5 +3076,7 @@
     <text name="ImportSaasShipmentFeature">إستيراد رحلات SAAS</text>
     <text name="DedicatedTruckFeature">تأجير شاحنات</text>
     <text name="SaveTemplateFeature">حفظ قالب</text>
+    <text name="PortMovementFeature">رحلات الموانئ</text>
+    <text name="HomeDeliveryFeature">توصيل منزلي</text>
 	</texts>
 </localizationDictionary>

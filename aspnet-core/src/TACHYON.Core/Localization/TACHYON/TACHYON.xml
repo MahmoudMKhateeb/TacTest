@@ -3361,5 +3361,7 @@
     <text name="ImportSaasShipmentFeature">Import SAAS shipment</text>
     <text name="DedicatedTruckFeature">Dedicated truck</text>
     <text name="SaveTemplateFeature">Save template</text>
+    <text name="PortMovementFeature">Port movement</text>
+    <text name="HomeDeliveryFeature">Home Delivery</text>
 	</texts>
 </localizationDictionary>

@@ -288,6 +288,20 @@ namespace TACHYON.Features
                inputType: new CheckboxInputType()
                );
 
+            var PortMovement = context.Create(
+              AppFeatures.PortMovement,
+              "true",
+              L("PortMovementFeature"),
+              inputType: new CheckboxInputType()
+              );
+
+            var HomeDelivery = context.Create(
+              AppFeatures.HomeDelivery,
+              "true",
+              L("HomeDeliveryFeature"),
+              inputType: new CheckboxInputType()
+              );
+
             #endregion
 
 
