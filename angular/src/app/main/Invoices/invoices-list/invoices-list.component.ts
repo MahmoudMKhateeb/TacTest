@@ -22,6 +22,9 @@ import { VoidInvoiceNoteModalComponent } from '../invoice-note/invoice-note-list
 import { InvoiceSearchInputDto } from './InvoiceSearchInputDto';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
+import { exportDataGrid } from 'devextreme/excel_exporter';
+import { Workbook } from 'exceljs';
+import { saveAs } from 'file-saver';
 
 @Component({
   templateUrl: './invoices-list.component.html',
@@ -137,6 +140,51 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     this._InvoiceServiceProxy.exports(data).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
+  }
+
+  ExportItemToExcel(event: number) {
+    this._InvoiceServiceProxy.exportItems(event).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
+
+  onExporting(e) {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Employees');
+    worksheet.columns = [{ width: 20 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }];
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+      customizeCell: ({ gridCell, excelCell }) => {
+        if (gridCell.rowType === 'data') {
+          if (gridCell.column.dataField === 'isPaid') {
+            excelCell.value = Boolean<any>(gridCell.value) ? this.l('Paid') : this.l('Unpaid');
+          }
+
+          if (gridCell.column.dataField === 'channel') {
+            excelCell.value = InvoiceChannel[<InvoiceChannel>excelCell.value];
+          }
+
+          if (gridCell.column.dataField === 'status') {
+            excelCell.value = InvoiceStatus[<InvoiceStatus>excelCell.value];
+          }
+
+          if (gridCell.column.dataField === 'accountType') {
+            excelCell.value = InvoiceAccountType[<InvoiceAccountType>excelCell.value];
+          }
+        }
+
+        if (gridCell.rowType === 'group') {
+          excelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'BEDFE6' } };
+        }
+      },
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
+      });
+    });
+    e.cancel = true;
   }
 
   downloadReport(id: number) {
