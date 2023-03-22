@@ -14,8 +14,14 @@
             <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
           </button>
           <div class="dropdown-menu dropdown-menu-right dropdown-excel-operations" *dropdownMenu>
-            <a class="dropdown-item" id="ExportUsersToExcelButton" (click)="exportToExcel()" href="javascript:;">
-              <i class="fa fa-download mr-2 mt-1" style="font-size: 1rem;"></i>
+            <a
+              *ngIf="isEnabled('App.ExportFunctionality')"
+              class="dropdown-item"
+              id="ExportUsersToExcelButton"
+              (click)="exportToExcel()"
+              href="javascript:;"
+            >
+              <i class="fa fa-download mr-2 mt-1" style="font-size: 1rem"></i>
               {{ 'ExportToExcel' | localize }}
             </a>
             <a href="javascript:;" *ngIf="'Pages.Administration.Users.Create' | permission" class="no-padding">
@@ -139,7 +145,7 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th
-                      style="width: 130px;"
+                      style="width: 130px"
                       [hidden]="
                         !(
                           [
@@ -153,38 +159,38 @@
                     >
                       {{ 'Actions' | localize }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="username">
+                    <th style="width: 150px" pSortableColumn="username">
                       {{ 'UserName' | localize }}
                       <p-sortIcon field="username"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="AccountNumber">
+                    <th style="width: 150px" pSortableColumn="AccountNumber">
                       {{ 'UserAccountNumber' | localize }}
                       <p-sortIcon field="AccountNumber"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="name">
+                    <th style="width: 150px" pSortableColumn="name">
                       {{ 'UserFirstName' | localize }}
                       <p-sortIcon field="name"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="surname">
+                    <th style="width: 150px" pSortableColumn="surname">
                       {{ 'LastName' | localize }}
                       <p-sortIcon field="surname"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;">
+                    <th style="width: 150px">
                       {{ 'Roles' | localize }}
                     </th>
-                    <th style="width: 250px;" pSortableColumn="emailAddress">
+                    <th style="width: 250px" pSortableColumn="emailAddress">
                       {{ 'Email' | localize }}
                       <p-sortIcon field="emailAddress"></p-sortIcon>
                     </th>
-                    <th style="width: 200px;" pSortableColumn="isEmailConfirmed">
+                    <th style="width: 200px" pSortableColumn="isEmailConfirmed">
                       {{ 'EmailConfirm' | localize }}
                       <p-sortIcon field="isEmailConfirmed"></p-sortIcon>
                     </th>
-                    <th style="width: 100px;" pSortableColumn="isActive">
+                    <th style="width: 100px" pSortableColumn="isActive">
                       {{ 'Active' | localize }}
                       <p-sortIcon field="isActive"></p-sortIcon>
                     </th>
-                    <th style="width: 200px;" pSortableColumn="creationTime">
+                    <th style="width: 200px" pSortableColumn="creationTime">
                       {{ 'CreationTime' | localize }}
                       <p-sortIcon field="creationTime"></p-sortIcon>
                     </th>
@@ -193,7 +199,7 @@
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
                     <td
-                      style="width: 130px;"
+                      style="width: 130px"
                       [hidden]="
                         !(
                           [
@@ -268,7 +274,7 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ 'UserName' | localize }}</span>
                       <span>
                         <a [href]="record.profilePictureUrl" target="_blank">
@@ -277,39 +283,39 @@
                         {{ record.userName }}
                       </span>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ 'AccountNumber' | localize }}</span>
                       <span>
                         {{ record.accountNumber }}
                       </span>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ 'Name' | localize }}</span>
                       {{ record.name }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ 'Surname' | localize }}</span>
                       {{ record.surname }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ 'Roles' | localize }}</span>
                       {{ getRolesAsString(record.roles) }}
                     </td>
-                    <td style="width: 250px;">
+                    <td style="width: 250px">
                       <span class="ui-column-title"> {{ 'EmailAddress' | localize }}</span>
                       {{ record.emailAddress }}
                     </td>
-                    <td style="width: 200px;">
+                    <td style="width: 200px">
                       <span class="ui-column-title"> {{ 'EmailConfirm' | localize }}</span>
                       <span class="label label-success label-inline" *ngIf="record.isEmailConfirmed">{{ 'Yes' | localize }}</span>
                       <span class="label label-dark label-inline" *ngIf="!record.isEmailConfirmed">{{ 'No' | localize }}</span>
                     </td>
-                    <td style="width: 100px;">
+                    <td style="width: 100px">
                       <span class="ui-column-title"> {{ 'Active' | localize }}</span>
                       <span class="label label-success label-inline" *ngIf="record.isActive">{{ 'Yes' | localize }}</span>
                       <span class="label label-dark label-inline" *ngIf="!record.isActive">{{ 'No' | localize }}</span>
                     </td>
-                    <td style="width: 200px;">
+                    <td style="width: 200px">
                       <span class="ui-column-title"> {{ 'CreationTime' | localize }}</span>
                       {{ record.creationTime | momentFormat: 'L' }}
                     </td>

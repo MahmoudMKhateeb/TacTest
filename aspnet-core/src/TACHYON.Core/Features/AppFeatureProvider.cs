@@ -302,6 +302,13 @@ namespace TACHYON.Features
               inputType: new CheckboxInputType()
               );
 
+            var ExportFunctionality = context.Create(
+              AppFeatures.ExportFunctionality,
+              "true",
+              L("ExportFunctionalityFeature"),
+              inputType: new CheckboxInputType()
+              );
+
             #endregion
 
 

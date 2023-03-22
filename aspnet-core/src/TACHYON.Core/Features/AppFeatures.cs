@@ -45,6 +45,7 @@
         public const string SaveTemplate = "App.SaveTemplateFeature";
         public const string PortMovement = "App.PortMovement";
         public const string HomeDelivery = "App.HomeDelivery";
+        public const string ExportFunctionality = "App.ExportFunctionality";
 
 
         public const string ShippingRequest = "App.shippingRequest";

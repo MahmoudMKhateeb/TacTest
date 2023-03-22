@@ -24,8 +24,14 @@
             <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
           </button>
           <div class="dropdown-menu dropdown-menu-right dropdown-excel-operations" *dropdownMenu>
-            <a class="dropdown-item" id="ExportTrucksToExcelButton" (click)="exportToExcel()" href="javascript:;">
-              <i class="fa fa-download mr-2 mt-1" style="font-size: 1rem;"></i>
+            <a
+              *ngIf="isEnabled('App.ExportFunctionality')"
+              class="dropdown-item"
+              id="ExportTrucksToExcelButton"
+              (click)="exportToExcel()"
+              href="javascript:;"
+            >
+              <i class="fa fa-download mr-2 mt-1" style="font-size: 1rem"></i>
               {{ 'ExportToExcel' | localize }}
             </a>
             <div *ngIf="isGranted('Pages.AppLocalizations.Edit')" class="no-padding">
@@ -157,33 +163,33 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;">
+                    <th style="width: 130px">
                       {{ l('Actions') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="MasterKey">
+                    <th style="width: 150px" pSortableColumn="MasterKey">
                       {{ l('MasterKey') }}
                       <p-sortIcon field="MasterKey"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="MasterValue">
+                    <th style="width: 150px" pSortableColumn="MasterValue">
                       {{ l('MasterValue') }}
                       <p-sortIcon field="MasterValue"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;">
+                    <th style="width: 150px">
                       {{ l('CurrentLanguage') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="PlatForm">
+                    <th style="width: 150px" pSortableColumn="PlatForm">
                       {{ l('PlatForm') }}
                       <p-sortIcon field="PlatForm"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="AppVersion">
+                    <th style="width: 150px" pSortableColumn="AppVersion">
                       {{ l('AppVersion') }}
                       <p-sortIcon field="AppVersion"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="Version">
+                    <th style="width: 150px" pSortableColumn="Version">
                       {{ l('TerminologyVersion') }}
                       <p-sortIcon field="Version"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="Section">
+                    <th style="width: 150px" pSortableColumn="Section">
                       {{ l('TerminologySection') }}
                       <p-sortIcon field="Section"></p-sortIcon>
                     </th>
@@ -191,7 +197,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;">
+                    <td style="width: 130px">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -221,31 +227,31 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('MasterKey') }}</span>
                       {{ record.masterKey }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('MasterValue') }}</span>
                       {{ record.masterValue }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('CurrentLanguage') }}</span>
                       {{ record.value }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('PlatForm') }}</span>
                       {{ l(record.platFormTitle) }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('AppVersion') }}</span>
                       {{ record.appVersionTitle }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('TerminologyVersion') }}</span>
                       {{ record.versionTitle }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('TerminologySection') }}</span>
                       {{ record.sectionTitle }}
                     </td>
