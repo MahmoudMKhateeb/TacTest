@@ -37,6 +37,7 @@ import { DxCheckBoxModule, DxDataGridModule } from '@node_modules/devextreme-ang
 import { CustomMarkerComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-marker/custom-marker.component';
 import { CustomTimelineComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-timeline/custom-timeline.component';
 import { UploadAdditionalDocumentsComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/upload-additional-documents/upload-additional-documents.component';
+import { TrackingTableViewComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-table-view/tracking-table-view.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { UploadAdditionalDocumentsComponent } from '@app/main/shippingRequests/s
     CustomMarkerComponent,
     CustomTimelineComponent,
     UploadAdditionalDocumentsComponent,
+    TrackingTableViewComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
