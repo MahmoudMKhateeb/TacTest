@@ -16,29 +16,30 @@ import { finalize } from 'rxjs/operators';
 import KTWizard from '@metronic/common/js/components/wizard';
 
 import {
-  CarriersForDropDownDto,
-  CountyDto,
-  CreateOrEditDedicatedStep1Dto,
-  CreateOrEditShippingRequestVasListDto,
-  DedicatedShippingRequestsServiceProxy,
-  EditDedicatedStep2Dto,
-  EntityTemplateServiceProxy,
-  FacilitiesServiceProxy,
-  GetAllGoodsCategoriesForDropDownOutput,
-  GetShippingRequestForViewOutput,
-  GoodsDetailsServiceProxy,
-  ISelectItemDto,
-  RoutStepsServiceProxy,
-  SavedEntityType,
-  SelectItemDto,
-  ShippersForDropDownDto,
-  ShippingRequestDestinationCitiesDto,
-  ShippingRequestRouteType,
-  ShippingRequestsServiceProxy,
-  ShippingTypeEnum,
-  TenantCityLookupTableDto,
-  TenantRegistrationServiceProxy,
-  TimeUnit,
+    ActorSelectItemDto,
+    CarriersForDropDownDto,
+    CountyDto,
+    CreateOrEditDedicatedStep1Dto,
+    CreateOrEditShippingRequestVasListDto,
+    DedicatedShippingRequestsServiceProxy,
+    EditDedicatedStep2Dto,
+    EntityTemplateServiceProxy,
+    FacilitiesServiceProxy,
+    GetAllGoodsCategoriesForDropDownOutput,
+    GetShippingRequestForViewOutput,
+    GoodsDetailsServiceProxy,
+    ISelectItemDto,
+    RoutStepsServiceProxy,
+    SavedEntityType,
+    SelectItemDto,
+    ShippersForDropDownDto,
+    ShippingRequestDestinationCitiesDto,
+    ShippingRequestRouteType,
+    ShippingRequestsServiceProxy,
+    ShippingTypeEnum,
+    TenantCityLookupTableDto,
+    TenantRegistrationServiceProxy,
+    TimeUnit,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -175,8 +176,8 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
   private selectingDateFor = 1;
   maxSelectableDate: Date;
   selectedDestCitiesForEdit: ShippingRequestDestinationCitiesDto[] = [];
-  AllActorsShippers: SelectItemDto[];
-  AllActorsCarriers: SelectItemDto[];
+  AllActorsShippers: ActorSelectItemDto[];
+  AllActorsCarriers: ActorSelectItemDto[];
   ShippingTypeEnum = ShippingTypeEnum;
 
   constructor(

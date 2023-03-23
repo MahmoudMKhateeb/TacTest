@@ -116,7 +116,7 @@
                   </div>
                   <span class="form-text text-muted">{{ l('SelectShipperActor') }}</span>
                 </div>
-                <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId">
+                <div class="form-group" *ngIf="canSetPriceForShipperActor()">
                   <label>{{ l('Price') }} <span class="text-danger">*</span></label>
                   <input
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice.subTotalAmountWithCommission"
@@ -129,7 +129,7 @@
                     (change)="calculatePrices(_TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice)"
                   />
                 </div>
-                <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId">
+                <div class="form-group" *ngIf="canSetPriceForShipperActor()">
                   <label>{{ l('TripVatAmount') }} <span class="text-danger">*</span></label>
                   <input
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice.vatAmountWithCommission"
@@ -142,7 +142,7 @@
                   />
                 </div>
 
-                <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId">
+                <div class="form-group" *ngIf="canSetPriceForShipperActor()">
                   <label>{{ l('TotalAmount') }} <span class="text-danger">*</span></label>
                   <input
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto?.actorShipperPrice.totalAmountWithCommission"
@@ -178,7 +178,7 @@
                   </div>
                   <span class="form-text text-muted">{{ l('SelectCarrierActor') }}</span>
                 </div>
-                <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.carrierActorId">
+                <div class="form-group" *ngIf="canSetPriceForCarrierActor()">
                   <label>{{ l('Price') }} <span class="text-danger">*</span></label>
                   <input
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice.subTotalAmount"
@@ -191,7 +191,7 @@
                     (change)="calculateCarrierPrices(_TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice)"
                   />
                 </div>
-                <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.carrierActorId">
+                <div class="form-group" *ngIf="canSetPriceForCarrierActor()">
                   <label>{{ l('TripVatAmount') }} <span class="text-danger">*</span></label>
                   <input
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice.vatAmount"

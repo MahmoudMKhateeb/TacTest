@@ -2,18 +2,19 @@ import { Component, ElementRef, EventEmitter, Injector, Input, NgZone, OnInit, O
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
-  CityPolygonLookupTableDto,
-  CountyDto,
-  CreateOrEditFacilityDto,
-  CreateOrEditFacilityWorkingHourDto,
-  FacilitiesServiceProxy,
-  FacilityForDropdownDto,
-  FacilityType,
-  PenaltiesServiceProxy,
-  SelectItemDto,
-  ShippersForDropDownDto,
-  ShippingRequestsServiceProxy,
-  TenantRegistrationServiceProxy,
+    ActorSelectItemDto,
+    CityPolygonLookupTableDto,
+    CountyDto,
+    CreateOrEditFacilityDto,
+    CreateOrEditFacilityWorkingHourDto,
+    FacilitiesServiceProxy,
+    FacilityForDropdownDto,
+    FacilityType,
+    PenaltiesServiceProxy,
+    SelectItemDto,
+    ShippersForDropDownDto,
+    ShippingRequestsServiceProxy,
+    TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { MapsAPILoader } from '@node_modules/@agm/core';
@@ -55,7 +56,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   countries: CountyDto[];
   private geoCoder: google.maps.Geocoder;
   polygonStyle = styleObject;
-  AllActorsShippers: SelectItemDto[];
+  AllActorsShippers: ActorSelectItemDto[];
   days = WeekDay;
   FacilityWorkingHours: any[];
   mapCenterLat: number;
