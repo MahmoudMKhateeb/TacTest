@@ -1,0 +1,80 @@
+<div class="container-fluid">
+  <div class="row">
+    <!--                    [dataSource]="dataSource"-->
+    <div class="col-12 position-relative bg-white p-4 mb-4">
+      <dx-data-grid
+        #dataGrid
+        id="gridContainer"
+        [dataSource]="items"
+        [remoteOperations]="false"
+        [wordWrapEnabled]="true"
+        [allowColumnReordering]="true"
+        [allowColumnResizing]="true"
+        [columnAutoWidth]="true"
+        [showBorders]="true"
+        [busyIf]="IsLoading"
+        (onRowExpanded)="getForView($event)"
+        (onRowCollapsed)="collapsedRow($event)"
+      >
+        <dxo-paging [pageSize]="maxResultCount"> </dxo-paging>
+        <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-load-panel [enabled]="IsLoading"></dxo-load-panel>
+        <dxo-scrolling mode="infinite"></dxo-scrolling>
+        <dxo-sorting mode="none"></dxo-sorting>
+
+        <dxi-column dataField="referenceNumber" caption="{{ 'RequestId' | localize }}" [fixed]="true"></dxi-column>
+        <dxi-column dataField="name" caption="{{ 'CarrierName' | localize }}"></dxi-column>
+        <dxi-column dataField="shippingRequestFlag" caption="{{ 'RequestType' | localize }}" cellTemplate="requestTypeCellTemplate"></dxi-column>
+        <dxi-column dataField="origin" caption="{{ 'Origin' | localize }}"></dxi-column>
+        <dxi-column dataField="destination" caption="{{ 'Destination' | localize }}"></dxi-column>
+        <dxi-column dataField="truckType" caption="{{ 'TrucksType' | localize }}"></dxi-column>
+        <dxi-column dataField="plateNumber" caption="{{ 'PlateNumber' | localize }}"></dxi-column>
+        <dxi-column dataField="routeType" caption="{{ 'RouteType' | localize }}"></dxi-column>
+        <dxi-column dataField="driver" caption="{{ 'Driver' | localize }}"></dxi-column>
+        <dxi-column dataField="goodsCategory" caption="{{ 'GoodsCategory' | localize }}"></dxi-column>
+        <dxi-column dataField="numberOfDrops" caption="{{ 'NumberOfDrops' | localize }}"></dxi-column>
+        <dxi-column dataField="waybillNumber" caption="{{ 'WaybillNumber' | localize }}"></dxi-column>
+        <dxi-column dataField="statusTitle" caption="{{ 'Status' | localize }}"></dxi-column>
+        <dxi-column dataField="id" caption="{{ 'Track' | localize }}" cellTemplate="trackCellTemplate"></dxi-column>
+
+        <dxo-master-detail [enabled]="true" template="masterDetail"></dxo-master-detail>
+        <div *dxTemplate="let masterDetailItem of 'masterDetail'">
+          <div class="card with-border" *ngIf="masterDetailItem.data.showSubTable">
+            <div class="card-header pb-2" (click)="log(masterDetailItem)">
+              <h3>
+                {{ 'SubWaybill' | localize }}
+              </h3>
+            </div>
+            <div class="card-body p-0">
+              <dx-data-grid [dataSource]="tripSubDetails?.routPoints" [remoteOperations]="false" [wordWrapEnabled]="true">
+                <dxi-column dataField="waybillNumber" caption="{{ 'SubWaybill' | localize }}"></dxi-column>
+                <dxi-column dataField="address" caption="{{ 'Destination' | localize }}"></dxi-column>
+              </dx-data-grid>
+            </div>
+          </div>
+          <div class="card" *ngIf="!masterDetailItem.data.showSubTable">
+            <div class="card-body p-0">
+              <new-tracking-conponent (getForViewReady)="getForViewReady()" [trip]="masterDetailItem.data"></new-tracking-conponent>
+            </div>
+          </div>
+          <!--        <detail-view-->
+          <!--            [key]="masterDetailItem.key"-->
+          <!--            [rowData]="masterDetailItem.data"-->
+          <!--        ></detail-view>-->
+        </div>
+        <div *dxTemplate="let d of 'requestTypeCellTemplate'">
+          <span>
+            <!--                            {{ (d.data.shippingRequestFlag === ShippingRequestFlag.Normal ? 'TruckAggregation' : '') | localize}}-->
+            {{ d.data.shippingRequestFlagTitle | localize }}
+          </span>
+        </div>
+        <div *dxTemplate="let d of 'trackCellTemplate'">
+          <button class="btn btn-primary" (click)="track(d)">
+            {{ 'Track' | localize }}
+          </button>
+        </div>
+      </dx-data-grid>
+    </div>
+  </div>
+</div>
