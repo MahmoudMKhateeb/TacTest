@@ -1,6 +1,7 @@
 using Abp.Timing;
 using AutoMapper;
 using System;
+using System.Globalization;
 using System.Linq;
 using TACHYON.Commission;
 using TACHYON.Goods.GoodsDetails;
@@ -66,7 +67,17 @@ namespace TACHYON.AutoMapper.PriceOffers
                  .ForMember(dst => dst.ShippingRequestFlagTitle,
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
                 .ForMember(dst => dst.RentalDurationUnitTitle,
-                    opt => opt.MapFrom(src => src.RentalDurationUnit != null ? src.RentalDurationUnit.GetEnumDescription() : ""));
+                    opt => opt.MapFrom(src => src.RentalDurationUnit != null ? src.RentalDurationUnit.GetEnumDescription() : ""))
+                .ForMember(x => x.TransportType,
+                    x => x.MapFrom(i =>
+                        i.TransportTypeId.HasValue
+                            ? (i.TransportTypeFk.Translations.Any(t =>
+                                t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                                ? i.TransportTypeFk.Translations
+                                    .FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                                    .DisplayName
+                                : i.TransportTypeFk.Key)
+                            : string.Empty));
 
             CreateMap<ActorShipperPrice, ActorShipperPriceDto>();
             CreateMap<CreateOrEditActorShipperPriceDto, ActorShipperPrice>().ReverseMap();
