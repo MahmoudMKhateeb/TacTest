@@ -113,7 +113,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         this.searchInput.status,
         this.searchInput.isTachyonDeal,
         this.searchInput.isTMS,
-        null,
+        undefined,
         '',
         this.skipCount,
         this.maxResultCount

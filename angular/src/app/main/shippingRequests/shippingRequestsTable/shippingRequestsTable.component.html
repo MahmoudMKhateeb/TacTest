@@ -139,6 +139,7 @@
                 (onLoadData)="LoadData()"
                 (onDelete)="delete($event)"
                 (onDecline)="decline($event)"
+                (onExpanded)="updateScrolling()"
               ></app-shipping-request-card>
             </div>
             <div *dxTemplate="let d of 'requestTypeTitleCellTemplate'">

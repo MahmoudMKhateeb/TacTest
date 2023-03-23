@@ -279,4 +279,10 @@ export class ShippingRequestsTableComponent extends AppComponentBase implements 
       rentalEndDate: shippingRequest?.rentalEndDate,
     });
   }
+
+  updateScrolling() {
+    setTimeout(() => {
+      this.dataGrid.instance.getScrollable().update();
+    }, 500);
+  }
 }

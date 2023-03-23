@@ -16,6 +16,7 @@ import { ShippingrequestsDetailsModelComponent } from '@app/main/shippingRequest
 import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
 import { ReplaceTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/replace-trucks-and-drivers-modal/replace-trucks-and-drivers-modal.component';
 import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-shipping-request-attendance-sheet-modal.component';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 
 @Component({
   selector: 'app-shipping-request-card',
@@ -24,15 +25,11 @@ import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main
   animations: [appModuleAnimation()],
 })
 export class ShippingRequestCardComponent extends AppComponentBase implements OnInit {
-  // @ViewChild('Model', { static: false }) modalMore: ShippingrequestsDetailsModelComponent;
-  // @ViewChild('assignTrucksAndDriversModal', { static: false }) assignTrucksAndDriversModal: AssignTrucksAndDriversModalComponent;
-  // @ViewChild('replaceTrucksAndDriversModal', { static: false }) replaceTrucksAndDriversModal: ReplaceTrucksAndDriversModalComponent;
-  // @ViewChild('attendanceModal', { static: true }) attendanceModal: DedicatedShippingRequestAttendanceSheetModalComponent;
-
   @Output() onSearch: EventEmitter<any> = new EventEmitter<any>();
   @Output() onLoadData: EventEmitter<any> = new EventEmitter<any>();
   @Output() onDelete: EventEmitter<GetShippingRequestForPriceOfferListDto> = new EventEmitter<GetShippingRequestForPriceOfferListDto>();
   @Output() onDecline: EventEmitter<GetShippingRequestForPriceOfferListDto> = new EventEmitter<GetShippingRequestForPriceOfferListDto>();
+  @Output() onExpanded: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @Input() item: GetShippingRequestForPriceOfferListDto;
   @Input() Channel: PriceOfferChannel | number | null | undefined = undefined;
@@ -42,8 +39,9 @@ export class ShippingRequestCardComponent extends AppComponentBase implements On
   shippingRequestStatusEnum = ShippingRequestStatus;
   ShippingTypeEnum = ShippingTypeEnum;
   ShippingRequestRouteType = ShippingRequestRouteType;
+  expanded = false;
 
-  constructor(injector: Injector, private router: Router) {
+  constructor(injector: Injector, private router: Router, private _tripService: TripService) {
     super(injector);
   }
 
@@ -113,59 +111,17 @@ export class ShippingRequestCardComponent extends AppComponentBase implements On
     return true;
   }
 
-  canDeleteDirectRequest(input: GetShippingRequestForPriceOfferListDto) {
-    if (
-      this.Channel === PriceOfferChannel.DirectRequest &&
-      (input.directRequestStatus === ShippingRequestDirectRequestStatus.New ||
-        input.directRequestStatus === ShippingRequestDirectRequestStatus.Declined)
-    ) {
-      if ((this.isTachyonDealer && input.isTachyonDeal) || (this.isShipper && !input.isTachyonDeal)) {
-        return true;
-      }
-    }
-    return false;
+  mapReady(event: any) {
+    event.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('Settings'));
   }
 
-  // delete(input: GetShippingRequestForPriceOfferListDto): void {
-  //     this.onDelete.emit(input);
-  // }
-  //
-  // decline(input: GetShippingRequestForPriceOfferListDto): void {
-  //     this.onDecline.emit(input);
-  // }
-
-  // moreRedirectTo(item: GetShippingRequestForPriceOfferListDto): void {
-  //     if (!this.Channel && this.appSession.tenantId) {
-  //         if (
-  //             !this.feature.isEnabled('App.TachyonDealer') ||
-  //             (this.feature.isEnabled('App.TachyonDealer') && item.requestType === ShippingRequestType.TachyonManageService) ||
-  //             (this.feature.isEnabled('App.TachyonDealer') && item.shippingRequestFlag === ShippingRequestFlag.Dedicated)
-  //         ) {
-  //             this.router.navigateByUrl(`/app/main/shippingRequests/shippingRequests/view?id=${item.id}`);
-  //             return;
-  //         }
-  //     }
-  //     this.modalMore.show(item);
-  // }
-
-  isCarrierOwnRequest(request: GetShippingRequestForPriceOfferListDto): boolean {
-    return this.isCarrierSaas && request.isSaas && this.appSession.tenantId === request.tenantId;
+  expand() {
+    this.expanded = true;
+    this.onExpanded.emit(true);
   }
 
-  // assignTrucksAndDrivers(item: GetShippingRequestForPriceOfferListDto) {
-  //     console.log('item', item);
-  //     this.assignTrucksAndDriversModal.show(item);
-  // }
-
-  // viewTrucksOrDrivers(item: GetShippingRequestForPriceOfferListDto, isForTruck: boolean) {
-  //     console.log('item', item);
-  //     this.replaceTrucksAndDriversModal.show(item, isForTruck);
-  // }
-  //
-  // openAttendanceModal() {
-  //     this.attendanceModal.show(this.item.status === this.shippingRequestStatusEnum.Completed, null, this.item.id, {
-  //         rentalStartDate: this.item?.rentalStartDate,
-  //         rentalEndDate: this.item?.rentalEndDate,
-  //     });
-  // }
+  collapse() {
+    this.expanded = false;
+    this.onExpanded.emit(true);
+  }
 }
