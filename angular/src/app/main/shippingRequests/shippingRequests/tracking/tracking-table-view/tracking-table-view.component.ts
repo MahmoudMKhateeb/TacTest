@@ -151,7 +151,9 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
   }
 
   getForView(selectedRow: any) {
-    selectedRow.component.updateDimensions();
+    setTimeout(() => {
+      selectedRow.component.updateDimensions();
+    }, 500);
     if (selectedRow.key instanceof Object) {
       // this.dataGrid.instance.collapseAll(-1);
       // this.dataGrid.instance.expandRow(selectedRow.key);
@@ -159,7 +161,9 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
       this._trackingServiceProxy.getForView(selectedRow.key.id).subscribe((result) => {
         this.tripSubDetails = result;
       });
-      this.dataGrid.instance.getScrollable().update();
+      setTimeout(() => {
+        this.dataGrid.instance.getScrollable().update();
+      }, 500);
     }
   }
 
@@ -179,6 +183,8 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
   }
 
   getForViewReady() {
-    this.dataGrid.instance.getScrollable().update();
+    setTimeout(() => {
+      this.dataGrid.instance.getScrollable().update();
+    }, 500);
   }
 }
