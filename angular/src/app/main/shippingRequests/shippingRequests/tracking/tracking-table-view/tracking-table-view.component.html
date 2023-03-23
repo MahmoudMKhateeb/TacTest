@@ -17,15 +17,16 @@
         (onRowCollapsed)="collapsedRow($event)"
       >
         <dxo-paging [pageSize]="maxResultCount"> </dxo-paging>
-        <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+        <dxo-column-chooser [enabled]="false" [mode]="'select'"></dxo-column-chooser>
         <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
         <dxo-load-panel [enabled]="IsLoading"></dxo-load-panel>
         <dxo-scrolling mode="infinite"></dxo-scrolling>
         <dxo-sorting mode="none"></dxo-sorting>
 
         <dxi-column dataField="referenceNumber" caption="{{ 'RequestId' | localize }}" [fixed]="true"></dxi-column>
-        <dxi-column dataField="name" caption="{{ 'CarrierName' | localize }}"></dxi-column>
-        <dxi-column dataField="shippingRequestFlag" caption="{{ 'RequestType' | localize }}" cellTemplate="requestTypeCellTemplate"></dxi-column>
+        <dxi-column *ngIf="isShipper" dataField="name" caption="{{ 'CarrierName' | localize }}"></dxi-column>
+        <dxi-column *ngIf="isCarrier || isCarrierSaas" dataField="name" caption="{{ 'ShipperName' | localize }}"></dxi-column>
+        <dxi-column dataField="requestTypeTitle" caption="{{ 'RequestType' | localize }}"></dxi-column>
         <dxi-column dataField="origin" caption="{{ 'Origin' | localize }}"></dxi-column>
         <dxi-column dataField="destination" caption="{{ 'Destination' | localize }}"></dxi-column>
         <dxi-column dataField="truckType" caption="{{ 'TrucksType' | localize }}"></dxi-column>
@@ -34,6 +35,7 @@
         <dxi-column dataField="driver" caption="{{ 'Driver' | localize }}"></dxi-column>
         <dxi-column dataField="goodsCategory" caption="{{ 'GoodsCategory' | localize }}"></dxi-column>
         <dxi-column dataField="numberOfDrops" caption="{{ 'NumberOfDrops' | localize }}"></dxi-column>
+        <dxi-column dataField="containerNumber" caption="{{ 'ContainerNumber' | localize }}"></dxi-column>
         <dxi-column dataField="waybillNumber" caption="{{ 'WaybillNumber' | localize }}"></dxi-column>
         <dxi-column dataField="statusTitle" caption="{{ 'Status' | localize }}"></dxi-column>
         <dxi-column dataField="id" caption="{{ 'Track' | localize }}" cellTemplate="trackCellTemplate"></dxi-column>
@@ -63,12 +65,7 @@
           <!--            [rowData]="masterDetailItem.data"-->
           <!--        ></detail-view>-->
         </div>
-        <div *dxTemplate="let d of 'requestTypeCellTemplate'">
-          <span>
-            <!--                            {{ (d.data.shippingRequestFlag === ShippingRequestFlag.Normal ? 'TruckAggregation' : '') | localize}}-->
-            {{ d.data.shippingRequestFlagTitle | localize }}
-          </span>
-        </div>
+        \
         <div *dxTemplate="let d of 'trackCellTemplate'">
           <button class="btn btn-primary" (click)="track(d)">
             {{ 'Track' | localize }}
