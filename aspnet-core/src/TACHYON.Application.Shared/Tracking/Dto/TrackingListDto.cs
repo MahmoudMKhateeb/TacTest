@@ -31,6 +31,7 @@ namespace TACHYON.Tracking.Dto
         public bool IsAssign { get; set; }
         public bool CanStartTrip { get; set; }
         public ShippingRequestType RequestType { get; set; }
+        public string RequestTypeTitle { get; set; }
         public bool HasAccident { get; set; }
         public string NoActionReason { get; set; }
         public bool CanAcceptTrip { get; set; }
@@ -56,6 +57,8 @@ namespace TACHYON.Tracking.Dto
         public bool IsTripImpactEnabled { get; set; }
 
         public ShippingTypeEnum ShippingType { get; set; }
+        public string ContainerNumber { get; set; }
+        public string PlateNumber { get; set; }
 
         #region Dedicated
         public int NumberOfTrucks { get; set; }
