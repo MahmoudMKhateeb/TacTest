@@ -219,6 +219,7 @@ namespace TACHYON.Shipping.Trips.Importing
             var goodsSubCategory = _goodsCategoryRepository.GetAll()
                 .Include(x=>x.Translations)
                 .WhereIf(RequestGoodsCategoryId != null, x => x.FatherId == RequestGoodsCategoryId)
+                .WhereIf(RequestGoodsCategoryId == null, x => x.FatherId != null)
                 .Select(x=> new { x.Id, x.Translations, x.Key })
                 .FirstOrDefault(x=> x.Key.Equals(text) || x.Translations.Any(x=>x.DisplayName.Equals(text)));
             if (goodsSubCategory != null)
