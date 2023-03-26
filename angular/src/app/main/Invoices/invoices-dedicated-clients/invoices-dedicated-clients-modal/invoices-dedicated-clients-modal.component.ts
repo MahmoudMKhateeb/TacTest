@@ -3,21 +3,22 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 import {
-  CommonLookupServiceProxy,
-  CreateOrEditDedicatedActorInvoiceDto,
-  CreateOrEditDedicatedInvoiceItemDto,
-  DedicatedDynamicActorInvoicesServiceProxy,
-  DedicatedDynamiceInvoicesServiceProxy,
-  DedicatedShippingRequestsServiceProxy,
-  DynamicInvoiceServiceProxy,
-  InvoiceAccountType,
-  InvoiceServiceProxy,
-  ISelectItemDto,
-  SelectItemDto,
-  ShippingRequestsServiceProxy,
-  TenantRegistrationServiceProxy,
-  TruckAttendancesServiceProxy,
-  WorkingDayType,
+    ActorSelectItemDto,
+    CommonLookupServiceProxy,
+    CreateOrEditDedicatedActorInvoiceDto,
+    CreateOrEditDedicatedInvoiceItemDto,
+    DedicatedDynamicActorInvoicesServiceProxy,
+    DedicatedDynamiceInvoicesServiceProxy,
+    DedicatedShippingRequestsServiceProxy,
+    DynamicInvoiceServiceProxy,
+    InvoiceAccountType,
+    InvoiceServiceProxy,
+    ISelectItemDto,
+    SelectItemDto,
+    ShippingRequestsServiceProxy,
+    TenantRegistrationServiceProxy,
+    TruckAttendancesServiceProxy,
+    WorkingDayType,
 } from '@shared/service-proxies/service-proxies';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
@@ -53,7 +54,7 @@ export class InvoiceDedicatedClientsModalComponent extends AppComponentBase impl
   taxVat: number;
   allWorkingDayTypes: any;
   private selectedShippingRequestId: number;
-  allActors: SelectItemDto[];
+  allActors: ActorSelectItemDto[];
   selectedActor: any;
   workingDayType = WorkingDayType;
 

@@ -33,6 +33,8 @@ namespace TACHYON.PriceOffers.Dto
         public bool IsTachyonDeal { get; set; }
         public bool isTMSRequest { get; set; }
 
+        public ShippingRequestFlag? RequestFlag { get; set; }
+
         public void Normalize()
         {
             if (!string.IsNullOrEmpty(Filter)) Filter = Filter.Trim().ToLower();

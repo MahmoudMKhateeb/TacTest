@@ -25,6 +25,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Actors;
+using TACHYON.Actors.Dtos;
 using TACHYON.AddressBook;
 using TACHYON.AddressBook.Ports;
 using TACHYON.Authorization;
@@ -1799,21 +1800,33 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
 
-        public async Task<List<SelectItemDto>> GetAllShippersActorsForDropDown()
+        public async Task<List<ActorSelectItemDto>> GetAllShippersActorsForDropDown()
         {
             return await _actorsRepository.GetAll()
-                .Where(x => (x.ActorType == ActorTypesEnum.Shipper || x.ActorType == ActorTypesEnum.MySelf) && x.IsActive)
-                .OrderByDescending(x=> x.ActorType).ThenByDescending(x=> x.Id)
-                .Select(x => new SelectItemDto() { Id = x.Id.ToString(), DisplayName = x.CompanyName }).ToListAsync();
+                .Where(x => (x.ActorType == ActorTypesEnum.Shipper || x.ActorType == ActorTypesEnum.MySelf) &&
+                            x.IsActive)
+                .OrderByDescending(x => x.ActorType).ThenByDescending(x => x.Id)
+                .Select(x => new ActorSelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.CompanyName,
+                    IsMySelf = x.ActorType == ActorTypesEnum.MySelf
+                }).ToListAsync();
         }
 
 
-        public async Task<List<SelectItemDto>> GetAllCarriersActorsForDropDown()
+        public async Task<List<ActorSelectItemDto>> GetAllCarriersActorsForDropDown()
         {
             return await _actorsRepository.GetAll()
-                .Where(x => (x.ActorType == ActorTypesEnum.Carrier || x.ActorType == ActorTypesEnum.MySelf) && x.IsActive)
-                .OrderByDescending(x=> x.ActorType).ThenByDescending(x=> x.Id)
-                .Select(x => new SelectItemDto() { Id = x.Id.ToString(), DisplayName = x.CompanyName }).ToListAsync();
+                .Where(x => (x.ActorType == ActorTypesEnum.Carrier || x.ActorType == ActorTypesEnum.MySelf) &&
+                            x.IsActive)
+                .OrderByDescending(x => x.ActorType).ThenByDescending(x => x.Id)
+                .Select(x => new ActorSelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.CompanyName,
+                    IsMySelf = x.ActorType == ActorTypesEnum.MySelf
+                }).ToListAsync();
         }
         //end Multiple Drops
 

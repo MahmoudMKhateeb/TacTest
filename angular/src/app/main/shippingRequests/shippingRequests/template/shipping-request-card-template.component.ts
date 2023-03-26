@@ -113,6 +113,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         this.searchInput.status,
         this.searchInput.isTachyonDeal,
         this.searchInput.isTMS,
+        undefined,
         '',
         this.skipCount,
         this.maxResultCount
@@ -345,5 +346,9 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     }
 
     return true;
+  }
+
+  showAsTable() {
+    this.router.navigateByUrl(`/app/main/${this.isTMS ? 'tms' : 'shippingRequests'}/shippingRequests?showType=1`);
   }
 }
