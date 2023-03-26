@@ -31,7 +31,6 @@ namespace TACHYON.Tracking.Dto
         public bool IsAssign { get; set; }
         public bool CanStartTrip { get; set; }
         public ShippingRequestType RequestType { get; set; }
-        public string RequestTypeTitle { get; set; }
         public bool HasAccident { get; set; }
         public string NoActionReason { get; set; }
         public bool CanAcceptTrip { get; set; }
@@ -53,10 +52,12 @@ namespace TACHYON.Tracking.Dto
         public bool? IsPrePayedShippingRequest { get; set; }
         public bool CanDriveTrip { get; set; }
         public ShippingRequestFlag ShippingRequestFlag { get; set; }
+        public string ShippingRequestFlagTitle { get; set; }
 
         public bool IsTripImpactEnabled { get; set; }
 
         public ShippingTypeEnum ShippingType { get; set; }
+        public string ShippingTypeTitle { get; set; }
         public string ContainerNumber { get; set; }
         public string PlateNumber { get; set; }
 
@@ -65,5 +66,8 @@ namespace TACHYON.Tracking.Dto
 
         public ShippingRequestTripFlag TripFlag { get; set; }
         #endregion
+
+        public long? ShipperInvoiceNumber { get; set; }
+        public long? CarrierInvoiceNumber { get; set; }
     }
 }
