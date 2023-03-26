@@ -32,6 +32,11 @@
             </li>
           </ul>
         </div>
+        <button (click)="showAsTable()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+      </div>
+      <div role="actions" *ngIf="isCarrier">
+        <button (click)="showAsTable()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>

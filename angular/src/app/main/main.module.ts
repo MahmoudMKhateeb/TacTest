@@ -341,6 +341,8 @@ import { ActorSubmitInvoiceItemDetailComponent } from './Invoices/actor-submit-i
 import { ActorInvoiceItemDetailComponent } from './Invoices/ActorInvoices/actor-invoice-list/actor-invoice-item-detail/actor-invoice-item-detail.component';
 import { MakeScrollableDirective } from '@app/shared/common/make-scrollable-directive/make-scrollable.directive';
 import { DirectTripsComponent } from './direct-trips/direct-trips.component';
+import { ShippingRequestsTableComponent } from '@app/main/shippingRequests/shippingRequestsTable/shippingRequestsTable.component';
+import { ShippingRequestCardComponent } from '@app/main/shippingRequests/shipping-request-card/shipping-request-card.component';
 
 @NgModule({
   imports: [
@@ -651,6 +653,8 @@ import { DirectTripsComponent } from './direct-trips/direct-trips.component';
     ActorInvoiceItemDetailComponent,
     MakeScrollableDirective,
     DirectTripsComponent,
+    ShippingRequestsTableComponent,
+    ShippingRequestCardComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

@@ -1,0 +1,508 @@
+<div
+  [class.tachyonDialer]="item.isTachyonDeal"
+  [class.shipCardGray]="((item.isPriced || item.remainingDays == '0') && Channel) || (item.status == shippingRequestStatusEnum.PostPrice && !Channel)"
+  [class.shipCardGreen]="item.status == shippingRequestStatusEnum.Completed && !Channel"
+  [class.shipCardRed]="(item.status == shippingRequestStatusEnum.Expired || item.status == shippingRequestStatusEnum.Cancled) && !Channel"
+  [class.expanded]="true"
+  [class.rtl]="isRtl"
+  class="shipCard card card-custom"
+  *ngIf="item.shippingRequestFlag === ShippingRequestFlagEnum.Normal"
+>
+  <div class="card-body">
+    <div class="infoBasic">
+      <a
+        *ngIf="setTitle(item).length > 0"
+        [routerLink]="item.isTachyonDeal ? [] : ['/app/main/profile', item.tenantId, 'view']"
+        class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3"
+      >
+        {{ setTitle(item) }} <i class="flaticon2-correct text-success icon-md ml-2"></i>
+      </a>
+      <span
+        *ngIf="setTitle(item).length === 0"
+        class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3"
+      ></span>
+
+      <span *ngIf="item.remainingDays && item.remainingDays != '0' && Channel == 1" class="remainingTime">
+        <b>{{ item.remainingDays }}</b>
+        {{ getWordTitle(item.remainingDays, 'RemainingDay') }}
+      </span>
+      <div class="info-badges">
+        <b *ngIf="item.remainingDays == '0' && Channel == 1 && item.bidStatusTitle" class="infoHighLight red stautsTruck">
+          {{ l(item.bidStatusTitle) }}
+        </b>
+
+        <b *ngIf="Channel == 2 || Channel == 10" class="infoHighLight red stautsTruck">
+          {{ l(item.directRequestStatusTitle) }}
+        </b>
+
+        <b *ngIf="!Channel && item.statusTitle" class="infoHighLight green stautsTruck">
+          {{ l(item.statusTitle) }}
+        </b>
+        <b *ngIf="item.isSaas" class="infoHighLight green stautsTruck">
+          {{ l('saas') }}
+        </b>
+        <b *ngIf="item.notesCount > 0" class="infoHighLight blue stautsTruck">
+          {{ item.notesCount }} &nbsp; <span> {{ item.notesCount == 1 ? l('note') : l('notes') }} </span>
+        </b>
+      </div>
+    </div>
+    <div class="serialNumber">
+      <i class="flaticon2-telegram-logo mr-2"></i>
+      <a href="javascript:void(0)" class="font-weight-bold">{{ l('ReferenceNo') }}: {{ item.referenceNumber }}</a>
+    </div>
+    <div class="detailsRoad text-dark-50">
+      <div class="from flex-row">
+        <p class="pickup font-weight-bold">{{ l('Origin') }}:</p>
+        <p class="text-muted">{{ item.originCity }}</p>
+      </div>
+
+      <div class="to flex-row">
+        <p class="delivery font-weight-bold">{{ l('Destination') }}:</p>
+        <p class="text-muted">{{ item.destinationCity }}</p>
+      </div>
+    </div>
+
+    <div class="divirCard"></div>
+    <div class="moreDetails">
+      <div *ngIf="item.startTripDate" class="dateRange">
+        <p>
+          {{ l('EstimatedPickUpDate') }}
+        </p>
+        <p>{{ item.startTripDate | momentFormat: 'L' }} {{ item.endTripDate ? '-' : '' }} {{ item.endTripDate | momentFormat: 'L' }}</p>
+      </div>
+
+      <div *ngIf="item.creationTime" class="dateRange">
+        <p>
+          {{ l('CreationTime') }}
+        </p>
+        <p>
+          {{ item.creationTime | momentFormat: 'L' }}
+        </p>
+      </div>
+
+      <div class="goodCategory">
+        <p>
+          {{ l('GoodCategory') }}
+        </p>
+        <p>
+          {{ item.goodsCategory }}
+        </p>
+      </div>
+      <div class="truckType">
+        <p>
+          {{ l('TruckType') }}
+        </p>
+        <p>
+          {{ item.truckType }}
+        </p>
+      </div>
+      <div class="numOfTrips">
+        <p>
+          {{ l('NoOfTrips') }}
+        </p>
+        <p class="isNum">
+          {{ item.numberOfTrips }}
+        </p>
+      </div>
+      <div>
+        <p>
+          {{ l('CompletedTripsFromTotal') }}
+        </p>
+        <p class="isNum">{{ item.numberOfCompletedTrips }}/{{ item.numberOfTrips }}</p>
+      </div>
+      <div>
+        <p>
+          {{ l('CreatedTripsFromTotal') }}
+        </p>
+        <p class="isNum">{{ item.totalsTripsAddByShippier }}/{{ item.numberOfTrips }}</p>
+      </div>
+      <div
+        class="routeType"
+        *ngIf="
+          (item?.shippingTypeId !== ShippingTypeEnum.ImportPortMovements && item?.shippingTypeId !== ShippingTypeEnum.ExportPortMovements) ||
+          ((item?.shippingTypeId === ShippingTypeEnum.ImportPortMovements || item?.shippingTypeId === ShippingTypeEnum.ExportPortMovements) &&
+            item.routeTypeId === ShippingRequestRouteType.SingleDrop)
+        "
+      >
+        <p>
+          {{ l('RouteType') }}
+        </p>
+        <p>
+          {{ l(item.routeType) }}
+        </p>
+      </div>
+      <div>
+        <p>
+          {{ l('Carrier') }}
+        </p>
+        <p>
+          {{ l(item.carrier) }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex flex-column">
+    <div class="info-badges buttom-info-badges">
+      <a *ngIf="(!Channel || Channel == 3) && item.createdByTachyonDealer" href="javascript:void(0)" class="infoHighLight blue">
+        {{ l('CreatedByTachyonDealer') }}
+      </a>
+      <a *ngIf="isShipper" href="javascript:void(0)" class="infoHighLight blue">
+        {{ l(item.requestTypeTitle) }}
+      </a>
+      <a *ngIf="canSeeTotalOffers(item)" href="javascript:void(0)" class="infoHighLight green">
+        {{ item.totalOffers }} {{ getWordTitle(item.totalOffers, 'TotalOffer') }}
+      </a>
+      <a *ngIf="item.isPriced && Channel != 10" href="javascript:void(0)" class="infoHighLight blue">{{ l('MarketPlacepriced') }}</a>
+      <a
+        *ngIf="
+          item.price &&
+          (item.status == shippingRequestStatusEnum.Completed || item.status == shippingRequestStatusEnum.PostPrice || item.price > 0) &&
+          Channel != 10 &&
+          canViewBrokerPrice(item)
+        "
+        href="javascript:void(0)"
+        class="infoHighLight red"
+        >{{ item.price | number }} {{ l('SAR') }}</a
+      >
+      <a *ngIf="Channel == 10 && canViewBrokerPrice(item)" href="javascript:void(0)" class="infoHighLight red"
+        >{{ item.price | number }} {{ l('SAR') }}</a
+      >
+      <b *ngIf="item.carrierActor" class="infoHighLight blue stautsTruck"> {{ l('carrierActor') }}: {{ item.carrierActor }} </b>
+      <b *ngIf="item.shipperActor" class="infoHighLight blue stautsTruck"> {{ l('shipperActor') }}: {{ item.shipperActor }} </b>
+    </div>
+
+    <div [ngbCollapse]="!expanded">
+      <div *ngIf="expanded">
+        <!--  start of ShippingRequestType::Details-->
+        <div class="mb-2">
+          <div class="form-group fv-plugins-icon-container">
+            <div *ngIf="!this.feature.isEnabled('App.Carrier')">
+              <shipping-request-offers-list
+                [shippingRequestId]="item.id"
+                [isTachyonDeal]="item.isTachyonDeal"
+                [isForDedicated]="false"
+                [Channel]="item.bidStatus == 0 ? 2 : 1"
+              >
+              </shipping-request-offers-list>
+            </div>
+
+            <div *ngIf="feature.isEnabled('App.Shipper') || (feature.isEnabled('App.TachyonDealer') && item.isTachyonDeal)">
+              <TripsForViewShippingRequest
+                #tripsForViewShippingRequest
+                *ngIf="item.id"
+                [ShippingRequest]="item"
+                [VasListFromFather]="undefined"
+              ></TripsForViewShippingRequest>
+            </div>
+            <div class="col-lg-12 mt-5 pl-0 pr-0">
+              <agm-map
+                minZoom="5"
+                style="height: 300px"
+                [longitude]="item.longitude || 46.675761"
+                [latitude]="item.latitude || 24.717942"
+                [scrollwheel]="false"
+                (mapReady)="mapReady($event)"
+              >
+                <agm-direction [origin]="item.originCity" [destination]="item.destinationCity" [optimizeWaypoints]="false"></agm-direction>
+                <ng-container id="markers">
+                  <agm-marker [longitude]="item.longitude" [latitude]="item.longitude"></agm-marker>
+                </ng-container>
+              </agm-map>
+            </div>
+          </div>
+        </div>
+        <!--  end::ShippingRequestType::Details-->
+      </div>
+    </div>
+    <div class="expand-to-show-more">
+      <button class="btn" *ngIf="!expanded" (click)="expand()" [attr.aria-expanded]="expanded" aria-controls="collapseExample">
+        <i class="fas fa-angle-down fa-2x"></i>
+      </button>
+      <button class="btn" *ngIf="expanded" (click)="collapse()" [attr.aria-expanded]="expanded" aria-controls="collapseExample">
+        <i class="fas fa-angle-up fa-2x"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<div
+  [class.tachyonDialer]="item.isTachyonDeal"
+  [class.rtl]="isRtl"
+  class="shipCard card card-custom dedicated-sr"
+  *ngIf="item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
+>
+  <div class="card-header ribbon ribbon-clip ribbon-left">
+    <div class="ribbon-target" style="top: 5px"><span class="ribbon-inner bg-warning"></span>{{ 'DedicatedShippingRequest' | localize }}</div>
+    <div class="row w-100">
+      <div class="col-md-4 col-lg-2" *ngIf="!item.isSaas">
+        <div class="symbol symbol-50 symbol-lg-120">
+          <img alt="Pic" src="assets/common/images/default-profile-picture.png" />
+        </div>
+      </div>
+      <div [class]="!item.isSaas ? 'col-md-8 col-lg-10 p-0 align-content-end' : 'col-md-12 col-lg-12 p-0 align-content-center'">
+        <div class="w-100 row custom-header-details" [class.align-items-center]="item.isSaas">
+          <div [class]="Channel !== PriceOfferChannelEnum.DirectRequest && !isCarrierSaas ? 'col-4' : 'col-6'">
+            <div *ngIf="!item.isSaas">
+              <a
+                *ngIf="setTitle(item).length > 0"
+                [routerLink]="item.isTachyonDeal ? [] : ['/app/main/profile', item.tenantId, 'view']"
+                class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3"
+              >
+                {{ setTitle(item) }} <i class="flaticon2-correct text-success icon-md ml-2"></i>
+              </a>
+              <a
+                *ngIf="item?.name?.length > 0 && !Channel && isShipper"
+                [routerLink]="item.isTachyonDeal ? [] : ['/app/main/profile', item.tenantId, 'view']"
+                class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3"
+              >
+                {{ item.name }} <i class="flaticon2-correct text-success icon-md ml-2"></i>
+              </a>
+              <span
+                *ngIf="setTitle(item).length === 0"
+                class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3"
+              ></span>
+            </div>
+            <div *ngIf="item.isSaas" class="serialNumber">
+              <p>
+                <i class="flaticon2-telegram-logo mr-2"></i>
+                <a href="javascript:void(0)" class="font-weight-bold">{{ l('ReferenceNo') }}: {{ item.referenceNumber }}</a>
+              </p>
+            </div>
+            <div *ngIf="!item.isSaas" class="serialNumber">
+              <i class="flaticon2-telegram-logo mr-2"></i>
+              <a href="javascript:void(0)" class="font-weight-bold">{{ l('ReferenceNo') }}: {{ item.referenceNumber }}</a>
+            </div>
+          </div>
+          <div [class]="Channel !== PriceOfferChannelEnum.DirectRequest && !isCarrierSaas ? 'col-4' : 'col-6'">
+            <p>
+              <b>
+                {{ 'Status' | localize }}:
+                {{ l(item.statusTitle) }}
+              </b>
+            </p>
+          </div>
+          <div class="col-4" *ngIf="Channel !== PriceOfferChannelEnum.DirectRequest && !isCarrierSaas">
+            <p>
+              <b *ngIf="isShipper">
+                {{ 'RentedFrom' | localize }}:
+                <a href="javascript:void(0)">
+                  {{ item.carrier }}
+                </a>
+              </b>
+              <b *ngIf="isCarrier || isCarrierSaas">
+                {{ 'RentedFor' | localize }}:
+                <a href="javascript:void(0)">
+                  {{ item.shipperName }}
+                </a>
+              </b>
+              <b *ngIf="isTachyonDealerOrHost">
+                {{ 'RentedFromTo' | localize }}:
+                <a href="javascript:void(0)">
+                  {{ item.carrier }}{{ item.shipperName ? ' / ' + item.shipperName + ' | ' : item.carrier ? ' | ' : ' '
+                  }}{{ l(item.requestTypeTitle) }}
+                </a>
+              </b>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="moreDetails">
+      <div class="row w-100 d-flex flex-row justify-content-around">
+        <div class="col-3">
+          <p>
+            <span class="text-muted">
+              <i class="flaticon2-hourglass-1 icon-md"></i>
+              {{ l('RentalDuration') }}:
+            </span>
+            &nbsp;
+            {{ item.rentalDuration }} {{ item.rentalDurationUnitTitle }}
+          </p>
+        </div>
+        <div class="col-3">
+          <p>
+            <span class="text-muted">
+              <i class="flaticon2-delivery-truck icon-md"></i>
+              {{ l('NumberOfTrucks') }}:
+            </span>
+            &nbsp;
+            {{ item.numberOfTrucks }}
+          </p>
+        </div>
+        <div class="col-3">
+          <p>
+            <span class="text-muted">
+              <i class="fas fa-tachometer-alt"></i>
+              {{ l('ExpectedMileage') }}:
+            </span>
+            &nbsp;
+            {{ item.expectedMileage }}
+          </p>
+        </div>
+      </div>
+      <div class="row w-100 d-flex flex-row justify-content-around">
+        <div class="col-3">
+          <p>
+            <span class="text-muted">
+              <i class="fa fa-map"></i>
+              {{ l('ServiceAreas') }}:
+            </span>
+            &nbsp;
+            {{ item.destinationCity }}
+          </p>
+        </div>
+        <div class="col-3">
+          <p>
+            <span class="text-muted">
+              <i class="far fa-clock"></i>
+              {{ l('RentalFromTo') }}:
+            </span>
+            &nbsp;
+            {{ item.rentalStartDate.toISOString() | date: 'MM/dd/yyyy' }} {{ item.rentalEndDate ? '-' : '' }}
+            {{ item.rentalEndDate.toISOString() | date: 'MM/dd/yyyy' }}
+          </p>
+        </div>
+        <div class="col-3 truckType">
+          <p>
+            <span class="text-muted">
+              <i class="flaticon-truck"></i>
+              {{ l('TruckType') }}:
+            </span>
+            &nbsp;
+            {{ item.truckType }}
+          </p>
+        </div>
+      </div>
+      <div class="info-badges buttom-info-badges">
+        <a *ngIf="(!Channel || Channel == 3) && item.createdByTachyonDealer" href="javascript:void(0)" class="infoHighLight blue">
+          {{ l('CreatedByTachyonDealer') }}
+        </a>
+        <a *ngIf="isShipper" href="javascript:void(0)" class="infoHighLight blue">
+          {{ l(item.requestTypeTitle) }}
+        </a>
+        <a *ngIf="canSeeTotalOffers(item)" href="javascript:void(0)" class="infoHighLight green">
+          {{ item.totalOffers }} {{ getWordTitle(item.totalOffers, 'TotalOffer') }}
+        </a>
+        <a *ngIf="item.isPriced && Channel != 10" href="javascript:void(0)" class="infoHighLight blue">{{ l('MarketPlacepriced') }}</a>
+        <a
+          *ngIf="
+            item.price &&
+            (item.status == shippingRequestStatusEnum.Completed || item.status == shippingRequestStatusEnum.PostPrice || item.price > 0) &&
+            Channel != 10 &&
+            canViewBrokerPrice(item)
+          "
+          href="javascript:void(0)"
+          class="infoHighLight red"
+          >{{ item.price | number }} {{ l('SAR') }}</a
+        >
+        <a *ngIf="Channel == 10 && canViewBrokerPrice(item)" href="javascript:void(0)" class="infoHighLight red"
+          >{{ item.price | number }} {{ l('SAR') }}</a
+        >
+        <b *ngIf="item.isSaas" class="infoHighLight blue stautsTruck">
+          {{ l('saas') }}
+        </b>
+        <b *ngIf="item.carrierActor" class="infoHighLight blue stautsTruck"> {{ l('carrierActor') }}: {{ item.carrierActor }} </b>
+        <b *ngIf="item.shipperActor" class="infoHighLight blue stautsTruck"> {{ l('shipperActor') }}: {{ item.shipperActor }} </b>
+      </div>
+    </div>
+    <div class="w-100 d-flex p-0 actions justify-content-end">
+      <!--            <a *ngIf="canDeleteDirectRequest(item)" href="javascript:void(0)" (click)="delete(item)" class="red">-->
+      <!--                {{ l('Delete') }}-->
+      <!--            </a>-->
+      <!--            <a-->
+      <!--                *ngIf="(isCarrier || isCarrierSaas) && Channel == 2 && (item.directRequestStatus == 0 || item.directRequestStatus == 5)"-->
+      <!--                href="javascript:void(0)"-->
+      <!--                (click)="decline(item)"-->
+      <!--                class="red"-->
+      <!--            >-->
+      <!--                {{ l('Declined') }}-->
+      <!--            </a>-->
+      <!--            <a-->
+      <!--                *ngIf="-->
+      <!--                    isGranted('Pages.ShippingRequests.Edit') &&-->
+      <!--                    item.canAssignDedicatedDriversAndTrucks &&-->
+      <!--                    !Channel &&-->
+      <!--                    !item.isDriversAndTrucksAssigned &&-->
+      <!--                    item.status !== shippingRequestStatusEnum.Expired-->
+      <!--                  "-->
+      <!--                href="javascript:void(0)"-->
+      <!--                (click)="assignTrucksAndDrivers(item)"-->
+      <!--                class="red"-->
+      <!--            >-->
+      <!--                {{ l('AssignTrucksAndDrivers') }}-->
+      <!--            </a>-->
+      <!--            <a-->
+      <!--                *ngIf="-->
+      <!--                    isGranted('Pages.DedicatedAttendaceSheet') &&-->
+      <!--                    item.canAssignDedicatedDriversAndTrucks &&-->
+      <!--                    !Channel &&-->
+      <!--                    item.isDriversAndTrucksAssigned-->
+      <!--                  "-->
+      <!--                href="javascript:void(0)"-->
+      <!--                (click)="openAttendanceModal()"-->
+      <!--                class="red"-->
+      <!--            >-->
+      <!--                {{ l('viewAttendance') }}-->
+      <!--            </a>-->
+      <!--            <a-->
+      <!--                *ngIf="-->
+      <!--                    isGranted('Pages.ShippingRequests.Edit') && item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned-->
+      <!--                  "-->
+      <!--                href="javascript:void(0)"-->
+      <!--                (click)="viewTrucksOrDrivers(item, false)"-->
+      <!--                class="red"-->
+      <!--            >-->
+      <!--                {{ l('ReplaceDrivers') }}-->
+      <!--            </a>-->
+      <!--            <a-->
+      <!--                *ngIf="-->
+      <!--                    isGranted('Pages.ShippingRequests.Edit') && item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned-->
+      <!--                  "-->
+      <!--                href="javascript:void(0)"-->
+      <!--                (click)="viewTrucksOrDrivers(item, true)"-->
+      <!--                class="red"-->
+      <!--            >-->
+      <!--                {{ l('ReplaceTrucks') }}-->
+      <!--            </a>-->
+      <!--            <a-->
+      <!--                *ngIf="-->
+      <!--                    (item.status == shippingRequestStatusEnum.PrePrice || item.status == shippingRequestStatusEnum.NeedsAction) &&-->
+      <!--                    !Channel &&-->
+      <!--                    (isShipper || (item.isTachyonDeal && (isTachyonDealer || !appSession.tenantId)))-->
+      <!--                  "-->
+      <!--                href="javascript:void(0)"-->
+      <!--                (click)="ModelCancel.show(item)"-->
+      <!--                class="red"-->
+      <!--            >-->
+      <!--                {{ l('Cancel') }}-->
+      <!--            </a>-->
+
+      <!--            <a-->
+      <!--                href="javascript:void(0)"-->
+      <!--                (click)="moreRedirectTo(item)"-->
+      <!--                class="red"-->
+      <!--                *ngIf="-->
+      <!--                    (!Channel &&(isShipper || isTachyonDealer || (item.isSaas && isCarrierSaas) || !appSession.tenantId)) ||-->
+      <!--                    ((Channel == PriceOfferChannelEnum.MarketPlace || Channel == PriceOfferChannelEnum.DirectRequest) && (isCarrier || hasCarrierClients || isCarrierSaas))-->
+      <!--                  "-->
+      <!--            >-->
+      <!--                {{ l('More') }}-->
+      <!--            </a>-->
+      <!--            <a-->
+      <!--                *ngIf="-->
+      <!--                    permission.isGranted('Pages.ShippingRequests.Edit') &&-->
+      <!--                    !Channel &&-->
+      <!--                    item.status === shippingRequestStatusEnum.PrePrice &&-->
+      <!--                    (isShipper || isTachyonDealer || isCarrierOwnRequest(item))-->
+      <!--                  "-->
+      <!--                [queryParams]="{ id: item.id, completedSteps: 2, isEdit: true }"-->
+      <!--                [routerLink]="['/app/main/shippingRequests/dedicatedShippingRequestWizard']"-->
+      <!--                class="red"-->
+      <!--            >-->
+      <!--                {{ l('Edit') }}-->
+      <!--            </a>-->
+    </div>
+  </div>
+</div>

@@ -199,15 +199,15 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       const isBroker = this.hasCarrierClients && this.hasShipperClients;
       this.showBtnAddTrips =
         (this.isTachyonDealer &&
-          (this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.Completed ||
-            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.PrePrice ||
-            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.PostPrice ||
-            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.NeedsAction)) ||
+          (this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.Completed ||
+            this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.PrePrice ||
+            this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.PostPrice ||
+            this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.NeedsAction)) ||
         ((this.isShipper || isBroker || this.isCarrierSaas) &&
           canAddTrip &&
-          (this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.PrePrice ||
-            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.PostPrice ||
-            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.NeedsAction));
+          (this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.PrePrice ||
+            this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.PostPrice ||
+            this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.NeedsAction));
     }
   }
 
