@@ -26,6 +26,7 @@ import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests
 import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
 import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-shipping-request-attendance-sheet-modal.component';
 import { ReplaceTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/replace-trucks-and-drivers-modal/replace-trucks-and-drivers-modal.component';
+import * as moment from '@node_modules/moment';
 
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
@@ -94,6 +95,28 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   }
 
   LoadData() {
+    // (filter,
+    // carrier,
+    // shippingRequestId,
+    // directRequestId,
+    // channel,
+    // requestType,
+    // truckTypeId,
+    // originId,
+    // destinationId,
+    // pickupFromDate,
+    // pickupToDate,
+    // fromDate,
+    // toDate,
+    // routeTypeId,
+    // status,
+    // isTachyonDeal,
+    // isTMSRequest,
+    // requestFlag,
+    // sorting,
+    // skipCount,
+    // maxResultCount)
+
     this._currentServ
       .getAllShippingRequest(
         this.searchInput.filter,
