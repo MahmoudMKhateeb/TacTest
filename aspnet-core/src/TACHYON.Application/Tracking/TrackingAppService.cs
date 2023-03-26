@@ -37,6 +37,8 @@ using Nito.AsyncEx;
 using System.Threading;
 using TACHYON.Authorization.Users;
 using TACHYON.Tracking.AdditionalSteps;
+using TACHYON.Invoices;
+using TACHYON.Invoices.SubmitInvoices;
 
 namespace TACHYON.Tracking
 {
@@ -52,6 +54,8 @@ namespace TACHYON.Tracking
         private readonly IRepository<UserOrganizationUnit,long> _userOrganizationUnitRepository;
         private readonly IRepository<ShippingRequestTripAccident> _accidentRepository;
         private readonly AdditionalStepWorkflowProvider _stepWorkflowProvider;
+        private readonly IRepository<InvoiceTrip, long> _InvoiceTripRepository;
+        private readonly IRepository<SubmitInvoiceTrip, long> _SubmitInvoiceTripRepository;
 
         public TrackingAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
@@ -62,7 +66,9 @@ namespace TACHYON.Tracking
             ForceDeliverTripExcelExporter deliverTripExcelExporter,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IRepository<ShippingRequestTripAccident> accidentRepository,
-            AdditionalStepWorkflowProvider stepWorkflowProvider)
+            AdditionalStepWorkflowProvider stepWorkflowProvider,
+            IRepository<InvoiceTrip, long> invoiceTripRepository,
+            IRepository<SubmitInvoiceTrip, long> submitInvoiceTripRepository)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _RoutPointRepository = routPointRepository;
@@ -73,6 +79,8 @@ namespace TACHYON.Tracking
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _accidentRepository = accidentRepository;
             _stepWorkflowProvider = stepWorkflowProvider;
+            _InvoiceTripRepository = invoiceTripRepository;
+            _SubmitInvoiceTripRepository = submitInvoiceTripRepository;
         }
 
 
@@ -243,6 +251,20 @@ namespace TACHYON.Tracking
             foreach (var item in query)
             {
                 trackingLists.Add(await GetMap(item));
+            }
+
+            var tripsNumber = trackingLists.Select(x => x.Id);
+            var invoices = await _InvoiceTripRepository.GetAll().Include(x => x.InvoiceFK).Where(y => tripsNumber.Contains(y.TripId)).ToListAsync();
+
+            var SubmitInvoices = await _SubmitInvoiceTripRepository.GetAll().Include(x => x.SubmitInvoicesFK).Where(y => tripsNumber.Contains(y.TripId)).ToListAsync();
+
+            foreach(var item in trackingLists)
+            {
+                if(item.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation || item.Status == ShippingRequestTripStatus.Delivered)
+                {
+                    item.ShipperInvoiceNumber = invoices.Where(x => x.TripId == item.Id).FirstOrDefault()?.InvoiceFK.InvoiceNumber;
+                    item.CarrierInvoiceNumber = SubmitInvoices.Where(x => x.TripId == item.Id).FirstOrDefault()?.SubmitInvoicesFK.ReferencNumber;
+                }
             }
 
 

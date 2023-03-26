@@ -34,7 +34,9 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.IsPrePayedShippingRequest, opt => opt.MapFrom(src => src.ShippingRequestFk.IsPrePayed))
             .ForMember(dst => dst.TripFlag, opt => opt.MapFrom(src => src.ShippingRequestTripFlag))
             .ForMember(dst => dst.IsSass, opt => opt.MapFrom(src => src.ShippingRequestFk.IsSaas()))
-            .ForMember(dst => dst.RequestTypeTitle, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.RequestType.GetEnumDescription() :"SAAS"))
+            .ForMember(dst => dst.ShippingRequestFlagTitle, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingRequestFlag.GetEnumDescription() :"SAAS"))
+            //todo this should be updated after release apply shipping type in SAAS shipment
+            .ForMember(dst => dst.ShippingTypeTitle, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingTypeId.GetEnumDescription() :""))
             .ForMember(dst => dst.PlateNumber, opt => opt.MapFrom(src => src.AssignedTruckFk != null ?src.AssignedTruckFk.PlateNumber :""));
 
 
