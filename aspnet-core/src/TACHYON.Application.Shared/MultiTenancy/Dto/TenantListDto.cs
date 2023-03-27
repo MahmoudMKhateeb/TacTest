@@ -39,5 +39,6 @@ namespace TACHYON.MultiTenancy.Dto
         public decimal Balance { get; set; } = 0;
         public decimal ReservedBalance { get; set; } = 0;
         public decimal CreditBalance { get; set; } = 0;
+        public decimal Rate { get; set; }
     }
 }

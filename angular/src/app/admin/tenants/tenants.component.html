@@ -77,6 +77,8 @@
 
               <dxi-column dataField="userListDto.emailAddress" dataType="text" caption="{{ l('Email') }}"> </dxi-column>
               <dxi-column dataField="userListDto.isEmailConfirmed" caption="{{ l('IsEmailConfirmed') }}"> </dxi-column>
+              <dxi-column dataField="tenantListDto.rate" caption="{{ l('Rate') }} " dataType="number" cellTemplate="cellRatingTemplate" width="170">
+              </dxi-column>
 
               <div *dxTemplate="let options of 'cellTemplate_IsActive'">
                 <span *ngIf="options.data.tenantListDto.isActive">{{ 'Yes' | localize }}</span>
@@ -90,7 +92,9 @@
                     : 'Unlimited'
                 }}
               </div>
-
+              <div *dxTemplate="let options of 'cellRatingTemplate'" class="d-flex justify-content-center">
+                <p-rating [ngModel]="options.data.tenantListDto.rate" readonly="true" stars="5" [cancel]="false"></p-rating>
+              </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">
                   <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
