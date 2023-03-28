@@ -369,7 +369,8 @@
                         >{{
                           record.canAssignTrucksAndDrivers &&
                           !isTachyonDealer &&
-                          !_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.isSaas
+                          !_TripService.GetShippingRequestForViewOutput.shippingRequest.isSaas &&
+                          record.statusTitle != 'Delivered'
                             ? l('ViewOrAssignDriver')
                             : l('View')
                         }}</a
@@ -378,7 +379,7 @@
                         class="dropdown-item"
                         *ngIf="_TripService?.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Normal"
                         (click)="ViewTripModal.show(record.id, _TripService.GetShippingRequestForViewOutput)"
-                        >{{ record.canAssignTrucksAndDrivers ? l('ViewOrAssignDriver') : l('View') }}</a
+                        >{{ record.canAssignTrucksAndDrivers && record.statusTitle != 'Delivered' ? l('ViewOrAssignDriver') : l('View') }}</a
                       >
                     </li>
                     <li
