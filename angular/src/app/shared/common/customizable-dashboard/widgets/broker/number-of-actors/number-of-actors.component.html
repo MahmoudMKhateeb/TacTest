@@ -39,8 +39,12 @@
       <!--&lt;!&ndash;                <div class="row">&ndash;&gt;-->
       <!--            </div>-->
       <div class="col d-flex flex-column justify-content-center pt-8">
-        <div class="row shipper-carrier-count">{{ 'Shippers' | localize }}&nbsp;<span class="dashed-line"></span>&nbsp;{{ shipperCount }}%</div>
-        <div class="row shipper-carrier-count">{{ 'Carriers' | localize }}&nbsp;<span class="dashed-line"></span>&nbsp;{{ carrierCount }}%</div>
+        <div class="row shipper-carrier-count">
+          {{ 'Shippers' | localize }}&nbsp;<span class="dashed-line"></span>&nbsp;{{ shipperCount | number: '1.0-2' }}%
+        </div>
+        <div class="row shipper-carrier-count">
+          {{ 'Carriers' | localize }}&nbsp;<span class="dashed-line"></span>&nbsp;{{ carrierCount | number: '1.0-2' }}%
+        </div>
       </div>
     </div>
   </div>
