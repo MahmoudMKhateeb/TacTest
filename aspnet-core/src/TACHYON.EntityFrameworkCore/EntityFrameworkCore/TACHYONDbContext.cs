@@ -375,6 +375,7 @@ namespace TACHYON.EntityFrameworkCore
         public TACHYONDbContext(DbContextOptions<TACHYONDbContext> options)
             : base(options)
         {
+            Database.SetCommandTimeout(120);
         }
 
         protected override bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType)
