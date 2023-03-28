@@ -369,20 +369,20 @@ namespace TACHYON.PricePackages.PricePackageOffers
             DisableTenancyFilters();
             var itemDetails = shippingRequest.ShippingRequestVases?
                 .Select(item => new PriceOfferDetailDto() { ItemId = item.Id, Price = 0 }).ToList();
+            // parent offer is carrier offer 
+            var parentOffer = await GetParentOffer(shippingRequest.Id).Select(x => new {x.ItemPrice,x.Id }).FirstOrDefaultAsync();
 
-            var parentOfferId = await GetParentOfferId(shippingRequest.Id);
-
-           if (parentOfferId == default)
+           if (parentOffer == null)
                throw new UserFriendlyException(L("YouMustSendRequestToCarrierAndAcceptTheOffer"));
 
            var priceOfferDto = new CreateOrEditPriceOfferInput()
            { 
                ShippingRequestId = shippingRequest.Id, 
-               ItemPrice = pricePackage.TotalPrice,
+               ItemPrice = parentOffer.ItemPrice,
                ItemDetails = itemDetails,
                CommissionType = PriceOfferCommissionType.CommissionValue,
-               CommissionPercentageOrAddValue = 0,
-               ParentId = parentOfferId,
+               CommissionPercentageOrAddValue = pricePackage.TotalPrice - parentOffer.ItemPrice,
+               ParentId = parentOffer.Id,
                VasCommissionType = PriceOfferCommissionType.CommissionValue, VasCommissionPercentageOrAddValue = 0
            };
             var offerId = await _priceOfferManager.CreateOrEdit(priceOfferDto);
@@ -411,7 +411,12 @@ namespace TACHYON.PricePackages.PricePackageOffers
         }
         public async Task<long> GetParentOfferId(long shippingRequestId)
         {
-           return await (from priceOffer in _priceOfferRepository.GetAll()
+            return await GetParentOffer(shippingRequestId).Select(x => x.Id).FirstOrDefaultAsync();
+        }
+        
+        private IQueryable<PriceOffer> GetParentOffer(long shippingRequestId)
+        {
+           return (from priceOffer in _priceOfferRepository.GetAll()
                 where priceOffer.ShippingRequestId == shippingRequestId
                       && (priceOffer.Status == PriceOfferStatus.Accepted || priceOffer.Status == PriceOfferStatus.Pending
                           || priceOffer.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier ||
@@ -420,7 +425,7 @@ namespace TACHYON.PricePackages.PricePackageOffers
                           .Any(x => x.DirectRequestId.HasValue &&
                                     x.DirectRequest.ShippingRequestId == shippingRequestId &&
                                     x.DirectRequest.CarrierTenantId == priceOffer.TenantId)
-                select priceOffer.Id).FirstOrDefaultAsync();
+                select priceOffer);
         }
 
         private async Task AcceptOfferByPricePackage(long pricePackageId,long srId)
