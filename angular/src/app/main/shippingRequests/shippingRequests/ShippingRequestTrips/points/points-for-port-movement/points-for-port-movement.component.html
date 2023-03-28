@@ -86,7 +86,7 @@
                   {{ item.displayName }}
                 </option>
               </select>
-              <div *ngIf="isShipper || isCarrierSaas" class="input-group-btn">
+              <div *ngIf="isShipper || isCarrierSaas || isTachyonDealer" class="input-group-btn">
                 <button class="btn btn-light-danger" [disabled]="facilityLoading" (click)="createOrEditFacilityModalShow()">
                   <i class="flaticon2-add"></i>
                 </button>
@@ -112,7 +112,7 @@
                   {{ item.displayName }}
                 </option>
               </select>
-              <div *ngIf="isShipper || isCarrierSaas" class="input-group-btn">
+              <div *ngIf="isShipper || isCarrierSaas || isTachyonDealer" class="input-group-btn">
                 <button
                   class="btn btn-light-danger"
                   data-toggle="tooltip"
