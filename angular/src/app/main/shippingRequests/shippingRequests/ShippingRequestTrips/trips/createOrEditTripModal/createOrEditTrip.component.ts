@@ -4,37 +4,37 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
-    ActorSelectItemDto,
-    CreateOrEditActorCarrierPrice,
-    CreateOrEditActorShipperPriceDto,
-    CreateOrEditDocumentFileDto,
-    CreateOrEditRoutPointDto,
-    CreateOrEditShippingRequestTripDto,
-    CreateOrEditShippingRequestTripVasDto,
-    DedicatedShippingRequestsServiceProxy,
-    DropPaymentMethod,
-    EntityTemplateServiceProxy,
-    FacilityType,
-    FileDto,
-    GetAllDedicatedDriversOrTrucksForDropDownDto,
-    GetAllGoodsCategoriesForDropDownOutput,
-    GetAllTrucksWithDriversListDto,
-    GetShippingRequestForViewOutput,
-    GetShippingRequestVasForViewDto,
-    GoodsDetailsServiceProxy,
-    PickingType,
-    RoundTripType,
-    SavedEntityType,
-    SelectItemDto,
-    ShippingRequestDto,
-    ShippingRequestFlag,
-    ShippingRequestRouteType,
-    ShippingRequestsServiceProxy,
-    ShippingRequestsTripServiceProxy,
-    ShippingRequestTripFlag,
-    ShippingTypeEnum,
-    UpdateDocumentFileInput,
-    WaybillsServiceProxy,
+  ActorSelectItemDto,
+  CreateOrEditActorCarrierPrice,
+  CreateOrEditActorShipperPriceDto,
+  CreateOrEditDocumentFileDto,
+  CreateOrEditRoutPointDto,
+  CreateOrEditShippingRequestTripDto,
+  CreateOrEditShippingRequestTripVasDto,
+  DedicatedShippingRequestsServiceProxy,
+  DropPaymentMethod,
+  EntityTemplateServiceProxy,
+  FacilityType,
+  FileDto,
+  GetAllDedicatedDriversOrTrucksForDropDownDto,
+  GetAllGoodsCategoriesForDropDownOutput,
+  GetAllTrucksWithDriversListDto,
+  GetShippingRequestForViewOutput,
+  GetShippingRequestVasForViewDto,
+  GoodsDetailsServiceProxy,
+  PickingType,
+  RoundTripType,
+  SavedEntityType,
+  SelectItemDto,
+  ShippingRequestDto,
+  ShippingRequestFlag,
+  ShippingRequestRouteType,
+  ShippingRequestsServiceProxy,
+  ShippingRequestsTripServiceProxy,
+  ShippingRequestTripFlag,
+  ShippingTypeEnum,
+  UpdateDocumentFileInput,
+  WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -315,6 +315,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.loading = true;
       this._shippingRequestTripsService.getShippingRequestTripForCreate().subscribe((result) => {
         this._TripService.CreateOrEditShippingRequestTripDto = result;
+        this._TripService.CreateOrEditShippingRequestTripDto.routPoints = this.PointsComponent?.wayPointsList;
         this._TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.extn = '_';
         this._TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.name = '_';
         this._TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice = new CreateOrEditActorShipperPriceDto();

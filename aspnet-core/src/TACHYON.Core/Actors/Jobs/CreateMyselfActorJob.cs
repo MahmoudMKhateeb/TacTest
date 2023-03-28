@@ -1,5 +1,6 @@
 using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
+using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -32,16 +33,19 @@ namespace TACHYON.Actors.Jobs
 
         public void Execute(CreateMyselfActorJobArgs args)
         {
+            if (args.TenantIds.IsNullOrEmpty()) return;
             using var uow = _unitOfWorkManager.Begin();
-            
 
-            var createdMyselfActors = (from tenantId in args.TenantIds
-                join tenant in _tenantRepository.GetAll() on tenantId equals tenant.Id
-                from adminUser in _userRepository.GetAll().IgnoreQueryFilters().Where(x=> !x.IsDeleted)
-                where adminUser.TenantId == tenantId && adminUser.UserName.Equals(AbpUserBase.AdminUserName)
+            var createdMyselfActors = (from tenant in _tenantRepository.GetAll() 
+                where args.TenantIds.Contains(tenant.Id)
+                join adminUser in _userRepository.GetAll().IgnoreQueryFilters().Where(x => !x.IsDeleted)
+                    on tenant.Id equals adminUser.TenantId
+                where adminUser.UserName.Equals(AbpUserBase.AdminUserName)
+                 && _actorRepository.GetAll().Where(x => x.TenantId == tenant.Id)
+                          .All(x => x.ActorType != ActorTypesEnum.MySelf)
                 select new Actor()
                 {
-                    TenantId = tenantId,
+                    TenantId = tenant.Id,
                     ActorType = ActorTypesEnum.MySelf,
                     CompanyName = TACHYONConsts.MyselfCompanyName,
                     MoiNumber = tenant.MoiNumber,

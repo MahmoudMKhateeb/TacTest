@@ -56,7 +56,7 @@
 
               <button
                 class="btn btn-primary"
-                *ngIf="_TripService.CreateOrEditShippingRequestTripDto.id"
+                *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.id"
                 [disabled]="!_TripService.CreateOrEditShippingRequestTripDto.id"
                 (click)="DownloadSingleDropWaybillPdf(_TripService.CreateOrEditShippingRequestTripDto.id)"
                 [buttonBusy]="wayBillIsDownloading"

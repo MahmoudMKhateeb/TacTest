@@ -94,7 +94,14 @@
         </div>
         <div class="modal-footer">
           <button type="button" (click)="close()" class="btn btn-secondary">{{ 'Close' | localize }}</button>
-          <button type="submit" (click)="createOrEdit()" [disabled]="PPPForm.invalid" class="btn btn-primary">{{ 'Save' | localize }}</button>
+          <button
+            type="submit"
+            (click)="createOrEdit()"
+            [disabled]="PPPForm.invalid || !pricePackageProposal?.pricePackages || pricePackageProposal?.pricePackages?.length == 0"
+            class="btn btn-primary"
+          >
+            {{ 'Save' | localize }}
+          </button>
         </div>
       </form>
     </div>
