@@ -180,6 +180,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
     NgxSpinnerModule,
     AppBsModalModule,
     DxButtonModule,
+    DxSelectBoxModule,
     RatingModule,
   ],
   providers: [

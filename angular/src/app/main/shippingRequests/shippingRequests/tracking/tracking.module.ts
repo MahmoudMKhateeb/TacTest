@@ -83,6 +83,7 @@ import { TrackingTableViewComponent } from '@app/main/shippingRequests/shippingR
     CascadeSelectModule,
     DxDataGridModule,
     DxCheckBoxModule,
+    DxSelectBoxModule,
   ],
   exports: [
     CreateOrEditTripAccidentModalComponent,

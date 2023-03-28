@@ -48,12 +48,27 @@
                 </div>
                 <div class="col-md-3">
                   <label for="ActorTypeFilterSelect">{{ l('ActorType') }}</label>
-                  <select class="form-select" name="ActorTypeFilter" id="ActorTypeFilterSelect" [(ngModel)]="actorTypeFilter">
-                    <option value="-1">{{ l('All') }}</option>
-                    <option value="1">{{ l('Shipper') }}</option>
+                  <dx-select-box
+                    id="ActorTypeFilterSelect"
+                    name="ActorTypeFilter"
+                    [(value)]="actorTypeFilter"
+                    [dataSource]="[
+                      { displayName: l('All'), value: -1 },
+                      { displayName: l('Shipper'), value: 1 },
+                      { displayName: l('Carrier'), value: 2 }
+                    ]"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="value"
+                    placeholder="{{ l('Select') }}"
+                  >
+                  </dx-select-box>
+                  <!--                  <select class="form-select" name="ActorTypeFilter" id="ActorTypeFilterSelect" [(ngModel)]="actorTypeFilter">-->
+                  <!--                    <option value="-1">{{ l('All') }}</option>-->
+                  <!--                    <option value="1">{{ l('Shipper') }}</option>-->
 
-                    <option value="2">{{ l('Carrier') }}</option>
-                  </select>
+                  <!--                    <option value="2">{{ l('Carrier') }}</option>-->
+                  <!--                  </select>-->
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">

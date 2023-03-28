@@ -46,14 +46,26 @@
               </div>
               <div class="col-xl-6">
                 <label for="truckType">{{ 'TruckType' | localize }}</label>
-                <div class="input-group">
-                  <select id="truckType" name="input.truckTypeId" [(ngModel)]="input.truckTypeId" class="form-control" required>
-                    <option value="">{{ l('All') }}</option>
-                    <option [value]="t.value" *ngFor="let t of truckTypes">
-                      {{ t.displayText | localize }}
-                    </option>
-                  </select>
-                </div>
+                <dx-select-box
+                  id="truckType"
+                  name="input.truckTypeId"
+                  [(value)]="input.truckTypeId"
+                  [dataSource]="truckTypes"
+                  [searchEnabled]="true"
+                  displayExpr="displayText"
+                  valueExpr="value"
+                  required
+                  placeholder="{{ l('Select') }}"
+                >
+                </dx-select-box>
+                <!--                  <select id="truckType" name="input.truckTypeId" [(ngModel)]="input.truckTypeId" class="form-control" required>-->
+                <!--                    <option value="">{{ l('All') }}</option>-->
+                <!--                    <option [value]="t.value" *ngFor="let t of truckTypes">-->
+                <!--                      {{ t.displayText | localize }}-->
+                <!--                    </option>-->
+                <!--                  </select>-->
+                <!--                <div class="input-group">-->
+                <!--                </div>-->
               </div>
 
               <div class="col-xl-6">
@@ -106,15 +118,28 @@
                 <div
                   [ngClass]="{
                     'spinner spinner-success spinner-right ': isDataLoading,
-                    'input-group': !isDataLoading
+                    '': !isDataLoading
                   }"
                 >
-                  <select [disabled]="isDataLoading" id="origin" name="input.originId" [(ngModel)]="input.originId" class="form-control" required>
-                    <option value="">{{ l('All') }}</option>
-                    <option [value]="c.value" *ngFor="let c of cites">
-                      {{ c.displayText | localize }}
-                    </option>
-                  </select>
+                  <dx-select-box
+                    id="origin"
+                    name="input.originId"
+                    [(value)]="input.originId"
+                    [dataSource]="cites"
+                    [searchEnabled]="true"
+                    displayExpr="displayText"
+                    valueExpr="value"
+                    required
+                    [disabled]="isDataLoading"
+                    placeholder="{{ l('Select') }}"
+                  >
+                  </dx-select-box>
+                  <!--                  <select [disabled]="isDataLoading" id="origin" name="input.originId" [(ngModel)]="input.originId" class="form-control" required>-->
+                  <!--                    <option value="">{{ l('All') }}</option>-->
+                  <!--                    <option [value]="c.value" *ngFor="let c of cites">-->
+                  <!--                      {{ c.displayText | localize }}-->
+                  <!--                    </option>-->
+                  <!--                  </select>-->
                 </div>
               </div>
               <div class="col-xl-6">
@@ -122,59 +147,108 @@
                 <div
                   [ngClass]="{
                     'spinner spinner-success spinner-right ': isDataLoading,
-                    'input-group': !isDataLoading
+                    '': !isDataLoading
                   }"
                 >
-                  <select
-                    [disabled]="isDataLoading"
+                  <dx-select-box
                     id="destination"
                     name="input.destinationId"
-                    [(ngModel)]="input.destinationId"
-                    class="form-control"
+                    [(value)]="input.destinationId"
+                    [dataSource]="cites"
+                    [searchEnabled]="true"
+                    displayExpr="displayText"
+                    valueExpr="value"
                     required
+                    [disabled]="isDataLoading"
+                    placeholder="{{ l('Select') }}"
                   >
-                    <option value="">{{ l('All') }}</option>
-                    <option [value]="c.value" *ngFor="let c of cites">
-                      {{ c.displayText | localize }}
-                    </option>
-                  </select>
+                  </dx-select-box>
+                  <!--                  <select-->
+                  <!--                    [disabled]="isDataLoading"-->
+                  <!--                    id="destination"-->
+                  <!--                    name="input.destinationId"-->
+                  <!--                    [(ngModel)]="input.destinationId"-->
+                  <!--                    class="form-control"-->
+                  <!--                    required-->
+                  <!--                  >-->
+                  <!--                    <option value="">{{ l('All') }}</option>-->
+                  <!--                    <option [value]="c.value" *ngFor="let c of cites">-->
+                  <!--                      {{ c.displayText | localize }}-->
+                  <!--                    </option>-->
+                  <!--                  </select>-->
                 </div>
               </div>
 
               <div class="col-xl-6">
                 <label for="routeType">{{ 'RouteType' | localize }}</label>
-                <div class="input-group">
-                  <select id="routeType" name="input.routeTypeId" [(ngModel)]="input.routeTypeId" class="form-control" required>
-                    <option value="">{{ l('All') }}</option>
-                    <option [value]="r.key" *ngFor="let r of routeTypes">
-                      {{ l(r.value) | localize }}
-                    </option>
-                  </select>
-                </div>
+                <dx-select-box
+                  id="routeType"
+                  name="input.routeTypeId"
+                  [(value)]="input.routeTypeId"
+                  [dataSource]="routeTypes"
+                  [searchEnabled]="true"
+                  displayExpr="value"
+                  valueExpr="key"
+                  required
+                  placeholder="{{ l('Select') }}"
+                >
+                </dx-select-box>
+                <!--                  <select id="routeType" name="input.routeTypeId" [(ngModel)]="input.routeTypeId" class="form-control" required>-->
+                <!--                    <option value="">{{ l('All') }}</option>-->
+                <!--                    <option [value]="r.key" *ngFor="let r of routeTypes">-->
+                <!--                      {{ l(r.value) | localize }}-->
+                <!--                    </option>-->
+                <!--                  </select>-->
+                <!--                <div class="input-group">-->
+                <!--                </div>-->
               </div>
               <ng-template [ngIf]="!input.channel && !input.isTMSRequest">
                 <div class="col-xl-6">
                   <label for="requestType">{{ 'ShippingRequestType' | localize }}</label>
-                  <div class="input-group">
-                    <select id="requestType" name="input.requestType" [(ngModel)]="input.requestType" class="form-control" required>
-                      <option value="">{{ l('All') }}</option>
-                      <option [value]="r.key" *ngFor="let r of requestTypes">
-                        {{ l(r.value) | localize }}
-                      </option>
-                    </select>
-                  </div>
+                  <dx-select-box
+                    id="requestType"
+                    name="input.requestType"
+                    [(value)]="input.requestType"
+                    [dataSource]="requestTypes"
+                    [searchEnabled]="true"
+                    displayExpr="value"
+                    valueExpr="key"
+                    required
+                    placeholder="{{ l('Select') }}"
+                  >
+                  </dx-select-box>
+                  <!--                    <select id="requestType" name="input.requestType" [(ngModel)]="input.requestType" class="form-control" required>-->
+                  <!--                      <option value="">{{ l('All') }}</option>-->
+                  <!--                      <option [value]="r.key" *ngFor="let r of requestTypes">-->
+                  <!--                        {{ l(r.value) | localize }}-->
+                  <!--                      </option>-->
+                  <!--                    </select>-->
+                  <!--                  <div class="input-group">-->
+                  <!--                  </div>-->
                 </div>
               </ng-template>
               <div class="col-xl-6">
                 <label for="status">{{ 'ShippingRequestStatusName' | localize }}</label>
-                <div class="input-group">
-                  <select id="status" name="input.status" [(ngModel)]="input.status" class="form-control" required>
-                    <option value="">{{ l('All') }}</option>
-                    <option [value]="s.value" *ngFor="let s of statusData">
-                      {{ l(s.displayText) | localize }}
-                    </option>
-                  </select>
-                </div>
+                <dx-select-box
+                  id="status"
+                  name="input.status"
+                  [(value)]="input.status"
+                  [dataSource]="statusData"
+                  [searchEnabled]="true"
+                  displayExpr="displayText"
+                  valueExpr="value"
+                  required
+                  placeholder="{{ l('Select') }}"
+                >
+                </dx-select-box>
+                <!--                  <select id="status" name="input.status" [(ngModel)]="input.status" class="form-control" required>-->
+                <!--                    <option value="">{{ l('All') }}</option>-->
+                <!--                    <option [value]="s.value" *ngFor="let s of statusData">-->
+                <!--                      {{ l(s.displayText) | localize }}-->
+                <!--                    </option>-->
+                <!--                  </select>-->
+                <!--                <div class="input-group">-->
+                <!--                </div>-->
               </div>
             </div>
           </div>
