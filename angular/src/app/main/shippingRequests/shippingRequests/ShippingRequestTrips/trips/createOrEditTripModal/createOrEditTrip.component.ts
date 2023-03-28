@@ -315,6 +315,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.loading = true;
       this._shippingRequestTripsService.getShippingRequestTripForCreate().subscribe((result) => {
         this._TripService.CreateOrEditShippingRequestTripDto = result;
+        this._TripService.CreateOrEditShippingRequestTripDto.routPoints = this.PointsComponent?.wayPointsList;
         this._TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.extn = '_';
         this._TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.name = '_';
         this._TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice = new CreateOrEditActorShipperPriceDto();
