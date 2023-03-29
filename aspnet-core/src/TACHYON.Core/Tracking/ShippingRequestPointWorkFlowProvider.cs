@@ -1158,7 +1158,7 @@ namespace TACHYON.Tracking
             var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
 
-            UploadFiles(args.Documents, point.Id, RoutePointDocumentType.POD);
+            await UploadFiles(args.Documents, point.Id, RoutePointDocumentType.POD);
 
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
@@ -1188,7 +1188,7 @@ namespace TACHYON.Tracking
             var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
 
-            UploadFiles(args.Documents, point.Id, RoutePointDocumentType.DeliveryNote);
+            await UploadFiles(args.Documents, point.Id, RoutePointDocumentType.DeliveryNote);
 
             point.IsDeliveryNoteUploaded = true;
             point.Status = status;
@@ -1204,7 +1204,7 @@ namespace TACHYON.Tracking
             var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
                  .FirstOrDefaultAsync(x => x.Id == args.PointId);
 
-            UploadFiles(args.Documents, point.Id, RoutePointDocumentType.DeliveryGood);
+            await UploadFiles(args.Documents, point.Id, RoutePointDocumentType.DeliveryGood);
 
             point.IsGoodPictureUploaded = true;
             point.Status = status;
@@ -1235,7 +1235,8 @@ namespace TACHYON.Tracking
         private async Task<string> DropOffConfirmDelivery(PointTransactionArgs arg)
         {
             var point = await _routPointRepository
-               .GetAllIncluding(x => x.ShippingRequestTripFk)
+               .GetAll().Include(x => x.ShippingRequestTripFk)
+               .ThenInclude(x=>x.ShippingRequestFk)
                .FirstOrDefaultAsync(x => x.Id == arg.PointId);
 
             point.Status = RoutePointStatus.ConfirmDelivery;
@@ -1559,7 +1560,7 @@ namespace TACHYON.Tracking
 
         private async Task HandlePointDelivery(long pointId)
         {
-            var point = await _routPointRepository.GetAsync(pointId);
+            var point = await _routPointRepository.GetAll().Include(x=>x.ShippingRequestTripFk).ThenInclude(x=>x.ShippingRequestFk).FirstOrDefaultAsync(x=>x.Id == pointId);
             await HandlePointDelivery(point);
         }
         /// <summary>
@@ -1836,8 +1837,17 @@ namespace TACHYON.Tracking
         /// </summary>
         public async Task NotificationWhenShipmentDelivered(RoutPoint point, User currentUser)
         {
-            var trip = point.ShippingRequestTripFk;
+            //var trip = point.ShippingRequestTripFk;
             // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+            // send notification about rating
+            //  _appNotifier
+
+            //send notification about rating
+            if(point.ShippingRequestTripFk.ShippingRequestFk != null && point.ShippingRequestTripFk.ShippingRequestFk.TenantId != point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId)
+            {
+                await _appNotifier.NotifyTenantWithRating(point.ShippingRequestTripFk.ShippingRequestId, point.ShippingRequestTripId, point.ShippingRequestTripFk.ShippingRequestFk.TenantId);
+                await _appNotifier.NotifyTenantWithRating(point.ShippingRequestTripFk.ShippingRequestId, point.ShippingRequestTripId, point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.Value);
+            }
         }
 
         #endregion

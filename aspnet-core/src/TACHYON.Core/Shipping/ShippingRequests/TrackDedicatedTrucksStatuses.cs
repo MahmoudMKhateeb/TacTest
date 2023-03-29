@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
+using TACHYON.Notifications;
 using TACHYON.Shipping.Dedicated;
 
 namespace TACHYON.Shipping.ShippingRequests
@@ -20,17 +21,21 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<DedicatedShippingRequestDriver, long> _dedicatedShippingRequestDriver;
         private readonly IRepository<DedicatedShippingRequestTruck, long> _dedicatedShippingRequestTruck;
+        private readonly IAppNotifier _appNotifier;
+
 
         public TrackDedicatedTrucksStatuses(AbpTimer timer,
             IRepository<ShippingRequest, long> shippingRequestRepository,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriver,
-            IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTruck) : base(timer)
+            IRepository<DedicatedShippingRequestTruck, long> dedicatedShippingRequestTruck,
+            IAppNotifier appNotifier) : base(timer)
         {
             Timer.Period = CheckPeriodAsMilliseconds;
             Timer.RunOnStart = true;
             _shippingRequestRepository = shippingRequestRepository;
             _dedicatedShippingRequestDriver = dedicatedShippingRequestDriver;
             _dedicatedShippingRequestTruck = dedicatedShippingRequestTruck;
+            _appNotifier = appNotifier;
         }
 
         [UnitOfWork]
@@ -103,7 +108,13 @@ namespace TACHYON.Shipping.ShippingRequests
             foreach (var request in expiredRentalShippingRequests)
             {
                 if(request.Status == ShippingRequestStatus.PostPrice)
+                {
                     request.Status = ShippingRequestStatus.Completed;
+                    if(request.TenantId != request.CarrierTenantId)
+                    {
+                        _appNotifier.NotifyShipperToRateDedicatedTrips(request.Id, request.TenantId);
+                    }
+                }
                 else if(request.Status == ShippingRequestStatus.PrePrice || request.Status == ShippingRequestStatus.NeedsAction)
                     request.Status = ShippingRequestStatus.Expired;
             }

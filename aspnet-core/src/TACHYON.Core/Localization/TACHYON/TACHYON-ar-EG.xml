@@ -3085,5 +3085,6 @@
     <text name="PortMovementFeature">رحلات الموانئ</text>
     <text name="HomeDeliveryFeature">توصيل منزلي</text>
 		
+    <text name="RateShippingExp">يمكنك تقييم تجربة الشحن مع {0}</text>
 	</texts>
 </localizationDictionary>
