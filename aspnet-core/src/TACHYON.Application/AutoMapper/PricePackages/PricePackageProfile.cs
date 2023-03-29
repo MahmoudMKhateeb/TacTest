@@ -43,7 +43,7 @@ namespace TACHYON.AutoMapper.PricePackages
                         i.AppendixId.HasValue ? i.Appendix.ContractName : "__"))
                 .ForMember(x => x.EditionName, x => x.MapFrom(i => i.UsageType == PricePackageUsageType.AsCarrier ? i.Tenant.Edition.DisplayName : i.DestinationTenant.Edition.DisplayName))
                 .ForMember(x => x.RouteType,
-                    x => x.MapFrom(i => i.RouteType.ToString()));
+                    x => x.MapFrom(i => i.RouteType.HasValue? i.RouteType.Value.ToString(): string.Empty));
 
             CreateMap<CreateOrEditServiceAreaDto, ServiceArea>().ReverseMap();
             CreateMap<CreateOrEditPricePackageDto, PricePackage>()
@@ -202,7 +202,7 @@ namespace TACHYON.AutoMapper.PricePackages
                 .ForMember(x => x.CompanyName, x => x.MapFrom(i => i.DestinationTenant.Name))
                 .ForMember(x => x.CompanyEditionName, x => x.MapFrom(i => i.DestinationTenant.Edition.DisplayName))
                 .ForMember(x => x.RouteType,
-                    x => x.MapFrom(i => i.RouteType.ToString()))
+                    x => x.MapFrom(i => i.RouteType.HasValue? i.RouteType.Value.ToString(): string.Empty))
                 .ForMember(x => x.Type, x => x.MapFrom(i => i.Type.ToString()));
 
             CreateMap<PricePackageProposal, ProposalAutoFillDataDto>()
