@@ -240,12 +240,18 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
-        if (isNotNullOrUndefined(filter)) {
-          if (isNotNullOrUndefined(loadOptions.filter)) {
-            loadOptions.filter.push(filter);
-          } else {
-            loadOptions.filter = filter;
-          }
+        if (!isNotNullOrUndefined(filter)) {
+          filter = [];
+        }
+
+        if (filter.length > 0) {
+          filter.push('and');
+        }
+        filter.push(['UsageType', '=', PricePackageUsageType.AsCarrier]);
+        if (isNotNullOrUndefined(loadOptions.filter)) {
+          loadOptions.filter.push(filter);
+        } else {
+          loadOptions.filter = filter;
         }
         return self._pricePackagesServiceProxy
           .getAll(JSON.stringify(loadOptions))
@@ -389,11 +395,11 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
       filter.push(pricePackageFilter);
     }
     /*if (isNotNullOrUndefined(serviceAreasFilter) && serviceAreasFilter.length > 0) {
-          if (filter.length > 0) {
-            filter.push('and');
-          }
-          filter.push(serviceAreasFilter);
-        }*/
+                      if (filter.length > 0) {
+                        filter.push('and');
+                      }
+                      filter.push(serviceAreasFilter);
+                    }*/
 
     this.getAllNormalPricePackages(filter);
   }
