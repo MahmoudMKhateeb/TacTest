@@ -1,7 +1,12 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { LazyLoadEvent } from 'primeng/api';
-import { ShippingRequestRouteType, PricePackageForViewDto, PricePackageServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+    ShippingRequestRouteType,
+    PricePackageForViewDto,
+    PricePackageServiceProxy,
+    PricePackageUsageType
+} from '@shared/service-proxies/service-proxies';
 import { Paginator } from '@node_modules/primeng/paginator';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { finalize } from 'rxjs/operators';
@@ -16,7 +21,8 @@ export class ViewMatchingPricePackageComponent extends AppComponentBase implemen
   @Input() shippingRequestId: number;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
   routeTypes;
-  loadingPricePackageId: string;
+  loadingItemId: number;
+  usageTypeEnum = PricePackageUsageType;
 
   constructor(private injector: Injector, private _enumToArray: EnumToArrayPipe, private _pricePackageServiceProxy: PricePackageServiceProxy) {
     super(injector);
@@ -41,7 +47,7 @@ export class ViewMatchingPricePackageComponent extends AppComponentBase implemen
 
   ngOnInit(): void {
     this.isDataRequested = false;
-    this.loadingPricePackageId = undefined;
+    this.loadingItemId = undefined;
     this.routeTypes = this._enumToArray.transform(ShippingRequestRouteType);
   }
 
@@ -50,10 +56,10 @@ export class ViewMatchingPricePackageComponent extends AppComponentBase implemen
   }
 
   handlePricePackageAction(pricePackage: PricePackageForViewDto) {
-    this.loadingPricePackageId = pricePackage.pricePackageId;
+    this.loadingItemId = pricePackage.id;
     this._pricePackageServiceProxy
       .applyPricePackage(pricePackage.id, this.shippingRequestId)
-      .pipe(finalize(() => (this.loadingPricePackageId = undefined)))
+      .pipe(finalize(() => (this.loadingItemId = undefined)))
       .subscribe(() => {
         this.notify.success('SentSuccessfully');
         this.getMatchingTmsPricePackages({});
