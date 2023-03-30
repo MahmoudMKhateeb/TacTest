@@ -52,10 +52,11 @@
                   class="btn btn-danger btn-sm"
                   *ngIf="isTachyonDealer && !record.hasOffer && !record.hasDirectRequest"
                   (click)="handlePricePackageAction(record)"
-                  [buttonBusy]="loadingPricePackageId === record.pricePackageId"
-                  [disabled]="record.isShipperPricePackage && !record.hasParentOffer"
+                  [buttonBusy]="loadingItemId === record.id"
+                  [disabled]="record.usageType == usageTypeEnum.AsTachyonManageService && !record.hasParentOffer"
                 >
-                  <i class="flaticon-eye"></i> {{ (record.isShipperPricePackage ? 'Acknowledge' : 'SendRequest') | localize }}
+                  <i class="flaticon-eye"></i>
+                  {{ (record.usageType == usageTypeEnum.AsTachyonManageService ? 'Acknowledge' : 'SendRequest') | localize }}
                 </button>
                 <!--                <button-->
                 <!--                  class="btn btn-danger btn-sm"-->

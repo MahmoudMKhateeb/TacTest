@@ -112,7 +112,7 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
         if (this.companyType == this.companyTypeEnum.Shipper) {
           this.pricingMethod = this.pricingMethodEnum.FinalPrice;
           this.calculatedPriceTitle = this.l('FinalPrice');
-          (this.calculatedPrice as any) = this.pricePackageDto.totalPrice.toFixed(2);
+          this.calculatedPrice = Number(this.pricePackageDto.totalPrice.toFixed(2));
         }
         if (this.pricePackageDto.type == this.pricePackageType.Dedicated) {
           this.loadAllCities(this.pricePackageDto.originCountryId);
@@ -240,12 +240,18 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
-        if (isNotNullOrUndefined(filter)) {
-          if (isNotNullOrUndefined(loadOptions.filter)) {
-            loadOptions.filter.push(filter);
-          } else {
-            loadOptions.filter = filter;
-          }
+        if (!isNotNullOrUndefined(filter)) {
+          filter = [];
+        }
+
+        if (filter.length > 0) {
+          filter.push('and');
+        }
+        filter.push(['UsageType', '=', PricePackageUsageType.AsCarrier]);
+        if (isNotNullOrUndefined(loadOptions.filter)) {
+          loadOptions.filter.push(filter);
+        } else {
+          loadOptions.filter = filter;
         }
         return self._pricePackagesServiceProxy
           .getAll(JSON.stringify(loadOptions))
@@ -389,11 +395,11 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
       filter.push(pricePackageFilter);
     }
     /*if (isNotNullOrUndefined(serviceAreasFilter) && serviceAreasFilter.length > 0) {
-          if (filter.length > 0) {
-            filter.push('and');
-          }
-          filter.push(serviceAreasFilter);
-        }*/
+                      if (filter.length > 0) {
+                        filter.push('and');
+                      }
+                      filter.push(serviceAreasFilter);
+                    }*/
 
     this.getAllNormalPricePackages(filter);
   }
@@ -416,15 +422,15 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
 
     let total = prices.reduce((last, next) => last + next, 0);
 
-    (this.calculatedPrice as any) = (total / prices.length).toFixed(2);
+    this.calculatedPrice = Number((total / prices.length).toFixed(2));
   }
 
   private calculateMaximumPrice(prices: number[]) {
-    (this.calculatedPrice as any) = Math.max(...prices).toFixed(2);
+    this.calculatedPrice = Number(Math.max(...prices).toFixed(2));
   }
 
   private calculateMinimumPrice(prices: number[]) {
-    (this.calculatedPrice as any) = Math.min(...prices).toFixed(2);
+    this.calculatedPrice = Number(Math.min(...prices).toFixed(2));
   }
 
   private buildCarriersFilter(): any[] {

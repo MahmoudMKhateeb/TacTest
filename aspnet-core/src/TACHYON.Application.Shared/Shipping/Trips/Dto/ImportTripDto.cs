@@ -50,7 +50,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public int? ReceiverId { get; set; }
         #region dedicated
         public string RouteTypeTitle { get; set; }
-        public ShippingRequestRouteType RouteType { get; set; }
+        public ShippingRequestRouteType? RouteType { get; set; }
         public int NumberOfDrops { get; set; }
         public string Driver { get; set; }
         public string Truck { get; set; }
