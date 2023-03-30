@@ -112,7 +112,7 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
         if (this.companyType == this.companyTypeEnum.Shipper) {
           this.pricingMethod = this.pricingMethodEnum.FinalPrice;
           this.calculatedPriceTitle = this.l('FinalPrice');
-          (this.calculatedPrice as any) = this.pricePackageDto.totalPrice.toFixed(2);
+          this.calculatedPrice = Number(this.pricePackageDto.totalPrice.toFixed(2));
         }
         if (this.pricePackageDto.type == this.pricePackageType.Dedicated) {
           this.loadAllCities(this.pricePackageDto.originCountryId);
@@ -416,15 +416,15 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
 
     let total = prices.reduce((last, next) => last + next, 0);
 
-    (this.calculatedPrice as any) = (total / prices.length).toFixed(2);
+    this.calculatedPrice = Number((total / prices.length).toFixed(2));
   }
 
   private calculateMaximumPrice(prices: number[]) {
-    (this.calculatedPrice as any) = Math.max(...prices).toFixed(2);
+    this.calculatedPrice = Number(Math.max(...prices).toFixed(2));
   }
 
   private calculateMinimumPrice(prices: number[]) {
-    (this.calculatedPrice as any) = Math.min(...prices).toFixed(2);
+    this.calculatedPrice = Number(Math.min(...prices).toFixed(2));
   }
 
   private buildCarriersFilter(): any[] {
