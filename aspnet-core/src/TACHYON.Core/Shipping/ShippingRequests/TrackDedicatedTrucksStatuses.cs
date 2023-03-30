@@ -1,6 +1,7 @@
 ﻿using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
+using System.Threading.Tasks;
 using TACHYON.Notifications;
 using TACHYON.Shipping.Dedicated;
 
@@ -43,7 +45,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
-                ExpiredRentedDedicatedRequests();
+                AsyncHelper.RunSync(() =>  ExpiredRentedDedicatedRequests() );
 
                 //Track drivers statuses
                 DriverStartOrEndRentalPeriodStatusesChange();
@@ -97,7 +99,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-        private void ExpiredRentedDedicatedRequests()
+        private async Task ExpiredRentedDedicatedRequests()
         {
             var expiredRentalShippingRequests = _shippingRequestRepository.GetAll()
                                 .Where(x => x.ShippingRequestFlag == ShippingRequestFlag.Dedicated &&
@@ -112,7 +114,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     request.Status = ShippingRequestStatus.Completed;
                     if(request.TenantId != request.CarrierTenantId)
                     {
-                        _appNotifier.NotifyShipperToRateDedicatedTrips(request.Id, request.TenantId);
+                       await  _appNotifier.NotifyShipperToRateDedicatedTrips(request.Id, request.TenantId);
                     }
                 }
                 else if(request.Status == ShippingRequestStatus.PrePrice || request.Status == ShippingRequestStatus.NeedsAction)

@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { CreateShipperRateByCarrierDto, RatingServiceProxy } from '@shared/service-proxies/service-proxies';
+import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 
@@ -9,24 +11,32 @@ import { finalize } from 'rxjs/operators';
   templateUrl: './shipping-request-rating-modal.component.html',
   styleUrls: ['./shipping-request-rating-modal.component.css'],
 })
-export class ShippingRequestRatingModalComponent extends AppComponentBase implements OnInit {
+export class ShippingRequestRatingModalComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('modal', { static: false }) modal: ModalDirective;
 
   rating: CreateShipperRateByCarrierDto = new CreateShipperRateByCarrierDto();
-
+  ratingTripId: any;
   active: boolean = false;
   saving: boolean = false;
   Specifiedtime: Date = new Date();
-  constructor(injector: Injector, private _Service: RatingServiceProxy) {
+  constructor(injector: Injector, private _Service: RatingServiceProxy, private _Router: ActivatedRoute) {
     super(injector);
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.ratingTripId = this._Router.snapshot.queryParams['ratingTripId'];
+  }
 
   public show(id: number): void {
     this.rating.tripId = id;
     this.active = true;
     this.modal.show();
+  }
+
+  ngAfterViewInit() {
+    if (isNotNullOrUndefined(this.ratingTripId)) {
+      this.show(this.ratingTripId);
+    }
   }
 
   save(): void {

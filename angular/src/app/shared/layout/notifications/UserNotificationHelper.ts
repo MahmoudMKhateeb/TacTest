@@ -200,6 +200,13 @@ export class UserNotificationHelper extends AppComponentBase {
         return `/app/main/shippingRequests/shippingRequests?dedicatedDriverId=${userNotification.notification.data.properties.dedicatedDriverId}&shippingRequestId=${userNotification.notification.data.properties.shippingRequestId}`;
       case 'App.NotifyCarrierWithTruckReplacement':
         return `/app/main/shippingRequests/shippingRequests?dedicatedTruckId=${userNotification.notification.data.properties.dedicatedTruckId}&shippingRequestId=${userNotification.notification.data.properties.shippingRequestId}&truckTypeId=${userNotification.notification.data.properties.truckTypeId}`;
+      case 'App.DedicatedRequestCompletedToRate':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.ShippingRequestId}`;
+      case 'App.TripDeliveredToRate':
+        return (
+          `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.ShippingRequestId}` +
+          `&ratingTripId=${userNotification.notification.data.properties.tripId}`
+        );
     }
 
     //No url for this notification

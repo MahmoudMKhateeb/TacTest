@@ -210,7 +210,7 @@ namespace TACHYON.Shipping.Drivers
             .Include(i => i.GoodCategoryFk)
             .Include(i => i.ShippingRequestFk)
                .ThenInclude(r => r.ShippingRequestDestinationCities)
-               .ThenInclude(x=>x.CityFk)
+               .ThenInclude(x => x.CityFk)
            .Include(i => i.ShippingRequestFk)
                .ThenInclude(r => r.OriginCityFk)
            .Include(i => i.ShippingRequestFk)
