@@ -27,24 +27,6 @@
                 <option *ngFor="let item of shippers" [value]="item.id">{{ item.displayName }}</option>
               </select>
             </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('Date') }} <span class="text-danger">*</span></label>
-              <input
-                id="Date"
-                type="text"
-                name="Date"
-                class="form-control"
-                bsDatepicker
-                datePickerMomentModifier
-                [(date)]="pricePackageProposal.proposalDate"
-                [bsConfig]="{ adaptivePosition: true }"
-              />
-            </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('ScopeOverview') }} <span class="text-danger">*</span></label>
-              <input [(ngModel)]="pricePackageProposal.scopeOverview" minlength="3" required type="text" class="form-control" name="scopeOverview" />
-            </div>
-
             <div class="form-group col-md-12">
               <!--              <input [(ngModel)]="pricePackageProposal.tmsPricePackages" required type="text" class="form-control" name="tmsPricePackages" />-->
               <label>{{ l('PricePackages') }} <span class="text-danger">*</span></label>
@@ -73,6 +55,21 @@
                 </div>
               </dx-drop-down-box>
             </div>
+
+            <div class="form-group col-md-6">
+              <label>{{ l('Date') }} <span class="text-danger">*</span></label>
+              <input
+                id="Date"
+                type="text"
+                name="Date"
+                class="form-control"
+                bsDatepicker
+                datePickerMomentModifier
+                [(date)]="pricePackageProposal.proposalDate"
+                [bsConfig]="{ adaptivePosition: true }"
+              />
+            </div>
+
             <div class="form-group col-md-6">
               <label>{{ l('EmailAddress') }}</label>
               <input
@@ -84,6 +81,12 @@
                 name="emailAddress"
               />
             </div>
+
+            <div class="form-group col-md-6">
+              <label>{{ l('ScopeOverview') }} <span class="text-danger">*</span></label>
+              <textarea [(ngModel)]="pricePackageProposal.scopeOverview" minlength="3" required class="form-control" name="scopeOverview"></textarea>
+            </div>
+
             <div class="form-group col-md-6">
               <label>{{ l('Notes') }} <span class="text-danger">*</span></label>
               <!--                            <textarea [(ngModel)]='pricePackageProposal.notes' required type='text' class='form-control'-->
