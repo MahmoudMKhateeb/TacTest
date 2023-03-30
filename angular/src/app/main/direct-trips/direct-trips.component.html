@@ -125,6 +125,7 @@
               [wordWrapEnabled]="true"
               (onRowExpanded)="getForView($event)"
               (onRowCollapsed)="collapsedRow($event)"
+              (onExporting)="onExporting($event)"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
@@ -133,6 +134,7 @@
               <dxo-scrolling mode="virtual"></dxo-scrolling>
               <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
               <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
+              <dxo-selection mode="multiple"></dxo-selection>
               <!--              <dxo-remote-operations [groupPaging]="true" [sorting]="true" [filtering]="true"> </dxo-remote-operations>-->
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-summary>
@@ -229,6 +231,7 @@
                   </div>
                 </div>
               </div>
+              <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
             </dx-data-grid>
           </div>
         </div>

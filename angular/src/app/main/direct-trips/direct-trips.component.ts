@@ -19,6 +19,9 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import Swal from 'sweetalert2';
 import { ViewImportedTripsFromExcelModalComponent } from '../shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular/ui/data-grid';
+import { Workbook } from 'exceljs';
+import { exportDataGrid } from 'devextreme/excel_exporter';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-direct-trips',
@@ -256,5 +259,28 @@ export class DirectTripsComponent extends AppComponentBase implements OnInit {
   collapsedRow(selectedRow: any) {
     console.log('collapsedRow selectedRow.key.id', selectedRow.key.id);
     selectedRow.key.tripSubDetails = undefined;
+  }
+
+  onExporting(e) {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Trips');
+
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+      customizeCell: ({ gridCell, excelCell }) => {
+        if (gridCell.rowType === 'data') {
+          if (gridCell.column.dataField === 'waybillNumber') {
+            excelCell.value = (<number>gridCell.value).toString();
+          }
+        }
+      },
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
+      });
+    });
+    e.cancel = true;
   }
 }
