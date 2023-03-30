@@ -228,8 +228,9 @@ namespace TACHYON.Shipping.Trips.Importing
             foreach (var trip in Trips)
             {
                 var tripItem = ObjectMapper.Map<ShippingRequestTrip>(trip);
+                tripItem.SaasInvoicingActivation = await _shippingRequestTripManager.GetSaasInvoicingActivation(trip.ShippingRequestId != null ? request.TenantId : tripItem.ShipperTenantId.Value);
 
-                
+
                 if (((request != null && request.RouteTypeId == ShippingRequestRouteType.SingleDrop)) || trip.RouteType == ShippingRequestRouteType.SingleDrop)
                 {
                     //create points
