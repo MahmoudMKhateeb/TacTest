@@ -1,6 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { CarrierDashboardServiceProxy, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BrokerInvoiceType, CarrierDashboardServiceProxy, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'app-counters-widget',
@@ -12,16 +13,28 @@ export class CountersWidgetComponent extends AppComponentBase implements OnInit 
   public loading: boolean;
   public inTransitTripsCount: number;
   public numberOfGeneratedInvoices: number;
+  public invoiceType: BrokerInvoiceType;
+  invoiceTypes: any[] = [];
 
   constructor(
     injector: Injector,
     private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy,
-    private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy
+    private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy,
+    private enumService: EnumToArrayPipe
   ) {
     super(injector);
   }
 
   ngOnInit(): void {
+    this.invoiceTypes = this.enumService.transform(BrokerInvoiceType).map((item) => {
+      item.key = Number(item.key);
+      return item;
+    });
+    if (!(this.hasCarrierClients && this.hasShipperClients)) {
+      this.invoiceType = this.isShipper ? BrokerInvoiceType.Invoice : BrokerInvoiceType.SubmitInvoice;
+    } else {
+      this.invoiceType = this.invoiceTypes[0].key;
+    }
     this.fetchData();
   }
 

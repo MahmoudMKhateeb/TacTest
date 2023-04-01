@@ -1,4 +1,4 @@
-﻿using Abp;
+using Abp;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -14,6 +14,7 @@ using Abp.Timing;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using Castle.Core.Internal;
+using DevExpress.Office.Utils;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Rest;
@@ -24,6 +25,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Actors;
+using TACHYON.Actors.Dtos;
 using TACHYON.AddressBook;
 using TACHYON.AddressBook.Ports;
 using TACHYON.Authorization;
@@ -39,6 +41,7 @@ using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Invoices;
 using TACHYON.MultiTenancy;
+using TACHYON.MultiTenancy.Dto;
 using TACHYON.Notifications;
 using TACHYON.Offers;
 using TACHYON.Packing.PackingTypes;
@@ -108,11 +111,12 @@ namespace TACHYON.Shipping.ShippingRequests
             DocumentFilesManager documentFilesManager,
             IRepository<PriceOffer, long> priceOfferRepository,
             IEntityChangeSetReasonProvider reasonProvider,
-            NormalPricePackageManager normalPricePackageManager,
             SrPostPriceUpdateManager postPriceUpdateManager,
             IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository,
             ShippingRequestManager shippingRequestManager,
-            IRepository<Actor> actorsRepository)
+            IRepository<Actor> actorsRepository, 
+            IPricePackageManager pricePackageManager,
+            IRepository<Facility, long> facilityRepository)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -141,11 +145,12 @@ namespace TACHYON.Shipping.ShippingRequests
             _documentFilesManager = documentFilesManager;
             _priceOfferRepository = priceOfferRepository;
             _reasonProvider = reasonProvider;
-            _normalPricePackageManager = normalPricePackageManager;
             _postPriceUpdateManager = postPriceUpdateManager;
             _shippingRequestDestinationCityRepository = shippingRequestDestinationCityRepository;
             _shippingRequestManager = shippingRequestManager;
             _actorsRepository = actorsRepository;
+            _pricePackageManager = pricePackageManager;
+            _facilityRepository = facilityRepository;
         }
 
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
@@ -176,9 +181,10 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly IRepository<PriceOffer, long> _priceOfferRepository;
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
-        private readonly NormalPricePackageManager _normalPricePackageManager;
         private readonly IRepository<ShippingRequestDestinationCity> _shippingRequestDestinationCityRepository;
         private readonly ShippingRequestManager _shippingRequestManager;
+        private readonly IPricePackageManager _pricePackageManager;
+        private readonly IRepository<Facility, long> _facilityRepository;
 
         private readonly IRepository<Actor> _actorsRepository;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
@@ -260,7 +266,7 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
-        [RequiresFeature(AppFeatures.Shipper, AppFeatures.CarrierAsASaas)]
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.CarrierAsASaas, AppFeatures.TachyonDealer)]
         public async Task<GetShippingRequestForEditOutput> GetShippingRequestForEdit(EntityDto<long> input)
         {
             if (await IsEnabledAsync(AppFeatures.TachyonDealer))
@@ -319,6 +325,7 @@ namespace TACHYON.Shipping.ShippingRequests
             var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id);
 
             //if request between cities and single drop
+            await _shippingRequestManager.ValidatePortMovementInputs(input, shippingRequest);
             ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest);
 
             if (shippingRequest.DraftStep < 2)
@@ -382,8 +389,11 @@ namespace TACHYON.Shipping.ShippingRequests
 
             ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
+                .ThenInclude(x=>x.VasFk)
                 .Where(x => x.Id == input.Id && x.IsDrafted == true)
                 .FirstOrDefaultAsync();
+
+            
 
             await ShippingRequestVasListValidate(input, shippingRequest.NumberOfTrips);
             //delete vases
@@ -401,6 +411,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<EditShippingRequestStep4Dto> GetStep4ForEdit(EntityDto<long> entity)
         {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
@@ -666,19 +677,23 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.TrucksTypeFk)
                     .ThenInclude(e => e.Translations)
                     .Include(e => e.TransportTypeFk)
+                    .ThenInclude(x=>x.Translations)
                     .Include(e => e.CapacityFk)
                     .Include(e => e.AssignedTruckFk)
                     .ThenInclude(e => e.TruckStatusFk)
                     .Include(e => e.GoodCategoryFk)
                     .ThenInclude(e => e.Translations)
-                    .Include(e => e.ShippingTypeFk)
+                    //.Include(e => e.ShippingTypeFk)
                     .Include(e => e.PackingTypeFk)
                     .ThenInclude(v => v.Translations)
                     .Include(e => e.CarrierTenantFk)
-                    .Include(x => x.ShippingRequestDestinationCities)
-                    .ThenInclude(x => x.CityFk)
-                    .Include(x => x.CarrierActorFk)
-                    .Include(x => x.ShipperActorFk)
+                    .Include(x=>x.ShippingRequestDestinationCities)
+                    .ThenInclude(x=>x.CityFk)
+                    .ThenInclude(x=>x.Translations)
+                    .Include(x=> x.CarrierActorFk)
+                    .Include(x=> x.ShipperActorFk)
+                    .Include(x=>x.OriginFacility)
+                    .ThenInclude(x=>x.CityFk)
                     .FirstOrDefaultAsync();
                 if (await IsCarrier() && !shippingRequest.IsSaas() && shippingRequest.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
                 {
@@ -738,8 +753,10 @@ namespace TACHYON.Shipping.ShippingRequests
                         new GetShippingRequestVasForViewDto
                         {
                             ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e),
-                            VasName = e.VasFk.Key
-                        }).ToListAsync();
+                            VasName = e.VasFk.Key, 
+                            ShouldHide = e.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName) ||
+                e.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName) ? true : false
+            }).ToListAsync();
 
                 //Bids
                 List<ShippingRequestBidDto> shippingRequestBidDtoList = new List<ShippingRequestBidDto>();
@@ -771,18 +788,21 @@ namespace TACHYON.Shipping.ShippingRequests
                 output.GoodsCategoryName =
                     ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
 
+                output.IsGeneralGoodsCategory = shippingRequest.GoodCategoryFk.Flag!= null && shippingRequest.GoodCategoryFk.Flag.Equals(TACHYONConsts.GeneralGoods);
 
+                output.OriginalCityName = ObjectMapper.Map<TenantCityLookupTableDto>(shippingRequest.OriginCityFk)?.DisplayName;
                 //fill dest city list
                 var index = 1;
                 foreach (var destCity in shippingRequest.ShippingRequestDestinationCities)
                 {
+                    var city = ObjectMapper.Map<TenantCityLookupTableDto>(destCity.CityFk).DisplayName;
                     if (index == 1)
                     {
-                        output.DestinationCityName = destCity.CityFk.DisplayName;
+                        output.DestinationCityName = city;
                     }
                     else
                     {
-                        output.DestinationCityName = output.DestinationCityName + ", " + destCity.CityFk.DisplayName;
+                        output.DestinationCityName = output.DestinationCityName + ", " + city;
                     }
                     index++;
                 }
@@ -797,12 +817,14 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 //return translated truck type by default language
                 output.TruckTypeDisplayName =
-                    ObjectMapper.Map<TrucksTypeDto>(shippingRequest.TrucksTypeFk).TranslatedDisplayName;
+                    ObjectMapper.Map<TrucksTypeSelectItemDto>(shippingRequest.TrucksTypeFk)?.DisplayName;
                 output.TruckTypeFullName = ObjectMapper.Map<TransportTypeDto>(shippingRequest.TransportTypeFk)
                                                .TranslatedDisplayName
                                            + "-" + output.TruckTypeDisplayName
                                            + "-" + ObjectMapper.Map<CapacityDto>(shippingRequest.CapacityFk)
                                                .TranslatedDisplayName;
+                output.TransportTypeDisplayName = ObjectMapper.Map<TransportTypeDto>(shippingRequest.TransportTypeFk)?.TranslatedDisplayName
+                    ?? shippingRequest.TransportTypeFk.DisplayName;
 
                 return output;
             }
@@ -942,8 +964,6 @@ namespace TACHYON.Shipping.ShippingRequests
                 // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
             }
 
-            // todo Add this Validation in Update Shipping Request
-
 
             await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
 
@@ -952,7 +972,7 @@ namespace TACHYON.Shipping.ShippingRequests
             if (shippingRequest.IsBid)
             {
                 //Notify Carrier with the same Truck type
-                await _normalPricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
+                await _pricePackageManager.SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
             }
 
         }
@@ -994,7 +1014,7 @@ namespace TACHYON.Shipping.ShippingRequests
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)
         {
             _reasonProvider.Use(nameof(UpdateShippingRequestTransaction));
-
+            await DisableTenancyFiltersIfTachyonDealer();
             ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                 .Include(x => x.ShippingRequestVases)
                 .Include(x => x.ShippingRequestDestinationCities)
@@ -1036,6 +1056,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<ShippingRequestVasListOutput>> GetAllShippingRequestVasesForTableDropdown()
         {
             return await _lookup_vasRepository.GetAll()
+                .Where(x=>!x.Name.ToLower().Equals(TACHYONConsts.AppointmentVasName) && !x.Name.ToLower().Equals(TACHYONConsts.ClearanceVasName))
                 .Select(vas => new ShippingRequestVasListOutput
                 {
                     VasName = vas.Translations.FirstOrDefault(t => t.Language.Contains(CurrentLanguage)) != null
@@ -1176,7 +1197,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var SenderpickupPoint = GetSenderInfo(shippingRequestTripId);
                 var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
-                var mobileNo = SenderpickupPoint != null ? SenderpickupPoint.PhoneNumber : "";
+                var mobileNo = SenderpickupPoint != null ? string.IsNullOrEmpty(SenderpickupPoint.PhoneNumber) ? "" : $"{"+966"}{SenderpickupPoint.PhoneNumber}" : "";
 
                 var query = info.Select(x => new
                 {
@@ -1219,6 +1240,12 @@ namespace TACHYON.Shipping.ShippingRequests
                     ShipperNotes = x.Note,
                     ContainerNumber = x.ContainerNumber,
                     SealNumber = x.SealNumber,
+                    MultipleDropsOrTripsLable = x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                                                ? "Trips" : "Drops",
+                    MultipleDropsOrTripsLableAr = x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                                                ? "الرحلات" : "الحمولات"
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
@@ -1255,6 +1282,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShipperNotes = x.ShipperNotes,
                         ContainerNumber = x.ContainerNumber,
                         SealNumber = x.SealNumber,
+                        MultipleDropsOrTripsLable = x.MultipleDropsOrTripsLable,
+                        MultipleDropsOrTripsLableAr = x.MultipleDropsOrTripsLableAr
                     });
 
                 return finalOutput;
@@ -1266,10 +1295,16 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
+                var shippingType = _shippingRequestTripRepository.GetAll()
+                    .Where(e => e.Id == shippingRequestTripId).Select(x => x.ShippingRequestFk.ShippingTypeId).FirstOrDefault();
+
                 var info = _shippingRequestTripRepository.GetAll()
+                    .Include(x=> x.ShippingRequestFk)
                     .Where(e => e.Id == shippingRequestTripId);
 
-                var dropPoint = dropOffId.HasValue ? AsyncHelper.RunSync(() => _routPointRepository.FirstOrDefaultAsync(dropOffId.Value)) : default;
+                //var dropPoint = dropOffId.HasValue ? AsyncHelper.RunSync(() => _routPointRepository.FirstOrDefaultAsync(dropOffId.Value)) : default;
+                var tripPoints = AsyncHelper.RunSync(() => GetTripPoints(shippingRequestTripId));
+                var dropPoint = dropOffId != null ? tripPoints.FirstOrDefault(x => x.Id == dropOffId) : tripPoints.FirstOrDefault(x=> x.PickingType == PickingType.Dropoff);
 
                 IQueryable<GetDropWaybillObject> query;
 
@@ -1317,7 +1352,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShipperInvoiceNo = x.ShippingRequestFk.ShipperInvoiceNo,
                         ShipperNotes = x.Note,
                         ContainerNumber = x.ContainerNumber,
-                        SealNumber = x.SealNumber
+                        SealNumber = x.SealNumber,
+                        ShippingType = x.ShippingRequestFk.ShippingTypeId,
                     }
                     );
                 }
@@ -1363,24 +1399,61 @@ namespace TACHYON.Shipping.ShippingRequests
                        // ShipperInvoiceNo = x.ShipperInvoiceNo,
                         ShipperNotes = x.Note,
                         ContainerNumber = x.ContainerNumber,
-                        SealNumber = x.SealNumber
+                        
+                        //update here
+                        SealNumber = x.SealNumber,
+                        
+
+
                     }
        );
                 }
 
-
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
 
-                var delivery = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Dropoff, dropOffId);
+                
 
-                var routPointWaybillNumber = _routPointRepository.GetAll()
-                    .Where(x => x.Id == dropOffId && x.PickingType == PickingType.Dropoff)
-                    .Select(x => x.WaybillNumber).FirstOrDefault();
+                var pickupFacility = default(Facility);
+                var deliveryFacility = default(Facility);
+                var SenderpickupPoint = default(Receiver);
+                var contactName = "";
+                var mobileNo = "";
+                var pickupPointId = default(long);
+                var pickupPoint = default(RoutPoint);
 
-                var SenderpickupPoint = GetSenderInfo(shippingRequestTripId);
-                var contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
-                var mobileNo = SenderpickupPoint != null ? SenderpickupPoint.PhoneNumber : "";
+                if (shippingType == ShippingTypeEnum.ImportPortMovements || shippingType == ShippingTypeEnum.ExportPortMovements)
+                {
+                    pickupPoint = tripPoints.FirstOrDefault(x => x.PointOrder == dropPoint.PointOrder - 1 && x.PickingType == PickingType.Pickup);
+                    pickupPointId = pickupPoint.Id;
 
+                    pickupFacility = pickupPoint.FacilityFk;
+
+                    deliveryFacility = dropPoint.FacilityFk;
+
+
+
+                    SenderpickupPoint = pickupPoint.ReceiverFk;
+                    contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
+                    mobileNo = SenderpickupPoint != null ? string.IsNullOrEmpty(mobileNo) ? "" : $"{"+966"}{SenderpickupPoint.PhoneNumber}" : "";
+                }
+                else
+                {
+                    pickupPoint = tripPoints.FirstOrDefault(x => x.PickingType == PickingType.Pickup);
+                    pickupPointId = pickupPoint.Id;
+                    pickupFacility = pickupPoint.FacilityFk;//GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup, null);
+
+                    deliveryFacility = dropPoint.FacilityFk;//GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Dropoff, dropOffId);
+
+
+
+                    SenderpickupPoint = pickupPoint.ReceiverFk;//GetSenderInfo(shippingRequestTripId);
+                    contactName = SenderpickupPoint != null ? SenderpickupPoint.FullName : "";
+                    mobileNo = SenderpickupPoint != null ? string.IsNullOrEmpty(mobileNo) ? "" : $"{"+966"}{SenderpickupPoint.PhoneNumber}" : "";
+                }
+                var dropPointPhoneNumber = dropPoint.ReceiverId != null ? (string.IsNullOrEmpty(dropPoint.ReceiverFk.PhoneNumber) ?"" : $"{"+966"}{dropPoint.ReceiverFk.PhoneNumber}") 
+                    : string.IsNullOrEmpty(dropPoint.ReceiverPhoneNumber) ?"" : $"{"+966"}{dropPoint.ReceiverPhoneNumber}";
+
+                var routPointWaybillNumber = dropPoint.WaybillNumber;
                 var finalOutput = query.ToList().Select(x
                     => new GetDropWaybillOutput
                     {
@@ -1388,28 +1461,28 @@ namespace TACHYON.Shipping.ShippingRequests
                         WaybillNumber = routPointWaybillNumber,
                         Date = NormalizeDateTimeToClientTime(Clock.Now),
                         ShippingRequestStatus = x.ShippingRequestStatus,
-                        SenderCompanyName = GetFacilityPoint(x.Id, null, PickingType.Pickup), // x.SenderCompanyName,
+                        SenderCompanyName = pickupFacility?.Name ,//GetFacilityPoint(x.Id, pickupPointId, PickingType.Pickup), // x.SenderCompanyName,
                         SenderContactName = contactName,
                         SenderMobile = mobileNo,
-                        ReceiverCompanyName = GetFacilityPoint(x.Id, null, PickingType.Dropoff),
-                        ReceiverContactName = GetReceiverName(null, x.Id),
-                        ReceiverMobile = GetReceiverPhone(null, x.Id),
+                        ReceiverCompanyName =  deliveryFacility?.Name ,// GetFacilityPoint(x.Id, dropOffId, PickingType.Dropoff),
+                        ReceiverContactName = dropPoint.ReceiverId != null ? dropPoint.ReceiverFk.FullName : dropPoint.ReceiverFullName,//GetReceiverName(dropOffId, x.Id),
+                        ReceiverMobile = dropPointPhoneNumber,//GetReceiverPhone(dropOffId, x.Id),
                         DriverName = x.DriverName,
                         DriverIqamaNo = GetDriverIqamaNo(x.driverUserId),
                         TruckTypeDisplayName = x.TruckTypeDisplayName,
                         PlateNumber = x.PlateNumber,
                         PackingTypeDisplayName = x.PackingTypeDisplayName,
                         NumberOfPacking = x.NumberOfPacking,
-                        FacilityName = pickup != null ? pickup.Name : "",
-                        CountryName = pickup?.CityFk.CountyFk.DisplayName,
-                        CityName = pickup?.CityFk.DisplayName,
-                        Area = pickup?.Address,
+                        FacilityName = pickupFacility?.Name,
+                        CountryName = pickupFacility?.CityFk.CountyFk.DisplayName,
+                        CityName = pickupFacility?.CityFk.DisplayName,
+                        Area = pickupFacility?.Address,
                         StartTripDate = NormalizeDateTimeToClientTime(x.StartTripDate),
                         ActualPickupDate = NormalizeDateTimeToClientTime(x.ActualPickupDate),
-                        DroppFacilityName = delivery?.Name,
-                        DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
-                        DroppCityName = delivery?.CityFk.DisplayName,
-                        DroppArea = delivery?.Address,
+                        DroppFacilityName = deliveryFacility?.Name,
+                        DroppCountryName = deliveryFacility?.CityFk.CountyFk.DisplayName,
+                        DroppCityName = deliveryFacility?.CityFk.DisplayName,
+                        DroppArea = deliveryFacility?.Address,
                         DeliveryDate = NormalizeDateTimeToClientTime(x.DeliveryDate),
                         TotalWeight = x.TotalWeight,
                         ClientName = x.ClientName,
@@ -1697,6 +1770,14 @@ namespace TACHYON.Shipping.ShippingRequests
             return ObjectMapper.Map<List<GetAllUnitOfMeasureForDropDownOutput>>(unitOfMeasures);
         }
 
+        public async Task<int?> GetContainerUOMId()
+        {
+            return await _unitOfMeasureRepository.GetAll()
+                .Where(x => x.DisplayName.Equals(TACHYONConsts.ContainerUOM))
+                .Select(x=>x.Id)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<List<SelectItemDto>> GetAllShippingTypesForDropdown()
         {
             return (await _shippingTypeRepository.GetAll()
@@ -1719,29 +1800,33 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
 
-        public async Task<List<SelectItemDto>> GetAllShippersActorsForDropDown()
+        public async Task<List<ActorSelectItemDto>> GetAllShippersActorsForDropDown()
         {
             return await _actorsRepository.GetAll()
-                 .Where(x => x.ActorType == ActorTypesEnum.Shipper &&
-                 x.IsActive)
-                   .Select(x => new SelectItemDto()
-                   {
-                       Id = x.Id.ToString(),
-                       DisplayName = x.CompanyName
-                   }).ToListAsync();
+                .Where(x => (x.ActorType == ActorTypesEnum.Shipper || x.ActorType == ActorTypesEnum.MySelf) &&
+                            x.IsActive)
+                .OrderByDescending(x => x.ActorType).ThenByDescending(x => x.Id)
+                .Select(x => new ActorSelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.CompanyName,
+                    IsMySelf = x.ActorType == ActorTypesEnum.MySelf
+                }).ToListAsync();
         }
 
 
-        public async Task<List<SelectItemDto>> GetAllCarriersActorsForDropDown()
+        public async Task<List<ActorSelectItemDto>> GetAllCarriersActorsForDropDown()
         {
             return await _actorsRepository.GetAll()
-                 .Where(x => x.ActorType == ActorTypesEnum.Carrier &&
-                 x.IsActive)
-                   .Select(x => new SelectItemDto()
-                   {
-                       Id = x.Id.ToString(),
-                       DisplayName = x.CompanyName
-                   }).ToListAsync();
+                .Where(x => (x.ActorType == ActorTypesEnum.Carrier || x.ActorType == ActorTypesEnum.MySelf) &&
+                            x.IsActive)
+                .OrderByDescending(x => x.ActorType).ThenByDescending(x => x.Id)
+                .Select(x => new ActorSelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.CompanyName,
+                    IsMySelf = x.ActorType == ActorTypesEnum.MySelf
+                }).ToListAsync();
         }
         //end Multiple Drops
 
@@ -1796,13 +1881,24 @@ namespace TACHYON.Shipping.ShippingRequests
             return pickupFacility;
         }
 
+        private async Task<List<RoutPoint>> GetTripPoints(int tripId)
+        {
+            return await _routPointRepository.GetAll()
+                .Include(x=>x.FacilityFk)
+                .ThenInclude(x=>x.CityFk)
+                .ThenInclude(x => x.CountyFk)
+                .Include(x=>x.ReceiverFk)
+                .Where(x => x.ShippingRequestTripId == tripId).ToListAsync();
+        }
+
         private async Task AddOrRemoveDestinationCities(List<ShippingRequestDestinationCitiesDto> destinationCitiesDtos, ShippingRequest shippingRequest)
         {
             foreach (var destinationCity in destinationCitiesDtos)
             {
+                DisableDraftedFilter();
                 //destinationCity.ShippingRequestId = shippingRequest.Id;
                 var exists = await _shippingRequestDestinationCityRepository.GetAll().AnyAsync(c => c.CityId == destinationCity.CityId &&
-                c.ShippingRequestId == destinationCity.ShippingRequestId);
+                c.ShippingRequestId == shippingRequest.Id);
 
                 if (!exists)
                 {
@@ -1823,11 +1919,43 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private void ValidateDestinationCities(ShippingRequestRouteType routeType, List<ShippingRequestDestinationCitiesDto> shippingRequestDestinationCitiesDtos, ShippingRequest shippingRequest)
         {
-            if (shippingRequest.ShippingTypeId == 2 && routeType == ShippingRequestRouteType.SingleDrop && shippingRequestDestinationCitiesDtos.Count > 1)
+            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.LocalBetweenCities && routeType == ShippingRequestRouteType.SingleDrop && shippingRequestDestinationCitiesDtos.Count > 1)
             {
                 throw new UserFriendlyException(L("OneDestinationCityAllowed"));
             }
         }
+
+        
+
+        private async Task AddNotExistVases(List<Vas> ClearedVases)
+        {
+            var appointVasId = default(int);
+            var ClearanceVasId = default(int);
+
+            if (!ClearedVases.Any(x => x.Name == TACHYONConsts.AppointmentVasName))
+            {
+                var AppointmentVas = new Vas() { Key = TACHYONConsts.AppointmentVasName, Name = TACHYONConsts.AppointmentVasName, HasCount = true, HasAmount = false, IsAppearAmount = false };
+                appointVasId = await _lookup_vasRepository.InsertAndGetIdAsync(AppointmentVas);
+                ClearedVases.Add(AppointmentVas);
+            }
+            if (!ClearedVases.Any(x => x.Name == TACHYONConsts.ClearanceVasName))
+            {
+                var clearanceVas = new Vas() { Key = TACHYONConsts.ClearanceVasName, Name = TACHYONConsts.ClearanceVasName, HasCount = true, HasAmount = false, IsAppearAmount = false };
+                ClearanceVasId = await _lookup_vasRepository.InsertAndGetIdAsync(clearanceVas);
+                ClearedVases.Add(clearanceVas);
+            }
+            //force save vases to DB
+            await CurrentUnitOfWork.SaveChangesAsync();
+        }
+
+        //private void EditVasNameByKey(string key, List<Vas> portVases)
+        //{
+        //    var vas = portVases.FirstOrDefault(x => x.Key.ToLower() == key.ToLower());
+        //    if ( vas != null)
+        //    {
+        //        vas.Name = key;
+        //    }
+        //}
     }
 
     internal class GetDropWaybillObject
@@ -1857,5 +1985,6 @@ namespace TACHYON.Shipping.ShippingRequests
         public string ShipperNotes { get; set; }
         public string ContainerNumber { get; set; }
         public string SealNumber { get; set; }
+        public ShippingTypeEnum ShippingType { get; set; }
     }
 }

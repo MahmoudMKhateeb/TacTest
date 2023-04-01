@@ -98,6 +98,9 @@ export class HostNewAccountsChartComponent extends WidgetComponentBase implement
           xaxis: {
             categories: this.months,
           },
+          yaxis: {
+            opposite: this.isRtl,
+          },
           tooltip: {
             y: {
               formatter: function (val) {

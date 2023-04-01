@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using System;
 using System.Collections.Generic;
 using TACHYON.PriceOffers.Dto;
@@ -11,8 +11,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
     public class GetShippingRequestForPricingOutput : EntityDto<long>
     {
         public long OfferId { get; set; }
-        public long? MatchingPricePackageId { get; set; }
-        public long? PricePackageOfferId { get; set; }
         public string Shipper { get; set; }
         public decimal ShipperRating { get; set; }
         
@@ -43,5 +41,19 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// shipper Id
         /// </summary>
         public int TenantId { get; set; }
+
+        public long? MatchingPricePackageId { get; set; }
+
+        #region Port movements
+
+        public long? OriginFacilityId { get; set; }
+
+        public string OriginFacilityTitle { get; set; }
+        public ShippingTypeEnum ShippingTypeId { get; set; }
+        public string ShippingTypeTitle { get; set; }
+        public string RoundTripTitle { get; set; }
+        public string PackingTypeTitle { get; set; }
+
+        #endregion
     }
 }

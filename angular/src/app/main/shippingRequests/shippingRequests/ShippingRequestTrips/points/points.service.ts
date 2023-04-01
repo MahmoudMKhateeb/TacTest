@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { CreateOrEditRoutPointDto, RoutPointDto } from '@shared/service-proxies/service-proxies';
+import { CreateOrEditRoutPointDto, GetShippingRequestForViewOutput, RoutPointDto } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PointsService {
+  currentShippingRequest: GetShippingRequestForViewOutput;
+  currentPointIndex: number;
   constructor(private _TripService: TripService) {}
 
   private singleWayPoint = new BehaviorSubject<CreateOrEditRoutPointDto>(new CreateOrEditRoutPointDto());

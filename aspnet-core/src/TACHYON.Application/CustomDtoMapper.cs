@@ -1,12 +1,11 @@
-﻿using TACHYON.Integration.BayanIntegration.Dtos;
+using TACHYON.Integration.BayanIntegration.Dtos;
 using TACHYON.Integration.BayanIntegration;
 using TACHYON.Regions.Dtos;
 using TACHYON.Regions;
 using Abp.Application.Editions;
-﻿using TACHYON.Actors.Dtos;
+using TACHYON.Actors.Dtos;
 using TACHYON.Actors;
 using Abp.Application.Features;
-using Abp.Application.Services.Dto;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Users;
@@ -53,8 +52,6 @@ using TACHYON.Countries.CountriesTranslations.Dtos;
 using TACHYON.Countries.Dtos;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
-using TACHYON.Documents.DocumentsEntities;
-using TACHYON.Documents.DocumentsEntities.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Documents.DocumentTypeTranslations;
@@ -113,9 +110,6 @@ using TACHYON.Offers.Dtos;
 using TACHYON.Organizations.Dto;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.Packing.PackingTypes.Dtos;
-using TACHYON.PriceOffers;
-using TACHYON.PricePackages;
-using TACHYON.PricePackages.Dto.NormalPricePackage;
 using TACHYON.Receivers;
 using TACHYON.Receivers.Dtos;
 using TACHYON.Routs.Dtos;
@@ -135,7 +129,6 @@ using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Shipping.ShippingTypes.Dtos;
-using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Shipping.Trips.Importing.Dto;
@@ -195,7 +188,6 @@ using Abp.Timing;
 using TACHYON.DedidcatedDynamicActorInvoices.Dtos;
 using TACHYON.DedicatedDynamicActorInvoices;
 using TACHYON.DedicatedDynamicActorInvoices.DedicatedDynamicActorInvoiceItems;
-using TACHYON.DedicatedDynamicInvocies;
 
 namespace TACHYON
 {
@@ -471,7 +463,7 @@ namespace TACHYON
                 .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.DriverUser.AccountNumber))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.DriverUser.PhoneNumber))
                 .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.CarrierTenantFk.TenancyName))
-                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}- {GetDurationUnit(src.ShippingRequest.RentalDurationUnit.Value)}"))
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}- {src.ShippingRequest.RentalDurationUnit.GetEnumDescription()}"))
                 .ForMember(dest => dest.ShippingRequestReference, opt => opt.MapFrom(src => src.ShippingRequest.ReferenceNumber))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
                 .ForMember(dest => dest.OriginalDedicatedDriverName, opt => opt.MapFrom(src => src.OriginalDedicatedDriverId !=null ? $"{src.OriginalDriver.DriverUser.Name} {src.OriginalDriver.DriverUser.Surname}" :""));
@@ -484,7 +476,7 @@ namespace TACHYON
                 .ForMember(dest => dest.ShippingRequestReference, opt => opt.MapFrom(src => src.ShippingRequest.ReferenceNumber))
                 .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.ShippingRequest.CarrierTenantFk.TenancyName))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => $"{src.ShippingRequest.RentalDuration}-" +
-                $" {GetDurationUnit(src.ShippingRequest.RentalDurationUnit.Value)}"))
+                $" {src.ShippingRequest.RentalDurationUnit.GetEnumDescription()}"))
                 .ForMember(dest => dest.NumberOfTrips, opt => opt.MapFrom(src => src.ShippingRequest.ShippingRequestTrips.Where(x=>x.AssignedTruckId == src.TruckId).Count()))
                 .ForMember(dest => dest.OriginalDedicatedTruckName, opt => opt.MapFrom(src => src.OriginalDedicatedTruckId.HasValue ?src.OriginalTruck.Truck.GetDisplayName() :""));
 
@@ -520,10 +512,13 @@ namespace TACHYON
                 .ForMember(d => d.RoutPoints, opt => opt.Ignore())
                 .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTrip);
-            configuration.CreateMap<ShippingRequestTrip, TrackingShippingRequestTripDto>().ReverseMap();
+            configuration.CreateMap<ShippingRequestTrip, TrackingShippingRequestTripDto>()
+                .ForMember(x => x.ShippingType, x => x.MapFrom(i => i.ShippingRequestFk.ShippingTypeId))
+                .ForMember(x => x.RoutPoints, x => x.Ignore());
 
             configuration.CreateMap<ShippingRequestTripVas, CreateOrEditShippingRequestTripVasDto>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Key));
+                
             configuration.CreateMap<CreateOrEditShippingRequestTripVasDto, ShippingRequestTripVas>();
 
             configuration.CreateMap<ShippingRequestTripVas, ShippingRequestTripVasDto>()
@@ -570,13 +565,19 @@ namespace TACHYON
                 .ForPath(dest => dest.DropPaymentMethodTitle , opt => opt.MapFrom(src => src.DropPaymentMethod.GetEnumDescription()));
 
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
+                .ForMember(dest => dest.NeedsClearance, opt => opt.MapFrom(src => src.DropNeedsClearance))
+                .ForMember(dest => dest.NeedsAppointment, opt => opt.MapFrom(src => src.DropNeedsAppointment))
                 .ForMember(x => x.WaybillNumber, otp => otp.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTripRoutePointGoods);
 
             configuration.CreateMap<RoutPoint, CreateOrEditRoutPointDto>()
                 .ForMember(dest => dest.GoodsDetailListDto, opt => opt.MapFrom(src => src.GoodsDetails))
                 .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
-                .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y));
+                .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
+                .ForPath(dest => dest.DropNeedsAppointment, opt => opt.MapFrom(src => src.NeedsAppointment))
+                .ForPath(dest => dest.DropNeedsClearance, opt => opt.MapFrom(src => src.NeedsClearance));
+                //.ForPath(dest => dest.AppointmentDataDto.AppointmentNumber, opt => opt.MapFrom(src => src.AppointmentNumber))
+                //.ForPath(dest => dest.AppointmentDataDto.AppointmentDateTime, opt => opt.MapFrom(src => src.AppointmentDateTime));
 
             //configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             //configuration.CreateMap<RouteDto, Route>().ReverseMap();
@@ -789,9 +790,10 @@ namespace TACHYON
             configuration.CreateMap<DriverListDto, DriverMappingEntity>()
                 .ForMember(x => x.User, x => x.MapFrom(y => y))
                 .ForPath(x => x.User.CarrierActorFk.CompanyName, x => x.MapFrom(y => y.CarrierActorName))
-                .ForPath(x => x.User.NationalityFk.Name, x => x.MapFrom(y => y.Nationality))
-                .ForMember(x => x.CompanyName, x => x.MapFrom(y => y.CompanyName))
-             .ReverseMap();
+                .ForPath(x => x.Nationality, x => x.MapFrom(y => y.Nationality))
+                .ForMember(x => x.CompanyName, x => x.MapFrom(y => y.CompanyName)).ReverseMap();
+
+             
             configuration.CreateMap<User, DriverListDto>();
             configuration.CreateMap<User, ChatUserDto>();
             configuration.CreateMap<User, OrganizationUnitUserListDto>();
@@ -1008,6 +1010,12 @@ namespace TACHYON
 
             configuration.CreateMap<SubmitInvoiceClaimCreateInput, ActorSubmitInvoice>();
             configuration.CreateMap<IHasDocument, ActorSubmitInvoice>().ReverseMap();
+            configuration.CreateMap<TripAppointmentDataDto, IHasDocument>();
+            configuration.CreateMap<ShippingRequestTripVas,TripAppointmentDataDto >()
+                .ForMember(dto => dto.ItemPrice, options => options.MapFrom(entity => entity.SubTotalAmount));
+            configuration.CreateMap<ShippingRequestTripVas, TripClearancePricesDto > ()
+                .ForMember(dto => dto.ItemPrice, options => options.MapFrom(entity => entity.SubTotalAmount));
+
         }
 
         /// <summary>
@@ -1034,7 +1042,16 @@ namespace TACHYON
                 .ForMember(x => x.DisplayName, x =>
                     x.MapFrom(i => i.GetTranslatedDisplayName<TransportType, TransportTypesTranslation>()));
 
+            //configuration.CreateMultiLingualMap<TrucksType, TrucksTypesTranslation, TrucksTypeDto>(context)
+            //    .EntityMap
+            //    .ReverseMap();
+
             configuration.CreateMultiLingualMap<County, CountriesTranslation, CountyDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            
+             configuration.CreateMultiLingualMap<County, CountriesTranslation, CountriesTranslationDto>(context)
                 .EntityMap
                 .ReverseMap();
 
@@ -1059,6 +1076,7 @@ namespace TACHYON
             configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckStatusDto>(context)
                 .EntityMap
                 .ReverseMap();
+            
 
             // goto:#Map_TruckStatus_TruckTruckStatusLookupTableDto
             configuration
@@ -1135,8 +1153,8 @@ namespace TACHYON
             configuration.
                 CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GetAllGoodsCategoriesForDropDownOutput>(context)
                 .EntityMap.ForMember(x => x.IsOther, x => x.MapFrom(i => i.ContainsOther()));
-            //configuration.
-            //    CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GoodCategoryDto>(context);
+            configuration.
+                CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GoodCategoryDto>(context);
             configuration.
                 CreateMultiLingualMap<UnitOfMeasure, UnitOfMeasureTranslation, UnitOfMeasureDto>(context);
             
@@ -1411,20 +1429,6 @@ namespace TACHYON
             }
         }
 
-        private static string GetDurationUnit(TimeUnit timeUnit)
-        {
-            switch (timeUnit)
-            {
-                case TimeUnit.Daily:
-                    return "Days";
-                case TimeUnit.Monthly:
-                    return "Months";
-                case TimeUnit.Weekly:
-                    return "Weeks";
-                default:
-                    return "";
-            }
-        }
     }
 
     public class DriverMappingEntity
@@ -1436,5 +1440,6 @@ namespace TACHYON
         public string RentedShippingRequestReference { get; set; }
         public long AssignedTruckId { get; set; }
         public string AssignedTruck { get; set; }
+        public string Nationality { get; set; }
     }
 }

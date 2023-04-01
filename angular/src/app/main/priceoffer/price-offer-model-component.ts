@@ -79,7 +79,8 @@ export class PriceOfferModelComponent extends AppComponentBase {
     type: string | undefined = undefined,
     offerId: number | undefined = undefined,
     isPostPriceOffer: boolean = false,
-    isForDedicated = false
+    isForDedicated = false,
+    directRequestId?: number
   ): void {
     this.isForDedicated = isForDedicated;
     this.isPostPriceOffer = isPostPriceOffer;
@@ -97,7 +98,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.type = type;
     this.input.channel = this.Channel;
     this.SRUpdateId = SRUpdateId;
-    this._CurrentServ.getPriceOfferForCreateOrEdit(id, offerId).subscribe((result) => {
+    this._CurrentServ.getPriceOfferForCreateOrEdit(id, offerId, directRequestId).subscribe((result) => {
       this.Items = result.items;
       this.ShipperValueOfGoods = result.shipperValueOfGoods;
       this.CarrierInsuranceCoverage = result.carrierIsuranceCoverage;
@@ -334,6 +335,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.input.isPostPrice = this.isPostPriceOffer;
     const parentId = this.offer.parentId;
     this._CurrentServ.initPriceOffer(this.input).subscribe((result) => {
+      (result.carrierActorId as any) = this.offer.carrierActorId?.toString();
       this.offer = result;
       this.offer.parentId = parentId;
       this.Items = this.offer.items;

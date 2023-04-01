@@ -1,12 +1,17 @@
-﻿using Abp.Timing;
+using Abp.Timing;
 using AutoMapper;
 using System;
+using System.Globalization;
 using System.Linq;
+using TACHYON.Commission;
+using TACHYON.Goods.GoodsDetails;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips.Dto;
+using TACHYON.ShippingRequestTripVases;
 using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.AutoMapper.PriceOffers
@@ -48,7 +53,7 @@ namespace TACHYON.AutoMapper.PriceOffers
                 .ForMember(dst => dst.ShipperRatingNumber, opt => opt.MapFrom(src => src.Tenant.RateNumber))
                 .ForMember(dst => dst.Carrier, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
                 .ForMember(dst => dst.ShipperName, opt => opt.MapFrom(src => src.Tenant.Name))
-                .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
+                //.ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src =>src.OriginFacilityId !=null ?$"{src.OriginFacility.Name} - {src.OriginCityFk.DisplayName}" : src.OriginCityFk.DisplayName))
                 .ForMember(dst => dst.destinationCities, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities))
                 //.ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.ShippingRequestDestinationCities.First().CityFk.DisplayName))
                 .ForMember(dst => dst.BidStatusTitle, opt => opt.MapFrom(src => src.BidStatus.GetEnumDescription()))
@@ -62,12 +67,29 @@ namespace TACHYON.AutoMapper.PriceOffers
                  .ForMember(dst => dst.ShippingRequestFlagTitle,
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestFlag), src.ShippingRequestFlag)))
                 .ForMember(dst => dst.RentalDurationUnitTitle,
-                    opt => opt.MapFrom(src => src.RentalDurationUnit != null ? GetDurationUnit(src.RentalDurationUnit.Value) : ""));
+                    opt => opt.MapFrom(src => src.RentalDurationUnit != null ? src.RentalDurationUnit.GetEnumDescription() : ""))
+                .ForMember(x => x.TransportType,
+                    x => x.MapFrom(i =>
+                        i.TransportTypeId.HasValue
+                            ? (i.TransportTypeFk.Translations.Any(t =>
+                                t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                                ? i.TransportTypeFk.Translations
+                                    .FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                                    .DisplayName
+                                : i.TransportTypeFk.Key)
+                            : string.Empty));
 
             CreateMap<ActorShipperPrice, ActorShipperPriceDto>();
             CreateMap<CreateOrEditActorShipperPriceDto, ActorShipperPrice>().ReverseMap();
             CreateMap<ActorCarrierPrice, ActorCarrierPriceDto>();
             CreateMap<ActorCarrierPrice, CreateOrEditActorCarrierPrice>().ReverseMap();
+
+            //CreateMap<SetAppointmentDataInput, PriceCommissionDtoBase>();
+            //    //.ForMember(dst => dst.CommissionPercentageOrAddValue, opt => opt.Ignore());
+            //CreateMap<SetClearancePriceInput, PriceOfferDetail>();
+
+            CreateMap<PriceCommissionDtoBase, ShippingRequestTripVas>();
+
 
         }
 
@@ -96,19 +118,6 @@ namespace TACHYON.AutoMapper.PriceOffers
             return "";
         }
 
-        private static string GetDurationUnit(TimeUnit timeUnit)
-        {
-            switch (timeUnit)
-            {
-                case TimeUnit.Daily:
-                    return "Days";
-                case TimeUnit.Monthly:
-                    return "Months";
-                case TimeUnit.Weekly:
-                    return "Weeks";
-                default:
-                    return "";
-            }
-        }
+
     }
 }

@@ -1,22 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Injector, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import {
-  DedicatedShippingRequestsServiceProxy,
-  LoadResult,
-  NormalPricePackagesServiceProxy,
-  ReplacementFlag,
-} from '@shared/service-proxies/service-proxies';
-import { NotifyService } from 'abp-ng2-module';
+import { DedicatedShippingRequestsServiceProxy, ReplacementFlag } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
-
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { Table } from 'primeng/table';
-import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/api';
-import * as _ from 'lodash';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import KTCard from '@metronic/common/js/components/card';
 import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-shipping-request-attendance-sheet-modal.component';

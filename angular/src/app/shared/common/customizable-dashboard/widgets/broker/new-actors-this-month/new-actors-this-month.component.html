@@ -1,0 +1,30 @@
+<div class="card card-custom card-stretch w-100 h-100">
+  <div class="card-body p-4 d-flex flex-column justify-content-center">
+    <div class="row px-8">
+      <h2 class="gutter-b">
+        {{ 'NewActorsThisMonth' | localize }}
+      </h2>
+    </div>
+    <div class="row px-8">
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <div class="d-flex align-items-center">
+              <img src="assets/SVG/group_of_people.svg" alt="" />&nbsp;&nbsp;
+              <strong class="font-35">{{ newActorsCount }}</strong>
+            </div>
+          </div>
+          <div class="col pt-4" *ngIf="percentage">+{{ percentage }}% <img src="assets/SVG/actors-increase-arrow.svg" alt="" /></div>
+        </div>
+      </div>
+      <div class="col pt-4">
+        <div class="row shipper-carrier-count">
+          {{ 'Shippers' | localize }}&nbsp;<span class="dashed-line"></span>&nbsp;{{ shipperCount | number: '1.0-2' }}%
+        </div>
+        <div class="row shipper-carrier-count">
+          {{ 'Carriers' | localize }}&nbsp;<span class="dashed-line"></span>&nbsp;{{ carrierCount | number: '1.0-2' }}%
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -32,6 +32,11 @@
             </li>
           </ul>
         </div>
+        <button (click)="showAsTable()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+      </div>
+      <div role="actions" *ngIf="isCarrier">
+        <button (click)="showAsTable()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>
@@ -210,7 +215,16 @@
                   </p>
                   <p class="isNum">{{ item.totalsTripsAddByShippier }}/{{ item.numberOfTrips }}</p>
                 </div>
-                <div class="routeType">
+                <div
+                  class="routeType"
+                  *ngIf="
+                    (item?.shippingTypeId !== ShippingTypeEnum.ImportPortMovements &&
+                      item?.shippingTypeId !== ShippingTypeEnum.ExportPortMovements) ||
+                    ((item?.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+                      item?.shippingTypeId === ShippingTypeEnum.ExportPortMovements) &&
+                      item.routeTypeId === ShippingRequestRouteType.SingleDrop)
+                  "
+                >
                   <p>
                     {{ l('RouteType') }}
                   </p>
@@ -301,7 +315,9 @@
                 </a>
                 <a
                   *ngIf="
-                    permission.isGranted('Pages.ShippingRequests.Edit') && !Channel && (feature.isEnabled('App.Shipper') || isCarrierOwnRequest(item))
+                    permission.isGranted('Pages.ShippingRequests.Edit') &&
+                    !Channel &&
+                    (feature.isEnabled('App.Shipper') || isCarrierOwnRequest(item) || (item.isTachyonDeal && isTachyonDealer))
                   "
                   [queryParams]="{ id: item.id }"
                   [routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']"
@@ -586,6 +602,7 @@
                 </a>
                 <a
                   *ngIf="
+                    isGranted('Pages.ShippingRequests.Edit') &&
                     item.canAssignDedicatedDriversAndTrucks &&
                     !Channel &&
                     !item.isDriversAndTrucksAssigned &&
@@ -598,7 +615,12 @@
                   {{ l('AssignTrucksAndDrivers') }}
                 </a>
                 <a
-                  *ngIf="item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned"
+                  *ngIf="
+                    isGranted('Pages.DedicatedAttendaceSheet') &&
+                    item.canAssignDedicatedDriversAndTrucks &&
+                    !Channel &&
+                    item.isDriversAndTrucksAssigned
+                  "
                   href="javascript:void(0)"
                   (click)="openAttendanceModal(item)"
                   class="red"
@@ -606,7 +628,9 @@
                   {{ l('viewAttendance') }}
                 </a>
                 <a
-                  *ngIf="item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned"
+                  *ngIf="
+                    isGranted('Pages.ShippingRequests.Edit') && item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned
+                  "
                   href="javascript:void(0)"
                   (click)="viewTrucksOrDrivers(item, false)"
                   class="red"
@@ -614,7 +638,9 @@
                   {{ l('ReplaceDrivers') }}
                 </a>
                 <a
-                  *ngIf="item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned"
+                  *ngIf="
+                    isGranted('Pages.ShippingRequests.Edit') && item.canAssignDedicatedDriversAndTrucks && !Channel && item.isDriversAndTrucksAssigned
+                  "
                   href="javascript:void(0)"
                   (click)="viewTrucksOrDrivers(item, true)"
                   class="red"

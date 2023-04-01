@@ -18,6 +18,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   @ViewChild('createOrEditPintForm') public createOrEditPintForm: NgForm;
   goodDetailsListForView: any;
   @Input('isForDedicated') isForDedicated: boolean;
+  @Input('isForPortsMovement') isForPortsMovement: boolean;
   @Input('isHomeDelivery') isHomeDelivery: boolean;
   RouteType: number; //filled in onInit from the Trip Shared Service
   PickingType = PickingType;
@@ -97,11 +98,12 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
       this.Point.receiverFullName = null;
     }
     this.modal.hide();
+    this._PointService.currentPointIndex = null;
   }
 
   ngOnDestroy() {
     //this.tripServiceSubscription$.unsubscribe();
-    this.pointsServiceSubscription$.unsubscribe();
-    this.usedInSubscription$.unsubscribe();
+    this.pointsServiceSubscription$?.unsubscribe();
+    this.usedInSubscription$?.unsubscribe();
   }
 }

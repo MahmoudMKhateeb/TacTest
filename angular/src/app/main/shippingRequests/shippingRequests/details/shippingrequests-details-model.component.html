@@ -48,7 +48,45 @@
             </div>
             <div class="divirCard"></div>
             <div class="detailsShip">
-              <p *ngIf="request.rangeDate">
+              <ng-container
+                *ngIf="
+                  request.shippingTypeId === shippingTypeEnum.ImportPortMovements || request.shippingTypeId === shippingTypeEnum.ExportPortMovements
+                "
+              >
+                <p>
+                  <span>
+                    {{ l('ShippingType') }}
+                  </span>
+                  <span>
+                    {{ request.shippingTypeTitle }}
+                  </span>
+                </p>
+                <p>
+                  <span>
+                    {{ l('RoundTrip') }}
+                  </span>
+                  <span>
+                    {{ request.roundTripTitle }}
+                  </span>
+                </p>
+                <p>
+                  <span>
+                    {{ l('PackingType') }}
+                  </span>
+                  <span>
+                    {{ request.packingTypeTitle }}
+                  </span>
+                </p>
+                <p>
+                  <span>
+                    {{ l('Weight') }}
+                  </span>
+                  <span>
+                    {{ request.totalWeight }}
+                  </span>
+                </p>
+              </ng-container>
+              <p *ngIf="request.shippingTypeTitle">
                 <span>
                   {{ l('EstimatedPickUpDate') }}
                 </span>
@@ -80,7 +118,13 @@
                   {{ request.shippingRequestFlag == shippingRequestFlagEnum.Normal ? request.numberOfTrips : request.numberOfTrucks }}
                 </span>
               </p>
-              <p *ngIf="request.shippingRequestFlag == shippingRequestFlagEnum.Normal">
+              <p
+                *ngIf="
+                  request.shippingRequestFlag == shippingRequestFlagEnum.Normal &&
+                  request.shippingTypeId !== shippingTypeEnum.ImportPortMovements &&
+                  request.shippingTypeId !== shippingTypeEnum.ExportPortMovements
+                "
+              >
                 <span>
                   {{ l('NumberOfDrops') }}
                 </span>
@@ -256,7 +300,10 @@
             <ng-template [ngIf]="canSetPrice()">
               <div class="divirCard"></div>
               <div class="setPrice">
-                <button type="button" (click)="ModelPrice.show(request.id, null, null, null, false, request.shippingRequestFlag === 1)">
+                <button
+                  type="button"
+                  (click)="ModelPrice.show(request.id, null, null, null, false, request.shippingRequestFlag === 1, shippingrequest.directRequestId)"
+                >
                   {{ l('SetPriceOffer') }}
                 </button>
               </div>
@@ -271,14 +318,14 @@
               <div class="divirCard"></div>
             </ng-template>
 
-            <ng-template [ngIf]="request.pricePackageOfferId && !shippingrequest.isBid">
+            <!-- TODO <ng-template [ngIf]="request.pricePackageOfferId && !shippingrequest.isBid">
               <div class="divirCard"></div>
               <div class="setPrice">
                 <button type="button" (click)="ModelPriceCalculation.Preview(request.id, request.pricePackageOfferId)">
                   {{ l('PreviewPricePackageOffer') }}
                 </button>
               </div>
-            </ng-template>
+            </ng-template>-->
             <ng-template [ngIf]="request.matchingPricePackageId && canSetPrice()">
               <div class="divirCard"></div>
               <div class="setPrice">

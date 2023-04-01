@@ -6,6 +6,7 @@ using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -347,11 +348,11 @@ namespace TACHYON.MultiTenancy
             return result;
         }
 
-        public async Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input)
+        public async Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int? input)
         {
             List<City> cities = await _lookupCityRepository
                 .GetAllIncluding(x => x.Translations)
-                .Where(x => x.CountyFk.Id == input)
+                .WhereIf(input.HasValue,x => x.CountyId == input)
                 .OrderBy(x => x.DisplayName)
                 .ToListAsync();
 

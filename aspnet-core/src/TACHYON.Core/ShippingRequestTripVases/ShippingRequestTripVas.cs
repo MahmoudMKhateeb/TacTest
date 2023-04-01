@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using TACHYON.PriceOffers;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.ShippingRequestVases;
 
@@ -18,6 +19,12 @@ namespace TACHYON.ShippingRequestTripVases
         public int ShippingRequestTripId { get; set; }
 
         [ForeignKey("ShippingRequestTripId")] public ShippingRequestTrip ShippingRequestTripFk { get; set; }
+        /// <summary>
+        /// This field is for appointment and clearance vas, to identify this vas is for any point
+        /// </summary>
+        public long? RoutePointId { get; set; }
+        [ForeignKey("RoutePointId")]
+        public RoutPoint RoutPoint { get; set; }
 
         #region Prices
 

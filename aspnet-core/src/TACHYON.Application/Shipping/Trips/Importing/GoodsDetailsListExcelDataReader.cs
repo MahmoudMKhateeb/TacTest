@@ -1,5 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Extensions;
+using Abp.Linq.Extensions;
+using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
 using NPOI.SS.UserModel;
 using System;
@@ -23,21 +25,23 @@ namespace TACHYON.Shipping.Trips.Importing
         private readonly IRepository<GoodCategory> _goodsCategoryRepository;
         private readonly IRepository<DangerousGoodType> _dangerousGoodTypeRepository;
         private readonly IRepository<UnitOfMeasure> _unitOfMesureRepository;
+        private IAbpSession AbpSession;
 
-        private int RequestGoodsCategoryId;
+        private int? RequestGoodsCategoryId;
         private bool IsSingleDropRequest;
-        private long ShippingRequestId;
+        private long? ShippingRequestId;
         private bool IsDedicatedRequest;
-        public GoodsDetailsListExcelDataReader(TachyonExcelDataReaderHelper tachyonExcelDataReaderHelper, IRepository<RoutPoint, long> routePointRepository, IRepository<GoodCategory> goodsCategoryRepository, IRepository<DangerousGoodType> dangerousGoodTypeRepository, IRepository<UnitOfMeasure> unitOfMesureRepository)
+        public GoodsDetailsListExcelDataReader(TachyonExcelDataReaderHelper tachyonExcelDataReaderHelper, IRepository<RoutPoint, long> routePointRepository, IRepository<GoodCategory> goodsCategoryRepository, IRepository<DangerousGoodType> dangerousGoodTypeRepository, IRepository<UnitOfMeasure> unitOfMesureRepository, IAbpSession abpSession)
         {
             _tachyonExcelDataReaderHelper = tachyonExcelDataReaderHelper;
             _routePointRepository = routePointRepository;
             _goodsCategoryRepository = goodsCategoryRepository;
             _dangerousGoodTypeRepository = dangerousGoodTypeRepository;
             _unitOfMesureRepository = unitOfMesureRepository;
+            AbpSession = abpSession;
         }
 
-        public List<ImportGoodsDetailsDto> GetGoodsDetailsFromExcel(byte[] fileBytes, long shippingRequestId,int requestGoodsCategoryId, bool isSingleDropRequest, bool isDedicatedRequest)
+        public List<ImportGoodsDetailsDto> GetGoodsDetailsFromExcel(byte[] fileBytes, long? shippingRequestId,int? requestGoodsCategoryId, bool isSingleDropRequest, bool isDedicatedRequest)
         {
             RequestGoodsCategoryId = requestGoodsCategoryId;
             IsSingleDropRequest = isSingleDropRequest;
@@ -79,6 +83,10 @@ namespace TACHYON.Shipping.Trips.Importing
                     if (pointId != null)
                     {
                         goodsDetail.RoutPointId = pointId.Value;
+                    }
+                    else
+                    {
+                        exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Point"));
                     }
                 }
                 else
@@ -169,25 +177,26 @@ namespace TACHYON.Shipping.Trips.Importing
 
         private long? GetRoutePointIdByBulkRef(string pointReference, string tripReference, StringBuilder exceptionMessage)
         {
-            try
-            {
-                return _routePointRepository.FirstOrDefault(x => x.BulkUploadReference == pointReference &&
+               var point = _routePointRepository.GetAll()
+                    .WhereIf(ShippingRequestId != null,x=> x.ShippingRequestTripFk.ShippingRequestId == ShippingRequestId)
+                    .WhereIf(ShippingRequestId == null,x=> x.ShippingRequestTripFk.ShipperTenantId == AbpSession.TenantId)
+                    .WhereIf(!string.IsNullOrEmpty(pointReference), x => x.BulkUploadReference == pointReference)
+                    .Where(x=>
                 x.PickingType == PickingType.Dropoff &&
-                x.ShippingRequestTripFk.BulkUploadRef==tripReference &&
-                x.ShippingRequestTripFk.ShippingRequestId == ShippingRequestId).Id;
-            }
-            catch
-            {
-                exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("Point"));
-                return null;
-            }
+                x.ShippingRequestTripFk.BulkUploadRef == tripReference).Select(x=>x.Id).FirstOrDefault();
+            if (point != 0)
+                return point;
+
+            exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("PointReference"));
+            return null;
+
         }
 
         private long? GetRoutePointIdByTripBulkRef(string tripReference, StringBuilder exceptionMessage)
         {
             try
             {
-                return _routePointRepository.Single(x =>x.ShippingRequestTripFk.BulkUploadRef == tripReference &&
+                return _routePointRepository.GetAll().Select(x=> new { x.Id, x.ShippingRequestTripFk, x.PickingType }).Single(x =>x.ShippingRequestTripFk.BulkUploadRef == tripReference &&
                 x.ShippingRequestTripFk.ShippingRequestId==ShippingRequestId &&
                 x.PickingType==PickingType.Dropoff).Id;
             }
@@ -209,7 +218,10 @@ namespace TACHYON.Shipping.Trips.Importing
 
             var goodsSubCategory = _goodsCategoryRepository.GetAll()
                 .Include(x=>x.Translations)
-                .FirstOrDefault(x=>(x.Key==text || x.Translations.Any(x=>x.DisplayName==text)) && x.FatherId== RequestGoodsCategoryId);
+                .WhereIf(RequestGoodsCategoryId != null, x => x.FatherId == RequestGoodsCategoryId)
+                .WhereIf(RequestGoodsCategoryId == null, x => x.FatherId != null)
+                .Select(x=> new { x.Id, x.Translations, x.Key })
+                .FirstOrDefault(x=> x.Key.Equals(text) || x.Translations.Any(x=>x.DisplayName.Equals(text)));
             if (goodsSubCategory != null)
             {
                 return goodsSubCategory.Id;
@@ -220,7 +232,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
         private int? GetDangerousGoodIdTypeByName(string text, StringBuilder exceptionMessage)
         {
-            var item= _dangerousGoodTypeRepository.FirstOrDefault(x => x.Name.ToLower() == text.ToLower());
+            var item= _dangerousGoodTypeRepository.GetAll().Select(x=> new { x.Id, x.Name }).FirstOrDefault(x => x.Name.Equals(text));
             if (item != null)
             {
                 return item.Id;
@@ -234,7 +246,8 @@ namespace TACHYON.Shipping.Trips.Importing
         private int? GetUnitOfMesureByName(string text, StringBuilder exceptionMessage)
         {
             var item = _unitOfMesureRepository.GetAll()
-                .FirstOrDefault(x => x.DisplayName.ToLower() == text.ToLower());
+                .Select(x => new { x.Id, x.DisplayName })
+                .FirstOrDefault(x => x.DisplayName.Equals(text));
             if (item != null)
             {
                 return item.Id;

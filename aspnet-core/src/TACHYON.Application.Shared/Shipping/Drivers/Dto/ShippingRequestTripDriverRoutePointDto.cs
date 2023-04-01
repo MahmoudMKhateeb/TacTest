@@ -42,6 +42,10 @@ namespace TACHYON.Shipping.Drivers.Dto
 
         public string ReceiverCode { get; set; }
         public long? WaybillNumber { get; set; }
+
+        #region PortMovements
+        public int? PointOrder { get; set; }
+        #endregion
         public List<GoodsDetailDto> GoodsDetails { get; set; }
         [JsonIgnore] public List<RoutPointStatusTransitionDto> RoutPointStatusTransitions { get; set; }
         public List<PointTransactionDto> AvailableTransactions { get; set; }

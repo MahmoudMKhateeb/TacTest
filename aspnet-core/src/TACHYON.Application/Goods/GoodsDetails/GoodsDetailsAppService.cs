@@ -261,11 +261,31 @@ namespace TACHYON.Goods.GoodsDetails
         {
             var list = await _lookup_goodCategoryRepository.GetAll()
                 .Include(x => x.Translations)
+                .Where(x=>x.Flag != TACHYONConsts.EmptyContainer)
                 .WhereIf(fatherId == null, x => x.GoodCategories.Where(e => e.GoodCategories != null).Any())
                 .WhereIf(fatherId != null, x => x.FatherId == fatherId)
                 .ToListAsync();
 
             return ObjectMapper.Map<List<GetAllGoodsCategoriesForDropDownOutput>>(list);
+        }
+
+        /// <summary>
+        /// Helper for front
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int?> GetGeneralGoodsCategoryId()
+        {
+            return await _lookup_goodCategoryRepository.GetAll().Where(x => x.Flag.Equals(TACHYONConsts.GeneralGoods)).Select(x => x.Id).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Helper for front
+        /// </summary>
+        /// <returns></returns>
+        public async Task<GetAllGoodsCategoriesForDropDownOutput> GetEmptyGoodsCategoryForDropDown()
+        {
+            var item= await _lookup_goodCategoryRepository.GetAll().Where(x => x.Flag.Equals(TACHYONConsts.EmptyContainer)).FirstOrDefaultAsync();
+            return ObjectMapper.Map<GetAllGoodsCategoriesForDropDownOutput>(new GetAllGoodsCategoriesForDropDownOutput { DisplayName=item.Flag, Id=item.Id});
         }
 
         #region Waybills

@@ -10,5 +10,6 @@ namespace TACHYON.Receivers.Dtos
 
         public DateTime CreationTime { get; set; }
         public string TenantName { get; set; }
+        public string ActorName { get; set; }
     }
 }

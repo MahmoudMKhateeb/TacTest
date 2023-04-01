@@ -152,8 +152,8 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
         '',
         [],
         [
-          new AppMenuItem('TMS Price Packages', 'Pages.TmsPricePackages', '', '/app/main/pricePackages/tmsPricePackages'),
-          new AppMenuItem('Price Packages Proposal', 'Pages.TmsPricePackages', '', '/app/main/pricePackages/pricePackagesProposal'),
+          new AppMenuItem('Price Packages', 'Pages.PricePackages', '', '/app/main/pricePackages/pricePackages'),
+          new AppMenuItem('Price Packages Proposal', 'Pages.PricePackageProposal', '', '/app/main/pricePackages/pricePackagesProposal'),
           new AppMenuItem('Price Package Appendices', 'Pages.PricePackageAppendix', '', '/app/main/pricePackages/pricePackageAppendices'),
         ],
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu

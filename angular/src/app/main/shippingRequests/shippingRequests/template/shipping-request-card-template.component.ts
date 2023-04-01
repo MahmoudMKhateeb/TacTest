@@ -5,11 +5,14 @@ import {
   GetShippingRequestForViewOutput,
   PriceOfferChannel,
   PriceOfferServiceProxy,
+  RoundTripType,
   ShippingRequestDirectRequestServiceProxy,
   ShippingRequestDirectRequestStatus,
   ShippingRequestFlag,
+  ShippingRequestRouteType,
   ShippingRequestStatus,
   ShippingRequestType,
+  ShippingTypeEnum,
 } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
@@ -59,6 +62,10 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   selectedShippingRequest: GetShippingRequestForPriceOfferListDto;
   shippingRequestStatusEnum = ShippingRequestStatus;
 
+  ShippingTypeEnum = ShippingTypeEnum;
+  RoundTripType = RoundTripType;
+  ShippingRequestRouteType = ShippingRequestRouteType;
+
   constructor(
     injector: Injector,
     private _currentServ: PriceOfferServiceProxy,
@@ -106,15 +113,14 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         this.searchInput.status,
         this.searchInput.isTachyonDeal,
         this.searchInput.isTMS,
+        undefined,
         '',
         this.skipCount,
         this.maxResultCount
       )
       .subscribe((result) => {
         this.IsLoading = false;
-        if (result.items.length < this.maxResultCount) {
-          this.StopLoading = true;
-        }
+        this.StopLoading = result.items.length < this.maxResultCount;
         result.items.forEach((r) => {
           this.origin = null;
           this.destination = null;
@@ -240,6 +246,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     this.IsLoading = true;
     this.skipCount = 0;
     this.items = [];
+    this.resetScrolling();
     this.LoadData();
   }
 
@@ -339,5 +346,9 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     }
 
     return true;
+  }
+
+  showAsTable() {
+    this.router.navigateByUrl(`/app/main/${this.isTMS ? 'tms' : 'shippingRequests'}/shippingRequests?showType=1`);
   }
 }

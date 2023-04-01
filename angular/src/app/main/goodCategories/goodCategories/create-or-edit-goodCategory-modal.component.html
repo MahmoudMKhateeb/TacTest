@@ -56,14 +56,14 @@
           </div>
           <div class="col-12">
             <div class="form-group">
-              <label for="GoodCategory_Name">{{ l('name') }} *</label>
+              <label for="GoodCategory_Name">{{ l('key') }} *</label>
               <input
                 #name="ngModel"
                 type="text"
                 name="GoodCategory_Name"
                 id="GoodCategory_Name"
                 class="form-control"
-                [(ngModel)]="goodCategory.name"
+                [(ngModel)]="goodCategory.key"
                 name="name"
                 minlength="0"
                 maxlength="256"

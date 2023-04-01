@@ -1,6 +1,11 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { CarrierDashboardServiceProxy, NeedsActionTripDto, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  BrokerDashboardServiceProxy,
+  CarrierDashboardServiceProxy,
+  NeedsActionTripDto,
+  ShipperDashboardServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,6 +14,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./needs-action-widget.component.css'],
 })
 export class NeedsActionWidgetComponent extends AppComponentBase implements OnInit {
+  @Input('isForActors') isForActors = false;
   needsActionTrips: NeedsActionTripDto[] = [];
   loading: boolean;
 
@@ -16,6 +22,7 @@ export class NeedsActionWidgetComponent extends AppComponentBase implements OnIn
     injector: Injector,
     private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy,
     private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy,
+    private _brokerDashboardServiceProxy: BrokerDashboardServiceProxy,
     private router: Router
   ) {
     super(injector);
@@ -31,6 +38,13 @@ export class NeedsActionWidgetComponent extends AppComponentBase implements OnIn
 
   getNeedsActionTrips(): void {
     this.loading = true;
+    if (this.isForActors) {
+      this._brokerDashboardServiceProxy.getNeedsActionTrips().subscribe((res) => {
+        this.needsActionTrips = res;
+        this.loading = false;
+      });
+      return;
+    }
     if (this.isShipper) {
       this._shipperDashboardServiceProxy.getNeedsActionTrips().subscribe((res) => {
         this.needsActionTrips = res;

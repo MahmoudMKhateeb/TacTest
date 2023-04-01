@@ -1,9 +1,7 @@
 import { AfterViewInit, Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
-import DataSource from '@node_modules/devextreme/data/data_source';
-import { TmsPricePackageServiceProxy } from '@shared/service-proxies/service-proxies';
+import { PricePackageServiceProxy } from '@shared/service-proxies/service-proxies';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
@@ -16,7 +14,7 @@ export class ProposalDetailGridComponent extends AppComponentBase implements OnI
   @Input() proposalId: number;
   pricePackageDataSource: any;
 
-  constructor(private _injector: Injector, private _tmsPricePackageServiceProxy: TmsPricePackageServiceProxy) {
+  constructor(private _injector: Injector, private _pricePackageServiceProxy: PricePackageServiceProxy) {
     super(_injector);
   }
 
@@ -30,7 +28,7 @@ export class ProposalDetailGridComponent extends AppComponentBase implements OnI
         }
         loadOptions.filter = [];
         (loadOptions.filter as any[]).push(['ProposalId', '=', self.proposalId]);
-        return self._tmsPricePackageServiceProxy
+        return self._pricePackageServiceProxy
           .getAll(JSON.stringify(loadOptions))
           .toPromise()
           .then((result) => {

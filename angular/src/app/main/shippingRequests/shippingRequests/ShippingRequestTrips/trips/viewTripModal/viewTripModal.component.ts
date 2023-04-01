@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   AssignDriverAndTruckToShippmentByCarrierInput,
@@ -18,6 +18,9 @@ import {
   TrucksServiceProxy,
   UpdateExpectedDeliveryTimeInput,
   WaybillsServiceProxy,
+  DropPaymentMethod,
+  ShippingTypeEnum,
+  GetAllUploadedFileDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -41,6 +44,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   @ViewChild('TripNotesModal', { static: false }) TripNotesModal: ModalDirective;
   @Output() modalSave: EventEmitter<any> = new EventEmitter();
   @ViewChild('fileViwerComponent', { static: false }) fileViwerComponent: FileViwerComponent;
+  @Input('isPortMovement') isPortMovement = false;
 
   canAssignTrucksAndDrivers: boolean;
   fromTime: string;
@@ -104,6 +108,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
 
   show(id, shippingRequestForView?: GetShippingRequestForViewOutput): void {
     this.shippingRequestForView = shippingRequestForView;
+    this._PointsService.currentShippingRequest = this.shippingRequestForView;
     if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Dedicated) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
@@ -129,6 +134,12 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this.trip = res;
         this.fromTime = res.supposedPickupDateFrom?.format('HH:mm');
         this.toTime = res.supposedPickupDateTo?.format('HH:mm');
+        if (
+          this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+          this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements
+        ) {
+          this.trip.routPoints = this.trip.routPoints.sort((a, b) => a.pointOrder - b.pointOrder);
+        }
         //Get The Points From The View Service and send them to the Points Service To Draw Them
         this._PointsService.updateWayPoints(this.trip.routPoints);
         this._PointsService.updateCurrentUsedIn('view');
@@ -290,5 +301,14 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         if (!isNotNullOrUndefined(this.assignDriverAndTruck.assignedDriverUserId)) this.assignDriverAndTruck.assignedDriverUserId = result;
       });
     }
+  }
+
+  downloadTripManifest() {
+    let image = this._fileDownloadService.downloadFileByBinary(
+      this.trip.tripManifestDataDto.documentId,
+      this.trip.tripManifestDataDto.documentName,
+      this.trip.tripManifestDataDto.documentContentType
+    );
+    this.fileViwerComponent.show(image, this.trip.tripManifestDataDto.documentContentType == 'application/pdf' ? 'pdf' : 'img');
   }
 }

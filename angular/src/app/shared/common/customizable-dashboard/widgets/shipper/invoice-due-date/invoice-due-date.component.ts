@@ -1,7 +1,7 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BrokerInvoiceType, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -10,6 +10,15 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./invoice-due-date.component.css'],
 })
 export class InvoiceDueDateComponent extends AppComponentBase implements OnInit {
+  private _invoiceType: BrokerInvoiceType;
+  @Input('invoiceType')
+  set invoiceType(val: BrokerInvoiceType) {
+    this._invoiceType = val;
+    this.getInvoices();
+  }
+  get invoiceType(): BrokerInvoiceType {
+    return this._invoiceType;
+  }
   InvoicesCount: number;
   loading: boolean = false;
 
@@ -24,7 +33,7 @@ export class InvoiceDueDateComponent extends AppComponentBase implements OnInit 
   getInvoices() {
     this.loading = true;
     this._shipperDashboardServiceProxy
-      .getInvoiceDueDateInDays()
+      .getInvoiceDueDateInDays(this.invoiceType)
       .pipe(
         finalize(() => {
           this.loading = false;

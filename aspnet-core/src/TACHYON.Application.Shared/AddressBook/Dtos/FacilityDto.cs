@@ -16,5 +16,7 @@ namespace TACHYON.AddressBook.Dtos
 
         public int CityId { get; set; }
         public string FacilityWorkingHours { get; set; }
+        public FacilityType FacilityType { get; set; }
+
     }
 }

@@ -8,6 +8,6 @@ namespace TACHYON.Shipping.Trips.Importing
 {
     public interface IRoutePointListDataReader :ITransientDependency
     {
-        List<ImportRoutePointDto> GetPointsFromExcel(byte[] fileBytes, long ShippingRequestId);
+        List<ImportRoutePointDto> GetPointsFromExcel(byte[] fileBytes, long? ShippingRequestId);
     }
 }

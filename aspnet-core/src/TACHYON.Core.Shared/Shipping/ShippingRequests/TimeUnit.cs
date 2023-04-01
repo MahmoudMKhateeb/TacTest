@@ -6,8 +6,8 @@ namespace TACHYON.Shipping.ShippingRequests
 {
     public enum TimeUnit:byte
     {
-        Daily = 1,
-        Weekly = 2,
-        Monthly = 3,
+        Days = 1,
+        Weeks = 2,
+        Months = 3,
     }
 }

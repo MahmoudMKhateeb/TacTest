@@ -1,0 +1,371 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <!--begin::Subheader-->
+    <sub-header [title]="Title | localize" [description]="'' | localize">
+      <div role="actions" *ngIf="isShipper || isTachyonDealer || isCarrierSaas">
+        <div
+          *ngIf="isGranted('Pages.ShippingRequests.Create')"
+          class="btn-group mr-2"
+          dropdown
+          #dropdownAddPage="bs-dropdown"
+          [dropup]="false"
+          [insideClick]="true"
+        >
+          <button dropdownToggle type="button" class="btn btn-success" aria-controls="dropdown-basic">
+            <i class="fas fa-plus"></i> {{ 'CreateNewRequest' | localize }}<span class="caret"></span>
+          </button>
+          <ul *dropdownMenu class="dropdown-menu p-2 w-100" role="menu" aria-labelledby="button-basic">
+            <li role="menuitem">
+              <button (click)="createNewRequest()" class="btn btn-outline-success btn-elevate-hover w-100">
+                <i class="fas fa-plus"></i> {{ l('New') }}
+              </button>
+            </li>
+            <li role="menuitem">
+              <button (click)="createNewDedicatedRequest()" class="btn btn-outline-success btn-elevate-hover mt-2 w-100">
+                <i class="fas fa-plus"></i> {{ l('NewDedicated') }}
+              </button>
+            </li>
+            <li role="menuitem">
+              <button (click)="loadEntityTemplateModal.show(1)" class="btn btn-outline-info btn-elevate-hover mt-2 w-100">
+                <i class="fas fa-list"></i> {{ l('FromTemplate') }}
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button (click)="showAsList()" class="btn btn-dark"><i class="fas fa-list"></i> {{ 'ShowAsList' | localize }}</button>
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+      </div>
+    </sub-header>
+    <!--end::Subheader-->
+    <!--begin::Entry-->
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 bg-white pt-4">
+          <div class="d-flex">
+            <div class="d-flex flex-column justify-content-center mr-2">
+              <span class="text-dark"> {{ 'FilterByRequestType' | localize }}: </span>
+            </div>
+            <button (click)="filterByRequestType(ShippingRequestFlag.Normal)" class="btn btn-primary mr-2" [(ngModel)]="searchInput.requestFlag">
+              {{ 'Normal' | localize }}
+            </button>
+            <button (click)="filterByRequestType(ShippingRequestFlag.Dedicated)" class="btn btn-primary" [(ngModel)]="searchInput.requestFlag">
+              {{ 'Dedicated' | localize }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!--                    [dataSource]="dataSource"-->
+        <div class="col-12 position-relative bg-white p-4 mb-4">
+          <dx-data-grid
+            #dataGrid
+            id="gridContainer"
+            [dataSource]="items"
+            [remoteOperations]="false"
+            [wordWrapEnabled]="true"
+            [allowColumnReordering]="true"
+            [allowColumnResizing]="true"
+            [columnAutoWidth]="true"
+            [showBorders]="true"
+            [busyIf]="IsLoading"
+          >
+            <dxo-paging [pageSize]="maxResultCount"> </dxo-paging>
+            <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+            <dxo-load-panel [enabled]="IsLoading"></dxo-load-panel>
+            <dxo-scrolling mode="infinite"></dxo-scrolling>
+            <dxo-sorting mode="none"></dxo-sorting>
+
+            <dxi-column dataField="referenceNumber" caption="{{ 'RequestId' | localize }}" [fixed]="true"></dxi-column>
+            <dxi-column dataField="shipperName" caption="{{ 'ShipperName' | localize }}"></dxi-column>
+            <dxi-column
+              *ngIf="selectedFilterShippingRequestFlag == ShippingRequestFlag.Normal"
+              dataField="carrier"
+              caption="{{ 'CarrierName' | localize }}"
+            ></dxi-column>
+            <dxi-column dataField="shippingRequestFlag" caption="{{ 'RequestType' | localize }}" cellTemplate="requestTypeCellTemplate"></dxi-column>
+            <dxi-column
+              *ngIf="selectedFilterShippingRequestFlag == ShippingRequestFlag.Dedicated"
+              dataField="carrier"
+              caption="{{ 'RentedFrom' | localize }}"
+            ></dxi-column>
+            <dxi-column
+              dataField="requestTypeTitle"
+              caption="{{ 'ShippingRequestType' | localize }}"
+              cellTemplate="requestTypeTitleCellTemplate"
+            ></dxi-column>
+            <dxi-column dataField="transportType" caption="{{ 'TransportType' | localize }}"></dxi-column>
+            <dxi-column dataField="truckType" caption="{{ 'TrucksType' | localize }}"></dxi-column>
+            <dxi-column cellTemplate="shippingTypeCellTemplate" dataField="shippingTypeId" caption="{{ 'ShippingType' | localize }}"></dxi-column>
+            <dxi-column dataField="originCity" caption="{{ 'Origin' | localize }}"></dxi-column>
+            <dxi-column dataField="destinationCity" caption="{{ 'Destination' | localize }}"></dxi-column>
+            <dxi-column dataField="statusTitle" caption="{{ 'Status' | localize }}"></dxi-column>
+            <dxi-column dataField="creationTime" caption="{{ 'CreationDate' | localize }}" dataType="date"></dxi-column>
+            <dxi-column
+              *ngIf="isTachyonDealerOrHost"
+              cellTemplate="totalOffersOrPriceCellTemplate"
+              dataField="totalOffers"
+              caption="{{ 'Cost' | localize }}"
+            ></dxi-column>
+            <dxi-column
+              *ngIf="isTachyonDealerOrHost"
+              cellTemplate="totalOffersOrShipperPriceCellTemplate"
+              dataField="shipperPrice"
+              caption="{{ 'Selling' | localize }}"
+            ></dxi-column>
+            <dxi-column
+              *ngIf="!isTachyonDealerOrHost"
+              cellTemplate="totalOffersOrPriceCellTemplate"
+              dataField="totalOffers"
+              caption="{{ 'Price' | localize }}"
+            ></dxi-column>
+            <dxi-column dataField="numberOfTrips" caption="{{ 'NumberOfTrips' | localize }}"></dxi-column>
+            <dxi-column dataField="numberOfCompletedTrips" caption="{{ 'CompletedTrips' | localize }}"></dxi-column>
+            <dxi-column dataField="startTripDate" caption="{{ 'EstimatedPickUpDate' | localize }}" dataType="date"></dxi-column>
+            <dxi-column dataField="goodsCategory" caption="{{ 'GoodsCategory' | localize }}"></dxi-column>
+            <dxi-column dataField="id" caption="{{ 'Actions' | localize }}" cellTemplate="actionsCellTemplate"></dxi-column>
+
+            <dxo-master-detail [enabled]="true" template="masterDetail"></dxo-master-detail>
+            <div *dxTemplate="let masterDetailItem of 'masterDetail'">
+              <!--        <detail-view-->
+              <!--            [key]="masterDetailItem.key"-->
+              <!--            [rowData]="masterDetailItem.data"-->
+              <!--        ></detail-view>-->
+              <app-shipping-request-card
+                [item]="masterDetailItem.data"
+                [Channel]="Channel"
+                (onSearch)="search()"
+                (onLoadData)="LoadData()"
+                (onDelete)="delete($event)"
+                (onDecline)="decline($event)"
+                (onExpanded)="updateScrolling()"
+              ></app-shipping-request-card>
+            </div>
+            <div *dxTemplate="let d of 'requestTypeTitleCellTemplate'">
+              <span>
+                <!--                            {{ (d.data.shippingRequestFlag === ShippingRequestFlag.Normal ? 'TruckAggregation' : '') | localize}}-->
+                {{ d.data.requestTypeTitle | localize }}
+              </span>
+            </div>
+            <div *dxTemplate="let d of 'requestTypeCellTemplate'">
+              <span>
+                <!--                            {{ (d.data.shippingRequestFlag === ShippingRequestFlag.Normal ? 'TruckAggregation' : '') | localize}}-->
+                {{ d.data.shippingRequestFlagTitle | localize }}
+              </span>
+            </div>
+            <div *dxTemplate="let d of 'shippingTypeCellTemplate'">
+              <span *ngIf="d.data.shippingTypeId == ShippingTypeEnum.LocalInsideCity">{{ 'LocalInsideCity' | localize }}</span>
+              <span *ngIf="d.data.shippingTypeId == ShippingTypeEnum.LocalBetweenCities">{{ 'LocalBetweenCities' | localize }}</span>
+              <span *ngIf="d.data.shippingTypeId == ShippingTypeEnum.ImportPortMovements">{{ 'ImportPortMovements' | localize }}</span>
+              <span *ngIf="d.data.shippingTypeId == ShippingTypeEnum.CrossBorderMovements">{{ 'CrossBorderMovements' | localize }}</span>
+              <span *ngIf="d.data.shippingTypeId == ShippingTypeEnum.ExportPortMovements">{{ 'ExportPortMovements' | localize }}</span>
+            </div>
+            <div *dxTemplate="let d of 'totalOffersOrPriceCellTemplate'">
+              <span
+                *ngIf="
+                  d.data.price &&
+                  (d.data.status == shippingRequestStatusEnum.Completed ||
+                    d.data.status == shippingRequestStatusEnum.PostPrice ||
+                    d.data.price > 0) &&
+                  Channel != 10 &&
+                  canViewBrokerPrice(d.data)
+                "
+                >{{ d.data.price | number }} {{ l('SAR') }}</span
+              >
+              <span *ngIf="Channel == 10 && canViewBrokerPrice(d.data)">{{ d.data.price | number }} {{ l('SAR') }}</span>
+              <span *ngIf="canSeeTotalOffers(d.data)"> {{ d.data.totalOffers }} {{ getWordTitle(d.data.totalOffers, 'TotalOffer') }} </span>
+            </div>
+            <div *dxTemplate="let d of 'totalOffersOrShipperPriceCellTemplate'">
+              <span
+                *ngIf="
+                  d.data.shipperPrice &&
+                  (d.data.status == shippingRequestStatusEnum.Completed ||
+                    d.data.status == shippingRequestStatusEnum.PostPrice ||
+                    d.data.shipperPrice > 0) &&
+                  Channel != 10 &&
+                  canViewBrokerPrice(d.data)
+                "
+                >{{ d.data.shipperPrice | number }} {{ l('SAR') }}</span
+              >
+              <span *ngIf="Channel == 10 && canViewBrokerPrice(d.data)">{{ d.data.shipperPrice | number }} {{ l('SAR') }}</span>
+              <span *ngIf="canSeeTotalOffersForShipperPrice(d.data)">
+                {{ d.data.totalOffers }} {{ getWordTitle(d.data.totalOffers, 'TotalOffer') }}
+              </span>
+            </div>
+            <div *dxTemplate="let d of 'actionsCellTemplate'">
+              <ng-container *ngIf="d.data.shippingRequestFlag === ShippingRequestFlag.Normal">
+                <div class="btn-group dropdown" container="body" dropdown>
+                  <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                    {{ 'Actions' | localize }}
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-left" *dropdownMenu>
+                    <li *ngIf="canDeleteDirectRequest(d.data)">
+                      <a href="javascript:void(0)" (click)="delete(d.data)" class="dropdown-item">
+                        {{ l('Delete') }}
+                      </a>
+                    </li>
+                    <li *ngIf="isCarrier && Channel == 2 && (d.data.directRequestStatus == 0 || d.data.directRequestStatus == 5)">
+                      <a href="javascript:void(0)" (click)="decline(d.data)" class="dropdown-item">
+                        {{ l('Declined') }}
+                      </a>
+                    </li>
+                    <li
+                      *ngIf="
+                        (d.data.status == shippingRequestStatusEnum.PrePrice || d.data.status == shippingRequestStatusEnum.NeedsAction) &&
+                        !Channel &&
+                        (isShipper || (d.data.isTachyonDeal && (isTachyonDealer || !appSession.tenantId)))
+                      "
+                    >
+                      <a href="javascript:void(0)" (click)="ModelCancel.show(d.data)" class="dropdown-item">
+                        {{ l('Cancel') }}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" (click)="moreRedirectTo(d.data)" class="dropdown-item">
+                        {{ l('More') }}
+                      </a>
+                    </li>
+                    <li
+                      *ngIf="
+                        permission.isGranted('Pages.ShippingRequests.Edit') &&
+                        !Channel &&
+                        (isShipper || isCarrierOwnRequest(d.data) || (d.data.isTachyonDeal && isTachyonDealer))
+                      "
+                    >
+                      <a
+                        [queryParams]="{ id: d.data.id }"
+                        [routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']"
+                        class="dropdown-item"
+                      >
+                        {{ l('Edit') }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="d.data.shippingRequestFlag === ShippingRequestFlag.Dedicated">
+                <div class="btn-group dropdown" container="body" dropdown>
+                  <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                    {{ 'Actions' | localize }}
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-left" *dropdownMenu>
+                    <li *ngIf="canDeleteDirectRequest(d.data)">
+                      <a href="javascript:void(0)" (click)="delete(d.data)" class="dropdown-item">
+                        {{ l('Delete') }}
+                      </a>
+                    </li>
+                    <li *ngIf="(isCarrier || isCarrierSaas) && Channel == 2 && (d.data.directRequestStatus == 0 || d.data.directRequestStatus == 5)">
+                      <a href="javascript:void(0)" (click)="decline(d.data)" class="dropdown-item">
+                        {{ l('Declined') }}
+                      </a>
+                    </li>
+                    <li
+                      *ngIf="
+                        isGranted('Pages.ShippingRequests.Edit') &&
+                        d.data.canAssignDedicatedDriversAndTrucks &&
+                        !Channel &&
+                        !d.data.isDriversAndTrucksAssigned &&
+                        d.data.status !== shippingRequestStatusEnum.Expired
+                      "
+                    >
+                      <a href="javascript:void(0)" (click)="assignTrucksAndDrivers(d.data)" class="dropdown-item">
+                        {{ l('AssignTrucksAndDrivers') }}
+                      </a>
+                    </li>
+                    <li
+                      *ngIf="
+                        isGranted('Pages.DedicatedAttendaceSheet') &&
+                        d.data.canAssignDedicatedDriversAndTrucks &&
+                        !Channel &&
+                        d.data.isDriversAndTrucksAssigned
+                      "
+                    >
+                      <a href="javascript:void(0)" (click)="openAttendanceModal(d.data)" class="dropdown-item">
+                        {{ l('viewAttendance') }}
+                      </a>
+                    </li>
+                    <li
+                      *ngIf="
+                        isGranted('Pages.ShippingRequests.Edit') &&
+                        d.data.canAssignDedicatedDriversAndTrucks &&
+                        !Channel &&
+                        d.data.isDriversAndTrucksAssigned
+                      "
+                    >
+                      <a href="javascript:void(0)" (click)="viewTrucksOrDrivers(d.data, false)" class="dropdown-item">
+                        {{ l('ReplaceDrivers') }}
+                      </a>
+                    </li>
+                    <li
+                      *ngIf="
+                        isGranted('Pages.ShippingRequests.Edit') &&
+                        d.data.canAssignDedicatedDriversAndTrucks &&
+                        !Channel &&
+                        d.data.isDriversAndTrucksAssigned
+                      "
+                    >
+                      <a href="javascript:void(0)" (click)="viewTrucksOrDrivers(d.data, true)" class="dropdown-item">
+                        {{ l('ReplaceTrucks') }}
+                      </a>
+                    </li>
+                    <li
+                      *ngIf="
+                        (d.data.status == shippingRequestStatusEnum.PrePrice || d.data.status == shippingRequestStatusEnum.NeedsAction) &&
+                        !Channel &&
+                        (isShipper || (d.data.isTachyonDeal && (isTachyonDealer || !appSession.tenantId)))
+                      "
+                    >
+                      <a href="javascript:void(0)" (click)="ModelCancel.show(d.data)" class="dropdown-item">
+                        {{ l('Cancel') }}
+                      </a>
+                    </li>
+                    <li
+                      *ngIf="
+                        (!Channel && (isShipper || isTachyonDealer || (d.data.isSaas && isCarrierSaas) || !appSession.tenantId)) ||
+                        ((Channel == PriceOfferChannelEnum.MarketPlace || Channel == PriceOfferChannelEnum.DirectRequest) &&
+                          (isCarrier || hasCarrierClients || isCarrierSaas))
+                      "
+                    >
+                      <a href="javascript:void(0)" (click)="moreRedirectTo(d.data)" class="dropdown-item">
+                        {{ l('More') }}
+                      </a>
+                    </li>
+                    <li
+                      *ngIf="
+                        permission.isGranted('Pages.ShippingRequests.Edit') &&
+                        !Channel &&
+                        d.data.status === shippingRequestStatusEnum.PrePrice &&
+                        (isShipper || isTachyonDealer || isCarrierOwnRequest(d.data))
+                      "
+                    >
+                      <a
+                        [queryParams]="{ id: d.data.id, completedSteps: 2, isEdit: true }"
+                        [routerLink]="['/app/main/shippingRequests/dedicatedShippingRequestWizard']"
+                        class="dropdown-item"
+                      >
+                        {{ l('Edit') }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </ng-container>
+            </div>
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<shipping-request-card-search-model #ModelSearch (modalsearch)="search()"></shipping-request-card-search-model>
+<load-entity-template-modal #loadEntityTemplateModal></load-entity-template-modal>
+<shippingrequests-details-model #Model [Channel]="Channel"></shippingrequests-details-model>
+
+<price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="search()" (modalRefresh)="LoadData()"></price-offer-view-model>
+<price-offer-list-model [Channel]="Channel" #ModelOffer (valueUpdated)="LoadData()"></price-offer-list-model>
+<shipping-request-card-cancel-model #ModelCancel></shipping-request-card-cancel-model>
+<shippingrequests-details-model #Model [Channel]="Channel"></shippingrequests-details-model>
+<assign-trucks-and-drivers-modal #assignTrucksAndDriversModal></assign-trucks-and-drivers-modal>
+<replace-trucks-and-drivers-modal #replaceTrucksAndDriversModal></replace-trucks-and-drivers-modal>
+<dedicated-shipping-request-attendance-sheet-modal #attendanceModal></dedicated-shipping-request-attendance-sheet-modal>

@@ -27,6 +27,7 @@ import {
   ShippingRequestsTripServiceProxy,
   ShippingRequestTripCancelStatus,
   ShippingRequestTripStatus,
+  ShippingTypeEnum,
 } from '@shared/service-proxies/service-proxies';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
 import { TripService } from '../trip.service';
@@ -37,6 +38,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { HttpClient } from '@angular/common/http';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import Swal from 'sweetalert2';
+import { ViewImportedTripsFromExcelModalComponent } from './ImportedTrips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
 
 @Component({
   selector: 'TripsForViewShippingRequest',
@@ -54,7 +56,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
   @ViewChild('PointExcelFileUpload', { static: false }) PointExcelFileUpload: FileUpload;
   @ViewChild('GoodDetailsExcelFileUpload', { static: false }) GoodDetailsExcelFileUpload: FileUpload;
-  @ViewChild('ViewImportedTripsModal', { static: false }) modal: ModalDirective;
+  @ViewChild('ViewImportedTripsModal', { static: false }) modal: ViewImportedTripsFromExcelModalComponent;
   @ViewChild('ViewImportedPointsModal', { static: false }) pointModal: ModalDirective;
   @ViewChild('ViewImportedGoodDetailsModal', { static: false }) goodDetailsModal: ModalDirective;
   @ViewChild('VasesExcelFileUpload', { static: false }) VasesExcelFileUpload: FileUpload;
@@ -89,6 +91,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
   ShippingRequestTripStatus = ShippingRequestTripStatus;
   showBtnAddTrips: boolean;
   ShippingRequestFlagEnum = ShippingRequestFlag;
+  ShippingTypeEnum = ShippingTypeEnum;
 
   constructor(
     injector: Injector,
@@ -124,12 +127,11 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
    */
   get CanEditTrip(): boolean {
     //check if shipper or  Carrier has a Saas feature and Can edit this trip
-    return (
-      this.feature.isEnabled('App.Shipper') ||
-      this.isTachyonDealer ||
-      (this.feature.isEnabled('App.CarrierAsASaas') &&
-        this.ShippingRequest.carrierTenantId === this._TripService.GetShippingRequestForViewOutput.tenantId)
-    );
+    return this.showBtnAddTrips;
+    //   this.feature.isEnabled('App.Shipper') ||
+    //   this.isTachyonDealer ||
+    //   (this.feature.isEnabled('App.CarrierAsASaas') && this.ShippingRequest.carrierTenantId === this.shippingRequestForView.tenantId)
+    // );
   }
 
   getShippingRequestsTrips(event?: LazyLoadEvent) {
@@ -197,15 +199,15 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
       const isBroker = this.hasCarrierClients && this.hasShipperClients;
       this.showBtnAddTrips =
         (this.isTachyonDealer &&
-          (this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.Completed ||
-            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.PrePrice ||
-            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.PostPrice ||
-            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.NeedsAction)) ||
+          (this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.Completed ||
+            this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.PrePrice ||
+            this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.PostPrice ||
+            this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.NeedsAction)) ||
         ((this.isShipper || isBroker || this.isCarrierSaas) &&
           canAddTrip &&
-          (this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.PrePrice ||
-            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.PostPrice ||
-            this._TripService.GetShippingRequestForViewOutput.shippingRequest.status === ShippingRequestStatus.NeedsAction));
+          (this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.PrePrice ||
+            this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.PostPrice ||
+            this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.status === ShippingRequestStatus.NeedsAction));
     }
   }
 
@@ -228,7 +230,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase imple
           this.loading = false;
           this.notify.success(this.l('ImportProcessStart'));
           this.saving = true;
-          this.modal.show();
+          this.modal.show(this.list);
         } else if (response.error != null) {
           this.loading = false;
           //this.notify.error(this.l('ImportFailed'));

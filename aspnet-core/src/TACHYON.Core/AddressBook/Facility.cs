@@ -28,5 +28,6 @@ namespace TACHYON.AddressBook
         public Actor ShipperActorFk { get; set; }
 
         public int? ShipperActorId { get; set ; }
+        public FacilityType FacilityType { get; set; }
     }
 }

@@ -5,7 +5,100 @@
       <div role="actions">
         <!--        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>-->
 
-        <button (click)="AddNewTripModal.show()" class="btn btn-primary blue"><i class="fa fa-plus"></i> {{ l('NewWaybill') }}</button>
+        <button (click)="AddNewTripModal.show()" class="btn btn-primary blue mr-2"><i class="fa fa-plus"></i> {{ l('NewWaybill') }}</button>
+
+        <!-- Excel Operations-->
+        <div *ngIf="isEnabled('App.ImportFunctionality')" class="btn-group" dropdown [busyIf]="loading">
+          <button
+            dropdownToggle
+            type="button"
+            class="btn btn-outline-success dropdown-toggle mr-1"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
+          </button>
+          <div class="dropdown-menu dropdown-menu-right dropdown-excel-operations" *dropdownMenu>
+            <!-- *ngIf="'Pages.ShippingRequestTrips.Create' | permission" -->
+            <div class="no-padding">
+              <span class="fileinput-button">
+                <p-fileUpload
+                  customUpload="true"
+                  name="ExcelFileUpload"
+                  #ExcelFileUpload
+                  maxFileSize="10000000"
+                  auto="auto"
+                  accept=".csv,.xls,.xlsx"
+                  (uploadHandler)="uploadExcel($event)"
+                  (onError)="onUploadExcelError()"
+                  chooseLabel="{{ 'ImportTripFromExcel' | localize }}"
+                >
+                </p-fileUpload>
+                <span class="dropdown-item-text text-muted pl-3" href="#">
+                  <small
+                    [innerHTML]="
+                      l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/Import_SAAS_Trip_details.xlsx>' + l('ClickHere') + '</a>')
+                    "
+                  ></small>
+                </span>
+              </span>
+            </div>
+
+            <div class="no-padding">
+              <span class="fileinput-button">
+                <p-fileUpload
+                  customUpload="true"
+                  name="PointExcelFileUpload"
+                  #PointExcelFileUpload
+                  maxFileSize="10000000"
+                  auto="auto"
+                  accept=".csv,.xls,.xlsx"
+                  (uploadHandler)="uploadPointsExcel($event)"
+                  (onError)="onUploadExcelError()"
+                  chooseLabel="{{ 'ImportPointFromExcel' | localize }}"
+                  [disabled]="dataSource.totalCount == 0"
+                >
+                </p-fileUpload>
+                <span class="dropdown-item-text text-muted pl-3" href="#">
+                  <small
+                    [innerHTML]="
+                      l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/Import_trip_points.xlsx>' + l('ClickHere') + '</a>')
+                    "
+                  ></small>
+                </span>
+              </span>
+            </div>
+
+            <div class="no-padding">
+              <span class="fileinput-button">
+                <p-fileUpload
+                  customUpload="true"
+                  name="GoodDetailsExcelFileUpload"
+                  #GoodDetailsExcelFileUpload
+                  maxFileSize="10000000"
+                  auto="auto"
+                  accept=".csv,.xls,.xlsx"
+                  (uploadHandler)="uploadGoodDetailsExcel($event)"
+                  (onError)="onUploadExcelError()"
+                  chooseLabel="{{ 'ImportGoodDetailsFromExcel' | localize }}"
+                  [disabled]="dataSource.totalCount == 0"
+                >
+                </p-fileUpload>
+                <span class="dropdown-item-text text-muted pl-3" href="#">
+                  <small
+                    [innerHTML]="
+                      l(
+                        'ImportToExcelSampleFileDownloadInfo',
+                        '<a href=/assets/sampleFiles/Import_goods_details_dedicated.xlsx>' + l('ClickHere') + '</a>'
+                      )
+                    "
+                  ></small>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </sub-header>
 
@@ -98,3 +191,17 @@
 
 <AddNewTripModal [shippingRequest]="shippingRequest" #AddNewTripModal (modalSave)="grid.instance.refresh()"></AddNewTripModal>
 <viewTripModal #ViewTripModal (modalSave)="grid.instance.refresh()"></viewTripModal>
+
+<app-view-imported-trips-from-excel-modal
+  [ImportedTripsList]="list"
+  [isDedicatedRequest]="true"
+  #ViewImportedTripsModal
+  (modalSave)="reloadPage()"
+></app-view-imported-trips-from-excel-modal>
+<app-view-imported-points-from-excel-modal
+  [ImportedPointsList]="pointsList"
+  #ViewImportedPointsModal
+  (modalSave)="reloadPage()"
+></app-view-imported-points-from-excel-modal>
+<app-view-imported-good-details-from-excel-modal [ImportedGoodDetailsList]="goodDetailsList" #ViewImportedGoodDetailsModal (modalSave)="reloadPage()">
+</app-view-imported-good-details-from-excel-modal>

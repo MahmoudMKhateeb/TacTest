@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
+using TACHYON.DedicatedInvoices;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Features;
 using TACHYON.Invoices.Dto;
@@ -49,8 +50,10 @@ namespace TACHYON.Invoices.InvoiceNotes
         private readonly UserManager _userManager;
         private readonly IRepository<TenantFeatureSetting, long> _tenantFeatureRepository;
         private readonly IRepository<EditionFeatureSetting, long> _editionFeatureRepository;
+        private readonly IRepository<DedicatedDynamicInvoice, long> _dedicatedDynamicInvoiceRepository;
 
-        public InvoiceNoteAppService(IRepository<InvoiceNote, long> invoiceRepository, IRepository<Tenant> tenantRepository, IRepository<Invoice, long> invoiceReposity, IRepository<InvoiceTrip, long> invoiveTripRepository, IRepository<SubmitInvoiceTrip, long> submitInvoiceTrip, IAppNotifier appNotifier, IRepository<SubmitInvoice, long> submitInvoiceReposity, IRepository<InvoiceNoteItem, long> invoiceNoteItemReposity, IRepository<DocumentFile, Guid> documentFileRepository, UserManager userManager, IAbpSession abpSession, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequestTripVas, long> shippingRequestTripVasRepository, IRepository<TenantFeatureSetting, long> tenantFeatureRepository, IRepository<EditionFeatureSetting, long> editionFeatureRepository)
+
+        public InvoiceNoteAppService(IRepository<InvoiceNote, long> invoiceRepository, IRepository<Tenant> tenantRepository, IRepository<Invoice, long> invoiceReposity, IRepository<InvoiceTrip, long> invoiveTripRepository, IRepository<SubmitInvoiceTrip, long> submitInvoiceTrip, IAppNotifier appNotifier, IRepository<SubmitInvoice, long> submitInvoiceReposity, IRepository<InvoiceNoteItem, long> invoiceNoteItemReposity, IRepository<DocumentFile, Guid> documentFileRepository, UserManager userManager, IAbpSession abpSession, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<ShippingRequestTripVas, long> shippingRequestTripVasRepository, IRepository<TenantFeatureSetting, long> tenantFeatureRepository, IRepository<EditionFeatureSetting, long> editionFeatureRepository, IRepository<DedicatedDynamicInvoice, long> dedicatedDynamicInvoiceRepository)
         {
             _invoiceNoteRepository = invoiceRepository;
             _tenantRepository = tenantRepository;
@@ -67,6 +70,7 @@ namespace TACHYON.Invoices.InvoiceNotes
             _shippingRequestTripVasRepository = shippingRequestTripVasRepository;
             _tenantFeatureRepository = tenantFeatureRepository;
             _editionFeatureRepository = editionFeatureRepository;
+            _dedicatedDynamicInvoiceRepository = dedicatedDynamicInvoiceRepository;
         }
 
         #region MainFunctions
@@ -499,6 +503,12 @@ namespace TACHYON.Invoices.InvoiceNotes
             if (invoice == null)
                 throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
+            var dedicatedInvoice = default(DedicatedDynamicInvoice);
+            if(invoice.Channel == InvoiceChannel.Dedicated)
+            {
+                dedicatedInvoice = await GetDedicatedDynamicInvoiceInfo(invoiceId);
+            }
+
             var invoiceNote = new InvoiceNote()
             {
                 NoteType = NoteType.Credit,
@@ -509,17 +519,44 @@ namespace TACHYON.Invoices.InvoiceNotes
                 VatAmount = invoice.VatAmount,
                 InvoiceNumber = invoice.InvoiceNumber,
                 VoidType = VoidType.FullVoid,
-                InvoiceItems = invoice.Trips.Select(x => new InvoiceNoteItem()
+                InvoiceItems = invoice.Channel != InvoiceChannel.Dedicated ? invoice.Trips.Select(x => new InvoiceNoteItem()
                 {
                     TripId = x.TripId,
+                    ItemName = x.ShippingRequestTripFK.WaybillNumber.ToString(),
                     Price = x.ShippingRequestTripFK.TotalAmountWithCommission.Value,
                     TotalAmount = x.ShippingRequestTripFK.TotalAmountWithCommission.Value,
                     VatAmount = x.ShippingRequestTripFK.VatAmountWithCommission.Value
+                }).ToList()
+                : dedicatedInvoice.DedicatedDynamicInvoiceItems.Select(x=> new InvoiceNoteItem()
+                {
+                    //TripId = x.TripId,
+                    ItemName = $"{x.DedicatedShippingRequestTruck.ShippingRequest.ReferenceNumber} - {x.DedicatedShippingRequestTruck.Truck.PlateNumber}",
+                    Price = x.ItemSubTotalAmount,
+                    TotalAmount = x.ItemTotalAmount,
+                    VatAmount = x.VatAmount
                 }).ToList()
             };
             var invoiceNoteId = await _invoiceNoteRepository.InsertAndGetIdAsync(invoiceNote);
             //invoiceNote.ReferanceNumber = GenerateInvoiceNoteReferanceNumber(invoiceNoteId, NoteType.Credit);
             invoiceNote.IsDrafted = true;
+        }
+
+        private async Task<DedicatedDynamicInvoice> GetDedicatedDynamicInvoiceInfo(long invoiceId)
+        {
+            DisableTenancyFilters();
+            var invoice = await _dedicatedDynamicInvoiceRepository
+                .GetAll()
+                .Include(i => i.Tenant)
+                .Include(i => i.DedicatedDynamicInvoiceItems)
+                .ThenInclude(x => x.DedicatedShippingRequestTruck)
+                .ThenInclude(x => x.ShippingRequest)
+                .Include(i => i.DedicatedDynamicInvoiceItems)
+                .ThenInclude(x => x.DedicatedShippingRequestTruck)
+                .ThenInclude(x => x.Truck)
+                .FirstOrDefaultAsync(i => i.InvoiceId == invoiceId);
+            if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+
+            return invoice;
         }
         private async Task FullVoidSubmitInvoiceForCarrier(long invoiceId)
         {

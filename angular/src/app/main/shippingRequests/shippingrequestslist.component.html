@@ -1,2 +1,6 @@
-<shipping-request-card-template [Title]="isShipper ? 'MyShippingRequests' : 'ShippingRequest'"></shipping-request-card-template>
+<shipping-request-card-template
+  *ngIf="showNormalView"
+  [Title]="isShipper ? 'MyShippingRequests' : 'ShippingRequest'"
+></shipping-request-card-template>
 <replace-trucks-and-drivers-modal #replaceTrucksAndDriversModal></replace-trucks-and-drivers-modal>
+<app-shipping-requests-table *ngIf="!showNormalView" [Title]="isShipper ? 'MyShippingRequests' : 'ShippingRequest'"></app-shipping-requests-table>

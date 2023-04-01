@@ -102,6 +102,8 @@ namespace TACHYON.Extension
             string property,
             object val)
         {
+            if (val is null) return string.Empty;
+            
             var mType = Type.GetType(type);
             var obj = Activator.CreateInstance(mType);
 

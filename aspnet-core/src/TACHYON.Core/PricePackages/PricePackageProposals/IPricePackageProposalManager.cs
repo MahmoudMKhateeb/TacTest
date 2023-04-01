@@ -8,7 +8,7 @@ namespace TACHYON.PricePackages.PricePackageProposals
 {
     public interface IPricePackageProposalManager : IDomainService
     {
-        Task<int> CreateProposal(PricePackageProposal createdProposal,List<int> tmsPricePackages,string emailAddress);
+        Task<int> CreateProposal(PricePackageProposal createdProposal,List<long> pricePackages,string emailAddress);
 
         Task UpdateProposal(PricePackageProposal updatedProposal, string emailAddress);
         

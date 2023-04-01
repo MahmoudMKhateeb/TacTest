@@ -7,8 +7,10 @@ import {
   DangerousGoodTypesServiceProxy,
   GetAllGoodsCategoriesForDropDownOutput,
   GetAllUnitOfMeasureForDropDownOutput,
+  GetShippingRequestForViewOutput,
   GoodsDetailsServiceProxy,
   PickingType,
+  RoundTripType,
   SelectItemDto,
   ShippingRequestsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -40,7 +42,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   isDangerousGoodLoading: boolean;
   allDangerousGoodTypes: SelectItemDto[];
 
-  private activeEditId: number;
+  activeEditId: number;
 
   //tripServiceSubs$: Subscription;
   goodCategoryId: number;
@@ -55,11 +57,57 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   dimentions: string;
   AllowedWeight: number;
   isForDedicated: boolean;
+  isForPortsMovement: boolean;
+  currentShippingRequest: GetShippingRequestForViewOutput;
+  goodCategoryDefaultId: number;
+
+  get shouldDisableCategoryForPortsMovement() {
+    return (
+      this.isForPortsMovement &&
+      ((this._PointsService?.currentPointIndex > 1 &&
+        this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType === RoundTripType.WithReturnTrip) ||
+        (this._PointsService?.currentPointIndex == 1 &&
+          this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType != RoundTripType.OneWayRoutWithPortShuttling &&
+          this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType !== RoundTripType.WithReturnTrip &&
+          this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType !== RoundTripType.WithoutReturnTrip))
+    );
+    // return this.isForPortsMovement && this._PointsService?.currentPointIndex > 1;
+  }
+
+  get isWeightRequiredForPortMovement() {
+    if (this.isForPortsMovement && isNotNullOrUndefined(this._PointsService?.currentPointIndex)) {
+      if (
+        this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType == RoundTripType.WithReturnTrip &&
+        this._PointsService?.currentPointIndex == 1
+      ) {
+        return false;
+      }
+      if (
+        this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType !== RoundTripType.WithoutReturnTrip &&
+        this._PointsService?.currentPointIndex > 0
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+  get isQtyRequiredForPortMovement() {
+    if (this.isForPortsMovement && isNotNullOrUndefined(this._PointsService?.currentPointIndex)) {
+      if (
+        this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType !== RoundTripType.WithReturnTrip &&
+        this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType !== RoundTripType.WithoutReturnTrip &&
+        this._PointsService?.currentPointIndex > 0
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   constructor(
     injector: Injector,
-    private _PointsService: PointsService,
-    private _TripService: TripService,
+    public _PointsService: PointsService,
+    public _TripService: TripService,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
     private _dangerousGoodTypesAppService: DangerousGoodTypesServiceProxy
@@ -68,8 +116,13 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   }
 
   ngOnInit(): void {
+    this.currentShippingRequest = this._PointsService.currentShippingRequest;
     this.myGoodsDetailList = this.GoodDetailsListInput || [];
-    this.GoodCategory = this._TripService.CreateOrEditShippingRequestTripDto.goodCategoryId;
+    if (this._TripService.GetShippingRequestForViewOutput) {
+      this.GoodCategory = this._TripService.GetShippingRequestForViewOutput?.goodCategoryId;
+    } else {
+      this.GoodCategory = this._TripService.CreateOrEditShippingRequestTripDto?.goodCategoryId;
+    }
     //take the current Active WayPoint From the Shared Service
     //this.tripServiceSubs$ = this._TripService.currentShippingRequest.subscribe((res) => (this.GoodCategory = res.shippingRequest.goodCategoryId));
     //sync the singleWayPoint From the Service
@@ -87,8 +140,9 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.loadGoodDangerousTypes();
   }
 
-  show(id?, isForDedicated = false) {
+  show(id?, isForDedicated = false, isForPortsMovement = false) {
     this.isForDedicated = isForDedicated;
+    this.isForPortsMovement = isForPortsMovement;
     this.active = true;
     this.goodsDetail = new CreateOrEditGoodsDetailDto();
     //if there is an id this is an edit
@@ -105,6 +159,29 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       this.dangerousGoodsTypeId = this.myGoodsDetailList[id].dangerousGoodTypeId;
       this.otherUnitOfMeasureName = this.myGoodsDetailList[id].otherUnitOfMeasureName;
       this.dimentions = this.myGoodsDetailList[id].dimentions;
+    }
+    if (isForPortsMovement) {
+      if (!isNotNullOrUndefined(id)) {
+        this.amount = this._PointsService.currentShippingRequest.shippingRequest.numberOfPacking;
+        this.weight = this._PointsService.currentShippingRequest.shippingRequest.totalWeight;
+        this.goodCategoryId = this.allSubGoodCategorys?.length > 0 ? this.allSubGoodCategorys[0].id : null;
+        if (
+          this._PointsService.currentShippingRequest.roundTripType === RoundTripType.WithReturnTrip &&
+          this._PointsService.currentPointIndex === 3
+        ) {
+          this.weight = null;
+          this.getContainerUOMDefaultId();
+        }
+        if (
+          (this._PointsService.currentShippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling ||
+            this._PointsService.currentShippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling) &&
+          this._PointsService.currentPointIndex === 1
+        ) {
+          this.weight = null;
+          this.getContainerUOMDefaultId();
+        }
+      }
+      this.loadGoodSubCategory(null);
     }
     if (this.weightValidation() || isForDedicated) {
       this.createOrEditGoodDetail.show();
@@ -170,14 +247,26 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
    */
   loadGoodSubCategory(FatherID) {
     //Get All Sub-Good Category
-    // if (FatherID || !this._TripService.GetShippingRequestForViewOutput?.shippingRequest) {
-    this._goodsDetailsServiceProxy
-      .getAllGoodCategoryForTableDropdown(FatherID)
-      .pipe(retry(3))
-      .subscribe((result) => {
-        this.allSubGoodCategorys = result;
-      });
-    //}
+    console.log('FatherID', FatherID);
+    if (this.shouldDisableCategoryForPortsMovement) {
+      this._goodsDetailsServiceProxy
+        .getEmptyGoodsCategoryForDropDown()
+        .pipe(retry(3))
+        .subscribe((result) => {
+          this.allSubGoodCategorys = [result];
+          this.goodCategoryId = this.allSubGoodCategorys[0].id;
+          this.description = this.l('EmptyContainer');
+        });
+      return;
+    }
+    if (FatherID) {
+      this._goodsDetailsServiceProxy
+        .getAllGoodCategoryForTableDropdown(FatherID)
+        .pipe(retry(3))
+        .subscribe((result) => {
+          this.allSubGoodCategorys = result;
+        });
+    }
   }
 
   /**
@@ -199,6 +288,11 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     let totalWeightGoodDetails: number = 0;
     let wayPointList: CreateOrEditRoutPointDto[];
     let allowedeight: number;
+
+    if (this.isForPortsMovement) {
+      this.AllowedWeight = this._PointsService.currentShippingRequest.shippingRequest.totalWeight;
+      return true;
+    }
 
     //get the Total Allowed Weight From the Shipping Request
 
@@ -226,6 +320,13 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     this.AllowedWeight = !this.isForDedicated ? allowedeight : this.weight;
     this.canAddMoreGoods.emit(allowedeight !== 0); // let the other components know
     return allowedeight !== 0;
+  }
+
+  getContainerUOMDefaultId() {
+    this._shippingRequestsServiceProxy.getContainerUOMId().subscribe((res) => {
+      this.amount = 1;
+      this.unitOfMeasureId = res;
+    });
   }
 
   ngOnDestroy() {

@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using TACHYON.Authorization.Users.Profile.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.Trips;
@@ -54,6 +54,8 @@ namespace TACHYON.Tracking.Dto
         public ShippingRequestFlag ShippingRequestFlag { get; set; }
 
         public bool IsTripImpactEnabled { get; set; }
+
+        public ShippingTypeEnum ShippingType { get; set; }
 
         #region Dedicated
         public int NumberOfTrucks { get; set; }

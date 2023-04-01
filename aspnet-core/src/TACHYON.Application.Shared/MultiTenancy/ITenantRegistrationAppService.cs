@@ -15,7 +15,7 @@ namespace TACHYON.MultiTenancy
 
         Task<EditionSelectDto> GetEdition(int editionId);
 
-        Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input);
+        Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int? input);
         Task<List<TenantCountryLookupTableDto>> GetAllCountryForTableDropdown();
     }
 }

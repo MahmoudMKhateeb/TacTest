@@ -3,6 +3,7 @@ using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.Net.Mail;
 using Abp.Quartz;
 using Abp.Timing;
@@ -459,25 +460,24 @@ namespace TACHYON.Invoices
             InvoicePeriod period)
         {
             //not saas trips
-            var notSaasTrips = trips.Where(x =>  x.ShippingRequestFk != null && !x.ShippingRequestFk.IsSaas());
+            var normalTrips = trips.Where(x => x.ShippingRequestFk != null && !x.ShippingRequestFk.IsSaas());
 
-            decimal notSaasTotalAmount = (decimal)notSaasTrips.Sum
-                (r => r.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.TotalAmountWithCommission));
-            decimal notSaasVatAmount = (decimal)notSaasTrips.Sum
-                (r => r.VatAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.VatAmountWithCommission));
-            decimal notSaaSubTotalAmount = (decimal)notSaasTrips.Sum
-                (r => r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
+            decimal normalTripsTotalAmount = (decimal)normalTrips.Sum(r => r.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.TotalAmountWithCommission));
+            decimal normalTripsVatAmount = (decimal)normalTrips.Sum(r => r.VatAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.VatAmountWithCommission));
+            decimal normalTripsSubTotalAmount = (decimal)normalTrips.Sum(r => r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
 
             //saas trips
-            var saasTrips = trips.Where(x => (x.ShippingRequestFk != null &&  x.ShippingRequestFk.IsSaas()) || x.CarrierTenantId == x.ShipperTenantId);
+            var saasTrips = trips.Where(x => (x.ShippingRequestFk != null && x.ShippingRequestFk.IsSaas()) || (x.ShipperTenantId != null && x.CarrierTenantId != null && x.CarrierTenantId == x.ShipperTenantId))
+                //Select only the waybills that saas invoicing activation is "On" from feature in creation process
+                .Where(x => x.SaasInvoicingActivation != null && x.SaasInvoicingActivation.Value);
 
             decimal SaasTotalAmount = (decimal)saasTrips.Sum(r => r.TotalAmountWithCommission);
             decimal SaasVatAmount = (decimal)saasTrips.Sum(r => r.VatAmountWithCommission);
             decimal SaasSubTotalAmount = (decimal)saasTrips.Sum(r => r.SubTotalAmountWithCommission);
 
-            var totalAmount = notSaasTotalAmount + SaasTotalAmount;
-            var vatAmount = notSaasVatAmount + SaasVatAmount;
-            var subTotalAmount = notSaaSubTotalAmount + SaasSubTotalAmount;
+            //var totalAmount = notSaasTotalAmount + SaasTotalAmount;
+            //var vatAmount = notSaasVatAmount + SaasVatAmount;
+            //var subTotalAmount = notSaaSubTotalAmount + SaasSubTotalAmount;
 
 
 
@@ -499,7 +499,7 @@ namespace TACHYON.Invoices
 
 
             //generate normal trips
-            var normalTrips = trips.Where(x => x.ShippingRequestFk != null && !x.ShippingRequestFk.IsSaas());
+            //var normalTrips = trips.Where(x => x.ShippingRequestFk != null && !x.ShippingRequestFk.IsSaas());
             if (normalTrips != null && normalTrips.Count() > 0)
             {
                 var invoice = new Invoice
@@ -508,9 +508,9 @@ namespace TACHYON.Invoices
                     PeriodId = period.Id,
                     DueDate = dueDate,
                     IsPaid = period.PeriodType == InvoicePeriodType.PayInAdvance,
-                    TotalAmount = totalAmount,
-                    VatAmount = vatAmount,
-                    SubTotalAmount = subTotalAmount,
+                    TotalAmount = normalTripsTotalAmount,
+                    VatAmount = normalTripsVatAmount,
+                    SubTotalAmount = normalTripsSubTotalAmount,
                     TaxVat = normalTrips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.Trip,
@@ -527,7 +527,6 @@ namespace TACHYON.Invoices
 
 
             //generate SAAS invoices
-            // var shipperSAAStrips = trips.Where(x => x.ShippingRequestFk.IsSaas());
             if (saasTrips != null && saasTrips.Count() > 0)
             {
                 //decimal taxVat = saasTrips.FirstOrDefault(x => x.TaxVat.HasValue).TaxVat.Value;
@@ -538,9 +537,9 @@ namespace TACHYON.Invoices
                     PeriodId = period.Id,
                     DueDate = dueDate,
                     IsPaid = period.PeriodType == InvoicePeriodType.PayInAdvance,
-                    TotalAmount = totalAmount,
-                    VatAmount = vatAmount,
-                    SubTotalAmount = subTotalAmount,
+                    TotalAmount = SaasTotalAmount,
+                    VatAmount = SaasVatAmount,
+                    SubTotalAmount = SaasSubTotalAmount,
                     TaxVat = taxVat,
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.SaasTrip,
@@ -928,6 +927,16 @@ namespace TACHYON.Invoices
 
         }
 
+        public async Task GenertateInvoiceWhenShipmintDelivery(int tripId)
+        {
+            var trip = await _shippingRequestTrip
+                .GetAllIncluding(d => d.ShippingRequestTripVases)
+                .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
+                .FirstOrDefaultAsync(t => t.Id == tripId);
+
+           await GenertateInvoiceWhenShipmintDelivery(trip);
+        }
+
         /// <summary>
         /// When the shipper billing interval  after delivry run this method to generate invoice
         /// </summary>
@@ -976,6 +985,7 @@ namespace TACHYON.Invoices
                              !x.IsShipperHaveInvoice &&
                              //waybills.Contains(x.Id) &&
                              (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
+                             x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation ||
                               x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
                     );
                 if (trips != null && trips.Count() > 0)

@@ -64,7 +64,7 @@ namespace TACHYON.Actors
                         ? (ActorTypesEnum)input.ActorTypeFilter
                         : default;
 
-            var filteredActors = _actorRepository.GetAll()
+            var filteredActors = _actorRepository.GetAll().Where(x=> x.ActorType != ActorTypesEnum.MySelf)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.CompanyName.Contains(input.Filter) || e.MoiNumber.Contains(input.Filter) || e.Address.Contains(input.Filter) || e.Logo.Contains(input.Filter) || e.MobileNumber.Contains(input.Filter) || e.Email.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CompanyNameFilter), e => e.CompanyName == input.CompanyNameFilter)
                         .WhereIf(input.ActorTypeFilter.HasValue && input.ActorTypeFilter > -1, e => e.ActorType == actorTypeFilter)
@@ -127,7 +127,10 @@ namespace TACHYON.Actors
         public async Task<GetActorForViewDto> GetActorForView(int id)
         {
             var actor = await _actorRepository.GetAsync(id);
-
+            
+            if (actor is { ActorType: ActorTypesEnum.MySelf })
+                throw new UserFriendlyException(L("YouCanNotViewThisActor"));
+            
             var output = new GetActorForViewDto { Actor = ObjectMapper.Map<ActorDto>(actor) };
             var documentFile =
                   await _documentFileRepository.FirstOrDefaultAsync(x => x.ActorId == id);
@@ -143,6 +146,9 @@ namespace TACHYON.Actors
         {
             var actor = await _actorRepository.FirstOrDefaultAsync(input.Id);
 
+            if (actor is { ActorType: ActorTypesEnum.MySelf })
+                throw new UserFriendlyException(L("YouCanNotEditThisActor"));
+            
             var output = new GetActorForEditOutput { Actor = ObjectMapper.Map<CreateOrEditActorDto>(actor) };
 
             var documentFile =
@@ -185,19 +191,32 @@ namespace TACHYON.Actors
             organizationUnit.Code = await _organizationUnitManager.GetNextChildCodeAsync(organizationUnit.ParentId);
 
             var organizationUnitId = await _organizationUnitRepository.InsertAndGetIdAsync(organizationUnit);
-            
-            bool isExists = await _roleManager.RoleExistsAsync(StaticRoleNames.Tenants.InternalClients);
-            if (!isExists)
-                await CreateInternalClientsRole();
+            if (input.ActorType == ActorTypesEnum.Shipper)
+            {
+
+                bool isExists = await _roleManager.RoleExistsAsync(StaticRoleNames.Tenants.InternalShipperClients);
+                if (!isExists)
+                    await CreateInternalShipperClientsRole();
+            }
+            else if(input.ActorType == ActorTypesEnum.Carrier)
+            {
+                bool isExists = await _roleManager.RoleExistsAsync(StaticRoleNames.Tenants.InternalCarrierClients);
+                if (!isExists)
+                    await CreateInternalCarrierClientsRole();
+            }
+
 
             await CurrentUnitOfWork.SaveChangesAsync();
 
 
-            
-            int internalClientsRoleId = await _roleManager.Roles.Where(x =>
-                    x.TenantId == AbpSession.TenantId && x.Name == StaticRoleNames.Tenants.InternalClients)
+
+            int internalClientsRoleId = input.ActorType == ActorTypesEnum.Shipper ? await _roleManager.Roles.Where(x =>
+                    x.TenantId == AbpSession.TenantId && x.Name == StaticRoleNames.Tenants.InternalShipperClients)
+                .Select(x => x.Id).SingleAsync() : await _roleManager.Roles.Where(x =>
+                    x.TenantId == AbpSession.TenantId && x.Name == StaticRoleNames.Tenants.InternalCarrierClients)
                 .Select(x => x.Id).SingleAsync();
-            
+
+
             await _roleManager.AddToOrganizationUnitAsync(internalClientsRoleId, organizationUnitId,AbpSession.TenantId);
 
             var actor = ObjectMapper.Map<Actor>(input);
@@ -261,13 +280,13 @@ namespace TACHYON.Actors
             }
         }
 
-        private async Task CreateInternalClientsRole()
+        private async Task CreateInternalShipperClientsRole()
         {
             await _roleManager.CreateAsync(new Role()
             {
                 TenantId = AbpSession.TenantId,
-                DisplayName = "Internal Client",
-                Name = StaticRoleNames.Tenants.InternalClients,
+                DisplayName = "Internal Shipper Client",
+                Name = StaticRoleNames.Tenants.InternalShipperClients,
                 IsStatic = true,
                 Permissions = new List<RolePermissionSetting>()
                 {
@@ -276,13 +295,47 @@ namespace TACHYON.Actors
                     new RolePermissionSetting() { Name = AppPermissions.Pages_Administration_ActorsInvoice, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_Invoices, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequests, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Facilities, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Receivers, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_DocumentFiles, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_DocumentFiles_Actors, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequestTrips, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Tenant_Dashboard, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ActorPrices, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ActorPrices_Shipper, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShipperDashboard, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShipperDashboard_trackingMap, TenantId = AbpSession.TenantId },
+
+
+                }
+            });
+        }
+
+        private async Task CreateInternalCarrierClientsRole()
+        {
+            await _roleManager.CreateAsync(new Role()
+            {
+                TenantId = AbpSession.TenantId,
+                DisplayName = "Internal Carrier Client",
+                Name = StaticRoleNames.Tenants.InternalCarrierClients,
+                IsStatic = true,
+                Permissions = new List<RolePermissionSetting>()
+                {
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Tracking, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Administration, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Administration_SubmitActorsInvoice, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Invoices, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequests, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_Trucks, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_Administration_Users, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_Administration_Drivers, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_DocumentFiles, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_DocumentFiles_Actors, TenantId = AbpSession.TenantId },
                     new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequestTrips, TenantId = AbpSession.TenantId },
-                    new RolePermissionSetting() { Name = AppPermissions.Pages_ShippingRequestAndTripNotes, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_Tenant_Dashboard, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ActorPrices, TenantId = AbpSession.TenantId },
+                    new RolePermissionSetting() { Name = AppPermissions.Pages_ActorPrices_Carrier, TenantId = AbpSession.TenantId },
+                    //new RolePermissionSetting() { Name = AppPermissions.Pages_CarrierDashboard, TenantId = AbpSession.TenantId },
                 }
             });
         }
@@ -305,11 +358,13 @@ namespace TACHYON.Actors
         [AbpAuthorize(AppPermissions.Pages_Administration_Actors_Delete)]
         public async Task Delete(EntityDto input)
         {
-            long organizationUnit = await _actorRepository.GetAll().Where(x => x.Id == input.Id)
-                .Select(x => x.OrganizationUnitId).FirstOrDefaultAsync();
+            var actor = await _actorRepository.GetAll().Where(x => x.Id == input.Id)
+                .Select(x => new {x.OrganizationUnitId,x.ActorType}).FirstOrDefaultAsync();
+            if (actor?.ActorType == ActorTypesEnum.MySelf)
+                throw new UserFriendlyException(L("ThisActorCanNotBeDeleted"));
 
-            if (organizationUnit != default)
-                await _organizationUnitRepository.DeleteAsync(organizationUnit);
+            if (actor?.OrganizationUnitId != default)
+                await _organizationUnitRepository.DeleteAsync(actor.OrganizationUnitId);
             
             await _actorRepository.DeleteAsync(input.Id);
         }
@@ -321,6 +376,9 @@ namespace TACHYON.Actors
             var actor = await _actorRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Id == actorId);
 
+            if (actor is { ActorType: ActorTypesEnum.MySelf })
+                throw new UserFriendlyException(L("ThisActorCanNotBeInvoiced"));
+            
             if (actor.ActorType == ActorTypesEnum.Shipper)
             {
                 return await _actorInvoicesManager.BuildActorShipperInvoices(actorId, trips);
@@ -352,6 +410,10 @@ namespace TACHYON.Actors
         {
             var actor= await _actorRepository.GetAll()
                  .FirstOrDefaultAsync(x => x.Id == id);
+            
+            if (actor is { ActorType: ActorTypesEnum.MySelf })
+                throw new UserFriendlyException(L("ThisActorCanNotHaveInvoices"));
+
             if(actor.ActorType == ActorTypesEnum.Shipper)
             {
                 return (await _actorInvoicesManager.GetAllShipperActorUnInvoicedTrips(id, null))

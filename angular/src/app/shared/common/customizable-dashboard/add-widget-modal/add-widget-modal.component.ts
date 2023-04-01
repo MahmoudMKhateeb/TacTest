@@ -31,8 +31,10 @@ export class AddWidgetModalComponent extends AppComponentBase {
   }
 
   show(widgets: WidgetOutput[]): void {
-    this.widgets = widgets;
-
+    this.widgets = widgets.map((widget) => {
+      widget.name = this.l(widget.name);
+      return widget;
+    });
     if (this.widgets && this.widgets.length) {
       this.selectedWidgetId = this.widgets[0].id;
     } else {
