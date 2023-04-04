@@ -2,6 +2,7 @@
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Organizations;
+using Abp.Runtime.Validation;
 using Abp.Timing;
 using Microsoft.Win32.SafeHandles;
 using System;
@@ -10,6 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading.Tasks;
 using TACHYON.Actors;
+using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Cities;
 using TACHYON.Configuration;
@@ -86,6 +88,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public virtual int? DestinationCityId { get; set; }
 
         [ForeignKey("DestinationCityId")] public City DestinationCityFk { get; set; }
+
 
         /// <summary>
         /// The type of shipping request
@@ -213,9 +216,10 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public int NumberOfPacking { get; set; }
 
-        public int ShippingTypeId { get; set; }
+        public ShippingTypeEnum ShippingTypeId { get; set; }
 
-        [ForeignKey("ShippingTypeId")] public ShippingType ShippingTypeFk { get; set; }
+        //[ForeignKey("ShippingTypeId")] public ShippingType ShippingTypeFk { get; set; }
+
 
         /// <summary>
         /// This field describes if the shipping request is draft or not, draft means incomplete request
@@ -318,6 +322,21 @@ namespace TACHYON.Shipping.ShippingRequests
 
         #endregion
 
+        #region PortMovements
+
+
+        /// <summary>
+        /// Round trip is used for port movements requests
+        /// </summary>
+        public RoundTripType? RoundTripType { get; set; }
+
+        /// <summary>
+        /// This presents origin port in port movements/ import
+        /// </summary>
+        public long? OriginFacilityId { get; set; }
+        [ForeignKey("OriginFacilityId")]
+        public Facility OriginFacility { get; set; }
+        #endregion
         public string SplitInvoiceFlag { get; set; }
 
         public void Close()

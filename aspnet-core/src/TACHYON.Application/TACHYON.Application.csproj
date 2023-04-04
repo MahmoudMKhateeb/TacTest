@@ -11,6 +11,7 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <RootNamespace>TACHYON</RootNamespace>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Invoices\Reports\DedicatedInvoice.rdlc" />
@@ -156,6 +157,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SingleDropVasDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Remove="PricePackages\TmsPricePackageAppService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Invoices\Reports\Datasets\GetDedicatedInvoiceItemReportInfo.xsd">

@@ -37,7 +37,7 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
   selectedTrucks: DedicatedShippingRequestTrucksAndDriversDto[] = [];
   isForTruck: boolean;
   private dedicatedShippingRequestId: number;
-  dataSource: any;
+  dataSource: any[] = [];
   selectedItems: any[] = [];
   private dedicatedTruckTypeId: number;
   private dedicatedTruckId: number;
@@ -194,84 +194,33 @@ export class ReplaceTrucksAndDriversModalComponent extends AppComponentBase {
     console.log('d', d);
   }
 
-  onDataGridCellClick(event: any) {
-    console.log('onDataGridCellClick', event);
-    if (event.columnIndex > 0) {
-      event.event.stopPropagation();
-      event.event.stopImmediatePropagation();
-    }
-    // if (event.column.dataField === 'driverUserId' && !event.row.isSelected) {
-    //   event.row.isSelected = true;
-    // }
-  }
-
-  onSelectionChanged(row) {
-    // if (row.selectedRowKeys.length > this.dedicatedShippingRequest?.numberOfTrucks) {
-    //   this.dataGrid.instance.deselectRows(row.currentSelectedRowKeys);
-    // }
-  }
-
   private getTrucksForReplace() {
-    let self = this;
-
-    this.dataSource = {};
-    this.dataSource.store = new CustomStore({
-      load(loadOptions: LoadOptions) {
-        return self._dedicatedShippingRequestService
-          .getDedicatedTrucksForReplace(self.dedicatedShippingRequestId, JSON.stringify(loadOptions))
-          .toPromise()
-          .then((response) => {
-            response.data.map((item) => {
-              item.selectedTruckId = null;
-              if (item.isRequestedToReplace) {
-                self.selectedItems.push(item);
-              } else {
-                item.replacementIntervalInDays = null;
-                item.replacementReason = null;
-              }
-            });
-            return {
-              data: response.data,
-              totalCount: response.totalCount,
-            };
-          })
-          .catch((error) => {
-            console.log(error);
-            throw new Error('Data Loading Error');
-          });
-      },
+    this._dedicatedShippingRequestService.getDedicatedTrucksForReplace(this.dedicatedShippingRequestId, JSON.stringify({})).subscribe((res) => {
+      res.data.map((item) => {
+        item.selectedTruckId = null;
+        if (item.isRequestedToReplace) {
+          this.selectedItems.push(item);
+        } else {
+          item.replacementIntervalInDays = null;
+          item.replacementReason = null;
+        }
+      });
+      this.dataSource = res.data;
     });
   }
 
   private getDriversForReplace() {
-    let self = this;
-
-    this.dataSource = {};
-    this.dataSource.store = new CustomStore({
-      load(loadOptions: LoadOptions) {
-        return self._dedicatedShippingRequestService
-          .getDedicatedDriversForReplace(self.dedicatedShippingRequestId, JSON.stringify(loadOptions))
-          .toPromise()
-          .then((response) => {
-            response.data.map((item) => {
-              item.selectedDriverId = null;
-              if (item.isRequestedToReplace) {
-                self.selectedItems.push(item);
-              } else {
-                item.replacementIntervalInDays = null;
-                item.replacementReason = null;
-              }
-            });
-            return {
-              data: response.data,
-              totalCount: response.totalCount,
-            };
-          })
-          .catch((error) => {
-            console.log(error);
-            throw new Error('Data Loading Error');
-          });
-      },
+    this._dedicatedShippingRequestService.getDedicatedDriversForReplace(this.dedicatedShippingRequestId, JSON.stringify({})).subscribe((res) => {
+      res.data.map((item) => {
+        item.selectedDriverId = null;
+        if (item.isRequestedToReplace) {
+          this.selectedItems.push(item);
+        } else {
+          item.replacementIntervalInDays = null;
+          item.replacementReason = null;
+        }
+      });
+      this.dataSource = res.data;
     });
   }
 

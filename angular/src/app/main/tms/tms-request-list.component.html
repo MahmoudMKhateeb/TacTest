@@ -1,1 +1,6 @@
-<shipping-request-card-template [isTMS]="true" [Title]="'TachyonManageService'"></shipping-request-card-template>
+<shipping-request-card-template *ngIf="showNormalView" [isTMS]="true" [Title]="'TachyonManageService'"></shipping-request-card-template>
+<app-shipping-requests-table
+  *ngIf="!showNormalView"
+  [isTMS]="true"
+  [Title]="isShipper ? 'MyShippingRequests' : 'ShippingRequest'"
+></app-shipping-requests-table>

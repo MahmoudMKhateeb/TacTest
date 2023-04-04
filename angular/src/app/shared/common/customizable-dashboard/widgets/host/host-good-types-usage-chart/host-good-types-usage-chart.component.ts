@@ -69,6 +69,9 @@ export class HostGoodTypesUsageChartComponent extends AppComponentBase implement
           xaxis: {
             categories: this.types,
           },
+          yaxis: {
+            opposite: this.isRtl,
+          },
           tooltip: {
             y: {
               formatter: function (val) {

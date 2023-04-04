@@ -22,6 +22,7 @@
         public const string Pages_Administration_Actors_Delete = "Pages.Administration.Actors.Delete";
 
         public const string Pages_Administration_ActorsInvoice = "Pages.Administration.ActorsInvoice";
+        public const string Pages_Administration_SubmitActorsInvoice = "Pages.Administration.SubmitActorsInvoice";
 
         public const string Pages_EmailTemplates = "Pages.EmailTemplates";
         public const string Pages_EmailTemplates_Create = "Pages.EmailTemplates.Create";
@@ -54,12 +55,18 @@
         public const string Pages_TruckStatusesTranslations_Delete = "Pages.TruckStatusesTranslations.Delete";
 
         public const string App_Shipper = "App.Shipper";
+       
         public const string App_Carrier = "App.Carrier";
         public const string App_TachyonDealer = "App.TachyonDealer";
 
         public const string Pages_HostDashboard = "Pages.HostDashboard";
         public const string Pages_ShipperDashboard = "Pages.ShipperDashboard";
+        public const string Pages_ShipperDashboard_tripDetails = "Pages.ShipperDashboard.tripDetails";
+        public const string Pages_ShipperDashboard_trackingMap = "Pages.ShipperDashboard.trackingMap";
+
         public const string Pages_CarrierDashboard = "Pages.CarrierDashboard";
+        public const string Pages_BrokerDashboard = "Pages.BrokerDashboard";
+
 
         public const string Pages_CitiesTranslations = "Pages.CitiesTranslations";
         public const string Pages_CitiesTranslations_Create = "Pages.CitiesTranslations.Create";
@@ -597,11 +604,6 @@
         public const string Pages_EntityTemplate_Update = "Pages.EntityTemplate.Update";
         public const string Pages_EntityTemplate_Delete = "Pages.EntityTemplate.Delete";
 
-        public const string Pages_NormalPricePackages = "Pages.NormalPricePackages";
-        public const string Pages_NormalPricePackages_Create = "Pages.NormalPricePackages.Create";
-        public const string Pages_NormalPricePackages_Edit = "Pages.NormalPricePackages.Edit";
-        public const string Pages_NormalPricePackages_Delete = "Pages.NormalPricePackages.Delete";
-
         #region ShippingRequestPostPriceUpdate
 
         public const string Pages_SrPostPriceUpdate = "Pages.SrPostPriceUpdate";
@@ -626,7 +628,7 @@
 
         #endregion
 
-        #region Dynamic Invoices
+        #region Dedicated & Dynamic Invoices
 
         public const string Pages_DedicatedDynamicInvoices = "Pages.DedicatedDynamicInvoices";
         public const string Pages_DedicatedDynamicInvoices_Create = "Pages.DedicatedDynamicInvoices.Create";
@@ -640,10 +642,15 @@
         public const string Pages_DedicatedDynamicActorInvoices_Update = "Pages.DedicatedDynamicActorInvoices.Update";
         public const string Pages_DedicatedDynamicActorInvoices_Delete = "Pages.DedicatedDynamicActorInvoices.Delete";
 
+        //attendance
+        public const string Pages_DedicatedAttendanceSheet = "Pages.DedicatedAttendanceSheet";
+        public const string Pages_DedicatedFillAttendanceSheet = "Pages.DedicatedFillAttendanceSheet";
+
         #endregion
         #region shpping
 
         public const string Pages_Tracking = "Pages.shipment.Tracking";
+        public const string Pages_Tracking_Drive = "Pages.shipment.Tracking.Drive";
         public const string Pages_Tracking_ReceiverCode = "Pages.Shipment.Tracking.ReceiverCode";
         public const string Pages_Tracking_ResetPointReceiverCode = "Pages.Shipment.Tracking.ResetPointReceiverCode";
         public const string Pages_Tracking_BulkDeliverTrip = "Pages.Shipment.Tracking.BulkDeliverTrip";
@@ -655,10 +662,10 @@
 
         #region TMS Price Packages
 
-        public const string Pages_TmsPricePackages = "Pages.TmsPricePackages";
-        public const string Pages_TmsPricePackages_Create = "Pages.TmsPricePackages.Create";
-        public const string Pages_TmsPricePackages_Update = "Pages.TmsPricePackages.Update";
-        public const string Pages_TmsPricePackages_Delete = "Pages.TmsPricePackages.Delete";
+        public const string Pages_PricePackages = "Pages.PricePackages";
+        public const string Pages_PricePackages_Create = "Pages.PricePackages.Create";
+        public const string Pages_PricePackages_Update = "Pages.PricePackages.Update";
+        public const string Pages_PricePackages_Delete = "Pages.PricePackages.Delete";
         
 
         #endregion

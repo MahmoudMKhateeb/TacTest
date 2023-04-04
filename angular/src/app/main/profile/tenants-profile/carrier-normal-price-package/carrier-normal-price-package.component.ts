@@ -30,7 +30,7 @@ export class CarrierNormalPricePackagesComponent extends AppComponentBase implem
 
     this.primengTableHelper.showLoadingIndicator();
     this._profileServiceProxy
-      .getNormalPricePackages(
+      .getPricePackages(
         this.giverUserId,
         this.primengTableHelper.getSorting(this.dataTableNormalPricePackages),
         this.primengTableHelper.getSkipCount(this.paginatorNormalPricePackages, event),

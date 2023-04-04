@@ -48,7 +48,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
                 var transactionsDate = new List<DateTime>();
 
-                for (int i = 1; i < (currentRow.Cells.Count-1); i++)
+                for (int i = 1; i < (currentRow.Cells.Count); i++)
                 {
                     var currentCell = currentRow.Cells[i];
 

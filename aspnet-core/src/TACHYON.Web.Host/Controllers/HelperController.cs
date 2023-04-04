@@ -172,7 +172,7 @@ namespace TACHYON.Web.Controllers
 
         [HttpPost]
         [AbpMvcAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
-        public async Task<JsonResult> ImportShipmentsFromExcel(long ShippingRequestId)
+        public async Task<JsonResult> ImportShipmentsFromExcel(long? ShippingRequestId)
         {
             try
             {
@@ -218,7 +218,7 @@ namespace TACHYON.Web.Controllers
 
         [HttpPost]
         [AbpMvcAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
-        public async Task<JsonResult> ImportPointsFromExcel(long ShippingRequestId)
+        public async Task<JsonResult> ImportPointsFromExcel(long? ShippingRequestId)
         {
             try
             {
@@ -304,7 +304,7 @@ namespace TACHYON.Web.Controllers
 
         [HttpPost]
         [AbpMvcAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
-        public async Task<JsonResult> ImportGoodsDetailsFromExcel(long ShippingRequestId)
+        public async Task<JsonResult> ImportGoodsDetailsFromExcel(long? ShippingRequestId)
         {
             try
             {

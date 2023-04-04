@@ -42,7 +42,7 @@
               </div>
             </div>
             <div class="form-group col-md-6">
-              <label for="appendixContractName">{{ 'ContractName' | localize }}</label>
+              <label for="appendixContractName">{{ 'ContractName' | localize }} <span class="text-danger">*</span></label>
               <input id="appendixContractName" [(ngModel)]="appendix.contractName" required type="text" class="form-control" name="contractName" />
             </div>
 
@@ -83,7 +83,7 @@
               <label>{{ l('PricePackages') }} <span class="text-danger">*</span></label>
               <dx-drop-down-box
                 [(value)]="appendix.pricePackages"
-                valueExpr="pricePackageId"
+                valueExpr="id"
                 displayExpr="displayName"
                 placeholder="Select a value..."
                 [showClearButton]="true"
@@ -100,7 +100,7 @@
                     [filterRow]="{ visible: true }"
                     [scrolling]="{ mode: 'virtual' }"
                     [height]="345"
-                    keyExpr="pricePackageId"
+                    keyExpr="id"
                     [(selectedRowKeys)]="appendix.pricePackages"
                   >
                   </dx-data-grid>
@@ -108,19 +108,27 @@
               </dx-drop-down-box>
             </div>
             <div class="form-group col-md-6">
-              <label for="appendixScopeOverview">{{ 'ScopeOverview' | localize }}</label>
-              <input id="appendixScopeOverview" [(ngModel)]="appendix.scopeOverview" required type="text" class="form-control" name="scopeOverview" />
+              <label for="appendixScopeOverview">{{ 'ScopeOverview' | localize }} <span class="text-danger">*</span></label>
+              <textarea id="appendixScopeOverview" [(ngModel)]="appendix.scopeOverview" required class="form-control" name="scopeOverview"></textarea>
             </div>
 
             <div class="form-group col-md-6">
-              <label for="appendixNotes">{{ 'Notes' | localize }}</label>
+              <label for="appendixNotes">{{ 'Notes' | localize }} <span class="text-danger">*</span></label>
               <input id="appendixNotes" [(ngModel)]="appendix.notes" required type="text" class="form-control" name="notes" />
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" (click)="close()" class="btn btn-secondary">{{ 'Close' | localize }}</button>
-          <button type="submit" [buttonBusy]="isLoading" (click)="createOrEdit()" [disabled]="PPAForm.invalid" class="btn btn-primary">
+          <button
+            type="submit"
+            [buttonBusy]="isLoading"
+            (click)="createOrEdit()"
+            [disabled]="
+              PPAForm.invalid || (currentCompanyType === companyType.Carrier && (!appendix.pricePackages || appendix.pricePackages.length == 0))
+            "
+            class="btn btn-primary"
+          >
             {{ 'Save' | localize }}
           </button>
         </div>

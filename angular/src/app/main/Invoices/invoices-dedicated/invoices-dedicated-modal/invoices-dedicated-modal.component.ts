@@ -13,7 +13,6 @@ import {
   InvoiceAccountType,
   InvoiceServiceProxy,
   ISelectItemDto,
-  NormalPricePackagesServiceProxy,
   SelectItemDto,
   ShippingRequestsServiceProxy,
   TenantCityLookupTableDto,
@@ -49,18 +48,20 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
   dedicatedShippingRequests: SelectItemDto[];
   selectedDedicateTruckId: number;
   dedicateTrucks: SelectItemDto[];
+  filteredDedicateTrucks: SelectItemDto[];
   pricePerDay: number;
   allNumberOfDays: number;
   allNumberOfDaysUpdate = new Subject<number>();
   taxVat: number;
   workingDayType = WorkingDayType;
-  allWorkingDayTypes: any;
+  allWorkingDayTypes: any[] = [];
   private selectedShippingRequestId: number;
+  truckValidationMap: Map<number, Array<number>> = new Map();
+  filteredWorkingDayTypes: any[] = [];
 
   constructor(
     injector: Injector,
     private _currentSrv: InvoiceServiceProxy,
-    private _NormalPricePackagesServiceProxy: NormalPricePackagesServiceProxy,
     private _ShippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _TenantRegistration: TenantRegistrationServiceProxy,
     private _DynamicInvoiceServiceProxy: DynamicInvoiceServiceProxy,
@@ -89,7 +90,7 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
 
   show(invoiceAccountType: number, id?: number, tenantName?: string, isView = false): void {
     this.isView = isView;
-    this.allWorkingDayTypes = this._EnumToArrayPipeService.transform(WorkingDayType).map((item) => {
+    this.filteredWorkingDayTypes = this.allWorkingDayTypes = this._EnumToArrayPipeService.transform(WorkingDayType).map((item) => {
       item.key = Number(item.key);
       return item;
     });
@@ -133,11 +134,12 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
     this.active = false;
     this.Tenants = [];
     this.activeIndex = null;
+    this.truckValidationMap = new Map();
     this.modal.hide();
   }
 
   search(event, initValue = false) {
-    this._CommonServ.getAutoCompleteTenants(event.query, null).subscribe((result) => {
+    this._CommonServ.getAutoCompleteTenantsByAccountType(event.query, this.root.invoiceAccountType).subscribe((result) => {
       this.Tenants = result;
       if (initValue) {
         const tenant = this.Tenants.find((item) => Number(item.id) === this.root.tenantId);
@@ -188,9 +190,11 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
       !isNotNullOrUndefined(this.activeIndex)
     ) {
       this.root.dedicatedInvoiceItems.push(this.dataSourceForEdit);
+      this.validateTrucks(this.dataSourceForEdit);
       this.dataSourceForEdit = null;
       return;
     }
+    this.validateTrucks(this.dataSourceForEdit);
     this.root.dedicatedInvoiceItems[this.activeIndex] = this.dataSourceForEdit;
     this.activeIndex = null;
     this.dataSourceForEdit = null;
@@ -201,6 +205,14 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
   }
 
   editRow(i: number, row: CreateOrEditDedicatedInvoiceItemDto) {
+    const truckIndex = this.filteredDedicateTrucks.findIndex((truck) => Number(truck.id) == row.dedicatedShippingRequestTruckId);
+    if (truckIndex === -1) {
+      this.filteredDedicateTrucks.push(this.dedicateTrucks.find((truck) => Number(truck.id) == row.dedicatedShippingRequestTruckId));
+    }
+    const workingDayTypeIndex = this.filteredWorkingDayTypes.findIndex((item) => Number(item.key) == Number(row.workingDayType));
+    if (workingDayTypeIndex === -1) {
+      this.filteredWorkingDayTypes.push(this.allWorkingDayTypes.find((item) => Number(item.key) == Number(row.workingDayType)));
+    }
     this.dataSourceForEdit = CreateOrEditDedicatedInvoiceItemDto.fromJS(row.toJSON());
     this.allNumberOfDays = row.allNumberDays;
     this.selectedDedicateTruckId = row.dedicatedShippingRequestTruckId;
@@ -208,6 +220,12 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
   }
 
   cancelAddToArray() {
+    if (this.truckValidationMap.has(this.selectedDedicateTruckId)) {
+      if (new Set(this.truckValidationMap.get(this.selectedDedicateTruckId)).size == 2) {
+        const truckIndex = this.filteredDedicateTrucks.findIndex((truck) => Number(truck.id) == this.selectedDedicateTruckId);
+        this.filteredDedicateTrucks.splice(truckIndex, 1);
+      }
+    }
     this.dataSourceForEdit = null;
     this.activeIndex = null;
   }
@@ -219,6 +237,10 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
   }
 
   getDedicatedRequestsByTenant(event) {
+    this.dedicateTrucks = [];
+    this.filteredDedicateTrucks = [];
+    this.truckValidationMap = new Map();
+    this.filteredWorkingDayTypes = this.allWorkingDayTypes;
     this.dedicatedShippingRequests = [];
     this._DedicatedShippingRequestsServiceProxy.getDedicatedRequestsByTenant(Number(event.id)).subscribe((res) => {
       this.dedicatedShippingRequests = res.map((item) => {
@@ -229,11 +251,12 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
   }
 
   getDedicateTrucksByRequest(event) {
-    console.log('event', event);
-    console.log('this.root', this.root);
     this.dedicateTrucks = [];
+    this.filteredDedicateTrucks = [];
+    this.truckValidationMap = new Map();
+    this.filteredWorkingDayTypes = this.allWorkingDayTypes;
     this._DedicatedShippingRequestsServiceProxy.getDedicateTrucksByRequest(Number(event.value)).subscribe((res) => {
-      this.dedicateTrucks = res.map((item) => {
+      this.filteredDedicateTrucks = this.dedicateTrucks = res.map((item) => {
         (item.id as any) = Number(item.id);
         return item;
       });
@@ -253,7 +276,6 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
   }
 
   calculateValues($event: any) {
-    console.log('$event', $event);
     if (!isNotNullOrUndefined(this.dataSourceForEdit)) {
       return;
     }
@@ -314,9 +336,37 @@ export class InvoiceDedicatedModalComponent extends AppComponentBase implements 
 
   private subscribeToAllNumberOfDaysChanges() {
     this.allNumberOfDaysUpdate.pipe(debounceTime(300), distinctUntilChanged()).subscribe((value) => {
-      console.log('value');
-      // this.consoleMessages.push(value);
       this.getDedicatedPricePerDay();
     });
+  }
+
+  private validateTrucks(dataSourceForEdit: CreateOrEditDedicatedInvoiceItemDto) {
+    let array = [];
+    if (this.truckValidationMap.has(dataSourceForEdit.dedicatedShippingRequestTruckId)) {
+      array = this.truckValidationMap.get(dataSourceForEdit.dedicatedShippingRequestTruckId);
+    }
+    array.push(dataSourceForEdit.workingDayType);
+    if (new Set(array).size == 2) {
+      this.filteredDedicateTrucks = this.dedicateTrucks.filter((item) => Number(item.id) != this.selectedDedicateTruckId);
+    }
+    this.truckValidationMap.set(dataSourceForEdit.dedicatedShippingRequestTruckId, array);
+  }
+
+  filterWorkingDayTypes() {
+    const allWorkingDayTypes = [...this.allWorkingDayTypes];
+    if (this.truckValidationMap.size > 0) {
+      if (this.truckValidationMap.has(this.selectedDedicateTruckId)) {
+        this.filteredWorkingDayTypes = allWorkingDayTypes.filter(
+          (item) => !this.truckValidationMap.get(this.selectedDedicateTruckId).includes(item.key)
+        );
+        if (isNotNullOrUndefined(this.activeIndex) && this.filteredWorkingDayTypes.length === 0) {
+          this.filteredWorkingDayTypes = allWorkingDayTypes.filter((item) =>
+            this.truckValidationMap.get(this.selectedDedicateTruckId).includes(item.key)
+          );
+        }
+        return;
+      }
+    }
+    this.filteredWorkingDayTypes = allWorkingDayTypes;
   }
 }

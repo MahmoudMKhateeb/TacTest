@@ -589,9 +589,9 @@ namespace TACHYON.Invoices
             return await _shippingRequestTripRepository.GetAll()
                 .Where(x=>x.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Normal || x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId)
                 .Where(
-                x => (x.ShippingRequestFk.TenantId == tenantId && !x.IsShipperHaveInvoice) &&
-                (x.Status == ShippingRequestTripStatus.Delivered ||
-                    x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
+                x => (x.ShippingRequestFk.TenantId == tenantId && !x.IsShipperHaveInvoice)// &&
+                //(x.Status == ShippingRequestTripStatus.Delivered ||
+                //    x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
                 )
                 .Select(x => new SelectItemDto { DisplayName = x.WaybillNumber.ToString(), Id = x.Id.ToString() })
                 .ToListAsync();
@@ -682,15 +682,22 @@ namespace TACHYON.Invoices
                     TotalAmount = trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
                     WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
                     TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName,
-                    Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? 
+                    Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ??
                      trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk?.DisplayName ?? trip.ShippingRequestTripFK.OriginFacilityFk.CityFk.DisplayName,
                     Destination = trip.ShippingRequestTripFK.DestinationFacilityFk.CityFk.DisplayName,
                     DateWork = trip.ShippingRequestTripFK.EndTripDate.HasValue ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.InvoiceFK.CreationTime.ToString("dd/MM/yyyy"),
-                    Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
-                        L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : "",
+                    Remarks = (trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                    trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+                    ? $"{trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId.GetEnumDescription()} - {trip.ShippingRequestTripFK.ShippingRequestFk.RoundTripType.GetEnumDescription()}"
+                    : "",
                     ContainerNumber = trip.ShippingRequestTripFK.ContainerNumber ?? "-",
-                    RoundTrip = trip.ShippingRequestTripFK.CanBePrinted ? trip.ShippingRequestTripFK.RoundTrip ?? "-" : "-",
-                });
+                    //round trip is quantity in report
+                    RoundTrip = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
+                       (trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                    trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements) ? trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops.ToString()
+                    :L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops)
+                    :"1",
+                }); 
                 Sequence++;
                 if (trip.ShippingRequestTripFK.ShippingRequestTripVases != null &&
                     trip.ShippingRequestTripFK.ShippingRequestTripVases.Count > 1)
@@ -1191,10 +1198,17 @@ namespace TACHYON.Invoices
                         Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestFk.OriginCityFk.DisplayName,
                         Destination = trip.ShippingRequestFk.ShippingRequestDestinationCities.First().CityFk.DisplayName,
                         DateWork = trip.EndTripDate.HasValue ? trip.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.ActorInvoiceFk.CreationTime.ToString("dd/MM/yyyy"),
-                        Remarks = trip.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
-                            L("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops) : "",
-                        ContainerNumber = trip.CanBePrinted ? trip.ContainerNumber ?? "-" : "-",
-                        RoundTrip = trip.CanBePrinted ? trip.RoundTrip ?? "-" : "-",
+                          Remarks = (trip.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                    trip.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+                    ? $"{trip.ShippingRequestFk.ShippingTypeId.GetEnumDescription()} - {trip.ShippingRequestFk.RoundTripType.GetEnumDescription()}"
+                    : "",
+                    ContainerNumber = trip.ContainerNumber ?? "-",
+                    //round trip is quantity in report
+                    RoundTrip = trip.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
+                       (trip.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                    trip.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements) ? trip.ShippingRequestFk.NumberOfDrops.ToString()
+                       : L("TotalOfDrop", trip.ShippingRequestFk.NumberOfDrops)
+                    : "1",
                     });
                 }
                 else
@@ -1221,6 +1235,7 @@ namespace TACHYON.Invoices
                     });
                 }
                 
+                  
                 sequence++;
                 if (trip.ShippingRequestTripVases != null &&
                     trip.ShippingRequestTripVases.Count > 1)

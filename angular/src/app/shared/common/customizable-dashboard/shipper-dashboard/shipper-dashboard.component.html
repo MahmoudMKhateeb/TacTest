@@ -1,5 +1,5 @@
-<tabset #dashboardTabs [justified]="true">
-  <tab heading="General">
+<tabset *ngIf="isGranted('Pages.ShipperDashboard')" #dashboardTabs [justified]="true">
+  <tab *ngIf="isGranted('Pages.ShipperDashboard.tripDetails')" heading="General">
     <div class="row pt-4 gutter-b">
       <div class="col-2">
         <app-counters-widget></app-counters-widget>
@@ -35,7 +35,7 @@
       </div>
     </div>
   </tab>
-  <tab heading="Tracking">
+  <tab *ngIf="isGranted('Pages.ShipperDashboard.trackingMap')" heading="Tracking">
     <app-tracking-map></app-tracking-map>
   </tab>
 </tabset>

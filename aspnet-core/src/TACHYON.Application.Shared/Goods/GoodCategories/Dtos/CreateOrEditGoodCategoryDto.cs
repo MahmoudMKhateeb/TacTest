@@ -9,7 +9,7 @@ namespace TACHYON.Goods.GoodCategories.Dtos
     {
         [Required]
         [StringLength(GoodCategoryConsts.MaxDisplayNameLength, MinimumLength = GoodCategoryConsts.MinDisplayNameLength)]
-        public string Name { get; set; }
+        public string Key { get; set; }
 
         public int? FatherId { get; set; }
 

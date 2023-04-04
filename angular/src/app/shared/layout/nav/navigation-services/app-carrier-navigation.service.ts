@@ -79,13 +79,14 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'directShipments',
         '',
-        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        'logistic, delivery, truck, vehicle, transportation, transport, speed, express.svg',
         '/app/main/directShipments',
         [],
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu
         undefined,
         undefined,
-        () => this.isEnabled('App.TachyonDealer')
+        undefined,
+        () => this.isEnabled('App.CarrierAsASaas')
       ),
 
       // start of PricePackages
@@ -96,8 +97,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
         '',
         [],
         [
-          new AppMenuItem('PricePackages', 'Pages.NormalPricePackages', '', '/app/main/pricePackages/normalPricePackages'),
-          new AppMenuItem('TMS Price Packages', 'Pages.TmsPricePackages', '', '/app/main/pricePackages/tmsPricePackages'),
+          new AppMenuItem('Price Packages', 'Pages.PricePackages', '', '/app/main/pricePackages/pricePackages'),
           new AppMenuItem('Price Package Appendices', 'Pages.PricePackageAppendix', '', '/app/main/pricePackages/pricePackageAppendices'),
         ]
         //added these line because the tachyon dealer has the above permision and he suppose not to see this menu

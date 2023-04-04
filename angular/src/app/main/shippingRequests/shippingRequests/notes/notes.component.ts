@@ -51,35 +51,36 @@ export class NotesComponent extends AppComponentBase implements OnInit {
       return;
     }
     this.primengTableHelper.showLoadingIndicator();
-
-    if (this.type.includes('ShippingRequest')) {
-      this._shippingRequestAndTripNotesServiceProxy
-        .getShippingRequestNotes(
-          this.shippingRequestId,
-          undefined,
-          undefined,
-          this.primengTableHelper.getSkipCount(this.paginator, event),
-          this.primengTableHelper.getMaxResultCount(this.paginator, event)
-        )
-        .subscribe((result) => {
-          this.primengTableHelper.totalRecordsCount = result.data.totalCount;
-          this.primengTableHelper.records = result.data.items;
-          this.primengTableHelper.hideLoadingIndicator();
-        });
-    } else {
-      this._shippingRequestAndTripNotesServiceProxy
-        .getTripNotes(
-          undefined,
-          this.tripId,
-          undefined,
-          this.primengTableHelper.getSkipCount(this.paginator, event),
-          this.primengTableHelper.getMaxResultCount(this.paginator, event)
-        )
-        .subscribe((result) => {
-          this.primengTableHelper.totalRecordsCount = result.data.totalCount;
-          this.primengTableHelper.records = result.data.items;
-          this.primengTableHelper.hideLoadingIndicator();
-        });
+    if (this.isGranted('Pages.ShippingRequestAndTripNotes')) {
+      if (this.type.includes('ShippingRequest')) {
+        this._shippingRequestAndTripNotesServiceProxy
+          .getShippingRequestNotes(
+            this.shippingRequestId,
+            undefined,
+            undefined,
+            this.primengTableHelper.getSkipCount(this.paginator, event),
+            this.primengTableHelper.getMaxResultCount(this.paginator, event)
+          )
+          .subscribe((result) => {
+            this.primengTableHelper.totalRecordsCount = result.data.totalCount;
+            this.primengTableHelper.records = result.data.items;
+            this.primengTableHelper.hideLoadingIndicator();
+          });
+      } else {
+        this._shippingRequestAndTripNotesServiceProxy
+          .getTripNotes(
+            undefined,
+            this.tripId,
+            undefined,
+            this.primengTableHelper.getSkipCount(this.paginator, event),
+            this.primengTableHelper.getMaxResultCount(this.paginator, event)
+          )
+          .subscribe((result) => {
+            this.primengTableHelper.totalRecordsCount = result.data.totalCount;
+            this.primengTableHelper.records = result.data.items;
+            this.primengTableHelper.hideLoadingIndicator();
+          });
+      }
     }
   }
 

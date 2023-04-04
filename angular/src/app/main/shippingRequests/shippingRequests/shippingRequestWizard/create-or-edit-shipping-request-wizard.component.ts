@@ -16,6 +16,7 @@ import { finalize } from 'rxjs/operators';
 import KTWizard from '@metronic/common/js/components/wizard';
 
 import {
+  ActorSelectItemDto,
   CarriersForDropDownDto,
   CountyDto,
   CreateOrEditShippingRequestStep1Dto,
@@ -28,16 +29,20 @@ import {
   FacilityForDropdownDto,
   GetAllGoodsCategoriesForDropDownOutput,
   GetShippingRequestForViewOutput,
+  GoodCategoriesServiceProxy,
   GoodsDetailsServiceProxy,
   ISelectItemDto,
+  RoundTripType,
   RoutStepsServiceProxy,
   SavedEntityType,
+  SelectFacilityItemDto,
   SelectItemDto,
   ShippersForDropDownDto,
   ShippingRequestDestinationCitiesDto,
   ShippingRequestRouteType,
   ShippingRequestsServiceProxy,
   ShippingRequestVasListOutput,
+  ShippingTypeEnum,
   TenantCityLookupTableDto,
   TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -118,8 +123,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   selectedVasesProperties = [];
   requestType: any;
   AllShippers: ShippersForDropDownDto[];
-  AllActorsShippers: SelectItemDto[];
-  AllActorsCarriers: SelectItemDto[];
+  AllActorsShippers: ActorSelectItemDto[];
+  AllActorsCarriers: ActorSelectItemDto[];
   public allCarriers: CarriersForDropDownDto[];
   isCarrierSass = false;
   sourceCities: TenantCityLookupTableDto[];
@@ -129,6 +134,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   originCountry: number;
   destinationCountry: number;
   entityType = SavedEntityType;
+  ShippingTypeEnum = ShippingTypeEnum;
+  allRoundTripTypes: SelectItemDto[];
+  allOriginPorts: SelectFacilityItemDto[] = [];
+  generalGoodsCategoryId: number;
+  ShippingRequestRouteType = ShippingRequestRouteType;
 
   constructor(
     injector: Injector,
@@ -165,11 +175,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     ShipperReference: [''],
     ShipperInvoiceNumber: [''],
     IsInternalBrokerRequest: [''],
+    roundTripType: [''],
   });
   step2Form = this.fb.group({
     originCountry: ['', Validators.required],
     destinationCountry: ['', Validators.required],
     originCity: ['', Validators.required],
+    originFacility: [''],
     destinationCity: ['', Validators.required],
     routeType: ['', Validators.required],
     numberOfDrops: ['', [Validators.minLength(1), Validators.maxLength(3)]],
@@ -234,18 +246,25 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
             this.createOrEditStep1();
+            if (this.step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
+              this.removeValidationForImportPortRequestOnStep2Form();
+            }
+            if (this.step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) {
+              this.removeValidationForExportPortRequestOnStep2Form();
+            }
             wizardObj.goNext();
           }
           break;
         }
         case 2: {
-          console.log('step 2 fired');
+          console.log('step 2 fired', this.step2Form);
           if (this.step2Form.invalid) {
             wizardObj.stop();
             this.step2Form.markAllAsTouched();
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
             this.createOrEditStep2();
+            this.removeRequiredGoodDetailsValidationForPortsMovement();
             wizardObj.goNext();
           }
           break;
@@ -265,15 +284,17 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           break;
         }
         case 4: {
-          console.log('step 4');
+          console.log('step 4', this.step3Form);
           //check validation for vases
           let isVaild = true;
           var tripsCountNotValid = this.selectedVases.filter(
-            (r) => r.numberOfTrips == null || r.numberOfTrips == 0 || r.numberOfTrips > this.step2Dto.numberOfTrips
+            (r) =>
+              this.selectedVasesProperties[r.vasId] &&
+              (r.numberOfTrips == null || r.numberOfTrips == 0 || r.numberOfTrips > this.step2Dto.numberOfTrips)
           ).length;
           this.selectedVases.forEach((element) => {
-            var isDisabledAmount = this.selectedVasesProperties[element.vasId].vasAmountDisabled;
-            var isDisabledCount = this.selectedVasesProperties[element.vasId].vasCountDisabled;
+            var isDisabledAmount = this.selectedVasesProperties[element.vasId] ? this.selectedVasesProperties[element.vasId].vasAmountDisabled : true;
+            var isDisabledCount = this.selectedVasesProperties[element.vasId] ? this.selectedVasesProperties[element.vasId].vasCountDisabled : true;
             if ((element.requestMaxCount <= 0 && !isDisabledCount) || (element.requestMaxAmount <= 0 && !isDisabledAmount)) {
               isVaild = false;
               return;
@@ -448,6 +469,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         res.isTachyonDeal ? (this.shippingRequestType = 'tachyondeal') : '';
         res.isDirectRequest ? (this.shippingRequestType = 'directrequest') : '';
         this.step1Dto = res;
+        this.fillAllRoundTrips(true);
+        if (
+          this.step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+          this.step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
+        ) {
+          this.prepareStep2Inputs();
+        }
       });
   }
 
@@ -460,6 +488,12 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         finalize(() => {
           this.loading = false;
           this.step2Form.markAllAsTouched();
+          if (this.step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
+            this.removeValidationForImportPortRequestOnStep2Form();
+          }
+          if (this.step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) {
+            this.removeValidationForExportPortRequestOnStep2Form();
+          }
         })
       )
       .subscribe((res) => {
@@ -551,12 +585,22 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.allTransportTypes = result;
     });
 
-    this._shippingRequestsServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
-      this.allShippingTypes = result;
+    // this._shippingRequestsServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
+    //   this.allShippingTypes = result;
+    // });
+    this.allShippingTypes = this.enumToArray.transform(ShippingTypeEnum).map((item) => {
+      const selectItem = new SelectItemDto();
+      (selectItem.id as any) = Number(item.key);
+      selectItem.displayName = item.value;
+      return selectItem;
     });
 
     this._shippingRequestsServiceProxy.getAllPackingTypesForDropdown().subscribe((result) => {
       this.allpackingTypes = result;
+    });
+
+    this._facilitiesServiceProxy.getAllPortsForTableDropdown().subscribe((result) => {
+      this.allOriginPorts = result;
     });
 
     this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
@@ -564,6 +608,58 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     });
 
     this.loadallVases();
+  }
+
+  private getGeneralGoodsId() {
+    this._goodsDetailsServiceProxy.getGeneralGoodsCategoryId().subscribe((result) => {
+      this.generalGoodsCategoryId = result;
+      this.step3Dto.goodCategoryId = this.generalGoodsCategoryId;
+      console.log('getGeneralGoodsId this.step3Dto', this.step3Dto);
+    });
+  }
+
+  fillAllRoundTrips(isInit = false) {
+    if (!isInit) {
+      this.step1Dto.roundTripType = null;
+    }
+    // this.step1Form.get('roundTripType').clearValidators();
+    // this.step1Form.get('roundTripType').updateValueAndValidity();
+    console.log(
+      'this.step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements',
+      this.step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements
+    );
+    console.log(
+      'this.step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements',
+      this.step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
+    );
+    if (
+      this.step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+      this.step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
+    ) {
+      return;
+    }
+    this.step1Form.get('roundTripType').setValidators([Validators.required]);
+    this.step1Form.get('roundTripType').updateValueAndValidity();
+    this.allRoundTripTypes = this.enumToArray
+      .transform(RoundTripType)
+      .filter((item) => {
+        if (this.step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
+          return item.key == RoundTripType.WithoutReturnTrip || item.key == RoundTripType.WithReturnTrip;
+        }
+        if (this.step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) {
+          return item.key != RoundTripType.WithoutReturnTrip && item.key != RoundTripType.WithReturnTrip;
+        }
+      })
+      .map((item) => {
+        const selectItem = new SelectItemDto();
+        (selectItem.id as any) = Number(item.key);
+        selectItem.displayName = item.value;
+        return selectItem;
+      });
+    // this.step1Dto.roundTripType = Number(this.allRoundTripTypes[0].id);
+    // this.step1Form.get('roundTripType').setValue(this.step1Dto.roundTripType);
+    // this.step1Form.get('roundTripType').markAsTouched();
+    // this.step1Form.get('roundTripType').updateValueAndValidity();
   }
 
   loadCitiesByCountryId(countryId: number, type: 'source' | 'destination') {
@@ -579,7 +675,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       )
       .subscribe((res) => {
         type === 'source' ? (this.sourceCities = res) : this.loadDestinationCities(res);
-        if (this.step1Dto.shippingTypeId == 2) {
+        if (
+          this.step1Dto.shippingTypeId == ShippingTypeEnum.LocalBetweenCities ||
+          this.step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+          this.step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
+        ) {
           this.sourceCities = res;
           // this.step2Dto.originCityId = this.step2Dto.destinationCityId = null;
           this.loadDestinationCities(res);
@@ -789,8 +889,12 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    * Validates Shipping Request Origing&Dest According to Shipping Type
    */
   validateShippingRequestType() {
+    if (this.step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
+      this.step2Form.get('originFacility').setValidators([Validators.required]);
+      this.step2Form.get('originFacility').updateValueAndValidity();
+    }
     //check if user choose local-inside city  but the origin&des same
-    if (this.step2Dto.originCityId != null && this.step1Dto.shippingTypeId == 1) {
+    if (this.step2Dto.originCityId != null && this.step1Dto.shippingTypeId == ShippingTypeEnum.LocalInsideCity) {
       this.step2Dto.shippingRequestDestinationCities = [];
       //local inside city
       this.destinationCountry = this.originCountry;
@@ -798,7 +902,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       city.cityId = this.step2Dto.originCityId;
 
       this.step2Dto.shippingRequestDestinationCities.push(city);
-    } else if (this.step1Dto.shippingTypeId == 2) {
+    } else if (this.step1Dto.shippingTypeId == ShippingTypeEnum.LocalBetweenCities) {
       // if route type is local betwenn cities check if user select same city in source and destination
       // this.destinationCities = this.sourceCities;
       this.destinationCountry = this.originCountry;
@@ -818,7 +922,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.clearValidation('destinationCity');
         this.clearValidation('destinationCountry');
       }
-    } else if (this.step1Dto.shippingTypeId == 4) {
+    } else if (this.step1Dto.shippingTypeId == ShippingTypeEnum.CrossBorderMovements) {
       //if route type is cross border prevent the countries to be the same
       if (this.originCountry === this.destinationCountry) {
         this.step2Form.controls['originCountry'].setErrors({ invalid: true });
@@ -826,6 +930,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       } else {
         this.clearValidation('originCountry');
         this.clearValidation('destinationCountry');
+        this.clearValidation('originFacility');
       }
     }
   }
@@ -844,11 +949,40 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    */
   resetStep2Inputs() {
     this.step2Dto.shippingRequestDestinationCities = [];
-    this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
+    this.step2Dto.originFacilityId = this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
     this.clearValidation('originCity');
     this.clearValidation('destinationCity');
     this.clearValidation('originCountry');
     this.clearValidation('destinationCountry');
+  }
+
+  /**
+   * prepare step2 inputs if the round Type Change for ports movement
+   */
+  prepareStep2Inputs() {
+    console.log('prepareStep2Inputs');
+    switch (Number(this.step1Dto.roundTripType)) {
+      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
+      case RoundTripType.TwoWayRoutsWithPortShuttling:
+      case RoundTripType.WithReturnTrip: {
+        this.step2Dto.routeTypeId = ShippingRequestRouteType.MultipleDrops;
+        this.step2Dto.numberOfDrops = 2;
+        break;
+      }
+      case RoundTripType.WithoutReturnTrip:
+      case RoundTripType.OneWayRoutWithPortShuttling:
+      default: {
+        this.step2Dto.routeTypeId = ShippingRequestRouteType.SingleDrop;
+        this.step2Dto.numberOfDrops = 1;
+        break;
+      }
+    }
+    // this.step2Dto.shippingRequestDestinationCities = [];
+    // this.step2Dto.originCityId = this.originCountry = this.destinationCountry = undefined;
+    // this.clearValidation('originCity');
+    // this.clearValidation('destinationCity');
+    // this.clearValidation('originCountry');
+    // this.clearValidation('destinationCountry');
   }
   /**
    * Get City Cordinates By Providing its name
@@ -1004,5 +1138,42 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
   goToDedicatedWizard() {
     this._router.navigate(['/app/main/shippingRequests/dedicatedShippingRequestWizard']);
+  }
+
+  getCityIdFromSelectedPort($event: any) {
+    this.step2Dto.originCityId = this.allOriginPorts?.find((port) => port.id == $event)?.cityId;
+    console.log('this.step2Dto', this.step2Dto);
+  }
+
+  removeValidationForImportPortRequestOnStep2Form() {
+    this.step2Form.get('destinationCountry').clearValidators();
+    this.step2Form.get('destinationCountry').updateValueAndValidity();
+    this.step2Form.get('originCity').clearValidators();
+    this.step2Form.get('originCity').updateValueAndValidity();
+    this.step2Form.get('routeType').clearValidators();
+    this.step2Form.get('routeType').updateValueAndValidity();
+  }
+
+  removeValidationForExportPortRequestOnStep2Form() {
+    this.step2Form.get('destinationCountry').clearValidators();
+    this.step2Form.get('destinationCountry').updateValueAndValidity();
+    this.step2Form.get('routeType').clearValidators();
+    this.step2Form.get('routeType').updateValueAndValidity();
+    this.step2Form.get('originFacility').clearValidators();
+    this.step2Form.get('originFacility').updateValueAndValidity();
+  }
+
+  private removeRequiredGoodDetailsValidationForPortsMovement() {
+    if (
+      this.step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+      this.step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements
+    ) {
+      this.getGeneralGoodsId();
+      this.step3Form.get('goodCategory').clearValidators();
+      this.step3Form.get('goodCategory').updateValueAndValidity();
+    } else {
+      this.step3Form.get('goodCategory').setValidators([Validators.required]);
+      this.step3Form.get('goodCategory').updateValueAndValidity();
+    }
   }
 }

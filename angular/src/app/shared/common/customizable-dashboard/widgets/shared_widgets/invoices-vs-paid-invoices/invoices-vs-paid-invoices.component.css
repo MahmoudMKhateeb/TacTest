@@ -14,6 +14,10 @@ input[type='radio'] {
   color: #dc2434;
 }
 
+.text-red.broker {
+  color: #000;
+}
+
 .text-gray {
   color: #d7dadc;
 }

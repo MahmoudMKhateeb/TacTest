@@ -35,10 +35,10 @@ namespace TACHYON.PricePackages.PricePackageProposals.Jobs
             CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
             
             var proposal = await _proposalRepository.GetAll().Include(x => x.Shipper)
-                .Include(x => x.TmsPricePackages).ThenInclude(x=> x.DestinationCity)
-                .Include(x => x.TmsPricePackages).ThenInclude(x=> x.OriginCity)
-                .Include(x => x.TmsPricePackages).ThenInclude(x=> x.TrucksTypeFk)
-                .Include(x => x.TmsPricePackages).ThenInclude(x=> x.ShippingType)
+                .Include(x => x.PricePackages).ThenInclude(x=> x.DestinationCity)
+                .Include(x => x.PricePackages).ThenInclude(x=> x.OriginCity)
+                .Include(x => x.PricePackages).ThenInclude(x=> x.TrucksTypeFk)
+                .Include(x => x.PricePackages).ThenInclude(x=> x.ShippingType)
                 .FirstOrDefaultAsync(x => x.Id == args.ProposalId);
             var file = await _proposalManager.GenerateProposalPdfFile(proposal);
 

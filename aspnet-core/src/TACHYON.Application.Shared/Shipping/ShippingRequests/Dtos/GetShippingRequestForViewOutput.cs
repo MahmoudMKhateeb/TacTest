@@ -40,6 +40,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string TransportTypeDisplayName { get; set; }
         public string CapacityDisplayName { get; set; }
         public string DriverName { get; set; }
+        public ShippingRequestRouteType? RouteTypeId { get; set; }
         public string RoutTypeName { get; set; }
         public string OriginalCityName { get; set; }
         public int OriginalCityId { get; set; }
@@ -79,6 +80,10 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         
         public string ShipperActorName { get; set; }
 
+        public bool IsCarrierActorMyself { get; set; }
+        
+        public bool IsShipperActorMyself { get; set; }
+
         #region Dedicated
         public TimeUnit? RentalDurationUnit { get; set; }
         public string RentalDurationUnitTitle { get; set; }
@@ -89,6 +94,17 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public DateTime? RentalEndDate { get; set; }
         public int NumberOfTrucks { get; set; }
         public double? DedicatedKPI { get; set; }
+        #endregion
+
+        #region Port movements
+
+        public long? OriginFacilityId { get; set; }
+
+        public string OriginFacilityTitle { get; set; }
+        public RoundTripType? RoundTripType { get; set; }
+        public string RoundTripTypeTitle { get; set; }
+        public bool IsGeneralGoodsCategory { get; set; }
+
         #endregion
     }
 }

@@ -9,6 +9,7 @@ import {
   PenaltiesServiceProxy,
   SelectItemDto,
   ShippingRequestsServiceProxy,
+  ActorSelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
@@ -36,7 +37,7 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   isShippersActorsLoading: boolean;
   isFacilitiesLoading: boolean;
   shipperActorId: number;
-  shipperActors: SelectItemDto[];
+  shipperActors: ActorSelectItemDto[];
   canManageShipperClients: boolean;
 
   constructor(
@@ -82,7 +83,7 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     this.modal.show();
   }
 
-  private loadAllFacilities() {
+  loadAllFacilities() {
     // Important Note: There's some cases we must not load all facilities
     // 1- if the user is a broker and he is creating a receiver from the contact management page. hint: not from create trip
     // -- Update: now allowed to create receiver without filter actor (see myself) .. so above number 1 is canceled now
@@ -96,7 +97,7 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
 
     this.isFacilitiesLoading = true;
     this._receiversServiceProxy
-      .getAllFacilityForTableDropdown(null)
+      .getAllFacilityForTableDropdown(this.isTachyonDealer ? this.receiver.tenantId : null)
       .pipe(finalize(() => (this.isFacilitiesLoading = false)))
       .subscribe((result) => {
         this.allFacilitys = result;
@@ -179,6 +180,10 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     } else {
       this.loadAllFacilities();
     }
+  }
+
+  LoadFacilitiesByTenant() {
+    this.loadAllFacilities();
   }
 
   isActorRequired(): boolean {

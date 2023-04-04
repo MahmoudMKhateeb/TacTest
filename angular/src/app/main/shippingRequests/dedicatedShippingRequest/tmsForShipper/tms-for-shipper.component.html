@@ -108,12 +108,12 @@
                       </span>
                     </a>
                     <ul class="dropdown-menu z-index-1000" *dropdownMenu>
-                      <li>
+                      <li *ngIf="!hasShipperClients || isGranted('Pages.DedicatedFillAttendaceSheet')">
                         <a href="javascript:;" class="dropdown-item" (click)="openFillAttendanceModal(options.data.id)">
                           {{ 'FillAttendance' | localize }}
                         </a>
                       </li>
-                      <li *ngIf="isTachyonDealer || isRequestSaas">
+                      <li *ngIf="isGranted('Pages.ShippingRequests.Edit') && (isTachyonDealer || isRequestSaas)">
                         <a href="javascript:;" class="dropdown-item" (click)="openTruckPerformanceModal(options.data)">
                           {{ 'updateTruckPerformance' | localize }}
                         </a>

@@ -12,6 +12,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         [Required] public ShippingRequestRouteType RouteTypeId { get; set; }
 
         [Required] public int OriginCityId { get; set; }
+        public long? OriginFacilityId { get; set; }
 
         //[Required] public int DestinationCityId { get; set; }
 

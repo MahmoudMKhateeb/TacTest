@@ -21,5 +21,7 @@ namespace TACHYON.Shipping.Drivers.Dto
         public long? WaybillNumber { get; set; }
         public bool HasIncident { get; set; }
         public bool IsSaas { get; set; }
+        public bool IsPortMovementRequest { get; set; }
+        public RoundTripType? RoundTripType { get; set; }
     }
 }

@@ -27,6 +27,35 @@
                 <option *ngFor="let item of shippers" [value]="item.id">{{ item.displayName }}</option>
               </select>
             </div>
+            <div class="form-group col-md-12">
+              <!--              <input [(ngModel)]="pricePackageProposal.tmsPricePackages" required type="text" class="form-control" name="tmsPricePackages" />-->
+              <label>{{ l('PricePackages') }} <span class="text-danger">*</span></label>
+              <dx-drop-down-box
+                [(value)]="pricePackageProposal.pricePackages"
+                valueExpr="id"
+                displayExpr="displayName"
+                placeholder="Select a value..."
+                [showClearButton]="true"
+                [dataSource]="dataSource"
+                [disabled]="!pricePackageProposal.shipperId"
+              >
+                <div *dxTemplate="let data of 'content'">
+                  <dx-data-grid
+                    [dataSource]="dataSource"
+                    [columns]="['displayName', 'truckType', 'originCity', 'destinationCity', 'totalPrice']"
+                    [selection]="{ mode: 'multiple' }"
+                    [hoverStateEnabled]="true"
+                    [paging]="{ enabled: true, pageSize: 10 }"
+                    [filterRow]="{ visible: true }"
+                    [scrolling]="{ mode: 'virtual' }"
+                    [height]="345"
+                    [(selectedRowKeys)]="pricePackageProposal.pricePackages"
+                  >
+                  </dx-data-grid>
+                </div>
+              </dx-drop-down-box>
+            </div>
+
             <div class="form-group col-md-6">
               <label>{{ l('Date') }} <span class="text-danger">*</span></label>
               <input
@@ -40,39 +69,7 @@
                 [bsConfig]="{ adaptivePosition: true }"
               />
             </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('ScopeOverview') }} <span class="text-danger">*</span></label>
-              <input [(ngModel)]="pricePackageProposal.scopeOverview" minlength="3" required type="text" class="form-control" name="scopeOverview" />
-            </div>
 
-            <div class="form-group col-md-12">
-              <!--              <input [(ngModel)]="pricePackageProposal.tmsPricePackages" required type="text" class="form-control" name="tmsPricePackages" />-->
-              <label>{{ l('PricePackages') }} <span class="text-danger">*</span></label>
-              <dx-drop-down-box
-                [(value)]="pricePackageProposal.tmsPricePackages"
-                valueExpr="id"
-                displayExpr="displayName"
-                placeholder="Select a value..."
-                [showClearButton]="true"
-                [dataSource]="dataSource"
-                [disabled]="!pricePackageProposal.shipperId"
-              >
-                <div *dxTemplate="let data of 'content'">
-                  <dx-data-grid
-                    [dataSource]="dataSource"
-                    [columns]="['displayName', 'truckType', 'originCity', 'destinationCity', 'directRequestTotalPrice', 'tachyonManageTotalPrice']"
-                    [selection]="{ mode: 'multiple' }"
-                    [hoverStateEnabled]="true"
-                    [paging]="{ enabled: true, pageSize: 10 }"
-                    [filterRow]="{ visible: true }"
-                    [scrolling]="{ mode: 'virtual' }"
-                    [height]="345"
-                    [(selectedRowKeys)]="pricePackageProposal.tmsPricePackages"
-                  >
-                  </dx-data-grid>
-                </div>
-              </dx-drop-down-box>
-            </div>
             <div class="form-group col-md-6">
               <label>{{ l('EmailAddress') }}</label>
               <input
@@ -84,6 +81,12 @@
                 name="emailAddress"
               />
             </div>
+
+            <div class="form-group col-md-6">
+              <label>{{ l('ScopeOverview') }} <span class="text-danger">*</span></label>
+              <textarea [(ngModel)]="pricePackageProposal.scopeOverview" minlength="3" required class="form-control" name="scopeOverview"></textarea>
+            </div>
+
             <div class="form-group col-md-6">
               <label>{{ l('Notes') }} <span class="text-danger">*</span></label>
               <!--                            <textarea [(ngModel)]='pricePackageProposal.notes' required type='text' class='form-control'-->
@@ -94,7 +97,14 @@
         </div>
         <div class="modal-footer">
           <button type="button" (click)="close()" class="btn btn-secondary">{{ 'Close' | localize }}</button>
-          <button type="submit" (click)="createOrEdit()" [disabled]="PPPForm.invalid" class="btn btn-primary">{{ 'Save' | localize }}</button>
+          <button
+            type="submit"
+            (click)="createOrEdit()"
+            [disabled]="PPPForm.invalid || !pricePackageProposal?.pricePackages || pricePackageProposal?.pricePackages?.length == 0"
+            class="btn btn-primary"
+          >
+            {{ 'Save' | localize }}
+          </button>
         </div>
       </form>
     </div>

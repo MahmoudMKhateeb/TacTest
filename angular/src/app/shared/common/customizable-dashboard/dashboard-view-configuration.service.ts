@@ -50,6 +50,21 @@ import { NewOffersWidgetComponent } from '@app/shared/common/customizable-dashbo
 import { DriverTucksActivityComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/driver-tucks-activity/driver-tucks-activity.component';
 import { AcceptedVsRejectedPricingComponent } from '@app/shared/common/customizable-dashboard/widgets/carrier/accepted-vs-rejected-pricing/accepted-vs-rejected-pricing.component';
 import { NewDirectRequestsWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/new-direct-requests-widget/new-direct-requests-widget.component';
+import { NewActorsThisMonthComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/new-actors-this-month/new-actors-this-month.component';
+import { NumberOfActorsComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/number-of-actors/number-of-actors.component';
+import { MostActiveActorShipperComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/most-active-actor-shipper/most-active-actor-shipper.component';
+import { MostActiveActorCarrierComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/most-active-actor-carrier/most-active-actor-carrier.component';
+import { NumberOfActiveActorsComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/number-of-active-actors/number-of-active-actors.component';
+import { MostUsedOriginsActorsComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/most-used-origins-actors/most-used-origins-actors.component';
+import { MostUsedDestinationsActorsComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/most-used-destinations-actors/most-used-destinations-actors.component';
+import { ActorUpcomingTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-upcoming-trips/actor-upcoming-trips.component';
+import { ActorNeedsActionsComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-needs-actions/actor-needs-actions.component';
+import { ActorPendingPriceOffersComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-pending-price-offers/actor-pending-price-offers.component';
+import { ActorMostTruckTypeUsedComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-most-truck-type-used/actor-most-truck-type-used.component';
+import { ActorNextDocDueDateComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-next-doc-due-date/actor-next-doc-due-date.component';
+import { ActorNextInvoiceDueDateComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-next-invoice-due-date/actor-next-invoice-due-date.component';
+import { ActorNewInvoiceVsPaidInvoiceComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-new-invoice-vs-paid-invoice/actor-new-invoice-vs-paid-invoice.component';
+import { ActorPaidInvoiceVsClaimedInvoiceComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-paid-invoice-vs-claimed-invoice/actor-paid-invoice-vs-claimed-invoice.component';
 
 @Injectable({
   providedIn: 'root',
@@ -499,6 +514,94 @@ export class DashboardViewConfigurationService {
       20
     );
 
+    // broker dashboard
+    let NewActorsThisMonth_Broker = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.NewActorsThisMonthWidget,
+      NewActorsThisMonthComponent,
+      12,
+      5
+    );
+    let NumberOfActors_Broker = new WidgetViewDefinition(DashboardCustomizationConst.widgets.Broker.NumberOfActors, NumberOfActorsComponent, 12, 5);
+    let MostActiveActorShipper = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.MostActiveActorShipper,
+      MostActiveActorShipperComponent,
+      12,
+      10
+    );
+    let MostActiveActorCarrier = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.MostActiveActorCarrier,
+      MostActiveActorCarrierComponent,
+      12,
+      10
+    );
+    let NumberOfActiveActors = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.NumberOfActiveActors,
+      NumberOfActiveActorsComponent,
+      8,
+      10
+    );
+    let ActorsMostUsedOrigins = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.ActorsMostUsedOrigins,
+      MostUsedOriginsActorsComponent,
+      8,
+      12
+    );
+
+    let ActorsMostUsedDestinations = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.ActorsMostUsedDestinations,
+      MostUsedDestinationsActorsComponent,
+      6,
+      10
+    );
+    let ActorsUpcomingTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.ActorsUpcomingTrips,
+      ActorUpcomingTripsComponent,
+      6,
+      8
+    );
+    let ActorsNeedsActions = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.ActorsNeedsActions,
+      ActorNeedsActionsComponent,
+      6,
+      7
+    );
+    let PendingPriceOffers = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.PendingPriceOffers,
+      ActorPendingPriceOffersComponent,
+      8,
+      10
+    );
+    let MostTruckTypeUsed = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.MostTruckTypeUsed,
+      ActorMostTruckTypeUsedComponent,
+      16,
+      12
+    );
+    let ActorNextDocDueDate = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.ActorNextDocDueDate,
+      ActorNextDocDueDateComponent,
+      6,
+      10
+    );
+    let ActorNextInvoiceDueDate = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.ActorNextInvoiceDueDate,
+      ActorNextInvoiceDueDateComponent,
+      6,
+      10
+    );
+    let NewInvoicesVsPaidInvoices = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.NewInvoicesVsPaidInvoices,
+      ActorNewInvoiceVsPaidInvoiceComponent,
+      16,
+      10
+    );
+    let ActorsPaidInvoiceVsClaimedInvoice = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.Broker.ActorsPaidInvoiceVsClaimedInvoice,
+      ActorPaidInvoiceVsClaimedInvoiceComponent,
+      16,
+      10
+    );
+
     //shipperPush
     this.WidgetViewDefinitions.push(shippercompletedTrips);
     this.WidgetViewDefinitions.push(acceptedVsRejectedRequestsWidget);
@@ -577,6 +680,24 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(worstRatedCarriersWidget);
     this.WidgetViewDefinitions.push(unPricedShippingRequestsWidget);
     this.WidgetViewDefinitions.push(hostRequestsPerAreaOrCity);
+
+    // broker
+    this.WidgetViewDefinitions.push(NewActorsThisMonth_Broker);
+    this.WidgetViewDefinitions.push(NumberOfActors_Broker);
+    this.WidgetViewDefinitions.push(MostActiveActorShipper);
+    this.WidgetViewDefinitions.push(MostActiveActorCarrier);
+    this.WidgetViewDefinitions.push(NumberOfActiveActors);
+    this.WidgetViewDefinitions.push(ActorsMostUsedOrigins);
+    this.WidgetViewDefinitions.push(ActorsMostUsedDestinations);
+    this.WidgetViewDefinitions.push(ActorsUpcomingTrips);
+    this.WidgetViewDefinitions.push(ActorsNeedsActions);
+    this.WidgetViewDefinitions.push(PendingPriceOffers);
+    this.WidgetViewDefinitions.push(MostTruckTypeUsed);
+    this.WidgetViewDefinitions.push(ActorNextDocDueDate);
+    this.WidgetViewDefinitions.push(ActorNextInvoiceDueDate);
+    this.WidgetViewDefinitions.push(NewInvoicesVsPaidInvoices);
+    this.WidgetViewDefinitions.push(ActorsPaidInvoiceVsClaimedInvoice);
+
     //console.log('WidgetViewDefinitions', this.WidgetViewDefinitions);
     // this.widgetFilterDefinitions.push();
   }

@@ -5,6 +5,7 @@
     class="{{ customClass ? customClass : 'btn btn-outline-danger dropdown-toggle btn-elevate-hover mr-2' }}"
     aria-controls="dropdown-basic"
     [disabled]="disabled"
+    type="button"
   >
     <i class="fa fa-plus"></i> {{ 'SaveAsTemplate' | localize }}<span class="caret"></span>
   </button>
@@ -26,7 +27,13 @@
         />
       </div>
       <validation-messages [formCtrl]="templateNameInput"></validation-messages>
-      <button role="menuitem" [disabled]="!templateNameInput.valid || disabled" class="btn btn-sm btn-block btn-info" (click)="SaveAsTemplate()">
+      <button
+        type="button"
+        role="menuitem"
+        [disabled]="!templateNameInput.valid || disabled"
+        class="btn btn-sm btn-block btn-info"
+        (click)="SaveAsTemplate()"
+      >
         {{ (templateIdForEdit ? 'Update' : 'Save') | localize }}
       </button>
     </li>

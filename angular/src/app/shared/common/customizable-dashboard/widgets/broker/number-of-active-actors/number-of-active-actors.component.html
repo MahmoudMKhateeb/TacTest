@@ -1,0 +1,28 @@
+<div class="card card-custom card-stretch w-100 h-100">
+  <div class="card-body p-4 d-flex flex-column justify-content-center">
+    <div class="row px-8">
+      <h2 class="gutter-b">
+        {{ 'NumberOfActiveActors' | localize }}
+      </h2>
+    </div>
+    <div class="row px-8 gutter-b">
+      <div class="col-2">
+        <img src="assets/SVG/active-actors.svg" alt="" />
+      </div>
+      <div class="col d-flex align-items-center">{{ activeShipperActorsCount }} {{ 'Shippers' | localize }}</div>
+      <div class="col d-flex align-items-center">{{ activeCarrierActorsCount }} {{ 'Carriers' | localize }}</div>
+    </div>
+    <div class="row px-8">
+      <h2 class="gutter-b">
+        {{ 'NumberOfNonActiveActors' | localize }}
+      </h2>
+    </div>
+    <div class="row px-8">
+      <div class="col-2">
+        <img src="assets/SVG/none-active-actor.svg" alt="" />
+      </div>
+      <div class="col d-flex align-items-center">{{ nonActiveShipperActorsCount }} {{ 'Shippers' | localize }}</div>
+      <div class="col d-flex align-items-center">{{ nonActiveCarrierActorsCount }} {{ 'Carriers' | localize }}</div>
+    </div>
+  </div>
+</div>

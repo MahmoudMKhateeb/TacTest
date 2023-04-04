@@ -10,6 +10,7 @@ using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Integration.WaslIntegration;
+using TACHYON.Invoices;
 using TACHYON.Invoices.ActorInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Penalties;
@@ -225,6 +226,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
 
         public ActorCarrierPrice ActorCarrierPrice { get; set; }
+        #region SaasInvoice
+        /// <summary>
+        /// This field is filled from features for saas trips in creation process
+        /// </summary>
+        public bool? SaasInvoicingActivation { get; set; }
+        #endregion
 
 
     }

@@ -8,9 +8,8 @@ using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
-using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
-using TACHYON.PricePackages.Dto.NormalPricePackage;
+using TACHYON.PricePackages.Dto;
 using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
@@ -68,7 +67,7 @@ namespace TACHYON.Notifications
             long TripId,
             string PickupFacilityName);
 
-        Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request);
+        Task ShipperShippingRequestFinish(UserIdentifier argsUser, long requestId);
 
         #region Trips
 
@@ -101,6 +100,7 @@ namespace TACHYON.Notifications
         Task ShippingRequestTripCanceled(List<UserIdentifier> Users, ShippingRequestTrip trip, string tenantName);
         Task ShippingRequestTripRejectCancelByTachyonDealer(List<UserIdentifier> Users, ShippingRequest request);
         Task TripAccidentResolved(ShippingRequest request, string waybillNum, TripAccidentResolveType resolveType);
+        Task NotifyTMSWithMaxWaybillsExceeds(int tenantId);
         #endregion
 
         #region ShippingRequest

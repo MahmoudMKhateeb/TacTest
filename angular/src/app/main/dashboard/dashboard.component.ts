@@ -14,11 +14,14 @@ export class DashboardComponent extends AppComponentBase {
   constructor(injector: Injector) {
     super(injector);
 
-    if (isEnabled('App.Shipper')) {
+    const isBroker = this.hasCarrierClients && this.hasShipperClients;
+    if (isBroker) {
+      this.dashboardName = DashboardCustomizationConst.dashboardNames.defaultBrokerDashboard;
+    } else if (this.isShipper) {
       this.dashboardName = DashboardCustomizationConst.dashboardNames.defaultShipperDashboard;
-    } else if (isEnabled('App.Carrier')) {
+    } else if (this.isCarrier) {
       this.dashboardName = DashboardCustomizationConst.dashboardNames.defaultCarrierDashboard;
-    } else if (isEnabled('App.TachyonDealer')) {
+    } else if (this.isTachyonDealer) {
       this.dashboardName = DashboardCustomizationConst.dashboardNames.defaultTachyonMangedServiceDashboard;
     }
   }

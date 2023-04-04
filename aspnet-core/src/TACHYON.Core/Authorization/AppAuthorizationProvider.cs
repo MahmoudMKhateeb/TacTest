@@ -52,6 +52,8 @@ namespace TACHYON.Authorization
 
             var hostDashboard = pages.CreateChildPermission(AppPermissions.Pages_HostDashboard, L("HostDashboard"));
             var shipperDashboard = pages.CreateChildPermission(AppPermissions.Pages_ShipperDashboard, L("ShipperDashboard"), multiTenancySides: MultiTenancySides.Tenant);
+            shipperDashboard.CreateChildPermission(AppPermissions.Pages_ShipperDashboard_trackingMap, L("ShipperTrackingMap"));
+            shipperDashboard.CreateChildPermission(AppPermissions.Pages_ShipperDashboard_tripDetails, L("ShipperTripDetails"));
             var CarrierDashboard = pages.CreateChildPermission(AppPermissions.Pages_CarrierDashboard, L("CarrierDashboard"), multiTenancySides: MultiTenancySides.Tenant);
 
             var receivers = pages.CreateChildPermission(AppPermissions.Pages_Receivers, L("Receivers"));
@@ -264,6 +266,7 @@ namespace TACHYON.Authorization
             facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Delete, L("DeleteFacility"),multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host);
 
             var shipper = pages.CreateChildPermission(AppPermissions.App_Shipper, L("Shipper"));
+            
             var carrier = pages.CreateChildPermission(AppPermissions.App_Carrier, L("Carrier"));
             var tachyonDealer = pages.CreateChildPermission(AppPermissions.App_TachyonDealer, L("TachyonDealer"));
 
@@ -437,6 +440,8 @@ namespace TACHYON.Authorization
                 multiTenancySides: MultiTenancySides.Host);
             trackingPermission.CreateChildPermission(AppPermissions.Pages_Tracking_BulkDeliverTrip, L("BulkDeliverTrip"),
                 featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer));
+            trackingPermission.CreateChildPermission(AppPermissions.Pages_Tracking_Drive, L("DriveTrackingPermission"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.ShipperClients));
 
             var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("Administration"));
 
@@ -457,6 +462,10 @@ namespace TACHYON.Authorization
 
 
             var actorInvoices = administration.CreateChildPermission(AppPermissions.Pages_Administration_ActorsInvoice, L("ActorInvoices"),
+                multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host,
+                featureDependency: new SimpleFeatureDependency(AppFeatures.ShipperClients, AppFeatures.TachyonDealer));
+
+            var actorSubmitInvoices = administration.CreateChildPermission(AppPermissions.Pages_Administration_SubmitActorsInvoice, L("ActorSubmitInvoicesPermission"),
                 multiTenancySides: MultiTenancySides.Tenant | MultiTenancySides.Host,
                 featureDependency: new SimpleFeatureDependency(AppFeatures.ShipperClients, AppFeatures.TachyonDealer));
 
@@ -701,11 +710,6 @@ namespace TACHYON.Authorization
                 L("DeleteEntityTemplate"), multiTenancySides: MultiTenancySides.Tenant
                 , featureDependency: templateFeatureDependency);
 
-            var normalPricePackage = pages.CreateChildPermission(AppPermissions.Pages_NormalPricePackages, L("NormalPricePackages"));
-            normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Create, L("CreateNewNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
-            normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Edit, L("EditNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
-            normalPricePackage.CreateChildPermission(AppPermissions.Pages_NormalPricePackages_Delete, L("DeleteNormalPricePackage"), multiTenancySides: MultiTenancySides.Tenant);
-
             #region SrPostPricePermissions
 
             var srPostPrice = context.CreatePermission(AppPermissions.Pages_SrPostPriceUpdate, L("SrPostPriceUpdates"),
@@ -811,25 +815,15 @@ namespace TACHYON.Authorization
                 featureDependency: shipperOrCarrierClientsFeatureDependency);
             #endregion
 
-            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Actors, L("ActorDocumentFiles"),
-               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
-                   AppFeatures.DocumentsManagement));
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Actors, L("ActorDocumentFiles"));
             
-            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Submitted, L("SubmittedDocument"),
-               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
-                   AppFeatures.DocumentsManagement));
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Submitted, L("SubmittedDocument"));
             
-            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Additional, L("AdditionalDocumentFiles"),
-               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
-                   AppFeatures.DocumentsManagement));
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Additional, L("AdditionalDocumentFiles"));
             
-            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Drivers, L("DriversDocumentFiles"),
-               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
-                   AppFeatures.DocumentsManagement));
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Drivers, L("DriversDocumentFiles"));
             
-            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Trucks, L("TrucksDocumentFiles"),
-               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer,
-                   AppFeatures.DocumentsManagement));
+            documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Trucks, L("TrucksDocumentFiles"));
 
            // For Host/TMS
            pages.CreateChildPermission(AppPermissions.Pages_Invoices_ConfirmInvoice, L("ConfirmInvoicePermission"),
@@ -837,21 +831,21 @@ namespace TACHYON.Authorization
            
            #region TMS Price Packages
 
-           var tmsPricePackagePermission = pages.CreateChildPermission(AppPermissions.Pages_TmsPricePackages,
-               L("TmsPricePackagesPermission"),
+           var tmsPricePackagePermission = pages.CreateChildPermission(AppPermissions.Pages_PricePackages,
+               L("PricePackagesPermission"),
                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Shipper,AppFeatures.Carrier));
            
-           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Create,
-               L("CreateTmsPricePackage"),
-               featureDependency: tmsFeatureDependency,multiTenancySides: MultiTenancySides.Tenant);
+           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_PricePackages_Create,
+               L("CreatePricePackage"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Carrier));
            
-           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Update,
-               L("UpdateTmsPricePackage"),
-               featureDependency: tmsFeatureDependency,multiTenancySides: MultiTenancySides.Tenant);
+           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_PricePackages_Update,
+               L("UpdatePricePackage"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Carrier));
            
-           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_TmsPricePackages_Delete,
-               L("DeleteTmsPricePackage"),
-               featureDependency: tmsFeatureDependency,multiTenancySides: MultiTenancySides.Tenant);
+           tmsPricePackagePermission.CreateChildPermission(AppPermissions.Pages_PricePackages_Delete,
+               L("DeletePricePackage"),
+               featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer, AppFeatures.Carrier));
            
 
            #endregion
@@ -903,7 +897,7 @@ namespace TACHYON.Authorization
 
            pricePackageAppendicesPermission.CreateChildPermission(AppPermissions.Pages_PricePackageAppendix_Activation,
                L("PricePackageAppendicesActivationPermission"),
-               featureDependency: tmsFeatureDependency, multiTenancySides: MultiTenancySides.Tenant);
+               featureDependency: tmsFeatureDependency);
            #endregion
 
            #region Actor Prices
@@ -925,6 +919,21 @@ namespace TACHYON.Authorization
 
            var penaltiesPermission = pages.CreateChildPermission(AppPermissions.Pages_Penalties, L("Penalties"));
            // note : to do use penalties permission to add some missing permission like create, update, and delete
+
+           pages.CreateChildPermission(AppPermissions.Pages_BrokerDashboard,L("BrokerDashboardPermission"),
+               // only for broker
+               featureDependency: new SimpleFeatureDependency(true,AppFeatures.CarrierClients,AppFeatures.ShipperClients));
+
+            #region Dedicated Attendance Sheet
+            var attendaceSheet = pages.CreateChildPermission(AppPermissions.Pages_DedicatedAttendanceSheet,
+              L("DedicatedAttendanceSheetPermission"),
+              featureDependency: brokerFeatureDependency);
+            attendaceSheet.CreateChildPermission(AppPermissions.Pages_DedicatedFillAttendanceSheet,
+              L("DedicatedFillAttendanceSheetPermission"),
+              featureDependency: brokerFeatureDependency);
+
+            #endregion
+            // note : to do use penalties permission to add some missing permission like create, update, and delete
         }
 
         private static ILocalizableString L(string name)

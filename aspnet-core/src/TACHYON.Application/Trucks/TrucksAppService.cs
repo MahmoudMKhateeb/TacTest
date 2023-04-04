@@ -155,7 +155,8 @@ namespace TACHYON.Trucks
                             ModelName = truck.ModelName,
                             ModelYear = truck.ModelYear,
                             Length = truck.Length,
-                            TruckStatusDisplayName = truck.TruckStatusFk != null ? truck.TruckStatusFk.DisplayName : "",
+                            TruckStatusDisplayName = truck.TruckStatusFk != null ? truck.TruckStatusFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name))
+                .TranslatedDisplayName : truck.TruckStatusFk.DisplayName,
                             TransportTypeDisplayName = truck.TransportTypeFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)) != null
                                             ? truck.TransportTypeFk.Translations.FirstOrDefault(t => t.Language.Contains(CultureInfo.CurrentUICulture.Name)).TranslatedDisplayName
                                             : truck.TransportTypeFk.DisplayName,
@@ -171,7 +172,7 @@ namespace TACHYON.Trucks
                             IstmaraNumber = document.Number,
                             OtherTransportTypeName = truck.OtherTransportTypeName,
                             OtherTrucksTypeName = truck.OtherTrucksTypeName,
-                            WorkingTruckStatus = truck.DedicatedShippingRequestTrucks.Any(x=>x.Status == Shipping.Dedicated.WorkingStatus.Busy)== true ?"Busy" :"Active",
+                            WorkingTruckStatus = truck.DedicatedShippingRequestTrucks.Any(x=>x.Status == Shipping.Dedicated.WorkingStatus.Busy)== true ?L("Busy") :L("Active"),
                             DriverUser = truck.DriverUserFk.Name +"",
                             WorkingShippingRequestReference= truck.DedicatedShippingRequestTrucks.Any(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy) == true 
                             ? truck.DedicatedShippingRequestTrucks.First().ShippingRequest.ReferenceNumber :"",

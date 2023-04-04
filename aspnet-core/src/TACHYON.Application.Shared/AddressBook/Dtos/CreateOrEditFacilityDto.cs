@@ -24,6 +24,8 @@ namespace TACHYON.AddressBook.Dtos
         public List<CreateOrEditFacilityWorkingHourDto> FacilityWorkingHours { get; set; }
         public int? ShipperActorId { get; set; }
         public bool IsForHomeDelivery { get; set; }
+        public FacilityType FacilityType { get; set; }
+
 
         public void AddValidationErrors(CustomValidationContext context)
         {

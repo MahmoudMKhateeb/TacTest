@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.MultiTenancy;
 using TACHYON.PricePackages.PricePackageProposals;
-using TACHYON.PricePackages.TmsPricePackages;
 
 namespace TACHYON.PricePackages.PricePackageAppendices
 {
@@ -38,10 +37,8 @@ namespace TACHYON.PricePackages.PricePackageAppendices
         [ForeignKey(nameof(DestinationTenantId))]
         public Tenant DestinationTenant { get; set; }
         
-        public List<TmsPricePackage> TmsPricePackages { get; set; }
-        
-        public List<NormalPricePackage> NormalPricePackages { get; set; }
-        
+        public List<PricePackage> PricePackages { get; set; }
+
         public bool IsActive { get; set; }
 
         [NotMapped]

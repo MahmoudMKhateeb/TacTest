@@ -16,6 +16,7 @@ import { finalize } from 'rxjs/operators';
 import KTWizard from '@metronic/common/js/components/wizard';
 
 import {
+  ActorSelectItemDto,
   CarriersForDropDownDto,
   CountyDto,
   CreateOrEditDedicatedStep1Dto,
@@ -35,6 +36,7 @@ import {
   ShippingRequestDestinationCitiesDto,
   ShippingRequestRouteType,
   ShippingRequestsServiceProxy,
+  ShippingTypeEnum,
   TenantCityLookupTableDto,
   TenantRegistrationServiceProxy,
   TimeUnit,
@@ -174,8 +176,9 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
   private selectingDateFor = 1;
   maxSelectableDate: Date;
   selectedDestCitiesForEdit: ShippingRequestDestinationCitiesDto[] = [];
-  AllActorsShippers: SelectItemDto[];
-  AllActorsCarriers: SelectItemDto[];
+  AllActorsShippers: ActorSelectItemDto[];
+  AllActorsCarriers: ActorSelectItemDto[];
+  ShippingTypeEnum = ShippingTypeEnum;
 
   constructor(
     injector: Injector,
@@ -272,6 +275,7 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
     this.wizard.on('beforeNext', (wizardObj) => {
       switch (this.wizard.getStep()) {
         case 1: {
+          console.log('this.step1Form', this.step1Form);
           document.getElementById('step1FormGroupButton').click();
           this.step1FormGroup.instance.validate();
           if (this.step1Form.invalid || !this.validateOthersInputs() || !this.validateRentalDuration()) {
@@ -533,6 +537,13 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
         return item;
       });
     });
+
+    // this.allShippingTypes = this.enumToArray.transform(ShippingTypeEnum).map((item) => {
+    //   const selectItem = new SelectItemDto();
+    //   (selectItem.id as any) = Number(item.key);
+    //   selectItem.displayName = item.value;
+    //   return selectItem;
+    // });
 
     this._shippingRequestsServiceProxy.getAllPackingTypesForDropdown().subscribe((result) => {
       this.allpackingTypes = result?.map((item) => {
@@ -859,12 +870,16 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
    */
   validateShippingRequestType() {
     //check if user choose local-inside city  but the origin&des same
-    if (this.step1Dto.shippingTypeId === 1) {
+    if (this.step1Dto.shippingTypeId === ShippingTypeEnum.LocalInsideCity) {
       //local inside city
       this.destinationCountry = this.originCountry;
-    } else if (this.step1Dto.shippingTypeId === 2) {
+      this.step1Form.get('destinationCountry').clearValidators();
+      this.step1Form.get('destinationCountry').updateValueAndValidity();
+    } else if (this.step1Dto.shippingTypeId === ShippingTypeEnum.LocalBetweenCities) {
       // if route type is local between cities check if user select same city in source and destination
       this.destinationCountry = this.originCountry;
+      this.step1Form.get('destinationCountry').clearValidators();
+      this.step1Form.get('destinationCountry').updateValueAndValidity();
 
       //if destination city one item selected and equals to origin, while shipping type is between cities
       if (isNotNullOrUndefined(this.step1Dto.shippingRequestDestinationCities) && this.step1Dto.shippingRequestDestinationCities.length === 1) {
@@ -877,7 +892,7 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
         this.clearValidation('destinationCity');
         this.clearValidation('destinationCountry');
       }
-    } else if (this.step1Dto.shippingTypeId === 4) {
+    } else if (this.step1Dto.shippingTypeId === ShippingTypeEnum.CrossBorderMovements) {
       //if route type is cross border prevent the countries to be the same
       if (this.originCountry === this.destinationCountry) {
         this.step1Form.controls['originCountry'].setErrors({ invalid: true });
@@ -918,15 +933,15 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
       date = this.today;
     }
     switch (this.step1Dto.rentalDurationUnit) {
-      case TimeUnit.Daily: {
+      case TimeUnit.Days: {
         this.maxSelectableDate = moment(date).add(this.step1Dto.rentalDuration, 'd').toDate();
         break;
       }
-      case TimeUnit.Weekly: {
+      case TimeUnit.Weeks: {
         this.maxSelectableDate = moment(date).add(this.step1Dto.rentalDuration, 'w').toDate();
         break;
       }
-      case TimeUnit.Monthly: {
+      case TimeUnit.Months: {
         this.maxSelectableDate = moment(date).add(this.step1Dto.rentalDuration, 'M').toDate();
         break;
       }
@@ -938,6 +953,7 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
 
   shippingTypeChanged() {
     this.step1Dto.shippingRequestDestinationCities = [];
+    this.validateShippingRequestType();
   }
 
   removeCarrierInputFromForm1() {

@@ -2,7 +2,7 @@ import { Component, Injector, Input, OnInit } from '@angular/core';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
-import { NormalPricePackagesServiceProxy, TmsPricePackageServiceProxy } from '@shared/service-proxies/service-proxies';
+import { PricePackageServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 @Component({
@@ -14,7 +14,7 @@ export class AppendixDetailGridComponent extends AppComponentBase implements OnI
   pricePackageDataSource: any;
   @Input() appendixId: number;
 
-  constructor(private _injector: Injector, private _tmsPricePackageServiceProxy: TmsPricePackageServiceProxy) {
+  constructor(private _injector: Injector, private _pricePackageServiceProxy: PricePackageServiceProxy) {
     super(_injector);
   }
 
@@ -28,7 +28,7 @@ export class AppendixDetailGridComponent extends AppComponentBase implements OnI
         }
         loadOptions.filter = [];
         (loadOptions.filter as any[]).push(['AppendixId', '=', self.appendixId]);
-        return self._tmsPricePackageServiceProxy
+        return self._pricePackageServiceProxy
           .getAppendixPricePackages(JSON.stringify(loadOptions))
           .toPromise()
           .then((result) => {

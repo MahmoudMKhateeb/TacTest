@@ -1,5 +1,6 @@
 ﻿using Abp;
 using Abp.Application.Features;
+using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
@@ -22,9 +23,11 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
+using TACHYON.Actors.Jobs;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;
 using TACHYON.Editions;
+using TACHYON.Features;
 using TACHYON.MultiTenancy.Demo;
 using TACHYON.MultiTenancy.Dto;
 using TACHYON.MultiTenancy.Payments;
@@ -49,6 +52,7 @@ namespace TACHYON.MultiTenancy
         private readonly IAbpZeroDbMigrator _abpZeroDbMigrator;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IRepository<SubscribableEdition> _subscribableEditionRepository;
+        private readonly IBackgroundJobManager _jobManager;
 
         public TenantManager(
             IRepository<Tenant> tenantRepository,
@@ -64,7 +68,8 @@ namespace TACHYON.MultiTenancy
             IAbpZeroFeatureValueStore featureValueStore,
             IAbpZeroDbMigrator abpZeroDbMigrator,
             IPasswordHasher<User> passwordHasher,
-            IRepository<SubscribableEdition> subscribableEditionRepository) : base(
+            IRepository<SubscribableEdition> subscribableEditionRepository,
+            IBackgroundJobManager jobManager) : base(
             tenantRepository,
             tenantFeatureRepository,
             editionManager,
@@ -83,6 +88,7 @@ namespace TACHYON.MultiTenancy
             _abpZeroDbMigrator = abpZeroDbMigrator;
             _passwordHasher = passwordHasher;
             _subscribableEditionRepository = subscribableEditionRepository;
+            _jobManager = jobManager;
         }
 
         public async Task<int> CreateWithAdminUserAsync(CreateTenantInput input, string emailActivationLink = null)
@@ -191,6 +197,16 @@ namespace TACHYON.MultiTenancy
                     {
                         adminUser.SetNewEmailConfirmationCode();
                         await _userEmailer.SendEmailActivationEmail(adminUser, emailActivationLink, input.AdminPassword);
+                    }
+
+                    if (tenant.EditionId.HasValue)
+                    {
+                       string featureValue = await EditionManager.GetFeatureValueOrNullAsync(tenant.EditionId.Value, AppFeatures.CMS);
+                       if (featureValue != null && featureValue.ToLower().Equals(true.ToString().ToLower()))
+                       {
+                          await _jobManager.EnqueueAsync<CreateMyselfActorJob, CreateMyselfActorJobArgs>(
+                               new CreateMyselfActorJobArgs { TenantIds = new[] { tenant.Id } });
+                       }
                     }
 
                     await _unitOfWorkManager.Current.SaveChangesAsync();

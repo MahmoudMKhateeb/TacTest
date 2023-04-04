@@ -2,6 +2,7 @@
 using Abp.Application.Services.Dto;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.MultiTenancy;
@@ -17,6 +18,7 @@ using TACHYON.Features;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.PriceOffers;
+using TACHYON.PricePackages;
 using TACHYON.Rating;
 using TACHYON.Shipping.DirectRequests.Dto;
 using TACHYON.Shipping.ShippingRequests;
@@ -34,6 +36,7 @@ namespace TACHYON.Shipping.DirectRequests
         private readonly PriceOfferManager _priceOfferManager;
         private readonly IRepository<TenantFeatureSetting, long> _tenantFeatureRepository;
         private readonly IRepository<EditionFeatureSetting, long> _editionFeatureRepository;
+        private readonly IRepository<PricePackage,long> _pricePackageRepository;
 
 
         public ShippingRequestDirectRequestAppService(IRepository<TenantCarrier, long> tenantCarrierRepository,
@@ -44,7 +47,8 @@ namespace TACHYON.Shipping.DirectRequests
             PriceOfferManager priceOfferManager,
             IRepository<ShippingRequest, long> shippingRequestRepository,
             IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
-            IRepository<EditionFeatureSetting, long> editionFeatureRepository)
+            IRepository<EditionFeatureSetting, long> editionFeatureRepository,
+            IRepository<PricePackage,long> pricePackageRepository)
         {
             _tenantCarrierRepository = tenantCarrierRepository;
             _tenantRepository = tenantRepository;
@@ -55,6 +59,7 @@ namespace TACHYON.Shipping.DirectRequests
             _shippingRequestRepository = shippingRequestRepository;
             _tenantFeatureRepository = tenantFeatureRepository;
             _editionFeatureRepository = editionFeatureRepository;
+            _pricePackageRepository = pricePackageRepository;
         }
 
         [RequiresFeature(AppFeatures.SendDirectRequest)]
@@ -102,18 +107,37 @@ namespace TACHYON.Shipping.DirectRequests
             await CheckCanAddDriectRequestToCarrirer(input);
             var id = await _shippingRequestDirectRequestRepository.InsertAndGetIdAsync(
                 ObjectMapper.Map<ShippingRequestDirectRequest>(input));
-            if (input.BidNormalPricePackage != null)
+            // todo =======>   find workaround and customize dto to complete carrier price package process
+            if (input.PricePackageId.HasValue)
             {
-                var referanceNumber = await _shippingRequestRepository.GetAll()
-                    .Where(x => x.Id == input.ShippingRequestId)
-                    .Select(x => x.ReferenceNumber)
-                    .FirstOrDefaultAsync();
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+                {
+                    var lookupDto = await (from request in _shippingRequestRepository.GetAll()
+                        from pricePackage in _pricePackageRepository.GetAll()
+                        from tenant in _tenantRepository.GetAll()
+                        where request.Id == input.ShippingRequestId && pricePackage.Id == input.PricePackageId &&
+                              tenant.Id == AbpSession.TenantId
+                        select new
+                        {
+                            RequestReference = request.ReferenceNumber,
+                            PackageReference = pricePackage.PricePackageReference,
+                            CurrentTenantName = tenant.Name
+                        }).SingleAsync();
 
-                await _appNotifier.NotfiyCarrierWhenReceiveBidPricePackage(input.CarrierTenantId, GetCurrentTenant().Name, input.BidNormalPricePackage.PricePackageId, id, referanceNumber);
+                    await _appNotifier.NotfiyCarrierWhenReceiveBidPricePackage(input.CarrierTenantId,
+                        lookupDto.CurrentTenantName, lookupDto.PackageReference, id, lookupDto.RequestReference);
+                }
             }
             else
             {
-                await _appNotifier.SendDriectRequest(GetCurrentTenant().Name, input.CarrierTenantId, id);
+                string currentTenantName;
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+                {
+                    currentTenantName = await _tenantRepository.GetAll().Where(x => x.Id == AbpSession.TenantId)
+                        .Select(x => x.Name).SingleAsync();
+                }
+
+                await _appNotifier.SendDriectRequest(currentTenantName, input.CarrierTenantId, id);
             }
 
             return id;

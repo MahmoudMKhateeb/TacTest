@@ -3,6 +3,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 import {
+  ActorSelectItemDto,
   CommonLookupServiceProxy,
   CreateOrEditDedicatedActorInvoiceDto,
   CreateOrEditDedicatedInvoiceItemDto,
@@ -13,7 +14,6 @@ import {
   InvoiceAccountType,
   InvoiceServiceProxy,
   ISelectItemDto,
-  NormalPricePackagesServiceProxy,
   SelectItemDto,
   ShippingRequestsServiceProxy,
   TenantRegistrationServiceProxy,
@@ -54,14 +54,13 @@ export class InvoiceDedicatedClientsModalComponent extends AppComponentBase impl
   taxVat: number;
   allWorkingDayTypes: any;
   private selectedShippingRequestId: number;
-  allActors: SelectItemDto[];
+  allActors: ActorSelectItemDto[];
   selectedActor: any;
   workingDayType = WorkingDayType;
 
   constructor(
     injector: Injector,
     private _currentSrv: InvoiceServiceProxy,
-    private _NormalPricePackagesServiceProxy: NormalPricePackagesServiceProxy,
     private _ShippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _TenantRegistration: TenantRegistrationServiceProxy,
     private _DynamicInvoiceServiceProxy: DynamicInvoiceServiceProxy,

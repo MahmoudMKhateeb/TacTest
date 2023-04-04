@@ -1,4 +1,4 @@
-﻿using Abp.Application.Features;
+using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
@@ -6,11 +6,13 @@ using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Runtime.Validation;
 using Abp.UI.Inputs;
+using DevExpress.DataAccess.Wizard.Presenters;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TACHYON.Configuration;
+using TACHYON.Invoices;
 using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy;
@@ -185,6 +187,41 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             );
 
+            cms.CreateChildFeature(
+                AppFeatures.SaasInvoicingActivation,
+                "false",
+                L("SaasInvoicingActivation"),
+                inputType: new CheckboxInputType()
+            );
+            #region Saas
+            var NumberOfWaybills = context.Create(
+                AppFeatures.NumberOfWaybills,
+                "false",
+                L("NumberOfWaybillsFeature"),
+                inputType: new CheckboxInputType()
+            );
+            NumberOfWaybills.CreateChildFeature(
+                AppFeatures.MaxNumberOfWaybills,
+                "false",
+                L("MaxNumberOfWaybillsFeature"), 
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+            );
+
+            NumberOfWaybills.CreateChildFeature(
+                AppFeatures.AdditionalWaybillPrice,
+                "false",
+                L("AdditionalWaybillPriceFeature"), 
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+                );
+
+            var ImportFunctionality = context.Create(
+                AppFeatures.ImportFunctionality,
+                "true",
+                L("ImportFunctionalityFeature"),
+                inputType: new CheckboxInputType()
+            );
+            #endregion
+
 
             var receiver = context.Create(
                 AppFeatures.Receiver,
@@ -253,12 +290,6 @@ namespace TACHYON.Features
                 IsVisibleOnPricingTable = false,
                 TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
-
-            var normalPricePackage = context.Create(
-            AppFeatures.NormalPricePackages,
-             "false",
-             L("NormalPricePackages"),
-               inputType: new CheckboxInputType());
 
             #endregion
 

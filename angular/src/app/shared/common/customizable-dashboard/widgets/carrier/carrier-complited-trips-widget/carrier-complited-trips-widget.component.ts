@@ -53,6 +53,9 @@ export class CarrierComplitedTripsWidgetComponent extends WidgetComponentBase im
           xaxis: {
             type: 'category',
           },
+          yaxis: {
+            opposite: this.isRtl,
+          },
         };
         (this.chartOptions.chart.locales as any[]) = [
           {
