@@ -1,4 +1,5 @@
 using Abp.Application.Services.Dto;
+using System;
 using TACHYON.Authorization.Users.Profile.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.Trips;
@@ -7,7 +8,10 @@ namespace TACHYON.Tracking.Dto
 {
     public class TrackingListDto : EntityDto
     {
+        public long? CreatorUserId { get; set; }
         public string Name { get; set; }
+        public string ShipperName { get; set; }
+        public string CarrierName { get; set; }
         public ShippingRequestTripStatus Status { get; set; }
         public string StatusTitle { get { return Status.GetEnumDescription(); } set { } }
         public string Driver { get; set; }
@@ -17,12 +21,12 @@ namespace TACHYON.Tracking.Dto
         public string DriverStatusTitle { get { return DriverStatus.GetEnumDescription(); } set { } }
         public long? AssignedDriverUserId { get; set; }
         public string TenantPhoto { get; set; }
-        public string DriverImageProfile { get; set; }
+        public Guid? DriverImageProfile { get; set; }
         public string Origin { get; set; }
         public string Destination { get; set; }
         public bool NeedsDeliveryNote { get; set; }
         public int NumberOfDrops { get; set; }
-        public int RequestId { get; set; }
+        public long? RequestId { get; set; }
         public string TruckType { get; set; }
         public string GoodsCategory { get; set; }
         public ShippingRequestRouteType RouteTypeId { get; set; }
@@ -69,5 +73,7 @@ namespace TACHYON.Tracking.Dto
 
         public long? ShipperInvoiceNumber { get; set; }
         public long? CarrierInvoiceNumber { get; set; }
+        public int? CarrierTenantId { get; set; }
+        public DateTime StartTripDate { get; set; }
     }
 }

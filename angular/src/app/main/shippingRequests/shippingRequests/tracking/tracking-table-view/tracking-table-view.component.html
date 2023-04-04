@@ -5,24 +5,29 @@
       <dx-data-grid
         #dataGrid
         id="gridContainer"
-        [dataSource]="items"
-        [remoteOperations]="false"
+        [dataSource]="dataSource"
         [wordWrapEnabled]="true"
         [allowColumnReordering]="true"
         [allowColumnResizing]="true"
         [columnAutoWidth]="true"
         [showBorders]="true"
-        [busyIf]="IsLoading"
+        [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
         (onRowExpanded)="getForView($event)"
         (onRowCollapsed)="collapsedRow($event)"
+        (onExporting)="onExporting($event)"
       >
-        <dxo-paging [pageSize]="maxResultCount"> </dxo-paging>
+        <dxo-paging [pageSize]="20"> </dxo-paging>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
+        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+        <dxo-filter-builder-popup></dxo-filter-builder-popup>
+        <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
+        <dxo-selection mode="multiple"></dxo-selection>
         <dxo-column-chooser [enabled]="false" [mode]="'select'"></dxo-column-chooser>
         <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
         <dxo-load-panel [enabled]="IsLoading"></dxo-load-panel>
         <dxo-scrolling mode="infinite"></dxo-scrolling>
-        <dxo-sorting mode="none"></dxo-sorting>
-
+        <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
         <dxi-column dataField="referenceNumber" caption="{{ 'RequestId' | localize }}" [fixed]="true"></dxi-column>
         <dxi-column
           *ngIf="isCarrier || isCarrierSaas || isTachyonDealer"
@@ -40,12 +45,12 @@
         <dxi-column dataField="shippingTypeTitle" caption="{{ 'ShippingType' | localize }}"></dxi-column>
         <dxi-column
           *ngIf="isTachyonDealer || isShipper"
-          dataField="ShipperInvoiceNumber"
+          dataField="shipperInvoiceNumber"
           caption="{{ (isTachyonDealer ? 'ShipperInvoiceNumber' : 'InvoiceNumber') | localize }}"
         ></dxi-column>
         <dxi-column
           *ngIf="isTachyonDealer || isCarrier"
-          dataField="CarrierInvoiceNumber"
+          dataField="carrierInvoiceNumber"
           caption="{{ (isTachyonDealer ? 'CarrierInvoiceNumber' : 'InvoiceNumber') | localize }}"
         ></dxi-column>
         <dxi-column dataField="origin" caption="{{ 'Origin' | localize }}"></dxi-column>
@@ -59,7 +64,7 @@
         <dxi-column dataField="containerNumber" caption="{{ 'ContainerNumber' | localize }}"></dxi-column>
         <dxi-column dataField="waybillNumber" caption="{{ 'WaybillNumber' | localize }}"></dxi-column>
         <dxi-column dataField="statusTitle" caption="{{ 'Status' | localize }}" cellTemplate="statusTitleCellTemplate"></dxi-column>
-        <dxi-column dataField="id" caption="{{ 'Track' | localize }}" cellTemplate="trackCellTemplate"></dxi-column>
+        <dxi-column [allowExporting]="false" dataField="id" caption="{{ 'Track' | localize }}" cellTemplate="trackCellTemplate"></dxi-column>
 
         <dxo-master-detail [enabled]="true" template="masterDetail"></dxo-master-detail>
         <div *dxTemplate="let masterDetailItem of 'masterDetail'">

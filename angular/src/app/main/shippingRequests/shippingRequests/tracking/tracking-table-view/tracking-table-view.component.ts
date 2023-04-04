@@ -19,6 +19,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { TrackingSearchInput } from '@app/shared/common/search/TrackingSearchInput';
 import { finalize } from '@node_modules/rxjs/operators';
+import { LoadOptions } from 'devextreme/data/load_options';
+import CustomStore from 'devextreme/data/custom_store';
+import { Workbook } from 'exceljs';
+import { saveAs } from 'file-saver';
+import { exportDataGrid } from 'devextreme/excel_exporter';
 
 @Component({
   selector: 'app-tracking-table',
@@ -52,6 +57,7 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
   waybillNumber: number;
   tripSubDetails: TrackingShippingRequestTripDto = new TrackingShippingRequestTripDto();
   showSubTable = true;
+  dataSource: any = {};
 
   constructor(
     injector: Injector,
@@ -102,44 +108,60 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
     if (isNotNullOrUndefined(this.waybillNumber)) {
       this.searchInput.WaybillNumber = this.waybillNumber;
     }
-    this._currentServ
-      .getAll(
-        this.searchInput.status,
-        this.searchInput.shipper,
-        this.searchInput.carrier,
-        this.searchInput.WaybillNumber,
-        this.searchInput.transportTypeId,
-        this.searchInput.truckTypeId,
-        this.searchInput.truckCapacityId,
-        this.searchInput.originId,
-        this.searchInput.destinationId,
-        this.searchInput.pickupFromDate,
-        this.searchInput.pickupToDate,
-        this.searchInput.fromDate,
-        this.searchInput.toDate,
-        this.searchInput.shippingRequestReferance,
-        this.searchInput.routeTypeId,
-        this.searchInput.packingTypeId,
-        this.searchInput.goodsOrSubGoodsCategoryId,
-        this.searchInput.plateNumberId,
-        this.searchInput.driverNameOrMobile,
-        this.searchInput.deliveryFromDate,
-        this.searchInput.deliveryToDate,
-        this.searchInput.containerNumber,
-        this.searchInput.isInvoiceIssued,
-        this.searchInput.isSubmittedPOD,
-        this.searchInput.requestTypeId,
-        '',
-        this.skipCount,
-        this.maxResultCount
-      )
-      .subscribe((result) => {
-        this.IsLoading = false;
-        this.isFirstLoad = false;
-        this.StopLoading = result.items.length < this.maxResultCount;
-        result.items.map((item) => ((item as any).showSubTable = true));
-        this.items.push(...result.items);
-      });
+
+    let self = this;
+
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      load(loadOptions: LoadOptions) {
+        return self._currentServ
+          .getAllDx(
+            JSON.stringify(loadOptions),
+            self.searchInput.status,
+            self.searchInput.shipper,
+            self.searchInput.carrier,
+            self.searchInput.WaybillNumber,
+            self.searchInput.transportTypeId,
+            self.searchInput.truckTypeId,
+            self.searchInput.truckCapacityId,
+            self.searchInput.originId,
+            self.searchInput.destinationId,
+            self.searchInput.pickupFromDate,
+            self.searchInput.pickupToDate,
+            self.searchInput.fromDate,
+            self.searchInput.toDate,
+            self.searchInput.shippingRequestReferance,
+            self.searchInput.routeTypeId,
+            self.searchInput.packingTypeId,
+            self.searchInput.goodsOrSubGoodsCategoryId,
+            self.searchInput.plateNumberId,
+            self.searchInput.driverNameOrMobile,
+            self.searchInput.deliveryFromDate,
+            self.searchInput.deliveryToDate,
+            self.searchInput.containerNumber,
+            self.searchInput.isInvoiceIssued,
+            self.searchInput.isSubmittedPOD,
+            self.searchInput.requestTypeId,
+            '',
+            self.skipCount,
+            self.maxResultCount
+          )
+          .toPromise()
+          .then((response) => {
+            self.isFirstLoad = false;
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+    });
   }
 
   search(): void {
@@ -186,5 +208,31 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
     setTimeout(() => {
       this.dataGrid.instance.getScrollable().update();
     }, 500);
+  }
+
+  onExporting(e) {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Employees');
+
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+      customizeCell: ({ gridCell, excelCell }) => {
+        if (gridCell.rowType === 'data') {
+          if (gridCell.column.dataField === 'waybillNumber') {
+            excelCell.value = parseInt(gridCell.value).toString();
+          }
+        }
+        if (gridCell.rowType === 'group') {
+          excelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'BEDFE6' } };
+        }
+      },
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
+      });
+    });
+    e.cancel = true;
   }
 }
