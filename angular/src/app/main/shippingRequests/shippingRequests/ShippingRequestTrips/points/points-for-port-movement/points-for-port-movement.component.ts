@@ -179,7 +179,7 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
           .filter((fac) => {
             switch (index) {
               case 1: {
-                return this.roundTripType === RoundTripType.OneWayRoutWithPortShuttling
+                return this.roundTripType === RoundTripType.OneWayRoutWithoutPortShuttling
                   ? fac.facilityType === FacilityType.Port
                   : fac.facilityType === FacilityType.Facility;
               }
@@ -224,7 +224,7 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
     if (this.isExportRequest) {
       switch (index) {
         case 1: {
-          return this.roundTripType === RoundTripType.OneWayRoutWithPortShuttling;
+          return this.roundTripType === RoundTripType.OneWayRoutWithoutPortShuttling;
         }
         case 5: {
           return this.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling;

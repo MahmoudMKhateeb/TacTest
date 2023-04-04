@@ -3192,7 +3192,7 @@
     <text name="WithoutReturnTrip">Without return trip</text>
     <text name="TwoWayRoutsWithPortShuttling">Two way routs with port shuttling</text>
     <text name="TwoWayRoutsWithoutPortShuttling">Two way routs without port shuttling</text>
-    <text name="OneWayRoutWithPortShuttling">One way rout with port shuttling</text>
+    <text name="OneWayRoutWithoutPortShuttling">One way rout with port shuttling</text>
     <text name="FacilityType">Facility Type</text>
     <text name="SelectARoundTripType">Select A Round Trip Type</text>
     <text name="AllowedWeight">Allowed Weight</text>

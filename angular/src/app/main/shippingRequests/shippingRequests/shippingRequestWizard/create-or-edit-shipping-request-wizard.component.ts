@@ -16,35 +16,35 @@ import { finalize } from 'rxjs/operators';
 import KTWizard from '@metronic/common/js/components/wizard';
 
 import {
-    ActorSelectItemDto,
-    CarriersForDropDownDto,
-    CountyDto,
-    CreateOrEditShippingRequestStep1Dto,
-    CreateOrEditShippingRequestVasListDto,
-    EditShippingRequestStep2Dto,
-    EditShippingRequestStep3Dto,
-    EditShippingRequestStep4Dto,
-    EntityTemplateServiceProxy,
-    FacilitiesServiceProxy,
-    FacilityForDropdownDto,
-    GetAllGoodsCategoriesForDropDownOutput,
-    GetShippingRequestForViewOutput,
-    GoodCategoriesServiceProxy,
-    GoodsDetailsServiceProxy,
-    ISelectItemDto,
-    RoundTripType,
-    RoutStepsServiceProxy,
-    SavedEntityType,
-    SelectFacilityItemDto,
-    SelectItemDto,
-    ShippersForDropDownDto,
-    ShippingRequestDestinationCitiesDto,
-    ShippingRequestRouteType,
-    ShippingRequestsServiceProxy,
-    ShippingRequestVasListOutput,
-    ShippingTypeEnum,
-    TenantCityLookupTableDto,
-    TenantRegistrationServiceProxy,
+  ActorSelectItemDto,
+  CarriersForDropDownDto,
+  CountyDto,
+  CreateOrEditShippingRequestStep1Dto,
+  CreateOrEditShippingRequestVasListDto,
+  EditShippingRequestStep2Dto,
+  EditShippingRequestStep3Dto,
+  EditShippingRequestStep4Dto,
+  EntityTemplateServiceProxy,
+  FacilitiesServiceProxy,
+  FacilityForDropdownDto,
+  GetAllGoodsCategoriesForDropDownOutput,
+  GetShippingRequestForViewOutput,
+  GoodCategoriesServiceProxy,
+  GoodsDetailsServiceProxy,
+  ISelectItemDto,
+  RoundTripType,
+  RoutStepsServiceProxy,
+  SavedEntityType,
+  SelectFacilityItemDto,
+  SelectItemDto,
+  ShippersForDropDownDto,
+  ShippingRequestDestinationCitiesDto,
+  ShippingRequestRouteType,
+  ShippingRequestsServiceProxy,
+  ShippingRequestVasListOutput,
+  ShippingTypeEnum,
+  TenantCityLookupTableDto,
+  TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -970,7 +970,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         break;
       }
       case RoundTripType.WithoutReturnTrip:
-      case RoundTripType.OneWayRoutWithPortShuttling:
+      case RoundTripType.OneWayRoutWithoutPortShuttling:
       default: {
         this.step2Dto.routeTypeId = ShippingRequestRouteType.SingleDrop;
         this.step2Dto.numberOfDrops = 1;

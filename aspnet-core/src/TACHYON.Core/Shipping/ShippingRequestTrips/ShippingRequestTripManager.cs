@@ -428,7 +428,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                       RoundTripType.TwoWayRoutsWithoutPortShuttling when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportFirstTripVersion,
                       RoundTripType.TwoWayRoutsWithoutPortShuttling when IsSecondTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportSecondTripVersion,
                       
-                      RoundTripType.OneWayRoutWithPortShuttling when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripVersion,
+                      RoundTripType.OneWayRoutWithoutPortShuttling when IsFirstTrip(point.PointOrder.Value) => AdditionalStepWorkflowVersionConst.PortsMovementExportThirdTripVersion,
                       _ => null
                   };
 
