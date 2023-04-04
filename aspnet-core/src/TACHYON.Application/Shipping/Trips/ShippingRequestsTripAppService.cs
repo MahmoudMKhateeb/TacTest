@@ -186,6 +186,11 @@ namespace TACHYON.Shipping.Trips
                     WaybillNumber = x.WaybillNumber,
                     SupposedPickupDateFrom = x.SupposedPickupDateFrom,
                     SupposedPickupDateTo = x.SupposedPickupDateTo,
+                    RouteType = x.RouteType.GetEnumDescription(),
+                    NumberOfDrops = x.NumberOfDrops,
+                    ShipperActorName = x.ShipperActorFk.CompanyName,
+                    CarrierActorName = x.CarrierActorFk.CompanyName,
+                    ContainerNumber = x.ContainerNumber
                 }
                 );
 
