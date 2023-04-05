@@ -422,7 +422,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     carrierMostUsedVasWidget.Id,
                     // carrierInvoicesVsPaidInvoicesWidget.Id,
                     CarrierActiveDriversAndTrucksWidget.Id,
-                    CarrierNewDirectRequestsWidget.Id,
+                    // CarrierNewDirectRequestsWidget.Id,
                     NewActorsThisMonthWidget.Id,
                     NumberOfActors.Id,
                     MostActiveActorShipper.Id,

@@ -1210,15 +1210,15 @@ namespace TACHYON.Configuration
                                     PositionX = 16,
                                     PositionY = 10
                                 },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
-                                        .NewDirectRequestsWidget,
-                                    Height =10,
-                                    Width = 7,
-                                    PositionX = 12,
-                                    PositionY = 30
-                                },
+                                // new Widget
+                                // {
+                                //     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                //         .NewDirectRequestsWidget,
+                                //     Height =10,
+                                //     Width = 7,
+                                //     PositionX = 12,
+                                //     PositionY = 30
+                                // },
                                 new Widget
                                 {
                                     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
