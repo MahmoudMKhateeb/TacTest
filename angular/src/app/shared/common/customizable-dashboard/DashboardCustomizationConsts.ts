@@ -409,13 +409,13 @@ export class DashboardCustomizationConst {
               positionX: 26,
               positionY: 30,
             },
-            {
-              widgetId: 'Widgets_Tenant_carrier_InvoicesVsPaidInvoicesWidget',
-              height: 10,
-              width: 13,
-              positionX: 13,
-              positionY: 20,
-            },
+            // {
+            //   widgetId: 'Widgets_Tenant_carrier_InvoicesVsPaidInvoicesWidget',
+            //   height: 10,
+            //   width: 13,
+            //   positionX: 13,
+            //   positionY: 20,
+            // },
             {
               widgetId: 'Widgets_Tenant_carrier_active_drivers_and_trucks_Widget',
               height: 10,

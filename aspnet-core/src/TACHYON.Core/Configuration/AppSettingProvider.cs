@@ -1192,15 +1192,15 @@ namespace TACHYON.Configuration
                                     PositionX = 26,
                                     PositionY = 30
                                 },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
-                                        .CarrierInvoicesVsPaidInvoicesWidget,
-                                    Height = 10,
-                                    Width = 13,
-                                    PositionX = 13,
-                                    PositionY = 20
-                                },
+                                // new Widget
+                                // {
+                                //     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                //         .CarrierInvoicesVsPaidInvoicesWidget,
+                                //     Height = 10,
+                                //     Width = 13,
+                                //     PositionX = 13,
+                                //     PositionY = 20
+                                // },
                                 new Widget
                                 {
                                     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier

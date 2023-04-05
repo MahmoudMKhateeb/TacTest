@@ -420,7 +420,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     
                     carrierAcceptedVsRejectedPricingWidget.Id,
                     carrierMostUsedVasWidget.Id,
-                    carrierInvoicesVsPaidInvoicesWidget.Id,
+                    // carrierInvoicesVsPaidInvoicesWidget.Id,
                     CarrierActiveDriversAndTrucksWidget.Id,
                     CarrierNewDirectRequestsWidget.Id,
                     NewActorsThisMonthWidget.Id,
