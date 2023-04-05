@@ -416,7 +416,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     shipperCountersWidget.Id,
                     shipperUpcomingTripsWidget.Id,
                     shipperNeedsActionWidget.Id,
-                    shipperNewOffersWidget.Id,
+                    // shipperNewOffersWidget.Id,
                     
                     carrierAcceptedVsRejectedPricingWidget.Id,
                     carrierMostUsedVasWidget.Id,

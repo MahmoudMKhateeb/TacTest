@@ -1173,15 +1173,15 @@ namespace TACHYON.Configuration
                                     PositionX = 26,
                                     PositionY = 10
                                 },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
-                                        .ShipperNewOffersWidget,
-                                    Height = 10,
-                                    Width = 7,
-                                    PositionX = 19,
-                                    PositionY = 30
-                                },
+                                // new Widget
+                                // {
+                                //     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                //         .ShipperNewOffersWidget,
+                                //     Height = 10,
+                                //     Width = 7,
+                                //     PositionX = 19,
+                                //     PositionY = 30
+                                // },
                                 // broker-carrier-widgets
                                 new Widget
                                 {
