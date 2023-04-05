@@ -54,8 +54,11 @@ namespace TACHYON.PriceOffers.Dto
         public string DirectRequestStatusTitle { get; set; }
         public ShippingRequestRouteType RouteTypeId { get; set; }
         public ShippingTypeEnum ShippingTypeId { get; set; }
+        public string ShippingTypeTitle { get { return ShippingTypeId.GetEnumDescription(); } }
         public string RouteType { get { return RouteTypeId.GetEnumDescription(); } }
         public decimal? Price { get; set; }
+        public string PriceOrOffer { get; set; }
+        public string ShipperPriceOrOffer { get; set; }
 
         public string ReferenceNumber { get; set; }
 
@@ -66,6 +69,7 @@ namespace TACHYON.PriceOffers.Dto
         public int NotesCount { get; set; }
 
         public List<ShippingRequestDestinationCitiesDto> destinationCities { get; set; }
+        public string Country { get; set; }
 
         public string ShipperActor { get; set; }
 

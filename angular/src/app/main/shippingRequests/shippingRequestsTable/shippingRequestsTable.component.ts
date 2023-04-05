@@ -8,11 +8,11 @@ import {
   ShippingRequestDirectRequestServiceProxy,
   ShippingRequestDirectRequestStatus,
   ShippingRequestFlag,
+  ShippingRequestForPriceOfferGetAllInput,
   ShippingRequestStatus,
   ShippingRequestType,
   ShippingTypeEnum,
 } from '@shared/service-proxies/service-proxies';
-import { ShippingRequestForPriceOfferGetAllInput } from '@app/shared/common/search/ShippingRequestForPriceOfferGetAllInput';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ShippingrequestsDetailsModelComponent } from '@app/main/shippingRequests/shippingRequests/details/shippingrequests-details-model.component';
 import * as _ from 'lodash';
@@ -76,7 +76,7 @@ export class ShippingRequestsTableComponent extends AppComponentBase implements 
     this.searchInput.requestFlag = ShippingRequestFlag.Normal;
     if (this.isTMS) {
       this.searchInput.requestType = ShippingRequestType.TachyonManageService;
-      this.searchInput.isTMS = true;
+      this.searchInput.isTMSRequest = true;
     }
     this.IsLoading = true;
     this.LoadData();
@@ -137,7 +137,7 @@ export class ShippingRequestsTableComponent extends AppComponentBase implements 
         this.searchInput.routeTypeId,
         this.searchInput.status,
         this.searchInput.isTachyonDeal,
-        this.searchInput.isTMS,
+        this.searchInput.isTMSRequest,
         this.searchInput.requestFlag,
         '',
         this.skipCount,
