@@ -346,13 +346,13 @@ export class DashboardCustomizationConst {
               positionX: 0,
               positionY: 30,
             },
-            {
-              widgetId: 'Widgets_Tenant_shipper_AcceptedVsRejectedRequestsWidget',
-              height: 10,
-              width: 14,
-              positionX: 6,
-              positionY: 0,
-            },
+            // {
+            //   widgetId: 'Widgets_Tenant_shipper_AcceptedVsRejectedRequestsWidget',
+            //   height: 10,
+            //   width: 14,
+            //   positionX: 6,
+            //   positionY: 0,
+            // },
             {
               widgetId: 'Widgets_Tenant_shipper_MostUsedOriginsWidget',
               height: 10,

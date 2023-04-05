@@ -407,7 +407,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                 TACHYONDashboardCustomizationConsts.DashboardNames.DefaultBrokerDashboard,
                 new List<string>
                 {
-                    shipperAcceptedVsRejectedRequestsWidget.Id,
+                    // shipperAcceptedVsRejectedRequestsWidget.Id,
                     shipperCompletedTripsVsPodWidget.Id,
                     shipperInvoicesVsPaidInvoicesWidget.Id,
                     shipperMostUsedOriginsWidget.Id,

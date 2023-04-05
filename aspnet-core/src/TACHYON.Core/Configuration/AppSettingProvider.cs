@@ -1110,15 +1110,15 @@ namespace TACHYON.Configuration
                                     PositionX = 0,
                                     PositionY = 30
                                 },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
-                                        .ShipperAcceptedVsRejectedRequestsWidget,
-                                    Height = 10,
-                                    Width = 14,
-                                    PositionX = 6,
-                                    PositionY = 0
-                                },
+                                // new Widget
+                                // {
+                                //     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                //         .ShipperAcceptedVsRejectedRequestsWidget,
+                                //     Height = 10,
+                                //     Width = 14,
+                                //     PositionX = 6,
+                                //     PositionY = 0
+                                // },
                                 new Widget
                                 {
                                     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
