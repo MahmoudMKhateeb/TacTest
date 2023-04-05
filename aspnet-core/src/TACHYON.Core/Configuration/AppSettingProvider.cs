@@ -1119,24 +1119,24 @@ namespace TACHYON.Configuration
                                 //     PositionX = 6,
                                 //     PositionY = 0
                                 // },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
-                                        .ShipperMostUsedOriginsWidget,
-                                    Height = 10,
-                                    Width = 6,
-                                    PositionX = 20,
-                                    PositionY = 0
-                                },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
-                                        .ShipperMostUsedDestinationsWidget,
-                                    Height = 10,
-                                    Width = 6,
-                                    PositionX = 26,
-                                    PositionY = 20
-                                },
+                                // new Widget
+                                // {
+                                //     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                //         .ShipperMostUsedOriginsWidget,
+                                //     Height = 10,
+                                //     Width = 6,
+                                //     PositionX = 20,
+                                //     PositionY = 0
+                                // },
+                                // new Widget
+                                // {
+                                //     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                //         .ShipperMostUsedDestinationsWidget,
+                                //     Height = 10,
+                                //     Width = 6,
+                                //     PositionX = 26,
+                                //     PositionY = 20
+                                // },
                                 new Widget
                                 {
                                     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
