@@ -67,6 +67,8 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   ShippingTypeEnum = ShippingTypeEnum;
   RoundTripType = RoundTripType;
   ShippingRequestRouteType = ShippingRequestRouteType;
+  NormalExportIsLoading: boolean = false;
+  DedicatedExportIsLoding: boolean = false;
 
   constructor(
     injector: Injector,
@@ -397,8 +399,10 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     input.isTMSRequest = this.searchInput.isTMSRequest;
     input.requestFlag = this.searchInput.requestFlag;
 
+    this.NormalExportIsLoading = true;
     this._currentServ.exportNormalShippingRequest(input).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.NormalExportIsLoading = false;
     });
   }
 
@@ -422,9 +426,10 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     input.isTMSRequest = this.searchInput.isTMSRequest;
     input.requestFlag = this.searchInput.requestFlag;
     input.channel = this.searchInput.channel;
-
+    this.DedicatedExportIsLoding = true;
     this._currentServ.exportDedicatedShippingRequest(input).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+      this.DedicatedExportIsLoding = false;
     });
   }
 }

@@ -3085,5 +3085,7 @@
     <text name="PortMovementFeature">رحلات الموانئ</text>
     <text name="HomeDeliveryFeature">توصيل منزلي</text>
 		
+    <text name="ExportNormalToExcel">تصدير الطلبات</text>
+    <text name="ExportDedicatedToExcel">تصدير طلبات التأجير </text>
 	</texts>
 </localizationDictionary>

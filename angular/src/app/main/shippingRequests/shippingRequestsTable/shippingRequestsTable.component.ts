@@ -21,6 +21,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
 import { ReplaceTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/replace-trucks-and-drivers-modal/replace-trucks-and-drivers-modal.component';
 import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-shipping-request-attendance-sheet-modal.component';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
   selector: 'app-shipping-requests-table',
@@ -53,13 +54,15 @@ export class ShippingRequestsTableComponent extends AppComponentBase implements 
   shippingRequestStatusEnum = ShippingRequestStatus;
   PriceOfferChannelEnum = PriceOfferChannel;
   requestType = ShippingRequestFlag.Normal;
-
+  NormalExportIsLoading: boolean = false;
+  DedicatedExportIsLoding: boolean = false;
   constructor(
     injector: Injector,
     private router: Router,
     private _activatedRoute: ActivatedRoute,
     private _currentServ: PriceOfferServiceProxy,
-    private _directRequestSrv: ShippingRequestDirectRequestServiceProxy
+    private _directRequestSrv: ShippingRequestDirectRequestServiceProxy,
+    private _fileDownloadService: FileDownloadService
   ) {
     super(injector);
     this.directRequestId = this._activatedRoute.snapshot.queryParams['directRequestId'];
@@ -284,5 +287,60 @@ export class ShippingRequestsTableComponent extends AppComponentBase implements 
     setTimeout(() => {
       this.dataGrid.instance.getScrollable().update();
     }, 500);
+  }
+
+  ExportNormalToExcel() {
+    let input: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
+    input.carrier = this.searchInput.carrier;
+    input.shippingRequestId = this.searchInput.shippingRequestId;
+    input.directRequestId = this.searchInput.directRequestId;
+    input.channel = this.searchInput.channel;
+    input.requestType = this.searchInput.requestType;
+    input.truckTypeId = this.searchInput.truckTypeId;
+    input.originId = this.searchInput.originId;
+    input.destinationId = this.searchInput.destinationId;
+    input.pickupFromDate = this.searchInput.pickupFromDate;
+    input.pickupToDate = this.searchInput.pickupToDate;
+    input.fromDate = this.searchInput.fromDate;
+    input.toDate = this.searchInput.toDate;
+    input.routeTypeId = this.searchInput.routeTypeId;
+    input.status = this.searchInput.status;
+    input.isTachyonDeal = this.searchInput.isTachyonDeal;
+    input.isTMSRequest = this.searchInput.isTMSRequest;
+    input.requestFlag = this.searchInput.requestFlag;
+
+    this.NormalExportIsLoading = true;
+    this._currentServ.exportNormalShippingRequest(input).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+      this.NormalExportIsLoading = false;
+    });
+  }
+
+  ExportDedicatedToExcel() {
+    let input: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
+    input.carrier = this.searchInput.carrier;
+    input.shippingRequestId = this.searchInput.shippingRequestId;
+    input.directRequestId = this.searchInput.directRequestId;
+    input.channel = this.searchInput.channel;
+    input.requestType = this.searchInput.requestType;
+    input.truckTypeId = this.searchInput.truckTypeId;
+    input.originId = this.searchInput.originId;
+    input.destinationId = this.searchInput.destinationId;
+    input.pickupFromDate = this.searchInput.pickupFromDate;
+    input.pickupToDate = this.searchInput.pickupToDate;
+    input.fromDate = this.searchInput.fromDate;
+    input.toDate = this.searchInput.toDate;
+    input.routeTypeId = this.searchInput.routeTypeId;
+    input.status = this.searchInput.status;
+    input.isTachyonDeal = this.searchInput.isTachyonDeal;
+    input.isTMSRequest = this.searchInput.isTMSRequest;
+    input.requestFlag = this.searchInput.requestFlag;
+    input.channel = this.searchInput.channel;
+
+    this.DedicatedExportIsLoding = true;
+    this._currentServ.exportDedicatedShippingRequest(input).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+      this.DedicatedExportIsLoding = false;
+    });
   }
 }

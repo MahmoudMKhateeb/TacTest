@@ -491,8 +491,8 @@ namespace TACHYON.PriceOffers
                 };
                 propertySelectors = new Func<GetShippingRequestForPriceOfferListDto, object>[]
                 {
-                    _ => _.ReferenceNumber, _ => _.ShipperName, _ => _.Carrier, _ => _.ShippingRequestFlagTitle, _=>_.requestTypeTitle,_=>_.TransportType,_=>_.TruckType,_=>_.ShippingTypeTitle,
-                    _=>_.OriginCity,_=>_.DestinationCity,_=>_.StatusTitle,_=>_.CreationTime,_=>_.PriceOrOffer,_ => _.ShipperPriceOrOffer, _ => _.NumberOfTrips, _ => _.NumberOfCompletedTrips, _ => _.StartTripDate,_ => _.GoodsCategory
+                    _ => _.ReferenceNumber, _ => _.ShipperName, _ => _.Carrier, _ => "Truck aggregation", _=>_.requestTypeTitle,_=>_.TransportType,_=>_.TruckType,_=>_.ShippingTypeTitle,
+                    _=>_.OriginCity,_=>_.DestinationCity,_=>_.StatusTitle,_=>_.CreationTime.Value.ToShortDateString(),_=>_.PriceOrOffer,_ => _.ShipperPriceOrOffer, _ => _.NumberOfTrips, _ => _.NumberOfCompletedTrips, _ => _.StartTripDate.ToShortDateString(),_ => _.GoodsCategory
                 };
             }
             else
@@ -504,8 +504,8 @@ namespace TACHYON.PriceOffers
                 };
                 propertySelectors = new Func<GetShippingRequestForPriceOfferListDto, object>[]
                 {
-                    _ => _.ReferenceNumber, _ => _.ShipperName, _ => _.Carrier, _ => _.ShippingRequestFlagTitle, _=>_.requestTypeTitle,_=>_.TransportType,_=>_.TruckType,_=>_.ShippingTypeTitle,
-                    _=>_.OriginCity,_=>_.DestinationCity,_=>_.StatusTitle,_=>_.CreationTime,_=>_.PriceOrOffer, _ => _.NumberOfTrips, _ => _.NumberOfCompletedTrips, _ => _.StartTripDate,_ => _.GoodsCategory
+                    _ => _.ReferenceNumber, _ => _.ShipperName, _ => _.Carrier, _ => "Truck aggregation", _=>_.requestTypeTitle,_=>_.TransportType,_=>_.TruckType,_=>_.ShippingTypeTitle,
+                    _=>_.OriginCity,_=>_.DestinationCity,_=>_.StatusTitle,_=>_.CreationTime.Value.ToShortDateString(),_=>_.PriceOrOffer, _ => _.NumberOfTrips, _ => _.NumberOfCompletedTrips, _ => _.StartTripDate.ToShortDateString(),_ => _.GoodsCategory
                 };
             }
 
@@ -536,8 +536,8 @@ namespace TACHYON.PriceOffers
                 };
                 propertySelectors = new Func<GetShippingRequestForPriceOfferListDto, object>[]
                 {
-                    _ => _.ReferenceNumber, _ => _.ShipperName, _ => _.ShippingRequestFlagTitle, _ => _.Carrier, _=>_.requestTypeTitle,_ => _.TransportType,_=>_.TruckType,_=>_.NumberOfTrucks,_ => _.Country,_=>_.ShippingTypeTitle,
-                    _=>_.DestinationCity,_=>_.StatusTitle,_ => _.RentalDuration + _.RentalDurationUnit.GetEnumDescription(),_=>_.PriceOrOffer,_ => _.ShipperPriceOrOffer, _ => _.RentalStartDate.ToString() +" - "+ _.RentalEndDate.ToString(), _ => _.ExpectedMileage,_ => _.GoodsCategory
+                    _ => _.ReferenceNumber, _ => _.ShipperName, _ => "Dedicated request", _ => _.Carrier, _=>_.requestTypeTitle,_ => _.TransportType,_=>_.TruckType,_=>_.NumberOfTrucks,_ => _.Country,_=>_.ShippingTypeTitle,
+                    _=>_.DestinationCity,_=>_.StatusTitle,_ => _.RentalDuration + " "+ _.RentalDurationUnit.GetEnumDescription(),_=>_.PriceOrOffer,_ => _.ShipperPriceOrOffer, _ => _.RentalStartDate.GetValueOrDefault().ToShortDateString() +" - "+ _.RentalEndDate.GetValueOrDefault().ToShortDateString(), _ => _.ExpectedMileage,_ => _.GoodsCategory
                 };
             }
             else
@@ -549,8 +549,8 @@ namespace TACHYON.PriceOffers
                 };
                 propertySelectors = new Func<GetShippingRequestForPriceOfferListDto, object>[]
                 {
-                    _ => _.ReferenceNumber, _ => _.ShipperName, _ => _.ShippingRequestFlagTitle, _ => _.Carrier, _=>_.requestTypeTitle,_ => _.TransportType,_=>_.TruckType,_=>_.NumberOfTrucks,_ => _.Country,_=>_.ShippingTypeTitle,
-                    _=>_.DestinationCity,_=>_.StatusTitle,_ => _.RentalDuration + _.RentalDurationUnit.GetEnumDescription(),_ => _.PriceOrOffer, _ => _.RentalStartDate.ToString() +" - "+ _.RentalEndDate.ToString(), _ => _.ExpectedMileage,_ => _.GoodsCategory
+                    _ => _.ReferenceNumber, _ => _.ShipperName, _ => "Dedicated request", _ => _.Carrier, _=>_.requestTypeTitle,_ => _.TransportType,_=>_.TruckType,_=>_.NumberOfTrucks,_ => _.Country,_=>_.ShippingTypeTitle,
+                    _=>_.DestinationCity,_=>_.StatusTitle,_ => _.RentalDuration + " "+ _.RentalDurationUnit.GetEnumDescription(),_ => _.PriceOrOffer, _ => _.RentalStartDate.GetValueOrDefault().ToShortDateString() +" - "+ _.RentalEndDate.GetValueOrDefault().ToShortDateString(), _ => _.ExpectedMileage,_ => _.GoodsCategory
                 };
             }
 
@@ -577,7 +577,7 @@ namespace TACHYON.PriceOffers
                         item.Price > 0) &&
                       input.Channel != PriceOfferChannel.Offers)
                     {
-                        item.PriceOrOffer = item.Price.ToString() + "SAR";
+                        item.PriceOrOffer = item.Price.ToString() + " SAR";
                     }
                     else
                     {
@@ -589,7 +589,7 @@ namespace TACHYON.PriceOffers
                         item.Price > 0) &&
                       input.Channel != PriceOfferChannel.Offers)
                     {
-                        item.PriceOrOffer = item.ShipperPrice.ToString() + "SAR";
+                        item.PriceOrOffer = item.ShipperPrice.ToString() + " SAR";
                     }
                     else
                     {
@@ -604,7 +604,7 @@ namespace TACHYON.PriceOffers
                         item.Price > 0) &&
                       input.Channel != PriceOfferChannel.Offers && (string.IsNullOrEmpty(item.ShipperActor) && string.IsNullOrEmpty(item.CarrierActor)))
                     {
-                        item.PriceOrOffer = item.Price.ToString() + "SAR";
+                        item.PriceOrOffer = item.Price.ToString() + " SAR";
                     }
                     else
                     {
