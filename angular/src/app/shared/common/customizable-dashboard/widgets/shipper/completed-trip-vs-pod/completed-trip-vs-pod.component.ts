@@ -1,12 +1,19 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ChartCategoryPairedValuesDto, FilterDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  CarrierDashboardServiceProxy,
+  ChartCategoryPairedValuesDto,
+  CompletedTripVsPodListDto,
+  FilterDatePeriod,
+  ShipperDashboardServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { ApexLegend } from '@node_modules/ng-apexcharts';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { DashboardCustomizationService } from '@app/shared/common/customizable-dashboard/dashboard-customization.service';
+import { Observable } from '@node_modules/rxjs';
 
 @Component({
   selector: 'app-completed-trip-vs-pod',
@@ -40,6 +47,7 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
   constructor(
     injector: Injector,
     private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy,
+    private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy,
     private _enumService: EnumToArrayPipe,
     private dashboardCustomizationService: DashboardCustomizationService
   ) {
@@ -56,10 +64,12 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
   }
 
   getTrips() {
-    this.loading = true;
+    let request: Observable<CompletedTripVsPodListDto> = this.isShipper
+      ? this._shipperDashboardServiceProxy.getCompletedTripVsPod(this.selectedOption)
+      : this._carrierDashboardServiceProxy.getCompletedTripVsPod(this.selectedOption);
 
-    this._shipperDashboardServiceProxy
-      .getCompletedTripVsPod(this.selectedOption)
+    this.loading = true;
+    request
       .pipe(
         finalize(() => {
           this.loading = false;

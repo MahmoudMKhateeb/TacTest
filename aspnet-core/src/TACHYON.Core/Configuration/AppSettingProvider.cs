@@ -819,7 +819,16 @@ namespace TACHYON.Configuration
                                     Width = 6,
                                     PositionX = 0,
                                     PositionY = 20
-                                }
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Shipper
+                                        .ShipperCompletedTripsVsPodWidget,
+                                    Height = 10,
+                                    Width = 12,
+                                    PositionX = 0,
+                                    PositionY = 30
+                                },
                             }
                         },
                         // new Page

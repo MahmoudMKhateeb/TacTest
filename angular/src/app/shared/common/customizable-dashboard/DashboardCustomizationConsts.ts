@@ -314,6 +314,13 @@ export class DashboardCustomizationConst {
               positionX: 24,
               positionY: 20,
             },
+            {
+              widgetId: 'Widgets_Tenant_shipper_CompletedTripsVsPodWidget',
+              height: 10,
+              width: 18,
+              positionX: 0,
+              positionY: 30,
+            },
           ],
         },
         {

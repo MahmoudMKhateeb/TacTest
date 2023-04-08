@@ -315,6 +315,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     CarrierCountersWidget.Id,
                     CarrierNeedsActionWidget.Id,
                     CarrierNewDirectRequestsWidget.Id,
+                    shipperCompletedTripsVsPodWidget.Id,
                 });
             DashboardDefinitions.Add(defaultCarrierDashboard);
 
@@ -407,7 +408,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                 TACHYONDashboardCustomizationConsts.DashboardNames.DefaultBrokerDashboard,
                 new List<string>
                 {
-                    // shipperAcceptedVsRejectedRequestsWidget.Id,
+                    // shipperAcceptedVsRejectedRequestsWidget.Id, 
                     shipperCompletedTripsVsPodWidget.Id,
                     shipperInvoicesVsPaidInvoicesWidget.Id,
                     // shipperMostUsedOriginsWidget.Id,
