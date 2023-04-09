@@ -402,10 +402,10 @@ namespace TACHYON.PricePackages.PricePackageOffers
                       && (priceOffer.Status == PriceOfferStatus.Accepted || priceOffer.Status == PriceOfferStatus.Pending
                                                                          || priceOffer.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier ||
                                                                          priceOffer.Status == PriceOfferStatus.AcceptedAndWaitingForShipper)
-                      && _pricePackageOfferRepository.GetAll()
+                      && (_pricePackageOfferRepository.GetAll()
                           .Any(x => x.DirectRequestId.HasValue &&
                                     x.DirectRequest.ShippingRequestId == shippingRequestId &&
-                                    x.DirectRequest.CarrierTenantId == priceOffer.TenantId)
+                                    x.DirectRequest.CarrierTenantId == priceOffer.TenantId) || (priceOffer.Channel == PriceOfferChannel.DirectRequest && priceOffer.ShippingRequestId == shippingRequestId))
                 select priceOffer.Id); 
             
         }
@@ -413,18 +413,21 @@ namespace TACHYON.PricePackages.PricePackageOffers
         {
             return await GetParentOffer(shippingRequestId).Select(x => x.Id).FirstOrDefaultAsync();
         }
-        
+
         private IQueryable<PriceOffer> GetParentOffer(long shippingRequestId)
         {
-           return (from priceOffer in _priceOfferRepository.GetAll()
+            return (from priceOffer in _priceOfferRepository.GetAll()
                 where priceOffer.ShippingRequestId == shippingRequestId
-                      && (priceOffer.Status == PriceOfferStatus.Accepted || priceOffer.Status == PriceOfferStatus.Pending
-                          || priceOffer.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier ||
+                      && (priceOffer.Status == PriceOfferStatus.Accepted 
+                          || priceOffer.Status == PriceOfferStatus.Pending
+                        || priceOffer.Status == PriceOfferStatus.AcceptedAndWaitingForCarrier || 
                           priceOffer.Status == PriceOfferStatus.AcceptedAndWaitingForShipper)
-                      && _pricePackageOfferRepository.GetAll()
-                          .Any(x => x.DirectRequestId.HasValue &&
-                                    x.DirectRequest.ShippingRequestId == shippingRequestId &&
-                                    x.DirectRequest.CarrierTenantId == priceOffer.TenantId)
+                      && (_pricePackageOfferRepository.GetAll()
+                              .Any(x => x.DirectRequestId.HasValue &&
+                                        x.DirectRequest.ShippingRequestId == shippingRequestId &&
+                                        x.DirectRequest.CarrierTenantId == priceOffer.TenantId) ||
+                          (priceOffer.Channel == PriceOfferChannel.DirectRequest &&
+                           priceOffer.ShippingRequestId == shippingRequestId))
                 select priceOffer);
         }
 
