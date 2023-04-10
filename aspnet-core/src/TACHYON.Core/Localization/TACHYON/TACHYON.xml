@@ -3355,6 +3355,8 @@
 	<text name="Proposal">Proposal</text>
 	<text name="ScopeOverview">Scope Overview</text>
 	<text name="SelectProposal">Select a proposal</text>
+		<text name="ShipperInvoices">Shipper Invoices</text>
+		<text name="CarrierInvoices">Carrier Invoices</text>
 		
 	</texts>
 </localizationDictionary>

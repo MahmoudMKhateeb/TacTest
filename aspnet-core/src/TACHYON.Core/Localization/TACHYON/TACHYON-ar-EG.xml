@@ -3069,5 +3069,8 @@
 		<text name="AppendixDate">تاريخ العقد</text>
 		<text name="Proposal">عرض الأسعار</text>
 		<text name="SelectProposal">أختر عرض الاسعار</text>
+		<text name="ShipperInvoices">فواتير الشاحن</text>
+		<text name="CarrierInvoices">فواتير الناقل</text>
+		
 	</texts>
 </localizationDictionary>

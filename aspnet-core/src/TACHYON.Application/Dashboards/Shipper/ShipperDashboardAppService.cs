@@ -553,7 +553,7 @@ namespace TACHYON.Dashboards.Shipper
             return isBroker switch
             {
                 true when !invoiceType.HasValue => throw new UserFriendlyException(L("YouMustProvideInvoiceType")),
-                true when invoiceType == BrokerInvoiceType.SubmitInvoice => await _submitInvoiceRepository.GetAll()
+                true when invoiceType == BrokerInvoiceType.CarrierInvoices => await _submitInvoiceRepository.GetAll()
                     .Where(x => x.TenantId == AbpSession.TenantId && x.DueDate.HasValue &&
                                 x.DueDate <= Clock.Now.Date.AddDays(5)).CountAsync(),
                 _ => await _invoiceRepository.GetAll()

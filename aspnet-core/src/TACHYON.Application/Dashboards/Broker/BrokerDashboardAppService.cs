@@ -332,7 +332,7 @@ namespace TACHYON.Dashboards.Broker
 
         public async Task<List<NextDueDateDto>> GetNextInvoicesDueDate(BrokerInvoiceType invoiceType)
         {
-            if (invoiceType == BrokerInvoiceType.SubmitInvoice)
+            if (invoiceType == BrokerInvoiceType.CarrierInvoices)
             {
                  var actorSubmitInvoices = await _actorSubmitInvoiceRepository.GetAll()
                     .Where(x => x.DueDate.Date > Clock.Now.Date)
