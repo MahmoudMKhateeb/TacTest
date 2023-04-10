@@ -75,7 +75,12 @@
             >
               {{ l('You are already passed the allowed number of waybills so this waybill will be priced by additional waybill price') }}
             </div>
-            <div class="row" *ngIf="_TripService.GetShippingRequestForViewOutput?.shippingRequestFlag == ShippingRequestFlagEnum.Dedicated">
+            <div
+              class="row"
+              *ngIf="
+                _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag == ShippingRequestFlagEnum.Dedicated || shippingRequest.id == 0
+              "
+            >
               <div class="col-lg-6">
                 <div class="form-group">
                   <label for="TripType"> {{ l('TripType') }} </label>
@@ -664,14 +669,9 @@
                   </div>
                 </div>
               </div>
-
               <!--        begin of home delivery for dedicated request special fields          -->
               <ng-container
-                *ngIf="
-                  _TripService.GetShippingRequestForViewOutput &&
-                  _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated &&
-                  _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery
-                "
+                *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
               >
                 <div class="form-group col-lg-4 mt-3">
                   <label for="PaymentMethod"> {{ l('PaymentMethod') }} </label>
