@@ -3370,6 +3370,7 @@
     <text name="SaveTemplateFeature">Save template</text>
     <text name="PortMovementFeature">Port movement</text>
     <text name="HomeDeliveryFeature">Home Delivery</text>
+	<text name="ConfirmationDate">Confirmation date</text>
 		
 	</texts>
 </localizationDictionary>

@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
@@ -10,14 +10,8 @@ using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using NPOI.SS.Formula.Functions;
-using QRCoder;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -48,8 +42,6 @@ using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Transactions;
 using TACHYON.MultiTenancy;
-using TACHYON.Penalties;
-using TACHYON.Penalties.Dto;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -608,10 +600,10 @@ namespace TACHYON.Invoices
             return await _shippingRequestTripRepository.GetAll()
                 .Where(x=>x.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Normal || x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId)
                 .Where(
-                x => (x.ShippingRequestFk.TenantId == tenantId && !x.IsShipperHaveInvoice)// &&
-                //(x.Status == ShippingRequestTripStatus.Delivered ||
-                //    x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
-                )
+                x => (x.ShippingRequestFk.TenantId == tenantId && !x.IsShipperHaveInvoice &&
+                (x.Status == ShippingRequestTripStatus.Delivered ||
+                    x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
+                ))
                 .Select(x => new SelectItemDto { DisplayName = x.WaybillNumber.ToString(), Id = x.Id.ToString() })
                 .ToListAsync();
 
@@ -677,6 +669,16 @@ namespace TACHYON.Invoices
             var link = $"{_webUrlService.WebSiteRootAddressFormat }account/outsideInvoice?id={invoiceId}";
             invoiceDto.QRCode = _pdfExporterBase.GenerateQrCode(link);
             invoiceDto.Note = invoice.Note;
+
+            if(invoice.Status == InvoiceStatus.Drafted && !invoice.HasConfirmationDate)
+            {
+                invoiceDto.CreationTime = "";
+            }
+            else if (invoice.HasConfirmationDate) {
+                invoiceDto.CreationTime = invoice.ConfirmationDate != null
+                    ?  ClockProviders.Local.Normalize(invoice.ConfirmationDate.Value).ToString("dd/MM/yyyy hh:mm")
+                : "";
+            }
             return new List<InvoiceInfoDto>() { invoiceDto };
         }
 

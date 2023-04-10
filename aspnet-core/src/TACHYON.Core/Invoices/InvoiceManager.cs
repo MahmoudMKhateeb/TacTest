@@ -515,6 +515,7 @@ namespace TACHYON.Invoices
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.Trip,
                     Status = InvoiceStatus.Drafted,
+                    HasConfirmationDate = true,
                     Trips = normalTrips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
                 };
                 invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
@@ -544,6 +545,7 @@ namespace TACHYON.Invoices
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.SaasTrip,
                     Status = InvoiceStatus.Drafted,
+                    HasConfirmationDate = true,
                     Trips = saasTrips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
                 };
                 invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
@@ -589,6 +591,9 @@ namespace TACHYON.Invoices
 
             await _balanceManager.CheckShipperOverLimit(tenant);
             invoice.Status = InvoiceStatus.Confirmed;
+            invoice.ConfirmationDate = Clock.Now;
+            invoice.HasConfirmationDate = true;
+            // consider confirmation date in invoice report from the date of release this update on servers
             await _appNotifier.NewInvoiceShipperGenerated(invoice);
         }
 
@@ -985,8 +990,10 @@ namespace TACHYON.Invoices
                              !x.IsShipperHaveInvoice &&
                              //waybills.Contains(x.Id) &&
                              (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
-                             x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation ||
-                              x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
+                             x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
+                             ||
+                              x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced
+                              )
                     );
                 if (trips != null && trips.Count() > 0)
                 {

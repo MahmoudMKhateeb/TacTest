@@ -3085,5 +3085,6 @@
     <text name="PortMovementFeature">رحلات الموانئ</text>
     <text name="HomeDeliveryFeature">توصيل منزلي</text>
 		
+    <text name="ConfirmationDate">تاريخ التأكيد</text>
 	</texts>
 </localizationDictionary>
