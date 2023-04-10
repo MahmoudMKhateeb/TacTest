@@ -28,7 +28,7 @@ import { NewTrackingConponent } from '@app/main/shippingRequests/shippingRequest
 import { finalize } from '@node_modules/rxjs/operators';
 import Swal from 'sweetalert2';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
@@ -66,6 +66,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   TripFlag = ShippingRequestTripFlag;
   ShippingTypeEnum = ShippingTypeEnum;
   private waybillNumber: number;
+  showNormalView = true;
 
   constructor(
     injector: Injector,
@@ -75,7 +76,8 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
     private _trackingServiceProxy: TrackingServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private _activatedRoute: ActivatedRoute
+    private _activatedRoute: ActivatedRoute,
+    private router: Router
   ) {
     super(injector);
     this.waybillNumber = this._activatedRoute.snapshot.queryParams['waybillNumber'];
@@ -83,9 +85,31 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
 
   ngOnInit(): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
+    this.watchForRouterChangeToChangeView();
     this.syncTrip();
-    this.LoadData();
+    if (this.showNormalView) {
+      this.LoadData();
+    }
     this.handleTripIncidentReport();
+  }
+
+  private watchForRouterChangeToChangeView() {
+    this.router.events.subscribe((event) => {
+      console.log('event', event);
+      if (event instanceof NavigationEnd) {
+        this.showNormalView = this._activatedRoute.snapshot.queryParamMap.get('showType')
+          ? this._activatedRoute.snapshot.queryParamMap.get('showType').toLowerCase() != '1'
+          : true;
+        this.StopLoading = !this.showNormalView;
+        if (this.showNormalView) {
+          this.LoadData();
+        }
+      }
+    });
+    this.showNormalView = this._activatedRoute.snapshot.queryParamMap.get('showType')
+      ? this._activatedRoute.snapshot.queryParamMap.get('showType').toLowerCase() != '1'
+      : true;
+    this.StopLoading = !this.showNormalView;
   }
 
   LoadData() {
@@ -131,6 +155,12 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   }
 
   search(): void {
+    if (!this.showNormalView) {
+      const searchInput = { ...this.searchInput };
+      this.searchInput = null;
+      this.searchInput = { ...searchInput };
+      return;
+    }
     this.IsLoading = true;
     this.skipCount = 0;
     this.Items = [];
@@ -311,5 +341,12 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
       item.status !== this.ShippingRequestTripStatusEnum.New &&
       item.status !== this.ShippingRequestTripStatusEnum.Delivered
     );
+  }
+
+  showAsTable() {
+    this.router.navigateByUrl(`/app/main/tracking?showType=1`);
+  }
+  showAsList() {
+    this.router.navigateByUrl(`/app/main/tracking`);
   }
 }

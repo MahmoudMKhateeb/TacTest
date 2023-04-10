@@ -3,6 +3,8 @@
     <!--begin::Subheader-->
     <sub-header [title]="'ShipmentTracking' | localize" [description]="'' | localize">
       <div role="actions">
+        <button *ngIf="showNormalView" (click)="showAsTable()" class="btn btn-dark mr-2"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
+        <button *ngIf="!showNormalView" (click)="showAsList()" class="btn btn-dark mr-2"><i class="fas fa-list"></i> {{ l('ShowAsList') }}</button>
         <div class="btn-group">
           <div *ngIf="permission.isGranted('Pages.Shipment.Tracking.BulkDeliverTrip')" class="mr-2">
             <div ngbDropdown placement="bottom" class="d-inline-block">
@@ -21,7 +23,7 @@
     <!--begin::Entry-->
 
     <div class="container-fluid">
-      <div class="row">
+      <div class="row" *ngIf="showNormalView">
         <div class="col-12 mb-7" *ngFor="let item of Items">
           <div>
             <div
@@ -359,6 +361,7 @@
           <span></span>
         </div>
       </div>
+      <app-tracking-table *ngIf="!showNormalView" [searchInput]="searchInput"></app-tracking-table>
     </div>
   </div>
 </div>
