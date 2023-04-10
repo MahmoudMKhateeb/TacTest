@@ -67,7 +67,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
       ((this._PointsService?.currentPointIndex > 1 &&
         this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType === RoundTripType.WithReturnTrip) ||
         (this._PointsService?.currentPointIndex == 1 &&
-          this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType != RoundTripType.OneWayRoutWithPortShuttling &&
+          this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType != RoundTripType.OneWayRoutWithoutPortShuttling &&
           this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType !== RoundTripType.WithReturnTrip &&
           this._PointsService?.currentShippingRequest?.shippingRequest?.roundTripType !== RoundTripType.WithoutReturnTrip))
     );

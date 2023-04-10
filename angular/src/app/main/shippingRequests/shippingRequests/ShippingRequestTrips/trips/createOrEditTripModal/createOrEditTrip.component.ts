@@ -753,7 +753,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       return this.validateImportWithoutReturnTrip();
     }
     if (
-      this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.roundTripType === RoundTripType.OneWayRoutWithPortShuttling &&
+      this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.roundTripType === RoundTripType.OneWayRoutWithoutPortShuttling &&
       this.PointsComponent.wayPointsList.length > 0
     ) {
       return this.validateOneWayRoutWithPortShuttling();

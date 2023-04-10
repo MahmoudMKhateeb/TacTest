@@ -1568,7 +1568,7 @@ namespace TACHYON.Shipping.Trips
                             throw new UserFriendlyException(L("ReceiverIsRequiredForSecondTrip"));
                         }
                     }
-                    else if (request.RoundTripType == RoundTripType.OneWayRoutWithPortShuttling)
+                    else if (request.RoundTripType == RoundTripType.OneWayRoutWithoutPortShuttling)
                     {
                         if (facilities.FirstOrDefault(x => x.Id == firstStep[1].FacilityId).FacilityType != AddressBook.FacilityType.Port)
                         {

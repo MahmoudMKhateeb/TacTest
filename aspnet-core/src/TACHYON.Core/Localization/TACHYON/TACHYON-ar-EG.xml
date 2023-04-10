@@ -2925,7 +2925,7 @@
     <text name="WithoutReturnTrip"></text>
     <text name="TwoWayRoutsWithPortShuttling"></text>
     <text name="TwoWayRoutsWithoutPortShuttling"></text>
-    <text name="OneWayRoutWithPortShuttling"></text>
+    <text name="OneWayRoutWithoutPortShuttling"></text>
 	<text name="FacilityType">نوع المنشأة</text>
 	<text name="SelectARoundTripType">اختر نوع الرحلة العائدة</text>
 	<text name="AllowedWeight">الوزن المسموح به</text>

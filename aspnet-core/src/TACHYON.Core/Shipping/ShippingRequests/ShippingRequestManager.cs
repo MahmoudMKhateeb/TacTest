@@ -224,7 +224,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L("RoundTripTypeIsRequired"));
             }
 
-            else if (input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements && (input.RoundTripType == null && input.RoundTripType != RoundTripType.TwoWayRoutsWithoutPortShuttling && input. RoundTripType != RoundTripType.TwoWayRoutsWithPortShuttling && input.RoundTripType != RoundTripType.OneWayRoutWithPortShuttling))
+            else if (input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements && (input.RoundTripType == null && input.RoundTripType != RoundTripType.TwoWayRoutsWithoutPortShuttling && input. RoundTripType != RoundTripType.TwoWayRoutsWithPortShuttling && input.RoundTripType != RoundTripType.OneWayRoutWithoutPortShuttling))
             {
                 throw new UserFriendlyException(L("RoundTripTypeIsRequired"));
             }
@@ -246,7 +246,7 @@ namespace TACHYON.Shipping.ShippingRequests
             switch (shippingRequest.RoundTripType)
             {
                 case RoundTripType.WithoutReturnTrip:
-                case RoundTripType.OneWayRoutWithPortShuttling:
+                case RoundTripType.OneWayRoutWithoutPortShuttling:
                     input.RouteTypeId = ShippingRequestRouteType.SingleDrop;
                     input.NumberOfDrops = 1;
                     break;
@@ -272,7 +272,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 switch (shippingRequest.RoundTripType)
                 {
                     case RoundTripType.WithoutReturnTrip:
-                    case RoundTripType.OneWayRoutWithPortShuttling:
+                    case RoundTripType.OneWayRoutWithoutPortShuttling:
                         input.RouteType = ShippingRequestRouteType.SingleDrop;
                         input.NumberOfDrops = 1;
                         break;

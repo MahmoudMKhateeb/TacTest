@@ -16,6 +16,6 @@ namespace TACHYON.Shipping.ShippingRequests
         [Description("Two way routs without port shuttling")]
         TwoWayRoutsWithoutPortShuttling = 4,
         [Description("One way rout with port shuttling")]
-        OneWayRoutWithPortShuttling = 5,
+        OneWayRoutWithoutPortShuttling = 5,
     }
 }

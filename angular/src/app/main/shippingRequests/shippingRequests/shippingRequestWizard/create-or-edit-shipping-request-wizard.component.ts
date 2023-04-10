@@ -975,7 +975,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         break;
       }
       case RoundTripType.WithoutReturnTrip:
-      case RoundTripType.OneWayRoutWithPortShuttling:
+      case RoundTripType.OneWayRoutWithoutPortShuttling:
       default: {
         this.step2Dto.routeTypeId = ShippingRequestRouteType.SingleDrop;
         this.step2Dto.numberOfDrops = 1;
