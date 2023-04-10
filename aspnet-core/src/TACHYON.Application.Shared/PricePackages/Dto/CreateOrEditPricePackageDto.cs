@@ -19,15 +19,11 @@ namespace TACHYON.PricePackages.Dto
 
         public long TruckTypeId { get; set; }
 
-        public int? OriginCityId { get; set; }
-
-        public int? DestinationCityId { get; set; }
-
         public long? DestinationTenantId { get; set; }
 
         public ShippingRequestRouteType RouteType { get; set; }
 
-        public int ShippingTypeId { get; set; }
+        public ShippingTypeEnum ShippingTypeId { get; set; }
 
         public decimal TotalPrice { get; set; }
 
@@ -47,6 +43,11 @@ namespace TACHYON.PricePackages.Dto
 
         [StringLength(300, MinimumLength = 3)] public string ScopeOfWork { get; set; }
 
+        public RoundTripType? RoundTrip { get; set; }
+
+        public PricePackageLocationSelectItemDto OriginLocation { get; set; }
+        
+        public PricePackageLocationSelectItemDto DestinationLocation { get; set; }
 
         public void AddValidationErrors(CustomValidationContext context)
         {
@@ -54,9 +55,9 @@ namespace TACHYON.PricePackages.Dto
                 context.Results.Add(new ValidationResult("You must select transport type"));
             if (TruckTypeId == default)
                 context.Results.Add(new ValidationResult("You must select truck type"));
-            if (OriginCityId is null && Type == PricePackageType.PerTrip)
+            if (OriginLocation?.CityId is null && Type != PricePackageType.Dedicated)
                 context.Results.Add(new ValidationResult("You must select origin city"));
-            if (DestinationCityId is null && Type == PricePackageType.PerTrip)
+            if (DestinationLocation?.CityId is null && Type != PricePackageType.Dedicated)
                 context.Results.Add(new ValidationResult("You must select destination city"));
             if (RouteType == default)
                 context.Results.Add(new ValidationResult("You must select route type"));
@@ -65,9 +66,29 @@ namespace TACHYON.PricePackages.Dto
             if (ShippingTypeId == default)
                 context.Results.Add(new ValidationResult("You must select price package type"));
 
+            if (ShippingTypeId == ShippingTypeEnum.ImportPortMovements && OriginLocation?.PortId is null)
+            {
+                context.Results.Add(new ValidationResult("You Must select an origin port"));
+            }
+            
+
+            if (Type == PricePackageType.Dedicated || ShippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+                ShippingTypeId == ShippingTypeEnum.ImportPortMovements)
+            {
+                if (string.IsNullOrEmpty(ScopeOfWork))
+                {
+                    context.Results.Add(new ValidationResult("You must select Scope Of Work "));
+                }
+
+                if (string.IsNullOrEmpty(ProjectName))
+                {
+                    context.Results.Add(new ValidationResult("You must select Project Name"));
+                }
+            }
+            
             if (Type != PricePackageType.Dedicated) return;
 
-            if (OriginCityId.HasValue || DestinationCityId.HasValue)
+            if (OriginLocation != null || DestinationLocation != null)
                 context.Results.Add(
                     new ValidationResult(
                         "You can not select origin or destination cities for dedicated price package"));
@@ -80,16 +101,6 @@ namespace TACHYON.PricePackages.Dto
             if (ServiceAreas.IsNullOrEmpty())
             {
                 context.Results.Add(new ValidationResult("You must select Service Areas"));
-            }
-
-            if (string.IsNullOrEmpty(ScopeOfWork))
-            {
-                context.Results.Add(new ValidationResult("You must select Scope Of Work "));
-            }
-
-            if (string.IsNullOrEmpty(ProjectName))
-            {
-                context.Results.Add(new ValidationResult("You must select Project Name"));
             }
         }
     }
