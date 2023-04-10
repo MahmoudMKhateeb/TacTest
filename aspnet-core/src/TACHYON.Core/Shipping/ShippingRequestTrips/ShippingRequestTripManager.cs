@@ -520,12 +520,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             return await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.CMS) && await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.SaasInvoicingActivation);
         }
 
-        public async Task<int?> getWaybillsNo(int tenantId)
+        public async Task<int?> GetWaybillsNo(int tenantId)
         {
             return await _shippingRequestTripRepository.CountAsync(x => x.ShippingRequestFk.TenantId == tenantId || x.ShipperTenantId == tenantId);
         }
 
-        public async Task<int?> getMaxNumberOfWaybills(int tenantId)
+        public async Task<int?> GetMaxNumberOfWaybills(int tenantId)
         {
             var waybillsFeature = await _featureChecker.IsEnabledAsync(tenantId, AppFeatures.NumberOfWaybills);
             if (waybillsFeature)

@@ -11,6 +11,7 @@
         <create-or-edit-template-drop-down-button
           *ngIf="
             _trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0 &&
+            isEnabled('App.SaveTemplateFeature') &&
             (isShipper || isTachyonDealer || (isCarrierSaas && _trip.GetShippingRequestForViewOutput.shippingRequest.isSaas))
           "
           [entityType]="entityTypes.ShippingRequestTemplate"

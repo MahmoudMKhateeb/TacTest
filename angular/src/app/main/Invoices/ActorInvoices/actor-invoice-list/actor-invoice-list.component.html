@@ -2,7 +2,9 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'InvoicesList' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-secondary"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button *ngIf="isEnabled('App.ExportFunctionality')" (click)="exportToExcel()" class="btn btn-outline-success">
+          <i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}
+        </button>
         <button
           *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId"
           (click)="OndemandModel.show()"

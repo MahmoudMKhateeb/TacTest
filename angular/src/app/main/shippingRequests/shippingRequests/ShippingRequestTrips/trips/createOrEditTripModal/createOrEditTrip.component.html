@@ -33,6 +33,7 @@
                 "
               >
                 <button
+                  *ngIf="isEnabled('App.SaveTemplateFeature')"
                   dropdownToggle
                   type="button"
                   class="btn btn-outline-danger dropdown-toggle btn-elevate-hover mr-2"
@@ -93,8 +94,8 @@
               </div>
             </div>
 
-            <div class="row" [hidden]="!this.feature.isEnabled('App.CarrierClients') || _TripService.GetShippingRequestForViewOutput">
-              <div class="col-6">
+            <div class="row" [hidden]="_TripService.GetShippingRequestForViewOutput">
+              <div class="col-6" [hidden]="!this.feature.isEnabled('App.ShipperClients')">
                 <div class="form-group">
                   <label>{{ l('ActorShipper') }}</label>
                   <div
@@ -156,7 +157,7 @@
                 </div>
               </div>
 
-              <div class="col-6">
+              <div class="col-6" [hidden]="!this.feature.isEnabled('App.CarrierClients')">
                 <div class="form-group">
                   <label>{{ l('ActorCarrier') }}</label>
                   <div
@@ -765,6 +766,7 @@
               <create-or-edit-template-drop-down-button
                 *ngIf="
                   (isShipper || isTachyonDealer || isCarrierSaas) &&
+                  isEnabled('App.SaveTemplateFeature') &&
                   _TripService.GetShippingRequestForViewOutput &&
                   _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
                 "

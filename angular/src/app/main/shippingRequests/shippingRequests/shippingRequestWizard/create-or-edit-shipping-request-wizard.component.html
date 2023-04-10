@@ -1,7 +1,7 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [breadcrumbs]="breadcrumbs" [title]="l('CreateNewRequests')">
-      <div role="actions">
+      <div *ngIf="isEnabled('App.DedicatedTruckFeature')" role="actions">
         <button (click)="goToDedicatedWizard()" class="btn btn-primary blue"><i class="fa fa-plus"></i> {{ l('NewDedicatedRequest') }}</button>
       </div>
     </sub-header>
@@ -1263,7 +1263,7 @@
                     </div>
                     <div>
                       <create-or-edit-template-drop-down-button
-                        *ngIf="activeStep == 4 && (isShipper || isTachyonDealer || isCarrierSaas)"
+                        *ngIf="activeStep == 4 && (isShipper || isTachyonDealer || isCarrierSaas) && isEnabled('App.SaveTemplateFeature')"
                         [entityType]="entityType.ShippingRequestTemplate"
                         [sourceEntityId]="activeShippingRequestId"
                         [customClass]="'btn btn-outline-secondary font-weight-bold px-9 py-4 dropdown-toggle btn-elevate-hover mr-2'"

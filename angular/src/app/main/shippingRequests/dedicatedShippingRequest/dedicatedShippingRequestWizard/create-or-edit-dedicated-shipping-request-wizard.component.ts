@@ -16,30 +16,30 @@ import { finalize } from 'rxjs/operators';
 import KTWizard from '@metronic/common/js/components/wizard';
 
 import {
-    ActorSelectItemDto,
-    CarriersForDropDownDto,
-    CountyDto,
-    CreateOrEditDedicatedStep1Dto,
-    CreateOrEditShippingRequestVasListDto,
-    DedicatedShippingRequestsServiceProxy,
-    EditDedicatedStep2Dto,
-    EntityTemplateServiceProxy,
-    FacilitiesServiceProxy,
-    GetAllGoodsCategoriesForDropDownOutput,
-    GetShippingRequestForViewOutput,
-    GoodsDetailsServiceProxy,
-    ISelectItemDto,
-    RoutStepsServiceProxy,
-    SavedEntityType,
-    SelectItemDto,
-    ShippersForDropDownDto,
-    ShippingRequestDestinationCitiesDto,
-    ShippingRequestRouteType,
-    ShippingRequestsServiceProxy,
-    ShippingTypeEnum,
-    TenantCityLookupTableDto,
-    TenantRegistrationServiceProxy,
-    TimeUnit,
+  ActorSelectItemDto,
+  CarriersForDropDownDto,
+  CountyDto,
+  CreateOrEditDedicatedStep1Dto,
+  CreateOrEditShippingRequestVasListDto,
+  DedicatedShippingRequestsServiceProxy,
+  EditDedicatedStep2Dto,
+  EntityTemplateServiceProxy,
+  FacilitiesServiceProxy,
+  GetAllGoodsCategoriesForDropDownOutput,
+  GetShippingRequestForViewOutput,
+  GoodsDetailsServiceProxy,
+  ISelectItemDto,
+  RoutStepsServiceProxy,
+  SavedEntityType,
+  SelectItemDto,
+  ShippersForDropDownDto,
+  ShippingRequestDestinationCitiesDto,
+  ShippingRequestRouteType,
+  ShippingRequestsServiceProxy,
+  ShippingTypeEnum,
+  TenantCityLookupTableDto,
+  TenantRegistrationServiceProxy,
+  TimeUnit,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -531,12 +531,21 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
       });
     });
 
-    this._shippingRequestsServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
-      this.allShippingTypes = result?.map((item) => {
-        (item.id as any) = Number(item.id);
-        return item;
+    this._shippingRequestsServiceProxy
+      .getAllShippingTypesForDropdown()
+      .pipe(
+        finalize(() => {
+          if (!this.isEnabled('App.PortMovement')) {
+            this.allShippingTypes = this.allShippingTypes.filter((x) => x.id.toString() != '3');
+          }
+        })
+      )
+      .subscribe((result) => {
+        this.allShippingTypes = result?.map((item) => {
+          (item.id as any) = Number(item.id);
+          return item;
+        });
       });
-    });
 
     // this.allShippingTypes = this.enumToArray.transform(ShippingTypeEnum).map((item) => {
     //   const selectItem = new SelectItemDto();

@@ -49,6 +49,8 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
   uploadUrl: string;
   documentsEntitiesEnum = DocumentsEntitiesEnum;
   dataSource: any = {};
+  IsExceedsMaxNumberOfWaybills: boolean;
+  CanAddTruck: boolean;
 
   constructor(
     injector: Injector,
@@ -68,6 +70,10 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
     this.isArabic = abp.localization.currentLanguage.name.startsWith('ar');
     this.refreshData();
+    this._trucksServiceProxy.getTenantExceedsNumberOfTrucks().subscribe((res) => {
+      this.IsExceedsMaxNumberOfWaybills = res.isTenantExceedsNumberOfTrucks;
+      this.CanAddTruck = res.canAddTruck;
+    });
   }
 
   ngAfterViewInit(): void {}

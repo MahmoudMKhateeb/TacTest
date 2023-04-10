@@ -119,7 +119,9 @@
         </ng-template>
       </div>
       <div class="modal-footer">
-        <button (click)="exportToExcel()" class="btn btn-outline-secondary"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button *ngIf="isEnabled('App.ExportFunctionality')" (click)="exportToExcel()" class="btn btn-success">
+          <i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}
+        </button>
       </div>
     </div>
   </div>

@@ -3357,6 +3357,19 @@
 	<text name="SelectProposal">Select a proposal</text>
 		<text name="ShipperInvoices">Shipper Invoices</text>
 		<text name="CarrierInvoices">Carrier Invoices</text>
+  <text name="NumberOfTrucksFeature">Number of trucks</text>
+  <text name="AdditionalTruckPriceFeature">Additional truck price</text>
+  <text name="MaxNumberOfTrucksFeature">Max number of trucks</text>
+    <text name="You are already passed the allowed number of trucks">You are already passed the allowed number of trucks</text>
+    <text name="ImportFunctionalityFeature">Import functionality</text>
+    <text name="ImportTripFeature">Import trip</text>
+    <text name="ImportTruckFeature">Import truck</text>
+    <text name="ImportDriverFeature">Import driver</text>
+    <text name="ImportSaasShipmentFeature">Import SAAS shipment</text>
+    <text name="DedicatedTruckFeature">Dedicated truck</text>
+    <text name="SaveTemplateFeature">Save template</text>
+    <text name="PortMovementFeature">Port movement</text>
+    <text name="HomeDeliveryFeature">Home Delivery</text>
 		
 	</texts>
 </localizationDictionary>

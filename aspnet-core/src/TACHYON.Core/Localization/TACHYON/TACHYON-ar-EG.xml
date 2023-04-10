@@ -3071,6 +3071,19 @@
 		<text name="SelectProposal">أختر عرض الاسعار</text>
 		<text name="ShipperInvoices">فواتير الشاحن</text>
 		<text name="CarrierInvoices">فواتير الناقل</text>
+    <text name="NumberOfTrucksFeature">عدد الشاحنات</text>
+    <text name="AdditionalTruckPriceFeature">سعر الشاحنة الاضافي</text>
+    <text name="MaxNumberOfTrucksFeature">عدد الشاحنات</text>
+    <text name="You are already passed the allowed number of trucks">وصلت الشاحنةالأخيرة من عدد الشاحنات المسموح بها</text>
+    <text name="ImportFunctionalityFeature">الإستيراد من اكسل</text>
+    <text name="ImportTripFeature">إستيراد الرحلات</text>
+    <text name="ImportTruckFeature">إستيراد الشاحنات</text>
+    <text name="ImportDriverFeature">إستيراد السائقين</text>
+    <text name="ImportSaasShipmentFeature">إستيراد رحلات SAAS</text>
+    <text name="DedicatedTruckFeature">تأجير شاحنات</text>
+    <text name="SaveTemplateFeature">حفظ قالب</text>
+    <text name="PortMovementFeature">رحلات الموانئ</text>
+    <text name="HomeDeliveryFeature">توصيل منزلي</text>
 		
 	</texts>
 </localizationDictionary>

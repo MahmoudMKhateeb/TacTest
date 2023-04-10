@@ -54,7 +54,7 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this.isEnabled('App.Shipper')
+            () => this.isEnabled('App.Shipper') && this.isEnabled('App.SaveTemplateFeature')
           ),
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Shipper')

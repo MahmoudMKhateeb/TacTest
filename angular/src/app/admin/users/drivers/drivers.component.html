@@ -15,11 +15,25 @@
             <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
           </button>
           <div class="dropdown-menu dropdown-menu-right dropdown-excel-operations" *dropdownMenu>
-            <a class="dropdown-item" id="ExportUsersToExcelButton" (click)="exportToExcel()" href="javascript:;">
+            <a
+              *ngIf="isEnabled('App.ExportFunctionality')"
+              class="dropdown-item"
+              id="ExportUsersToExcelButton"
+              (click)="exportToExcel()"
+              href="javascript:;"
+            >
               <i class="fa fa-download mr-2 mt-1" style="font-size: 1rem"></i>
               {{ 'ExportToExcel' | localize }}
             </a>
-            <a href="javascript:;" *ngIf="'Pages.Administration.Users.Create' | permission" class="no-padding">
+            <a
+              href="javascript:;"
+              *ngIf="
+                ('Pages.Administration.Users.Create' | permission) &&
+                isEnabled('App.ImportFunctionality') &&
+                isEnabled('App.ImportFunctionality.ImportDriverFeature')
+              "
+              class="no-padding"
+            >
               <span class="fileinput-button">
                 <p-fileUpload
                   customUpload="true"

@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'InvoicesList' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-secondary"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <!-- <button *ngIf="isEnabled('App.ExportFunctionality')" (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button> -->
         <button
           *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId"
           (click)="OndemandModel.show()"
@@ -31,6 +31,7 @@
               [rowAlternationEnabled]="true"
               keyExpr="id"
               [wordWrapEnabled]="true"
+              (onExporting)="onExporting($event)"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
@@ -53,6 +54,7 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
+              <dxo-selection *ngIf="isEnabled('App.ExportFunctionality')" mode="multiple"></dxo-selection>
               <dxi-column dataField="invoiceNumber" caption="{{ l('InvoiceNumber') }}"></dxi-column>
               <dxi-column
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
@@ -79,6 +81,7 @@
                 caption="{{ l('Status') }}"
               ></dxi-column>
               <dxi-column dataField="channel" cellTemplate="cellTemplate_Channel" caption="{{ l('label') }}"></dxi-column>
+              <dxo-export *ngIf="isEnabled('App.ExportFunctionality')" [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
               <div *dxTemplate="let options of 'cellTemplate_isPaid'">
                 <span *ngIf="options.data.isPaid">{{ 'Paid' | localize }}</span>
                 <span *ngIf="!options.data.isPaid">{{ 'UnPaid' | localize }}</span>
@@ -121,6 +124,9 @@
                         (click)="downloadReport(options.data.id)"
                         >{{ l('downloadInvoice') }}</a
                       >
+                    </li>
+                    <li>
+                      <a class="dropdown-item" (click)="ExportItemToExcel(options.data.id)">{{ l('ExportToExcel') }}</a>
                     </li>
                     <li>
                       <a class="dropdown-item" *ngIf="options.data.channel == 3" (click)="downloadPenaltyReport(options.data.id)">{{

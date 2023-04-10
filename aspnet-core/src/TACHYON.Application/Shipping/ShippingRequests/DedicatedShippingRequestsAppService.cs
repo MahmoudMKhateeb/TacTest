@@ -41,6 +41,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<Truck, long> _truckRepository;
         private readonly IRepository<User, long> _lookup_userRepository;
         private readonly IAppNotifier _appNotifier;
+        private readonly IFeatureChecker _featureChecker;
 
         public DedicatedShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository,
             ShippingRequestManager shippingRequestManager,
@@ -51,7 +52,8 @@ namespace TACHYON.Shipping.ShippingRequests
             ISettingManager settingManager,
             IRepository<Truck, long> truckRepository,
             IRepository<User, long> lookup_userRepository,
-            IAppNotifier appNotifier)
+            IAppNotifier appNotifier,
+            IFeatureChecker featureChecker)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestManager = shippingRequestManager;
@@ -63,6 +65,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _truckRepository = truckRepository;
             _lookup_userRepository = lookup_userRepository;
             _appNotifier = appNotifier;
+            _featureChecker = featureChecker;
         }
 
         #region Wizard
@@ -99,6 +102,8 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task<long> CreateOrEditStep1(CreateOrEditDedicatedStep1Dto input)
         {
+            await CheckPermissions(input);
+
             await _shippingRequestManager.ValidateShippingRequestStep1(input);
             ValidateDestinationCities(input);
             await _shippingRequestManager.OthersNameValidation(input);
@@ -112,6 +117,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 return await UpdateStep1(input);
             }
         }
+
+       
 
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.ShipperClients)]
         public async Task<CreateOrEditDedicatedStep1Dto> GetStep1ForEdit(long id)
@@ -762,6 +769,20 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Where(x => input.ReplaceDriverDtos.Select(x => x.OriginalDedicatedDriverId).Contains(x.Id) &&
                 x.ShippingRequestId == input.ShippingRequestId)
                 .ToListAsync();
+        }
+
+        private async Task CheckPermissions(CreateOrEditDedicatedStep1Dto input)
+        {
+            if (!await IsTachyonDealer() && !_featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.DedicatedTruck))
+            {
+                throw new UserFriendlyException(L("YouDon'tHavePermissionToDedicatedTruck"));
+            }
+
+            if ((input.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+                && _featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.PortMovement))
+            {
+                throw new UserFriendlyException(L("YouDon'tHavePermissionToPortMovements"));
+            }
         }
         #endregion
     }

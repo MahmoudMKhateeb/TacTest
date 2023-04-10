@@ -2,8 +2,10 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'Invoices' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-secondary"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
-        <button (click)="ModelSearch.show(searchInput)" class="btn btn-secondary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+        <button *ngIf="isEnabled('App.ExportFunctionality')" (click)="exportToExcel()" class="btn btn-outline-success">
+          <i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}
+        </button>
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>
 
