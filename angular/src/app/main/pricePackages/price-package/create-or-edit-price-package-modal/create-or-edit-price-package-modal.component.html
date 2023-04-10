@@ -459,7 +459,7 @@
               </div>
 
               <div *ngIf="companyType == companyTypeEnum.Carrier" class="form-group col-md-6">
-                <label>{{ l('DirectRequestPrice') }} <span class="text-danger">*</span></label>
+                <label>{{ l('DirectRequestPrice') }}</label>
                 <input
                   [(ngModel)]="pricePackageDto.directRequestPrice"
                   min="0"
@@ -467,7 +467,6 @@
                   name="directRequestPrice"
                   type="number"
                   class="form-control"
-                  required
                   #directRequestPrice="ngModel"
                   [ngClass]="{
                     'is-invalid': directRequestPrice.invalid && (directRequestPrice.dirty || directRequestPrice.touched),
