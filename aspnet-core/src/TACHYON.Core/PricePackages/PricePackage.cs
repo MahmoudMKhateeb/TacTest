@@ -49,7 +49,7 @@ namespace TACHYON.PricePackages
         [ForeignKey(nameof(DestinationTenantId))]
         public Tenant DestinationTenant { get; set; }
 
-        public ShippingRequestRouteType RouteType { get; set; }
+        public ShippingRequestRouteType? RouteType { get; set; }
 
         public ShippingTypeEnum ShippingTypeId { get; set; }
 

@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using Abp.Collections.Extensions;
 using Abp.Runtime.Validation;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace TACHYON.PricePackages.Dto
 
         public long? DestinationTenantId { get; set; }
 
-        public ShippingRequestRouteType RouteType { get; set; }
+        public ShippingRequestRouteType? RouteType { get; set; }
 
         public ShippingTypeEnum ShippingTypeId { get; set; }
 
@@ -59,7 +59,7 @@ namespace TACHYON.PricePackages.Dto
                 context.Results.Add(new ValidationResult("You must select origin city"));
             if (DestinationLocation?.CityId is null && Type != PricePackageType.Dedicated)
                 context.Results.Add(new ValidationResult("You must select destination city"));
-            if (RouteType == default)
+            if (RouteType == default && Type == PricePackageType.PerTrip)
                 context.Results.Add(new ValidationResult("You must select route type"));
             if (Type == default)
                 context.Results.Add(new ValidationResult("You must select price package type"));

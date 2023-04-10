@@ -92,7 +92,7 @@ namespace TACHYON.PricePackages.PricePackageProposals
             var truckTypes = proposal.PricePackages?.Select(x => x.TrucksTypeFk?.Key)
                 .Distinct().ToArray();
             var routeTypes = proposal.PricePackages
-                ?.Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType))
+                ?.Where(x=> x.RouteType.HasValue).Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType))
                 .Distinct().ToArray();
             
             var shippingTypes = proposal.PricePackages?
