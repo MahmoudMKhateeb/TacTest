@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'TrailerStatuses' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button (click)="exportToExcel()" class="btn btn-outline-secondary"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
         <button *ngIf="isGranted('Pages.TrailerStatuses.Create')" (click)="createTrailerStatus()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewTrailerStatus') }}
@@ -79,10 +79,10 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.TrailerStatuses.Edit', 'Pages.TrailerStatuses.Delete')">
+                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.TrailerStatuses.Edit', 'Pages.TrailerStatuses.Delete')">
                       {{ l('Actions') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
+                    <th style="width: 150px" pSortableColumn="displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="trailerStatus.displayName"></p-sortIcon>
                     </th>
@@ -90,7 +90,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.TrailerStatuses.Edit', 'Pages.TrailerStatuses.Delete')">
+                    <td style="width: 130px" [hidden]="!isGrantedAny('Pages.TrailerStatuses.Edit', 'Pages.TrailerStatuses.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -123,7 +123,7 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.trailerStatus.displayName }}
                     </td>

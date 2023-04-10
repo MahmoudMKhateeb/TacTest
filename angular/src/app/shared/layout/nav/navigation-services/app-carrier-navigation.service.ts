@@ -25,7 +25,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Operations',
         'Pages.ShippingRequests',
-        'Operations.svg',
+        '6 Opertation.svg',
         '/app/main/comingSoon',
         [],
         [
@@ -61,7 +61,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'AddressBook',
         '',
-        'Facility Managment.svg',
+        '9 Facilities managment.svg',
         '',
         [],
         [
@@ -93,7 +93,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'PricePackages',
         '',
-        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        '7 Price Packging.svg',
         '',
         [],
         [
@@ -108,7 +108,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMS',
         '',
-        'TMS Settings.svg',
+        '8 TMS Managment.svg',
         '',
         [],
         [
@@ -136,7 +136,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Financials',
         'Pages.Invoices',
-        'Financials.svg',
+        '2 Financials.svg',
         '',
         [],
         [
@@ -200,7 +200,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'DocumentManagement',
         '',
-        'Document.svg',
+        '4 Documents managment.svg',
         '',
         [],
         [
@@ -263,7 +263,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Settings',
         'Pages.Administration.Tenant.Settings',
-        'Settings.svg',
+        '10 Setting.svg',
         '',
         [],
         [new AppMenuItem('GeneralSettings', 'Pages.Administration.Tenant.Settings', '', '/app/admin/tenantSettings')]
@@ -275,7 +275,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'UserManagement',
         '',
-        'User Management.svg',
+        '11 User managment.svg',
         '',
         [],
         [

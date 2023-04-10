@@ -239,19 +239,6 @@
         </div>
 
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
-          <!--          <button-->
-          <!--            type="submit"-->
-          <!--            class="btn btn-primary blue"-->
-          <!--            [disabled]="!receiverForm.form.valid"-->
-          <!--            [buttonBusy]="saving"-->
-          <!--            [busyText]="l('SavingWithThreeDot')"-->
-          <!--          >-->
-          <!--            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>-->
-          <!--          </button>-->
-
-          <!--                [busyText]="l('SavingWithThreeDot')"-->
-          <!--                [disabled]="saving || !receiverForm.form.valid"-->
           <dx-button
             type="submit"
             class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
@@ -262,6 +249,7 @@
             [validationGroup]="'receiverGroup'"
           >
           </dx-button>
+          <button [disabled]="saving" type="button" class="btn btn-outline-danger" (click)="close()">{{ l('Cancel') }}</button>
         </div>
       </form>
     </div>

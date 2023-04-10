@@ -25,7 +25,7 @@
               <label for="Name">{{ 'Entity' | localize }} *</label>
               <select class="form-control" [(ngModel)]="entityDynamicParameter.entityFullName" required>
                 <option value="">{{ 'SelectAnEntity' | localize }}</option>
-                <option *ngFor="let entity of allEntities" [value]="entity">{{ entity }} </option>
+                <option *ngFor="let entity of allEntities" [value]="entity">{{ entity }}</option>
               </select>
             </div>
             <div class="form-group">
@@ -40,13 +40,13 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">
+          <button [disabled]="saving" type="button" class="btn btn-outline-danger font-weight-bold" (click)="close()">
             {{ 'Cancel' | localize }}
           </button>
 
           <button
             type="button"
-            class="btn btn-save font-weight-bold"
+            class="btn btn-primary font-weight-bold"
             (click)="save()"
             [disabled]="!entityDynamicParameter.entityFullName || !entityDynamicParameter.dynamicParameterId"
             [buttonBusy]="saving"

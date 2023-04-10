@@ -31,9 +31,6 @@
         <div class="modal-footer">
           <!--begin::Buttons-->
 
-          <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" [disabled]="saving" (click)="close()">
-            {{ l('Close') }}
-          </button>
           <button
             type="submit"
             class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase"
@@ -41,6 +38,9 @@
             [disabled]="!Form.form.valid"
           >
             {{ l('Send') }}
+          </button>
+          <button type="button" class="btn btn-light font-weight-bolder btn-sm py-3 px-6 text-uppercase" [disabled]="saving" (click)="close()">
+            {{ l('Close') }}
           </button>
           <!--end::Buttons-->
         </div>

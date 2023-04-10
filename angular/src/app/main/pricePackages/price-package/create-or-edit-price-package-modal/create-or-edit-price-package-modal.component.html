@@ -537,8 +537,8 @@
                         <dxi-column dataField="destinationCity" caption="{{ l('Destination') }}"></dxi-column>
 
                         <div *dxTemplate="let options of 'cellTemplate_RoutType'">
-                          <span *ngIf="options.data.isMultiDrop" class="badge badge-success badge-inline">{{ 'MultipleDrops' | localize }}</span>
-                          <span *ngIf="!options.data.isMultiDrop" class="badge badge-danger badge-inline">{{ 'SingleDrop' | localize }}</span>
+                          <span *ngIf="options.data.isMultiDrop">{{ 'MultipleDrops' | localize }}</span>
+                          <span *ngIf="!options.data.isMultiDrop">{{ 'SingleDrop' | localize }}</span>
                         </div>
                       </dx-data-grid>
                     </div>
@@ -611,11 +611,10 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="close()">{{ 'Close' | localize }}</button>
-
           <button type="submit" [buttonBusy]="isFormSaving" [disabled]="PPForm.invalid" class="btn btn-primary">
             {{ 'Save' | localize }}
           </button>
+          <button type="button" class="btn btn-light" (click)="close()">{{ 'Close' | localize }}</button>
         </div>
       </form>
     </div>

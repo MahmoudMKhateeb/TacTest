@@ -104,12 +104,12 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button (click)="close()" [disabled]="saving" class="btn btn-default" type="button">{{ l('Cancel') }}</button>
+          <button (click)="close()" [disabled]="saving" class="btn btn-outline-danger" type="button">{{ l('Cancel') }}</button>
           <button
             [busyText]="l('SavingWithThreeDot')"
             [buttonBusy]="saving"
             [disabled]="!goodsDetailForm.form.valid"
-            class="btn btn-save blue"
+            class="btn btn-primary blue"
             type="submit"
           >
             <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>

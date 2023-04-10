@@ -36,16 +36,16 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
           <button
             type="submit"
-            class="btn btn-save blue"
+            class="btn btn-primary blue"
             [disabled]="!trailerStatusForm.form.valid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >
             <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
           </button>
+          <button [disabled]="saving" type="button" class="btn btn-outline-danger" (click)="close()">{{ l('Cancel') }}</button>
         </div>
       </form>
     </div>

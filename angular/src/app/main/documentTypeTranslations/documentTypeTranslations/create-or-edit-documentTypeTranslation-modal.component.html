@@ -24,7 +24,7 @@
           <div class="form-group m-form__group">
             <label for="DocumentTypeDisplayName">{{ l('DocumentType') }}</label>
             <select name="documentTypeTranslation.coreId" [(ngModel)]="documentTypeTranslation.coreId" class="form-control" required>
-              <option value="{{ -1 }}"> {{ l('Select') }} {{ l('DocumentType') }}</option>
+              <option value="{{ -1 }}">{{ l('Select') }} {{ l('DocumentType') }}</option>
               <option *ngFor="let item of allDocumentTypes" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
           </div>
@@ -51,10 +51,10 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button [disabled]="saving" type="button" class="btn btn-outline-danger" (click)="close()">{{ l('Cancel') }}</button>
           <button
             type="submit"
-            class="btn btn-save blue"
+            class="btn btn-primary blue"
             [disabled]="!documentTypeTranslationForm.form.valid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"

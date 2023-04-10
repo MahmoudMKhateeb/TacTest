@@ -28,9 +28,9 @@
         </div>
         <!--end::Body-->
         <!--begin::Footer-->
-        <div class="card-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">{{ l('Close') }}</button>
+        <div class="card-footer text-right">
           <button type="button" class="btn btn-primary" [disabled]="loading || !templateId" (click)="ApplyTemplate()">{{ l('UseTemplate') }}</button>
+          <button type="button" class="btn btn-light" data-dismiss="modal" (click)="close()">{{ l('Close') }}</button>
         </div>
         <!--end::Footer-->
       </div>

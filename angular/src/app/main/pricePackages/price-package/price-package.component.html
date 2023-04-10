@@ -80,7 +80,7 @@
               </dxo-summary>
 
               <div *dxTemplate="let options of 'statusTemplate'">
-                <span class="badge badge-primary badge-inline">{{ options.data.status | localize }}</span>
+                <span>{{ options.data.status | localize }}</span>
               </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div

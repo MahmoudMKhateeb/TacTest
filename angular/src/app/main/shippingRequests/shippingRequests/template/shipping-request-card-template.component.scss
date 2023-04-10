@@ -182,6 +182,18 @@
             top: 2rem;
         }
     }
+    .buttom-info-badges {
+        a {
+            &.badge-gray {
+                &:hover {
+                    text-decoration: none;
+                    color: var(--white);
+                    //color: var(--gray-dark-55c);
+                    //border: 1px solid var(--gray-dark-55c);
+                }
+            }
+        }
+    }
 }
 
 ::ng-deep {

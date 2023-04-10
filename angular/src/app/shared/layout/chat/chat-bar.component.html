@@ -4,7 +4,7 @@
       href="javascript:;"
       id="kt_quick_sidebar_back"
       class="btn btn-xs btn-icon btn-light btn-hover-primary quick-sidebar-back ml-2"
-      style="float: left;"
+      style="float: left"
       (click)="quickSideBarBackClick()"
       [hidden]="!selectedUser.friendUserId"
     >
@@ -43,7 +43,7 @@
             </ng-template>
           </div>
         </div>
-        <button id="SearchChatUserButton" type="button" *ngIf="userNameFilter.length" (click)="search()" class="btn btn-block btn-success">
+        <button id="SearchChatUserButton" type="button" *ngIf="userNameFilter.length" (click)="search()" class="btn btn-block btn-primary">
           {{ 'AddFriend' | localize }}
         </button>
         <div class="mt-7 scroll scroll-pull chat-users">
@@ -128,7 +128,7 @@
             #chatScrollBar
             [config]="{ suppressScrollX: true }"
             (psYReachStart)="loadPreviousMesssagesOfSelectedUser()"
-            style="height: 78vh;"
+            style="height: 78vh"
           >
             <!--begin::Scroll-->
             <div class="scroll scroll-pull">
@@ -181,8 +181,8 @@
           <!--begin::Compose-->
           <form name="chatMessageForm" id="chatMessageForm" role="form">
             <div id="files" class="files"></div>
-            <div class="col-md-12" style="margin: 5px; padding-right: 25px;" *ngIf="selectedUser.state === friendDtoState.Blocked">
-              <button id="UnblockUserButton" type="button" (click)="unblock(selectedUser)" class="btn btn-block btn-success">
+            <div class="col-md-12" style="margin: 5px; padding-right: 25px" *ngIf="selectedUser.state === friendDtoState.Blocked">
+              <button id="UnblockUserButton" type="button" (click)="unblock(selectedUser)" class="btn btn-block btn-primary">
                 {{ 'UnblockUser' | localize }}
               </button>
             </div>

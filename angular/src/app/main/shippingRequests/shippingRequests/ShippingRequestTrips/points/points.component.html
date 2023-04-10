@@ -84,7 +84,7 @@
                             </option>
                           </select>
                           <div *ngIf="isShipper || isCarrierSaas" class="input-group-btn">
-                            <button class="btn btn-light-danger" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
+                            <button class="btn btn-light-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
                               <i class="flaticon2-add"></i>
                             </button>
                           </div>
@@ -111,7 +111,7 @@
                           </select>
                           <div *ngIf="isShipper || isCarrierSaas" class="input-group-btn">
                             <button
-                              class="btn btn-light-danger"
+                              class="btn btn-light-primary"
                               data-toggle="tooltip"
                               data-placement="top"
                               title="Tooltip on top"
@@ -130,7 +130,7 @@
                           (click)="createOrEditPointModal.show(i, 'goodDetails', record.goodsDetailListDto)"
                           class="btn btn-sm mr-3"
                           [ngClass]="{
-                            'btn-light-danger': !wayPointsList[i].goodsDetailListDto?.length,
+                            'btn-light-primary': !wayPointsList[i].goodsDetailListDto?.length,
                             'btn-light-success': wayPointsList[i].goodsDetailListDto?.length
                           }"
                         >
@@ -152,7 +152,7 @@
                           (click)="createOrEditPointModal.show(i, 'receiver')"
                           class="btn btn-sm mr-3"
                           [ngClass]="{
-                            'btn-light-danger': !wayPointsList[i].receiverFullName,
+                            'btn-light-primary': !wayPointsList[i].receiverFullName,
                             'btn-light-success': wayPointsList[i].receiverFullName
                           }"
                         >
@@ -173,7 +173,7 @@
                           *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff"
                           (click)="createOrEditPointModal.show(i, 'note')"
                           [ngClass]="{
-                            'btn-light-danger': !wayPointsList[i].note,
+                            'btn-light-primary': !wayPointsList[i].note,
                             'btn-light-success': wayPointsList[i].note
                           }"
                           class="btn btn-sm mr-3"

@@ -33,30 +33,30 @@
           >
             <ng-template pTemplate="header">
               <tr>
-                <th style="width: 20%;">
+                <th style="width: 20%">
                   {{ 'Actions' | localize }}
                 </th>
-                <th style="width: 65%;" pSortableColumn="userName">
+                <th style="width: 65%" pSortableColumn="userName">
                   {{ 'UserName' | localize }}
                   <p-sortIcon field="userName"></p-sortIcon>
                 </th>
-                <th style="width: 15%;">
+                <th style="width: 15%">
                   {{ 'Delete' | localize }}
                 </th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-record="$implicit">
               <tr>
-                <td style="width: 20%;">
+                <td style="width: 20%">
                   <button class="btn btn-sm btn-primary" (click)="switchToUser(record)">
                     <i class="fa fa-sign-in-alt"></i>{{ 'LogIn' | localize }}
                   </button>
                 </td>
-                <td style="width: 65%;">
+                <td style="width: 65%">
                   <span class="ui-column-title"> {{ 'UserName' | localize }}</span>
                   {{ getShownLinkedUserName(record) }}
                 </td>
-                <td style="width: 15%;">
+                <td style="width: 15%">
                   <button class="btn btn-outline-danger btn-sm btn-icon" (click)="deleteLinkedUser(record)">
                     <i class="fa fa-trash" [attr.aria-label]="l('Delete')"></i>
                   </button>
@@ -84,7 +84,7 @@
         <!--<Primeng-TurboTable-End>-->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-light-primary font-weight-bold pull-right" (click)="close()">{{ 'Close' | localize }}</button>
+        <button type="button" class="btn btn-light font-weight-bold pull-right" (click)="close()">{{ 'Close' | localize }}</button>
       </div>
     </div>
   </div>

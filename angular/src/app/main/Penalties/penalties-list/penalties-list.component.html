@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'PenaltiesList' | localize" [description]="'' | localize">
       <div *ngIf="isTachyonDealerOrHost" role="actions">
-        <button class="btn btn-outline-success" (click)="createOrEditPenaltyModal.show()">{{ l('ApplyNotLoggedPenalty') }}</button>
+        <button class="btn btn-outline-primary" (click)="createOrEditPenaltyModal.show()">{{ l('ApplyNotLoggedPenalty') }}</button>
       </div>
     </sub-header>
     <div [class]="containerClass">
@@ -47,18 +47,9 @@
               <dxi-column width="6%" dataField="totalAmount" caption="{{ l('Amount') }}"> </dxi-column>
               <dxi-column cellTemplate="statusCellTemplate" dataField="penaltyStatusTitle" caption="{{ l('Status') }}"> </dxi-column>
               <div *dxTemplate="let options of 'statusCellTemplate'">
-                <span style="width: 137px"
-                  ><span
-                    class="badge badge-inline"
-                    [ngClass]="{
-                      'badge-primary': options.data.status == PenaltyTypeEnum.Draft,
-                      'badge-danger': options.data.status == PenaltyTypeEnum.Canceled,
-                      'badge-success': options.data.status == PenaltyTypeEnum.Confirmed,
-                      'badge-info': options.data.status == PenaltyTypeEnum.Paid
-                    }"
-                    >{{ l(options.data.penaltyStatusTitle) }}</span
-                  ></span
-                >
+                <span style="width: 137px">
+                  <span>{{ l(options.data.penaltyStatusTitle) }}</span>
+                </span>
               </div>
               <dxi-column *ngIf="isTachyonDealerOrHost" dataField="companyName" caption="{{ l('CompanyName') }}" dataType="text"> </dxi-column>
               <dxi-column dataField="waybillNumber" caption="{{ l('WaybillNumber') }}" dataType="number"> </dxi-column>
@@ -74,19 +65,9 @@
               <dxi-column *ngIf="isTachyonDealerOrHost" dataField="invoiceFlag" caption=" {{ l('InvoiceFlag) }}"></dxi-column>
               <dxi-column dataField="generationDate" caption="{{ l('GenerationDate') }}" dataType="date"></dxi-column>
               <div *dxTemplate="let options of 'TypeCellTemplate'">
-                <span style="width: 137px"
-                  ><span
-                    class="badge badge-inline"
-                    [ngClass]="{
-                      'badge-warning': options.data.penaltyTypeTitle == 'NotLogged',
-                      'badge-secondary': options.data.penaltyTypeTitle == 'TripCancelation',
-                      'badge-primary': options.data.penaltyTypeTitle == 'ExceedMaximumAllowedTime',
-                      'badge-danger': options.data.penaltyTypeTitle == 'TruckAndDriverLateAssigned',
-                      'badge-success': options.data.penaltyTypeTitle == 'DropsDeliveringAfterTripEndDate'
-                    }"
-                    >{{ l(options.data.penaltyTypeTitle) }}</span
-                  ></span
-                >
+                <span style="width: 137px">
+                  <span>{{ l(options.data.penaltyTypeTitle) }}</span>
+                </span>
               </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">

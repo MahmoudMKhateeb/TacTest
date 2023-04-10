@@ -6,14 +6,14 @@
         <div class="btn-group">
           <div *ngIf="permission.isGranted('Pages.Shipment.Tracking.BulkDeliverTrip')" class="mr-2">
             <div ngbDropdown placement="bottom" class="d-inline-block">
-              <button class="btn btn-outline-success" id="dropdownBasic2" ngbDropdownToggle>{{ l('BulkDeliverTrips') }}</button>
+              <button class="btn btn-outline-secondary" id="dropdownBasic2" ngbDropdownToggle>{{ l('BulkDeliverTrips') }}</button>
               <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
                 <a href="assets/sampleFiles/BulkDeliveryTripsSampleFile.xlsx" class="dropdown-item">{{ l('DownloadFileTemplate') }}</a>
                 <button (click)="ForceDeliverTripModal.show()" class="dropdown-item">{{ l('UploadFile') }}</button>
               </div>
             </div>
           </div>
-          <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+          <button (click)="ModelSearch.show(searchInput)" class="btn btn-secondary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
         </div>
       </div>
     </sub-header>
@@ -45,7 +45,7 @@
                   item.shippingType == ShippingTypeEnum.ExportPortMovements
                 "
               >
-                <span class="ribbon-inner {{ item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ? 'bg-warning' : 'bg-danger' }}"></span>
+                <!--                <span class="ribbon-inner bg-primary"></span>-->
                 {{ (item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ? 'DedicatedShippingRequest' : 'PortsMovement') | localize }}
               </div>
               <div class="card-body ribbon ribbon-top">
@@ -54,31 +54,44 @@
                   <button
                     *ngIf="item.hasAccident"
                     (click)="showIncident(item)"
-                    class="ribbon-target bg-warning border-0"
-                    style="top: -1rem; right: 8%"
+                    class="ribbon-target bg-gray border-0"
+                    style="right: 8%"
                     type="submit"
+                    [style.top]="
+                      item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
+                      item.shippingType == ShippingTypeEnum.ImportPortMovements ||
+                      item.shippingType == ShippingTypeEnum.ExportPortMovements
+                        ? '-1.5rem'
+                        : '-1rem'
+                    "
                   >
                     <!--                    //TODO: Add The Icon and the condition-->
                     {{ l('Incident') }}
                   </button>
                   <div
-                    class="ribbon-target"
-                    style="top: -1rem; right: 2%; left: auto"
-                    [ngClass]="{
-                      'bg-danger': item.status === ShippingRequestTripStatusEnum.Delivered,
-                      'bg-info': item.status === ShippingRequestTripStatusEnum.Canceled,
-                      'bg-success': item.status === ShippingRequestTripStatusEnum.InTransit,
-                      'bg-secondary': item.status === ShippingRequestTripStatusEnum.DeliveredAndNeedsConfirmation,
-                      'bg-primary': item.status === ShippingRequestTripStatusEnum.New
-                    }"
+                    class="ribbon-target bg-primary"
+                    style="right: 2%; left: auto"
+                    [style.top]="
+                      item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
+                      item.shippingType == ShippingTypeEnum.ImportPortMovements ||
+                      item.shippingType == ShippingTypeEnum.ExportPortMovements
+                        ? '-1.5rem'
+                        : '-1rem'
+                    "
                   >
                     {{ item.statusTitle | localize }}
                   </div>
                   <div
                     *ngIf="item.isSass"
-                    class="ribbon-target bg-info"
+                    class="ribbon-target bg-dark"
                     [class.for-dedicated]="item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
-                    style="top: -1rem"
+                    [style.top]="
+                      item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
+                      item.shippingType == ShippingTypeEnum.ImportPortMovements ||
+                      item.shippingType == ShippingTypeEnum.ExportPortMovements
+                        ? '-1.5rem'
+                        : '-1rem'
+                    "
                     [ngClass]="{ left: !isRtl, right: isRtl }"
                   >
                     {{ 'SAASTrip' | localize }}
@@ -128,7 +141,7 @@
                       <!--begin::Actions-->
                       <div class="my-lg-0 my-3 mt-8">
                         <a
-                          class="btn btn-sm btn-light-danger font-weight-bolder text-uppercase mr-2"
+                          class="btn btn-sm btn-light-primary font-weight-bolder text-uppercase mr-2"
                           *ngIf="item.driver && (!activePanelId || activePanelId != item.id)"
                           href="javascript:void(0)"
                           (click)="activePanelId = item.id"
@@ -137,7 +150,7 @@
                           <i class="flaticon-pin"></i> {{ l('Track') }}</a
                         >
                         <a
-                          class="btn btn-sm btn-light-danger font-weight-bolder text-uppercase mr-2"
+                          class="btn btn-sm btn-light-primary font-weight-bolder text-uppercase mr-2"
                           *ngIf="activePanelId == item.id"
                           href="javascript:void(0)"
                           (click)="activePanelId = null"

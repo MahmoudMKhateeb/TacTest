@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'Ports' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button (click)="exportToExcel()" class="btn btn-outline-secondary"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
         <button *ngIf="isGranted('Pages.Ports.Create')" (click)="createPort()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewPort') }}
@@ -141,24 +141,24 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Ports.Edit', 'Pages.Ports.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="cityFk.displayName">
+                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.Ports.Edit', 'Pages.Ports.Delete')">{{ l('Actions') }}</th>
+                    <th style="width: 150px" pSortableColumn="cityFk.displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="cityDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="name">
+                    <th style="width: 150px" pSortableColumn="name">
                       {{ l('Name') }}
                       <p-sortIcon field="port.name"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="adress">
+                    <th style="width: 150px" pSortableColumn="adress">
                       {{ l('Adress') }}
                       <p-sortIcon field="port.adress"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="longitude">
+                    <th style="width: 150px" pSortableColumn="longitude">
                       {{ l('Longitude') }}
                       <p-sortIcon field="port.longitude"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="latitude">
+                    <th style="width: 150px" pSortableColumn="latitude">
                       {{ l('Latitude') }}
                       <p-sortIcon field="port.latitude"></p-sortIcon>
                     </th>
@@ -166,7 +166,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.Ports.Edit', 'Pages.Ports.Delete')">
+                    <td style="width: 130px" [hidden]="!isGrantedAny('Pages.Ports.Edit', 'Pages.Ports.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -196,23 +196,23 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.cityDisplayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.port.name }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Adress') }}</span>
                       {{ record.port.adress }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Longitude') }}</span>
                       {{ record.port.longitude }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Latitude') }}</span>
                       {{ record.port.latitude }}
                     </td>

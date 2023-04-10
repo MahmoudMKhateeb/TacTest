@@ -28,11 +28,11 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button [disabled]="saving" type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">{{ 'Cancel' | localize }}</button>
+        <button [disabled]="saving" type="button" class="btn btn-outline-danger font-weight-bold" (click)="close()">{{ 'Cancel' | localize }}</button>
 
         <button
           type="button"
-          class="btn btn-save font-weight-bold"
+          class="btn btn-primary font-weight-bold"
           (click)="save()"
           [disabled]="!dynamicParameterValue.value"
           [buttonBusy]="saving"

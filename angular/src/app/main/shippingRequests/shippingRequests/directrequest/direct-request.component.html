@@ -4,7 +4,7 @@
       {{ l('DirectRequests') }}
     </h3>
     <div class="card-toolbar" *ngIf="ShippingRequestStatus !== ShippingRequestStatuses.PostPrice">
-      <button class="btn btn-danger" (click)="DirectRequestTenantModel.show()">
+      <button class="btn btn-dark" (click)="DirectRequestTenantModel.show()">
         <i class="flaticon2-paper-plane"></i> {{ l('SendDirectRequests') }}
       </button>
     </div>
