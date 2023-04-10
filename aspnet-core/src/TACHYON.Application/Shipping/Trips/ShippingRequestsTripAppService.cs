@@ -1022,7 +1022,7 @@ namespace TACHYON.Shipping.Trips
             }
 
 
-            if (request != null && request.ShippingRequestFlag == ShippingRequestFlag.Dedicated && trip.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
+            if (trip.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
             {
                 // Note: if the trip is normal and changed to Home delivery 
                 // the driver status must updated

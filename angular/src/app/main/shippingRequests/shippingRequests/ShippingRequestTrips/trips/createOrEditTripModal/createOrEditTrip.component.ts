@@ -195,6 +195,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   ngOnInit() {
     this.paymentMethodsArray = this.enumToArray.transform(DropPaymentMethod);
+    this.ShippingRequestTripFlagArray = this.enumToArray.transform(ShippingRequestTripFlag);
+
+    //Take The Points List From the Points Shared Service
+    // this.PointsServiceSubscription = this._PointsService.currentWayPointsList.subscribe((res) => (this._TripService.CreateOrEditShippingRequestTripDto.routPoints = res));
     this.vasesHandler();
     this.ShippingRequestTripFlagArray = this.enumToArray.transform(ShippingRequestTripFlag);
 
