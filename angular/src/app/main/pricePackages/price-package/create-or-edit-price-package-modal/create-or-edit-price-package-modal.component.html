@@ -185,8 +185,8 @@
                   [(value)]="pricePackageDto.routeType"
                   [dataSource]="routeTypes"
                   [searchEnabled]="true"
-                  displayExpr="displayName"
-                  valueExpr="id"
+                  displayExpr="value"
+                  valueExpr="key"
                   required
                   placeholder="{{ l('SelectRouteType') }}"
                 >
@@ -290,8 +290,8 @@
                   [dataSource]="shippingTypes"
                   [searchEnabled]="true"
                   (onSelectionChanged)="shippingTypeChanged()"
-                  displayExpr="displayName"
-                  valueExpr="id"
+                  displayExpr="value"
+                  valueExpr="key"
                   required
                   placeholder="{{ l('SelectShippingType') }}"
                 >
