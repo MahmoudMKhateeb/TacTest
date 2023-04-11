@@ -1,4 +1,4 @@
-﻿using Abp.Domain.Entities;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
@@ -42,6 +42,6 @@ namespace TACHYON.Invoices
         /// <summary>
         /// This flag to consider all upcoming invoice to confirmation date, all previous invoices to be the same as printed, creation time
         /// </summary>
-        public bool HasConfirmationDate { get; set; }
+        public bool ConsiderConfirmationAndLoadingDates { get; set; }
     }
 }
