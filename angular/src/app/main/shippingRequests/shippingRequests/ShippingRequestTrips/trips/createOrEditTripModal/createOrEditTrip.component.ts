@@ -423,7 +423,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         break;
       }
       case RoundTripType.WithoutReturnTrip:
-      case RoundTripType.OneWayRoutWithPortShuttling:
+      case RoundTripType.OneWayRoutWithoutPortShuttling:
       default: {
         this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.SingleDrop;
         this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 1;
@@ -855,8 +855,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       return this.validateImportWithoutReturnTrip();
     }
     if (
-      (this._TripService?.CreateOrEditShippingRequestTripDto?.roundTripType === RoundTripType.OneWayRoutWithPortShuttling ||
-        this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.roundTripType === RoundTripType.OneWayRoutWithPortShuttling) &&
+      (this._TripService?.CreateOrEditShippingRequestTripDto?.roundTripType === RoundTripType.OneWayRoutWithoutPortShuttling ||
+        this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.roundTripType === RoundTripType.OneWayRoutWithoutPortShuttling) &&
       this.PointsComponent.wayPointsList.length > 0
     ) {
       return this.validateOneWayRoutWithPortShuttling();

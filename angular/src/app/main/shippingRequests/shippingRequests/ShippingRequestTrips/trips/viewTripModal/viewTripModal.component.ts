@@ -33,6 +33,7 @@ import {
   GoodsDetailsServiceProxy,
   GetAllGoodsCategoriesForDropDownOutput,
   GetAllTrucksWithDriversListDto,
+  ActorSelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -88,8 +89,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   ShippingRequestFlagEnum = ShippingRequestFlag;
   ShippingRequestTripFlagEnum = ShippingRequestTripFlag;
   ShippingRequestTripFlagArray = [];
-  AllActorsCarriers: SelectItemDto[] = [];
-  AllActorsShippers: SelectItemDto[] = [];
+  AllActorsCarriers: ActorSelectItemDto[] = [];
+  AllActorsShippers: ActorSelectItemDto[] = [];
   allShippingTypes: SelectItemDto[] = [];
   ShippingTypeEnum = ShippingTypeEnum;
   allRoundTripTypes: SelectItemDto[] = [];

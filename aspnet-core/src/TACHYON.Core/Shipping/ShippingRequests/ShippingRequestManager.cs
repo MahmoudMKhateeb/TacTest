@@ -248,8 +248,8 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 case RoundTripType.WithoutReturnTrip:
                 case RoundTripType.OneWayRoutWithoutPortShuttling:
-                    input.RouteTypeId = ShippingRequestRouteType.SingleDrop;
-                    input.NumberOfDrops = 1;
+                    RouteTypeId = ShippingRequestRouteType.SingleDrop;
+                    NumberOfDrops = 1;
                     break;
                 case RoundTripType.WithReturnTrip:
                 case RoundTripType.TwoWayRoutsWithoutPortShuttling:
