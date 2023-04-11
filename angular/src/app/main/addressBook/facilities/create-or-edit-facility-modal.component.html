@@ -230,7 +230,7 @@
               <div class="form-group col-md-12">
                 <label>{{ l('Address') }} <span *ngIf="isRequiredAddress" class="required-fileds">*</span></label>
                 <dx-text-box
-                  #search="ngModel"
+                  #search
                   [(ngModel)]="facility.address"
                   [(value)]="facility.address"
                   placeholder="{{ l('searchForNearestLocation') }}"
