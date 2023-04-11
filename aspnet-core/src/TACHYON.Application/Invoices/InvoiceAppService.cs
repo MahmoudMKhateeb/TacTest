@@ -342,7 +342,8 @@ namespace TACHYON.Invoices
                 .Include(i => i.Items)
                 .ThenInclude(x => x.ShippingRequestTrip)
                 .ThenInclude(x => x.ShippingRequestFk)
-                .ThenInclude(x => x.DestinationCityFk)
+                .ThenInclude(x => x.ShippingRequestDestinationCities)
+                .ThenInclude(x => x.CityFk)
                 .Include(i => i.Items)
                 .ThenInclude(x => x.ShippingRequestTrip)
                 .ThenInclude(x => x.AssignedTruckFk)
@@ -929,7 +930,7 @@ namespace TACHYON.Invoices
                 //Destination
                 if (item.ShippingRequestTrip != null)
                 {
-                    CityDto cityDto = ObjectMapper.Map<CityDto>(item.ShippingRequestTrip.ShippingRequestFk.DestinationCityFk);
+                    CityDto cityDto = ObjectMapper.Map<CityDto>(item.ShippingRequestTrip.ShippingRequestFk.ShippingRequestDestinationCities.First().CityFk);
                     invoiceItemDto.Destination = cityDto.NormalizedDisplayName;
 
                 }
