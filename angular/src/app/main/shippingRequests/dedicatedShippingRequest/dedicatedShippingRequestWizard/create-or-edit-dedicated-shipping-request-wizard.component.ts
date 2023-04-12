@@ -54,7 +54,7 @@ import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import Swal from 'sweetalert2';
-import { DxValidationGroupComponent } from '@node_modules/devextreme-angular';
+import { DxValidationGroupComponent } from '@node_modules/devextreme-angular/ui/validation-group';
 import { Calendar } from '@node_modules/primeng/calendar';
 
 let _self;

@@ -19,7 +19,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { InvoiceTenantItemsDetailsComponent } from './model/invoice-tenant-items-details.component';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import { DxDataGridComponent } from '@node_modules/devextreme-angular';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular/ui/data-grid';
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 import { VoidInvoiceNoteModalComponent } from '@app/main/invoices/invoice-note/invoice-note-list/void-invoice-note-modal/void-invoice-note-modal.component';
 import { SubmitInvoicesSearchInput } from '@app/shared/common/search/SubmitInvoiceSearchInput';

@@ -1,8 +1,5 @@
-import { AfterViewInit, Component, ElementRef, Injector, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import {
-  DedicatedShippingRequestsServiceProxy,
-  ReplacementFlag,
-} from '@shared/service-proxies/service-proxies';
+import { AfterViewInit, Component, ElementRef, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { DedicatedShippingRequestsServiceProxy, ReplacementFlag } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';

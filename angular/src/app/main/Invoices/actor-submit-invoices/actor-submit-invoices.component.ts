@@ -4,7 +4,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { ActorSubmitInvoiceServiceProxy, SubmitInvoiceStatus } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { DxDataGridComponent } from 'devextreme-angular';
+import { DxDataGridComponent } from 'devextreme-angular/ui/data-grid';
 import CustomStore from 'devextreme/data/custom_store';
 import { LoadOptions } from 'devextreme/data/load_options';
 
