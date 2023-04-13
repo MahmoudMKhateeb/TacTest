@@ -249,7 +249,7 @@ namespace TACHYON.PricePackages
                     from pricePackage in _pricePackageRepository.GetAll().AsNoTracking()
                     let hasNormalDirectRequest = _directRequestRepository.GetAll().Any(x =>
                         x.ShippingRequestId == input.ShippingRequestId &&
-                        x.CarrierTenantId == pricePackage.DestinationTenantId)
+                        x.CarrierTenantId == pricePackage.TenantId)
                     let ppOffer = (from pricePackageOffer in _pricePackageOfferRepository.GetAll()
                             .AsNoTracking()
                         where hasNormalDirectRequest ||
