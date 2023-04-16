@@ -84,7 +84,7 @@ namespace TACHYON.Tracking
         }
 
 
-        public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
+        private async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input,bool isDirectShipmentTrackingEnabled)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
 
@@ -137,6 +137,7 @@ namespace TACHYON.Tracking
                           (x.ShippingRequestFk.Status == ShippingRequestStatus.PostPrice || x.ShippingRequestFk.CarrierTenantId.HasValue)) ||
                          x.CarrierTenantId.HasValue
                 )
+                .Where(x=> isDirectShipmentTrackingEnabled? !x.ShippingRequestId.HasValue : x.ShippingRequestId.HasValue)
                 .WhereIf
                 (
                     AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper) && !hasCarrierClient,
@@ -274,6 +275,14 @@ namespace TACHYON.Tracking
 
             );
         }
+
+        [AbpAuthorize(AppPermissions.Pages_Tracking_DirectShipmentTracking)]
+        public async Task<PagedResultDto<TrackingListDto>> GetDirectShipments(TrackingSearchInputDto input)
+            => await GetAll(input, true);
+
+        public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
+            => await GetAll(input, false);
+
         [AbpAllowAnonymous]
         public async Task<PagedResultDto<TrackingByWaybillDto>> GetDropsOffByMasterWaybill(long waybillNumber)
         {

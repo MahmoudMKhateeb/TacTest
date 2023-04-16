@@ -3084,6 +3084,8 @@
     <text name="SaveTemplateFeature">حفظ قالب</text>
     <text name="PortMovementFeature">رحلات الموانئ</text>
     <text name="HomeDeliveryFeature">توصيل منزلي</text>
+	<text name="DirectShipmentTrackingPermission">تتبع الشحنات المباشرة</text>
+	<text name="DirectShipmentTracking">تتبع الشحنات المباشرة</text>
 		
 	</texts>
 </localizationDictionary>

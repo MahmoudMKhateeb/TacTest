@@ -3370,6 +3370,8 @@
     <text name="SaveTemplateFeature">Save template</text>
     <text name="PortMovementFeature">Port movement</text>
     <text name="HomeDeliveryFeature">Home Delivery</text>
+    <text name="DirectShipmentTrackingPermission">Direct Shipment Tracking Permission</text>
+    <text name="DirectShipmentTracking">Direct Shipment Tracking</text>
 		
 	</texts>
 </localizationDictionary>
