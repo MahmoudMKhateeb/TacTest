@@ -407,10 +407,10 @@ namespace TACHYON.Tracking.AdditionalSteps
                    Status = x.Status,
                    ShipperUser = new UserIdentifier(x.ShippingRequestFk.TenantId, x.ShippingRequestFk.CreatorUserId.Value),
                    TripShipperTenantId = x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId !=  x.ShippingRequestFk.CarrierTenantId 
-                   ?x.ShippingRequestFk.TenantId 
+                   ?(int?) x.ShippingRequestFk.TenantId 
                    :null,
                    TripCarrierTenantId = x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId
-                   ? x.ShippingRequestFk.CarrierTenantId
+                   ? (int?)x.ShippingRequestFk.CarrierTenantId
                    : null
                })
                .FirstOrDefaultAsync();
