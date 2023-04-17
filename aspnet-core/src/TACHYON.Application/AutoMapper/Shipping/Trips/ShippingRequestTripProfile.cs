@@ -80,6 +80,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
             CreateMap<ShippingRequestTrip, ShippingRequestTripDriverDetailsDto>()
                 .ForMember(dst => dst.ShipperName, opt => opt.MapFrom(src => src.ShippingRequestFk.Tenant.TenancyName))
                 .ForMember(dst => dst.ShipperRating, opt => opt.MapFrom(src => src.ShippingRequestFk.Tenant.Rate))
+                .ForMember(dst => dst.ShipperRatingNumber, opt => opt.MapFrom(src => src.ShippingRequestFk.Tenant.RateNumber))
                 .ForMember(dst => dst.Source,
                     opt => opt.MapFrom(src =>
                         $"{src.ShippingRequestFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))

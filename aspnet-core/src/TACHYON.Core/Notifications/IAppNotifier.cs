@@ -253,5 +253,7 @@ namespace TACHYON.Notifications
         Task NotifyUserWhenBulkDeliverySucceeded(UserIdentifier user);
 
         Task NotifyUserWhenBulkDeliveryFailed(UserIdentifier user, string errorMsg);
+        Task NotifyTenantWithRating(long? shippingRequestId, int tripId, int tenantId);
+        Task NotifyShipperToRateDedicatedTrips(long? shippingRequestId, int shipperTenantId);
     }
 }
