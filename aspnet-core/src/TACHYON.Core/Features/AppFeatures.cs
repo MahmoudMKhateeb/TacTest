@@ -191,6 +191,8 @@
 
         public const string Penalties = "App.Penalties";
 
+        public const string RequiredReceiverCodeForInvoice = "App.RequiredReceiverCodeForInvoice";
+
         public const string TripCancelation = "App.Penalties.TripCancelation";
         public const string TripCancelationCommissionType = "App.Penalties.TripCancelation.CommissionType";
         public const string TripCancelationCommissionMinValue = "App.Penalties.TripCancelation.CommissionMinValue";
