@@ -1,6 +1,10 @@
-﻿using AutoMapper;
+using Abp.Application.Features;
+using Abp.Runtime.Session;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 using TACHYON.Common;
 using TACHYON.Routs.RoutPoints;
@@ -17,11 +21,12 @@ namespace TACHYON.AutoMapper.Tracking
         public TrackingProfile()
         {
             CreateMap<ShippingRequestTrip, TrackingListDto>()
-             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestFk.CarrierTenantFk.Name))
-             .ForMember(dst => dst.RouteTypeId, opt => opt.MapFrom(src => src.RouteType != null ?src.RouteType :src.ShippingRequestFk.RouteTypeId))
-            .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk.FullName))
-            .ForMember(dst => dst.DriverImageProfile, opt => opt.MapFrom(src => src.AssignedDriverUserFk.ProfilePictureId))
-            .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.OriginFacilityFk.Address))
+             .ForMember(dst => dst.ShipperName, opt => opt.MapFrom(src => src.ShippingRequestFk!= null ? src.ShippingRequestFk.Tenant.Name :src.ShipperTenantFk.Name))
+             .ForMember(dst => dst.CarrierName, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.CarrierTenantFk.Name :src.CarrierTenantFk.Name))
+             .ForMember(dst => dst.RouteTypeId, opt => opt.MapFrom(src => src.RouteType != null ? src.RouteType : src.ShippingRequestFk.RouteTypeId))
+            .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.FullName : ""))
+            .ForMember(dst => dst.DriverImageProfile, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.ProfilePictureId : null))
+            .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.OriginFacilityFk != null ? src.OriginFacilityFk.Address : ""))
             .ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.DestinationFacilityFk.Address))
             .ForMember(dst => dst.ReferenceNumber, opt => opt.MapFrom(src => src.ShippingRequestFk.ReferenceNumber))
             .ForMember(dst => dst.ShippingRequestFlag, opt => opt.MapFrom(src => src.ShippingRequestFk.ShippingRequestFlag))
@@ -29,15 +34,34 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.TenantId, opt => opt.MapFrom(src => src.ShippingRequestFk.TenantId))
             .ForMember(dst => dst.ShippingType, opt => opt.MapFrom(src => src.ShippingRequestFk.ShippingTypeId))
             .ForMember(dst => dst.RequestId, opt => opt.MapFrom(src => src.ShippingRequestId))
-            .ForMember(dst => dst.DriverRate, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Rate))
+            .ForMember(dst => dst.DriverRate, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.Rate : 0))
             .ForMember(dst => dst.shippingRequestStatus, opt => opt.MapFrom(src => src.ShippingRequestFk.Status))
             .ForMember(dst => dst.IsPrePayedShippingRequest, opt => opt.MapFrom(src => src.ShippingRequestFk.IsPrePayed))
             .ForMember(dst => dst.TripFlag, opt => opt.MapFrom(src => src.ShippingRequestTripFlag))
-            .ForMember(dst => dst.IsSass, opt => opt.MapFrom(src => src.ShippingRequestFk.IsSaas()))
-            .ForMember(dst => dst.ShippingRequestFlagTitle, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingRequestFlag.GetEnumDescription() :"SAAS"))
-            //todo this should be updated after release apply shipping type in SAAS shipment
-            .ForMember(dst => dst.ShippingTypeTitle, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingTypeId.GetEnumDescription() :""))
-            .ForMember(dst => dst.PlateNumber, opt => opt.MapFrom(src => src.AssignedTruckFk != null ?src.AssignedTruckFk.PlateNumber :""));
+            .ForMember(dst => dst.IsSass, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.IsSaas() : src.ShipperTenantId == src.CarrierTenantId))
+            .ForMember(dst => dst.NumberOfDrops, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.NumberOfDrops : src.NumberOfDrops))
+            .ForMember(dst => dst.TruckType, opt => opt.MapFrom(src => src.AssignedTruckFk.TrucksTypeFk.Translations.Where(x => x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault() != null
+            ? src.AssignedTruckFk.TrucksTypeFk.Translations.Where(x => x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault().TranslatedDisplayName
+            : src.AssignedTruckFk.TrucksTypeFk.Key))
+            .ForMember(dst => dst.GoodsCategory, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.GoodCategoryFk.Translations.Where(x => x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault() != null
+            ? src.ShippingRequestFk.GoodCategoryFk.Translations.Where(x => x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault().DisplayName
+            : src.ShippingRequestFk.GoodCategoryFk.Key
+            : src.GoodCategoryFk.Translations.Where(x => x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault() != null
+            ? src.GoodCategoryFk.Translations.Where(x => x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault().DisplayName
+            : src.GoodCategoryFk.Key))
+            .ForMember(dst => dst.Reason, opt => opt.MapFrom(src => src.ShippingRequestTripRejectReason != null
+            ? src.ShippingRequestTripRejectReason.Translations.Where(x => x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault() != null
+            ? src.ShippingRequestTripRejectReason.Translations.Where(x => x.Language == CultureInfo.CurrentCulture.Name).FirstOrDefault().Name
+            : src.ShippingRequestTripRejectReason.Key
+            : ""))
+            .ForMember(dst => dst.CarrierTenantId, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.CarrierTenantId : src.CarrierTenantId))
+            .ForMember(dst => dst.ShippingRequestFlagTitle, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingRequestFlag.GetEnumDescription() : "SAAS"))
+            .ForMember(dst => dst.ShippingTypeTitle, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingTypeId.GetEnumDescription() : ""))
+            .ForMember(dst => dst.PlateNumber, opt => opt.MapFrom(src => src.AssignedTruckFk != null ? src.AssignedTruckFk.PlateNumber : ""))
+            .ForMember(dst => dst.DriverStatusTitle, opt => opt.MapFrom(src => src.DriverStatus.GetEnumDescription()))
+            .ForMember(dst => dst.RouteType, opt => opt.MapFrom(src => src.RouteType != null ? src.RouteType.GetEnumDescription() : src.ShippingRequestFk.RouteTypeId.GetEnumDescription()))
+            .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
+            ;
 
 
             CreateMap<IHasDocument, RoutPointDocument>().ReverseMap();
