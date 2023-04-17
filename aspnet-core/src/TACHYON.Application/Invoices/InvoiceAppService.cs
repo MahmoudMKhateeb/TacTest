@@ -608,7 +608,7 @@ namespace TACHYON.Invoices
             return await _shippingRequestTripRepository.GetAll()
                 .Where(x=>x.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Normal || x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId)
                 .Where(
-                x => (x.ShippingRequestFk.TenantId == tenantId && !x.IsShipperHaveInvoice)// &&
+                x => (((x.ShippingRequestId.HasValue && x.ShippingRequestFk.TenantId == tenantId) || x.ShipperTenantId == tenantId) && !x.IsShipperHaveInvoice)// &&
                 //(x.Status == ShippingRequestTripStatus.Delivered ||
                 //    x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
                 )
