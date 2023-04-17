@@ -9,7 +9,7 @@ namespace TACHYON.Shipping.Trips.Dto
 {
     public class TripAppointmentDataDto: PriceCommissionDtoBase
     {
-        public long ShippingRequestId { get; set; }
+        public long? ShippingRequestId { get; set; }
         [Required]
         public decimal ItemPrice { get; set; }
 

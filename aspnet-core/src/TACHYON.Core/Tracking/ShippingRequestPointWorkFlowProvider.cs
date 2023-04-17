@@ -1524,7 +1524,9 @@ namespace TACHYON.Tracking
                     !forceMode,
                     x => x.Status == RoutePointStatus.StandBy && !x.IsActive && !x.IsResolve && !x.IsComplete
                          && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.InTransit
-                         && (x.PickingType == PickingType.Dropoff 
+                         && (x.PickingType == PickingType.Dropoff
+                             || x.ShippingRequestTripFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                             || x.ShippingRequestTripFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements
                              || x.ShippingRequestTripFk.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
                              || x.ShippingRequestTripFk.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements))
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)

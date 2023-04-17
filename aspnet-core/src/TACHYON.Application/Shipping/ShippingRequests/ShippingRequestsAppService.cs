@@ -336,8 +336,9 @@ namespace TACHYON.Shipping.ShippingRequests
             var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id);
 
             //if request between cities and single drop
-            await _shippingRequestManager.ValidatePortMovementInputs(input, shippingRequest);
-            ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest);
+            if(shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || shippingRequest.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+            await _shippingRequestManager.ValidatePortMovementInputs(input.OriginFacilityId, input.RouteTypeId, input.NumberOfDrops, shippingRequest.ShippingTypeId, shippingRequest.RoundTripType);
+            _shippingRequestManager.ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest.ShippingTypeId);
 
             if (shippingRequest.DraftStep < 2)
             {
@@ -1053,7 +1054,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
 
             await ValidateGoodsCategory(input);
-            ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest);
+            _shippingRequestManager.ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest.ShippingTypeId);
             if (shippingRequest.Status == ShippingRequestStatus.NeedsAction)
                 await CheckHasOffersToNotifyCarriers(shippingRequest);
             ObjectMapper.Map(input, shippingRequest);
@@ -1251,11 +1252,15 @@ namespace TACHYON.Shipping.ShippingRequests
                     ShipperNotes = x.Note,
                     ContainerNumber = x.ContainerNumber,
                     SealNumber = x.SealNumber,
-                    MultipleDropsOrTripsLable = x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                    MultipleDropsOrTripsLable = x.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+                                                (x.ShippingRequestFk != null && x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
                                                 ? "Trips" : "Drops",
-                    MultipleDropsOrTripsLableAr = x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                    MultipleDropsOrTripsLableAr = x.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+                                               ( x.ShippingRequestFk != null && x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
                                                 ? "الرحلات" : "الحمولات"
                 });
 
@@ -1364,7 +1369,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShipperNotes = x.Note,
                         ContainerNumber = x.ContainerNumber,
                         SealNumber = x.SealNumber,
-                        ShippingType = x.ShippingRequestFk.ShippingTypeId,
+                        ShippingType = x.ShippingTypeId != null ?x.ShippingTypeId.Value :x.ShippingRequestFk.ShippingTypeId,
                     }
                     );
                 }
@@ -1410,10 +1415,8 @@ namespace TACHYON.Shipping.ShippingRequests
                        // ShipperInvoiceNo = x.ShipperInvoiceNo,
                         ShipperNotes = x.Note,
                         ContainerNumber = x.ContainerNumber,
-                        
-                        //update here
                         SealNumber = x.SealNumber,
-                        
+                        ShippingType = x.ShippingTypeId.Value,
 
 
                     }
@@ -1639,6 +1642,7 @@ namespace TACHYON.Shipping.ShippingRequests
             var vases = _shippingRequestTripVasRepository.GetAll()
                 .Include(x => x.ShippingRequestVasFk)
                 .Include(x => x.ShippingRequestVasFk.VasFk)
+                .Include(x => x.VasFk)
                 .Where(x => x.ShippingRequestTripId == shippingRequestTripId)
                 .ToList();
 
@@ -1646,9 +1650,9 @@ namespace TACHYON.Shipping.ShippingRequests
             (
                 x => new GetAllShippingRequestVasesOutput
                 {
-                    VasName = x.ShippingRequestVasFk.VasFk.Key,
-                    Amount = x.ShippingRequestVasFk.RequestMaxAmount,
-                    Count = x.ShippingRequestVasFk.RequestMaxCount
+                    VasName = x.VasFk !=null ?x.VasFk.Key :x.ShippingRequestVasFk.VasFk.Key,
+                    Amount = x.VasFk!= null ?1 :x.ShippingRequestVasFk.RequestMaxAmount,
+                    Count = x.VasFk != null ?1 : x.ShippingRequestVasFk.RequestMaxCount
                 }
             );
 
@@ -1928,13 +1932,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-        private void ValidateDestinationCities(ShippingRequestRouteType routeType, List<ShippingRequestDestinationCitiesDto> shippingRequestDestinationCitiesDtos, ShippingRequest shippingRequest)
-        {
-            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.LocalBetweenCities && routeType == ShippingRequestRouteType.SingleDrop && shippingRequestDestinationCitiesDtos.Count > 1)
-            {
-                throw new UserFriendlyException(L("OneDestinationCityAllowed"));
-            }
-        }
+        
 
         
 

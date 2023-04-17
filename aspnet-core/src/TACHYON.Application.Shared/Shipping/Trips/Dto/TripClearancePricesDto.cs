@@ -9,7 +9,7 @@ namespace TACHYON.Shipping.Trips.Dto
 {
     public class TripClearancePricesDto : PriceCommissionDtoBase
     {
-        public long ShippingRequestId { get; set; }
+        public long? ShippingRequestId { get; set; }
         [Required]
         public decimal ItemPrice {get; set;}
         public decimal TotalAmount {get; set;}

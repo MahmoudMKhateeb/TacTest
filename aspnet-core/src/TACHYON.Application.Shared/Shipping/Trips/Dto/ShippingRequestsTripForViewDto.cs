@@ -52,5 +52,16 @@ namespace TACHYON.Shipping.Trips.Dto
         public bool isRequestOwner { get; set; }
         public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
         public TripManifestDataDto TripManifestDataDto { get; set; }
+
+        #region ShippingType
+        public ShippingTypeEnum? ShippingTypeId { get; set; }
+        /// <summary>
+        /// Round trip is used for port movements requests
+        /// </summary>
+        public RoundTripType? RoundTripType { get; set; }
+
+        public virtual int? OriginCityId { get; set; }
+        public string DestinationCities { get; set; }
+        #endregion
     }
 }

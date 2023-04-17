@@ -162,19 +162,22 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     }
     if (isForPortsMovement) {
       if (!isNotNullOrUndefined(id)) {
-        this.amount = this._PointsService.currentShippingRequest.shippingRequest.numberOfPacking;
-        this.weight = this._PointsService.currentShippingRequest.shippingRequest.totalWeight;
+        this.amount = this._PointsService.currentShippingRequest?.shippingRequest?.numberOfPacking;
+        this.weight = this._PointsService.currentShippingRequest?.shippingRequest?.totalWeight;
         this.goodCategoryId = this.allSubGoodCategorys?.length > 0 ? this.allSubGoodCategorys[0].id : null;
         if (
-          this._PointsService.currentShippingRequest.roundTripType === RoundTripType.WithReturnTrip &&
+          (this._TripService.CreateOrEditShippingRequestTripDto.roundTripType === RoundTripType.WithReturnTrip ||
+            this._PointsService.currentShippingRequest?.roundTripType === RoundTripType.WithReturnTrip) &&
           this._PointsService.currentPointIndex === 3
         ) {
           this.weight = null;
           this.getContainerUOMDefaultId();
         }
         if (
-          (this._PointsService.currentShippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling ||
-            this._PointsService.currentShippingRequest.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling) &&
+          (this._TripService.CreateOrEditShippingRequestTripDto.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling ||
+            this._TripService.CreateOrEditShippingRequestTripDto.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling ||
+            this._PointsService.currentShippingRequest?.roundTripType === RoundTripType.TwoWayRoutsWithPortShuttling ||
+            this._PointsService.currentShippingRequest?.roundTripType === RoundTripType.TwoWayRoutsWithoutPortShuttling) &&
           this._PointsService.currentPointIndex === 1
         ) {
           this.weight = null;
@@ -290,7 +293,7 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
     let allowedeight: number;
 
     if (this.isForPortsMovement) {
-      this.AllowedWeight = this._PointsService.currentShippingRequest.shippingRequest.totalWeight;
+      this.AllowedWeight = this._PointsService.currentShippingRequest?.shippingRequest?.totalWeight;
       return true;
     }
 
