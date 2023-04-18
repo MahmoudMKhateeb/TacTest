@@ -158,7 +158,7 @@
               <dxi-column dataField="destination" caption="{{ l('Destination') }}"></dxi-column>
 
               <dxi-column dataField="startTripDate" caption="{{ l('StartTripDate') }}" cellTemplate="startTripDateTemplate"></dxi-column>
-              <dxi-column dataField="endTripDate" caption="{{ l('EndTripDate') }}" cellTemplate="endTripDateTemplate"></dxi-column>
+              <dxi-column dataField="endWorking" caption="{{ l('EndTripDate') }}" cellTemplate="endTripDateTemplate"></dxi-column>
 
               <dxi-column dataField="driver" caption="{{ l('Driver') }}"></dxi-column>
               <dxi-column dataField="truck" caption="{{ l('PlateNumber') }}"></dxi-column>
@@ -176,7 +176,7 @@
               </div>
               <div *dxTemplate="let d of 'endTripDateTemplate'">
                 <span>
-                  {{ d?.data?.endTripDate | date: 'yyyy/MM/dd hh:mm a' }}
+                  {{ d?.data?.endWorking | date: 'yyyy/MM/dd hh:mm a' }}
                 </span>
               </div>
               <div *dxTemplate="let d of 'routeTypeTemplate'">
