@@ -144,7 +144,8 @@ export class ShippingRequestsTableComponent extends AppComponentBase implements 
         this.searchInput.requestFlag,
         '',
         this.skipCount,
-        this.maxResultCount
+        this.maxResultCount,
+        false
       )
       .subscribe((result) => {
         this.IsLoading = false;

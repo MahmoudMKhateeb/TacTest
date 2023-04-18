@@ -522,7 +522,7 @@ namespace TACHYON.PriceOffers
         {
             string[] HeaderText;
             Func<GetShippingRequestForPriceOfferListDto, object>[] propertySelectors;
-            var dto = (await GetAllShippingRequest(input)).Items.Where(x => x.ShippingRequestFlag == ShippingRequestFlag.Dedicated).ToList();
+            var dto = (await GetAllShippingRequest(input, true)).Items.Where(x => x.ShippingRequestFlag == ShippingRequestFlag.Dedicated).ToList();
             var isTMS = await IsTachyonDealer();
 
             await BindExportData(input, dto);
