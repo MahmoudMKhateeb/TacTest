@@ -569,7 +569,7 @@ namespace TACHYON.Tracking
                )
                .WhereIf
                (
-                   isTMS,
+                   !isTMS,
                    x => x.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Normal ||
                         (x.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Dedicated && AbpSession.TenantId == x.ShippingRequestFk.TenantId) ||
                         AbpSession.TenantId == x.CarrierTenantId
