@@ -143,7 +143,8 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         undefined,
         '',
         this.skipCount,
-        this.maxResultCount
+        this.maxResultCount,
+        false
       )
       .subscribe((result) => {
         this.IsLoading = false;

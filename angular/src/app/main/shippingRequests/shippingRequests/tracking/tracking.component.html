@@ -162,7 +162,7 @@
                           <i class="flaticon2-up"></i> {{ l('Collapse') }}</a
                         >
                         <div
-                          *ngIf="isGranted('Pages.shipment.Tracking.Drive') && item.driver && item.canDriveTrip"
+                          *ngIf="!isTachyonDealer || (isGranted('Pages.shipment.Tracking.Drive') && item.driver && item.canDriveTrip)"
                           ngbDropdown
                           container="body"
                           class="d-inline-block"

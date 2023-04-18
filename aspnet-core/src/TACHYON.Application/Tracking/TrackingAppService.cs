@@ -144,7 +144,7 @@ namespace TACHYON.Tracking
                     //: "",
 
                     CarrierTenantId = src.ShippingRequestFk != null ? src.ShippingRequestFk.CarrierTenantId : src.CarrierTenantId,
-                CanDriveTrip = !tenantId.HasValue || tenantId == src.CarrierTenantId || isTMS,
+                CanDriveTrip = !tenantId.HasValue || tenantId == src.CarrierTenantId || isTMS || tenantId == src.ShippingRequestFk.CarrierTenantId,
                 IsAssign = !tenantId.HasValue || (tenantId.HasValue && !isShipper) ? true : false,
                 CanStartTrip = !tenantId.HasValue || (tenantId.HasValue && !isShipper) && (src.StartTripDate.Date <= Clock.Now.Date
                       && src.Status == ShippingRequestTripStatus.New
