@@ -182,7 +182,8 @@ namespace TACHYON.Tracking
                 WaybillNumber = src.WaybillNumber,
                 ShippingRequestFlagTitle = src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingRequestFlag.GetEnumDescription() : "SAAS",
                 ShippingTypeTitle = src.ShippingRequestFk != null ? src.ShippingRequestFk.ShippingTypeId.GetEnumDescription() : "",
-                PlateNumber = src.AssignedTruckFk != null ? src.AssignedTruckFk.PlateNumber : ""
+                PlateNumber = src.AssignedTruckFk != null ? src.AssignedTruckFk.PlateNumber : "",
+                BookingNumber = src.ShippingRequestFk != null ?src.ShippingRequestFk.ShipperInvoiceNo :""
                 }).ToListAsync();
 
 

@@ -309,6 +309,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             private global::System.Data.DataColumn columnPlateNumber;
             
+            private global::System.Data.DataColumn columnBookingNumber;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public DataTable1DataTable() {
@@ -464,6 +466,14 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn BookingNumberColumn {
+                get {
+                    return this.columnBookingNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -499,7 +509,23 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public DataTable1Row AddDataTable1Row(string DateWork, string Source, string Destination, string TruckType, string Price, string Notes, string Sequence, string WayBillNumber, string SubTotalAmount, string VatAmount, string TotalAmount, string Remarks, string RoundTrip, string ContainerNumber, string PlateNumber) {
+            public DataTable1Row AddDataTable1Row(
+                        string DateWork, 
+                        string Source, 
+                        string Destination, 
+                        string TruckType, 
+                        string Price, 
+                        string Notes, 
+                        string Sequence, 
+                        string WayBillNumber, 
+                        string SubTotalAmount, 
+                        string VatAmount, 
+                        string TotalAmount, 
+                        string Remarks, 
+                        string RoundTrip, 
+                        string ContainerNumber, 
+                        string PlateNumber, 
+                        string BookingNumber) {
                 DataTable1Row rowDataTable1Row = ((DataTable1Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         DateWork,
@@ -516,7 +542,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         Remarks,
                         RoundTrip,
                         ContainerNumber,
-                        PlateNumber};
+                        PlateNumber,
+                        BookingNumber};
                 rowDataTable1Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTable1Row);
                 return rowDataTable1Row;
@@ -554,6 +581,7 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 this.columnRoundTrip = base.Columns["RoundTrip"];
                 this.columnContainerNumber = base.Columns["ContainerNumber"];
                 this.columnPlateNumber = base.Columns["PlateNumber"];
+                this.columnBookingNumber = base.Columns["BookingNumber"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -589,6 +617,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 base.Columns.Add(this.columnContainerNumber);
                 this.columnPlateNumber = new global::System.Data.DataColumn("PlateNumber", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnPlateNumber);
+                this.columnBookingNumber = new global::System.Data.DataColumn("BookingNumber", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBookingNumber);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -971,6 +1001,22 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string BookingNumber {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.BookingNumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BookingNumber\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.BookingNumberColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsDateWorkNull() {
                 return this.IsNull(this.tableDataTable1.DateWorkColumn);
             }
@@ -1147,6 +1193,18 @@ namespace TACHYON.Invoices.Reports.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetPlateNumberNull() {
                 this[this.tableDataTable1.PlateNumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsBookingNumberNull() {
+                return this.IsNull(this.tableDataTable1.BookingNumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetBookingNumberNull() {
+                this[this.tableDataTable1.BookingNumberColumn] = global::System.Convert.DBNull;
             }
         }
         

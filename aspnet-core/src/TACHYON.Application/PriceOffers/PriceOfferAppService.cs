@@ -1171,8 +1171,6 @@ namespace TACHYON.PriceOffers
             if(!getAllData) query = query.OrderBy(input.Sorting ?? "id desc").PageBy(input);
 
             //get truck type tranlation list
-            var goodscategoryIds = query.Select(x => x.TrucksTypeId).ToList();
-            var truckTypeTranslationList = _truckTypeTranslationRepository.GetAll().Where(x =>  goodscategoryIds.Contains(x.CoreId)).ToList();
 
 
             List<GetShippingRequestForPriceOfferListDto> ShippingRequestForPriceOfferList = new List<GetShippingRequestForPriceOfferListDto>();
@@ -1187,6 +1185,9 @@ namespace TACHYON.PriceOffers
                 .Where(x => x.Status != PriceOfferStatus.Rejected && x.Status != PriceOfferStatus.New && shippingRequestIds.Contains(x.ShippingRequestId))
                 .WhereIf(AbpSession.TenantId.HasValue && !isTachyonDealer, x=> x.TenantId == AbpSession.TenantId)
                 .Select(x => new {RequestId = x.ShippingRequestId, Price = x.TotalAmount,x.Channel}).ToListAsync();
+
+            var goodscategoryIds = query.Select(x => x.TrucksTypeId).ToList();
+            var truckTypeTranslationList = _truckTypeTranslationRepository.GetAll().Where(x => goodscategoryIds.Contains(x.CoreId)).ToList();
 
             foreach (var request in pageResult )
             {

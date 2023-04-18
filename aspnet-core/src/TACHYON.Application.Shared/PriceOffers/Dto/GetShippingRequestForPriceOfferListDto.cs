@@ -82,7 +82,8 @@ namespace TACHYON.PriceOffers.Dto
         public string TransportType { get; set; }
 
         public decimal? ShipperPrice { get; set; }
-        
+        public string ShipperInvoiceNo { get; set; }
+
         #region Dedicated
         public TimeUnit? RentalDurationUnit { get; set; }
         public string RentalDurationUnitTitle { get; set; }

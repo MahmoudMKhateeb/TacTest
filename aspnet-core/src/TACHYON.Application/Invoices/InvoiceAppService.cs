@@ -716,6 +716,7 @@ namespace TACHYON.Invoices
                     trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements) ? trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops.ToString()
                     :L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops)
                     :"1",
+                    BookingNumber = trip.ShippingRequestTripFK.ShippingRequestId != null ?trip.ShippingRequestTripFK.ShippingRequestFk.ShipperInvoiceNo :""
                 }); 
                 Sequence++;
                 if (trip.ShippingRequestTripFK.ShippingRequestTripVases != null &&
@@ -893,6 +894,8 @@ namespace TACHYON.Invoices
                     VatTax = item.VatTax,
                     TotalAmount = item.TotalAmount,
                     RoundTrip = item.Description,
+                    BookingNumber = item.ShippingRequestTrip != null && item.ShippingRequestTrip.ShippingRequestFk != null 
+                    ? item.ShippingRequestTrip.ShippingRequestFk.ShipperInvoiceNo :""
 
                 };
 

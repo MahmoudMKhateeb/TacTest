@@ -61,6 +61,7 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.DriverStatusTitle, opt => opt.MapFrom(src => src.DriverStatus.GetEnumDescription()))
             .ForMember(dst => dst.RouteType, opt => opt.MapFrom(src => src.RouteType != null ? src.RouteType.GetEnumDescription() : src.ShippingRequestFk.RouteTypeId.GetEnumDescription()))
             .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
+            .ForMember(dst => dst.BookingNumber, opt => opt.MapFrom(src => src.ShippingRequestFk != null ?src.ShippingRequestFk.ShipperInvoiceNo  :""))
             ;
 
 
