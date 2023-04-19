@@ -300,7 +300,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
             //check port movements feature enabled
             if ((input.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
-                && _featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.PortMovement))
+                && !_featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.PortMovement))
             {
                 throw new UserFriendlyException(L("YouDon'tHavePermissionToPortMovements"));
             }
