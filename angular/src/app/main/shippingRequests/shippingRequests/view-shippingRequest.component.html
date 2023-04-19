@@ -58,7 +58,7 @@
 
       <app-view-matching-price-package *ngIf="canSeePricePackages()" [shippingRequestId]="activeShippingRequestId"></app-view-matching-price-package>
 
-      <div class="card card-custom gutter-b" *ngIf="isGrantedAny('Pages.ActorPrices.Carrier', 'Pages.ActorPrices.Shipper')">
+      <div class="card card-custom gutter-b" *ngIf="isGrantedAny('Pages.ActorPrices.Carrier', 'Pages.ActorPrices.Shipper') && (_trip.GetShippingRequestForViewOutput.tenantId === appSession.tenantId || !_trip.GetShippingRequestForViewOutput.isCarrierActorMyself)">
         <div class="card-header">
           <h3 class="card-title">{{ l('Actors') }}</h3>
           <div class="card-toolbar">
