@@ -435,7 +435,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   setStartTripDate(startTripDate) {
-    if (this.isTachyonDealer && this._TripService?.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlag.Dedicated) {
+    if (this._TripService?.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlag.Dedicated) {
       startTripDate = this._TripService.GetShippingRequestForViewOutput.rentalStartDate;
     }
     const todayGregorian = moment(startTripDate).locale('en').format('D/M/YYYY');

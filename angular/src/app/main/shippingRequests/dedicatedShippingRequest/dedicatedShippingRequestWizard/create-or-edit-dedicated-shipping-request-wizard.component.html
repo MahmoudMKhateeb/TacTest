@@ -735,6 +735,7 @@
                           </div>
                           <div class="form-group col-md-6 col-lg-6">
                             <label>{{ l('RentalDates') }} <span class="required-fileds">*</span></label>
+                            <!-- [minDate]="today" -->
                             <p-calendar
                               #primeCalendar
                               [disabled]="!step1Dto.rentalDuration || !step1Dto.rentalDurationUnit"
@@ -747,7 +748,6 @@
                               [(ngModel)]="rentalRangeDates"
                               selectionMode="range"
                               [readonlyInput]="true"
-                              [minDate]="today"
                               [maxDate]="maxSelectableDate"
                               [hideOnDateTimeSelect]="false"
                               [showButtonBar]="true"

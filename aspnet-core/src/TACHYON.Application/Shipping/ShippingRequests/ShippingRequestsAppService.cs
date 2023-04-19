@@ -293,10 +293,6 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<long> CreateOrEditStep1(CreateOrEditShippingRequestStep1Dto input)
         {
             await _shippingRequestManager.ValidateShippingRequestStep1(input);
-            if (!await IsTachyonDealer() && input.StartTripDate.Date < Clock.Now.Date)
-            {
-                throw new UserFriendlyException(L("Start trip date cannot be before today"));
-            }
 
             //check port movements feature enabled
             if ((input.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
