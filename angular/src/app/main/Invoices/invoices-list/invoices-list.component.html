@@ -72,7 +72,15 @@
               >
               </dxi-column>
               <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"></dxi-column>
-              <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"></dxi-column>
+              <dxi-column *ngIf="isTachyonDealer" dataField="confirmationDate" caption="{{ l('ConfirmationDate') }}" dataType="date"></dxi-column>
+              <dxi-column *ngIf="isTachyonDealer" dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"></dxi-column>
+              <dxi-column
+                *ngIf="!isTachyonDealer"
+                dataField="creationTime"
+                cellTemplate="cellTemplate_IssuanceDate"
+                caption="{{ l('IssuanceDate') }}"
+                dataType="date"
+              ></dxi-column>
               <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('PaymentStatus') }}"></dxi-column>
               <dxi-column
                 *ngIf="isTachyonDealerOrHost"
@@ -93,6 +101,15 @@
                 <span style="width: 137px; text-align: center" *ngIf="canSeeDynamicInvoice(options)">
                   <span>{{ l(options.data.invoiceChannelTitle) }}</span>
                 </span>
+              </div>
+
+              <div *dxTemplate="let options of 'cellTemplate_IssuanceDate'">
+                <span style="width: 137px; text-align: center" *ngIf="options.data.hasConfirmationDate">
+                  {{ options.data.confirmationDate | date: 'dd/MM/yyyy' }}</span
+                >
+                <span style="width: 137px; text-align: center" *ngIf="!options.data.hasConfirmationDate">
+                  {{ options.data.creationTime | date: 'dd/MM/yyyy' }}</span
+                >
               </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">

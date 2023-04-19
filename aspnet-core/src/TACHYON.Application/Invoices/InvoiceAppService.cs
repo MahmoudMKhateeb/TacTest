@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
@@ -10,14 +10,8 @@ using Abp.UI;
 using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using NPOI.SS.Formula.Functions;
-using QRCoder;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -48,8 +42,6 @@ using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Transactions;
 using TACHYON.MultiTenancy;
-using TACHYON.Penalties;
-using TACHYON.Penalties.Dto;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -217,6 +209,9 @@ namespace TACHYON.Invoices
                 .ThenInclude(r => r.OriginFacilityFk)
                 .ThenInclude(r => r.CityFk)
                 .Include(i => i.Trips)
+                .ThenInclude(i=> i.ShippingRequestTripFK)
+                .ThenInclude(i => i.RoutPoints)
+                .ThenInclude(i => i.RoutPointStatusTransitions)
                 .FirstOrDefaultAsync(i => i.Id == invoiceId);
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
@@ -316,6 +311,7 @@ namespace TACHYON.Invoices
                 .ThenInclude(x => x.ShippingRequest)
                 .ThenInclude(x=>x.ShippingRequestDestinationCities)
                 .ThenInclude(x=>x.CityFk)
+                .Include(x=>x.Invoice)
                 .FirstOrDefaultAsync(i => i.InvoiceId == invoiceId);
             if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
 
@@ -608,10 +604,10 @@ namespace TACHYON.Invoices
             return await _shippingRequestTripRepository.GetAll()
                 .Where(x=>x.ShippingRequestFk.ShippingRequestFlag == ShippingRequestFlag.Normal || x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId)
                 .Where(
-                x => (((x.ShippingRequestId.HasValue && x.ShippingRequestFk.TenantId == tenantId) || x.ShipperTenantId == tenantId) && !x.IsShipperHaveInvoice)// &&
-                //(x.Status == ShippingRequestTripStatus.Delivered ||
-                //    x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
-                )
+                x => (x.ShippingRequestFk.TenantId == tenantId && !x.IsShipperHaveInvoice &&
+                (x.Status == ShippingRequestTripStatus.Delivered ||
+                    x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
+                ))
                 .Select(x => new SelectItemDto { DisplayName = x.WaybillNumber.ToString(), Id = x.Id.ToString() })
                 .ToListAsync();
 
@@ -677,6 +673,16 @@ namespace TACHYON.Invoices
             var link = $"{_webUrlService.WebSiteRootAddressFormat }account/outsideInvoice?id={invoiceId}";
             invoiceDto.QRCode = _pdfExporterBase.GenerateQrCode(link);
             invoiceDto.Note = invoice.Note;
+
+            if(invoice.Status == InvoiceStatus.Drafted && !invoice.ConsiderConfirmationAndLoadingDates)
+            {
+                invoiceDto.CreationTime = "";
+            }
+            else if (invoice.ConsiderConfirmationAndLoadingDates) {
+                invoiceDto.CreationTime = invoice.ConfirmationDate != null
+                    ?  ClockProviders.Local.Normalize(invoice.ConfirmationDate.Value).ToString("dd/MM/yyyy hh:mm")
+                : "";
+            }
             return new List<InvoiceInfoDto>() { invoiceDto };
         }
 
@@ -704,7 +710,13 @@ namespace TACHYON.Invoices
                     Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ??
                      trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk?.DisplayName ?? trip.ShippingRequestTripFK.OriginFacilityFk.CityFk.DisplayName,
                     Destination = trip.ShippingRequestTripFK.DestinationFacilityFk.CityFk.DisplayName,
-                    DateWork = trip.ShippingRequestTripFK.EndTripDate.HasValue ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.InvoiceFK.CreationTime.ToString("dd/MM/yyyy"),
+
+                    DateWork = !invoice.ConsiderConfirmationAndLoadingDates
+                    ? invoice.Status == InvoiceStatus.Drafted ?""  :trip.ShippingRequestTripFK.EndTripDate.HasValue ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.InvoiceFK.CreationTime.ToString("dd/MM/yyyy")
+                    : trip.ShippingRequestTripFK.RoutPoints.First(x=>x.PickingType == PickingType.Pickup).RoutPointStatusTransitions.Count > 0 
+                        ? trip.ShippingRequestTripFK.RoutPoints.First(x => x.PickingType == PickingType.Pickup).RoutPointStatusTransitions.Select(x => new {Status = x.Status, creationTime = x.CreationTime}).First(x=>x.Status == RoutePointStatus.FinishLoading).creationTime.ToShortDateString()
+                        :trip.ShippingRequestTripFK.StartTripDate.ToShortDateString(),
+
                     Remarks = (trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
                     trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
                     ? $"{trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId.GetEnumDescription()} - {trip.ShippingRequestTripFK.ShippingRequestFk.RoundTripType.GetEnumDescription()}"
@@ -1060,7 +1072,11 @@ namespace TACHYON.Invoices
                     :item.DedicatedShippingRequestTruck.Truck.TrucksTypeFk.DisplayName,
                     TruckPlateNumber = item.DedicatedShippingRequestTruck.Truck.PlateNumber,
                     TaxVat = item.TaxVat,
-                    Date = item.CreationTime.ToString("dd/MM/yyyy"),
+                    Date = (dedicatedInvoice.Invoice.Status == InvoiceStatus.Drafted && !dedicatedInvoice.Invoice.ConsiderConfirmationAndLoadingDates)
+                    ?""
+                    : dedicatedInvoice.Invoice.ConsiderConfirmationAndLoadingDates 
+                        ? item.DedicatedShippingRequestTruck.ShippingRequest.RentalEndDate.Value.ToString("dd/MM/yyyy")
+                        :item.CreationTime.ToString("dd/MM/yyyy"),
                     From = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.First().CityFk.DisplayName,
                     To = item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.Count() > 1 ? "Multiple destinations"
                     : item.DedicatedShippingRequestTruck.ShippingRequest.ShippingRequestDestinationCities.First().CityFk.DisplayName,
