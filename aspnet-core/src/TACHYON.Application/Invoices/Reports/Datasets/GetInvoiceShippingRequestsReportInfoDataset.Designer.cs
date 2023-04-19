@@ -311,6 +311,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             private global::System.Data.DataColumn columnBookingNumber;
             
+            private global::System.Data.DataColumn columnVatTax;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public DataTable1DataTable() {
@@ -474,6 +476,14 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn VatTaxColumn {
+                get {
+                    return this.columnVatTax;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -525,7 +535,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         string RoundTrip, 
                         string ContainerNumber, 
                         string PlateNumber, 
-                        string BookingNumber) {
+                        string BookingNumber, 
+                        string VatTax) {
                 DataTable1Row rowDataTable1Row = ((DataTable1Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         DateWork,
@@ -543,7 +554,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         RoundTrip,
                         ContainerNumber,
                         PlateNumber,
-                        BookingNumber};
+                        BookingNumber,
+                        VatTax};
                 rowDataTable1Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTable1Row);
                 return rowDataTable1Row;
@@ -582,6 +594,7 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 this.columnContainerNumber = base.Columns["ContainerNumber"];
                 this.columnPlateNumber = base.Columns["PlateNumber"];
                 this.columnBookingNumber = base.Columns["BookingNumber"];
+                this.columnVatTax = base.Columns["VatTax"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -619,6 +632,8 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 base.Columns.Add(this.columnPlateNumber);
                 this.columnBookingNumber = new global::System.Data.DataColumn("BookingNumber", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnBookingNumber);
+                this.columnVatTax = new global::System.Data.DataColumn("VatTax", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnVatTax);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1017,6 +1032,22 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string VatTax {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.VatTaxColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'VatTax\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.VatTaxColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsDateWorkNull() {
                 return this.IsNull(this.tableDataTable1.DateWorkColumn);
             }
@@ -1205,6 +1236,18 @@ namespace TACHYON.Invoices.Reports.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetBookingNumberNull() {
                 this[this.tableDataTable1.BookingNumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsVatTaxNull() {
+                return this.IsNull(this.tableDataTable1.VatTaxColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetVatTaxNull() {
+                this[this.tableDataTable1.VatTaxColumn] = global::System.Convert.DBNull;
             }
         }
         

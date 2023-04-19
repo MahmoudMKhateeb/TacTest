@@ -216,6 +216,10 @@
           <DataField>BookingNumber</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="VatTax">
+          <DataField>VatTax</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>GetInvoiceShippingRequestsReportInfoDataset</rd:DataSetName>
@@ -2877,7 +2881,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!VatTax.Value &amp; " %"</Value>
+                                  <Value>=Fields!VatTax.Value</Value>
                                   <Style>
                                     <FontFamily>Open Sans</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2907,6 +2911,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -4582,7 +4587,7 @@
           <BackgroundColor>White</BackgroundColor>
         </Style>
       </Body>
-      <Width>29.71179cm</Width>
+      <Width>29.7cm</Width>
       <Page>
         <PageHeader>
           <Height>2.3cm</Height>
