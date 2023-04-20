@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ImportRoutePointDto, ImportShipmentFromExcelServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { DxPopoverComponent } from '@node_modules/devextreme-angular';
+import { DxPopoverComponent } from '@node_modules/devextreme-angular/ui/popover';
 
 @Component({
   selector: 'app-view-imported-points-from-excel-modal',

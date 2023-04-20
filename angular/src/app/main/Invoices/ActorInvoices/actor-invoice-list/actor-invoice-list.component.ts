@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { InvoiceTenantItemsDetailsComponent } from '@app/main/Invoices/invoice-tenants/model/invoice-tenant-items-details.component';
-import { DxDataGridComponent } from '@node_modules/devextreme-angular';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular/ui/data-grid';
 import {
   ActorInvoiceServiceProxy,
   CommonLookupServiceProxy,

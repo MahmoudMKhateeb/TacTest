@@ -9,13 +9,12 @@ import {
   PenaltyStatus,
   PenaltyType,
 } from '@shared/service-proxies/service-proxies';
-import { DxDataGridComponent } from 'devextreme-angular';
+import { DxDataGridComponent } from 'devextreme-angular/ui/data-grid';
 import CustomStore from 'devextreme/data/custom_store';
 import { LoadOptions } from 'devextreme/data/load_options';
 import { finalize } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
-import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ViewComplaintModalComponent } from '@app/main/Penalties/penalties-list/view-complaint/view-complaint-modal.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 

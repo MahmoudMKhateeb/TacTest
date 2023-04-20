@@ -39,7 +39,7 @@ import { FilterDateRangePickerComponent } from './customizable-dashboard/filters
 import { AddWidgetModalComponent } from './customizable-dashboard/add-widget-modal/add-widget-modal.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxBootstrapDatePickerConfigService } from 'assets/ngx-bootstrap/ngx-bootstrap-datepicker-config.service';
-import { PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { CountoModule } from 'angular2-counto';
 import { AppBsModalModule } from '@shared/common/appBsModal/app-bs-modal.module';
 import { SingleLineStringInputTypeComponent } from './input-types/single-line-string-input-type/single-line-string-input-type.component';
@@ -52,24 +52,16 @@ import { KeyValueListManagerComponent } from './key-value-list-manager/key-value
 import { SubHeaderComponent } from '@app/shared/common/sub-header/sub-header.component';
 import { HijriGregorianDatepickerComponent } from '@app/shared/common/hijri-gregorian-datepicker/hijri-gregorian-datepicker.component';
 import { HijriDatepickerComponent } from '@app/shared/common/hijri-gregorian-datepicker/hijri-datepicker/hijri-datepicker.component';
-import { NgbDateParserFormatter, NgbModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
-import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
+import { NgbModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { RequiredDocumentFormChildComponent } from './required-document-form-child/required-document-form-child.component';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DriverSubmitedDocumentsListComponent } from '@app/main/documentFiles/documentFiles/drivers-submitted-documents/driver-submited-documents-list/driver-submited-documents-list.component';
-import { DevExtremeModule } from '@node_modules/devextreme-angular';
 import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
 import { ViewDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/view-documentFile-modal.component';
 import { RejectionReasonModalComponent } from '@app/main/documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewRejectionReasonModalComponent } from '@app/admin/required-document-files/view-rejection-reason-modal.component';
 import { TruckSubmitedDocumentsListComponent } from '@app/main/documentFiles/documentFiles/trucks-submitted-documents/truck-submited-documents-list/truck-submited-documents-list.component';
-import { CompletedTripsWidgetComponent } from './customizable-dashboard/widgets/shared_widgets/completed-trips-widget/completed-trips-widget.component';
 import { ChartModule } from '@node_modules/primeng/chart';
-import { CompletedTripVsPodComponent } from './customizable-dashboard/widgets/shipper/completed-trip-vs-pod/completed-trip-vs-pod.component';
-import { AcceptedVsRejecedRequestsComponent } from './customizable-dashboard/widgets/shipper/accepted-vs-rejeced-requests/accepted-vs-rejeced-requests.component';
-import { InvoicesVsPaidInvoicesComponent } from './customizable-dashboard/widgets/shared_widgets/invoices-vs-paid-invoices/invoices-vs-paid-invoices.component';
-import { MostWorkedWithCarriersComponent } from './customizable-dashboard/widgets/shipper/most-worked-with-carriers/most-worked-with-carriers.component';
-import { RequestsInMarketPlaceComponent } from './customizable-dashboard/widgets/shipper/requests-in-market-place/requests-in-market-place.component';
 import { NgApexchartsModule } from '@node_modules/ng-apexcharts';
 import { WidgetsModule } from '@app/shared/common/customizable-dashboard/widgets/widgets.module';
 import { EntityLogComponent } from './entity-log/entity-log.component';
@@ -79,7 +71,26 @@ import { FileViwerComponent } from './file-viwer/file-viwer.component';
 import { PdfJsViewerModule } from '@node_modules/ng2-pdfjs-viewer';
 import { CreateOrEditWorkingHoursComponent } from './workingHours/create-or-edit-working-hours/create-or-edit-working-hours.component';
 import { ViewWorkingHoursComponent } from './workingHours/view-working-hours/view-working-hours.component';
-// import { FileUploadModule } from '@node_modules/primeng';
+
+// devextreme imports
+import { DxDataGridModule } from '@node_modules/devextreme-angular/ui/data-grid';
+import { DxPopoverModule } from '@node_modules/devextreme-angular/ui/popover';
+import { DxValidationGroupModule } from '@node_modules/devextreme-angular/ui/validation-group';
+import { DxValidatorModule } from '@node_modules/devextreme-angular/ui/validator';
+import { DxValidationSummaryModule } from '@node_modules/devextreme-angular/ui/validation-summary';
+import { DxDateBoxModule } from '@node_modules/devextreme-angular/ui/date-box';
+import { DxTextBoxModule } from '@node_modules/devextreme-angular/ui/text-box';
+import { DxFileUploaderModule } from '@node_modules/devextreme-angular/ui/file-uploader';
+import { DxCheckBoxModule } from '@node_modules/devextreme-angular/ui/check-box';
+import { DxNumberBoxModule } from '@node_modules/devextreme-angular/ui/number-box';
+import { DxLoadPanelModule } from '@node_modules/devextreme-angular/ui/load-panel';
+import { DxButtonModule } from '@node_modules/devextreme-angular/ui/button';
+import { DxTreeListModule } from '@node_modules/devextreme-angular/ui/tree-list';
+import { DxSelectBoxModule } from '@node_modules/devextreme-angular/ui/select-box';
+import { DxDropDownBoxModule } from '@node_modules/devextreme-angular/ui/drop-down-box';
+import { DxSchedulerModule } from '@node_modules/devextreme-angular/ui/scheduler';
+import { DxPopupModule } from '@node_modules/devextreme-angular/ui/popup';
+import { DxScrollViewModule } from '@node_modules/devextreme-angular/ui/scroll-view';
 
 @NgModule({
   imports: [
@@ -102,12 +113,29 @@ import { ViewWorkingHoursComponent } from './workingHours/view-working-hours/vie
     AutoCompleteModule,
     NgbModule,
     FileUploadModule,
-    DevExtremeModule,
     ChartModule,
     NgApexchartsModule,
     WidgetsModule,
     CollapseModule,
     PdfJsViewerModule,
+    DxDataGridModule,
+    DxPopoverModule,
+    DxValidationGroupModule,
+    DxValidatorModule,
+    DxValidationSummaryModule,
+    DxDateBoxModule,
+    DxTextBoxModule,
+    DxFileUploaderModule,
+    DxCheckBoxModule,
+    DxNumberBoxModule,
+    DxLoadPanelModule,
+    DxButtonModule,
+    DxTreeListModule,
+    DxSelectBoxModule,
+    DxDropDownBoxModule,
+    DxSchedulerModule,
+    DxPopupModule,
+    DxScrollViewModule,
   ],
   declarations: [
     TimeZoneComboComponent,
