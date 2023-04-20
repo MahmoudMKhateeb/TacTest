@@ -64,6 +64,7 @@ export class MostActiveActorComponent extends AppComponentBase implements OnInit
   private getMostActiveActorsCarrier(from, to) {
     this.brokerDashboardServiceProxy.getMostActiveActors(ActorTypesEnum.Carrier, this.selectedDateRangeType, from, to).subscribe((res) => {
       console.log('res', res);
+      this.chartOptions = undefined;
       this.fillChart(res.items);
     });
   }
@@ -71,6 +72,7 @@ export class MostActiveActorComponent extends AppComponentBase implements OnInit
   private getMostActiveActorsShipper(from, to) {
     this.brokerDashboardServiceProxy.getMostActiveActors(ActorTypesEnum.Shipper, this.selectedDateRangeType, from, to).subscribe((res) => {
       console.log('res', res);
+      this.chartOptions = undefined;
       this.fillChart(res.items);
     });
   }
@@ -78,20 +80,20 @@ export class MostActiveActorComponent extends AppComponentBase implements OnInit
   fillChart(items: ActiveActorDto[]) {
     this.colors = [];
     this.chartOptions = {
-      series: items.map((item, index) => {
-        this.colors.push(index % 2 == 0 ? this.dashboardCustomizationService.acceptedColor : this.dashboardCustomizationService.rejectedColor);
-        return {
-          name: item.actorName,
-          data: [
-            {
+      series: [
+        {
+          data: items.map((item, index) => {
+            this.colors.push(index % 2 == 0 ? this.dashboardCustomizationService.acceptedColor : this.dashboardCustomizationService.rejectedColor);
+            return {
+              name: item.actorName,
               x: item.actorName,
               y: item.numberOfTrips,
               color: index % 2 == 0 ? this.dashboardCustomizationService.acceptedColor : this.dashboardCustomizationService.rejectedColor,
-            },
-          ],
-          color: index % 2 == 0 ? this.dashboardCustomizationService.acceptedColor : this.dashboardCustomizationService.rejectedColor,
-        };
-      }),
+              fillColor: index % 2 == 0 ? this.dashboardCustomizationService.acceptedColor : this.dashboardCustomizationService.rejectedColor,
+            };
+          }),
+        },
+      ],
       chart: {
         type: 'bar',
         width: '100%',
