@@ -194,6 +194,8 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             );
             #region Saas
+
+            //waybills
             var NumberOfWaybills = context.Create(
                 AppFeatures.NumberOfWaybills,
                 "false",
@@ -214,12 +216,99 @@ namespace TACHYON.Features
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
                 );
 
+            //import
             var ImportFunctionality = context.Create(
                 AppFeatures.ImportFunctionality,
                 "true",
                 L("ImportFunctionalityFeature"),
                 inputType: new CheckboxInputType()
             );
+
+            ImportFunctionality.CreateChildFeature(
+                AppFeatures.ImportTripFeature,
+                "true",
+                L("ImportTripFeature"),
+                inputType: new CheckboxInputType()
+                );
+
+            ImportFunctionality.CreateChildFeature(
+                AppFeatures.ImportTruckFeature,
+                "true",
+                L("ImportTruckFeature"),
+                inputType: new CheckboxInputType()
+                );
+
+            ImportFunctionality.CreateChildFeature(
+                AppFeatures.ImportDriverFeature,
+                "true",
+                L("ImportDriverFeature"),
+                inputType: new CheckboxInputType()
+                );
+
+            ImportFunctionality.CreateChildFeature(
+                AppFeatures.ImportSaasShipmentFeature,
+                "true",
+                L("ImportSaasShipmentFeature"),
+                inputType: new CheckboxInputType()
+                );
+
+            //number of trucks
+            var NumberOfTrucks = context.Create(
+                AppFeatures.NumberOfTrucks,
+                "false",
+                L("NumberOfTrucksFeature"),
+                inputType: new CheckboxInputType()
+            );
+            NumberOfTrucks.CreateChildFeature(
+                AppFeatures.MaxNumberOfTrucks,
+                "false",
+                L("MaxNumberOfTrucksFeature"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+            );
+
+            NumberOfTrucks.CreateChildFeature(
+                AppFeatures.AdditionalTruckPrice,
+                "false",
+                L("AdditionalTruckPriceFeature"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+                );
+
+            //dedicated
+            var DedicatedTruck = context.Create(
+               AppFeatures.DedicatedTruck,
+               "true",
+               L("DedicatedTruckFeature"),
+               inputType: new CheckboxInputType()
+               );
+
+            var SaveTemplate = context.Create(
+               AppFeatures.SaveTemplate,
+               "true",
+               L("SaveTemplateFeature"),
+               inputType: new CheckboxInputType()
+               );
+
+            var PortMovement = context.Create(
+              AppFeatures.PortMovement,
+              "true",
+              L("PortMovementFeature"),
+              inputType: new CheckboxInputType()
+              );
+
+            var HomeDelivery = context.Create(
+              AppFeatures.HomeDelivery,
+              "true",
+              L("HomeDeliveryFeature"),
+              inputType: new CheckboxInputType()
+              );
+
+            var ExportFunctionality = context.Create(
+              AppFeatures.ExportFunctionality,
+              "true",
+              L("ExportFunctionalityFeature"),
+              inputType: new CheckboxInputType()
+              );
+
             #endregion
 
 

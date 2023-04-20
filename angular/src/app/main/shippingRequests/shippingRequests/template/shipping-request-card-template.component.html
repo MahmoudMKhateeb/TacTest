@@ -11,31 +11,71 @@
           [dropup]="false"
           [insideClick]="true"
         >
-          <button dropdownToggle type="button" class="btn btn-success" aria-controls="dropdown-basic">
+          <button dropdownToggle type="button" class="btn btn-primary" aria-controls="dropdown-basic">
             <i class="fas fa-plus"></i> {{ 'CreateNewRequest' | localize }}<span class="caret"></span>
           </button>
           <ul *dropdownMenu class="dropdown-menu p-2 w-100" role="menu" aria-labelledby="button-basic">
             <li role="menuitem">
-              <button (click)="createNewRequest()" class="btn btn-outline-success btn-elevate-hover w-100">
+              <button (click)="createNewRequest()" class="btn btn-outline-primary btn-elevate-hover w-100">
                 <i class="fas fa-plus"></i> {{ l('New') }}
               </button>
             </li>
-            <li role="menuitem">
+            <li *ngIf="isEnabled('App.DedicatedTruckFeature')" role="menuitem">
               <button (click)="createNewDedicatedRequest()" class="btn btn-outline-success btn-elevate-hover mt-2 w-100">
                 <i class="fas fa-plus"></i> {{ l('NewDedicated') }}
               </button>
             </li>
             <li role="menuitem">
-              <button (click)="loadEntityTemplateModal.show(1)" class="btn btn-outline-info btn-elevate-hover mt-2 w-100">
+              <button (click)="loadEntityTemplateModal.show(1)" class="btn btn-primary btn-elevate-hover mt-2 w-100 primary-invert-on-hover">
                 <i class="fas fa-list"></i> {{ l('FromTemplate') }}
               </button>
             </li>
           </ul>
         </div>
+        <div class="btn-group mr-2" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true">
+          <button dropdownToggle type="button" class="btn btn-secondary" aria-controls="dropdown-export">
+            <i class="fas fa-file-export"></i> {{ 'ExportToExcel' | localize }}<span class="caret"></span>
+          </button>
+          <ul *dropdownMenu class="dropdown-menu p-2 w-120" role="menu" aria-labelledby="button-export">
+            <li role="menuitem">
+              <button [buttonBusy]="NormalExportIsLoading" (click)="ExportNormalToExcel()" class="btn btn-outline-secondary btn-elevate-hover w-100">
+                <i class="fas fa-file-export"></i> {{ l('ExportNormalToExcel') }}
+              </button>
+            </li>
+            <li role="menuitem">
+              <button
+                [buttonBusy]="DedicatedExportIsLoding"
+                (click)="ExportDedicatedToExcel()"
+                class="btn btn-outline-secondary btn-elevate-hover mt-2 w-100"
+              >
+                <i class="fas fa-file-export"></i> {{ l('ExportDedicatedToExcel') }}
+              </button>
+            </li>
+          </ul>
+        </div>
         <button (click)="showAsTable()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
+
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
       <div role="actions" *ngIf="isCarrier">
+        <div class="btn-group mr-2" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true">
+          <button dropdownToggle type="button" class="btn btn-secondary" aria-controls="dropdown-export">
+            <i class="fas fa-file-export"></i> {{ 'ExportToExcel' | localize }}<span class="caret"></span>
+          </button>
+          <ul *dropdownMenu class="dropdown-menu p-2 w-120" role="menu" aria-labelledby="button-export">
+            <li role="menuitem">
+              <button (click)="ExportNormalToExcel()" class="btn btn-outline-secondary btn-elevate-hover w-100">
+                <i class="fas fa-file-export"></i> {{ l('ExportNormalToExcel') }}
+              </button>
+            </li>
+            <li role="menuitem">
+              <button (click)="ExportDedicatedToExcel()" class="btn btn-outline-secondary btn-elevate-hover mt-2 w-100">
+                <i class="fas fa-file-export"></i> {{ l('ExportDedicatedToExcel') }}
+              </button>
+            </li>
+          </ul>
+        </div>
+
         <button (click)="showAsTable()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
@@ -107,23 +147,23 @@
                   {{ getWordTitle(item.remainingDays, 'RemainingDay') }}
                 </span>
                 <div class="info-badges">
-                  <b *ngIf="item.remainingDays == '0' && Channel == 1 && item.bidStatusTitle" class="infoHighLight red stautsTruck">
+                  <b *ngIf="item.remainingDays == '0' && Channel == 1 && item.bidStatusTitle" class="infoHighLight red stautsTruck badge-primary">
                     {{ l(item.bidStatusTitle) }}
                   </b>
 
-                  <b *ngIf="Channel == 2 || Channel == 10" class="infoHighLight red stautsTruck">
+                  <b *ngIf="Channel == 2 || Channel == 10" class="infoHighLight red stautsTruck badge-primary">
                     {{ l(item.directRequestStatusTitle) }}
                   </b>
 
                   <!--              <b *ngIf="item.numberOfCompletedTrips >= item.numberOfTrips" class="infoHighLight green stautsTruck">{{ l('Completed') }}</b>-->
                   <!--              <b *ngIf="item.numberOfCompletedTrips < item.numberOfTrips" class="infoHighLight red stautsTruck">{{ l('Trips:InProgress') }}</b>-->
-                  <b *ngIf="!Channel && item.statusTitle" class="infoHighLight green stautsTruck">
+                  <b *ngIf="!Channel && item.statusTitle" class="infoHighLight badge-primary stautsTruck">
                     {{ l(item.statusTitle) }}
                   </b>
-                  <b *ngIf="item.isSaas" class="infoHighLight green stautsTruck">
+                  <b *ngIf="item.isSaas" class="infoHighLight badge-dark stautsTruck">
                     {{ l('saas') }}
                   </b>
-                  <b *ngIf="item.notesCount > 0" class="infoHighLight blue stautsTruck">
+                  <b *ngIf="item.notesCount > 0" class="infoHighLight badge-primary stautsTruck">
                     {{ item.notesCount }} &nbsp; <span> {{ item.notesCount == 1 ? l('note') : l('notes') }} </span>
                   </b>
                 </div>
@@ -251,19 +291,19 @@
                 <!--                  href="javascript:void(0)"-->
                 <!--                  class="infoHighLight blue"-->
                 <!--                ></a>-->
-                <a *ngIf="(!Channel || Channel == 3) && item.createdByTachyonDealer" href="javascript:void(0)" class="infoHighLight blue">
+                <a *ngIf="(!Channel || Channel == 3) && item.createdByTachyonDealer" href="javascript:void(0)" class="infoHighLight blue badge-gray">
                   {{ l('CreatedByTachyonDealer') }}
                 </a>
-                <a *ngIf="feature.isEnabled('App.Shipper')" href="javascript:void(0)" class="infoHighLight blue">
+                <a *ngIf="feature.isEnabled('App.Shipper')" href="javascript:void(0)" class="infoHighLight blue badge-gray">
                   {{ l(item.requestTypeTitle) }}
                 </a>
-                <a *ngIf="canSeeTotalOffers(item)" href="javascript:void(0)" class="infoHighLight green" (click)="ModelOffer.show(item)">
+                <a *ngIf="canSeeTotalOffers(item)" href="javascript:void(0)" class="infoHighLight green badge-gray" (click)="ModelOffer.show(item)">
                   {{ item.totalOffers }} {{ getWordTitle(item.totalOffers, 'TotalOffer') }}
                 </a>
                 <a
                   *ngIf="item.isPriced && Channel != 10"
                   href="javascript:void(0)"
-                  class="infoHighLight blue"
+                  class="infoHighLight blue badge-gray"
                   (click)="ModelViewPrice.show(item.id, item.offerId, false, item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated)"
                   >{{ l('MarketPlacepriced') }}</a
                 >
@@ -275,14 +315,14 @@
                     canViewBrokerPrice(item)
                   "
                   href="javascript:void(0)"
-                  class="infoHighLight red"
+                  class="infoHighLight red badge-gray"
                   >{{ item.price | number }} {{ l('SAR') }}</a
                 >
-                <a *ngIf="Channel == 10 && canViewBrokerPrice(item)" href="javascript:void(0)" class="infoHighLight red"
+                <a *ngIf="Channel == 10 && canViewBrokerPrice(item)" href="javascript:void(0)" class="infoHighLight red badge-gray"
                   >{{ item.price | number }} {{ l('SAR') }}</a
                 >
-                <b *ngIf="item.carrierActor" class="infoHighLight blue stautsTruck"> {{ l('carrierActor') }}: {{ item.carrierActor }} </b>
-                <b *ngIf="item.shipperActor" class="infoHighLight blue stautsTruck"> {{ l('shipperActor') }}: {{ item.shipperActor }} </b>
+                <b *ngIf="item.carrierActor" class="infoHighLight blue stautsTruck badge-gray"> {{ l('carrierActor') }}: {{ item.carrierActor }} </b>
+                <b *ngIf="item.shipperActor" class="infoHighLight blue stautsTruck badge-gray"> {{ l('shipperActor') }}: {{ item.shipperActor }} </b>
               </div>
 
               <div class="actions">
@@ -310,7 +350,7 @@
                   {{ l('Cancel') }}
                 </a>
 
-                <a href="javascript:void(0)" (click)="moreRedirectTo(item)" class="red">
+                <a href="javascript:void(0)" (click)="moreRedirectTo(item)" class="btn-dark">
                   {{ l('More') }}
                 </a>
                 <a
@@ -321,7 +361,7 @@
                   "
                   [queryParams]="{ id: item.id }"
                   [routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']"
-                  class="red"
+                  class="btn-dark"
                 >
                   {{ l('Edit') }}
                 </a>
@@ -401,7 +441,7 @@
           >
             <div class="card-header ribbon ribbon-clip ribbon-left">
               <div class="ribbon-target" style="top: 5px">
-                <span class="ribbon-inner bg-warning"></span>{{ 'DedicatedShippingRequest' | localize }}
+                <span class="ribbon-inner bg-primary"></span>{{ 'DedicatedShippingRequest' | localize }}
               </div>
               <div class="row w-100">
                 <div class="col-md-4 col-lg-2" *ngIf="!item.isSaas">
@@ -551,19 +591,23 @@
                   <!--                  href="javascript:void(0)"-->
                   <!--                  class="infoHighLight blue"-->
                   <!--                ></a>-->
-                  <a *ngIf="(!Channel || Channel == 3) && item.createdByTachyonDealer" href="javascript:void(0)" class="infoHighLight blue">
+                  <a
+                    *ngIf="(!Channel || Channel == 3) && item.createdByTachyonDealer"
+                    href="javascript:void(0)"
+                    class="infoHighLight blue badge-gray"
+                  >
                     {{ l('CreatedByTachyonDealer') }}
                   </a>
-                  <a *ngIf="feature.isEnabled('App.Shipper')" href="javascript:void(0)" class="infoHighLight blue">
+                  <a *ngIf="feature.isEnabled('App.Shipper')" href="javascript:void(0)" class="infoHighLight blue badge-gray">
                     {{ l(item.requestTypeTitle) }}
                   </a>
-                  <a *ngIf="canSeeTotalOffers(item)" href="javascript:void(0)" class="infoHighLight green" (click)="ModelOffer.show(item)">
+                  <a *ngIf="canSeeTotalOffers(item)" href="javascript:void(0)" class="infoHighLight green badge-gray" (click)="ModelOffer.show(item)">
                     {{ item.totalOffers }} {{ getWordTitle(item.totalOffers, 'TotalOffer') }}
                   </a>
                   <a
                     *ngIf="item.isPriced && Channel != 10"
                     href="javascript:void(0)"
-                    class="infoHighLight blue"
+                    class="infoHighLight blue badge-gray"
                     (click)="ModelViewPrice.show(item.id, item.offerId, false, item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated)"
                     >{{ l('MarketPlacepriced') }}</a
                   >
@@ -575,17 +619,21 @@
                       canViewBrokerPrice(item)
                     "
                     href="javascript:void(0)"
-                    class="infoHighLight red"
+                    class="infoHighLight red badge-gray"
                     >{{ item.price | number }} {{ l('SAR') }}</a
                   >
-                  <a *ngIf="Channel == 10 && canViewBrokerPrice(item)" href="javascript:void(0)" class="infoHighLight red"
+                  <a *ngIf="Channel == 10 && canViewBrokerPrice(item)" href="javascript:void(0)" class="infoHighLight red badge-gray"
                     >{{ item.price | number }} {{ l('SAR') }}</a
                   >
-                  <b *ngIf="item.isSaas" class="infoHighLight blue stautsTruck">
+                  <b *ngIf="item.isSaas" class="infoHighLight blue stautsTruck badge-gray">
                     {{ l('saas') }}
                   </b>
-                  <b *ngIf="item.carrierActor" class="infoHighLight blue stautsTruck"> {{ l('carrierActor') }}: {{ item.carrierActor }} </b>
-                  <b *ngIf="item.shipperActor" class="infoHighLight blue stautsTruck"> {{ l('shipperActor') }}: {{ item.shipperActor }} </b>
+                  <b *ngIf="item.carrierActor" class="infoHighLight blue stautsTruck badge-gray">
+                    {{ l('carrierActor') }}: {{ item.carrierActor }}
+                  </b>
+                  <b *ngIf="item.shipperActor" class="infoHighLight blue stautsTruck badge-gray">
+                    {{ l('shipperActor') }}: {{ item.shipperActor }}
+                  </b>
                 </div>
               </div>
               <div class="w-100 d-flex p-0 actions justify-content-end">
@@ -663,7 +711,7 @@
                 <a
                   href="javascript:void(0)"
                   (click)="moreRedirectTo(item)"
-                  class="red"
+                  class="btn-dark"
                   *ngIf="
                     (!Channel &&
                       (feature.isEnabled('App.Shipper') ||
@@ -685,7 +733,7 @@
                   "
                   [queryParams]="{ id: item.id, completedSteps: 2, isEdit: true }"
                   [routerLink]="['/app/main/shippingRequests/dedicatedShippingRequestWizard']"
-                  class="red"
+                  class="btn-dark"
                 >
                   {{ l('Edit') }}
                 </a>

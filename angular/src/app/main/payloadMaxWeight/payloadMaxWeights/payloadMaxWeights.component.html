@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'PayloadMaxWeights' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button (click)="exportToExcel()" class="btn btn-outline-secondary"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
         <button *ngIf="isGranted('Pages.PayloadMaxWeights.Create')" (click)="createPayloadMaxWeight()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewPayloadMaxWeight') }}
@@ -101,14 +101,14 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.PayloadMaxWeights.Edit', 'Pages.PayloadMaxWeights.Delete')">
+                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.PayloadMaxWeights.Edit', 'Pages.PayloadMaxWeights.Delete')">
                       {{ l('Actions') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
+                    <th style="width: 150px" pSortableColumn="displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="payloadMaxWeight.displayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="maxWeight">
+                    <th style="width: 150px" pSortableColumn="maxWeight">
                       {{ l('MaxWeight') }}
                       <p-sortIcon field="payloadMaxWeight.maxWeight"></p-sortIcon>
                     </th>
@@ -116,7 +116,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.PayloadMaxWeights.Edit', 'Pages.PayloadMaxWeights.Delete')">
+                    <td style="width: 130px" [hidden]="!isGrantedAny('Pages.PayloadMaxWeights.Edit', 'Pages.PayloadMaxWeights.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -149,11 +149,11 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.payloadMaxWeight.displayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('MaxWeight') }}</span>
                       {{ record.payloadMaxWeight.maxWeight }}
                     </td>

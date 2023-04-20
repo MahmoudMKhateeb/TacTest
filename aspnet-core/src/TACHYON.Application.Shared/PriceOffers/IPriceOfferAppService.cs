@@ -11,7 +11,7 @@ namespace TACHYON.PriceOffers
         Task<PagedResultDto<PriceOfferListDto>> GetAll(PriceOfferGetAllInput input);
 
         Task<ListResultDto<GetShippingRequestForPriceOfferListDto>> GetAllShippingRequest(
-            ShippingRequestForPriceOfferGetAllInput input);
+            ShippingRequestForPriceOfferGetAllInput input, bool getAllData= false);
 
         Task<GetShippingRequestSearchListDto> GetAllListForSearch();
 

@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'Trailers' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button (click)="exportToExcel()" class="btn btn-outline-secondary"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
         <button *ngIf="isGranted('Pages.Trailers.Create')" (click)="createTrailer()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewTrailer') }}
         </button>
@@ -242,66 +242,66 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Trailers.Edit', 'Pages.Trailers.Delete')">
+                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.Trailers.Edit', 'Pages.Trailers.Delete')">
                       {{ l('Actions') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="trailerStatusFk.displayName">
+                    <th style="width: 150px" pSortableColumn="trailerStatusFk.displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="trailerStatusDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="trailerTypeFk.displayName">
+                    <th style="width: 150px" pSortableColumn="trailerTypeFk.displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="trailerTypeDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="payloadMaxWeightFk.displayName">
+                    <th style="width: 150px" pSortableColumn="payloadMaxWeightFk.displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="payloadMaxWeightDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="hookedTruckFk.plateNumber">
+                    <th style="width: 150px" pSortableColumn="hookedTruckFk.plateNumber">
                       {{ l('PlateNumber') }}
                       <p-sortIcon field="truckPlateNumber"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="trailerCode">
+                    <th style="width: 150px" pSortableColumn="trailerCode">
                       {{ l('TrailerCode') }}
                       <p-sortIcon field="trailer.trailerCode"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="plateNumber">
+                    <th style="width: 150px" pSortableColumn="plateNumber">
                       {{ l('PlateNumber') }}
                       <p-sortIcon field="trailer.plateNumber"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="model">
+                    <th style="width: 150px" pSortableColumn="model">
                       {{ l('Model') }}
                       <p-sortIcon field="trailer.model"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="year">
+                    <th style="width: 150px" pSortableColumn="year">
                       {{ l('Year') }}
                       <p-sortIcon field="trailer.year"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="width">
+                    <th style="width: 150px" pSortableColumn="width">
                       {{ l('Width') }}
                       <p-sortIcon field="trailer.width"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="height">
+                    <th style="width: 150px" pSortableColumn="height">
                       {{ l('Height') }}
                       <p-sortIcon field="trailer.height"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="length">
+                    <th style="width: 150px" pSortableColumn="length">
                       {{ l('Length') }}
                       <p-sortIcon field="trailer.length"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="isLiftgate">
+                    <th style="width: 150px" pSortableColumn="isLiftgate">
                       {{ l('IsLiftgate') }}
                       <p-sortIcon field="trailer.isLiftgate"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="isReefer">
+                    <th style="width: 150px" pSortableColumn="isReefer">
                       {{ l('IsReefer') }}
                       <p-sortIcon field="trailer.isReefer"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="isVented">
+                    <th style="width: 150px" pSortableColumn="isVented">
                       {{ l('IsVented') }}
                       <p-sortIcon field="trailer.isVented"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="isRollDoor">
+                    <th style="width: 150px" pSortableColumn="isRollDoor">
                       {{ l('IsRollDoor') }}
                       <p-sortIcon field="trailer.isRollDoor"></p-sortIcon>
                     </th>
@@ -309,7 +309,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.Trailers.Edit', 'Pages.Trailers.Delete')">
+                    <td style="width: 130px" [hidden]="!isGrantedAny('Pages.Trailers.Edit', 'Pages.Trailers.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -342,66 +342,66 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.trailerStatusDisplayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.trailerTypeDisplayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.payloadMaxWeightDisplayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('PlateNumber') }}</span>
                       {{ record.truckPlateNumber }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('TrailerCode') }}</span>
                       {{ record.trailer.trailerCode }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('PlateNumber') }}</span>
                       {{ record.trailer.plateNumber }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Model') }}</span>
                       {{ record.trailer.model }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Year') }}</span>
                       {{ record.trailer.year }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Width') }}</span>
                       {{ record.trailer.width }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Height') }}</span>
                       {{ record.trailer.height }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Length') }}</span>
                       {{ record.trailer.length }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('IsLiftgate') }}</span>
                       <div *ngIf="record.trailer.isLiftgate" class="text-center"><i class="fa fa-check-circle text-success" title="True"></i></div>
                       <div *ngIf="!record.trailer.isLiftgate" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('IsReefer') }}</span>
                       <div *ngIf="record.trailer.isReefer" class="text-center"><i class="fa fa-check-circle text-success" title="True"></i></div>
                       <div *ngIf="!record.trailer.isReefer" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('IsVented') }}</span>
                       <div *ngIf="record.trailer.isVented" class="text-center"><i class="fa fa-check-circle text-success" title="True"></i></div>
                       <div *ngIf="!record.trailer.isVented" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('IsRollDoor') }}</span>
                       <div *ngIf="record.trailer.isRollDoor" class="text-center"><i class="fa fa-check-circle text-success" title="True"></i></div>
                       <div *ngIf="!record.trailer.isRollDoor" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>

@@ -4,9 +4,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   CommonLookupServiceProxy,
   DedicatedDynamicActorInvoicesServiceProxy,
-  DedicatedDynamiceInvoicesServiceProxy,
   InvoiceAccountType,
-  InvoiceChannel,
   InvoiceFilterInput,
   InvoiceReportServiceServiceProxy,
   InvoiceServiceProxy,
@@ -18,7 +16,7 @@ import { InvoiceTenantItemsDetailsComponent } from 'app/main/invoices/invoice-te
 import { Router } from '@angular/router';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import { DxDataGridComponent } from '@node_modules/devextreme-angular';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular/ui/data-grid';
 import Swal from 'sweetalert2';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';

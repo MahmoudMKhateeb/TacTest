@@ -18,11 +18,16 @@
         <i class="flaticon-plus"></i> {{ l('AddATrip') }}
       </button>
       <!-- <div role="actions"> -->
-      <div *ngIf="isEnabled('App.ImportFunctionality')" class="btn-group" dropdown [busyIf]="loading">
+      <div
+        *ngIf="isEnabled('App.ImportFunctionality') && isEnabled('App.ImportFunctionality.ImportTripFeature')"
+        class="btn-group"
+        dropdown
+        [busyIf]="loading"
+      >
         <button
           dropdownToggle
           type="button"
-          class="btn btn-outline-success dropdown-toggle mr-1"
+          class="btn btn-outline-secondary dropdown-toggle mr-1"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
@@ -444,7 +449,8 @@
                     <li
                       *ngIf="
                         isGranted('Pages.ShippingRequestTrips.Edit') &&
-                        _TripService?.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Normal &&
+                        isEnabled('App.SaveTemplateFeature') &&
+                        _TripService.GetShippingRequestForViewOutput.shippingRequestFlag === ShippingRequestFlagEnum.Normal &&
                         record.canCreateTemplate &&
                         (isShipper || isTachyonDealer || (isCarrierSaas && _TripService?.GetShippingRequestForViewOutput?.shippingRequest?.isSaas))
                       "

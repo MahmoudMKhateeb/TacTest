@@ -77,7 +77,7 @@
 
           <div class="d-flex justify-content-end mb-2">
             <!--            <button *ngIf="dataSourceForEdit" type="button" class="btn btn-sm btn-danger" (click)="cancelAddToArray()">{{ l('Cancel') }}</button>-->
-            <button *ngIf="!isView && !dataSourceForEdit" class="btn btn-sm btn-success" (click)="addNew()">
+            <button *ngIf="!isView && !dataSourceForEdit" class="btn btn-sm btn-dark" (click)="addNew()">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
           </div>
@@ -308,22 +308,22 @@
             </div>
 
             <div class="col-12 d-flex justify-content-end">
-              <button class="btn btn-sm btn-danger" (click)="cancelAddToArray()">
+              <button class="btn btn-sm btn-outline-danger" (click)="cancelAddToArray()">
                 {{ l('Cancel') }}
               </button>
-              <button class="btn btn-sm btn-success" (click)="saveToArray()">
+              <button class="btn btn-sm btn-dark" (click)="saveToArray()">
                 {{ ('' + activeIndex).length > 0 ? l('Save') : l('Add') }}
               </button>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button *ngIf="isView" type="button" class="btn btn-default" (click)="close()">{{ l('Close') }}</button>
-          <button *ngIf="!isView" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button *ngIf="isView" type="button" class="btn btn-light" (click)="close()">{{ l('Close') }}</button>
+          <button *ngIf="!isView" type="button" class="btn btn-outline-danger" (click)="close()">{{ l('Cancel') }}</button>
           <button
             *ngIf="!isView"
             type="submit"
-            class="btn btn-save blue"
+            class="btn btn-primary blue"
             [disabled]="isFormInvalid(Form)"
             [buttonBusy]="Form.valid && saving"
             [busyText]="l('SavingWithThreeDot')"

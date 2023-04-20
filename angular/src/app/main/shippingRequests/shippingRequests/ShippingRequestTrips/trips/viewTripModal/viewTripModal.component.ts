@@ -21,6 +21,19 @@ import {
   DropPaymentMethod,
   ShippingTypeEnum,
   GetAllUploadedFileDto,
+  ShippingRequestsServiceProxy,
+  RoundTripType,
+  TenantRegistrationServiceProxy,
+  CountyDto,
+  TenantCityLookupTableDto,
+  ShippingRequestDestinationCitiesDto,
+  FacilitiesServiceProxy,
+  SelectFacilityItemDto,
+  CreateOrEditShippingRequestTripDto,
+  GoodsDetailsServiceProxy,
+  GetAllGoodsCategoriesForDropDownOutput,
+  GetAllTrucksWithDriversListDto,
+  ActorSelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -33,6 +46,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
 import { Moment } from '@node_modules/moment';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'viewTripModal',
@@ -53,7 +67,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   trip: ShippingRequestsTripForViewDto = new ShippingRequestsTripForViewDto();
   assignDriverAndTruck: AssignDriverAndTruckToShippmentByCarrierInput = new AssignDriverAndTruckToShippmentByCarrierInput();
   allDrivers: SelectItemDto[] = [];
-  allTrucks: SelectItemDto[] = [];
+  allTrucks: SelectItemDto[] | GetAllTrucksWithDriversListDto[] = [];
   saving = false;
   loading = true;
   //currentTripId: number;
@@ -75,11 +89,24 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   ShippingRequestFlagEnum = ShippingRequestFlag;
   ShippingRequestTripFlagEnum = ShippingRequestTripFlag;
   ShippingRequestTripFlagArray = [];
+  AllActorsCarriers: ActorSelectItemDto[] = [];
+  AllActorsShippers: ActorSelectItemDto[] = [];
+  allShippingTypes: SelectItemDto[] = [];
+  ShippingTypeEnum = ShippingTypeEnum;
+  allRoundTripTypes: SelectItemDto[] = [];
+  originCountry;
+  destinationCountry;
+  allCountries: CountyDto[] = [];
+  sourceCities: TenantCityLookupTableDto[] = [];
+  destinationCities: ShippingRequestDestinationCitiesDto[] = [];
+  allOriginPorts: SelectFacilityItemDto[] = [];
+  allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
 
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
+    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _dedicatedShippingRequestsServiceProxy: DedicatedShippingRequestsServiceProxy,
     public _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
@@ -89,7 +116,10 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     public _TripService: TripService,
     private _Router: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
-    private enumToArray: EnumToArrayPipe
+    private enumToArray: EnumToArrayPipe,
+    private _countriesServiceProxy: TenantRegistrationServiceProxy,
+    private _facilitiesServiceProxy: FacilitiesServiceProxy,
+    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy
   ) {
     super(injector);
   }
@@ -97,13 +127,40 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   ngOnInit() {
     this.TruckTypeId = this._TripService.GetShippingRequestForViewOutput?.truckTypeId;
     this.activeTripId = this._Router.snapshot.queryParams['tripId'];
+    this.fillData();
+  }
+
+  private fillData() {
+    this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
     this.ShippingRequestTripFlagArray = this.enumToArray.transform(ShippingRequestTripFlag);
+    this.getActors();
+    this.allShippingTypes = this.enumToArray.transform(ShippingTypeEnum).map((item) => {
+      const selectItem = new SelectItemDto();
+      (selectItem.id as any) = Number(item.key);
+      selectItem.displayName = item.value;
+      return selectItem;
+    });
+    this.allRoundTripTypes = this.enumToArray.transform(RoundTripType).map((item) => {
+      const selectItem = new SelectItemDto();
+      (selectItem.id as any) = Number(item.key);
+      selectItem.displayName = item.value;
+      return selectItem;
+    });
+
+    this._countriesServiceProxy.getAllCountriesWithCode().subscribe((res) => {
+      this.allCountries = res;
+    });
+    this._facilitiesServiceProxy.getAllPortsForTableDropdown().subscribe((result) => {
+      this.allOriginPorts = result;
+    });
+    this.getAllGoodCategories();
   }
 
   ngAfterViewInit() {
     if (isNotNullOrUndefined(this.activeTripId)) {
       this.show(this.activeTripId, this.shippingRequestForView);
     }
+    this._changeDetectorRef.detectChanges();
   }
 
   show(id, shippingRequestForView?: GetShippingRequestForViewOutput): void {
@@ -112,7 +169,6 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     if (isNotNullOrUndefined(shippingRequestForView) && shippingRequestForView.shippingRequestFlag === this.ShippingRequestFlagEnum.Dedicated) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
-      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
     }
     this.loading = true;
 
@@ -121,6 +177,34 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     if (this.shippingRequestForView) {
       this.getAllTrucks(this.TruckTypeId);
       this.getAllDrivers();
+    }
+
+    if (!this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id) {
+      this._TripService.GetShippingRequestForViewOutput = undefined;
+      this.getAllDriversForDirectShipment();
+      this.getAllTrucksForDirectShipment();
+      this._shippingRequestTripsService.getShippingRequestTripForEdit(id).subscribe((res) => {
+        this._TripService.CreateOrEditShippingRequestTripDto = res;
+        (this.originCountry as any) = res.countryId + '';
+        if (!shippingRequestForView) {
+          this.loadCitiesByCountryId(this.originCountry, 'source', true);
+          if (res.shippingTypeId != ShippingTypeEnum.CrossBorderMovements) {
+            this.loadCitiesByCountryId(this.originCountry, 'destination', true);
+          }
+        }
+        if (this._TripService.CreateOrEditShippingRequestTripDto.shipperActorId) {
+          (this._TripService.CreateOrEditShippingRequestTripDto.shipperActorId as any) = res.shipperActorId.toString();
+        }
+        if (this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId) {
+          (this._TripService.CreateOrEditShippingRequestTripDto.carrierActorId as any) = res.carrierActorId.toString();
+        }
+        if (
+          this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
+          this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId === ShippingTypeEnum.ImportPortMovements
+        ) {
+          this.isPortMovement = true;
+        }
+      });
     }
 
     this._shippingRequestTripsService
@@ -134,10 +218,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this.trip = res;
         this.fromTime = res.supposedPickupDateFrom?.format('HH:mm');
         this.toTime = res.supposedPickupDateTo?.format('HH:mm');
-        if (
-          this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements ||
-          this.shippingRequestForView.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements
-        ) {
+        if (res.shippingTypeId === ShippingTypeEnum.ExportPortMovements || res.shippingTypeId === ShippingTypeEnum.ImportPortMovements) {
+          this.isPortMovement = true;
           this.trip.routPoints = this.trip.routPoints.sort((a, b) => a.pointOrder - b.pointOrder);
         }
         //Get The Points From The View Service and send them to the Points Service To Draw Them
@@ -165,6 +247,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
     this._PointsService.updateWayPoints([]);
     this.modal.hide();
     this._changeDetectorRef.detectChanges();
+    this._TripService.CreateOrEditShippingRequestTripDto = undefined;
   }
 
   checkData(category) {
@@ -214,6 +297,24 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
         this.allTrucks = result;
       });
     }
+  }
+
+  /**
+   * this method is for Getting All Drivers For Direct Shipment
+   */
+  getAllDriversForDirectShipment() {
+    this._trucksServiceProxy.getAllDriversForDropDown(undefined).subscribe((result) => {
+      this.allDrivers = result;
+    });
+  }
+
+  /**
+   * this method is for Getting All Trucks For Direct Shipment
+   */
+  getAllTrucksForDirectShipment() {
+    this._dedicatedShippingRequestsServiceProxy.getAllTrucksWithDriversList(undefined, undefined).subscribe((res) => {
+      this.allTrucks = res;
+    });
   }
 
   getNotes() {
@@ -310,5 +411,53 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
       this.trip.tripManifestDataDto.documentContentType
     );
     this.fileViwerComponent.show(image, this.trip.tripManifestDataDto.documentContentType == 'application/pdf' ? 'pdf' : 'img');
+  }
+
+  getActors() {
+    this._shippingRequestsServiceProxy.getAllCarriersActorsForDropDown().subscribe((result) => {
+      this.AllActorsCarriers = result;
+      // this.AllActorsCarriers.unshift( SelectItemDto.fromJS({id: null, displayName: this.l('Myself'), isOther: false}));
+    });
+
+    this._shippingRequestsServiceProxy.getAllShippersActorsForDropDown().subscribe((result) => {
+      this.AllActorsShippers = result;
+      // this.AllActorsShippers.unshift( SelectItemDto.fromJS({id: null, displayName: this.l('Myself'), isOther: false}));
+    });
+  }
+
+  loadCitiesByCountryId(countryId: number, type: 'source' | 'destination', isInit = false) {
+    if (!isInit) {
+      this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities = [];
+    }
+    this.destinationCities = [];
+    this._countriesServiceProxy.getAllCitiesForTableDropdown(countryId).subscribe((res) => {
+      type === 'source' ? (this.sourceCities = res) : this.loadDestinationCities(res);
+      if (
+        this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.LocalBetweenCities ||
+        this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+        this._TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
+      ) {
+        this.sourceCities = res;
+        // this.step2Dto.originCityId = this.step2Dto.destinationCityId = null;
+        this.loadDestinationCities(res);
+      }
+    });
+  }
+
+  private loadDestinationCities(res: TenantCityLookupTableDto[]) {
+    if (isNotNullOrUndefined(res)) {
+      res.forEach((element) => {
+        var item = new ShippingRequestDestinationCitiesDto();
+        item.cityId = Number(element.id);
+        item.cityName = element.displayName;
+        this.destinationCities.push(item);
+      });
+    }
+  }
+
+  private getAllGoodCategories() {
+    this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
+      this.allGoodCategorys = result;
+    });
   }
 }

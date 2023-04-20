@@ -2,13 +2,7 @@ import { Component, Injector, ViewChild, Input, OnInit, AfterViewInit } from '@a
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import {
-  InvoiceServiceProxy,
-  SubmitInvoicesServiceProxy,
-  SubmitInvoiceInfoDto,
-  InvoiceInfoDto,
-  InvoiceItemDto,
-} from '@shared/service-proxies/service-proxies';
+import { InvoiceServiceProxy, SubmitInvoicesServiceProxy, InvoiceInfoDto, InvoiceItemDto } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';

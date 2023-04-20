@@ -2434,7 +2434,7 @@
 		<text name="DocumentTypeName">اسم نوع المستند</text>
 		<text name="submitterTenatTenancyName">اسم الشركة المرسلة</text>
 		<text name="ShipperReference">رقم فاتورة المراجعة</text>
-		<text name="ShipperInvoiceNumber">مرجع المرسل</text>
+		<text name="ShipperBookingNumber">رقم الحجز</text>
 		<text name="OriginCountry">دولة الإنطلاق</text>
 		<text name="DestinationCountry">دولة الوصول</text>
 		<text name="SelectanOriginCountry">اختر دولة الإنطلاق</text>
@@ -2848,7 +2848,7 @@
 		<text name="ActorInvoicesList">قائمة فواتير العميل</text>
 		<text name="DownloadBayanDropWaybill">تحميل وثيقة شحن بيان</text>
 		<text name="CreateNewProposal">إضافة عرض حزم الأسعار </text>
-		<text name="ScopeOverview">نظرة عامة على النطاق</text>
+		<text name="ScopeOverview">نظرة عامة</text>
 		<text name="PricePackagesProposal">عرض حزم الأسعار</text>
 		<text name="NewDedicatedRequest">طلب تأجير شاحنات</text>
 		<text name="TMSForShipper">نظم إدارة النقل</text>
@@ -2925,7 +2925,7 @@
     <text name="WithoutReturnTrip"></text>
     <text name="TwoWayRoutsWithPortShuttling"></text>
     <text name="TwoWayRoutsWithoutPortShuttling"></text>
-    <text name="OneWayRoutWithPortShuttling"></text>
+    <text name="OneWayRoutWithoutPortShuttling"></text>
 	<text name="FacilityType">نوع المنشأة</text>
 	<text name="SelectARoundTripType">اختر نوع الرحلة العائدة</text>
 	<text name="AllowedWeight">الوزن المسموح به</text>
@@ -3064,5 +3064,31 @@
     <text name="MaxNumberOfWaybillsFeature">عدد الشحنات</text>
     <text name="You are already pass the allowed number of waybills so this waybill will be priced by additional waybill price">لقد تجاوزت الحد المسموح للشحنات لهذا سيتم تسعير هذه الشحنة بحساب السعر الاضافي</text>
     <text name="TenantExceedMaxWaybillNo">{0} وصلت الرحلة الأخيرة من عدد الرحلات المسموح بها</text>
+		<text name="CreateNewAppendix">إنشاء عقد جديد</text>
+		<text name="ContractName">إسم العقد</text>
+		<text name="AppendixDate">تاريخ العقد</text>
+		<text name="Proposal">عرض الأسعار</text>
+		<text name="SelectProposal">أختر عرض الاسعار</text>
+		<text name="ShipperInvoices">فواتير الشاحن</text>
+		<text name="CarrierInvoices">فواتير الناقل</text>
+    <text name="NumberOfTrucksFeature">عدد الشاحنات</text>
+    <text name="AdditionalTruckPriceFeature">سعر الشاحنة الاضافي</text>
+    <text name="MaxNumberOfTrucksFeature">عدد الشاحنات</text>
+    <text name="You are already passed the allowed number of trucks">وصلت الشاحنةالأخيرة من عدد الشاحنات المسموح بها</text>
+    <text name="ImportFunctionalityFeature">الإستيراد من اكسل</text>
+    <text name="ImportTripFeature">إستيراد الرحلات</text>
+    <text name="ImportTruckFeature">إستيراد الشاحنات</text>
+    <text name="ImportDriverFeature">إستيراد السائقين</text>
+    <text name="ImportSaasShipmentFeature">إستيراد رحلات SAAS</text>
+    <text name="DedicatedTruckFeature">تأجير شاحنات</text>
+    <text name="SaveTemplateFeature">حفظ قالب</text>
+    <text name="PortMovementFeature">رحلات الموانئ</text>
+    <text name="HomeDeliveryFeature">توصيل منزلي</text>	
+    <text name="RateShippingExp">يمكنك تقييم تجربة الشحن مع {0}</text>
+    <text name="ExportNormalToExcel">تصدير الطلبات</text>
+    <text name="ExportDedicatedToExcel">تصدير طلبات التأجير </text>
+    <text name="HomeDeliveryFeature">توصيل منزلي</text>
+    <text name="ConfirmationDate">تاريخ التأكيد</text>
+		
 	</texts>
 </localizationDictionary>

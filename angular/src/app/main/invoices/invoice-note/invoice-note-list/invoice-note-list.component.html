@@ -4,7 +4,7 @@
       <div role="actions">
         <button
           *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId"
-          class="btn btn-danger"
+          class="btn btn-primary"
           (click)="createOrEditNoteModalComponent.show()"
         >
           <i class="fa fa-plus"></i> {{ l('CreateNewInvoiceNote') }}
@@ -61,34 +61,17 @@
               <dxi-column dataField="totalValue" caption="{{ l('TotalValue') }}"></dxi-column>
               <dxi-column cellTemplate="noteTypeCellTemplate" dataField="noteType" caption=" {{ l('NoteType') }}"></dxi-column>
               <div *dxTemplate="let options of 'noteTypeCellTemplate'">
-                <span style="width: 137px; text-align: center"
-                  ><span
-                    class="badge badge-inline"
-                    [ngClass]="{
-                      'badge-success': options.data.noteTypeTitle == 'Credit',
-                      'badge-danger': options.data.noteTypeTitle == 'Debit'
-                    }"
-                    >{{ l(options.data.noteTypeTitle) }}</span
-                  ></span
-                >
+                <span style="width: 137px; text-align: center">
+                  <span>{{ l(options.data.noteTypeTitle) }}</span>
+                </span>
               </div>
               <dxi-column cellTemplate="statusCellTemplate" dataField="status" caption=" {{ l('Status') }}"></dxi-column>
               <dxi-column dataField="invoiceNumber" caption=" {{ l('InvoiceNumber') }}"></dxi-column>
               <dxi-column dataField="submitInvoiceNumber" caption=" {{ l('CarrierInvoiceNumber') }}"></dxi-column>
               <div *dxTemplate="let options of 'statusCellTemplate'">
-                <span style="width: 137px; text-align: center"
-                  ><span
-                    class="badge badge-inline"
-                    [ngClass]="{
-                      'badge-primary': options.data.statusTitle == 'Draft',
-                      'badge-success': options.data.statusTitle == 'Confirm',
-                      'badge-danger': options.data.statusTitle == 'Canceled',
-                      'badge-warning': options.data.statusTitle == 'WaitingtobePaid',
-                      'badge-info': options.data.statusTitle == 'Paid'
-                    }"
-                    >{{ l(options.data.statusTitle) }}</span
-                  ></span
-                >
+                <span style="width: 137px; text-align: center">
+                  <span>{{ l(options.data.statusTitle) }}</span>
+                </span>
               </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div class="btn-group dropdown" dropdown container="body">

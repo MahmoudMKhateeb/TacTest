@@ -15,6 +15,7 @@ using TACHYON.PriceOffers.Dto;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.ShippingRequestTripVases.Dtos;
 
 namespace TACHYON.Shipping.Trips.Dto
@@ -85,6 +86,19 @@ namespace TACHYON.Shipping.Trips.Dto
         /// </summary>
         public bool IsExceedMaxWaybillsNumber { get; set; }
         #endregion
+
+        #region PortSaas
+        public ShippingTypeEnum? ShippingTypeId { get; set; }
+        /// <summary>
+        /// Round trip is used for port movements requests
+        /// </summary>
+        public RoundTripType? RoundTripType { get; set; }
+
+        public virtual int? OriginCityId { get; set; }
+        public List<ShippingRequestDestinationCitiesDto> ShippingRequestDestinationCities { get; set; }
+        public int? CountryId { get; set; }
+
+        #endregion
         public void AddValidationErrors(CustomValidationContext context)
         {
             //document validation
@@ -122,6 +136,11 @@ namespace TACHYON.Shipping.Trips.Dto
             if (ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery && RoutPoints.Where(x=>x.PickingType == PickingType.Dropoff).SelectMany(x=>x.GoodsDetailListDto).Any(x => x.UnitOfMeasureId == null))
             {
                 context.Results.Add(new ValidationResult("GoodsUnitOfMeasureIsRequired"));
+            }
+
+            if ((ShippingTypeId == ShippingTypeEnum.ImportPortMovements || ShippingTypeId == ShippingTypeEnum.ExportPortMovements) && dropPoints.Any(x=>x.PointOrder == null))
+            {
+                context.Results.Add(new ValidationResult("InvalidPointOrder"));
             }
 
 

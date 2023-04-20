@@ -52,10 +52,10 @@
                   <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
                     <tr>
                       <td>
-                        <span *ngIf="record.pickingType === PickingType.Pickup" class="label label-success label-dot mr-2"></span>
-                        <span *ngIf="record.pickingType === PickingType.Pickup" class="font-weight-bold text-success">{{ l('Pickup') }}</span>
-                        <span *ngIf="record.pickingType === PickingType.Dropoff" class="label label-danger label-dot mr-2"></span>
-                        <span *ngIf="record.pickingType === PickingType.Dropoff" class="font-weight-bold text-danger">{{ l('DropOff') }}</span>
+                        <span *ngIf="record.pickingType == PickingType.Pickup" class="label label-success label-dot mr-2"></span>
+                        <span *ngIf="record.pickingType == PickingType.Pickup" class="font-weight-bold text-success">{{ l('Pickup') }}</span>
+                        <span *ngIf="record.pickingType == PickingType.Dropoff" class="label label-danger label-dot mr-2"></span>
+                        <span *ngIf="record.pickingType == PickingType.Dropoff" class="font-weight-bold text-danger">{{ l('DropOff') }}</span>
                       </td>
                       <td>
                         <span *ngIf="this.usedIn != 'createOrEdit'"> {{ record.facility }}</span>
@@ -76,15 +76,13 @@
                             [class.is-invalid]="pointFacility.touched && !wayPointsList[i].facilityId && !pointFacility.valid"
                           >
                             <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
-                            <option
-                              *ngFor="let item of record.pickingType === PickingType.Pickup ? pickupFacilities : dropFacilities"
-                              [ngValue]="item.id"
-                            >
+                            <!--                              *ngFor="let item of record.pickingType === PickingType.Pickup ? pickupFacilities : dropFacilities"-->
+                            <option *ngFor="let item of filterFacilitiesForDropDown(record.pickingType == PickingType.Pickup)" [ngValue]="item.id">
                               {{ item.displayName }}
                             </option>
                           </select>
                           <div *ngIf="isShipper || isCarrierSaas" class="input-group-btn">
-                            <button class="btn btn-light-danger" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
+                            <button class="btn btn-light-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
                               <i class="flaticon2-add"></i>
                             </button>
                           </div>
@@ -111,7 +109,7 @@
                           </select>
                           <div *ngIf="isShipper || isCarrierSaas" class="input-group-btn">
                             <button
-                              class="btn btn-light-danger"
+                              class="btn btn-light-primary"
                               data-toggle="tooltip"
                               data-placement="top"
                               title="Tooltip on top"
@@ -126,11 +124,11 @@
                       <td>
                         <!--      td good Details -->
                         <a
-                          *ngIf="record.pickingType === PickingType.Dropoff"
+                          *ngIf="record.pickingType == PickingType.Dropoff"
                           (click)="createOrEditPointModal.show(i, 'goodDetails', record.goodsDetailListDto)"
                           class="btn btn-sm mr-3"
                           [ngClass]="{
-                            'btn-light-danger': !wayPointsList[i].goodsDetailListDto?.length,
+                            'btn-light-primary': !wayPointsList[i].goodsDetailListDto?.length,
                             'btn-light-success': wayPointsList[i].goodsDetailListDto?.length
                           }"
                         >
@@ -148,11 +146,11 @@
                         <!--      td Additional reciver -->
                         <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.receiverFullName }} - {{ record.receiverPhoneNumber }}</span>
                         <a
-                          *ngIf="this.usedIn == 'createOrEdit' && (record.pickingType === PickingType.Dropoff || isHomeDelivery)"
+                          *ngIf="this.usedIn == 'createOrEdit' && (record.pickingType == PickingType.Dropoff || isHomeDelivery)"
                           (click)="createOrEditPointModal.show(i, 'receiver')"
                           class="btn btn-sm mr-3"
                           [ngClass]="{
-                            'btn-light-danger': !wayPointsList[i].receiverFullName,
+                            'btn-light-primary': !wayPointsList[i].receiverFullName,
                             'btn-light-success': wayPointsList[i].receiverFullName
                           }"
                         >
@@ -170,10 +168,10 @@
 
                         <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.note ?? '-' }}</span>
                         <a
-                          *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff"
+                          *ngIf="this.usedIn == 'createOrEdit' && record.pickingType == PickingType.Dropoff"
                           (click)="createOrEditPointModal.show(i, 'note')"
                           [ngClass]="{
-                            'btn-light-danger': !wayPointsList[i].note,
+                            'btn-light-primary': !wayPointsList[i].note,
                             'btn-light-success': wayPointsList[i].note
                           }"
                           class="btn btn-sm mr-3"
@@ -189,7 +187,7 @@
                       </td>
                       <td *ngIf="isHomeDelivery">
                         <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.dropPaymentMethodTitle ?? '-' }}</span>
-                        <div *ngIf="this.usedIn == 'createOrEdit' && record.pickingType === PickingType.Dropoff" class="input-group">
+                        <div *ngIf="this.usedIn == 'createOrEdit' && record.pickingType == PickingType.Dropoff" class="input-group">
                           <select
                             name="PaymentMethod-{{ i }}"
                             id="PaymentMethod-{{ i }}"
@@ -202,7 +200,7 @@
                       </td>
                       <td *ngIf="isHomeDelivery">
                         <!--                        <span *ngIf="this.usedIn != 'createOrEdit'">{{ record.note ?? '-' }}</span>-->
-                        <div *ngIf="record.pickingType === PickingType.Dropoff">
+                        <div *ngIf="record.pickingType == PickingType.Dropoff">
                           <div class="checkbox-list mb-2">
                             <label class="checkbox ml-2">
                               <input
@@ -251,12 +249,22 @@
               [allPointsSendersAndReceivers]="allPointsSendersAndREcivers"
               [facilityLoading]="facilityLoading"
               [receiverLoading]="receiverLoading"
-              [isExportRequest]="_tripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ExportPortMovements"
-              [isImportWithReturnTrip]="
-                _tripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
-                _tripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType === RoundTripType.WithReturnTrip
+              [isExportRequest]="
+                (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                  _tripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) ||
+                _tripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId == ShippingTypeEnum.ExportPortMovements
               "
-              [roundTripType]="_tripService.GetShippingRequestForViewOutput.shippingRequest.roundTripType"
+              [isImportWithReturnTrip]="
+                (_tripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements &&
+                  _tripService.CreateOrEditShippingRequestTripDto.roundTripType == RoundTripType.WithReturnTrip) ||
+                (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId == ShippingTypeEnum.ImportPortMovements &&
+                  _tripService?.GetShippingRequestForViewOutput?.shippingRequest.roundTripType == RoundTripType.WithReturnTrip)
+              "
+              [roundTripType]="
+                !_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id
+                  ? _tripService.CreateOrEditShippingRequestTripDto.roundTripType
+                  : _tripService?.GetShippingRequestForViewOutput?.shippingRequest.roundTripType
+              "
               (RouteStepCordSetterEvent)="RouteStepCordSetter($event.index, $event.facilityId)"
               (wayPointsSetterEvent)="wayPointsSetter()"
               (loadReceiversEvent)="loadReceivers($event)"
@@ -294,7 +302,7 @@
   <!--Create/Edit Point Modal-->
   <createOrEditPointModal
     #createOrEditPointModal
-    [isForDedicated]="_tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
+    [isForDedicated]="_tripService.GetShippingRequestForViewOutput?.shippingRequestFlag == shippingRequestFlagEnum.Dedicated"
     [isHomeDelivery]="isHomeDelivery"
     [isForPortsMovement]="isPortMovement"
   ></createOrEditPointModal>
@@ -305,7 +313,7 @@
 <createOrEditFacilityModal
   #createOrEditFacilityModal
   (modalSave)="loadFacilities()"
-  [isForDedicated]="this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === shippingRequestFlagEnum.Dedicated"
+  [isForDedicated]="this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag == shippingRequestFlagEnum.Dedicated"
   [isHomeDelivery]="isHomeDelivery"
 ></createOrEditFacilityModal>
 <!-- End::CreateOrEditFacilityModal -->

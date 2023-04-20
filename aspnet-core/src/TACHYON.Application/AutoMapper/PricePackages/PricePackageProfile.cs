@@ -43,11 +43,28 @@ namespace TACHYON.AutoMapper.PricePackages
                         i.AppendixId.HasValue ? i.Appendix.ContractName : "__"))
                 .ForMember(x => x.EditionName, x => x.MapFrom(i => i.UsageType == PricePackageUsageType.AsCarrier ? i.Tenant.Edition.DisplayName : i.DestinationTenant.Edition.DisplayName))
                 .ForMember(x => x.RouteType,
-                    x => x.MapFrom(i => i.RouteType.ToString()));
+                    x => x.MapFrom(i => i.RouteType.HasValue? i.RouteType.Value.ToString(): string.Empty));
 
             CreateMap<CreateOrEditServiceAreaDto, ServiceArea>().ReverseMap();
             CreateMap<CreateOrEditPricePackageDto, PricePackage>()
-                .ForMember(x=> x.ServiceAreas,x=> x.MapFrom(i=> i.ServiceAreas)).ReverseMap();
+                .ForMember(x=> x.DestinationCityId,x=> x.MapFrom(i=> i.DestinationLocation != null? i.DestinationLocation.CityId : default))
+                .ForMember(x=> x.DestinationFacilityPortId,x=> x.MapFrom(i=> i.DestinationLocation != null? i.DestinationLocation.PortId : default))
+                .ForMember(x=> x.OriginCityId,x=> x.MapFrom(i=> i.OriginLocation != null? i.OriginLocation.CityId : default))
+                .ForMember(x=> x.OriginFacilityPortId,x=> x.MapFrom(i=> i.OriginLocation != null? i.OriginLocation.PortId : default))
+                .ForMember(x=> x.ServiceAreas,x=> x.MapFrom(i=> i.ServiceAreas));
+
+            CreateMap<PricePackage, CreateOrEditPricePackageDto>()
+                .ForMember(x => x.OriginLocation, x => x.MapFrom(i => new PricePackageLocationSelectItemDto
+                    {
+                        CityId = i.OriginCityId.Value, PortId = i.OriginFacilityPortId,
+                        Id = $"{(i.OriginFacilityPortId.HasValue ? PricePackageLocationType.Port : PricePackageLocationType.City).ToString()} {(i.OriginFacilityPortId ?? i.OriginCityId)}"
+                    }))
+                .ForMember(x => x.DestinationLocation, x => x.MapFrom(i => new PricePackageLocationSelectItemDto
+                    {
+                        CityId = i.DestinationCityId.Value, PortId = i.DestinationFacilityPortId,
+                        Id = $"{(i.DestinationFacilityPortId.HasValue ? PricePackageLocationType.Port : PricePackageLocationType.City).ToString()} {(i.DestinationFacilityPortId ?? i.DestinationCityId)}"
+                    }))
+                .ForMember(x => x.ServiceAreas, x => x.MapFrom(i => i.ServiceAreas));
             
             CreateMap<CreateOrEditProposalDto, PricePackageProposal>()
                 .ForMember(x => x.PricePackages, x => x.Ignore())
@@ -202,7 +219,7 @@ namespace TACHYON.AutoMapper.PricePackages
                 .ForMember(x => x.CompanyName, x => x.MapFrom(i => i.DestinationTenant.Name))
                 .ForMember(x => x.CompanyEditionName, x => x.MapFrom(i => i.DestinationTenant.Edition.DisplayName))
                 .ForMember(x => x.RouteType,
-                    x => x.MapFrom(i => i.RouteType.ToString()))
+                    x => x.MapFrom(i => i.RouteType.HasValue? i.RouteType.Value.ToString(): string.Empty))
                 .ForMember(x => x.Type, x => x.MapFrom(i => i.Type.ToString()));
 
             CreateMap<PricePackageProposal, ProposalAutoFillDataDto>()

@@ -7,7 +7,7 @@
           <button
             dropdownToggle
             type="button"
-            class="btn btn-outline-success dropdown-toggle mr-1"
+            class="btn btn-outline-secondary dropdown-toggle mr-1"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
@@ -15,11 +15,24 @@
             <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
           </button>
           <div class="dropdown-menu dropdown-menu-right dropdown-excel-operations" *dropdownMenu>
-            <a class="dropdown-item" id="ExportTrucksToExcelButton" (click)="exportToExcel()" href="javascript:;">
+            <a
+              *ngIf="isEnabled('App.ExportFunctionality')"
+              class="dropdown-item"
+              id="ExportTrucksToExcelButton"
+              (click)="exportToExcel()"
+              href="javascript:;"
+            >
               <i class="fa fa-download mr-2 mt-1" style="font-size: 1rem"></i>
               {{ 'ExportToExcel' | localize }}
             </a>
-            <div *ngIf="'Pages.Trucks.Create' | permission" class="no-padding">
+            <div
+              *ngIf="
+                ('Pages.Trucks.Create' | permission) &&
+                isEnabled('App.ImportFunctionality') &&
+                isEnabled('App.ImportFunctionality.ImportTruckFeature')
+              "
+              class="no-padding"
+            >
               <span class="fileinput-button">
                 <p-fileUpload
                   customUpload="true"
@@ -53,7 +66,7 @@
           </div>
         </div>
 
-        <button *ngIf="isGranted('Pages.Trucks.Create')" (click)="createTruck()" class="btn btn-primary blue">
+        <button *ngIf="isGranted('Pages.Trucks.Create') && CanAddTruck" (click)="createTruck()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewTruck') }}
         </button>
       </div>
@@ -62,6 +75,15 @@
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <div class="card-body">
+          <div
+            *ngIf="IsExceedsMaxNumberOfWaybills"
+            class="row alert alert-warning"
+            style="background-color: #fff3cd; color: #856404; border-color: #ffeeba"
+            role="alert"
+          >
+            {{ l('You are already passed the allowed number of trucks') }}
+          </div>
+
           <div class="row align-items-center">
             <dx-data-grid
               style="height: 45vw"
@@ -98,7 +120,8 @@
               <dxi-column dataField="modelName" caption="{{ l('ModelName') }}"> </dxi-column>
               <dxi-column dataField="modelYear" caption="{{ l('ModelYear') }}"> </dxi-column>
               <dxi-column dataField="length" caption="{{ l('Length') }}"> </dxi-column>
-              <dxi-column dataField="truckStatusDisplayName" caption="{{ l('TruckStatus') }}"> </dxi-column>
+              <dxi-column cellTemplate="cellTemplate_IsActiveTruckStatus" dataField="truckStatusDisplayName" caption="{{ l('TruckStatus') }}">
+              </dxi-column>
               <dxi-column
                 *ngIf="isTachyonDealer || hasCarrierClients"
                 dataField="companyName"
@@ -111,7 +134,8 @@
               <dxi-column dataField="trucksTypeDisplayName" caption="{{ l('TrucksType') }}"> </dxi-column>
               <dxi-column dataField="capacityDisplayName" caption="{{ l('CapacityCategory') }}"> </dxi-column>
               <dxi-column dataField="capacity" caption="{{ l('Capacity') }}"> </dxi-column>
-              <dxi-column dataField="workingTruckStatus" caption="{{ l('RentedStatus') }}"> </dxi-column>
+              <dxi-column cellTemplate="cellTemplate_IsActiveTruckRentedStatus" dataField="workingTruckStatus" caption="{{ l('RentedStatus') }}">
+              </dxi-column>
               <dxi-column dataField="workingShippingRequestReference" caption="{{ l('RentedShippingRequestReference') }}"> </dxi-column>
               <dxi-column dataField="istmaraNumber" caption="{{ l('IstmaraNumber') }}"> </dxi-column>
               <dxi-column
@@ -121,6 +145,28 @@
                 [allowSorting]="false"
               >
               </dxi-column>
+              <div *dxTemplate="let options of 'cellTemplate_IsActiveTruckStatus'">
+                <span
+                  *ngIf="options?.data?.truckStatusDisplayName?.toLowerCase() == l('Active').toLowerCase()"
+                  class="badge badge-primary badge-inline"
+                  >{{ options?.data?.truckStatusDisplayName }}</span
+                >
+                <span
+                  *ngIf="options?.data?.truckStatusDisplayName?.toLowerCase() != l('Active').toLowerCase()"
+                  class="badge badge-dark badge-inline"
+                  >{{ options?.data?.truckStatusDisplayName }}</span
+                >
+              </div>
+              <div *dxTemplate="let options of 'cellTemplate_IsActiveTruckRentedStatus'">
+                <span
+                  *ngIf="options?.data?.workingTruckStatus?.toLowerCase() == l('Active').toLowerCase()"
+                  class="badge badge-primary badge-inline"
+                  >{{ options?.data?.workingTruckStatus }}</span
+                >
+                <span *ngIf="options?.data?.workingTruckStatus?.toLowerCase() != l('Active').toLowerCase()" class="badge badge-dark badge-inline">{{
+                  options?.data?.workingTruckStatus
+                }}</span>
+              </div>
               <div *dxTemplate="let options of 'companyNameTemplate'">
                 {{ hasCarrierClients && options.data.carrierActorName ? options.data.carrierActorName : options.data.companyName }}
               </div>

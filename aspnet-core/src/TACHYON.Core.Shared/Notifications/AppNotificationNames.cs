@@ -68,6 +68,8 @@ namespace TACHYON.Notifications
         public const string TMSTripNeedAccept = "App.TMSTripNeedAccept";
         public const string TripHasAttachment = "App.TripHasAttachment";
         public const string TripNeedsDeliveryNote = "App.NeedsDeliveryNote";
+        public const string TripDeliveredToRate = "App.TripDeliveredToRate";
+        public const string DedicatedRequestCompletedToRate = "App.DedicatedRequestCompletedToRate";
         public const string NotificationWhenTripDetailsChanged = "App.NotificationWhenTripDetailsChanged";
         public const string NotifyShipperWhenTripUpdated = "App.NotifyShipperWhenTripUpdated";
         public const string NotifyCarrierWhenTripUpdated = "App.NotifyCarrierWhenTripUpdated";

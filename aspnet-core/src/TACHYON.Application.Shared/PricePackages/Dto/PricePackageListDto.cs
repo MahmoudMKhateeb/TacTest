@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using System.Collections.Generic;
 using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequests;
@@ -54,5 +54,7 @@ namespace TACHYON.PricePackages.Dto
         public List<int> ServiceAreas { get; set; }
 
         public PricePackageUsageType UsageType { get; set; }
+
+        public RoundTripType? RoundTrip { get; set; }
     }
 }

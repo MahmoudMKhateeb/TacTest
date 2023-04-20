@@ -60,8 +60,8 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
+                    <th style="width: 130px">{{ l('Actions') }}</th>
+                    <th style="width: 150px" pSortableColumn="displayName">
                       {{ l('Name') }}
                       <p-sortIcon field="displayName"></p-sortIcon>
                     </th>
@@ -69,14 +69,14 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;">
+                    <td style="width: 130px">
                       <div class="btn-group dropdown" normalizePosition>
                         <button class="btn btn-sm btn-primary" type="button" (click)="setAndSave(record)">
                           {{ l('Select') }}
                         </button>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.displayName }}
                     </td>
@@ -106,7 +106,7 @@
       </div>
 
       <div class="modal-footer">
-        <button [disabled]="saving" type="button" class="btn btn-primary blue" (click)="close()">{{ l('Close') }}</button>
+        <button [disabled]="saving" type="button" class="btn btn-light blue" (click)="close()">{{ l('Close') }}</button>
       </div>
     </div>
   </div>

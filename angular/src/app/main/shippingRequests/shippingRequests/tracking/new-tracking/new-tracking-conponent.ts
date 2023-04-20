@@ -1,4 +1,4 @@
-import { Component, ElementRef, Injector, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   AdditionalStepTransitionDto,
@@ -51,6 +51,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
   @ViewChild('additionalDocumentsComponent', { static: false }) additionalDocumentsComponent: UploadAdditionalDocumentsComponent;
 
   @Input() trip: TrackingListDto = new TrackingListDto();
+  @Output() getForViewReady: EventEmitter<boolean> = new EventEmitter<boolean>();
   active = false;
   item: number;
 
@@ -228,6 +229,7 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
         this.syncTripInGetForView(this.trip);
         this.handleCanGoNextLocation(result.routPoints);
         this.getTripRouteForMap();
+        this.getForViewReady.emit(true);
       });
   }
 

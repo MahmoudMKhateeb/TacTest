@@ -405,7 +405,13 @@ namespace TACHYON.Tracking.AdditionalSteps
                    RequestRouteType = x.ShippingRequestFk.RouteTypeId,
                    RouteType = x.RouteType,
                    Status = x.Status,
-                   ShipperUser = new UserIdentifier(x.ShippingRequestFk.TenantId, x.ShippingRequestFk.CreatorUserId.Value)
+                   ShipperUser = new UserIdentifier(x.ShippingRequestFk.TenantId, x.ShippingRequestFk.CreatorUserId.Value),
+                   TripShipperTenantId = x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId !=  x.ShippingRequestFk.CarrierTenantId 
+                   ?(int?) x.ShippingRequestFk.TenantId 
+                   :null,
+                   TripCarrierTenantId = x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId
+                   ? (int?)x.ShippingRequestFk.CarrierTenantId
+                   : null
                })
                .FirstOrDefaultAsync();
 
@@ -426,6 +432,15 @@ namespace TACHYON.Tracking.AdditionalSteps
                     {
                         x.Status = ShippingRequestTripStatus.Delivered;
                     });
+                    //send notification about rating
+                    if(trip.ShippingRequestId != null)
+                    {
+                        if(trip.TripShipperTenantId != null)
+                        await _appNotifier.NotifyTenantWithRating(trip.ShippingRequestId, trip.Id, trip.TripShipperTenantId.Value);
+                        if(trip.TripCarrierTenantId != null)
+                        await _appNotifier.NotifyTenantWithRating(trip.ShippingRequestId, trip.Id, trip.TripCarrierTenantId.Value);
+                    }
+                     
                     if (trip.ShippingRequestId != null)
                     {
                         await HandleDeliveredTrip(trip.ShippingRequestId.Value, trip.Id, trip.ShipperUser);

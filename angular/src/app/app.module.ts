@@ -87,7 +87,7 @@ import { MenuSearchBarComponent } from './shared/layout/nav/menu-search-bar/menu
 import { NgxSpinnerModule, NgxSpinnerComponent } from 'ngx-spinner';
 import { ScrollTopComponent } from './shared/layout/scroll-top.component';
 import { AppBsModalModule } from '@shared/common/appBsModal/app-bs-modal.module';
-import { DxButtonModule } from '@node_modules/devextreme-angular';
+import { DxButtonModule } from '@node_modules/devextreme-angular/ui/button';
 import { BalanceTopbarComponent } from './shared/layout/topbar/balance-topbar/balance-topbar.component';
 import { RatingPageComponent } from './rating-page/rating-page.component';
 import { RatingModule } from '@node_modules/primeng/rating';

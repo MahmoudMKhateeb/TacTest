@@ -2,7 +2,7 @@ namespace TACHYON.Dashboards.Shipper.Dto
 {
     public enum BrokerInvoiceType
     {
-        Invoice = 1,
-        SubmitInvoice = 2,
+        ShipperInvoices = 1,
+        CarrierInvoices = 2,
     }
 }

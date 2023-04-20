@@ -31,7 +31,7 @@
             </label>
           </div>
           <div class="modal-footer">
-            <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">
+            <button [disabled]="saving" type="button" class="btn btn-outline-danger" (click)="close()">
               {{ l('Cancel') }}
             </button>
             <button type="submit" class="btn btn-primary" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot' | localize)">

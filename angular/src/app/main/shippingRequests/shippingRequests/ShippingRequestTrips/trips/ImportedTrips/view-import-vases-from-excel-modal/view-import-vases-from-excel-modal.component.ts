@@ -2,8 +2,8 @@ import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@an
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { ImportShipmentFromExcelServiceProxy, ImportTripVasesDto, ImportTripVasesFromExcelInput } from '@shared/service-proxies/service-proxies';
-import { DxPopoverComponent } from '@node_modules/devextreme-angular';
+import { ImportShipmentFromExcelServiceProxy, ImportTripVasesDto } from '@shared/service-proxies/service-proxies';
+import { DxPopoverComponent } from '@node_modules/devextreme-angular/ui/popover';
 
 @Component({
   selector: 'app-view-import-vases-from-excel-modal',

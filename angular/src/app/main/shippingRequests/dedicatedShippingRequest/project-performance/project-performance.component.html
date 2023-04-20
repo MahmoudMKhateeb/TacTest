@@ -5,7 +5,7 @@
       <h3 class="card-label">{{ l('ProjectPerformance') }}</h3>
     </div>
     <div class="actions" *ngIf="isTachyonDealer || isRequestSaas">
-      <button *ngIf="isGranted('Pages.ShippingRequests.Edit')" class="btn btn-danger" (click)="showEditFields()">
+      <button *ngIf="isGranted('Pages.ShippingRequests.Edit')" class="btn btn-primary primary-invert-on-hover" (click)="showEditFields()">
         {{ l('updateKPIForRequest') }}
       </button>
     </div>
@@ -17,7 +17,7 @@
         <div class="input-group">
           <input class="form-control" type="number" name="newKpi" id="newKpi" [(ngModel)]="newKpi" />
           <div class="input-group-append">
-            <button class="btn btn-danger" (click)="updateKPI()">
+            <button class="btn btn-primary" (click)="updateKPI()">
               {{ l('save') }}
             </button>
           </div>

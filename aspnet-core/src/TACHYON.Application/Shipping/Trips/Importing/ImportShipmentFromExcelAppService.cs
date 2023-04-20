@@ -1,4 +1,5 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
@@ -40,8 +41,9 @@ namespace TACHYON.Shipping.Trips.Importing
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepoitory;
         private readonly IRepository<ShippingRequest,long> _shippingRequestRepoitory;
         private readonly IRepository<GoodCategory> _goodCategoryRepoitory;
+        private readonly IFeatureChecker _featureChecker;
 
-        public ImportShipmentFromExcelAppService(IBinaryObjectManager binaryObjectManager, IShipmentListExcelDataReader shipmentListExcelDataReader, ShippingRequestTripManager shippingRequestTripManager, IRoutePointListDataReader routePointListExcelDataReader, IRepository<RoutPoint, long> routPointRepository, IGoodsDetailsListExcelDataReader goodsDetailsListExcelDataReader, IRepository<GoodsDetail, long> goodsDetailRepository, IImportTripVasesDataReader importTripVasesDataReader, IRepository<ShippingRequestTripVas, long> shippingRequestTripVas, IRepository<ShippingRequestTrip> shippingRequestTripRepoitory, IRepository<ShippingRequest, long> shippingRequestRepoitory, IRepository<GoodCategory> goodCategoryRepoitory)
+        public ImportShipmentFromExcelAppService(IBinaryObjectManager binaryObjectManager, IShipmentListExcelDataReader shipmentListExcelDataReader, ShippingRequestTripManager shippingRequestTripManager, IRoutePointListDataReader routePointListExcelDataReader, IRepository<RoutPoint, long> routPointRepository, IGoodsDetailsListExcelDataReader goodsDetailsListExcelDataReader, IRepository<GoodsDetail, long> goodsDetailRepository, IImportTripVasesDataReader importTripVasesDataReader, IRepository<ShippingRequestTripVas, long> shippingRequestTripVas, IRepository<ShippingRequestTrip> shippingRequestTripRepoitory, IRepository<ShippingRequest, long> shippingRequestRepoitory, IRepository<GoodCategory> goodCategoryRepoitory, IFeatureChecker featureChecker)
         {
             _binaryObjectManager = binaryObjectManager;
             _shipmentListExcelDataReader = shipmentListExcelDataReader;
@@ -55,12 +57,17 @@ namespace TACHYON.Shipping.Trips.Importing
             _shippingRequestTripRepoitory = shippingRequestTripRepoitory;
             _shippingRequestRepoitory = shippingRequestRepoitory;
             _goodCategoryRepoitory = goodCategoryRepoitory;
+            _featureChecker = featureChecker;
         }
 
         #region ImportTrips
         public async Task<List<ImportTripDto>> ImportShipmentFromExcel(ImportShipmentFromExcelInput importShipmentFromExcelInput)
         {
             await DisableTenancyFiltersIfTachyonDealer();
+            if(!await IsTachyonDealer() && !_featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.ImportFunctionality))
+            {
+                throw new UserFriendlyException(L("YouDonnotHaveAccessToImportFunctionality"));
+            }
             List<ImportTripDto> trips;
             if (importShipmentFromExcelInput.ShippingRequestId != null)
             {
@@ -228,7 +235,7 @@ namespace TACHYON.Shipping.Trips.Importing
             foreach (var trip in Trips)
             {
                 var tripItem = ObjectMapper.Map<ShippingRequestTrip>(trip);
-                tripItem.SaasInvoicingActivation = await _shippingRequestTripManager.GetSaasInvoicingActivation(trip.ShippingRequestId != null ? request.TenantId : tripItem.ShipperTenantId.Value);
+                
 
 
                 if (((request != null && request.RouteTypeId == ShippingRequestRouteType.SingleDrop)) || trip.RouteType == ShippingRequestRouteType.SingleDrop)
@@ -269,9 +276,11 @@ namespace TACHYON.Shipping.Trips.Importing
                     if(request != null) AddRequestVasesAutomaticToDedicatedTrip(request, tripItem);
 
                     // Assign tenant to saas trip
-                    if (request == null) tripItem.ShipperTenantId = AbpSession.TenantId; tripItem.CarrierTenantId = AbpSession.TenantId;
+                    if (request == null) tripItem.ShipperTenantId = AbpSession.TenantId;
+                    tripItem.CarrierTenantId = AbpSession.TenantId;
                 }
 
+                tripItem.SaasInvoicingActivation = await _shippingRequestTripManager.GetSaasInvoicingActivation(trip.ShippingRequestId != null ? request.TenantId : tripItem.ShipperTenantId.Value);
                 var r = await  _shippingRequestTripRepoitory.InsertAndGetIdAsync(tripItem);
 
             }
@@ -437,10 +446,10 @@ namespace TACHYON.Shipping.Trips.Importing
                     return _goodsDetailsListExcelDataReader.GetGoodsDetailsFromExcel(file.Bytes, input.ShippingRequestId, requestGoodsCategory, isSingleDropRequest, isDedicatedRequest);
                 }
                 catch
-                {
-                    return null;
-                }
+            {
+                return null;
             }
+        }
         }
 
         private async Task<List<ImportTripVasesDto>> GetTripVasListFromExcelOrNull(ImportTripVasesFromExcelInput input,long ShippingRequestId)
@@ -531,7 +540,7 @@ namespace TACHYON.Shipping.Trips.Importing
                 {
                     list.Where(x => x.TripReference == tripRef)
                     .ToList()
-                    .ForEach(y => y.Exception += L("InvalidTrip"));
+                    .ForEach(y => y.Exception += L("InvalidTripReference")+ "; ");
                 }
                 else
                 {
@@ -541,7 +550,7 @@ namespace TACHYON.Shipping.Trips.Importing
 
                     if(trip.RouteType == ShippingRequestRouteType.MultipleDrops && list.Where(x=>x.TripReference == tripRef).Any(x=> string.IsNullOrEmpty(x.PointReference)))
                     {
-                        list.Where(x => x.TripReference == tripRef && string.IsNullOrEmpty(x.PointReference)).ForEach(x => x.Exception += L("InvalidPointReference"));
+                        list.Where(x => x.TripReference == tripRef && string.IsNullOrEmpty(x.PointReference)).ForEach(x => x.Exception += L("InvalidPointReference") +"; ");
                     }
                 }
             }
@@ -596,10 +605,18 @@ namespace TACHYON.Shipping.Trips.Importing
                     var tripGoodsCategory = _shippingRequestTripRepoitory.GetAll().Select(x => new { x.GoodCategoryId, x.BulkUploadRef, x.ShipperTenantId, x.GoodCategoryFk.Key })
                         .FirstOrDefault(x => x.BulkUploadRef == tripGoodsDetails.tripRef && x.ShipperTenantId == AbpSession.TenantId);
                     var subgoods = tripGoodsDetails.importGoodsDetailsDtoList.Select(x => x.GoodCategoryId);
-                    var AllsubIdsNotFromFather = _goodCategoryRepoitory.GetAll().Where(x => subgoods.Contains(x.Id) && x.FatherId != tripGoodsCategory.GoodCategoryId).Select(x=>x.Id).ToList();
+                    if(tripGoodsCategory == null)
+                    {
+                        tripGoodsDetails.importGoodsDetailsDtoList.ForEach(x =>
+                        {
+                            x.Exception = L("InvalidTripReference") + ";";
+                        });
+                        continue;
+                    }
+                    var AllsubIdsNotFromFather = _goodCategoryRepoitory.GetAll().Where(x => subgoods.Contains(x.Id) && x.FatherId != tripGoodsCategory.GoodCategoryId).Select(x => x.Id).ToList();
                     tripGoodsDetails.importGoodsDetailsDtoList.Where(x => AllsubIdsNotFromFather.Contains(x.GoodCategoryId.Value)).ForEach(x =>
                     {
-                        x.Exception = L("CategoryMustBeSubFromTrip")+" - "+ tripGoodsCategory.Key + ";";
+                        x.Exception += L("CategoryMustBeSubFromTrip") + " - " + tripGoodsCategory.Key + ";";
                     });
                 }
             }
@@ -626,7 +643,7 @@ namespace TACHYON.Shipping.Trips.Importing
             if (!allDropsGoodsDetailsExists)
             {
                 tripGoodsDetails.importGoodsDetailsDtoList.ForEach(x =>
-                x.Exception = L("AllDropsMustHaveGoodsDetails") + ";");
+                x.Exception += L("AllDropsMustHaveGoodsDetails") + ";");
             }
         }
 
@@ -639,7 +656,7 @@ namespace TACHYON.Shipping.Trips.Importing
             catch
             {
                 tripGoodsDetails.importGoodsDetailsDtoList.ForEach(x =>
-                x.Exception =
+                x.Exception +=
                     L("TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight", request.TotalWeight) + ";");
             }
         }
@@ -655,7 +672,7 @@ namespace TACHYON.Shipping.Trips.Importing
             if (goodsDetailsExistsForTrip)
             {
                 tripGoodsDetails.importGoodsDetailsDtoList.ForEach(x =>
-                x.Exception = L("GoodsDetailsAlreadyExistsForTrip") + " " + tripGoodsDetails.tripRef + ";");
+                x.Exception += L("GoodsDetailsAlreadyExistsForTrip") + " " + tripGoodsDetails.tripRef + ";");
             }
         }
 

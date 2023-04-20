@@ -9,17 +9,17 @@ using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
-using DevExpress.XtraRichEdit.Model;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using NUglify.Helpers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.AddressBook;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
+using TACHYON.Cities;
 using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Features;
@@ -28,7 +28,6 @@ using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.PricePackages.Dto;
 using TACHYON.PricePackages.PricePackageOffers;
-using TACHYON.ServiceAreas;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
@@ -52,6 +51,8 @@ namespace TACHYON.PricePackages
         private readonly IRepository<TrucksType, long> _truckTypeRepository;
         private readonly IRepository<TransportType> _transportTypeRepository;
         private readonly IShippingRequestDirectRequestAppService _directRequestAppService;
+        private readonly IRepository<City> _cityRepository;
+        private readonly IRepository<Facility,long> _facilityRepository;
 
         public PricePackageAppService(
             IRepository<PricePackage,long> pricePackageRepository,
@@ -66,7 +67,9 @@ namespace TACHYON.PricePackages
             IPricePackageOfferManager pricePackageOfferManager, 
             IRepository<TrucksType, long> truckTypeRepository,
             IRepository<TransportType> transportTypeRepository,
-            IShippingRequestDirectRequestAppService directRequestAppService)
+            IShippingRequestDirectRequestAppService directRequestAppService,
+            IRepository<City> cityRepository,
+            IRepository<Facility, long> facilityRepository)
         {
             _pricePackageRepository = pricePackageRepository;
             _tenantRepository = tenantRepository;
@@ -81,6 +84,8 @@ namespace TACHYON.PricePackages
             _truckTypeRepository = truckTypeRepository;
             _transportTypeRepository = transportTypeRepository;
             _directRequestAppService = directRequestAppService;
+            _cityRepository = cityRepository;
+            _facilityRepository = facilityRepository;
         }
 
 
@@ -432,7 +437,30 @@ namespace TACHYON.PricePackages
                     Id = p.Id.ToString()
                 }).ToListAsync();
         }
-        
+
+        public async Task<List<PricePackageLocationSelectItemDto>> GetPricePackageLocations(PricePackageLocationType locationType,int? countryId)
+        {
+            if (locationType == PricePackageLocationType.City)
+            {
+                return await _cityRepository.GetAll()
+                    .WhereIf(countryId.HasValue,x=> x.CountyId == countryId)
+                    .Select(city => new PricePackageLocationSelectItemDto
+                    {
+                        CityId = city.Id,Id = $"{PricePackageLocationType.City.ToString()} {city.Id}",
+                        DisplayName = city == null ? string.Empty : city.DisplayName,
+                        LocationType = PricePackageLocationType.City
+                    }).ToListAsync();
+            }
+            
+            return await _facilityRepository.GetAll().Where(x=> x.FacilityType == FacilityType.Port)
+                .Select(port => new PricePackageLocationSelectItemDto
+                {
+                    CityId = port.CityId, Id = $"{PricePackageLocationType.Port.ToString()} {port.Id}",
+                    DisplayName = port == null ? string.Empty : port.Name,
+                    PortId = port.Id,
+                    LocationType = PricePackageLocationType.Port
+                }).ToListAsync();
+        }
 
         #endregion
     }

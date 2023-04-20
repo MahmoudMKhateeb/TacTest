@@ -99,7 +99,7 @@ namespace TACHYON.PricePackages
         
         public string GeneratePricePackageReferenceNumber(PricePackage pricePackage)
         {
-            string routType = pricePackage.RouteType == ShippingRequestRouteType.MultipleDrops ? "MUL" : "SDR";
+            string routType = pricePackage.RouteType is null ? "DR" : pricePackage.RouteType == ShippingRequestRouteType.MultipleDrops ? "MUL" : "SDR";
             string formatDate = pricePackage.CreationTime.ToString("ddMMyy");
             long referenceId = pricePackage.Id + 1_000L;
             // NCP ===> Normal Carrier Package

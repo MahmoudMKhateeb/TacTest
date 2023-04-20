@@ -11,7 +11,7 @@ import {
   NoteType,
 } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { DxDataGridComponent } from 'devextreme-angular';
+import { DxDataGridComponent } from 'devextreme-angular/ui/data-grid';
 import CustomStore from 'devextreme/data/custom_store';
 import { LoadOptions } from 'devextreme/data/load_options';
 import { CreateOrEditNoteModalComponent } from './create-or-edit-note-modal/create-or-edit-note-modal.component';

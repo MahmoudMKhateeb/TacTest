@@ -486,10 +486,12 @@ namespace TACHYON.Invoices
 
             if (period.PeriodType != InvoicePeriodType.PayInAdvance)
             {
+                string paymentMethod = await _featureChecker.GetValueAsync(tenant.Id, AppFeatures.InvoicePaymentMethod);
+                
                 var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync
                 (
                     x =>
-                        x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.InvoicePaymentMethod))
+                        x.Id == int.Parse(paymentMethod)
                 );
                 if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
                 {
@@ -515,6 +517,7 @@ namespace TACHYON.Invoices
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.Trip,
                     Status = InvoiceStatus.Drafted,
+                    ConsiderConfirmationAndLoadingDates = true,
                     Trips = normalTrips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
                 };
                 invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
@@ -544,6 +547,7 @@ namespace TACHYON.Invoices
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.SaasTrip,
                     Status = InvoiceStatus.Drafted,
+                    ConsiderConfirmationAndLoadingDates = true,
                     Trips = saasTrips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
                 };
                 invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
@@ -589,6 +593,9 @@ namespace TACHYON.Invoices
 
             await _balanceManager.CheckShipperOverLimit(tenant);
             invoice.Status = InvoiceStatus.Confirmed;
+            invoice.ConfirmationDate = Clock.Now;
+            invoice.ConsiderConfirmationAndLoadingDates = true;
+            // consider confirmation date in invoice report from the date of release this update on servers
             await _appNotifier.NewInvoiceShipperGenerated(invoice);
         }
 
@@ -932,6 +939,7 @@ namespace TACHYON.Invoices
             var trip = await _shippingRequestTrip
                 .GetAllIncluding(d => d.ShippingRequestTripVases)
                 .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
+                .Include(x=>x.ShipperTenantFk)
                 .FirstOrDefaultAsync(t => t.Id == tripId);
 
            await GenertateInvoiceWhenShipmintDelivery(trip);
@@ -980,15 +988,17 @@ namespace TACHYON.Invoices
                     .Include(x => x.ShippingRequestTripVases)
                     .Where
                     (
-                        x => x.ShippingRequestFk.TenantId == tenant.Id &&
+                        x => ((x.ShippingRequestId.HasValue && x.ShippingRequestFk.TenantId == tenant.Id) || x.ShipperTenantId == tenant.Id) &&
                              tripIdsList.Contains(x.Id) &&
                              !x.IsShipperHaveInvoice &&
                              //waybills.Contains(x.Id) &&
                              (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
-                             x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation ||
-                              x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
+                             x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
+                             ||
+                              x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced
+                              )
                     );
-                if (trips != null && trips.Count() > 0)
+                if (trips != null && trips.Any())
                 {
                     await GenerateShipperInvoice(tenant, trips.ToList(), period);
                 }

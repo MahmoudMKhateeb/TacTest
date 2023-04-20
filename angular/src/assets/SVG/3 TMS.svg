@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="_3_TMS" data-name="3 TMS" transform="translate(-300 -188)">
+    <g id="house-2">
+      <path id="Vector" d="M0,0H24V24H0Z" transform="translate(300 188)" fill="none" opacity="0"/>
+      <g id="Group">
+        <path id="Vector-2" data-name="Vector" d="M21.5.75a.755.755,0,0,1-.75.75H.75A.75.75,0,0,1,.75,0h20A.749.749,0,0,1,21.5.75Z" transform="translate(301.25 209.25)" fill="#dc2434"/>
+      </g>
+      <path id="Vector-3" data-name="Vector" d="M18.05,7.447v11.27H0L.05,7.437a1.985,1.985,0,0,1,.77-1.57l7-5.44a1.983,1.983,0,0,1,2.46,0l7,5.44A1.99,1.99,0,0,1,18.05,7.447Z" transform="translate(302.95 190.533)" fill="#dc2434" opacity="0.4"/>
+      <g id="Group-2" data-name="Group">
+        <path id="Vector-4" data-name="Vector" d="M3.75,1.5h-3A.755.755,0,0,1,0,.75.755.755,0,0,1,.75,0h3A.755.755,0,0,1,4.5.75.755.755,0,0,1,3.75,1.5Z" transform="translate(309.75 194.75)" fill="#dc2434"/>
+      </g>
+      <path id="Vector-5" data-name="Vector" d="M8.5,0h-7A1.5,1.5,0,0,0,0,1.5V11H10V1.5A1.5,1.5,0,0,0,8.5,0ZM3.75,6.75a.75.75,0,0,1-1.5,0V5.25a.75.75,0,0,1,1.5,0Z" transform="translate(307 199)" fill="#dc2434"/>
+    </g>
+  </g>
+</svg>

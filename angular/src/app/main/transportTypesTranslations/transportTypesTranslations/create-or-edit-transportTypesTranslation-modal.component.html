@@ -31,7 +31,7 @@
               required
             >
               <option value="">{{ l('SelectATransportType') }}</option>
-              <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.translatedDisplayName }} </option>
+              <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.translatedDisplayName }}</option>
             </select>
           </div>
 
@@ -68,7 +68,6 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
           <button
             type="submit"
             class="btn btn-primary blue"
@@ -78,6 +77,7 @@
           >
             <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
           </button>
+          <button [disabled]="saving" type="button" class="btn btn-outline-danger" (click)="close()">{{ l('Cancel') }}</button>
         </div>
       </form>
     </div>

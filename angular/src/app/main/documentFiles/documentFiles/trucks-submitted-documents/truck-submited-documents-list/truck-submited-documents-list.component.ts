@@ -18,7 +18,6 @@ import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
 import { ViewDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/view-documentFile-modal.component';
-import { DxDataGridComponent } from '@node_modules/devextreme-angular';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import session = abp.session;
 
@@ -31,7 +30,6 @@ import session = abp.session;
   providers: [DateFormatterService, EnumToArrayPipe],
 })
 export class TruckSubmitedDocumentsListComponent extends AppComponentBase implements OnInit {
-  @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
   @ViewChild('createOrEditDocumentFileModal', { static: true }) createOrEditDocumentFileModal: CreateOrEditDocumentFileModalComponent;
   @ViewChild('viewDocumentFileModalComponent', { static: true }) viewDocumentFileModal: ViewDocumentFileModalComponent;

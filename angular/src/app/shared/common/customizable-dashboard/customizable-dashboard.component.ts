@@ -23,7 +23,6 @@ import { AddWidgetModalComponent } from './add-widget-modal/add-widget-modal.com
 import { DashboardCustomizationConst } from './DashboardCustomizationConsts';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import * as rtlDetect from 'rtl-detect';
-import * as moment from '@node_modules/moment';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
