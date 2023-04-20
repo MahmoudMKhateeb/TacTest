@@ -183,7 +183,7 @@ namespace TACHYON.Shipping.Trips
                     StartTripDate = x.StartTripDate,
                     EndTripDate = x.EndTripDate,
                     StartWorking = x.StartWorking,
-                    EndWorking = x.EndTripDate,
+                    EndWorking = x.EndWorking,
                     Status = x.Status.ToString(),
                     Driver = x.AssignedDriverUserFk.Name + " " + x.AssignedDriverUserFk.Surname,
                     Truck = x.AssignedTruckFk.PlateNumber,
