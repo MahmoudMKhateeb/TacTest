@@ -357,7 +357,8 @@ namespace TACHYON.Invoices
                 .Include(i => i.Items)
                 .ThenInclude(x => x.ShippingRequestTrip)
                 .ThenInclude(x => x.ShippingRequestFk)
-                .ThenInclude(x => x.DestinationCityFk)
+                .ThenInclude(x => x.ShippingRequestDestinationCities)
+                .ThenInclude(x=>x.CityFk)
                 .Include(i => i.Items)
                 .ThenInclude(x => x.ShippingRequestTrip)
                 .ThenInclude(x => x.AssignedTruckFk)
@@ -728,6 +729,7 @@ namespace TACHYON.Invoices
                     trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements) ? trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops.ToString()
                     :L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops)
                     :"1",
+                    BookingNumber = trip.ShippingRequestTripFK.ShippingRequestId != null ?trip.ShippingRequestTripFK.ShippingRequestFk.ShipperInvoiceNo :""
                 }); 
                 Sequence++;
                 if (trip.ShippingRequestTripFK.ShippingRequestTripVases != null &&
@@ -905,6 +907,8 @@ namespace TACHYON.Invoices
                     VatTax = item.VatTax,
                     TotalAmount = item.TotalAmount,
                     RoundTrip = item.Description,
+                    BookingNumber = item.ShippingRequestTrip != null && item.ShippingRequestTrip.ShippingRequestFk != null 
+                    ? item.ShippingRequestTrip.ShippingRequestFk.ShipperInvoiceNo :""
 
                 };
 
@@ -958,10 +962,16 @@ namespace TACHYON.Invoices
                 }
 
                 //Destination
-                if (item.ShippingRequestTrip != null)
+                if (item.ShippingRequestTrip != null && item.ShippingRequestTrip.ShippingRequestFk != null)
                 {
-                    CityDto cityDto = ObjectMapper.Map<CityDto>(item.ShippingRequestTrip.ShippingRequestFk.DestinationCityFk);
-                    invoiceItemDto.Destination = cityDto?.NormalizedDisplayName;
+                    int index = 1;
+                    foreach (var city in item.ShippingRequestTrip.ShippingRequestFk.ShippingRequestDestinationCities)
+                    {
+                        if(index == 1) invoiceItemDto.Destination = city.CityFk?.DisplayName;
+                        else invoiceItemDto.Destination += ", " +city.CityFk?.DisplayName;
+                        index++;
+                    }
+                    
 
                 }
                 else

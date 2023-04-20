@@ -64,6 +64,7 @@ namespace TACHYON.Tracking.Dto
         public string ShippingTypeTitle { get; set; }
         public string ContainerNumber { get; set; }
         public string PlateNumber { get; set; }
+        public string BookingNumber { get; set; }
 
         #region Dedicated
         public int NumberOfTrucks { get; set; }

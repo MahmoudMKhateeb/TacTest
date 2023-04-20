@@ -2434,7 +2434,7 @@
 		<text name="DocumentTypeName">اسم نوع المستند</text>
 		<text name="submitterTenatTenancyName">اسم الشركة المرسلة</text>
 		<text name="ShipperReference">رقم فاتورة المراجعة</text>
-		<text name="ShipperInvoiceNumber">مرجع المرسل</text>
+		<text name="ShipperBookingNumber">رقم الحجز</text>
 		<text name="OriginCountry">دولة الإنطلاق</text>
 		<text name="DestinationCountry">دولة الوصول</text>
 		<text name="SelectanOriginCountry">اختر دولة الإنطلاق</text>

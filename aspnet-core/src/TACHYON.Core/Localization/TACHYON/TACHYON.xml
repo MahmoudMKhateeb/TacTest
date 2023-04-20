@@ -2660,7 +2660,7 @@
     <text name="DocumentTypeName">Document type</text>
     <text name="submitterTenatTenancyName">Submitter company</text>
     <text name="ShipperReference">Shipper reference</text>
-    <text name="ShipperInvoiceNumber">Shipper invoice</text>
+    <text name="ShipperBookingNumber">Shipper booking number</text>
     <text name="OriginCountry">Origin country</text>
     <text name="DestinationCountry">Destination country</text>
     <text name="SelectanOriginCountry">Select origin country</text>
