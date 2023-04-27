@@ -3087,7 +3087,6 @@
     <text name="RateShippingExp">يمكنك تقييم تجربة الشحن مع {0}</text>
     <text name="ExportNormalToExcel">تصدير الطلبات</text>
     <text name="ExportDedicatedToExcel">تصدير طلبات التأجير </text>
-    <text name="HomeDeliveryFeature">توصيل منزلي</text>
     <text name="ConfirmationDate">تاريخ التأكيد</text>
 		
 	</texts>
