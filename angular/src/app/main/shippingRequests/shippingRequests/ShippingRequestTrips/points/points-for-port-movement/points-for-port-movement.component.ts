@@ -22,12 +22,45 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
   styleUrls: ['./points-for-port-movement.component.scss'],
 })
 export class PointsForPortsMovementComponent extends AppComponentBase implements OnInit {
+  PickingType = PickingType;
+  activePointIndex: number;
+  filteredPickupFacilities: FacilityForDropdownDto[][] = [];
+  filteredDropFacilities: FacilityForDropdownDto[][] = [];
+
   @ViewChild('appointmentAndClearanceModal', { static: true }) appointmentAndClearanceModal: AppointmentAndClearanceModalComponent;
   @Input('isEdit') isEdit = false;
   @Input('wayPointsList') wayPointsList: CreateOrEditRoutPointDto[] = [];
+  _pickupFacilities: FacilityForDropdownDto[] = [];
+  @Input('pickupFacilities') set pickupFacilities(value: FacilityForDropdownDto[]) {
+    this._pickupFacilities = value;
+    if (this.wayPointsList.length > 0) {
+      for (let i = 0; i < this.wayPointsList.length; i++) {
+        this.wayPointsList[i].pickingType === PickingType.Pickup
+          ? (this.filteredPickupFacilities[i] = this.filterFacilitiesForDropDown(this.wayPointsList[i].pickingType === PickingType.Pickup, i))
+          : (this.filteredDropFacilities[i] = this.filterFacilitiesForDropDown(this.wayPointsList[i].pickingType === PickingType.Pickup, i));
+      }
+    }
+  }
+  get pickupFacilities(): FacilityForDropdownDto[] {
+    return this._pickupFacilities;
+  }
+
+  _dropFacilities: FacilityForDropdownDto[] = [];
+  @Input('dropFacilities') set dropFacilities(value: FacilityForDropdownDto[]) {
+    this._dropFacilities = value;
+    if (this.wayPointsList.length > 0) {
+      for (let i = 0; i < this.wayPointsList.length; i++) {
+        this.wayPointsList[i].pickingType === PickingType.Pickup
+          ? (this.filteredPickupFacilities[i] = this.filterFacilitiesForDropDown(this.wayPointsList[i].pickingType === PickingType.Pickup, i))
+          : (this.filteredDropFacilities[i] = this.filterFacilitiesForDropDown(this.wayPointsList[i].pickingType === PickingType.Pickup, i));
+      }
+    }
+  }
+  get dropFacilities(): FacilityForDropdownDto[] {
+    return this._dropFacilities;
+  }
+
   @Input('usedIn') usedIn: 'view' | 'createOrEdit';
-  @Input('pickupFacilities') pickupFacilities: FacilityForDropdownDto[] = [];
-  @Input('dropFacilities') dropFacilities: FacilityForDropdownDto[] = [];
   @Input('allPointsSendersAndReceivers') allPointsSendersAndReceivers: ReceiverFacilityLookupTableDto[][] = [];
   @Input('facilityLoading') facilityLoading: boolean;
   @Input('receiverLoading') receiverLoading: boolean;
@@ -47,8 +80,6 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
     tripClearance: TripClearancePricesDto;
     pointIndex: number;
   }>();
-  PickingType = PickingType;
-  activePointIndex: number;
 
   constructor(
     injector: Injector,
@@ -73,7 +104,11 @@ export class PointsForPortsMovementComponent extends AppComponentBase implements
 
   RouteStepCordSetter(index: number, facilityId: number) {
     this.RouteStepCordSetterEvent.emit({ index, facilityId });
-    if (((index < 3 && !this.isExportRequest) || (index > 0 && index < 5 && this.isExportRequest)) && this.wayPointsList[index + 1]) {
+    if (
+      ((index < 3 && !this.isExportRequest) || (index > 0 && index < 5 && this.isExportRequest)) &&
+      this.wayPointsList[index + 1] &&
+      this.wayPointsList[index + 1].pickingType === PickingType.Pickup
+    ) {
       this.wayPointsList[index + 1].facilityId = facilityId;
     }
     this.wayPointsList[index].dropNeedsAppointment = this.wayPointsList[index].dropNeedsClearance = false;

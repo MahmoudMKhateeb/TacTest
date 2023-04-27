@@ -92,6 +92,7 @@ import { BalanceTopbarComponent } from './shared/layout/topbar/balance-topbar/ba
 import { RatingPageComponent } from './rating-page/rating-page.component';
 import { RatingModule } from '@node_modules/primeng/rating';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { DxSelectBoxModule } from '@node_modules/devextreme-angular/ui/select-box';
 
 @NgModule({
   declarations: [
