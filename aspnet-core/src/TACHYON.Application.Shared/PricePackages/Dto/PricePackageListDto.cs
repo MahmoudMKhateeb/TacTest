@@ -56,5 +56,7 @@ namespace TACHYON.PricePackages.Dto
         public PricePackageUsageType UsageType { get; set; }
 
         public RoundTripType? RoundTrip { get; set; }
+        
+        public ShippingTypeEnum ShippingTypeId { get; set; }
     }
 }

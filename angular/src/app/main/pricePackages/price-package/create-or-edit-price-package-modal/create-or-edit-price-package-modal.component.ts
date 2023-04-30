@@ -1,33 +1,39 @@
 /* tslint:disable:triple-equals */
-import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
-import { AppComponentBase } from '@shared/common/app-component-base';
-import { ModalDirective } from 'ngx-bootstrap/modal';
+import {Component, EventEmitter, Injector, OnInit, Output, ViewChild} from '@angular/core';
+import {AppComponentBase} from '@shared/common/app-component-base';
+import {ModalDirective} from 'ngx-bootstrap/modal';
 import {
-  CarriersForDropDownDto,
-  CompanyType,
-  CreateOrEditPricePackageDto,
-  CreateOrEditServiceAreaDto,
-  PricePackageLocationSelectItemDto,
-  PricePackageLocationType,
-  PricePackageServiceProxy,
-  PricePackageType,
-  PricePackageUsageType,
-  RoundTripType,
-  SelectItemDto,
-  ShippingRequestRouteType,
-  ShippingRequestsServiceProxy,
-  ShippingTypeEnum,
-  TenantRegistrationServiceProxy,
+    CarriersForDropDownDto,
+    CompanyType,
+    CreateOrEditPricePackageDto,
+    CreateOrEditServiceAreaDto,
+    PricePackageLocationSelectItemDto,
+    PricePackageLocationType,
+    PricePackageServiceProxy,
+    PricePackageType,
+    PricePackageUsageType,
+    RoundTripType,
+    SelectItemDto,
+    ShippingRequestRouteType,
+    ShippingRequestsServiceProxy,
+    ShippingTypeEnum,
+    TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
-import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import {EnumToArrayPipe} from '@shared/common/pipes/enum-to-array.pipe';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
-import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import { DxDataGridComponent } from '@node_modules/devextreme-angular';
-import { TmsPricePackagePricingMethod } from '@app/main/pricePackages/price-package/create-or-edit-price-package-modal/tms-price-package-pricing-method';
-import { TmsPricePackageCommissionType } from '@app/main/pricePackages/price-package/create-or-edit-price-package-modal/tms-price-package-commission-type';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
-import { finalize } from '@node_modules/rxjs/operators';
-import { DestinationCompanyType } from '@app/main/pricePackages/price-package-appendix/create-or-edit-price-package-appendix/destination-company-type';
+import {LoadOptions} from '@node_modules/devextreme/data/load_options';
+import {DxDataGridComponent} from '@node_modules/devextreme-angular';
+import {
+    TmsPricePackagePricingMethod
+} from '@app/main/pricePackages/price-package/create-or-edit-price-package-modal/tms-price-package-pricing-method';
+import {
+    TmsPricePackageCommissionType
+} from '@app/main/pricePackages/price-package/create-or-edit-price-package-modal/tms-price-package-commission-type';
+import {isNotNullOrUndefined} from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import {finalize} from '@node_modules/rxjs/operators';
+import {
+    DestinationCompanyType
+} from '@app/main/pricePackages/price-package-appendix/create-or-edit-price-package-appendix/destination-company-type';
 
 @Component({
   selector: 'app-create-or-edit-price-package-modal',
@@ -79,7 +85,7 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   shippingTypeEnum = ShippingTypeEnum;
   pricePackageOriginLocations: PricePackageLocationSelectItemDto[];
   pricePackageDestinationLocations: PricePackageLocationSelectItemDto[];
-  serviceAreasList: SelectItemDto[];
+  selectedServiceAreas: PricePackageLocationSelectItemDto[];
   originLocationId: string;
   destinationLocationId: string;
 
@@ -243,6 +249,7 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     this.companiesLoading = false;
     this.truckTypeLoading = false;
     this.dataSource = {};
+    this.selectedServiceAreas = undefined;
     this.modal.hide();
   }
 
@@ -304,11 +311,14 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
       this.pricePackageDto.usageType = undefined;
     }
     if (isNotNullOrUndefined(this.pricePackageDto?.serviceAreas)) {
-      this.pricePackageDto.serviceAreas = this.pricePackageDto.serviceAreas.map((item) => {
-        let dto = new CreateOrEditServiceAreaDto();
-        dto.cityId = +(item as any).id;
-        return dto;
-      });
+        this.pricePackageDto.serviceAreas = this.selectedServiceAreas.map((item) => {
+            let dto = new CreateOrEditServiceAreaDto();
+            dto.cityId = +item.cityId;
+            if (item instanceof CreateOrEditServiceAreaDto) {
+                dto.id = +item.id;
+            }
+            return dto;
+        });
     }
 
     this.pricePackageDto.originLocation = this.pricePackageOriginLocations.find((x) => x.id == this.originLocationId);
@@ -579,9 +589,11 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
           return selectItem;
         });
 
-      this.gerPricePackageLocations(PricePackageLocationType.Port);
+      this.getPricePackageLocations(PricePackageLocationType.Port);
+    } else if (this.pricePackageDto.type == this.pricePackageType.Dedicated) {
+        this.getPricePackageLocations(PricePackageLocationType.City, this.pricePackageDto.originCountryId);
     } else {
-      this.gerPricePackageLocations(PricePackageLocationType.City);
+      this.getPricePackageLocations(PricePackageLocationType.City);
     }
 
     if (this.companyType == this.companyTypeEnum.Shipper) {
@@ -589,8 +601,8 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     }
   }
 
-  private gerPricePackageLocations(type: PricePackageLocationType) {
-    this._pricePackagesServiceProxy.getPricePackageLocations(type, undefined).subscribe((result) => {
+  private getPricePackageLocations(type: PricePackageLocationType, countryId?: number | undefined) {
+    this._pricePackagesServiceProxy.getPricePackageLocations(type, countryId).subscribe((result) => {
       if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
         this.pricePackageOriginLocations = result;
         this.pricePackageDto.originLocation = undefined;
@@ -655,4 +667,33 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     this.pricePackageDto.destinationLocation = undefined;
     this.loadCountries();
   }
+
+    logDto(event) {
+
+        console.log('event====>');
+        console.log(event);
+
+        console.log('_________Before Map________');
+        console.log(this.pricePackageDto);
+        console.log('______________________');
+
+        if (isNotNullOrUndefined(this.selectedServiceAreas)) {
+            console.log('service area is not null or undefined');
+            this.pricePackageDto.serviceAreas = this.selectedServiceAreas.map((item) => {
+                console.log('item');
+                console.log(item);
+                let dto = new CreateOrEditServiceAreaDto();
+                dto.cityId = item.cityId;
+                console.log('dto');
+                console.log(dto);
+                if (item instanceof CreateOrEditServiceAreaDto) {
+                    dto.id = item.id;
+                }
+                return dto;
+            });
+
+            console.log('_________After Map________');
+            console.log(this.pricePackageDto);
+        }
+    }
 }

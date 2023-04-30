@@ -52,6 +52,61 @@
                   {{ 'PricePackageInvalidDisplayNameMsg' | localize }}
                 </div>
               </div>
+
+                <div
+                    *ngIf="
+                  pricePackageDto.type == pricePackageType.Dedicated ||
+                  pricePackageDto.shippingTypeId == shippingTypeEnum.ExportPortMovements ||
+                  pricePackageDto.shippingTypeId == shippingTypeEnum.ImportPortMovements
+                "
+                    class="form-group col-md-6"
+                >
+                    <label>{{ l('ProjectName') }} </label>
+                    <input
+                        [(ngModel)]="pricePackageDto.projectName"
+                        minlength="3"
+                        maxlength="150"
+                        name="projectName"
+                        type="text"
+                        class="form-control"
+                        #projectName="ngModel"
+                        [ngClass]="{
+                    'is-invalid': projectName.invalid && (projectName.dirty || projectName.touched),
+                    'is-valid': projectName.valid && (projectName.dirty || projectName.touched)
+                  }"
+                    />
+                    <div *ngIf="projectName.invalid && (projectName.dirty || projectName.touched)" class="invalid-feedback">
+                        {{ 'PricePackageInvalidProjectNameMsg' | localize }}
+                    </div>
+                </div>
+
+                <div
+                    *ngIf="
+                  pricePackageDto.type == pricePackageType.Dedicated ||
+                  pricePackageDto.shippingTypeId == shippingTypeEnum.ExportPortMovements ||
+                  pricePackageDto.shippingTypeId == shippingTypeEnum.ImportPortMovements
+                "
+                    class="form-group col-md-6"
+                >
+                    <label>{{ l('ScopeOfWork') }}</label>
+                    <input
+                        [(ngModel)]="pricePackageDto.scopeOfWork"
+                        minlength="3"
+                        maxlength="300"
+                        name="scopeOfWork"
+                        type="text"
+                        class="form-control"
+                        #scopeOfWork="ngModel"
+                        [ngClass]="{
+                    'is-invalid': scopeOfWork.invalid && (scopeOfWork.dirty || scopeOfWork.touched),
+                    'is-valid': scopeOfWork.valid && (scopeOfWork.dirty || scopeOfWork.touched)
+                  }"
+                    />
+                    <div *ngIf="scopeOfWork.invalid && (scopeOfWork.dirty || scopeOfWork.touched)" class="invalid-feedback">
+                        {{ 'PricePackageInvalidScopeOfWorkMsg' | localize }}
+                    </div>
+                </div>
+
               <div *ngIf="isTachyonDealerOrHost && !pricePackageDto.id" class="form-group col-md-6">
                 <label>{{ l('Company') }} <span class="text-danger">*</span></label>
                 <div
@@ -176,6 +231,11 @@
               </div>
               <div *ngIf="pricePackageDto.type == pricePackageType.Dedicated" class="form-group col-md-6">
                 <label>{{ l('OriginCountry') }} <span class="text-danger">*</span></label>
+                  <div
+                      [ngClass]="{
+                    'spinner spinner-success spinner-right mr-1 ml-1': countriesLoading
+                  }"
+                  >
                 <select
                   [(ngModel)]="pricePackageDto.originCountryId"
                   (ngModelChange)="originCountryChanged()"
@@ -193,6 +253,7 @@
                     {{ item.displayName }}
                   </option>
                 </select>
+                  </div>
                 <div *ngIf="OriginCountry.invalid && (OriginCountry.dirty || OriginCountry.touched)" class="invalid-feedback">
                   {{ 'PricePackageInvalidOriginCountryMsg' | localize }}
                 </div>
@@ -257,9 +318,10 @@
                   #serviceAreas="ngModel"
                   dropdownIcon="fa fa-caret-down"
                   name="serviceAreas"
-                  [options]="serviceAreasList"
-                  [(ngModel)]="pricePackageDto.serviceAreas"
+                  [options]="pricePackageOriginLocations"
+                  [(ngModel)]="selectedServiceAreas"
                   (onChange)="applyFilters()"
+                  (ngModelChange)="logDto($event)"
                   [selectedItemsLabel]="'{0} items selected'"
                   [style]="{ width: '100%' }"
                   styleClass="form-control pt-1"
@@ -279,59 +341,7 @@
                 </div>
               </div>
 
-              <div
-                *ngIf="
-                  pricePackageDto.type == pricePackageType.Dedicated ||
-                  pricePackageDto.shippingTypeId == shippingTypeEnum.ExportPortMovements ||
-                  pricePackageDto.shippingTypeId == shippingTypeEnum.ImportPortMovements
-                "
-                class="form-group col-md-6"
-              >
-                <label>{{ l('ProjectName') }} </label>
-                <input
-                  [(ngModel)]="pricePackageDto.projectName"
-                  minlength="3"
-                  maxlength="150"
-                  name="projectName"
-                  type="text"
-                  class="form-control"
-                  #projectName="ngModel"
-                  [ngClass]="{
-                    'is-invalid': projectName.invalid && (projectName.dirty || projectName.touched),
-                    'is-valid': projectName.valid && (projectName.dirty || projectName.touched)
-                  }"
-                />
-                <div *ngIf="projectName.invalid && (projectName.dirty || projectName.touched)" class="invalid-feedback">
-                  {{ 'PricePackageInvalidProjectNameMsg' | localize }}
-                </div>
-              </div>
 
-              <div
-                *ngIf="
-                  pricePackageDto.type == pricePackageType.Dedicated ||
-                  pricePackageDto.shippingTypeId == shippingTypeEnum.ExportPortMovements ||
-                  pricePackageDto.shippingTypeId == shippingTypeEnum.ImportPortMovements
-                "
-                class="form-group col-md-6"
-              >
-                <label>{{ l('ScopeOfWork') }}</label>
-                <input
-                  [(ngModel)]="pricePackageDto.scopeOfWork"
-                  minlength="3"
-                  maxlength="300"
-                  name="scopeOfWork"
-                  type="text"
-                  class="form-control"
-                  #scopeOfWork="ngModel"
-                  [ngClass]="{
-                    'is-invalid': scopeOfWork.invalid && (scopeOfWork.dirty || scopeOfWork.touched),
-                    'is-valid': scopeOfWork.valid && (scopeOfWork.dirty || scopeOfWork.touched)
-                  }"
-                />
-                <div *ngIf="scopeOfWork.invalid && (scopeOfWork.dirty || scopeOfWork.touched)" class="invalid-feedback">
-                  {{ 'PricePackageInvalidScopeOfWorkMsg' | localize }}
-                </div>
-              </div>
 
               <div *ngIf="pricePackageDto.type != pricePackageType.Dedicated" class="form-group col-md-6">
                 <label>{{ l('OriginCity') }} <span class="text-danger">*</span></label>
@@ -372,7 +382,7 @@
                 </div>
               </div>
               <div
-                *ngIf="pricePackageDto.type == pricePackageType.Dedicated || pricePackageDto.shippingTypeId != shippingTypeEnum.LocalInsideCity"
+                *ngIf="pricePackageDto.type == pricePackageType.PerTrip && pricePackageDto.shippingTypeId != shippingTypeEnum.LocalInsideCity"
                 class="form-group col-md-6"
               >
                 <label>{{ l('DestinationCity') }} <span class="text-danger">*</span></label>

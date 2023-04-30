@@ -164,6 +164,9 @@ namespace TACHYON.PricePackages
 
         private async Task CheckPricePackageImpersonate(PricePackage pricePackage)
         {
+            if (!AbpSession.TenantId.HasValue && !pricePackage.DestinationTenantId.HasValue)
+                throw new UserFriendlyException(L("ThePricePackageMustCreatedForCurrentTenantOrForDestinationTenant"));
+            
             if (!AbpSession.TenantId.HasValue || await IsTachyonDealer())
             {
                 switch (pricePackage.UsageType)
@@ -177,14 +180,17 @@ namespace TACHYON.PricePackages
                     case PricePackageUsageType.AsTachyonManageService when !AbpSession.TenantId.HasValue:
                         pricePackage.TenantId = await _tenantRepository.GetAll().Where(x => x.Edition.Id == TachyonEditionId).Select(x => x.Id)
                             .FirstOrDefaultAsync();
-                        if (!pricePackage.ServiceAreas.IsNullOrEmpty())
-                        {
-                            pricePackage.ServiceAreas.ForEach(x=> x.TenantId = pricePackage.TenantId);
-                        }
+                        
                         break;
                 }
             }
 
+            
+            if (!pricePackage.ServiceAreas.IsNullOrEmpty())
+            {
+                // Note: Based on the if condition in the first of this method, One of those (SessionTenantId or DestinationTenantId) must have a value 
+                pricePackage.ServiceAreas.ForEach(x => x.TenantId =  AbpSession.TenantId ?? pricePackage.DestinationTenantId.Value);
+            }
             
         }
 

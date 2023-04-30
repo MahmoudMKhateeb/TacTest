@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Abp.Collections.Extensions;
+using AutoMapper;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -56,12 +57,12 @@ namespace TACHYON.AutoMapper.PricePackages
             CreateMap<PricePackage, CreateOrEditPricePackageDto>()
                 .ForMember(x => x.OriginLocation, x => x.MapFrom(i => new PricePackageLocationSelectItemDto
                     {
-                        CityId = i.OriginCityId.Value, PortId = i.OriginFacilityPortId,
+                        CityId = i.OriginCityId, PortId = i.OriginFacilityPortId,
                         Id = $"{(i.OriginFacilityPortId.HasValue ? PricePackageLocationType.Port : PricePackageLocationType.City).ToString()} {(i.OriginFacilityPortId ?? i.OriginCityId)}"
                     }))
                 .ForMember(x => x.DestinationLocation, x => x.MapFrom(i => new PricePackageLocationSelectItemDto
                     {
-                        CityId = i.DestinationCityId.Value, PortId = i.DestinationFacilityPortId,
+                        CityId = i.DestinationCityId, PortId = i.DestinationFacilityPortId,
                         Id = $"{(i.DestinationFacilityPortId.HasValue ? PricePackageLocationType.Port : PricePackageLocationType.City).ToString()} {(i.DestinationFacilityPortId ?? i.DestinationCityId)}"
                     }))
                 .ForMember(x => x.ServiceAreas, x => x.MapFrom(i => i.ServiceAreas));
