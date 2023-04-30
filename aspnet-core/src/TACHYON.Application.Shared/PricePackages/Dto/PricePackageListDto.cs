@@ -13,7 +13,7 @@ namespace TACHYON.PricePackages.Dto
 
         public string Company { get; set; }
 
-        public string RouteType { get; set; }
+        public ShippingRequestRouteType? RouteType { get; set; }
 
         public string DisplayName { get; set; }
 
@@ -58,5 +58,9 @@ namespace TACHYON.PricePackages.Dto
         public RoundTripType? RoundTrip { get; set; }
         
         public ShippingTypeEnum ShippingTypeId { get; set; }
+        
+        public long? OriginFacilityPortId { get; set; }
+        
+        public long? DestinationFacilityPortId { get; set; }
     }
 }

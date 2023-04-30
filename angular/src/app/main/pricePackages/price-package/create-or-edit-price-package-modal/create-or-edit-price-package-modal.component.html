@@ -53,14 +53,7 @@
                 </div>
               </div>
 
-                <div
-                    *ngIf="
-                  pricePackageDto.type == pricePackageType.Dedicated ||
-                  pricePackageDto.shippingTypeId == shippingTypeEnum.ExportPortMovements ||
-                  pricePackageDto.shippingTypeId == shippingTypeEnum.ImportPortMovements
-                "
-                    class="form-group col-md-6"
-                >
+                <div class="form-group col-md-6">
                     <label>{{ l('ProjectName') }} </label>
                     <input
                         [(ngModel)]="pricePackageDto.projectName"
@@ -80,14 +73,7 @@
                     </div>
                 </div>
 
-                <div
-                    *ngIf="
-                  pricePackageDto.type == pricePackageType.Dedicated ||
-                  pricePackageDto.shippingTypeId == shippingTypeEnum.ExportPortMovements ||
-                  pricePackageDto.shippingTypeId == shippingTypeEnum.ImportPortMovements
-                "
-                    class="form-group col-md-6"
-                >
+                <div class="form-group col-md-6">
                     <label>{{ l('ScopeOfWork') }}</label>
                     <input
                         [(ngModel)]="pricePackageDto.scopeOfWork"
@@ -191,6 +177,7 @@
                   #routeType="ngModel"
                   [(ngModel)]="pricePackageDto.routeType"
                   required
+                  (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"
                   class="form-control"
                   name="tmsPP_RouteType"
                   [ngClass]="{
@@ -321,7 +308,6 @@
                   [options]="pricePackageOriginLocations"
                   [(ngModel)]="selectedServiceAreas"
                   (onChange)="applyFilters()"
-                  (ngModelChange)="logDto($event)"
                   [selectedItemsLabel]="'{0} items selected'"
                   [style]="{ width: '100%' }"
                   styleClass="form-control pt-1"
@@ -541,13 +527,12 @@
                         <dxi-column dataField="company" caption="{{ l('Carrier') }} "></dxi-column>
                         <dxi-column dataField="truckType" caption="{{ l('TruckType') }}" [groupIndex]="0"></dxi-column>
                         <dxi-column dataField="totalPrice" caption="{{ l('TachyonMSRequestPrice') }}"></dxi-column>
-                        <dxi-column dataField="isMultiDrop" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"></dxi-column>
+                        <dxi-column dataField="routeType" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"></dxi-column>
                         <dxi-column dataField="originCity" caption="{{ l('Origin') }}"></dxi-column>
                         <dxi-column dataField="destinationCity" caption="{{ l('Destination') }}"></dxi-column>
 
                         <div *dxTemplate="let options of 'cellTemplate_RoutType'">
-                          <span *ngIf="options.data.isMultiDrop">{{ 'MultipleDrops' | localize }}</span>
-                          <span *ngIf="!options.data.isMultiDrop">{{ 'SingleDrop' | localize }}</span>
+                          <span >{{ (options.data.routeType == routeTypeEnum.MultipleDrops ? 'MultipleDrops': 'SingleDrop' ) | localize }}</span>
                         </div>
                       </dx-data-grid>
                     </div>

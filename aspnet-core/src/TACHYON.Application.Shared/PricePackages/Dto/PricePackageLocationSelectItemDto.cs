@@ -17,6 +17,7 @@ namespace TACHYON.PricePackages.Dto
     public enum PricePackageLocationType
     {
         City = 1,
-        Port = 2
+        Port = 2,
+        CityAndPort = 3,
     }
 }

@@ -12,6 +12,7 @@ using AutoMapper.QueryableExtensions;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using NUglify.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -446,7 +447,23 @@ namespace TACHYON.PricePackages
 
         public async Task<List<PricePackageLocationSelectItemDto>> GetPricePackageLocations(PricePackageLocationType locationType,int? countryId)
         {
-            if (locationType == PricePackageLocationType.City)
+            switch (locationType)
+            {
+                case PricePackageLocationType.City:
+                    return await GetCities();
+                case PricePackageLocationType.Port:
+                    return await GetPorts();
+                case PricePackageLocationType.CityAndPort:
+                    var citiesList = await GetCities();
+                    var citiesAndPortsList = await GetPorts();
+                    // cities and ports list
+                    citiesAndPortsList.AddRange(citiesList);
+                    return citiesAndPortsList;
+                
+                default: throw new UserFriendlyException(L("NotValidPricePackageLocationType"));
+            }
+
+            async Task<List<PricePackageLocationSelectItemDto>> GetCities()
             {
                 return await _cityRepository.GetAll()
                     .WhereIf(countryId.HasValue,x=> x.CountyId == countryId)
@@ -457,15 +474,19 @@ namespace TACHYON.PricePackages
                         LocationType = PricePackageLocationType.City
                     }).ToListAsync();
             }
-            
-            return await _facilityRepository.GetAll().Where(x=> x.FacilityType == FacilityType.Port)
-                .Select(port => new PricePackageLocationSelectItemDto
-                {
-                    CityId = port.CityId, Id = $"{PricePackageLocationType.Port.ToString()} {port.Id}",
-                    DisplayName = port == null ? string.Empty : port.Name,
-                    PortId = port.Id,
-                    LocationType = PricePackageLocationType.Port
-                }).ToListAsync();
+
+            async Task<List<PricePackageLocationSelectItemDto>> GetPorts()
+            {
+                DisableTenancyFilters();
+                return await _facilityRepository.GetAll().Where(x=> x.FacilityType == FacilityType.Port)
+                    .Select(port => new PricePackageLocationSelectItemDto
+                    {
+                        CityId = port.CityId, Id = $"{PricePackageLocationType.Port.ToString()} {port.Id}",
+                        DisplayName = port == null ? string.Empty : port.Name,
+                        PortId = port.Id,
+                        LocationType = PricePackageLocationType.Port
+                    }).ToListAsync();
+            }
         }
 
         #endregion

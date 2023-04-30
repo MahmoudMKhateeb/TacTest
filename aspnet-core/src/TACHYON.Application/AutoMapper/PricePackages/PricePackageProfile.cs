@@ -42,9 +42,7 @@ namespace TACHYON.AutoMapper.PricePackages
                     x => x.MapFrom(i =>
                         i.ProposalId.HasValue && i.Proposal.AppendixId.HasValue ? i.Proposal.Appendix.ContractName :
                         i.AppendixId.HasValue ? i.Appendix.ContractName : "__"))
-                .ForMember(x => x.EditionName, x => x.MapFrom(i => i.UsageType == PricePackageUsageType.AsCarrier ? i.Tenant.Edition.DisplayName : i.DestinationTenant.Edition.DisplayName))
-                .ForMember(x => x.RouteType,
-                    x => x.MapFrom(i => i.RouteType.HasValue? i.RouteType.Value.ToString(): string.Empty));
+                .ForMember(x => x.EditionName, x => x.MapFrom(i => i.UsageType == PricePackageUsageType.AsCarrier ? i.Tenant.Edition.DisplayName : i.DestinationTenant.Edition.DisplayName));
 
             CreateMap<CreateOrEditServiceAreaDto, ServiceArea>().ReverseMap();
             CreateMap<CreateOrEditPricePackageDto, PricePackage>()
