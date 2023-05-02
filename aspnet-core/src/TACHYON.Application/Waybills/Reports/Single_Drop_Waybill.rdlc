@@ -5851,7 +5851,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Shipper Invoice No</Value>
+                              <Value>Booking No</Value>
                               <Style>
                                 <FontFamily>Open Sans</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -5944,7 +5944,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>: رقم فاتورة المراجعة</Value>
+                              <Value>: رقم الحجز</Value>
                               <Style>
                                 <FontFamily>Cairo</FontFamily>
                                 <FontSize>8pt</FontSize>
