@@ -330,9 +330,22 @@
                     </span>
                     <div class="d-flex flex-column">
                       <span class="text-dark-75 font-weight-bolder font-size-sm">{{ l('Waybill') }}</span>
+
                       <a [buttonBusy]="downloadingForItem === item.id" (click)="DownloadSingleDropWaybillPdf(item.id)" class="font-weight-bolder">{{
                         item.waybillNumber
                       }}</a>
+                    </div>
+                  </div>
+                  <!--end: Item-->
+                  <!--begin: Item-->
+                  <div *ngIf="item.bayanId" class="d-flex align-items-center flex-lg-fill my-1">
+                    <span class="mr-4">
+                      <i class="flaticon2-notepad icon-2x text-muted font-weight-bold"></i>
+                    </span>
+                    <div class="d-flex flex-column">
+                      <span class="text-dark-75 font-weight-bolder font-size-sm">{{ l('Bayan waybill') }}</span>
+
+                      <a (click)="printBayanTrip(item.id)" class="font-weight-bolder">{{ item.bayanId }}</a>
                     </div>
                   </div>
                   <!--end: Item-->

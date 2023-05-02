@@ -6,6 +6,7 @@ import {
   ShippingRequestRouteType,
   ShippingRequestStatus,
   ShippingRequestsTripListDto,
+  ShippingRequestsTripServiceProxy,
   ShippingRequestTripCancelStatus,
   ShippingRequestTripDriverRoutePointDto,
   ShippingRequestTripDriverStatus,
@@ -75,7 +76,8 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
     private _trackingServiceProxy: TrackingServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private _activatedRoute: ActivatedRoute
+    private _activatedRoute: ActivatedRoute,
+    private _shippingRequestTripsService: ShippingRequestsTripServiceProxy
   ) {
     super(injector);
     this.waybillNumber = this._activatedRoute.snapshot.queryParams['waybillNumber'];
@@ -311,5 +313,17 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
       item.status !== this.ShippingRequestTripStatusEnum.New &&
       item.status !== this.ShippingRequestTripStatusEnum.Delivered
     );
+  }
+
+  printBayanTrip(id: any) {
+    this._shippingRequestTripsService.printBayanIntegrationTrip(id).subscribe((result) => {
+      const linkSource = 'data:application/pdf;base64,' + result + '\n';
+      const downloadLink = document.createElement('a');
+      const fileName = id + '.pdf';
+
+      downloadLink.href = linkSource;
+      downloadLink.download = fileName;
+      downloadLink.click();
+    });
   }
 }

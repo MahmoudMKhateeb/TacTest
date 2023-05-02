@@ -62,5 +62,8 @@ namespace TACHYON.Tracking.Dto
 
         public ShippingRequestTripFlag TripFlag { get; set; }
         #endregion
+
+        public string BayanId { get; set; }
+
     }
 }

@@ -140,7 +140,7 @@ namespace TACHYON.Configuration
                     isVisibleToClients: true,
                     scopes: SettingScopes.Application),
                 new SettingDefinition(AppSettings.BayanIntegration.ClientId,
-                    GetFromAppSettings(AppSettings.BayanIntegration.ClientId, "32004113-74ad-46a0-a011-e1349f56f6dc"),
+                    GetFromAppSettings(AppSettings.BayanIntegration.ClientId, "35a3cd64-2390-4ede-9d19-5180b943c2e9"),
                     isVisibleToClients: true,
                     scopes: SettingScopes.Application),
                 new SettingDefinition(AppSettings.HostManagement.DriverLocationTrackingInterval,

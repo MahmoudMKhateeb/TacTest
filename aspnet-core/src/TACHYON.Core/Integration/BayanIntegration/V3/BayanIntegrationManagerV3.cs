@@ -586,9 +586,9 @@ namespace TACHYON.Integration.BayanIntegration.V3
                     carrier = new Carrier
                     {
                         type = "COMPANY",
-                        moi = x.ShippingRequestFk.CarrierTenantFk.MoiNumber
+                        moi = x.ShippingRequestId != null ? x.ShippingRequestFk.CarrierTenantFk.MoiNumber : x.CarrierTenantFk.MoiNumber
                     },
-                    receivedDate = x.StartTripDate.Date.ToString(),
+                    receivedDate = x.StartTripDate.Date.AddDays(2).ToString(),
                     //receivedDate = DateTime.Now.Date.ToString("yyyy-MM-dd"),
                     expectedDeliveryDate = x.EndTripDate.HasValue ? x.EndTripDate.Value.Date.ToString() : x.StartTripDate.Date.AddDays(1).ToString(),
                     //expectedDeliveryDate = DateTime.Now.Date.AddDays(1).ToString("yyyy-MM-dd"),
@@ -600,20 +600,20 @@ namespace TACHYON.Integration.BayanIntegration.V3
                         {
                             sender = new Sender
                             {
-                                name = x.ShippingRequestFk.Tenant.companyName,
-                                phone = "+966" + x.RoutPoints.FirstOrDefault(x => x.PickingType == PickingType.Pickup).ReceiverFk.PhoneNumber,
-                                countryCode = x.ShippingRequestFk.Tenant.CountyFk.Code,
-                                cityId = x.ShippingRequestFk.Tenant.CityFk.BayanIntegrationId.HasValue ? x.ShippingRequestFk.Tenant.CityFk.BayanIntegrationId.Value.ToString() : "",
-                                address = x.ShippingRequestFk.Tenant.Address,
+                                name = x.ShippingRequestId != null ? x.ShippingRequestFk.Tenant.companyName : x.ShipperTenantFk.companyName,
+                                phone =  "+966" + x.RoutPoints.FirstOrDefault(x => x.PickingType == PickingType.Pickup).ReceiverFk.PhoneNumber,
+                                countryCode = x.ShippingRequestId != null ? x.ShippingRequestFk.Tenant.CountyFk.Code : x.ShipperTenantFk.CountyFk.Code,
+                                cityId = x.ShippingRequestId != null ? x.ShippingRequestFk.Tenant.CityFk.BayanIntegrationId.Value.ToString() : x.ShipperTenantFk.CityFk.BayanIntegrationId.Value.ToString(),
+                                address = x.ShippingRequestId != null ? x.ShippingRequestFk.Tenant.Address  : x.ShipperTenantFk.Address,
                                 notes = ""
                             },
                             recipient = new Recipient
                             {
-                                name = x.ShippingRequestFk.CarrierTenantFk.companyName,
+                                name = x.ShippingRequestId != null ?  x.ShippingRequestFk.CarrierTenantFk.companyName : x.CarrierTenantFk.companyName,
                                 phone = "+966" + x.RoutPoints.FirstOrDefault(x => x.PickingType == PickingType.Dropoff).ReceiverFk.PhoneNumber,
-                                countryCode = x.ShippingRequestFk.CarrierTenantFk.CountyFk.Code,
-                                cityId = x.ShippingRequestFk.CarrierTenantFk.CityFk.BayanIntegrationId.HasValue ? x.ShippingRequestFk.CarrierTenantFk.CityFk.BayanIntegrationId.Value.ToString() : "",
-                                address = x.ShippingRequestFk.CarrierTenantFk.Address,
+                                countryCode = x.ShippingRequestId != null ?  x.ShippingRequestFk.CarrierTenantFk.CountyFk.Code : x.CarrierTenantFk.CountyFk.Code,
+                                cityId = x.ShippingRequestId != null ? x.ShippingRequestFk.CarrierTenantFk.CityFk.BayanIntegrationId.Value.ToString() : x.CarrierTenantFk.CityFk.BayanIntegrationId.Value.ToString(),
+                                address = x.ShippingRequestId != null ? x.ShippingRequestFk.CarrierTenantFk.Address : x.CarrierTenantFk.Address,
                                 notes = ""
                             },
                             receivingLocation = new ReceivingLocation
