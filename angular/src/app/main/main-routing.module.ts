@@ -359,6 +359,11 @@ import { DirectTripsComponent } from '@app/main/direct-trips/direct-trips.compon
             loadChildren: () => import('@app/main/pricePackages/price-package.module').then((m) => m.PricePackageModule), //Lazy load main module
             data: { preload: true },
           },
+            {
+            path: 'reports',
+            loadChildren: () => import('@app/main/reports/reports.module').then((m) => m.ReportsModule), //Lazy load main module
+            data: { preload: true },
+          },
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           { path: 'directShipments', component: DirectTripsComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           //TODO:// to be removed after menu Structure work is complete

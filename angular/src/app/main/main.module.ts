@@ -342,6 +342,7 @@ import { DirectTripsComponent } from './direct-trips/direct-trips.component';
 import { ShippingRequestsTableComponent } from '@app/main/shippingRequests/shippingRequestsTable/shippingRequestsTable.component';
 import { ShippingRequestCardComponent } from '@app/main/shippingRequests/shipping-request-card/shipping-request-card.component';
 import { TruckFilterModalComponent } from '@app/main/trucks/trucks/truck-filter/truck-filter-modal.component';
+import {ReportsModule} from '@app/main/reports/reports.module';
 
 // devextreme imports
 import { DxDataGridModule } from '@node_modules/devextreme-angular/ui/data-grid';
@@ -444,6 +445,7 @@ import { MakeScrollableModule } from '@app/shared/common/make-scrollable-directi
     DxScrollViewModule,
     DxTextAreaModule,
     MakeScrollableModule,
+    ReportsModule,
   ],
   declarations: [
     EmailTemplatesComponent,

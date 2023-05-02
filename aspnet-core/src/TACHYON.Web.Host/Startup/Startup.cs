@@ -9,6 +9,11 @@ using Abp.PlugIns;
 using Abp.Timing;
 using Castle.Facilities.Logging;
 using CrystalQuartz.AspNetCore;
+using DevExpress.AspNetCore;
+using DevExpress.AspNetCore.Reporting.QueryBuilder;
+using DevExpress.AspNetCore.Reporting.ReportDesigner;
+using DevExpress.AspNetCore.Reporting.WebDocumentViewer;
+using DevExpress.XtraReports.Web.Extensions;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using GraphQL.Server;
@@ -175,6 +180,16 @@ namespace TACHYON.Web.Startup
                     services.AddHealthChecksUI();
                 }
             }
+            
+            // Register reporting services in an application's dependency injection container.
+            services.AddDevExpressControls();
+            // Use the AddMvcCore (or AddMvc) method to add MVC services
+            services.AddMvcCore();
+            // todo find another workaround
+            services.AddScoped<ReportStorageWebExtension, ReportStorageWebExtensionService>();
+            services.AddTransient<WebDocumentViewerController>();
+            services.AddTransient<ReportDesignerController>();
+            services.AddTransient<QueryBuilderController>();
 
             //Configure Abp and Dependency Injection
             return services.AddAbp<TACHYONWebHostModule>(options =>
@@ -214,6 +229,9 @@ namespace TACHYON.Web.Startup
             app.UseStaticFiles();
             app.UseRouting();
 
+            // Initialize reporting services.
+            app.UseDevExpressControls();
+            
             app.UseCors(DefaultCorsPolicyName); //Enable CORS!
 
             app.UseAuthentication();

@@ -5,8 +5,8 @@ using Abp.Domain.Repositories;
 using Abp.Reflection.Extensions;
 using Abp.Timing;
 using Abp.UI;
-using DevExpress.XtraRichEdit;
-using DevExpress.XtraRichEdit.API.Native;
+// using DevExpress.XtraRichEdit;
+// using DevExpress.XtraRichEdit.API.Native;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -158,133 +158,134 @@ namespace TACHYON.PricePackages.PricePackageAppendices
         
         public async Task<BinaryObject> GenerateAppendixFile(int appendixId)
         {
-            DisableTenancyFilters();
-            
-            var appendix = await _appendixRepository.GetAll()
-                .Include(x => x.Proposal).ThenInclude(x => x.PricePackages).ThenInclude(x=> x.TransportTypeFk)
-                .Include(x => x.Proposal).ThenInclude(x => x.PricePackages).ThenInclude(x=> x.TrucksTypeFk)
-                .Include(x => x.Proposal).ThenInclude(x => x.PricePackages).ThenInclude(x=> x.OriginCity)
-                .Include(x => x.Proposal).ThenInclude(x => x.PricePackages).ThenInclude(x=> x.DestinationCity)
-                .Include(x => x.Proposal).ThenInclude(x => x.Shipper)
-                .Include(x=> x.PricePackages).ThenInclude(x=> x.TransportTypeFk)
-                .Include(x=> x.PricePackages).ThenInclude(x=> x.TrucksTypeFk)                
-                .Include(x=> x.PricePackages).ThenInclude(x=> x.OriginCity)
-                .Include(x=> x.PricePackages).ThenInclude(x=> x.DestinationCity)
-                .Include(x=> x.PricePackages).ThenInclude(x=> x.TransportTypeFk)
-                .Include(x=> x.PricePackages).ThenInclude(x=> x.TrucksTypeFk)
-                .Include(x=> x.PricePackages).ThenInclude(x=> x.OriginCity)
-                .Include(x=> x.PricePackages).ThenInclude(x=> x.DestinationCity)
-                .Include(x=> x.DestinationTenant)
-                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == appendixId);
-
-            if (appendix is null) throw new EntityNotFoundException(L("AppendixNotFound"));
-            
-            await using var stream = GetResourceStream(TACHYONConsts.AppendixTemplateFullNamespace);
-            using var documentProcessor = new RichEditDocumentServer();
-            await documentProcessor.LoadDocumentAsync(stream);
-            var document = documentProcessor.Document;
-
-            List<AppendixTableItem> items;
-            string[] truckTypes, transportTypes, routeTypes;
-
-            // check if this shipper appendix
-            if (appendix.ProposalId.HasValue)
-            {
-                items = appendix.Proposal?.PricePackages?.Select(x => new AppendixTableItem()
-                {
-                    Origin = x.OriginCity?.DisplayName,
-                    Destination = x.DestinationCity?.DisplayName,
-                    Price = x.TotalPrice,
-                    TruckType = x.TrucksTypeFk?.DisplayName
-                }).ToList();
-
-                truckTypes = appendix.Proposal?.PricePackages?
-                    .Select(x => x.TrucksTypeFk?.DisplayName)?.Distinct()
-                    .ToArray();
-
-                transportTypes = appendix.Proposal?.PricePackages?
-                    .Select(x => x.TransportTypeFk?.DisplayName)?.Distinct()
-                    .ToArray();
-
-                routeTypes = appendix.Proposal?.PricePackages?.Where(x=> x.RouteType.HasValue)
-                    .Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType)).Distinct()
-                    .ToArray();
-            }
-            // check if this carrier appendix
-            else if (appendix.DestinationTenantId.HasValue && !appendix.ProposalId.HasValue)
-            {
-                truckTypes = appendix.PricePackages?
-                    .Select(x => x.TrucksTypeFk?.DisplayName).ToArray();
-
-                transportTypes = appendix.PricePackages?
-                    .Select(x => x.TransportTypeFk?.DisplayName).ToArray();
-
-                routeTypes = appendix.PricePackages?.Where(x=> x.RouteType.HasValue)
-                    .Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType)).ToArray();
-                
-                items = appendix.PricePackages?.Select(x => new AppendixTableItem()
-                {
-                    Origin = x.OriginCity?.DisplayName,
-                    Destination = x.DestinationCity?.DisplayName,
-                    Price = x.TotalPrice,
-                    TruckType = x.TrucksTypeFk?.DisplayName
-                }).ToList();
-            }
-            else throw new UserFriendlyException(L("AppendixMustHaveDestinationCompanyOrProposal"));
-             
-            var companyName = appendix.ProposalId.HasValue ? appendix.Proposal?.Shipper?.companyName : appendix.DestinationTenant?.companyName;
-            string contractNumber = appendix.ProposalId.HasValue ? appendix.Proposal?.Shipper?.ContractNumber : appendix.DestinationTenant?.ContractNumber;
-            var appendixDate = ClockProviders.Local.Normalize(appendix.AppendixDate).ToString("dd/MM/yyyy");
-            var contractDate = appendix.ProposalId.HasValue ? appendix.Proposal?.Shipper?.CreationTime : appendix.DestinationTenant?.CreationTime;
-            if (!contractDate.HasValue) throw new UserFriendlyException(L("CanNotFindContractDate"));
-            
-            
-            string formattedContractDate = ClockProviders.Local.Normalize(contractDate.Value).ToString("dd/MM/yyyy");
-
-            string formattedScopeOverview = appendix.ScopeOverview.Replace(TACHYONConsts.AppendixTemplateClientName, companyName);
-            
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, contractNumber,SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateAppendixDate, appendixDate ,SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateContractDate, formattedContractDate,SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, $"{appendix?.Proposal?.Shipper?.ContractNumber}",SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateClientName, companyName,SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateScopeOverview, formattedScopeOverview,SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateNotes, appendix.Notes,SearchOptions.None);
-            document.ReplaceAll(TACHYONConsts.AppendixTemplateVersion, $"{appendix.MajorVersion}.{appendix.MinorVersion}",SearchOptions.None);
-            if (truckTypes != null && truckTypes.Length > 0) 
-                document.ReplaceAll(TACHYONConsts.AppendixTemplateTruckTypes, string.Join(',',truckTypes),SearchOptions.None);
-            
-            if (transportTypes != null && transportTypes.Length > 0) 
-                document.ReplaceAll(TACHYONConsts.AppendixTemplateTransportTypes, string.Join(',',transportTypes),SearchOptions.None);
-            
-            if (routeTypes != null && routeTypes.Length > 0) 
-                document.ReplaceAll(TACHYONConsts.AppendixTemplateRouteTypes, string.Join(',',routeTypes),SearchOptions.None);
-
-            if (items == null || items.Count < 1) throw new UserFriendlyException(L("AppendixMustHavePricePackages"));
-
-            var pricingDetailsTable = document.Tables[2];
-            for (int i = 0; i < items?.Count; i++)
-            {
-                int rowLength = pricingDetailsTable.Rows.Count;
-                if (i > 0) pricingDetailsTable.Rows.InsertAfter(rowLength- 1);
-                var currentColumn = i == 0 ? rowLength - 1 : rowLength;
-                document.InsertText(pricingDetailsTable[currentColumn, 0].Range.Start, $"{i + 1}");
-                document.InsertText(pricingDetailsTable[currentColumn, 1].Range.Start, items[i].Origin);
-                document.InsertText(pricingDetailsTable[currentColumn, 2].Range.Start, items[i].Destination);
-                document.InsertText(pricingDetailsTable[currentColumn, 3].Range.Start, items[i].TruckType);
-                document.InsertText(pricingDetailsTable[currentColumn, 4].Range.Start, $"{items[i].Price} SR");
-            }
-            
-            await using MemoryStream outputFileStream = new MemoryStream();
-
-            await documentProcessor.ExportToPdfAsync(outputFileStream);
-
-            BinaryObject pdfFile = new BinaryObject(null, outputFileStream.ToArray());
-            var pdfFileId = await _binaryObjectRepository.InsertAndGetIdAsync(pdfFile);
-
-            _appendixRepository.Update(appendix.Id, x => x.AppendixFileId = pdfFileId);
-            return pdfFile;
-
+            // todo fix this
+            // DisableTenancyFilters();
+            //
+            // var appendix = await _appendixRepository.GetAll()
+            //     .Include(x => x.Proposal).ThenInclude(x => x.PricePackages).ThenInclude(x=> x.TransportTypeFk)
+            //     .Include(x => x.Proposal).ThenInclude(x => x.PricePackages).ThenInclude(x=> x.TrucksTypeFk)
+            //     .Include(x => x.Proposal).ThenInclude(x => x.PricePackages).ThenInclude(x=> x.OriginCity)
+            //     .Include(x => x.Proposal).ThenInclude(x => x.PricePackages).ThenInclude(x=> x.DestinationCity)
+            //     .Include(x => x.Proposal).ThenInclude(x => x.Shipper)
+            //     .Include(x=> x.PricePackages).ThenInclude(x=> x.TransportTypeFk)
+            //     .Include(x=> x.PricePackages).ThenInclude(x=> x.TrucksTypeFk)                
+            //     .Include(x=> x.PricePackages).ThenInclude(x=> x.OriginCity)
+            //     .Include(x=> x.PricePackages).ThenInclude(x=> x.DestinationCity)
+            //     .Include(x=> x.PricePackages).ThenInclude(x=> x.TransportTypeFk)
+            //     .Include(x=> x.PricePackages).ThenInclude(x=> x.TrucksTypeFk)
+            //     .Include(x=> x.PricePackages).ThenInclude(x=> x.OriginCity)
+            //     .Include(x=> x.PricePackages).ThenInclude(x=> x.DestinationCity)
+            //     .Include(x=> x.DestinationTenant)
+            //     .AsNoTracking().FirstOrDefaultAsync(x => x.Id == appendixId);
+            //
+            // if (appendix is null) throw new EntityNotFoundException(L("AppendixNotFound"));
+            //
+            // await using var stream = GetResourceStream(TACHYONConsts.AppendixTemplateFullNamespace);
+            // using var documentProcessor = new RichEditDocumentServer();
+            // await documentProcessor.LoadDocumentAsync(stream);
+            // var document = documentProcessor.Document;
+            //
+            // List<AppendixTableItem> items;
+            // string[] truckTypes, transportTypes, routeTypes;
+            //
+            // // check if this shipper appendix
+            // if (appendix.ProposalId.HasValue)
+            // {
+            //     items = appendix.Proposal?.PricePackages?.Select(x => new AppendixTableItem()
+            //     {
+            //         Origin = x.OriginCity?.DisplayName,
+            //         Destination = x.DestinationCity?.DisplayName,
+            //         Price = x.TotalPrice,
+            //         TruckType = x.TrucksTypeFk?.DisplayName
+            //     }).ToList();
+            //
+            //     truckTypes = appendix.Proposal?.PricePackages?
+            //         .Select(x => x.TrucksTypeFk?.DisplayName)?.Distinct()
+            //         .ToArray();
+            //
+            //     transportTypes = appendix.Proposal?.PricePackages?
+            //         .Select(x => x.TransportTypeFk?.DisplayName)?.Distinct()
+            //         .ToArray();
+            //
+            //     routeTypes = appendix.Proposal?.PricePackages?
+            //         .Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType))?.Distinct()
+            //         .ToArray();
+            // }
+            // // check if this carrier appendix
+            // else if (appendix.DestinationTenantId.HasValue && !appendix.ProposalId.HasValue)
+            // {
+            //     truckTypes = appendix.PricePackages?
+            //         .Select(x => x.TrucksTypeFk?.DisplayName).ToArray();
+            //
+            //     transportTypes = appendix.PricePackages?
+            //         .Select(x => x.TransportTypeFk?.DisplayName).ToArray();
+            //
+            //     routeTypes = appendix.PricePackages?
+            //         .Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType)).ToArray();
+            //     
+            //     items = appendix.PricePackages?.Select(x => new AppendixTableItem()
+            //     {
+            //         Origin = x.OriginCity?.DisplayName,
+            //         Destination = x.DestinationCity?.DisplayName,
+            //         Price = x.TotalPrice,
+            //         TruckType = x.TrucksTypeFk?.DisplayName
+            //     }).ToList();
+            // }
+            // else throw new UserFriendlyException(L("AppendixMustHaveDestinationCompanyOrProposal"));
+            //  
+            // var companyName = appendix.ProposalId.HasValue ? appendix.Proposal?.Shipper?.companyName : appendix.DestinationTenant?.companyName;
+            // string contractNumber = appendix.ProposalId.HasValue ? appendix.Proposal?.Shipper?.ContractNumber : appendix.DestinationTenant?.ContractNumber;
+            // var appendixDate = ClockProviders.Local.Normalize(appendix.AppendixDate).ToString("dd/MM/yyyy");
+            // var contractDate = appendix.ProposalId.HasValue ? appendix.Proposal?.Shipper?.CreationTime : appendix.DestinationTenant?.CreationTime;
+            // if (!contractDate.HasValue) throw new UserFriendlyException(L("CanNotFindContractDate"));
+            //
+            //
+            // string formattedContractDate = ClockProviders.Local.Normalize(contractDate.Value).ToString("dd/MM/yyyy");
+            //
+            // string formattedScopeOverview = appendix.ScopeOverview.Replace(TACHYONConsts.AppendixTemplateClientName, companyName);
+            //
+            // document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, contractNumber,SearchOptions.None);
+            // document.ReplaceAll(TACHYONConsts.AppendixTemplateAppendixDate, appendixDate ,SearchOptions.None);
+            // document.ReplaceAll(TACHYONConsts.AppendixTemplateContractDate, formattedContractDate,SearchOptions.None);
+            // document.ReplaceAll(TACHYONConsts.AppendixTemplateContractNumber, $"{appendix?.Proposal?.Shipper?.ContractNumber}",SearchOptions.None);
+            // document.ReplaceAll(TACHYONConsts.AppendixTemplateClientName, companyName,SearchOptions.None);
+            // document.ReplaceAll(TACHYONConsts.AppendixTemplateScopeOverview, formattedScopeOverview,SearchOptions.None);
+            // document.ReplaceAll(TACHYONConsts.AppendixTemplateNotes, appendix.Notes,SearchOptions.None);
+            // document.ReplaceAll(TACHYONConsts.AppendixTemplateVersion, $"{appendix.MajorVersion}.{appendix.MinorVersion}",SearchOptions.None);
+            // if (truckTypes != null && truckTypes.Length > 0) 
+            //     document.ReplaceAll(TACHYONConsts.AppendixTemplateTruckTypes, string.Join(',',truckTypes),SearchOptions.None);
+            //
+            // if (transportTypes != null && transportTypes.Length > 0) 
+            //     document.ReplaceAll(TACHYONConsts.AppendixTemplateTransportTypes, string.Join(',',transportTypes),SearchOptions.None);
+            //
+            // if (routeTypes != null && routeTypes.Length > 0) 
+            //     document.ReplaceAll(TACHYONConsts.AppendixTemplateRouteTypes, string.Join(',',routeTypes),SearchOptions.None);
+            //
+            // if (items == null || items.Count < 1) throw new UserFriendlyException(L("AppendixMustHavePricePackages"));
+            //
+            // var pricingDetailsTable = document.Tables[2];
+            // for (int i = 0; i < items?.Count; i++)
+            // {
+            //     int rowLength = pricingDetailsTable.Rows.Count;
+            //     if (i > 0) pricingDetailsTable.Rows.InsertAfter(rowLength- 1);
+            //     var currentColumn = i == 0 ? rowLength - 1 : rowLength;
+            //     document.InsertText(pricingDetailsTable[currentColumn, 0].Range.Start, $"{i + 1}");
+            //     document.InsertText(pricingDetailsTable[currentColumn, 1].Range.Start, items[i].Origin);
+            //     document.InsertText(pricingDetailsTable[currentColumn, 2].Range.Start, items[i].Destination);
+            //     document.InsertText(pricingDetailsTable[currentColumn, 3].Range.Start, items[i].TruckType);
+            //     document.InsertText(pricingDetailsTable[currentColumn, 4].Range.Start, $"{items[i].Price} SR");
+            // }
+            //
+            // await using MemoryStream outputFileStream = new MemoryStream();
+            //
+            // await documentProcessor.ExportToPdfAsync(outputFileStream);
+            //
+            // BinaryObject pdfFile = new BinaryObject(null, outputFileStream.ToArray());
+            // var pdfFileId = await _binaryObjectRepository.InsertAndGetIdAsync(pdfFile);
+            //
+            // _appendixRepository.Update(appendix.Id, x => x.AppendixFileId = pdfFileId);
+            // return pdfFile;
+            return new BinaryObject(default, default);
         }
         
         private static Stream GetResourceStream(string resourceName)
