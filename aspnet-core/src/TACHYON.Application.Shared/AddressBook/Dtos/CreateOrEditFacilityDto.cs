@@ -34,10 +34,7 @@ namespace TACHYON.AddressBook.Dtos
                 context.Results.Add(new ValidationResult("LocationAndNameAreRequired"));
             }
 
-            if (!IsForHomeDelivery && (FacilityWorkingHours == null || FacilityWorkingHours.Count == 0))
-            {
-                context.Results.Add(new ValidationResult("FacilityWorkingHoursIsRequired"));
-            }
+            
 
             else if(IsForHomeDelivery && (Longitude == null || Latitude == null || Address == null) && Name.IsNullOrEmpty()){
                 context.Results.Add(new ValidationResult("LocationOrNameAreRequired"));
