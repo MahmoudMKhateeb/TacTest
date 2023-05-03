@@ -288,6 +288,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
         [
           new AppMenuItem('TachyonManageService', 'Pages', '', '/app/main/tms/shippingRequests'),
           new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking'),
+          new AppMenuItem('DirectShipmentTracking', 'Pages.Shipment.Tracking.DirectShipmentTracking', '', '/app/main/tracking/directShipmentTracking'),
           new AppMenuItem(
             'SavedTemplates',
             'Pages.EntityTemplate',

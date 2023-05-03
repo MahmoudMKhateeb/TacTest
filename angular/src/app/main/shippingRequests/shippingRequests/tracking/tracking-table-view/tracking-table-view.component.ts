@@ -24,6 +24,7 @@ import CustomStore from 'devextreme/data/custom_store';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
 import { exportDataGrid } from 'devextreme/excel_exporter';
+import {AppConsts} from '@shared/AppConsts';
 
 @Component({
   selector: 'app-tracking-table',
@@ -42,6 +43,7 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
       this.search();
     }
   }
+  @Input() shipmentType: 'normalShipment' | 'directShipment';
   get searchInput(): TrackingSearchInput {
     return this._searchInput;
   }
@@ -114,52 +116,102 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
-        return self._currentServ
-          .getAllDx(
-            JSON.stringify(loadOptions),
-            self.searchInput.status,
-            self.searchInput.shipper,
-            self.searchInput.carrier,
-            self.searchInput.WaybillNumber,
-            self.searchInput.transportTypeId,
-            self.searchInput.truckTypeId,
-            self.searchInput.truckCapacityId,
-            self.searchInput.originId,
-            self.searchInput.destinationId,
-            self.searchInput.pickupFromDate,
-            self.searchInput.pickupToDate,
-            self.searchInput.fromDate,
-            self.searchInput.toDate,
-            self.searchInput.shippingRequestReferance,
-            self.searchInput.routeTypeId,
-            self.searchInput.packingTypeId,
-            self.searchInput.goodsOrSubGoodsCategoryId,
-            self.searchInput.plateNumberId,
-            self.searchInput.driverNameOrMobile,
-            self.searchInput.deliveryFromDate,
-            self.searchInput.deliveryToDate,
-            self.searchInput.containerNumber,
-            self.searchInput.isInvoiceIssued,
-            self.searchInput.isSubmittedPOD,
-            self.searchInput.requestTypeId,
-            '',
-            self.skipCount,
-            self.maxResultCount
-          )
-          .toPromise()
-          .then((response) => {
-            self.isFirstLoad = false;
-            return {
-              data: response.data,
-              totalCount: response.totalCount,
-              summary: response.summary,
-              groupCount: response.groupCount,
-            };
-          })
-          .catch((error) => {
-            console.log(error);
-            throw new Error('Data Loading Error');
-          });
+          if (this.shipmentType === AppConsts.Tracking_NormalShipment) {
+              return self._currentServ
+                  .getAllDx(
+                      JSON.stringify(loadOptions),
+                      self.searchInput.status,
+                      self.searchInput.shipper,
+                      self.searchInput.carrier,
+                      self.searchInput.WaybillNumber,
+                      self.searchInput.transportTypeId,
+                      self.searchInput.truckTypeId,
+                      self.searchInput.truckCapacityId,
+                      self.searchInput.originId,
+                      self.searchInput.destinationId,
+                      self.searchInput.pickupFromDate,
+                      self.searchInput.pickupToDate,
+                      self.searchInput.fromDate,
+                      self.searchInput.toDate,
+                      self.searchInput.shippingRequestReferance,
+                      self.searchInput.routeTypeId,
+                      self.searchInput.packingTypeId,
+                      self.searchInput.goodsOrSubGoodsCategoryId,
+                      self.searchInput.plateNumberId,
+                      self.searchInput.driverNameOrMobile,
+                      self.searchInput.deliveryFromDate,
+                      self.searchInput.deliveryToDate,
+                      self.searchInput.containerNumber,
+                      self.searchInput.isInvoiceIssued,
+                      self.searchInput.isSubmittedPOD,
+                      self.searchInput.requestTypeId,
+                      '',
+                      self.skipCount,
+                      self.maxResultCount
+                  )
+                  .toPromise()
+                  .then((response) => {
+                      self.isFirstLoad = false;
+                      return {
+                          data: response.data,
+                          totalCount: response.totalCount,
+                          summary: response.summary,
+                          groupCount: response.groupCount,
+                      };
+                  })
+                  .catch((error) => {
+                      console.log(error);
+                      throw new Error('Data Loading Error');
+                  });
+          }
+
+          return self._currentServ
+              .getDirectShipmentsDx(
+                  JSON.stringify(loadOptions),
+                  self.searchInput.status,
+                  self.searchInput.shipper,
+                  self.searchInput.carrier,
+                  self.searchInput.WaybillNumber,
+                  self.searchInput.transportTypeId,
+                  self.searchInput.truckTypeId,
+                  self.searchInput.truckCapacityId,
+                  self.searchInput.originId,
+                  self.searchInput.destinationId,
+                  self.searchInput.pickupFromDate,
+                  self.searchInput.pickupToDate,
+                  self.searchInput.fromDate,
+                  self.searchInput.toDate,
+                  self.searchInput.shippingRequestReferance,
+                  self.searchInput.routeTypeId,
+                  self.searchInput.packingTypeId,
+                  self.searchInput.goodsOrSubGoodsCategoryId,
+                  self.searchInput.plateNumberId,
+                  self.searchInput.driverNameOrMobile,
+                  self.searchInput.deliveryFromDate,
+                  self.searchInput.deliveryToDate,
+                  self.searchInput.containerNumber,
+                  self.searchInput.isInvoiceIssued,
+                  self.searchInput.isSubmittedPOD,
+                  self.searchInput.requestTypeId,
+                  '',
+                  self.skipCount,
+                  self.maxResultCount
+              )
+              .toPromise()
+              .then((response) => {
+                  self.isFirstLoad = false;
+                  return {
+                      data: response.data,
+                      totalCount: response.totalCount,
+                      summary: response.summary,
+                      groupCount: response.groupCount,
+                  };
+              })
+              .catch((error) => {
+                  console.log(error);
+                  throw new Error('Data Loading Error');
+              });
+
       },
     });
   }

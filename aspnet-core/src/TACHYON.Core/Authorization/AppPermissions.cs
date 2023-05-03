@@ -654,6 +654,7 @@
         public const string Pages_Tracking_ReceiverCode = "Pages.Shipment.Tracking.ReceiverCode";
         public const string Pages_Tracking_ResetPointReceiverCode = "Pages.Shipment.Tracking.ResetPointReceiverCode";
         public const string Pages_Tracking_BulkDeliverTrip = "Pages.Shipment.Tracking.BulkDeliverTrip";
+        public const string Pages_Tracking_DirectShipmentTracking = "Pages.Shipment.Tracking.DirectShipmentTracking";
         
         public const string Pages_ShippingRequestUpdates = "Pages.ShippingRequestUpdates";
         public const string Pages_ShippingRequestUpdates_TakeAction = "Pages.ShippingRequestUpdates.TakeAction";

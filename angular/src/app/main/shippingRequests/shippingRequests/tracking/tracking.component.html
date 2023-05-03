@@ -1,7 +1,7 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
-    <sub-header [title]="'ShipmentTracking' | localize" [description]="'' | localize">
+    <sub-header [title]=" (shipmentType === 'normalShipment' ? 'ShipmentTracking': 'DirectShipmentTracking') | localize" [description]="'' | localize">
       <div role="actions">
         <button *ngIf="showNormalView" (click)="showAsTable()" class="btn btn-dark mr-2"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
         <button *ngIf="!showNormalView" (click)="showAsList()" class="btn btn-dark mr-2"><i class="fas fa-list"></i> {{ l('ShowAsList') }}</button>
@@ -361,7 +361,7 @@
           <span></span>
         </div>
       </div>
-      <app-tracking-table *ngIf="!showNormalView" [searchInput]="searchInput"></app-tracking-table>
+      <app-tracking-table *ngIf="!showNormalView" [searchInput]="searchInput" [shipmentType]="shipmentType"></app-tracking-table>
     </div>
   </div>
 </div>
