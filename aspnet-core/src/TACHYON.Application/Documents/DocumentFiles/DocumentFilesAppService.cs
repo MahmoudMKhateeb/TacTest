@@ -106,7 +106,7 @@ namespace TACHYON.Documents.DocumentFiles
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Submitted)]
         public async Task<LoadResult> GetAllTenantsSubmittedDocuments(GetAllForListDocumentFilesInput input)
         {
-            DisableTenancyFiltersIfHost();
+            await DisableTenancyFilterIfTachyonDealerOrHost();
 
             var filteredDocumentFiles = _documentFileRepository.GetAll()
                 .Where(e => e.DocumentTypeFk.DocumentsEntityId == DocumentsEntitiesEnum.Tenant)
@@ -324,7 +324,7 @@ namespace TACHYON.Documents.DocumentFiles
         [AbpAllowAnonymous]
         public async Task<FileDto> GetDocumentFileDto(Guid documentFileId)
         {
-            DisableTenancyFiltersIfHost();
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             var documentFile = await _documentFileRepository.GetAsync(documentFileId);
 
             var binaryObject = await _binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId.Value);
