@@ -59,41 +59,85 @@
             <div class="col-xl-3">
               <div class="form-group">
                 <label for="PlatForm">{{ l('PlatForm') }}</label>
-                <select name="PlatForm" [(ngModel)]="AppLocalization.platForm" class="form-control">
-                  <option [value]="code.key" *ngFor="let code of terminologyPlatForm">
-                    {{ code.value | localize }}
-                  </option>
-                </select>
+                <dx-select-box
+                  id="PlatForm"
+                  name="PlatForm"
+                  [(value)]="AppLocalization.platForm"
+                  [dataSource]="terminologyPlatForm"
+                  [searchEnabled]="true"
+                  displayExpr="value"
+                  valueExpr="key"
+                  placeholder="{{ l('Select') }}"
+                >
+                </dx-select-box>
+                <!--                <select name="PlatForm" [(ngModel)]="AppLocalization.platForm" class="form-control">-->
+                <!--                  <option [value]="code.key" *ngFor="let code of terminologyPlatForm">-->
+                <!--                    {{ code.value | localize }}-->
+                <!--                  </option>-->
+                <!--                </select>-->
               </div>
             </div>
             <div class="col-xl-3">
               <div class="form-group">
                 <label for="AppVersion">{{ l('AppVersion') }}</label>
-                <select name="AppVersion" [(ngModel)]="AppLocalization.appVersion" class="form-control">
-                  <option [value]="code.key" *ngFor="let code of terminologyAppVersion">
-                    {{ code.value | localize }}
-                  </option>
-                </select>
+                <dx-select-box
+                  id="AppVersion"
+                  name="AppVersion"
+                  [(value)]="AppLocalization.appVersion"
+                  [dataSource]="terminologyAppVersion"
+                  [searchEnabled]="true"
+                  displayExpr="value"
+                  valueExpr="key"
+                  placeholder="{{ l('Select') }}"
+                >
+                </dx-select-box>
+                <!--                <select name="AppVersion" [(ngModel)]="AppLocalization.appVersion" class="form-control">-->
+                <!--                  <option [value]="code.key" *ngFor="let code of terminologyAppVersion">-->
+                <!--                    {{ code.value | localize }}-->
+                <!--                  </option>-->
+                <!--                </select>-->
               </div>
             </div>
             <div class="col-xl-3">
               <div class="form-group">
                 <label for="version">{{ l('TerminologyVersion') }}</label>
-                <select name="version" [(ngModel)]="AppLocalization.version" class="form-control">
-                  <option [value]="code.key" *ngFor="let code of terminologyVersion">
-                    {{ code.value | localize }}
-                  </option>
-                </select>
+                <dx-select-box
+                  id="version"
+                  name="version"
+                  [(value)]="AppLocalization.version"
+                  [dataSource]="terminologyVersion"
+                  [searchEnabled]="true"
+                  displayExpr="value"
+                  valueExpr="key"
+                  placeholder="{{ l('Select') }}"
+                >
+                </dx-select-box>
+                <!--                <select name="version" [(ngModel)]="AppLocalization.version" class="form-control">-->
+                <!--                  <option [value]="code.key" *ngFor="let code of terminologyVersion">-->
+                <!--                    {{ code.value | localize }}-->
+                <!--                  </option>-->
+                <!--                </select>-->
               </div>
             </div>
             <div class="col-xl-3">
               <div class="form-group">
                 <label for="section">{{ l('TerminologySection') }}</label>
-                <select name="section" [(ngModel)]="AppLocalization.section" class="form-control">
-                  <option [value]="code.key" *ngFor="let code of terminologySection">
-                    {{ code.value | localize }}
-                  </option>
-                </select>
+                <dx-select-box
+                  id="section"
+                  name="section"
+                  [(value)]="AppLocalization.section"
+                  [dataSource]="terminologySection"
+                  [searchEnabled]="true"
+                  displayExpr="value"
+                  valueExpr="key"
+                  placeholder="{{ l('Select') }}"
+                >
+                </dx-select-box>
+                <!--                <select name="section" [(ngModel)]="AppLocalization.section" class="form-control">-->
+                <!--                  <option [value]="code.key" *ngFor="let code of terminologySection">-->
+                <!--                    {{ code.value | localize }}-->
+                <!--                  </option>-->
+                <!--                </select>-->
               </div>
             </div>
           </div>

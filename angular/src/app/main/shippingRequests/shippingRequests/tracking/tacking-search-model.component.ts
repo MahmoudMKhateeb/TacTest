@@ -50,8 +50,20 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
     super(injector);
   }
   ngOnInit(): void {
-    this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
-    this.requestTypes = this.enumToArray.transform(ShippingRequestType);
+    this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
+    this.requestTypes = this.enumToArray.transform(ShippingRequestType).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
+    const obj = {
+      value: this.l('All'),
+      key: '',
+    };
+    this.routeTypes.unshift(obj);
+    this.requestTypes.unshift(obj);
     this.getRequestStatus();
   }
 
@@ -79,7 +91,7 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
       });
       this.truckCapacities = result.capacities.map((x) => {
         let item: ComboboxItemDto = new ComboboxItemDto();
-        item.displayText = x.translatedDisplayName;
+        item.displayText = x.displayName;
         item.value = x.id.toString();
         return item;
       });
@@ -95,6 +107,15 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
         item.value = x.id.toString();
         return item;
       });
+      const combo = new ComboboxItemDto();
+      combo.displayText = this.l('All');
+      combo.value = '';
+      this.cites.unshift(combo);
+      this.truckTypes.unshift(combo);
+      this.transportTypes.unshift(combo);
+      this.truckCapacities.unshift(combo);
+      this.goodsCategories.unshift(combo);
+      this.packingTypes.unshift(combo);
     });
   }
   show(Input: TrackingSearchInput): void {

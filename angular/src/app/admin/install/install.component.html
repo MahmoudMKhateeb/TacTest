@@ -74,11 +74,21 @@
                   <h5 class="font-size-lg text-dark font-weight-bold mb-6-title">Default Language</h5>
                 </div>
                 <div class="form-group">
-                  <select class="form-control" [(ngModel)]="setupSettings.defaultLanguage" name="defaultLanguage">
-                    <option *ngFor="let language of languages" value="{{ language.value }}">
-                      {{ language.name }}
-                    </option>
-                  </select>
+                  <dx-select-box
+                    name="setupSettings.defaultLanguage"
+                    [(value)]="setupSettings.defaultLanguage"
+                    [dataSource]="languages"
+                    [searchEnabled]="true"
+                    displayExpr="name"
+                    valueExpr="value"
+                    placeholder="{{ l('Select') }}"
+                  >
+                  </dx-select-box>
+                  <!--                  <select class="form-control" [(ngModel)]="setupSettings.defaultLanguage" name="defaultLanguage">-->
+                  <!--                    <option *ngFor="let language of languages" value="{{ language.value }}">-->
+                  <!--                      {{ language.name }}-->
+                  <!--                    </option>-->
+                  <!--                  </select>-->
                 </div>
                 <div class="separator separator-dashed my-5"></div>
                 <div class="font-size-lg text-dark font-weight-bold mb-6">

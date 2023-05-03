@@ -23,34 +23,82 @@
         <div class="modal-body">
           <div class="form-group m-form__group">
             <label for="TrucksTypeDisplayName">{{ l('TrucksType') }}</label>
-            <select name="offer.trucksTypeId" [(ngModel)]="offer.trucksTypeId" class="form-control" required>
-              <option value="">{{ l('SelectATrucksType') }}</option>
-              <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <dx-select-box
+              id="TrucksTypeDisplayName"
+              name="offer.trucksTypeId"
+              [(value)]="offer.trucksTypeId"
+              [dataSource]="allTrucksTypes"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="id"
+              required
+              placeholder="{{ l('SelectATrucksType') }}"
+            >
+            </dx-select-box>
+            <!--            <select name="offer.trucksTypeId" [(ngModel)]="offer.trucksTypeId" class="form-control" required>-->
+            <!--              <option value="">{{ l('SelectATrucksType') }}</option>-->
+            <!--              <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
           </div>
 
           <div class="form-group m-form__group">
             <label for="TrailerTypeDisplayName">{{ l('TrailerType') }}</label>
-            <select name="offer.trailerTypeId" [(ngModel)]="offer.trailerTypeId" class="form-control" required>
-              <option value="">{{ l('SelectATrailerType') }}</option>
-              <option *ngFor="let item of allTrailerTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <dx-select-box
+              id="TrailerTypeDisplayName"
+              name="offer.trailerTypeId"
+              [(value)]="offer.trailerTypeId"
+              [dataSource]="allTrailerTypes"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="id"
+              required
+              placeholder="{{ l('SelectATrailerType') }}"
+            >
+            </dx-select-box>
+            <!--            <select name="offer.trailerTypeId" [(ngModel)]="offer.trailerTypeId" class="form-control" required>-->
+            <!--              <option value="">{{ l('SelectATrailerType') }}</option>-->
+            <!--              <option *ngFor="let item of allTrailerTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
           </div>
 
           <div class="form-group m-form__group">
             <label for="GoodCategoryDisplayName">{{ l('GoodCategory') }}</label>
-            <select name="offer.goodCategoryId" [(ngModel)]="offer.goodCategoryId" class="form-control">
-              <option value="">{{ l('SelectAGoodCategory') }}</option>
-              <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <dx-select-box
+              id="GoodCategoryDisplayName"
+              name="offer.goodCategoryId"
+              [(value)]="offer.goodCategoryId"
+              [dataSource]="allGoodCategorys"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="id"
+              required
+              placeholder="{{ l('SelectAGoodCategory') }}"
+            >
+            </dx-select-box>
+            <!--            <select name="offer.goodCategoryId" [(ngModel)]="offer.goodCategoryId" class="form-control">-->
+            <!--              <option value="">{{ l('SelectAGoodCategory') }}</option>-->
+            <!--              <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
           </div>
 
           <div class="form-group m-form__group">
             <label for="RouteDisplayName">{{ l('Route') }}</label>
-            <select name="offer.routeId" [(ngModel)]="offer.routeId" class="form-control" required>
-              <option value="">{{ l('SelectARoute') }}</option>
-              <option *ngFor="let item of allRoutes" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <dx-select-box
+              id="RouteDisplayName"
+              name="offer.routeId"
+              [(value)]="offer.routeId"
+              [dataSource]="allRoutes"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="id"
+              required
+              placeholder="{{ l('SelectARoute') }}"
+            >
+            </dx-select-box>
+            <!--            <select name="offer.routeId" [(ngModel)]="offer.routeId" class="form-control" required>-->
+            <!--              <option value="">{{ l('SelectARoute') }}</option>-->
+            <!--              <option *ngFor="let item of allRoutes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
           </div>
 
           <div class="form-group">

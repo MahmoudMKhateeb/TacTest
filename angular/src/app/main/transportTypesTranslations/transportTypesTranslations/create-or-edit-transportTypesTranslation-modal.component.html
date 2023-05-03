@@ -1,4 +1,4 @@
-﻿<div
+<div
   bsModal
   #createOrEditModal="bs-modal"
   class="modal fade"
@@ -23,16 +23,28 @@
         <div class="modal-body">
           <div class="form-group m-form__group">
             <label for="TransportTypeDisplayName">{{ l('TransportType') }}</label>
-            <select
+            <dx-select-box
               id="TransportTypeDisplayName"
               name="transportTypesTranslation.coreId"
-              [(ngModel)]="transportTypesTranslation.coreId"
-              class="form-control"
+              [(value)]="transportTypesTranslation.coreId"
+              [dataSource]="allTransportTypes"
+              [searchEnabled]="true"
+              displayExpr="translatedDisplayName"
+              valueExpr="id"
               required
+              placeholder="{{ l('SelectATransportType') }}"
             >
-              <option value="">{{ l('SelectATransportType') }}</option>
-              <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.translatedDisplayName }}</option>
-            </select>
+            </dx-select-box>
+            <!--            <select-->
+            <!--              id="TransportTypeDisplayName"-->
+            <!--              name="transportTypesTranslation.coreId"-->
+            <!--              [(ngModel)]="transportTypesTranslation.coreId"-->
+            <!--              class="form-control"-->
+            <!--              required-->
+            <!--            >-->
+            <!--              <option value="">{{ l('SelectATransportType') }}</option>-->
+            <!--              <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.translatedDisplayName }} </option>-->
+            <!--            </select>-->
           </div>
 
           <div class="form-group">

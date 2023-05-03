@@ -116,38 +116,63 @@
           <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <select
-                  (change)="CountryChanged($event)"
-                  #countrySelect="ngModel"
-                  class="form-control form-control-lg custom-select mr-sm-2"
+                <dx-select-box
                   name="tenant.countryId"
-                  [(ngModel)]="tenant.countryId"
+                  [(value)]="tenant.countryId"
+                  [dataSource]="allCountries"
+                  [searchEnabled]="true"
+                  (onSelectionChanged)="CountryChanged($event)"
+                  displayExpr="displayName"
+                  valueExpr="id"
                   required
+                  placeholder="{{ l('Select') }} {{ l('Country') }}"
                 >
-                  <option [ngValue]="null">{{ l('Select') }} {{ l('Country') }}</option>
-                  <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>
-                </select>
+                </dx-select-box>
+                <!--                <select-->
+                <!--                  (change)="CountryChanged($event)"-->
+                <!--                  #countrySelect="ngModel"-->
+                <!--                  class="form-control form-control-lg custom-select mr-sm-2"-->
+                <!--                  name="tenant.countryId"-->
+                <!--                  [(ngModel)]="tenant.countryId"-->
+                <!--                  required-->
+                <!--                >-->
+                <!--                  <option [ngValue]="null">{{ l('Select') }} {{ l('Country') }}</option>-->
+                <!--                  <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>-->
+                <!--                </select>-->
                 <!-- <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched">Country is required</span> -->
-                <validation-messages [formCtrl]="countrySelect"></validation-messages>
+                <!--                <validation-messages [formCtrl]="countrySelect"></validation-messages>-->
               </div>
             </div>
 
             <div class="col-6">
               <div class="form-group">
-                <select
-                  [disabled]="!isCountySelected"
-                  #citySelect="ngModel"
-                  class="form-control form-control-lg custom-select mr-sm-2"
+                <dx-select-box
                   name="tenant.cityId"
-                  [(ngModel)]="tenant.cityId"
+                  [(value)]="tenant.cityId"
+                  [dataSource]="allCities"
+                  [searchEnabled]="true"
+                  (onSelectionChanged)="CountryChanged($event)"
+                  displayExpr="displayName"
+                  valueExpr="id"
                   required
+                  [disabled]="!isCountySelected"
+                  placeholder="{{ l('Select') }} {{ l('City') }}"
                 >
-                  <option [ngValue]="null">{{ l('Select') }} {{ l('City') }}</option>
-                  <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>
-                  <option value="-1">{{ l('Other') }}</option>
-                </select>
+                </dx-select-box>
+                <!--                <select-->
+                <!--                  [disabled]="!isCountySelected"-->
+                <!--                  #citySelect="ngModel"-->
+                <!--                  class="form-control form-control-lg custom-select mr-sm-2"-->
+                <!--                  name="tenant.cityId"-->
+                <!--                  [(ngModel)]="tenant.cityId"-->
+                <!--                  required-->
+                <!--                >-->
+                <!--                  <option [ngValue]="null">{{ l('Select') }} {{ l('City') }}</option>-->
+                <!--                  <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>-->
+                <!--                  <option value="-1">{{ l('Other') }}</option>-->
+                <!--                </select>-->
                 <!-- <span class="form-text text-danger" *ngIf="citySelect.value == -2 && citySelect.touched">City is required</span> -->
-                <validation-messages [formCtrl]="citySelect"></validation-messages>
+                <!--                <validation-messages [formCtrl]="citySelect"></validation-messages>-->
               </div>
             </div>
           </div>
@@ -389,9 +414,20 @@
 
           <div class="form-group">
             <label for="edition">{{ 'Edition' | localize }}</label>
-            <select id="edition" name="edition" class="form-control" [(ngModel)]="tenant.editionId" (change)="onEditionChange()">
-              <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }}</option>
-            </select>
+            <dx-select-box
+              name="edition"
+              [(value)]="tenant.editionId"
+              [dataSource]="editions"
+              [searchEnabled]="true"
+              displayExpr="displayText"
+              valueExpr="value"
+              (onSelectionChanged)="onEditionChange()"
+              placeholder="{{ l('Select') }}"
+            >
+            </dx-select-box>
+            <!--            <select id="edition" name="edition" class="form-control" [(ngModel)]="tenant.editionId" (change)="onEditionChange()">-->
+            <!--              <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }}</option>-->
+            <!--            </select>-->
           </div>
 
           <div [hidden]="!isSubscriptionFieldsVisible" class="checkbox-list">
@@ -467,8 +503,8 @@
               !subscriptionEndDateIsValid() ||
               !isEmailValid ||
               !isEmailAvailable ||
-              citySelect.value == -2 ||
-              countrySelect.value == -2 ||
+              tenant.cityId == -2 ||
+              tenant.countryId == -2 ||
               !isCompanyNameAvailable
             "
           >

@@ -20,10 +20,21 @@
         <div class="card-body">
           <div class="form-group">
             <label>{{ l('Template') }}</label>
-            <select class="form-control" name="template" [(ngModel)]="templateId" [busyIf]="loading">
-              <option value="undefined" selected disabled>{{ l('SelectATemplate') }}</option>
-              <option *ngFor="let item of templates" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <dx-select-box
+              name="template"
+              [(value)]="templateId"
+              [dataSource]="templates"
+              [searchEnabled]="true"
+              displayExpr="displayName"
+              valueExpr="id"
+              required
+              placeholder="{{ l('SelectATemplate') }}"
+            >
+            </dx-select-box>
+            <!--            <select class="form-control" name="template" [(ngModel)]="templateId" [busyIf]="loading">-->
+            <!--              <option value="undefined" selected disabled>{{ l('SelectATemplate') }}</option>-->
+            <!--              <option *ngFor="let item of templates" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
           </div>
         </div>
         <!--end::Body-->

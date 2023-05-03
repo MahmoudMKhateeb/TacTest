@@ -46,7 +46,10 @@ export class CreateOrEditPenaltyModalComponent extends AppComponentBase implemen
   }
   ngOnInit(): void {
     this.loadDropDowns();
-    this.priceOfferCommissionType = this.enumToArray.transform(PriceOfferCommissionType);
+    this.priceOfferCommissionType = this.enumToArray.transform(PriceOfferCommissionType).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
     this._PenaltiesServiceProxy
       .getTaxVat()
       .pipe(

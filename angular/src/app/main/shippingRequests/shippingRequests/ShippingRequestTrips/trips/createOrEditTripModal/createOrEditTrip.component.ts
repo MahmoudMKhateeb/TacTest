@@ -270,14 +270,20 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     ) {
       this.getAllDedicatedDriversForDropDown();
       this.getAllDedicateTrucksForDropDown();
-      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
+      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+        item.value = this.l(item.value);
+        return item;
+      });
     }
     if (!shippingRequestForView) {
       //console.log('!shippingRequestForView');
       this.getAllDrivers();
       this.getAllTrucks(undefined);
       this.getAllGoodCategories();
-      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
+      this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+        item.value = this.l(item.value);
+        return item;
+      });
       this.getActors();
     }
     if (this.shippingRequest) {
@@ -1130,7 +1136,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._dedicatedShippingRequestsServiceProxy
         .getAllDedicatedDriversForDropDown(this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.id)
         .subscribe((res) => {
-          this.allDedicatedDrivers = res;
+          this.allDedicatedDrivers = res.map((item) => {
+            (item as any).disabled = !item.isAvailable;
+            return item;
+          });
         });
     }
   }
@@ -1143,7 +1152,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._dedicatedShippingRequestsServiceProxy
         .getAllDedicateTrucksForDropDown(this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.id)
         .subscribe((res) => {
-          this.allDedicatedTrucks = res;
+          this.allDedicatedTrucks = res.map((item) => {
+            (item as any).disabled = !item.isAvailable;
+            return item;
+          });
         });
     }
   }

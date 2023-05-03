@@ -39,6 +39,7 @@ import { CustomMarkerComponent } from '@app/main/shippingRequests/shippingReques
 import { CustomTimelineComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-timeline/custom-timeline.component';
 import { UploadAdditionalDocumentsComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/upload-additional-documents/upload-additional-documents.component';
 import { TrackingTableViewComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-table-view/tracking-table-view.component';
+import { DxSelectBoxModule } from '@node_modules/devextreme-angular/ui/select-box';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { TrackingTableViewComponent } from '@app/main/shippingRequests/shippingR
     CascadeSelectModule,
     DxDataGridModule,
     DxCheckBoxModule,
+    DxSelectBoxModule,
   ],
   exports: [
     CreateOrEditTripAccidentModalComponent,

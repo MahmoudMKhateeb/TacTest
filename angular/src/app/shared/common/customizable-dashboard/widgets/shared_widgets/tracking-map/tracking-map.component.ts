@@ -55,7 +55,10 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   TruckType: number;
   RouteType: number;
   driverName: string;
-  ShippingRequestRouteType = this.enumToArray.transform(ShippingRequestRouteType);
+  ShippingRequestRouteType = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+    item.value = this.l(item.value);
+    return item;
+  });
 
   allTruckTypes: ISelectItemDto[];
   cityFillter: number;
@@ -84,6 +87,10 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   getallTruckTypes() {
     this._shipperDashboardServiceProxy.getAllTruckTypesForDropdown().subscribe((res) => {
       this.allTruckTypes = res;
+      const allFacLookup = new ISelectItemDto();
+      allFacLookup.displayName = this.l('All');
+      (allFacLookup.id as any) = '';
+      this.allTruckTypes.unshift(allFacLookup);
     });
   }
 
@@ -93,6 +100,10 @@ export class TrackingMapComponent extends AppComponentBase implements OnInit {
   getAllCities() {
     this.facilitiesServiceProxy.getAllCityForTableDropdown().subscribe((res) => {
       this.citiesList = res;
+      const allFacLookup = new FacilityCityLookupTableDto();
+      allFacLookup.displayName = this.l('All');
+      (allFacLookup.id as any) = '';
+      this.citiesList.unshift(allFacLookup);
     });
   }
 

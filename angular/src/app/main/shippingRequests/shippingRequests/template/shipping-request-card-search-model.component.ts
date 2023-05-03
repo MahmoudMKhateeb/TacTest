@@ -46,8 +46,20 @@ export class ShippingRequestCardSearchModelComponent extends AppComponentBase im
     super(injector);
   }
   ngOnInit(): void {
-    this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
-    this.requestTypes = this.enumToArray.transform(ShippingRequestType);
+    this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
+    this.requestTypes = this.enumToArray.transform(ShippingRequestType).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
+    const obj = {
+      value: this.l('All'),
+      key: '',
+    };
+    this.routeTypes.unshift(obj);
+    this.requestTypes.unshift(obj);
   }
 
   getData() {
@@ -70,6 +82,11 @@ export class ShippingRequestCardSearchModelComponent extends AppComponentBase im
           item.value = x.id.toString();
           return item;
         });
+        const combo = new ComboboxItemDto();
+        combo.displayText = this.l('All');
+        combo.value = '';
+        this.cites.unshift(combo);
+        this.truckTypes.unshift(combo);
       });
   }
   show(Input: ShippingRequestForPriceOfferGetAllInput): void {
