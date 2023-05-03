@@ -3374,6 +3374,7 @@
 	<text name="ConfirmationDate">Confirmation date</text>
     <text name="DirectShipmentTrackingPermission">Direct Shipment Tracking Permission</text>
     <text name="DirectShipmentTracking">Direct Shipment Tracking</text>
+    <text name="RequiredReceiverCodeForInvoice">Is receiver code required</text>
 		
     <text name="ExportNormalToExcel">Export normal request</text>
     <text name="ExportDedicatedToExcel">Export dedicated request</text>

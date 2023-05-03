@@ -3090,6 +3090,7 @@
     <text name="ConfirmationDate">تاريخ التأكيد</text>
 	<text name="DirectShipmentTrackingPermission">تتبع الشحنات المباشرة</text>
 	<text name="DirectShipmentTracking">تتبع الشحنات المباشرة</text>
+    <text name="RequiredReceiverCodeForInvoice">هل رمز المستلم مطلوب</text>
 		
 	</texts>
 </localizationDictionary>
