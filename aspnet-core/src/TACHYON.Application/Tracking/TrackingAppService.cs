@@ -77,9 +77,7 @@ namespace TACHYON.Tracking
             _SubmitInvoiceTripRepository = submitInvoiceTripRepository;
         }
 
-
-        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper)]
-        public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
+        private async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input, bool isDirectShipmentTrackingEnabled)
         {
            // CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
 
@@ -101,6 +99,7 @@ namespace TACHYON.Tracking
             bool hasCarrierClient = await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierClients);
             DisableTenancyFilters();
             var query =await (await GetTrip(input))
+                .Where(x => isDirectShipmentTrackingEnabled ? !x.ShippingRequestId.HasValue : x.ShippingRequestId.HasValue)
                 .AsNoTracking()
                 .OrderBy(input.Sorting ?? "id desc").PageBy(input).Select(src => new TrackingListDto
             {
@@ -219,9 +218,7 @@ namespace TACHYON.Tracking
 
             );
         }
-
-        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper)]
-        public async Task<LoadResult> GetAllDx(string filter, TrackingSearchInputDto input)
+        private async Task<LoadResult> GetAllDx(string filter, TrackingSearchInputDto input, bool isDirectShipmentTrackingEnabled)
         {
 
             var isShipper = await IsEnabledAsync(AppFeatures.Shipper);
@@ -231,6 +228,7 @@ namespace TACHYON.Tracking
 
             DisableTenancyFilters();
             var query =  (await GetTrip(input))
+            .Where(x=> isDirectShipmentTrackingEnabled? !x.ShippingRequestId.HasValue : x.ShippingRequestId.HasValue)
                 .ProjectTo<TrackingListDto>(AutoMapperConfigurationProvider).AsNoTracking();
 
             var result = query.ToList();
@@ -273,6 +271,23 @@ namespace TACHYON.Tracking
         }
 
       
+
+        [AbpAuthorize(AppPermissions.Pages_Tracking_DirectShipmentTracking)]
+        public async Task<LoadResult> GetDirectShipmentsDx(string filter, TrackingSearchInputDto input)
+            => await GetAllDx(filter, input, true);
+
+        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper)]
+        public async Task<LoadResult> GetAllDx(string filter, TrackingSearchInputDto input)
+            => await GetAllDx(filter, input, false);
+
+        [AbpAuthorize(AppPermissions.Pages_Tracking_DirectShipmentTracking)]
+        public async Task<PagedResultDto<TrackingListDto>> GetDirectShipments(TrackingSearchInputDto input)
+            => await GetAll( input, true);
+
+        [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper)]
+        public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
+            => await GetAll(input, false);
+
         [AbpAllowAnonymous]
         public async Task<PagedResultDto<TrackingByWaybillDto>> GetDropsOffByMasterWaybill(long waybillNumber)
         {
