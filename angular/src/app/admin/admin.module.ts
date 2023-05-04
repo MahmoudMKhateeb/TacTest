@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -151,6 +151,7 @@ import { AgmCoreModule } from '@node_modules/@agm/core';
 import { UnitOfMeasureTranslationsComponent } from './unitOfMeasures/unitOfMeasures/UnitOfMeasureTranslations/unit-of-measure-translations/unit-of-measure-translations.component';
 // import { ActorInvoiceDemandModelComponent } from './actors/Actor-Invoices-ondemand-model.component';
 import { MultiSelectModule } from '@node_modules/primeng/multiselect';
+import { DriverFilterModalComponent } from '@app/admin/users/drivers/driver-filter/driver-filter-modal.component';
 
 // devextreme imports
 import { DxDataGridModule } from '@node_modules/devextreme-angular/ui/data-grid';
@@ -349,6 +350,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DriverTrackingModalComponent,
     UnitOfMeasureTranslationsComponent,
     // ActorInvoiceDemandModelComponent
+    DriverFilterModalComponent,
   ],
 
   exports: [AddMemberModalComponent, AddRoleModalComponent, ViewOrEditEntityDocumentsModalComponent],
