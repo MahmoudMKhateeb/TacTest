@@ -3088,6 +3088,9 @@
     <text name="ExportNormalToExcel">تصدير الطلبات</text>
     <text name="ExportDedicatedToExcel">تصدير طلبات التأجير </text>
     <text name="ConfirmationDate">تاريخ التأكيد</text>
+	<text name="DedicatedShippingRequestSavedTemplate">قوالب طلب تأجير الشاحنات</text>
+	<text name="ShippingRequestSavedTemplate">قوالب طلب الشحن</text>
+	<text name="TripSavedTemplate">فوالب الرحلة</text>
 		
 	</texts>
 </localizationDictionary>

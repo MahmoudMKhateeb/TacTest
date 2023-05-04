@@ -28,10 +28,7 @@
                   !_TripService.CreateOrEditShippingRequestTripDto?.id &&
                   (isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas')) &&
                   _TripService.GetShippingRequestForViewOutput &&
-                  _TripService.GetShippingRequestForViewOutput &&
-                  _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
-                "
-              >
+                  _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Normal">
                 <button
                   *ngIf="isEnabled('App.SaveTemplateFeature')"
                   dropdownToggle

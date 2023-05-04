@@ -4,43 +4,43 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
-  ActorSelectItemDto,
-  CountyDto,
-  CreateOrEditActorCarrierPrice,
-  CreateOrEditActorShipperPriceDto,
-  CreateOrEditDocumentFileDto,
-  CreateOrEditRoutPointDto,
-  CreateOrEditShippingRequestTripDto,
-  CreateOrEditShippingRequestTripVasDto,
-  DedicatedShippingRequestsServiceProxy,
-  DropPaymentMethod,
-  EntityTemplateServiceProxy,
-  FacilitiesServiceProxy,
-  FacilityType,
-  FileDto,
-  GetAllDedicatedDriversOrTrucksForDropDownDto,
-  GetAllGoodsCategoriesForDropDownOutput,
-  GetAllTrucksWithDriversListDto,
-  GetShippingRequestForViewOutput,
-  GetShippingRequestVasForViewDto,
-  GoodsDetailsServiceProxy,
-  PickingType,
-  RoundTripType,
-  SavedEntityType,
-  SelectFacilityItemDto,
-  SelectItemDto,
-  ShippingRequestDestinationCitiesDto,
-  ShippingRequestDto,
-  ShippingRequestFlag,
-  ShippingRequestRouteType,
-  ShippingRequestsServiceProxy,
-  ShippingRequestsTripServiceProxy,
-  ShippingRequestTripFlag,
-  ShippingTypeEnum,
-  TenantCityLookupTableDto,
-  TenantRegistrationServiceProxy,
-  UpdateDocumentFileInput,
-  WaybillsServiceProxy,
+    ActorSelectItemDto,
+    CountyDto,
+    CreateOrEditActorCarrierPrice,
+    CreateOrEditActorShipperPriceDto,
+    CreateOrEditDocumentFileDto,
+    CreateOrEditRoutPointDto,
+    CreateOrEditShippingRequestTripDto,
+    CreateOrEditShippingRequestTripVasDto,
+    DedicatedShippingRequestsServiceProxy,
+    DropPaymentMethod,
+    EntityTemplateServiceProxy,
+    FacilitiesServiceProxy,
+    FacilityType,
+    FileDto,
+    GetAllDedicatedDriversOrTrucksForDropDownDto,
+    GetAllGoodsCategoriesForDropDownOutput,
+    GetAllTrucksWithDriversListDto,
+    GetShippingRequestForViewOutput,
+    GetShippingRequestVasForViewDto,
+    GoodsDetailsServiceProxy,
+    PickingType,
+    RoundTripType,
+    SavedEntityType,
+    SelectFacilityItemDto,
+    SelectItemDto,
+    ShippingRequestDestinationCitiesDto,
+    ShippingRequestDto,
+    ShippingRequestFlag,
+    ShippingRequestRouteType,
+    ShippingRequestsServiceProxy,
+    ShippingRequestsTripServiceProxy,
+    ShippingRequestTripFlag,
+    ShippingTypeEnum, TemplateSelectItemDto,
+    TenantCityLookupTableDto,
+    TenantRegistrationServiceProxy,
+    UpdateDocumentFileInput,
+    WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -136,7 +136,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   docProgressFileName: any;
   templatesLoading: boolean;
-  tripTemples: SelectItemDto[];
+  tripTemples: TemplateSelectItemDto[];
   SavedEntityType = SavedEntityType;
   private PickingType = PickingType;
   //private tripServiceShippingRequestSub: Subscription;
@@ -1065,15 +1065,15 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   public CanCreateTemplate(): boolean {
     //if there is no routePoints
-    if (!isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto.routPoints)) {
+    if (!isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto.routPoints) && !isNotNullOrUndefined(this.PointsComponent?.wayPointsList)) {
       return false;
     } else if (
       this._TripService.CreateOrEditShippingRequestTripDto.routPoints.find(
         (x) => x.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x.goodsDetailListDto)
       )
-    ) {
+        || this.PointsComponent?.wayPointsList?.find((x) => x.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x.goodsDetailListDto))) {
       return false;
-    } else if (this._TripService.CreateOrEditShippingRequestTripDto.routPoints.length < this.shippingRequest.numberOfDrops + 1) {
+    } else if (this._TripService.CreateOrEditShippingRequestTripDto.routPoints.length < this.shippingRequest.numberOfDrops + 1 && this.PointsComponent?.wayPointsList?.length < this.shippingRequest.numberOfDrops + 1) {
       return false;
     } else {
       return true;
