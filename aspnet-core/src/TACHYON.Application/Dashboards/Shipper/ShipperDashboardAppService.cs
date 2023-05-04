@@ -353,14 +353,15 @@ namespace TACHYON.Dashboards.Shipper
                 .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
                 .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year && x.CreationTime.Month == Clock.Now.Month )
                 .WhereIf(period == FilterDatePeriod.Monthly,x=>  x.CreationTime.Year == Clock.Now.Year )
-                .Where(x => x.Status == ShippingRequestTripStatus.Delivered);
+                .Where(x => x.Status == ShippingRequestTripStatus.Delivered || x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation);
 
 
             var podTrips = await query
-                    .Where(x => x.RoutPoints.Any(p => p.IsPodUploaded))
+                .Where(x => x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
+                    .Where(x => x.RoutPoints.Any(p => !p.IsPodUploaded))
                     .Select(x=> new {x.CreationTime,x.Id}).ToListAsync();
             
-            var total = await query.Select(x=> new {x.CreationTime,x.Id}).ToListAsync();
+            var total = await query.Where(x => x.Status == ShippingRequestTripStatus.Delivered).Select(x=> new {x.CreationTime,x.Id}).ToListAsync();
                 
             
             var podTripsList = new List<ChartCategoryPairedValuesDto>();
