@@ -197,10 +197,15 @@ namespace TACHYON.Trucks
             {
                 var trucksCount =await GetTrucksNo(AbpSession.TenantId.Value);
                 var maxNumberOfTrucks = await GetMaxNumberOfTrucks(AbpSession.TenantId.Value);
-                if (maxNumberOfTrucks >= trucksCount)
+                if (maxNumberOfTrucks != null && maxNumberOfTrucks <= trucksCount)
                 {
                     dto.IsTenantExceedsNumberOfTrucks = true;
                     dto.CanAddTruck =await HaveAdditionalPrice(AbpSession.TenantId.Value);
+                }
+                else if(maxNumberOfTrucks == null)
+                {
+                    dto.IsTenantExceedsNumberOfTrucks = false;
+                    dto.CanAddTruck = true;
                 }
             }
             return dto;
