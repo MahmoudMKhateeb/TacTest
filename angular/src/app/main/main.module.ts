@@ -341,6 +341,7 @@ import { MakeScrollableDirective } from '@app/shared/common/make-scrollable-dire
 import { DirectTripsComponent } from './direct-trips/direct-trips.component';
 import { ShippingRequestsTableComponent } from '@app/main/shippingRequests/shippingRequestsTable/shippingRequestsTable.component';
 import { ShippingRequestCardComponent } from '@app/main/shippingRequests/shipping-request-card/shipping-request-card.component';
+import { TruckFilterModalComponent } from '@app/main/trucks/trucks/truck-filter/truck-filter-modal.component';
 
 // devextreme imports
 import { DxDataGridModule } from '@node_modules/devextreme-angular/ui/data-grid';
@@ -692,6 +693,7 @@ import { DxTextAreaModule } from '@node_modules/devextreme-angular/ui/text-area'
     DirectTripsComponent,
     ShippingRequestsTableComponent,
     ShippingRequestCardComponent,
+    TruckFilterModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
