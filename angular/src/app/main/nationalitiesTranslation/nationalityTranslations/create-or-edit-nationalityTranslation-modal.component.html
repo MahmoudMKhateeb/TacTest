@@ -23,22 +23,10 @@
         <div class="modal-body">
           <div class="form-group m-form__group">
             <label for="NationalityName">{{ l('Nationality') }}</label>
-            <dx-select-box
-              id="NationalityName"
-              name="nationalityTranslation.nationalityId"
-              [(value)]="nationalityTranslation.coreId"
-              [dataSource]="allNationalitys"
-              [searchEnabled]="true"
-              displayExpr="displayName"
-              valueExpr="id"
-              required
-              placeholder="{{ l('SelectANationality') }}"
-            >
-            </dx-select-box>
-            <!--            <select name="nationalityTranslation.nationalityId" [(ngModel)]="nationalityTranslation.coreId" class="form-control" required>-->
-            <!--              <option value="">{{ l('SelectANationality') }}</option>-->
-            <!--              <option *ngFor="let item of allNationalitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
-            <!--            </select>-->
+            <select name="nationalityTranslation.nationalityId" [(ngModel)]="nationalityTranslation.coreId" class="form-control" required>
+              <option value="">{{ l('SelectANationality') }}</option>
+              <option *ngFor="let item of allNationalitys" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
           </div>
 
           <div class="form-group">

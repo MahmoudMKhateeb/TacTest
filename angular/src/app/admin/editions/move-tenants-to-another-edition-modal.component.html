@@ -32,21 +32,10 @@
           </div>
           <div class="form-group">
             <label>{{ 'Edition' | localize }}</label>
-            <dx-select-box
-              name="moveTenantsInput.targetEditionId"
-              [(value)]="moveTenantsInput.targetEditionId"
-              [dataSource]="targetEditions"
-              [searchEnabled]="true"
-              displayExpr="displayText"
-              valueExpr="value"
-              required
-              placeholder="{{ l('Select') }}"
-            >
-            </dx-select-box>
-            <!--            <select name="expiringEdition" class="form-control" required [(ngModel)]="moveTenantsInput.targetEditionId">-->
-            <!--              <option value="">{{ 'Select' | localize }}</option>-->
-            <!--              <option *ngFor="let targetEdition of targetEditions" [value]="targetEdition.value">{{ targetEdition.displayText }}</option>-->
-            <!--            </select>-->
+            <select name="expiringEdition" class="form-control" required [(ngModel)]="moveTenantsInput.targetEditionId">
+              <option value="">{{ 'Select' | localize }}</option>
+              <option *ngFor="let targetEdition of targetEditions" [value]="targetEdition.value">{{ targetEdition.displayText }}</option>
+            </select>
           </div>
         </div>
         <div class="modal-footer">

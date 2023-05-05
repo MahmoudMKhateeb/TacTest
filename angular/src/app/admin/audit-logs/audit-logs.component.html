@@ -87,25 +87,11 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="HasException">{{ 'ErrorState' | localize }}</label>
-                        <dx-select-box
-                          name="hasException"
-                          [(value)]="hasException"
-                          [dataSource]="[
-                            { displayName: l('All'), value: '' },
-                            { displayName: l('Success'), value: true },
-                            { displayName: l('HasError'), value: false }
-                          ]"
-                          [searchEnabled]="true"
-                          displayExpr="displayName"
-                          valueExpr="value"
-                          placeholder="{{ l('Select') }}"
-                        >
-                        </dx-select-box>
-                        <!--                        <select id="HasException" name="HasException" class="form-control" [(ngModel)]="hasException">-->
-                        <!--                          <option value="">{{ 'All' | localize }}</option>-->
-                        <!--                          <option value="false">{{ 'Success' | localize }}</option>-->
-                        <!--                          <option value="true">{{ 'HasError' | localize }}</option>-->
-                        <!--                        </select>-->
+                        <select id="HasException" name="HasException" class="form-control" [(ngModel)]="hasException">
+                          <option value="">{{ 'All' | localize }}</option>
+                          <option value="false">{{ 'Success' | localize }}</option>
+                          <option value="true">{{ 'HasError' | localize }}</option>
+                        </select>
                       </div>
                     </div>
 
@@ -299,21 +285,11 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="EntityTypeFullName">{{ 'Object' | localize }}</label>
-                        <dx-select-box
-                          name="EntityTypeFullName"
-                          [(value)]="entityTypeFullName"
-                          [dataSource]="objectTypes"
-                          [searchEnabled]="true"
-                          displayExpr="name"
-                          valueExpr="value"
-                          placeholder="{{ l('Select') }}"
-                        >
-                        </dx-select-box>
 
-                        <!--                        <select id="EntityTypeFullName" name="EntityTypeFullName" class="form-control" [(ngModel)]="entityTypeFullName">-->
-                        <!--                          <option value="undefined" selected="selected">{{ 'All' | localize }} </option>-->
-                        <!--                          <option *ngFor="let objectType of objectTypes" [value]="objectType.value">{{ objectType.name }}</option>-->
-                        <!--                        </select>-->
+                        <select id="EntityTypeFullName" name="EntityTypeFullName" class="form-control" [(ngModel)]="entityTypeFullName">
+                          <option value="undefined" selected="selected">{{ 'All' | localize }}</option>
+                          <option *ngFor="let objectType of objectTypes" [value]="objectType.value">{{ objectType.name }}</option>
+                        </select>
                       </div>
                     </div>
                   </div>

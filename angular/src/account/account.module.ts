@@ -46,8 +46,6 @@ import { TermAndConditionRegistrationComponent } from './register/term-and-condi
 import { TrackingOutsidePlatformComponent } from './tracking-outside-platform/tracking-outside-platform.component';
 import { TableModule } from '@node_modules/primeng/table';
 
-import { DxSelectBoxModule } from '@node_modules/devextreme-angular/ui/select-box';
-
 import { InvoiceOutsideComponent } from '@account/invoice-outside/invoice-outside.component';
 export function getRecaptchaLanguage(): string {
   return new LocaleMappingService().map('recaptcha', abp.localization.currentLanguage.name);
@@ -69,7 +67,6 @@ export function getRecaptchaLanguage(): string {
     PasswordModule,
     AppBsModalModule,
     TableModule,
-    DxSelectBoxModule,
   ],
   declarations: [
     SafePipe,

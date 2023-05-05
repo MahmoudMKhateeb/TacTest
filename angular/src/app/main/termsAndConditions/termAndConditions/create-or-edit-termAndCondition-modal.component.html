@@ -42,22 +42,10 @@
                 <label for="TermAndCondition_EditionId">{{ l('Edition') }}</label>
                 <!-- <input type="number" id="TermAndCondition_EditionId" class="form-control" [(ngModel)]="termAndCondition.editionId" name="EditionId" /> -->
 
-                <dx-select-box
-                  id="TermAndCondition_EditionId"
-                  name="EditionId"
-                  [(value)]="termAndCondition.editionId"
-                  [dataSource]="editionsList"
-                  [searchEnabled]="true"
-                  displayExpr="displayName"
-                  valueExpr="id"
-                  required
-                  placeholder="{{ l('Select') }}"
-                >
-                </dx-select-box>
-                <!--                <select id="TermAndCondition_EditionId" name="EditionId" [(ngModel)]="termAndCondition.editionId" class="form-control">-->
-                <!--                  &lt;!&ndash; <option value="">{{ l('SelectEdition') }}</option> &ndash;&gt;-->
-                <!--                  <option *ngFor="let item of editionsList" value="{{ item.id }}">{{ item.displayName }}</option>-->
-                <!--                </select>-->
+                <select id="TermAndCondition_EditionId" name="EditionId" [(ngModel)]="termAndCondition.editionId" class="form-control">
+                  <!-- <option value="">{{ l('SelectEdition') }}</option> -->
+                  <option *ngFor="let item of editionsList" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
               </div>
             </div>
           </div>

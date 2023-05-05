@@ -24,31 +24,19 @@
         <div class="modal-body">
           <div class="form-group m-form__group">
             <label for="emailTemplateType">{{ l('emailTemplateType') }}</label>
-            <dx-select-box
-              id="emailTemplateType"
+            <select
               name="emailTemplateType"
-              [(value)]="emailTemplate.emailTemplateType"
-              [dataSource]="types"
-              [searchEnabled]="true"
-              displayExpr="value"
-              valueExpr="key"
+              [(ngModel)]="emailTemplate.emailTemplateType"
+              class="form-control"
               required
-              placeholder="{{ l('SelectAnEmailTemplateType') }}"
+              #emailTemplateType="ngModel"
+              id="emailTemplateType"
             >
-            </dx-select-box>
-            <!--            <select-->
-            <!--              name="emailTemplateType"-->
-            <!--              [(ngModel)]="emailTemplate.emailTemplateType"-->
-            <!--              class="form-control"-->
-            <!--              required-->
-            <!--              #emailTemplateType="ngModel"-->
-            <!--              id="emailTemplateType"-->
-            <!--            >-->
-            <!--              <option [value]="undefined" selected disabled hidden>{{ l('SelectAnEmailTemplateType') }}</option>-->
-            <!--              <option [value]="code.key" *ngFor="let code of types">-->
-            <!--                {{ code.value | localize }}-->
-            <!--              </option>-->
-            <!--            </select>-->
+              <option [value]="undefined" selected disabled hidden>{{ l('SelectAnEmailTemplateType') }}</option>
+              <option [value]="code.key" *ngFor="let code of types">
+                {{ code.value | localize }}
+              </option>
+            </select>
           </div>
 
           <div class="form-group">

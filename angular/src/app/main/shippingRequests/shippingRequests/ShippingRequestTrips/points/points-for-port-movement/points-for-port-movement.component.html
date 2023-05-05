@@ -65,46 +65,27 @@
           <td>
             <span *ngIf="usedIn != 'createOrEdit'"> {{ record.facility }}</span>
             <div *ngIf="usedIn == 'createOrEdit'" class="input-group">
-              <dx-select-box
-                class="form-control p-0"
+              <select
+                #pointFacility="ngModel"
                 name="facility{{ i }}"
-                [(value)]="wayPointsList[i].facilityId"
-                [dataSource]="record.pickingType === PickingType.Pickup ? filteredPickupFacilities[i] : filteredDropFacilities[i]"
-                [searchEnabled]="true"
-                (onSelectionChanged)="
+                class="form-control"
+                [(ngModel)]="wayPointsList[i].facilityId"
+                (ngModelChange)="
                   RouteStepCordSetter(i, wayPointsList[i].facilityId);
                   wayPointsSetter();
                   loadReceivers(wayPointsList[i].facilityId);
                   wayPointsList[i].receiverId = null;
                   onChangedWayPointsList()
                 "
-                displayExpr="displayName"
-                valueExpr="id"
+                [class.is-valid]="pointFacility.touched && wayPointsList[i].facilityId && pointFacility.valid"
+                [class.is-invalid]="pointFacility.touched && !wayPointsList[i].facilityId && !pointFacility.valid"
                 [disabled]="isFacilityDisabled(i)"
-                placeholder="{{ l('SelectaFacility') }}"
               >
-              </dx-select-box>
-              <!--              <select-->
-              <!--                #pointFacility="ngModel"-->
-              <!--                name="facility{{ i }}"-->
-              <!--                class="form-control"-->
-              <!--                [(ngModel)]="wayPointsList[i].facilityId"-->
-              <!--                (change)="-->
-              <!--                  RouteStepCordSetter(i, wayPointsList[i].facilityId);-->
-              <!--                  wayPointsSetter();-->
-              <!--                  loadReceivers(wayPointsList[i].facilityId);-->
-              <!--                  wayPointsList[i].receiverId = null;-->
-              <!--                  onChangedWayPointsList()-->
-              <!--                "-->
-              <!--                [class.is-valid]="pointFacility.touched && wayPointsList[i].facilityId && pointFacility.valid"-->
-              <!--                [class.is-invalid]="pointFacility.touched && !wayPointsList[i].facilityId && !pointFacility.valid"-->
-              <!--                [disabled]="isFacilityDisabled(i)"-->
-              <!--              >-->
-              <!--                <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>-->
-              <!--                <option *ngFor="let item of filterFacilitiesForDropDown(record.pickingType === PickingType.Pickup, i)" [ngValue]="item.id">-->
-              <!--                  {{ item.displayName }}-->
-              <!--                </option>-->
-              <!--              </select>-->
+                <option [value]="undefined" disabled selected>{{ l('SelectaFacility') }}</option>
+                <option *ngFor="let item of filterFacilitiesForDropDown(record.pickingType === PickingType.Pickup, i)" [ngValue]="item.id">
+                  {{ item.displayName }}
+                </option>
+              </select>
               <div *ngIf="isShipper || isCarrierSaas || isTachyonDealer" class="input-group-btn">
                 <button class="btn btn-light-danger" [disabled]="facilityLoading" (click)="createOrEditFacilityModalShow()">
                   <i class="flaticon2-add"></i>
@@ -115,36 +96,22 @@
           <td>
             <span *ngIf="usedIn != 'createOrEdit'"> {{ record.senderOrReceiverContactName }}</span>
             <div *ngIf="usedIn == 'createOrEdit'" class="input-group">
-              <dx-select-box
-                class="form-control p-0"
+              <select
+                #pointReciver="ngModel"
                 name="reciver{{ i }}"
-                [(value)]="wayPointsList[i].receiverId"
+                class="form-control"
+                [(ngModel)]="wayPointsList[i].receiverId"
                 [disabled]="!wayPointsList[i].facilityId"
-                [dataSource]="allPointsSendersAndReceivers[wayPointsList[i].facilityId] ?? []"
-                [searchEnabled]="true"
-                (onSelectionChanged)="onChangedWayPointsList(); selectContact(i)"
-                displayExpr="displayName"
-                valueExpr="id"
-                required
-                placeholder="{{ l('SelectContact') }}"
+                [busyIf]="receiverLoading"
+                [class.is-valid]="pointReciver.touched && wayPointsList[i].receiverId && pointReciver.valid"
+                [class.is-invalid]="pointReciver.touched && !wayPointsList[i].receiverId && !pointReciver.valid"
+                (change)="onChangedWayPointsList(); selectContact(i)"
               >
-              </dx-select-box>
-              <!--              <select-->
-              <!--                #pointReciver="ngModel"-->
-              <!--                name="reciver{{ i }}"-->
-              <!--                class="form-control"-->
-              <!--                [(ngModel)]="wayPointsList[i].receiverId"-->
-              <!--                [disabled]="!wayPointsList[i].facilityId"-->
-              <!--                [busyIf]="receiverLoading"-->
-              <!--                [class.is-valid]="pointReciver.touched && wayPointsList[i].receiverId && pointReciver.valid"-->
-              <!--                [class.is-invalid]="pointReciver.touched && !wayPointsList[i].receiverId && !pointReciver.valid"-->
-              <!--                (change)="onChangedWayPointsList(); selectContact(i)"-->
-              <!--              >-->
-              <!--                <option value="">{{ l('SelectContact') }}</option>-->
-              <!--                <option *ngFor="let item of allPointsSendersAndReceivers[wayPointsList[i].facilityId] ?? []" [ngValue]="item.id">-->
-              <!--                  {{ item.displayName }}-->
-              <!--                </option>-->
-              <!--              </select>-->
+                <option value="">{{ l('SelectContact') }}</option>
+                <option *ngFor="let item of allPointsSendersAndReceivers[wayPointsList[i].facilityId] ?? []" [ngValue]="item.id">
+                  {{ item.displayName }}
+                </option>
+              </select>
               <div *ngIf="isShipper || isCarrierSaas || isTachyonDealer" class="input-group-btn">
                 <button
                   class="btn btn-light-danger"

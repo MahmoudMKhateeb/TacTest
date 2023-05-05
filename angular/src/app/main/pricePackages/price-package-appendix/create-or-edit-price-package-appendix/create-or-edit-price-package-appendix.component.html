@@ -17,54 +17,28 @@
                   'spinner spinner-success spinner-right mr-1 ml-1': companyType.Shipper ? shippersLoading : carriersLoading
                 }"
               >
-                <dx-select-box
+                <select
                   *ngIf="currentCompanyType === companyType.Shipper"
+                  [(ngModel)]="companyId"
+                  (change)="loadProposals()"
+                  required
+                  class="form-control"
                   name="appendixShipper"
-                  [(value)]="companyId"
-                  [dataSource]="shippers"
-                  [searchEnabled]="true"
-                  (onSelectionChanged)="loadProposals()"
-                  displayExpr="displayName"
-                  valueExpr="id"
-                  required
-                  placeholder="{{ l('SelectShipper') }}"
                 >
-                </dx-select-box>
-                <!--                <select-->
-                <!--                  *ngIf="currentCompanyType === companyType.Shipper"-->
-                <!--                  [(ngModel)]="companyId"-->
-                <!--                  (change)="loadProposals()"-->
-                <!--                  required-->
-                <!--                  class="form-control"-->
-                <!--                  name="appendixShipper"-->
-                <!--                >-->
-                <!--                  <option selected disabled [value]="undefined">{{ 'SelectShipper' | localize }}</option>-->
-                <!--                  <option *ngFor="let item of shippers" [value]="item.id">{{ item.displayName }}</option>-->
-                <!--                </select>-->
-                <dx-select-box
+                  <option selected disabled [value]="undefined">{{ 'SelectShipper' | localize }}</option>
+                  <option *ngFor="let item of shippers" [value]="item.id">{{ item.displayName }}</option>
+                </select>
+                <select
                   *ngIf="currentCompanyType === companyType.Carrier"
-                  name="appendixCarrier"
-                  [(value)]="companyId"
-                  [dataSource]="carriers"
-                  [searchEnabled]="true"
-                  (onSelectionChanged)="loadPricePackages()"
-                  displayExpr="displayName"
-                  valueExpr="id"
+                  [(ngModel)]="companyId"
+                  (change)="loadPricePackages()"
                   required
-                  placeholder="{{ l('SelectCarrier') }}"
+                  class="form-control"
+                  name="appendixCarrier"
                 >
-                </dx-select-box>
-                <!--                <select-->
-                <!--                  *ngIf="currentCompanyType === companyType.Carrier"-->
-                <!--                  [(ngModel)]="companyId"-->
-                <!--                  (change)="loadPricePackages()"-->
-                <!--                  required-->
-                <!--                  class="form-control"-->
-                <!--                  name="appendixCarrier"-->
-                <!--                >-->
-                <!--                  <option selected disabled [value]="undefined">{{ 'SelectCarrier' | localize }}</option>-->
-                <!--                  <option *ngFor="let item of carriers" [value]="item.id">{{ item.displayName }}</option>-->
-                <!--                </select>-->
+                  <option selected disabled [value]="undefined">{{ 'SelectaCarrier' | localize }}</option>
+                  <option *ngFor="let item of carriers" [value]="item.id">{{ item.displayName }}</option>
+                </select>
               </div>
             </div>
             <div class="form-group col-md-6">
@@ -93,27 +67,16 @@
                   'spinner spinner-success spinner-right mr-1 ml-1': proposalsLoading
                 }"
               >
-                <dx-select-box
+                <select
+                  [(ngModel)]="appendix.proposalId"
+                  (change)="autoFillByProposal(appendix.proposalId)"
+                  required
+                  class="form-control"
                   name="appendixProposalId"
-                  [(value)]="appendix.proposalId"
-                  [dataSource]="proposals"
-                  [searchEnabled]="true"
-                  (onSelectionChanged)="autoFillByProposal(appendix.proposalId)"
-                  displayExpr="displayName"
-                  valueExpr="id"
-                  placeholder="{{ l('SelectProposal') }}"
                 >
-                </dx-select-box>
-                <!--                <select-->
-                <!--                  [(ngModel)]="appendix.proposalId"-->
-                <!--                  (change)="autoFillByProposal(appendix.proposalId)"-->
-                <!--                  required-->
-                <!--                  class="form-control"-->
-                <!--                  name="appendixProposalId"-->
-                <!--                >-->
-                <!--                  <option selected disabled [value]="undefined">{{ 'SelectProposal' | localize }}</option>-->
-                <!--                  <option *ngFor="let item of proposals" [value]="item.id">{{ item.displayName }}</option>-->
-                <!--                </select>-->
+                  <option selected disabled [value]="undefined">{{ 'SelectProposal' | localize }}</option>
+                  <option *ngFor="let item of proposals" [value]="item.id">{{ item.displayName }}</option>
+                </select>
               </div>
             </div>
             <div *ngIf="currentCompanyType === companyType.Carrier" class="form-group col-md-12">

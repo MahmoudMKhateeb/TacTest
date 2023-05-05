@@ -23,21 +23,10 @@
         <div class="modal-body">
           <div class="form-group m-form__group">
             <label for="CityDisplayName">{{ l('City') }}</label>
-            <dx-select-box
-              id="CityDisplayName"
-              name="citiesTranslation.coreId"
-              [(value)]="citiesTranslation.coreId"
-              [dataSource]="allCitys"
-              [searchEnabled]="true"
-              displayExpr="displayName"
-              valueExpr="id"
-              placeholder="{{ l('SelectACity') }}"
-            >
-            </dx-select-box>
-            <!--            <select name="citiesTranslation.coreId" [(ngModel)]="citiesTranslation.coreId" class="form-control" required>-->
-            <!--              <option value="">{{ l('SelectACity') }}</option>-->
-            <!--              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
-            <!--            </select>-->
+            <select name="citiesTranslation.coreId" [(ngModel)]="citiesTranslation.coreId" class="form-control" required>
+              <option value="">{{ l('SelectACity') }}</option>
+              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
           </div>
 
           <div class="form-group">

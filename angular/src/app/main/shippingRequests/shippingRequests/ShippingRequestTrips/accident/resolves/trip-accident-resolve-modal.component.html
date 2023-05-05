@@ -38,30 +38,17 @@
                     'spinner spinner-success spinner-right mr-1 ml-1': driversLoading
                   }"
                 >
-                  <dx-select-box
-                    name="driverId"
-                    id="driversDropDownList"
-                    [(value)]="resolve.driverId"
-                    [dataSource]="drivers"
-                    [searchEnabled]="true"
-                    displayExpr="displayName"
-                    valueExpr="id"
-                    [attr.required]="changeDriverEnabled"
+                  <select
                     [disabled]="driversLoading || viewModeEnabled || !changeDriverEnabled"
-                    placeholder="{{ l('SelectADriver') }}"
+                    [required]="changeDriverEnabled"
+                    [(ngModel)]="resolve.driverId"
+                    name="driverId"
+                    class="form-control"
+                    id="driversDropDownList"
                   >
-                  </dx-select-box>
-                  <!--                  <select-->
-                  <!--                    [disabled]="driversLoading || viewModeEnabled || !changeDriverEnabled"-->
-                  <!--                    [required]="changeDriverEnabled"-->
-                  <!--                    [(ngModel)]="resolve.driverId"-->
-                  <!--                    name="driverId"-->
-                  <!--                    class="form-control"-->
-                  <!--                    id="driversDropDownList"-->
-                  <!--                  >-->
-                  <!--                    <option [value]="undefined" selected disabled>{{ l('SelectADriver') }}</option>-->
-                  <!--                    <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.displayName }}</option>-->
-                  <!--                  </select>-->
+                    <option [value]="undefined" selected disabled>{{ l('SelectADriver') }}</option>
+                    <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.displayName }}</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -85,30 +72,17 @@
                     'spinner spinner-success spinner-right mr-1 ml-1': trucksLoading
                   }"
                 >
-                  <dx-select-box
-                    id="trucksDropDownList"
-                    name="truckId"
-                    [(value)]="resolve.truckId"
-                    [dataSource]="trucks"
-                    [searchEnabled]="true"
-                    displayExpr="displayName"
-                    valueExpr="id"
+                  <select
                     [disabled]="trucksLoading || viewModeEnabled || !changeTruckEnabled"
-                    [attr.required]="changeTruckEnabled"
-                    placeholder="{{ l('SelectATruck') }}"
+                    [required]="changeTruckEnabled"
+                    [(ngModel)]="resolve.truckId"
+                    name="truckId"
+                    class="form-control"
+                    id="trucksDropDownList"
                   >
-                  </dx-select-box>
-                  <!--                  <select-->
-                  <!--                    [disabled]="trucksLoading || viewModeEnabled || !changeTruckEnabled"-->
-                  <!--                    [required]="changeTruckEnabled"-->
-                  <!--                    [(ngModel)]="resolve.truckId"-->
-                  <!--                    name="truckId"-->
-                  <!--                    class="form-control"-->
-                  <!--                    id="trucksDropDownList"-->
-                  <!--                  >-->
-                  <!--                    <option [value]="undefined" selected disabled>{{ l('SelectATruck') }}</option>-->
-                  <!--                    <option *ngFor="let truck of trucks" [value]="truck.id">{{ truck.displayName }}</option>-->
-                  <!--                  </select>-->
+                    <option [value]="undefined" selected disabled>{{ l('SelectATruck') }}</option>
+                    <option *ngFor="let truck of trucks" [value]="truck.id">{{ truck.displayName }}</option>
+                  </select>
                 </div>
               </div>
             </div>

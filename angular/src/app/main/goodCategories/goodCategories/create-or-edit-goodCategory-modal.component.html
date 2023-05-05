@@ -25,35 +25,22 @@
             <div class="col-12">
               <div class="form-group">
                 <label for="GoodCategory_CategoryFather">{{ l('SubCategoryFather') }}</label>
-                <dx-select-box
+                <select
+                  class="form-control"
                   name="GoodCategory_CategoryFather"
                   id="GoodCategory_CategoryFather"
-                  [(value)]="goodCategory.fatherId"
-                  [dataSource]="AllGoodsCategoriesForDropDown"
+                  [(ngModel)]="goodCategory.fatherId"
                   [disabled]="!AllGoodsCategoriesForDropDown"
-                  [searchEnabled]="true"
-                  displayExpr="displayName"
-                  valueExpr="id"
-                  required
-                  placeholder="{{ l('SelectGoodCategory') }}"
                 >
-                </dx-select-box>
-                <!--                <select-->
-                <!--                  class="form-control"-->
-                <!--                  name="GoodCategory_CategoryFather"-->
-                <!--                  id="GoodCategory_CategoryFather"-->
-                <!--                  [(ngModel)]="goodCategory.fatherId"-->
-                <!--                  [disabled]="!AllGoodsCategoriesForDropDown"-->
-                <!--                >-->
-                <!--                  <option [ngValue]="null">{{ l('SelectGoodCategory') }}</option>-->
-                <!--                  <option-->
-                <!--                    *ngFor="let item of AllGoodsCategoriesForDropDown"-->
-                <!--                    [ngValue]="item.id"-->
-                <!--                    [disabled]="goodCategory.id && item.id === goodCategory.id"-->
-                <!--                  >-->
-                <!--                    {{ item.displayName }}-->
-                <!--                  </option>-->
-                <!--                </select>-->
+                  <option [ngValue]="null">{{ l('SelectGoodCategory') }}</option>
+                  <option
+                    *ngFor="let item of AllGoodsCategoriesForDropDown"
+                    [ngValue]="item.id"
+                    [disabled]="goodCategory.id && item.id === goodCategory.id"
+                  >
+                    {{ item.displayName }}
+                  </option>
+                </select>
                 <span class="form-text text-muted">{{ 'SubCategoryFather' }}</span>
               </div>
               <div class="form-group">

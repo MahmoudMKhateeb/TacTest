@@ -42,10 +42,7 @@ export class InvoicePeriodsModalComponent extends AppComponentBase implements On
     super(injector);
   }
   ngOnInit(): void {
-    this.PeriodType = this.enumToArray.transform(InvoicePeriodType).map((item) => {
-      item.value = this.l(item.value);
-      return item;
-    });
+    this.PeriodType = this.enumToArray.transform(InvoicePeriodType);
     this.FreRelativeInterval = this.enumToArray.transform(FrequencyRelativeInterval);
   }
 

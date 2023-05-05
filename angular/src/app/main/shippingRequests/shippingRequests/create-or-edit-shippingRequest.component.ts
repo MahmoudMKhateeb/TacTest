@@ -105,10 +105,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
   ngOnInit(): void {
     this.show(this._activatedRoute.snapshot.queryParams['id']);
-    this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
-      item.value = this.l(item.value);
-      return item;
-    });
+    this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
   }
 
   show(shippingRequestId?: number): void {

@@ -7,7 +7,7 @@
   [propagateSelectionUp]="false"
 >
   <ng-template let-node pTemplate="default">
-    <span style="margin-right: 5px">{{ node.label }}</span>
+    <span style="margin-right: 5px;">{{ node.label }}</span>
     <input
       type="{{ node.data.inputType.validator.name === 'NUMERIC' ? 'number' : 'text' }}"
       [attr.name]="node.data.name"
@@ -15,20 +15,8 @@
       [(ngModel)]="node.value"
       (change)="onInputChange(node)"
     />
-    <dx-select-box
-      *ngIf="node.data.inputType.name === 'COMBOBOX'"
-      name="node.value"
-      [(value)]="node.value"
-      [dataSource]="node.data.inputType.itemSource.items"
-      [searchEnabled]="true"
-      (onSelectionChanged)="onDropdownChange(node)"
-      displayExpr="displayText"
-      valueExpr="value"
-      placeholder="{{ l('Select') }}"
-    >
-    </dx-select-box>
-    <!--    <select *ngIf="node.data.inputType.name === 'COMBOBOX'" [(ngModel)]="node.value" (change)="onDropdownChange(node)">-->
-    <!--      <option *ngFor="let item of node.data.inputType.itemSource.items" [value]="item.value">{{ item.displayText }}</option>-->
-    <!--    </select>-->
+    <select *ngIf="node.data.inputType.name === 'COMBOBOX'" [(ngModel)]="node.value" (change)="onDropdownChange(node)">
+      <option *ngFor="let item of node.data.inputType.itemSource.items" [value]="item.value">{{ item.displayText }}</option>
+    </select>
   </ng-template>
 </p-tree>

@@ -23,20 +23,10 @@
         <div class="modal-body">
           <div class="form-group m-form__group">
             <label for="TermAndConditionTitle">{{ l('TermAndCondition') }}</label>
-            <dx-select-box
-              name="termAndConditionTranslation.coreId"
-              [(value)]="termAndConditionTranslation.coreId"
-              [dataSource]="allTermAndConditions"
-              [searchEnabled]="true"
-              displayExpr="displayName"
-              valueExpr="id"
-              placeholder="{{ l('SelectATermAndCondition') }}"
-            >
-            </dx-select-box>
-            <!--            <select name="termAndConditionTranslation.coreId" [(ngModel)]="termAndConditionTranslation.coreId" class="form-control">-->
-            <!--              <option value="">{{ l('SelectATermAndCondition') }}</option>-->
-            <!--              <option *ngFor="let item of allTermAndConditions" value="{{ item.id }}">{{ item.displayName }}</option>-->
-            <!--            </select>-->
+            <select name="termAndConditionTranslation.coreId" [(ngModel)]="termAndConditionTranslation.coreId" class="form-control">
+              <option value="">{{ l('SelectATermAndCondition') }}</option>
+              <option *ngFor="let item of allTermAndConditions" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
           </div>
 
           <div class="form-group">

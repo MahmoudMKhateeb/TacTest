@@ -65,19 +65,9 @@
                 </div>
                 <div class="form-group">
                   <label for="DefaultEditionId">{{ 'Edition' | localize }}</label>
-                  <dx-select-box
-                    name="hostSettings.tenantManagement.defaultEditionId"
-                    [(value)]="hostSettings.tenantManagement.defaultEditionId"
-                    [dataSource]="editions"
-                    [searchEnabled]="true"
-                    displayExpr="displayText"
-                    valueExpr="value"
-                    placeholder="{{ l('Select') }}"
-                  >
-                  </dx-select-box>
-                  <!--                  <select id="DefaultEditionId" class="form-control" [(ngModel)]="hostSettings.tenantManagement.defaultEditionId">-->
-                  <!--                    <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }}</option>-->
-                  <!--                  </select>-->
+                  <select id="DefaultEditionId" class="form-control" [(ngModel)]="hostSettings.tenantManagement.defaultEditionId">
+                    <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }}</option>
+                  </select>
                 </div>
               </div>
             </tab>

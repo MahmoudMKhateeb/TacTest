@@ -29,21 +29,10 @@
 
           <div class="form-group m-form__group">
             <label for="CountyDisplayName">{{ l('County') }}</label>
-            <dx-select-box
-              id="CountyDisplayName"
-              name="city.countyId"
-              [(value)]="city.countyId"
-              [dataSource]="allCountys"
-              [searchEnabled]="true"
-              displayExpr="displayName"
-              valueExpr="id"
-              placeholder="{{ l('SelectACounty') }}"
-            >
-            </dx-select-box>
-            <!--            <select name="city.countyId" [(ngModel)]="city.countyId" class="form-control" required>-->
-            <!--              <option value="">{{ l('SelectACounty') }}</option>-->
-            <!--              <option *ngFor="let item of allCountys" value="{{ item.id }}">{{ item.displayName }}</option>-->
-            <!--            </select>-->
+            <select name="city.countyId" [(ngModel)]="city.countyId" class="form-control" required>
+              <option value="">{{ l('SelectACounty') }}</option>
+              <option *ngFor="let item of allCountys" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
           </div>
 
           <div class="form-group">

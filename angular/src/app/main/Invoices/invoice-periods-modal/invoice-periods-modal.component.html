@@ -28,30 +28,18 @@
 
           <div class="form-group m-form__group">
             <label for="periodType">{{ l('BillingIntervalType') }}</label>
-            <dx-select-box
-              id="periodType"
-              name="periodType"
-              [(value)]="Period.periodType"
-              [dataSource]="PeriodType"
-              [searchEnabled]="true"
-              (onSelectionChanged)="onChangePeriodType($event)"
-              displayExpr="value"
-              valueExpr="key"
+            <select
+              name="Period.periodType"
+              [(ngModel)]="Period.periodType"
+              (change)="onChangePeriodType($event.target.value)"
+              class="form-control"
               required
-              placeholder="{{ l('SelectBillingIntervalFreqType') }}"
-            ></dx-select-box>
-            <!--            <select-->
-            <!--              name="Period.periodType"-->
-            <!--              [(ngModel)]="Period.periodType"-->
-            <!--              (change)="onChangePeriodType($event.target.value)"-->
-            <!--              class="form-control"-->
-            <!--              required-->
-            <!--            >-->
-            <!--              <option value="">{{ l('SelectBillingIntervalFreqType') }}</option>-->
-            <!--              <option [value]="code.key" *ngFor="let code of PeriodType">-->
-            <!--                {{ code.value | localize }}-->
-            <!--              </option>-->
-            <!--            </select>-->
+            >
+              <option value="">{{ l('SelectBillingIntervalFreqType') }}</option>
+              <option [value]="code.key" *ngFor="let code of PeriodType">
+                {{ code.value | localize }}
+              </option>
+            </select>
           </div>
           <div class="form-check">
             <input class="form-check-input" type="checkbox" [(ngModel)]="Period.shipperOnlyUsed" name="shipperOnlyUsed" id="shipperOnlyUsed" />

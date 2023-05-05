@@ -7,22 +7,15 @@
   <form #twoFactorForm="ngForm" class="login-form form" method="post" (ngSubmit)="submit()" *ngIf="loginService.authenticateResult">
     <p>{{ 'SendSecurityCode_Information' | localize }}</p>
     <div class="form-group">
-      <!--      <select-->
-      <!--        autoFocus-->
-      <!--        size="1"-->
-      <!--        class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"-->
-      <!--        [(ngModel)]="selectedTwoFactorProvider"-->
-      <!--        name="selectedTwoFactorProvider"-->
-      <!--      >-->
-      <!--        <option *ngFor="let provider of loginService.authenticateResult.twoFactorAuthProviders" [value]="provider">{{ provider }}</option>-->
-      <!--      </select>-->
-      <dx-select-box
+      <select
+        autoFocus
+        size="1"
+        class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+        [(ngModel)]="selectedTwoFactorProvider"
         name="selectedTwoFactorProvider"
-        [(value)]="selectedTwoFactorProvider"
-        [items]="loginService.authenticateResult.twoFactorAuthProviders"
-        [searchEnabled]="true"
       >
-      </dx-select-box>
+        <option *ngFor="let provider of loginService.authenticateResult.twoFactorAuthProviders" [value]="provider">{{ provider }}</option>
+      </select>
     </div>
 
     <div class="pb-lg-0 pb-5">

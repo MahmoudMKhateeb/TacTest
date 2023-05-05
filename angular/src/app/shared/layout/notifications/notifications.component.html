@@ -27,24 +27,10 @@
               </div>
               <div class="col-xl-6">
                 <div class="form-group">
-                  <dx-select-box
-                    name="readStateFilter"
-                    [(value)]="readStateFilter"
-                    [dataSource]="[
-                      { name: l('All'), value: 'ALL' },
-                      { name: l('Unread'), value: 'UNREAD' }
-                    ]"
-                    [searchEnabled]="true"
-                    displayExpr="displayName"
-                    valueExpr="id"
-                    required
-                    placeholder="{{ l('Select') }}"
-                  >
-                  </dx-select-box>
-                  <!--                  <select #TargetValueFilterSelectionCombobox class="form-control" [(ngModel)]="readStateFilter" name="readStateFilter">-->
-                  <!--                    <option value="ALL">{{ 'All' | localize }}</option>-->
-                  <!--                    <option value="UNREAD">{{ 'Unread' | localize }}</option>-->
-                  <!--                  </select>-->
+                  <select #TargetValueFilterSelectionCombobox class="form-control" [(ngModel)]="readStateFilter" name="readStateFilter">
+                    <option value="ALL">{{ 'All' | localize }}</option>
+                    <option value="UNREAD">{{ 'Unread' | localize }}</option>
+                  </select>
                 </div>
               </div>
             </div>

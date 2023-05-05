@@ -7,22 +7,10 @@
         <div class="card-body">
           <div class="form-group m-form__group">
             <label for="RoutTypeDisplayName">{{ l('RoutType') }}</label>
-            <dx-select-box
-              id="RoutTypeDisplayName"
-              name="route.routTypeId"
-              [(value)]="route.routTypeId"
-              [dataSource]="allRoutTypes"
-              [searchEnabled]="true"
-              displayExpr="displayName"
-              valueExpr="id"
-              required
-              placeholder="{{ l('SelectARoutType') }}"
-            >
-            </dx-select-box>
-            <!--            <select name="route.routTypeId" [(ngModel)]="route.routTypeId" class="form-control">-->
-            <!--              <option value="">{{ l('SelectARoutType') }}</option>-->
-            <!--              <option *ngFor="let item of allRoutTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
-            <!--            </select>-->
+            <select name="route.routTypeId" [(ngModel)]="route.routTypeId" class="form-control">
+              <option value="">{{ l('SelectARoutType') }}</option>
+              <option *ngFor="let item of allRoutTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
           </div>
 
           <div class="form-group">

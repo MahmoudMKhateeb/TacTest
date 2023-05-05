@@ -221,11 +221,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
   ngOnInit() {
     this.loadAllDropDownLists();
-    this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
-      item.value = this.l(item.value);
-      item.key = Number(item.key);
-      return item;
-    });
+    this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
     this.isCarrierSass = this.feature.isEnabled('App.CarrierAsASaas');
     this.useShippingRequestTemplate();
   }
@@ -609,10 +605,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     });
 
     this._shippingRequestsServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
-      this.allTransportTypes = result.map((item) => {
-        (item.id as any) = Number(item.id);
-        return item;
-      });
+      this.allTransportTypes = result;
     });
 
     // this._shippingRequestsServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
@@ -631,10 +624,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     }
 
     this._shippingRequestsServiceProxy.getAllPackingTypesForDropdown().subscribe((result) => {
-      this.allpackingTypes = result.map((item) => {
-        (item.id as any) = Number(item.id);
-        return item;
-      });
+      this.allpackingTypes = result;
     });
 
     this._facilitiesServiceProxy.getAllPortsForTableDropdown().subscribe((result) => {
@@ -712,11 +702,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         })
       )
       .subscribe((res) => {
-        res = res.map((item) => {
-          (item.id as any) = Number(item.id);
-          return item;
-        });
-        type === 'source' ? (this.sourceCities = res) : this.loadDestinationCities(res);
+        type === 'source' ? (this.sourceCities = res) : this.loadDestinationCities(res, citiesToFill);
         if (type === 'destination') {
           citiesToFill = undefined;
         }
@@ -755,17 +741,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.capacityLoading = true;
       this.truckTypeLoading = true;
       this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(this.step3Dto.transportTypeId).subscribe((result) => {
-        this.allTrucksTypes = result.map((item) => {
-          (item.id as any) = Number(item.id);
-          return item;
-        });
+        this.allTrucksTypes = result;
         this.truckTypeLoading = false;
       });
       this._shippingRequestsServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(this.step3Dto.trucksTypeId).subscribe((result) => {
-        this.allCapacities = result.map((item) => {
-          (item.id as any) = Number(item.id);
-          return item;
-        });
+        this.allCapacities = result;
         this.capacityLoading = false;
       });
     }
@@ -776,19 +756,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.capacityLoading = true;
       if (this.IfOther(this.allTrucksTypes, trucksTypeId)) {
         this._shippingRequestsServiceProxy.getAllCapacitiesForDropdown().subscribe((result) => {
-          this.allCapacities = result.map((item) => {
-            (item.id as any) = Number(item.id);
-            return item;
-          });
+          this.allCapacities = result;
           this.step3Dto.capacityId = null;
           this.capacityLoading = false;
         });
       }
       this._shippingRequestsServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(trucksTypeId).subscribe((result) => {
-        this.allCapacities = result.map((item) => {
-          (item.id as any) = Number(item.id);
-          return item;
-        });
+        this.allCapacities = result;
         this.step3Dto.capacityId = null;
         this.capacityLoading = false;
       });
@@ -802,10 +776,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     if (transportTypeId > 0) {
       this.truckTypeLoading = true;
       this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(transportTypeId).subscribe((result) => {
-        this.allTrucksTypes = result.map((item) => {
-          (item.id as any) = Number(item.id);
-          return item;
-        });
+        this.allTrucksTypes = result;
         const selectedTransportType = this.allTransportTypes.find((item) => Number(item.id) === Number(transportTypeId));
         if (
           result.length > 0 &&
@@ -1120,7 +1091,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
 
   isOthersTrucksTypeId(trucksTypeId: number): boolean {
-    const t = this.allTrucksTypes?.find((x) => x.id?.toString() == trucksTypeId?.toString());
+    const t = this.allTrucksTypes?.find((x) => x.id == trucksTypeId?.toString());
     const r = t?.displayName.toLowerCase().includes('others');
     if (r) {
       this.step3Form?.controls?.otherTrucksTypeName?.setValidators([Validators.required]);

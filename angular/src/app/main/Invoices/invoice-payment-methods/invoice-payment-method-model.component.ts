@@ -30,10 +30,7 @@ export class InvoicePaymentMethodModelComponent extends AppComponentBase impleme
     super(injector);
   }
   ngOnInit(): void {
-    this.PaymentType = this.enumToArray.transform(InvoicePaymentType).map((item) => {
-      item.value = this.l(item.value);
-      return item;
-    });
+    this.PaymentType = this.enumToArray.transform(InvoicePaymentType);
   }
 
   public show(paymentMethod: InvoicePaymentMethodListDto | null): void {

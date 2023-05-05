@@ -65,11 +65,7 @@ export class EditTenantModalComponent extends AppComponentBase implements OnInit
           })
         )
         .subscribe((result) => {
-          this.allCities = result.map((item) => {
-            (item.id as any) = Number(item.id);
-            return item;
-          });
-          this.allCities.push(TenantCityLookupTableDto.fromJS({ id: -1, displayName: this.l('Other') }));
+          this.allCities = result;
           this.cityLoading = false;
         });
       this.active = true;
@@ -165,18 +161,14 @@ export class EditTenantModalComponent extends AppComponentBase implements OnInit
   // }
 
   CountryChanged(event) {
-    if (event.selectedItem.id == -2) {
+    if (event.target.value == -2) {
       this.isCountySelected = false;
     } else {
       this.isCountySelected = true;
     }
 
-    this._tenantService.getAllCitiesForTableDropdown(event.selectedItem.id).subscribe((result) => {
-      this.allCities = result.map((item) => {
-        (item.id as any) = Number(item.id);
-        return item;
-      });
-      this.allCities.push(TenantCityLookupTableDto.fromJS({ id: -1, displayName: this.l('Other') }));
+    this._tenantService.getAllCitiesForTableDropdown(event.target.value).subscribe((result) => {
+      this.allCities = result;
     });
   }
 
@@ -188,10 +180,7 @@ export class EditTenantModalComponent extends AppComponentBase implements OnInit
 
   GetAllCountries() {
     this._tenantService.getAllCountryForTableDropdown().subscribe((result) => {
-      this.allCountries = result.map((item) => {
-        (item.id as any) = Number(item.id);
-        return item;
-      });
+      this.allCountries = result;
     });
   }
 }

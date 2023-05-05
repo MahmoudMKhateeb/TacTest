@@ -112,21 +112,9 @@
 
             <div *ngIf="form.tenantId && form.destinationTenantId" class="col-lg-6 mt-4">
               <label>{{ l('commissionType') }}:</label>
-              <dx-select-box
-                id="commissionType"
-                name="form.commissionType"
-                [(value)]="form.commissionType"
-                [dataSource]="priceOfferCommissionType"
-                [searchEnabled]="true"
-                displayExpr="value"
-                valueExpr="key"
-                (onSelectionChanged)="CalculatePrices()"
-                placeholder="{{ l('Select') }}"
-              >
-              </dx-select-box>
-              <!--              <select class="form-control" name="CommissionType" [(ngModel)]="form.commissionType" (change)="CalculatePrices()">-->
-              <!--                <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>-->
-              <!--              </select>-->
+              <select class="form-control" name="CommissionType" [(ngModel)]="form.commissionType" (change)="CalculatePrices()">
+                <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">{{ l(code.value) | localize }}</option>
+              </select>
             </div>
             <div *ngIf="form.tenantId && form.destinationTenantId" class="col-lg-6 mt-4">
               <label>{{ l('commissionTypeValue') }}:</label>
