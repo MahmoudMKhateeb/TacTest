@@ -70,22 +70,7 @@ namespace TACHYON.PricePackages.Dto
             {
                 context.Results.Add(new ValidationResult("You Must select an origin port"));
             }
-            
 
-            if (Type == PricePackageType.Dedicated || ShippingTypeId == ShippingTypeEnum.ExportPortMovements ||
-                ShippingTypeId == ShippingTypeEnum.ImportPortMovements)
-            {
-                if (string.IsNullOrEmpty(ScopeOfWork))
-                {
-                    context.Results.Add(new ValidationResult("You must select Scope Of Work "));
-                }
-
-                if (string.IsNullOrEmpty(ProjectName))
-                {
-                    context.Results.Add(new ValidationResult("You must select Project Name"));
-                }
-            }
-            
             if (Type != PricePackageType.Dedicated) return;
 
             if (OriginLocation != null || DestinationLocation != null)

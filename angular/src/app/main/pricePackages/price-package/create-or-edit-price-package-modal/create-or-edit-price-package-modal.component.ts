@@ -1,33 +1,39 @@
 /* tslint:disable:triple-equals */
-import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
-import { AppComponentBase } from '@shared/common/app-component-base';
-import { ModalDirective } from 'ngx-bootstrap/modal';
+import {Component, EventEmitter, Injector, OnInit, Output, ViewChild} from '@angular/core';
+import {AppComponentBase} from '@shared/common/app-component-base';
+import {ModalDirective} from 'ngx-bootstrap/modal';
 import {
-  CarriersForDropDownDto,
-  CompanyType,
-  CreateOrEditPricePackageDto,
-  CreateOrEditServiceAreaDto,
-  PricePackageLocationSelectItemDto,
-  PricePackageLocationType,
-  PricePackageServiceProxy,
-  PricePackageType,
-  PricePackageUsageType,
-  RoundTripType,
-  SelectItemDto,
-  ShippingRequestRouteType,
-  ShippingRequestsServiceProxy,
-  ShippingTypeEnum,
-  TenantRegistrationServiceProxy,
+    CarriersForDropDownDto,
+    CompanyType,
+    CreateOrEditPricePackageDto,
+    CreateOrEditServiceAreaDto,
+    PricePackageLocationSelectItemDto,
+    PricePackageLocationType,
+    PricePackageServiceProxy,
+    PricePackageType,
+    PricePackageUsageType,
+    RoundTripType,
+    SelectItemDto,
+    ShippingRequestRouteType,
+    ShippingRequestsServiceProxy,
+    ShippingTypeEnum,
+    TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
-import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import {EnumToArrayPipe} from '@shared/common/pipes/enum-to-array.pipe';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
-import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import { DxDataGridComponent } from '@node_modules/devextreme-angular';
-import { TmsPricePackagePricingMethod } from '@app/main/pricePackages/price-package/create-or-edit-price-package-modal/tms-price-package-pricing-method';
-import { TmsPricePackageCommissionType } from '@app/main/pricePackages/price-package/create-or-edit-price-package-modal/tms-price-package-commission-type';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
-import { finalize } from '@node_modules/rxjs/operators';
-import { DestinationCompanyType } from '@app/main/pricePackages/price-package-appendix/create-or-edit-price-package-appendix/destination-company-type';
+import {LoadOptions} from '@node_modules/devextreme/data/load_options';
+import {DxDataGridComponent} from '@node_modules/devextreme-angular';
+import {
+    TmsPricePackagePricingMethod
+} from '@app/main/pricePackages/price-package/create-or-edit-price-package-modal/tms-price-package-pricing-method';
+import {
+    TmsPricePackageCommissionType
+} from '@app/main/pricePackages/price-package/create-or-edit-price-package-modal/tms-price-package-commission-type';
+import {isNotNullOrUndefined} from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import {finalize} from '@node_modules/rxjs/operators';
+import {
+    DestinationCompanyType
+} from '@app/main/pricePackages/price-package-appendix/create-or-edit-price-package-appendix/destination-company-type';
 
 @Component({
   selector: 'app-create-or-edit-price-package-modal',
@@ -79,7 +85,7 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   shippingTypeEnum = ShippingTypeEnum;
   pricePackageOriginLocations: PricePackageLocationSelectItemDto[];
   pricePackageDestinationLocations: PricePackageLocationSelectItemDto[];
-  serviceAreasList: SelectItemDto[];
+  selectedServiceAreas: PricePackageLocationSelectItemDto[];
   originLocationId: string;
   destinationLocationId: string;
 
@@ -127,7 +133,7 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
         this.destinationLocationId = this.pricePackageDto.destinationLocation?.id;
 
         if (this.pricePackageDto.type == this.pricePackageType.Dedicated) {
-          this.loadAllCities(this.pricePackageDto.originCountryId);
+          this.loadCities(this.pricePackageDto.originCountryId);
           this.loadCountries();
         }
         this.isFormLoading = false;
@@ -165,7 +171,7 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     if (this.pricePackageDto?.type == this.pricePackageType.Dedicated) {
       this.loadCountries();
     } else {
-      this.loadAllCities();
+      this.loadCities();
     }
   }
 
@@ -213,16 +219,44 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
    * load all cities for DropDown
    * @private
    */
-  private loadAllCities(originCountry?: number | undefined): void {
+  private loadCities(originCountry?: number | undefined): void {
     this._pricePackagesServiceProxy.getPricePackageLocations(PricePackageLocationType.City, originCountry).subscribe((res) => {
-      this.pricePackageOriginLocations = res;
-      this.pricePackageDestinationLocations = res;
+        if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
+            this.pricePackageDestinationLocations = res;
+            this.pricePackageDto.destinationLocation = undefined;
+        } else if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) {
+            this.pricePackageOriginLocations = res;
+            this.pricePackageDto.originLocation = undefined;
+        } else {
+            this.pricePackageOriginLocations = res;
+            this.pricePackageDestinationLocations = res;
+            this.pricePackageDto.originLocation = undefined;
+            this.pricePackageDto.destinationLocation = undefined;
+        }
       if (isNotNullOrUndefined(this.pricePackageDto?.id) && isNotNullOrUndefined(this.pricePackageDto?.serviceAreas)) {
         (this.pricePackageDto.serviceAreas as any[]) = this.pricePackageOriginLocations.filter((x) =>
           this.pricePackageDto?.serviceAreas?.some((s) => s.cityId == +x.cityId)
         );
       }
     });
+  }
+
+  private loadCitiesAndPorts() {
+      if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) {
+          this._pricePackagesServiceProxy.getPricePackageLocations(PricePackageLocationType.CityAndPort, undefined).subscribe((result) => {
+              this.pricePackageDestinationLocations = result;
+              this.pricePackageDto.destinationLocation = undefined;
+          });
+      }
+  }
+
+  private loadPorts() {
+      if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
+          this._pricePackagesServiceProxy.getPricePackageLocations(PricePackageLocationType.Port, undefined).subscribe((result) => {
+              this.pricePackageOriginLocations = result;
+              this.pricePackageDto.destinationLocation = undefined;
+          });
+      }
   }
 
   close() {
@@ -243,6 +277,9 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     this.companiesLoading = false;
     this.truckTypeLoading = false;
     this.dataSource = {};
+    this.selectedServiceAreas = undefined;
+    this.destinationLocationId = undefined;
+    this.originLocationId = undefined;
     this.modal.hide();
   }
 
@@ -303,12 +340,15 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     } else {
       this.pricePackageDto.usageType = undefined;
     }
-    if (isNotNullOrUndefined(this.pricePackageDto?.serviceAreas)) {
-      this.pricePackageDto.serviceAreas = this.pricePackageDto.serviceAreas.map((item) => {
-        let dto = new CreateOrEditServiceAreaDto();
-        dto.cityId = +(item as any).id;
-        return dto;
-      });
+    if (isNotNullOrUndefined(this.selectedServiceAreas)) {
+        this.pricePackageDto.serviceAreas = this.selectedServiceAreas.map((item) => {
+            let dto = new CreateOrEditServiceAreaDto();
+            dto.cityId = +item.cityId;
+            if (item instanceof CreateOrEditServiceAreaDto) {
+                dto.id = +item.id;
+            }
+            return dto;
+        });
     }
 
     this.pricePackageDto.originLocation = this.pricePackageOriginLocations.find((x) => x.id == this.originLocationId);
@@ -512,19 +552,32 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
       filter.push(['truckTypeId', '=', this.pricePackageDto.truckTypeId]);
     }
 
-    if (isNotNullOrUndefined(this.pricePackageDto?.originLocation?.cityId)) {
+    if (isNotNullOrUndefined(this.pricePackageDto.routeType)) {
       if (filter.length > 0) {
         filter.push('and');
       }
-
-      filter.push(['originCityId', '=', this.pricePackageDto?.originLocation?.cityId]);
+      filter.push(['routeType', '=', this.pricePackageDto.routeType]);
     }
 
-    if (isNotNullOrUndefined(this.pricePackageDto?.destinationLocation?.cityId)) {
+    if (isNotNullOrUndefined(this.originLocationId)) {
       if (filter.length > 0) {
         filter.push('and');
       }
-      filter.push(['destinationCityId', '=', this.pricePackageDto.destinationLocation.cityId]);
+
+
+      let originLocation = this.pricePackageOriginLocations.find((x) => x.id == this.originLocationId);
+      filter.push(['originCityId', '=', originLocation?.cityId]);
+      filter.push(['originFacilityPortId', '=', originLocation?.portId]);
+    }
+
+    if (isNotNullOrUndefined(this.destinationLocationId)) {
+      if (filter.length > 0) {
+        filter.push('and');
+      }
+
+      let destinationLocation = this.pricePackageDestinationLocations.find((x) => x.id == this.destinationLocationId);
+      filter.push(['destinationCityId', '=', destinationLocation?.cityId]);
+      filter.push(['destinationFacilityPortId', '=', destinationLocation?.portId]);
     }
 
     return filter;
@@ -533,9 +586,12 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   validateOriginAndDestination() {
     if (this.pricePackageDto.shippingTypeId == this.shippingTypeEnum.LocalInsideCity) {
       this.pricePackageDto.destinationLocation = this.pricePackageDto.originLocation;
+      this.destinationLocationId = this.originLocationId;
     } else {
       this.pricePackageDto.destinationLocation = undefined;
       this.pricePackageDto.originLocation = undefined;
+      this.originLocationId = undefined;
+      this.destinationLocationId = undefined;
     }
   }
 
@@ -554,6 +610,8 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
 
   shippingTypeChanged() {
     this.pricePackageDto.serviceAreas = undefined;
+    this.pricePackageDto.serviceAreas = undefined;
+    this.selectedServiceAreas = undefined;
     this.serviceAreasSelectionLimit = this.pricePackageDto?.shippingTypeId == this.shippingTypeEnum.LocalInsideCity ? 1 : undefined;
 
     this.validateOriginAndDestination();
@@ -579,32 +637,25 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
           return selectItem;
         });
 
-      this.gerPricePackageLocations(PricePackageLocationType.Port);
-    } else {
-      this.gerPricePackageLocations(PricePackageLocationType.City);
+      if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
+          this.loadPorts();
+      }
+
+      if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) {
+            this.loadCitiesAndPorts();
+      }
+
+    } else if (this.pricePackageDto.type == this.pricePackageType.Dedicated) {
+         this.loadCities(this.pricePackageDto.originCountryId);
+         return;
     }
+
+    this.loadCities();
+
 
     if (this.companyType == this.companyTypeEnum.Shipper) {
       this.applyFilters();
     }
-  }
-
-  private gerPricePackageLocations(type: PricePackageLocationType) {
-    this._pricePackagesServiceProxy.getPricePackageLocations(type, undefined).subscribe((result) => {
-      if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
-        this.pricePackageOriginLocations = result;
-        this.pricePackageDto.originLocation = undefined;
-      } else if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) {
-        this.pricePackageDestinationLocations = result;
-        this.pricePackageDestinationLocations.push(...this.pricePackageOriginLocations);
-        this.pricePackageDto.destinationLocation = undefined;
-      } else {
-        this.pricePackageOriginLocations = result;
-        this.pricePackageDestinationLocations = result;
-        this.pricePackageDto.originLocation = undefined;
-        this.pricePackageDto.destinationLocation = undefined;
-      }
-    });
   }
 
   originCityChanged() {
@@ -625,7 +676,7 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
       this.applyFilters();
       this.pricePackageDto.originLocation = undefined;
       this.pricePackageDto.destinationLocation = undefined;
-      this.loadAllCities(this.pricePackageDto.originCountryId);
+      this.loadCities(this.pricePackageDto.originCountryId);
     }
   }
 
@@ -645,6 +696,10 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   }
 
   pricePackageTypeChanged() {
+      if (this.pricePackageDto.type == this.pricePackageType.Dedicated) {
+          this.pricePackageDto.routeType = undefined;
+      }
+
     this.updateCalculatedPriceInputTitle();
     this.applyFilters();
     if (this.pricePackageDto?.type != this.pricePackageType.Dedicated) {

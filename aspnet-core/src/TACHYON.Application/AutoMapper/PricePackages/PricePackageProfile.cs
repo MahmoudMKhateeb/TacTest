@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Abp.Collections.Extensions;
+using AutoMapper;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -41,9 +42,7 @@ namespace TACHYON.AutoMapper.PricePackages
                     x => x.MapFrom(i =>
                         i.ProposalId.HasValue && i.Proposal.AppendixId.HasValue ? i.Proposal.Appendix.ContractName :
                         i.AppendixId.HasValue ? i.Appendix.ContractName : "__"))
-                .ForMember(x => x.EditionName, x => x.MapFrom(i => i.UsageType == PricePackageUsageType.AsCarrier ? i.Tenant.Edition.DisplayName : i.DestinationTenant.Edition.DisplayName))
-                .ForMember(x => x.RouteType,
-                    x => x.MapFrom(i => i.RouteType.HasValue? i.RouteType.Value.ToString(): string.Empty));
+                .ForMember(x => x.EditionName, x => x.MapFrom(i => i.UsageType == PricePackageUsageType.AsCarrier ? i.Tenant.Edition.DisplayName : i.DestinationTenant.Edition.DisplayName));
 
             CreateMap<CreateOrEditServiceAreaDto, ServiceArea>().ReverseMap();
             CreateMap<CreateOrEditPricePackageDto, PricePackage>()
@@ -56,12 +55,12 @@ namespace TACHYON.AutoMapper.PricePackages
             CreateMap<PricePackage, CreateOrEditPricePackageDto>()
                 .ForMember(x => x.OriginLocation, x => x.MapFrom(i => new PricePackageLocationSelectItemDto
                     {
-                        CityId = i.OriginCityId.Value, PortId = i.OriginFacilityPortId,
+                        CityId = i.OriginCityId, PortId = i.OriginFacilityPortId,
                         Id = $"{(i.OriginFacilityPortId.HasValue ? PricePackageLocationType.Port : PricePackageLocationType.City).ToString()} {(i.OriginFacilityPortId ?? i.OriginCityId)}"
                     }))
                 .ForMember(x => x.DestinationLocation, x => x.MapFrom(i => new PricePackageLocationSelectItemDto
                     {
-                        CityId = i.DestinationCityId.Value, PortId = i.DestinationFacilityPortId,
+                        CityId = i.DestinationCityId, PortId = i.DestinationFacilityPortId,
                         Id = $"{(i.DestinationFacilityPortId.HasValue ? PricePackageLocationType.Port : PricePackageLocationType.City).ToString()} {(i.DestinationFacilityPortId ?? i.DestinationCityId)}"
                     }))
                 .ForMember(x => x.ServiceAreas, x => x.MapFrom(i => i.ServiceAreas));

@@ -5,7 +5,7 @@ namespace TACHYON.PricePackages.Dto
 {
     public class PricePackageLocationSelectItemDto: EntityDto<string>
     {
-        public int CityId { get; set; }
+        public int? CityId { get; set; }
 
         public long? PortId { get; set; }
 
@@ -17,6 +17,7 @@ namespace TACHYON.PricePackages.Dto
     public enum PricePackageLocationType
     {
         City = 1,
-        Port = 2
+        Port = 2,
+        CityAndPort = 3,
     }
 }

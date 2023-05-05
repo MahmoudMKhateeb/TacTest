@@ -54,7 +54,7 @@
               <dxi-column *ngIf="isTachyonDealerOrHost" dataField="editionName" caption="{{ l('Edition') }}"></dxi-column>
               <dxi-column *ngIf="isTachyonDealerOrHost" dataField="company" caption="{{ l('CompanyName') }}"></dxi-column>
               <dxi-column dataField="truckType" caption="{{ l('TruckType') }}"></dxi-column>
-              <dxi-column dataField="routeType" [width]="110" [allowSearch]="false" caption="{{ l('RouteType') }}"></dxi-column>
+              <dxi-column dataField="routeType" [width]="110" [allowSearch]="false" caption="{{ l('RouteType') }}" cellTemplate="routeTypeTemplate"></dxi-column>
               <dxi-column dataField="originCity" caption="{{ l('Origin') }}"></dxi-column>
               <dxi-column dataField="destinationCity" caption="{{ l('Destination') }}"></dxi-column>
               <dxi-column
@@ -81,6 +81,9 @@
 
               <div *dxTemplate="let options of 'statusTemplate'">
                 <span>{{ options.data.status | localize }}</span>
+              </div>
+              <div *dxTemplate="let options of 'routeTypeTemplate'">
+                  {{getRouteTypeTitle(options.data.routeType)}}
               </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
                 <div
