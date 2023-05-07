@@ -1582,7 +1582,7 @@ namespace TACHYON.Tracking
         private async Task HandlePointDelivery(long pointId, RoutePointStatus pointStatus)
         {
             var point = await _routPointRepository.GetAll().Include(x=>x.ShippingRequestTripFk).ThenInclude(x=>x.ShippingRequestFk).FirstOrDefaultAsync(x=>x.Id == pointId);
-            await HandlePointDelivery(pointId, pointStatus);
+            await HandlePointDelivery(point, pointStatus);
         }
         /// <summary>
         /// check if point is complete and mark it as complete & check if trip is complete and mark it as delivered
