@@ -32,3 +32,4 @@ aspnet-core/AspNetZeroRadTool/
 #angular/src/shared/service-proxies/service-proxies.ts
 
 *.yml
+aspnet-core/.cr/personal/
