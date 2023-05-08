@@ -114,7 +114,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     request.Status = ShippingRequestStatus.Completed;
                     if(request.TenantId != request.CarrierTenantId)
                     {
-                       await  _appNotifier.NotifyShipperToRateDedicatedTrips(request.Id, request.TenantId);
+                       await  _appNotifier.NotifyShipperToRateDedicatedTrips(request.Id, request.TenantId, request.CarrierTenantId.Value);
                     }
                 }
                 else if(request.Status == ShippingRequestStatus.PrePrice || request.Status == ShippingRequestStatus.NeedsAction)
