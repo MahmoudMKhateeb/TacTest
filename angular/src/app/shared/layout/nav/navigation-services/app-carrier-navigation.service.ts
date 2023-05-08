@@ -47,7 +47,7 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
           new AppMenuItem('DirectShippingRequests', '', '', '/app/main/directrequest/list', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Carrier')
           ),
-          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking', undefined, undefined, undefined, undefined, () =>
+          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Carrier')
           ),
         ],

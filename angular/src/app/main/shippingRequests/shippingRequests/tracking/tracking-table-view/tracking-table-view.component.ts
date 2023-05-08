@@ -3,15 +3,15 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular/ui/data-grid';
 import {
-  PickingType,
-  RoutPointTransactionDto,
-  ShippingRequestDriverServiceProxy,
-  ShippingRequestFlag,
-  ShippingTypeEnum,
-  TrackingListDto,
-  TrackingServiceProxy,
-  TrackingShippingRequestTripDto,
-  WaybillsServiceProxy,
+    PickingType,
+    RoutPointTransactionDto, ShipmentTrackingMode,
+    ShippingRequestDriverServiceProxy,
+    ShippingRequestFlag,
+    ShippingTypeEnum,
+    TrackingListDto,
+    TrackingServiceProxy,
+    TrackingShippingRequestTripDto,
+    WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -117,6 +117,7 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
           if (this.shipmentType === AppConsts.Tracking_NormalShipment) {
+              let trackingMode = this.isTachyonDealerOrHost ? ShipmentTrackingMode.NormalShipment : ShipmentTrackingMode.Mixed;
               return self._currentServ
                   .getAllDx(
                       JSON.stringify(loadOptions),
@@ -145,6 +146,7 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
                       self.searchInput.isInvoiceIssued,
                       self.searchInput.isSubmittedPOD,
                       self.searchInput.requestTypeId,
+                      trackingMode,
                       '',
                       self.skipCount,
                       self.maxResultCount
@@ -166,7 +168,7 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
           }
 
           return self._currentServ
-              .getDirectShipmentsDx(
+              .getAllDx(
                   JSON.stringify(loadOptions),
                   self.searchInput.status,
                   self.searchInput.shipper,
@@ -193,6 +195,7 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
                   self.searchInput.isInvoiceIssued,
                   self.searchInput.isSubmittedPOD,
                   self.searchInput.requestTypeId,
+                  ShipmentTrackingMode.DirectShipment,
                   '',
                   self.skipCount,
                   self.maxResultCount

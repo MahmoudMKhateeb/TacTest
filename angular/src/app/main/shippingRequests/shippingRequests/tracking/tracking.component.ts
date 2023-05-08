@@ -1,35 +1,38 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
-import { appModuleAnimation } from '@shared/animations/routerTransition';
+import {Component, Injector, OnInit, ViewChild} from '@angular/core';
+import {appModuleAnimation} from '@shared/animations/routerTransition';
 import {
-  ShippingRequestDriverServiceProxy,
-  ShippingRequestFlag,
-  ShippingRequestRouteType,
-  ShippingRequestStatus,
-  ShippingRequestsTripListDto,
-  ShippingRequestTripCancelStatus,
-  ShippingRequestTripDriverRoutePointDto,
-  ShippingRequestTripDriverStatus,
-  ShippingRequestTripFlag,
-  ShippingRequestTripStatus,
-  ShippingRequestType,
-  ShippingTypeEnum,
-  TrackingListDto,
-  TrackingServiceProxy,
-  WaybillsServiceProxy,
+    ShipmentTrackingMode,
+    ShippingRequestDriverServiceProxy,
+    ShippingRequestFlag,
+    ShippingRequestRouteType,
+    ShippingRequestStatus,
+    ShippingRequestsTripListDto,
+    ShippingRequestTripCancelStatus,
+    ShippingRequestTripDriverRoutePointDto,
+    ShippingRequestTripDriverStatus,
+    ShippingRequestTripFlag,
+    ShippingRequestTripStatus,
+    ShippingRequestType,
+    ShippingTypeEnum,
+    TrackingListDto,
+    TrackingServiceProxy,
+    WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
-import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
-import { TrackingSearchInput } from '../../../../shared/common/search/TrackingSearchInput';
-import { LocalStorageService } from '@shared/utils/local-storage.service';
-import { AppConsts } from '@shared/AppConsts';
-import { ViewTripAccidentModelComponent } from '../ShippingRequestTrips/accident/View-trip-accident-modal.component';
-import { animate, style, transition, trigger } from '@angular/animations';
-import { FileDownloadService } from '@shared/utils/file-download.service';
-import { NewTrackingConponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/new-tracking-conponent';
-import { finalize } from '@node_modules/rxjs/operators';
+import {ScrollPagnationComponentBase} from '@shared/common/scroll/scroll-pagination-component-base';
+import {TrackingSearchInput} from '../../../../shared/common/search/TrackingSearchInput';
+import {LocalStorageService} from '@shared/utils/local-storage.service';
+import {AppConsts} from '@shared/AppConsts';
+import {ViewTripAccidentModelComponent} from '../ShippingRequestTrips/accident/View-trip-accident-modal.component';
+import {animate, style, transition, trigger} from '@angular/animations';
+import {FileDownloadService} from '@shared/utils/file-download.service';
+import {
+    NewTrackingConponent
+} from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/new-tracking-conponent';
+import {finalize} from '@node_modules/rxjs/operators';
 import Swal from 'sweetalert2';
-import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import {FileViwerComponent} from '@app/shared/common/file-viwer/file-viwer.component';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {isNotNullOrUndefined} from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './tracking.component.html',
@@ -120,6 +123,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     }
 
     if (this.shipmentType === AppConsts.Tracking_NormalShipment) {
+      let trackingMode = this.isTachyonDealerOrHost ? ShipmentTrackingMode.NormalShipment : ShipmentTrackingMode.Mixed;
       this._currentServ
         .getAll(
           this.searchInput.status,
@@ -147,6 +151,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
           this.searchInput.isInvoiceIssued,
           this.searchInput.isSubmittedPOD,
           this.searchInput.requestTypeId,
+          trackingMode,
           '',
           this.skipCount,
           this.maxResultCount
@@ -163,7 +168,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
       return;
     }
     this._currentServ
-      .getDirectShipments(
+      .getAll(
         this.searchInput.status,
         this.searchInput.shipper,
         this.searchInput.carrier,
@@ -189,6 +194,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         this.searchInput.isInvoiceIssued,
         this.searchInput.isSubmittedPOD,
         this.searchInput.requestTypeId,
+        ShipmentTrackingMode.DirectShipment,
         '',
         this.skipCount,
         this.maxResultCount

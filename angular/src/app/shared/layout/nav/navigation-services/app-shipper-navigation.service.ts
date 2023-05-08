@@ -56,7 +56,7 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.Shipper') && this.isEnabled('App.SaveTemplateFeature')
           ),
-          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking', undefined, undefined, undefined, undefined, () =>
+          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, undefined, () =>
             this.isEnabled('App.Shipper')
           ),
           // TODO this Hole Component need To be removed Later

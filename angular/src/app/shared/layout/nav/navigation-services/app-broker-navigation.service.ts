@@ -61,8 +61,7 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.SaveTemplateFeature')
           ),
-          new AppMenuItem('DirectShippingRequests', 'Pages.ShippingRequests.DirectRequests', '', '/app/main/directrequest/list'),
-          new AppMenuItem('ShipmentTracking', 'Pages.shipment.Tracking', '', '/app/main/tracking', undefined, undefined, undefined, undefined),
+          new AppMenuItem('ShipmentTracking', 'Pages.shipment.Tracking', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, undefined),
         ],
         undefined,
         undefined

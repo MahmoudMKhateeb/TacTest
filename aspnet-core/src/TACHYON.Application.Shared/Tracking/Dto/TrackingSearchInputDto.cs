@@ -44,7 +44,9 @@ namespace TACHYON.Tracking.Dto
         /// 2-- SAAS
         /// 3-- Dedicated
         /// </summary>
-        public int? RequestTypeId { get; set; } 
+        public int? RequestTypeId { get; set; }
+
+        public ShipmentTrackingMode TrackingMode { get; set; }
 
     }
 }
