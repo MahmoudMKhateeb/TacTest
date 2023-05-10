@@ -3,15 +3,16 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { DxDataGridComponent } from '@node_modules/devextreme-angular/ui/data-grid';
 import {
-    PickingType,
-    RoutPointTransactionDto, ShipmentTrackingMode,
-    ShippingRequestDriverServiceProxy,
-    ShippingRequestFlag,
-    ShippingTypeEnum,
-    TrackingListDto,
-    TrackingServiceProxy,
-    TrackingShippingRequestTripDto,
-    WaybillsServiceProxy,
+  PickingType,
+  RoutPointTransactionDto,
+  ShipmentTrackingMode,
+  ShippingRequestDriverServiceProxy,
+  ShippingRequestFlag,
+  ShippingTypeEnum,
+  TrackingListDto,
+  TrackingServiceProxy,
+  TrackingShippingRequestTripDto,
+  WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -24,7 +25,7 @@ import CustomStore from 'devextreme/data/custom_store';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
 import { exportDataGrid } from 'devextreme/excel_exporter';
-import {AppConsts} from '@shared/AppConsts';
+import { AppConsts } from '@shared/AppConsts';
 
 @Component({
   selector: 'app-tracking-table',
@@ -116,105 +117,104 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
-          if (this.shipmentType === AppConsts.Tracking_NormalShipment) {
-              let trackingMode = this.isTachyonDealerOrHost ? ShipmentTrackingMode.NormalShipment : ShipmentTrackingMode.Mixed;
-              return self._currentServ
-                  .getAllDx(
-                      JSON.stringify(loadOptions),
-                      self.searchInput.status,
-                      self.searchInput.shipper,
-                      self.searchInput.carrier,
-                      self.searchInput.WaybillNumber,
-                      self.searchInput.transportTypeId,
-                      self.searchInput.truckTypeId,
-                      self.searchInput.truckCapacityId,
-                      self.searchInput.originId,
-                      self.searchInput.destinationId,
-                      self.searchInput.pickupFromDate,
-                      self.searchInput.pickupToDate,
-                      self.searchInput.fromDate,
-                      self.searchInput.toDate,
-                      self.searchInput.shippingRequestReferance,
-                      self.searchInput.routeTypeId,
-                      self.searchInput.packingTypeId,
-                      self.searchInput.goodsOrSubGoodsCategoryId,
-                      self.searchInput.plateNumberId,
-                      self.searchInput.driverNameOrMobile,
-                      self.searchInput.deliveryFromDate,
-                      self.searchInput.deliveryToDate,
-                      self.searchInput.containerNumber,
-                      self.searchInput.isInvoiceIssued,
-                      self.searchInput.isSubmittedPOD,
-                      self.searchInput.requestTypeId,
-                      trackingMode,
-                      '',
-                      self.skipCount,
-                      self.maxResultCount
-                  )
-                  .toPromise()
-                  .then((response) => {
-                      self.isFirstLoad = false;
-                      return {
-                          data: response.data,
-                          totalCount: response.totalCount,
-                          summary: response.summary,
-                          groupCount: response.groupCount,
-                      };
-                  })
-                  .catch((error) => {
-                      console.log(error);
-                      throw new Error('Data Loading Error');
-                  });
-          }
-
+        if (self.shipmentType === AppConsts.Tracking_NormalShipment) {
+          let trackingMode = this.isTachyonDealerOrHost ? ShipmentTrackingMode.NormalShipment : ShipmentTrackingMode.Mixed;
           return self._currentServ
-              .getAllDx(
-                  JSON.stringify(loadOptions),
-                  self.searchInput.status,
-                  self.searchInput.shipper,
-                  self.searchInput.carrier,
-                  self.searchInput.WaybillNumber,
-                  self.searchInput.transportTypeId,
-                  self.searchInput.truckTypeId,
-                  self.searchInput.truckCapacityId,
-                  self.searchInput.originId,
-                  self.searchInput.destinationId,
-                  self.searchInput.pickupFromDate,
-                  self.searchInput.pickupToDate,
-                  self.searchInput.fromDate,
-                  self.searchInput.toDate,
-                  self.searchInput.shippingRequestReferance,
-                  self.searchInput.routeTypeId,
-                  self.searchInput.packingTypeId,
-                  self.searchInput.goodsOrSubGoodsCategoryId,
-                  self.searchInput.plateNumberId,
-                  self.searchInput.driverNameOrMobile,
-                  self.searchInput.deliveryFromDate,
-                  self.searchInput.deliveryToDate,
-                  self.searchInput.containerNumber,
-                  self.searchInput.isInvoiceIssued,
-                  self.searchInput.isSubmittedPOD,
-                  self.searchInput.requestTypeId,
-                  ShipmentTrackingMode.DirectShipment,
-                  '',
-                  self.skipCount,
-                  self.maxResultCount
-              )
-              .toPromise()
-              .then((response) => {
-                  self.isFirstLoad = false;
-                  return {
-                      data: response.data,
-                      totalCount: response.totalCount,
-                      summary: response.summary,
-                      groupCount: response.groupCount,
-                  };
-              })
-              .catch((error) => {
-                  console.log(error);
-                  throw new Error('Data Loading Error');
-              });
+            .getAllDx(
+              JSON.stringify(loadOptions),
+              self.searchInput.status,
+              self.searchInput.shipper,
+              self.searchInput.carrier,
+              self.searchInput.WaybillNumber,
+              self.searchInput.transportTypeId,
+              self.searchInput.truckTypeId,
+              self.searchInput.truckCapacityId,
+              self.searchInput.originId,
+              self.searchInput.destinationId,
+              self.searchInput.pickupFromDate,
+              self.searchInput.pickupToDate,
+              self.searchInput.fromDate,
+              self.searchInput.toDate,
+              self.searchInput.shippingRequestReferance,
+              self.searchInput.routeTypeId,
+              self.searchInput.packingTypeId,
+              self.searchInput.goodsOrSubGoodsCategoryId,
+              self.searchInput.plateNumberId,
+              self.searchInput.driverNameOrMobile,
+              self.searchInput.deliveryFromDate,
+              self.searchInput.deliveryToDate,
+              self.searchInput.containerNumber,
+              self.searchInput.isInvoiceIssued,
+              self.searchInput.isSubmittedPOD,
+              self.searchInput.requestTypeId,
+              trackingMode,
+              '',
+              self.skipCount,
+              self.maxResultCount
+            )
+            .toPromise()
+            .then((response) => {
+              self.isFirstLoad = false;
+              return {
+                data: response.data,
+                totalCount: response.totalCount,
+                summary: response.summary,
+                groupCount: response.groupCount,
+              };
+            })
+            .catch((error) => {
+              console.log(error);
+              throw new Error('Data Loading Error');
+            });
+        }
 
+        return self._currentServ
+          .getAllDx(
+            JSON.stringify(loadOptions),
+            self.searchInput.status,
+            self.searchInput.shipper,
+            self.searchInput.carrier,
+            self.searchInput.WaybillNumber,
+            self.searchInput.transportTypeId,
+            self.searchInput.truckTypeId,
+            self.searchInput.truckCapacityId,
+            self.searchInput.originId,
+            self.searchInput.destinationId,
+            self.searchInput.pickupFromDate,
+            self.searchInput.pickupToDate,
+            self.searchInput.fromDate,
+            self.searchInput.toDate,
+            self.searchInput.shippingRequestReferance,
+            self.searchInput.routeTypeId,
+            self.searchInput.packingTypeId,
+            self.searchInput.goodsOrSubGoodsCategoryId,
+            self.searchInput.plateNumberId,
+            self.searchInput.driverNameOrMobile,
+            self.searchInput.deliveryFromDate,
+            self.searchInput.deliveryToDate,
+            self.searchInput.containerNumber,
+            self.searchInput.isInvoiceIssued,
+            self.searchInput.isSubmittedPOD,
+            self.searchInput.requestTypeId,
+            ShipmentTrackingMode.DirectShipment,
+            '',
+            self.skipCount,
+            self.maxResultCount
+          )
+          .toPromise()
+          .then((response) => {
+            self.isFirstLoad = false;
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
       },
     });
   }
