@@ -117,7 +117,7 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
     this.dataSource = {};
     this.dataSource.store = new CustomStore({
       load(loadOptions: LoadOptions) {
-        if (this.shipmentType === AppConsts.Tracking_NormalShipment) {
+        if (self.shipmentType === AppConsts.Tracking_NormalShipment) {
           let trackingMode = this.isTachyonDealerOrHost ? ShipmentTrackingMode.NormalShipment : ShipmentTrackingMode.Mixed;
           return self._currentServ
             .getAllDx(
