@@ -286,7 +286,8 @@ export class ShippingRequestsTableComponent extends AppComponentBase implements 
 
   updateScrolling() {
     setTimeout(() => {
-      this.dataGrid.instance.getScrollable().update();
+      this.dataGrid.instance.updateDimensions();
+      // this.dataGrid.instance.getScrollable().update();
     }, 500);
   }
 
