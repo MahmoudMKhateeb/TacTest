@@ -1020,8 +1020,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   prepareStep2Inputs() {
     console.log('prepareStep2Inputs');
     switch (Number(this.step1Dto.roundTripType)) {
-      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
       case RoundTripType.TwoWayRoutsWithPortShuttling:
+        this.step2Dto.routeTypeId = ShippingRequestRouteType.MultipleDrops;
+        this.step2Dto.numberOfDrops = 3;
+        break;
+      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
       case RoundTripType.WithReturnTrip: {
         this.step2Dto.routeTypeId = ShippingRequestRouteType.MultipleDrops;
         this.step2Dto.numberOfDrops = 2;
