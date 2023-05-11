@@ -58,7 +58,7 @@
               <dx-text-box [(value)]="searchObj.accountNumber"></dx-text-box>
             </div>
           </div>
-          <div class="dx-field col-6">
+          <div *ngIf="isTachyonDealerOrHost" class="dx-field col-6">
             <div class="dx-field-label">{{ 'CarrierName' | localize }}</div>
             <div class="dx-field-value">
               <!--                [(value)]="selectedCarrier"-->

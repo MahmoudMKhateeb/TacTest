@@ -43,8 +43,9 @@ namespace TACHYON.Shipping.DirectRequests
                 list = await _tenantRepository
                     .GetAll()
                     .AsNoTracking()
-                    .Where(t => t.IsActive && t.Edition.DisplayName == TACHYONConsts.CarrierEdtionName)
-                    .Select(r => new CarriersForDropDownDto { Id = r.Id, DisplayName = r.TenancyName, Rate = r.Rate })
+                    .Where(t => t.IsActive &&
+                    ( t.Edition.DisplayName == TACHYONConsts.CarrierEdtionName || t.Edition.DisplayName == TACHYONConsts.BrokerEditionName))
+                    .Select(r => new CarriersForDropDownDto { Id = r.Id, DisplayName = r.companyName, Rate = r.Rate })
                     .ToListAsync();
             }
             else if (await _featureChecker.IsEnabledAsync(AppFeatures.Shipper) &&
@@ -57,7 +58,7 @@ namespace TACHYON.Shipping.DirectRequests
                     .Select(r => new CarriersForDropDownDto
                     {
                         Id = r.CarrierTenantId,
-                        DisplayName = r.CarrierShipper.TenancyName,
+                        DisplayName = r.CarrierShipper.companyName,
                         Rate = r.CarrierShipper.Rate
                     }).ToListAsync();
             }
