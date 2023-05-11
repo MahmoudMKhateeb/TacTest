@@ -1153,6 +1153,7 @@
                             *ngIf="destination.lat"
                             [origin]="{ lat: origin.lat, lng: origin.lng }"
                             [destination]="{ lat: destination.lat, lng: destination.lng }"
+                            [waypoints]="wayPoints"
                             [travelMode]="'DRIVING'"
                           ></agm-direction>
                         </agm-map>
