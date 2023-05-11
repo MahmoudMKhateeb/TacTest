@@ -436,9 +436,9 @@ namespace TACHYON.Tracking.AdditionalSteps
                     if(trip.ShippingRequestId != null)
                     {
                         if(trip.TripShipperTenantId != null)
-                        await _appNotifier.NotifyTenantWithRating(trip.ShippingRequestId, trip.Id, trip.TripShipperTenantId.Value);
+                        await _appNotifier.NotifyTenantWithRating(trip.ShippingRequestId, trip.Id, trip.TripShipperTenantId.Value, trip.TripCarrierTenantId.Value);
                         if(trip.TripCarrierTenantId != null)
-                        await _appNotifier.NotifyTenantWithRating(trip.ShippingRequestId, trip.Id, trip.TripCarrierTenantId.Value);
+                        await _appNotifier.NotifyTenantWithRating(trip.ShippingRequestId, trip.Id, trip.TripCarrierTenantId.Value, trip.TripShipperTenantId.Value);
                     }
                      
                     if (trip.ShippingRequestId != null)

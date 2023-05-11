@@ -1288,9 +1288,9 @@ namespace TACHYON.Notifications
             
         }
 
-        public async Task NotifyTenantWithRating(long? shippingRequestId,int tripId, int tenantId)
+        public async Task NotifyTenantWithRating(long? shippingRequestId,int tripId, int tenantId, int toTenantId)
         {
-            var user = (await _tenantsRepository.FirstOrDefaultAsync(tenantId)).TenancyName;
+            var user = (await _tenantsRepository.FirstOrDefaultAsync(toTenantId)).TenancyName;
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
                     L("RateShippingExp", user),
@@ -1308,9 +1308,9 @@ namespace TACHYON.Notifications
                     userIds: new[] { User });
         }
 
-        public async Task NotifyShipperToRateDedicatedTrips(long? shippingRequestId, int shipperTenantId)
+        public async Task NotifyShipperToRateDedicatedTrips(long? shippingRequestId, int shipperTenantId, int toTenantId)
         {
-            var user = (await _tenantsRepository.FirstOrDefaultAsync(shipperTenantId)).TenancyName;
+            var user = (await _tenantsRepository.FirstOrDefaultAsync(toTenantId)).TenancyName;
             var notificationData = new LocalizableMessageNotificationData(
                new LocalizableString(
                    L("RateShippingExp", user),

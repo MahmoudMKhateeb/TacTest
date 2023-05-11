@@ -1857,8 +1857,8 @@ namespace TACHYON.Tracking
             //send notification about rating
             if(point.ShippingRequestTripFk.ShippingRequestFk != null && point.ShippingRequestTripFk.ShippingRequestFk.TenantId != point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId)
             {
-                await _appNotifier.NotifyTenantWithRating(point.ShippingRequestTripFk.ShippingRequestId, point.ShippingRequestTripId, point.ShippingRequestTripFk.ShippingRequestFk.TenantId);
-                await _appNotifier.NotifyTenantWithRating(point.ShippingRequestTripFk.ShippingRequestId, point.ShippingRequestTripId, point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.Value);
+                await _appNotifier.NotifyTenantWithRating(point.ShippingRequestTripFk.ShippingRequestId, point.ShippingRequestTripId, point.ShippingRequestTripFk.ShippingRequestFk.TenantId, point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.Value);
+                await _appNotifier.NotifyTenantWithRating(point.ShippingRequestTripFk.ShippingRequestId, point.ShippingRequestTripId, point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.Value, point.ShippingRequestTripFk.ShippingRequestFk.TenantId);
             }
         }
 
