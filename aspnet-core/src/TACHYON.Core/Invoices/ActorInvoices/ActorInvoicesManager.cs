@@ -203,9 +203,9 @@ namespace TACHYON.Invoices.ActorInvoices
 
                 if (directTrips != null)
                 {
-                    directTripsTotalAmount = (decimal)directTrips.Sum(r => r.ActorCarrierPrice.SubTotalAmount + r.ActorCarrierPrice.VatAmount + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorCarrierPrice.SubTotalAmount + v.ActorCarrierPrice.VatAmount));
-                    directTripsVatAmount = (decimal)directTrips.Sum(r => r.ActorCarrierPrice.VatAmount + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorCarrierPrice.SubTotalAmount));
-                    directTripsSubTotalAmount = (decimal)directTrips.Sum(r => r.ActorCarrierPrice.SubTotalAmount + r.ShippingRequestTripVases.Select(x => x.ShippingRequestVasFk).Sum(v => v.ActorCarrierPrice.SubTotalAmount));
+                    directTripsTotalAmount = (decimal)directTrips.Sum(r => r.ActorCarrierPrice.SubTotalAmount + r.ActorCarrierPrice.VatAmount + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmount + v.VatAmount));
+                    directTripsVatAmount = (decimal)directTrips.Sum(r => r.ActorCarrierPrice.VatAmount + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmount));
+                    directTripsSubTotalAmount = (decimal)directTrips.Sum(r => r.ActorCarrierPrice.SubTotalAmount + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmount));
                     //directTripsTaxVat = (decimal)directTrips.First()?.TaxVat;
 
 
