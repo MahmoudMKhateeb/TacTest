@@ -11,6 +11,12 @@
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
+            *ngIf="
+              isEnabled('App.ExportFunctionality') ||
+              (('Pages.Trucks.Create' | permission) &&
+                isEnabled('App.ImportFunctionality') &&
+                isEnabled('App.ImportFunctionality.ImportTruckFeature'))
+            "
           >
             <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
           </button>

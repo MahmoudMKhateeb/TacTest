@@ -27,7 +27,7 @@
         <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
         <dxo-load-panel [enabled]="IsLoading"></dxo-load-panel>
         <dxo-scrolling mode="infinite"></dxo-scrolling>
-        <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
+        <dxo-export *ngIf="isEnabled('App.ExportFunctionality')" [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
         <dxi-column dataField="referenceNumber" caption="{{ 'RequestId' | localize }}" [fixed]="true"></dxi-column>
         <dxi-column
           *ngIf="isCarrier || isCarrierSaas || isTachyonDealer"

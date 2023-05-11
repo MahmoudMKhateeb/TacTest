@@ -32,7 +32,14 @@
             </li>
           </ul>
         </div>
-        <div class="btn-group mr-2" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true">
+        <div
+          *ngIf="isEnabled('App.ExportFunctionality')"
+          class="btn-group mr-2"
+          dropdown
+          #dropdownAddPage="bs-dropdown"
+          [dropup]="false"
+          [insideClick]="true"
+        >
           <button dropdownToggle type="button" class="btn btn-secondary" aria-controls="dropdown-export">
             <i class="fas fa-file-export"></i> {{ 'ExportToExcel' | localize }}<span class="caret"></span>
           </button>
@@ -58,7 +65,14 @@
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
       <div role="actions" *ngIf="isCarrier">
-        <div class="btn-group mr-2" dropdown #dropdownAddPage="bs-dropdown" [dropup]="false" [insideClick]="true">
+        <div
+          *ngIf="isEnabled('App.ExportFunctionality')"
+          class="btn-group mr-2"
+          dropdown
+          #dropdownAddPage="bs-dropdown"
+          [dropup]="false"
+          [insideClick]="true"
+        >
           <button dropdownToggle type="button" class="btn btn-secondary" aria-controls="dropdown-export">
             <i class="fas fa-file-export"></i> {{ 'ExportToExcel' | localize }}<span class="caret"></span>
           </button>
