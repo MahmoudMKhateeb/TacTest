@@ -25,11 +25,11 @@
                 [dropup]="false"
                 [insideClick]="true"
                 *ngIf="
-                  !_TripService.CreateOrEditShippingRequestTripDto?.id &&
+                  !_TripService?.CreateOrEditShippingRequestTripDto?.id &&
                   (isShipper || isTachyonDealer || feature.isEnabled('App.CarrierAsASaas')) &&
-                  _TripService.GetShippingRequestForViewOutput &&
-                  _TripService.GetShippingRequestForViewOutput &&
-                  _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
+                  _TripService?.GetShippingRequestForViewOutput &&
+                  _TripService?.GetShippingRequestForViewOutput &&
+                  _TripService?.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
                 "
               >
                 <button
@@ -58,8 +58,8 @@
               <button
                 class="btn btn-primary"
                 *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.id"
-                [disabled]="!_TripService.CreateOrEditShippingRequestTripDto.id"
-                (click)="DownloadSingleDropWaybillPdf(_TripService.CreateOrEditShippingRequestTripDto.id)"
+                [disabled]="!_TripService?.CreateOrEditShippingRequestTripDto?.id"
+                (click)="DownloadSingleDropWaybillPdf(_TripService?.CreateOrEditShippingRequestTripDto?.id)"
                 [buttonBusy]="wayBillIsDownloading"
               >
                 <i class="fa flaticon2-print"></i>
@@ -67,9 +67,9 @@
               </button>
             </div>
           </div>
-          <div class="modal-body" [busyIf]="loading">
+          <div class="modal-body" [busyIf]="loading" *ngIf="_TripService?.CreateOrEditShippingRequestTripDto">
             <div
-              *ngIf="_TripService.CreateOrEditShippingRequestTripDto.isExceedMaxWaybillsNumber"
+              *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.isExceedMaxWaybillsNumber"
               class="row alert alert-warning"
               style="background-color: #fff3cd; color: #856404; border-color: #ffeeba"
               role="alert"
@@ -79,7 +79,7 @@
             <div
               class="row"
               *ngIf="
-                _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag == ShippingRequestFlagEnum.Dedicated || shippingRequest.id == 0
+                _TripService?.GetShippingRequestForViewOutput?.shippingRequestFlag == ShippingRequestFlagEnum.Dedicated || shippingRequest.id == 0
               "
             >
               <div class="col-lg-6">
@@ -99,7 +99,7 @@
               </div>
             </div>
 
-            <div class="row" [hidden]="_TripService.GetShippingRequestForViewOutput">
+            <div class="row" [hidden]="_TripService?.GetShippingRequestForViewOutput">
               <div class="col-6" [hidden]="!this.feature.isEnabled('App.ShipperClients')">
                 <div class="form-group">
                   <label>{{ l('ActorShipper') }}</label>
@@ -132,7 +132,7 @@
                     type="number"
                     class="form-control"
                     name="subTotalAmountWithCommission"
-                    (change)="calculatePrices(_TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice)"
+                    (change)="calculatePrices(_TripService?.CreateOrEditShippingRequestTripDto?.actorShipperPrice)"
                   />
                 </div>
                 <div class="form-group" *ngIf="canSetPriceForShipperActor()">
@@ -151,7 +151,7 @@
                 <div class="form-group" *ngIf="canSetPriceForShipperActor()">
                   <label>{{ l('TotalAmount') }} <span class="text-danger">*</span></label>
                   <input
-                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto?.actorShipperPrice.totalAmountWithCommission"
+                    [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice.totalAmountWithCommission"
                     required
                     min="0"
                     type="number"
@@ -194,7 +194,7 @@
                     type="number"
                     class="form-control"
                     name="subTotalAmount"
-                    (change)="calculateCarrierPrices(_TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice)"
+                    (change)="calculateCarrierPrices(_TripService?.CreateOrEditShippingRequestTripDto?.actorCarrierPrice)"
                   />
                 </div>
                 <div class="form-group" *ngIf="canSetPriceForCarrierActor()">
@@ -218,7 +218,7 @@
             <div
               class="row"
               *ngIf="!_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id"
-              [hidden]="_TripService.GetShippingRequestForViewOutput"
+              [hidden]="_TripService?.GetShippingRequestForViewOutput"
             >
               <div class="col-lg-6">
                 <div class="form-group">
@@ -251,8 +251,8 @@
               <div
                 class="col-lg-6"
                 *ngIf="
-                  _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                  _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
+                  _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                  _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements
                 "
               >
                 <div class="form-group">
@@ -288,17 +288,17 @@
 
               <ng-container
                 *ngIf="
-                  (_TripService.GetShippingRequestForViewOutput &&
-                    _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated) ||
-                  !_TripService.GetShippingRequestForViewOutput
+                  (_TripService?.GetShippingRequestForViewOutput &&
+                    _TripService?.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated) ||
+                  !_TripService?.GetShippingRequestForViewOutput
                 "
               >
                 <div
                   class="form-group col-lg-6"
                   *ngIf="
-                    _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
-                    _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ExportPortMovements &&
-                    _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery
+                    _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                    _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId != ShippingTypeEnum.ExportPortMovements &&
+                    _TripService?.CreateOrEditShippingRequestTripDto?.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery
                   "
                 >
                   <label>{{ l('RouteType') }}</label>
@@ -320,10 +320,10 @@
                 <div
                   class="form-group col-lg-6"
                   *ngIf="
-                    _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
-                    _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ExportPortMovements &&
-                    _TripService.CreateOrEditShippingRequestTripDto.routeType == RouteTypesEnum.MultipleDrops &&
-                    _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery
+                    _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                    _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId != ShippingTypeEnum.ExportPortMovements &&
+                    _TripService?.CreateOrEditShippingRequestTripDto?.routeType == RouteTypesEnum.MultipleDrops &&
+                    _TripService?.CreateOrEditShippingRequestTripDto?.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery
                   "
                 >
                   <label>{{ l('NumberOfDrops') }}</label>
@@ -351,8 +351,8 @@
                 <div class="form-group">
                   <label
                     >{{
-                      _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
-                      _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
+                      _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                      _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId != ShippingTypeEnum.ExportPortMovements
                         ? l('OriginCountry')
                         : l('Country')
                     }}
@@ -382,7 +382,7 @@
                   <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
                 </div>
               </div>
-              <div class="col-lg-6" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.CrossBorderMovements">
+              <div class="col-lg-6" *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.CrossBorderMovements">
                 <div class="form-group">
                   <label> {{ l('DestinationCountry') }}<span class="required-fileds">*</span></label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
@@ -395,9 +395,9 @@
                         (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
                       " -->
                     <!--                      [attr.disabled]="-->
-                    <!--                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId &&-->
-                    <!--                        (_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == 2 ||-->
-                    <!--                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == 1-->
+                    <!--                        _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId &&-->
+                    <!--                        (_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == 2 ||-->
+                    <!--                        _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == 1-->
                     <!--                          ? true-->
                     <!--                          : null)-->
                     <!--                      "-->
@@ -422,8 +422,8 @@
                 <div
                   class="form-group"
                   *ngIf="
-                    _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
-                    _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
+                    _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                    _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId != ShippingTypeEnum.ExportPortMovements
                   "
                 >
                   <label>{{ l('OriginCity') }} <span class="required-fileds">*</span> </label>
@@ -452,8 +452,8 @@
                 <div
                   class="form-group"
                   *ngIf="
-                    _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                    _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
+                    _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                    _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements
                   "
                 >
                   <label>{{ l('Origin') }} <span class="required-fileds">*</span> </label>
@@ -478,7 +478,7 @@
                         loadFacilitiesInPointComponent()
                       "
                       required
-                      *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements"
+                      *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements"
                     >
                       <option [ngValue]="null" disabled selected>{{ l('SelectanOrigin') }}</option>
                       <option *ngFor="let originPort of allOriginPorts" [ngValue]="Number(originPort.id)">
@@ -500,7 +500,7 @@
                         validateShippingRequestType(); removeValidationForExportPortRequestOnStep2Form(); loadFacilitiesInPointComponent()
                       "
                       required
-                      *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements"
+                      *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements"
                     >
                       <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>
                       <option *ngFor="let originCity of sourceCities" [ngValue]="Number(originCity.id)">{{ originCity.displayName }}</option>
@@ -508,13 +508,13 @@
                   </div>
 
                   <span class="form-text text-muted">{{
-                    _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements
+                    _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements
                       ? l('SelectaPort')
                       : l('SelectaCity')
                   }}</span>
                 </div>
               </div>
-              <div class="col-lg-6" [hidden]="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.LocalInsideCity">
+              <div class="col-lg-6" [hidden]="_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.LocalInsideCity">
                 <div class="form-group">
                   <label> {{ l('DestinationCity') }}<span class="required-fileds">*</span></label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
@@ -532,12 +532,12 @@
                       [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities"
                       optionLabel="cityName"
                       [disabled]="
-                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.LocalInsideCity ||
-                        (_TripService.CreateOrEditShippingRequestTripDto.roundTripType != roundTripTypeEnum.WithReturnTrip &&
-                          !_TripService.CreateOrEditShippingRequestTripDto.originCityId) ||
-                        (_TripService.CreateOrEditShippingRequestTripDto.roundTripType == roundTripTypeEnum.WithReturnTrip &&
-                          !_TripService.CreateOrEditShippingRequestTripDto.originFacilityId) ||
-                        _TripService.CreateOrEditShippingRequestTripDto.routeType == null
+                        _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.LocalInsideCity ||
+                        (_TripService?.CreateOrEditShippingRequestTripDto?.roundTripType != roundTripTypeEnum.WithReturnTrip &&
+                          !_TripService?.CreateOrEditShippingRequestTripDto?.originCityId) ||
+                        (_TripService?.CreateOrEditShippingRequestTripDto?.roundTripType == roundTripTypeEnum.WithReturnTrip &&
+                          !_TripService?.CreateOrEditShippingRequestTripDto?.originFacilityId) ||
+                        _TripService?.CreateOrEditShippingRequestTripDto?.routeType == null
                           ? true
                           : false
                       "
@@ -547,7 +547,7 @@
                       [style]="{ width: '100%' }"
                       styleClass="form-control pt-1"
                       [dataKey]="'cityId'"
-                      [selectionLimit]="_TripService.CreateOrEditShippingRequestTripDto.routeType == 1 ? 1 : 10"
+                      [selectionLimit]="_TripService?.CreateOrEditShippingRequestTripDto?.routeType == 1 ? 1 : 10"
                     >
                     </p-multiSelect>
                     <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
@@ -644,7 +644,7 @@
                     name="tripStartDate"
                     [(value)]="_TripService.CreateOrEditShippingRequestTripDto.expectedDeliveryTime"
                     type="datetime"
-                    [min]="_TripService.CreateOrEditShippingRequestTripDto.startTripDate"
+                    [min]="_TripService?.CreateOrEditShippingRequestTripDto?.startTripDate"
                     openOnFieldClick="true"
                   >
                   </dx-date-box>
@@ -656,7 +656,7 @@
                 class="col-lg-6"
                 *ngIf="
                   VasListFromFather?.length > 0 &&
-                  _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag != ShippingRequestFlagEnum.Dedicated
+                  _TripService?.GetShippingRequestForViewOutput?.shippingRequestFlag != ShippingRequestFlagEnum.Dedicated
                 "
               >
                 <div class="form-group">
@@ -678,7 +678,7 @@
               </div>
               <!--      end:Vas's      -->
 
-              <div class="col-lg-6" *ngIf="!_TripService.GetShippingRequestForViewOutput">
+              <div class="col-lg-6" *ngIf="!_TripService?.GetShippingRequestForViewOutput">
                 <label>{{ l('MainGoodCategory') }} <span class="required-fileds">*</span></label>
                 <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
                   <select
@@ -695,7 +695,7 @@
                 </div>
               </div>
               <!--  begin::Trip Goods Approximate Value -->
-              <div class="col-lg-6 mt-3">
+              <div class="col-lg-6 mt-3" *ngIf="_TripService.CreateOrEditShippingRequestTripDto">
                 <div class="form-group">
                   <label>{{ l('ApproximateTripGoodsValue') }} <span class="required-fileds" *ngIf="isApproximateValueRequired">*</span></label>
                   <div class="input-group date">
@@ -725,7 +725,8 @@
                   <div
                     class="col-6 col-form-label"
                     *ngIf="
-                      _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal && !isPortMovement
+                      _TripService?.CreateOrEditShippingRequestTripDto?.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal &&
+                      !isPortMovement
                     "
                   >
                     <label for="DeliveryNote"> {{ l('NeedsDeliveryNote') }} </label>
@@ -742,7 +743,8 @@
                   </div>
                   <div
                     [class]="
-                      _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal && !isPortMovement
+                      _TripService?.CreateOrEditShippingRequestTripDto?.shippingRequestTripFlag == ShippingRequestTripFlagEnum.Normal &&
+                      !isPortMovement
                         ? 'col-6 col-form-label'
                         : 'col-12 col-form-label'
                     "
@@ -769,12 +771,12 @@
                     <span
                       class="required-fileds"
                       *ngIf="
-                        (!_TripService.GetShippingRequestForViewOutput?.shippingRequest?.id &&
-                          (_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                            _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
-                        (_TripService.GetShippingRequestForViewOutput &&
-                          (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                            _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
+                        (!_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                          (_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                            _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
+                        (_TripService?.GetShippingRequestForViewOutput &&
+                          (_TripService?.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                            _TripService?.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
                       "
                       >*</span
                     ></label
@@ -786,14 +788,14 @@
                     name="ContainerNumber"
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.containerNumber"
                     type="text"
-                    [disabled]="_TripService.CreateOrEditShippingRequestTripDto.id && IsHaveContainerNumberValue && !isTachyonDealer"
+                    [disabled]="_TripService?.CreateOrEditShippingRequestTripDto?.id && IsHaveContainerNumberValue && !isTachyonDealer"
                     [required]="
-                      (!_TripService.GetShippingRequestForViewOutput?.shippingRequest?.id &&
-                        (_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                          _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
-                      (_TripService.GetShippingRequestForViewOutput &&
-                        (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                          _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
+                      (!_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                        (_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                          _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
+                      (_TripService?.GetShippingRequestForViewOutput &&
+                        (_TripService?.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                          _TripService?.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
                     "
                   />
                 </div>
@@ -807,12 +809,12 @@
                     <span
                       class="required-fileds"
                       *ngIf="
-                        (!_TripService.GetShippingRequestForViewOutput?.shippingRequest?.id &&
-                          (_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                            _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
-                        (_TripService.GetShippingRequestForViewOutput &&
-                          (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                            _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
+                        (!_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                          (_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                            _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
+                        (_TripService?.GetShippingRequestForViewOutput &&
+                          (_TripService?.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                            _TripService?.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
                       "
                       >*</span
                     ></label
@@ -824,27 +826,27 @@
                     name="SealNumber"
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.sealNumber"
                     type="text"
-                    [disabled]="_TripService.CreateOrEditShippingRequestTripDto.id && IsHaveSealNumberValue && !isTachyonDealer"
+                    [disabled]="_TripService?.CreateOrEditShippingRequestTripDto?.id && IsHaveSealNumberValue && !isTachyonDealer"
                     [required]="
-                      (!_TripService.GetShippingRequestForViewOutput?.shippingRequest?.id &&
-                        (_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                          _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
-                      (_TripService.GetShippingRequestForViewOutput != null &&
-                        (_TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                          _TripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
+                      (!_TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                        (_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                          _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements)) ||
+                      (_TripService?.GetShippingRequestForViewOutput != null &&
+                        (_TripService?.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                          _TripService?.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId == ShippingTypeEnum.ExportPortMovements))
                     "
                   />
                 </div>
               </div>
               <!--   StartOf::Driver&Truck for DedicatedSR -->
 
-              <ng-container *ngIf="_TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated">
+              <ng-container *ngIf="_TripService?.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated">
                 <div class="form-group col-lg-6">
                   <label>{{ l('Driver') }}</label>
                   <select
                     name="driverUserId"
                     type="text"
-                    (change)="GetTruckOrDriver(_TripService.CreateOrEditShippingRequestTripDto.driverUserId, null)"
+                    (change)="GetTruckOrDriver(_TripService?.CreateOrEditShippingRequestTripDto?.driverUserId, null)"
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.driverUserId"
                     class="form-control"
                     [disabled]="saving || isDisabledDriver"
@@ -862,7 +864,7 @@
                     name="truckId"
                     type="text"
                     [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.truckId"
-                    (change)="GetTruckOrDriver(null, _TripService.CreateOrEditShippingRequestTripDto.truckId)"
+                    (change)="GetTruckOrDriver(null, _TripService?.CreateOrEditShippingRequestTripDto?.truckId)"
                     class="form-control"
                     [disabled]="saving || isDisabledTruck"
                     required
@@ -873,7 +875,7 @@
                 </div>
               </ng-container>
 
-              <ng-container *ngIf="!_TripService.GetShippingRequestForViewOutput">
+              <ng-container *ngIf="!_TripService?.GetShippingRequestForViewOutput">
                 <div class="form-group col-lg-6">
                   <label>{{ l('Driver') }}</label>
                   <select
@@ -906,7 +908,7 @@
               <!--   EndOf::Driver&Truck for DedicatedSR -->
 
               <!--       start:: Notes       -->
-              <div [class]="_TripService.CreateOrEditShippingRequestTripDto.hasAttachment ? 'col-lg-6' : 'col-lg-12'">
+              <div [class]="_TripService?.CreateOrEditShippingRequestTripDto?.hasAttachment ? 'col-lg-6' : 'col-lg-12'">
                 <label>{{ l('Notes') }}</label>
                 <div class="input-group">
                   <textarea
@@ -921,24 +923,24 @@
                 </div>
               </div>
               <!--End :: notes-->
-              <div *ngIf="_TripService.CreateOrEditShippingRequestTripDto.hasAttachment" class="col-lg-6">
+              <div *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.hasAttachment" class="col-lg-6">
                 <label>{{ l('SelectFile') }} {{ fileToken }} </label>
                 <div class="custom-file">
                   <input
                     name="file"
-                    (change)="DocFileChangeEvent($event, _TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto)"
+                    (change)="DocFileChangeEvent($event, _TripService?.CreateOrEditShippingRequestTripDto?.createOrEditDocumentFileDto)"
                     type="file"
                     class="custom-file-input"
                     accept="image/x-png,image/jpeg,application/pdf"
-                    [required]="_TripService.CreateOrEditShippingRequestTripDto.hasAttachment"
+                    [required]="_TripService?.CreateOrEditShippingRequestTripDto?.hasAttachment"
                   />
                   <label
                     class="custom-file-label text-truncate"
-                    [for]="_TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.name"
+                    [for]="_TripService?.CreateOrEditShippingRequestTripDto?.createOrEditDocumentFileDto.name"
                   >
                     {{
-                      _TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.name
-                        ? _TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.name
+                      _TripService?.CreateOrEditShippingRequestTripDto?.createOrEditDocumentFileDto.name
+                        ? _TripService?.CreateOrEditShippingRequestTripDto?.createOrEditDocumentFileDto.name
                         : l('SelectFile')
                     }}</label
                   >
@@ -946,7 +948,7 @@
                 <div class="margin-top-5">
                   <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
                 </div>
-                <div class="mt-2" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto.name">
+                <div class="mt-2" *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.createOrEditDocumentFileDto.name">
                   <div class="d-flex align-items-center flex-wrap mb-8">
                     <!--begin::Symbol-->
                     <div class="symbol symbol-50 symbol-light mr-3 ml-3">
@@ -958,15 +960,15 @@
                     <!--begin::Text-->
                     <div class="d-flex flex-column flex-grow-1 mr-2">
                       <a (click)="downloadAttatchment()" class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">
-                        {{ _TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto?.name }}</a
+                        {{ _TripService?.CreateOrEditShippingRequestTripDto?.createOrEditDocumentFileDto?.name }}</a
                       >
                       <span class="text-muted font-weight-bold">{{
-                        _TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto?.documentTypeDto?.templateContentType
+                        _TripService?.CreateOrEditShippingRequestTripDto?.createOrEditDocumentFileDto?.documentTypeDto?.templateContentType
                       }}</span>
                     </div>
                     <!--end::Text-->
                     <a
-                      *ngIf="_TripService.CreateOrEditShippingRequestTripDto.createOrEditDocumentFileDto?.binaryObjectId"
+                      *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.createOrEditDocumentFileDto?.binaryObjectId"
                       (click)="downloadAttatchment()"
                       class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
                     >
@@ -977,7 +979,7 @@
               </div>
               <!--        begin of home delivery for dedicated request special fields          -->
               <ng-container
-                *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
+                *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
               >
                 <div class="form-group col-lg-4 mt-3">
                   <label for="PaymentMethod"> {{ l('PaymentMethod') }} </label>
@@ -1021,8 +1023,8 @@
                     <div class="d-flex flex-column justify-content-center align-items-end p-6">
                       <button
                         [disabled]="
-                          _TripService.CreateOrEditShippingRequestTripDto.routeType == RouteTypesEnum.SingleDrop &&
-                          _TripService.CreateOrEditShippingRequestTripDto.numberOfDrops == 1
+                          _TripService?.CreateOrEditShippingRequestTripDto?.routeType == RouteTypesEnum.SingleDrop &&
+                          _TripService?.CreateOrEditShippingRequestTripDto?.numberOfDrops == 1
                         "
                         type="button"
                         class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
@@ -1040,7 +1042,9 @@
               <PointsComponent
                 [class.invalid-trip-points]="isTripPointsInvalid && isFormSubmitted"
                 (wayPointsListChanged)="revalidatePointsFromPointsComponent()"
-                [isHomeDelivery]="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"
+                [isHomeDelivery]="
+                  _TripService?.CreateOrEditShippingRequestTripDto?.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery
+                "
                 [isPortMovement]="isPortMovement"
                 [shippingRequest]="shippingRequest"
                 [isEdit]="isEdit"
@@ -1062,7 +1066,7 @@
                 type="submit"
                 class="btn btn-primary font-weight-bolder no-padding-custom"
                 [disabled]="saving || !shippingRequestTripsForm.form.valid || !isFileInputValid"
-                text="{{ _TripService.CreateOrEditShippingRequestTripDto.id ? l('UpdateTrip') : l('AddNewTrip') }}"
+                text="{{ _TripService?.CreateOrEditShippingRequestTripDto?.id ? l('UpdateTrip') : l('AddNewTrip') }}"
                 (onClick)="isFormSubmitted = true"
                 [useSubmitBehavior]="true"
                 [validationGroup]="'shippingRequestTripsGroup'"
@@ -1072,8 +1076,8 @@
                 *ngIf="
                   (isShipper || isTachyonDealer || isCarrierSaas) &&
                   isEnabled('App.SaveTemplateFeature') &&
-                  _TripService.GetShippingRequestForViewOutput &&
-                  _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
+                  _TripService?.GetShippingRequestForViewOutput &&
+                  _TripService?.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Normal
                 "
                 [entityType]="SavedEntityType.TripTemplate"
                 [jsonData]="tripAsJson"
@@ -1091,10 +1095,13 @@
               <!--              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"-->
               <!--              (click)="createOrEditTrip()"-->
               <!--            >-->
-              <!--              {{ _TripService.CreateOrEditShippingRequestTripDto.id ? l('UpdateTrip') : l('AddNewTrip') }}-->
+              <!--              {{ _TripService?.CreateOrEditShippingRequestTripDto?.id ? l('UpdateTrip') : l('AddNewTrip') }}-->
               <!--            </button>-->
               <!--end::Buttons-->
             </div>
+          </div>
+          <div class="modal-body" *ngIf="!_TripService?.CreateOrEditShippingRequestTripDto">
+            <ngx-skeleton-loader count="4" [animation]="'pulse'" [theme]="{ height: '100px' }"></ngx-skeleton-loader>
           </div>
         </dx-validation-group>
       </form>

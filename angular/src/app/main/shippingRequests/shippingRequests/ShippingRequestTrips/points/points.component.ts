@@ -120,8 +120,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         .subscribe((result) => {
           this.allFacilities = result;
           this.dropFacilities =
-            this._tripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements ||
-            this._tripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements
+            this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+            this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements
               ? result
               : result.filter((fac) => {
                   if (isNotNullOrUndefined(this._tripService.GetShippingRequestForViewOutput)) {
@@ -133,8 +133,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
                 });
           console.log('loadFacilities this.dropFacilities', this.dropFacilities);
           this.pickupFacilities =
-            this._tripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements ||
-            this._tripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements
+            this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+            this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements
               ? result
               : result.filter((r) => {
                   if (isNotNullOrUndefined(this._tripService.GetShippingRequestForViewOutput)) {
