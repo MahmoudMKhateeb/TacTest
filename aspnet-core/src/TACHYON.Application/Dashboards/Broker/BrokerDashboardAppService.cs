@@ -199,11 +199,7 @@ namespace TACHYON.Dashboards.Broker
 
              var trips = await (from point in _routePointRepository.GetAll()
                  where (point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                        point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) &&
-                       (point.ShippingRequestTripFk.ShippingRequestFk.CarrierActorId.HasValue ||
-                        point.ShippingRequestTripFk.ShippingRequestFk.ShipperActorId.HasValue) &&
-                       (!point.ShippingRequestTripFk.ShippingRequestFk.CarrierActorId.HasValue &&
-                        !point.ShippingRequestTripFk.ShippingRequestFk.ShipperActorId.HasValue)
+                        point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                        && point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
                        && point.PickingType == PickingType.Dropoff && !point.IsComplete &&
                        (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue)
