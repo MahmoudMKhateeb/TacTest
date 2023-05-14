@@ -53,6 +53,7 @@ namespace TACHYON.Web.Controllers
         private CommonManager _commonManager;
         private IShippingRequestTripAccidentAppService _shippingRequestTripAccidentAppService;
         private readonly IImportShipmentFromExcelAppService _importShipmentFromExcelAppService;
+        private readonly IForceDeliverTripsAppService _forceDeliverTripsAppService;
 
         public HelperController(TrucksAppService trucksAppService,
             ITempFileCacheManager tempFileCacheManager,
@@ -62,7 +63,7 @@ namespace TACHYON.Web.Controllers
             CityManager cityManager,
             CommonManager commonManager,
             ShippingRequestPointWorkFlowProvider workFlowProvider,
-            IShippingRequestTripAccidentAppService shippingRequestTripAccidentAppService, IImportShipmentFromExcelAppService importShipmentFromExcelAppService)
+            IShippingRequestTripAccidentAppService shippingRequestTripAccidentAppService, IImportShipmentFromExcelAppService importShipmentFromExcelAppService, IForceDeliverTripsAppService forceDeliverTripsAppService)
         {
             _trucksAppService = trucksAppService;
             _tempFileCacheManager = tempFileCacheManager;
@@ -74,6 +75,7 @@ namespace TACHYON.Web.Controllers
             _shippingRequestTripAccidentAppService = shippingRequestTripAccidentAppService;
             _cityManager = cityManager;
             _importShipmentFromExcelAppService = importShipmentFromExcelAppService;
+            _forceDeliverTripsAppService = forceDeliverTripsAppService;
         }
 
         public async Task<FileResult> GetTruckPictureByTruckId(long truckId)
@@ -285,16 +287,16 @@ namespace TACHYON.Web.Controllers
 
                 var fileBinaryObject = new BinaryObject(AbpSession.TenantId, fileBytes); 
                 
-                await BinaryObjectManager.SaveAsync(fileBinaryObject); 
-                
-                await BackgroundJobManager.EnqueueAsync<ForceDeliverTripJob, ForceDeliverTripJobArgs>(new ForceDeliverTripJobArgs()
+                await BinaryObjectManager.SaveAsync(fileBinaryObject);
+                CurrentUnitOfWork.SaveChanges();
+                var tripsFromExcel = await _forceDeliverTripsAppService.ReadForceDeliverTripsFromExcel(new ForceDeliverTripInput()
                 {
                     BinaryObjectId = fileBinaryObject.Id,
                     RequestedByTenantId = AbpSession.TenantId,
                     RequestedByUserId = AbpSession.UserId.Value
                 });
 
-                return Json(new AjaxResponse(new { }));
+                return Json(new AjaxResponse(new { tripsFromExcel }));
             }
             catch (UserFriendlyException ex)
             {
