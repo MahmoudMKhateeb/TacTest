@@ -410,6 +410,9 @@ namespace TACHYON.Tracking.AdditionalSteps
                    TripCarrierTenantId = x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId
                    ? (int?)x.ShippingRequestFk.CarrierTenantId
                    : null,
+                   CarrierTenantId = x.ShippingRequestId != null
+                   ? (int)x.ShippingRequestFk.CarrierTenantId
+                   : x.CarrierTenantId.Value,
                    InvoiceTripStatus = x.InvoiceStatus,
                    CarrierInvoiceTripStatus = x.CarrierInvoiceStatus
                })
