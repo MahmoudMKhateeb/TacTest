@@ -3091,6 +3091,7 @@
 	<text name="DirectShipmentTrackingPermission">تتبع الشحنات المباشرة</text>
 	<text name="DirectShipmentTracking">تتبع الشحنات المباشرة</text>
     <text name="RequiredReceiverCodeForInvoice">هل رمز المستلم مطلوب</text>
+    <text name="IsTaxVatIncluded">يتضمن الضريبة</text>
 		
 	</texts>
 </localizationDictionary>

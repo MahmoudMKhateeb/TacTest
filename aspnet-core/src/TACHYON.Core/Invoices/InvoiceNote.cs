@@ -42,5 +42,6 @@ namespace TACHYON.Invoices
         #endregion
         public List<InvoiceNoteItem> InvoiceItems { get; set; }
         public bool IsDrafted { get; set; }
+        public bool IsTaxVatIncluded { get; set; } = true;
     }
 }
