@@ -97,7 +97,10 @@ namespace TACHYON.Invoices.InvoiceNotes
                 throw new UserFriendlyException(L("WaybillsShouldnotBeDuplicated"));
             }
 
-
+            if (!input.IsTaxVatIncluded)
+            {
+                input.InvoiceItems.ForEach(x => x.VatAmount = 0);
+            }
             if (!input.Id.HasValue)
             {
                 await Create(input);
@@ -295,7 +298,7 @@ namespace TACHYON.Invoices.InvoiceNotes
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public async Task<List<GetAllInvoiceItemDto>> GetAllInvoicmItemDto(long id)
+        public async Task<List<GetAllInvoiceItemDto>> GetAllInvoicmItemDto(long id, bool isTaxVatIncluded)
         {
             DisableTenancyFilters();
             var invoiceTenant = await _invoiceReposity.GetAll().Include(x => x.Trips).ThenInclude(x => x.ShippingRequestTripFK).ThenInclude(x => x.ShippingRequestTripVases).FirstOrDefaultAsync(x => x.Id == id);
@@ -309,10 +312,10 @@ namespace TACHYON.Invoices.InvoiceNotes
                 {
                     TripId = trip.TripId,
                     Price = trip.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
-                    VatAmount = trip.ShippingRequestTripFK.VatAmountWithCommission.Value,
-                    TotalAmount = trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
+                    VatAmount = isTaxVatIncluded  ?trip.ShippingRequestTripFK.VatAmountWithCommission.Value :0,
+                    TotalAmount = isTaxVatIncluded ?trip.ShippingRequestTripFK.TotalAmountWithCommission.Value : trip.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
                     WaybillNumber = trip.ShippingRequestTripFK.WaybillNumber.Value,
-                    TaxVat = trip.ShippingRequestTripFK.TaxVat.Value,
+                    TaxVat =isTaxVatIncluded ?trip.ShippingRequestTripFK.TaxVat.Value :0,
                     ItemName= trip.ShippingRequestTripFK.WaybillNumber.Value.ToString(),
                 });
                 if (trip.ShippingRequestTripFK.ShippingRequestTripVases != null &&
@@ -327,10 +330,10 @@ namespace TACHYON.Invoices.InvoiceNotes
                     {
                         TripId = trip.TripId,
                         Price = vas.SubTotalAmountWithCommission.Value,
-                        VatAmount = vas.VatAmountWithCommission.Value,
-                        TotalAmount = vas.TotalAmountWithCommission.Value,
+                        VatAmount = isTaxVatIncluded? vas.VatAmountWithCommission.Value :0,
+                        TotalAmount = isTaxVatIncluded ?vas.TotalAmountWithCommission.Value : vas.SubTotalAmountWithCommission.Value,
                         WaybillNumber = trip.ShippingRequestTripFK.WaybillNumber.Value,
-                        TaxVat = trip.ShippingRequestTripFK.TaxVat.Value,
+                        TaxVat = isTaxVatIncluded ?trip.ShippingRequestTripFK.TaxVat.Value :0,
                         ItemName = VasCounter ==0 ? trip.ShippingRequestTripFK.WaybillNumber.Value.ToString() : $"{trip.ShippingRequestTripFK.WaybillNumber.Value.ToString()}Vas{VasCounter}",
                         TripVasId = vas.Id,
                     });
@@ -342,7 +345,7 @@ namespace TACHYON.Invoices.InvoiceNotes
 
         }
     
-        public async Task<List<GetAllInvoiceItemDto>> GetAllSubmitInvoicmItemDto(long id)
+        public async Task<List<GetAllInvoiceItemDto>> GetAllSubmitInvoicmItemDto(long id, bool isTaxVatIncluded)
         {
             DisableTenancyFilters();
             var submitInvoice = await _submitInvoiceReposity.GetAll()
@@ -358,10 +361,11 @@ namespace TACHYON.Invoices.InvoiceNotes
                TripId = x.TripId,
                WaybillNumber = x.ShippingRequestTripFK.WaybillNumber.Value,
                Price = x.ShippingRequestTripFK.SubTotalAmount.Value,
-               VatAmount = x.ShippingRequestTripFK.VatAmount.Value,
-               TotalAmount = x.ShippingRequestTripFK.TotalAmount.Value,
-               TaxVat = x.ShippingRequestTripFK.TaxVat.Value
-           }));
+               VatAmount = isTaxVatIncluded ? x.ShippingRequestTripFK.VatAmount.Value : 0,
+               TotalAmount = isTaxVatIncluded ? x.ShippingRequestTripFK.TotalAmount.Value : x.ShippingRequestTripFK.SubTotalAmount.Value,
+               TaxVat = isTaxVatIncluded ? x.ShippingRequestTripFK.TaxVat.Value : 0,
+               ItemName =  x.ShippingRequestTripFK.WaybillNumber.Value.ToString()
+           })) ;
             return Items;
         }
 
@@ -446,11 +450,12 @@ namespace TACHYON.Invoices.InvoiceNotes
 
             var invoiceNote = ObjectMapper.Map<InvoiceNote>(input);
             invoiceNote.IsDrafted = true;
-            var invoiceNoteId = await _invoiceNoteRepository.InsertAndGetIdAsync(invoiceNote);
 
             //invoiceNote.ReferanceNumber = GenerateInvoiceNoteReferanceNumber(invoiceNoteId, invoiceNote.NoteType);
             if (input.InvoiceItems.Any())
                  ItemValueCalculator(invoiceNote);
+            await _invoiceNoteRepository.InsertAsync(invoiceNote);
+
         }
         [AbpAuthorize(AppPermissions.Pages_InvoiceNote_Edit)]
         [RequiresFeature(AppFeatures.TachyonDealer)]
