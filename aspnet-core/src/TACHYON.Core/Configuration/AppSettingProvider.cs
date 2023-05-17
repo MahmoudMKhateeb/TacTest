@@ -1093,9 +1093,44 @@ namespace TACHYON.Configuration
                     {
                         new Page
                         {
-                            Name = TACHYONDashboardCustomizationConsts.DefaultPageName,
+                            Name = "General_Tap",
                             Widgets = new List<Widget>()
-
+                            {
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Host
+                                    .NumberOfRegisteredCompaniesWidget,
+                                    Height = 5,
+                                    Width = 6,
+                                    PositionX = 0,
+                                    PositionY = 0
+                                },
+                                new Widget
+                                {
+                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Host
+                                    .RouteTypesUsageWidget,
+                                    Height = 5,
+                                    Width = 6,
+                                    PositionX = 6,
+                                    PositionY = 0
+                                },
+                            }
+                        },
+                        new Page()
+                        {
+                            Name = "Operation",
+                            Widgets = new List<Widget>()
+                            {
+                                
+                            }
+                        },
+                        new Page()
+                        {
+                            Name = "Interactive map",
+                            Widgets = new List<Widget>()
+                            {
+                                
+                            }
                         }
                     }
                 },

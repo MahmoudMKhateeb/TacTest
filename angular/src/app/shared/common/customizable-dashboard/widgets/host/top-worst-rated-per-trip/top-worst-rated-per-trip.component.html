@@ -1,0 +1,87 @@
+<div class="row h-100">
+  <div class="col-lg-12">
+    <!--begin::Card-->
+    <div class="card card-custom card-stretch" [busyIf]="loading">
+      <div class="card-header border-0">
+        <div class="card-title text-center">
+          <h3 class="card-label">{{ l('TopWorstRatedPerTripWidget') }}</h3>
+        </div>
+      </div>
+      <!--begin::Body-->
+      <div class="card-body pt-2">
+        <ng-container *ngIf="topWorstRated && topWorstRated.length > 0">
+          <div class="d-flex w-100">
+            <div class="w-50 form-group">
+              <label>{{ l('RateType') }}</label>
+              <div>
+                <dx-select-box
+                  id="rateType"
+                  name="rateType"
+                  [(value)]="rateType"
+                  [dataSource]="rateTypes"
+                  [searchEnabled]="true"
+                  placeholder="{{ l('Select') }}"
+                >
+                </dx-select-box>
+              </div>
+            </div>
+            <div class="w-50 pl-4 form-group">
+              <label>{{ l('EditionType') }}</label>
+              <div>
+                <dx-select-box
+                  id="editionType"
+                  name="editionType"
+                  [(value)]="editionType"
+                  [dataSource]="editionTypes"
+                  [searchEnabled]="true"
+                  placeholder="{{ l('Select') }}"
+                >
+                </dx-select-box>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex w-100 justify-content-between" *ngFor="let item of topWorstRated">
+            <div class="d-flex flex-column w-100 pr-4">
+              <div class="d-flex align-items-center justify-content-between">
+                <h5 class="text-dark">
+                  <b>{{ item.name }}</b>
+                </h5>
+                <h5 class="text-dark">
+                  <b>{{ item.numberOfRequests }}</b>
+                </h5>
+              </div>
+              <div class="d-flex w-100">
+                <div class="progress w-100">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    [ngStyle]="{
+                      width: (item.rating > 0 ? (item.rating / 5) * 100 : 100) + '%',
+                      'background-color': '#dc2434'
+                    }"
+                    [attr.aria-valuenow]="item.rating > 0 ? (item.rating / 5) * 100 : 100"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-column">
+              <div class="mt-1">
+                <ng-template #t let-fill="fill">
+                  <span class="star p-0" [class.full]="fill === 100"> <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;</span>
+                </ng-template>
+                <ngb-rating [(rate)]="item.rating" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <div class="pd-5 text-center" *ngIf="!topWorstRated || topWorstRated.length == 0">
+          {{ l('NoData') }}
+        </div>
+      </div>
+      <!--end::Body-->
+    </div>
+    <!--end::Card-->
+  </div>
+</div>

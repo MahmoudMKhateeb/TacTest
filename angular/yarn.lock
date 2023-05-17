@@ -9,6 +9,20 @@
   dependencies:
     tslib "^1.9.0"
 
+"@agm/js-marker-clusterer@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@agm/js-marker-clusterer/-/js-marker-clusterer-1.1.0.tgz#473538230ccae38e9ecbea7bfaa9c0584f85593f"
+  integrity sha512-BLgzmYlRP8ApWwyt6N8/jlHESn4LQVWCGFGBu+7gR6hZHqpxyeU9p0ptNEGBORuyZE5O3r5N4yTJFLtvYwjA4g==
+  dependencies:
+    tslib "^1.9.0"
+
+"@agm/markerclusterer@^3.0.0-beta.0":
+  version "3.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@agm/markerclusterer/-/markerclusterer-3.0.0-beta.0.tgz#b7b79883c7b98b097b0595782d0522414c9c1c12"
+  integrity sha512-abJHZsLKFH8AkBgVCQ9GqN17CI1IZEW6pTzQxeihK24F+n0rxeptJ0mFETNA+l844GziEJ3jmkygOQ4AqpCWog==
+  dependencies:
+    tslib "^2.0.0"
+
 "@angular-devkit/architect@0.1201.1":
   version "0.1201.1"
   resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.1201.1.tgz#a1cb4e25c53bfc388134f53f5f1d7c5884f0b2c8"
@@ -1687,6 +1701,11 @@
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-4.4.2.tgz#864abe98cce4497a163c01a8fc30389f15d3d4e1"
   integrity sha512-vq7KQGuAJ1ieFG5tUqwxwUwmXYtblFOTjHaLAVHo6iEPB52mS7DS45VJfkhaQmX4+5/+BHRpg82G1qkuAINwtg==
+
+"@google/markerclustererplus@^5.1.3":
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/@google/markerclustererplus/-/markerclustererplus-5.1.3.tgz#dd7ddbb2a17c977e0b0252c3d8e61fcf502b1bf2"
+  integrity sha512-2wQGO6GGbKPC2tNmTz8ei1zBa64zV3QBBvgLHiPvYqUA63230qNqfQpN+nzsrl1RM40NJtty4Y1CEQKxq6MBGg==
 
 "@grpc/grpc-js@^1.3.2":
   version "1.5.5"

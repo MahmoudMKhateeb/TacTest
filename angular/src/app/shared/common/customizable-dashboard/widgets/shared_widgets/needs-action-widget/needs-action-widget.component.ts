@@ -17,6 +17,7 @@ export class NeedsActionWidgetComponent extends AppComponentBase implements OnIn
   @Input('isForActors') isForActors = false;
   needsActionTrips: NeedsActionTripDto[] = [];
   loading: boolean;
+  today = new Date();
 
   constructor(
     injector: Injector,
@@ -56,6 +57,9 @@ export class NeedsActionWidgetComponent extends AppComponentBase implements OnIn
         this.needsActionTrips = res;
         this.loading = false;
       });
+    }
+    if (this.isTachyonDealerOrHost) {
+      this.loading = false;
     }
   }
 

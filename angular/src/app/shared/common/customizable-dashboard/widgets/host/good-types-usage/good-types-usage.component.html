@@ -1,0 +1,49 @@
+<div class="card card-custom card-stretch w-100 h-100">
+  <div class="h-100 card-body p-4 d-flex flex-column justify-content-center">
+    <div>
+      <h2>
+        {{ 'GoodTypesUsage' | localize }}
+      </h2>
+    </div>
+    <div class="row" style="height: 85%">
+      <div class="col-10">
+        <div id="chart" *ngIf="chartOptions">
+          <!--                [series]="chartOptions.series"-->
+          <!--                [chart]="chartOptions.chart"-->
+          <!--                [labels]="chartOptions.labels"-->
+          <!--                [responsive]="chartOptions.responsive"-->
+          <!--                [plotOptions]="plotOptions"-->
+          <!--                [legend]="legend"-->
+          <!--                [dataLabels]="{ enabled: false }"-->
+          <apx-chart
+            #chart
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [dataLabels]="chartOptions.dataLabels"
+            [stroke]="chartOptions.stroke"
+            [colors]="chartOptions.colors"
+            [title]="chartOptions.title"
+            [subtitle]="chartOptions.subtitle"
+            [plotOptions]="chartOptions.plotOptions"
+            [yaxis]="chartOptions.yaxis"
+            [xaxis]="chartOptions.xaxis"
+            [tooltip]="chartOptions.tooltip"
+            [legend]="legend"
+          ></apx-chart>
+          <!--                [fill]="{colors}"-->
+        </div>
+      </div>
+      <div class="col-2 h-100 overflow-auto scrollable-col" *ngIf="allGoodTypes.length > 0">
+        <div
+          class="clickable-item transport-type"
+          *ngFor="let goodType of allGoodTypes; let i = index"
+          (click)="selectTransportType(goodType)"
+          [class.selected-transport-type]="selectedTransportTypeId == goodType.id"
+        >
+          <img src="assets/SVG/box-goods-default.svg" alt="" width="30" />
+          <div>{{ goodType.displayName }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

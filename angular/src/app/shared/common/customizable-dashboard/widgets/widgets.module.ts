@@ -87,6 +87,22 @@ import { ActorNextDocDueDateComponent } from '@app/shared/common/customizable-da
 import { ActorNextInvoiceDueDateComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-next-invoice-due-date/actor-next-invoice-due-date.component';
 import { ActorNewInvoiceVsPaidInvoiceComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-new-invoice-vs-paid-invoice/actor-new-invoice-vs-paid-invoice.component';
 import { ActorPaidInvoiceVsClaimedInvoiceComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-paid-invoice-vs-claimed-invoice/actor-paid-invoice-vs-claimed-invoice.component';
+import { NumberOfRegisteredCompaniesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-registered-companies/number-of-registered-companies.component';
+import { NumberOfDriversAndTrucksComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-drivers-and-trucks/number-of-drivers-and-trucks.component';
+import { TopRatedShippersAndCarriersComponent } from '@app/shared/common/customizable-dashboard/widgets/host/top-rated-shippers-and-carriers/top-rated-shippers-and-carriers.component';
+import { NormalRequestsVSDedicatedRequestsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/normal-requests-vs-dedicated-requests/normal-requests-vs-dedicated-requests.component';
+import { AgmMarkerClustererModule } from '@agm/markerclusterer';
+import { NumberOfTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-trips/number-of-trips.component';
+import { NumberOfSaasTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-saas-trips/number-of-saas-trips.component';
+import { NumberOfTruckAggregationTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-truck-aggregation-trips/number-of-truck-aggregation-trips.component';
+import { NumberOfTruckAggregationTripsVsSaasTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-truck-aggregation-trips-vs-saas-trips/number-of-truck-aggregation-trips-vs-saas-trips.component';
+import { TopWorstRatedPerTripComponent } from '@app/shared/common/customizable-dashboard/widgets/host/top-worst-rated-per-trip/top-worst-rated-per-trip.component';
+import { PaidInvoicesBeforeDueDateComponent } from '@app/shared/common/customizable-dashboard/widgets/host/paid-invoices-before-due-date/paid-invoices-before-due-date.component';
+import { CostVsSellingVsProfitOfSaasTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/cost-vs-selling-vs-profit-of-saas-trips/cost-vs-selling-vs-profit-of-saas-trips.component';
+import { OverallTotalAmountPerAllTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/overall-total-amount-per-all-trips/overall-total-amount-per-all-trips.component';
+import { TruckAggregationInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/truck-aggregation-invoices/truck-aggregation-invoices.component';
+import { SaasInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/saas-invoices/saas-invoices.component';
+import { GoodTypesUsageComponent } from '@app/shared/common/customizable-dashboard/widgets/host/good-types-usage/good-types-usage.component';
 import { MakeScrollableModule } from '@app/shared/common/make-scrollable-directive/make-scrollable.module';
 
 const widgets = [
@@ -161,6 +177,21 @@ const widgets = [
   ActorNextInvoiceDueDateComponent,
   ActorNewInvoiceVsPaidInvoiceComponent,
   ActorPaidInvoiceVsClaimedInvoiceComponent,
+  NumberOfRegisteredCompaniesComponent,
+  NumberOfDriversAndTrucksComponent,
+  TopRatedShippersAndCarriersComponent,
+  NormalRequestsVSDedicatedRequestsComponent,
+  NumberOfTripsComponent,
+  NumberOfSaasTripsComponent,
+  NumberOfTruckAggregationTripsComponent,
+  NumberOfTruckAggregationTripsVsSaasTripsComponent,
+  TopWorstRatedPerTripComponent,
+  PaidInvoicesBeforeDueDateComponent,
+  CostVsSellingVsProfitOfSaasTripsComponent,
+  OverallTotalAmountPerAllTripsComponent,
+  TruckAggregationInvoicesComponent,
+  SaasInvoicesComponent,
+  GoodTypesUsageComponent,
 ];
 @NgModule({
   declarations: [...widgets],
@@ -169,7 +200,10 @@ const widgets = [
     ChartModule,
     NgApexchartsModule,
     TableModule,
-    AgmCoreModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDKKZqDW_xX5azTqBV2oXSb6P3nwCAzOpw',
+    }),
+    AgmMarkerClustererModule,
     AgmDirectionModule,
     PaginatorModule,
     UtilsModule,

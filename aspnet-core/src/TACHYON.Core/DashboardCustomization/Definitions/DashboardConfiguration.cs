@@ -45,19 +45,19 @@ namespace TACHYON.DashboardCustomization.Definitions
             var hostWidgetsDefaultPermission = new List<string> { AppPermissions.Pages_Administration_Host_Dashboard };
 
             var hostNumberOfRegisteredTrucksWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfRegisteredTrucksWidget, ("NumberOfRegisteredTrucksWidget"), side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
-            var hostNumberOfRegisteredShippersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfRegisteredShippersWidget, "NumberOfRegisteredShippersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
-            var hostNumberOfRegisteredCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfRegisteredCarriersWidget, "NumberOfRegisteredCarriersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            // var hostNumberOfRegisteredShippersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfRegisteredShippersWidget, "NumberOfRegisteredShippersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            // var hostNumberOfRegisteredCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfRegisteredCarriersWidget, "NumberOfRegisteredCarriersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostNewAccountsRegisteredWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NewAccountsRegisteredWidget, "NewAccountsRegisteredWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostNewTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NewTripsWidget, "NewTripsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostNumberOfDeliveredTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfDeliveredTripsWidget, "NumberOfDeliveredTripsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostNumberOfOngoingTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfOngoingTripsWidget, "NumberOfOngoingTripsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
-            var hostTruckTypeUsageWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.TruckTypeUsageWidget, "TruckTypeUsageWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
-            var hostGoodTypesUsageWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.GoodTypesUsageWidget, "GoodTypesUsageWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            // var hostTruckTypeUsageWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.TruckTypeUsageWidget, "TruckTypeUsageWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            // var hostGoodTypesUsageWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.GoodTypesUsageWidget, "GoodTypesUsageWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostRouteTypesUsageWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.RouteTypesUsageWidget, "RouteTypesUsageWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostMostRequestingShippersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.MostRequestingShippersWidget, "MostRequestingShippersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostMostRequestedCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.MostRequestedCarriersWidget, "MostRequestedCarriersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
-            var hostTopRatedShippersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.TopRatedShippersWidget, "TopRatedShippersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
-            var hostTopRatedCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.TopRatedCarriersWidget, "TopRatedCarriersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            // var hostTopRatedShippersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.TopRatedShippersWidget, "TopRatedShippersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            // var hostTopRatedCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.TopRatedCarriersWidget, "TopRatedCarriersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostWorstRatedShippersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.WorstRatedShippersWidget, "WorstRatedShippersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostWorstRatedCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.WorstRatedCarriersWidget, "WorstRatedCarriersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostUnPricedRequestsInMarketPlaceWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.UnPricedRequestsInMarketPlaceWidget, "UnPricedRequestsInMarketPlaceWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
@@ -65,25 +65,43 @@ namespace TACHYON.DashboardCustomization.Definitions
             var hostRequestsPriceAcceptanceWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.RequestsPriceAcceptanceWidget, "RequestsPriceAcceptanceWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostInvoicesPaidBeforeDueDateWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.InvoicesPaidBeforeDueDateWidget, "InvoicesPaidBeforeDueDateWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var hostNumberOfRequestsPerAreaOrCityWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfRequestsPerAreaOrCityWidget, "NumberOfRequestsPerAreaOrCityWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var NumberOfRegisteredCompaniesWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfRegisteredCompaniesWidget, "NumberOfRegisteredCompaniesWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var NumberOfDriversAndTrucksWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfDriversAndTrucksWidget, "NumberOfDriversAndTrucksWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var TopRatedShippersAndCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.TopRatedShippersAndCarriersWidget, "TopRatedShippersAndCarriersWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var NormalRequestsVSDedicatedRequestsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NormalRequestsVSDedicatedRequestsWidget, "NormalRequestsVSDedicatedRequestsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var MostTruckTypeUsedWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.MostTruckTypeUsedWidget, "MostTruckTypeUsedWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var NumberOfTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfTripsWidget, "NumberOfTripsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var NumberOfSaasTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfSaasTrips, "NumberOfSaasTrips", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var NumberOfTruckAggregationTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfTruckAggregationTrips, "NumberOfTruckAggregationTrips", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var NumberOfTruckAggregationTripsVsSaasTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NumberOfTruckAggregationTripsVsSaasTrips, "NumberOfTruckAggregationTripsVsSaasTrips", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var TopWorstRatedPerTrip = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.TopWorstRatedPerTrip, "TopWorstRatedPerTrip", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var PaidInvoicesBeforeDueDate = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.PaidInvoicesBeforeDueDate, "PaidInvoicesBeforeDueDate", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var CostVsSellingVsProfitOfSaasTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.CostVsSellingVsProfitOfSaasTripsWidget, "CostVsSellingVsProfitOfSaasTripsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var OverallTotalAmountPerAllTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.OverallTotalAmountPerAllTrips, "OverallTotalAmountPerAllTrips", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var TruckAggregationInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.TruckAggregationInvoices, "TruckAggregationInvoices", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var SaasInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.SaasInvoices, "SaasInvoices", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var GoodTypesUsage = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.GoodTypesUsage, "GoodTypesUsage", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var UpcomingTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.UpcomingTrips, "UpcomingTrips", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var NeedsActions = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NeedsActions, "NeedsActions", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             //var tachyonDealerSearchableMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerSearchableMapWidget, "TachyonDealerSearchableMapWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             //var tachyonDealerRequestsHeatMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerRequestsHeatMapWidget, "TachyonDealerRequestsHeatMapWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             //var tachyonDealerNormalVsRentalRequestsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerNormalVsRentalRequestsWidget, "TachyonDealerNormalVsRentalRequestsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
 
 
             WidgetDefinitions.Add(hostNumberOfRegisteredTrucksWidget);
-            WidgetDefinitions.Add(hostNumberOfRegisteredShippersWidget);
-            WidgetDefinitions.Add(hostNumberOfRegisteredCarriersWidget);
+            // WidgetDefinitions.Add(hostNumberOfRegisteredShippersWidget);
+            // WidgetDefinitions.Add(hostNumberOfRegisteredCarriersWidget);
             WidgetDefinitions.Add(hostNewAccountsRegisteredWidget);
             WidgetDefinitions.Add(hostNewTripsWidget);
             WidgetDefinitions.Add(hostNumberOfDeliveredTripsWidget);
             WidgetDefinitions.Add(hostNumberOfOngoingTripsWidget);
-            WidgetDefinitions.Add(hostTruckTypeUsageWidget);
-            WidgetDefinitions.Add(hostGoodTypesUsageWidget);
+            // WidgetDefinitions.Add(hostTruckTypeUsageWidget);
+            // WidgetDefinitions.Add(hostGoodTypesUsageWidget);
             WidgetDefinitions.Add(hostRouteTypesUsageWidget);
             WidgetDefinitions.Add(hostMostRequestingShippersWidget);
             WidgetDefinitions.Add(hostMostRequestedCarriersWidget);
-            WidgetDefinitions.Add(hostTopRatedShippersWidget);
-            WidgetDefinitions.Add(hostTopRatedCarriersWidget);
+            // WidgetDefinitions.Add(hostTopRatedShippersWidget);
+            // WidgetDefinitions.Add(hostTopRatedCarriersWidget);
             WidgetDefinitions.Add(hostWorstRatedShippersWidget);
             WidgetDefinitions.Add(hostWorstRatedCarriersWidget);
             WidgetDefinitions.Add(hostUnPricedRequestsInMarketPlaceWidget);
@@ -91,6 +109,24 @@ namespace TACHYON.DashboardCustomization.Definitions
             WidgetDefinitions.Add(hostRequestsPriceAcceptanceWidget);
             WidgetDefinitions.Add(hostInvoicesPaidBeforeDueDateWidget);
             WidgetDefinitions.Add(hostNumberOfRequestsPerAreaOrCityWidget);
+            WidgetDefinitions.Add(NumberOfRegisteredCompaniesWidget);
+            WidgetDefinitions.Add(NumberOfDriversAndTrucksWidget);
+            WidgetDefinitions.Add(TopRatedShippersAndCarriersWidget);
+            WidgetDefinitions.Add(NormalRequestsVSDedicatedRequestsWidget);
+            WidgetDefinitions.Add(MostTruckTypeUsedWidget);
+            WidgetDefinitions.Add(NumberOfTripsWidget);
+            WidgetDefinitions.Add(NumberOfSaasTrips);
+            WidgetDefinitions.Add(NumberOfTruckAggregationTrips);
+            WidgetDefinitions.Add(NumberOfTruckAggregationTripsVsSaasTrips);
+            WidgetDefinitions.Add(TopWorstRatedPerTrip);
+            WidgetDefinitions.Add(PaidInvoicesBeforeDueDate);
+            WidgetDefinitions.Add(CostVsSellingVsProfitOfSaasTripsWidget);
+            WidgetDefinitions.Add(OverallTotalAmountPerAllTrips);
+            WidgetDefinitions.Add(TruckAggregationInvoices);
+            WidgetDefinitions.Add(SaasInvoices);
+            WidgetDefinitions.Add(GoodTypesUsage);
+            WidgetDefinitions.Add(UpcomingTrips);
+            WidgetDefinitions.Add(NeedsActions);
             //WidgetDefinitions.Add(tachyonDealerSearchableMapWidget);
             //WidgetDefinitions.Add(tachyonDealerRequestsHeatMapWidget);
             //WidgetDefinitions.Add(tachyonDealerNormalVsRentalRequestsWidget);
@@ -198,14 +234,14 @@ namespace TACHYON.DashboardCustomization.Definitions
             };
 
             var tachyonDealerNumberOfRegisteredTrucksWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfRegisteredTrucksWidget, ("TMSNumberOfRegisteredTrucksWidget"), side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
-            var tachyonDealerNumberOfRegisteredShippersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfRegisteredShippersWidget, "TMSNumberOfRegisteredShippersWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
-            var tachyonDealerNumberOfRegisteredCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfRegisteredCarriersWidget, "TMSNumberOfRegisteredCarriersWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
+            // var tachyonDealerNumberOfRegisteredShippersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfRegisteredShippersWidget, "TMSNumberOfRegisteredShippersWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
+            // var tachyonDealerNumberOfRegisteredCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfRegisteredCarriersWidget, "TMSNumberOfRegisteredCarriersWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
             var tachyonDealerNewAccountsRegisteredWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NewAccountsRegisteredWidget, "TMSNewAccountsRegisteredWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
             var tachyonDealerNewTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NewTripsWidget, "TMSNewTripsWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
             var tachyonDealerNumberOfDeliveredTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfDeliveredTripsWidget, "TMSNumberOfDeliveredTripsWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
             var tachyonDealerNumberOfOngoingTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfOngoingTripsWidget, "TMSNumberOfOngoingTripsWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
-            var tachyonDealerTruckTypeUsageWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TruckTypeUsageWidget, "TMSTruckTypeUsageWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
-            var tachyonDealerGoodTypesUsageWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.GoodTypesUsageWidget, "TMSGoodTypesUsageWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
+            // var tachyonDealerTruckTypeUsageWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TruckTypeUsageWidget, "TMSTruckTypeUsageWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
+            // var tachyonDealerGoodTypesUsageWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.GoodTypesUsageWidget, "TMSGoodTypesUsageWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
             var tachyonDealerRouteTypesUsageWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.RouteTypesUsageWidget, "TMSRouteTypesUsageWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
             var tachyonDealerMostRequestingShippersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.MostRequestingShippersWidget, "TMSMostRequestingShippersWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
             var tachyonDealerMostRequestedCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.MostRequestedCarriersWidget, "TMSMostRequestedCarriersWidget", side: MultiTenancySides.Tenant, permissions: tachyonDealerWidgetsDefaultPermission);
@@ -221,24 +257,60 @@ namespace TACHYON.DashboardCustomization.Definitions
             //var tachyonDealerSearchableMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerSearchableMapWidget, "TachyonDealerSearchableMapWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             //var tachyonDealerRequestsHeatMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerRequestsHeatMapWidget, "TachyonDealerRequestsHeatMapWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             //var tachyonDealerNormalVsRentalRequestsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerNormalVsRentalRequestsWidget, "TachyonDealerNormalVsRentalRequestsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerNumberOfRegisteredCompaniesWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfRegisteredCompaniesWidget, "TachyonDealerNormalVsRentalRequestsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerNumberOfDriversAndTrucksWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfDriversAndTrucksWidget, "TachyonDealerNormalVsRentalRequestsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
 
+            var tachyonDealerTopRatedShippersAndCarriersWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TopRatedShippersAndCarriersWidget, "TopRatedShippersAndCarriersWidget", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerNormalRequestsVSDedicatedRequestsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NormalRequestsVSDedicatedRequestsWidget, "NormalRequestsVSDedicatedRequestsWidget", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerMostTruckTypeUsedWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.MostTruckTypeUsedWidget, "MostTruckTypeUsedWidget", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerNumberOfTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfTripsWidget, "NumberOfTripsWidget", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerNumberOfSaasTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfSaasTrips, "NumberOfSaasTrips", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerNumberOfTruckAggregationTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfTruckAggregationTrips, "NumberOfTruckAggregationTrips", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerNumberOfTruckAggregationTripsVsSaasTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NumberOfTruckAggregationTripsVsSaasTrips, "NumberOfTruckAggregationTripsVsSaasTrips", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerTopWorstRatedPerTrip = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TopWorstRatedPerTrip, "TopWorstRatedPerTrip", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerPaidInvoicesBeforeDueDate = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.PaidInvoicesBeforeDueDate, "PaidInvoicesBeforeDueDate", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerCostVsSellingVsProfitOfSaasTripsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.CostVsSellingVsProfitOfSaasTripsWidget, "CostVsSellingVsProfitOfSaasTripsWidget", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerOverallTotalAmountPerAllTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.OverallTotalAmountPerAllTrips, "OverallTotalAmountPerAllTrips", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerTruckAggregationInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TruckAggregationInvoices, "TruckAggregationInvoices", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerSaasInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.SaasInvoices, "SaasInvoices", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerGoodTypesUsage = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.GoodTypesUsage, "GoodTypesUsage", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerUpcomingTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.UpcomingTrips, "UpcomingTrips", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerNeedsActions = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NeedsActions, "NeedsActions", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
 
 
             WidgetDefinitions.Add(tachyonDealerNumberOfRegisteredTrucksWidget);
-            WidgetDefinitions.Add(tachyonDealerNumberOfRegisteredShippersWidget);
-            WidgetDefinitions.Add(tachyonDealerNumberOfRegisteredCarriersWidget);
+            // WidgetDefinitions.Add(tachyonDealerNumberOfRegisteredShippersWidget);
+            // WidgetDefinitions.Add(tachyonDealerNumberOfRegisteredCarriersWidget);
             WidgetDefinitions.Add(tachyonDealerNewAccountsRegisteredWidget);
             WidgetDefinitions.Add(tachyonDealerNewTripsWidget);
             WidgetDefinitions.Add(tachyonDealerNumberOfDeliveredTripsWidget);
             WidgetDefinitions.Add(tachyonDealerNumberOfOngoingTripsWidget);
-            WidgetDefinitions.Add(tachyonDealerTruckTypeUsageWidget);
-            WidgetDefinitions.Add(tachyonDealerGoodTypesUsageWidget);
+            // WidgetDefinitions.Add(tachyonDealerTruckTypeUsageWidget);
+            // WidgetDefinitions.Add(tachyonDealerGoodTypesUsageWidget);
             WidgetDefinitions.Add(tachyonDealerRouteTypesUsageWidget);
             WidgetDefinitions.Add(tachyonDealerUnPricedRequestsInMarketPlaceWidget);
             WidgetDefinitions.Add(tachyonDealerRequestsPricingBeforeBidEndingWidget);
             WidgetDefinitions.Add(tachyonDealerRequestsPriceAcceptanceWidget);
             WidgetDefinitions.Add(tachyonDealerInvoicesPaidBeforeDueDateWidget);
             WidgetDefinitions.Add(tachyonDealerNumberOfRequestsPerAreaOrCityWidget);
+            WidgetDefinitions.Add(tachyonDealerNumberOfRegisteredCompaniesWidget);
+            WidgetDefinitions.Add(tachyonDealerNumberOfDriversAndTrucksWidget);
+            WidgetDefinitions.Add(tachyonDealerTopRatedShippersAndCarriersWidget);
+            WidgetDefinitions.Add(tachyonDealerNormalRequestsVSDedicatedRequestsWidget);
+            WidgetDefinitions.Add(tachyonDealerMostTruckTypeUsedWidget);
+            WidgetDefinitions.Add(tachyonDealerNumberOfTripsWidget);
+            WidgetDefinitions.Add(tachyonDealerNumberOfSaasTrips);
+            WidgetDefinitions.Add(tachyonDealerNumberOfTruckAggregationTrips);
+            WidgetDefinitions.Add(tachyonDealerNumberOfTruckAggregationTripsVsSaasTrips);
+            WidgetDefinitions.Add(tachyonDealerTopWorstRatedPerTrip);
+            WidgetDefinitions.Add(tachyonDealerPaidInvoicesBeforeDueDate);
+            WidgetDefinitions.Add(tachyonDealerCostVsSellingVsProfitOfSaasTripsWidget);
+            WidgetDefinitions.Add(tachyonDealerOverallTotalAmountPerAllTrips);
+            WidgetDefinitions.Add(tachyonDealerTruckAggregationInvoices);
+            WidgetDefinitions.Add(tachyonDealerSaasInvoices);
+            WidgetDefinitions.Add(tachyonDealerGoodTypesUsage);
+            WidgetDefinitions.Add(tachyonDealerUpcomingTrips);
+            WidgetDefinitions.Add(tachyonDealerNeedsActions);
             //WidgetDefinitions.Add(tachyonDealerSearchableMapWidget);
             //WidgetDefinitions.Add(tachyonDealerRequestsHeatMapWidget);
             //WidgetDefinitions.Add(tachyonDealerNormalVsRentalRequestsWidget);
@@ -349,19 +421,37 @@ namespace TACHYON.DashboardCustomization.Definitions
                 new List<string>
                 {
                     tachyonDealerNumberOfRegisteredTrucksWidget.Id,
-                    tachyonDealerNumberOfRegisteredShippersWidget.Id,
-                    tachyonDealerNumberOfRegisteredCarriersWidget.Id,
+                    // tachyonDealerNumberOfRegisteredShippersWidget.Id,
+                    // tachyonDealerNumberOfRegisteredCarriersWidget.Id,
                     tachyonDealerNewAccountsRegisteredWidget.Id,
                     tachyonDealerNewTripsWidget.Id,
                     tachyonDealerNumberOfDeliveredTripsWidget.Id,
                     tachyonDealerNumberOfOngoingTripsWidget.Id,
-                    tachyonDealerTruckTypeUsageWidget.Id,
-                    tachyonDealerGoodTypesUsageWidget.Id,
+                    // tachyonDealerTruckTypeUsageWidget.Id,
+                    // tachyonDealerGoodTypesUsageWidget.Id,
                     tachyonDealerRouteTypesUsageWidget.Id,
                     tachyonDealerRequestsPricingBeforeBidEndingWidget.Id,
                     tachyonDealerRequestsPriceAcceptanceWidget.Id,
                     tachyonDealerInvoicesPaidBeforeDueDateWidget.Id,
                     tachyonDealerNumberOfRequestsPerAreaOrCityWidget.Id,
+                    tachyonDealerNumberOfRegisteredCompaniesWidget.Id,
+                    tachyonDealerNumberOfDriversAndTrucksWidget.Id,
+                    tachyonDealerTopRatedShippersAndCarriersWidget.Id,
+                    tachyonDealerNormalRequestsVSDedicatedRequestsWidget.Id,
+                    tachyonDealerMostTruckTypeUsedWidget.Id,
+                    tachyonDealerNumberOfTripsWidget.Id,
+                    tachyonDealerNumberOfSaasTrips.Id,
+                    tachyonDealerNumberOfTruckAggregationTrips.Id,
+                    tachyonDealerNumberOfTruckAggregationTripsVsSaasTrips.Id,
+                    tachyonDealerTopWorstRatedPerTrip.Id,
+                    tachyonDealerPaidInvoicesBeforeDueDate.Id,
+                    tachyonDealerCostVsSellingVsProfitOfSaasTripsWidget.Id,
+                    tachyonDealerOverallTotalAmountPerAllTrips.Id,
+                    tachyonDealerTruckAggregationInvoices.Id,
+                    tachyonDealerSaasInvoices.Id,
+                    tachyonDealerGoodTypesUsage.Id,
+                    tachyonDealerUpcomingTrips.Id,
+                    tachyonDealerNeedsActions.Id,
                     //tachyonDealerSearchableMapWidget.Id,
                     //tachyonDealerRequestsHeatMapWidget.Id,
                     //tachyonDealerNormalVsRentalRequestsWidget.Id,
@@ -376,19 +466,19 @@ namespace TACHYON.DashboardCustomization.Definitions
                 new List<string>
                 {
                     hostNumberOfRegisteredTrucksWidget.Id,
-                    hostNumberOfRegisteredShippersWidget.Id,
-                    hostNumberOfRegisteredCarriersWidget.Id,
+                    // hostNumberOfRegisteredShippersWidget.Id,
+                    // hostNumberOfRegisteredCarriersWidget.Id,
                     hostNewAccountsRegisteredWidget.Id,
                     hostNewTripsWidget.Id,
                     hostNumberOfDeliveredTripsWidget.Id,
                     hostNumberOfOngoingTripsWidget.Id,
-                    hostTruckTypeUsageWidget.Id,
-                    hostGoodTypesUsageWidget.Id,
+                    // hostTruckTypeUsageWidget.Id,
+                    // hostGoodTypesUsageWidget.Id,
                     hostRouteTypesUsageWidget.Id,
                     hostMostRequestingShippersWidget.Id,
                     hostMostRequestedCarriersWidget.Id,
-                    hostTopRatedShippersWidget.Id,
-                    hostTopRatedCarriersWidget.Id,
+                    // hostTopRatedShippersWidget.Id,
+                    // hostTopRatedCarriersWidget.Id,
                     hostWorstRatedShippersWidget.Id,
                     hostWorstRatedCarriersWidget.Id,
                     hostUnPricedRequestsInMarketPlaceWidget.Id,
@@ -396,6 +486,24 @@ namespace TACHYON.DashboardCustomization.Definitions
                     hostRequestsPriceAcceptanceWidget.Id,
                     hostInvoicesPaidBeforeDueDateWidget.Id,
                     hostNumberOfRequestsPerAreaOrCityWidget.Id,
+                    NumberOfRegisteredCompaniesWidget.Id,
+                    NumberOfDriversAndTrucksWidget.Id,
+                    TopRatedShippersAndCarriersWidget.Id,
+                    NormalRequestsVSDedicatedRequestsWidget.Id,
+                    MostTruckTypeUsedWidget.Id,
+                    NumberOfTripsWidget.Id,
+                    NumberOfSaasTrips.Id,
+                    NumberOfTruckAggregationTrips.Id,
+                    NumberOfTruckAggregationTripsVsSaasTrips.Id,
+                    TopWorstRatedPerTrip.Id,
+                    PaidInvoicesBeforeDueDate.Id,
+                    CostVsSellingVsProfitOfSaasTripsWidget.Id,
+                    OverallTotalAmountPerAllTrips.Id,
+                    TruckAggregationInvoices.Id,
+                    SaasInvoices.Id,
+                    GoodTypesUsage.Id,
+                    UpcomingTrips.Id,
+                    NeedsActions.Id,
                     //tachyonDealerSearchableMapWidget.Id,
                     //tachyonDealerRequestsHeatMapWidget.Id,
                     //tachyonDealerNormalVsRentalRequestsWidget.Id,

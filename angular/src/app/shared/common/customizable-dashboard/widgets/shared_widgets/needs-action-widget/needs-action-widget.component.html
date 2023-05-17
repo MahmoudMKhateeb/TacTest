@@ -2,8 +2,17 @@
   <div class="w-100 h-100 col-12">
     <div class="card card-custom card-stretch">
       <div class="card-body p-4 d-flex flex-column">
-        <div class="card-title mb-4">
+        <div [class]="!isTachyonDealerOrHost ? 'card-title mb-4' : 'card-title mb-4 ribbon ribbon-left isHostOrTMS'">
           <div class="card-label">{{ 'NeedsAction' | localize }}</div>
+          <div
+            *ngIf="isTachyonDealerOrHost"
+            class="ribbon-target bg-primary"
+            style="top: 45%; font-size: 20px"
+            [style.left]="!isRtl ? '0% !important' : 'auto !important'"
+            [style.right]="!isRtl ? 'auto !important' : '0% !important'"
+          >
+            {{ today | date: 'MMMM' }}
+          </div>
         </div>
         <div appMakeScrollable class="overflow-auto" [cssClassSelector]="'overflow-auto'">
           <div

@@ -2,3 +2,11 @@
   max-width: 650px;
   margin: 35px auto;
 } */
+
+.border-radius-as-card {
+  border-radius: 0.9rem;
+}
+::ng-deep .border-radius-as-card .agm-map-container-inner.sebm-google-map-container-inner {
+  border-top-left-radius: 0.9rem;
+  border-bottom-left-radius: 0.9rem;
+}

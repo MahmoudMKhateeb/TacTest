@@ -1,17 +1,21 @@
-<div class="row d-flex justify-content-center">
-  <div class="col-sm">
-    <!--begin::Card-->
-    <div class="card card-custom card-stretch" [busyIf]="loading">
-      <div class="card-header d-flex justify-content-center">
-        <div class="card-title">
-          <h3 class="card-label">{{ l('NumberOfRegesteredShippers') }}</h3>
-        </div>
-      </div>
-      <div class="card-body w-100 d-flex justify-content-center">
-        <h5 class="text-dark font-weight-bold">{{ shippersCount }}</h5>
-      </div>
-      <span class="form-text text-muted text-center mr-btm">{{ l('ForCurrentYear') }}</span>
-    </div>
-    <!--end::Card-->
-  </div>
+<!--<div class="row d-flex justify-content-center">-->
+<!--  <div class="col-sm">-->
+<!--    &lt;!&ndash;begin::Card&ndash;&gt;-->
+<!--    <div class="card card-custom card-stretch" [busyIf]="loading">-->
+<!--      <div class="card-header d-flex justify-content-center">-->
+<!--        <div class="card-title">-->
+<!--          <h3 class="card-label">{{ l('NumberOfRegesteredShippers') }}</h3>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="card-body w-100 d-flex justify-content-center">-->
+<!--        <h5 class="text-dark font-weight-bold">{{ shippersCount }}</h5>-->
+<!--      </div>-->
+<!--      <span class="form-text text-muted text-center mr-btm">{{ l('ForCurrentYear') }}</span>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;end::Card&ndash;&gt;-->
+<!--  </div>-->
+<!--</div>-->
+<div class="d-flex align-items-center mb-2">
+  <div class="rect-radius-10 bg-primary mr-4"></div>
+  <div class="text-primary font-weight-bold m-0">{{ 'Shippers' | localize }}...{{ shippersCount }}</div>
 </div>

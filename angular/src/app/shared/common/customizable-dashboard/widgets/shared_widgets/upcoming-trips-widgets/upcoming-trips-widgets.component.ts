@@ -67,6 +67,9 @@ export class UpcomingTripsWidgetsComponent extends AppComponentBase implements O
         this.loading = false;
       });
     }
+    if (this.isTachyonDealerOrHost) {
+      this.loading = false;
+    }
   }
 
   selectDay(day: Date) {

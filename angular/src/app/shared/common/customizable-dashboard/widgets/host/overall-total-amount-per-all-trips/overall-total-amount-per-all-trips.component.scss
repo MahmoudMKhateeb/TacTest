@@ -1,0 +1,19 @@
+.sar-red-circle {
+    width: 7em;
+    height: 7em;
+}
+
+.label-absolute-for-overall {
+    position: absolute;
+    right: 25%;
+    font-size: 1.6em;
+}
+
+::ng-deep {
+    [dir='rtl'] {
+        .label-absolute-for-overall {
+            right: auto !important;
+            left: 25%;
+        }
+    }
+}

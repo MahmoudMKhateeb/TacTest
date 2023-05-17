@@ -6,7 +6,7 @@ import { finalize } from 'rxjs/operators';
 @Component({
   selector: 'app-deleverd-trips',
   templateUrl: './deleverd-trips.component.html',
-  styles: [],
+  styleUrls: ['./delivered-trips.component.scss'],
 })
 export class DeleverdTripsComponent extends AppComponentBase implements OnInit {
   deliveredTripsCount: number;

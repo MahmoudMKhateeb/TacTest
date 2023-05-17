@@ -5,7 +5,7 @@ import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxi
 @Component({
   selector: 'app-on-going-trips',
   templateUrl: './on-going-trips.component.html',
-  styles: [],
+  styleUrls: ['./on-going-trips.component.scss'],
 })
 export class OnGoingTripsComponent extends AppComponentBase implements OnInit {
   tripsCount: number;

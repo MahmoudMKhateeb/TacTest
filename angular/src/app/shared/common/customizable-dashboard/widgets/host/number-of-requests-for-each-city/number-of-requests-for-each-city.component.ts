@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Injector, NgZone, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as ApexCharts from 'apexcharts';
@@ -6,13 +6,13 @@ import * as ApexCharts from 'apexcharts';
 import { ApexAxisChartSeries, ApexTitleSubtitle, ApexDataLabels, ApexChart, ApexPlotOptions, ChartComponent } from 'ng-apexcharts';
 import { finalize } from 'rxjs/operators';
 
-export type ChartOptions = {
+export interface ChartOptions {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   dataLabels: ApexDataLabels;
   title: ApexTitleSubtitle;
   plotOptions: ApexPlotOptions;
-};
+}
 
 @Component({
   selector: 'app-number-of-requests-for-each-city',
@@ -22,9 +22,20 @@ export type ChartOptions = {
 export class NumberOfRequestsForEachCityComponent extends AppComponentBase implements OnInit {
   @ViewChild('chart') chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
-  loading: boolean = false;
+  loading = false;
   y: number[];
   series1: any[];
+  locations = [
+    { latitude: 24.774265, longitude: 46.738586, label: 'Riyadh' },
+    { latitude: 21.543333, longitude: 39.172779, label: 'Jeddah' },
+    { latitude: 26.4207, longitude: 50.1007, label: 'Dammam' },
+    { latitude: 24.6877, longitude: 46.7219, label: 'Al-Masjid an-Nabawi' },
+    { latitude: 24.5247, longitude: 39.5692, label: 'King Abdullah Economic City' },
+    { latitude: 21.3891, longitude: 40.0579, label: 'King Abdulaziz International Airport' },
+    { latitude: 21.7051, longitude: 39.1547, label: 'King Fahd Fountain' },
+    { latitude: 21.3891, longitude: 39.8579, label: 'Jeddah Corniche' },
+    { latitude: 18.2308, longitude: 42.5003, label: 'Abha' },
+  ];
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
@@ -120,13 +131,11 @@ export class NumberOfRequestsForEachCityComponent extends AppComponentBase imple
   }
 
   public generateData(count, yrange) {
-    var i = 0;
-    var series = [];
+    let i = 0;
+    let series = [];
     while (i < count) {
-      var x = '';
-
-      var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-
+      let x = '';
+      let y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
       series.push({
         x: x,
         y: y,
