@@ -1,14 +1,12 @@
 ﻿using Abp;
 using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
-using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -17,7 +15,6 @@ using TACHYON.Shipping.Trips.Importing;
 using TACHYON.Shipping.Trips.Importing.Dto;
 using TACHYON.Storage;
 using TACHYON.Tracking.Dto;
-using TACHYON.WorkFlows;
 
 namespace TACHYON.Tracking
 {
@@ -59,56 +56,53 @@ namespace TACHYON.Tracking
                 .WhereIf(!await IsTachyonDealer(), x => x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .Select(x => x.WaybillNumber);
 
-            var allTrips = _shippingRequestTripRepository.GetAll();
+            var allTripsIQ = _shippingRequestTripRepository.GetAll();
             foreach (var item in importedTripDeliveryDetails)
             {
                 var waybill = item.WaybillNumber;
-                var isMasterWaybill =await allTrips.AnyAsync(x => x.WaybillNumber == waybill);
-                var isSubWaybill = await allTrips.AnyAsync(x => x.RoutPoints.Any(y => y.WaybillNumber == waybill));
+                var isMasterWaybill =await allTripsIQ.AnyAsync(x => x.WaybillNumber == waybill);
+                var isSubWaybill = await allTripsIQ.AnyAsync(x => x.RoutPoints.Any(y => y.WaybillNumber == waybill));
 
                 if (!isMasterWaybill && !isSubWaybill)
                 {
                     item.Exception += "InCorrect waybill No; ";
                     continue;
                 }
-                var dd = await _shippingRequestTripRepository.GetAll().Where(x => x.WaybillNumber == waybill || x.RoutPoints.Any(y => y.WaybillNumber == waybill))
-                    //.Where(x => x.Status == ShippingRequestTripStatus.New)
-                    .ToListAsync();
                 if (isMasterWaybill)
                 {
-                    if(!await allTrips.Where(x => x.WaybillNumber == waybill)
+                    if (!await allTripsIQ.Where(x => x.WaybillNumber == waybill)
                     .AnyAsync(x => x.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.SingleDrop ||
                     x.RouteType == Shipping.ShippingRequests.ShippingRequestRouteType.SingleDrop))
                     {
                         item.Exception += "Master waybill must be for single drop trip; ";
                         continue;
                     }
-                    if (!await allTrips.Where(x => x.WaybillNumber == waybill)
+                    if (!await allTripsIQ.Where(x => x.WaybillNumber == waybill)
                     .AnyAsync(x => x.Status == ShippingRequestTripStatus.New))
                     {
                         item.Exception += "Status of trip must be New; ";
                     }
-                    var driver = await allTrips.Where(x => x.WaybillNumber == waybill)
+                    var driver = await allTripsIQ.Where(x => x.WaybillNumber == waybill)
                     .AnyAsync(x => x.AssignedDriverUserId != null);
-                    if(!driver)
+                    if (!driver)
                     {
                         item.Exception += "Driver not assigned; ";
                     }
                 }
                 if(isSubWaybill)
                 {
-                    if (!await _pointRepository.GetAll().Where(x => x.WaybillNumber == waybill)
-                    .AnyAsync(x => x.Status == RoutePointStatus.StandBy))
+                    var pointIQ = _pointRepository.GetAll().Where(x => x.WaybillNumber == waybill);
+                    if (!await pointIQ.AnyAsync(x => x.Status == RoutePointStatus.StandBy))
                     {
                         item.Exception += "Status of SubWaybill must be Standby; ";
                     }
 
-                    if (!await _pointRepository.GetAll().Where(x => x.WaybillNumber == waybill)
-                    .AnyAsync(x => x.ShippingRequestTripFk.AssignedDriverUserId != null))
+                    if (!await pointIQ.AnyAsync(x => x.ShippingRequestTripFk.AssignedDriverUserId != null))
                     {
                         item.Exception += "Driver not assigned; ";
                     }
 
+                    await ValidatePortMovementPickupStatus(item, pointIQ);
                 }
             }
 
@@ -123,5 +117,30 @@ namespace TACHYON.Tracking
                 importedTripDeliveryDetails = importedTripDeliveryDetails });
         }
 
+
+        #region Helper
+
+        private async Task ValidatePortMovementPickupStatus(ImportTripTransactionFromExcelDto item, IQueryable<RoutPoint> pointIQ)
+        {
+            var isPortMovement = await pointIQ
+                .AnyAsync(x => x.ShippingRequestTripFk.ShippingTypeId == Shipping.ShippingRequests.ShippingTypeEnum.ImportPortMovements ||
+                x.ShippingRequestTripFk.ShippingTypeId == Shipping.ShippingRequests.ShippingTypeEnum.ExportPortMovements ||
+                x.ShippingRequestTripFk.ShippingRequestFk.ShippingTypeId == Shipping.ShippingRequests.ShippingTypeEnum.ImportPortMovements ||
+                x.ShippingRequestTripFk.ShippingRequestFk.ShippingTypeId == Shipping.ShippingRequests.ShippingTypeEnum.ExportPortMovements);
+
+            if (isPortMovement)
+            {
+                var point = await pointIQ.Select(x => new { x.PointOrder, MasterWaybill = x.ShippingRequestTripFk.WaybillNumber }).FirstOrDefaultAsync();
+                var isPickupPointStandByOrCompleted = await _pointRepository.GetAll().Where(x => x.ShippingRequestTripFk.WaybillNumber == point.MasterWaybill
+                && x.PickingType == PickingType.Pickup && x.PointOrder == point.PointOrder - 1).AnyAsync(x => x.Status == RoutePointStatus.StandBy || x.IsComplete);
+
+                if (!isPickupPointStandByOrCompleted)
+                {
+                    item.Exception += "Status of pickup point for this SubWaybill must be Standby or completed; ";
+                }
+
+            }
+        }
+        #endregion
     }
 }

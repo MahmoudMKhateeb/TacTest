@@ -42,8 +42,6 @@ namespace TACHYON.Shipping.Trips
         [UnitOfWork]
         protected override async Task ExecuteAsync(ForceDeliverTripJobArgs args)
         {
-
-
             _workFlowProvider.AbpSession.Use(args.userIdentifier.TenantId,args.userIdentifier.UserId);
             if (args.importedTripDeliveryDetails.IsNullOrEmpty() ||
                 args.importedTripDeliveryDetails.Any(x => !x.Exception.IsNullOrEmpty()))
