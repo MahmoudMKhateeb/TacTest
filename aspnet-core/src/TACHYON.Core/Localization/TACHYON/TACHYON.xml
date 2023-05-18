@@ -3244,7 +3244,7 @@
     <text name="InTransitTrips">In Transit Trips</text>
     <text name="NextDocDueDate">Next Doc Due Date</text>
 	<text name="NextInvoiceDueDate">Next Invoice Due Date</text>
-	<text name="withinAWeek">with in a week</text>
+	<text name="withinA">with in</text>
 	<text name="PaidVsClaimedInvoices">Paid Vs Claimed Invoices</text>
 	<text name="NewActorsThisMonth">New Actors This Month</text>
 	<text name="NumberOfActors">Number Of Actors</text>
@@ -3378,6 +3378,8 @@
 		
     <text name="ExportNormalToExcel">Export normal request</text>
     <text name="ExportDedicatedToExcel">Export dedicated request</text>
+    <text name="day">day</text>
+    <text name="withinAWeek">with in a Week</text>
     
 	</texts>
 </localizationDictionary>

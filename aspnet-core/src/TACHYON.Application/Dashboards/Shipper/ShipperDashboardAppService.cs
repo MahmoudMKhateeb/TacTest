@@ -528,38 +528,65 @@ namespace TACHYON.Dashboards.Shipper
         }
 
 
-        public async Task<long> GetDocumentsDueDateInDays()
+        public async Task<GetDueDateInDaysOutput> GetDocumentsDueDateInDays()
         {
             DisableTenancyFilters();
 
-            return await _documentFileRepository
+            var document = _documentFileRepository
                 .GetAll()
                 .AsNoTracking()
                 .Where(x => x.TenantId == AbpSession.TenantId)
                 .Where(x => x.IsAccepted)
                 .Where(x => x.ExpirationDate.HasValue)
-                .Where(x => x.ExpirationDate.Value.Date <= Clock.Now.Date.AddDays(5))
-                .CountAsync();
-
+                .Where(x => x.ExpirationDate.Value.Date <= Clock.Now.Date.AddDays(7));
+            var count = await document.CountAsync();
+            if(count == 1)
+            {
+                var RemainingDays = document.FirstOrDefault() != null ? (document.FirstOrDefault().ExpirationDate.Value.Date - Clock.Now.Date).Days : 0;
+                return new GetDueDateInDaysOutput { Count = 1, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays +" Days" };
+            }
+            else
+            {
+                return new GetDueDateInDaysOutput { Count = count, TimeUnit = "Week" };
+            }
         }
 
 
-        public async Task<long> GetInvoiceDueDateInDays(BrokerInvoiceType? invoiceType)
+        public async Task<GetDueDateInDaysOutput> GetInvoiceDueDateInDays(BrokerInvoiceType? invoiceType)
         {
             DisableTenancyFilters();
 
             bool isBroker = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
-
-            return isBroker switch
-            {
-                true when !invoiceType.HasValue => throw new UserFriendlyException(L("YouMustProvideInvoiceType")),
-                true when invoiceType == BrokerInvoiceType.CarrierInvoices => await _submitInvoiceRepository.GetAll()
+                if (!invoiceType.HasValue) throw new UserFriendlyException(L("YouMustProvideInvoiceType"));
+                if(invoiceType == BrokerInvoiceType.CarrierInvoices)
+                {
+                    var submitInvoice = _submitInvoiceRepository.GetAll()
                     .Where(x => x.TenantId == AbpSession.TenantId && x.DueDate.HasValue &&
-                                x.DueDate <= Clock.Now.Date.AddDays(5)).CountAsync(),
-                _ => await _invoiceRepository.GetAll()
+                                x.DueDate <= Clock.Now.Date.AddDays(7) && x.DueDate > Clock.Now.Date).Select(x=>x.DueDate);
+                    var count = await submitInvoice.CountAsync();
+                    if(count > 1) { return new GetDueDateInDaysOutput { Count = count, TimeUnit = "Week" }; }
+                    else
+                    { 
+                        var RemainingDays = submitInvoice.FirstOrDefault() != null ? (submitInvoice.FirstOrDefault().Value.Date - Clock.Now.Date).Days :0;
+                        return new GetDueDateInDaysOutput { Count = count, TimeUnit = RemainingDays == 1 ? "Day" : RemainingDays + " Days" };
+                    }
+                }
+            
+            else
+            {
+                var invoice = _invoiceRepository.GetAll()
                     .AsNoTracking()
-                    .Where(r => r.TenantId == AbpSession.TenantId && !r.IsPaid && r.DueDate <= Clock.Now.Date.AddDays(5)).CountAsync()
-            };
+                    .Where(r => r.TenantId == AbpSession.TenantId && !r.IsPaid && r.DueDate <= Clock.Now.Date.AddDays(7) && r.DueDate.Date > Clock.Now.Date).Select(x => x.DueDate);
+                var count = await invoice.CountAsync();
+                if (count > 1) { return new GetDueDateInDaysOutput { Count = count, TimeUnit = "Week" }; }
+                else
+                {
+                    var RemainingDays = invoice.FirstOrDefault()!= null ? (invoice.FirstOrDefault().Date - Clock.Now.Date).Days :0;
+                    return new GetDueDateInDaysOutput { Count = count, TimeUnit = RemainingDays == 1 ? "a Day" : RemainingDays + " Days" };
+                }
+
+            }
+       
         }
 
         // Tracking Map
