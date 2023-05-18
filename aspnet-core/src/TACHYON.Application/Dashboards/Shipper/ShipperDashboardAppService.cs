@@ -350,7 +350,8 @@ namespace TACHYON.Dashboards.Shipper
                 .WhereIf(!isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                 .WhereIf(isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
-                .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year && x.CreationTime.Month == Clock.Now.Month )
+                .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year &&
+                x.CreationTime.Date >= Clock.Now.AddDays(-28).Date)
                 .WhereIf(period == FilterDatePeriod.Monthly, x => ((Clock.Now.Month == 12 && x.CreationTime.Year == Clock.Now.Year) ||
                 (Clock.Now.Month != 12 && x.CreationTime.Year == Clock.Now.Year || x.CreationTime.Year == Clock.Now.AddYears(-1).Year))
                 && x.CreationTime.Date >= Clock.Now.AddMonths(-11).Date)
@@ -405,26 +406,40 @@ namespace TACHYON.Dashboards.Shipper
                     }
                 }
                
-
-
-
-                totalList = total.GroupBy(x => x.CreationTime.Month)
-                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
-                    .ToList();
+               
             }
 
             if (period == FilterDatePeriod.Weekly)
             {
-                DateTime firstMonthDay = new DateTime(Clock.Now.Year, Clock.Now.Month, 1);
-                DateTime firstMonthSunday = firstMonthDay.AddDays((DayOfWeek.Sunday + 7 - firstMonthDay.DayOfWeek) % 7);
-                
-                podTripsList = podTrips.GroupBy(x => ((x.CreationTime.Day - firstMonthSunday.Day) / 7) +1)
-                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"Week {x.Key}",Y = x.Count() })
-                    .ToList();
-                
-                totalList = total.GroupBy(x => ((x.CreationTime.Day - firstMonthSunday.Day) / 7) +1)
+
+                DateTime firstDayInWeeks = Clock.Now.AddDays(-28);
+                var AllWeeks = new List<int> { 1, 2, 3, 4 };
+                foreach(var week in AllWeeks)
+                {
+                    var groupedTrips = podTrips.GroupBy(x => ((x.CreationTime.Date - firstDayInWeeks.Date).Days / 7) + 1);
+                    if (groupedTrips.Select(x=>x.Key).ToList().Contains(week))
+                    {
+                        podTripsList.Add(groupedTrips.Where(x=>x.Key == week)
                     .Select(x => new ChartCategoryPairedValuesDto() { X = $"Week {x.Key}", Y = x.Count() })
-                    .ToList();
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        podTripsList.Add(new ChartCategoryPairedValuesDto { X = $"Week {week}", Y = 0 });
+                    }
+                     var groupedTotal = total.GroupBy(x => ((x.CreationTime.Date - firstDayInWeeks.Date).Days / 7) + 1);
+                    if (groupedTotal.Select(x => x.Key).ToList().Contains(week))
+                    {
+                        totalList.Add(groupedTotal.Where(x => x.Key == week)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"Week {x.Key}", Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        totalList.Add(new ChartCategoryPairedValuesDto { X = $"Week {week}", Y = 0 });
+                    }
+                }
+                
             }
 
             return new CompletedTripVsPodListDto
@@ -747,6 +762,19 @@ namespace TACHYON.Dashboards.Shipper
             {
                 yield return date;
             }
+        }
+
+        static int GetWeekNumberOfMonth(DateTime date)
+        {
+            date = date.Date;
+            DateTime firstMonthDay = new DateTime(date.Year, date.Month, 1);
+            DateTime firstMonthMonday = firstMonthDay.AddDays((DayOfWeek.Monday + 7 - firstMonthDay.DayOfWeek) % 7);
+            if (firstMonthMonday > date)
+            {
+                firstMonthDay = firstMonthDay.AddMonths(-1);
+                firstMonthMonday = firstMonthDay.AddDays((DayOfWeek.Monday + 7 - firstMonthDay.DayOfWeek) % 7);
+            }
+            return (date - firstMonthMonday).Days / 7 + 1;
         }
 
         #endregion
