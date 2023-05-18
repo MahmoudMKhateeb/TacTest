@@ -351,7 +351,9 @@ namespace TACHYON.Dashboards.Shipper
                 .WhereIf(isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
                 .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year && x.CreationTime.Month == Clock.Now.Month )
-                .WhereIf(period == FilterDatePeriod.Monthly,x=>  x.CreationTime.Year == Clock.Now.Year )
+                .WhereIf(period == FilterDatePeriod.Monthly, x => ((Clock.Now.Month == 12 && x.CreationTime.Year == Clock.Now.Year) ||
+                (Clock.Now.Month != 12 && x.CreationTime.Year == Clock.Now.Year || x.CreationTime.Year == Clock.Now.AddYears(-1).Year))
+                && x.CreationTime.Date >= Clock.Now.AddMonths(-11).Date)
                 .Where(x => x.Status == ShippingRequestTripStatus.Delivered || x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation);
 
 
@@ -378,15 +380,39 @@ namespace TACHYON.Dashboards.Shipper
 
             if (period == FilterDatePeriod.Monthly)
             {
-                podTripsList = podTrips.GroupBy(x => x.CreationTime.Month)
-                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key ),Y = x.Count() })
-                    .ToList();
-                
+                foreach (var date in GetYearMonthsEndWithCurrent())
+                {
+                    if (podTrips.GroupBy(x => x.CreationTime.Month).Select(x => x.Key).ToList().Contains(date.Month))
+                    {
+                        podTripsList.Add(podTrips.GroupBy(x => x.CreationTime.Month).Where(x => x.Key == date.Month)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        podTripsList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    }
+
+                    if (total.GroupBy(x => x.CreationTime.Month).Select(x => x.Key).ToList().Contains(date.Month))
+                    {
+                        totalList.Add(total.GroupBy(x => x.CreationTime.Month).Where(x => x.Key == date.Month)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        totalList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    }
+                }
+               
+
+
+
                 totalList = total.GroupBy(x => x.CreationTime.Month)
                     .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
                     .ToList();
             }
-            
+
             if (period == FilterDatePeriod.Weekly)
             {
                 DateTime firstMonthDay = new DateTime(Clock.Now.Year, Clock.Now.Month, 1);
@@ -410,6 +436,8 @@ namespace TACHYON.Dashboards.Shipper
 
 
         }
+
+
 
         public async Task<InvoicesVsPaidInvoicesDto> GetInvoicesVSPaidInvoices()
         {
@@ -697,6 +725,28 @@ namespace TACHYON.Dashboards.Shipper
                 }).OrderBy(r => r.Y).ToList();
             return result;
 
+        }
+
+        private static List<DateTime> GetYearMonthsEndWithCurrent()
+        {
+            DateTime endDate = new DateTime(Clock.Now.Year, Clock.Now.Month, 1);
+            DateTime begDate = Clock.Now.Month == 12 ? new DateTime(Clock.Now.Year, Clock.Now.AddMonths(-11).Month, 1) : new DateTime(Clock.Now.AddYears(-1).Year, Clock.Now.AddMonths(-11).Month, 1);
+
+            var monthsList = new List<DateTime>();
+            foreach (DateTime date in MonthsInRange(begDate, endDate))
+            {
+                monthsList.Add(date);
+            }
+
+            return monthsList;
+        }
+
+        private static IEnumerable<DateTime> MonthsInRange(DateTime start, DateTime end)
+        {
+            for (DateTime date = start; date <= end; date = date.AddMonths(1))
+            {
+                yield return date;
+            }
         }
 
         #endregion
