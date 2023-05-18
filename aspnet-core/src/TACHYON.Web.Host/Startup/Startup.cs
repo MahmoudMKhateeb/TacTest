@@ -10,6 +10,7 @@ using Abp.Timing;
 using Castle.Facilities.Logging;
 using CrystalQuartz.AspNetCore;
 using DevExpress.AspNetCore;
+using DevExpress.AspNetCore.Reporting;
 using DevExpress.AspNetCore.Reporting.QueryBuilder;
 using DevExpress.AspNetCore.Reporting.ReportDesigner;
 using DevExpress.AspNetCore.Reporting.WebDocumentViewer;
@@ -51,6 +52,7 @@ using TACHYON.Web.Chat.SignalR;
 using TACHYON.Web.Common;
 using TACHYON.Web.HealthCheck;
 using TACHYON.Web.IdentityServer;
+using TACHYON.Web.Services;
 using TACHYON.Web.Swagger;
 using HealthChecksUISettings = HealthChecks.UI.Configuration.Settings;
 using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
@@ -187,9 +189,13 @@ namespace TACHYON.Web.Startup
             services.AddMvcCore();
             // todo find another workaround
             services.AddScoped<ReportStorageWebExtension, ReportStorageWebExtensionService>();
-            services.AddTransient<WebDocumentViewerController>();
-            services.AddTransient<ReportDesignerController>();
-            services.AddTransient<QueryBuilderController>();
+            //services.ConfigureReportingServices(configurator => {
+            //    configurator.ConfigureReportDesigner(designerConfigurator => {
+            //        // ...
+            //        designerConfigurator.RegisterObjectDataSourceWizardTypeProvider<ReportsObjectDataSourceWizardTypeProvider>();
+            //        // ...
+            //    });
+            //});
 
             //Configure Abp and Dependency Injection
             return services.AddAbp<TACHYONWebHostModule>(options =>
@@ -229,10 +235,11 @@ namespace TACHYON.Web.Startup
             app.UseStaticFiles();
             app.UseRouting();
 
-            // Initialize reporting services.
-            app.UseDevExpressControls();
             
             app.UseCors(DefaultCorsPolicyName); //Enable CORS!
+
+            // Initialize reporting services.
+            app.UseDevExpressControls();
 
             app.UseAuthentication();
 

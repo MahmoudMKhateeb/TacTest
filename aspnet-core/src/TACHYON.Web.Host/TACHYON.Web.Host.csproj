@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <Import Project="..\..\common.props"></Import>
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -13,98 +13,9 @@
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
   <ItemGroup>
-    
-    <Reference Include="DevExpress.DataAccess.v21.2">
-      <HintPath>$(SolutionDir)/DevExpress.DataAccess.v21.2.dll</HintPath>
-    </Reference>
-
-
-    <Reference Include="DevExpress.AspNetCore.Reporting.v21.2">
-      <HintPath>$(SolutionDir)/DevExpress.AspNetCore.Reporting.v21.2.dll</HintPath>
-    </Reference>
-
-    <Reference Include="DevExpress.AspNetCore.Common.v21.2">
-      <HintPath>$(SolutionDir)/DevExpress.AspNetCore.Common.v21.2.dll</HintPath>
-    </Reference>
-
-
-    <Reference Include="DevExpress.AspNetCore.Core.v21.2">
-      <HintPath>$(SolutionDir)/DevExpress.AspNetCore.Core.v21.2.dll</HintPath>
-    </Reference>
-
-
-    <Reference Include="DevExpress.AspNetCore.Resources.v21.2">
-      <HintPath>$(SolutionDir)/DevExpress.AspNetCore.Resources.v21.2.dll</HintPath>
-    </Reference>
-
-
-    <Reference Include="DevExpress.Data.v21.2">
-      <HintPath>$(SolutionDir)/DevExpress.Data.v21.2.dll</HintPath>
-    </Reference>
-
-    <Reference Include="DevExpress.Printing.v21.2.Core">
-      <HintPath>$(SolutionDir)/DevExpress.Printing.v21.2.Core.dll</HintPath>
-    </Reference>
-
-
-    <Reference Include="DevExpress.XtraReports.v21.2">
-      <HintPath>$(SolutionDir)/DevExpress.XtraReports.v21.2.dll</HintPath>
-    </Reference>
-
-    <Reference Include="DevExpress.XtraReports.v21.2.Web">
-      <HintPath>$(SolutionDir)/DevExpress.XtraReports.v21.2.Web.dll</HintPath>
-    </Reference>
-
-    <Reference Include="DevExpress.Pdf.v21.2.Core">
-      <HintPath>$(SolutionDir)/DevExpress.Pdf.v21.2.Core.dll</HintPath>
-    </Reference>
-
-    <Reference Include="DevExpress.Charts.v21.2.Core">
-      <HintPath>$(SolutionDir)/DevExpress.Charts.v21.2.Core.dll</HintPath>
-    </Reference>
-
-    <Reference Include="DevExpress.XtraGauges.v21.2.Core">
-      <HintPath>$(SolutionDir)/DevExpress.XtraGauges.v21.2.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraCharts.v21.2">
-      <HintPath>$(SolutionDir)/DevExpress.XtraCharts.v21.2.dll</HintPath>
-    </Reference>
-
-    <Reference Include="DevExpress.Pdf.v21.2.Drawing">
-      <HintPath>$(SolutionDir)/DevExpress.Pdf.v21.2.Drawing.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.DataVisualization.v21.2.Core">
-      <HintPath>$(SolutionDir)/DevExpress.DataVisualization.v21.2.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Sparkline.v21.2.Core">
-      <HintPath>$(SolutionDir)/DevExpress.Sparkline.v21.2.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.PivotGrid.v21.2.Core">
-      <HintPath>$(SolutionDir)/DevExpress.PivotGrid.v21.2.Core.dll</HintPath>
-    </Reference>
-
-
-    <Reference Include="DevExpress.CodeParser.v21.2">
-      <HintPath>$(SolutionDir)/DevExpress.CodeParser.v21.2.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Office.v21.2.Core">
-      <HintPath>$(SolutionDir)/DevExpress.Office.v21.2.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Xpo.v21.2">
-      <HintPath>$(SolutionDir)/DevExpress.Xpo.v21.2.dll</HintPath>
-    </Reference>
-
-
-    <Reference Include="DevExpress.RichEdit.v21.2.Export">
-      <HintPath>$(SolutionDir)/DevExpress.RichEdit.v21.2.Export.dll</HintPath>
-    </Reference>
-
-    <Reference Include="DevExpress.RichEdit.v21.2.Core">
-      <HintPath>$(SolutionDir)/DevExpress.RichEdit.v21.2.Core.dll</HintPath>
-    </Reference>
-    
 
     <Compile Remove="App_Data\**" />
+
     <Content Remove="App_Data\**" />
     <EmbeddedResource Remove="App_Data\**" />
     <None Remove="App_Data\**" />
@@ -134,20 +45,34 @@
     <ProjectReference Include="..\TACHYON.Web.Core\TACHYON.Web.Core.csproj" />
     <EmbeddedResource Include="wwwroot\Comoon\Static\*" />
   </ItemGroup>
-  <ItemGroup>
+
+	<ItemGroup>
     <PackageReference Include="Abp.Castle.Log4Net" Version="5.10.1" />
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.1.1" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.1.1" />
     <PackageReference Include="CrystalQuartz.AspNetCore" Version="6.8.1" />
+    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="21.2.5" />
     <PackageReference Include="FirebaseAdmin" Version="2.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.5.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
   </ItemGroup>
   <ItemGroup>
+    
+    <EmbeddedResource Include="Reports\TripDetailsReport.repx" />
     <EmbeddedResource Include="wwwroot\swagger\ui\index.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Xml\" />
-    <Folder Include="Services" />
     <Folder Include="wwwroot\Plugins\" />
+  </ItemGroup>
+  <ItemGroup>
+
+    <Compile Update="Reports\TripDetailsReport.cs">
+      <DependentUpon>TripDetailsReport.repx</DependentUpon>
+    </Compile>
+
+    <Compile Update="Reports\TripDetailsReport.Designer.cs">
+      <DependentUpon>TripDetailsReport.repx</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
