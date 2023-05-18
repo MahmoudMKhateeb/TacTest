@@ -1,0 +1,187 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'CreateReportType' | localize" [description]="'' | localize"></sub-header>
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <!--begin: Wizard-->
+          <div #wizard class="wizard wizard-3" id="kt_wizard_v3" data-wizard-state="first" data-wizard-clickable="true">
+            <!--begin: Wizard Nav-->
+            <div class="wizard-nav">
+              <div class="wizard-steps px-8 py-8 px-lg-15 py-lg-3">
+                <!--begin::Wizard Step 1 Nav-->
+                <div class="wizard-step" data-wizard-type="step" data-wizard-state="current">
+                  <div class="wizard-label">
+                    <h3 class="wizard-title"><span>1.</span> {{ 'ReportTypeSetup' | localize }}</h3>
+                    <div class="wizard-bar"></div>
+                  </div>
+                </div>
+                <!--end::Wizard Step 1 Nav-->
+
+                <!--begin::Wizard Step 2 Nav-->
+                <div class="wizard-step" data-wizard-type="step" data-wizard-state="pending">
+                  <div class="wizard-label">
+                    <h3 class="wizard-title"><span>2.</span> {{ 'SelectAttributes' | localize }}</h3>
+                    <div class="wizard-bar"></div>
+                  </div>
+                </div>
+                <!--end::Wizard Step 2 Nav-->
+
+                <!--begin::Wizard Step 3 Nav-->
+                <div class="wizard-step" data-wizard-type="step" data-wizard-state="pending">
+                  <div class="wizard-label">
+                    <h3 class="wizard-title"><span>3.</span> {{ 'ReportAccessSetup' | localize }}</h3>
+                    <div class="wizard-bar"></div>
+                  </div>
+                </div>
+                <!--end::Wizard Step 3 Nav-->
+
+                <!--begin::Wizard Step 4 Nav-->
+                <div class="wizard-step" data-wizard-type="step" data-wizard-state="pending">
+                  <div class="wizard-label">
+                    <h3 class="wizard-title"><span>4.</span> {{ 'ReportDesigner' }}</h3>
+                    <div class="wizard-bar"></div>
+                  </div>
+                </div>
+                <!--end::Wizard Step 4 Nav-->
+              </div>
+            </div>
+            <!--end: Wizard Nav-->
+
+            <!--begin: Wizard Body-->
+            <div class="row justify-content-center py-10 px-8 py-lg-12 px-lg-10">
+              <div class="col-xl-12 col-xxl-7">
+                <!--begin: Wizard Form-->
+                <form class="form fv-plugins-bootstrap fv-plugins-framework" id="kt_form">
+                  <!--begin: Wizard Step 1-->
+                  <div class="pb-5" data-wizard-type="step-content" data-wizard-state="current">
+                    <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportTypeSetup' | localize }}</h4>
+                    <div class="d-flex">
+                      <div class="form-group w-50">
+                        <label>{{ 'ReportType' | localize }}</label>
+                        <dx-select-box
+                          id="type"
+                          name="type"
+                          [(value)]="step1Model.type"
+                          [dataSource]="allTypes"
+                          [searchEnabled]="true"
+                          placeholder="{{ l('SelectType') }}"
+                        >
+                          <!--                                                    displayExpr="displayName"-->
+                          <!--                                                    valueExpr="id"-->
+                        </dx-select-box>
+                        <span class="form-text text-muted">{{ 'PleaseSelectType' | localize }}</span>
+                      </div>
+                      <div class="form-group w-50 ml-4">
+                        <label>{{ 'ReportName' | localize }}</label>
+                        <dx-text-box id="reportName" name="reportName" [(value)]="step1Model.reportName" placeholder="{{ l('EnterReportName') }}">
+                        </dx-text-box>
+                        <span class="form-text text-muted">{{ 'PleaseEnterReportName' | localize }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--end: Wizard Step 1-->
+
+                  <!--begin: Wizard Step 2-->
+                  <div class="pb-5" data-wizard-type="step-content">
+                    <h4 class="mb-10 font-weight-bold text-dark">{{ 'SelectAttributes' | localize }}</h4>
+                    <div class="d-flex">
+                      <dx-data-grid
+                        #selectAttributesGrid
+                        id="selectAttributesGrid"
+                        [dataSource]="selectAttributesDataSource"
+                        [remoteOperations]="false"
+                        [showBorders]="true"
+                        keyExpr="id"
+                      >
+                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                        <dxo-selection [selectAllMode]="'allPages'" [showCheckBoxesMode]="'onClick'" mode="multiple"></dxo-selection>
+                        <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"> </dxo-editing>
+                        <dxi-column dataField="attributeName" caption="{{ l('AttributeName') }}"></dxi-column>
+                      </dx-data-grid>
+                    </div>
+                  </div>
+                  <!--end: Wizard Step 2-->
+
+                  <!--begin: Wizard Step 3-->
+                  <div class="pb-5" data-wizard-type="step-content">
+                    <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportAccessSetup' | localize }}</h4>
+                    <div class="d-flex">
+                      <div class="form-group w-50">
+                        <label>{{ 'EditionType' | localize }}</label>
+                        <dx-select-box
+                          id="editionType"
+                          name="editionType"
+                          [(value)]="step3Model.editionType"
+                          [dataSource]="allEditionTypes"
+                          [searchEnabled]="true"
+                          placeholder="{{ l('SelectEditionType') }}"
+                        >
+                          <!--                                                    displayExpr="displayName"-->
+                          <!--                                                    valueExpr="id"-->
+                        </dx-select-box>
+                        <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
+                      </div>
+                      <div class="form-group w-50 ml-4">
+                        <label>{{ 'ExcludingCompanies' | localize }}</label>
+                        <dx-select-box
+                          id="excludingCompanies"
+                          name="excludingCompanies"
+                          [(value)]="step3Model.excludingCompanies"
+                          [dataSource]="allCompanies"
+                          [searchEnabled]="true"
+                          placeholder="{{ l('SelectACompany') }}"
+                        >
+                          <!--                                                    displayExpr="displayName"-->
+                          <!--                                                    valueExpr="id"-->
+                        </dx-select-box>
+                        <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--end: Wizard Step 3-->
+
+                  <!--begin: Wizard Step 4-->
+                  <div class="pb-5" data-wizard-type="step-content">
+                    <!--  here will be the designer  -->
+                    <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportDesigner' | localize }}</h4>
+                    <dx-report-designer [reportUrl]="reportUrl" height="700px">
+                      <dxrd-request-options [getDesignerModelAction]="getDesignerModelAction" [host]="hostUrl"></dxrd-request-options>
+                    </dx-report-designer>
+                  </div>
+                  <!--end: Wizard Step 4-->
+
+                  <!--begin: Wizard Actions-->
+                  <div class="d-flex justify-content-between border-top mt-5 pt-10">
+                    <div class="mr-2">
+                      <button type="button" class="btn btn-light-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-prev">
+                        Previous
+                      </button>
+                    </div>
+                    <div>
+                      <button type="button" class="btn btn-success font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-submit">
+                        Submit
+                      </button>
+                      <button type="button" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-next">
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                  <!--end: Wizard Actions-->
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </form>
+                <!--end: Wizard Form-->
+              </div>
+            </div>
+            <!--end: Wizard Body-->
+          </div>
+          <!--end: Wizard-->
+        </div>
+      </div>
+    </div>
+    <!--end::Container-->
+  </div>
+</div>

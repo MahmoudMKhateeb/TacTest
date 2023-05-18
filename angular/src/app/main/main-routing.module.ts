@@ -79,6 +79,7 @@ import { ActorInvoiceListComponent } from './Invoices/ActorInvoices/actor-invoic
 import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/actor-submit-invoices.component';
 import { InvoicesDedicatedClientsComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients.component';
 import { DirectTripsComponent } from '@app/main/direct-trips/direct-trips.component';
+import { ReportingModule } from '@app/main/reporting/reporting.module';
 
 @NgModule({
   imports: [
@@ -359,13 +360,18 @@ import { DirectTripsComponent } from '@app/main/direct-trips/direct-trips.compon
             loadChildren: () => import('@app/main/pricePackages/price-package.module').then((m) => m.PricePackageModule), //Lazy load main module
             data: { preload: true },
           },
-            {
+          {
             path: 'reports',
             loadChildren: () => import('@app/main/reports/reports.module').then((m) => m.ReportsModule), //Lazy load main module
             data: { preload: true },
           },
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           { path: 'directShipments', component: DirectTripsComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
+          {
+            path: 'reporting',
+            loadChildren: () => import('../main/reporting/reporting.module').then((m) => m.ReportingModule), //Lazy load main module
+            data: { preload: true },
+          },
           //TODO:// to be removed after menu Structure work is complete
           //
           { path: 'page-not-found', component: ComingSoonComponent },
