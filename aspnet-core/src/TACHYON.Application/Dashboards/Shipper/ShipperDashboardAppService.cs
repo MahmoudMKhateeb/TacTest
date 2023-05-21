@@ -52,6 +52,7 @@ namespace TACHYON.Dashboards.Shipper
         private readonly IRepository<RoutPoint,long> _routePointRepository;
         private readonly IRepository<RoutPointStatusTransition> _transitionRepository;
         private readonly IRepository<SubmitInvoice, long> _submitInvoiceRepository;
+        private readonly DashboardDomainService _dashboardDomainService;
 
         public ShipperDashboardAppService(
              IRepository<ShippingRequest, long> shippingRequestRepository,
@@ -63,7 +64,8 @@ namespace TACHYON.Dashboards.Shipper
              IRepository<TrucksType, long> truckTypesRepository,
              IRepository<RoutPoint, long> routePointRepository,
              IRepository<RoutPointStatusTransition> transitionRepository,
-             IRepository<SubmitInvoice, long> submitInvoiceRepository)
+             IRepository<SubmitInvoice, long> submitInvoiceRepository,
+             DashboardDomainService dashboardDomainService)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
@@ -75,6 +77,7 @@ namespace TACHYON.Dashboards.Shipper
             _routePointRepository = routePointRepository;
             _transitionRepository = transitionRepository;
             _submitInvoiceRepository = submitInvoiceRepository;
+            _dashboardDomainService = dashboardDomainService;
         }
 
 
@@ -353,7 +356,7 @@ namespace TACHYON.Dashboards.Shipper
                 .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year &&
                 x.CreationTime.Date >= Clock.Now.AddDays(-28).Date)
                 .WhereIf(period == FilterDatePeriod.Monthly, x => ((Clock.Now.Month == 12 && x.CreationTime.Year == Clock.Now.Year) ||
-                (Clock.Now.Month != 12 && x.CreationTime.Year == Clock.Now.Year || x.CreationTime.Year == Clock.Now.AddYears(-1).Year))
+                (Clock.Now.Month != 12 && (x.CreationTime.Year == Clock.Now.Year || x.CreationTime.Year == Clock.Now.AddYears(-1).Year)))
                 && x.CreationTime.Date >= Clock.Now.AddMonths(-11).Date)
                 .Where(x => x.Status == ShippingRequestTripStatus.Delivered || x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation);
 
@@ -381,11 +384,13 @@ namespace TACHYON.Dashboards.Shipper
 
             if (period == FilterDatePeriod.Monthly)
             {
-                foreach (var date in GetYearMonthsEndWithCurrent())
+                var groupedTrips = podTrips.GroupBy(x => x.CreationTime.Month);
+
+                foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
                 {
-                    if (podTrips.GroupBy(x => x.CreationTime.Month).Select(x => x.Key).ToList().Contains(date.Month))
+                    if (groupedTrips.Select(x => x.Key).ToList().Contains(date.Month))
                     {
-                        podTripsList.Add(podTrips.GroupBy(x => x.CreationTime.Month).Where(x => x.Key == date.Month)
+                        podTripsList.Add(groupedTrips.Where(x => x.Key == date.Month)
                     .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
                     .FirstOrDefault());
                     }
@@ -462,36 +467,54 @@ namespace TACHYON.Dashboards.Shipper
             var query = _invoiceRepository
                 .GetAll()
                 .AsNoTracking()
-                .Where(x => x.TenantId == AbpSession.TenantId);
-
+                .Where(x => x.TenantId == AbpSession.TenantId && ((Clock.Now.Month == 12 && x.CreationTime.Year == Clock.Now.Year ) || (
+                Clock.Now.Month != 12 && (x.CreationTime.Year == Clock.Now.Year || x.CreationTime.Year == Clock.Now.AddYears(-1).Year))));
             var paid = (await query
                     .Where(x => x.IsPaid)
-                    .ToListAsync())
-                .GroupBy(x => x.CreationTime.Date.Month)
-                    .Select(g => new ChartCategoryPairedValuesDto
-                    {
-                        X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
-                        Y = g.Count()
-                    })
-                    .OrderBy(x => x.X)
-                    .ToList();
+                    .ToListAsync());
+
 
             var total = (await query
-                    .ToListAsync())
-                    .GroupBy(x => x.CreationTime.Date.Month)
-                    .Select(g => new ChartCategoryPairedValuesDto
-                    {
-                        X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
-                        Y = g.Count()
-                    })
-                    .OrderBy(x => x.X)
-                    .ToList();
+                    .ToListAsync()).GroupBy(x => x.CreationTime.Month);
+
+            var PaidInvoicesList = new List<ChartCategoryPairedValuesDto>();
+            var totalInvoicesList = new List<ChartCategoryPairedValuesDto>();
+            var groupedPaid = paid.GroupBy(x => x.CreationTime.Date.Month);
+
+            foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
+            {
+                if (groupedPaid.Select(x => x.Key).ToList().Contains(date.Month))
+                {
+                    PaidInvoicesList.Add(groupedPaid.Where(x => x.Key == date.Month)
+               .Select(g => new ChartCategoryPairedValuesDto
+               {
+                   X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
+                   Y = g.Count()
+               })
+                .FirstOrDefault());
+                }
+                else
+                {
+                    PaidInvoicesList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                }
+
+                if (total.Select(x => x.Key).ToList().Contains(date.Month))
+                {
+                    totalInvoicesList.Add(total.Where(x => x.Key == date.Month)
+                .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                .FirstOrDefault());
+                }
+                else
+                {
+                    totalInvoicesList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                }
+            }
 
 
             return new InvoicesVsPaidInvoicesDto
             {
-                PaidInvoices = paid,
-                ShipperInvoices = total
+                PaidInvoices = PaidInvoicesList,
+                ShipperInvoices = totalInvoicesList
             };
         }
 
@@ -742,40 +765,8 @@ namespace TACHYON.Dashboards.Shipper
 
         }
 
-        private static List<DateTime> GetYearMonthsEndWithCurrent()
-        {
-            DateTime endDate = new DateTime(Clock.Now.Year, Clock.Now.Month, 1);
-            DateTime begDate = Clock.Now.Month == 12 ? new DateTime(Clock.Now.Year, Clock.Now.AddMonths(-11).Month, 1) : new DateTime(Clock.Now.AddYears(-1).Year, Clock.Now.AddMonths(-11).Month, 1);
 
-            var monthsList = new List<DateTime>();
-            foreach (DateTime date in MonthsInRange(begDate, endDate))
-            {
-                monthsList.Add(date);
-            }
 
-            return monthsList;
-        }
-
-        private static IEnumerable<DateTime> MonthsInRange(DateTime start, DateTime end)
-        {
-            for (DateTime date = start; date <= end; date = date.AddMonths(1))
-            {
-                yield return date;
-            }
-        }
-
-        static int GetWeekNumberOfMonth(DateTime date)
-        {
-            date = date.Date;
-            DateTime firstMonthDay = new DateTime(date.Year, date.Month, 1);
-            DateTime firstMonthMonday = firstMonthDay.AddDays((DayOfWeek.Monday + 7 - firstMonthDay.DayOfWeek) % 7);
-            if (firstMonthMonday > date)
-            {
-                firstMonthDay = firstMonthDay.AddMonths(-1);
-                firstMonthMonday = firstMonthDay.AddDays((DayOfWeek.Monday + 7 - firstMonthDay.DayOfWeek) % 7);
-            }
-            return (date - firstMonthMonday).Days / 7 + 1;
-        }
 
         #endregion
 
