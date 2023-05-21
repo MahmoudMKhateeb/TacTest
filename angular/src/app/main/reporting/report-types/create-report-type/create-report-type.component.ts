@@ -1,28 +1,31 @@
-import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, Injector, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import KTWizard from '@metronic/common/js/components/wizard';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { DxValidationGroupComponent } from '@node_modules/devextreme-angular/ui/validation-group';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxReportDesignerComponent } from '@node_modules/devexpress-reporting-angular';
 import * as ko from '@node_modules/knockout';
 import { ajaxSetup } from '@node_modules/@devexpress/analytics-core/core/internal/ajaxSetup';
+import { API_BASE_URL } from '@shared/service-proxies/service-proxies';
+import { ActionId } from '@node_modules/devexpress-reporting/designer/actions/actionId';
 
 @Component({
   selector: 'app-create-report-type',
   templateUrl: './create-report-type.component.html',
+  encapsulation: ViewEncapsulation.None,
   styleUrls: [
     './create-report-type.component.scss',
-    '../../../../../node_modules/jquery-ui/themes/base/all.css',
-    '../../../../../node_modules/devexpress-richedit/dist/dx.richedit.css',
-    '../../../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.common.css',
-    '../../../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.light.css',
-    '../../../../../node_modules/@devexpress/analytics-core/dist/css/dx-querybuilder.css',
-    '../../../../../node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css',
-    '../../../../../node_modules/devexpress-reporting/dist/css/dx-reportdesigner.css',
+    '../../../../../../node_modules/jquery-ui/themes/base/all.css',
+    '../../../../../../node_modules/devexpress-richedit/dist/dx.richedit.css',
+    '../../../../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.common.css',
+    '../../../../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.light.css',
+    '../../../../../../node_modules/@devexpress/analytics-core/dist/css/dx-querybuilder.css',
+    '../../../../../../node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css',
+    '../../../../../../node_modules/devexpress-reporting/dist/css/dx-reportdesigner.css',
   ],
   animations: [appModuleAnimation()],
 })
@@ -34,7 +37,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
 
   title = 'DXReportViewerSample';
   getDesignerModelAction = `/DXXRD/GetDesignerModel`;
-  hostUrl = 'http://localhost:44301/';
+  hostUrl: string;
   koReportUrl = ko.observable('');
   get reportUrl() {
     return this.koReportUrl();
@@ -77,13 +80,20 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   allCompanies: any[] = [];
   allEditionTypes: any[] = [];
 
-  constructor(injector: Injector, private _activatedRoute: ActivatedRoute, private _router: Router, private fb: FormBuilder) {
+  constructor(
+    injector: Injector,
+    private _activatedRoute: ActivatedRoute,
+    private _router: Router,
+    private fb: FormBuilder,
+    @Inject(API_BASE_URL) hostUrl: string
+  ) {
     super(injector);
     ajaxSetup.ajaxSettings = {
       headers: {
         Authorization: 'Bearer ' + abp.auth.getToken(),
       },
     };
+    this.hostUrl = hostUrl;
   }
 
   ngOnInit(): void {

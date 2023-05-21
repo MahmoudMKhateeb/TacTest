@@ -79,7 +79,6 @@ import { ActorInvoiceListComponent } from './Invoices/ActorInvoices/actor-invoic
 import { ActorSubmitInvoicesComponent } from './Invoices/actor-submit-invoices/actor-submit-invoices.component';
 import { InvoicesDedicatedClientsComponent } from '@app/main/Invoices/invoices-dedicated-clients/invoices-dedicated-clients.component';
 import { DirectTripsComponent } from '@app/main/direct-trips/direct-trips.component';
-import { ReportingModule } from '@app/main/reporting/reporting.module';
 
 @NgModule({
   imports: [
@@ -358,11 +357,6 @@ import { ReportingModule } from '@app/main/reporting/reporting.module';
           {
             path: 'pricePackages',
             loadChildren: () => import('@app/main/pricePackages/price-package.module').then((m) => m.PricePackageModule), //Lazy load main module
-            data: { preload: true },
-          },
-          {
-            path: 'reports',
-            loadChildren: () => import('@app/main/reports/reports.module').then((m) => m.ReportsModule), //Lazy load main module
             data: { preload: true },
           },
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
