@@ -1,7 +1,10 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
-    <sub-header [title]="'ShipmentTracking' | localize" [description]="'' | localize">
+    <sub-header
+      [title]="(shipmentType === 'normalShipment' ? 'ShipmentTracking' : 'DirectShipmentTracking') | localize"
+      [description]="'' | localize"
+    >
       <div role="actions">
         <button *ngIf="showNormalView" (click)="showAsTable()" class="btn btn-dark mr-2"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
         <button *ngIf="!showNormalView" (click)="showAsList()" class="btn btn-dark mr-2"><i class="fas fa-list"></i> {{ l('ShowAsList') }}</button>
@@ -34,11 +37,25 @@
                   ? 'card card-custom pt-4'
                   : 'card card-custom ribbon ribbon-clip ribbon-left pt-6'
               "
+              [class.pt-8]="
+                item.isSass &&
+                (((item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated || item.shippingRequestFlag === ShippingRequestFlagEnum.Normal) &&
+                  item.shippingType == ShippingTypeEnum.ImportPortMovements) ||
+                  item.shippingType == ShippingTypeEnum.ExportPortMovements)
+              "
               [busyIf]="loadingTripId === item.id"
             >
+              <!--                  style="top: 12px"-->
               <div
                 class="ribbon-target"
-                style="top: 12px"
+                [style.top]="
+                  (item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
+                    item.shippingType == ShippingTypeEnum.ImportPortMovements ||
+                    item.shippingType == ShippingTypeEnum.ExportPortMovements) &&
+                  item.isSass
+                    ? '32px'
+                    : '12px'
+                "
                 [style.left]="isRtl ? 'auto !important' : ''"
                 [style.right]="isRtl ? '-10px !important' : ''"
                 *ngIf="
@@ -63,7 +80,9 @@
                       item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
                       item.shippingType == ShippingTypeEnum.ImportPortMovements ||
                       item.shippingType == ShippingTypeEnum.ExportPortMovements
-                        ? '-1.5rem'
+                        ? item.isSass
+                          ? '-2rem'
+                          : '-1.5rem'
                         : '-1rem'
                     "
                   >
@@ -77,7 +96,9 @@
                       item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
                       item.shippingType == ShippingTypeEnum.ImportPortMovements ||
                       item.shippingType == ShippingTypeEnum.ExportPortMovements
-                        ? '-1.5rem'
+                        ? item.isSass
+                          ? '-2rem'
+                          : '-1.5rem'
                         : '-1rem'
                     "
                   >
@@ -91,7 +112,9 @@
                       item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
                       item.shippingType == ShippingTypeEnum.ImportPortMovements ||
                       item.shippingType == ShippingTypeEnum.ExportPortMovements
-                        ? '-1.5rem'
+                        ? item.isSass
+                          ? '-2rem'
+                          : '-1.5rem'
                         : '-1rem'
                     "
                     [ngClass]="{ left: !isRtl, right: isRtl }"
@@ -361,7 +384,7 @@
           <span></span>
         </div>
       </div>
-      <app-tracking-table *ngIf="!showNormalView" [searchInput]="searchInput"></app-tracking-table>
+      <app-tracking-table *ngIf="!showNormalView" [searchInput]="searchInput" [shipmentType]="shipmentType"></app-tracking-table>
     </div>
   </div>
 </div>

@@ -122,7 +122,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public ICollection<RatingLog> RatingLogs { get; set; }
         public ICollection<Penalty> Penalties { get; set; }
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
+        /// <summary>
+        /// This field is for shipper invoice
+        /// </summary>
         public InvoiceTripStatus InvoiceStatus { get; set; }
+        public InvoiceTripStatus CarrierInvoiceStatus { get; set; }
         public int? RejectReasonId { get; set; }
 
         [ForeignKey("RejectReasonId")]

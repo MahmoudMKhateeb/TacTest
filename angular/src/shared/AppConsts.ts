@@ -34,4 +34,7 @@ export class AppConsts {
   /// It's also shown in the web page.
   /// </summary>
   static readonly WebAppGuiVersion = '1.0.0.0';
+
+  public static readonly Tracking_NormalShipment = 'normalShipment';
+  public static readonly Tracking_DirectShipment = 'directShipment';
 }

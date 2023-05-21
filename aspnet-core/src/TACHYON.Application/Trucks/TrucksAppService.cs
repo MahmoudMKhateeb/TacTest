@@ -1,4 +1,4 @@
-﻿using Abp;
+using Abp;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -179,7 +179,8 @@ namespace TACHYON.Trucks
                             DriverUser = truck.DriverUserFk.Name +"",
                             WorkingShippingRequestReference= truck.DedicatedShippingRequestTrucks.Any(x => x.Status == Shipping.Dedicated.WorkingStatus.Busy) == true 
                             ? truck.DedicatedShippingRequestTrucks.First().ShippingRequest.ReferenceNumber :"",
-                            CarrierActorName = truck.CarrierActorFk.CompanyName
+                            CarrierActorName = truck.CarrierActorFk.CompanyName,
+                            TruckStatusId = truck.TruckStatusId
                         };
 
             var result = await LoadResultAsync(query, input.Filter);
@@ -196,10 +197,15 @@ namespace TACHYON.Trucks
             {
                 var trucksCount =await GetTrucksNo(AbpSession.TenantId.Value);
                 var maxNumberOfTrucks = await GetMaxNumberOfTrucks(AbpSession.TenantId.Value);
-                if (maxNumberOfTrucks >= trucksCount)
+                if (maxNumberOfTrucks != null && maxNumberOfTrucks <= trucksCount)
                 {
                     dto.IsTenantExceedsNumberOfTrucks = true;
                     dto.CanAddTruck =await HaveAdditionalPrice(AbpSession.TenantId.Value);
+                }
+                else if(maxNumberOfTrucks == null)
+                {
+                    dto.IsTenantExceedsNumberOfTrucks = false;
+                    dto.CanAddTruck = true;
                 }
             }
             return dto;

@@ -251,18 +251,18 @@
               [receiverLoading]="receiverLoading"
               [isExportRequest]="
                 (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
-                  _tripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) ||
+                  _tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements) ||
                 _tripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId == ShippingTypeEnum.ExportPortMovements
               "
               [isImportWithReturnTrip]="
-                (_tripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements &&
-                  _tripService.CreateOrEditShippingRequestTripDto.roundTripType == RoundTripType.WithReturnTrip) ||
+                (_tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements &&
+                  _tripService?.CreateOrEditShippingRequestTripDto?.roundTripType == RoundTripType.WithReturnTrip) ||
                 (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId == ShippingTypeEnum.ImportPortMovements &&
                   _tripService?.GetShippingRequestForViewOutput?.shippingRequest.roundTripType == RoundTripType.WithReturnTrip)
               "
               [roundTripType]="
                 !_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id
-                  ? _tripService.CreateOrEditShippingRequestTripDto.roundTripType
+                  ? _tripService?.CreateOrEditShippingRequestTripDto?.roundTripType
                   : _tripService?.GetShippingRequestForViewOutput?.shippingRequest.roundTripType
               "
               (RouteStepCordSetterEvent)="RouteStepCordSetter($event.index, $event.facilityId)"

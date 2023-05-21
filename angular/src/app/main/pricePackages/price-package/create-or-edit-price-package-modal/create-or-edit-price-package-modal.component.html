@@ -52,6 +52,47 @@
                   {{ 'PricePackageInvalidDisplayNameMsg' | localize }}
                 </div>
               </div>
+
+              <div class="form-group col-md-6">
+                <label>{{ l('ProjectName') }} </label>
+                <input
+                  [(ngModel)]="pricePackageDto.projectName"
+                  minlength="3"
+                  maxlength="150"
+                  name="projectName"
+                  type="text"
+                  class="form-control"
+                  #projectName="ngModel"
+                  [ngClass]="{
+                    'is-invalid': projectName.invalid && (projectName.dirty || projectName.touched),
+                    'is-valid': projectName.valid && (projectName.dirty || projectName.touched)
+                  }"
+                />
+                <div *ngIf="projectName.invalid && (projectName.dirty || projectName.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidProjectNameMsg' | localize }}
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>{{ l('ScopeOfWork') }}</label>
+                <input
+                  [(ngModel)]="pricePackageDto.scopeOfWork"
+                  minlength="3"
+                  maxlength="300"
+                  name="scopeOfWork"
+                  type="text"
+                  class="form-control"
+                  #scopeOfWork="ngModel"
+                  [ngClass]="{
+                    'is-invalid': scopeOfWork.invalid && (scopeOfWork.dirty || scopeOfWork.touched),
+                    'is-valid': scopeOfWork.valid && (scopeOfWork.dirty || scopeOfWork.touched)
+                  }"
+                />
+                <div *ngIf="scopeOfWork.invalid && (scopeOfWork.dirty || scopeOfWork.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidScopeOfWorkMsg' | localize }}
+                </div>
+              </div>
+
               <div *ngIf="isTachyonDealerOrHost && !pricePackageDto.id" class="form-group col-md-6">
                 <label>{{ l('Company') }} <span class="text-danger">*</span></label>
                 <div
@@ -136,6 +177,7 @@
                   #routeType="ngModel"
                   [(ngModel)]="pricePackageDto.routeType"
                   required
+                  (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"
                   class="form-control"
                   name="tmsPP_RouteType"
                   [ngClass]="{
@@ -176,23 +218,29 @@
               </div>
               <div *ngIf="pricePackageDto.type == pricePackageType.Dedicated" class="form-group col-md-6">
                 <label>{{ l('OriginCountry') }} <span class="text-danger">*</span></label>
-                <select
-                  [(ngModel)]="pricePackageDto.originCountryId"
-                  (ngModelChange)="originCountryChanged()"
-                  required
-                  class="form-control"
-                  name="tmsPP_OriginCountry"
-                  #OriginCountry="ngModel"
+                <div
                   [ngClass]="{
-                    'is-invalid': OriginCountry.invalid && (OriginCountry.dirty || OriginCountry.touched),
-                    'is-valid': OriginCountry.valid && (OriginCountry.dirty || OriginCountry.touched)
+                    'spinner spinner-success spinner-right mr-1 ml-1': countriesLoading
                   }"
                 >
-                  <option selected disabled [value]="undefined">{{ 'SelectAnOriginCountry' | localize }}</option>
-                  <option *ngFor="let item of countries" [value]="item.id">
-                    {{ item.displayName }}
-                  </option>
-                </select>
+                  <select
+                    [(ngModel)]="pricePackageDto.originCountryId"
+                    (ngModelChange)="originCountryChanged()"
+                    required
+                    class="form-control"
+                    name="tmsPP_OriginCountry"
+                    #OriginCountry="ngModel"
+                    [ngClass]="{
+                      'is-invalid': OriginCountry.invalid && (OriginCountry.dirty || OriginCountry.touched),
+                      'is-valid': OriginCountry.valid && (OriginCountry.dirty || OriginCountry.touched)
+                    }"
+                  >
+                    <option selected disabled [value]="undefined">{{ 'SelectAnOriginCountry' | localize }}</option>
+                    <option *ngFor="let item of countries" [value]="item.id">
+                      {{ item.displayName }}
+                    </option>
+                  </select>
+                </div>
                 <div *ngIf="OriginCountry.invalid && (OriginCountry.dirty || OriginCountry.touched)" class="invalid-feedback">
                   {{ 'PricePackageInvalidOriginCountryMsg' | localize }}
                 </div>
@@ -257,8 +305,8 @@
                   #serviceAreas="ngModel"
                   dropdownIcon="fa fa-caret-down"
                   name="serviceAreas"
-                  [options]="serviceAreasList"
-                  [(ngModel)]="pricePackageDto.serviceAreas"
+                  [options]="pricePackageOriginLocations"
+                  [(ngModel)]="selectedServiceAreas"
                   (onChange)="applyFilters()"
                   [selectedItemsLabel]="'{0} items selected'"
                   [style]="{ width: '100%' }"
@@ -276,60 +324,6 @@
                 </p-multiSelect>
                 <div *ngIf="serviceAreas.invalid && (serviceAreas.dirty || serviceAreas.touched)" class="invalid-feedback">
                   {{ 'PricePackageInvalidServiceAreasMsg' | localize }}
-                </div>
-              </div>
-
-              <div
-                *ngIf="
-                  pricePackageDto.type == pricePackageType.Dedicated ||
-                  pricePackageDto.shippingTypeId == shippingTypeEnum.ExportPortMovements ||
-                  pricePackageDto.shippingTypeId == shippingTypeEnum.ImportPortMovements
-                "
-                class="form-group col-md-6"
-              >
-                <label>{{ l('ProjectName') }} </label>
-                <input
-                  [(ngModel)]="pricePackageDto.projectName"
-                  minlength="3"
-                  maxlength="150"
-                  name="projectName"
-                  type="text"
-                  class="form-control"
-                  #projectName="ngModel"
-                  [ngClass]="{
-                    'is-invalid': projectName.invalid && (projectName.dirty || projectName.touched),
-                    'is-valid': projectName.valid && (projectName.dirty || projectName.touched)
-                  }"
-                />
-                <div *ngIf="projectName.invalid && (projectName.dirty || projectName.touched)" class="invalid-feedback">
-                  {{ 'PricePackageInvalidProjectNameMsg' | localize }}
-                </div>
-              </div>
-
-              <div
-                *ngIf="
-                  pricePackageDto.type == pricePackageType.Dedicated ||
-                  pricePackageDto.shippingTypeId == shippingTypeEnum.ExportPortMovements ||
-                  pricePackageDto.shippingTypeId == shippingTypeEnum.ImportPortMovements
-                "
-                class="form-group col-md-6"
-              >
-                <label>{{ l('ScopeOfWork') }}</label>
-                <input
-                  [(ngModel)]="pricePackageDto.scopeOfWork"
-                  minlength="3"
-                  maxlength="300"
-                  name="scopeOfWork"
-                  type="text"
-                  class="form-control"
-                  #scopeOfWork="ngModel"
-                  [ngClass]="{
-                    'is-invalid': scopeOfWork.invalid && (scopeOfWork.dirty || scopeOfWork.touched),
-                    'is-valid': scopeOfWork.valid && (scopeOfWork.dirty || scopeOfWork.touched)
-                  }"
-                />
-                <div *ngIf="scopeOfWork.invalid && (scopeOfWork.dirty || scopeOfWork.touched)" class="invalid-feedback">
-                  {{ 'PricePackageInvalidScopeOfWorkMsg' | localize }}
                 </div>
               </div>
 
@@ -372,7 +366,7 @@
                 </div>
               </div>
               <div
-                *ngIf="pricePackageDto.type == pricePackageType.Dedicated || pricePackageDto.shippingTypeId != shippingTypeEnum.LocalInsideCity"
+                *ngIf="pricePackageDto.type == pricePackageType.PerTrip && pricePackageDto.shippingTypeId != shippingTypeEnum.LocalInsideCity"
                 class="form-group col-md-6"
               >
                 <label>{{ l('DestinationCity') }} <span class="text-danger">*</span></label>
@@ -531,13 +525,12 @@
                         <dxi-column dataField="company" caption="{{ l('Carrier') }} "></dxi-column>
                         <dxi-column dataField="truckType" caption="{{ l('TruckType') }}" [groupIndex]="0"></dxi-column>
                         <dxi-column dataField="totalPrice" caption="{{ l('TachyonMSRequestPrice') }}"></dxi-column>
-                        <dxi-column dataField="isMultiDrop" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"></dxi-column>
+                        <dxi-column dataField="routeType" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"></dxi-column>
                         <dxi-column dataField="originCity" caption="{{ l('Origin') }}"></dxi-column>
                         <dxi-column dataField="destinationCity" caption="{{ l('Destination') }}"></dxi-column>
 
                         <div *dxTemplate="let options of 'cellTemplate_RoutType'">
-                          <span *ngIf="options.data.isMultiDrop">{{ 'MultipleDrops' | localize }}</span>
-                          <span *ngIf="!options.data.isMultiDrop">{{ 'SingleDrop' | localize }}</span>
+                          <span>{{ (options.data.routeType == routeTypeEnum.MultipleDrops ? 'MultipleDrops' : 'SingleDrop') | localize }}</span>
                         </div>
                       </dx-data-grid>
                     </div>

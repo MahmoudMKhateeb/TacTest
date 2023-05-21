@@ -140,6 +140,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   allOriginPorts: SelectFacilityItemDto[] = [];
   generalGoodsCategoryId: number;
   ShippingRequestRouteType = ShippingRequestRouteType;
+  wayPoints = [];
 
   constructor(
     injector: Injector,
@@ -471,7 +472,12 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.getRequestType(res.shippingRequest.isBid, res.shippingRequest.isDirectRequest);
       this.loading = false;
       this.getCordinatesByCityName(res.originalCityName, 'source');
-      this.getCordinatesByCityName(res.destinationCityName, 'destanation');
+      this.wayPoints = [];
+      for (let i = 0; i < res.destinationCitiesDtos.length; i++) {
+        const destCity = res.destinationCitiesDtos[i];
+        this.getCordinatesByCityName(destCity.cityName, 'destanation');
+      }
+      // this.getCordinatesByCityName(res.destinationCityName, 'destanation');
     });
   }
 
@@ -1014,8 +1020,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   prepareStep2Inputs() {
     console.log('prepareStep2Inputs');
     switch (Number(this.step1Dto.roundTripType)) {
-      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
       case RoundTripType.TwoWayRoutsWithPortShuttling:
+        this.step2Dto.routeTypeId = ShippingRequestRouteType.MultipleDrops;
+        this.step2Dto.numberOfDrops = 3;
+        break;
+      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
       case RoundTripType.WithReturnTrip: {
         this.step2Dto.routeTypeId = ShippingRequestRouteType.MultipleDrops;
         this.step2Dto.numberOfDrops = 2;
@@ -1058,6 +1067,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           if (cityType == 'source') {
             this.origin = { lat: Lat, lng: Lng };
           } else {
+            this.wayPoints.push({ location: { lat: Lat, lng: Lng } });
             this.destination = { lat: Lat, lng: Lng };
           }
         } else {

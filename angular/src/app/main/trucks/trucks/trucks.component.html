@@ -11,6 +11,12 @@
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
+            *ngIf="
+              isEnabled('App.ExportFunctionality') ||
+              (('Pages.Trucks.Create' | permission) &&
+                isEnabled('App.ImportFunctionality') &&
+                isEnabled('App.ImportFunctionality.ImportTruckFeature'))
+            "
           >
             <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
           </button>
@@ -69,6 +75,10 @@
         <button *ngIf="isGranted('Pages.Trucks.Create') && CanAddTruck" (click)="createTruck()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewTruck') }}
         </button>
+        <button (click)="truckFilterModal.show()" class="btn btn-primary"><i class="fa fa-search"></i> {{ 'Search' | localize }}</button>
+        <button *ngIf="showClearSearchFilters" (click)="clearFilters()" class="btn btn-primary">
+          <i class="fa fa-trash"></i> {{ 'ClearFilters' | localize }}
+        </button>
       </div>
     </sub-header>
 
@@ -90,7 +100,7 @@
               #grid
               id="dataGrid"
               [dataSource]="dataSource"
-              [remoteOperations]="{ groupPaging: false, sorting: false, filtering: false }"
+              [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
               [showColumnLines]="true"
               [showRowLines]="false"
               [showBorders]="true"
@@ -239,5 +249,6 @@
     <viewTruckModal #viewTruckModal></viewTruckModal>
     <app-viwe-truck-documents-modal #viewOrEditEntityDocumentsModal (modalSave)="getAllTrucks(undefined)"> </app-viwe-truck-documents-modal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
+    <app-truck-filter-modal #truckFilterModal (searchClicked)="search($event)" [shouldClearInputs]="shouldClearInputs"></app-truck-filter-modal>
   </div>
 </div>

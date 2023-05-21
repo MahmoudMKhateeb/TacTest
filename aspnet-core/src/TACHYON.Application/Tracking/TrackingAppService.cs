@@ -76,14 +76,14 @@ namespace TACHYON.Tracking
             _InvoiceTripRepository = invoiceTripRepository;
             _SubmitInvoiceTripRepository = submitInvoiceTripRepository;
         }
-
-
         [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper)]
         public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
         {
            // CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
 
             bool isCmsEnabled = await FeatureChecker.IsEnabledAsync(AppFeatures.CMS);
+
+            await CheckDirectShipmentTrackingPermission(input.TrackingMode);
 
             List<long> userOrganizationUnits = null;
             if (isCmsEnabled)
@@ -100,7 +100,10 @@ namespace TACHYON.Tracking
 
             bool hasCarrierClient = await FeatureChecker.IsEnabledAsync(AppFeatures.CarrierClients);
             DisableTenancyFilters();
-            var query =await (await GetTrip(input))
+            var query = await (await GetTrip(input))
+                .Where(x => input.TrackingMode == ShipmentTrackingMode.Mixed ||
+                            (input.TrackingMode == ShipmentTrackingMode.NormalShipment && x.ShippingRequestId.HasValue) ||
+                            (input.TrackingMode == ShipmentTrackingMode.DirectShipment && !x.ShippingRequestId.HasValue))
                 .AsNoTracking()
                 .OrderBy(input.Sorting ?? "id desc").PageBy(input).Select(src => new TrackingListDto
             {
@@ -220,9 +223,13 @@ namespace TACHYON.Tracking
             );
         }
 
+
+
         [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper)]
         public async Task<LoadResult> GetAllDx(string filter, TrackingSearchInputDto input)
         {
+
+           await CheckDirectShipmentTrackingPermission(input.TrackingMode);
 
             var isShipper = await IsEnabledAsync(AppFeatures.Shipper);
             var isCarrier = await IsEnabledAsync(AppFeatures.Carrier);
@@ -231,6 +238,9 @@ namespace TACHYON.Tracking
 
             DisableTenancyFilters();
             var query =  (await GetTrip(input))
+                .Where(x => input.TrackingMode == ShipmentTrackingMode.Mixed ||
+                            (input.TrackingMode == ShipmentTrackingMode.NormalShipment && x.ShippingRequestId.HasValue) ||
+                            (input.TrackingMode == ShipmentTrackingMode.DirectShipment && !x.ShippingRequestId.HasValue))
                 .ProjectTo<TrackingListDto>(AutoMapperConfigurationProvider).AsNoTracking();
 
             var result = query.ToList();
@@ -272,7 +282,8 @@ namespace TACHYON.Tracking
 
         }
 
-      
+        
+
         [AbpAllowAnonymous]
         public async Task<PagedResultDto<TrackingByWaybillDto>> GetDropsOffByMasterWaybill(long waybillNumber)
         {
@@ -682,6 +693,15 @@ namespace TACHYON.Tracking
                );
         }
 
+
+        private async Task CheckDirectShipmentTrackingPermission(ShipmentTrackingMode trackingMode)
+        {
+            if (trackingMode is ShipmentTrackingMode.DirectShipment)
+            {
+                if (!await PermissionChecker.IsGrantedAsync(AppPermissions.Pages_Tracking_DirectShipmentTracking))
+                    throw new AbpAuthorizationException(L("YouMustHavePermissionToAccessDirectShipment"));
+            }
+        }
 
         #endregion
     }

@@ -253,7 +253,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         //Get the Vase List From Father And Attach Them to new Array
         const vas: CreateOrEditShippingRequestTripVasDto = new CreateOrEditShippingRequestTripVasDto();
         vas.id = undefined; // vas id in shipping Request trip (Required for edit trip)
-        vas.shippingRequestTripId = this._TripService.CreateOrEditShippingRequestTripDto.id || undefined; //the trip id
+        vas.shippingRequestTripId = this._TripService?.CreateOrEditShippingRequestTripDto?.id || undefined; //the trip id
         vas.shippingRequestVasId = x.shippingRequestVas.id; //vas id in shipping request
         vas.name = x.vasName; //vas Name
         this.cleanVasesList.push(vas);
@@ -302,7 +302,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
     if (record) {
       // this.activeTripId = record.id;
-
+      if (!isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto)) {
+        this._TripService.CreateOrEditShippingRequestTripDto = new CreateOrEditShippingRequestTripDto();
+      }
       this._TripService.CreateOrEditShippingRequestTripDto.id = record.id;
       this._TripService.activeTripId = record.id;
 
@@ -1337,7 +1339,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   fillAllRoundTrips(isInit = false) {
     console.log(this._TripService.CreateOrEditShippingRequestTripDto);
-
+    if (!isNotNullOrUndefined(this._TripService) || !isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto)) {
+      return;
+    }
     if (!isInit) {
       this._TripService.CreateOrEditShippingRequestTripDto.roundTripType = null;
     }

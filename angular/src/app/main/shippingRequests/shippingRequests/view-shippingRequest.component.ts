@@ -22,6 +22,7 @@ import { DirectRequestComponent } from '@app/main/shippingRequests/shippingReque
 import { retry } from 'rxjs/operators';
 import { NotesComponent } from './notes/notes.component';
 import * as moment from '@node_modules/moment';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './view-shippingRequest.component.html',
@@ -83,16 +84,18 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       .getShippingRequestForView(shippingRequestId)
       .pipe(retry(3))
       .subscribe((result) => {
-        this._trip.GetShippingRequestForViewOutput = result;
-        this._trip.GetShippingRequestForViewOutput.rentalStartDate = moment(this._trip.GetShippingRequestForViewOutput?.rentalStartDate);
-        this._trip.GetShippingRequestForViewOutput.rentalEndDate = moment(this._trip.GetShippingRequestForViewOutput?.rentalEndDate);
+        if (isNotNullOrUndefined(this._trip) && isNotNullOrUndefined(this._trip.GetShippingRequestForViewOutput)) {
+          this._trip.GetShippingRequestForViewOutput = result;
+          this._trip.GetShippingRequestForViewOutput.rentalStartDate = moment(this._trip.GetShippingRequestForViewOutput?.rentalStartDate);
+          this._trip.GetShippingRequestForViewOutput.rentalEndDate = moment(this._trip.GetShippingRequestForViewOutput?.rentalEndDate);
+        }
         this.rentalRange = {
-          rentalStartDate: this._trip.GetShippingRequestForViewOutput?.rentalStartDate,
-          rentalEndDate: this._trip.GetShippingRequestForViewOutput?.rentalEndDate,
+          rentalStartDate: this._trip?.GetShippingRequestForViewOutput?.rentalStartDate,
+          rentalEndDate: this._trip?.GetShippingRequestForViewOutput?.rentalEndDate,
         };
         this.vases = result.shippingRequestVasDtoList;
         this.breadcrumbs.push(new BreadcrumbItem('' + result.referenceNumber));
-        this.activeShippingRequestId = this._trip.GetShippingRequestForViewOutput.shippingRequest.id;
+        this.activeShippingRequestId = this._trip?.GetShippingRequestForViewOutput?.shippingRequest?.id;
         this.active = true;
         this.loading = false;
       });

@@ -51,14 +51,21 @@
                   class="custom-file-input"
                   accept="image/x-png,image/jpeg,application/pdf"
                 />
-                <label class="custom-file-label text-truncate" [for]="createOrEditDocumentFileDtos[i].name">
-                  {{ createOrEditDocumentFileDtos[i].name ? createOrEditDocumentFileDtos[i].name : l('SelectFile') }}
+                <label
+                  class="custom-file-label text-truncate"
+                  [for]="createOrEditDocumentFileDtos.length > 0 && createOrEditDocumentFileDtos[i].name"
+                >
+                  {{
+                    createOrEditDocumentFileDtos.length > 0 && createOrEditDocumentFileDtos[i].name
+                      ? createOrEditDocumentFileDtos[i].name
+                      : l('SelectFile')
+                  }}
                 </label>
               </div>
               <div class="margin-top-5">
                 <p-progressBar [value]="FileDocProgresses[i]" [style]="{ height: '6px', width: '100' }"></p-progressBar>
               </div>
-              <div class="mt-2" *ngIf="createOrEditDocumentFileDtos[i].name">
+              <div class="mt-2" *ngIf="createOrEditDocumentFileDtos.length > 0 && createOrEditDocumentFileDtos[i].name">
                 <div class="d-flex align-items-center flex-wrap mb-8">
                   <!--begin::Symbol-->
                   <div class="symbol symbol-50 symbol-light mr-3 ml-3">

@@ -229,7 +229,9 @@ export class NewTrackingConponent extends AppComponentBase implements OnChanges,
         this.syncTripInGetForView(this.trip);
         this.handleCanGoNextLocation(result.routPoints);
         this.getTripRouteForMap();
-        this.getForViewReady.emit(true);
+        setTimeout(() => {
+          this.getForViewReady.emit(true);
+        }, 500);
       });
   }
 

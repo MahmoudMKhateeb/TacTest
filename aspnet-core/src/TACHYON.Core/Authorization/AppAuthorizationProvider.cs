@@ -934,6 +934,11 @@ namespace TACHYON.Authorization
 
             #endregion
             // note : to do use penalties permission to add some missing permission like create, update, and delete
+
+            pages.CreateChildPermission(AppPermissions.Pages_Tracking_DirectShipmentTracking,
+                L("DirectShipmentTrackingPermission"),
+                featureDependency: new SimpleFeatureDependency(AppFeatures.TachyonDealer));
+
         }
 
         private static ILocalizableString L(string name)

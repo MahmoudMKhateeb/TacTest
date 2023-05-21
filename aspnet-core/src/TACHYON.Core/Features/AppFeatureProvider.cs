@@ -6,7 +6,6 @@ using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Runtime.Validation;
 using Abp.UI.Inputs;
-using DevExpress.DataAccess.Wizard.Presenters;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
@@ -117,7 +116,12 @@ namespace TACHYON.Features
                     );
 
 
-
+            var RequiredReceiverCodeForInvoice = context.Create(
+                        AppFeatures.RequiredReceiverCodeForInvoice,
+                        "false",
+                        L("RequiredReceiverCodeForInvoice"),
+                        inputType: new CheckboxInputType()
+                    );
 
 
 
@@ -125,7 +129,7 @@ namespace TACHYON.Features
             // Clients Management System feature: this feature has sub features 
             // Sub features like : Shipper Clients, Carrier Clients, Client Login to the system, Document Management, and Direct Trip Feature
             // those feature used by Editions => Broker & Carrier SAAS .. See documentation for more details 
-            
+
             var cms = context.Create(
                 AppFeatures.CMS,
                 "false",

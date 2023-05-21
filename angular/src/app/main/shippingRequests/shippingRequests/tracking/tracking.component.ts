@@ -1,6 +1,7 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
+  ShipmentTrackingMode,
   ShippingRequestDriverServiceProxy,
   ShippingRequestFlag,
   ShippingRequestRouteType,
@@ -67,6 +68,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   ShippingTypeEnum = ShippingTypeEnum;
   private waybillNumber: number;
   showNormalView = true;
+  shipmentType: 'normalShipment' | 'directShipment';
 
   constructor(
     injector: Injector,
@@ -81,6 +83,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   ) {
     super(injector);
     this.waybillNumber = this._activatedRoute.snapshot.queryParams['waybillNumber'];
+    this.shipmentType = this._activatedRoute.snapshot.data.shipmentType;
   }
 
   ngOnInit(): void {
@@ -116,6 +119,52 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     if (isNotNullOrUndefined(this.waybillNumber)) {
       this.searchInput.WaybillNumber = this.waybillNumber;
     }
+
+    if (this.shipmentType === AppConsts.Tracking_NormalShipment) {
+      let trackingMode = this.isTachyonDealerOrHost ? ShipmentTrackingMode.NormalShipment : ShipmentTrackingMode.Mixed;
+      this._currentServ
+        .getAll(
+          this.searchInput.status,
+          this.searchInput.shipper,
+          this.searchInput.carrier,
+          this.searchInput.WaybillNumber,
+          this.searchInput.transportTypeId,
+          this.searchInput.truckTypeId,
+          this.searchInput.truckCapacityId,
+          this.searchInput.originId,
+          this.searchInput.destinationId,
+          this.searchInput.pickupFromDate,
+          this.searchInput.pickupToDate,
+          this.searchInput.fromDate,
+          this.searchInput.toDate,
+          this.searchInput.shippingRequestReferance,
+          this.searchInput.routeTypeId,
+          this.searchInput.packingTypeId,
+          this.searchInput.goodsOrSubGoodsCategoryId,
+          this.searchInput.plateNumberId,
+          this.searchInput.driverNameOrMobile,
+          this.searchInput.deliveryFromDate,
+          this.searchInput.deliveryToDate,
+          this.searchInput.containerNumber,
+          this.searchInput.isInvoiceIssued,
+          this.searchInput.isSubmittedPOD,
+          this.searchInput.requestTypeId,
+          trackingMode,
+          '',
+          this.skipCount,
+          this.maxResultCount
+        )
+        .subscribe((result) => {
+          this.IsLoading = false;
+          this.StopLoading = result.items.length < this.maxResultCount;
+          this.Items.push(...result.items);
+        });
+      return;
+    }
+
+    if (this.shipmentType !== AppConsts.Tracking_DirectShipment) {
+      return;
+    }
     this._currentServ
       .getAll(
         this.searchInput.status,
@@ -143,6 +192,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         this.searchInput.isInvoiceIssued,
         this.searchInput.isSubmittedPOD,
         this.searchInput.requestTypeId,
+        ShipmentTrackingMode.DirectShipment,
         '',
         this.skipCount,
         this.maxResultCount
@@ -344,9 +394,16 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
   }
 
   showAsTable() {
-    this.router.navigateByUrl(`/app/main/tracking?showType=1`);
+    let pageName = this.shipmentType === AppConsts.Tracking_NormalShipment ? 'shipmentTracking' : 'directShipmentTracking';
+    console.log(pageName);
+    this.router.navigateByUrl(`/app/main/tracking/${pageName}?showType=1`);
   }
+
   showAsList() {
-    this.router.navigateByUrl(`/app/main/tracking`);
+    let pageName = this.shipmentType === AppConsts.Tracking_NormalShipment ? 'shipmentTracking' : 'directShipmentTracking';
+    console.log(pageName);
+    this.router.navigateByUrl(`/app/main/tracking/${pageName}`);
   }
+
+  protected readonly AppConsts = AppConsts;
 }

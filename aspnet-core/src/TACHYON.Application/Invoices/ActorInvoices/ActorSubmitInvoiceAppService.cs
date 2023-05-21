@@ -182,9 +182,18 @@ namespace TACHYON.Invoices.ActorInvoices
                         : string.Empty),
                     Vases = trip.ShippingRequestTripVases.Select(x=> new
                     {
-                        VasName = x.ShippingRequestVasFk.VasFk.Key, SubTotalAmount = x.ShippingRequestVasFk.ActorCarrierPrice.SubTotalAmount.Value,
-                        VatAmount = x.ShippingRequestVasFk.ActorCarrierPrice.VatAmount.Value, 
-                        TotalAmount = x.ShippingRequestVasFk.ActorCarrierPrice.VatAmount.Value + x.ShippingRequestVasFk.ActorCarrierPrice.SubTotalAmount.Value,
+                        VasName = x.ShippingRequestTripFk.ShippingRequestId != null
+                        ? x.ShippingRequestVasFk.VasFk.Key
+                        : x.VasFk.Key,
+                        SubTotalAmount = x.ShippingRequestTripFk.ShippingRequestId != null 
+                        ? x.ShippingRequestVasFk.ActorCarrierPrice.SubTotalAmount.Value
+                        : x.SubTotalAmount.Value,
+                        VatAmount = x.ShippingRequestTripFk.ShippingRequestId != null
+                        ?x.ShippingRequestVasFk.ActorCarrierPrice.VatAmount.Value
+                        : x.VatAmount, 
+                        TotalAmount = x.ShippingRequestTripFk.ShippingRequestId != null
+                        ?x.ShippingRequestVasFk.ActorCarrierPrice.VatAmount.Value + x.ShippingRequestVasFk.ActorCarrierPrice.SubTotalAmount.Value
+                        : x.VatAmount.Value + x.SubTotalAmount.Value,
                         Remarks = x.Quantity > 1 ? x.Quantity.ToString() : string.Empty
                     })
                     
@@ -243,7 +252,7 @@ namespace TACHYON.Invoices.ActorInvoices
                     {
                         Sequence = $"{sequence}/{totalItems}",
                         SubTotalAmount = vas.SubTotalAmount,
-                        VatAmount = vas.VatAmount,
+                        VatAmount = vas.VatAmount.Value,
                         TotalAmount = vas.TotalAmount,
                         WayBillNumber = waybillNumber,
                         TruckType = L("InvoiceVasType", vas.VasName),
