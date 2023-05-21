@@ -21,5 +21,6 @@ namespace TACHYON.Invoices.InoviceNote.Dto
         public string InvoiceNoteReferenceNumber { get; set; }
         //public bool IsManual { get; set; }
         public List<GetAllInvoiceItemDto> InvoiceItems { get; set; }
+        public bool IsTaxVatIncluded { get; set; }
     }
 }

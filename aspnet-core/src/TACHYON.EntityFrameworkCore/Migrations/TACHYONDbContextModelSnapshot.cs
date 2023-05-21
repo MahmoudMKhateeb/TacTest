@@ -3894,6 +3894,9 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsManual")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsTaxVatIncluded")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
