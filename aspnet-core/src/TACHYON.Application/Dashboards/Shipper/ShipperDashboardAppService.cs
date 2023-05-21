@@ -248,7 +248,8 @@ namespace TACHYON.Dashboards.Shipper
                 .WhereIf(isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
                 .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year && x.CreationTime.Month == Clock.Now.Month )
-                .WhereIf(period == FilterDatePeriod.Monthly,x=>  x.CreationTime.Year == Clock.Now.Year )
+                .WhereIf(period == FilterDatePeriod.Monthly,x=> ((Clock.Now.Month == 12 && x.CreationTime.Year == Clock.Now.Year) ||
+                (Clock.Now.Month != 12 && (x.CreationTime.Year == Clock.Now.Year || x.CreationTime.Year == Clock.Now.AddYears(-1).Year))))
                 .Select(x => new { x.Status, x.CreationTime });
 
             var accepted =  await query.Where(x => x.Status == PriceOfferStatus.Accepted).ToListAsync();
@@ -269,14 +270,35 @@ namespace TACHYON.Dashboards.Shipper
 
             if (period == FilterDatePeriod.Monthly)
             {
-                acceptedOffers = accepted.GroupBy(x => x.CreationTime.Month)
-                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key ),Y = x.Count() })
-                    .ToList();
-                
-                rejectedOffers = rejected.GroupBy(x => x.CreationTime.Month)
+                var acceptedOffersList = accepted.GroupBy(x => x.CreationTime.Month);
+
+                var rejectedOffersList = rejected.GroupBy(x => x.CreationTime.Month);
+
+                foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
+                {
+                    if (acceptedOffersList.Select(x => x.Key).ToList().Contains(date.Month))
+                    {
+                        acceptedOffers.Add(acceptedOffersList.Where(x => x.Key == date.Month)
                     .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
-                    .ToList();
-            }
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        acceptedOffers.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    }
+
+                    if (rejectedOffersList.Select(x => x.Key).ToList().Contains(date.Month))
+                    {
+                        rejectedOffers.Add(rejectedOffersList.Where(x => x.Key == date.Month)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        rejectedOffers.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    }
+                }
+                }
             
             if (period == FilterDatePeriod.Weekly)
             {
