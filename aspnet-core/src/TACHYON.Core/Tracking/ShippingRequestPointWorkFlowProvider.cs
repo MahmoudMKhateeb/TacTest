@@ -640,7 +640,7 @@ namespace TACHYON.Tracking
             routeStart.IsActive = true;
             routeStart.IsResolve = true;
             trip.Status = ShippingRequestTripStatus.InTransit;
-            trip.StartTripDate = Clock.Now;
+            trip.StartWorking = Clock.Now;
 
             await StartTransition(routeStart, new Point(Input.lng, Input.lat));
 

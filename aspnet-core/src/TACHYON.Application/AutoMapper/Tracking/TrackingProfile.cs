@@ -62,6 +62,8 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.RouteType, opt => opt.MapFrom(src => src.RouteType != null ? src.RouteType.GetEnumDescription() : src.ShippingRequestFk.RouteTypeId.GetEnumDescription()))
             .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
             .ForMember(dst => dst.BookingNumber, opt => opt.MapFrom(src => src.ShippingRequestFk != null ?src.ShippingRequestFk.ShipperInvoiceNo  :""))
+            .ForMember(dst => dst.ActualDeliveryDate, opt => opt.MapFrom(src => src.ActualDeliveryDate != null ?src.ActualDeliveryDate.Value.ToString("dd/MM/yyyy")  :""))
+            .ForMember(dst => dst.ActualPickupDate, opt => opt.MapFrom(src => src.StartTripDate.ToString("dd/MM/yyyy")))
             ;
 
 
