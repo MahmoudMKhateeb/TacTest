@@ -3379,5 +3379,8 @@
     <text name="ExportNormalToExcel">Export normal request</text>
     <text name="ExportDedicatedToExcel">Export dedicated request</text>
     
+	<text name="DedicatedShippingRequestSavedTemplate">Dedicated Shipping Request Templates</text>
+	<text name="ShippingRequestSavedTemplate">Normal Shipping Request Templates</text>
+	<text name="TripSavedTemplate">Trip Templates</text>
 	</texts>
 </localizationDictionary>

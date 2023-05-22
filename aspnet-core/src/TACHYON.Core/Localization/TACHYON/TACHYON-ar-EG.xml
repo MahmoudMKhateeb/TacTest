@@ -3091,6 +3091,9 @@
 	<text name="DirectShipmentTrackingPermission">تتبع الشحنات المباشرة</text>
 	<text name="DirectShipmentTracking">تتبع الشحنات المباشرة</text>
     <text name="RequiredReceiverCodeForInvoice">هل رمز المستلم مطلوب</text>
+	<text name="DedicatedShippingRequestSavedTemplate">قوالب طلب تأجير الشاحنات</text>
+	<text name="ShippingRequestSavedTemplate">قوالب طلب الشحن</text>
+	<text name="TripSavedTemplate">فوالب الرحلة</text>
 		
 	</texts>
 </localizationDictionary>

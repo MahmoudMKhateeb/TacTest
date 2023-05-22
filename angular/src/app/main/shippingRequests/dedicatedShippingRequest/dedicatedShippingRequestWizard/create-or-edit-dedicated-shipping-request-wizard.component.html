@@ -428,7 +428,7 @@
                                 (ngModelChange)="validateShippingRequestType()"
                                 [style]="{ width: '100%' }"
                                 styleClass="form-control pt-1"
-                                [dataKey]="'cityId'"
+                                dataKey="cityId"
                                 [selectionLimit]="step1Dto.shippingTypeId == 1 ? 1 : 100"
                               >
                               </p-multiSelect>
@@ -972,14 +972,14 @@
                   <!--begin: Form Actions -->
                   <div class="d-flex justify-content-between border-top pt-10">
                     <div class="mr-2">
-                      <div class="btn btn-light-dark font-weight text-uppercase px-9 py-4" data-wizard-type="action-prev">
+                      <div class="btn btn-light-dark font-weight text-uppercase px-9 py-4" data-wizard-type="action-prev" (click)="updateRoute()">
                         {{ l('Previous') }}
                       </div>
                     </div>
                     <div>
                       <create-or-edit-template-drop-down-button
-                        *ngIf="activeStep == 4 && (isShipper || isTachyonDealer || isCarrierSaas)"
-                        [entityType]="entityType.ShippingRequestTemplate"
+                        *ngIf="(stepToCompleteFrom == 3 || activeStep == 3) && (isShipper || isTachyonDealer || isCarrierSaas)"
+                        [entityType]="entityType.DedicatedShippingRequestTemplate"
                         [sourceEntityId]="'' + activeShippingRequestId"
                         [customClass]="'btn btn-primary primary-invert-on-hover font-weight-bold px-9 py-4 dropdown-toggle btn-elevate-hover mr-2'"
                       ></create-or-edit-template-drop-down-button>

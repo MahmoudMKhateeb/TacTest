@@ -10,6 +10,7 @@ import {
   ShippingTypeEnum,
   RoundTripType,
   ShippingRequestRouteType,
+  ShippingRequestFlag,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
@@ -46,6 +47,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   ShippingTypeEnum = ShippingTypeEnum;
   RoundTripType = RoundTripType;
   ShippingRequestRouteType = ShippingRequestRouteType;
+  requestFlag = ShippingRequestFlag;
 
   constructor(
     injector: Injector,
