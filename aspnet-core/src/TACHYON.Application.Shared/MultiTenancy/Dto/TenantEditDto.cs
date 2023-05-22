@@ -43,5 +43,6 @@ namespace TACHYON.MultiTenancy.Dto
         public string MoiNumber { get; set; }
         public int? InsuranceCoverage { get; set; }
         public int? ValueOfGoods { get; set; }
+        public bool IsCarrier { get; set; }
     }
 }

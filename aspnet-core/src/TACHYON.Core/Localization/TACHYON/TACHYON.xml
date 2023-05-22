@@ -3382,5 +3382,8 @@
 	<text name="DedicatedShippingRequestSavedTemplate">Dedicated Shipping Request Templates</text>
 	<text name="ShippingRequestSavedTemplate">Normal Shipping Request Templates</text>
 	<text name="TripSavedTemplate">Trip Templates</text>
+    <text name="ValueOfGoods">Value of goods</text>
+    <text name="InsuranceCoverage">Insurance coverage</text>
+    
 	</texts>
 </localizationDictionary>

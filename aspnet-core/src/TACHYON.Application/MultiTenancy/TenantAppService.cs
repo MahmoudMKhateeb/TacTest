@@ -45,16 +45,18 @@ namespace TACHYON.MultiTenancy
         private readonly IRepository<County, int> _lookup_countryRepository;
         private readonly IRepository<City, int> _lookup_cityRepository;
         private readonly IBackgroundJobManager _jobManager;
+        private readonly IFeatureChecker _featureChecker;
 
 
         public TenantAppService(IRepository<County, int> lookup_countryRepository,
-            IRepository<City, int> lookup_cityRepository, IBackgroundJobManager jobManager)
+            IRepository<City, int> lookup_cityRepository, IBackgroundJobManager jobManager, IFeatureChecker featureChecker)
         {
             AppUrlService = NullAppUrlService.Instance;
             EventBus = NullEventBus.Instance;
             _lookup_countryRepository = lookup_countryRepository;
             _lookup_cityRepository = lookup_cityRepository;
             _jobManager = jobManager;
+            _featureChecker = featureChecker;
         }
 
         public async Task<PagedResultDto<TenantListDto>> GetTenants(GetTenantsInput input)
@@ -112,6 +114,8 @@ namespace TACHYON.MultiTenancy
         public async Task<TenantEditDto> GetTenantForEdit(EntityDto input)
         {
             var tenantEditDto = ObjectMapper.Map<TenantEditDto>(await TenantManager.GetByIdAsync(input.Id));
+            tenantEditDto.IsCarrier = (await _featureChecker.IsEnabledAsync(tenantEditDto.Id, AppFeatures.Carrier) &&
+              !await _featureChecker.IsEnabledAsync(tenantEditDto.Id, AppFeatures.CMS));
             tenantEditDto.ConnectionString = SimpleStringCipher.Instance.Decrypt(tenantEditDto.ConnectionString);
             return tenantEditDto;
         }
