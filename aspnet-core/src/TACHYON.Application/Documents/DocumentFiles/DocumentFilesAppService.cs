@@ -527,10 +527,10 @@ namespace TACHYON.Documents.DocumentFiles
 
         public async Task AcceptAsync(Guid id)
         {
-            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
 
             var documentFile = await _documentFileRepository.GetAll()
-                .Include(x => x.TenantFk)
+                //.Include(x => x.TenantFk)
                 .FirstOrDefaultAsync(x => x.Id == id);
             documentFile.IsAccepted = true;
             documentFile.IsRejected = false;
@@ -554,7 +554,7 @@ namespace TACHYON.Documents.DocumentFiles
 
         public async Task Reject(Guid id, string reason)
         {
-            DisableTenancyFiltersIfHost();
+            await DisableTenancyFiltersIfTachyonDealer();
 
             var documentFile = await _documentFileRepository.FirstOrDefaultAsync(id);
             if (documentFile == null)
