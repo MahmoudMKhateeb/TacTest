@@ -437,7 +437,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>(VAT 15 %) SAR
+                                  <Value>(VAT Amount 15 %) SAR
 قيمة الضريبة المضافة ر.س</Value>
                                   <Style>
                                     <FontFamily>Cairo SemiBold</FontFamily>
@@ -1126,7 +1126,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value> قيمة الضريبة المضافة (%</Value>
+                                  <Value> قيمة الضريبة (%</Value>
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>7pt</FontSize>

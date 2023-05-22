@@ -2219,7 +2219,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>(VAT) SAR
+                                  <Value>(VAT Amount) SAR
 </Value>
                                   <Style>
                                     <FontSize>7pt</FontSize>
@@ -2228,7 +2228,7 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>قيمة الضريبة المضافة ر.س</Value>
+                                  <Value>قيمة الضريبة ر.س</Value>
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2911,7 +2911,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -3581,7 +3580,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value> قيمة الضريبة المضافة   ر.س </Value>
+                                  <Value> قيمة الضريبة ر.س </Value>
                                   <Style>
                                     <FontFamily>Cairo</FontFamily>
                                     <FontSize>8pt</FontSize>
