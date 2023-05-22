@@ -675,7 +675,7 @@ namespace TACHYON.Invoices
             foreach (var trip in invoice.Trips.ToList())
             {
                 int VasCounter = 0;
-                Items.Add(new InvoiceItemDto
+                InvoiceItemDto dto = new InvoiceItemDto
                 {
                     Sequence = $"{Sequence}/{TotalItem}",
                     SubTotalAmount = trip.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
@@ -687,10 +687,6 @@ namespace TACHYON.Invoices
                      trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk?.DisplayName ?? trip.ShippingRequestTripFK.OriginFacilityFk.CityFk.DisplayName,
                     Destination = trip.ShippingRequestTripFK.DestinationFacilityFk.CityFk.DisplayName,
                     DateWork = trip.ShippingRequestTripFK.EndTripDate.HasValue ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.InvoiceFK.CreationTime.ToString("dd/MM/yyyy"),
-                    Remarks = (trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                    trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
-                    ? $"{trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId.GetEnumDescription()} - {trip.ShippingRequestTripFK.ShippingRequestFk.RoundTripType.GetEnumDescription()}"
-                    : "",
                     ContainerNumber = trip.ShippingRequestTripFK.ContainerNumber ?? "-",
                     //round trip is quantity in report
                     RoundTrip = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
@@ -698,7 +694,21 @@ namespace TACHYON.Invoices
                     trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements) ? trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops.ToString()
                     :L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops)
                     :"1",
-                }); 
+                };
+
+                if (trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId.IsIn(ShippingTypeEnum.ImportPortMovements , ShippingTypeEnum.ExportPortMovements))
+                {
+                    dto.Remarks =
+                        $"{trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId.GetEnumDescription()} - {trip.ShippingRequestTripFK.ShippingRequestFk.RoundTripType.GetEnumDescription()}";
+                }
+
+                if (!trip.ShippingRequestTripFK.RoundTrip.IsNullOrEmpty())
+                {
+                    dto.Remarks += trip.ShippingRequestTripFK.RoundTrip;
+                }
+
+
+                Items.Add(dto); 
                 Sequence++;
                 if (trip.ShippingRequestTripFK.ShippingRequestTripVases != null &&
                     trip.ShippingRequestTripFK.ShippingRequestTripVases.Count > 1)
