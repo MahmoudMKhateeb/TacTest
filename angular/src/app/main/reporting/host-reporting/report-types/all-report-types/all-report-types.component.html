@@ -44,11 +44,11 @@
               [fixed]="true"
               [alignment]="'center'"
             ></dxi-column>
-            <dxi-column dataField="reportType" caption="{{ l('reportType') }}"></dxi-column>
-            <dxi-column dataField="reportName" caption="{{ l('reportName') }}"></dxi-column>
-            <dxi-column dataField="creationDate" caption="{{ l('creationDate') }}"></dxi-column>
-            <dxi-column dataField="accessEdition" caption="{{ l('accessEdition') }}"></dxi-column>
-            <dxi-column [allowFiltering]="false" [width]="350" dataField="accessException" caption="{{ l('accessException') }}"></dxi-column>
+            <dxi-column dataField="reportType" caption="{{ l('ReportType') }}"></dxi-column>
+            <dxi-column dataField="reportName" caption="{{ l('ReportName') }}"></dxi-column>
+            <dxi-column dataField="creationDate" caption="{{ l('CreationDate') }}"></dxi-column>
+            <dxi-column dataField="accessEdition" caption="{{ l('AccessEdition') }}"></dxi-column>
+            <dxi-column [allowFiltering]="false" [width]="350" dataField="accessException" caption="{{ l('AccessException') }}"></dxi-column>
 
             <div *dxTemplate="let options of 'cellTemplateActions'">
               <div class="btn-group dropdown" dropdown container="body">

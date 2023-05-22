@@ -19,6 +19,26 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
   getMenu(): AppMenu {
     let menu = new AppMenu('MainMenu', 'MainMenu', [
       new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'Dashboards.svg', '/app/main/dashboard'),
+      // start of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
+      //TODO: Need Permission
+      new AppMenuItem(
+        'Reporting',
+        '',
+        'report.svg',
+        '',
+        [],
+        [
+          new AppMenuItem('CreateReport', '', '', '/app/main/reporting/generate-report'),
+          new AppMenuItem('MyReports', '', '', '/app/main/reporting/all-reports'),
+          new AppMenuItem('MyAutomatedReports', '', '', '/app/main/reporting/my-automated-reports'),
+        ]
+        // undefined,
+        // undefined,
+        // () => !this.isEnabled('App.TachyonDealer')
+      ),
+      //end of reporting
+      // ---------------------------------------------------------------------------------------------------------------------
       //  ---------------------------------------------------------------------------------------------------------------------
       // start of Operations
       new AppMenuItem(

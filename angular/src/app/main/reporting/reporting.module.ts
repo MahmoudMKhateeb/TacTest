@@ -28,10 +28,14 @@ import { DxDropDownBoxModule } from '@node_modules/devextreme-angular/ui/drop-do
 import { DxSchedulerModule } from '@node_modules/devextreme-angular/ui/scheduler';
 import { DxScrollViewModule } from '@node_modules/devextreme-angular/ui/scroll-view';
 import { DxTextAreaModule } from '@node_modules/devextreme-angular/ui/text-area';
-import { CreateReportTypeComponent } from '@app/main/reporting/report-types/create-report-type/create-report-type.component';
+import { CreateReportTypeComponent } from '@app/main/reporting/host-reporting/report-types/create-report-type/create-report-type.component';
 import { ReportingRouteModule } from '@app/main/reporting/reporting-route.module';
-import { AllReportTypesComponent } from '@app/main/reporting/report-types/all-report-types/all-report-types.component';
+import { AllReportTypesComponent } from '@app/main/reporting/host-reporting/report-types/all-report-types/all-report-types.component';
 import { DxReportDesignerModule } from '@node_modules/devexpress-reporting-angular';
+import { GenerateReportByCompanyComponent } from '@app/main/reporting/tenant-reports/generate-report-by-company/generate-report-by-company.component';
+import { AutomationSetupModalComponent } from '@app/main/reporting/tenant-reports/generate-report-by-company/automation-setup-modal/automation-setup-modal.component';
+import { TenantAllReportComponent } from '@app/main/reporting/tenant-reports/all-report/all-report.component';
+import { TenantMyAutomatedReportsComponent } from '@app/main/reporting/tenant-reports/my-automated-reports/my-automated-reports.component';
 
 const imports = [UtilsModule, AppCommonModule, CommonModule, FormsModule, ModalModule, BsDropdownModule];
 
@@ -59,7 +63,14 @@ const dxImports = [
 
 @NgModule({
   imports: [...imports, ...dxImports, ReportingRouteModule, DxReportDesignerModule],
-  declarations: [CreateReportTypeComponent, AllReportTypesComponent],
+  declarations: [
+    CreateReportTypeComponent,
+    AllReportTypesComponent,
+    GenerateReportByCompanyComponent,
+    AutomationSetupModalComponent,
+    TenantAllReportComponent,
+    TenantMyAutomatedReportsComponent,
+  ],
   providers: [],
 })
 export class ReportingModule {}

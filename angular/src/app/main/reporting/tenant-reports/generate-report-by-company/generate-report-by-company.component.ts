@@ -10,15 +10,24 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxReportDesignerComponent } from '@node_modules/devexpress-reporting-angular';
 import * as ko from '@node_modules/knockout';
 import { ajaxSetup } from '@node_modules/@devexpress/analytics-core/core/internal/ajaxSetup';
-import { API_BASE_URL } from '@shared/service-proxies/service-proxies';
-import { ActionId } from '@node_modules/devexpress-reporting/designer/actions/actionId';
+import {
+  API_BASE_URL,
+  CompanyType,
+  EditionListDto,
+  EditionServiceProxy,
+  PricePackageServiceProxy,
+  SelectItemDto,
+} from '@shared/service-proxies/service-proxies';
+import { finalize } from '@node_modules/rxjs/operators';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { AutomationSetupModalComponent } from '@app/main/reporting/tenant-reports/generate-report-by-company/automation-setup-modal/automation-setup-modal.component';
 
 @Component({
-  selector: 'app-create-report-type',
-  templateUrl: './create-report-type.component.html',
+  selector: 'app-generate-report-by-company',
+  templateUrl: './generate-report-by-company.component.html',
   encapsulation: ViewEncapsulation.None,
   styleUrls: [
-    './create-report-type.component.scss',
+    './generate-report-by-company.component.scss',
     '../../../../../../node_modules/jquery-ui/themes/base/all.css',
     '../../../../../../node_modules/devexpress-richedit/dist/dx.richedit.css',
     '../../../../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.common.css',
@@ -29,8 +38,9 @@ import { ActionId } from '@node_modules/devexpress-reporting/designer/actions/ac
   ],
   animations: [appModuleAnimation()],
 })
-export class CreateReportTypeComponent extends AppComponentBase implements OnInit, AfterViewInit, OnDestroy {
+export class GenerateReportByCompanyComponent extends AppComponentBase implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('wizard', { static: true }) el: ElementRef;
+  @ViewChild('automationSetupModal', { static: false }) automationSetupModal: AutomationSetupModalComponent;
   @ViewChild('step1FormGroup', { static: false }) step1FormGroup: DxValidationGroupComponent;
 
   @ViewChild('designer', { static: false }) designer: DxReportDesignerComponent;
@@ -69,6 +79,13 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
     editionType: null,
     excludingCompanies: null,
   };
+  step4Form = this.fb.group({
+    // isGeneratedAutomatically: [null, Validators.required],
+    // reportName: [null, Validators.required],
+  });
+  step4Model: any = {
+    isGeneratedAutomatically: false,
+  };
   // end of form groups and form models
 
   private wizard: KTWizard;
@@ -77,15 +94,21 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   allTypes: any[] = [];
 
   selectAttributesDataSource: any = {};
-  allCompanies: any[] = [];
-  allEditionTypes: any[] = [];
+  allCompanies: SelectItemDto[] = [];
+  allEditionTypes: EditionListDto[] = [];
+  allRoles: any[] = [];
+  allFormats: any[] = [];
+  allUsers: any[] = [];
 
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
     private fb: FormBuilder,
-    @Inject(API_BASE_URL) hostUrl: string
+    @Inject(API_BASE_URL) hostUrl: string,
+    private _editionService: EditionServiceProxy,
+    private _pricePackagesServiceProxy: PricePackageServiceProxy,
+    private enumService: EnumToArrayPipe
   ) {
     super(injector);
     ajaxSetup.ajaxSettings = {
@@ -243,5 +266,16 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
 
   open() {
     this.designer.bindingSender.open(this.reportUrl);
+  }
+
+  openGeneratedAutomaticallyModal() {
+    console.log('openGeneratedAutomaticallyModal', this.step4Model);
+    if (this.step4Model.isGeneratedAutomatically) {
+      this.automationSetupModal.show();
+    }
+  }
+
+  automationSetupModalSave($event: any) {
+    console.log('event', $event);
   }
 }

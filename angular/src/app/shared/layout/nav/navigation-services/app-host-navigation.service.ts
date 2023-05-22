@@ -55,15 +55,14 @@ export class AppHostNavigationService extends AppBaseNavigationService {
         '',
         [],
         [
-          new AppMenuItem('CreateReportType', 'Pages.ShippingRequestResoneAccidents', '', '/app/main/reporting/create-report-type'),
-          new AppMenuItem('AllReports', 'Pages.ShippingRequestTrips.Reject.Reason', '', '/app/main/reporting/report-types'),
-          new AppMenuItem('AccessSetup', 'Pages.ShippingRequestTrips.Reject.Reason', '', '/app/main/reporting/report-types'),
+          new AppMenuItem('CreateReportType', '', '', '/app/main/reporting/create-report-type'),
+          new AppMenuItem('AllReports', '', '', '/app/main/reporting/report-types'),
         ]
         // undefined,
         // undefined,
         // () => !this.isEnabled('App.TachyonDealer')
       ),
-      //end of report
+      //end of reporting
       // ---------------------------------------------------------------------------------------------------------------------
       //start of Invoices
       new AppMenuItem(

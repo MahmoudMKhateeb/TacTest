@@ -116,9 +116,10 @@
                           [dataSource]="allEditionTypes"
                           [searchEnabled]="true"
                           placeholder="{{ l('SelectEditionType') }}"
+                          displayExpr="displayName"
+                          valueExpr="id"
+                          (onSelectionChanged)="loadAllCompanies()"
                         >
-                          <!--                                                    displayExpr="displayName"-->
-                          <!--                                                    valueExpr="id"-->
                         </dx-select-box>
                         <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
                       </div>
@@ -131,9 +132,9 @@
                           [dataSource]="allCompanies"
                           [searchEnabled]="true"
                           placeholder="{{ l('SelectACompany') }}"
+                          displayExpr="displayName"
+                          valueExpr="id"
                         >
-                          <!--                                                    displayExpr="displayName"-->
-                          <!--                                                    valueExpr="id"-->
                         </dx-select-box>
                         <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
                       </div>

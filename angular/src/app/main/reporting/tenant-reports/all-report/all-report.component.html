@@ -1,0 +1,99 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'AllReport' | localize" [description]="'' | localize">
+      <div role="actions">
+        <!--        <button class="btn btn-primary btn-sm" (click)="goToCreateNewReportType()">-->
+        <!--          {{ 'CreateNewReportType' | localize }}-->
+        <!--        </button>-->
+        <button class="btn btn-primary btn-sm">
+          {{ 'Search' | localize }}
+        </button>
+      </div>
+    </sub-header>
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <dx-data-grid
+            id="allReportTypesDataSource"
+            [dataSource]="allReportsDataSource"
+            [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
+            [showColumnLines]="true"
+            [showRowLines]="false"
+            [showBorders]="true"
+            [rowAlternationEnabled]="true"
+            [wordWrapEnabled]="true"
+            [allowColumnReordering]="true"
+            [allowColumnResizing]="true"
+            [columnAutoWidth]="true"
+            keyExpr="id"
+          >
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
+            <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-paging [pageSize]="20"></dxo-paging>
+
+            <dxi-column
+              *ngIf="!isTachyonDealer"
+              cellTemplate="cellTemplateActions"
+              [allowFiltering]="false"
+              [allowSorting]="false"
+              [allowEditing]="false"
+              [editorOptions]="{ visible: false }"
+              [width]="120"
+              [fixed]="true"
+              [alignment]="'center'"
+            ></dxi-column>
+            <dxi-column dataField="reportType" caption="{{ l('ReportType') }}"></dxi-column>
+            <dxi-column dataField="reportName" caption="{{ l('ReportName') }}"></dxi-column>
+            <dxi-column dataField="edition" caption="{{ l('Edition') }}"></dxi-column>
+            <dxi-column dataField="generationDate" caption="{{ l('GenerationDate') }}"></dxi-column>
+            <dxi-column alignment="center" cellTemplate="cellTemplateReportFile" dataField="reportFile" caption="{{ l('ReportFile') }}"></dxi-column>
+            <dxi-column dataField="generationType" caption="{{ l('GenerationType') }}"></dxi-column>
+
+            <div *dxTemplate="let options of 'cellTemplateActions'">
+              <div class="btn-group dropdown" dropdown container="body">
+                <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                  <i class="fa fa-cog"></i><span class="caret"></span>
+                  {{ 'Actions' | localize }}
+                </button>
+                <!--                                <a href="javascript:;" class="btn btn-sm btn-primary mr-2" dropdownToggle>-->
+                <!--                                    {{'Actions' | localize}}-->
+                <!--                                </a>-->
+                <ul class="dropdown-menu z-index-1000" *dropdownMenu>
+                  <li>
+                    <a href="javascript:;" class="dropdown-item" (click)="viewReport(options.data.id)">
+                      {{ 'View' | localize }}
+                    </a>
+                  </li>
+                  <li>
+                    <a href="javascript:;" class="dropdown-item" (click)="editReport(options.data.id)">
+                      {{ 'Edit' | localize }}
+                    </a>
+                  </li>
+                  <li>
+                    <a href="javascript:;" class="dropdown-item" (click)="deleteReport(options.data.id)">
+                      {{ 'Delete' | localize }}
+                    </a>
+                  </li>
+                  <li>
+                    <a href="javascript:;" class="dropdown-item" (click)="cloneReport(options.data.id)">
+                      {{ 'Clone' | localize }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div *dxTemplate="let options of 'cellTemplateReportFile'">
+              <div class="btn-group dropdown" dropdown container="body">
+                <button class="icon btn btn-sm btn-outline-primary" (click)="downloadReport(options.data)">
+                  <i class="fa fa-download"></i>
+                </button>
+              </div>
+            </div>
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
