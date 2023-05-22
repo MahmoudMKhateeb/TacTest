@@ -179,6 +179,7 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
   AllActorsShippers: ActorSelectItemDto[];
   AllActorsCarriers: ActorSelectItemDto[];
   ShippingTypeEnum = ShippingTypeEnum;
+  private destinationCitiesFromTemplate: ShippingRequestDestinationCitiesDto[];
 
   constructor(
     injector: Injector,
@@ -417,12 +418,13 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
       item.numberOfTrips = 0;
       return item;
     });
+
+    this.updateRoutingQueries(this.activeShippingRequestId, 2);
     this._dedicatedShippingRequestsServiceProxy
       .editStep2(this.step2Dto)
       .pipe(
         finalize(() => {
           this.saving = false;
-          this.updateRoutingQueries(this.activeShippingRequestId, 2);
         })
       )
       .subscribe((res) => {
@@ -582,12 +584,12 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
       )
       .subscribe((res) => {
         this.destinationCities = [];
-        this.loadDestinationCities(res);
         if (this.selectedDestCitiesForEdit.length > 0) {
           this.step1Dto.shippingRequestDestinationCities = [...this.selectedDestCitiesForEdit];
         } else {
           this.step1Dto.shippingRequestDestinationCities = [];
         }
+        this.loadDestinationCities(res);
       });
   }
 
@@ -599,6 +601,17 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
         item.cityName = element.displayName;
         this.destinationCities.push(item);
       });
+
+      if (isNotNullOrUndefined(this.destinationCitiesFromTemplate)) {
+        this.step1Dto.shippingRequestDestinationCities = this.destinationCitiesFromTemplate.map((item) => {
+          let dto = new ShippingRequestDestinationCitiesDto();
+          dto.cityId = Number(item.cityId);
+          dto.cityName = item.cityName;
+          dto.id = item.id;
+          dto.shippingRequestId = item.shippingRequestId;
+          return dto;
+        });
+      }
     }
   }
 
@@ -800,7 +813,6 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
             this.destination = { lat: Lat, lng: Lng };
           }
         } else {
-          console.log('Something got wrong ' + status);
         }
       }
     );
@@ -848,12 +860,18 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
   private parseJsonToDtoData(savedEntityJsonString: string): void {
     let pharsedJson = JSON.parse(savedEntityJsonString);
     this.step1Dto.init(pharsedJson);
-    this.step1Form.get('shippingRequestType').setValue(this.step1Dto.isBid ? 'bidding' : '');
-    this.step1Form.get('shippingRequestType').setValue(this.step1Dto.isTachyonDeal ? 'tachyondeal' : '');
-    this.step1Form.get('shippingRequestType').setValue(this.step1Dto.isDirectRequest ? 'directrequest' : '');
+    if (this.step1Dto.isBid) {
+      this.step1Form.get('shippingRequestType').setValue('bidding');
+    } else if (this.step1Dto.isTachyonDeal) {
+      this.step1Form.get('shippingRequestType').setValue('tachyondeal');
+    } else if (this.step1Dto.isDirectRequest) {
+      this.step1Form.get('shippingRequestType').setValue('directrequest');
+    }
+
     this.step1Dto.rentalEndDate = this.step1Dto.rentalStartDate = this.step1Dto.bidStartDate = this.step1Dto.bidEndDate = null; //empty Shipping Request Dates
-    this.originCountry = pharsedJson.originCountryId;
+    this.originCountry = pharsedJson.countryId;
     this.destinationCountry = pharsedJson.destinationCountryId;
+    this.destinationCitiesFromTemplate = pharsedJson.shippingRequestDestinationCities;
     this.loadCitiesByCountryId(this.originCountry, 'source');
     this.loadCitiesByCountryId(this.destinationCountry, 'destination');
     this.step2Dto.init(pharsedJson);
@@ -961,6 +979,9 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
   }
 
   shippingTypeChanged() {
+    if (isNotNullOrUndefined(this.destinationCitiesFromTemplate) && this.destinationCitiesFromTemplate.length > 0) {
+      return;
+    }
     this.step1Dto.shippingRequestDestinationCities = [];
     this.validateShippingRequestType();
   }
@@ -985,5 +1006,9 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
         this.step1Dto.carrierTenantIdForDirectRequest = null;
       }
     }
+  }
+
+  updateRoute() {
+    this.updateRoutingQueries(this.activeShippingRequestId, this.stepToCompleteFrom - 1);
   }
 }

@@ -9,6 +9,7 @@ using Abp.Linq.Extensions;
 using Abp.Runtime.Validation;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
+using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
 using RestSharp.Extensions;
 using System;
@@ -17,6 +18,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Features;
 
@@ -87,7 +89,7 @@ namespace TACHYON.EntityTemplates
             return ObjectMapper.Map<EntityTemplateForViewDto>(template);
         }
 
-        public async Task<List<SelectItemDto>> GetAllForDropdown(GetAllTemplateForDropdownInputDto input)
+        public async Task<List<TemplateSelectItemDto>> GetAllForDropdown(GetAllTemplateForDropdownInputDto input)
         {
             var isTachyonDealer = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
             
@@ -100,9 +102,10 @@ namespace TACHYON.EntityTemplates
 
             switch (input.Type)
             {
+                case SavedEntityType.DedicatedShippingRequestTemplate:
                 case SavedEntityType.ShippingRequestTemplate:
                     return await templates
-                        .Select(x => new SelectItemDto() {DisplayName = x.TemplateName, Id = x.Id.ToString()})
+                        .Select(x => new TemplateSelectItemDto() {DisplayName = x.TemplateName, Id = x.Id.ToString(),Type = x.EntityType})
                         .ToListAsync();
                 case SavedEntityType.TripTemplate:
 
@@ -111,13 +114,42 @@ namespace TACHYON.EntityTemplates
                         return await _templateManager.FilterTripTemplatesByParentEntity(tripTemplates, input.ParentEntityId);
                     
                     return await templates
-                        .Select(x => new SelectItemDto() {DisplayName = x.TemplateName, Id = x.Id.ToString()})
+                        .Select(x => new TemplateSelectItemDto() {DisplayName = x.TemplateName, Id = x.Id.ToString(),Type = x.EntityType})
                         .ToListAsync();
                 default:
                     throw new UserFriendlyException(L("NotSupportedEntityType"));
             }
 
            
+        }
+
+        public async Task<List<TemplateSelectItemGroupDto>> GetShippingRequestTemplatesForDropdown()
+        {
+            var isTachyonDealer = await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer);
+
+            if (isTachyonDealer)
+                CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant);
+
+            var templates = await _templateRepository.GetAll().AsNoTracking()
+                .Where(x => x.EntityType == SavedEntityType.ShippingRequestTemplate ||
+                            x.EntityType == SavedEntityType.DedicatedShippingRequestTemplate)
+                .WhereIf(isTachyonDealer,
+                    x => x.CreatorTenantId.HasValue && x.CreatorTenantId.Value == AbpSession.TenantId)
+                .Select(i => new TemplateSelectItemDto()
+                {
+                    DisplayName = i.TemplateName, Id = i.Id.ToString(), Type = i.EntityType
+                }).ToListAsync();
+
+
+            var groupedTemplates = templates.GroupBy(x => x.Type)
+                .Select(x =>
+                    new TemplateSelectItemGroupDto()
+                    {
+                        TypeTitle = LocalizationSource.GetString(x.Key.GetEnumDescription()), Templates = x.ToList()
+                    })
+                .ToList();
+
+            return groupedTemplates;
         }
 
 

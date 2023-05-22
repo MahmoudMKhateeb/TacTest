@@ -188,6 +188,7 @@ using Abp.Timing;
 using TACHYON.DedidcatedDynamicActorInvoices.Dtos;
 using TACHYON.DedicatedDynamicActorInvoices;
 using TACHYON.DedicatedDynamicActorInvoices.DedicatedDynamicActorInvoiceItems;
+using TACHYON.EntityTemplates;
 
 namespace TACHYON
 {
@@ -502,6 +503,10 @@ namespace TACHYON
                 .AfterMap(AddOrUpdateShippingRequest);
 
             configuration.CreateMap<ShippingRequest, EditDedicatedStep2Dto>()
+                .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
+            
+            configuration.CreateMap<ShippingRequest, DedicatedShippingRequestTemplateDto>()
+                .ForMember(dest => dest.CountryId, opt=> opt.MapFrom(src=> src.ShippingRequestDestinationCities.First().CityFk.CountyId))
                 .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
 
             configuration.CreateMap<ShippingRequest, EditShippingRequestStep4Dto>()
