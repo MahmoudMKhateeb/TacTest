@@ -1,12 +1,10 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, Injector, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, Injector, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import KTWizard from '@metronic/common/js/components/wizard';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { DxValidationGroupComponent } from '@node_modules/devextreme-angular/ui/validation-group';
-import CustomStore from '@node_modules/devextreme/data/custom_store';
-import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DxReportDesignerComponent } from '@node_modules/devexpress-reporting-angular';
 import * as ko from '@node_modules/knockout';
 import { ajaxSetup } from '@node_modules/@devexpress/analytics-core/core/internal/ajaxSetup';
@@ -18,7 +16,6 @@ import {
   PricePackageServiceProxy,
   SelectItemDto,
 } from '@shared/service-proxies/service-proxies';
-import { finalize } from '@node_modules/rxjs/operators';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
@@ -68,12 +65,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
     // reportType: [null, Validators.required],
     // reportName: [null, Validators.required],
   });
-  step2Model: any[] = [];
-  step3Form = this.fb.group({
-    // reportType: [null, Validators.required],
-    // reportName: [null, Validators.required],
-  });
-  step3Model: any = {
+  step2Model: any = {
     editionType: null,
     excludingCompanies: null,
   };
@@ -139,7 +131,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
             this.createOrEditStep1();
-            this.getAttributes();
+            this.getEditionTypes();
             wizardObj.goNext();
           }
           break;
@@ -151,23 +143,11 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
             this.createOrEditStep2();
-            this.getEditionTypes();
             wizardObj.goNext();
           }
           break;
         }
         case 3: {
-          if (this.step3Form.invalid) {
-            wizardObj.stop();
-            this.step3Form.markAllAsTouched();
-            this.notify.error(this.l('PleaseCompleteMissingFields'));
-          } else {
-            this.createOrEditStep3();
-            wizardObj.goNext();
-          }
-          break;
-        }
-        case 4: {
           break;
         }
         default: {
@@ -195,48 +175,6 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
    */
   private createOrEditStep2() {
     this.updateRoutingQueries(2);
-  }
-
-  /**
-   * send api call to save step3
-   * @private
-   */
-  private createOrEditStep3() {
-    this.updateRoutingQueries(3);
-  }
-
-  /**
-   * send api to get all report type attributes
-   */
-  getAttributes() {
-    let self = this;
-    this.selectAttributesDataSource = {};
-    this.selectAttributesDataSource.store = new CustomStore({
-      key: 'id',
-      load(loadOptions: LoadOptions) {
-        return new Promise((resolve) => {
-          resolve([]);
-        }).then((res) => {
-          return {
-            data: res,
-            totalCount: 0,
-          };
-        });
-        /*self._unitOfMeasuresServiceProxy
-                    .getAll(JSON.stringify(loadOptions))
-                    .toPromise()
-                    .then((response) => {
-                        return {
-                            data: response.data,
-                            totalCount: response.totalCount,
-                        };
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        throw new Error('Data Loading Error');
-                    });*/
-      },
-    });
   }
 
   /**
@@ -278,7 +216,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
    */
   loadAllCompanies(): void {
     // there is a difference between company type in front end  & backend
-    this._pricePackagesServiceProxy.getCompanies(this.step3Model.editionType).subscribe((res) => {
+    this._pricePackagesServiceProxy.getCompanies(this.step2Model.editionType).subscribe((res) => {
       this.allCompanies = res.map((item) => {
         (item.id as any) = Number(item.id);
         return item;
