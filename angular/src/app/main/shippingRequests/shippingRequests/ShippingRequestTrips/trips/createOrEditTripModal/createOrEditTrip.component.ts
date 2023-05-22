@@ -170,7 +170,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     if (this._TripService.CreateOrEditShippingRequestTripDto) {
       this._TripService.CreateOrEditShippingRequestTripDto.shippingRequestId = this.shippingRequest.id;
     }
-    return JSON.stringify(this._TripService.CreateOrEditShippingRequestTripDto);
+    let tripDto = this._TripService.CreateOrEditShippingRequestTripDto;
+    tripDto.shippingTypeId ??= this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId;
+    tripDto.originCityId ??= this._TripService?.GetShippingRequestForViewOutput?.originalCityId;
+    return JSON.stringify(tripDto);
   }
 
   callbacks: any[] = [];
