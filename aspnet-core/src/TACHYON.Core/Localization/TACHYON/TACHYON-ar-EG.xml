@@ -3091,6 +3091,9 @@
 	<text name="DirectShipmentTrackingPermission">تتبع الشحنات المباشرة</text>
 	<text name="DirectShipmentTracking">تتبع الشحنات المباشرة</text>
     <text name="RequiredReceiverCodeForInvoice">هل رمز المستلم مطلوب</text>
+    <text name="experienceFacility">كيف كانت تجربة الشحن للمنشأة؟</text>
+    <text name="clickToRateTheShippingExperiencewith">انقر لتقييم تجربة الشحن مع</text>
+    <text name="clickToRateTheShippingExperience">انقر لقييم تجربة الشحن</text>
 		
 	</texts>
 </localizationDictionary>
