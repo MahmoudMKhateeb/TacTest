@@ -46,12 +46,14 @@
 
           <div class="col-6 mb-3">
             <h6>{{ l('CreationTime') }}:</h6>
-            {{ item?.creationTime }}
+            {{ item?.creationTime | date: 'dd/MM/yyyy hh:mm a' }}
           </div>
           <div *ngIf="item?.expirationDate" class="col-6 mb-3">
             <h6>{{ l('ExpirationDate') }}:</h6>
-            <span *ngIf="_moment(item.expirationDate) <= todayMoment" class="text-warning"> {{ item.expirationDate | date }}</span>
-            <span *ngIf="_moment(item.expirationDate) > todayMoment"> {{ item.expirationDate | date }}</span>
+            <span *ngIf="_moment(item.expirationDate) <= todayMoment" class="text-warning">
+              {{ item.expirationDate | date: 'dd/MM/yyyy hh:mm a' }}</span
+            >
+            <span *ngIf="_moment(item.expirationDate) > todayMoment"> {{ item.expirationDate | date: 'dd/MM/yyyy hh:mm a' }}</span>
             <!--            {{ item?.expirationDate | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}-->
           </div>
           <div class="col-6 mb-3">
