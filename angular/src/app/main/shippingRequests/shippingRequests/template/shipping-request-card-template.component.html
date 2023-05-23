@@ -60,7 +60,13 @@
             </li>
           </ul>
         </div>
-        <button (click)="showAsTable()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
+        <button
+          *ngIf="Channel != PriceOfferChannelEnum.DirectRequest && Channel != PriceOfferChannelEnum.MarketPlace"
+          (click)="showAsTable()"
+          class="btn btn-dark"
+        >
+          <i class="fas fa-table"></i> {{ l('ShowAsTable') }}
+        </button>
 
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
@@ -90,8 +96,17 @@
           </ul>
         </div>
 
-        <button (click)="showAsTable()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
+        <button
+          *ngIf="Channel != PriceOfferChannelEnum.DirectRequest && Channel != PriceOfferChannelEnum.MarketPlace"
+          (click)="showAsTable()"
+          class="btn btn-dark"
+        >
+          <i class="fas fa-table"></i> {{ l('ShowAsTable') }}
+        </button>
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+      </div>
+      <div role="actions" *ngIf="!appSession.tenantId && Channel != PriceOfferChannelEnum.MarketPlace">
+        <button (click)="showAsTable()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
       </div>
     </sub-header>
     <!--end::Subheader-->

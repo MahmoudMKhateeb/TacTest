@@ -44,7 +44,18 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
             () => this.isEnabled('App.Shipper')
           ),
 
-          new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem(
+            'MyShippingRequests',
+            'Pages.ShippingRequests',
+            '',
+            '/app/main/shippingRequests/shippingRequests',
+            undefined,
+            undefined,
+            undefined,
+            {
+              showType: 1,
+            }
+          ),
           new AppMenuItem(
             'SavedTemplates',
             'Pages.EntityTemplate',
@@ -56,8 +67,18 @@ export class AppShipperNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.Shipper') && this.isEnabled('App.SaveTemplateFeature')
           ),
-          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, undefined, () =>
-            this.isEnabled('App.Shipper')
+          new AppMenuItem(
+            'ShipmentTracking',
+            'Pages',
+            '',
+            '/app/main/tracking/shipmentTracking',
+            undefined,
+            undefined,
+            undefined,
+            {
+              showType: 1,
+            },
+            () => this.isEnabled('App.Shipper')
           ),
           // TODO this Hole Component need To be removed Later
         ],
