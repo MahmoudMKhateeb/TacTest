@@ -35,10 +35,12 @@ import { TripAccidentResolveModalComponent } from '@app/main/shippingRequests/sh
 import { TrackingForceDeliverTripComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-force-deliver-trip/tracking-force-deliver-trip.component';
 import { DxDataGridModule } from '@node_modules/devextreme-angular/ui/data-grid';
 import { DxCheckBoxModule } from '@node_modules/devextreme-angular/ui/check-box';
+import { DxPopoverModule } from '@node_modules/devextreme-angular/ui/popover';
 import { CustomMarkerComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-marker/custom-marker.component';
 import { CustomTimelineComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-timeline/custom-timeline.component';
 import { UploadAdditionalDocumentsComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/upload-additional-documents/upload-additional-documents.component';
 import { TrackingTableViewComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-table-view/tracking-table-view.component';
+import { ViewForceDeliverTripsFromExcelModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-force-deliver-trip/view-force-deliver-trips-from-excel-modal/view-force-deliver-trips-from-excel-modal.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,7 @@ import { TrackingTableViewComponent } from '@app/main/shippingRequests/shippingR
     AddAccidentCommentModalComponent,
     TripAccidentResolveModalComponent,
     TrackingForceDeliverTripComponent,
+    ViewForceDeliverTripsFromExcelModalComponent,
     CustomMarkerComponent,
     CustomTimelineComponent,
     UploadAdditionalDocumentsComponent,
@@ -83,6 +86,7 @@ import { TrackingTableViewComponent } from '@app/main/shippingRequests/shippingR
     CascadeSelectModule,
     DxDataGridModule,
     DxCheckBoxModule,
+    DxPopoverModule,
   ],
   exports: [
     CreateOrEditTripAccidentModalComponent,

@@ -13,7 +13,9 @@
       <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="save()">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span></span>
+            <span>
+              <span>{{ 'BulkDeliverTrips' | localize }}</span>
+            </span>
           </h4>
           <button type="button" class="close" (click)="close()" style="position: relative; z-index: 99999" aria-label="Close">
             <span aria-hidden="false">&times;</span>
@@ -30,7 +32,7 @@
               maxFileSize="10000000"
               accept=".xlsx"
               (uploadHandler)="upload($event)"
-              (onError)="onUploadError()"
+              (onError)="onUploadError($event)"
               chooseLabel="{{ 'ImportFile' | localize }}"
               uploadLabel="{{ 'Upload' | localize }}"
               cancelLabel="{{ 'Cancel' | localize }}"
@@ -44,3 +46,9 @@
     </div>
   </div>
 </div>
+
+<app-view-force-deliver-trips-from-excel-modal
+  #viewForceDeliverTripsFromExcelModal
+  [tripsFromExcel]="tripsFromExcel"
+  (modalSave)="onViewModalSave()"
+></app-view-force-deliver-trips-from-excel-modal>
