@@ -72,13 +72,16 @@ namespace TACHYON.Shipping.Trips.Importing
 
 
                     var date = currentCell.StringCellValue;
+
+                    BindTransactionDates(point, i, date);
+
                     if (date.IsNullOrEmpty() || date.IsNullOrWhiteSpace()) break;
                     var isDateValid = DateTime.TryParseExact(date.Trim(), "dd/MM/yyyy - HH:mm",
                         CultureInfo.CurrentUICulture, DateTimeStyles.None, out DateTime parsedDate);
                     if (!isDateValid)
                     {
                         var dateLabel = fileDates[i - 1];
-                        exceptionMessage.Append(_localizationSource.GetString("NotValidDateFormatMsg", dateLabel) +"; ");
+                        exceptionMessage.Append(_localizationSource.GetString("NotValidDateFormatMsg", dateLabel) + "; ");
                     }
                     else
                     {
@@ -101,6 +104,40 @@ namespace TACHYON.Shipping.Trips.Importing
 
             return point;
         }
-        
+
+        private static void BindTransactionDates(ImportTripTransactionFromExcelDto point, int i, string date)
+        {
+            switch (i)
+            {
+                case 1:
+                    point.StartMovingToLoadingLocation = date;
+                    break;
+                case 2:
+                    point.ArriveToLoadingLocation = date;
+                    break;
+                case 3:
+                    point.StartLoading = date;
+                    break;
+                case 4:
+                    point.FinishLoading = date;
+                    break;
+                case 5:
+                    point.StartMovingToOffloadingLocation = date;
+                    break;
+                case 6:
+                    point.ArriveToOffloadingLocation = date;
+                    break;
+                case 7:
+                    point.StartOffloading = date;
+                    break;
+                case 8:
+                    point.FinishOffLoading = date;
+                    break;
+                case 9:
+                    point.RecieverConfirmed = date;
+                    break;
+
+            }
+        }
     }
 }
