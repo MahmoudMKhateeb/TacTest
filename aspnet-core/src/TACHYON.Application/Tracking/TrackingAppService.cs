@@ -241,6 +241,7 @@ namespace TACHYON.Tracking
                 .Where(x => input.TrackingMode == ShipmentTrackingMode.Mixed ||
                             (input.TrackingMode == ShipmentTrackingMode.NormalShipment && x.ShippingRequestId.HasValue) ||
                             (input.TrackingMode == ShipmentTrackingMode.DirectShipment && !x.ShippingRequestId.HasValue))
+                .OrderByDescending(x=>x.Id)
                 .ProjectTo<TrackingListDto>(AutoMapperConfigurationProvider).AsNoTracking();
 
             var result = query.ToList();
