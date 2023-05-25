@@ -3,7 +3,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import KTWizard from '@metronic/common/js/components/wizard';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { DxValidationGroupComponent } from '@node_modules/devextreme-angular/ui/validation-group';
 import { DxReportDesignerComponent } from '@node_modules/devexpress-reporting-angular';
 import * as ko from '@node_modules/knockout';
@@ -40,6 +40,7 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
 export class CreateReportTypeComponent extends AppComponentBase implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('wizard', { static: true }) el: ElementRef;
   @ViewChild('step1FormGroup', { static: false }) step1FormGroup: DxValidationGroupComponent;
+  @ViewChild('step2FormGroup', { static: false }) step2FormGroup: DxValidationGroupComponent;
 
   @ViewChild('designer', { static: false }) designer: DxReportDesignerComponent;
 
@@ -57,13 +58,13 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
 
   // start of form groups and form models
   step1Form = this.fb.group({
-    // reportType: [null, Validators.required],
-    // reportName: [null, Validators.required],
+    reportType: [null, Validators.required],
+    reportName: [null, Validators.required],
   });
 
   step2Form = this.fb.group({
-    // reportType: [null, Validators.required],
-    // reportName: [null, Validators.required],
+    editionType: [null, Validators.required],
+    excludingCompanies: [null, Validators.required],
   });
   // end of form groups and form models
 
@@ -74,6 +75,30 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   allCompanies: SelectItemDto[] = [];
   allEditionTypes: EditionListDto[] = [];
   reportDefinitionDto: CreateOrEditReportDefinitionDto;
+
+  isEditionTypeInvalid: boolean;
+  editionTypeCallbacks: any[] = [];
+  editionTypeAdapterConfig = {
+    getValue: () => {
+      return this.reportDefinitionDto?.grantedEditionIds?.length > 0;
+    },
+    applyValidationResults: (e) => {
+      this.isEditionTypeInvalid = !e.isValid;
+    },
+    validationRequestsCallbacks: this.editionTypeCallbacks,
+  };
+
+  isExcludingCompaniesInvalid: boolean;
+  excludingCompaniesCallbacks: any[] = [];
+  excludingCompaniesAdapterConfig = {
+    getValue: () => {
+      return this.reportDefinitionDto?.excludedTenantIds?.length > 0;
+    },
+    applyValidationResults: (e) => {
+      this.isExcludingCompaniesInvalid = !e.isValid;
+    },
+    validationRequestsCallbacks: this.excludingCompaniesCallbacks,
+  };
 
   constructor(
     injector: Injector,
@@ -96,6 +121,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
 
   ngOnInit(): void {
     this.reportDefinitionDto = new CreateOrEditReportDefinitionDto();
+    console.log('this.reportDefinitionDto', this.reportDefinitionDto);
     this.reportUrl = '';
   }
 
@@ -115,11 +141,16 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
    * @private
    */
   private watchForWizardNextBtnOnClick() {
+    this.wizard.on('afterPrev', (wizardObj) => {
+      console.log('afterPrev', wizardObj);
+      this.updateRoutingQueries(this.wizard.getStep());
+    });
     this.wizard.on('beforeNext', (wizardObj) => {
+      console.log('beforeNext');
       switch (this.wizard.getStep()) {
         case 1: {
-          // document.getElementById('step1FormGroupButton').click();
-          // this.step1FormGroup.instance.validate();
+          document.getElementById('step1FormGroupButton').click();
+          this.step1FormGroup.instance.validate();
           if (this.step1Form.invalid) {
             wizardObj.stop();
             this.step1Form.markAllAsTouched();
@@ -132,12 +163,14 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
           break;
         }
         case 2: {
-          this.updateReportUrl();
+          document.getElementById('step2FormGroupButton').click();
+          this.step2FormGroup.instance.validate();
           if (this.step2Form.invalid) {
             wizardObj.stop();
             this.step2Form.markAllAsTouched();
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
+            this.updateReportUrl();
             this.createOrEditStep2();
             wizardObj.goNext();
           }
@@ -224,7 +257,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
    */
   loadAllCompanies(): void {
     // there is a difference between company type in front end  & backend
-
+    this.revalidateEditionType();
     if (isNotNullOrUndefined(this.reportDefinitionDto.grantedEditionIds)) {
       const selectedEditionIds = (this.reportDefinitionDto.grantedEditionIds as any[]).map((x) => x.id);
 
@@ -247,5 +280,21 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
         this.notify.error(this.l('ReportUrlNotFound'));
         break;
     }
+  }
+
+  validateGroup(params) {
+    console.log('params', params);
+    params.validationGroup.validate();
+  }
+
+  revalidateEditionType() {
+    this.editionTypeCallbacks.forEach((func) => {
+      func();
+    });
+  }
+  revalidateExcludingCompanies() {
+    this.excludingCompaniesCallbacks.forEach((func) => {
+      func();
+    });
   }
 }

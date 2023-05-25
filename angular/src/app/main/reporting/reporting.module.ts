@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { UtilsModule } from '@shared/utils/utils.module';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 // import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -39,7 +39,17 @@ import { TenantMyAutomatedReportsComponent } from '@app/main/reporting/tenant-re
 import { DxListModule } from '@node_modules/devextreme-angular';
 import { MultiSelectModule } from '@node_modules/primeng/multiselect';
 
-const imports = [UtilsModule, AppCommonModule, CommonModule, FormsModule, ModalModule, BsDropdownModule];
+const imports = [
+  UtilsModule,
+  AppCommonModule,
+  CommonModule,
+  FormsModule,
+  ModalModule,
+  BsDropdownModule,
+  ReportingRouteModule,
+  MultiSelectModule,
+  ReactiveFormsModule,
+];
 
 const dxImports = [
   DxDataGridModule,
@@ -61,10 +71,12 @@ const dxImports = [
   DxSchedulerModule,
   DxScrollViewModule,
   DxTextAreaModule,
+  DxReportDesignerModule,
+  DxListModule,
 ];
 
 @NgModule({
-  imports: [...imports, ...dxImports, ReportingRouteModule, DxReportDesignerModule, DxListModule, MultiSelectModule],
+  imports: [...imports, ...dxImports],
   declarations: [
     CreateReportTypeComponent,
     AllReportTypesComponent,

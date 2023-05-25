@@ -43,134 +43,204 @@
             <div class="row justify-content-center py-10 px-8 py-lg-12 px-lg-10">
               <div class="col-xl-12" [ngClass]="{ 'col-xxl-7': activeStep !== 2, 'col-xxl-10': activeStep === 2 }">
                 <!--begin: Wizard Form-->
-                <form class="form fv-plugins-bootstrap fv-plugins-framework" id="kt_form">
+                <form class="form fv-plugins-bootstrap fv-plugins-framework" id="kt_form" [formGroup]="step1Form">
                   <!--begin: Wizard Step 1-->
-                  <div class="pb-5" data-wizard-type="step-content" data-wizard-state="current">
-                    <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportTypeSetup' | localize }}</h4>
-                    <div class="d-flex">
-                      <div class="form-group w-50">
-                        <label>{{ 'ReportType' | localize }}</label>
-                        <dx-select-box
-                          id="type"
-                          name="type"
-                          [(value)]="reportDefinitionDto.type"
-                          [dataSource]="allTypes"
-                          [searchEnabled]="true"
-                          displayExpr="value"
-                          valueExpr="key"
-                          placeholder="{{ l('SelectType') }}"
-                        >
-                        </dx-select-box>
-                        <span class="form-text text-muted">{{ 'PleaseSelectType' | localize }}</span>
-                      </div>
-                      <div class="form-group w-50 ml-4">
-                        <label>{{ 'ReportName' | localize }}</label>
-                        <dx-text-box
-                          id="reportName"
-                          name="reportName"
-                          [(value)]="reportDefinitionDto.displayName"
-                          placeholder="{{ l('EnterReportName') }}"
-                        >
-                        </dx-text-box>
-                        <span class="form-text text-muted">{{ 'PleaseEnterReportName' | localize }}</span>
+                  <dx-validation-group #step1FormGroup>
+                    <div class="pb-5" data-wizard-type="step-content" data-wizard-state="current">
+                      <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportTypeSetup' | localize }}</h4>
+                      <div class="d-flex">
+                        <div class="form-group w-50">
+                          <label>{{ 'ReportType' | localize }}</label>
+                          <dx-select-box
+                            id="type"
+                            name="type"
+                            formControlName="reportType"
+                            [(value)]="reportDefinitionDto.type"
+                            [dataSource]="allTypes"
+                            [searchEnabled]="true"
+                            displayExpr="value"
+                            valueExpr="key"
+                            placeholder="{{ l('SelectType') }}"
+                            required
+                          >
+                            <dx-validator [validationGroup]="'step1FormGroup'">
+                              <dxi-validation-rule
+                                type="required"
+                                message="{{ 'ReportType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                              ></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-select-box>
+                          <span class="form-text text-muted">{{ 'PleaseSelectType' | localize }}</span>
+                        </div>
+                        <div class="form-group w-50 ml-4">
+                          <label>{{ 'ReportName' | localize }}</label>
+                          <dx-text-box
+                            id="reportName"
+                            name="reportName"
+                            formControlName="reportName"
+                            [(value)]="reportDefinitionDto.displayName"
+                            placeholder="{{ l('EnterReportName') }}"
+                            required
+                          >
+                            <dx-validator [validationGroup]="'step1FormGroup'">
+                              <dxi-validation-rule
+                                type="required"
+                                message="{{ 'ReportName' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                              ></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                          <span class="form-text text-muted">{{ 'PleaseEnterReportName' | localize }}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                    <div class="row pt-4">
+                      <div class="col-12">
+                        <dx-validation-summary validationGroup="step1FormGroup" id="step1-form-Group"></dx-validation-summary>
+                      </div>
+                    </div>
+                    <dx-button
+                      class="d-none"
+                      text="Validate"
+                      id="step1FormGroupButton"
+                      [validationGroup]="'step1FormGroup'"
+                      (onClick)="validateGroup($event)"
+                    >
+                    </dx-button>
+                  </dx-validation-group>
                   <!--end: Wizard Step 1-->
-
-                  <!--begin: Wizard Step 2-->
-                  <div class="pb-5" data-wizard-type="step-content">
-                    <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportAccessSetup' | localize }}</h4>
-                    <div class="d-flex">
-                      <div class="form-group w-50">
-                        <label>{{ 'EditionType' | localize }}</label>
-                        <p-multiSelect
-                          #editionType="ngModel"
-                          dropdownIcon="fa fa-caret-down"
-                          name="editionType"
-                          [options]="allEditionTypes"
-                          [(ngModel)]="reportDefinitionDto.grantedEditionIds"
-                          (onChange)="loadAllCompanies()"
-                          [selectedItemsLabel]="'{0} items selected'"
-                          [style]="{ width: '100%' }"
-                          styleClass="form-control pt-1"
-                          [dataKey]="'id'"
-                          required
-                          optionLabel="displayName"
-                          [ngClass]="{
-                            'is-invalid': editionType.invalid && (editionType.dirty || editionType.touched),
-                            'is-valid': editionType.valid && (editionType.dirty || editionType.touched)
-                          }"
-                        >
-                        </p-multiSelect>
-                        <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
-                      </div>
-                      <div class="form-group w-50 ml-4">
-                        <label>{{ 'ExcludingCompanies' | localize }}</label>
-                        <p-multiSelect
-                          #excludingCompanies="ngModel"
-                          dropdownIcon="fa fa-caret-down"
-                          id="excludingCompanies"
-                          name="excludingCompanies"
-                          [options]="allCompanies"
-                          [(ngModel)]="reportDefinitionDto.excludedTenantIds"
-                          [selectedItemsLabel]="'{0} items selected'"
-                          [style]="{ width: '100%' }"
-                          styleClass="form-control pt-1"
-                          [dataKey]="'id'"
-                          required
-                          placeholder="{{ l('SelectACompany') }}"
-                          optionLabel="displayName"
-                          [ngClass]="{
-                            'is-invalid': excludingCompanies.invalid && (excludingCompanies.dirty || excludingCompanies.touched),
-                            'is-valid': excludingCompanies.valid && (excludingCompanies.dirty || excludingCompanies.touched)
-                          }"
-                        >
-                        </p-multiSelect>
-                        <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
+                </form>
+                <!--begin: Wizard Step 2-->
+                <form class="form fv-plugins-bootstrap fv-plugins-framework" id="kt_form2" [formGroup]="step2Form">
+                  <!--begin: Wizard Step 1-->
+                  <dx-validation-group #step2FormGroup>
+                    <div class="pb-5" data-wizard-type="step-content">
+                      <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportAccessSetup' | localize }}</h4>
+                      <div class="d-flex">
+                        <div class="form-group w-50">
+                          <label>{{ 'EditionType' | localize }}</label>
+                          <p-multiSelect
+                            dropdownIcon="fa fa-caret-down"
+                            name="editionType"
+                            [options]="allEditionTypes"
+                            [(ngModel)]="reportDefinitionDto.grantedEditionIds"
+                            formControlName="editionType"
+                            (onChange)="loadAllCompanies()"
+                            [selectedItemsLabel]="'{0} items selected'"
+                            [style]="{ width: '100%' }"
+                            styleClass="form-control pt-1"
+                            [dataKey]="'id'"
+                            required
+                            optionLabel="displayName"
+                            [ngClass]="{
+                              'is-invalid':
+                                (isEditionTypeInvalid || step2Form.get('editionType').invalid) &&
+                                (step2Form.get('editionType').dirty || step2Form.get('editionType').touched),
+                              'is-valid':
+                                (!isEditionTypeInvalid || step2Form.get('editionType').valid) &&
+                                (step2Form.get('editionType').dirty || step2Form.get('editionType').touched)
+                            }"
+                          >
+                          </p-multiSelect>
+                          <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
+                          <dx-validator [validationGroup]="'step2FormGroup'" [adapter]="editionTypeAdapterConfig">
+                            <dxi-validation-rule type="required" message="{{ 'EditionType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}">
+                            </dxi-validation-rule>
+                          </dx-validator>
+                        </div>
+                        <div class="form-group w-50 ml-4">
+                          <label>{{ 'ExcludingCompanies' | localize }}</label>
+                          <p-multiSelect
+                            dropdownIcon="fa fa-caret-down"
+                            id="excludingCompanies"
+                            name="excludingCompanies"
+                            [options]="allCompanies"
+                            [(ngModel)]="reportDefinitionDto.excludedTenantIds"
+                            formControlName="excludingCompanies"
+                            (onChange)="revalidateExcludingCompanies()"
+                            [selectedItemsLabel]="'{0} items selected'"
+                            [style]="{ width: '100%' }"
+                            styleClass="form-control pt-1"
+                            [dataKey]="'id'"
+                            required
+                            placeholder="{{ l('SelectACompany') }}"
+                            optionLabel="displayName"
+                            [ngClass]="{
+                              'is-invalid':
+                                (isExcludingCompaniesInvalid || step2Form.get('excludingCompanies').invalid) &&
+                                (step2Form.get('excludingCompanies').dirty || step2Form.get('excludingCompanies').touched),
+                              'is-valid':
+                                (!isExcludingCompaniesInvalid || step2Form.get('excludingCompanies').valid) &&
+                                (step2Form.get('excludingCompanies').dirty || step2Form.get('excludingCompanies').touched)
+                            }"
+                          >
+                          </p-multiSelect>
+                          <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
+                          <dx-validator [validationGroup]="'step2FormGroup'" [adapter]="excludingCompaniesAdapterConfig">
+                            <dxi-validation-rule
+                              type="required"
+                              message="{{ 'ExcludingCompanies' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                            >
+                            </dxi-validation-rule>
+                          </dx-validator>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <!--end: Wizard Step 2-->
+                    <div class="row pt-4">
+                      <div class="col-12">
+                        <dx-validation-summary validationGroup="step2FormGroup" id="step2-form-Group"></dx-validation-summary>
+                      </div>
+                    </div>
+                    <dx-button
+                      class="d-none"
+                      text="Validate"
+                      id="step2FormGroupButton"
+                      [validationGroup]="'step2FormGroup'"
+                      (onClick)="validateGroup($event)"
+                    >
+                    </dx-button>
+                  </dx-validation-group>
+                </form>
+                <!--end: Wizard Step 2-->
 
-                  <!--begin: Wizard Step 3-->
-                  <div class="pb-5" data-wizard-type="step-content">
-                    <!--  here will be the designer  -->
-                    <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportDesigner' | localize }}</h4>
+                <!--begin: Wizard Step 3-->
+                <div class="pb-5" data-wizard-type="step-content">
+                  <!--  here will be the designer  -->
+                  <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportDesigner' | localize }}</h4>
+                  <ng-container *ngIf="reportUrl.length > 0">
                     <dx-report-designer [reportUrl]="reportUrl" height="700px">
                       <dxrd-request-options [getDesignerModelAction]="getDesignerModelAction" [host]="hostUrl"></dxrd-request-options>
                       <dxrd-callbacks (ReportSaved)="reportDefinitionDto.reportTemplateUrl = reportUrl"></dxrd-callbacks>
                     </dx-report-designer>
-                  </div>
-                  <!--end: Wizard Step 3-->
+                  </ng-container>
+                </div>
+                <!--end: Wizard Step 3-->
 
-                  <!--begin: Wizard Actions-->
-                  <div class="d-flex justify-content-between border-top mt-5 pt-10">
-                    <div class="mr-2">
-                      <button type="button" class="btn btn-light-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-prev">
-                        Previous
-                      </button>
-                    </div>
-                    <div>
-                      <button
-                        type="button"
-                        (click)="createOrEdit()"
-                        class="btn btn-success font-weight-bolder text-uppercase px-9 py-4"
-                        data-wizard-type="action-submit"
-                      >
-                        Submit
-                      </button>
-                      <button type="button" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-next">
-                        Next
-                      </button>
-                    </div>
+                <!--begin: Wizard Actions-->
+                <div class="d-flex justify-content-between border-top mt-5 pt-10">
+                  <div class="mr-2">
+                    <button type="button" class="btn btn-light-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-prev">
+                      Previous
+                    </button>
                   </div>
-                  <!--end: Wizard Actions-->
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                </form>
+                  <div>
+                    <button
+                      type="button"
+                      (click)="createOrEdit()"
+                      class="btn btn-success font-weight-bolder text-uppercase px-9 py-4"
+                      data-wizard-type="action-submit"
+                    >
+                      Submit
+                    </button>
+                    <button type="button" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-next">
+                      Next
+                    </button>
+                  </div>
+                </div>
+                <!--end: Wizard Actions-->
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
                 <!--end: Wizard Form-->
               </div>
             </div>
