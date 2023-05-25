@@ -95,6 +95,10 @@ export class DashboardCustomizationConst {
       //TachyonDealerSearchableMapWidget: 'Widgets_Tenant_TachyonDealer_SearchableMapWidget',
       //TachyonDealerRequestsHeatMapWidget: 'Widgets_Tenant_TachyonDealer_RequestsHeatMapWidget',
       //TachyonDealerNormalVsRentalRequestsWidget: 'Widgets_Tenant_TachyonDealer_NormalVsRentalRequestsWidget',
+      CostVsSellingVsProfitOfTruckAggregationTripsWidget: 'Widgets_Tenant_TachyonDealer_CostVsSellingVsProfitOfTruckAggregationTripsWidget',
+      NewRegisteredCompanies: 'Widgets_Tenant_TachyonDealer_NewRegisteredCompanies',
+      InvoicesVsPaidInvoices: 'Widgets_Tenant_TachyonDealer_InvoicesVsPaidInvoicesComponent',
+      ClaimedInvoicesVsPaidInvoices: 'Widgets_Tenant_TachyonDealer_ClaimedInvoicesVsPaidInvoices',
     },
     //Widgets For Host Only
     host: {
@@ -145,6 +149,10 @@ export class DashboardCustomizationConst {
       //TachyonDealerSearchableMapWidget: 'Widgets_Tenant_TachyonDealer_SearchableMapWidget',
       //TachyonDealerRequestsHeatMapWidget: 'Widgets_Tenant_TachyonDealer_RequestsHeatMapWidget',
       //TachyonDealerNormalVsRentalRequestsWidget: 'Widgets_Tenant_TachyonDealer_NormalVsRentalRequestsWidget',
+      CostVsSellingVsProfitOfTruckAggregationTripsWidget: 'Widgets_Tenant_Host_CostVsSellingVsProfitOfTruckAggregationTripsWidget',
+      NewRegisteredCompanies: 'Widgets_Tenant_Host_NewRegisteredCompanies',
+      InvoicesVsPaidInvoices: 'Widgets_Tenant_Host_InvoicesVsPaidInvoicesComponent',
+      ClaimedInvoicesVsPaidInvoices: 'Widgets_Tenant_Host_ClaimedInvoicesVsPaidInvoices',
     },
     Broker: {
       NewActorsThisMonthWidget: 'Widgets_Tenant_Broker_New_Actors_This_Month',

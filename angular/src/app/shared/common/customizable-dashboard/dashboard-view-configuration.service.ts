@@ -80,6 +80,8 @@ import { OverallTotalAmountPerAllTripsComponent } from '@app/shared/common/custo
 import { TruckAggregationInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/truck-aggregation-invoices/truck-aggregation-invoices.component';
 import { SaasInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/saas-invoices/saas-invoices.component';
 import { GoodTypesUsageComponent } from '@app/shared/common/customizable-dashboard/widgets/host/good-types-usage/good-types-usage.component';
+import { CostVsSellingVsProfitOfTruckAggregationTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/cost-vs-selling-vs-profit-of-truck-aggregation-trips/cost-vs-selling-vs-profit-of-truck-aggregation-trips.component';
+import { NewRegisteredCompaniesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/new-registered-companies/new-registered-companies.component';
 
 @Injectable({
   providedIn: 'root',
@@ -519,12 +521,37 @@ export class DashboardViewConfigurationService {
     let CostVsSellingVsProfitOfSaasTrips = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.CostVsSellingVsProfitOfSaasTripsWidget,
       CostVsSellingVsProfitOfSaasTripsComponent,
+      18,
+      12
+    );
+    let NewRegisteredCompanies = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.NewRegisteredCompanies,
+      NewRegisteredCompaniesComponent,
+      9,
+      10
+    );
+
+    let CostVsSellingVsProfitOfTruckAggregationTrips = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.CostVsSellingVsProfitOfTruckAggregationTripsWidget,
+      CostVsSellingVsProfitOfTruckAggregationTripsComponent,
       14,
       12
     );
 
-    let HostUpcomingTrips = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.UpcomingTrips, UpcomingTripsWidgetsComponent, 6, 12);
-    let HostNeedsActions = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.NeedsActions, NeedsActionWidgetComponent, 6, 12);
+    let InvoicesVsPaidInvoices_Host = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.InvoicesVsPaidInvoices,
+      InvoicesVsPaidInvoicesComponent,
+      9,
+      10
+    );
+    let carrierInvoicesVsPaid_Host = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.host.ClaimedInvoicesVsPaidInvoices,
+      CarrierInvoicesDetailsWidgetComponent,
+      9,
+      10
+    );
+    let HostUpcomingTrips = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.UpcomingTrips, UpcomingTripsWidgetsComponent, 6, 15);
+    let HostNeedsActions = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.NeedsActions, NeedsActionWidgetComponent, 6, 15);
 
     //TMS
     let NumberOfRegisteredTrucks_TMS = new WidgetViewDefinition(
@@ -726,21 +753,47 @@ export class DashboardViewConfigurationService {
     let CostVsSellingVsProfitOfSaasTrips_TMS = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.TachyonDealer.CostVsSellingVsProfitOfSaasTripsWidget,
       CostVsSellingVsProfitOfSaasTripsComponent,
+      18,
+      12
+    );
+
+    let NewRegisteredCompanies_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.TachyonDealer.NewRegisteredCompanies,
+      NewRegisteredCompaniesComponent,
+      9,
+      10
+    );
+    let CostVsSellingVsProfitOfTruckAggregationTrips_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.TachyonDealer.CostVsSellingVsProfitOfTruckAggregationTripsWidget,
+      CostVsSellingVsProfitOfTruckAggregationTripsComponent,
       14,
       12
+    );
+
+    let InvoicesVsPaidInvoices_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.TachyonDealer.InvoicesVsPaidInvoices,
+      InvoicesVsPaidInvoicesComponent,
+      9,
+      10
+    );
+    let carrierInvoicesVsPaid_TMS = new WidgetViewDefinition(
+      DashboardCustomizationConst.widgets.TachyonDealer.ClaimedInvoicesVsPaidInvoices,
+      CarrierInvoicesDetailsWidgetComponent,
+      9,
+      10
     );
 
     let UpcomingTrips_TMS = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.TachyonDealer.UpcomingTrips,
       UpcomingTripsWidgetsComponent,
       6,
-      12
+      15
     );
     let NeedsActions_TMS = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.TachyonDealer.NeedsActions,
       NeedsActionWidgetComponent,
       6,
-      12
+      15
     );
 
     // broker dashboard
@@ -901,6 +954,10 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(GoodTypesUsage_TMS);
     this.WidgetViewDefinitions.push(UpcomingTrips_TMS);
     this.WidgetViewDefinitions.push(NeedsActions_TMS);
+    this.WidgetViewDefinitions.push(CostVsSellingVsProfitOfTruckAggregationTrips_TMS);
+    this.WidgetViewDefinitions.push(NewRegisteredCompanies_TMS);
+    this.WidgetViewDefinitions.push(InvoicesVsPaidInvoices_TMS);
+    this.WidgetViewDefinitions.push(carrierInvoicesVsPaid_TMS);
     //Host
     //this.widgetFilterDefinitions.push(NumberOfRegisteredTrucks);
 
@@ -945,6 +1002,10 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(GoodTypesUsage);
     this.WidgetViewDefinitions.push(HostUpcomingTrips);
     this.WidgetViewDefinitions.push(HostNeedsActions);
+    this.WidgetViewDefinitions.push(CostVsSellingVsProfitOfTruckAggregationTrips);
+    this.WidgetViewDefinitions.push(NewRegisteredCompanies);
+    this.WidgetViewDefinitions.push(InvoicesVsPaidInvoices_Host);
+    this.WidgetViewDefinitions.push(carrierInvoicesVsPaid_Host);
 
     // broker
     this.WidgetViewDefinitions.push(NewActorsThisMonth_Broker);

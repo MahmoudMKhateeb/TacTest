@@ -83,6 +83,10 @@ namespace TACHYON.DashboardCustomization.Definitions
             var GoodTypesUsage = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.GoodTypesUsage, "GoodTypesUsage", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var UpcomingTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.UpcomingTrips, "UpcomingTrips", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             var NeedsActions = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NeedsActions, "NeedsActions", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var CostVsSellingVsProfitOfTruckAggregationTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.CostVsSellingVsProfitOfTruckAggregationTripsWidget, "CostVsSellingVsProfitOfTruckAggregationTrips", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var NewRegisteredCompanies = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.NewRegisteredCompanies, "NewRegisteredCompanies", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var InvoicesVsPaidInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.InvoicesVsPaidInvoices, "InvoicesVsPaidInvoices", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
+            var ClaimedInvoicesVsPaidInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.Host.ClaimedInvoicesVsPaidInvoices, "ClaimedInvoicesVsPaidInvoices", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             //var tachyonDealerSearchableMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerSearchableMapWidget, "TachyonDealerSearchableMapWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             //var tachyonDealerRequestsHeatMapWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerRequestsHeatMapWidget, "TachyonDealerRequestsHeatMapWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
             //var tachyonDealerNormalVsRentalRequestsWidget = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.TachyonDealerNormalVsRentalRequestsWidget, "TachyonDealerNormalVsRentalRequestsWidget", side: MultiTenancySides.Host, permissions: hostWidgetsDefaultPermission);
@@ -127,6 +131,10 @@ namespace TACHYON.DashboardCustomization.Definitions
             WidgetDefinitions.Add(GoodTypesUsage);
             WidgetDefinitions.Add(UpcomingTrips);
             WidgetDefinitions.Add(NeedsActions);
+            WidgetDefinitions.Add(CostVsSellingVsProfitOfTruckAggregationTrips);
+            WidgetDefinitions.Add(NewRegisteredCompanies);
+            WidgetDefinitions.Add(InvoicesVsPaidInvoices);
+            WidgetDefinitions.Add(ClaimedInvoicesVsPaidInvoices);
             //WidgetDefinitions.Add(tachyonDealerSearchableMapWidget);
             //WidgetDefinitions.Add(tachyonDealerRequestsHeatMapWidget);
             //WidgetDefinitions.Add(tachyonDealerNormalVsRentalRequestsWidget);
@@ -276,6 +284,10 @@ namespace TACHYON.DashboardCustomization.Definitions
             var tachyonDealerGoodTypesUsage = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.GoodTypesUsage, "GoodTypesUsage", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
             var tachyonDealerUpcomingTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.UpcomingTrips, "UpcomingTrips", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
             var tachyonDealerNeedsActions = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NeedsActions, "NeedsActions", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerCostVsSellingVsProfitOfTruckAggregationTrips = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.CostVsSellingVsProfitOfTruckAggregationTripsWidget, "CostVsSellingVsProfitOfTruckAggregationTrips", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerNewRegisteredCompanies = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.NewRegisteredCompanies, "NewRegisteredCompanies", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerInvoicesVsPaidInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.InvoicesVsPaidInvoices, "InvoicesVsPaidInvoices", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
+            var tachyonDealerClaimedInvoicesVsPaidInvoices = new WidgetDefinition(TACHYONDashboardCustomizationConsts.Widgets.TachyonDealer.ClaimedInvoicesVsPaidInvoices, "ClaimedInvoicesVsPaidInvoices", side: MultiTenancySides.Tenant, permissions: hostWidgetsDefaultPermission);
 
 
             WidgetDefinitions.Add(tachyonDealerNumberOfRegisteredTrucksWidget);
@@ -311,6 +323,10 @@ namespace TACHYON.DashboardCustomization.Definitions
             WidgetDefinitions.Add(tachyonDealerGoodTypesUsage);
             WidgetDefinitions.Add(tachyonDealerUpcomingTrips);
             WidgetDefinitions.Add(tachyonDealerNeedsActions);
+            WidgetDefinitions.Add(tachyonDealerCostVsSellingVsProfitOfTruckAggregationTrips);
+            WidgetDefinitions.Add(tachyonDealerNewRegisteredCompanies);
+            WidgetDefinitions.Add(tachyonDealerInvoicesVsPaidInvoices);
+            WidgetDefinitions.Add(tachyonDealerClaimedInvoicesVsPaidInvoices);
             //WidgetDefinitions.Add(tachyonDealerSearchableMapWidget);
             //WidgetDefinitions.Add(tachyonDealerRequestsHeatMapWidget);
             //WidgetDefinitions.Add(tachyonDealerNormalVsRentalRequestsWidget);
@@ -452,6 +468,10 @@ namespace TACHYON.DashboardCustomization.Definitions
                     tachyonDealerGoodTypesUsage.Id,
                     tachyonDealerUpcomingTrips.Id,
                     tachyonDealerNeedsActions.Id,
+                    tachyonDealerCostVsSellingVsProfitOfTruckAggregationTrips.Id,
+                    tachyonDealerNewRegisteredCompanies.Id,
+                    tachyonDealerInvoicesVsPaidInvoices.Id,
+                    tachyonDealerClaimedInvoicesVsPaidInvoices.Id,
                     //tachyonDealerSearchableMapWidget.Id,
                     //tachyonDealerRequestsHeatMapWidget.Id,
                     //tachyonDealerNormalVsRentalRequestsWidget.Id,
@@ -504,6 +524,10 @@ namespace TACHYON.DashboardCustomization.Definitions
                     GoodTypesUsage.Id,
                     UpcomingTrips.Id,
                     NeedsActions.Id,
+                    CostVsSellingVsProfitOfTruckAggregationTrips.Id,
+                    NewRegisteredCompanies.Id,
+                    InvoicesVsPaidInvoices.Id,
+                    ClaimedInvoicesVsPaidInvoices.Id,
                     //tachyonDealerSearchableMapWidget.Id,
                     //tachyonDealerRequestsHeatMapWidget.Id,
                     //tachyonDealerNormalVsRentalRequestsWidget.Id,

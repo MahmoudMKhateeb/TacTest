@@ -103,6 +103,8 @@ import { OverallTotalAmountPerAllTripsComponent } from '@app/shared/common/custo
 import { TruckAggregationInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/truck-aggregation-invoices/truck-aggregation-invoices.component';
 import { SaasInvoicesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/saas-invoices/saas-invoices.component';
 import { GoodTypesUsageComponent } from '@app/shared/common/customizable-dashboard/widgets/host/good-types-usage/good-types-usage.component';
+import { CostVsSellingVsProfitOfTruckAggregationTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/cost-vs-selling-vs-profit-of-truck-aggregation-trips/cost-vs-selling-vs-profit-of-truck-aggregation-trips.component';
+import { NewRegisteredCompaniesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/new-registered-companies/new-registered-companies.component';
 import { MakeScrollableModule } from '@app/shared/common/make-scrollable-directive/make-scrollable.module';
 
 const widgets = [
@@ -192,6 +194,8 @@ const widgets = [
   TruckAggregationInvoicesComponent,
   SaasInvoicesComponent,
   GoodTypesUsageComponent,
+  CostVsSellingVsProfitOfTruckAggregationTripsComponent,
+  NewRegisteredCompaniesComponent,
 ];
 @NgModule({
   declarations: [...widgets],

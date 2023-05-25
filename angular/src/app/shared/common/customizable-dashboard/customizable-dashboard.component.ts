@@ -455,6 +455,7 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
       scrollToNewItems: true,
       swap: true,
       swapWhileDragging: false,
+      maxRows: 200,
     };
   }
 

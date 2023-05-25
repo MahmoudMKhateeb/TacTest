@@ -58,6 +58,9 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
   }
 
   fetchData() {
+    if (this.isTachyonDealerOrHost) {
+      return;
+    }
     if (!this.isForActor) {
       this.getInvoices();
       return;

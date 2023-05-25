@@ -59,6 +59,9 @@ export class CarrierInvoicesDetailsWidgetComponent extends AppComponentBase impl
   }
 
   fetchData() {
+    if (this.isTachyonDealerOrHost) {
+      return;
+    }
     if (!this.isForActor) {
       this.getInvoices();
       return;

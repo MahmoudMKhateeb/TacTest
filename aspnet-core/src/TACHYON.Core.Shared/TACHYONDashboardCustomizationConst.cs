@@ -133,6 +133,10 @@
                 public const string GoodTypesUsage = "Widgets_Tenant_TachyonDealer_GoodTypesUsageWidget";
                 public const string UpcomingTrips = "Widgets_Tenant_TachyonDealer_UpcomingTripsWidget";
                 public const string NeedsActions = "Widgets_Tenant_TachyonDealer_NeedsActionsWidget";
+                public const string CostVsSellingVsProfitOfTruckAggregationTripsWidget = "Widgets_Tenant_TachyonDealer_CostVsSellingVsProfitOfTruckAggregationTripsWidget";
+                public const string NewRegisteredCompanies = "Widgets_Tenant_TachyonDealer_NewRegisteredCompanies";
+                public const string InvoicesVsPaidInvoices = "Widgets_Tenant_TachyonDealer_InvoicesVsPaidInvoicesComponent";
+                public const string ClaimedInvoicesVsPaidInvoices = "Widgets_Tenant_TachyonDealer_ClaimedInvoicesVsPaidInvoices";
             }
 
             public class Host
@@ -179,6 +183,10 @@
                 public const string GoodTypesUsage = "Widgets_Tenant_Host_GoodTypesUsageWidget";
                 public const string UpcomingTrips = "Widgets_Tenant_Host_UpcomingTripsWidget";
                 public const string NeedsActions = "Widgets_Tenant_Host_NeedsActionsWidget";
+                public const string CostVsSellingVsProfitOfTruckAggregationTripsWidget = "Widgets_Tenant_Host_CostVsSellingVsProfitOfTruckAggregationTripsWidget";
+                public const string NewRegisteredCompanies = "Widgets_Tenant_Host_NewRegisteredCompanies";
+                public const string InvoicesVsPaidInvoices = "Widgets_Tenant_Host_InvoicesVsPaidInvoicesComponent";
+                public const string ClaimedInvoicesVsPaidInvoices = "Widgets_Tenant_Host_ClaimedInvoicesVsPaidInvoices";
             }
             
             public class Broker
