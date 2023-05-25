@@ -189,13 +189,16 @@ namespace TACHYON.Web.Startup
             services.AddMvcCore();
             // todo find another workaround
             services.AddScoped<ReportStorageWebExtension, ReportStorageWebExtensionService>();
-            //services.ConfigureReportingServices(configurator => {
-            //    configurator.ConfigureReportDesigner(designerConfigurator => {
-            //        // ...
-            //        designerConfigurator.RegisterObjectDataSourceWizardTypeProvider<ReportsObjectDataSourceWizardTypeProvider>();
-            //        // ...
-            //    });
-            //});
+            services.ConfigureReportingServices(configurator => {
+                configurator.ConfigureReportDesigner(designerConfigurator => {
+
+                    designerConfigurator.RegisterDataSourceWizardJsonConnectionStorage<CustomDataSourceWizardJsonDataConnectionStorage>(true);
+                });
+                configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
+
+                    viewerConfigurator.RegisterJsonDataConnectionProviderFactory<CustomJsonDataConnectionProviderFactory>();
+                });
+            });
 
             //Configure Abp and Dependency Injection
             return services.AddAbp<TACHYONWebHostModule>(options =>

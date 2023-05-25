@@ -77,7 +77,7 @@ namespace TACHYON.Web.Services
                 dbReport.LastModificationTime = Clock.Now;
             }
 
-            dbReport ??= new Report { Url = url, Data = reportData, Name = report.Name, CreationTime = Clock.Now };
+            dbReport ??= new Report { Url = Path.GetFileNameWithoutExtension(url), Data = reportData, Name = report.Name, CreationTime = Clock.Now };
 
 
             _reportRepository.InsertOrUpdate(dbReport);

@@ -3,6 +3,7 @@ using Abp.UI;
 using DevExpress.DataAccess.ConnectionParameters;
 using DevExpress.DataAccess.Sql;
 using DevExpress.DataAccess.Wizard.Services;
+using TACHYON.Reports;
 
 namespace TACHYON.Web.Services
 {

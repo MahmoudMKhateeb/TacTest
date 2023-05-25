@@ -36,6 +36,8 @@ import { GenerateReportByCompanyComponent } from '@app/main/reporting/tenant-rep
 import { AutomationSetupModalComponent } from '@app/main/reporting/tenant-reports/generate-report-by-company/automation-setup-modal/automation-setup-modal.component';
 import { TenantAllReportComponent } from '@app/main/reporting/tenant-reports/all-report/all-report.component';
 import { TenantMyAutomatedReportsComponent } from '@app/main/reporting/tenant-reports/my-automated-reports/my-automated-reports.component';
+import { DxListModule } from '@node_modules/devextreme-angular';
+import { MultiSelectModule } from '@node_modules/primeng/multiselect';
 
 const imports = [UtilsModule, AppCommonModule, CommonModule, FormsModule, ModalModule, BsDropdownModule];
 
@@ -62,7 +64,7 @@ const dxImports = [
 ];
 
 @NgModule({
-  imports: [...imports, ...dxImports, ReportingRouteModule, DxReportDesignerModule],
+  imports: [...imports, ...dxImports, ReportingRouteModule, DxReportDesignerModule, DxListModule, MultiSelectModule],
   declarations: [
     CreateReportTypeComponent,
     AllReportTypesComponent,

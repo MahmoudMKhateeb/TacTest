@@ -100,6 +100,7 @@ using TACHYON.DedicatedDynamicActorInvoices;
 using TACHYON.DedicatedDynamicActorInvoices.DedicatedDynamicActorInvoiceItems;
 using TACHYON.PricePackages.PricePackageOffers;
 using TACHYON.Reports;
+using TACHYON.Reports.ReportDefinitions;
 using TACHYON.Tracking.AdditionalSteps;
 
 namespace TACHYON.EntityFrameworkCore
@@ -349,6 +350,8 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<AdditionalStepTransition> AdditionalStepTransitions { get; set; }
 
         public DbSet<Report> Reports { get; set; }
+
+        public DbSet<ReportDefinition> ReportDefinitions { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool CurrentIsDrafted => false;

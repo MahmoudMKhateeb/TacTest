@@ -53,19 +53,24 @@
                         <dx-select-box
                           id="type"
                           name="type"
-                          [(value)]="step1Model.type"
+                          [(value)]="reportDefinitionDto.type"
                           [dataSource]="allTypes"
                           [searchEnabled]="true"
+                          displayExpr="value"
+                          valueExpr="key"
                           placeholder="{{ l('SelectType') }}"
                         >
-                          <!--                                                    displayExpr="displayName"-->
-                          <!--                                                    valueExpr="id"-->
                         </dx-select-box>
                         <span class="form-text text-muted">{{ 'PleaseSelectType' | localize }}</span>
                       </div>
                       <div class="form-group w-50 ml-4">
                         <label>{{ 'ReportName' | localize }}</label>
-                        <dx-text-box id="reportName" name="reportName" [(value)]="step1Model.reportName" placeholder="{{ l('EnterReportName') }}">
+                        <dx-text-box
+                          id="reportName"
+                          name="reportName"
+                          [(value)]="reportDefinitionDto.displayName"
+                          placeholder="{{ l('EnterReportName') }}"
+                        >
                         </dx-text-box>
                         <span class="form-text text-muted">{{ 'PleaseEnterReportName' | localize }}</span>
                       </div>
@@ -79,33 +84,49 @@
                     <div class="d-flex">
                       <div class="form-group w-50">
                         <label>{{ 'EditionType' | localize }}</label>
-                        <dx-select-box
-                          id="editionType"
+                        <p-multiSelect
+                          #editionType="ngModel"
+                          dropdownIcon="fa fa-caret-down"
                           name="editionType"
-                          [(value)]="step2Model.editionType"
-                          [dataSource]="allEditionTypes"
-                          [searchEnabled]="true"
-                          placeholder="{{ l('SelectEditionType') }}"
-                          displayExpr="displayName"
-                          valueExpr="id"
-                          (onSelectionChanged)="loadAllCompanies()"
+                          [options]="allEditionTypes"
+                          [(ngModel)]="reportDefinitionDto.grantedEditionIds"
+                          (onChange)="loadAllCompanies()"
+                          [selectedItemsLabel]="'{0} items selected'"
+                          [style]="{ width: '100%' }"
+                          styleClass="form-control pt-1"
+                          [dataKey]="'id'"
+                          required
+                          optionLabel="displayName"
+                          [ngClass]="{
+                            'is-invalid': editionType.invalid && (editionType.dirty || editionType.touched),
+                            'is-valid': editionType.valid && (editionType.dirty || editionType.touched)
+                          }"
                         >
-                        </dx-select-box>
+                        </p-multiSelect>
                         <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
                       </div>
                       <div class="form-group w-50 ml-4">
                         <label>{{ 'ExcludingCompanies' | localize }}</label>
-                        <dx-select-box
+                        <p-multiSelect
+                          #excludingCompanies="ngModel"
+                          dropdownIcon="fa fa-caret-down"
                           id="excludingCompanies"
                           name="excludingCompanies"
-                          [(value)]="step2Model.excludingCompanies"
-                          [dataSource]="allCompanies"
-                          [searchEnabled]="true"
+                          [options]="allCompanies"
+                          [(ngModel)]="reportDefinitionDto.excludedTenantIds"
+                          [selectedItemsLabel]="'{0} items selected'"
+                          [style]="{ width: '100%' }"
+                          styleClass="form-control pt-1"
+                          [dataKey]="'id'"
+                          required
                           placeholder="{{ l('SelectACompany') }}"
-                          displayExpr="displayName"
-                          valueExpr="id"
+                          optionLabel="displayName"
+                          [ngClass]="{
+                            'is-invalid': excludingCompanies.invalid && (excludingCompanies.dirty || excludingCompanies.touched),
+                            'is-valid': excludingCompanies.valid && (excludingCompanies.dirty || excludingCompanies.touched)
+                          }"
                         >
-                        </dx-select-box>
+                        </p-multiSelect>
                         <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
                       </div>
                     </div>
@@ -118,6 +139,7 @@
                     <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportDesigner' | localize }}</h4>
                     <dx-report-designer [reportUrl]="reportUrl" height="700px">
                       <dxrd-request-options [getDesignerModelAction]="getDesignerModelAction" [host]="hostUrl"></dxrd-request-options>
+                      <dxrd-callbacks (ReportSaved)="reportDefinitionDto.reportTemplateUrl = reportUrl"></dxrd-callbacks>
                     </dx-report-designer>
                   </div>
                   <!--end: Wizard Step 3-->
@@ -130,7 +152,12 @@
                       </button>
                     </div>
                     <div>
-                      <button type="button" class="btn btn-success font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-submit">
+                      <button
+                        type="button"
+                        (click)="createOrEdit()"
+                        class="btn btn-success font-weight-bolder text-uppercase px-9 py-4"
+                        data-wizard-type="action-submit"
+                      >
                         Submit
                       </button>
                       <button type="button" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-next">

@@ -11,12 +11,15 @@ import { ajaxSetup } from '@node_modules/@devexpress/analytics-core/core/interna
 import {
   API_BASE_URL,
   CompanyType,
+  CreateOrEditReportDefinitionDto,
   EditionListDto,
   EditionServiceProxy,
-  PricePackageServiceProxy,
+  ReportDefinitionServiceProxy,
+  ReportType,
   SelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-create-report-type',
@@ -57,28 +60,20 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
     // reportType: [null, Validators.required],
     // reportName: [null, Validators.required],
   });
-  step1Model: any = {
-    type: null,
-    reportName: null,
-  };
+
   step2Form = this.fb.group({
     // reportType: [null, Validators.required],
     // reportName: [null, Validators.required],
   });
-  step2Model: any = {
-    editionType: null,
-    excludingCompanies: null,
-  };
   // end of form groups and form models
 
   private wizard: KTWizard;
   stepToCompleteFrom: number = this._activatedRoute.snapshot.queryParams['completedSteps'];
   activeStep: number;
-  allTypes: any[] = [];
-
-  selectAttributesDataSource: any = {};
+  allTypes = this.enumService.transform(ReportType);
   allCompanies: SelectItemDto[] = [];
   allEditionTypes: EditionListDto[] = [];
+  reportDefinitionDto: CreateOrEditReportDefinitionDto;
 
   constructor(
     injector: Injector,
@@ -87,8 +82,8 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
     private fb: FormBuilder,
     @Inject(API_BASE_URL) hostUrl: string,
     private _editionService: EditionServiceProxy,
-    private _pricePackagesServiceProxy: PricePackageServiceProxy,
-    private enumService: EnumToArrayPipe
+    private enumService: EnumToArrayPipe,
+    private _reportDefinitionService: ReportDefinitionServiceProxy
   ) {
     super(injector);
     ajaxSetup.ajaxSettings = {
@@ -100,7 +95,8 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   }
 
   ngOnInit(): void {
-    this.reportUrl = 'TripDetailsReport';
+    this.reportDefinitionDto = new CreateOrEditReportDefinitionDto();
+    this.reportUrl = '';
   }
 
   ngAfterViewInit() {
@@ -122,7 +118,6 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
     this.wizard.on('beforeNext', (wizardObj) => {
       switch (this.wizard.getStep()) {
         case 1: {
-          console.log('this.step1Form', this.step1Form);
           // document.getElementById('step1FormGroupButton').click();
           // this.step1FormGroup.instance.validate();
           if (this.step1Form.invalid) {
@@ -137,6 +132,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
           break;
         }
         case 2: {
+          this.updateReportUrl();
           if (this.step2Form.invalid) {
             wizardObj.stop();
             this.step2Form.markAllAsTouched();
@@ -148,6 +144,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
           break;
         }
         case 3: {
+          this.createOrEdit();
           break;
         }
         default: {
@@ -177,6 +174,17 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
     this.updateRoutingQueries(2);
   }
 
+  createOrEdit(): void {
+    let selectedCompanies = (this.reportDefinitionDto.excludedTenantIds as any[]).map((x) => x.id);
+    let selectedEditions = (this.reportDefinitionDto.grantedEditionIds as any[]).map((x) => x.id);
+
+    this.reportDefinitionDto.grantedEditionIds = selectedEditions;
+    this.reportDefinitionDto.excludedTenantIds = selectedCompanies;
+    this._reportDefinitionService.createOrEdit(this.reportDefinitionDto).subscribe(() => {
+      this.notify.success('SavedSuccessfully');
+      this._router.navigate(['app/main/reporting/report-types']);
+    });
+  }
   /**
    * Updates Router Query Parameters
    * @param step
@@ -216,11 +224,28 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
    */
   loadAllCompanies(): void {
     // there is a difference between company type in front end  & backend
-    this._pricePackagesServiceProxy.getCompanies(this.step2Model.editionType).subscribe((res) => {
-      this.allCompanies = res.map((item) => {
-        (item.id as any) = Number(item.id);
-        return item;
+
+    if (isNotNullOrUndefined(this.reportDefinitionDto.grantedEditionIds)) {
+      const selectedEditionIds = (this.reportDefinitionDto.grantedEditionIds as any[]).map((x) => x.id);
+
+      this._reportDefinitionService.getCompanies(selectedEditionIds).subscribe((res) => {
+        this.allCompanies = res.map((item) => {
+          (item.id as any) = Number(item.id);
+          return item;
+        });
       });
-    });
+    }
+  }
+
+  private updateReportUrl() {
+    switch (ReportType[this.reportDefinitionDto.type]) {
+      case ReportType[ReportType.TripDetailsReport]:
+        this.reportUrl = 'TripDetailsReport';
+        break;
+      default:
+        this.reportUrl = '';
+        this.notify.error(this.l('ReportUrlNotFound'));
+        break;
+    }
   }
 }

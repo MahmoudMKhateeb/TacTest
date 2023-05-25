@@ -3,6 +3,7 @@ using DevExpress.DataAccess.Web;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using TACHYON.Reports.ReportDataSources;
 
 namespace TACHYON.Web.Services
 {
@@ -10,16 +11,9 @@ namespace TACHYON.Web.Services
     {
         public IEnumerable<Type> GetAvailableTypes(string context)
         {
-            return new[] { typeof(TripDetailsDataSource) };
+            
+            return new[] { typeof(TripDetailsReportDataSourceAppService) };
         }
 
-        [DisplayName("Trip Details Data Source")]
-        public class TripDetailsDataSource
-        {
-            public List<string> GetData()
-            {
-                return new List<string>{"Mosa", "Mosa" , "Mosa" , "Mosa" , "Mosa" , "Mosa" };
-            }
-        }
     }
 }
