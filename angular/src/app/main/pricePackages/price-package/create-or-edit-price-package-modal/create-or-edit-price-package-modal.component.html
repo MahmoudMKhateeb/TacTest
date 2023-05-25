@@ -229,7 +229,7 @@
                 <label>{{ l('ShippingType') }} <span class="text-danger">*</span></label>
                 <select
                   [(ngModel)]="pricePackageDto.shippingTypeId"
-                  (ngModelChange)="shippingTypeChanged()"
+                  (change)="shippingTypeChanged()"
                   required
                   class="form-control"
                   name="tmsPP_ShippingType"
@@ -252,7 +252,7 @@
                 *ngIf="
                   pricePackageDto.type != pricePackageType.Dedicated &&
                   pricePackageDto.shippingTypeId != shippingTypeEnum.ImportPortMovements &&
-                    pricePackageDto.shippingTypeId != shippingTypeEnum.ExportPortMovements
+                  pricePackageDto.shippingTypeId != shippingTypeEnum.ExportPortMovements
                 "
                 class="form-group col-md-6"
               >

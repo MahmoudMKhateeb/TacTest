@@ -115,6 +115,13 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
       this.isFormLoading = true;
       this._pricePackagesServiceProxy.getForEdit(id).subscribe((res) => {
         this.pricePackageDto = res;
+        if (
+          this.pricePackageDto.shippingTypeId == this.shippingTypeEnum.ImportPortMovements ||
+          this.pricePackageDto.shippingTypeId == this.shippingTypeEnum.ExportPortMovements
+        ) {
+          this.loadPorts(true);
+        }
+        this.updateRoundTripTypes();
         this.companyType =
           this.pricePackageDto.usageType == PricePackageUsageType.AsCarrier ? this.companyTypeEnum.Carrier : this.companyTypeEnum.Shipper;
         this.loadAllTruckTypeByTransportType(this.pricePackageDto.transportTypeId);
@@ -244,11 +251,13 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     }
   }
 
-  private loadPorts() {
+  private loadPorts(editPricePackageModeEnabled?: boolean) {
     if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
       this._pricePackagesServiceProxy.getPricePackageLocations(PricePackageLocationType.Port, undefined).subscribe((result) => {
         this.pricePackageOriginLocations = result;
-        this.pricePackageDto.destinationLocation = undefined;
+        if (!editPricePackageModeEnabled) {
+          this.pricePackageDto.destinationLocation = undefined;
+        }
       });
     }
   }
@@ -357,6 +366,9 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   }
 
   calculatePriceForSelection() {
+    if (!isNotNullOrUndefined(this.selectedRows)) {
+      return;
+    }
     let prices = this.selectedRows.map((dto) => {
       return dto.totalPrice;
     });
@@ -622,22 +634,7 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
       this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements
     ) {
       this.pricePackageDto.routeType = null;
-      this.roundTripTypes = this._enumToArrayPipe
-        .transform(RoundTripType)
-        .filter((item) => {
-          if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
-            return item.key == RoundTripType.WithoutReturnTrip || item.key == RoundTripType.WithReturnTrip;
-          }
-          if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) {
-            return item.key != RoundTripType.WithoutReturnTrip && item.key != RoundTripType.WithReturnTrip;
-          }
-        })
-        .map((item) => {
-          const selectItem = new SelectItemDto();
-          (selectItem.id as any) = Number(item.key);
-          selectItem.displayName = item.value;
-          return selectItem;
-        });
+      this.updateRoundTripTypes();
 
       if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
         this.loadPorts();
@@ -709,5 +706,29 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     this.pricePackageDto.originLocation = undefined;
     this.pricePackageDto.destinationLocation = undefined;
     this.loadCountries();
+  }
+
+  updateRoundTripTypes() {
+    if (
+      this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+      this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements
+    ) {
+      this.roundTripTypes = this._enumToArrayPipe
+        .transform(RoundTripType)
+        .filter((item) => {
+          if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements) {
+            return item.key == RoundTripType.WithoutReturnTrip || item.key == RoundTripType.WithReturnTrip;
+          }
+          if (this.pricePackageDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements) {
+            return item.key != RoundTripType.WithoutReturnTrip && item.key != RoundTripType.WithReturnTrip;
+          }
+        })
+        .map((item) => {
+          const selectItem = new SelectItemDto();
+          (selectItem.id as any) = Number(item.key);
+          selectItem.displayName = item.value;
+          return selectItem;
+        });
+    }
   }
 }

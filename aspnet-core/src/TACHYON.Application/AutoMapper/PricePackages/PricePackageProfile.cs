@@ -50,7 +50,14 @@ namespace TACHYON.AutoMapper.PricePackages
                 .ForMember(x=> x.DestinationFacilityPortId,x=> x.MapFrom(i=> i.DestinationLocation != null? i.DestinationLocation.PortId : default))
                 .ForMember(x=> x.OriginCityId,x=> x.MapFrom(i=> i.OriginLocation != null? i.OriginLocation.CityId : default))
                 .ForMember(x=> x.OriginFacilityPortId,x=> x.MapFrom(i=> i.OriginLocation != null? i.OriginLocation.PortId : default))
-                .ForMember(x=> x.ServiceAreas,x=> x.MapFrom(i=> i.ServiceAreas));
+                .ForMember(x=> x.ServiceAreas,x=> x.MapFrom(i=> i.ServiceAreas))
+                .BeforeMap((dto, pricePackage) =>
+                {
+                    if (dto.Id.HasValue)
+                    {
+                        dto.DestinationTenantId = pricePackage.DestinationTenantId;
+                    }
+                });
 
             CreateMap<PricePackage, CreateOrEditPricePackageDto>()
                 .ForMember(x => x.OriginLocation, x => x.MapFrom(i => new PricePackageLocationSelectItemDto
