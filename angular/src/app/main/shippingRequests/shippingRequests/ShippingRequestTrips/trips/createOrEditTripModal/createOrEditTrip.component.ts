@@ -317,7 +317,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this.getTripForEditSub = this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.selectedShippingRequestDestinationCities = res.shippingRequestDestinationCities;
         this._TripService.CreateOrEditShippingRequestTripDto = res;
-        (this.originCountry as any) = res.countryId + '';
+        (this.originCountry as any) = res.countryId;
         if (!shippingRequestForView) {
           this.loadCitiesByCountryId(this.originCountry, 'source', true);
           if (res.shippingTypeId != ShippingTypeEnum.CrossBorderMovements) {
