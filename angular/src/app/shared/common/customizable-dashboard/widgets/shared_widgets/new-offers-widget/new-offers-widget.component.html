@@ -18,6 +18,11 @@
               <small>{{ 'ChatMessage_From' | localize }}</small
               >&nbsp;&nbsp;<b>{{ offer.companyName }}</b>
             </div>
+            <div class="flex-grow-2 border-bottom-dashed mx-4"></div>
+            <div>
+              <small>{{ 'On' | localize }}</small
+              >&nbsp;&nbsp;<b>{{ offer.creationTime | momentFormat: 'DD/MM/YYYY' }}</b>
+            </div>
           </div>
         </div>
       </div>
