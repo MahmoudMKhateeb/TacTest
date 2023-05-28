@@ -36,8 +36,7 @@ using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Trucks;
-using TACHYON.Trucks.TrucksTypes;
-using TACHYON.Trucks.TrucksTypes.Dtos;
+
 
 namespace TACHYON.Dashboards.Carrier
 {
@@ -341,13 +340,34 @@ namespace TACHYON.Dashboards.Carrier
 
             if (period == FilterDatePeriod.Monthly)
             {
-                podTripsList = podTrips.GroupBy(x => x.CreationTime.Month)
-                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key ),Y = x.Count() })
-                    .ToList();
-                
-                totalList = total.GroupBy(x => x.CreationTime.Month)
+                var GroupedPodTrips = podTrips.GroupBy(x => x.CreationTime.Month);
+
+                var GroupedTotal = total.GroupBy(x => x.CreationTime.Month);
+
+                foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
+                {
+                    if (GroupedPodTrips.Select(x => x.Key).ToList().Contains(date.Month))
+                    {
+                        podTripsList.Add(GroupedPodTrips.Where(x => x.Key == date.Month)
                     .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
-                    .ToList();
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        podTripsList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    }
+
+                    if (GroupedTotal.Select(x => x.Key).ToList().Contains(date.Month))
+                    {
+                        totalList.Add(GroupedTotal.Where(x => x.Key == date.Month)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        totalList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    }
+                }
             }
             
             if (period == FilterDatePeriod.Weekly)
