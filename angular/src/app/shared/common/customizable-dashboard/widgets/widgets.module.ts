@@ -87,6 +87,7 @@ import { ActorNextDocDueDateComponent } from '@app/shared/common/customizable-da
 import { ActorNextInvoiceDueDateComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-next-invoice-due-date/actor-next-invoice-due-date.component';
 import { ActorNewInvoiceVsPaidInvoiceComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-new-invoice-vs-paid-invoice/actor-new-invoice-vs-paid-invoice.component';
 import { ActorPaidInvoiceVsClaimedInvoiceComponent } from '@app/shared/common/customizable-dashboard/widgets/broker/actor-paid-invoice-vs-claimed-invoice/actor-paid-invoice-vs-claimed-invoice.component';
+import { MakeScrollableModule } from '@app/shared/common/make-scrollable-directive/make-scrollable.module';
 
 const widgets = [
   CompletedTripsWidgetComponent,
@@ -180,6 +181,7 @@ const widgets = [
     RouterModule,
     DxSelectBoxModule,
     DxDateBoxModule,
+    MakeScrollableModule,
   ],
   entryComponents: [...widgets],
   exports: [...widgets],

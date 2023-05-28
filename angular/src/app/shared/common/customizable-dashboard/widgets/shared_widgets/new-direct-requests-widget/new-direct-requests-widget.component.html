@@ -8,7 +8,7 @@
         <div class="w-100 text-center gutter-b">
           <img class="new-direct-requests-img" src="assets/SVG/Direct_request.svg" alt="" />
         </div>
-        <div appMakeScrollable class="overflow-auto">
+        <div appMakeScrollable class="overflow-auto" [cssClassSelector]="'overflow-auto'">
           <div
             class="d-flex justify-content-between mb-4 px-4 clickable-item"
             *ngFor="let directRequest of newDirectRequests"

@@ -5,7 +5,7 @@
         <div class="card-title mt-4 mb-4">
           <div class="card-label">{{ 'PendingPriceOffer' | localize }}</div>
         </div>
-        <div appMakeScrollable class="overflow-auto">
+        <div appMakeScrollable class="overflow-auto" [cssClassSelector]="'overflow-auto'">
           <div class="d-flex justify-content-between mb-4 px-4 clickable-item" *ngFor="let offer of pendingOffers" (click)="goToPriceOffer(offer)">
             <div>
               {{ offer.referenceNumber }}
