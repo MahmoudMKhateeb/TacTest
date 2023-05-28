@@ -168,7 +168,9 @@ namespace TACHYON.PricePackages
             if (!AbpSession.TenantId.HasValue && !pricePackage.DestinationTenantId.HasValue)
                 throw new UserFriendlyException(L("ThePricePackageMustCreatedForCurrentTenantOrForDestinationTenant"));
             
-            if (!AbpSession.TenantId.HasValue || await IsTachyonDealer())
+            // I added `(pricePackage.Id == default || pricePackage.UsageType == PricePackageUsageType.AsTachyonManageService)` to
+            // ignore change/check TenantId or Destination TenantId for `Update Carrier Price Package` case, see after map func in price package profile
+            if ((!AbpSession.TenantId.HasValue || await IsTachyonDealer()) && (pricePackage.Id == default || pricePackage.UsageType == PricePackageUsageType.AsTachyonManageService))
             {
                 switch (pricePackage.UsageType)
                 {
@@ -199,6 +201,7 @@ namespace TACHYON.PricePackages
         protected virtual async Task Update(CreateOrEditPricePackageDto input)
         {
             if (!input.Id.HasValue) return;
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             var updatedPricePackage = await _pricePackageRepository.GetAllIncluding(x => x.ServiceAreas)
                 .FirstOrDefaultAsync(x => x.Id == input.Id.Value);
             if (updatedPricePackage.Type != input.Type)
@@ -286,7 +289,9 @@ namespace TACHYON.PricePackages
                           pricePackage.Type == PricePackageType.PerTrip &&
                           pricePackage.TruckTypeId == shippingRequest.TrucksTypeId &&
                           pricePackage.OriginCityId == shippingRequest.OriginCityId &&
-                          pricePackage.RouteType == shippingRequest.RouteTypeId
+                         pricePackage.ShippingTypeId == shippingRequest.ShippingTypeId &&
+                          (((pricePackage.ShippingTypeId == ShippingTypeEnum.ExportPortMovements || pricePackage.ShippingTypeId == ShippingTypeEnum.ImportPortMovements) && pricePackage.RoundTrip == shippingRequest.RoundTripType) ||
+                           pricePackage.RouteType == shippingRequest.RouteTypeId)
                           && shippingRequest.ShippingRequestDestinationCities.Any(i =>
                               i.CityId == pricePackage.DestinationCityId)
                     orderby pricePackage.Id

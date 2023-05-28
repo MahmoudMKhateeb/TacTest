@@ -59,7 +59,7 @@ namespace TACHYON.PricePackages.Dto
                 context.Results.Add(new ValidationResult("You must select origin city"));
             if (DestinationLocation?.CityId is null && Type != PricePackageType.Dedicated)
                 context.Results.Add(new ValidationResult("You must select destination city"));
-            if (RouteType == default && Type == PricePackageType.PerTrip)
+            if (RouteType == default && Type == PricePackageType.PerTrip && (ShippingTypeId != ShippingTypeEnum.ImportPortMovements && ShippingTypeId != ShippingTypeEnum.ExportPortMovements))
                 context.Results.Add(new ValidationResult("You must select route type"));
             if (Type == default)
                 context.Results.Add(new ValidationResult("You must select price package type"));
