@@ -19,6 +19,6 @@ namespace TACHYON.Invoices.Dto
         public string InvoiceChannelTitle { get { return Channel.GetEnumDescription(); } }
         public string AccountTypeTitle { get { return AccountType.GetEnumDescription(); } }
         public decimal TotalAmount { get; set; }
-        public bool HasConfirmationDate { get; set; }
+        public bool HasConfirmationDate { get { return ConfirmationDate != null; }  }
     }
 }
