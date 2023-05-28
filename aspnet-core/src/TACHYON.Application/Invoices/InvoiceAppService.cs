@@ -715,7 +715,7 @@ namespace TACHYON.Invoices
                     DateWork = !invoice.ConsiderConfirmationAndLoadingDates
                     ? invoice.Status == InvoiceStatus.Drafted ?""  :trip.ShippingRequestTripFK.EndTripDate.HasValue ? trip.ShippingRequestTripFK.EndTripDate.Value.ToString("dd/MM/yyyy") : trip.InvoiceFK.CreationTime.ToString("dd/MM/yyyy")
                     : trip.ShippingRequestTripFK.RoutPoints.First(x=>x.PickingType == PickingType.Pickup).RoutPointStatusTransitions.Count > 0 
-                        ? trip.ShippingRequestTripFK.RoutPoints.First(x => x.PickingType == PickingType.Pickup).RoutPointStatusTransitions.Select(x => new {Status = x.Status, creationTime = x.CreationTime}).First(x=>x.Status == RoutePointStatus.FinishLoading).creationTime.ToShortDateString()
+                        ? trip.ShippingRequestTripFK.RoutPoints.First(x => x.PickingType == PickingType.Pickup).RoutPointStatusTransitions.Select(x => new {Status = x.Status, creationTime = x.CreationTime}).First(x=>x.Status == RoutePointStatus.StartLoading).creationTime.ToShortDateString()
                         :trip.ShippingRequestTripFK.StartTripDate.ToShortDateString(),
 
                     Remarks = (trip.ShippingRequestTripFK.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
