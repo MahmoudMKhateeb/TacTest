@@ -185,7 +185,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
       this.getAllTrucksForDirectShipment();
       this._shippingRequestTripsService.getShippingRequestTripForEdit(id).subscribe((res) => {
         this._TripService.CreateOrEditShippingRequestTripDto = res;
-        (this.originCountry as any) = res.countryId + '';
+        (this.originCountry as any) = res.countryId;
         if (!shippingRequestForView) {
           this.loadCitiesByCountryId(this.originCountry, 'source', true);
           if (res.shippingTypeId != ShippingTypeEnum.CrossBorderMovements) {

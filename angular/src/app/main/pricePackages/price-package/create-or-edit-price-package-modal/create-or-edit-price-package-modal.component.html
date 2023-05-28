@@ -171,27 +171,6 @@
                 </div>
               </div>
 
-              <div *ngIf="pricePackageDto.type != pricePackageType.Dedicated" class="form-group col-md-6">
-                <label>{{ l('RouteType') }} <span class="text-danger">*</span></label>
-                <select
-                  #routeType="ngModel"
-                  [(ngModel)]="pricePackageDto.routeType"
-                  required
-                  (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"
-                  class="form-control"
-                  name="tmsPP_RouteType"
-                  [ngClass]="{
-                    'is-invalid': routeType.invalid && (routeType.dirty || routeType.touched),
-                    'is-valid': routeType.valid && (routeType.dirty || routeType.touched)
-                  }"
-                >
-                  <option selected disabled [value]="undefined">{{ 'SelectRouteType' | localize }}</option>
-                  <option *ngFor="let item of routeTypes" [value]="item.key">{{ item.value }}</option>
-                </select>
-                <div *ngIf="routeType.invalid && (routeType.dirty || routeType.touched)" class="invalid-feedback">
-                  {{ 'PricePackageInvalidRouteTypeMsg' | localize }}
-                </div>
-              </div>
               <div class="form-group col-md-6">
                 <label>{{ l('PricePackageType') }} <span class="text-danger">*</span></label>
                 <select
@@ -250,7 +229,7 @@
                 <label>{{ l('ShippingType') }} <span class="text-danger">*</span></label>
                 <select
                   [(ngModel)]="pricePackageDto.shippingTypeId"
-                  (ngModelChange)="shippingTypeChanged()"
+                  (change)="shippingTypeChanged()"
                   required
                   class="form-control"
                   name="tmsPP_ShippingType"
@@ -269,6 +248,35 @@
                   {{ 'PricePackageInvalidShippingTypeMsg' | localize }}
                 </div>
               </div>
+              <div
+                *ngIf="
+                  pricePackageDto.type != pricePackageType.Dedicated &&
+                  pricePackageDto.shippingTypeId != shippingTypeEnum.ImportPortMovements &&
+                  pricePackageDto.shippingTypeId != shippingTypeEnum.ExportPortMovements
+                "
+                class="form-group col-md-6"
+              >
+                <label>{{ l('RouteType') }} <span class="text-danger">*</span></label>
+                <select
+                  #routeType="ngModel"
+                  [(ngModel)]="pricePackageDto.routeType"
+                  required
+                  (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"
+                  class="form-control"
+                  name="tmsPP_RouteType"
+                  [ngClass]="{
+                    'is-invalid': routeType.invalid && (routeType.dirty || routeType.touched),
+                    'is-valid': routeType.valid && (routeType.dirty || routeType.touched)
+                  }"
+                >
+                  <option selected disabled [value]="undefined">{{ 'SelectRouteType' | localize }}</option>
+                  <option *ngFor="let item of routeTypes" [value]="item.key">{{ item.value }}</option>
+                </select>
+                <div *ngIf="routeType.invalid && (routeType.dirty || routeType.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidRouteTypeMsg' | localize }}
+                </div>
+              </div>
+
               <div
                 *ngIf="
                   pricePackageDto.shippingTypeId == shippingTypeEnum.ImportPortMovements ||
