@@ -417,13 +417,6 @@ export class DashboardCustomizationConst {
               positionY: 30,
             },
             {
-              widgetId: 'Widgets_Tenant_carrier_AcceptedVsRejectedPricingWidget',
-              height: 10,
-              width: 13,
-              positionX: 6,
-              positionY: 62,
-            },
-            {
               widgetId: 'Widgets_Tenant_Broker_New_Actors_This_Month',
               height: 5,
               width: 12,
