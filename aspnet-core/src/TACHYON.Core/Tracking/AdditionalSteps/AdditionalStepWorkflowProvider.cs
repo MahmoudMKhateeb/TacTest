@@ -403,7 +403,7 @@ namespace TACHYON.Tracking.AdditionalSteps
                    RequestRouteType = x.ShippingRequestFk.RouteTypeId,
                    RouteType = x.RouteType,
                    Status = x.Status,
-                   ShipperUser = new UserIdentifier(x.ShippingRequestFk.TenantId, x.ShippingRequestFk.CreatorUserId.Value),
+                   ShipperUser = x.ShippingRequestId.HasValue ? new UserIdentifier(x.ShippingRequestFk.TenantId, x.ShippingRequestFk.CreatorUserId.Value) : new UserIdentifier(x.ShipperTenantId, x.CreatorUserId.Value),
                    TripShipperTenantId = x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId !=  x.ShippingRequestFk.CarrierTenantId 
                    ?(int?) x.ShippingRequestFk.TenantId 
                    :null,
