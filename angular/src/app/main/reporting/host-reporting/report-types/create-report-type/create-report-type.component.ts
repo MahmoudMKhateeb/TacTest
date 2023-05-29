@@ -20,6 +20,8 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
 
 @Component({
   selector: 'app-create-report-type',
@@ -41,6 +43,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   @ViewChild('wizard', { static: true }) el: ElementRef;
   @ViewChild('step1FormGroup', { static: false }) step1FormGroup: DxValidationGroupComponent;
   @ViewChild('step2FormGroup', { static: false }) step2FormGroup: DxValidationGroupComponent;
+  @ViewChild('step3FormGroup', { static: false }) step3FormGroup: DxValidationGroupComponent;
 
   @ViewChild('designer', { static: false }) designer: DxReportDesignerComponent;
 
@@ -63,6 +66,11 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   });
 
   step2Form = this.fb.group({
+    filters: [null, Validators.required],
+    // excludingCompanies: [null, Validators.required],
+  });
+
+  step3Form = this.fb.group({
     editionType: [null, Validators.required],
     excludingCompanies: [null, Validators.required],
   });
@@ -99,6 +107,20 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
     },
     validationRequestsCallbacks: this.excludingCompaniesCallbacks,
   };
+
+  isFiltersInvalid: boolean;
+  filtersCallbacks: any[] = [];
+  filtersAdapterConfig = {
+    getValue: () => {
+      return this.selectedFilters?.length > 0;
+    },
+    applyValidationResults: (e) => {
+      this.isFiltersInvalid = !e.isValid;
+    },
+    validationRequestsCallbacks: this.filtersCallbacks,
+  };
+  selectAttributesDataSource: any = {};
+  selectedFilters: any[] = [];
 
   constructor(
     injector: Injector,
@@ -157,6 +179,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
             this.createOrEditStep1();
+            this.getAttributes();
             this.getEditionTypes();
             wizardObj.goNext();
           }
@@ -170,13 +193,26 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
             this.step2Form.markAllAsTouched();
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
-            this.updateReportUrl();
             this.createOrEditStep2();
             wizardObj.goNext();
           }
           break;
         }
         case 3: {
+          document.getElementById('step3FormGroupButton').click();
+          this.step3FormGroup.instance.validate();
+          if (this.step3Form.invalid) {
+            wizardObj.stop();
+            this.step3Form.markAllAsTouched();
+            this.notify.error(this.l('PleaseCompleteMissingFields'));
+          } else {
+            this.updateReportUrl();
+            this.createOrEditStep3();
+            wizardObj.goNext();
+          }
+          break;
+        }
+        case 4: {
           this.createOrEdit();
           break;
         }
@@ -205,6 +241,14 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
    */
   private createOrEditStep2() {
     this.updateRoutingQueries(2);
+  }
+
+  /**
+   * send api call to save step3
+   * @private
+   */
+  private createOrEditStep3() {
+    this.updateRoutingQueries(3);
   }
 
   createOrEdit(): void {
@@ -295,6 +339,67 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   revalidateExcludingCompanies() {
     this.excludingCompaniesCallbacks.forEach((func) => {
       func();
+    });
+  }
+
+  revalidateFilters() {
+    this.filtersCallbacks.forEach((func) => {
+      func();
+    });
+    this.step2Form.get('filters').setValue(this.selectedFilters);
+  }
+
+  /**
+   * send api to get all report type attributes
+   */
+  getAttributes() {
+    let self = this;
+    this.selectAttributesDataSource = {};
+    this.selectAttributesDataSource.store = new CustomStore({
+      key: 'id',
+      load(loadOptions: LoadOptions) {
+        return new Promise((resolve) => {
+          resolve([
+            { id: 0, filterName: 'ShipperName' },
+            { id: 1, filterName: 'CarrierName' },
+            { id: 2, filterName: 'DateRange' },
+            { id: 3, filterName: 'Date' },
+            { id: 4, filterName: 'RequestID' },
+            { id: 5, filterName: 'RequestType' },
+            { id: 6, filterName: 'ShippingType' },
+            { id: 7, filterName: 'TripType' },
+            { id: 8, filterName: 'TripStatus' },
+            { id: 9, filterName: 'TransportType' },
+            { id: 10, filterName: 'TruckType' },
+            { id: 11, filterName: 'RouteType' },
+            { id: 12, filterName: 'Origin' },
+            { id: 13, filterName: 'Destination' },
+            { id: 14, filterName: 'ExpectedDeliveryDate' },
+            { id: 15, filterName: 'TripsPickupDateStart' },
+            { id: 16, filterName: 'IsPODSubmitted' },
+            { id: 17, filterName: 'IsInvoiceIssued' },
+            { id: 18, filterName: 'IsAttachedVAS' },
+          ]);
+        }).then((res) => {
+          return {
+            data: res,
+            totalCount: 0,
+          };
+        });
+        /*self._unitOfMeasuresServiceProxy
+                          .getAll(JSON.stringify(loadOptions))
+                          .toPromise()
+                          .then((response) => {
+                              return {
+                                  data: response.data,
+                                  totalCount: response.totalCount,
+                              };
+                          })
+                          .catch((error) => {
+                              console.log(error);
+                              throw new Error('Data Loading Error');
+                          });*/
+      },
     });
   }
 }

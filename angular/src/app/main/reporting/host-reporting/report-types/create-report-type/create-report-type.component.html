@@ -21,7 +21,7 @@
                 <!--begin::Wizard Step 2 Nav-->
                 <div class="wizard-step" data-wizard-type="step" data-wizard-state="pending">
                   <div class="wizard-label">
-                    <h3 class="wizard-title"><span>2.</span> {{ 'ReportAccessSetup' | localize }}</h3>
+                    <h3 class="wizard-title"><span>2.</span> {{ 'SelectFilters' | localize }}</h3>
                     <div class="wizard-bar"></div>
                   </div>
                 </div>
@@ -30,18 +30,27 @@
                 <!--begin::Wizard Step 3 Nav-->
                 <div class="wizard-step" data-wizard-type="step" data-wizard-state="pending">
                   <div class="wizard-label">
-                    <h3 class="wizard-title"><span>3.</span> {{ 'ReportDesigner' }}</h3>
+                    <h3 class="wizard-title"><span>3.</span> {{ 'ReportAccessSetup' | localize }}</h3>
                     <div class="wizard-bar"></div>
                   </div>
                 </div>
                 <!--end::Wizard Step 3 Nav-->
+
+                <!--begin::Wizard Step 4 Nav-->
+                <div class="wizard-step" data-wizard-type="step" data-wizard-state="pending">
+                  <div class="wizard-label">
+                    <h3 class="wizard-title"><span>4.</span> {{ 'ReportDesigner' }}</h3>
+                    <div class="wizard-bar"></div>
+                  </div>
+                </div>
+                <!--end::Wizard Step 4 Nav-->
               </div>
             </div>
             <!--end: Wizard Nav-->
 
             <!--begin: Wizard Body-->
             <div class="row justify-content-center py-10 px-8 py-lg-12 px-lg-10">
-              <div class="col-xl-12" [ngClass]="{ 'col-xxl-7': activeStep !== 2, 'col-xxl-10': activeStep === 2 }">
+              <div class="col-xl-12" [ngClass]="{ 'col-xxl-7': activeStep !== 4, 'col-xxl-10': activeStep === 4 }">
                 <!--begin: Wizard Form-->
                 <form class="form fv-plugins-bootstrap fv-plugins-framework" id="kt_form" [formGroup]="step1Form">
                   <!--begin: Wizard Step 1-->
@@ -109,10 +118,52 @@
                   </dx-validation-group>
                   <!--end: Wizard Step 1-->
                 </form>
-                <!--begin: Wizard Step 2-->
+
                 <form class="form fv-plugins-bootstrap fv-plugins-framework" id="kt_form2" [formGroup]="step2Form">
-                  <!--begin: Wizard Step 1-->
                   <dx-validation-group #step2FormGroup>
+                    <div class="pb-5" data-wizard-type="step-content">
+                      <h4 class="mb-10 font-weight-bold text-dark">{{ 'SelectFilters' | localize }}</h4>
+                      <div class="d-flex">
+                        <dx-data-grid
+                          #selectAttributesGrid
+                          id="selectAttributesGrid"
+                          [dataSource]="selectAttributesDataSource"
+                          [remoteOperations]="false"
+                          [showBorders]="true"
+                          [(selectedRowKeys)]="selectedFilters"
+                          (onSelectionChanged)="revalidateFilters()"
+                          formControlName="filters"
+                          keyExpr="id"
+                        >
+                          <dxo-filter-row [visible]="false"></dxo-filter-row>
+                          <dxo-selection [selectAllMode]="'allPages'" [showCheckBoxesMode]="'onClick'" mode="multiple"></dxo-selection>
+                          <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"> </dxo-editing>
+                          <dxi-column dataField="filterName" caption="{{ l('FilterName') }}"></dxi-column>
+                        </dx-data-grid>
+                      </div>
+                      <dx-validator [validationGroup]="'step2FormGroup'" [adapter]="filtersAdapterConfig">
+                        <dxi-validation-rule type="required" message="{{ 'Filters' | localize }}: {{ 'SelectAtLeastOneOfTheFilters' | localize }}">
+                        </dxi-validation-rule>
+                      </dx-validator>
+                    </div>
+                    <div class="row pt-4">
+                      <div class="col-12">
+                        <dx-validation-summary validationGroup="step2FormGroup" id="step2-form-Group"></dx-validation-summary>
+                      </div>
+                    </div>
+                    <dx-button
+                      class="d-none"
+                      text="Validate"
+                      id="step2FormGroupButton"
+                      [validationGroup]="'step2FormGroup'"
+                      (onClick)="validateGroup($event)"
+                    >
+                    </dx-button>
+                  </dx-validation-group>
+                </form>
+                <form class="form fv-plugins-bootstrap fv-plugins-framework" id="kt_form3" [formGroup]="step3Form">
+                  <!--begin: Wizard Step 3-->
+                  <dx-validation-group #step3FormGroup>
                     <div class="pb-5" data-wizard-type="step-content">
                       <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportAccessSetup' | localize }}</h4>
                       <div class="d-flex">
@@ -133,16 +184,16 @@
                             optionLabel="displayName"
                             [ngClass]="{
                               'is-invalid':
-                                (isEditionTypeInvalid || step2Form.get('editionType').invalid) &&
-                                (step2Form.get('editionType').dirty || step2Form.get('editionType').touched),
+                                (isEditionTypeInvalid || step3Form.get('editionType').invalid) &&
+                                (step3Form.get('editionType').dirty || step3Form.get('editionType').touched),
                               'is-valid':
-                                (!isEditionTypeInvalid || step2Form.get('editionType').valid) &&
-                                (step2Form.get('editionType').dirty || step2Form.get('editionType').touched)
+                                (!isEditionTypeInvalid || step3Form.get('editionType').valid) &&
+                                (step3Form.get('editionType').dirty || step3Form.get('editionType').touched)
                             }"
                           >
                           </p-multiSelect>
                           <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
-                          <dx-validator [validationGroup]="'step2FormGroup'" [adapter]="editionTypeAdapterConfig">
+                          <dx-validator [validationGroup]="'step3FormGroup'" [adapter]="editionTypeAdapterConfig">
                             <dxi-validation-rule type="required" message="{{ 'EditionType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}">
                             </dxi-validation-rule>
                           </dx-validator>
@@ -166,16 +217,16 @@
                             optionLabel="displayName"
                             [ngClass]="{
                               'is-invalid':
-                                (isExcludingCompaniesInvalid || step2Form.get('excludingCompanies').invalid) &&
-                                (step2Form.get('excludingCompanies').dirty || step2Form.get('excludingCompanies').touched),
+                                (isExcludingCompaniesInvalid || step3Form.get('excludingCompanies').invalid) &&
+                                (step3Form.get('excludingCompanies').dirty || step3Form.get('excludingCompanies').touched),
                               'is-valid':
-                                (!isExcludingCompaniesInvalid || step2Form.get('excludingCompanies').valid) &&
-                                (step2Form.get('excludingCompanies').dirty || step2Form.get('excludingCompanies').touched)
+                                (!isExcludingCompaniesInvalid || step3Form.get('excludingCompanies').valid) &&
+                                (step3Form.get('excludingCompanies').dirty || step3Form.get('excludingCompanies').touched)
                             }"
                           >
                           </p-multiSelect>
                           <span class="form-text text-muted">{{ 'PleaseSelectEditionType' | localize }}</span>
-                          <dx-validator [validationGroup]="'step2FormGroup'" [adapter]="excludingCompaniesAdapterConfig">
+                          <dx-validator [validationGroup]="'step3FormGroup'" [adapter]="excludingCompaniesAdapterConfig">
                             <dxi-validation-rule
                               type="required"
                               message="{{ 'ExcludingCompanies' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
@@ -187,20 +238,20 @@
                     </div>
                     <div class="row pt-4">
                       <div class="col-12">
-                        <dx-validation-summary validationGroup="step2FormGroup" id="step2-form-Group"></dx-validation-summary>
+                        <dx-validation-summary validationGroup="step3FormGroup" id="step3-form-Group"></dx-validation-summary>
                       </div>
                     </div>
                     <dx-button
                       class="d-none"
                       text="Validate"
-                      id="step2FormGroupButton"
-                      [validationGroup]="'step2FormGroup'"
+                      id="step3FormGroupButton"
+                      [validationGroup]="'step3FormGroup'"
                       (onClick)="validateGroup($event)"
                     >
                     </dx-button>
                   </dx-validation-group>
+                  <!--end: Wizard Step 2-->
                 </form>
-                <!--end: Wizard Step 2-->
 
                 <!--begin: Wizard Step 3-->
                 <div class="pb-5" data-wizard-type="step-content">
