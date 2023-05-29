@@ -139,6 +139,10 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
    * @private
    */
   private watchForWizardNextBtnOnClick() {
+    this.wizard.on('afterPrev', (wizardObj) => {
+      console.log('afterPrev', wizardObj);
+      this.updateRoutingQueries(this.wizard.getStep());
+    });
     this.wizard.on('beforeNext', (wizardObj) => {
       switch (this.wizard.getStep()) {
         case 1: {
@@ -226,7 +230,147 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
       key: 'id',
       load(loadOptions: LoadOptions) {
         return new Promise((resolve) => {
-          resolve([]);
+          resolve([
+            {
+              id: 0,
+              filterName: 'ShipperName',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'Shipper1' },
+                { id: 2, displayName: 'Shipper2' },
+              ],
+            },
+            {
+              id: 1,
+              filterName: 'CarrierName',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'Carrier1' },
+                { id: 2, displayName: 'Carrier2' },
+              ],
+            },
+            { id: 2, filterName: 'DateRange', filterData: { from: null, to: null }, filterSource: 'dateRange' },
+            { id: 3, filterName: 'Date', filterData: null, filterSource: 'date' },
+            {
+              id: 4,
+              filterName: 'RequestID',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'Request1' },
+                { id: 2, displayName: 'Request2' },
+              ],
+            },
+            {
+              id: 5,
+              filterName: 'RequestType',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'RequestType1' },
+                { id: 2, displayName: 'RequestType2' },
+              ],
+            },
+            {
+              id: 6,
+              filterName: 'ShippingType',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'ShippingType1' },
+                { id: 2, displayName: 'ShippingType2' },
+              ],
+            },
+            {
+              id: 7,
+              filterName: 'TripType',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'TripType1' },
+                { id: 2, displayName: 'TripType2' },
+              ],
+            },
+            {
+              id: 8,
+              filterName: 'TripStatus',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'TripStatus1' },
+                { id: 2, displayName: 'TripStatus2' },
+              ],
+            },
+            {
+              id: 9,
+              filterName: 'TransportType',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'TransportType1' },
+                { id: 2, displayName: 'TransportType2' },
+              ],
+            },
+            {
+              id: 10,
+              filterName: 'TruckType',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'TruckType1' },
+                { id: 2, displayName: 'TruckType2' },
+              ],
+            },
+            {
+              id: 11,
+              filterName: 'RouteType',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'RouteType1' },
+                { id: 2, displayName: 'RouteType2' },
+              ],
+            },
+            {
+              id: 12,
+              filterName: 'Origin',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'Origin1' },
+                { id: 2, displayName: 'Origin2' },
+              ],
+            },
+            {
+              id: 13,
+              filterName: 'Destination',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'Destination1' },
+                { id: 2, displayName: 'Destination2' },
+              ],
+            },
+            { id: 14, filterName: 'ExpectedDeliveryDate', filterData: null, filterSource: 'date' },
+            { id: 15, filterName: 'TripsPickupDateStart', filterData: null, filterSource: 'dateTime' },
+            {
+              id: 16,
+              filterName: 'IsPODSubmitted',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'Yes' },
+                { id: 2, displayName: 'No' },
+              ],
+            },
+            {
+              id: 17,
+              filterName: 'IsInvoiceIssued',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'Yes' },
+                { id: 2, displayName: 'No' },
+              ],
+            },
+            {
+              id: 18,
+              filterName: 'IsAttachedVAS',
+              filterData: null,
+              filterSource: [
+                { id: 1, displayName: 'Yes' },
+                { id: 2, displayName: 'No' },
+              ],
+            },
+          ]);
         }).then((res) => {
           return {
             data: res,
@@ -277,5 +421,9 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
 
   automationSetupModalSave($event: any) {
     console.log('event', $event);
+  }
+
+  isArray(item: any): boolean {
+    return Array.isArray(item);
   }
 }

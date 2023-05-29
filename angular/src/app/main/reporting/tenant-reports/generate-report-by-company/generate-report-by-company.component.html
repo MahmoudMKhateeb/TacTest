@@ -21,7 +21,7 @@
                 <!--begin::Wizard Step 2 Nav-->
                 <div class="wizard-step" data-wizard-type="step" data-wizard-state="pending">
                   <div class="wizard-label">
-                    <h3 class="wizard-title"><span>2.</span> {{ 'SelectHeaders' | localize }}</h3>
+                    <h3 class="wizard-title"><span>2.</span> {{ 'SelectFilters' | localize }}</h3>
                     <div class="wizard-bar"></div>
                   </div>
                 </div>
@@ -148,22 +148,90 @@
 
                   <!--begin: Wizard Step 2-->
                   <div class="pb-5" data-wizard-type="step-content">
-                    <h4 class="mb-10 font-weight-bold text-dark">{{ 'SelectHeaders' | localize }}</h4>
-                    <!--                    <div class="d-flex">-->
-                    <!--                      <dx-data-grid-->
-                    <!--                        #selectAttributesGrid-->
-                    <!--                        id="selectAttributesGrid"-->
-                    <!--                        [dataSource]="selectAttributesDataSource"-->
-                    <!--                        [remoteOperations]="false"-->
-                    <!--                        [showBorders]="true"-->
-                    <!--                        keyExpr="id"-->
-                    <!--                      >-->
-                    <!--                        <dxo-filter-row [visible]="true"></dxo-filter-row>-->
-                    <!--                        <dxo-selection [selectAllMode]="'allPages'" [showCheckBoxesMode]="'onClick'" mode="multiple"></dxo-selection>-->
-                    <!--                        <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"> </dxo-editing>-->
-                    <!--                        <dxi-column dataField="attributeName" caption="{{ l('AttributeName') }}"></dxi-column>-->
-                    <!--                      </dx-data-grid>-->
-                    <!--                    </div>-->
+                    <h4 class="mb-10 font-weight-bold text-dark">{{ 'SelectFilters' | localize }}</h4>
+                    <div class="d-flex">
+                      <dx-data-grid
+                        #selectAttributesGrid
+                        id="selectAttributesGrid"
+                        [dataSource]="selectAttributesDataSource"
+                        [remoteOperations]="false"
+                        [showBorders]="true"
+                        keyExpr="id"
+                      >
+                        <dxo-filter-row [visible]="false"></dxo-filter-row>
+                        <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"> </dxo-editing>
+                        <dxi-column dataField="filterName" caption="{{ l('FilterName') }}"></dxi-column>
+                        <dxi-column dataField="filterData" cellTemplate="filterDataTemplate" caption="{{ l('FilterData') }}"></dxi-column>
+                        <div *dxTemplate="let cell of 'filterDataTemplate'">
+                          <ng-container *ngIf="isArray(cell.data.filterSource)">
+                            <dx-select-box
+                              [id]="cell.data.filterName"
+                              [name]="cell.data.filterName"
+                              [(value)]="cell.data.filterData"
+                              [dataSource]="cell.data.filterSource"
+                              [searchEnabled]="true"
+                              displayExpr="displayName"
+                              valueExpr="id"
+                              required
+                              placeholder="{{ l('Select') }}"
+                            >
+                            </dx-select-box>
+                          </ng-container>
+                          <ng-container *ngIf="!isArray(cell.data.filterSource)">
+                            <div class="d-flex" *ngIf="cell.data.filterSource === 'dateRange'">
+                              <div class="w-50">
+                                <dx-date-box
+                                  [id]="cell.data.filterName + 'from'"
+                                  [name]="cell.data.filterName + 'from'"
+                                  [(value)]="cell.data.filterData.from"
+                                  placeholder="{{ l('SelectDate') }}"
+                                  displayFormat="dd/MM/yyyy"
+                                  type="datetime"
+                                >
+                                </dx-date-box>
+                              </div>
+                              <div class="w-50 ml-4">
+                                <dx-date-box
+                                  [id]="cell.data.filterName + 'to'"
+                                  [name]="cell.data.filterName + 'to'"
+                                  [(value)]="cell.data.filterData.to"
+                                  placeholder="{{ l('SelectDate') }}"
+                                  displayFormat="dd/MM/yyyy"
+                                  type="datetime"
+                                >
+                                </dx-date-box>
+                              </div>
+                            </div>
+                            <div class="d-flex" *ngIf="cell.data.filterSource === 'date'">
+                              <div class="w-100">
+                                <dx-date-box
+                                  [id]="cell.data.filterName + 'date'"
+                                  [name]="cell.data.filterName + 'date'"
+                                  [(value)]="cell.data.filterData"
+                                  placeholder="{{ l('SelectDate') }}"
+                                  displayFormat="dd/MM/yyyy"
+                                  type="date"
+                                >
+                                </dx-date-box>
+                              </div>
+                            </div>
+                            <div class="d-flex" *ngIf="cell.data.filterSource === 'dateTime'">
+                              <div class="w-100">
+                                <dx-date-box
+                                  [id]="cell.data.filterName + 'date'"
+                                  [name]="cell.data.filterName + 'date'"
+                                  [(value)]="cell.data.filterData"
+                                  placeholder="{{ l('Select') }}"
+                                  displayFormat="dd/MM/yyyy"
+                                  type="datetime"
+                                >
+                                </dx-date-box>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </dx-data-grid>
+                    </div>
                   </div>
                   <!--end: Wizard Step 2-->
 
