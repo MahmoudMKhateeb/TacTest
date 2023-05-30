@@ -708,7 +708,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         })
       )
       .subscribe((res) => {
-        type === 'source' ? (this.sourceCities = res) : this.loadDestinationCities(res, citiesToFill);
+        type === 'source' ? (this.sourceCities = res) : this.loadDestinationCities(res, citiesToFill, true);
         if (type === 'destination') {
           citiesToFill = undefined;
         }
@@ -724,8 +724,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       });
   }
 
-  private loadDestinationCities(res: TenantCityLookupTableDto[], citiesToFill?: number[]) {
-    if (isNotNullOrUndefined(res) && (!isNotNullOrUndefined(this.destinationCities) || this.destinationCities.length === 0)) {
+  private loadDestinationCities(res: TenantCityLookupTableDto[], citiesToFill?: number[], forceLoadCities = false) {
+    if (
+      (isNotNullOrUndefined(res) && (!isNotNullOrUndefined(this.destinationCities) || this.destinationCities.length === 0)) ||
+      (isNotNullOrUndefined(res) && forceLoadCities)
+    ) {
       res.forEach((element) => {
         var item = new ShippingRequestDestinationCitiesDto();
         item.cityId = Number(element.id);
@@ -737,6 +740,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           (city) =>
             citiesToFill.includes(city.cityId) && !this.step2Dto.shippingRequestDestinationCities?.map((item) => item.cityId)?.includes(city.cityId)
         );
+        this.step2Dto.shippingRequestDestinationCities = this.step2Dto.shippingRequestDestinationCities.reduce((accumulator, current) => {
+          const existingItem = accumulator.find((item) => item.cityId === current.cityId);
+          if (!existingItem) {
+            accumulator.push(current);
+          }
+          return accumulator;
+        }, []);
       }
     }
   }
@@ -1120,17 +1130,19 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   private useShippingRequestTemplate() {
     if (isNotNullOrUndefined(this.templateId)) {
       this.loading = true;
-      this._templateService
-        .getForView(this.templateId)
-        .pipe(
-          finalize(() => {
-            this.loading = false;
-          })
-        )
-        .subscribe((res) => {
-          // this.templateName = res.templateName;
-          this.parseJsonToDtoData(res.savedEntity);
-        });
+      setTimeout(() => {
+        this._templateService
+          .getForView(this.templateId)
+          .pipe(
+            finalize(() => {
+              this.loading = false;
+            })
+          )
+          .subscribe((res) => {
+            // this.templateName = res.templateName;
+            this.parseJsonToDtoData(res.savedEntity);
+          });
+      }, 250);
     }
   }
 
@@ -1151,9 +1163,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.step2Dto.init(parsedJson);
     this.originCountry = parsedJson.originCountryId;
     this.destinationCountry = parsedJson.destinationCountryId;
-    this.step2Dto.shippingRequestDestinationCities = undefined;
     this.loadCitiesByCountryId(this.originCountry, 'source');
-    let citiesToFill = parsedJson.shippingRequestDestinationCities.map((item) => item.cityId);
+    let citiesToFill = parsedJson.shippingRequestDestinationCities?.map((item) => item.cityId);
     this.loadCitiesByCountryId(this.destinationCountry, 'destination', citiesToFill);
     this.step2Dto.originCityId = parsedJson.originCityId;
     this.step2Dto.originFacilityId = parsedJson.originFacilityId;
@@ -1231,7 +1242,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
 
   getCityIdFromSelectedPort($event: any) {
-    this.step2Dto.originCityId = this.allOriginPorts?.find((port) => port.id == $event)?.cityId;
+    if (isNotNullOrUndefined(this.allOriginPorts)) {
+      this.step2Dto.originCityId = this.allOriginPorts?.find((port) => port.id == $event)?.cityId;
+    }
     console.log('this.step2Dto', this.step2Dto);
   }
 
