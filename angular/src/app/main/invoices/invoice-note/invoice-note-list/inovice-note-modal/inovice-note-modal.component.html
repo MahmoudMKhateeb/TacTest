@@ -38,7 +38,7 @@
           </div>
           <div class="col-6 mb-3">
             <h6>{{ l('TotalValue') }}:</h6>
-            {{ item?.totalValue }}
+            {{ item?.totalValue | number: '1.0-0' }}
           </div>
           <div class="col-6 mb-3">
             <h6>{{ l('Remarks') }}:</h6>

@@ -7,7 +7,7 @@
       <dxi-column dataField="source" caption="{{ l('Origin') }}"></dxi-column>
       <dxi-column dataField="destination" caption="{{ l('DestinationDelivery') }}"></dxi-column>
       <dxi-column dataField="truckType" caption="{{ l('TruckType') }}"></dxi-column>
-      <dxi-column dataField="subTotalAmount" caption="{{ l('Price') }} {{ l('SAR') }}"></dxi-column>
+      <dxi-column dataField="subTotalAmount" caption="{{ l('Price') }} {{ l('SAR') }}" format="fixedPoint"></dxi-column>
       <dxi-column dataField="vatAmount" caption="{{ l('Vat') }} {{ Data?.taxVat }}%"></dxi-column>
       <dxi-column dataField="totalAmount" caption="{{ l('Total') }}"></dxi-column>
       <dxi-column dataField="remarks" caption="{{ l('Quantity') }}"></dxi-column>
@@ -20,13 +20,13 @@
     <tbody>
       <tr>
         <td>
-          {{ l('SubTotalAmount') }} &nbsp;<span>{{ Data?.subTotalAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
+          {{ l('SubTotalAmount') }} &nbsp;<span>{{ Data?.subTotalAmount | | number:'1.0-0' }}</span> &nbsp;<span>{{ l('SAR') }}</span>
         </td>
         <td>
-          {{ l('VatAmount') }} &nbsp;<span>{{ Data?.vatAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
+          {{ l('VatAmount') }} &nbsp;<span>{{ Data?.vatAmount | | number:'1.0-0' }}</span> &nbsp;<span>{{ l('SAR') }}</span>
         </td>
         <td>
-          {{ l('TotalAmount') }} &nbsp; <span>{{ Data?.totalAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
+          {{ l('TotalAmount') }} &nbsp; <span>{{ Data?.totalAmount | | number:'1.0-0' }}</span> &nbsp;<span>{{ l('SAR') }}</span>
         </td>
         <td>
           <button *ngIf="isEnabled('App.ExportFunctionality')" (click)="exportToExcel()" class="btn btn-outline-danger">

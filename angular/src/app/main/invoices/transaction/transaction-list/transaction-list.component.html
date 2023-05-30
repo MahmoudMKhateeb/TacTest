@@ -47,7 +47,7 @@
               <dxi-column dataField="channelId" caption="{{ l('Channel') }}">
                 <dxo-lookup [dataSource]="ChannelType" displayExpr="value" valueExpr="key"> </dxo-lookup>
               </dxi-column>
-              <dxi-column dataField="amount" dataType="number" caption="{{ l('Amount') }}"></dxi-column>
+              <dxi-column dataField="amount" dataType="number" caption="{{ l('Amount') }}" format="fixedPoint"></dxi-column>
               <dxi-column dataField="creationTime" dataType="datetime" caption="{{ l('CreationDate') }}"></dxi-column>
               <dxo-summary> <dxi-total-item column="clientName" summaryType="count"> </dxi-total-item> </dxo-summary>
             </dx-data-grid>
