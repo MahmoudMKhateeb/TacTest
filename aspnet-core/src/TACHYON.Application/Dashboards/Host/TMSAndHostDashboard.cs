@@ -192,6 +192,55 @@ namespace TACHYON.Dashboards.Host
         }
 
 
+        public async Task<List<GetTopOWorstRatedTenantsOutput>> GetTopOWorstRatedTenants(GetTopOWorstRatedTenantsInput input)
+        {
+            await DisableTenancyFiltersIfTachyonDealer();
+            var tenants = _tenantRepository.GetAll().AsNoTracking();
+            var tenantList = default(List<Tenant>);
+
+            switch (input.EditionType)
+            {
+                case 1:
+                    tenantList = await tenants.Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.ShipperEdtionName)).ToListAsync();
+                    break;
+                case 2:
+                    tenantList = await tenants.Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.CarrierEdtionName)).ToListAsync();
+                    break;
+                case 3:
+                    tenantList = await tenants.Where(r => r.Edition.DisplayName.Contains(TACHYONConsts.BrokerEditionName) ||
+                                     r.Edition.DisplayName.Contains(TACHYONConsts.CarrierSaasEditionName)).ToListAsync();
+                    break;
+            }
+
+            switch (input.RateType)
+            {
+                case 1:
+                    tenantList = tenantList.OrderByDescending(x => x.Rate).ToList();
+                    break;
+                case 2:
+                    tenantList = tenantList.OrderBy(x => x.Rate).ToList();
+                    break;
+            }
+
+            var tenantsIdsList = tenantList.Select(x => x.Id).ToList();
+
+            var trips = await _shippingRequestTripRepository.GetAll().AsNoTracking()
+                .Where(r => (r.Status == ShippingRequestTripStatus.Delivered || r.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
+                && tenantsIdsList.Contains(r.ShippingRequestFk.TenantId) || (r.ShipperTenantId!= null && tenantsIdsList.Contains(r.ShipperTenantId.Value)) ||
+                tenantsIdsList.Contains(r.ShippingRequestFk.CarrierTenantId.Value) || (r.CarrierTenantId != null && tenantsIdsList.Contains(r.CarrierTenantId.Value)))
+                .Select(x=> new { x.CarrierTenantId , x.ShipperTenantId, requestShippers = x.ShippingRequestFk.TenantId, requestCarriers = x.ShippingRequestFk.CarrierTenantId }).ToListAsync();
+
+            return tenantList.Select(tenant => new GetTopOWorstRatedTenantsOutput()
+            {
+                Id = tenant.Id,
+                Name = tenant.companyName,
+                Rating = tenant.Rate,
+                NumberOfTrips = trips.Where(x=>x.CarrierTenantId == tenant.Id || x.ShipperTenantId == tenant.Id ||
+                x.requestShippers == tenant.Id || x.requestCarriers == tenant.Id).Count()
+            }).Take(5).ToList();
+        }
+
+
 
         #region Helper
         private IEnumerable<string> MonthsWithYearsInRange(DateTime start, DateTime end)
