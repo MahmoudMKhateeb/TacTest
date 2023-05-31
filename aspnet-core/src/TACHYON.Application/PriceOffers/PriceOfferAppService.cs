@@ -742,6 +742,7 @@ namespace TACHYON.PriceOffers
                     {
                         var isDirectRequestExist = await _shippingRequestDirectRequestRepository.GetAll().AnyAsync(x => x.CarrierTenantId == AbpSession.TenantId.Value && x.ShippingRequestId == input.Id && x.Status != ShippingRequestDirectRequestStatus.Declined);
                         if (!isDirectRequestExist) throw new UserFriendlyException(L("YouDoNotHaveDirectRequest"));
+                        matchingPricePackageId = await _pricePackageManager.GetMatchingPricePackageId(shippingRequest.TrucksTypeId, shippingRequest.OriginCityId, shippingRequest.DestinationCityId, AbpSession.TenantId);
                     }
                 }
 

@@ -76,7 +76,8 @@ namespace TACHYON.PricePackages
                       pricePackage.Type == PricePackageType.PerTrip &&
                       pricePackage.TruckTypeId == shippingRequest.TrucksTypeId &&
                       pricePackage.OriginCityId == shippingRequest.OriginCityId &&
-                      pricePackage.RouteType == shippingRequest.RouteTypeId && shippingRequest
+                      (((pricePackage.ShippingTypeId == ShippingTypeEnum.ExportPortMovements || pricePackage.ShippingTypeId == ShippingTypeEnum.ImportPortMovements) && pricePackage.RoundTrip == shippingRequest.RoundTripType) ||
+                       pricePackage.RouteType == shippingRequest.RouteTypeId) && shippingRequest
                           .ShippingRequestDestinationCities
                           .Any(i => i.CityId == pricePackage.DestinationCityId)
                 orderby pricePackage.Id
