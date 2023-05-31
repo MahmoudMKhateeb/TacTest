@@ -351,11 +351,24 @@
                   [disabled]="!pricePackageDto.shippingTypeId"
                   [required]="true"
                   placeholder="{{ l('SelectanOriginCity') }}"
+                  fieldTemplate="originCityTemplate"
                   [ngClass]="{
                     'is-invalid': originCity.invalid && (originCity.dirty || originCity.touched),
                     'is-valid': originCity.valid && (originCity.dirty || originCity.touched)
                   }"
                 >
+                  <div *dxTemplate="let data of 'originCityTemplate'">
+                    <dx-text-box
+                      [disabled]="
+                        pricePackageDto.shippingTypeId == shippingTypeEnum.LocalBetweenCities &&
+                        pricePackageDto.destinationLocation?.cityId == data?.cityId
+                      "
+                      class="product-name"
+                      [value]="data?.displayName"
+                      [readOnly]="true"
+                      sea
+                    ></dx-text-box>
+                  </div>
                 </dx-select-box>
                 <div *ngIf="originCity.invalid && (originCity.dirty || originCity.touched)" class="invalid-feedback">
                   {{ 'PricePackageInvalidOriginCityMsg' | localize }}
@@ -380,11 +393,23 @@
                   valueExpr="id"
                   [required]="true"
                   placeholder="{{ l('SelectaDestination') }}"
+                  fieldTemplate="destinationCityTemplate"
                   [ngClass]="{
                     'is-invalid': destinationCity.invalid && (destinationCity.dirty || destinationCity.touched),
                     'is-valid': destinationCity.valid && (destinationCity.dirty || destinationCity.touched)
                   }"
                 >
+                  <div *dxTemplate="let data of 'destinationCityTemplate'">
+                    <dx-text-box
+                      [disabled]="
+                        pricePackageDto.shippingTypeId == shippingTypeEnum.LocalBetweenCities &&
+                        pricePackageDto?.originLocation?.cityId == data?.cityId
+                      "
+                      class="product-name"
+                      [value]="data?.displayName"
+                      [readOnly]="true"
+                    ></dx-text-box>
+                  </div>
                 </dx-select-box>
 
                 <div *ngIf="destinationCity.invalid && (destinationCity.dirty || destinationCity.touched)" class="invalid-feedback">

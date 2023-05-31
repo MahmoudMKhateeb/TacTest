@@ -82,8 +82,6 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   selectedServiceAreas: PricePackageLocationSelectItemDto[];
   originLocationId: string;
   destinationLocationId: string;
-  searchMode = 'contains';
-  searchExpr = 'displayName';
 
   constructor(
     private injector: Injector,
