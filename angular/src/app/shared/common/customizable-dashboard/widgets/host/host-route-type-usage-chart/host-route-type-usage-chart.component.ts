@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { HostDashboardServiceProxy, TMSAndHostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 // import { ChartOptionsBars } from '../../ApexInterfaces';
 
@@ -27,7 +27,9 @@ export class HostRouteTypeUsageChartComponent extends AppComponentBase implement
   colors: string[] = [];
   tooltip: ApexTooltip = {
     custom: ({ series, seriesIndex, dataPointIndex, w }) => {
-      return `<div class="arrow_box" style="padding: 0.6rem; background: ${this.colors[seriesIndex]}"><span>${series[seriesIndex]}% ${this.l(
+      const percentage = (series[seriesIndex] / this.total) * 100;
+      const fixedPercentage = parseFloat(percentage.toFixed(2));
+      return `<div class="arrow_box" style="padding: 0.6rem; background: ${this.colors[seriesIndex]}"><span>${fixedPercentage}% ${this.l(
         this.routes[seriesIndex]
       )} </span></div>`;
     },
@@ -35,7 +37,7 @@ export class HostRouteTypeUsageChartComponent extends AppComponentBase implement
   };
   public chartOptions: Partial<ChartOptions>;
 
-  constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
+  constructor(private injector: Injector, private _TMSAndHostDashboardServiceProxy: TMSAndHostDashboardServiceProxy) {
     super(injector);
   }
 
@@ -47,7 +49,7 @@ export class HostRouteTypeUsageChartComponent extends AppComponentBase implement
     this.routes = [];
     this.counts = [];
     this.loading = true;
-    this._hostDashboardServiceProxy
+    this._TMSAndHostDashboardServiceProxy
       .getRouteTypeCount()
       .pipe(
         finalize(() => {

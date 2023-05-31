@@ -3,9 +3,11 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   ActiveActorDto,
   BrokerDashboardServiceProxy,
+  GetTruckTypeUsageOutput,
   ISelectItemDto,
   MostUsedTruckTypeDto,
   ShippingRequestsServiceProxy,
+  TMSAndHostDashboardServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { ApexPlotOptions, ChartComponent } from '@node_modules/ng-apexcharts';
 import { ApexLegend, ApexOptions } from '@node_modules/ng-apexcharts/lib/model/apex-types';
@@ -35,12 +37,14 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
   colors: string[] = [];
   allTransportTypes: ISelectItemDto[] = [];
   selectedTransportTypeId: string;
+  loading: boolean;
 
   constructor(
     injector: Injector,
     private dashboardCustomizationService: DashboardCustomizationService,
     private brokerDashboardServiceProxy: BrokerDashboardServiceProxy,
-    private shippingRequestsServiceProxy: ShippingRequestsServiceProxy
+    private shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
+    private _TMSAndHostDashboardServiceProxy: TMSAndHostDashboardServiceProxy
   ) {
     super(injector);
   }
@@ -63,7 +67,7 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
     this.getMostTruckTypeUsedComponent();
   }
 
-  fillChart(items: MostUsedTruckTypeDto[]) {
+  fillChart(items: MostUsedTruckTypeDto[] | GetTruckTypeUsageOutput[]) {
     this.colors = [];
     // this.chartOptions = {
     //     series: items.map((item, index) => {
@@ -116,7 +120,9 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
     //     },
     // };
     const numberOfTripsArray = items.map((item) => item.numberOfTrips);
-    const categories = items.map((item) => item.truckTypeName + '-' + item.capacityName + ' ' + this.l('Ton'));
+    const categories = items.map(
+      (item) => (isNotNullOrUndefined(item.name) ? item.name : item.truckTypeName + '-' + item.capacityName) + ' ' + this.l('Ton')
+    );
     this.chartOptions = {
       series: [
         {
@@ -217,8 +223,17 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
     if (!isNotNullOrUndefined(this.selectedTransportTypeId)) {
       return;
     }
+    this.loading = true;
+    if (this.isTachyonDealerOrHost) {
+      this._TMSAndHostDashboardServiceProxy.getTruckTypeUsage(Number(this.selectedTransportTypeId)).subscribe((res) => {
+        this.fillChart(res);
+        this.loading = false;
+      });
+      return;
+    }
     this.brokerDashboardServiceProxy.getMostTruckTypesUsed(Number(this.selectedTransportTypeId)).subscribe((res) => {
       this.fillChart(res);
+      this.loading = false;
     });
   }
 

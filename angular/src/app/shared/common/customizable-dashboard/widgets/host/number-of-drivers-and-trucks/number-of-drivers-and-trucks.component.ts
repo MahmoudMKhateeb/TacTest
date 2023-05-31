@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { TMSAndHostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -14,6 +14,7 @@ import {
   ApexFill,
   ApexTooltip,
 } from 'ng-apexcharts';
+import * as moment from '@node_modules/moment';
 
 export interface ChartOptions {
   series: ApexAxisChartSeries;
@@ -38,66 +39,74 @@ export class NumberOfDriversAndTrucksComponent extends AppComponentBase implemen
   public chartOptions: Partial<ChartOptions>;
 
   loading = false;
-  constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
+  constructor(private injector: Injector, private _TMSAndHostDashboardServiceProxy: TMSAndHostDashboardServiceProxy) {
     super(injector);
   }
 
-  ngOnInit(): void {
-    this.chartOptions = {
-      series: [
-        {
-          name: 'Trucks',
-          data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
-          color: '#dc2434',
+  ngOnInit(): void {}
+
+  getData(start: moment.Moment, end: moment.Moment) {
+    this.loading = true;
+    this._TMSAndHostDashboardServiceProxy.getDriversAndTrucksCount(start, end).subscribe((res) => {
+      console.log('res', res);
+      this.loading = false;
+      this.chartOptions = {
+        series: [
+          {
+            name: this.l('Trucks'),
+            data: res.trucks.map((item) => item.y),
+            color: '#dc2434',
+          },
+          {
+            name: this.l('Drivers'),
+            data: res.drivers.map((item) => item.y),
+            color: '#000',
+          },
+        ],
+        chart: {
+          type: 'bar',
+          height: '100%',
+          width: '100%',
         },
-        {
-          name: 'Drivers',
-          data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
-          color: '#000',
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '55%',
+            // endingShape: 'rounded'
+          },
         },
-      ],
-      chart: {
-        type: 'bar',
-        height: '100%',
-        width: '100%',
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '55%',
-          // endingShape: 'rounded'
+        dataLabels: {
+          enabled: false,
         },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent'],
-      },
-      xaxis: {
-        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-      },
-      yaxis: {
-        title: {
-          // text: '$ (thousands)'
+        stroke: {
+          show: true,
+          width: 2,
+          colors: ['transparent'],
         },
-      },
-      fill: {
-        opacity: 1,
-      },
-      tooltip: {
-        y: {
-          // formatter: function(val) {
-          //     return '$ ' + val + ' thousands';
-          // }
+        xaxis: {
+          categories: res.trucks.map((item) => item.x),
         },
-      },
-    };
+        yaxis: {
+          title: {
+            // text: '$ (thousands)'
+          },
+        },
+        fill: {
+          opacity: 1,
+        },
+        tooltip: {
+          y: {
+            // formatter: function(val) {
+            //     return '$ ' + val + ' thousands';
+            // }
+          },
+        },
+      };
+    });
   }
 
-  getData() {
-    this.loading = true;
+  selectedFilter(event: { start: moment.Moment; end: moment.Moment }) {
+    console.log('event', event);
+    this.getData(event.start, event.end);
   }
 }

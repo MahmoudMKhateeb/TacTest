@@ -1,5 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
+import { GetRegisteredCompaniesNumberOutput, TMSAndHostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-number-of-registered-companies',
@@ -7,9 +8,20 @@ import { AppComponentBase } from '@shared/common/app-component-base';
   styleUrls: ['./number-of-registered-companies.component.scss'],
 })
 export class NumberOfRegisteredCompaniesComponent extends AppComponentBase implements OnInit {
-  constructor(private injector: Injector) {
+  registeredCompaniesNumber: GetRegisteredCompaniesNumberOutput;
+
+  constructor(private injector: Injector, private _TMSAndHostDashboardServiceProxy: TMSAndHostDashboardServiceProxy) {
     super(injector);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.fetchData();
+  }
+
+  private fetchData() {
+    this._TMSAndHostDashboardServiceProxy.getRegisteredCompaniesNumber().subscribe((res) => {
+      this.registeredCompaniesNumber = res;
+      console.log('res', res);
+    });
+  }
 }

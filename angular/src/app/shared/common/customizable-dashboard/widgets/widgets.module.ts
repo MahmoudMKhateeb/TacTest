@@ -105,6 +105,7 @@ import { SaasInvoicesComponent } from '@app/shared/common/customizable-dashboard
 import { GoodTypesUsageComponent } from '@app/shared/common/customizable-dashboard/widgets/host/good-types-usage/good-types-usage.component';
 import { CostVsSellingVsProfitOfTruckAggregationTripsComponent } from '@app/shared/common/customizable-dashboard/widgets/host/cost-vs-selling-vs-profit-of-truck-aggregation-trips/cost-vs-selling-vs-profit-of-truck-aggregation-trips.component';
 import { NewRegisteredCompaniesComponent } from '@app/shared/common/customizable-dashboard/widgets/host/new-registered-companies/new-registered-companies.component';
+import { HostTmsWidgetFiltersComponent } from '@app/shared/common/customizable-dashboard/host-tms-widget-filters/host-tms-widget-filters.component';
 import { MakeScrollableModule } from '@app/shared/common/make-scrollable-directive/make-scrollable.module';
 
 const widgets = [
@@ -196,6 +197,7 @@ const widgets = [
   GoodTypesUsageComponent,
   CostVsSellingVsProfitOfTruckAggregationTripsComponent,
   NewRegisteredCompaniesComponent,
+  HostTmsWidgetFiltersComponent,
 ];
 @NgModule({
   declarations: [...widgets],

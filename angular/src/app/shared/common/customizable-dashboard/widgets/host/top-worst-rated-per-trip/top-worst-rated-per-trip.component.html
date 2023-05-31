@@ -20,7 +20,10 @@
                   [(value)]="rateType"
                   [dataSource]="rateTypes"
                   [searchEnabled]="true"
+                  displayExpr="value"
+                  valueExpr="key"
                   placeholder="{{ l('Select') }}"
+                  (onValueChanged)="getData()"
                 >
                 </dx-select-box>
               </div>
@@ -34,7 +37,10 @@
                   [(value)]="editionType"
                   [dataSource]="editionTypes"
                   [searchEnabled]="true"
+                  displayExpr="value"
+                  valueExpr="key"
                   placeholder="{{ l('Select') }}"
+                  (onValueChanged)="getData()"
                 >
                 </dx-select-box>
               </div>
@@ -44,10 +50,10 @@
             <div class="d-flex flex-column w-100 pr-4">
               <div class="d-flex align-items-center justify-content-between">
                 <h5 class="text-dark">
-                  <b>{{ item.name }}</b>
+                  <b>{{ item.name }}</b> &nbsp;
                 </h5>
                 <h5 class="text-dark">
-                  <b>{{ item.numberOfRequests }}</b>
+                  <b>{{ item.numberOfTrips }}</b>
                 </h5>
               </div>
               <div class="d-flex w-100">

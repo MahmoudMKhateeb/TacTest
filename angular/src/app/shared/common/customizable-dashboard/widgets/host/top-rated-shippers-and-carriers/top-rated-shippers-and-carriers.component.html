@@ -1,11 +1,16 @@
 <div class="row h-100">
-  <div class="col-lg-12">
+  <div class="col-lg-12 h-100">
     <!--begin::Card-->
-    <div class="card card-custom card-stretch p-0">
+    <div class="card card-custom card-stretch p-0" [busyIf]="loading">
       <!--begin::Body-->
       <div class="card-body p-0">
-        <app-top-rated-shippers></app-top-rated-shippers>
-        <app-top-rated-carriers></app-top-rated-carriers>
+        <div class="pt-4 pr-4 d-flex w-100 justify-content-end">
+          <app-host-tms-widget-filters (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
+        </div>
+        <div class="p-0 m-0 h-100 overflow-auto scrollable-col d-flex flex-column">
+          <app-top-rated-shippers [topShippers]="topTenantsCreatedTrips?.shippers"></app-top-rated-shippers>
+          <app-top-rated-carriers [topCarriers]="topTenantsCreatedTrips?.carriers"></app-top-rated-carriers>
+        </div>
       </div>
       <!--end::Body-->
     </div>

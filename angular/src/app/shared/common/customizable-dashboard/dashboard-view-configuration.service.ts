@@ -469,12 +469,7 @@ export class DashboardViewConfigurationService {
       15
     );
 
-    let goodTypesUsage = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.GoodTypesUsageWidget,
-      HostGoodTypesUsageChartComponent,
-      10,
-      15
-    );
+    let goodTypesUsage = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.GoodTypesUsageWidget, GoodTypesUsageComponent, 10, 15);
 
     let routeTypeUsage = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.RouteTypesUsageWidget,
@@ -555,21 +550,21 @@ export class DashboardViewConfigurationService {
 
     //TMS
     let NumberOfRegisteredTrucks_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSNumberOfRegisteredTrucksWidget,
+      DashboardCustomizationConst.widgets.TachyonDealer.NumberOfRegisteredTrucksWidget,
       NumberOfRegesterdTrucksComponent,
       6,
       5
     );
 
     let NumberOfRegisteredShippers_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSNumberOfRegisteredShippersWidget,
+      DashboardCustomizationConst.widgets.TachyonDealer.NumberOfRegisteredShippersWidget,
       NumberOfRegesterdShippersComponent,
       6,
       5
     );
 
     let onGoingTrips_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSNumberOfOngoingTripsWidget,
+      DashboardCustomizationConst.widgets.TachyonDealer.NumberOfOngoingTripsWidget,
       OnGoingTripsComponent,
       3,
       5
@@ -606,14 +601,14 @@ export class DashboardViewConfigurationService {
     let SaasInvoices_TMS = new WidgetViewDefinition(DashboardCustomizationConst.widgets.TachyonDealer.SaasInvoices, SaasInvoicesComponent, 6, 7);
 
     let numberOfDeliveredTrips_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSNumberOfDeliveredTripsWidget,
+      DashboardCustomizationConst.widgets.TachyonDealer.NumberOfDeliveredTripsWidget,
       DeleverdTripsComponent,
       3,
       5
     );
 
     let numberOfRegisteredCarriers_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSMostRequestedCarriersWidget,
+      DashboardCustomizationConst.widgets.TachyonDealer.MostRequestedCarriersWidget,
       NumberOfRegesterdCarriersComponent,
       6,
       5
@@ -627,14 +622,14 @@ export class DashboardViewConfigurationService {
     );
 
     let NumberOfDriversAndTrucks_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSNumberOfDriversAndTrucksWidget,
+      DashboardCustomizationConst.widgets.TachyonDealer.NumberOfDriversAndTrucksWidget,
       NumberOfDriversAndTrucksComponent,
       9,
       10
     );
 
     let NumberOfTrips_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSNumberOfTripsWidget,
+      DashboardCustomizationConst.widgets.TachyonDealer.NumberOfTripsWidget,
       NumberOfTripsComponent,
       9,
       10
@@ -655,34 +650,29 @@ export class DashboardViewConfigurationService {
     );
 
     let NewAccounts_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSNewAccountsRegisteredWidget,
+      DashboardCustomizationConst.widgets.TachyonDealer.NewAccountsRegisteredWidget,
       HostNewAccountsChartComponent,
       10,
       15
     );
-    let NewTrips_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSNewTripsWidget,
-      HostNewTripsChartComponent,
-      10,
-      15
-    );
+    let NewTrips_TMS = new WidgetViewDefinition(DashboardCustomizationConst.widgets.TachyonDealer.NewTripsWidget, HostNewTripsChartComponent, 10, 15);
 
     let TruckTypesChart_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSTruckTypeUsageWidget,
+      DashboardCustomizationConst.widgets.TachyonDealer.TruckTypeUsageWidget,
       HostTruckTypeUsageChartComponent,
       10,
       15
     );
 
     let goodTypesUsage_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSGoodTypesUsageWidget,
-      HostGoodTypesUsageChartComponent,
+      DashboardCustomizationConst.widgets.TachyonDealer.GoodTypesUsageWidget,
+      GoodTypesUsageComponent,
       10,
       15
     );
 
     let routeTypeUsage_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSRouteTypesUsageWidget,
+      DashboardCustomizationConst.widgets.TachyonDealer.RouteTypesUsageWidget,
       HostRouteTypeUsageChartComponent,
       6,
       5
@@ -695,14 +685,14 @@ export class DashboardViewConfigurationService {
       15
     );
     let RequestAcceptanceMeter_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSRequestsPriceAcceptanceWidget,
+      DashboardCustomizationConst.widgets.TachyonDealer.RequestsPriceAcceptanceWidget,
       HostRquestAcceptanceMeterComponent,
       8,
       8
     );
 
     let InvoicePaidMeter_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.TMSInvoicesPaidBeforeDueDateWidget,
+      DashboardCustomizationConst.widgets.TachyonDealer.InvoicesPaidBeforeDueDateWidget,
       HostInvoicesMeterComponent,
       8,
       8

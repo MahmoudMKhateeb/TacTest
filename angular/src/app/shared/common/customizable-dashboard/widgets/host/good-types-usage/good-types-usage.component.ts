@@ -4,14 +4,17 @@ import {
   ActiveActorDto,
   BrokerDashboardServiceProxy,
   GetAllGoodsCategoriesForDropDownOutput,
+  GetTruckTypeUsageOutput,
   ISelectItemDto,
   MostUsedTruckTypeDto,
   ShippingRequestsServiceProxy,
+  TMSAndHostDashboardServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { ApexPlotOptions, ChartComponent } from '@node_modules/ng-apexcharts';
 import { ApexLegend, ApexOptions } from '@node_modules/ng-apexcharts/lib/model/apex-types';
 import { DashboardCustomizationService } from '@app/shared/common/customizable-dashboard/dashboard-customization.service';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'app-good-types-usage',
@@ -36,6 +39,8 @@ export class GoodTypesUsageComponent extends AppComponentBase implements OnInit 
   colors: string[] = [];
   allGoodTypes: GetAllGoodsCategoriesForDropDownOutput[] = [];
   selectedTransportTypeId: number;
+  private startEnd: { start: moment.Moment; end: moment.Moment };
+  loading: boolean;
 
   @HostListener('wheel', ['$event']) onScroll(event: WheelEvent): void {
     const targetElement = event.target as HTMLElement;
@@ -48,7 +53,7 @@ export class GoodTypesUsageComponent extends AppComponentBase implements OnInit 
   constructor(
     injector: Injector,
     private dashboardCustomizationService: DashboardCustomizationService,
-    private brokerDashboardServiceProxy: BrokerDashboardServiceProxy,
+    private _TMSAndHostDashboardServiceProxy: TMSAndHostDashboardServiceProxy,
     private shippingRequestsServiceProxy: ShippingRequestsServiceProxy
   ) {
     super(injector);
@@ -64,7 +69,7 @@ export class GoodTypesUsageComponent extends AppComponentBase implements OnInit 
         return item;
       });
       this.selectedTransportTypeId = this.allGoodTypes.length > 0 ? this.allGoodTypes[0].id : null;
-      this.fetchData();
+      // this.fetchData();
     });
   }
 
@@ -72,10 +77,10 @@ export class GoodTypesUsageComponent extends AppComponentBase implements OnInit 
     this.getMostTruckTypeUsedComponent();
   }
 
-  fillChart(items: MostUsedTruckTypeDto[]) {
+  fillChart(items: GetTruckTypeUsageOutput[]) {
     this.colors = [];
     const numberOfTripsArray = items.map((item) => item.numberOfTrips);
-    const categories = items.map((item) => item.truckTypeName + '-' + item.capacityName + ' ' + this.l('Ton'));
+    const categories = items.map((item) => item.name);
     this.chartOptions = {
       series: [
         {
@@ -144,13 +149,23 @@ export class GoodTypesUsageComponent extends AppComponentBase implements OnInit 
     if (!isNotNullOrUndefined(this.selectedTransportTypeId)) {
       return;
     }
-    this.brokerDashboardServiceProxy.getMostTruckTypesUsed(Number(this.selectedTransportTypeId)).subscribe((res) => {
-      this.fillChart(res);
-    });
+    this.loading = true;
+    this._TMSAndHostDashboardServiceProxy
+      .getGoodsUsage(Number(this.selectedTransportTypeId), this.startEnd.start, this.startEnd.end)
+      .subscribe((res) => {
+        this.fillChart(res);
+        this.loading = false;
+      });
   }
 
   selectTransportType(transportType: GetAllGoodsCategoriesForDropDownOutput) {
     this.selectedTransportTypeId = transportType.id;
+    this.fetchData();
+  }
+
+  selectedFilter(event: { start: moment.Moment; end: moment.Moment }) {
+    console.log('event', event);
+    this.startEnd = event;
     this.fetchData();
   }
 }
