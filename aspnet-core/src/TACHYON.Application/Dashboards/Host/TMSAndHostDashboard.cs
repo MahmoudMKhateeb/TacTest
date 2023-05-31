@@ -2,12 +2,12 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Timing;
-using DevExpress.XtraRichEdit.Import.Html;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
@@ -238,6 +238,65 @@ namespace TACHYON.Dashboards.Host
                 NumberOfTrips = trips.Where(x=>x.CarrierTenantId == tenant.Id || x.ShipperTenantId == tenant.Id ||
                 x.requestShippers == tenant.Id || x.requestCarriers == tenant.Id).Count()
             }).Take(5).ToList();
+        }
+
+        public async Task<List<GetTruckTypeUsageOutput>> GetTruckTypeUsage(int transportTypeId)
+        {
+                var trips =await _shippingRequestTripRepository.GetAll()
+            .Where(x => (x.Status == ShippingRequestTripStatus.Delivered || 
+            x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation) &&
+            x.AssignedTruckFk.TransportTypeId == transportTypeId)
+            .Select(x => x.AssignedTruckFk)
+            .Select(x => new
+            {
+                TransportType = x.TransportTypeFk.DisplayName,
+                truckType = x.TrucksTypeFk.DisplayName +"-"+ x.CapacityFk.DisplayName
+            }).Where(x=> !string.IsNullOrEmpty(x.truckType))
+            .GroupBy(x => x.truckType)
+            .Select(g => new
+            {
+                name = g.Key,
+                trips = g.Count()
+            })
+            .OrderByDescending(g => g.trips)
+            .Take(5).ToListAsync();
+
+            return trips.Select(x => new GetTruckTypeUsageOutput
+            {
+                Name = x.name,
+                NumberOfTrips = x.trips
+            }).ToList();
+        }
+
+        public async Task<List<GetTruckTypeUsageOutput>> GetGoodsUsage(int goodsCategoryId, DateRangeInput dateRangeInput)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+
+            var goodsDetailsList =await _shippingRequestTripRepository.GetAll()
+                .Where(x => (x.Status == ShippingRequestTripStatus.Delivered ||
+                x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation) &&
+                x.GoodCategoryId == goodsCategoryId || x.ShippingRequestFk.GoodCategoryId == goodsCategoryId &&
+                x.CreationTime.Date > dateRangeInput.StartDate && x.CreationTime.Date < dateRangeInput.EndDate)
+                .SelectMany(x => x.RoutPoints.Where(x=>x.PickingType == Routs.RoutPoints.PickingType.Dropoff)
+                .SelectMany(y => y.GoodsDetails))
+                .Select(x => new
+                {
+                    goodsSubCatName = x.GoodCategoryFk.Key,
+                })
+            .GroupBy(x => x.goodsSubCatName)
+            .Select(g => new
+            {
+                name = g.Key,
+                trips = g.Count()
+            })
+            .OrderByDescending(g => g.trips)
+            .Take(5).ToListAsync();
+
+                return goodsDetailsList.Select(x => new GetTruckTypeUsageOutput
+                {
+                    Name = x.name,
+                    NumberOfTrips = x.trips
+                }).ToList();
         }
 
 
