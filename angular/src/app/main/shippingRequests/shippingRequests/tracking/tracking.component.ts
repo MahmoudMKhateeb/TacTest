@@ -7,6 +7,7 @@ import {
   ShippingRequestRouteType,
   ShippingRequestStatus,
   ShippingRequestsTripListDto,
+  ShippingRequestsTripServiceProxy,
   ShippingRequestTripCancelStatus,
   ShippingRequestTripDriverRoutePointDto,
   ShippingRequestTripDriverStatus,
@@ -78,6 +79,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
     private _trackingServiceProxy: TrackingServiceProxy,
     private _fileDownloadService: FileDownloadService,
+    private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
     private _activatedRoute: ActivatedRoute,
     private router: Router
   ) {
@@ -405,5 +407,16 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     this.router.navigateByUrl(`/app/main/tracking/${pageName}`);
   }
 
+  printBayanTrip(id: any) {
+    this._shippingRequestTripsService.printBayanIntegrationTrip(id).subscribe((result) => {
+      const linkSource = 'data:application/pdf;base64,' + result + '\n';
+      const downloadLink = document.createElement('a');
+      const fileName = id + '.pdf';
+
+      downloadLink.href = linkSource;
+      downloadLink.download = fileName;
+      downloadLink.click();
+    });
+  }
   protected readonly AppConsts = AppConsts;
 }
