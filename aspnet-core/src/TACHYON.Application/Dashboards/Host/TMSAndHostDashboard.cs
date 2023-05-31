@@ -65,7 +65,7 @@ namespace TACHYON.Dashboards.Host
             var list = (await _tenantRepository.GetAll().AsNoTracking()
             .Where(r => r.CreationTime.Date > input.StartDate && r.CreationTime.Date < input.EndDate).Select(x=>x.CreationTime).ToListAsync())
             .Select(creationTime => new { y = creationTime.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationTime.Month) })
-            .GroupBy(x => x.y).Select(x => new { X = x.Key, Y= x.Count()});
+            .GroupBy(x => x.y).Select(x => new { X = x.Key, Y= x.Count()}).ToList();
 
             var dto = new List<ChartCategoryPairedValuesDto>();
              foreach(var monthWithYear in MonthsWithYearsInRange(input.StartDate, input.EndDate))
@@ -299,6 +299,125 @@ namespace TACHYON.Dashboards.Host
                 }).ToList();
         }
 
+
+        public async Task<GetTopTenantsCreatedTripsOutput> GetTopTenantsCreatedTrips(DateRangeInput input)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+
+            var shippers = await _shippingRequestTripRepository.GetAll()
+                .Where(x=>x.CreationTime.Date > input.StartDate && x.CreationTime.Date < input.EndDate)
+                .Select(x => new
+                {
+                    tenant = x.ShippingRequestFk != null ? x.ShippingRequestFk.Tenant.companyName
+                    : x.ShipperTenantFk.companyName,
+                    rate = x.ShippingRequestFk != null ?  x.ShippingRequestFk.Tenant.Rate
+                    :  x.ShipperTenantFk.Rate,
+                }).GroupBy(x => new {  x.tenant, x.rate })
+                .Select(x => new GetTenantsCountWithRateOutput
+                {
+                    Name = x.Key.tenant,
+                    Rate = x.Key.rate,
+                    NumberOfTrips = x.Count()
+                })
+                .OrderByDescending(x => x.NumberOfTrips)
+                .Take(3).ToListAsync();
+
+            var carriers = await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.CreationTime.Date > input.StartDate && x.CreationTime.Date < input.EndDate)
+                .Select(x => new
+                {
+                    tenant = x.ShippingRequestFk != null && x.ShippingRequestFk.CarrierTenantId != null
+                    ? x.ShippingRequestFk.CarrierTenantFk.companyName
+                    : x.CarrierTenantFk.companyName,
+                    rate = x.ShippingRequestFk != null ? x.ShippingRequestFk.Tenant.Rate
+                    : x.ShipperTenantFk.Rate,
+                }).GroupBy(x =>new { x.tenant , x.rate})
+                .Select(x => new GetTenantsCountWithRateOutput
+                {
+                    Name = x.Key.tenant,
+                    Rate = x.Key.rate,
+                    NumberOfTrips = x.Count()
+                })
+                .OrderByDescending(x => x.NumberOfTrips)
+                .Take(3).ToListAsync();
+
+            return new GetTopTenantsCreatedTripsOutput { Carriers = carriers, Shippers = shippers };
+        }
+
+
+        public async Task<GetNormalVsDedicatedRequestsOutput> GetNormalVsDedicatedRequests(DateRangeInput input)
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            var total = _shippingRequestRepository.GetAll()
+                .Where(x => x.CreationTime.Date > input.StartDate && x.CreationTime.Date < input.EndDate);
+
+            var normalTrips = (await total.Where(x => x.ShippingRequestFlag == ShippingRequestFlag.Normal)
+                .Select(x => x.CreationTime.Date).ToListAsync())
+                .Select(creationTime =>
+                new { y = creationTime.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationTime.Month) })
+                .GroupBy(x => x.y)
+                .Select(x => new { X = x.Key, Y = x.Count() })
+                .ToList();
+
+            var dedicatedTrips = (await total.Where(x => x.ShippingRequestFlag == ShippingRequestFlag.Dedicated)
+                .Select(x => x.CreationTime.Date).ToListAsync())
+                .Select(creationTime =>
+                new { y = creationTime.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationTime.Month) })
+                .GroupBy(x => x.y)
+                .Select(x => new { X = x.Key, Y = x.Count() })
+                .ToList();
+
+
+            var dto = new GetNormalVsDedicatedRequestsOutput
+            {
+                DedicatedTrips = new List<ChartCategoryPairedValuesDto>(),
+                NormalTrips = new List<ChartCategoryPairedValuesDto>()
+            };
+            foreach (var monthWithYear in MonthsWithYearsInRange(input.StartDate, input.EndDate))
+            {
+                var normal = normalTrips.FirstOrDefault(x => x.X == monthWithYear);
+                if (normal != null)
+                {
+                    dto.NormalTrips.Add(new ChartCategoryPairedValuesDto { X = normal.X, Y = normal.Y });
+                }
+                else
+                {
+                    dto.NormalTrips.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                }
+
+                var dedicated = dedicatedTrips.FirstOrDefault(x => x.X == monthWithYear);
+                if (dedicated != null)
+                {
+                    dto.DedicatedTrips.Add(new ChartCategoryPairedValuesDto { X = dedicated.X, Y = dedicated.Y });
+                }
+                else
+                {
+                    dto.DedicatedTrips.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                }
+            }
+
+            return dto;
+
+        }
+
+
+        public async Task<long> GetSaasTripsNumber()
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            return await _shippingRequestTripRepository.GetAll()
+                .Where(x=>x.CreationTime.Month == Clock.Now.Month)
+                .Where(x => x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId ||
+            (x.ShippingRequestFk == null && x.ShipperTenantId == x.CarrierTenantId)).CountAsync();
+        }
+
+        public async Task<long> GetTruckAggregationTripsNumber()
+        {
+            await DisableTenancyFilterIfTachyonDealerOrHost();
+            return await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.CreationTime.Month == Clock.Now.Month)
+                .Where(x => x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId ||
+            (x.ShipperTenantId != x.CarrierTenantId)).CountAsync();
+        }
 
 
         #region Helper
