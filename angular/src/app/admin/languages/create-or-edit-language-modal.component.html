@@ -47,11 +47,11 @@
             >
               <ng-template let-item pTemplate="selectedItem">
                 <i class="margin-right-5 d-inline-block" [ngClass]="item.value"></i>
-                <span style="vertical-align: middle;">{{ item.label }}</span>
+                <span style="vertical-align: middle">{{ item.label }}</span>
               </ng-template>
               <ng-template let-flag pTemplate="item">
                 <i class="margin-right-5 d-inline-block" [ngClass]="flag.value"></i>
-                <span style="vertical-align: middle;">{{ flag.label }}</span>
+                <span style="vertical-align: middle">{{ flag.label }}</span>
               </ng-template>
             </p-dropdown>
           </div>
@@ -64,7 +64,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">
+          <button [disabled]="saving" type="button" class="btn btn-outline-danger font-weight-bold" (click)="close()">
             {{ 'Cancel' | localize }}
           </button>
           <button

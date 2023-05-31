@@ -52,7 +52,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public string ShipperReference { get; set; }
 
         /// <summary>
-        /// shipper add his invoice number manually
+        /// shipper add his invoice number manually, this updated currnetly to booking number 
         /// </summary>
         public string ShipperInvoiceNo { get; set; }
 

@@ -47,6 +47,374 @@
             </div>
           </div>
         </div>
+        <div class="row" [hidden]="!this.feature.isEnabled('App.CarrierClients') || _TripService.GetShippingRequestForViewOutput">
+          <div class="col-6" *ngIf="_TripService?.CreateOrEditShippingRequestTripDto">
+            <div class="form-group">
+              <label>{{ l('ActorShipper') }}</label>
+              <div>
+                <dx-select-box
+                  id="ActorShipper"
+                  name="ActorShipper"
+                  [(value)]="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId"
+                  [dataSource]="AllActorsShippers"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  placeholder="{{ l('SelectActor') }}"
+                  [disabled]="true"
+                >
+                </dx-select-box>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId">
+              <label>{{ l('Price') }} <span class="text-danger">*</span></label>
+              <input
+                [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice.subTotalAmountWithCommission"
+                min="0"
+                (keypress)="numberOnly($event)"
+                required
+                type="number"
+                class="form-control"
+                name="subTotalAmountWithCommission"
+                [disabled]="true"
+              />
+            </div>
+            <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId">
+              <label>{{ l('TripVatAmount') }} <span class="text-danger">*</span></label>
+              <input
+                [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorShipperPrice.vatAmountWithCommission"
+                required
+                min="0"
+                type="number"
+                class="form-control"
+                name="vatAmountWithCommission"
+                disabled
+              />
+            </div>
+
+            <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shipperActorId">
+              <label>{{ l('TotalAmount') }} <span class="text-danger">*</span></label>
+              <input
+                [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto?.actorShipperPrice.totalAmountWithCommission"
+                required
+                min="0"
+                type="number"
+                class="form-control"
+                name="totalAmountWithCommission"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="col-6" *ngIf="_TripService?.CreateOrEditShippingRequestTripDto">
+            <div class="form-group">
+              <label>{{ l('ActorCarrier') }}</label>
+              <div>
+                <dx-select-box
+                  id="ActorCarrier"
+                  name="ActorCarrier"
+                  [(value)]="_TripService.CreateOrEditShippingRequestTripDto.carrierActorId"
+                  [dataSource]="AllActorsCarriers"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  placeholder="{{ l('SelectActor') }}"
+                  [disabled]="true"
+                >
+                </dx-select-box>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.carrierActorId">
+              <label>{{ l('Price') }} <span class="text-danger">*</span></label>
+              <input
+                [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice.subTotalAmount"
+                min="0"
+                (keypress)="numberOnly($event)"
+                required
+                type="number"
+                class="form-control"
+                name="subTotalAmount"
+                disabled
+              />
+            </div>
+            <div class="form-group" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.carrierActorId">
+              <label>{{ l('TripVatAmount') }} <span class="text-danger">*</span></label>
+              <input
+                [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.actorCarrierPrice.vatAmount"
+                required
+                min="0"
+                type="number"
+                class="form-control"
+                name="vatAmount"
+                disabled
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row" [hidden]="_TripService.GetShippingRequestForViewOutput" *ngIf="_TripService.CreateOrEditShippingRequestTripDto">
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label> {{ l('ShippingType') }}</label>
+              <div>
+                <select
+                  class="form-control"
+                  name="shippingTypeId"
+                  [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId"
+                  disabled
+                  required
+                >
+                  <!-- [class.is-valid]="
+                            shippingType.valid && (shippingType.dirty || shippingType.touched)
+                          "
+                          [class.is-invalid]="
+                            shippingType.invalid && (shippingType.dirty || shippingType.touched)
+                          " -->
+                  <!--                          <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>-->
+                  <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-lg-6"
+            *ngIf="
+              _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+              _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
+            "
+          >
+            <div class="form-group">
+              <label>{{ l('RoundTrip') }} </label>
+              <div>
+                <select
+                  class="form-control"
+                  name="roundTripType"
+                  [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.roundTripType"
+                  required
+                  disabled
+                >
+                  <option disabled [ngValue]="null">{{ l('SelectARoundTripType') }}</option>
+                  <option *ngFor="let item of allRoundTripTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <!-- End Shipping Type -->
+
+          <!-- Route type -->
+
+          <ng-container
+            *ngIf="
+              (_TripService.GetShippingRequestForViewOutput &&
+                _TripService.GetShippingRequestForViewOutput?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated) ||
+              !_TripService.GetShippingRequestForViewOutput
+            "
+          >
+            <div
+              class="form-group col-lg-6"
+              *ngIf="
+                _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ExportPortMovements &&
+                _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery
+              "
+            >
+              <label>{{ l('RouteType') }}</label>
+              <select
+                name="routeType"
+                type="text"
+                [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.routeType"
+                class="form-control"
+                [disabled]="true"
+                required
+              >
+                <option disabled [ngValue]="null">{{ l('SelectRouteType') }}</option>
+                <option [value]="r.key" *ngFor="let r of routeTypes">
+                  {{ l(r.value) | localize }}
+                </option>
+              </select>
+            </div>
+            <div
+              class="form-group col-lg-6"
+              *ngIf="
+                _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ExportPortMovements &&
+                _TripService.CreateOrEditShippingRequestTripDto.routeType == RouteTypesEnum.MultipleDrops &&
+                _TripService.CreateOrEditShippingRequestTripDto.shippingRequestTripFlag != ShippingRequestTripFlagEnum.HomeDelivery
+              "
+            >
+              <label>{{ l('NumberOfDrops') }}</label>
+              <input
+                #numberOfDrops="ngModel"
+                type="number"
+                class="form-control"
+                name="numberOfDrops"
+                [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.numberOfDrops"
+                [min]="2"
+                [class.is-invalid]="numberOfDrops.touched && !numberOfDrops.valid"
+                [class.is-valid]="numberOfDrops.touched && numberOfDrops.valid"
+                [disabled]="true"
+                required
+              />
+            </div>
+          </ng-container>
+          <!-- End route type -->
+          <!-- Origin & destination -->
+          <!--    Countries    -->
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label
+                >{{
+                  _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                  _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
+                    ? l('OriginCountry')
+                    : l('Country')
+                }}
+              </label>
+              <div>
+                <select class="form-control" name="originCountry" [(ngModel)]="originCountry" disabled required>
+                  <option value="undefined" selected disabled>{{ l('SelectanOriginCountry') }}</option>
+                  <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.translatedDisplayName }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6" *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.CrossBorderMovements">
+            <div class="form-group">
+              <label> {{ l('DestinationCountry') }}</label>
+              <div>
+                <!-- [class.is-valid]="
+                              step2Form.get('destinationCountry').valid &&
+                              (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
+                            "
+                            [class.is-invalid]="
+                              step2Form.get('destinationCountry').invalid &&
+                              (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
+                            " -->
+                <!--                      [attr.disabled]="-->
+                <!--                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId &&-->
+                <!--                        (_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == 2 ||-->
+                <!--                        _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == 1-->
+                <!--                          ? true-->
+                <!--                          : null)-->
+                <!--                      "-->
+                <select class="form-control" name="destinationCountry" [(ngModel)]="destinationCountry" disabled required>
+                  <option value="undefined" selected disabled>{{ l('SelectanDestinationCountry') }}</option>
+                  <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+                <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!--    Cities        -->
+          <div class="col-lg-6">
+            <div
+              class="form-group"
+              *ngIf="
+                _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
+                _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
+              "
+            >
+              <label>{{ l('OriginCity') }} </label>
+              <div>
+                <!-- [class.is-valid]="
+                              step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
+                            "
+                            [class.is-invalid]="
+                              step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
+                            " -->
+                <select
+                  class="form-control"
+                  name="originCity"
+                  [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.originCityId"
+                  disabled
+                  required
+                >
+                  <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>
+                  <option *ngFor="let originCity of sourceCities" [ngValue]="Number(originCity.id)">{{ originCity.displayName }}</option>
+                </select>
+              </div>
+            </div>
+            <div
+              class="form-group"
+              *ngIf="
+                _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                _TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements
+              "
+            >
+              <label>{{ l('Origin') }} </label>
+              <div>
+                <!-- [class.is-valid]="
+                              step2Form.get('originFacility').valid &&
+                              (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)
+                            "
+                            [class.is-invalid]="
+                              step2Form.get('originFacility').invalid &&
+                              (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)
+                            " -->
+                <select
+                  class="form-control"
+                  name="originFacility"
+                  [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.originFacilityId"
+                  disabled
+                  required
+                  *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ImportPortMovements"
+                >
+                  <option [ngValue]="null" disabled selected>{{ l('SelectanOrigin') }}</option>
+                  <option *ngFor="let originPort of allOriginPorts" [ngValue]="Number(originPort.id)">
+                    {{ originPort.displayName }}
+                  </option>
+                </select>
+                <!-- [class.is-valid]="
+                              step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
+                            "
+                            [class.is-invalid]="
+                              step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
+                            " -->
+                <select
+                  class="form-control"
+                  name="originCity"
+                  [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.originCityId"
+                  disabled
+                  required
+                  *ngIf="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.ExportPortMovements"
+                >
+                  <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>
+                  <option *ngFor="let originCity of sourceCities" [ngValue]="Number(originCity.id)">{{ originCity.displayName }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6" [hidden]="_TripService.CreateOrEditShippingRequestTripDto.shippingTypeId == ShippingTypeEnum.LocalInsideCity">
+            <div class="form-group">
+              <label> {{ l('DestinationCity') }}</label>
+              <div>
+                <!-- [class.is-valid]="
+                              step2Form.get('destinationCity').valid &&
+                              (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
+                            "
+                            [class.is-invalid]="
+                              step2Form.get('destinationCity').invalid &&
+                              (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
+                            " -->
+                <p-multiSelect
+                  name="destinationCity"
+                  [options]="destinationCities"
+                  [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.shippingRequestDestinationCities"
+                  optionLabel="cityName"
+                  [disabled]="true"
+                  [maxSelectedLabels]="0"
+                  [selectedItemsLabel]="l('{0} items selected')"
+                  [style]="{ width: '100%' }"
+                  styleClass="form-control pt-1"
+                  [dataKey]="'cityId'"
+                  [selectionLimit]="_TripService.CreateOrEditShippingRequestTripDto.routeType == 1 ? 1 : 10"
+                >
+                </p-multiSelect>
+                <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <!--begin::Body-->
           <div class="col-lg-6">
@@ -117,6 +485,20 @@
               </dx-date-box>
             </div>
           </div>
+          <div class="col-lg-6" *ngIf="!_TripService.GetShippingRequestForViewOutput && _TripService.CreateOrEditShippingRequestTripDto">
+            <label>{{ l('MainGoodCategory') }} </label>
+            <div>
+              <select
+                class="form-control"
+                name="goodCategoryId"
+                [disabled]="true"
+                [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.goodCategoryId"
+              >
+                <!--                            <option [ngValue]="undefined" disabled selected>{{ l('SelectAGoodCategory') }}</option>-->
+                <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
+          </div>
           <!--  begin::Trip Goods Approximate Value -->
           <div class="col-lg-6 mt-2">
             <div class="form-group">
@@ -164,7 +546,7 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-6" *ngIf="trip.isRequestOwner">
+          <div class="col-lg-6" *ngIf="trip.isRequestOwner && _TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id">
             <div class="form-group">
               <!--                expected trip Delivery Date-->
               <label>{{ l('ContainerNumber') }}</label>
@@ -179,16 +561,50 @@
               />
             </div>
           </div>
-          <div class="col-lg-6" *ngIf="trip.isRequestOwner">
+          <div class="col-lg-6" *ngIf="trip.isRequestOwner && _TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id">
             <div class="form-group">
               <!--                expected trip Delivery Date-->
               <label>{{ l('SealNumber') }}</label>
               <input #SealNumber id="SealNumber" class="form-control" name="SealNumber" [(ngModel)]="trip.sealNumber" type="text" disabled />
             </div>
           </div>
+          <div class="col-lg-6" *ngIf="_TripService.CreateOrEditShippingRequestTripDto">
+            <div class="form-group">
+              <label>{{ l('ContainerNumber') }}</label>
+              <input
+                #ContainerNumber
+                id="ContainerNumber"
+                class="form-control"
+                name="ContainerNumber"
+                [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.containerNumber"
+                type="text"
+                [disabled]="true"
+              />
+            </div>
+          </div>
+          <div class="col-lg-6" *ngIf="_TripService.CreateOrEditShippingRequestTripDto">
+            <div class="form-group">
+              <!--                expected trip Delivery Date-->
+              <label>{{ l('SealNumber') }}</label>
+              <input
+                id="SealNumber"
+                class="form-control"
+                name="SealNumber"
+                [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.sealNumber"
+                type="text"
+                [disabled]="true"
+              />
+            </div>
+          </div>
 
           <!--   StartOf::Driver&Truck for DedicatedSR -->
-          <ng-container *ngIf="(isShipper || isTachyonDealer) && shippingRequestForView && shippingRequestForView?.shippingRequestFlag === 1">
+          <ng-container
+            *ngIf="
+              (isShipper || isTachyonDealer) &&
+              shippingRequestForView &&
+              shippingRequestForView?.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated
+            "
+          >
             <div class="form-group col-lg-6">
               <label>{{ l('RouteType') }}</label>
               <select name="routeType" type="text" [(ngModel)]="trip.routeType" class="form-control" disabled>
@@ -214,6 +630,37 @@
               <select name="truckId" type="text" [(ngModel)]="trip.assignedTruckId" class="form-control" disabled>
                 <option disabled [ngValue]="null">{{ l('Selectatruck') }}</option>
                 <option *ngFor="let item of allDedicatedTrucks" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+          </ng-container>
+
+          <ng-container
+            *ngIf="!_TripService.GetShippingRequestForViewOutput && !canAssignTrucksAndDrivers && _TripService.CreateOrEditShippingRequestTripDto"
+          >
+            <div class="form-group col-lg-6">
+              <label>{{ l('Driver') }}</label>
+              <select
+                name="driverUserId"
+                type="text"
+                [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.driverUserId"
+                class="form-control"
+                [disabled]="true"
+              >
+                <option disabled [ngValue]="null">{{ l('SelectaDriver') }}</option>
+                <option *ngFor="let item of allDrivers" [value]="item.id">{{ item.displayName }}</option>
+              </select>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>{{ l('Truck') }}</label>
+              <select
+                name="truckId"
+                type="text"
+                [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.truckId"
+                class="form-control"
+                [disabled]="true"
+              >
+                <option disabled [ngValue]="null">{{ l('Selectatruck') }}</option>
+                <option *ngFor="let item of allTrucks" [value]="item.truckId">{{ item.truckName }}</option>
               </select>
             </div>
           </ng-container>
@@ -263,36 +710,6 @@
                 <option [ngValue]="null">{{ l('Selectatruck') }}</option>
                 <option *ngFor="let item of allTrucks" [value]="item.id">{{ item.displayName }}</option>
               </select>
-            </div>
-            <div class="col-lg-6">
-              <div class="form-group">
-                <!--                expected trip Delivery Date-->
-                <label>{{ l('ContainerNumber') }}</label>
-                <input
-                  #ContainerNumber
-                  id="ContainerNumber"
-                  class="form-control"
-                  name="ContainerNumber"
-                  [(ngModel)]="assignDriverAndTruck.containerNumber"
-                  type="text"
-                  [disabled]="!isGranted('Pages.ShippingRequestTrips.Edit') || saving || (trip.containerNumber && trip.containerNumber.length > 0)"
-                />
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="form-group">
-                <!--                expected trip Delivery Date-->
-                <label>{{ l('SealNumber') }}</label>
-                <input
-                  #SealNumber
-                  id="SealNumber"
-                  class="form-control"
-                  name="SealNumber"
-                  [(ngModel)]="assignDriverAndTruck.sealNumber"
-                  type="text"
-                  [disabled]="!isGranted('Pages.ShippingRequestTrips.Edit') || saving || (trip.sealNumber && trip.sealNumber.length > 0)"
-                />
-              </div>
             </div>
             <div class="form-group col-lg-1 mt-7 align-items-end">
               <button
@@ -396,7 +813,7 @@
       <div class="modal-footer">
         <!--begin::Buttons-->
 
-        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+        <button type="button" class="btn btn-light font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
           {{ l('Close') }}
         </button>
         <!--end::Buttons-->

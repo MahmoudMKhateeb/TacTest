@@ -107,7 +107,8 @@ namespace TACHYON.Waybills
                 .GetAll()
                 .Include(e => e.ShippingRequestFk)
                 .FirstOrDefault(e => e.Id == shippingRequestTripId);
-            return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
+            return item.RouteType == ShippingRequestRouteType.SingleDrop ||
+                item.ShippingRequestFk?.RouteTypeId == ShippingRequestRouteType.SingleDrop;
         }
 
         private bool IsSingleDropShippingRequest(long routPointId)
@@ -118,7 +119,8 @@ namespace TACHYON.Waybills
                 .Include(e => e.RoutPoints)
                 .FirstOrDefault(e => e.RoutPoints.Any(x => x.Id == routPointId));
 
-            return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
+            return item.RouteType == ShippingRequestRouteType.SingleDrop ||
+                item.ShippingRequestFk?.RouteTypeId == ShippingRequestRouteType.SingleDrop;
         }
     }
 }

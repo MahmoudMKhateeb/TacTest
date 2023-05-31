@@ -2,7 +2,13 @@ import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angu
 import { AppComponentBase } from '@shared/common/app-component-base';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import { CreateOrEditShippingRequestTripDto, ShippingRequestDto, ShippingRequestsTripServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  CreateOrEditShippingRequestTripDto,
+  ShippingRequestDto,
+  ShippingRequestsTripServiceProxy,
+  TrackingServiceProxy,
+  TrackingShippingRequestTripDto,
+} from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { AppConsts } from '@shared/AppConsts';
@@ -12,14 +18,21 @@ import { finalize } from 'rxjs/operators';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import Swal from 'sweetalert2';
 import { ViewImportedTripsFromExcelModalComponent } from '../shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular/ui/data-grid';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { Workbook } from 'exceljs';
+import { exportDataGrid } from 'devextreme/excel_exporter';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-direct-trips',
   templateUrl: './direct-trips.component.html',
   styleUrls: ['./direct-trips.component.css'],
   encapsulation: ViewEncapsulation.None,
+  animations: [appModuleAnimation()],
 })
 export class DirectTripsComponent extends AppComponentBase implements OnInit {
+  @ViewChild('grid', { static: true }) dataGrid: DxDataGridComponent;
   @ViewChild('AddNewTripModal', { static: true }) addNewTripModal: CreateOrEditTripComponent;
   @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
   @ViewChild('ViewImportedTripsModal', { static: false }) modal: ViewImportedTripsFromExcelModalComponent;
@@ -77,8 +90,14 @@ export class DirectTripsComponent extends AppComponentBase implements OnInit {
     totalWeight: 0,
     totalsTripsAddByShippier: 0,
   });
+  tripSubDetails: TrackingShippingRequestTripDto;
 
-  constructor(injector: Injector, private shippingRequestsTripServiceProxy: ShippingRequestsTripServiceProxy, private _httpClient: HttpClient) {
+  constructor(
+    injector: Injector,
+    private shippingRequestsTripServiceProxy: ShippingRequestsTripServiceProxy,
+    private _httpClient: HttpClient,
+    private _trackingServiceProxy: TrackingServiceProxy
+  ) {
     super(injector);
     this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportShipmentsFromExcel';
     this.uploadPointUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportPointsFromExcel';
@@ -227,5 +246,43 @@ export class DirectTripsComponent extends AppComponentBase implements OnInit {
     let record = new CreateOrEditShippingRequestTripDto();
     record.id = id;
     this.addNewTripModal.show(record);
+  }
+
+  getForView(selectedRow: any) {
+    console.log('getForView selectedRow.key.id', selectedRow.key.id);
+    this._trackingServiceProxy.getForView(selectedRow.key.id).subscribe((result) => {
+      selectedRow.key.tripSubDetails = result;
+    });
+    setTimeout(() => {
+      this.dataGrid.instance.getScrollable().update();
+    }, 500);
+  }
+
+  collapsedRow(selectedRow: any) {
+    console.log('collapsedRow selectedRow.key.id', selectedRow.key.id);
+    selectedRow.key.tripSubDetails = undefined;
+  }
+
+  onExporting(e) {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Trips');
+
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+      customizeCell: ({ gridCell, excelCell }) => {
+        if (gridCell.rowType === 'data') {
+          if (gridCell.column.dataField === 'waybillNumber') {
+            excelCell.value = (<number>gridCell.value).toString();
+          }
+        }
+      },
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
+      });
+    });
+    e.cancel = true;
   }
 }

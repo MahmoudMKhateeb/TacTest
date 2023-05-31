@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'Counties' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button (click)="exportToExcel()" class="btn btn-outline-secondary"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
         <button *ngIf="isGranted('Pages.Counties.Create')" (click)="createCounty()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewCounty') }}
@@ -85,14 +85,14 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Counties.Edit', 'Pages.Counties.Delete')">
+                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.Counties.Edit', 'Pages.Counties.Delete')">
                       {{ l('Actions') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
+                    <th style="width: 150px" pSortableColumn="displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="county.displayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="code">
+                    <th style="width: 150px" pSortableColumn="code">
                       {{ l('Code') }}
                       <p-sortIcon field="county.code"></p-sortIcon>
                     </th>
@@ -100,7 +100,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.Counties.Edit', 'Pages.Counties.Delete')">
+                    <td style="width: 130px" [hidden]="!isGrantedAny('Pages.Counties.Edit', 'Pages.Counties.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -130,11 +130,11 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.county.displayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Code') }}</span>
                       {{ record.county.code }}
                     </td>

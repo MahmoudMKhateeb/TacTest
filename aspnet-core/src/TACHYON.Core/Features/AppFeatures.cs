@@ -29,8 +29,25 @@
         public const string TachyonDealer = "App.TachyonDealer";
         public const string NumberOfWaybills = "App.NumberOfWaybills";
         public const string ImportFunctionality = "App.ImportFunctionality";
+        public const string ImportTripFeature = "App.ImportFunctionality.ImportTripFeature";
+        public const string ImportTruckFeature = "App.ImportFunctionality.ImportTruckFeature";
+        public const string ImportDriverFeature = "App.ImportFunctionality.ImportDriverFeature";
+        public const string ImportSaasShipmentFeature = "App.ImportFunctionality.ImportSaasShipmentFeature";
+
         public const string MaxNumberOfWaybills = "App.NumberOfWaybills.MaxNumberOfWaybills";
         public const string AdditionalWaybillPrice = "App.NumberOfWaybills.AdditionalWaybillPrice";
+
+        public const string NumberOfTrucks = "App.NumberOfTrucks";
+        public const string MaxNumberOfTrucks = "App.NumberOfTrucks.MaxNumberOfTrucks";
+        public const string AdditionalTruckPrice = "App.NumberOfTrucks.AdditionalTruckPrice";
+
+        public const string DedicatedTruck = "App.DedicatedTruckFeature";
+        public const string SaveTemplate = "App.SaveTemplateFeature";
+        public const string PortMovement = "App.PortMovement";
+        public const string HomeDelivery = "App.HomeDelivery";
+        public const string ExportFunctionality = "App.ExportFunctionality";
+
+
         public const string ShippingRequest = "App.shippingRequest";
         public const string MarketPlace = "App.MarketPlace";
         public const string OffersMarketPlace = "App.OffersMarketPlace";
@@ -173,6 +190,8 @@
         public const string PayPeriod = "App.Pay.PayPeriod";
 
         public const string Penalties = "App.Penalties";
+
+        public const string RequiredReceiverCodeForInvoice = "App.RequiredReceiverCodeForInvoice";
 
         public const string TripCancelation = "App.Penalties.TripCancelation";
         public const string TripCancelationCommissionType = "App.Penalties.TripCancelation.CommissionType";

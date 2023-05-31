@@ -29,7 +29,9 @@
           {{ l('TotalAmount') }} &nbsp; <span>{{ Data?.totalAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
         </td>
         <td>
-          <button (click)="exportToExcel()" class="btn btn-outline-danger"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+          <button *ngIf="isEnabled('App.ExportFunctionality')" (click)="exportToExcel()" class="btn btn-outline-danger">
+            <i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}
+          </button>
         </td>
       </tr>
     </tbody>

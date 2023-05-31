@@ -138,7 +138,7 @@
         </div>
 
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="closeModal()">{{ 'Cancel' | localize }}</button>
+          <button [disabled]="saving" type="button" class="btn btn-outline-danger" (click)="closeModal()">{{ 'Cancel' | localize }}</button>
           <button
             *ngIf="!viewModeEnabled"
             type="submit"

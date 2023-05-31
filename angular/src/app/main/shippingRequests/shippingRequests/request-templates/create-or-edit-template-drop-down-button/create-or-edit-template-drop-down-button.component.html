@@ -2,7 +2,7 @@
   <button
     dropdownToggle
     type="button"
-    class="{{ customClass ? customClass : 'btn btn-outline-danger dropdown-toggle btn-elevate-hover mr-2' }}"
+    class="{{ customClass ? customClass : 'btn btn-dark dropdown-toggle btn-elevate-hover mr-2' }}"
     aria-controls="dropdown-basic"
     [disabled]="disabled"
     type="button"
@@ -31,7 +31,7 @@
         type="button"
         role="menuitem"
         [disabled]="!templateNameInput.valid || disabled"
-        class="btn btn-sm btn-block btn-info"
+        class="btn btn-sm btn-block btn-dark"
         (click)="SaveAsTemplate()"
       >
         {{ (templateIdForEdit ? 'Update' : 'Save') | localize }}

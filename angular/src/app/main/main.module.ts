@@ -235,7 +235,6 @@ import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRe
 import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
 import { MultiSelectModule } from '@node_modules/primeng/multiselect';
 import { ListboxModule } from '@node_modules/primeng/listbox';
-import { DevExtremeModule, DxButtonModule } from '@node_modules/devextreme-angular';
 import { PdfJsViewerModule } from '@node_modules/ng2-pdfjs-viewer';
 import { GoodDetailsComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
 import { CreateOrEditGoodDetailsModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/create-or-edit-good-details-modal/create-or-edit-good-details-modal.component';
@@ -286,7 +285,6 @@ import { CreateOrEditTemplateDropDownButtonComponent } from './shippingRequests/
 import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
 import { SrPostPriceUpdateComponent } from './shippingRequests/shippingRequests/srpost-price-update/sr-post-price-update.component';
 import { ViewSrPostPriceUpdateModalComponent } from './shippingRequests/shippingRequests/srpost-price-update/view-sr-post-price-update-modal/view-sr-post-price-update-modal.component';
-import { CardModule } from '@node_modules/primeng/card';
 import { RejectPostPriceUpdateComponent } from './shippingRequests/shippingRequests/srpost-price-update/reject-post-price-update/reject-post-price-update.component';
 import { ViewImportedTripsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-trips-from-excel-modal/view-imported-trips-from-excel-modal.component';
 import { ViewImportedPointsFromExcelModalComponent } from './shippingRequests/shippingRequests/ShippingRequestTrips/trips/ImportedTrips/view-imported-points-from-excel-modal/view-imported-points-from-excel-modal.component';
@@ -343,6 +341,28 @@ import { MakeScrollableDirective } from '@app/shared/common/make-scrollable-dire
 import { DirectTripsComponent } from './direct-trips/direct-trips.component';
 import { ShippingRequestsTableComponent } from '@app/main/shippingRequests/shippingRequestsTable/shippingRequestsTable.component';
 import { ShippingRequestCardComponent } from '@app/main/shippingRequests/shipping-request-card/shipping-request-card.component';
+import { TruckFilterModalComponent } from '@app/main/trucks/trucks/truck-filter/truck-filter-modal.component';
+
+// devextreme imports
+import { DxDataGridModule } from '@node_modules/devextreme-angular/ui/data-grid';
+import { DxPopoverModule } from '@node_modules/devextreme-angular/ui/popover';
+import { DxValidationGroupModule } from '@node_modules/devextreme-angular/ui/validation-group';
+import { DxValidatorModule } from '@node_modules/devextreme-angular/ui/validator';
+import { DxValidationSummaryModule } from '@node_modules/devextreme-angular/ui/validation-summary';
+import { DxDateBoxModule } from '@node_modules/devextreme-angular/ui/date-box';
+import { DxTextBoxModule } from '@node_modules/devextreme-angular/ui/text-box';
+import { DxFileUploaderModule } from '@node_modules/devextreme-angular/ui/file-uploader';
+import { DxCheckBoxModule } from '@node_modules/devextreme-angular/ui/check-box';
+import { DxNumberBoxModule } from '@node_modules/devextreme-angular/ui/number-box';
+import { DxLoadPanelModule } from '@node_modules/devextreme-angular/ui/load-panel';
+import { DxButtonModule } from '@node_modules/devextreme-angular/ui/button';
+import { DxTreeListModule } from '@node_modules/devextreme-angular/ui/tree-list';
+import { DxSelectBoxModule } from '@node_modules/devextreme-angular/ui/select-box';
+import { DxDropDownBoxModule } from '@node_modules/devextreme-angular/ui/drop-down-box';
+import { DxSchedulerModule } from '@node_modules/devextreme-angular/ui/scheduler';
+import { DxPopupModule } from '@node_modules/devextreme-angular/ui/popup';
+import { DxScrollViewModule } from '@node_modules/devextreme-angular/ui/scroll-view';
+import { DxTextAreaModule } from '@node_modules/devextreme-angular/ui/text-area';
 
 @NgModule({
   imports: [
@@ -382,7 +402,6 @@ import { ShippingRequestCardComponent } from '@app/main/shippingRequests/shippin
     MultiSelectModule,
     ListboxModule,
     DxButtonModule,
-    DevExtremeModule,
     PdfJsViewerModule,
     InputNumberModule,
     ProfileModule,
@@ -404,6 +423,25 @@ import { ShippingRequestCardComponent } from '@app/main/shippingRequests/shippin
     SplitButtonModule,
     CalendarModule,
     PricePackageModule,
+    DxDataGridModule,
+    DxPopoverModule,
+    DxPopupModule,
+    DxValidationGroupModule,
+    DxDateBoxModule,
+    DxValidatorModule,
+    DxValidationSummaryModule,
+    DxTextBoxModule,
+    DxFileUploaderModule,
+    DxCheckBoxModule,
+    DxNumberBoxModule,
+    DxLoadPanelModule,
+    DxButtonModule,
+    DxTreeListModule,
+    DxSelectBoxModule,
+    DxDropDownBoxModule,
+    DxSchedulerModule,
+    DxScrollViewModule,
+    DxTextAreaModule,
   ],
   declarations: [
     EmailTemplatesComponent,
@@ -655,6 +693,7 @@ import { ShippingRequestCardComponent } from '@app/main/shippingRequests/shippin
     DirectTripsComponent,
     ShippingRequestsTableComponent,
     ShippingRequestCardComponent,
+    TruckFilterModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

@@ -20,7 +20,7 @@
             <ngb-rating [(rate)]="sideProfileUserInfo.rating" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>({{
               sideProfileUserInfo.rateNumber
             }})
-            <div *ngIf="sideProfileUserInfo.editionId == 2">
+            <div *ngIf="sideProfileUserInfo.editionId == 1">
               <ngb-rating [(rate)]="sideProfileUserInfo.facilitiesRating" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>({{
                 l('Facilities')
               }})

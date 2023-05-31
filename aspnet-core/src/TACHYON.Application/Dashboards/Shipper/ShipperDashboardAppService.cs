@@ -170,8 +170,7 @@ namespace TACHYON.Dashboards.Shipper
             var trips = await (from point in _routePointRepository.GetAll()
                 where ((!isBroker && point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId) || (isBroker &&
                     (point.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId ||
-                     point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)))&&
-                    (!point.ShippingRequestTripFk.ShippingRequestFk.CarrierActorId.HasValue && !point.ShippingRequestTripFk.ShippingRequestFk.ShipperActorId.HasValue)
+                     point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)))
                       && point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
                       && point.PickingType == PickingType.Dropoff && !point.IsComplete && (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue)
                 select new NeedsActionTripDto()
@@ -353,14 +352,15 @@ namespace TACHYON.Dashboards.Shipper
                 .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
                 .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year && x.CreationTime.Month == Clock.Now.Month )
                 .WhereIf(period == FilterDatePeriod.Monthly,x=>  x.CreationTime.Year == Clock.Now.Year )
-                .Where(x => x.Status == ShippingRequestTripStatus.Delivered);
+                .Where(x => x.Status == ShippingRequestTripStatus.Delivered || x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation);
 
 
             var podTrips = await query
-                    .Where(x => x.RoutPoints.Any(p => p.IsPodUploaded))
+                .Where(x => x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
+                    .Where(x => x.RoutPoints.Any(p => !p.IsPodUploaded))
                     .Select(x=> new {x.CreationTime,x.Id}).ToListAsync();
             
-            var total = await query.Select(x=> new {x.CreationTime,x.Id}).ToListAsync();
+            var total = await query.Where(x => x.Status == ShippingRequestTripStatus.Delivered).Select(x=> new {x.CreationTime,x.Id}).ToListAsync();
                 
             
             var podTripsList = new List<ChartCategoryPairedValuesDto>();
@@ -553,7 +553,7 @@ namespace TACHYON.Dashboards.Shipper
             return isBroker switch
             {
                 true when !invoiceType.HasValue => throw new UserFriendlyException(L("YouMustProvideInvoiceType")),
-                true when invoiceType == BrokerInvoiceType.SubmitInvoice => await _submitInvoiceRepository.GetAll()
+                true when invoiceType == BrokerInvoiceType.CarrierInvoices => await _submitInvoiceRepository.GetAll()
                     .Where(x => x.TenantId == AbpSession.TenantId && x.DueDate.HasValue &&
                                 x.DueDate <= Clock.Now.Date.AddDays(5)).CountAsync(),
                 _ => await _invoiceRepository.GetAll()

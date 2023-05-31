@@ -315,6 +315,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     CarrierCountersWidget.Id,
                     CarrierNeedsActionWidget.Id,
                     CarrierNewDirectRequestsWidget.Id,
+                    shipperCompletedTripsVsPodWidget.Id,
                 });
             DashboardDefinitions.Add(defaultCarrierDashboard);
 
@@ -407,22 +408,22 @@ namespace TACHYON.DashboardCustomization.Definitions
                 TACHYONDashboardCustomizationConsts.DashboardNames.DefaultBrokerDashboard,
                 new List<string>
                 {
-                    shipperAcceptedVsRejectedRequestsWidget.Id,
+                    // shipperAcceptedVsRejectedRequestsWidget.Id, 
                     shipperCompletedTripsVsPodWidget.Id,
                     shipperInvoicesVsPaidInvoicesWidget.Id,
-                    shipperMostUsedOriginsWidget.Id,
-                    shipperMostUsedDestinationsWidget.Id,
+                    // shipperMostUsedOriginsWidget.Id,
+                    // shipperMostUsedDestinationsWidget.Id,
                     shipperTrackingMapWidget.Id,
                     shipperCountersWidget.Id,
                     shipperUpcomingTripsWidget.Id,
                     shipperNeedsActionWidget.Id,
-                    shipperNewOffersWidget.Id,
+                    // shipperNewOffersWidget.Id,
                     
                     carrierAcceptedVsRejectedPricingWidget.Id,
                     carrierMostUsedVasWidget.Id,
-                    carrierInvoicesVsPaidInvoicesWidget.Id,
+                    // carrierInvoicesVsPaidInvoicesWidget.Id,
                     CarrierActiveDriversAndTrucksWidget.Id,
-                    CarrierNewDirectRequestsWidget.Id,
+                    // CarrierNewDirectRequestsWidget.Id,
                     NewActorsThisMonthWidget.Id,
                     NumberOfActors.Id,
                     MostActiveActorShipper.Id,

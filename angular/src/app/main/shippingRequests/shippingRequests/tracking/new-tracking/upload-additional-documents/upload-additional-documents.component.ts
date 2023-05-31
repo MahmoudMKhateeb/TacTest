@@ -16,6 +16,8 @@ import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { finalize } from '@node_modules/rxjs/operators';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-upload-additional-documents',
@@ -247,6 +249,9 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
   }
 
   DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto, index: number): void {
+    if (event.target.files.length === 0) {
+      return;
+    }
     if (event.target.files[0].size > 5242880) {
       //5MB
       this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
@@ -289,6 +294,23 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
     this.showReceiverCode = null;
     this.showUploadManifestFile = null;
     this.showUploadPodFile = null;
+    this.createOrEditDocumentFileDtos = [];
+    this.fileTokens = [];
+    this.FileDocProgresses = [];
+    this.fileUploading = [];
+    this.DocsUploaders = [];
+    this._DocsUploadersOptions = [];
+    this.hasNewUploads = [];
+    this.fileTypes = [];
+    this.fileNames = [];
+    this.docProgressFileNames = [];
+    this.alldocumentsValid = [];
+    const fileInputs = document.querySelectorAll('input.custom-file-input[type="file"]');
+    if (fileInputs.length > 0) {
+      fileInputs.forEach((item: HTMLInputElement) => {
+        item.value = null;
+      });
+    }
     // this.manifestFileToken = null;
     // this.podFileToken = null;
     // this.fileTypeManifest = null;
@@ -315,15 +337,10 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
           this.saving = false;
         })
       )
-      .subscribe(
-        (res) => {
-          this.close();
-          abp.event.trigger('trackingConfirmCodeSubmittedFromAdditionalSteps');
-        },
-        (error) => {
-          this.notify.error(this.l('InvalidCode'));
-        }
-      );
+      .subscribe((res) => {
+        this.close();
+        abp.event.trigger('trackingConfirmCodeSubmittedFromAdditionalSteps');
+      });
   }
 
   // downloadAttatchmentPod(): void {
@@ -369,7 +386,6 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
     }
     this.fileUploading[index] = true;
     const invokeRequestBody = new InvokeStepInputDto();
-    invokeRequestBody.code = this.receiverCode;
     invokeRequestBody.id = this.point.id;
     invokeRequestBody.action = this.point.availableSteps[index].action;
 
@@ -385,15 +401,10 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
           this.fileUploading[index] = false;
         })
       )
-      .subscribe(
-        (res) => {
-          this.close();
-          abp.event.trigger('FileUploadedSuccessFromAdditionalSteps');
-        },
-        (error) => {
-          this.notify.error(this.l('ErrorWhenUploadingFile'));
-        }
-      );
+      .subscribe((res) => {
+        this.close();
+        abp.event.trigger('FileUploadedSuccessFromAdditionalSteps');
+      });
   }
 
   uploadPod(index: number) {
@@ -416,15 +427,10 @@ export class UploadAdditionalDocumentsComponent extends AppComponentBase impleme
           this.saving = false;
         })
       )
-      .subscribe(
-        (res) => {
-          this.close();
-          abp.event.trigger('FileUploadedSuccessFromAdditionalSteps');
-        },
-        (error) => {
-          this.notify.error(this.l('ErrorWhenUploadingFile'));
-        }
-      );
+      .subscribe((res) => {
+        this.close();
+        abp.event.trigger('FileUploadedSuccessFromAdditionalSteps');
+      });
   }
 
   isFileInputValid(index: number) {

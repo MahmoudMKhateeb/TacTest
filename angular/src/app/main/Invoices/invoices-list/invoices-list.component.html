@@ -2,16 +2,16 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'InvoicesList' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <!-- <button *ngIf="isEnabled('App.ExportFunctionality')" (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button> -->
         <button
           *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId"
           (click)="OndemandModel.show()"
           type="button"
-          class="btn btn-default"
+          class="btn btn-secondary"
         >
           {{ l('OnDemand') }}
         </button>
-        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-secondary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>
 
@@ -31,6 +31,7 @@
               [rowAlternationEnabled]="true"
               keyExpr="id"
               [wordWrapEnabled]="true"
+              (onExporting)="onExporting($event)"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
@@ -53,6 +54,7 @@
                 [editorOptions]="{ visible: false }"
                 [width]="50"
               ></dxi-column>
+              <dxo-selection *ngIf="isEnabled('App.ExportFunctionality')" mode="multiple"></dxo-selection>
               <dxi-column dataField="invoiceNumber" caption="{{ l('InvoiceNumber') }}"></dxi-column>
               <dxi-column
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
@@ -70,7 +72,15 @@
               >
               </dxi-column>
               <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"></dxi-column>
-              <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"></dxi-column>
+              <dxi-column *ngIf="isTachyonDealer" dataField="confirmationDate" caption="{{ l('ConfirmationDate') }}" dataType="date"></dxi-column>
+              <dxi-column *ngIf="isTachyonDealer" dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"></dxi-column>
+              <dxi-column
+                *ngIf="!isTachyonDealer"
+                dataField="creationTime"
+                cellTemplate="cellTemplate_IssuanceDate"
+                caption="{{ l('IssuanceDate') }}"
+                dataType="date"
+              ></dxi-column>
               <dxi-column dataField="isPaid" cellTemplate="cellTemplate_isPaid" caption="{{ l('PaymentStatus') }}"></dxi-column>
               <dxi-column
                 *ngIf="isTachyonDealerOrHost"
@@ -79,33 +89,26 @@
                 caption="{{ l('Status') }}"
               ></dxi-column>
               <dxi-column dataField="channel" cellTemplate="cellTemplate_Channel" caption="{{ l('label') }}"></dxi-column>
+              <dxo-export *ngIf="isEnabled('App.ExportFunctionality')" [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
               <div *dxTemplate="let options of 'cellTemplate_isPaid'">
-                <span *ngIf="options.data.isPaid" class="badge badge-success badge-inline">{{ 'Paid' | localize }}</span>
-                <span *ngIf="!options.data.isPaid" class="badge badge-danger badge-inline">{{ 'UnPaid' | localize }}</span>
+                <span *ngIf="options.data.isPaid">{{ 'Paid' | localize }}</span>
+                <span *ngIf="!options.data.isPaid">{{ 'UnPaid' | localize }}</span>
               </div>
               <div *dxTemplate="let options of 'cellTemplate_status'">
-                <span
-                  class="badge badge-inline"
-                  [ngClass]="{
-                    'badge-success': options.data.status == InvoiceStatusEnum.Confirmed,
-                    'badge-secondary': options.data.status == InvoiceStatusEnum.Drafted
-                  }"
-                  >{{ getInvoiceStatusTitle(options.data.status) }}</span
-                >
+                <span>{{ getInvoiceStatusTitle(options.data.status) }}</span>
               </div>
               <div *dxTemplate="let options of 'cellTemplate_Channel'">
-                <span style="width: 137px; text-align: center" *ngIf="canSeeDynamicInvoice(options)"
-                  ><span
-                    class="badge badge-inline"
-                    [ngClass]="{
-                      'badge-primary': options.data.channel == InvoiceChannelEnum.Trip,
-                      'badge-warning': options.data.channel == InvoiceChannelEnum.Penalty,
-                      'badge-success': options.data.channel == InvoiceChannelEnum.DynamicInvoice,
-                      'badge-info': options.data.channel == InvoiceChannelEnum.Dedicated,
-                      'badge-danger': options.data.channel == InvoiceChannelEnum.SaasTrip
-                    }"
-                    >{{ l(options.data.invoiceChannelTitle) }}</span
-                  ></span
+                <span style="width: 137px; text-align: center" *ngIf="canSeeDynamicInvoice(options)">
+                  <span>{{ l(options.data.invoiceChannelTitle) }}</span>
+                </span>
+              </div>
+
+              <div *dxTemplate="let options of 'cellTemplate_IssuanceDate'">
+                <span style="width: 137px; text-align: center" *ngIf="options.data.hasConfirmationDate">
+                  {{ options.data.confirmationDate | date: 'dd/MM/yyyy' }}</span
+                >
+                <span style="width: 137px; text-align: center" *ngIf="!options.data.hasConfirmationDate">
+                  {{ options.data.creationTime | date: 'dd/MM/yyyy' }}</span
                 >
               </div>
               <div *dxTemplate="let options of 'cellTemplateActions'">
@@ -138,6 +141,9 @@
                         (click)="downloadReport(options.data.id)"
                         >{{ l('downloadInvoice') }}</a
                       >
+                    </li>
+                    <li>
+                      <a class="dropdown-item" (click)="ExportItemToExcel(options.data.id)">{{ l('ExportToExcel') }}</a>
                     </li>
                     <li>
                       <a class="dropdown-item" *ngIf="options.data.channel == 3" (click)="downloadPenaltyReport(options.data.id)">{{

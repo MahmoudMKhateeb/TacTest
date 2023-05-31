@@ -1,10 +1,7 @@
-import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
-import { TrackingSearchInput } from '@app/shared/common/search/TrackingSearchInput';
 import { SubmitInvoicesSearchInput } from '@app/shared/common/search/SubmitInvoiceSearchInput';
-import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
-import { waybillsComponent } from '@app/admin/waybills/waybills';
 
 @Component({
   selector: 'app-invoice-tenant-search-model',

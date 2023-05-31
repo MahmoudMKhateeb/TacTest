@@ -17,7 +17,7 @@ import { InvoiceTenantItemsDetailsComponent } from 'app/main/invoices/invoice-te
 import { Router } from '@angular/router';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import { DxDataGridComponent } from '@node_modules/devextreme-angular';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular/ui/data-grid';
 import { InvoiceDynamicModalComponent } from '@app/main/Invoices/invoices-dynamic/invoices-dynamic-modal/invoices-dynamic-modal.component';
 import Swal from 'sweetalert2';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';

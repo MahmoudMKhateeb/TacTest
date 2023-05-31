@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -137,14 +137,12 @@ import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameter
 import { ManageEntityDynamicParameterValuesModalComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/manage-entity-dynamic-parameter-values-modal.component';
 import { EntityDynamicParameterValueManagerComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/entity-dynamic-parameter-value-manager/entity-dynamic-parameter-value-manager.component';
 import { RequiredDocumentFilesComponent } from './required-document-files/required-document-files.component';
-import { NgbDateParserFormatter, NgbModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DriversComponent } from './users/drivers/drivers.component';
 import { CreateOrEditDriverModalComponent } from '@app/admin/users/drivers/create-or-edit-driver-modal.component';
 import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
-import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 import { waybillsComponent } from './waybills/waybills';
 import { NotRequiredDocumentFilesComponent } from '@app/admin/not-required-document-files/not-required-document-files.component';
-import { DevExtremeModule } from '@node_modules/devextreme-angular';
 import { TruckStatusesTranslationsTemplateComponent } from './trucks/truckStatuses/truck-statuses-translations-template/truck-statuses-translations-template.component';
 import { VasesTranslationsTemplateComponent } from './vases/vases/vases-translations-template/vases-translations-template.component';
 import { RatingModule } from '@node_modules/primeng/rating';
@@ -153,6 +151,27 @@ import { AgmCoreModule } from '@node_modules/@agm/core';
 import { UnitOfMeasureTranslationsComponent } from './unitOfMeasures/unitOfMeasures/UnitOfMeasureTranslations/unit-of-measure-translations/unit-of-measure-translations.component';
 // import { ActorInvoiceDemandModelComponent } from './actors/Actor-Invoices-ondemand-model.component';
 import { MultiSelectModule } from '@node_modules/primeng/multiselect';
+import { DriverFilterModalComponent } from '@app/admin/users/drivers/driver-filter/driver-filter-modal.component';
+
+// devextreme imports
+import { DxDataGridModule } from '@node_modules/devextreme-angular/ui/data-grid';
+import { DxPopoverModule } from '@node_modules/devextreme-angular/ui/popover';
+import { DxValidationGroupModule } from '@node_modules/devextreme-angular/ui/validation-group';
+import { DxValidatorModule } from '@node_modules/devextreme-angular/ui/validator';
+import { DxValidationSummaryModule } from '@node_modules/devextreme-angular/ui/validation-summary';
+import { DxDateBoxModule } from '@node_modules/devextreme-angular/ui/date-box';
+import { DxTextBoxModule } from '@node_modules/devextreme-angular/ui/text-box';
+import { DxFileUploaderModule } from '@node_modules/devextreme-angular/ui/file-uploader';
+import { DxCheckBoxModule } from '@node_modules/devextreme-angular/ui/check-box';
+import { DxNumberBoxModule } from '@node_modules/devextreme-angular/ui/number-box';
+import { DxLoadPanelModule } from '@node_modules/devextreme-angular/ui/load-panel';
+import { DxButtonModule } from '@node_modules/devextreme-angular/ui/button';
+import { DxTreeListModule } from '@node_modules/devextreme-angular/ui/tree-list';
+import { DxSelectBoxModule } from '@node_modules/devextreme-angular/ui/select-box';
+import { DxDropDownBoxModule } from '@node_modules/devextreme-angular/ui/drop-down-box';
+import { DxSchedulerModule } from '@node_modules/devextreme-angular/ui/scheduler';
+import { DxPopupModule } from '@node_modules/devextreme-angular/ui/popup';
+import { DxScrollViewModule } from '@node_modules/devextreme-angular/ui/scroll-view';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
@@ -190,7 +209,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DropdownModule,
     AppBsModalModule,
     NgbModule,
-    DevExtremeModule,
     RatingModule,
     AgmCoreModule,
     MultiSelectModule,
@@ -198,6 +216,24 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       apiKey: 'AIzaSyDKKZqDW_xX5azTqBV2oXSb6P3nwCAzOpw',
       libraries: ['places'],
     }),
+    DxDataGridModule,
+    DxPopoverModule,
+    DxValidationGroupModule,
+    DxValidatorModule,
+    DxValidationSummaryModule,
+    DxDateBoxModule,
+    DxTextBoxModule,
+    DxFileUploaderModule,
+    DxCheckBoxModule,
+    DxNumberBoxModule,
+    DxLoadPanelModule,
+    DxButtonModule,
+    DxTreeListModule,
+    DxSelectBoxModule,
+    DxDropDownBoxModule,
+    DxSchedulerModule,
+    DxPopupModule,
+    DxScrollViewModule,
   ],
   declarations: [
     BayanIntegrationResultsComponent,
@@ -314,6 +350,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DriverTrackingModalComponent,
     UnitOfMeasureTranslationsComponent,
     // ActorInvoiceDemandModelComponent
+    DriverFilterModalComponent,
   ],
 
   exports: [AddMemberModalComponent, AddRoleModalComponent, ViewOrEditEntityDocumentsModalComponent],

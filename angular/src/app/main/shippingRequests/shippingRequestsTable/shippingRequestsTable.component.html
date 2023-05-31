@@ -11,28 +11,87 @@
           [dropup]="false"
           [insideClick]="true"
         >
-          <button dropdownToggle type="button" class="btn btn-success" aria-controls="dropdown-basic">
+          <button dropdownToggle type="button" class="btn btn-primary" aria-controls="dropdown-basic">
             <i class="fas fa-plus"></i> {{ 'CreateNewRequest' | localize }}<span class="caret"></span>
           </button>
           <ul *dropdownMenu class="dropdown-menu p-2 w-100" role="menu" aria-labelledby="button-basic">
             <li role="menuitem">
-              <button (click)="createNewRequest()" class="btn btn-outline-success btn-elevate-hover w-100">
+              <button (click)="createNewRequest()" class="btn btn-outline-primary btn-elevate-hover w-100">
                 <i class="fas fa-plus"></i> {{ l('New') }}
               </button>
             </li>
             <li role="menuitem">
-              <button (click)="createNewDedicatedRequest()" class="btn btn-outline-success btn-elevate-hover mt-2 w-100">
+              <button (click)="createNewDedicatedRequest()" class="btn btn-outline-primary btn-elevate-hover mt-2 w-100">
                 <i class="fas fa-plus"></i> {{ l('NewDedicated') }}
               </button>
             </li>
             <li role="menuitem">
-              <button (click)="loadEntityTemplateModal.show(1)" class="btn btn-outline-info btn-elevate-hover mt-2 w-100">
+              <button (click)="loadEntityTemplateModal.show(1)" class="btn btn-primary btn-elevate-hover mt-2 w-100">
                 <i class="fas fa-list"></i> {{ l('FromTemplate') }}
               </button>
             </li>
           </ul>
         </div>
+
+        <div
+          *ngIf="isEnabled('App.ExportFunctionality')"
+          class="btn-group mr-2"
+          dropdown
+          #dropdownAddPage="bs-dropdown"
+          [dropup]="false"
+          [insideClick]="true"
+        >
+          <button dropdownToggle type="button" class="btn btn-secondary" aria-controls="dropdown-export">
+            <i class="fas fa-file-export"></i> {{ 'ExportToExcel' | localize }}<span class="caret"></span>
+          </button>
+          <ul *dropdownMenu class="dropdown-menu p-2 w-120" role="menu" aria-labelledby="button-export">
+            <li role="menuitem">
+              <button [buttonBusy]="NormalExportIsLoading" (click)="ExportNormalToExcel()" class="btn btn-outline-secondary btn-elevate-hover w-100">
+                <i class="fas fa-file-export"></i> {{ l('ExportNormalToExcel') }}
+              </button>
+            </li>
+            <li role="menuitem">
+              <button
+                [buttonBusy]="DedicatedExportIsLoding"
+                (click)="ExportDedicatedToExcel()"
+                class="btn btn-outline-secondary btn-elevate-hover mt-2 w-100"
+              >
+                <i class="fas fa-file-export"></i> {{ l('ExportDedicatedToExcel') }}
+              </button>
+            </li>
+          </ul>
+        </div>
         <button (click)="showAsList()" class="btn btn-dark"><i class="fas fa-list"></i> {{ 'ShowAsList' | localize }}</button>
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+      </div>
+
+      <div role="actions" *ngIf="isCarrier">
+        <div
+          *ngIf="isEnabled('App.ExportFunctionality')"
+          class="btn-group mr-2"
+          dropdown
+          #dropdownAddPage="bs-dropdown"
+          [dropup]="false"
+          [insideClick]="true"
+        >
+          <button dropdownToggle type="button" class="btn btn-secondary" aria-controls="dropdown-export">
+            <i class="fas fa-file-export"></i> {{ 'ExportToExcel' | localize }}<span class="caret"></span>
+          </button>
+          <ul *dropdownMenu class="dropdown-menu p-2 w-120" role="menu" aria-labelledby="button-export">
+            <li role="menuitem">
+              <button (click)="ExportNormalToExcel()" class="btn btn-outline-secondary btn-elevate-hover w-100">
+                <i class="fas fa-file-export"></i> {{ l('ExportNormalToExcel') }}
+              </button>
+            </li>
+            <li role="menuitem">
+              <button (click)="ExportDedicatedToExcel()" class="btn btn-outline-secondary btn-elevate-hover mt-2 w-100">
+                <i class="fas fa-file-export"></i> {{ l('ExportDedicatedToExcel') }}
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <button (click)="showAsList()" class="btn btn-dark"><i class="fas fa-table"></i> {{ l('ShowAsList') }}</button>
         <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
       </div>
     </sub-header>
@@ -120,6 +179,7 @@
               dataField="totalOffers"
               caption="{{ 'Price' | localize }}"
             ></dxi-column>
+            <dxi-column dataField="shipperInvoiceNo" caption="{{ 'ShipperBookingNumber' | localize }}"></dxi-column>
             <dxi-column dataField="numberOfTrips" caption="{{ 'NumberOfTrips' | localize }}"></dxi-column>
             <dxi-column dataField="numberOfCompletedTrips" caption="{{ 'CompletedTrips' | localize }}"></dxi-column>
             <dxi-column dataField="startTripDate" caption="{{ 'EstimatedPickUpDate' | localize }}" dataType="date"></dxi-column>

@@ -11,25 +11,24 @@
         <create-or-edit-template-drop-down-button
           *ngIf="
             _trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0 &&
+            isEnabled('App.SaveTemplateFeature') &&
             (isShipper || isTachyonDealer || (isCarrierSaas && _trip.GetShippingRequestForViewOutput.shippingRequest.isSaas))
           "
           [entityType]="entityTypes.ShippingRequestTemplate"
           [sourceEntityId]="activeShippingRequestId"
         ></create-or-edit-template-drop-down-button>
-        <a class="btn btn-outline-success" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'ActivityLog' | localize }} </a>
         <ng-container *ngIf="feature.isEnabled('App.TachyonDealer') && !_trip.GetShippingRequestForViewOutput.shippingRequest.isBid">
-          <a class="btn btn-outline-success" (click)="scrollToDirectRequests()">{{ l('SendDirectRequests') }}</a>
-          <a class="btn btn-outline-success margin-right-5" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">{{
-            l('StartBidding')
-          }}</a>
+          <a class="btn btn-dark" (click)="scrollToDirectRequests()">{{ l('SendDirectRequests') }}</a>
+          <a class="btn btn-dark margin-right-5" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">{{ l('StartBidding') }}</a>
         </ng-container>
         <a
-          class="btn btn-outline-primary"
+          class="btn btn-secondary"
           *ngIf="!_trip.GetShippingRequestForViewOutput.shippingRequest.isSaas"
           (click)="srPostPriceUpdatesModal.show(activeShippingRequestId, _trip.GetShippingRequestForViewOutput.shippingRequestFlag === 1)"
         >
           <i class="flaticon-edit-1"></i> {{ l('ShippingRequestUpdates') }}
         </a>
+        <a class="btn btn-secondary" (click)="appEntityLog.show()"> <i class="flaticon-notes"></i> {{ 'ActivityLog' | localize }} </a>
       </div>
     </sub-header>
 
@@ -59,7 +58,13 @@
 
       <app-view-matching-price-package *ngIf="canSeePricePackages()" [shippingRequestId]="activeShippingRequestId"></app-view-matching-price-package>
 
-      <div class="card card-custom gutter-b" *ngIf="isGrantedAny('Pages.ActorPrices.Carrier', 'Pages.ActorPrices.Shipper')">
+      <div
+        class="card card-custom gutter-b"
+        *ngIf="
+          isGrantedAny('Pages.ActorPrices.Carrier', 'Pages.ActorPrices.Shipper') &&
+          (_trip.GetShippingRequestForViewOutput.tenantId === appSession.tenantId || !_trip.GetShippingRequestForViewOutput.isCarrierActorMyself)
+        "
+      >
         <div class="card-header">
           <h3 class="card-title">{{ l('Actors') }}</h3>
           <div class="card-toolbar">
@@ -242,7 +247,7 @@
                     </div>
                     <div class="col-lg-3 mt-5" *ngIf="_trip.GetShippingRequestForViewOutput.shippingRequestFlag === 0">
                       <div class="form-group">
-                        <label> {{ l('ShipperInvoiceNumber') }}</label>
+                        <label> {{ l('ShipperBookingNumber') }}</label>
                         <div class="input-group date">
                           <input
                             [value]="_trip.GetShippingRequestForViewOutput.shippingRequest.shipperInvoiceNo"

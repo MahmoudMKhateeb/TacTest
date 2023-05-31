@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Vases.Dtos;
 
 namespace TACHYON.EntityTemplates
@@ -35,8 +36,10 @@ namespace TACHYON.EntityTemplates
 
         [Required] public int OriginCityId { get; set; }
 
-        [Required] public int DestinationCityId { get; set; }
+        [Required] public List<ShippingRequestDestinationCitiesDto> ShippingRequestDestinationCities { get; set; }
         
+        public RoundTripType? RoundTripType { get; set; }
+
         public int OriginCountryId { get; set; }
 
         public int DestinationCountryId { get; set; }
@@ -65,5 +68,7 @@ namespace TACHYON.EntityTemplates
         
         [JsonIgnore]
         public int TenantId { get; set; }
+        
+        public long? OriginFacilityId { get; set; }
     }
 }

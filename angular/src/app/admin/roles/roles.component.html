@@ -39,7 +39,7 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!(['Pages.Administration.Roles.Edit', 'Pages.Administration.Roles.Delete'] | permissionAny)">
+                    <th style="width: 130px" [hidden]="!(['Pages.Administration.Roles.Edit', 'Pages.Administration.Roles.Delete'] | permissionAny)">
                       {{ 'Actions' | localize }}
                     </th>
                     <th>{{ 'RoleName' | localize }}</th>
@@ -84,7 +84,7 @@
                         {{ record.displayName }}
                         <span
                           *ngIf="record.isStatic"
-                          class="label label-primary label-inline m-1"
+                          class="label label-gray label-inline m-1"
                           data-toggle="tooltip"
                           title="{{ 'StaticRole_Tooltip' | localize }}"
                           data-placement="top"

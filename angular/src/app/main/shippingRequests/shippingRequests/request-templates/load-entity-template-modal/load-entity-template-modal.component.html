@@ -19,18 +19,19 @@
         <!--begin::Body-->
         <div class="card-body">
           <div class="form-group">
-            <label>{{ l('Template') }}</label>
-            <select class="form-control" name="template" [(ngModel)]="templateId" [busyIf]="loading">
-              <option value="undefined" selected disabled>{{ l('SelectATemplate') }}</option>
-              <option *ngFor="let item of templates" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <div class="dx-field">
+              <div class="dx-field-label">{{ l('Template') }}</div>
+              <div class="dx-field-value">
+                <dx-select-box [(ngModel)]="template" [dataSource]="dataSource" [grouped]="true" displayExpr="displayName"></dx-select-box>
+              </div>
+            </div>
           </div>
         </div>
         <!--end::Body-->
         <!--begin::Footer-->
-        <div class="card-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">{{ l('Close') }}</button>
-          <button type="button" class="btn btn-primary" [disabled]="loading || !templateId" (click)="ApplyTemplate()">{{ l('UseTemplate') }}</button>
+        <div class="card-footer text-right">
+          <button type="button" class="btn btn-primary" [disabled]="loading || !template" (click)="ApplyTemplate()">{{ l('UseTemplate') }}</button>
+          <button type="button" class="btn btn-light" data-dismiss="modal" (click)="close()">{{ l('Close') }}</button>
         </div>
         <!--end::Footer-->
       </div>

@@ -230,7 +230,7 @@
               <div class="form-group col-md-12">
                 <label>{{ l('Address') }} <span *ngIf="isRequiredAddress" class="required-fileds">*</span></label>
                 <dx-text-box
-                  #search="ngModel"
+                  #search
                   [(ngModel)]="facility.address"
                   [(value)]="facility.address"
                   placeholder="{{ l('searchForNearestLocation') }}"
@@ -294,7 +294,6 @@
             <dx-validation-summary validationGroup="createFacilityGroup" id="create-facility-summary"></dx-validation-summary>
           </div>
           <div class="modal-footer">
-            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
             <dx-button
               type="submit"
               class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 no-padding-custom"
@@ -305,6 +304,16 @@
               [validationGroup]="'createFacilityGroup'"
             >
             </dx-button>
+            <button [disabled]="saving" type="button" class="btn btn-outline-danger" (click)="close()">{{ l('Cancel') }}</button>
+            <!--          <button-->
+            <!--            type="submit"-->
+            <!--            class="btn btn-primary blue"-->
+            <!--            [disabled]="!createFacilityForm.form.valid"-->
+            <!--            [buttonBusy]="saving"-->
+            <!--            [busyText]="l('SavingWithThreeDot')"-->
+            <!--          >-->
+            <!--            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>-->
+            <!--          </button>-->
           </div>
         </dx-validation-group>
       </form>

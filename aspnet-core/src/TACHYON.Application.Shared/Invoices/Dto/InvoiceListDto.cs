@@ -10,6 +10,7 @@ namespace TACHYON.Invoices.Dto
         public string TenantName { get; set; }
         public string Period { get; set; }
         public DateTime DueDate { get; set; }
+        public DateTime? ConfirmationDate { get; set; }
         public bool IsPaid { get; set; }
         public InvoiceAccountType AccountType { get; set; }
         public InvoiceChannel Channel { get; set; }
@@ -18,5 +19,6 @@ namespace TACHYON.Invoices.Dto
         public string InvoiceChannelTitle { get { return Channel.GetEnumDescription(); } }
         public string AccountTypeTitle { get { return AccountType.GetEnumDescription(); } }
         public decimal TotalAmount { get; set; }
+        public bool HasConfirmationDate { get { return ConfirmationDate != null; }  }
     }
 }

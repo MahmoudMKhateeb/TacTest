@@ -152,7 +152,7 @@
                   </select>
                 </div>
               </div>
-              <ng-template [ngIf]="!input.channel && !input.isTMS">
+              <ng-template [ngIf]="!input.channel && !input.isTMSRequest">
                 <div class="col-xl-6">
                   <label for="requestType">{{ 'ShippingRequestType' | localize }}</label>
                   <div class="input-group">
@@ -179,10 +179,9 @@
             </div>
           </div>
         </div>
-
-        <div class="modal-footer">
-          <button type="button" (click)="search()" class="btn btn-primary">{{ l('Search') }}</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="search()" class="btn btn-primary">{{ l('Search') }}</button>
       </div>
     </div>
   </div>

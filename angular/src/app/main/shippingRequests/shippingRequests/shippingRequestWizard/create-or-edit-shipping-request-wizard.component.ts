@@ -41,6 +41,7 @@ import {
   ShippingRequestDestinationCitiesDto,
   ShippingRequestRouteType,
   ShippingRequestsServiceProxy,
+  ShippingRequestVasDto,
   ShippingRequestVasListOutput,
   ShippingTypeEnum,
   TenantCityLookupTableDto,
@@ -139,6 +140,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   allOriginPorts: SelectFacilityItemDto[] = [];
   generalGoodsCategoryId: number;
   ShippingRequestRouteType = ShippingRequestRouteType;
+  wayPoints = [];
 
   constructor(
     injector: Injector,
@@ -159,10 +161,17 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     super(injector);
     this.step1Dto.isInternalBrokerRequest = false;
   }
+
   breadcrumbs: BreadcrumbItem[] = [new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests')];
   @ViewChild('wizard', { static: true }) el: ElementRef;
   step1Form = this.fb.group({
-    shippingRequestType: [{ value: '', disabled: false }, this.isCarrierSass || this.step1Dto.isInternalBrokerRequest ? Validators.required : false],
+    shippingRequestType: [
+      {
+        value: '',
+        disabled: false,
+      },
+      this.isCarrierSass || this.step1Dto.isInternalBrokerRequest ? Validators.required : false,
+    ],
     shippingType: [{ value: '', disabled: false }, Validators.required],
     carrier: [{ value: '', disabled: false }],
     tripsStartDate: [''],
@@ -223,9 +232,13 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
 
   getRequestType(isBid, isDirectRequest) {
-    if (isBid) this.requestType = this.l('Marketplace');
-    else if (isDirectRequest) this.requestType = this.l('DirectRequest');
-    else this.requestType = this.l('TachyonManageService');
+    if (isBid) {
+      this.requestType = this.l('Marketplace');
+    } else if (isDirectRequest) {
+      this.requestType = this.l('DirectRequest');
+    } else {
+      this.requestType = this.l('TachyonManageService');
+    }
   }
 
   ngAfterViewInit() {
@@ -316,6 +329,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       }
     });
   }
+
   ngAfterViewChecked() {
     this.cdr.detectChanges();
   }
@@ -350,8 +364,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           )
           .subscribe((res) => {
             this.notify.success(this.l('ShippingRequestPublishedSuccessfully'));
-            if (this.feature.isEnabled('App.TachyonDealer')) this._router.navigate(['/app/main/tms/shippingRequests']);
-            else this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
+            if (this.feature.isEnabled('App.TachyonDealer')) {
+              this._router.navigate(['/app/main/tms/shippingRequests']);
+            } else {
+              this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
+            }
           });
       }
     });
@@ -392,6 +409,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         // this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
       });
   }
+
   createOrEditStep2() {
     this.saving = true;
     this.step2Dto.id = this.activeShippingRequestId;
@@ -408,6 +426,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       });
     console.log('step 2');
   }
+
   createOrEditStep3() {
     this.saving = true;
     this.step3Dto.id = this.activeShippingRequestId;
@@ -424,6 +443,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       });
     //console.log('step 3');
   }
+
   createOrEditStep4() {
     this.saving = true;
     this.step4Dto.id = this.activeShippingRequestId;
@@ -440,6 +460,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.notify.info(this.l('SavedSuccessfully'));
       });
   }
+
   //get the summary and displays it for user
   reviewAndSubmit() {
     console.log('Review And Submit Lanched');
@@ -451,9 +472,15 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.getRequestType(res.shippingRequest.isBid, res.shippingRequest.isDirectRequest);
       this.loading = false;
       this.getCordinatesByCityName(res.originalCityName, 'source');
-      this.getCordinatesByCityName(res.destinationCityName, 'destanation');
+      this.wayPoints = [];
+      for (let i = 0; i < res.destinationCitiesDtos.length; i++) {
+        const destCity = res.destinationCitiesDtos[i];
+        this.getCordinatesByCityName(destCity.cityName, 'destanation');
+      }
+      // this.getCordinatesByCityName(res.destinationCityName, 'destanation');
     });
   }
+
   loadStep1ForEdit() {
     this.loading = true;
     return this._shippingRequestsServiceProxy
@@ -500,6 +527,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.step2Dto = res;
       });
   }
+
   loadStep3ForEdit() {
     this.loading = true;
 
@@ -516,6 +544,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.loadTruckandCapacityForEdit();
       });
   }
+
   loadStep4ForEdit() {
     this.loading = true;
     this._shippingRequestsServiceProxy
@@ -595,6 +624,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       return selectItem;
     });
 
+    // if port movement feature not set, remove it from list
+    if (!this.isEnabled('App.PortMovement')) {
+      this.allShippingTypes = this.allShippingTypes.filter((x) => x.id.toString() != '3' && x.id.toString() != '5');
+    }
+
     this._shippingRequestsServiceProxy.getAllPackingTypesForDropdown().subscribe((result) => {
       this.allpackingTypes = result;
     });
@@ -613,7 +647,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   private getGeneralGoodsId() {
     this._goodsDetailsServiceProxy.getGeneralGoodsCategoryId().subscribe((result) => {
       this.generalGoodsCategoryId = result;
-      this.step3Dto.goodCategoryId = this.generalGoodsCategoryId;
+      this.step3Dto.goodCategoryId ??= this.generalGoodsCategoryId;
       console.log('getGeneralGoodsId this.step3Dto', this.step3Dto);
     });
   }
@@ -662,7 +696,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     // this.step1Form.get('roundTripType').updateValueAndValidity();
   }
 
-  loadCitiesByCountryId(countryId: number, type: 'source' | 'destination') {
+  loadCitiesByCountryId(countryId: number, type: 'source' | 'destination', citiesToFill?: number[]) {
     this.step2Dto.shippingRequestDestinationCities = [];
     this.destinationCities = [];
     this.citiesLoading = true;
@@ -674,7 +708,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         })
       )
       .subscribe((res) => {
-        type === 'source' ? (this.sourceCities = res) : this.loadDestinationCities(res);
+        type === 'source' ? (this.sourceCities = res) : this.loadDestinationCities(res, citiesToFill, true);
+        if (type === 'destination') {
+          citiesToFill = undefined;
+        }
         if (
           this.step1Dto.shippingTypeId == ShippingTypeEnum.LocalBetweenCities ||
           this.step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements ||
@@ -687,14 +724,30 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       });
   }
 
-  private loadDestinationCities(res: TenantCityLookupTableDto[]) {
-    if (isNotNullOrUndefined(res)) {
+  private loadDestinationCities(res: TenantCityLookupTableDto[], citiesToFill?: number[], forceLoadCities = false) {
+    if (
+      (isNotNullOrUndefined(res) && (!isNotNullOrUndefined(this.destinationCities) || this.destinationCities.length === 0)) ||
+      (isNotNullOrUndefined(res) && forceLoadCities)
+    ) {
       res.forEach((element) => {
         var item = new ShippingRequestDestinationCitiesDto();
         item.cityId = Number(element.id);
         item.cityName = element.displayName;
         this.destinationCities.push(item);
       });
+      if (isNotNullOrUndefined(citiesToFill)) {
+        this.step2Dto.shippingRequestDestinationCities = this.destinationCities.filter(
+          (city) =>
+            citiesToFill.includes(city.cityId) && !this.step2Dto.shippingRequestDestinationCities?.map((item) => item.cityId)?.includes(city.cityId)
+        );
+        this.step2Dto.shippingRequestDestinationCities = this.step2Dto.shippingRequestDestinationCities.reduce((accumulator, current) => {
+          const existingItem = accumulator.find((item) => item.cityId === current.cityId);
+          if (!existingItem) {
+            accumulator.push(current);
+          }
+          return accumulator;
+        }, []);
+      }
     }
   }
 
@@ -713,6 +766,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       });
     }
   }
+
   trucksTypeSelectChange(trucksTypeId?: number) {
     if (trucksTypeId > 0) {
       this.capacityLoading = true;
@@ -733,6 +787,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       this.allCapacities = null;
     }
   }
+
   transportTypeSelectChange(transportTypeId?: number) {
     if (transportTypeId > 0) {
       this.truckTypeLoading = true;
@@ -812,22 +867,28 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.minGrogTripdate = $event;
       }
     }
-    if (type == 'tripsEndDate') this.endTripdate = $event;
+    if (type == 'tripsEndDate') {
+      this.endTripdate = $event;
+    }
 
     var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startTripdate);
     var endDate = this.dateFormatterService.NgbDateStructToMoment(this.endTripdate);
 
-    if (this.startTripdate != null && this.startTripdate != undefined)
+    if (this.startTripdate != null && this.startTripdate != undefined) {
       this.step1Dto.startTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.startTripdate).GregorianDate;
+    }
 
     this.step1Dto.startTripDate == null ? (this.step1Dto.startTripDate = moment(new Date())) : null;
 
-    if (this.endTripdate != null && this.endTripdate != undefined)
+    if (this.endTripdate != null && this.endTripdate != undefined) {
       this.step1Dto.endTripDate = this.GetGregorianAndhijriFromDatepickerChange(this.endTripdate).GregorianDate;
+    }
 
     //checks if the trips end date is less than trips start date
     if (startDate != undefined && endDate != undefined) {
-      if (endDate < startDate) this.step1Dto.endTripDate = this.endTripdate = undefined;
+      if (endDate < startDate) {
+        this.step1Dto.endTripDate = this.endTripdate = undefined;
+      }
     }
   }
 
@@ -843,20 +904,27 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.minGrogEndDate = $event;
       }
     }
-    if (type == 'biddingEndDate') this.endBiddate = $event;
+    if (type == 'biddingEndDate') {
+      this.endBiddate = $event;
+    }
 
     var startDate = this.dateFormatterService.NgbDateStructToMoment(this.startBiddate);
     var endDate = this.dateFormatterService.NgbDateStructToMoment(this.endBiddate);
 
     this.step1Dto.bidStartDate = this.GetGregorianAndhijriFromDatepickerChange(this.startBiddate).GregorianDate;
 
-    if (this.endBiddate != undefined) this.step1Dto.bidEndDate = this.GetGregorianAndhijriFromDatepickerChange(this.endBiddate).GregorianDate;
+    if (this.endBiddate != undefined) {
+      this.step1Dto.bidEndDate = this.GetGregorianAndhijriFromDatepickerChange(this.endBiddate).GregorianDate;
+    }
 
     //   //if end date is more than start date reset end date
     if (startDate != undefined && endDate != undefined) {
-      if (startDate > endDate) this.step1Dto.bidEndDate = this.endBiddate = undefined;
+      if (startDate > endDate) {
+        this.step1Dto.bidEndDate = this.endBiddate = undefined;
+      }
     }
   }
+
   /**
    * Resets Shipping Request Wizard
    */
@@ -962,15 +1030,18 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   prepareStep2Inputs() {
     console.log('prepareStep2Inputs');
     switch (Number(this.step1Dto.roundTripType)) {
-      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
       case RoundTripType.TwoWayRoutsWithPortShuttling:
+        this.step2Dto.routeTypeId = ShippingRequestRouteType.MultipleDrops;
+        this.step2Dto.numberOfDrops = 3;
+        break;
+      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
       case RoundTripType.WithReturnTrip: {
         this.step2Dto.routeTypeId = ShippingRequestRouteType.MultipleDrops;
         this.step2Dto.numberOfDrops = 2;
         break;
       }
       case RoundTripType.WithoutReturnTrip:
-      case RoundTripType.OneWayRoutWithPortShuttling:
+      case RoundTripType.OneWayRoutWithoutPortShuttling:
       default: {
         this.step2Dto.routeTypeId = ShippingRequestRouteType.SingleDrop;
         this.step2Dto.numberOfDrops = 1;
@@ -984,6 +1055,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     // this.clearValidation('originCountry');
     // this.clearValidation('destinationCountry');
   }
+
   /**
    * Get City Cordinates By Providing its name
    * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace
@@ -1005,6 +1077,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           if (cityType == 'source') {
             this.origin = { lat: Lat, lng: Lng };
           } else {
+            this.wayPoints.push({ location: { lat: Lat, lng: Lng } });
             this.destination = { lat: Lat, lng: Lng };
           }
         } else {
@@ -1057,17 +1130,19 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   private useShippingRequestTemplate() {
     if (isNotNullOrUndefined(this.templateId)) {
       this.loading = true;
-      this._templateService
-        .getForView(this.templateId)
-        .pipe(
-          finalize(() => {
-            this.loading = false;
-          })
-        )
-        .subscribe((res) => {
-          // this.templateName = res.templateName;
-          this.parseJsonToDtoData(res.savedEntity);
-        });
+      setTimeout(() => {
+        this._templateService
+          .getForView(this.templateId)
+          .pipe(
+            finalize(() => {
+              this.loading = false;
+            })
+          )
+          .subscribe((res) => {
+            // this.templateName = res.templateName;
+            this.parseJsonToDtoData(res.savedEntity);
+          });
+      }, 250);
     }
   }
 
@@ -1077,20 +1152,41 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    * @private
    */
   private parseJsonToDtoData(savedEntityJsonString: string): void {
-    let pharsedJson = JSON.parse(savedEntityJsonString);
-    this.step1Dto.init(pharsedJson);
+    let parsedJson = JSON.parse(savedEntityJsonString);
+    this.step1Dto.init(parsedJson);
     this.step1Dto.isBid ? (this.shippingRequestType = 'bidding') : '';
     this.step1Dto.isTachyonDeal ? (this.shippingRequestType = 'tachyondeal') : '';
     this.step1Dto.isDirectRequest ? (this.shippingRequestType = 'directrequest') : '';
     this.step1Dto.endTripDate = this.step1Dto.startTripDate = this.step1Dto.bidStartDate = this.step1Dto.bidEndDate = null; //empty Shipping Request Dates
-    this.originCountry = pharsedJson.originCountryId;
-    this.destinationCountry = pharsedJson.destinationCountryId;
+    this.fillAllRoundTrips();
+    this.step1Dto.roundTripType = parsedJson.roundTripType;
+    this.step2Dto.init(parsedJson);
+    this.originCountry = parsedJson.originCountryId;
+    this.destinationCountry = parsedJson.destinationCountryId;
     this.loadCitiesByCountryId(this.originCountry, 'source');
-    this.loadCitiesByCountryId(this.destinationCountry, 'destination');
-    this.step2Dto.init(pharsedJson);
-    this.step3Dto.init(pharsedJson);
+    let citiesToFill = parsedJson.shippingRequestDestinationCities?.map((item) => item.cityId);
+    this.loadCitiesByCountryId(this.destinationCountry, 'destination', citiesToFill);
+    this.step2Dto.originCityId = parsedJson.originCityId;
+    this.step2Dto.originFacilityId = parsedJson.originFacilityId;
+    this.step3Dto.init(parsedJson);
+    this.step3Dto.goodCategoryId = parsedJson.goodCategoryId;
     this.loadTruckandCapacityForEdit();
-    this.step4Dto.init(pharsedJson);
+    this.step4Dto.init(parsedJson);
+    if (isNotNullOrUndefined(parsedJson.shippingRequestVasList)) {
+      this.selectedVases = parsedJson.shippingRequestVasList.map((item) => {
+        let dto = new CreateOrEditShippingRequestVasListDto();
+        // I'm using this way to obtain an object that have .toJson() method
+        dto.shippingRequestId = item.shippingRequestId;
+        dto.id = item.id;
+        dto.vasId = item.vasId;
+        dto.vasName = item.vasName;
+        dto.numberOfTrips = item.numberOfTrips;
+        dto.requestMaxAmount = item.requestMaxAmount;
+        dto.requestMaxCount = item.requestMaxCount;
+        return dto;
+      });
+    }
+
     Swal.fire({
       icon: 'success',
       title: this.l('TemplateImportedSuccessfully'),
@@ -1108,10 +1204,15 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
 
   routeTypeChanged() {
-    if (this.step2Dto.routeTypeId == 1) this.step2Dto.numberOfDrops = 1;
-    else this.step2Dto.numberOfDrops = undefined;
+    if (this.step2Dto.routeTypeId == 1) {
+      this.step2Dto.numberOfDrops = 1;
+    } else {
+      this.step2Dto.numberOfDrops = undefined;
+    }
 
-    if (this.step1Dto.shippingTypeId != 1) this.step2Dto.shippingRequestDestinationCities = [];
+    if (this.step1Dto.shippingTypeId != 1) {
+      this.step2Dto.shippingRequestDestinationCities = [];
+    }
   }
 
   removeCarrierInputFromForm1() {
@@ -1141,7 +1242,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
 
   getCityIdFromSelectedPort($event: any) {
-    this.step2Dto.originCityId = this.allOriginPorts?.find((port) => port.id == $event)?.cityId;
+    if (isNotNullOrUndefined(this.allOriginPorts)) {
+      this.step2Dto.originCityId = this.allOriginPorts?.find((port) => port.id == $event)?.cityId;
+    }
     console.log('this.step2Dto', this.step2Dto);
   }
 

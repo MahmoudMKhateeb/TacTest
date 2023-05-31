@@ -231,9 +231,9 @@
                     [(ngModel)]="edition.edition.expiringEditionId"
                     [attr.min]="expireAction == expireActionEnum.AssignToAnotherEdition ? 1 : 0"
                   >
-                    <option *ngFor="let expiringEdition of expiringEditions" [value]="expiringEdition.value">{{
-                      expiringEdition.displayText
-                    }}</option>
+                    <option *ngFor="let expiringEdition of expiringEditions" [value]="expiringEdition.value">
+                      {{ expiringEdition.displayText }}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -244,12 +244,12 @@
           </tabset>
         </div>
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">
+          <button [disabled]="saving" type="button" class="btn btn-outline-danger font-weight-bold" (click)="close()">
             {{ 'Cancel' | localize }}
           </button>
           <button
             type="submit"
-            class="btn btn-save font-weight-bold"
+            class="btn btn-primary font-weight-bold"
             [disabled]="!editionForm.form.valid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"

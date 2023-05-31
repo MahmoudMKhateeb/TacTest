@@ -41,7 +41,7 @@
                       >
                         <ng-template pTemplate="header">
                           <tr>
-                            <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.TenantCarrier.Delete')">
+                            <th style="width: 130px" [hidden]="!isGrantedAny('Pages.TenantCarrier.Delete')">
                               {{ l('Actions') }}
                             </th>
 
@@ -53,7 +53,7 @@
                         </ng-template>
                         <ng-template pTemplate="body" let-record="$implicit">
                           <tr>
-                            <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.TenantCarrier.Delete')">
+                            <td style="width: 130px" [hidden]="!isGrantedAny('Pages.TenantCarrier.Delete')">
                               <div class="btn-group dropdown" dropdown container="body">
                                 <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                                   <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -97,7 +97,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
+            <button [disabled]="saving" type="button" class="btn btn-light" (click)="close()">{{ 'Close' | localize }}</button>
           </div>
         </div>
       </div>

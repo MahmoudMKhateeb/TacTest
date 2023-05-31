@@ -1,19 +1,24 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
-    <sub-header [title]="'ShipmentTracking' | localize" [description]="'' | localize">
+    <sub-header
+      [title]="(shipmentType === 'normalShipment' ? 'ShipmentTracking' : 'DirectShipmentTracking') | localize"
+      [description]="'' | localize"
+    >
       <div role="actions">
+        <button *ngIf="showNormalView" (click)="showAsTable()" class="btn btn-dark mr-2"><i class="fas fa-table"></i> {{ l('ShowAsTable') }}</button>
+        <button *ngIf="!showNormalView" (click)="showAsList()" class="btn btn-dark mr-2"><i class="fas fa-list"></i> {{ l('ShowAsList') }}</button>
         <div class="btn-group">
           <div *ngIf="permission.isGranted('Pages.Shipment.Tracking.BulkDeliverTrip')" class="mr-2">
             <div ngbDropdown placement="bottom" class="d-inline-block">
-              <button class="btn btn-outline-success" id="dropdownBasic2" ngbDropdownToggle>{{ l('BulkDeliverTrips') }}</button>
+              <button class="btn btn-outline-secondary" id="dropdownBasic2" ngbDropdownToggle>{{ l('BulkDeliverTrips') }}</button>
               <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
                 <a href="assets/sampleFiles/BulkDeliveryTripsSampleFile.xlsx" class="dropdown-item">{{ l('DownloadFileTemplate') }}</a>
                 <button (click)="ForceDeliverTripModal.show()" class="dropdown-item">{{ l('UploadFile') }}</button>
               </div>
             </div>
           </div>
-          <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+          <button (click)="ModelSearch.show(searchInput)" class="btn btn-secondary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
         </div>
       </div>
     </sub-header>
@@ -21,7 +26,7 @@
     <!--begin::Entry-->
 
     <div class="container-fluid">
-      <div class="row">
+      <div class="row" *ngIf="showNormalView">
         <div class="col-12 mb-7" *ngFor="let item of Items">
           <div>
             <div
@@ -32,11 +37,25 @@
                   ? 'card card-custom pt-4'
                   : 'card card-custom ribbon ribbon-clip ribbon-left pt-6'
               "
+              [class.pt-8]="
+                item.isSass &&
+                (((item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated || item.shippingRequestFlag === ShippingRequestFlagEnum.Normal) &&
+                  item.shippingType == ShippingTypeEnum.ImportPortMovements) ||
+                  item.shippingType == ShippingTypeEnum.ExportPortMovements)
+              "
               [busyIf]="loadingTripId === item.id"
             >
+              <!--                  style="top: 12px"-->
               <div
                 class="ribbon-target"
-                style="top: 12px"
+                [style.top]="
+                  (item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
+                    item.shippingType == ShippingTypeEnum.ImportPortMovements ||
+                    item.shippingType == ShippingTypeEnum.ExportPortMovements) &&
+                  item.isSass
+                    ? '32px'
+                    : '12px'
+                "
                 [style.left]="isRtl ? 'auto !important' : ''"
                 [style.right]="isRtl ? '-10px !important' : ''"
                 *ngIf="
@@ -45,7 +64,7 @@
                   item.shippingType == ShippingTypeEnum.ExportPortMovements
                 "
               >
-                <span class="ribbon-inner {{ item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ? 'bg-warning' : 'bg-danger' }}"></span>
+                <!--                <span class="ribbon-inner bg-primary"></span>-->
                 {{ (item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ? 'DedicatedShippingRequest' : 'PortsMovement') | localize }}
               </div>
               <div class="card-body ribbon ribbon-top">
@@ -54,31 +73,50 @@
                   <button
                     *ngIf="item.hasAccident"
                     (click)="showIncident(item)"
-                    class="ribbon-target bg-warning border-0"
-                    style="top: -1rem; right: 8%"
+                    class="ribbon-target bg-gray border-0"
+                    style="right: 8%"
                     type="submit"
+                    [style.top]="
+                      item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
+                      item.shippingType == ShippingTypeEnum.ImportPortMovements ||
+                      item.shippingType == ShippingTypeEnum.ExportPortMovements
+                        ? item.isSass
+                          ? '-2rem'
+                          : '-1.5rem'
+                        : '-1rem'
+                    "
                   >
                     <!--                    //TODO: Add The Icon and the condition-->
                     {{ l('Incident') }}
                   </button>
                   <div
-                    class="ribbon-target"
-                    style="top: -1rem; right: 2%; left: auto"
-                    [ngClass]="{
-                      'bg-danger': item.status === ShippingRequestTripStatusEnum.Delivered,
-                      'bg-info': item.status === ShippingRequestTripStatusEnum.Canceled,
-                      'bg-success': item.status === ShippingRequestTripStatusEnum.InTransit,
-                      'bg-secondary': item.status === ShippingRequestTripStatusEnum.DeliveredAndNeedsConfirmation,
-                      'bg-primary': item.status === ShippingRequestTripStatusEnum.New
-                    }"
+                    class="ribbon-target bg-primary"
+                    style="right: 2%; left: auto"
+                    [style.top]="
+                      item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
+                      item.shippingType == ShippingTypeEnum.ImportPortMovements ||
+                      item.shippingType == ShippingTypeEnum.ExportPortMovements
+                        ? item.isSass
+                          ? '-2rem'
+                          : '-1.5rem'
+                        : '-1rem'
+                    "
                   >
                     {{ item.statusTitle | localize }}
                   </div>
                   <div
                     *ngIf="item.isSass"
-                    class="ribbon-target bg-info"
+                    class="ribbon-target bg-dark"
                     [class.for-dedicated]="item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated"
-                    style="top: -1rem"
+                    [style.top]="
+                      item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
+                      item.shippingType == ShippingTypeEnum.ImportPortMovements ||
+                      item.shippingType == ShippingTypeEnum.ExportPortMovements
+                        ? item.isSass
+                          ? '-2rem'
+                          : '-1.5rem'
+                        : '-1rem'
+                    "
                     [ngClass]="{ left: !isRtl, right: isRtl }"
                   >
                     {{ 'SAASTrip' | localize }}
@@ -128,7 +166,7 @@
                       <!--begin::Actions-->
                       <div class="my-lg-0 my-3 mt-8">
                         <a
-                          class="btn btn-sm btn-light-danger font-weight-bolder text-uppercase mr-2"
+                          class="btn btn-sm btn-light-primary font-weight-bolder text-uppercase mr-2"
                           *ngIf="item.driver && (!activePanelId || activePanelId != item.id)"
                           href="javascript:void(0)"
                           (click)="activePanelId = item.id"
@@ -137,7 +175,7 @@
                           <i class="flaticon-pin"></i> {{ l('Track') }}</a
                         >
                         <a
-                          class="btn btn-sm btn-light-danger font-weight-bolder text-uppercase mr-2"
+                          class="btn btn-sm btn-light-primary font-weight-bolder text-uppercase mr-2"
                           *ngIf="activePanelId == item.id"
                           href="javascript:void(0)"
                           (click)="activePanelId = null"
@@ -147,7 +185,7 @@
                           <i class="flaticon2-up"></i> {{ l('Collapse') }}</a
                         >
                         <div
-                          *ngIf="isGranted('Pages.shipment.Tracking.Drive') && item.driver && item.canDriveTrip"
+                          *ngIf="!isTachyonDealer || (isGranted('Pages.shipment.Tracking.Drive') && item.driver && item.canDriveTrip)"
                           ngbDropdown
                           container="body"
                           class="d-inline-block"
@@ -359,6 +397,7 @@
           <span></span>
         </div>
       </div>
+      <app-tracking-table *ngIf="!showNormalView" [searchInput]="searchInput" [shipmentType]="shipmentType"></app-tracking-table>
     </div>
   </div>
 </div>

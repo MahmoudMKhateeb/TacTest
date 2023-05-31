@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'Offers' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button (click)="exportToExcel()" class="btn btn-outline-secondary"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
         <button *ngIf="isGranted('Pages.Offers.Create')" (click)="createOffer()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewOffer') }}
@@ -155,32 +155,32 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Offers.Edit', 'Pages.Offers.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="trucksTypeFk.displayName">
+                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.Offers.Edit', 'Pages.Offers.Delete')">{{ l('Actions') }}</th>
+                    <th style="width: 150px" pSortableColumn="trucksTypeFk.displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="trailerTypeFk.displayName">
+                    <th style="width: 150px" pSortableColumn="trailerTypeFk.displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="trailerTypeDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="goodCategoryFk.displayName">
+                    <th style="width: 150px" pSortableColumn="goodCategoryFk.displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="routeFk.displayName">
+                    <th style="width: 150px" pSortableColumn="routeFk.displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="routeDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
+                    <th style="width: 150px" pSortableColumn="displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="offer.displayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="description">
+                    <th style="width: 150px" pSortableColumn="description">
                       {{ l('Description') }}
                       <p-sortIcon field="offer.description"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="price">
+                    <th style="width: 150px" pSortableColumn="price">
                       {{ l('Price') }}
                       <p-sortIcon field="offer.price"></p-sortIcon>
                     </th>
@@ -188,7 +188,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.Offers.Edit', 'Pages.Offers.Delete')">
+                    <td style="width: 130px" [hidden]="!isGrantedAny('Pages.Offers.Edit', 'Pages.Offers.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -218,31 +218,31 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.trucksTypeDisplayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.trailerTypeDisplayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.goodCategoryDisplayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.routeDisplayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.offer.displayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Description') }}</span>
                       {{ record.offer.description }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Price') }}</span>
                       {{ record.offer.price }}
                     </td>

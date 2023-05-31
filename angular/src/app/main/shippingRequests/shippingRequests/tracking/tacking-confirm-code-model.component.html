@@ -27,7 +27,6 @@
         </div>
 
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
           <button
             type="submit"
             class="btn btn-primary"
@@ -37,6 +36,7 @@
           >
             <i class="fa fa-save"></i> <span>{{ 'Confirm' | localize }}</span>
           </button>
+          <button [disabled]="saving" type="button" class="btn btn-outline-danger" (click)="close()">{{ 'Cancel' | localize }}</button>
         </div>
       </form>
     </div>

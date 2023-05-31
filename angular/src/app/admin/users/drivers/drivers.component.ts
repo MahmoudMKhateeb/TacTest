@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Injector, OnInit, ViewChild, ViewEncapsulatio
 import { UsersComponent } from '@app/admin/users/users.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ImpersonationService } from '@app/admin/users/impersonation.service';
-import { DocumentsEntitiesEnum, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CarriersForDropDownDto, DocumentsEntitiesEnum, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -13,6 +13,10 @@ import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import { DriverTrackingModalComponent } from '@app/admin/users/drivers/driver-tracking-modal/driver-tracking-modal.component';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { DriverFilterModalComponent } from '@app/admin/users/drivers/driver-filter/driver-filter-modal.component';
+import { DriverFilter } from '@app/admin/users/drivers/driver-filter/driver-filter-model';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular';
+import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'app-drivers',
@@ -22,13 +26,17 @@ import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUn
   animations: [appModuleAnimation()],
 })
 export class DriversComponent extends UsersComponent implements AfterViewInit, OnInit {
+  @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
   @ViewChild('DriverTrackingModal') DriverTrackingModal: DriverTrackingModalComponent;
+  @ViewChild('driverFilterModal') driverFilter: DriverFilterModalComponent;
   @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
   isArabic = false;
   driverId: number;
   tripId: number;
   documentsEntitiesEnum = DocumentsEntitiesEnum;
   dataSource: any = {};
+  showClearSearchFilters: boolean;
+  shouldClearInputs: boolean;
 
   constructor(
     injector: Injector,
@@ -53,7 +61,7 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
     this.viewOrEditEntityDocumentsModal.show(driverId, DocumentsEntitiesEnum.Driver);
   }
 
-  getDrivers() {
+  getDrivers(searchOptions?: LoadOptions) {
     var filter = this._activatedRoute.snapshot.queryParams['isActive'];
     let self = this;
     this.dataSource = {};
@@ -65,6 +73,15 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
             (loadOptions.filter as any[]).push(['isActive', '=', filter]);
           }
         }
+        // console.log('searchOptions', searchOptions);
+        // debugger
+        // if (isNotNullOrUndefined(searchOptions)) {
+        //     (searchOptions.filter as any[]).map(item => {
+        //         (loadOptions.filter as any[]).push(item);
+        //     });
+        //     searchOptions = null;
+        // }
+        console.log('loadOptions', loadOptions);
         return self._userServiceProxy
           .getDrivers(JSON.stringify(loadOptions))
           .toPromise()
@@ -90,5 +107,66 @@ export class DriversComponent extends UsersComponent implements AfterViewInit, O
       this.getDrivers();
       this.notify.success(this.l('SuccessfullyDeleted'));
     });
+  }
+
+  search(filterObject: DriverFilter) {
+    const loadOptions: LoadOptions = {
+      filter: [],
+    };
+    const keys = Object.keys(filterObject);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const val = filterObject[key];
+      if (isNotNullOrUndefined(val)) {
+        if (key === 'selectedCarriers' && val.length > 0) {
+          const array = [];
+          (val as CarriersForDropDownDto[]).map((item, index) => {
+            array.push(['companyName', '=', item.displayName]);
+            if (index < val.length - 1) {
+              array.push('or');
+            }
+          });
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
+          continue;
+        }
+        if (key === 'creationTime' && !!val) {
+          const array = [];
+          const date = val as Date;
+          const dateValue = moment.utc({ y: date.getFullYear(), M: date.getMonth(), d: date.getDate() });
+          array.push(['creationTime', '>=', dateValue.toISOString()]);
+          array.push('and');
+          array.push(['creationTime', '<', dateValue.add(1, 'd').toISOString()]);
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
+          continue;
+        }
+        if (key === 'driverName' && !!val) {
+          const array = [];
+          array.push(['name', '=', val]);
+          array.push('or');
+          array.push(['surname', '=', val]);
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
+          continue;
+        }
+        if (!(val instanceof Array) && !!val) {
+          loadOptions.filter.push([key, '=', val]);
+          if (i < keys.length - 1) {
+            loadOptions.filter.push('and');
+          }
+        }
+      }
+    }
+    this.dataGrid.instance.clearFilter();
+    this.dataGrid.instance.filter(loadOptions.filter);
+    this.showClearSearchFilters = true;
+    this.shouldClearInputs = false;
+  }
+
+  clearFilters() {
+    this.dataGrid.instance.clearFilter();
+    this.showClearSearchFilters = false;
+    this.shouldClearInputs = true;
   }
 }

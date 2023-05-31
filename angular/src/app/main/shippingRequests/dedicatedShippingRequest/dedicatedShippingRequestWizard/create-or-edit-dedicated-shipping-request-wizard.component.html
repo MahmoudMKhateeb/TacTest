@@ -17,7 +17,7 @@
           </div>
         </ng-container>
         <div class="card-header">
-          <div class="card-title">
+          <div *ngIf="isEnabled('App.DedicatedTruckFeature')" class="card-title">
             <h3 class="card-label">
               <ng-container>{{ l('NewDedicatedShippingRequest') }} </ng-container>
             </h3>
@@ -428,7 +428,7 @@
                                 (ngModelChange)="validateShippingRequestType()"
                                 [style]="{ width: '100%' }"
                                 styleClass="form-control pt-1"
-                                [dataKey]="'cityId'"
+                                dataKey="cityId"
                                 [selectionLimit]="step1Dto.shippingTypeId == 1 ? 1 : 100"
                               >
                               </p-multiSelect>
@@ -735,6 +735,7 @@
                           </div>
                           <div class="form-group col-md-6 col-lg-6">
                             <label>{{ l('RentalDates') }} <span class="required-fileds">*</span></label>
+                            <!-- [minDate]="today" -->
                             <p-calendar
                               #primeCalendar
                               [disabled]="!step1Dto.rentalDuration || !step1Dto.rentalDurationUnit"
@@ -747,7 +748,6 @@
                               [(ngModel)]="rentalRangeDates"
                               selectionMode="range"
                               [readonlyInput]="true"
-                              [minDate]="today"
                               [maxDate]="maxSelectableDate"
                               [hideOnDateTimeSelect]="false"
                               [showButtonBar]="true"
@@ -972,21 +972,21 @@
                   <!--begin: Form Actions -->
                   <div class="d-flex justify-content-between border-top pt-10">
                     <div class="mr-2">
-                      <div class="btn btn-light-danger font-weight text-uppercase px-9 py-4" data-wizard-type="action-prev">
+                      <div class="btn btn-light-dark font-weight text-uppercase px-9 py-4" data-wizard-type="action-prev" (click)="updateRoute()">
                         {{ l('Previous') }}
                       </div>
                     </div>
                     <div>
                       <create-or-edit-template-drop-down-button
-                        *ngIf="activeStep == 4 && (isShipper || isTachyonDealer || isCarrierSaas)"
-                        [entityType]="entityType.ShippingRequestTemplate"
+                        *ngIf="(stepToCompleteFrom == 3 || activeStep == 3) && (isShipper || isTachyonDealer || isCarrierSaas)"
+                        [entityType]="entityType.DedicatedShippingRequestTemplate"
                         [sourceEntityId]="'' + activeShippingRequestId"
-                        [customClass]="'btn btn-light-danger font-weight-bold px-9 py-4 dropdown-toggle btn-elevate-hover mr-2'"
+                        [customClass]="'btn btn-primary primary-invert-on-hover font-weight-bold px-9 py-4 dropdown-toggle btn-elevate-hover mr-2'"
                       ></create-or-edit-template-drop-down-button>
                       <button
                         *ngIf="!isEdit"
                         (click)="onSubmit()"
-                        class="btn btn-success font-weight-bold text-uppercase px-9 py-4"
+                        class="btn btn-primary font-weight-bold text-uppercase px-9 py-4"
                         data-wizard-type="action-submit"
                       >
                         {{ l('Publish') }}
@@ -994,7 +994,7 @@
                       <a
                         *ngIf="isEdit"
                         type="button"
-                        class="btn btn-success font-weight-bold text-uppercase px-9 py-4"
+                        class="btn btn-light font-weight-bold text-uppercase px-9 py-4"
                         routerLink="/app/main/shippingRequests/shippingRequests"
                         data-wizard-type="action-submit"
                       >

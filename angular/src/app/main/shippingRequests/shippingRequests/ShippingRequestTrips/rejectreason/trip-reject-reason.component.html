@@ -2,7 +2,9 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'AccidentReason' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button *ngIf="isEnabled('App.ExportFunctionality')" (click)="exportToExcel()" class="btn btn-outline-secondary">
+          <i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}
+        </button>
 
         <button *ngIf="isGranted('Pages.ShippingRequestTrips.Reject.Reason.Create')" (click)="ReasonModal.show(null)" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('Create') }}
@@ -55,13 +57,13 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th
-                      style="width: 130px;"
+                      style="width: 130px"
                       [hidden]="!isGrantedAny('Pages.ShippingRequestTrips.Reject.Reason.Edit', 'Pages.ShippingRequestTrips.Reject.Reason.Delete')"
                     >
                       {{ l('Actions') }}
                     </th>
 
-                    <th style="width: 150px;">
+                    <th style="width: 150px">
                       {{ l('DisplayName') }}
                     </th>
                   </tr>
@@ -69,7 +71,7 @@
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
                     <td
-                      style="width: 130px;"
+                      style="width: 130px"
                       [hidden]="!isGrantedAny('Pages.ShippingRequestTrips.Reject.Reason.Edit', 'Pages.ShippingRequestTrips.Reject.Reason.Delete')"
                     >
                       <div class="btn-group dropdown" dropdown container="body">
@@ -99,7 +101,7 @@
                       </div>
                     </td>
 
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.name }}
                     </td>

@@ -16,20 +16,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
-using TACHYON.Configuration;
-using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Features;
 using TACHYON.Integration.BayanIntegration.V3;
 using TACHYON.Invoices;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
-using TACHYON.Offers;
 using TACHYON.Penalties;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Base;
 using TACHYON.PriceOffers.Dto;
-using TACHYON.PricePackages;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.RoutPointSmartEnum;
 using TACHYON.Shipping.Drivers.Dto;
@@ -1097,8 +1093,10 @@ namespace TACHYON.Tracking
                 point.ShippingRequestTripFk.ActualDeliveryDate = Clock.Now;
 
             if (otherPoints.All(x => x.IsResolve))
+            {
                 point.ShippingRequestTripFk.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
-
+                await HandleInvoiceStatusBeforeConfirmation(point);
+            }
 
             var arrviceTime = await _routPointStatusTransitionRepository.GetAll()
                .Where(x => x.PointId == args.PointId && !x.IsReset
@@ -1133,6 +1131,23 @@ namespace TACHYON.Tracking
             return nameof(RoutPointDropOffStep4);
         }
 
+        private async Task HandleInvoiceStatusBeforeConfirmation(RoutPoint point)
+        {
+            var carrierTenant = point.ShippingRequestTripFk.ShippingRequestId == null ? point.ShippingRequestTripFk.CarrierTenantId.Value
+                : point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.Value;
+            var shipperTenant = point.ShippingRequestTripFk.ShippingRequestId == null ? point.ShippingRequestTripFk.ShipperTenantId.Value
+                : point.ShippingRequestTripFk.ShippingRequestFk.TenantId;
+
+            if (!await _featureChecker.IsEnabledAsync(carrierTenant, AppFeatures.RequiredReceiverCodeForInvoice))
+            {
+                point.ShippingRequestTripFk.CarrierInvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
+            }
+            if ( !await _featureChecker.IsEnabledAsync(shipperTenant, AppFeatures.RequiredReceiverCodeForInvoice))
+            {
+                point.ShippingRequestTripFk.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
+            }
+        }
+
         private async Task<string> ReceiverConfirmed(PointTransactionArgs args)
         {
             var status = RoutePointStatus.ReceiverConfirmed;
@@ -1148,7 +1163,7 @@ namespace TACHYON.Tracking
             point.ShippingRequestTripFk.EndWorking = Clock.Now;
 
             // check if point is complete .. and trip is complete 
-            await HandlePointDelivery(args.PointId);
+            await HandlePointDelivery(args.PointId, status);
             return nameof(RoutPointDropOffStep5);
         }
 
@@ -1158,7 +1173,7 @@ namespace TACHYON.Tracking
             var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
 
-            UploadFiles(args.Documents, point.Id, RoutePointDocumentType.POD);
+            await UploadFiles(args.Documents, point.Id, RoutePointDocumentType.POD);
 
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
@@ -1168,7 +1183,7 @@ namespace TACHYON.Tracking
             && !x.RoutPointStatusTransitions.Any(s => !s.IsReset && s.Status == RoutePointStatus.DeliveryConfirmation)
             && x.Id != point.Id);
 
-            await HandlePointDelivery(args.PointId);
+            await HandlePointDelivery(args.PointId, status);
 
             if (allPointsHasDeliveryConfirmation)
             {
@@ -1188,7 +1203,7 @@ namespace TACHYON.Tracking
             var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
                 .FirstOrDefaultAsync(x => x.Id == args.PointId);
 
-            UploadFiles(args.Documents, point.Id, RoutePointDocumentType.DeliveryNote);
+            await UploadFiles(args.Documents, point.Id, RoutePointDocumentType.DeliveryNote);
 
             point.IsDeliveryNoteUploaded = true;
             point.Status = status;
@@ -1204,12 +1219,12 @@ namespace TACHYON.Tracking
             var point = await _routPointRepository.GetAllIncluding(x => x.ShippingRequestTripFk)
                  .FirstOrDefaultAsync(x => x.Id == args.PointId);
 
-            UploadFiles(args.Documents, point.Id, RoutePointDocumentType.DeliveryGood);
+            await UploadFiles(args.Documents, point.Id, RoutePointDocumentType.DeliveryGood);
 
             point.IsGoodPictureUploaded = true;
             point.Status = status;
             point.ShippingRequestTripFk.RoutePointStatus = status;
-            await HandlePointDelivery(args.PointId);
+            await HandlePointDelivery(args.PointId, status);
 
             return nameof(RoutPointDropOffStep8);
         }
@@ -1235,7 +1250,8 @@ namespace TACHYON.Tracking
         private async Task<string> DropOffConfirmDelivery(PointTransactionArgs arg)
         {
             var point = await _routPointRepository
-               .GetAllIncluding(x => x.ShippingRequestTripFk)
+               .GetAll().Include(x => x.ShippingRequestTripFk)
+               .ThenInclude(x=>x.ShippingRequestFk)
                .FirstOrDefaultAsync(x => x.Id == arg.PointId);
 
             point.Status = RoutePointStatus.ConfirmDelivery;
@@ -1254,9 +1270,13 @@ namespace TACHYON.Tracking
                 point.ShippingRequestTripFk.ActualDeliveryDate = Clock.Now;
 
             if (otherPoints.All(x => x.IsResolve))
+            {
                 point.ShippingRequestTripFk.Status = ShippingRequestTripStatus.DeliveredAndNeedsConfirmation;
+                point.ShippingRequestTripFk.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
+                point.ShippingRequestTripFk.CarrierInvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
+            }
 
-            await HandlePointDelivery(point);
+            await HandlePointDelivery(point, RoutePointStatus.ConfirmDelivery);
             await _banIntegrationManagerV3.QueueCloseWaybillJob(point.Id);
 
             return nameof(RoutPointDropOffStep4);
@@ -1415,7 +1435,7 @@ namespace TACHYON.Tracking
 
             if (trip.ShippingRequestTripVases == null || trip.ShippingRequestTripVases.Count == 0) return;
 
-            foreach (var vas in trip.ShippingRequestTripVases.Where(x=> !x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName) && !x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName)))
+            foreach (var vas in trip.ShippingRequestTripVases.Where(x=> x.ShippingRequestVasFk.VasFk.Name != null && !x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName) && !x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName)))
             {
                 var item = items.FirstOrDefault(x => x.SourceId == vas.ShippingRequestVasId && x.PriceType == PriceOfferType.Vas);
                 vas.CommissionType = item.CommissionType;
@@ -1523,7 +1543,9 @@ namespace TACHYON.Tracking
                     !forceMode,
                     x => x.Status == RoutePointStatus.StandBy && !x.IsActive && !x.IsResolve && !x.IsComplete
                          && x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.InTransit
-                         && (x.PickingType == PickingType.Dropoff 
+                         && (x.PickingType == PickingType.Dropoff
+                             || x.ShippingRequestTripFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                             || x.ShippingRequestTripFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements
                              || x.ShippingRequestTripFk.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
                              || x.ShippingRequestTripFk.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements))
                 .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
@@ -1557,15 +1579,15 @@ namespace TACHYON.Tracking
                 .FirstOrDefaultAsync();
         }
 
-        private async Task HandlePointDelivery(long pointId)
+        private async Task HandlePointDelivery(long pointId, RoutePointStatus pointStatus)
         {
-            var point = await _routPointRepository.GetAsync(pointId);
-            await HandlePointDelivery(point);
+            var point = await _routPointRepository.GetAll().Include(x=>x.ShippingRequestTripFk).ThenInclude(x=>x.ShippingRequestFk).FirstOrDefaultAsync(x=>x.Id == pointId);
+            await HandlePointDelivery(point, pointStatus);
         }
         /// <summary>
         /// check if point is complete and mark it as complete & check if trip is complete and mark it as delivered
         /// </summary>
-        private async Task HandlePointDelivery(RoutPoint point)
+        private async Task HandlePointDelivery(RoutPoint point, RoutePointStatus pointStatus)
         {
             bool IsMultipleDrops(ShippingRequestTrip shippingRequestTrip)
             {
@@ -1607,6 +1629,12 @@ namespace TACHYON.Tracking
                     .Include(x => x.ShipperTenantFk)
                     .FirstOrDefaultAsync(t => t.Id == point.ShippingRequestTripId);
 
+            bool isSingleDrop = IsSingleDrop(trip);
+            bool isMultipleDrops = IsMultipleDrops(trip);
+
+            var shipperTenant = trip.ShippingRequestId != null ? trip.ShippingRequestFk.TenantId : trip.ShipperTenantId.Value;
+            var carrierTenant = trip.ShippingRequestId != null ? trip.ShippingRequestFk.CarrierTenantId : trip.CarrierTenantId.Value;
+
             if (isCompleted)
             {
                 point.IsActive = false;
@@ -1624,34 +1652,19 @@ namespace TACHYON.Tracking
                     await CloseLastTransitionInComplete(trip.Id);
                     await NotificationWhenShipmentDelivered(point, currentUser);
                 }
+                else if(point.ShippingRequestTripFk.ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery)
+                {
+                    await _invoiceManager.HandleInvoiceStatus(point.Id,isSingleDrop, pointStatus == RoutePointStatus.ReceiverConfirmed, trip.InvoiceStatus, trip.CarrierInvoiceStatus, trip.Id, shipperTenant, carrierTenant.Value);
+                }
             }
-            else
+            else if (point.ShippingRequestTripFk.ShippingRequestTripFlag != ShippingRequestTripFlag.HomeDelivery)
             {
-                bool isSingleDrop = IsSingleDrop(trip);
-                bool isMultipleDrops = IsMultipleDrops(trip);
+                await _invoiceManager.HandleInvoiceStatus(point.Id, isSingleDrop, pointStatus == RoutePointStatus.ReceiverConfirmed, trip.InvoiceStatus, trip.CarrierInvoiceStatus, trip.Id, shipperTenant, carrierTenant.Value);
 
-                if (isSingleDrop)
-                {
-                    trip.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
-                    await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);//we will create invoice in this case if shipper period is PayInAdvance
-                }
-                else if (isMultipleDrops)
-                {
-                    var allPointHasProofDelivery = await _routPointRepository.GetAll()
-                        .Where(c => c.Id != point.Id && c.PickingType == PickingType.Dropoff && c.ShippingRequestTripId == point.ShippingRequestTripId)
-                        .AllAsync(x => x.RoutPointStatusTransitions.Any(x => !x.IsReset
-                                                                             && (x.Status == RoutePointStatus.ReceiverConfirmed
-                                                                                 || x.Status == RoutePointStatus.DeliveryConfirmation)));
-
-                    if (allPointHasProofDelivery)
-                    {
-                        trip.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced;
-                        await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);//we will create invoice in this case if shipper period is PayInAdvance
-                    }
-
-                }
             }
         }
+
+       
 
         /// <summary>
         /// check if point is complete all workflow transuctions
@@ -1836,8 +1849,17 @@ namespace TACHYON.Tracking
         /// </summary>
         public async Task NotificationWhenShipmentDelivered(RoutPoint point, User currentUser)
         {
-            var trip = point.ShippingRequestTripFk;
+            //var trip = point.ShippingRequestTripFk;
             // if (!currentUser.IsDriver) await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(trip.ShippingRequestFk.CarrierTenantId.Value, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+            // send notification about rating
+            //  _appNotifier
+
+            //send notification about rating
+            if(point.ShippingRequestTripFk.ShippingRequestFk != null && point.ShippingRequestTripFk.ShippingRequestFk.TenantId != point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId)
+            {
+                await _appNotifier.NotifyTenantWithRating(point.ShippingRequestTripFk.ShippingRequestId, point.ShippingRequestTripId, point.ShippingRequestTripFk.ShippingRequestFk.TenantId, point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.Value);
+                await _appNotifier.NotifyTenantWithRating(point.ShippingRequestTripFk.ShippingRequestId, point.ShippingRequestTripId, point.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.Value, point.ShippingRequestTripFk.ShippingRequestFk.TenantId);
+            }
         }
 
         #endregion

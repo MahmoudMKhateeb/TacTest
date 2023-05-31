@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Actors;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
+using TACHYON.Cities;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Integration.WaslIntegration;
 using TACHYON.Invoices;
@@ -121,7 +122,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public ICollection<RatingLog> RatingLogs { get; set; }
         public ICollection<Penalty> Penalties { get; set; }
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
+        /// <summary>
+        /// This field is for shipper invoice
+        /// </summary>
         public InvoiceTripStatus InvoiceStatus { get; set; }
+        public InvoiceTripStatus CarrierInvoiceStatus { get; set; }
         public int? RejectReasonId { get; set; }
 
         [ForeignKey("RejectReasonId")]
@@ -233,6 +238,19 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public bool? SaasInvoicingActivation { get; set; }
         #endregion
 
+        #region SaasPortMovements
+        public ShippingTypeEnum? ShippingTypeId { get; set; }
+        /// <summary>
+        /// Round trip is used for port movements requests
+        /// </summary>
+        public RoundTripType? RoundTripType { get; set; }
 
+
+        public virtual int? OriginCityId { get; set; }
+
+        [ForeignKey("OriginCityId")] public City OriginCityFk { get; set; }
+        public ICollection<ShippingRequestDestinationCity> ShippingRequestDestinationCities { get; set; }
+
+        #endregion
     }
 }

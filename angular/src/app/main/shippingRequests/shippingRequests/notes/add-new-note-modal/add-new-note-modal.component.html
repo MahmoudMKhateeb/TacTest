@@ -137,9 +137,6 @@
           <!--end::Body-->
         </div>
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6" (click)="close()">
-            {{ 'Close' | localize }}
-          </button>
           <button
             type="submit"
             [buttonBusy]="saving"
@@ -147,6 +144,9 @@
             class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
           >
             {{ item.noteId > 0 ? l('UpdateNote') : l('AddNote') }}
+          </button>
+          <button [disabled]="saving" type="button" class="btn btn-light font-weight-bolder btn-sm py-3 px-6" (click)="close()">
+            {{ 'Close' | localize }}
           </button>
           <!--end::Buttons-->
         </div>
