@@ -1435,7 +1435,7 @@ namespace TACHYON.Tracking
 
             if (trip.ShippingRequestTripVases == null || trip.ShippingRequestTripVases.Count == 0) return;
 
-            foreach (var vas in trip.ShippingRequestTripVases.Where(x=> x.ShippingRequestVasFk.VasFk.Name != null && !x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.AppointmentVasName) && !x.ShippingRequestVasFk.VasFk.Name.Equals(TACHYONConsts.ClearanceVasName)))
+            foreach (var vas in trip.ShippingRequestTripVases.Where(x=> x.ShippingRequestVasFk.VasFk.Name != null && !x.ShippingRequestVasFk.VasFk.Name.Trim().Equals(TACHYONConsts.AppointmentVasName) && !x.ShippingRequestVasFk.VasFk.Name.Trim().Equals(TACHYONConsts.ClearanceVasName)))
             {
                 var item = items.FirstOrDefault(x => x.SourceId == vas.ShippingRequestVasId && x.PriceType == PriceOfferType.Vas);
                 vas.CommissionType = item.CommissionType;
