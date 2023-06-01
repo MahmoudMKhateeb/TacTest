@@ -70,7 +70,6 @@ export class CostVsSellingVsProfitOfSaasTripsComponent extends AppComponentBase 
         bar: {
           horizontal: false,
           columnWidth: '55%',
-          // endingShape: 'rounded'
         },
       },
       dataLabels: {
@@ -85,19 +84,13 @@ export class CostVsSellingVsProfitOfSaasTripsComponent extends AppComponentBase 
         categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
       },
       yaxis: {
-        title: {
-          // text: '$ (thousands)'
-        },
+        title: {},
       },
       fill: {
         opacity: 1,
       },
       tooltip: {
-        y: {
-          // formatter: function(val) {
-          //     return '$ ' + val + ' thousands';
-          // }
-        },
+        y: {},
       },
     };
   }

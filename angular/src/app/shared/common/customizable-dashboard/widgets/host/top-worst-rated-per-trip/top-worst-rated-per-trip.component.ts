@@ -11,32 +11,7 @@ import { EditionTypesForTopWorst } from '@app/shared/common/customizable-dashboa
   styleUrls: ['./top-worst-rated-per-trip.component.css'],
 })
 export class TopWorstRatedPerTripComponent extends AppComponentBase implements OnInit {
-  topWorstRated: GetTopOWorstRatedTenantsOutput[] = [
-    // {
-    //   id: 164,
-    //   name: 'shipperPlus',
-    //   numberOfRequests: 10,
-    //   rating: 3.3,
-    // },
-    // {
-    //   id: 165,
-    //   name: 'shipperProPlus',
-    //   numberOfRequests: 15,
-    //   rating: 4.3,
-    // },
-    // {
-    //   id: 166,
-    //   name: 'shipperTest',
-    //   numberOfRequests: 8,
-    //   rating: 4.0,
-    // },
-    // {
-    //   id: 167,
-    //   name: 'shipperTestPlus',
-    //   numberOfRequests: 20,
-    //   rating: 5.0,
-    // },
-  ];
+  topWorstRated: GetTopOWorstRatedTenantsOutput[] = [];
   loading = false;
   rateTypes: any[] = [];
   rateType: number = TopWorstEnum.Top;

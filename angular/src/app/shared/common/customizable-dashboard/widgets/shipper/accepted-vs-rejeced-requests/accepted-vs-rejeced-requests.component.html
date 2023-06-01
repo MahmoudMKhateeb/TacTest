@@ -6,9 +6,6 @@
     </div>
   </div>
   <div class="card-body p-4">
-    <!--        <div class="pd-5 text-center" *ngIf="acceptedReqs.length == 0 && rejectedReqs.length == 0">-->
-    <!--          {{ l('NoData') }}-->
-    <!--        </div>-->
     <div class="row h-100" *ngIf="chartOptions && chartOptions.series">
       <div class="col-9 p-0">
         <div id="acceptedVsRejectedChart">
@@ -37,7 +34,6 @@
             valueExpr="key"
             (onValueChanged)="getRequests()"
           ></dx-select-box>
-          <!--          <dx-select-box [items]="options"></dx-select-box>-->
         </div>
         <div class="pb-5">
           <div class="text-gray">

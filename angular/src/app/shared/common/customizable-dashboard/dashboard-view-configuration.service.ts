@@ -131,41 +131,6 @@ export class DashboardViewConfigurationService {
       10
     );
 
-    //5
-    // let mostWorkedWithCarriers = new WidgetViewDefinition(
-    //   DashboardCustomizationConst.widgets.Shipper.ShipperMostWorkedWithCarriersWidget,
-    //   MostWorkedWithCarriersComponent,
-    //   10,
-    //   10
-    // );
-
-    //5
-    // let shippingRequestsInMarketPlace = new WidgetViewDefinition(
-    //   DashboardCustomizationConst.widgets.Shipper.ShipperRequestsInMarketplaceWidget,
-    //   RequestsInMarketPlaceComponent
-    // );
-    //6
-    // let nextInvoiceFrequancyDate = new WidgetViewDefinition(
-    //   DashboardCustomizationConst.widgets.Shipper.ShipperNextInvoiceFrequancyEndDateWidget,
-    //   NextInvoiceFrequancyDateComponent,
-    //   6,
-    //   5
-    // );
-    //7
-    // let invoiceDueDate = new WidgetViewDefinition(
-    //   DashboardCustomizationConst.widgets.Shipper.ShipperInvoiceDueDateInDaysWidget,
-    //   InvoiceDueDateComponent,
-    //   4,
-    //   3
-    // );
-    //8
-    // let dueDateInDays = new WidgetViewDefinition(
-    //   DashboardCustomizationConst.widgets.Shipper.ShipperDocumentDueDateInDaysWidget,
-    //   ShipperDueDateInDaysComponent,
-    //   4,
-    //   3
-    // );
-
     //9
     let mostUsedOrigins = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Shipper.ShipperMostUsedOriginsWidget,
@@ -235,13 +200,6 @@ export class DashboardViewConfigurationService {
     );
 
     let mostUsedVases = new WidgetViewDefinition(DashboardCustomizationConst.widgets.Carrier.CarrierMostUsedVasWidget, MostUsedVasesComponent, 6, 10);
-
-    // let mostWorkedWithShippers = new WidgetViewDefinition(
-    //   DashboardCustomizationConst.widgets.Carrier.CarrierMostWorkedWithShipperWidget,
-    //   MostWorkedWithShippersComponent,
-    //   10,
-    //   10
-    // );
 
     let mostUsedPP = new WidgetViewDefinition(DashboardCustomizationConst.widgets.Carrier.CarrierMostUsedPpWidget, MostUsedppComponent, 6, 10);
 
@@ -879,11 +837,6 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(acceptedVsRejectedRequestsWidget);
     this.WidgetViewDefinitions.push(shipperCompletedTripsVsPodWidget);
     this.WidgetViewDefinitions.push(shipperInvoicesVsPaidInvoices);
-    // this.WidgetViewDefinitions.push(mostWorkedWithCarriers);
-    // this.WidgetViewDefinitions.push(shippingRequestsInMarketPlace);
-    // this.WidgetViewDefinitions.push(nextInvoiceFrequancyDate);
-    // this.WidgetViewDefinitions.push(invoiceDueDate);
-    // this.WidgetViewDefinitions.push(dueDateInDays);
     this.WidgetViewDefinitions.push(mostUsedOrigins);
     this.WidgetViewDefinitions.push(mostUsedDest);
     this.WidgetViewDefinitions.push(trackingMapOfShipper);
@@ -896,7 +849,6 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(carrierInvoicesVsPaid);
     this.WidgetViewDefinitions.push(carrierAcceptedVsRejected);
     this.WidgetViewDefinitions.push(CarrierCompletedTrips);
-    // this.WidgetViewDefinitions.push(mostWorkedWithShippers);
     this.WidgetViewDefinitions.push(mostUsedPP);
     this.WidgetViewDefinitions.push(CarrierNextInvoice);
     this.WidgetViewDefinitions.push(CarrierDocumentsDueDate);
@@ -1013,8 +965,5 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(ActorNextInvoiceDueDate);
     this.WidgetViewDefinitions.push(NewInvoicesVsPaidInvoices);
     this.WidgetViewDefinitions.push(ActorsPaidInvoiceVsClaimedInvoice);
-
-    //console.log('WidgetViewDefinitions', this.WidgetViewDefinitions);
-    // this.widgetFilterDefinitions.push();
   }
 }

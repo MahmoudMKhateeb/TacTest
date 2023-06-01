@@ -38,9 +38,6 @@
                 public const string ShipperDocumentDueDateInDaysWidget =
                     "Widgets_Tenant_shipper_DocumentDueDateInDaysWidget";
 
-                // public const string ShipperMostWorkedWithCarriersWidget =
-                //     "Widgets_Tenant_shipper_MostWorkedWithCarriersWidget";
-
                 public const string ShipperMostUsedOriginsWidget = "Widgets_Tenant_shipper_MostUsedOriginsWidget";
 
                 public const string ShipperMostUsedDestinationsWidget =
@@ -73,8 +70,6 @@
                 public const string CarrierNumberOfCompletedTripsTotalMonthlyIncreaseWidget =
                     "Widgets_Tenant_carrier_NumberOfCompletedTripsTotalMonthlyIncreaseWidget";
 
-                // public const string CarrierMostWorkedWithShipperWidget =
-                //     "Widgets_Tenant_carrier_MostWorkedWithShipperWidget";
 
                 public const string CarrierNextInvoiceFrequenctEndDateWidget =
                     "Widgets_Tenant_carrier_NextInvoiceFrequenctEndDateWidget";
@@ -99,7 +94,6 @@
                 public const string NumberOfDeliveredTripsWidget = "Widgets_Tenant_TachyonDealer_NumberOfDeliverdTripsWidget";
                 public const string NumberOfOngoingTripsWidget = "Widgets_Tenant_TachyonDealer_NumberOfOngoingTripsWidget";
                 public const string TruckTypeUsageWidget = "Widgets_Tenant_TachyonDealer_TruckTypeUsageWidget";
-                // public const string GoodTypesUsageWidget = "Widgets_Tenant_TachyonDealer_GoodTypesUsageWidget";
                 public const string RouteTypesUsageWidget = "Widgets_Tenant_TachyonDealer_RouteTypesUsageWidget";
                 public const string MostRequestingShippersWidget = "Widgets_Tenant_TachyonDealer_MostRequestingShippersWidget";
                 public const string MostRequestedCarriersWidget = "Widgets_Tenant_TachyonDealer_MostRequestedCarriersWidget";
@@ -149,7 +143,6 @@
                 public const string NumberOfDeliveredTripsWidget = "Widgets_Tenant_TachyonDealer_NumberOfDeliverdTripsWidget";
                 public const string NumberOfOngoingTripsWidget = "Widgets_Tenant_TachyonDealer_NumberOfOngoingTripsWidget";
                 public const string TruckTypeUsageWidget = "Widgets_Tenant_TachyonDealer_TruckTypeUsageWidget";
-                // public const string GoodTypesUsageWidget = "Widgets_Tenant_TachyonDealer_GoodTypesUsageWidget";
                 public const string RouteTypesUsageWidget = "Widgets_Tenant_TachyonDealer_RouteTypesUsageWidget";
                 public const string MostRequestingShippersWidget = "Widgets_Tenant_TachyonDealer_MostRequestingShippersWidget";
                 public const string MostRequestedCarriersWidget = "Widgets_Tenant_TachyonDealer_MostRequestedCarriersWidget";

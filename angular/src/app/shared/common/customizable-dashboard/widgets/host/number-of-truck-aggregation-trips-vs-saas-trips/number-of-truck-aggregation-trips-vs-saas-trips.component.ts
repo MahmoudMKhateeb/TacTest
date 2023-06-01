@@ -1,6 +1,5 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -38,7 +37,7 @@ export class NumberOfTruckAggregationTripsVsSaasTripsComponent extends AppCompon
   public chartOptions: Partial<ChartOptions>;
 
   loading = false;
-  constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
+  constructor(private injector: Injector) {
     super(injector);
   }
 

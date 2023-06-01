@@ -69,7 +69,7 @@ export class GoodTypesUsageComponent extends AppComponentBase implements OnInit 
         return item;
       });
       this.selectedTransportTypeId = this.allGoodTypes.length > 0 ? this.allGoodTypes[0].id : null;
-      // this.fetchData();
+      this.fetchData();
     });
   }
 
@@ -84,7 +84,7 @@ export class GoodTypesUsageComponent extends AppComponentBase implements OnInit 
     this.chartOptions = {
       series: [
         {
-          data: numberOfTripsArray /*[400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]*/,
+          data: numberOfTripsArray,
         },
       ],
       chart: {
@@ -92,7 +92,7 @@ export class GoodTypesUsageComponent extends AppComponentBase implements OnInit 
         height: 380,
       },
       plotOptions: this.plotOptions,
-      colors: numberOfTripsArray.map((item, i) => (i % 2 == 0 ? '#000' : '#707070')),
+      colors: numberOfTripsArray.map((item, i) => (i % 2 === 0 ? '#000' : '#707070')),
 
       dataLabels: {
         enabled: true,
@@ -101,7 +101,7 @@ export class GoodTypesUsageComponent extends AppComponentBase implements OnInit 
           colors: ['#fff'],
         },
         formatter: (val, opt) => {
-          return val + ' ' + this.l('Trip') /*opt.w.globals.labels[opt.dataPointIndex] + ':  ' + val*/;
+          return val + ' ' + this.l('Trip');
         },
         offsetX: 0,
         dropShadow: {
@@ -138,8 +138,6 @@ export class GoodTypesUsageComponent extends AppComponentBase implements OnInit 
     this.legend = {
       show: false,
       formatter: function (legendName: string, opts?: any) {
-        console.log('legendName', legendName);
-        console.log('opts', opts);
         return legendName;
       },
     };
@@ -164,7 +162,6 @@ export class GoodTypesUsageComponent extends AppComponentBase implements OnInit 
   }
 
   selectedFilter(event: { start: moment.Moment; end: moment.Moment }) {
-    console.log('event', event);
     this.startEnd = event;
     this.fetchData();
   }

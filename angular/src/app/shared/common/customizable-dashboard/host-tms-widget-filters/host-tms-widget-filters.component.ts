@@ -24,7 +24,6 @@ export class HostTmsWidgetFiltersComponent extends AppComponentBase implements O
   ngOnDestroy(): void {}
 
   ngOnInit(): void {
-    // this.selectOption(2);
     const startDate = moment().subtract(12, 'months').startOf('month');
     const endDate = moment();
     this.optionSelected.emit({ start: startDate, end: endDate });

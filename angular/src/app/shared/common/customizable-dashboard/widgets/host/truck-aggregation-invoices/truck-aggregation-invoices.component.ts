@@ -1,6 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-truck-aggregation-invoices',
@@ -14,7 +13,7 @@ export class TruckAggregationInvoicesComponent extends AppComponentBase implemen
   cost = 15000;
   profit = 5000;
 
-  constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
+  constructor(private injector: Injector) {
     super(injector);
   }
 

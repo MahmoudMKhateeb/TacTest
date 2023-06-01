@@ -21,7 +21,6 @@ export class NumberOfRegisteredCompaniesComponent extends AppComponentBase imple
   private fetchData() {
     this._TMSAndHostDashboardServiceProxy.getRegisteredCompaniesNumber().subscribe((res) => {
       this.registeredCompaniesNumber = res;
-      console.log('res', res);
     });
   }
 }

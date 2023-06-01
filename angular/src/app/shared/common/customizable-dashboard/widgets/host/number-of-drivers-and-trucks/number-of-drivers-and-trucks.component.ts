@@ -48,7 +48,6 @@ export class NumberOfDriversAndTrucksComponent extends AppComponentBase implemen
   getData(start: moment.Moment, end: moment.Moment) {
     this.loading = true;
     this._TMSAndHostDashboardServiceProxy.getDriversAndTrucksCount(start, end).subscribe((res) => {
-      console.log('res', res);
       this.loading = false;
       this.chartOptions = {
         series: [
@@ -72,7 +71,6 @@ export class NumberOfDriversAndTrucksComponent extends AppComponentBase implemen
           bar: {
             horizontal: false,
             columnWidth: '55%',
-            // endingShape: 'rounded'
           },
         },
         dataLabels: {
@@ -87,26 +85,19 @@ export class NumberOfDriversAndTrucksComponent extends AppComponentBase implemen
           categories: res.trucks.map((item) => item.x),
         },
         yaxis: {
-          title: {
-            // text: '$ (thousands)'
-          },
+          title: {},
         },
         fill: {
           opacity: 1,
         },
         tooltip: {
-          y: {
-            // formatter: function(val) {
-            //     return '$ ' + val + ' thousands';
-            // }
-          },
+          y: {},
         },
       };
     });
   }
 
   selectedFilter(event: { start: moment.Moment; end: moment.Moment }) {
-    console.log('event', event);
     this.getData(event.start, event.end);
   }
 }

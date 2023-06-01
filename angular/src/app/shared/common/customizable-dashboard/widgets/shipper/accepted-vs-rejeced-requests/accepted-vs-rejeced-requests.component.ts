@@ -1,5 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { ChartOptions, ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
+import { ChartOptions } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ChartCategoryPairedValuesDto, FilterDatePeriod, ShipperDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
@@ -18,24 +18,10 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
   loading = false;
   legend: ApexLegend = {
     show: false,
-    // position: 'right',
-    // offsetY: 40,
-    // fontWeight: 500,
   };
   public acceptedVsRejected: any;
-  // this.l('Daily'), this.l('Weekly'), this.l('Monthly')
   options: { key: any; value: any }[] = [];
-  yaxis = [
-    { opposite: this.isRtl },
-    // {
-    //     labels: {
-    //         formatter: function(val) {
-    //             console.log('AcceptedVsRejecedRequestsComponent val', val);
-    //             return isNaN(val) ? val.toFixed(0) : 0;
-    //         }
-    //     }
-    // }
-  ];
+  yaxis = [{ opposite: this.isRtl }];
   selectedOption = FilterDatePeriod.Monthly;
 
   constructor(
@@ -57,7 +43,6 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
   }
 
   getRequests() {
-    console.log('this.selectedOption', this.selectedOption);
     this.loading = true;
     this._shipperDashboardServiceProxy
       .getAcceptedAndRejectedRequests(this.selectedOption)
@@ -105,7 +90,6 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
             accepted.x = this.selectedOption != FilterDatePeriod.Weekly ? accepted?.x?.slice(0, 3) : accepted?.x;
             return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
-          console.log('acceptedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
             y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
@@ -116,14 +100,11 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
             rejected.x = this.selectedOption != FilterDatePeriod.Weekly ? rejected?.x?.slice(0, 3) : rejected?.x;
             return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
-          console.log('rejectedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
             y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
           });
         });
-        console.log('acceptedSeries', acceptedSeries);
-        console.log('rejectedSeries', rejectedSeries);
         this.chartOptions = {
           series: [
             {
@@ -159,7 +140,6 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
         (this.chartOptions as any).plotOptions = {
           bar: {
             columnWidth: '45%',
-            // distributed: true
           },
         };
         (this.chartOptions.chart.locales as any[]) = [
@@ -174,7 +154,6 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
             },
           },
         ];
-        console.log('this.chartOptions', this.chartOptions);
         this.loading = false;
       });
   }

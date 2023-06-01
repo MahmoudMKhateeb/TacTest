@@ -1,8 +1,7 @@
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { ChartComponent } from '@node_modules/ng-apexcharts';
-
-import { ApexLegend, ApexPlotOptions, ApexOptions } from '@node_modules/ng-apexcharts/lib/model/apex-types';
+import { ApexLegend, ApexPlotOptions, ApexOptions, ApexTooltip } from '@node_modules/ng-apexcharts/lib/model/apex-types';
 import { BrokerDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -26,10 +25,9 @@ export class NumberOfActorsComponent extends AppComponentBase implements OnInit 
   };
   legend: ApexLegend = {};
 
-  actorsCount: number = 100;
-  // percentage: number = 10;
-  shipperCount: number = 60;
-  carrierCount: number = 40;
+  actorsCount = 100;
+  shipperCount = 60;
+  carrierCount = 40;
 
   constructor(injector: Injector, private brokerDashboardServiceProxy: BrokerDashboardServiceProxy) {
     super(injector);
@@ -45,13 +43,13 @@ export class NumberOfActorsComponent extends AppComponentBase implements OnInit 
       this.shipperCount = res.shipperActorPercentage;
       this.carrierCount = res.carrierActorPercentage;
       this.chartOptions = {
-        series: [this.shipperCount, this.carrierCount] /* [44, 55, 13, 43, 22] */,
+        series: [this.shipperCount, this.carrierCount],
         chart: {
           type: 'donut',
           width: '100%',
           height: 150,
         },
-        labels: this.labels /* ["Team A", "Team B", "Team C", "Team D", "Team E"] */,
+        labels: this.labels,
         responsive: [
           {
             breakpoint: 480,
@@ -64,7 +62,6 @@ export class NumberOfActorsComponent extends AppComponentBase implements OnInit 
         ],
         tooltip: {
           custom: ({ series, seriesIndex, dataPointIndex, w }) => {
-            console.log('series, seriesIndex, dataPointIndex, w', series, seriesIndex, dataPointIndex, w);
             return '<div class="arrow_box">' + '<span>' + series[seriesIndex][dataPointIndex] + '</span>' + '</div>';
           },
         },
@@ -75,9 +72,6 @@ export class NumberOfActorsComponent extends AppComponentBase implements OnInit 
       this.legend = {
         show: false,
         formatter: function (legendName: string, opts?: any) {
-          console.log('legendName', legendName);
-          console.log('opts', opts);
-          // return result[opts.seriesIndex].numberOfTrips + ' ' + legendName;
           return '';
         },
       };

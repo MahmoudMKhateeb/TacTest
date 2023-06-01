@@ -25,21 +25,8 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
   loading = false;
   legend: ApexLegend = {
     show: false,
-    // position: 'right',
-    // offsetY: 40,
-    // fontWeight: 500,
   };
-  yaxis = [
-    { opposite: this.isRtl },
-    // {
-    //     labels: {
-    //         formatter: function(val) {
-    //             console.log('InvoicesVsPaidInvoicesComponent val', val);
-    //             return isNaN(val) ? val.toFixed(0) : val;
-    //         }
-    //     }
-    // }
-  ];
+  yaxis = [{ opposite: this.isRtl }];
   public completedTripVsPod: any;
   options: { key: any; value: any }[] = [];
   selectedOption = FilterDatePeriod.Monthly;
@@ -124,14 +111,11 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
             pod.x = this.selectedOption != FilterDatePeriod.Weekly ? pod?.x?.slice(0, 3) : pod?.x;
             return pod.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
-          console.log('rejectedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
             y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
           });
         });
-        console.log('completedSeries', completedSeries);
-        console.log('podSeries', podSeries);
         this.chartOptions = {
           series: [
             {

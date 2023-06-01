@@ -1,6 +1,5 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-number-of-regesterd-shippers',
@@ -9,20 +8,11 @@ import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxi
 })
 export class NumberOfRegesterdShippersComponent extends AppComponentBase implements OnInit {
   @Input() shippersCount: number;
-  loading: boolean = false;
-  constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
+  loading = false;
+
+  constructor(private injector: Injector) {
     super(injector);
   }
 
-  ngOnInit(): void {
-    // this.getData();
-  }
-
-  getData() {
-    this.loading = true;
-    this._hostDashboardServiceProxy.getShippersCount().subscribe((result) => {
-      this.shippersCount = result;
-      this.loading = false;
-    });
-  }
+  ngOnInit(): void {}
 }

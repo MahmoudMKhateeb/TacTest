@@ -1,6 +1,6 @@
 import { Component, HostListener, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { GetTopTenantsCreatedTripsOutput, HostDashboardServiceProxy, TMSAndHostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { GetTopTenantsCreatedTripsOutput, TMSAndHostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as moment from '@node_modules/moment';
 
 @Component({
@@ -35,7 +35,6 @@ export class TopRatedShippersAndCarriersComponent extends AppComponentBase imple
   }
 
   selectedFilter(event: { start: moment.Moment; end: moment.Moment }) {
-    console.log('event', event);
     this.getData(event);
   }
 }

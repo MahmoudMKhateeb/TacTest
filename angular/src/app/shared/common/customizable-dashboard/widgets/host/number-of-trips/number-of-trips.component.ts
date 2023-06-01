@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { HostDashboardServiceProxy, TMSAndHostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { TMSAndHostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -48,7 +48,6 @@ export class NumberOfTripsComponent extends AppComponentBase implements OnInit {
   getData(start: moment.Moment, end: moment.Moment) {
     this.loading = true;
     this._TMSAndHostDashboardServiceProxy.getNumberOfTrips(start, end).subscribe((res) => {
-      console.log('res', res);
       this.loading = false;
       this.chartOptions = {
         series: [
@@ -57,11 +56,6 @@ export class NumberOfTripsComponent extends AppComponentBase implements OnInit {
             data: res.map((item) => item.y),
             color: '#dc2434',
           },
-          // {
-          //   name: this.l('Carriers'),
-          //   data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
-          //   color: '#000',
-          // },
         ],
         chart: {
           type: 'bar',
@@ -72,7 +66,6 @@ export class NumberOfTripsComponent extends AppComponentBase implements OnInit {
           bar: {
             horizontal: false,
             columnWidth: '55%',
-            // endingShape: 'rounded'
           },
         },
         dataLabels: {
@@ -84,29 +77,22 @@ export class NumberOfTripsComponent extends AppComponentBase implements OnInit {
           colors: ['transparent'],
         },
         xaxis: {
-          categories: res.map((item) => item.x) /*['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']*/,
+          categories: res.map((item) => item.x),
         },
         yaxis: {
-          title: {
-            // text: '$ (thousands)'
-          },
+          title: {},
         },
         fill: {
           opacity: 1,
         },
         tooltip: {
-          y: {
-            // formatter: function(val) {
-            //     return '$ ' + val + ' thousands';
-            // }
-          },
+          y: {},
         },
       };
     });
   }
 
   selectedFilter(event: { start: moment.Moment; end: moment.Moment }) {
-    console.log('event', event);
     this.getData(event.start, event.end);
   }
 }

@@ -1,10 +1,8 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { HostDashboardServiceProxy, TMSAndHostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { TMSAndHostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
-// import { ChartOptionsBars } from '../../ApexInterfaces';
-
-import { ApexChart, ApexNonAxisChartSeries, ApexResponsive } from '@node_modules/ng-apexcharts';
+import { ApexChart, ApexNonAxisChartSeries, ApexResponsive, ApexTooltip } from '@node_modules/ng-apexcharts';
 import { ApexLegend } from '@node_modules/ng-apexcharts/lib/model/apex-types';
 export interface ChartOptions {
   series: ApexNonAxisChartSeries;
@@ -79,9 +77,6 @@ export class HostRouteTypeUsageChartComponent extends AppComponentBase implement
                 chart: {
                   width: 200,
                 },
-                // legend: {
-                //   position: 'bottom',
-                // },
               },
             },
           ],
@@ -89,54 +84,9 @@ export class HostRouteTypeUsageChartComponent extends AppComponentBase implement
         this.legend = {
           show: false,
           formatter: function (legendName: string, opts?: any) {
-            console.log('legendName', legendName);
-            console.log('opts', opts);
             return that.routes[opts.seriesIndex] + '...' + result[opts.seriesIndex].availableRouteTypesCount;
           },
         };
-        // this.chartOptions = {
-        //   series: [
-        //     {
-        //       name: 'Shipping Requests',
-        //       data: this.counts,
-        //       color: '#b10303',
-        //     },
-        //   ],
-        //   chart: {
-        //     type: 'bar',
-        //     height: 350,
-        //   },
-        //   plotOptions: {
-        //     bar: {
-        //       horizontal: false,
-        //       columnWidth: '55%',
-        //     },
-        //   },
-        //   dataLabels: {
-        //     enabled: false,
-        //   },
-        //   stroke: {
-        //     show: true,
-        //     width: 2,
-        //     colors: ['transparent'],
-        //   },
-        //   xaxis: {
-        //     categories: this.routes,
-        //   },
-        //   yaxis: {
-        //     opposite: this.isRtl,
-        //   },
-        //   tooltip: {
-        //     y: {
-        //       formatter: function (val) {
-        //         return val.toFixed(0);
-        //       },
-        //     },
-        //   },
-        //   fill: {
-        //     opacity: 1,
-        //   },
-        // };
         (this.chartOptions.chart.locales as any[]) = [
           {
             name: 'en',

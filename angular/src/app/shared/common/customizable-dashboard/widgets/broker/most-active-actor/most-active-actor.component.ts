@@ -51,7 +51,6 @@ export class MostActiveActorComponent extends AppComponentBase implements OnInit
     if (this.selectedDateRangeType === DateRangeType.CustomRange && shouldFetch && (!this.from || !this.to)) {
       return;
     }
-    console.log('isForShipperActor', this.isForShipperActor);
     const from = this.selectedDateRangeType == DateRangeType.CustomRange ? moment(this.from) : null;
     const to = this.selectedDateRangeType == DateRangeType.CustomRange ? moment(this.to) : null;
     if (this.isForShipperActor) {
@@ -63,7 +62,6 @@ export class MostActiveActorComponent extends AppComponentBase implements OnInit
 
   private getMostActiveActorsCarrier(from, to) {
     this.brokerDashboardServiceProxy.getMostActiveActors(ActorTypesEnum.Carrier, this.selectedDateRangeType, from, to).subscribe((res) => {
-      console.log('res', res);
       this.chartOptions = undefined;
       this.fillChart(res.items);
     });
@@ -71,7 +69,6 @@ export class MostActiveActorComponent extends AppComponentBase implements OnInit
 
   private getMostActiveActorsShipper(from, to) {
     this.brokerDashboardServiceProxy.getMostActiveActors(ActorTypesEnum.Shipper, this.selectedDateRangeType, from, to).subscribe((res) => {
-      console.log('res', res);
       this.chartOptions = undefined;
       this.fillChart(res.items);
     });
@@ -129,49 +126,9 @@ export class MostActiveActorComponent extends AppComponentBase implements OnInit
         },
       },
     };
-    // this.chartOptions = {
-    //     series: [
-    //         {
-    //             name: 'basic',
-    //             data: items.map((item, index) => item.numberOfTrips) /*[400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]*/
-    //         }
-    //     ],
-    //     chart: {
-    //         type: 'bar',
-    //         height: 250
-    //     },
-    //     plotOptions: {
-    //         bar: {
-    //             horizontal: false,
-    //             dataLabels: {
-    //                 position: 'top' // top, center, bottom
-    //             }
-    //         }
-    //     },
-    //     dataLabels: {
-    //         enabled: false
-    //     },
-    //     xaxis: {
-    //         categories: items.map((item, index) => item.actorName)/*[
-    //             "South Korea",
-    //             "Canada",
-    //             "United Kingdom",
-    //             "Netherlands",
-    //             "Italy",
-    //             "France",
-    //             "Japan",
-    //             "United States",
-    //             "China",
-    //             "Germany"
-    //         ]*/
-    //     }
-    // };
     this.legend = {
       show: false,
       formatter: function (legendName: string, opts?: any) {
-        console.log('legendName', legendName);
-        console.log('opts', opts);
-        // return result[opts.seriesIndex].numberOfTrips + ' ' + legendName;
         return legendName;
       },
     };

@@ -1,11 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import {
-  CarrierDashboardServiceProxy,
-  NewDirectRequestListDto,
-  NewPriceOfferListDto,
-  ShipperDashboardServiceProxy,
-} from '@shared/service-proxies/service-proxies';
+import { CarrierDashboardServiceProxy, NewDirectRequestListDto } from '@shared/service-proxies/service-proxies';
 import { Router } from '@angular/router';
 
 @Component({

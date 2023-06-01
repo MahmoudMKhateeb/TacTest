@@ -127,7 +127,6 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
         accepted.x = accepted?.x?.slice(0, 3);
         return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
       });
-      console.log('acceptedSeries foundFromResponse', foundFromResponse);
       return ChartCategoryPairedValuesDto.fromJS({
         x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
         y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
@@ -138,27 +137,21 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
         rejected.x = rejected?.x?.slice(0, 3);
         return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
       });
-      console.log('rejectedSeries foundFromResponse', foundFromResponse);
       return ChartCategoryPairedValuesDto.fromJS({
         x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
         y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
       });
     });
-    console.log('paidSeries', paidSeries);
-    console.log('unpaidSeries', unpaidSeries);
     this.chartOptions = {
       series: [
         {
           name: this.isShipper ? this.l('UnPaidInvoice') : this.l('Claimed'),
-          // data: [6, 8, 25, 15, 10, 18, 22, 23, 25, 30, 38], // result.shipperInvoices,
           data: unpaidSeries,
-          // color: 'rgba(187, 41, 41, 0.847)',
           color: this.dashboardCustomizationService.unpaidColor,
         },
         {
           name: this.isShipper ? this.l('PaidInvoice') : this.l('Paid'),
           color: this.dashboardCustomizationService.paidColor,
-          // data: [4, 6, 20, 11, 8, 15, 19, 21, 20, 25, 32], //result.paidInvoices,
           data: paidSeries,
         },
       ],
