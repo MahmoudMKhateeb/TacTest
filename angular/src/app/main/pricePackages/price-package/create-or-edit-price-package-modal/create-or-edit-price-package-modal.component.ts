@@ -48,10 +48,19 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   countries: SelectItemDto[];
   companies: SelectItemDto[];
   pricePackageType = PricePackageType;
-  pricePackageTypes = this._enumToArrayPipe.transform(this.pricePackageType);
-  routeTypes = this._enumToArrayPipe.transform(ShippingRequestRouteType);
+  pricePackageTypes = this._enumToArrayPipe.transform(this.pricePackageType).map((item) => {
+    item.key = Number(item.key);
+    return item;
+  });
+  routeTypes = this._enumToArrayPipe.transform(ShippingRequestRouteType).map((item) => {
+    item.key = Number(item.key);
+    return item;
+  });
   dataSource: any = {};
-  shippingTypes = this._enumToArrayPipe.transform(ShippingTypeEnum);
+  shippingTypes = this._enumToArrayPipe.transform(ShippingTypeEnum).map((item) => {
+    item.key = Number(item.key);
+    return item;
+  });
   roundTripTypes: SelectItemDto[];
   pricingMethod: TmsPricePackagePricingMethod;
   pricingMethodEnum = TmsPricePackagePricingMethod;
@@ -70,7 +79,10 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
   totalPrice: number;
   companyType: DestinationCompanyType;
   companyTypeEnum = DestinationCompanyType;
-  companyTypes = this._enumToArrayPipe.transform(DestinationCompanyType);
+  companyTypes = this._enumToArrayPipe.transform(DestinationCompanyType).map((item) => {
+    item.key = Number(item.key);
+    return item;
+  });
   routeTypeEnum = ShippingRequestRouteType;
   truckTypeLoading: boolean;
   companiesLoading: boolean;
@@ -102,10 +114,16 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
     this.countriesLoading = false;
     this.loadAllDropDowns();
     this.loadAllCarriers();
-    this.pricingMethods = this._enumToArrayPipe.transform(this.pricingMethodEnum);
+    this.pricingMethods = this._enumToArrayPipe.transform(this.pricingMethodEnum).map((item) => {
+      item.key = Number(item.key);
+      return item;
+    });
     // The Pricing Method default value is `Average`
     this.pricingMethod = TmsPricePackagePricingMethod.Average;
-    this.commissionTypes = this._enumToArrayPipe.transform(TmsPricePackageCommissionType);
+    this.commissionTypes = this._enumToArrayPipe.transform(TmsPricePackageCommissionType).map((item) => {
+      item.key = Number(item.key);
+      return item;
+    });
     this.calculatedPriceTitle = '';
     this.serviceAreasSelectionLimit = 0;
   }
@@ -145,7 +163,10 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
       if (this.isTachyonDealerOrHost) {
         this.companyType = this.companyTypeEnum.Shipper;
         this._pricePackagesServiceProxy.getCompanies(CompanyType.Shipper).subscribe((res) => {
-          this.companies = res;
+          this.companies = res.map((item) => {
+            (item.id as any) = Number(item.id);
+            return item;
+          });
           this.isFormActive = true;
           this.modal.show();
         });
@@ -188,7 +209,10 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
       .getCompanies(companyType)
       .pipe(finalize(() => (this.companiesLoading = false)))
       .subscribe((res) => {
-        this.companies = res;
+        this.companies = res.map((item) => {
+          (item.id as any) = Number(item.id);
+          return item;
+        });
       });
   }
 
@@ -198,7 +222,10 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
    */
   private loadAllTransportTypes(): void {
     this._pricePackagesServiceProxy.getAllTransportTypeForDropdown().subscribe((res) => {
-      this.transportTypes = res;
+      this.transportTypes = res.map((item) => {
+        (item.id as any) = Number(item.id);
+        return item;
+      });
     });
   }
 
@@ -212,7 +239,10 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
       .getAllTruckTypeForDropdown(transportTypeId)
       .pipe(finalize(() => (this.truckTypeLoading = false)))
       .subscribe((res) => {
-        this.truckTypes = res;
+        this.truckTypes = res.map((item) => {
+          (item.id as any) = Number(item.id);
+          return item;
+        });
       });
   }
 
@@ -688,7 +718,10 @@ export class CreateOrEditPricePackageModalComponent extends AppComponentBase imp
         })
       )
       .subscribe((result) => {
-        this.countries = result;
+        this.countries = result.map((item) => {
+          (item.id as any) = Number(item.id);
+          return item;
+        });
       });
   }
 

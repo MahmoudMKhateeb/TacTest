@@ -71,7 +71,7 @@
                 [(value)]="wayPointsList[i].facilityId"
                 [dataSource]="record.pickingType === PickingType.Pickup ? filteredPickupFacilities[i] : filteredDropFacilities[i]"
                 [searchEnabled]="true"
-                (onSelectionChanged)="
+                (onValueChanged)="
                   RouteStepCordSetter(i, wayPointsList[i].facilityId);
                   wayPointsSetter();
                   loadReceivers(wayPointsList[i].facilityId);
@@ -117,7 +117,7 @@
             <div *ngIf="usedIn == 'createOrEdit'" class="input-group">
               <dx-select-box
                 class="form-control p-0"
-                name="reciver{{ i }}"
+                name="reciver-{{ i }}"
                 [(value)]="wayPointsList[i].receiverId"
                 [disabled]="!wayPointsList[i].facilityId"
                 [dataSource]="allPointsSendersAndReceivers[wayPointsList[i].facilityId] ?? []"

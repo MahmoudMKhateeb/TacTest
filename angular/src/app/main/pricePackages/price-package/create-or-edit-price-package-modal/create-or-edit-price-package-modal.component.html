@@ -14,35 +14,41 @@
               <div *ngIf="isTachyonDealerOrHost && !pricePackageDto.id" class="form-group col-md-6">
                 <label>{{ l('CompanyType') }} <span class="text-danger">*</span></label>
                 <dx-select-box
+                  id="PP_CompanyType"
                   name="PP_CompanyType"
-                  [(value)]="companyType"
+                  #companyTypeInput="ngModel"
+                  [(ngModel)]="companyType"
+                  (ngModelChange)="companyTypeChanged()"
                   [dataSource]="companyTypes"
                   [searchEnabled]="true"
-                  (onSelectionChanged)="companyTypeChanged()"
                   displayExpr="value"
                   valueExpr="key"
-                  required
+                  [required]="true"
                   placeholder="{{ l('SelectCompanyType') }}"
+                  [ngClass]="{
+                    'is-invalid': companyTypeInput.invalid && (companyTypeInput.dirty || companyTypeInput.touched),
+                    'is-valid': companyTypeInput.valid
+                  }"
                 >
                 </dx-select-box>
-                <!--                <select-->
-                <!--                  #companyTypeInput="ngModel"-->
-                <!--                  class="form-control"-->
-                <!--                  name="PP_CompanyType"-->
-                <!--                  [ngClass]="{-->
+                <!--                                <select-->
+                <!--                                    #companyTypeInput="ngModel"-->
+                <!--                                    class="form-control"-->
+                <!--                                    name="PP_CompanyType"-->
+                <!--                                    [ngClass]="{-->
                 <!--                    'is-invalid': companyTypeInput.invalid && (companyTypeInput.dirty || companyTypeInput.touched),-->
                 <!--                    'is-valid': companyTypeInput.valid-->
                 <!--                  }"-->
-                <!--                  (change)="companyTypeChanged()"-->
-                <!--                  [(ngModel)]="companyType"-->
-                <!--                  required-->
-                <!--                >-->
-                <!--                  <option selected disabled [value]="undefined">{{ 'SelectCompanyType' | localize }}</option>-->
-                <!--                  <option *ngFor="let item of companyTypes" [value]="item.key">{{ item.value }}</option>-->
-                <!--                </select>-->
-                <!--                <div *ngIf="companyTypeInput.invalid && (companyTypeInput.dirty || companyTypeInput.touched)" class="invalid-feedback">-->
-                <!--                  {{ 'PricePackageInvalidCompanyTypeMsg' | localize }}-->
-                <!--                </div>-->
+                <!--                                    (change)="companyTypeChanged()"-->
+                <!--                                    [(ngModel)]="companyType"-->
+                <!--                                    required-->
+                <!--                                >-->
+                <!--                                    <option selected disabled [value]="undefined">{{ 'SelectCompanyType' | localize }}</option>-->
+                <!--                                    <option *ngFor="let item of companyTypes" [value]="item.key">{{ item.value }}</option>-->
+                <!--                                </select>-->
+                <div *ngIf="companyTypeInput.invalid && (companyTypeInput.dirty || companyTypeInput.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidCompanyTypeMsg' | localize }}
+                </div>
               </div>
 
               <div class="form-group col-md-6">
@@ -113,148 +119,169 @@
                   }"
                 >
                   <dx-select-box
+                    id="tmsPP_Shipper"
                     name="tmsPP_Shipper"
-                    [disabled]="!companyType || companiesLoading"
-                    [(value)]="pricePackageDto.destinationTenantId"
+                    #company="ngModel"
+                    [(ngModel)]="pricePackageDto.destinationTenantId"
                     [dataSource]="companies"
                     [searchEnabled]="true"
                     displayExpr="displayName"
                     valueExpr="id"
-                    required
+                    [required]="true"
                     placeholder="{{ l('SelectCompany') }}"
+                    [disabled]="!companyType || companiesLoading"
+                    [ngClass]="{
+                      'is-invalid': company.invalid && (company.dirty || company.touched),
+                      'is-valid': company.valid && (company.dirty || company.touched)
+                    }"
                   >
                   </dx-select-box>
-                  <!--                  <select-->
-                  <!--                    [disabled]="!companyType || companiesLoading"-->
-                  <!--                    [(ngModel)]="pricePackageDto.destinationTenantId"-->
-                  <!--                    required-->
-                  <!--                    class="form-control"-->
-                  <!--                    name="tmsPP_Shipper"-->
-                  <!--                    #company="ngModel"-->
-                  <!--                    [ngClass]="{-->
+                  <!--                                    <select-->
+                  <!--                                        [disabled]="!companyType || companiesLoading"-->
+                  <!--                                        [(ngModel)]="pricePackageDto.destinationTenantId"-->
+                  <!--                                        required-->
+                  <!--                                        class="form-control"-->
+                  <!--                                        name="tmsPP_Shipper"-->
+                  <!--                                        #company="ngModel"-->
+                  <!--                                        [ngClass]="{-->
                   <!--                      'is-invalid': company.invalid && (company.dirty || company.touched),-->
                   <!--                      'is-valid': company.valid && (company.dirty || company.touched)-->
                   <!--                    }"-->
-                  <!--                  >-->
-                  <!--                    <option selected disabled [value]="undefined">{{ 'SelectCompany' | localize }}</option>-->
-                  <!--                    <option *ngFor="let item of companies" [value]="item.id">{{ item.displayName }}</option>-->
-                  <!--                  </select>-->
-                  <!--                  <div *ngIf="company.invalid && (company.dirty || company.touched)" class="invalid-feedback">-->
-                  <!--                    {{ (companyType == companyTypeEnum.Shipper ? 'PricePackageInvalidShipperMsg' : 'PricePackageInvalidCarrierMsg') | localize }}-->
-                  <!--                  </div>-->
+                  <!--                                    >-->
+                  <!--                                        <option selected disabled [value]="undefined">{{ 'SelectCompany' | localize }}</option>-->
+                  <!--                                        <option *ngFor="let item of companies" [value]="item.id">{{ item.displayName }}</option>-->
+                  <!--                                    </select>-->
+                  <div *ngIf="company.invalid && (company.dirty || company.touched)" class="invalid-feedback">
+                    {{ (companyType == companyTypeEnum.Shipper ? 'PricePackageInvalidShipperMsg' : 'PricePackageInvalidCarrierMsg') | localize }}
+                  </div>
                 </div>
               </div>
 
               <div class="form-group col-md-6">
                 <label>{{ l('TransportType') }} <span class="text-danger">*</span></label>
                 <dx-select-box
+                  id="tmsPP_TransportType"
                   name="tmsPP_TransportType"
-                  [(value)]="pricePackageDto.transportTypeId"
+                  #transportType="ngModel"
+                  [(ngModel)]="pricePackageDto.transportTypeId"
+                  (onValueChanged)="transportTypeChanged()"
                   [dataSource]="transportTypes"
                   [searchEnabled]="true"
-                  (onSelectionChanged)="transportTypeChanged()"
                   displayExpr="displayName"
                   valueExpr="id"
-                  required
+                  [required]="true"
                   placeholder="{{ l('SelectaTransportType') }}"
+                  [ngClass]="{
+                    'is-invalid': transportType.invalid && (transportType.dirty || transportType.touched),
+                    'is-valid': transportType.valid && (transportType.dirty || transportType.touched)
+                  }"
                 >
                 </dx-select-box>
-                <!--                <select-->
-                <!--                  [(ngModel)]="pricePackageDto.transportTypeId"-->
-                <!--                  (change)="transportTypeChanged()"-->
-                <!--                  #transportType="ngModel"-->
-                <!--                  required-->
-                <!--                  class="form-control"-->
-                <!--                  name="tmsPP_TransportType"-->
-                <!--                  [ngClass]="{-->
+                <!--                                <select-->
+                <!--                                    [(ngModel)]="pricePackageDto.transportTypeId"-->
+                <!--                                    (change)="transportTypeChanged()"-->
+                <!--                                    #transportType="ngModel"-->
+                <!--                                    required-->
+                <!--                                    class="form-control"-->
+                <!--                                    name="tmsPP_TransportType"-->
+                <!--                                    [ngClass]="{-->
                 <!--                    'is-invalid': transportType.invalid && (transportType.dirty || transportType.touched),-->
                 <!--                    'is-valid': transportType.valid && (transportType.dirty || transportType.touched)-->
                 <!--                  }"-->
-                <!--                >-->
-                <!--                  <option selected disabled [value]="undefined">{{ 'SelectaTransportType' | localize }}</option>-->
-                <!--                  <option *ngFor="let item of transportTypes" [value]="item.id">{{ item.displayName }}</option>-->
-                <!--                </select>-->
-                <!--                <div *ngIf="transportType.invalid && (transportType.dirty || transportType.touched)" class="invalid-feedback">-->
-                <!--                  {{ 'PricePackageInvalidTransportTypeMsg' | localize }}-->
-                <!--                </div>-->
+                <!--                                >-->
+                <!--                                    <option selected disabled [value]="undefined">{{ 'SelectaTransportType' | localize }}</option>-->
+                <!--                                    <option *ngFor="let item of transportTypes" [value]="item.id">{{ item.displayName }}</option>-->
+                <!--                                </select>-->
+                <div *ngIf="transportType.invalid && (transportType.dirty || transportType.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidTransportTypeMsg' | localize }}
+                </div>
               </div>
               <div class="form-group col-md-6">
                 <label>{{ l('TruckType') }} <span class="text-danger">*</span></label>
-                <div
-                  [ngClass]="{
-                    'spinner spinner-success spinner-right mr-1 ml-1': truckTypeLoading
-                  }"
-                >
+                <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': truckTypeLoading }">
                   <dx-select-box
+                    id="tmsPP_TruckType"
                     name="tmsPP_TruckType"
-                    [(value)]="pricePackageDto.truckTypeId"
+                    #truckType="ngModel"
+                    [(ngModel)]="pricePackageDto.truckTypeId"
+                    (onValueChanged)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"
                     [dataSource]="truckTypes"
                     [searchEnabled]="true"
-                    (onSelectionChanged)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"
                     displayExpr="displayName"
                     valueExpr="id"
-                    required
+                    [required]="true"
+                    [disabled]="!pricePackageDto.transportTypeId || !truckTypes || truckTypeLoading"
                     placeholder="{{ l('SelectaTruckType') }}"
+                    [ngClass]="{
+                      'is-invalid': truckType.invalid && (truckType.dirty || truckType.touched),
+                      'is-valid': truckType.valid && (truckType.dirty || truckType.touched)
+                    }"
                   >
                   </dx-select-box>
-                  <!--                  <select-->
-                  <!--                    #truckType="ngModel"-->
-                  <!--                    [(ngModel)]="pricePackageDto.truckTypeId"-->
-                  <!--                    required-->
-                  <!--                    class="form-control"-->
-                  <!--                    (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"-->
-                  <!--                    name="tmsPP_TruckType"-->
-                  <!--                    [disabled]="!pricePackageDto.transportTypeId || !truckTypes || truckTypeLoading"-->
-                  <!--                    [ngClass]="{-->
+                  <!--                                    <select-->
+                  <!--                                        #truckType="ngModel"-->
+                  <!--                                        [(ngModel)]="pricePackageDto.truckTypeId"-->
+                  <!--                                        required-->
+                  <!--                                        class="form-control"-->
+                  <!--                                        (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"-->
+                  <!--                                        name="tmsPP_TruckType"-->
+                  <!--                                        [disabled]="!pricePackageDto.transportTypeId || !truckTypes || truckTypeLoading"-->
+                  <!--                                        [ngClass]="{-->
                   <!--                      'is-invalid': truckType.invalid && (truckType.dirty || truckType.touched),-->
                   <!--                      'is-valid': truckType.valid && (truckType.dirty || truckType.touched)-->
                   <!--                    }"-->
-                  <!--                  >-->
-                  <!--                    <option selected disabled [value]="undefined">{{ 'SelectaTruckType' | localize }}</option>-->
-                  <!--                    <option *ngFor="let item of truckTypes" [value]="item.id">{{ item.displayName }}</option>-->
-                  <!--                  </select>-->
-                  <!--                  <div *ngIf="truckType.invalid && (truckType.dirty || truckType.touched)" class="invalid-feedback">-->
-                  <!--                    {{ 'PricePackageInvalidTruckTypeMsg' | localize }}-->
-                  <!--                  </div>-->
+                  <!--                                    >-->
+                  <!--                                        <option selected disabled [value]="undefined">{{ 'SelectaTruckType' | localize }}</option>-->
+                  <!--                                        <option *ngFor="let item of truckTypes" [value]="item.id">{{ item.displayName }}</option>-->
+                  <!--                                    </select>-->
+                  <div *ngIf="truckType.invalid && (truckType.dirty || truckType.touched)" class="invalid-feedback">
+                    {{ 'PricePackageInvalidTruckTypeMsg' | localize }}
+                  </div>
                 </div>
               </div>
 
               <div class="form-group col-md-6">
                 <label>{{ l('PricePackageType') }} <span class="text-danger">*</span></label>
                 <dx-select-box
+                  id="tmsPP_PricePackageType"
                   name="tmsPP_PricePackageType"
-                  [(value)]="pricePackageDto.type"
+                  #pricePackageTypeInput="ngModel"
+                  [(ngModel)]="pricePackageDto.type"
+                  (onValueChanged)="pricePackageTypeChanged()"
                   [dataSource]="pricePackageTypes"
-                  [disabled]="pricePackageDto.id != undefined && pricePackageDto.id != null"
                   [searchEnabled]="true"
-                  (onSelectionChanged)="pricePackageTypeChanged()"
                   displayExpr="value"
                   valueExpr="key"
-                  required
+                  [required]="true"
+                  [disabled]="pricePackageDto.id != undefined && pricePackageDto.id != null"
                   placeholder="{{ l('SelectPricePackageType') }}"
+                  [ngClass]="{
+                    'is-invalid': truckType.invalid && (truckType.dirty || truckType.touched),
+                    'is-valid': truckType.valid && (truckType.dirty || truckType.touched)
+                  }"
                 >
                 </dx-select-box>
-                <!--                <select-->
-                <!--                  [(ngModel)]="pricePackageDto.type"-->
-                <!--                  required-->
-                <!--                  class="form-control"-->
-                <!--                  name="tmsPP_PricePackageType"-->
-                <!--                  [disabled]="pricePackageDto.id != undefined && pricePackageDto.id != null"-->
-                <!--                  #pricePackageTypeInput="ngModel"-->
-                <!--                  (ngModelChange)="pricePackageTypeChanged()"-->
-                <!--                  [ngClass]="{-->
+                <!--                                <select-->
+                <!--                                    [(ngModel)]="pricePackageDto.type"-->
+                <!--                                    required-->
+                <!--                                    class="form-control"-->
+                <!--                                    name="tmsPP_PricePackageType"-->
+                <!--                                    [disabled]="pricePackageDto.id != undefined && pricePackageDto.id != null"-->
+                <!--                                    #pricePackageTypeInput="ngModel"-->
+                <!--                                    (ngModelChange)="pricePackageTypeChanged()"-->
+                <!--                                    [ngClass]="{-->
                 <!--                    'is-invalid': pricePackageTypeInput.invalid && (pricePackageTypeInput.dirty || pricePackageTypeInput.touched),-->
                 <!--                    'is-valid': pricePackageTypeInput.valid && (pricePackageTypeInput.dirty || pricePackageTypeInput.touched)-->
                 <!--                  }"-->
-                <!--                >-->
-                <!--                  <option selected disabled [value]="undefined">{{ 'SelectPricePackageType' | localize }}</option>-->
-                <!--                  <option *ngFor="let item of pricePackageTypes" [value]="item.key">-->
-                <!--                    {{ item.value }}-->
-                <!--                  </option>-->
-                <!--                </select>-->
-                <!--                <div *ngIf="pricePackageTypeInput.invalid && (pricePackageTypeInput.dirty || pricePackageTypeInput.touched)" class="invalid-feedback">-->
-                <!--                  {{ 'PricePackageInvalidPricePackageTypeMsg' | localize }}-->
-                <!--                </div>-->
+                <!--                                >-->
+                <!--                                    <option selected disabled [value]="undefined">{{ 'SelectPricePackageType' | localize }}</option>-->
+                <!--                                    <option *ngFor="let item of pricePackageTypes" [value]="item.key">-->
+                <!--                                        {{ item.value }}-->
+                <!--                                    </option>-->
+                <!--                                </select>-->
+                <div *ngIf="pricePackageTypeInput.invalid && (pricePackageTypeInput.dirty || pricePackageTypeInput.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidPricePackageTypeMsg' | localize }}
+                </div>
               </div>
               <div *ngIf="pricePackageDto.type == pricePackageType.Dedicated" class="form-group col-md-6">
                 <label>{{ l('OriginCountry') }} <span class="text-danger">*</span></label>
@@ -263,23 +290,41 @@
                     'spinner spinner-success spinner-right mr-1 ml-1': countriesLoading
                   }"
                 >
-                  <select
-                    [(ngModel)]="pricePackageDto.originCountryId"
-                    (ngModelChange)="originCountryChanged()"
-                    required
-                    class="form-control"
+                  <dx-select-box
+                    id="tmsPP_OriginCountry"
                     name="tmsPP_OriginCountry"
                     #OriginCountry="ngModel"
+                    [(ngModel)]="pricePackageDto.originCountryId"
+                    (onValueChanged)="originCountryChanged()"
+                    [dataSource]="countries"
+                    [searchEnabled]="true"
+                    displayExpr="displayName"
+                    valueExpr="id"
+                    [required]="true"
+                    placeholder="{{ l('SelectAnOriginCountry') }}"
                     [ngClass]="{
                       'is-invalid': OriginCountry.invalid && (OriginCountry.dirty || OriginCountry.touched),
                       'is-valid': OriginCountry.valid && (OriginCountry.dirty || OriginCountry.touched)
                     }"
                   >
-                    <option selected disabled [value]="undefined">{{ 'SelectAnOriginCountry' | localize }}</option>
-                    <option *ngFor="let item of countries" [value]="item.id">
-                      {{ item.displayName }}
-                    </option>
-                  </select>
+                  </dx-select-box>
+                  <!--                                    <select-->
+                  <!--                                        [(ngModel)]="pricePackageDto.originCountryId"-->
+                  <!--                                        (ngModelChange)="originCountryChanged()"-->
+                  <!--                                        required-->
+                  <!--                                        class="form-control"-->
+                  <!--                                        name="tmsPP_OriginCountry"-->
+                  <!--                                        #OriginCountry="ngModel"-->
+                  <!--                                        [ngClass]="{-->
+                  <!--                      'is-invalid': OriginCountry.invalid && (OriginCountry.dirty || OriginCountry.touched),-->
+                  <!--                      'is-valid': OriginCountry.valid && (OriginCountry.dirty || OriginCountry.touched)-->
+                  <!--                    }"-->
+                  <!--                                    >-->
+                  <!--                                        <option selected disabled [value]="undefined">{{ 'SelectAnOriginCountry' | localize }}</option>-->
+                  <!--                                        <option *ngFor="let item of countries" [value]="item.id">-->
+                  <!--                                            {{ item.displayName }}-->
+                  <!--                                        </option>-->
+                  <!--                                    </select>-->
                 </div>
                 <div *ngIf="OriginCountry.invalid && (OriginCountry.dirty || OriginCountry.touched)" class="invalid-feedback">
                   {{ 'PricePackageInvalidOriginCountryMsg' | localize }}
@@ -288,28 +333,44 @@
 
               <div class="form-group col-md-6">
                 <label>{{ l('ShippingType') }} <span class="text-danger">*</span></label>
-                <select [(ngModel)]="pricePackageDto.shippingTypeId" (change)="shippingTypeChanged()" required></select>
-                <!--                  placeholder="{{ l('SelectShippingType') }}"-->
-                <!--                <select-->
-                <!--                  [(ngModel)]="pricePackageDto.shippingTypeId"-->
-                <!--                  (ngModelChange)="shippingTypeChanged()"-->
-                <!--                  required-->
-                <!--                  class="form-control"-->
-                <!--                  name="tmsPP_ShippingType"-->
-                <!--                  #shippingType="ngModel"-->
-                <!--                  [ngClass]="{-->
+                <dx-select-box
+                  id="tmsPP_ShippingType"
+                  name="tmsPP_ShippingType"
+                  #shippingType="ngModel"
+                  [(ngModel)]="pricePackageDto.shippingTypeId"
+                  (onValueChanged)="shippingTypeChanged()"
+                  [dataSource]="shippingTypes"
+                  [searchEnabled]="true"
+                  displayExpr="value"
+                  valueExpr="key"
+                  [required]="true"
+                  placeholder="{{ l('SelectShippingType') }}"
+                  [ngClass]="{
+                    'is-invalid': shippingType.invalid && (shippingType.dirty || shippingType.touched),
+                    'is-valid': shippingType.valid && (shippingType.dirty || shippingType.touched)
+                  }"
+                >
+                </dx-select-box>
+                <!--                                <select-->
+                <!--                                    [(ngModel)]="pricePackageDto.shippingTypeId"-->
+                <!--                                    (change)="shippingTypeChanged()"-->
+                <!--                                    required-->
+                <!--                                    class="form-control"-->
+                <!--                                    name="tmsPP_ShippingType"-->
+                <!--                                    #shippingType="ngModel"-->
+                <!--                                    [ngClass]="{-->
                 <!--                    'is-invalid': shippingType.invalid && (shippingType.dirty || shippingType.touched),-->
                 <!--                    'is-valid': shippingType.valid && (shippingType.dirty || shippingType.touched)-->
                 <!--                  }"-->
-                <!--                >-->
-                <!--                  <option selected disabled [value]="undefined">{{ 'SelectShippingType' | localize }}</option>-->
-                <!--                  <option *ngFor="let item of shippingTypes" [value]="item.id">-->
-                <!--                    {{ item.displayName }}-->
-                <!--                  </option>-->
-                <!--                </select>-->
-                <!--                <div *ngIf="shippingType.invalid && (shippingType.dirty || shippingType.touched)" class="invalid-feedback">-->
-                <!--                  {{ 'PricePackageInvalidShippingTypeMsg' | localize }}-->
-                <!--                </div>-->
+                <!--                                >-->
+                <!--                                    <option selected disabled [value]="undefined">{{ 'SelectShippingType' | localize }}</option>-->
+                <!--                                    <option *ngFor="let item of shippingTypes" [value]="item.key">-->
+                <!--                                        {{ item.value }}-->
+                <!--                                    </option>-->
+                <!--                                </select>-->
+                <div *ngIf="shippingType.invalid && (shippingType.dirty || shippingType.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidShippingTypeMsg' | localize }}
+                </div>
               </div>
               <div
                 *ngIf="
@@ -320,21 +381,39 @@
                 class="form-group col-md-6"
               >
                 <label>{{ l('RouteType') }} <span class="text-danger">*</span></label>
-                <select
+                <dx-select-box
+                  id="tmsPP_RouteType"
+                  name="tmsPP_RouteType"
                   #routeType="ngModel"
                   [(ngModel)]="pricePackageDto.routeType"
-                  required
                   (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"
-                  class="form-control"
-                  name="tmsPP_RouteType"
+                  [dataSource]="routeTypes"
+                  [searchEnabled]="true"
+                  displayExpr="value"
+                  valueExpr="key"
+                  [required]="true"
+                  placeholder="{{ l('SelectRouteType') }}"
                   [ngClass]="{
                     'is-invalid': routeType.invalid && (routeType.dirty || routeType.touched),
                     'is-valid': routeType.valid && (routeType.dirty || routeType.touched)
                   }"
                 >
-                  <option selected disabled [value]="undefined">{{ 'SelectRouteType' | localize }}</option>
-                  <option *ngFor="let item of routeTypes" [value]="item.key">{{ item.value }}</option>
-                </select>
+                </dx-select-box>
+                <!--                                <select-->
+                <!--                                    #routeType="ngModel"-->
+                <!--                                    [(ngModel)]="pricePackageDto.routeType"-->
+                <!--                                    required-->
+                <!--                                    (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"-->
+                <!--                                    class="form-control"-->
+                <!--                                    name="tmsPP_RouteType"-->
+                <!--                                    [ngClass]="{-->
+                <!--                    'is-invalid': routeType.invalid && (routeType.dirty || routeType.touched),-->
+                <!--                    'is-valid': routeType.valid && (routeType.dirty || routeType.touched)-->
+                <!--                  }"-->
+                <!--                                >-->
+                <!--                                    <option selected disabled [value]="undefined">{{ 'SelectRouteType' | localize }}</option>-->
+                <!--                                    <option *ngFor="let item of routeTypes" [value]="item.key">{{ item.value }}</option>-->
+                <!--                                </select>-->
                 <div *ngIf="routeType.invalid && (routeType.dirty || routeType.touched)" class="invalid-feedback">
                   {{ 'PricePackageInvalidRouteTypeMsg' | localize }}
                 </div>
@@ -348,23 +427,41 @@
                 class="form-group col-md-6"
               >
                 <label>{{ l('RoundTripType') }} <span class="text-danger">*</span></label>
-                <select
-                  [(ngModel)]="pricePackageDto.roundTrip"
-                  (ngModelChange)="applyFilters()"
-                  required
-                  class="form-control"
+                <dx-select-box
+                  id="tmsPP_RoundTripType"
                   name="tmsPP_RoundTripType"
                   #RoundTripType="ngModel"
+                  [(ngModel)]="pricePackageDto.roundTrip"
+                  (ngModelChange)="applyFilters()"
+                  [dataSource]="roundTripTypes"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  [required]="true"
+                  placeholder="{{ l('SelectShippingType') }}"
                   [ngClass]="{
                     'is-invalid': RoundTripType.invalid && (RoundTripType.dirty || RoundTripType.touched),
                     'is-valid': RoundTripType.valid && (RoundTripType.dirty || RoundTripType.touched)
                   }"
                 >
-                  <option selected disabled [value]="undefined">{{ 'SelectShippingType' | localize }}</option>
-                  <option *ngFor="let item of roundTripTypes" [value]="item.id">
-                    {{ item.displayName }}
-                  </option>
-                </select>
+                </dx-select-box>
+                <!--                                <select-->
+                <!--                                    [(ngModel)]="pricePackageDto.roundTrip"-->
+                <!--                                    (ngModelChange)="applyFilters()"-->
+                <!--                                    required-->
+                <!--                                    class="form-control"-->
+                <!--                                    name="tmsPP_RoundTripType"-->
+                <!--                                    #RoundTripType="ngModel"-->
+                <!--                                    [ngClass]="{-->
+                <!--                    'is-invalid': RoundTripType.invalid && (RoundTripType.dirty || RoundTripType.touched),-->
+                <!--                    'is-valid': RoundTripType.valid && (RoundTripType.dirty || RoundTripType.touched)-->
+                <!--                  }"-->
+                <!--                                >-->
+                <!--                                    <option selected disabled [value]="undefined">{{ 'SelectShippingType' | localize }}</option>-->
+                <!--                                    <option *ngFor="let item of roundTripTypes" [value]="item.id">-->
+                <!--                                        {{ item.displayName }}-->
+                <!--                                    </option>-->
+                <!--                                </select>-->
                 <div *ngIf="RoundTripType.invalid && (RoundTripType.dirty || RoundTripType.touched)" class="invalid-feedback">
                   {{ 'PricePackageInvalidShippingTypeMsg' | localize }}
                 </div>
@@ -615,20 +712,25 @@
                 <div class="form-group col-md-6">
                   <label>{{ l('PricingMethod') }} <span class="text-danger">*</span></label>
                   <dx-select-box
+                    id="pricingMethod"
                     name="pricingMethod"
-                    [(value)]="pricingMethod"
+                    #pricingMethodInput="ngModel"
+                    [(ngModel)]="pricingMethod"
+                    (ngModelChange)="updatePricingMethod()"
                     [dataSource]="pricingMethods"
                     [searchEnabled]="true"
-                    (onSelectionChanged)="updatePricingMethod()"
                     displayExpr="value"
                     valueExpr="key"
-                    required
-                    placeholder="{{ l('Select') }}"
+                    [required]="true"
+                    [ngClass]="{
+                      'is-invalid': pricingMethodInput.invalid && (pricingMethodInput.dirty || pricingMethodInput.touched),
+                      'is-valid': pricingMethodInput.valid && (pricingMethodInput.dirty || pricingMethodInput.touched)
+                    }"
                   >
                   </dx-select-box>
-                  <!--                  <select [(ngModel)]="pricingMethod" (ngModelChange)="updatePricingMethod()" required class="form-control" name="pricingMethod">-->
-                  <!--                    <option *ngFor="let item of pricingMethods" [value]="item.key">{{ item.value }}</option>-->
-                  <!--                  </select>-->
+                  <!--                                    <select [(ngModel)]="pricingMethod" (ngModelChange)="updatePricingMethod()" required class="form-control" name="pricingMethod">-->
+                  <!--                                        <option *ngFor="let item of pricingMethods" [value]="item.key">{{ item.value }}</option>-->
+                  <!--                                    </select>-->
                 </div>
                 <div class="form-group col-md-6">
                   <label>{{ calculatedPriceTitle }} <span class="text-danger">*</span></label>
@@ -647,27 +749,33 @@
                 <div class="form-group col-md-6">
                   <label>{{ l('CommissionType') }} <span class="text-danger">*</span></label>
                   <dx-select-box
+                    id="commissionType"
                     name="commissionType"
-                    [(value)]="commissionType"
+                    #commissionTypeInput="ngModel"
+                    [(ngModel)]="commissionType"
+                    (ngModelChange)="calculateTotalCommissionAndTotalPrice()"
                     [dataSource]="commissionTypes"
                     [searchEnabled]="true"
-                    (onSelectionChanged)="calculateTotalCommissionAndTotalPrice()"
                     displayExpr="value"
                     valueExpr="key"
-                    required
-                    placeholder="{{ l('SelectCommissionType') }}"
+                    placeholder="{{ 'SelectCommissionType' | localize }}"
+                    [required]="true"
+                    [ngClass]="{
+                      'is-invalid': commissionTypeInput.invalid && (commissionTypeInput.dirty || commissionTypeInput.touched),
+                      'is-valid': commissionTypeInput.valid && (commissionTypeInput.dirty || commissionTypeInput.touched)
+                    }"
                   >
                   </dx-select-box>
-                  <!--                  <select-->
-                  <!--                    [(ngModel)]="commissionType"-->
-                  <!--                    (ngModelChange)="calculateTotalCommissionAndTotalPrice()"-->
-                  <!--                    required-->
-                  <!--                    class="form-control"-->
-                  <!--                    name="commissionType"-->
-                  <!--                  >-->
-                  <!--                    <option selected disabled [value]="undefined">{{ 'SelectCommissionType' | localize }}</option>-->
-                  <!--                    <option *ngFor="let item of commissionTypes" [value]="item.key">{{ item.value }}</option>-->
-                  <!--                  </select>-->
+                  <!--                                    <select-->
+                  <!--                                        [(ngModel)]="commissionType"-->
+                  <!--                                        (ngModelChange)="calculateTotalCommissionAndTotalPrice()"-->
+                  <!--                                        required-->
+                  <!--                                        class="form-control"-->
+                  <!--                                        name="commissionType"-->
+                  <!--                                    >-->
+                  <!--                                        <option selected disabled [value]="undefined">{{ 'SelectCommissionType' | localize }}</option>-->
+                  <!--                                        <option *ngFor="let item of commissionTypes" [value]="item.key">{{ item.value }}</option>-->
+                  <!--                                    </select>-->
                 </div>
                 <div class="form-group col-md-6">
                   <label>{{ l('CommissionAmount') }} <span class="text-danger">*</span></label>
