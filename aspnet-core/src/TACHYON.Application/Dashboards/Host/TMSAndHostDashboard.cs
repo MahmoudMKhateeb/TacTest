@@ -12,9 +12,12 @@ using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
+using TACHYON.Dashboards.Carrier;
 using TACHYON.Dashboards.Host.Dto;
 using TACHYON.Dashboards.Host.TMS_HostDto;
 using TACHYON.Dashboards.Shipper.Dto;
+using TACHYON.Invoices;
+using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -31,15 +34,20 @@ namespace TACHYON.Dashboards.Host
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly IRepository<Truck, long> _truckRepository;
         private readonly UserManager _userManager;
+        private readonly IRepository<Invoice, long> _invoiceRepository;
+        private readonly IRepository<SubmitInvoice, long> _submitInvoiceRepository;
 
 
-        public TMSAndHostDashboard(IRepository<Tenant> tenantRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<Truck, long> truckRepository, UserManager userManager)
+
+        public TMSAndHostDashboard(IRepository<Tenant> tenantRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<Truck, long> truckRepository, UserManager userManager, IRepository<Invoice, long> invoiceRepository, IRepository<SubmitInvoice, long> submitInvoiceRepository)
         {
             _tenantRepository = tenantRepository;
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _truckRepository = truckRepository;
             _userManager = userManager;
+            _invoiceRepository = invoiceRepository;
+            _submitInvoiceRepository = submitInvoiceRepository;
         }
 
         public async Task<GetRegisteredCompaniesNumberOutput> GetRegisteredCompaniesNumber()
@@ -417,6 +425,131 @@ namespace TACHYON.Dashboards.Host
                 .Where(x => x.CreationTime.Month == Clock.Now.Month)
                 .Where(x => x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId ||
             (x.ShipperTenantId != x.CarrierTenantId)).CountAsync();
+        }
+
+        public async Task<GetInvoicesPaidVsUnpaidOutput> GetInvoicesPaidVsUnpaid(DateRangeInput input)
+        {
+            DisableTenancyFilters();
+
+            var query = _invoiceRepository
+                .GetAll().Where(x => x.CreationTime.Date > input.StartDate && x.CreationTime.Date < input.EndDate)
+                .AsNoTracking();
+
+            var paid = (await query
+                    .Where(x => x.IsPaid).Select(x=>x.CreationTime.Date)
+                    .ToListAsync())
+                    .Select(creationTime =>
+                new { y = creationTime.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationTime.Month) })
+                .GroupBy(x => x.y)
+                .Select(x => new { X = x.Key, Y = x.Count() })
+                .ToList();
+
+            var unPaid = (await query
+                .Where(x => !x.IsPaid).Select(x => x.CreationTime.Date)
+                    .ToListAsync())
+                    .Select(creationTime =>
+                new { y = creationTime.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationTime.Month) })
+                .GroupBy(x => x.y)
+                .Select(x => new { X = x.Key, Y = x.Count() })
+                .ToList();
+
+            var dto = new GetInvoicesPaidVsUnpaidOutput
+            {
+                PaidInvoices = new List<ChartCategoryPairedValuesDto>(),
+                UnPaidInvoices = new List<ChartCategoryPairedValuesDto>()
+            };
+            foreach (var monthWithYear in MonthsWithYearsInRange(input.StartDate, input.EndDate))
+            {
+                var paidItem = paid.FirstOrDefault(x => x.X == monthWithYear);
+                if (paidItem != null)
+                {
+                    dto.PaidInvoices.Add(new ChartCategoryPairedValuesDto { X = paidItem.X, Y = paidItem.Y });
+                }
+                else
+                {
+                    dto.PaidInvoices.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                }
+
+
+                var unPaidItem = unPaid.FirstOrDefault(x => x.X == monthWithYear);
+                if (paidItem != null)
+                {
+                    dto.UnPaidInvoices.Add(new ChartCategoryPairedValuesDto { X = unPaidItem.X, Y = unPaidItem.Y });
+                }
+                else
+                {
+                    dto.UnPaidInvoices.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                }
+            }
+
+
+            return dto;
+        }
+
+
+        public async Task<GetCarrierInvoicesDetailsOutput> GetClaimedVsPaidDetails(DateRangeInput input)
+        {
+            DisableTenancyFilters();
+
+
+            var query = _submitInvoiceRepository
+                .GetAll()
+                .Where(x => x.CreationTime.Date > input.StartDate && x.CreationTime.Date < input.EndDate)
+                .AsNoTracking();
+
+            var paid = (await query
+                    .Where(x => x.Status == SubmitInvoiceStatus.Paid)
+                    .Select(x => x.CreationTime.Date)
+                    .ToListAsync())
+                    .Select(creationTime =>
+                new { y = creationTime.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationTime.Month) })
+                .GroupBy(x => x.y)
+                .Select(x => new { X = x.Key, Y = x.Count() })
+                .ToList();
+
+
+            var claimed = (await query
+               .Where(x => x.Status == SubmitInvoiceStatus.Claim)
+               .Select(x => x.CreationTime.Date)
+                    .ToListAsync())
+                    .Select(creationTime =>
+                new { y = creationTime.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationTime.Month) })
+                .GroupBy(x => x.y)
+                .Select(x => new { X = x.Key, Y = x.Count() })
+                .ToList();
+
+            var dto = new GetCarrierInvoicesDetailsOutput
+            {
+                Claimed = new List<ChartCategoryPairedValuesDto>(),
+                PaidInvoices = new List<ChartCategoryPairedValuesDto>()
+            };
+            foreach (var monthWithYear in MonthsWithYearsInRange(input.StartDate, input.EndDate))
+            {
+                var paidItem = paid.FirstOrDefault(x => x.X == monthWithYear);
+                if (paidItem != null)
+                {
+                    dto.PaidInvoices.Add(new ChartCategoryPairedValuesDto { X = paidItem.X, Y = paidItem.Y });
+                }
+                else
+                {
+                    dto.PaidInvoices.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                }
+
+
+                var claimedItem = claimed.FirstOrDefault(x => x.X == monthWithYear);
+                if (claimedItem != null)
+                {
+                    dto.Claimed.Add(new ChartCategoryPairedValuesDto { X = claimedItem.X, Y = claimedItem.Y });
+                }
+                else
+                {
+                    dto.Claimed.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                }
+
+            }
+
+            return dto;
+
         }
 
 
