@@ -288,12 +288,8 @@
 
               <div class="form-group col-md-6">
                 <label>{{ l('ShippingType') }} <span class="text-danger">*</span></label>
-                <select
-                  [(ngModel)]="pricePackageDto.shippingTypeId"
-                  (change)="shippingTypeChanged()"
-                  required
-                  placeholder="{{ l('SelectShippingType') }}"
-                ></select>
+                <select [(ngModel)]="pricePackageDto.shippingTypeId" (change)="shippingTypeChanged()" required></select>
+                <!--                  placeholder="{{ l('SelectShippingType') }}"-->
                 <!--                <select-->
                 <!--                  [(ngModel)]="pricePackageDto.shippingTypeId"-->
                 <!--                  (ngModelChange)="shippingTypeChanged()"-->
