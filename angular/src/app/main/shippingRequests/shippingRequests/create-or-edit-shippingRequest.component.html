@@ -34,20 +34,33 @@
                           {{ l('TransportType') }}</label
                         >
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allTransportTypes }">
-                          <select
-                            class="form-control"
+                          <dx-select-box
                             name="transportType"
-                            #TransportType="ngModel"
-                            required
+                            [(value)]="shippingRequest.transportTypeId"
+                            [dataSource]="allTransportTypes"
+                            [searchEnabled]="true"
+                            (onSelectionChanged)="transportTypeSelectChange(shippingRequest.transportTypeId)"
                             [disabled]="!allTransportTypes"
-                            [(ngModel)]="shippingRequest.transportTypeId"
-                            [class.is-invalid]="allTransportTypes && TransportType.touched && !TransportType.valid"
-                            [class.is-valid]="allTransportTypes && TransportType.touched && TransportType.valid"
-                            (change)="transportTypeSelectChange(shippingRequest.transportTypeId)"
+                            displayExpr="displayName"
+                            valueExpr="id"
+                            required
+                            placeholder="{{ l('SelectaTransportType') }}"
                           >
-                            <option [ngValue]="null">{{ l('SelectaTransportType') }}</option>
-                            <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                          </select>
+                          </dx-select-box>
+                          <!--                          <select-->
+                          <!--                            class="form-control"-->
+                          <!--                            name="transportType"-->
+                          <!--                            #TransportType="ngModel"-->
+                          <!--                            required-->
+                          <!--                            [disabled]="!allTransportTypes"-->
+                          <!--                            [(ngModel)]="shippingRequest.transportTypeId"-->
+                          <!--                            [class.is-invalid]="allTransportTypes && TransportType.touched && !TransportType.valid"-->
+                          <!--                            [class.is-valid]="allTransportTypes && TransportType.touched && TransportType.valid"-->
+                          <!--                            (change)="transportTypeSelectChange(shippingRequest.transportTypeId)"-->
+                          <!--                          >-->
+                          <!--                            <option [ngValue]="null">{{ l('SelectaTransportType') }}</option>-->
+                          <!--                            <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                          <!--                          </select>-->
                         </div>
                         <span class="form-text text-muted">{{ l('SelectaTransportType') }}</span>
                       </div>
@@ -59,20 +72,33 @@
                               'spinner spinner-success spinner-right mr-1 ml-1': truckTypeLoading
                             }"
                           >
-                            <select
-                              #TruckType="ngModel"
-                              class="form-control"
+                            <dx-select-box
                               name="truckType"
+                              [(value)]="shippingRequest.trucksTypeId"
+                              [dataSource]="allTrucksTypes"
+                              [searchEnabled]="true"
+                              (onSelectionChanged)="trucksTypeSelectChange(shippingRequest.trucksTypeId)"
+                              displayExpr="displayName"
+                              valueExpr="id"
                               required
                               [disabled]="shippingRequest.transportTypeId == null || allTransportTypes == null || allTrucksTypes == null"
-                              [(ngModel)]="shippingRequest.trucksTypeId"
-                              [class.is-invalid]="allTrucksTypes && TruckType.touched && !TruckType.valid"
-                              [class.is-valid]="allTrucksTypes && TruckType.touched && TruckType.valid"
-                              (change)="trucksTypeSelectChange(shippingRequest.trucksTypeId)"
+                              placeholder="{{ l('SelectaTruckType') }}"
                             >
-                              <option [ngValue]="null">{{ l('SelectaTruckType') }}</option>
-                              <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                            </select>
+                            </dx-select-box>
+                            <!--                            <select-->
+                            <!--                              #TruckType="ngModel"-->
+                            <!--                              class="form-control"-->
+                            <!--                              name="truckType"-->
+                            <!--                              required-->
+                            <!--                              [disabled]="shippingRequest.transportTypeId == null || allTransportTypes == null || allTrucksTypes == null"-->
+                            <!--                              [(ngModel)]="shippingRequest.trucksTypeId"-->
+                            <!--                              [class.is-invalid]="allTrucksTypes && TruckType.touched && !TruckType.valid"-->
+                            <!--                              [class.is-valid]="allTrucksTypes && TruckType.touched && TruckType.valid"-->
+                            <!--                              (change)="trucksTypeSelectChange(shippingRequest.trucksTypeId)"-->
+                            <!--                            >-->
+                            <!--                              <option [ngValue]="null">{{ l('SelectaTruckType') }}</option>-->
+                            <!--                              <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                            <!--                            </select>-->
                           </div>
                         </div>
 
@@ -85,10 +111,13 @@
                             'spinner spinner-success spinner-right mr-1 ml-1': capacityLoading
                           }"
                         >
-                          <select
-                            #Capacity="ngModel"
-                            class="form-control"
+                          <dx-select-box
                             name="capacity"
+                            [(value)]="shippingRequest.capacityId"
+                            [dataSource]="allCapacities"
+                            [searchEnabled]="true"
+                            displayExpr="displayName"
+                            valueExpr="id"
                             required
                             [disabled]="
                               capacityLoading ||
@@ -97,13 +126,28 @@
                               allTransportTypes == null ||
                               allTrucksTypes == null
                             "
-                            [(ngModel)]="shippingRequest.capacityId"
-                            [class.is-invalid]="allCapacities && Capacity.touched && !Capacity.valid"
-                            [class.is-valid]="allCapacities && Capacity.touched && Capacity.valid"
+                            placeholder="{{ l('SelectaCapacity') }}"
                           >
-                            <option [ngValue]="null">{{ l('SelectaCapacity') }}</option>
-                            <option *ngFor="let item of allCapacities" value="{{ item.id }}">{{ item.displayName }}</option>
-                          </select>
+                          </dx-select-box>
+                          <!--                          <select-->
+                          <!--                            #Capacity="ngModel"-->
+                          <!--                            class="form-control"-->
+                          <!--                            name="capacity"-->
+                          <!--                            required-->
+                          <!--                            [disabled]="-->
+                          <!--                              capacityLoading ||-->
+                          <!--                              shippingRequest.trucksTypeId == null ||-->
+                          <!--                              shippingRequest.transportTypeId == null ||-->
+                          <!--                              allTransportTypes == null ||-->
+                          <!--                              allTrucksTypes == null-->
+                          <!--                            "-->
+                          <!--                            [(ngModel)]="shippingRequest.capacityId"-->
+                          <!--                            [class.is-invalid]="allCapacities && Capacity.touched && !Capacity.valid"-->
+                          <!--                            [class.is-valid]="allCapacities && Capacity.touched && Capacity.valid"-->
+                          <!--                          >-->
+                          <!--                            <option [ngValue]="null">{{ l('SelectaCapacity') }}</option>-->
+                          <!--                            <option *ngFor="let item of allCapacities" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                          <!--                          </select>-->
                         </div>
                         <span class="form-text text-muted">{{ l('SelectaCapacity') }}</span>
                       </div>
@@ -132,27 +176,48 @@
                     <div class="form-group row fv-plugins-icon-container">
                       <div class="col-lg-6">
                         <label><span class="required-fileds">*</span> {{ l('ShippingRequestType') }}</label>
-                        <select
-                          #SRType="ngModel"
-                          class="form-control"
+                        <dx-select-box
                           name="shippingRequestType"
-                          required
-                          [class.is-invalid]="SRType.touched && !SRType.valid"
-                          [class.is-valid]="SRType.touched && SRType.valid"
-                          [(ngModel)]="shippingRequestType"
-                          (change)="resetBiddingDates()"
+                          [(value)]="shippingRequestType"
+                          [dataSource]="[
+                            { displayName: l('Marketplace'), value: 'bidding' },
+                            { displayName: l('TachyonManageService'), value: 'tachyondeal' },
+                            {
+                              displayName: l('DirectRequest'),
+                              value: 'directrequest',
+                              visible: this.feature.isEnabled('App.SendDirectRequest') || isCarrierSaas
+                            }
+                          ]"
+                          (onSelectionChanged)="resetBiddingDates()"
                           [disabled]="shippingRequest.id"
+                          [searchEnabled]="true"
+                          displayExpr="displayName"
+                          valueExpr="value"
+                          required
+                          placeholder="{{ l('Select') }}"
                         >
-                          <option value="">Select</option>
-                          <!--                          <option value="bidding">{{ l('Marketplace') }}</option>-->
-                          <option value="tachyondeal">{{ l('TachyonManageService') }}</option>
-                          <option
-                            *ngIf="this.feature.isEnabled('App.SendDirectRequest') || feature.isEnabled('App.CarrierAsASaas')"
-                            value="directrequest"
-                          >
-                            {{ l('DirectRequest') }}
-                          </option>
-                        </select>
+                        </dx-select-box>
+                        <!--                        <select-->
+                        <!--                          #SRType="ngModel"-->
+                        <!--                          class="form-control"-->
+                        <!--                          name="shippingRequestType"-->
+                        <!--                          required-->
+                        <!--                          [class.is-invalid]="SRType.touched && !SRType.valid"-->
+                        <!--                          [class.is-valid]="SRType.touched && SRType.valid"-->
+                        <!--                          [(ngModel)]="shippingRequestType"-->
+                        <!--                          (change)="resetBiddingDates()"-->
+                        <!--                          [disabled]="shippingRequest.id"-->
+                        <!--                        >-->
+                        <!--                          <option value="">Select</option>-->
+                        <!--                          <option value="bidding">{{ l('Marketplace') }}</option>-->
+                        <!--                          <option value="tachyondeal">{{ l('TachyonManageService') }}</option>-->
+                        <!--                          <option-->
+                        <!--                            *ngIf="this.feature.isEnabled('App.SendDirectRequest') || feature.isEnabled('App.CarrierAsASaas')"-->
+                        <!--                            value="directrequest"-->
+                        <!--                          >-->
+                        <!--                            {{ l('DirectRequest') }}-->
+                        <!--                          </option>-->
+                        <!--                        </select>-->
                         <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
                       </div>
                       <div *ngIf="shippingRequestType == 'bidding'" class="col-lg-3">
@@ -195,20 +260,33 @@
                             'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
                           }"
                         >
-                          <select
-                            #shippingType="ngModel"
-                            class="form-control"
+                          <dx-select-box
                             name="shippingType"
+                            [(value)]="shippingRequest.shippingTypeId"
+                            [dataSource]="allShippingTypes"
+                            [searchEnabled]="true"
+                            displayExpr="displayName"
+                            valueExpr="id"
                             required
-                            [(ngModel)]="shippingRequest.shippingTypeId"
-                            [class.is-invalid]="shippingType.touched && !shippingType.valid"
-                            [class.is-valid]="shippingType.touched && shippingType.valid"
-                            (change)="shippingRequest.shippingRequestDestinationCities = undefined"
+                            (onSelectionChanged)="shippingRequest.shippingRequestDestinationCities = undefined"
                             [disabled]="!allShippingTypes"
+                            placeholder="{{ l('SelectAshippingType') }}"
                           >
-                            <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>
-                            <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                          </select>
+                          </dx-select-box>
+                          <!--                          <select-->
+                          <!--                            #shippingType="ngModel"-->
+                          <!--                            class="form-control"-->
+                          <!--                            name="shippingType"-->
+                          <!--                            required-->
+                          <!--                            [(ngModel)]="shippingRequest.shippingTypeId"-->
+                          <!--                            [class.is-invalid]="shippingType.touched && !shippingType.valid"-->
+                          <!--                            [class.is-valid]="shippingType.touched && shippingType.valid"-->
+                          <!--                            (change)="shippingRequest.shippingRequestDestinationCities = undefined"-->
+                          <!--                            [disabled]="!allShippingTypes"-->
+                          <!--                          >-->
+                          <!--                            <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>-->
+                          <!--                            <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                          <!--                          </select>-->
                         </div>
                         <span class="form-text text-muted">{{ l('SelectAShippingType') }}</span>
                       </div>
@@ -239,19 +317,31 @@
                       <div class="col-lg-6">
                         <label><span class="required-fileds">*</span> {{ l('MainGoodCategory') }}</label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
-                          <select
-                            #goodCategory="ngModel"
-                            class="form-control"
+                          <dx-select-box
                             name="goodCategory"
+                            [(value)]="shippingRequest.goodCategoryId"
+                            [dataSource]="allGoodCategorys"
+                            [searchEnabled]="true"
                             [disabled]="!allGoodCategorys"
-                            [(ngModel)]="shippingRequest.goodCategoryId"
+                            displayExpr="displayName"
+                            valueExpr="id"
                             required
-                            [class.is-invalid]="goodCategory.touched && !goodCategory.valid"
-                            [class.is-valid]="goodCategory.touched && goodCategory.valid"
+                            placeholder="{{ l('SelectaGoodCategory') }}"
                           >
-                            <option [ngValue]="undefined">{{ l('SelectaGoodCategory') }}</option>
-                            <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
-                          </select>
+                          </dx-select-box>
+                          <!--                          <select-->
+                          <!--                            #goodCategory="ngModel"-->
+                          <!--                            class="form-control"-->
+                          <!--                            name="goodCategory"-->
+                          <!--                            [disabled]="!allGoodCategorys"-->
+                          <!--                            [(ngModel)]="shippingRequest.goodCategoryId"-->
+                          <!--                            required-->
+                          <!--                            [class.is-invalid]="goodCategory.touched && !goodCategory.valid"-->
+                          <!--                            [class.is-valid]="goodCategory.touched && goodCategory.valid"-->
+                          <!--                          >-->
+                          <!--                            <option [ngValue]="undefined">{{ l('SelectaGoodCategory') }}</option>-->
+                          <!--                            <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                          <!--                          </select>-->
                         </div>
 
                         <span class="form-text text-muted">{{ l('SelectaGoodCategory') }}</span>
@@ -291,19 +381,31 @@
                             }"
                           >
                             <label><span class="required-fileds">*</span> {{ l('PackingType') }}</label>
-                            <select
-                              #packingType="ngModel"
-                              class="form-control"
+                            <dx-select-box
                               name="packingType"
+                              [(value)]="shippingRequest.packingTypeId"
+                              [dataSource]="allpackingTypes"
+                              [searchEnabled]="true"
+                              displayExpr="displayName"
+                              valueExpr="id"
                               required
-                              [(ngModel)]="shippingRequest.packingTypeId"
-                              [class.is-invalid]="packingType.touched && !packingType.valid"
-                              [class.is-valid]="packingType.touched && packingType.valid"
                               [disabled]="!allpackingTypes"
+                              placeholder="{{ l('SelectaPackingType') }}"
                             >
-                              <option [ngValue]="null">{{ l('SelectaPackingType') }}</option>
-                              <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                            </select>
+                            </dx-select-box>
+                            <!--                            <select-->
+                            <!--                              #packingType="ngModel"-->
+                            <!--                              class="form-control"-->
+                            <!--                              name="packingType"-->
+                            <!--                              required-->
+                            <!--                              [(ngModel)]="shippingRequest.packingTypeId"-->
+                            <!--                              [class.is-invalid]="packingType.touched && !packingType.valid"-->
+                            <!--                              [class.is-valid]="packingType.touched && packingType.valid"-->
+                            <!--                              [disabled]="!allpackingTypes"-->
+                            <!--                            >-->
+                            <!--                              <option [ngValue]="null">{{ l('SelectaPackingType') }}</option>-->
+                            <!--                              <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                            <!--                            </select>-->
                           </div>
                           <span class="form-text text-muted">{{ l('EnterPackingType') }}</span>
                         </div>
@@ -358,20 +460,33 @@
                         <div class="form-group">
                           <label><span class="required-fileds">*</span> {{ l('OriginCity') }}</label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
-                            <select
-                              #Origin="ngModel"
-                              class="form-control"
+                            <dx-select-box
                               name="origin"
+                              [(value)]="shippingRequest.originCityId"
+                              [dataSource]="allCitys"
+                              [searchEnabled]="true"
+                              (onSelectionChanged)="validateShippingRequestType()"
+                              displayExpr="displayName"
+                              valueExpr="id"
                               [disabled]="!allCitys"
-                              [(ngModel)]="shippingRequest.originCityId"
                               required
-                              [class.is-invalid]="Origin.touched && !Origin.valid"
-                              [class.is-valid]="Origin.touched && Origin.valid"
-                              (ngModelChange)="validateShippingRequestType()"
+                              placeholder="{{ l('SelectanOriginCity') }}"
                             >
-                              <option value="">{{ l('SelectanOriginCity') }}</option>
-                              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-                            </select>
+                            </dx-select-box>
+                            <!--                            <select-->
+                            <!--                              #Origin="ngModel"-->
+                            <!--                              class="form-control"-->
+                            <!--                              name="origin"-->
+                            <!--                              [disabled]="!allCitys"-->
+                            <!--                              [(ngModel)]="shippingRequest.originCityId"-->
+                            <!--                              required-->
+                            <!--                              [class.is-invalid]="Origin.touched && !Origin.valid"-->
+                            <!--                              [class.is-valid]="Origin.touched && Origin.valid"-->
+                            <!--                              (ngModelChange)="validateShippingRequestType()"-->
+                            <!--                            >-->
+                            <!--                              <option value="">{{ l('SelectanOriginCity') }}</option>-->
+                            <!--                              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                            <!--                            </select>-->
                           </div>
 
                           <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
@@ -461,23 +576,36 @@
                       <div class="col-lg-3">
                         <label><span class="required-fileds">*</span> {{ l('RouteType') }}</label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allRoutTypes }">
-                          <select
-                            #RouteType="ngModel"
-                            class="form-control"
+                          <dx-select-box
                             name="routeType"
+                            [(value)]="selectedRouteType"
+                            [dataSource]="allRoutTypes"
+                            [searchEnabled]="true"
+                            (onSelectionChanged)="shippingRequest.numberOfDrops = undefined"
+                            displayExpr="value"
+                            valueExpr="key"
                             required
                             [disabled]="true"
-                            [(ngModel)]="selectedRouteType"
-                            [class.is-invalid]="RouteType.touched && !RouteType.valid"
-                            [class.is-valid]="RouteType.touched && RouteType.valid"
-                            (change)="shippingRequest.numberOfDrops = undefined"
+                            placeholder="{{ l('SelectRouteType') }}"
                           >
-                            <option value="">{{ l('SelectRouteType') }}</option>
-                            <option [value]="code.key" *ngFor="let code of allRoutTypes">
-                              {{ code.value | localize }}
-                            </option>
-                            <!--<option *ngFor="let item of allRoutTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
-                          </select>
+                          </dx-select-box>
+                          <!--                          <select-->
+                          <!--                            #RouteType="ngModel"-->
+                          <!--                            class="form-control"-->
+                          <!--                            name="routeType"-->
+                          <!--                            required-->
+                          <!--                            [disabled]="true"-->
+                          <!--                            [(ngModel)]="selectedRouteType"-->
+                          <!--                            [class.is-invalid]="RouteType.touched && !RouteType.valid"-->
+                          <!--                            [class.is-valid]="RouteType.touched && RouteType.valid"-->
+                          <!--                            (change)="shippingRequest.numberOfDrops = undefined"-->
+                          <!--                          >-->
+                          <!--                            <option value="">{{ l('SelectRouteType') }}</option>-->
+                          <!--                            <option [value]="code.key" *ngFor="let code of allRoutTypes">-->
+                          <!--                              {{ code.value | localize }}-->
+                          <!--                            </option>-->
+                          <!--                            &lt;!&ndash;<option *ngFor="let item of allRoutTypes" value="{{ item.id }}">{{ item.displayName }}</option>&ndash;&gt;-->
+                          <!--                          </select>-->
                         </div>
                         <span class="form-text text-muted">{{ l('PickaRouteType') }}</span>
                       </div>

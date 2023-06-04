@@ -51,6 +51,20 @@ export class TrackinSearchModelComponent extends AppComponentBase implements OnI
     super(injector);
   }
   ngOnInit(): void {
+    this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
+    this.requestTypes = this.enumToArray.transform(ShippingRequestType).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
+    const obj = {
+      value: this.l('All'),
+      key: '',
+    };
+    this.routeTypes.unshift(obj);
+    this.requestTypes.unshift(obj);
     this.getRoutTypes();
     this.getRequestStatus();
   }

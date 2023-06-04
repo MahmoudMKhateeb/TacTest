@@ -234,6 +234,13 @@
                       (change)="ShippingTypeChanged()"
                       required
                     >
+                      <!-- [class.is-valid]="
+                                          shippingType.valid && (shippingType.dirty || shippingType.touched)
+                                        "
+                                        [class.is-invalid]="
+                                          shippingType.invalid && (shippingType.dirty || shippingType.touched)
+                                        " -->
+                      <!--                          <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>-->
                       <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                     </select>
                   </div>
@@ -261,6 +268,12 @@
                       required
                       (ngModelChange)="resetShippingInputs(); prepareRoundTripInputs(); onRouteTypeChange()"
                     >
+                      <!-- [class.is-valid]="
+                                          roundTripType.valid && (roundTripType.dirty || roundTripType.touched)
+                                        "
+                                        [class.is-invalid]="
+                                          roundTripType.invalid && (roundTripType.dirty || roundTripType.touched)
+                                        " -->
                       <option disabled [ngValue]="null">{{ l('SelectARoundTripType') }}</option>
                       <option *ngFor="let item of allRoundTripTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                     </select>
@@ -369,13 +382,13 @@
                   </label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
                     <!-- [class.is-valid]="
-                        step2Form.get('originCountry').valid &&
-                        (step2Form.get('originCountry').dirty || step2Form.get('originCountry').touched)
-                      "
-                      [class.is-invalid]="
-                        step2Form.get('originCountry').invalid &&
-                        (step2Form.get('originCountry').dirty || step2Form.get('originCountry').touched)
-                      " -->
+                                            step2Form.get('originCountry').valid &&
+                                            (step2Form.get('originCountry').dirty || step2Form.get('originCountry').touched)
+                                          "
+                                          [class.is-invalid]="
+                                            step2Form.get('originCountry').invalid &&
+                                            (step2Form.get('originCountry').dirty || step2Form.get('originCountry').touched)
+                                          " -->
                     <select
                       class="form-control"
                       name="originCountry"
@@ -396,13 +409,13 @@
                   <label> {{ l('DestinationCountry') }}<span class="required-fileds">*</span></label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
                     <!-- [class.is-valid]="
-                        step2Form.get('destinationCountry').valid &&
-                        (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
-                      "
-                      [class.is-invalid]="
-                        step2Form.get('destinationCountry').invalid &&
-                        (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
-                      " -->
+                                            step2Form.get('destinationCountry').valid &&
+                                            (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
+                                          "
+                                          [class.is-invalid]="
+                                            step2Form.get('destinationCountry').invalid &&
+                                            (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
+                                          " -->
                     <!--                      [attr.disabled]="-->
                     <!--                        _TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId &&-->
                     <!--                        (_TripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == 2 ||-->
@@ -438,11 +451,11 @@
                   <label>{{ l('OriginCity') }} <span class="required-fileds">*</span> </label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
                     <!-- [class.is-valid]="
-                        step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
-                      "
-                      [class.is-invalid]="
-                        step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
-                      " -->
+                                            step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
+                                          "
+                                          [class.is-invalid]="
+                                            step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
+                                          " -->
                     <select
                       class="form-control"
                       name="originCity"
@@ -468,13 +481,13 @@
                   <label>{{ l('Origin') }} <span class="required-fileds">*</span> </label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
                     <!-- [class.is-valid]="
-                        step2Form.get('originFacility').valid &&
-                        (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)
-                      "
-                      [class.is-invalid]="
-                        step2Form.get('originFacility').invalid &&
-                        (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)
-                      " -->
+                                            step2Form.get('originFacility').valid &&
+                                            (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)
+                                          "
+                                          [class.is-invalid]="
+                                            step2Form.get('originFacility').invalid &&
+                                            (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)
+                                          " -->
                     <select
                       class="form-control"
                       name="originFacility"
@@ -495,11 +508,11 @@
                       </option>
                     </select>
                     <!-- [class.is-valid]="
-                        step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
-                      "
-                      [class.is-invalid]="
-                        step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
-                      " -->
+                                            step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
+                                          "
+                                          [class.is-invalid]="
+                                            step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
+                                          " -->
                     <select
                       class="form-control"
                       name="originCity"
@@ -528,13 +541,13 @@
                   <label> {{ l('DestinationCity') }}<span class="required-fileds">*</span></label>
                   <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
                     <!-- [class.is-valid]="
-                        step2Form.get('destinationCity').valid &&
-                        (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
-                      "
-                      [class.is-invalid]="
-                        step2Form.get('destinationCity').invalid &&
-                        (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
-                      " -->
+                                            step2Form.get('destinationCity').valid &&
+                                            (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
+                                          "
+                                          [class.is-invalid]="
+                                            step2Form.get('destinationCity').invalid &&
+                                            (step2Form.get('destinationCity').dirty || step2Form.get('destinationCity').touched)
+                                          " -->
                     <p-multiSelect
                       name="destinationCity"
                       [options]="destinationCities"

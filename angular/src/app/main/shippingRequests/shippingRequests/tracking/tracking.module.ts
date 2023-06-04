@@ -90,6 +90,7 @@ import { ViewForceDeliverTripsFromExcelModalComponent } from '@app/main/shipping
     CascadeSelectModule,
     DxDataGridModule,
     DxCheckBoxModule,
+    DxSelectBoxModule,
     DxPopoverModule,
     DxTextBoxModule,
     DxSelectBoxModule,

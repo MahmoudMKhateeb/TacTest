@@ -88,10 +88,22 @@
                   'spinner spinner-success spinner-right mr-1 ml-1': isFacilitiesLoading
                 }"
               >
-                <select name="receiver.facilityId" [(ngModel)]="receiver.facilityId" class="form-control" required [disabled]="facilityIdFromTrips">
-                  <option [value]="undefined" disabled>{{ l('SelectaFacility') }}</option>
-                  <option *ngFor="let item of allFacilitys" [value]="item.id">{{ item.displayName }}</option>
-                </select>
+                <dx-select-box
+                  name="receiver.facilityId"
+                  [(value)]="receiver.facilityId"
+                  [dataSource]="allFacilitys"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  required
+                  [disabled]="facilityIdFromTrips"
+                  placeholder="{{ l('SelectaFacility') }}"
+                >
+                </dx-select-box>
+                <!--                <select name="receiver.facilityId" [(ngModel)]="receiver.facilityId" class="form-control" required [disabled]="facilityIdFromTrips">-->
+                <!--                  <option [value]="undefined" disabled>{{ l('SelectaFacility') }}</option>-->
+                <!--                  <option *ngFor="let item of allFacilitys" [value]="item.id">{{ item.displayName }}</option>-->
+                <!--                </select>-->
               </div>
             </div>
 

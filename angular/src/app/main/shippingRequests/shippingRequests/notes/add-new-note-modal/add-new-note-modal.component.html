@@ -77,18 +77,35 @@
             <div class="col-lg-12">
               <div class="form-group" [hidden]="!open">
                 <label for="otherSelect">{{ 'Others' | localize }}</label>
-                <select class="form-control" name="otherSelect" [(ngModel)]="item.visibility" (change)="others = item.visibility" required>
-                  <option *ngIf="feature.isEnabled('App.Shipper')" value="{{ visibility.TMSAndCarrier }}">{{ 'TMSAndCarrier' | localize }}</option>
-                  <option *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')" value="{{ visibility.CarrierOnly }}">
-                    {{ 'CarrierOnly' | localize }}
-                  </option>
-                  <option *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.Carrier')" value="{{ visibility.TMSOnly }}">
-                    {{ 'TMSOnly' | localize }}
-                  </option>
-                  <option *ngIf="feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer')" value="{{ visibility.ShipperOnly }}">
-                    {{ 'ShipperOnly' | localize }}
-                  </option>
-                </select>
+                <dx-select-box
+                  name="otherSelect"
+                  [(value)]="item.visibility"
+                  [dataSource]="[
+                    { displayName: l('TMSAndCarrier'), value: visibility.TMSAndCarrier, visible: isShipper },
+                    { displayName: l('CarrierOnly'), value: visibility.CarrierOnly, visible: isShipper || isTachyonDealer },
+                    { displayName: l('TMSOnly'), value: visibility.TMSOnly, visible: isShipper || isCarrier },
+                    { displayName: l('ShipperOnly'), value: visibility.ShipperOnly, visible: isCarrier || isTachyonDealer }
+                  ]"
+                  [searchEnabled]="true"
+                  (onSelectionChanged)="others = item.visibility"
+                  displayExpr="displayName"
+                  valueExpr="value"
+                  required
+                  placeholder="{{ l('Select') }} {{ l('Country') }}"
+                >
+                </dx-select-box>
+                <!--                <select class="form-control" name="otherSelect" [(ngModel)]="item.visibility" (change)="others = item.visibility" required>-->
+                <!--&lt;!&ndash;                  <option *ngIf="feature.isEnabled('App.Shipper')" value="{{ visibility.TMSAndCarrier }}">{{ 'TMSAndCarrier' | localize }}</option>&ndash;&gt;-->
+                <!--&lt;!&ndash;                  <option *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')" value="{{ visibility.CarrierOnly }}">&ndash;&gt;-->
+                <!--&lt;!&ndash;                    {{ 'CarrierOnly' | localize }}&ndash;&gt;-->
+                <!--&lt;!&ndash;                  </option>&ndash;&gt;-->
+                <!--&lt;!&ndash;                  <option *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.Carrier')" value="{{ visibility.TMSOnly }}">&ndash;&gt;-->
+                <!--&lt;!&ndash;                    {{ 'TMSOnly' | localize }}&ndash;&gt;-->
+                <!--&lt;!&ndash;                  </option>&ndash;&gt;-->
+                <!--&lt;!&ndash;                  <option *ngIf="feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer')" value="{{ visibility.ShipperOnly }}">&ndash;&gt;-->
+                <!--&lt;!&ndash;                    {{ 'ShipperOnly' | localize }}&ndash;&gt;-->
+                <!--&lt;!&ndash;                  </option>&ndash;&gt;-->
+                <!--                </select>-->
               </div>
             </div>
 

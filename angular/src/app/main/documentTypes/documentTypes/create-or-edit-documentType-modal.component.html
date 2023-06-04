@@ -39,7 +39,13 @@
             <div class="dx-field">
               <div class="dx-field-label">{{ l('Entity') }}</div>
               <div class="dx-field-value">
-                <dx-select-box [(value)]="documentType.documentsEntityId" [dataSource]="allDocumentsEntities" displayExpr="value" valueExpr="key">
+                <dx-select-box
+                  [searchEnabled]="true"
+                  [(value)]="documentType.documentsEntityId"
+                  [dataSource]="allDocumentsEntities"
+                  displayExpr="value"
+                  valueExpr="key"
+                >
                   <dx-validator>
                     <dxi-validation-rule type="required" message="documentsEntity is required"></dxi-validation-rule>
                   </dx-validator>
@@ -49,7 +55,14 @@
             <div class="dx-field">
               <div class="dx-field-label">{{ l('DocumentTypeFlag') }}</div>
               <div class="dx-field-value">
-                <dx-select-box [(value)]="documentType.flag" [dataSource]="DocumentTypeFlags" displayExpr="value" valueExpr="value"> </dx-select-box>
+                <dx-select-box
+                  [searchEnabled]="true"
+                  [(value)]="documentType.flag"
+                  [dataSource]="DocumentTypeFlags"
+                  displayExpr="value"
+                  valueExpr="value"
+                >
+                </dx-select-box>
               </div>
             </div>
             <div class="dx-field" *ngIf="documentType.documentsEntityId == documentsEntitiesEnum.Tenant">
@@ -58,6 +71,7 @@
                 <dx-select-box
                   [(value)]="documentType.editionId"
                   [dataSource]="editions"
+                  [searchEnabled]="true"
                   displayExpr="displayName"
                   valueExpr="id"
                   placeholder="{{ l('Select') }}"
@@ -73,6 +87,7 @@
                 <dx-select-box
                   [(value)]="documentType.documentRelatedWithId"
                   [dataSource]="Tenants"
+                  [searchEnabled]="true"
                   displayExpr="displayName"
                   valueExpr="id"
                   placeholder="{{ l('Select') }}"

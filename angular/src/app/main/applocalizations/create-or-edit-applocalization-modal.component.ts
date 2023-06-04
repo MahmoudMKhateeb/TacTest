@@ -42,10 +42,22 @@ export class ApplocalizationModalComponent extends AppComponentBase implements O
   }
   ngOnInit(): void {
     this.languages = _.filter(this.localization.languages, (l) => l.isDisabled === false && l.displayName != 'English');
-    this.terminologyVersion = this.enumToArray.transform(TerminologyVersion);
-    this.terminologyPlatForm = this.enumToArray.transform(TerminologyPlatForm);
-    this.terminologyAppVersion = this.enumToArray.transform(TerminologyAppVersion);
-    this.terminologySection = this.enumToArray.transform(TerminologySection);
+    this.terminologyVersion = this.enumToArray.transform(TerminologyVersion).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
+    this.terminologyPlatForm = this.enumToArray.transform(TerminologyPlatForm).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
+    this.terminologyAppVersion = this.enumToArray.transform(TerminologyAppVersion).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
+    this.terminologySection = this.enumToArray.transform(TerminologySection).map((item) => {
+      item.value = this.l(item.value);
+      return item;
+    });
   }
 
   public show(id: number | null): void {

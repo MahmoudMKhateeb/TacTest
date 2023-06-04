@@ -87,17 +87,30 @@
                           'spinner spinner-success spinner-right mr-1 ml-1': !AllShippers
                         }"
                       >
-                        <select
-                          class="form-control"
+                        <dx-select-box
                           name="Shipper"
                           formControlName="Shipper"
-                          [(ngModel)]="step1Dto.shipperId"
-                          (change)="shippingRequestType = 'tachyondeal'"
+                          [(value)]="step1Dto.shipperId"
+                          [dataSource]="AllShippers"
+                          [searchEnabled]="true"
+                          (onSelectionChanged)="shippingRequestType = 'tachyondeal'"
+                          displayExpr="displayName"
+                          valueExpr="id"
                           required
+                          placeholder="{{ l('SelectShipper') }}"
                         >
-                          <option [value]="undefined" disabled>{{ l('SelectShipper') }}</option>
-                          <option *ngFor="let item of AllShippers" value="{{ item.id }}">{{ item.displayName }}</option>
-                        </select>
+                        </dx-select-box>
+                        <!--                        <select-->
+                        <!--                          class="form-control"-->
+                        <!--                          name="Shipper"-->
+                        <!--                          formControlName="Shipper"-->
+                        <!--                          [(ngModel)]="step1Dto.shipperId"-->
+                        <!--                          (change)="shippingRequestType = 'tachyondeal'"-->
+                        <!--                          required-->
+                        <!--                        >-->
+                        <!--                          <option [value]="undefined" disabled>{{ l('SelectShipper') }}</option>-->
+                        <!--                          <option *ngFor="let item of AllShippers" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                        <!--                        </select>-->
                       </div>
                       <span class="form-text text-muted">{{ l('SelectShipper') }} {{ step1Dto.shipperId }}</span>
                     </div>
@@ -174,31 +187,49 @@
 
                     <div *ngIf="!isCarrierSass" [hidden]="step1Dto.isInternalBrokerRequest" class="form-group">
                       <label>{{ l('ShippingRequestType') }} <span class="required-fileds">*</span></label>
-                      <select
-                        class="form-control"
+                      <dx-select-box
                         name="shippingRequestType"
                         formControlName="shippingRequestType"
-                        [(ngModel)]="shippingRequestType"
-                        (change)="validateCarrierForDirectRequest()"
-                        [class.is-valid]="
-                          step1Form.get('shippingRequestType').valid &&
-                          (step1Form.get('shippingRequestType').dirty || step1Form.get('shippingRequestType').touched)
-                        "
-                        [class.is-invalid]="
-                          step1Form.get('shippingRequestType').invalid &&
-                          (step1Form.get('shippingRequestType').dirty || step1Form.get('shippingRequestType').touched)
-                        "
-                        [required]="!step1Dto.isInternalBrokerRequest"
-                        readonly="readonly"
-                        [attr.disabled]="step1Dto.shipperId > 0 ? true : null"
+                        [(value)]="shippingRequestType"
+                        [dataSource]="[
+                          { displayName: l('Marketplace'), value: 'bidding', visible: feature.isEnabled('App.MarketPlace') },
+                          { displayName: l('TachyonManageService'), value: 'tachyondeal' },
+                          { displayName: l('DirectRequest'), value: 'directrequest', visible: feature.isEnabled('App.SendDirectRequest') }
+                        ]"
+                        (onSelectionChanged)="validateCarrierForDirectRequest()"
+                        [disabled]="step1Dto.shipperId > 0 ? true : null"
+                        [searchEnabled]="true"
+                        displayExpr="displayName"
+                        valueExpr="value"
+                        [attr.required]="!step1Dto.isInternalBrokerRequest"
+                        placeholder="{{ l('Select') }}"
                       >
-                        <option value="undefined" selected disabled>{{ l('Select') }}</option>
-                        <!--                        <option *ngIf="feature.isEnabled('App.MarketPlace')" [value]="'bidding'">{{ l('Marketplace') }}</option>-->
-                        <option [value]="'tachyondeal'">{{ l('TachyonManageService') }}</option>
-                        <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">
-                          {{ l('DirectRequest') }}
-                        </option>
-                      </select>
+                      </dx-select-box>
+                      <!--                      <select-->
+                      <!--                        class="form-control"-->
+                      <!--                        name="shippingRequestType"-->
+                      <!--                        formControlName="shippingRequestType"-->
+                      <!--                        [(ngModel)]="shippingRequestType"-->
+                      <!--                        (change)="validateCarrierForDirectRequest()"-->
+                      <!--                        [class.is-valid]="-->
+                      <!--                          step1Form.get('shippingRequestType').valid &&-->
+                      <!--                          (step1Form.get('shippingRequestType').dirty || step1Form.get('shippingRequestType').touched)-->
+                      <!--                        "-->
+                      <!--                        [class.is-invalid]="-->
+                      <!--                          step1Form.get('shippingRequestType').invalid &&-->
+                      <!--                          (step1Form.get('shippingRequestType').dirty || step1Form.get('shippingRequestType').touched)-->
+                      <!--                        "-->
+                      <!--                        [required]="!step1Dto.isInternalBrokerRequest"-->
+                      <!--                        readonly="readonly"-->
+                      <!--                        [attr.disabled]="step1Dto.shipperId > 0 ? true : null"-->
+                      <!--                      >-->
+                      <!--                        <option value="undefined" selected disabled>{{ l('Select') }}</option>-->
+                      <!--                        <option *ngIf="feature.isEnabled('App.MarketPlace')" [value]="'bidding'">{{ l('Marketplace') }}</option>-->
+                      <!--                        <option [value]="'tachyondeal'">{{ l('TachyonManageService') }}</option>-->
+                      <!--                        <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">-->
+                      <!--                          {{ l('DirectRequest') }}-->
+                      <!--                        </option>-->
+                      <!--                      </select>-->
                       <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
                     </div>
                     <div class="form-group" [hidden]="shippingRequestType !== 'directrequest' || isCarrierSass || step1Dto.isInternalBrokerRequest">
@@ -299,23 +330,37 @@
                           'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
                         }"
                       >
-                        <select
-                          class="form-control"
+                        <dx-select-box
                           name="shippingType"
                           formControlName="shippingType"
-                          [(ngModel)]="step1Dto.shippingTypeId"
-                          (change)="resetStep2Inputs(); fillAllRoundTrips()"
-                          [class.is-valid]="
-                            step1Form.get('shippingType').valid && (step1Form.get('shippingType').dirty || step1Form.get('shippingType').touched)
-                          "
-                          [class.is-invalid]="
-                            step1Form.get('shippingType').invalid && (step1Form.get('shippingType').dirty || step1Form.get('shippingType').touched)
-                          "
+                          [(value)]="step1Dto.shippingTypeId"
+                          [dataSource]="allShippingTypes"
+                          [searchEnabled]="true"
+                          displayExpr="displayName"
+                          valueExpr="id"
                           required
+                          (onSelectionChanged)="resetStep2Inputs(); fillAllRoundTrips()"
+                          [disabled]="!allShippingTypes"
+                          placeholder="{{ l('SelectAshippingType') }}"
                         >
-                          <!--                          <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>-->
-                          <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                        </select>
+                        </dx-select-box>
+                        <!--                        <select-->
+                        <!--                          class="form-control"-->
+                        <!--                          name="shippingType"-->
+                        <!--                          formControlName="shippingType"-->
+                        <!--                          [(ngModel)]="step1Dto.shippingTypeId"-->
+                        <!--                          (change)="resetStep2Inputs(); fillAllRoundTrips()"-->
+                        <!--                          [class.is-valid]="-->
+                        <!--                            step1Form.get('shippingType').valid && (step1Form.get('shippingType').dirty || step1Form.get('shippingType').touched)-->
+                        <!--                          "-->
+                        <!--                          [class.is-invalid]="-->
+                        <!--                            step1Form.get('shippingType').invalid && (step1Form.get('shippingType').dirty || step1Form.get('shippingType').touched)-->
+                        <!--                          "-->
+                        <!--                          required-->
+                        <!--                        >-->
+                        <!--                          &lt;!&ndash;                          <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>&ndash;&gt;-->
+                        <!--                          <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                        <!--                        </select>-->
                       </div>
                       <span class="form-text text-muted">{{ l('SelectAShippingType') }}</span>
                     </div>
@@ -332,23 +377,36 @@
                           'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
                         }"
                       >
-                        <select
-                          class="form-control"
+                        <dx-select-box
                           name="roundTripType"
                           formControlName="roundTripType"
-                          [(ngModel)]="step1Dto.roundTripType"
-                          [class.is-valid]="
-                            step1Form.get('roundTripType').valid && (step1Form.get('roundTripType').dirty || step1Form.get('roundTripType').touched)
-                          "
-                          [class.is-invalid]="
-                            step1Form.get('roundTripType').invalid && (step1Form.get('roundTripType').dirty || step1Form.get('roundTripType').touched)
-                          "
+                          [(value)]="step1Dto.roundTripType"
+                          [dataSource]="allRoundTripTypes"
+                          [searchEnabled]="true"
+                          (onSelectionChanged)="resetStep2Inputs(); prepareStep2Inputs()"
+                          displayExpr="displayName"
+                          valueExpr="id"
                           required
-                          (change)="resetStep2Inputs(); prepareStep2Inputs()"
+                          placeholder="{{ l('SelectARoundTripType') }}"
                         >
-                          <option disabled [ngValue]="null">{{ l('SelectARoundTripType') }}</option>
-                          <option *ngFor="let item of allRoundTripTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                        </select>
+                        </dx-select-box>
+                        <!--                        <select-->
+                        <!--                          class="form-control"-->
+                        <!--                          name="roundTripType"-->
+                        <!--                          formControlName="roundTripType"-->
+                        <!--                          [(ngModel)]="step1Dto.roundTripType"-->
+                        <!--                          [class.is-valid]="-->
+                        <!--                            step1Form.get('roundTripType').valid && (step1Form.get('roundTripType').dirty || step1Form.get('roundTripType').touched)-->
+                        <!--                          "-->
+                        <!--                          [class.is-invalid]="-->
+                        <!--                            step1Form.get('roundTripType').invalid && (step1Form.get('roundTripType').dirty || step1Form.get('roundTripType').touched)-->
+                        <!--                          "-->
+                        <!--                          required-->
+                        <!--                          (ngModelChange)="resetStep2Inputs(); prepareStep2Inputs()"-->
+                        <!--                        >-->
+                        <!--                          <option disabled [ngValue]="null">{{ l('SelectARoundTripType') }}</option>-->
+                        <!--                          <option *ngFor="let item of allRoundTripTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                        <!--                        </select>-->
                       </div>
                       <span class="form-text text-muted">{{ l('SelectARoundTripType') }}</span>
                     </div>
@@ -430,28 +488,42 @@
                       >
                         <label> {{ l('RouteType') }} <span class="required-fileds">*</span></label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allRoutTypes }">
-                          <select
-                            class="form-control"
+                          <dx-select-box
                             name="routeType"
-                            #routeType
                             formControlName="routeType"
-                            [attr.disabled]="allRoutTypes ? null : true"
-                            [(ngModel)]="step2Dto.routeTypeId"
-                            [class.is-valid]="
-                              step2Form.get('routeType').valid && (step2Form.get('routeType').dirty || step2Form.get('routeType').touched)
-                            "
-                            [class.is-invalid]="
-                              step2Form.get('routeType').invalid && (step2Form.get('routeType').dirty || step2Form.get('routeType').touched)
-                            "
-                            (change)="routeTypeChanged()"
+                            [(value)]="step2Dto.routeTypeId"
+                            [dataSource]="allRoutTypes"
+                            [searchEnabled]="true"
+                            (onSelectionChanged)="routeTypeChanged()"
+                            displayExpr="value"
+                            valueExpr="key"
                             required
+                            [disabled]="allRoutTypes ? null : true"
+                            placeholder="{{ l('SelectRouteType') }}"
                           >
-                            <option [ngValue]="null" disabled selected>{{ l('SelectRouteType') }}</option>
-                            <option [value]="code.key" *ngFor="let code of allRoutTypes">
-                              {{ l(code.value) }}
-                            </option>
-                            <!--<option *ngFor="let item of allRoutTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
-                          </select>
+                          </dx-select-box>
+                          <!--                          <select-->
+                          <!--                            class="form-control"-->
+                          <!--                            name="routeType"-->
+                          <!--                            #routeType-->
+                          <!--                            formControlName="routeType"-->
+                          <!--                            [attr.disabled]="allRoutTypes ? null : true"-->
+                          <!--                            [(ngModel)]="step2Dto.routeTypeId"-->
+                          <!--                            [class.is-valid]="-->
+                          <!--                              step2Form.get('routeType').valid && (step2Form.get('routeType').dirty || step2Form.get('routeType').touched)-->
+                          <!--                            "-->
+                          <!--                            [class.is-invalid]="-->
+                          <!--                              step2Form.get('routeType').invalid && (step2Form.get('routeType').dirty || step2Form.get('routeType').touched)-->
+                          <!--                            "-->
+                          <!--                            (change)="routeTypeChanged()"-->
+                          <!--                            required-->
+                          <!--                          >-->
+                          <!--                            <option [ngValue]="null" disabled selected>{{ l('SelectRouteType') }}</option>-->
+                          <!--                            <option [value]="code.key" *ngFor="let code of allRoutTypes">-->
+                          <!--                              {{ l(code.value) }}-->
+                          <!--                            </option>-->
+                          <!--                            &lt;!&ndash;<option *ngFor="let item of allRoutTypes" value="{{ item.id }}">{{ item.displayName }}</option>&ndash;&gt;-->
+                          <!--                          </select>-->
                         </div>
                         <span class="form-text text-muted">{{ l('PickaRouteType') }}</span>
                       </div>
@@ -469,26 +541,39 @@
                             <span class="required-fileds">*</span>
                           </label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
-                            <select
-                              class="form-control"
+                            <dx-select-box
                               name="originCountry"
                               formControlName="originCountry"
-                              [(ngModel)]="originCountry"
-                              [class.is-valid]="
-                                step2Form.get('originCountry').valid &&
-                                (step2Form.get('originCountry').dirty || step2Form.get('originCountry').touched)
-                              "
-                              [class.is-invalid]="
-                                step2Form.get('originCountry').invalid &&
-                                (step2Form.get('originCountry').dirty || step2Form.get('originCountry').touched)
-                              "
-                              (ngModelChange)="validateShippingRequestType()"
-                              (change)="loadCitiesByCountryId(originCountry, 'source')"
+                              [(value)]="originCountry"
+                              [dataSource]="allCountries"
+                              [searchEnabled]="true"
+                              (onSelectionChanged)="validateShippingRequestType(); loadCitiesByCountryId(originCountry, 'source')"
+                              displayExpr="translatedDisplayName"
+                              valueExpr="id"
                               required
+                              placeholder="{{ l('SelectanOriginCountry') }}"
                             >
-                              <option value="undefined" selected disabled>{{ l('SelectanOriginCountry') }}</option>
-                              <option *ngFor="let item of allCountries" [value]="item.id">{{ item.translatedDisplayName }}</option>
-                            </select>
+                            </dx-select-box>
+                            <!--                            <select-->
+                            <!--                              class="form-control"-->
+                            <!--                              name="originCountry"-->
+                            <!--                              formControlName="originCountry"-->
+                            <!--                              [(ngModel)]="originCountry"-->
+                            <!--                              [class.is-valid]="-->
+                            <!--                                step2Form.get('originCountry').valid &&-->
+                            <!--                                (step2Form.get('originCountry').dirty || step2Form.get('originCountry').touched)-->
+                            <!--                              "-->
+                            <!--                              [class.is-invalid]="-->
+                            <!--                                step2Form.get('originCountry').invalid &&-->
+                            <!--                                (step2Form.get('originCountry').dirty || step2Form.get('originCountry').touched)-->
+                            <!--                              "-->
+                            <!--                              (ngModelChange)="validateShippingRequestType()"-->
+                            <!--                              (change)="loadCitiesByCountryId(originCountry, 'source')"-->
+                            <!--                              required-->
+                            <!--                            >-->
+                            <!--                              <option value="undefined" selected disabled>{{ l('SelectanOriginCountry') }}</option>-->
+                            <!--                              <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.translatedDisplayName }}</option>-->
+                            <!--                            </select>-->
                           </div>
 
                           <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
@@ -498,27 +583,40 @@
                         <div class="form-group">
                           <label> {{ l('DestinationCountry') }}<span class="required-fileds">*</span></label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCountries }">
-                            <select
-                              class="form-control"
+                            <dx-select-box
                               name="destinationCountry"
                               formControlName="destinationCountry"
-                              [(ngModel)]="destinationCountry"
-                              [class.is-valid]="
-                                step2Form.get('destinationCountry').valid &&
-                                (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
-                              "
-                              [class.is-invalid]="
-                                step2Form.get('destinationCountry').invalid &&
-                                (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)
-                              "
-                              [attr.disabled]="step1Dto.shippingTypeId == 2 || step1Dto.shippingTypeId == 1 ? true : null"
-                              (ngModelChange)="validateShippingRequestType()"
-                              (change)="loadCitiesByCountryId(destinationCountry, 'destination')"
+                              [(value)]="destinationCountry"
+                              [dataSource]="allCountries"
+                              [searchEnabled]="true"
+                              (onSelectionChanged)="validateShippingRequestType(); loadCitiesByCountryId(destinationCountry, 'destination')"
+                              displayExpr="translatedDisplayName"
+                              valueExpr="id"
                               required
+                              placeholder="{{ l('SelectanDestinationCountry') }}"
                             >
-                              <option value="undefined" selected disabled>{{ l('SelectanDestinationCountry') }}</option>
-                              <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>
-                            </select>
+                            </dx-select-box>
+                            <!--                            <select-->
+                            <!--                              class="form-control"-->
+                            <!--                              name="destinationCountry"-->
+                            <!--                              formControlName="destinationCountry"-->
+                            <!--                              [(ngModel)]="destinationCountry"-->
+                            <!--                              [class.is-valid]="-->
+                            <!--                                step2Form.get('destinationCountry').valid &&-->
+                            <!--                                (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)-->
+                            <!--                              "-->
+                            <!--                              [class.is-invalid]="-->
+                            <!--                                step2Form.get('destinationCountry').invalid &&-->
+                            <!--                                (step2Form.get('destinationCountry').dirty || step2Form.get('destinationCountry').touched)-->
+                            <!--                              "-->
+                            <!--                              [attr.disabled]="step1Dto.shippingTypeId == 2 || step1Dto.shippingTypeId == 1 ? true : null"-->
+                            <!--                              (ngModelChange)="validateShippingRequestType()"-->
+                            <!--                              (change)="loadCitiesByCountryId(destinationCountry, 'destination')"-->
+                            <!--                              required-->
+                            <!--                            >-->
+                            <!--                              <option value="undefined" selected disabled>{{ l('SelectanDestinationCountry') }}</option>-->
+                            <!--                              <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                            <!--                            </select>-->
                             <div class="invalid-feedback">{{ l('SourceAndDestinationCantBeTheSame') }}</div>
                           </div>
                           <span class="form-text text-muted">{{ l('SelectaCountry') }}</span>
@@ -536,24 +634,38 @@
                         >
                           <label>{{ l('OriginCity') }} <span class="required-fileds">*</span> </label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
-                            <select
-                              class="form-control"
+                            <dx-select-box
                               name="originCity"
                               formControlName="originCity"
-                              [(ngModel)]="step2Dto.originCityId"
-                              [attr.disabled]="!sourceCities ? true : null"
-                              [class.is-valid]="
-                                step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
-                              "
-                              [class.is-invalid]="
-                                step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
-                              "
-                              (ngModelChange)="validateShippingRequestType()"
+                              [(value)]="step2Dto.originCityId"
+                              [dataSource]="sourceCities"
+                              [searchEnabled]="true"
+                              (onSelectionChanged)="validateShippingRequestType()"
+                              displayExpr="displayName"
+                              valueExpr="id"
+                              [disabled]="!sourceCities ? true : null"
                               required
+                              placeholder="{{ l('SelectanOriginCity') }}"
                             >
-                              <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>
-                              <option *ngFor="let originCity of sourceCities" [ngValue]="Number(originCity.id)">{{ originCity.displayName }}</option>
-                            </select>
+                            </dx-select-box>
+                            <!--                            <select-->
+                            <!--                              class="form-control"-->
+                            <!--                              name="originCity"-->
+                            <!--                              formControlName="originCity"-->
+                            <!--                              [(ngModel)]="step2Dto.originCityId"-->
+                            <!--                              [attr.disabled]="!sourceCities ? true : null"-->
+                            <!--                              [class.is-valid]="-->
+                            <!--                                step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)-->
+                            <!--                              "-->
+                            <!--                              [class.is-invalid]="-->
+                            <!--                                step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)-->
+                            <!--                              "-->
+                            <!--                              (ngModelChange)="validateShippingRequestType()"-->
+                            <!--                              required-->
+                            <!--                            >-->
+                            <!--                              <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>-->
+                            <!--                              <option *ngFor="let originCity of sourceCities" [ngValue]="Number(originCity.id)">{{ originCity.displayName }}</option>-->
+                            <!--                            </select>-->
                           </div>
 
                           <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
@@ -567,50 +679,84 @@
                         >
                           <label>{{ l('Origin') }} <span class="required-fileds">*</span> </label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
-                            <select
-                              class="form-control"
+                            <dx-select-box
                               name="originFacility"
                               formControlName="originFacility"
-                              [(ngModel)]="step2Dto.originFacilityId"
-                              [attr.disabled]="!allOriginPorts ? true : null"
-                              [class.is-valid]="
-                                step2Form.get('originFacility').valid &&
-                                (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)
+                              [(value)]="step2Dto.originFacilityId"
+                              [dataSource]="allOriginPorts"
+                              [searchEnabled]="true"
+                              [disabled]="!allOriginPorts ? true : null"
+                              (onSelectionChanged)="
+                                validateShippingRequestType();
+                                getCityIdFromSelectedPort(step2Dto.originFacilityId);
+                                removeValidationForImportPortRequestOnStep2Form()
                               "
-                              [class.is-invalid]="
-                                step2Form.get('originFacility').invalid &&
-                                (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)
-                              "
-                              (ngModelChange)="
-                                validateShippingRequestType(); getCityIdFromSelectedPort($event); removeValidationForImportPortRequestOnStep2Form()
-                              "
+                              displayExpr="displayName"
+                              valueExpr="id"
                               required
+                              placeholder="{{ l('SelectanOrigin') }}"
                               *ngIf="step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements"
                             >
-                              <option [ngValue]="null" disabled selected>{{ l('SelectanOrigin') }}</option>
-                              <option *ngFor="let originPort of allOriginPorts" [ngValue]="Number(originPort.id)">
-                                {{ originPort.displayName }}
-                              </option>
-                            </select>
-                            <select
-                              class="form-control"
+                            </dx-select-box>
+                            <!--                            <select-->
+                            <!--                              class="form-control"-->
+                            <!--                              name="originFacility"-->
+                            <!--                              formControlName="originFacility"-->
+                            <!--                              [(ngModel)]="step2Dto.originFacilityId"-->
+                            <!--                              [attr.disabled]="!allOriginPorts ? true : null"-->
+                            <!--                              [class.is-valid]="-->
+                            <!--                                step2Form.get('originFacility').valid &&-->
+                            <!--                                (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)-->
+                            <!--                              "-->
+                            <!--                              [class.is-invalid]="-->
+                            <!--                                step2Form.get('originFacility').invalid &&-->
+                            <!--                                (step2Form.get('originFacility').dirty || step2Form.get('originFacility').touched)-->
+                            <!--                              "-->
+                            <!--                              (ngModelChange)="-->
+                            <!--                                validateShippingRequestType(); getCityIdFromSelectedPort($event); removeValidationForImportPortRequestOnStep2Form()-->
+                            <!--                              "-->
+                            <!--                              required-->
+                            <!--                              *ngIf="step1Dto.shippingTypeId == ShippingTypeEnum.ImportPortMovements"-->
+                            <!--                            >-->
+                            <!--                              <option [ngValue]="null" disabled selected>{{ l('SelectanOrigin') }}</option>-->
+                            <!--                              <option *ngFor="let originPort of allOriginPorts" [ngValue]="Number(originPort.id)">-->
+                            <!--                                {{ originPort.displayName }}-->
+                            <!--                              </option>-->
+                            <!--                            </select>-->
+                            <dx-select-box
                               name="originCity"
                               formControlName="originCity"
-                              [(ngModel)]="step2Dto.originCityId"
-                              [attr.disabled]="!sourceCities ? true : null"
-                              [class.is-valid]="
-                                step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
-                              "
-                              [class.is-invalid]="
-                                step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)
-                              "
-                              (ngModelChange)="validateShippingRequestType(); removeValidationForExportPortRequestOnStep2Form()"
+                              [(value)]="step2Dto.originCityId"
+                              [dataSource]="sourceCities"
+                              [searchEnabled]="true"
+                              [disabled]="!sourceCities ? true : null"
+                              (onSelectionChanged)="validateShippingRequestType(); removeValidationForExportPortRequestOnStep2Form()"
+                              displayExpr="displayName"
+                              valueExpr="id"
                               required
+                              placeholder="{{ l('SelectanOriginCity') }}"
                               *ngIf="step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements"
                             >
-                              <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>
-                              <option *ngFor="let originCity of sourceCities" [ngValue]="Number(originCity.id)">{{ originCity.displayName }}</option>
-                            </select>
+                            </dx-select-box>
+                            <!--                            <select-->
+                            <!--                              class="form-control"-->
+                            <!--                              name="originCity"-->
+                            <!--                              formControlName="originCity"-->
+                            <!--                              [(ngModel)]="step2Dto.originCityId"-->
+                            <!--                              [attr.disabled]="!sourceCities ? true : null"-->
+                            <!--                              [class.is-valid]="-->
+                            <!--                                step2Form.get('originCity').valid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)-->
+                            <!--                              "-->
+                            <!--                              [class.is-invalid]="-->
+                            <!--                                step2Form.get('originCity').invalid && (step2Form.get('originCity').dirty || step2Form.get('originCity').touched)-->
+                            <!--                              "-->
+                            <!--                              (ngModelChange)="validateShippingRequestType(); removeValidationForExportPortRequestOnStep2Form()"-->
+                            <!--                              required-->
+                            <!--                              *ngIf="step1Dto.shippingTypeId == ShippingTypeEnum.ExportPortMovements"-->
+                            <!--                            >-->
+                            <!--                              <option [ngValue]="null" disabled selected>{{ l('SelectanOriginCity') }}</option>-->
+                            <!--                              <option *ngFor="let originCity of sourceCities" [ngValue]="Number(originCity.id)">{{ originCity.displayName }}</option>-->
+                            <!--                            </select>-->
                           </div>
 
                           <span class="form-text text-muted">{{
@@ -730,26 +876,42 @@
                           ></label
                         >
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
-                          <select
-                            class="form-control"
+                          <dx-select-box
                             name="goodCategory"
                             formControlName="goodCategory"
+                            [(value)]="step3Dto.goodCategoryId"
+                            [dataSource]="allGoodCategorys"
+                            [searchEnabled]="true"
                             [disabled]="!allGoodCategorys"
-                            [(ngModel)]="step3Dto.goodCategoryId"
-                            [class.is-valid]="
-                              step3Form.get('goodCategory').valid && (step3Form.get('goodCategory').dirty || step3Form.get('goodCategory').touched)
-                            "
-                            [class.is-invalid]="
-                              step3Form.get('goodCategory').invalid && (step3Form.get('goodCategory').dirty || step3Form.get('goodCategory').touched)
-                            "
-                            [required]="
+                            displayExpr="displayName"
+                            valueExpr="id"
+                            [attr.required]="
                               step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&
                               step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements
                             "
+                            placeholder="{{ l('SelectaGoodCategory') }}"
                           >
-                            <!--                            <option [ngValue]="undefined" disabled selected>{{ l('SelectAGoodCategory') }}</option>-->
-                            <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
-                          </select>
+                          </dx-select-box>
+                          <!--                          <select-->
+                          <!--                            class="form-control"-->
+                          <!--                            name="goodCategory"-->
+                          <!--                            formControlName="goodCategory"-->
+                          <!--                            [disabled]="!allGoodCategorys"-->
+                          <!--                            [(ngModel)]="step3Dto.goodCategoryId"-->
+                          <!--                            [class.is-valid]="-->
+                          <!--                              step3Form.get('goodCategory').valid && (step3Form.get('goodCategory').dirty || step3Form.get('goodCategory').touched)-->
+                          <!--                            "-->
+                          <!--                            [class.is-invalid]="-->
+                          <!--                              step3Form.get('goodCategory').invalid && (step3Form.get('goodCategory').dirty || step3Form.get('goodCategory').touched)-->
+                          <!--                            "-->
+                          <!--                            [required]="-->
+                          <!--                              step1Dto.shippingTypeId != ShippingTypeEnum.ImportPortMovements &&-->
+                          <!--                              step1Dto.shippingTypeId != ShippingTypeEnum.ExportPortMovements-->
+                          <!--                            "-->
+                          <!--                          >-->
+                          <!--                            &lt;!&ndash;                            <option [ngValue]="undefined" disabled selected>{{ l('SelectAGoodCategory') }}</option>&ndash;&gt;-->
+                          <!--                            <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                          <!--                          </select>-->
                           <span class="form-text text-muted">{{ l('SelectaGoodCategory') }}</span>
                         </div>
                       </div>
@@ -816,23 +978,36 @@
                             }"
                           >
                             <label>{{ l('PackingType') }} <span class="required-fileds">*</span></label>
-                            <select
-                              class="form-control"
+                            <dx-select-box
                               name="packingType"
                               formControlName="packingType"
-                              [(ngModel)]="step3Dto.packingTypeId"
-                              [class.is-valid]="
-                                step3Form.get('packingType').valid && (step3Form.get('packingType').dirty || step3Form.get('packingType').touched)
-                              "
-                              [class.is-invalid]="
-                                step3Form.get('packingType').invalid && (step3Form.get('packingType').dirty || step3Form.get('packingType').touched)
-                              "
-                              [disabled]="!allpackingTypes"
+                              [(value)]="step3Dto.packingTypeId"
+                              [dataSource]="allpackingTypes"
+                              [searchEnabled]="true"
+                              displayExpr="displayName"
+                              valueExpr="id"
                               required
+                              [disabled]="!allpackingTypes"
+                              placeholder="{{ l('SelectaPackingType') }}"
                             >
-                              <option [ngValue]="null" disabled selected>{{ l('SelectaPackingType') }}</option>
-                              <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                            </select>
+                            </dx-select-box>
+                            <!--                            <select-->
+                            <!--                              class="form-control"-->
+                            <!--                              name="packingType"-->
+                            <!--                              formControlName="packingType"-->
+                            <!--                              [(ngModel)]="step3Dto.packingTypeId"-->
+                            <!--                              [class.is-valid]="-->
+                            <!--                                step3Form.get('packingType').valid && (step3Form.get('packingType').dirty || step3Form.get('packingType').touched)-->
+                            <!--                              "-->
+                            <!--                              [class.is-invalid]="-->
+                            <!--                                step3Form.get('packingType').invalid && (step3Form.get('packingType').dirty || step3Form.get('packingType').touched)-->
+                            <!--                              "-->
+                            <!--                              [disabled]="!allpackingTypes"-->
+                            <!--                              required-->
+                            <!--                            >-->
+                            <!--                              <option [ngValue]="null" disabled selected>{{ l('SelectaPackingType') }}</option>-->
+                            <!--                              <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                            <!--                            </select>-->
                           </div>
                           <span class="form-text text-muted">{{ l('EnterPackingType') }}</span>
                         </div>
@@ -890,25 +1065,39 @@
                       <div class="col-lg-6 mt-4">
                         <label> {{ l('TransportType') }} <span class="required-fileds">*</span></label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allTransportTypes }">
-                          <select
-                            class="form-control"
+                          <dx-select-box
                             name="transportType"
                             formControlName="transportType"
+                            [(value)]="step3Dto.transportTypeId"
+                            [dataSource]="allTransportTypes"
+                            [searchEnabled]="true"
+                            (onSelectionChanged)="transportTypeSelectChange(step3Dto.transportTypeId)"
+                            [disabled]="!allTransportTypes"
+                            displayExpr="displayName"
+                            valueExpr="id"
                             required
-                            [attr.disabled]="allTransportTypes ? null : true"
-                            [(ngModel)]="step3Dto.transportTypeId"
-                            [class.is-valid]="
-                              step3Form.get('transportType').valid && (step3Form.get('transportType').dirty || step3Form.get('transportType').touched)
-                            "
-                            [class.is-invalid]="
-                              step3Form.get('transportType').invalid &&
-                              (step3Form.get('transportType').dirty || step3Form.get('transportType').touched)
-                            "
-                            (change)="transportTypeSelectChange(step3Dto.transportTypeId)"
+                            placeholder="{{ l('SelectaTransportType') }}"
                           >
-                            <option [ngValue]="null" disabled selected>{{ l('SelectaTransportType') }}</option>
-                            <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                          </select>
+                          </dx-select-box>
+                          <!--                          <select-->
+                          <!--                            class="form-control"-->
+                          <!--                            name="transportType"-->
+                          <!--                            formControlName="transportType"-->
+                          <!--                            required-->
+                          <!--                            [attr.disabled]="allTransportTypes ? null : true"-->
+                          <!--                            [(ngModel)]="step3Dto.transportTypeId"-->
+                          <!--                            [class.is-valid]="-->
+                          <!--                              step3Form.get('transportType').valid && (step3Form.get('transportType').dirty || step3Form.get('transportType').touched)-->
+                          <!--                            "-->
+                          <!--                            [class.is-invalid]="-->
+                          <!--                              step3Form.get('transportType').invalid &&-->
+                          <!--                              (step3Form.get('transportType').dirty || step3Form.get('transportType').touched)-->
+                          <!--                            "-->
+                          <!--                            (change)="transportTypeSelectChange(step3Dto.transportTypeId)"-->
+                          <!--                          >-->
+                          <!--                            <option [ngValue]="null" disabled selected>{{ l('SelectaTransportType') }}</option>-->
+                          <!--                            <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                          <!--                          </select>-->
                         </div>
                         <span class="form-text text-muted">{{ l('SelectaTransportType') }}</span>
 
@@ -948,11 +1137,17 @@
                               'spinner spinner-success spinner-right mr-1 ml-1': truckTypeLoading
                             }"
                           >
-                            <select
-                              class="form-control"
+                            <dx-select-box
                               name="truckType"
                               formControlName="truckType"
-                              [attr.disabled]="
+                              [(value)]="step3Dto.trucksTypeId"
+                              [dataSource]="allTrucksTypes"
+                              [searchEnabled]="true"
+                              (onSelectionChanged)="trucksTypeSelectChange(step3Dto.trucksTypeId)"
+                              displayExpr="displayName"
+                              valueExpr="id"
+                              required
+                              [disabled]="
                                 step3Dto.transportTypeId == null
                                   ? true
                                   : null || allTransportTypes == null
@@ -961,19 +1156,35 @@
                                   ? true
                                   : null
                               "
-                              [(ngModel)]="step3Dto.trucksTypeId"
-                              [class.is-valid]="
-                                step3Form.get('truckType').valid && (step3Form.get('truckType').dirty || step3Form.get('truckType').touched)
-                              "
-                              [class.is-invalid]="
-                                step3Form.get('truckType').invalid && (step3Form.get('truckType').dirty || step3Form.get('truckType').touched)
-                              "
-                              (change)="trucksTypeSelectChange(step3Dto.trucksTypeId)"
-                              required
+                              placeholder="{{ l('SelectaTruckType') }}"
                             >
-                              <option [ngValue]="null" selected disabled>{{ l('SelectaTruckType') }}</option>
-                              <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                            </select>
+                            </dx-select-box>
+                            <!--                            <select-->
+                            <!--                              class="form-control"-->
+                            <!--                              name="truckType"-->
+                            <!--                              formControlName="truckType"-->
+                            <!--                              [attr.disabled]="-->
+                            <!--                                step3Dto.transportTypeId == null-->
+                            <!--                                  ? true-->
+                            <!--                                  : null || allTransportTypes == null-->
+                            <!--                                  ? true-->
+                            <!--                                  : null || allTrucksTypes == null-->
+                            <!--                                  ? true-->
+                            <!--                                  : null-->
+                            <!--                              "-->
+                            <!--                              [(ngModel)]="step3Dto.trucksTypeId"-->
+                            <!--                              [class.is-valid]="-->
+                            <!--                                step3Form.get('truckType').valid && (step3Form.get('truckType').dirty || step3Form.get('truckType').touched)-->
+                            <!--                              "-->
+                            <!--                              [class.is-invalid]="-->
+                            <!--                                step3Form.get('truckType').invalid && (step3Form.get('truckType').dirty || step3Form.get('truckType').touched)-->
+                            <!--                              "-->
+                            <!--                              (change)="trucksTypeSelectChange(step3Dto.trucksTypeId)"-->
+                            <!--                              required-->
+                            <!--                            >-->
+                            <!--                              <option [ngValue]="null" selected disabled>{{ l('SelectaTruckType') }}</option>-->
+                            <!--                              <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                            <!--                            </select>-->
                           </div>
                         </div>
 
@@ -1014,11 +1225,16 @@
                             'spinner spinner-success spinner-right mr-1 ml-1': capacityLoading
                           }"
                         >
-                          <select
-                            class="form-control"
+                          <dx-select-box
                             name="capacity"
                             formControlName="capacity"
-                            [attr.disabled]="
+                            [(value)]="step3Dto.capacityId"
+                            [dataSource]="allCapacities"
+                            [searchEnabled]="true"
+                            displayExpr="displayName"
+                            valueExpr="id"
+                            required
+                            [disabled]="
                               capacityLoading
                                 ? true
                                 : null || step3Dto.trucksTypeId == null
@@ -1031,18 +1247,38 @@
                                 ? true
                                 : null
                             "
-                            [(ngModel)]="step3Dto.capacityId"
-                            [class.is-valid]="
-                              step3Form.get('capacity').valid && (step3Form.get('capacity').dirty || step3Form.get('capacity').touched)
-                            "
-                            [class.is-invalid]="
-                              step3Form.get('capacity').invalid && (step3Form.get('capacity').dirty || step3Form.get('capacity').touched)
-                            "
-                            required
+                            placeholder="{{ l('SelectaCapacity') }}"
                           >
-                            <option [ngValue]="null" selected disabled>{{ l('SelectaCapacity') }}</option>
-                            <option *ngFor="let item of allCapacities" value="{{ item.id }}">{{ item.displayName }}</option>
-                          </select>
+                          </dx-select-box>
+                          <!--                          <select-->
+                          <!--                            class="form-control"-->
+                          <!--                            name="capacity"-->
+                          <!--                            formControlName="capacity"-->
+                          <!--                            [attr.disabled]="-->
+                          <!--                              capacityLoading-->
+                          <!--                                ? true-->
+                          <!--                                : null || step3Dto.trucksTypeId == null-->
+                          <!--                                ? true-->
+                          <!--                                : null || step3Dto.transportTypeId == null-->
+                          <!--                                ? true-->
+                          <!--                                : null || allTransportTypes == null-->
+                          <!--                                ? true-->
+                          <!--                                : null || allTrucksTypes == null-->
+                          <!--                                ? true-->
+                          <!--                                : null-->
+                          <!--                            "-->
+                          <!--                            [(ngModel)]="step3Dto.capacityId"-->
+                          <!--                            [class.is-valid]="-->
+                          <!--                              step3Form.get('capacity').valid && (step3Form.get('capacity').dirty || step3Form.get('capacity').touched)-->
+                          <!--                            "-->
+                          <!--                            [class.is-invalid]="-->
+                          <!--                              step3Form.get('capacity').invalid && (step3Form.get('capacity').dirty || step3Form.get('capacity').touched)-->
+                          <!--                            "-->
+                          <!--                            required-->
+                          <!--                          >-->
+                          <!--                            <option [ngValue]="null" selected disabled>{{ l('SelectaCapacity') }}</option>-->
+                          <!--                            <option *ngFor="let item of allCapacities" value="{{ item.id }}">{{ item.displayName }}</option>-->
+                          <!--                          </select>-->
                         </div>
                         <span class="form-text text-muted">{{ l('SelectaCapacity') }}</span>
                       </div>
