@@ -69,7 +69,7 @@
                 class="form-control p-0"
                 name="facility{{ i }}"
                 [(value)]="wayPointsList[i].facilityId"
-                [dataSource]="filterFacilitiesForDropDown(record.pickingType === PickingType.Pickup, i)"
+                [dataSource]="record.pickingType === PickingType.Pickup ? filteredPickupFacilities[i] : filteredDropFacilities[i]"
                 [searchEnabled]="true"
                 (onSelectionChanged)="
                   RouteStepCordSetter(i, wayPointsList[i].facilityId);
