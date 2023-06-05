@@ -1,6 +1,7 @@
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
+using Abp.Linq.Extensions;
 using Abp.Timing;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -553,7 +554,221 @@ namespace TACHYON.Dashboards.Host
         }
 
 
+        public async Task<List<GetRequestsHeapMapOutput>> GetRequestsHeapMap(DateRangeInput input)
+        {
+            DisableTenancyFilters();
+            var origins = await _shippingRequestRepository.GetAll()
+                .Where(x => x.CreationTime.Date > input.StartDate && x.CreationTime.Date < input.EndDate && x.OriginCityId != null)
+                .Select(x => new { origin = x.OriginCityFk.DisplayName, x.OriginCityId})
+                .GroupBy(x => new { x.origin , x.OriginCityId})
+                .OrderByDescending(x => x.Count())
+                .Select(x => new GetRequestsHeapMapOutput
+                {
+                    CityType = "origin",
+                    NumberOfRequests = x.Count(),
+                    CityName = x.Key.origin,
+                    CityId = x.Key.OriginCityId.Value
+                }).Take(5).ToListAsync();
+
+
+            var destinations =await _shippingRequestRepository.GetAll()
+                .Where(x => x.CreationTime.Date > input.StartDate && x.CreationTime.Date < input.EndDate)
+                .SelectMany(x => x.ShippingRequestDestinationCities.Select(x => new { dest = x.CityFk.DisplayName, x.CityId }))
+                .GroupBy(x => new { x.dest, x.CityId })
+                .OrderByDescending(x => x.Count())
+                .Select(x => new GetRequestsHeapMapOutput
+                {
+                    CityType = "destination",
+                    NumberOfRequests = x.Count(),
+                    CityName = x.Key.dest,
+                    CityId = x.Key.CityId
+                }).Take(5).ToListAsync();
+
+            return origins.Union(destinations).OrderByDescending(x=>x.NumberOfRequests).Take(5).ToList();
+
+        }
+
+        public async Task<GetInvoicesPaidBeforeDueDateOutput> GetInvoicesPaidBeforeDueDate()
+        {
+            DisableTenancyFilters();
+            var invoices = _invoiceRepository.GetAll().Where(x => x.IsPaid && ((x.ConsiderConfirmationAndLoadingDates && x.ConfirmationDate.Value.Date.Month == Clock.Now.Month) ||
+            (!x.ConsiderConfirmationAndLoadingDates && x.CreationTime.Date.Month == Clock.Now.Month)));
+
+            var total = await invoices.CountAsync();
+            var paidBeforeDueDate = total != 0 ? (await invoices.Where(x => x.PaymentDate < x.DueDate).CountAsync()) / total * 100 :0;
+            var unPaidBeforeDueDate = total != 0 ? 100 - paidBeforeDueDate :0;
+
+            return new GetInvoicesPaidBeforeDueDateOutput
+            {
+                totalInvoices = total,
+                PaidInvoicesBeforeDueDatePercantage = paidBeforeDueDate,
+                UnPaidInvoicesBeforeDueDatePercantage = unPaidBeforeDueDate
+            };
+
+        }
+
+        public async Task<GetCostVsSellingTruckAggregationTripsOutput> GetCostVsSellingTruckAggregationTrips (DateRangeInput input)
+        {
+            return await ReturnCostSellingCalcPerMonth(input, false);
+        }
+
+        public async Task<GetCostVsSellingTruckAggregationTripsOutput> GetCostVsSellingSAASTrips(DateRangeInput input)
+        {
+            return await ReturnCostSellingCalcPerMonth(input, true);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filter" 1: all, 2: SAAS , 3:Truck Aggregation></param>
+        /// <returns></returns>
+        public async Task<GetOverallAmountForAlltripsOutput> GetOverallAmountForAlltrips(int filter)
+        {
+            DisableTenancyFilters();
+            var trips = await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.ActualPickupDate.HasValue)
+                .WhereIf(filter == 3, x => (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId) ||
+                            (x.ShippingRequestFk == null && x.ShipperTenantId != x.CarrierTenantId))
+                .WhereIf(filter == 2, x => (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId) ||
+                            (x.ShippingRequestFk == null && x.ShipperTenantId == x.CarrierTenantId))
+                .Select(x => new
+                {
+                    x.TotalAmountWithCommission,
+                    x.SubTotalAmount,
+                })
+                .ToListAsync();
+            var selling = trips.Sum(x => x.TotalAmountWithCommission).Value;
+            var cost = trips.Sum(x => x.SubTotalAmount).Value;
+            return new GetOverallAmountForAlltripsOutput { Selling =selling, Cost = cost, Profit = selling - cost };
+        }
+
+        public async Task<GetOverallAmountForAlltripsOutput> GetTruckAggregationInvoicesCostAndSelling()
+        {
+            return await GetInvoicesCostAndSelling(false);
+        }
+
+        public async Task<GetOverallAmountForAlltripsOutput> GetSAASInvoicesCostAndSelling()
+        {
+            return await GetInvoicesCostAndSelling(true);
+        }
+        /// <summary>
+        /// Filter: 1 = Normal , 2= SAAS, 3=HomeDelivery
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public async Task<List<GetUpcomingTripsOutput>> GetUpcomingTrips(int filter)
+        {
+            DisableTenancyFilters();
+            var trips = await _shippingRequestTripRepository.GetAll().Where(x => x.StartTripDate.Date >= Clock.Now.Date && x.StartTripDate.Date.AddDays(7) < Clock.Now.Date)
+                .WhereIf(filter == 1, x => (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId) ||
+                            (x.ShippingRequestFk == null && x.ShipperTenantId != x.CarrierTenantId))
+                .WhereIf(filter == 2, x => (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId) ||
+                            (x.ShippingRequestFk == null && x.ShipperTenantId == x.CarrierTenantId))
+                .WhereIf(filter == 3, x => x.ShippingRequestTripFlag == ShippingRequestTripFlag.HomeDelivery)
+                .Include(x=>x.ShippingRequestDestinationCities).ThenInclude(x=>x.CityFk)
+                .Select(x => new
+                {
+                    requestOriginCity = x.ShippingRequestFk.OriginCityFk != null ? x.ShippingRequestFk.OriginCityFk.DisplayName : x.ShippingRequestFk.OriginFacility.Name + "- " + x.ShippingRequestFk.OriginFacility.CityFk.DisplayName,
+                    tripOrigin = x.OriginCityFk != null ? x.OriginCityFk.DisplayName : x.OriginFacilityFk.Name + "- " + x.OriginFacilityFk.CityFk.DisplayName,
+                    x.WaybillNumber, x.StartTripDate, x.ShippingRequestDestinationCities
+                })
+                .ToListAsync();
+
+            var dto = new List<GetUpcomingTripsOutput>();
+
+            foreach(var trip in trips)
+            {
+                var origin = trip.requestOriginCity != null ? trip.requestOriginCity : trip.tripOrigin;
+                var destination = "";
+                int index = 1;
+                foreach(var dest in trip.ShippingRequestDestinationCities)
+                {
+                    if (index == 1)
+                        destination = dest.CityFk.DisplayName;
+                    else
+                        destination = destination + "," + dest.CityFk.DisplayName;
+                    index++;
+                }
+
+                dto.Add(new GetUpcomingTripsOutput { OrigiCity = origin, DestinationCity = destination, StartTripDate =trip.StartTripDate, WaybillNumber=trip.WaybillNumber.ToString() });
+            }
+
+            return dto;
+
+
+        }
+
         #region Helper
+        private async Task<GetOverallAmountForAlltripsOutput> GetInvoicesCostAndSelling(bool isSaas)
+        {
+            DisableTenancyFilters();
+            var trips = await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.ActualPickupDate.HasValue && x.CreationTime.Month == Clock.Now.Month)
+                .WhereIf(!isSaas, x => (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId) ||
+                            (x.ShippingRequestFk == null && x.ShipperTenantId != x.CarrierTenantId))
+                .WhereIf(isSaas, x => (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId) ||
+                            (x.ShippingRequestFk == null && x.ShipperTenantId == x.CarrierTenantId))
+                .Select(x => new
+                {
+                    x.TotalAmountWithCommission,
+                    x.SubTotalAmount,
+                })
+                .ToListAsync();
+            var selling = trips.Sum(x => x.TotalAmountWithCommission).Value;
+            var cost = trips.Sum(x => x.SubTotalAmount).Value;
+            return new GetOverallAmountForAlltripsOutput { Selling = selling, Cost = cost, Profit = selling - cost };
+        }
+
+        private async Task<GetCostVsSellingTruckAggregationTripsOutput> ReturnCostSellingCalcPerMonth(DateRangeInput input, bool isForSaasTrip)
+        {
+            DisableTenancyFilters();
+            var trips = (await _shippingRequestTripRepository.GetAll()
+                .Where(x => x.ActualPickupDate.HasValue && x.CreationTime.Date > input.StartDate && x.CreationTime.Date < input.EndDate)
+                .WhereIf(!isForSaasTrip,x=> (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId) ||
+                            (x.ShippingRequestFk == null && x.ShipperTenantId != x.CarrierTenantId))
+                .WhereIf(isForSaasTrip, x => (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId) ||
+                            (x.ShippingRequestFk == null && x.ShipperTenantId == x.CarrierTenantId))
+                .Select(x => new
+                {
+                    x.TotalAmountWithCommission,
+                    x.SubTotalAmount,
+                    x.CreationTime
+                })
+                .ToListAsync())
+                .Select(x => new { x.TotalAmountWithCommission, x.SubTotalAmount, CreationTime = x.CreationTime.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.CreationTime.Month) })
+                .GroupBy(x => x.CreationTime);
+
+
+
+            var dto = new GetCostVsSellingTruckAggregationTripsOutput()
+            {
+                Selling = new List<ChartCategoryPairedValuesDto>(),
+                Cost = new List<ChartCategoryPairedValuesDto>(),
+                Profit = new List<ChartCategoryPairedValuesDto>()
+            };
+
+            foreach (var monthWithYear in MonthsWithYearsInRange(input.StartDate, input.EndDate))
+            {
+                var trip = trips.FirstOrDefault(x => x.Key == monthWithYear);
+                if (trip != null)
+                {
+                    var selling = Convert.ToInt32(trip.Sum(x => x.TotalAmountWithCommission).Value);
+                    var cost = Convert.ToInt32(trip.Sum(x => x.SubTotalAmount).Value);
+                    var profit = selling - cost;
+                    dto.Selling.Add(new ChartCategoryPairedValuesDto { X = trip.Key, Y = selling });
+                    dto.Cost.Add(new ChartCategoryPairedValuesDto { X = trip.Key, Y = cost });
+                    dto.Profit.Add(new ChartCategoryPairedValuesDto { X = trip.Key, Y = profit });
+                }
+                else
+                {
+                    dto.Selling.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                    dto.Cost.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                    dto.Profit.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                }
+
+            }
+            return dto;
+        }
+
         private IEnumerable<string> MonthsWithYearsInRange(DateTime start, DateTime end)
         {
             for (DateTime date = start; date <= end; date = date.AddMonths(1))
