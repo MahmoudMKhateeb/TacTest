@@ -194,8 +194,9 @@ namespace TACHYON.Dashboards.Carrier
                     CompanyName = x.ShippingRequestFK.RequestType == ShippingRequestType.TachyonManageService
                         ? LocalizationSource.GetString("TachyonManageService")
                         : x.Tenant.companyName,
-                    ShippingRequestId = x.ShippingRequestId
-                }).ToListAsync();
+                    ShippingRequestId = x.ShippingRequestId,
+                    CreationTime = x.CreationTime
+                }).OrderByDescending(x=>x.CreationTime).ToListAsync();
 
             return directRequests;
         }
