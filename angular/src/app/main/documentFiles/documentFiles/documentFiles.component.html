@@ -33,8 +33,8 @@
               </dxo-summary>
 
               <dxi-column cellTemplate="cellTemplateActions" [allowFiltering]="false" [allowSorting]="false" [width]="50"></dxi-column>
-              <dxi-column *ngIf="isTachyonDealerOrHost" dataField="submitterTenatTenancyName" caption="{{ l('SubmitterTenant') }}"></dxi-column>
-              <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="date"></dxi-column>
+              <dxi-column *ngIf="!appSession.tenantId" dataField="submitterTenatTenancyName" caption="{{ l('SubmitterTenant') }}"></dxi-column>
+              <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="date" [format]="'dd/MM/yyyy'"></dxi-column>
               <dxi-column dataField="documentTypeName" caption="{{ l('DatatableDocumentName') }}" [allowGrouping]="false"></dxi-column>
               <dxi-column
                 dataField="expirationDate"
@@ -48,8 +48,8 @@
               <dxi-column dataField="number" caption="{{ l('Number') }}"></dxi-column>
 
               <div *dxTemplate="let data of 'cellTemplateStatus'">
-                <span *ngIf="data.value <= todayMoment" class="text-warning"> {{ data.value | date }}</span>
-                <span *ngIf="data.value > todayMoment"> {{ data.value | date }}</span>
+                <span *ngIf="data.value <= todayMoment" class="text-warning"> {{ data.value | momentFormat: 'DD/MM/YYYY' }}</span>
+                <span *ngIf="data.value > todayMoment"> {{ data.value | momentFormat: 'DD/MM/YYYY' }}</span>
               </div>
 
               <div *dxTemplate="let options of 'cellTemplateActions'">

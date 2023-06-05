@@ -26,7 +26,7 @@
 
   <dxi-column cellTemplate="cellTemplateActions" [allowFiltering]="false" [allowSorting]="false" [width]="50"></dxi-column>
   <dxi-column dataField="driverName" caption="{{ l('DriverName') }}"></dxi-column>
-  <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="datetime"></dxi-column>
+  <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="datetime" [format]="'dd/MM/yyyy hh:mm a'"></dxi-column>
   <dxi-column dataField="documentTypeName" caption="{{ l('DatatableDocumentName') }}" [allowGrouping]="false"></dxi-column>
   <dxi-column dataField="expirationDate" caption="{{ l('ExpirationDate') }}" dataType="date" cellTemplate="cellTemplateStatus"></dxi-column>
   <dxi-column dataField="extn" caption="{{ l('Extn') }}" [allowFiltering]="false"></dxi-column>

@@ -190,9 +190,9 @@
                                 <a href="#" class="text-dark-75 text-hover-primary font-weight-bold"
                                   >{{ point.pickingType === pickingTypeEnum.Pickup ? l('Pickup') : l('Drop') }}</a
                                 >
-                                <span class="text-muted ml-2" *ngIf="point.startTime">{{point.startTime | momentFormat: 'L'}}</span>
+                                <span class="text-muted ml-2" *ngIf="point.startTime">{{point.startTime | momentFormat: 'DD/MM/YYYY'}}</span>
                                 <span *ngIf="point.endTime"> -</span>
-                                <span class="text-muted ml-2" *ngIf="point.endTime">{{point.endTime | momentFormat: 'L'}}</span>
+                                <span class="text-muted ml-2" *ngIf="point.endTime">{{point.endTime | momentFormat: 'DD/MM/YYYY'}}</span>
                               </div>
 
                               <div class="btn-group mt-6" *ngIf="trip.driver ">
