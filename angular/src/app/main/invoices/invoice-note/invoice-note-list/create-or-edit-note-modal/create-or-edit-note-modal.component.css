@@ -2,3 +2,8 @@
 .p-multiselect {
   width: 100% !important;
 }
+
+.checkClass {
+  padding-left: 2.3rem;
+  padding-top: 1rem;
+}

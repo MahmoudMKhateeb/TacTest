@@ -3096,6 +3096,7 @@
 	<text name="TripSavedTemplate">فوالب الرحلة</text>
     <text name="day">يوم</text>
     <text name="withinAWeek">خلال أسبوع</text>
+    <text name="IsTaxVatIncluded">يتضمن الضريبة</text>
 		
 	</texts>
 </localizationDictionary>

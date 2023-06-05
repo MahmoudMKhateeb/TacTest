@@ -3380,6 +3380,7 @@
     <text name="ExportDedicatedToExcel">Export dedicated request</text>
     <text name="day">day</text>
     <text name="withinAWeek">with in a Week</text>
+    <text name="IsTaxVatIncluded">Is tax vat included</text>
     
 	<text name="DedicatedShippingRequestSavedTemplate">Dedicated Shipping Request Templates</text>
 	<text name="ShippingRequestSavedTemplate">Normal Shipping Request Templates</text>

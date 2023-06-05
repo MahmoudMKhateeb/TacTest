@@ -179,7 +179,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
     if (this.form.id) this.form.invoiceItems = [];
 
     if (this.InvoiceType == 1) {
-      this._invoiceNoteServiceProxy.getAllInvoicmItemDto(id).subscribe((res) => {
+      this._invoiceNoteServiceProxy.getAllInvoicmItemDto(id, this.form.isTaxVatIncluded).subscribe((res) => {
         this.allWaybills = res;
         this.waybillsLoading = false;
         console.log(this.form.invoiceNumber);
@@ -199,7 +199,7 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
         });
       });
     } else {
-      this._invoiceNoteServiceProxy.getAllSubmitInvoicmItemDto(id).subscribe((res) => {
+      this._invoiceNoteServiceProxy.getAllSubmitInvoicmItemDto(id, this.form.isTaxVatIncluded).subscribe((res) => {
         this.allWaybills = res;
         this.waybillsLoading = false;
         console.log(this.form.invoiceNumber);
@@ -219,6 +219,9 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
     }
   }
   calculator(price: number, taxVat: number, index: number): void {
+    if (!this.form.isTaxVatIncluded) {
+      taxVat = 0;
+    }
     this.allWaybills[index].vatAmount = (price * taxVat) / 100;
     this.allWaybills[index].totalAmount = this.allWaybills[index].vatAmount + price;
     this.selectedWaybills = this.allWaybills.filter((item) => {
@@ -245,8 +248,10 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
   }
 
   calculatePrice(newPrice: number): void {
-    var newVatAmount: number;
-    newVatAmount = (newPrice * 15) / 100;
+    var newVatAmount: number = 0;
+    if (this.form.isTaxVatIncluded) {
+      newVatAmount = (newPrice * 15) / 100;
+    }
     this.newAttribute.vatAmount = newVatAmount;
     var newTotalAmount = newPrice + newVatAmount;
     this.newAttribute.totalAmount = newTotalAmount;
