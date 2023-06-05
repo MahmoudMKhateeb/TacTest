@@ -8,13 +8,23 @@
       <h3 class="card-label" *ngIf="isForActor">{{ l('NewInvoicesVsPaidInvoices') }}</h3>
     </div>
     <div class="row border-left pl-4" *ngIf="!isForActor">
-      <div class="col-6 d-flex">
-        <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i>
-        {{ (isShipper || isTachyonDealerOrHost ? 'UnPaidInvoice' : 'Paid') | localize }}
-      </div>
-      <div class="col-6 d-flex">
-        <i class="fa fa-circle text-gray mx-1"></i> {{ (isShipper || isTachyonDealerOrHost ? 'PaidInvoice' : 'Claimed') | localize }}
-      </div>
+      <ng-container *ngIf="!isTachyonDealerOrHost">
+        <div class="col-6 d-flex">
+          <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i>
+          {{ (isShipper ? 'UnPaidInvoice' : 'Paid') | localize }}
+        </div>
+        <div class="col-6 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ (isShipper ? 'PaidInvoice' : 'Claimed') | localize }}</div>
+      </ng-container>
+      <ng-container *ngIf="isTachyonDealerOrHost">
+        <div class="col-5 d-flex">
+          <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i>
+          {{ 'Paid' | localize }}
+        </div>
+        <div class="col-5 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ 'UnPaid' | localize }}</div>
+        <div class="col-2 d-flex text-right">
+          <app-host-tms-widget-filters (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
+        </div>
+      </ng-container>
     </div>
     <div class="row border-left pl-4" *ngIf="isForActor">
       <div class="col-4 d-flex">
