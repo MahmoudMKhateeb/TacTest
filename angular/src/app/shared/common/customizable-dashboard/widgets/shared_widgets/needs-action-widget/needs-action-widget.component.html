@@ -5,7 +5,7 @@
         <div class="card-title mb-4">
           <div class="card-label">{{ 'NeedsAction' | localize }}</div>
         </div>
-        <div appMakeScrollable class="overflow-auto">
+        <div appMakeScrollable class="overflow-auto" [cssClassSelector]="'overflow-auto'">
           <div
             class="card card-custom dashboard-plain-card mb-2 clickable-item overflow-hidden"
             *ngFor="let trip of needsActionTrips"

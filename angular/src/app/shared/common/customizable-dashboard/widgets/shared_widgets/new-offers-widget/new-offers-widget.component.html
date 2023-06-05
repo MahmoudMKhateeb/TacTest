@@ -8,7 +8,7 @@
         <div class="w-100 text-center gutter-b">
           <img class="new-price-offers-img" src="assets/SVG/New_price_offer.svg" alt="" />
         </div>
-        <div appMakeScrollable class="overflow-auto">
+        <div appMakeScrollable class="overflow-auto" [cssClassSelector]="'overflow-auto'">
           <div class="d-flex justify-content-between mb-4 px-4 clickable-item" *ngFor="let offer of newOffers" (click)="goToPriceOffer(offer)">
             <div>
               {{ offer.referenceNumber }}
