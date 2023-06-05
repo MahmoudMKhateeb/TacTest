@@ -136,9 +136,24 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
         '',
         [],
         [
-          new AppMenuItem('TachyonManageService', 'Pages', '', '/app/main/tms/shippingRequests'),
-          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking/shipmentTracking'),
-          new AppMenuItem('DirectShipmentTracking', 'Pages.Shipment.Tracking.DirectShipmentTracking', '', '/app/main/tracking/directShipmentTracking'),
+          new AppMenuItem('TachyonManageService', 'Pages', '', '/app/main/tms/shippingRequests', undefined, undefined, undefined, {
+            showType: 1,
+          }),
+          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, {
+            showType: 1,
+          }),
+          new AppMenuItem(
+            'DirectShipmentTracking',
+            'Pages.Shipment.Tracking.DirectShipmentTracking',
+            '',
+            '/app/main/tracking/directShipmentTracking',
+            undefined,
+            undefined,
+            undefined,
+            {
+              showType: 1,
+            }
+          ),
           new AppMenuItem(
             'SavedTemplates',
             'Pages.EntityTemplate',
@@ -150,7 +165,9 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.TachyonDealer')
           ),
-          new AppMenuItem('Requests', 'Pages', '', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem('Requests', 'Pages', '', '/app/main/shippingRequests/shippingRequests', undefined, undefined, undefined, {
+            showType: 1,
+          }),
           new AppMenuItem(
             'Marketplace',
             'Pages',
