@@ -2,10 +2,15 @@
   <div class="card-body p-4">
     <div class="month-section" [class.isHostOrTMS]="isTachyonDealerOrHost">
       <div class="d-flex flex-column">
-        <div *ngIf="isTachyonDealerOrHost" class="mb-8 custom-title">
-          <strong>
+        <div *ngIf="isTachyonDealerOrHost" class="mb-8 d-flex justify-content-between">
+          <strong class="custom-title">
             {{ 'UpcomingTrips' | localize }}
           </strong>
+          <app-host-tms-widget-filters
+            [isForTripType]="true"
+            [isDateDropDown]="false"
+            (filterSelected)="selectedFilter($event)"
+          ></app-host-tms-widget-filters>
         </div>
         <div class="d-flex justify-content-between pb-4 flex-wrap-reverse" [class.mt-4]="isTachyonDealerOrHost">
           <div class="month-name">
@@ -27,13 +32,32 @@
         *ngFor="let trip of upcomingTripsForSelectedDay"
         (click)="goToTrackingPage(trip)"
       >
-        <div class="ribbon-target bg-primary" style="top: -2px; right: 20px">{{ trip.tripType }}</div>
-        <div class="card-body p-4 d-flex justify-content-between align-items-end">
-          <app-from-to [from]="trip.origin" [to]="trip.destinations" class="w-45"></app-from-to>
-          <div class="w-55">
-            <div class="title">{{ trip.waybillNumber }}</div>
+        <ng-container *ngIf="!isTachyonDealerOrHost">
+          <div class="ribbon-target bg-primary" style="top: -2px; right: 20px">{{ trip.tripType }}</div>
+          <div class="card-body p-4 d-flex justify-content-between align-items-end">
+            <app-from-to [from]="trip.origin" [to]="trip.destinations" class="w-45"></app-from-to>
+            <div class="w-55">
+              <div class="title">{{ trip.waybillNumber }}</div>
+            </div>
           </div>
-        </div>
+        </ng-container>
+        <ng-container *ngIf="isTachyonDealerOrHost">
+          <div class="ribbon-target bg-primary" style="top: -2px; right: 20px">
+            {{
+              selectedFilterId == normalSaasHomeDeliveryEnum.Normal
+                ? 'Normal'
+                : selectedFilterId == normalSaasHomeDeliveryEnum.Saas
+                ? 'Saas'
+                : 'HomeDelivery'
+            }}
+          </div>
+          <div class="card-body p-4 d-flex justify-content-between align-items-end">
+            <app-from-to [from]="trip.origiCity" [to]="trip.destinationCity" class="w-45"></app-from-to>
+            <div class="w-55">
+              <div class="title">{{ trip.waybillNumber }}</div>
+            </div>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

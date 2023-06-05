@@ -3,6 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from '@node_modules/moment';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { AllSaasTruckAggregationFilterEnum } from '@app/shared/common/customizable-dashboard/host-tms-widget-filters/all-saas-truckaggregation-filter-enum';
+import { NormalSaasHomeDeliveryEnum } from '@app/shared/common/customizable-dashboard/host-tms-widget-filters/normal-saas-homedelivery-enum';
 
 @Component({
   selector: 'app-host-tms-widget-filters',
@@ -16,6 +17,7 @@ export class HostTmsWidgetFiltersComponent extends AppComponentBase implements O
   }>(null);
   @Output() filterSelected: EventEmitter<number> = new EventEmitter<number>();
   @Input() isDateDropDown = true;
+  @Input() isForTripType = false;
   isDropdownOpen = false;
   showCustomStartEnd = false;
   start: Date;
@@ -33,6 +35,14 @@ export class HostTmsWidgetFiltersComponent extends AppComponentBase implements O
       const startDate = moment().subtract(12, 'months').startOf('month');
       const endDate = moment();
       this.optionSelected.emit({ start: startDate, end: endDate });
+      return;
+    }
+    if (this.isForTripType) {
+      this.filtersArray = this.enumService.transform(NormalSaasHomeDeliveryEnum).map((item) => {
+        item.key = Number(item.key);
+        return item;
+      });
+      this.filterSelected.emit(NormalSaasHomeDeliveryEnum.Normal);
       return;
     }
     this.filtersArray = this.enumService.transform(AllSaasTruckAggregationFilterEnum).map((item) => {
