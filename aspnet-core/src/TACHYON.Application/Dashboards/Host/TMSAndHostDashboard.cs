@@ -1,6 +1,5 @@
 using Abp.Authorization;
 using Abp.Domain.Repositories;
-using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Timing;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +19,7 @@ using TACHYON.Dashboards.Shipper.Dto;
 using TACHYON.Invoices;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
@@ -37,10 +37,11 @@ namespace TACHYON.Dashboards.Host
         private readonly UserManager _userManager;
         private readonly IRepository<Invoice, long> _invoiceRepository;
         private readonly IRepository<SubmitInvoice, long> _submitInvoiceRepository;
+        private readonly IRepository<RoutPoint, long> _routePointRepository;
 
 
 
-        public TMSAndHostDashboard(IRepository<Tenant> tenantRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<Truck, long> truckRepository, UserManager userManager, IRepository<Invoice, long> invoiceRepository, IRepository<SubmitInvoice, long> submitInvoiceRepository)
+        public TMSAndHostDashboard(IRepository<Tenant> tenantRepository, IRepository<ShippingRequest, long> shippingRequestRepository, IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<Truck, long> truckRepository, UserManager userManager, IRepository<Invoice, long> invoiceRepository, IRepository<SubmitInvoice, long> submitInvoiceRepository, IRepository<RoutPoint, long> routePointRepository)
         {
             _tenantRepository = tenantRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -49,6 +50,7 @@ namespace TACHYON.Dashboards.Host
             _userManager = userManager;
             _invoiceRepository = invoiceRepository;
             _submitInvoiceRepository = submitInvoiceRepository;
+            _routePointRepository = routePointRepository;
         }
 
         public async Task<GetRegisteredCompaniesNumberOutput> GetRegisteredCompaniesNumber()
@@ -658,7 +660,7 @@ namespace TACHYON.Dashboards.Host
         public async Task<List<GetUpcomingTripsOutput>> GetUpcomingTrips(int filter)
         {
             DisableTenancyFilters();
-            var trips = await _shippingRequestTripRepository.GetAll().Where(x => x.StartTripDate.Date >= Clock.Now.Date && x.StartTripDate.Date.AddDays(7) < Clock.Now.Date)
+            var trips = await _shippingRequestTripRepository.GetAll().Where(x => x.StartTripDate.Date >= Clock.Now.Date && x.StartTripDate.Date < Clock.Now.AddDays(7).Date)
                 .WhereIf(filter == 1, x => (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId) ||
                             (x.ShippingRequestFk == null && x.ShipperTenantId != x.CarrierTenantId))
                 .WhereIf(filter == 2, x => (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId == x.ShippingRequestFk.CarrierTenantId) ||
@@ -697,8 +699,100 @@ namespace TACHYON.Dashboards.Host
 
         }
 
-        #region Helper
-        private async Task<GetOverallAmountForAlltripsOutput> GetInvoicesCostAndSelling(bool isSaas)
+
+        public async Task<List<GetNeedsActionTripsAndRequestsOutput>> GetNeedsActionTripsAndRequests(DateRangeInput input)
+        {
+            DisableTenancyFilters();
+            var trips = await (from point in _routePointRepository.GetAll() where
+                               point.ShippingRequestTripFk.CreationTime > input.StartDate && point.ShippingRequestTripFk.CreationTime < input.EndDate &&
+                               ((point.ShippingRequestTripFk.ShippingRequestId != null && !point.ShippingRequestTripFk.ShippingRequestFk.IsDeleted) || 
+                               point.ShippingRequestTripFk.ShippingRequestId == null ) &&
+                        point.ShippingRequestTripFk.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
+                        && point.PickingType == PickingType.Dropoff && !point.IsComplete && (!point.IsPodUploaded || !point.ShippingRequestTripFk.EndWorking.HasValue)
+                        select new GetNeedsActionTripsAndRequestsOutput()
+                        {
+                            OriginCity = point.ShippingRequestTripFk.OriginFacilityFk.CityFk.DisplayName,
+                            DestinationCity = point.ShippingRequestTripFk.ShippingRequestFk != null 
+                            ? point.ShippingRequestTripFk.ShippingRequestFk.ShippingRequestDestinationCities.Select(x=>x.CityFk.DisplayName).ToList()
+                            : point.ShippingRequestTripFk.ShippingRequestDestinationCities.Count() >0 
+                            ? point.ShippingRequestTripFk.ShippingRequestDestinationCities.Select(x=>x.CityFk.DisplayName).ToList()
+                            : new List<string> { point.FacilityFk.CityFk.DisplayName },
+                            WaybillOrRequestReference = point.ShippingRequestTripFk.RouteType.HasValue
+                                ? (point.ShippingRequestTripFk.RouteType == ShippingRequestRouteType.SingleDrop
+                                    ? point.ShippingRequestTripFk.WaybillNumber.ToString()
+                                    : point.WaybillNumber.ToString())
+                                : (point.ShippingRequestTripFk.ShippingRequestFk.RouteTypeId ==
+                                    ShippingRequestRouteType.SingleDrop
+                                    ? point.ShippingRequestTripFk.WaybillNumber.ToString()
+                                    : point.WaybillNumber.ToString()),
+                            ActionName = !point.IsPodUploaded ?"POD" :"Receiver Code",
+                        }).ToListAsync();
+
+
+            var requestsNeedsAction =await _shippingRequestRepository.GetAll().Where(x => x.Status == ShippingRequestStatus.NeedsAction
+            && x.CreationTime > input.StartDate && x.CreationTime.Date < input.EndDate).Select(x => new GetNeedsActionTripsAndRequestsOutput
+            {
+                ActionName = "Price Agreement",
+                OriginCity = x.OriginCityFk != null ? x.OriginCityFk.DisplayName : $"{x.OriginFacility.Name}-{x.OriginFacility.CityFk.DisplayName}",
+                DestinationCity = x.ShippingRequestDestinationCities.Select(x => x.CityFk.DisplayName).ToList(),
+                WaybillOrRequestReference = x.ReferenceNumber
+            }).ToListAsync() ;
+
+            return trips.Union(requestsNeedsAction).ToList();
+        }
+
+
+        public async Task<GetNumberOfTruckAggregVsSAASTripsOutput> GetNumberOfTruckAggregVsSAASTrips (DateRangeInput input)
+        {
+            DisableTenancyFilters();
+            var query = _shippingRequestTripRepository.GetAll().Where(x => x.CreationTime.Date > input.StartDate && x.CreationTime.Date < input.EndDate);
+
+            var truckAggregTrips = (await query.Where(x=>x.ShippingRequestFk != null).Select(x => x.CreationTime).ToListAsync())
+                .Select(x => new { CreationTime = x.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Month) }).GroupBy(x => x.CreationTime);
+
+
+            var saasTrips = (await query.Where(x => x.ShippingRequestId == null).Select(x => x.CreationTime).ToListAsync())
+                .Select(x => new { CreationTime = x.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Month) }).GroupBy(x => x.CreationTime);
+
+
+            var dto = new GetNumberOfTruckAggregVsSAASTripsOutput
+            {
+                SAASTrips = new List<ChartCategoryPairedValuesDto>(),
+                TruckAggregationTrips = new List<ChartCategoryPairedValuesDto>()
+            };
+
+            foreach (var monthWithYear in MonthsWithYearsInRange(input.StartDate, input.EndDate))
+            {
+                var truckAggTrips = truckAggregTrips.FirstOrDefault(x => x.Key == monthWithYear);
+                if (truckAggTrips != null)
+                {
+                    dto.TruckAggregationTrips.Add(new ChartCategoryPairedValuesDto { X = truckAggTrips.Key, Y = truckAggTrips.Count() });
+                }
+                else
+                {
+                    dto.TruckAggregationTrips.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                }
+
+
+                var saasTrip = saasTrips.FirstOrDefault(x => x.Key == monthWithYear);
+                if (saasTrip != null)
+                {
+                    dto.SAASTrips.Add(new ChartCategoryPairedValuesDto { X = saasTrip.Key, Y = saasTrip.Count() });
+                }
+                else
+                {
+                    dto.SAASTrips.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                }
+            }
+
+            return dto;
+
+        }
+
+
+            // public async Task Get
+            #region Helper
+            private async Task<GetOverallAmountForAlltripsOutput> GetInvoicesCostAndSelling(bool isSaas)
         {
             DisableTenancyFilters();
             var trips = await _shippingRequestTripRepository.GetAll()
