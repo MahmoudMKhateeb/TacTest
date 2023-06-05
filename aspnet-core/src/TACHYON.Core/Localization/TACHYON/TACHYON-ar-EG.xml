@@ -2977,7 +2977,7 @@
 	<text name="InTransitTrips">في رحلات العبور</text>
 	<text name="NextDocDueDate">تاريخ الاستحقاق التالي للمستند</text>
 	<text name="NextInvoiceDueDate">تاريخ استحقاق الفاتورة التالي</text>
-	<text name="withinAWeek">خلال أسبوع</text>
+	<text name="withinA">خلال</text>
 	<text name="PaidVsClaimedInvoices">الفواتير المدفوعة مقابل المطالب بها</text>
 	<text name="NewActorsThisMonth">العملاء الجدد هذا الشهر</text>
 	<text name="NumberOfActors">عدد العملاء</text>
@@ -3094,6 +3094,8 @@
 	<text name="DedicatedShippingRequestSavedTemplate">قوالب طلب تأجير الشاحنات</text>
 	<text name="ShippingRequestSavedTemplate">قوالب طلب الشحن</text>
 	<text name="TripSavedTemplate">فوالب الرحلة</text>
+    <text name="day">يوم</text>
+    <text name="withinAWeek">خلال أسبوع</text>
 		
 	</texts>
 </localizationDictionary>

@@ -11,6 +11,7 @@ import { finalize } from 'rxjs/operators';
 })
 export class ShipperDueDateInDaysComponent extends AppComponentBase implements OnInit {
   DocumentsCount: number;
+  TimeUnit: string;
   loading: boolean = false;
   saving = false;
 
@@ -34,7 +35,8 @@ export class ShipperDueDateInDaysComponent extends AppComponentBase implements O
         })
       )
       .subscribe((result) => {
-        this.DocumentsCount = result;
+        this.DocumentsCount = result.count;
+        this.TimeUnit = result.timeUnit;
         this.loading = false;
         this.saving = false;
       });

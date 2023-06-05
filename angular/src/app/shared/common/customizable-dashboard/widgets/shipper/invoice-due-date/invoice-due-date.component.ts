@@ -20,6 +20,7 @@ export class InvoiceDueDateComponent extends AppComponentBase implements OnInit 
     return this._invoiceType;
   }
   InvoicesCount: number;
+  InvoiceTimeUnit: string;
   loading: boolean = false;
 
   constructor(private injector: Injector, private router: Router, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
@@ -40,7 +41,8 @@ export class InvoiceDueDateComponent extends AppComponentBase implements OnInit 
         })
       )
       .subscribe((result) => {
-        this.InvoicesCount = result;
+        this.InvoicesCount = result.count;
+        this.InvoiceTimeUnit = result.timeUnit;
         this.loading = false;
       });
   }
