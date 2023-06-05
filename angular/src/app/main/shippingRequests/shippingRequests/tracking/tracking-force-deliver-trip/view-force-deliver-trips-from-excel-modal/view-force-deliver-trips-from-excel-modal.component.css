@@ -1,0 +1,14 @@
+th,
+td {
+  width: 15%;
+}
+td {
+  word-break: break-all;
+}
+
+.customAlert {
+  background-color: #bbf9b3 !important;
+}
+.lgWidth2 {
+  max-width: 1500px !important;
+}

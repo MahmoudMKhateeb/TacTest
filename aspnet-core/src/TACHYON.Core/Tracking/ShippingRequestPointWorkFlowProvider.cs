@@ -34,6 +34,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
+using TACHYON.Tracking.AdditionalSteps;
 using TACHYON.Tracking.Dto;
 using TACHYON.Tracking.Dto.WorkFlow;
 using TACHYON.Url;
@@ -58,6 +59,7 @@ namespace TACHYON.Tracking
         private readonly IRepository<RoutPointDocument, long> _routPointDocumentRepository;
         private readonly IRepository<ShippingRequestTripTransition> _shippingRequestTripTransitionRepository;
         private readonly IRepository<RoutPointStatusTransition> _routPointStatusTransitionRepository;
+        private readonly IRepository<AdditionalStepTransition, long> _additionalStepTransition;
         private readonly ISmsSender _smsSender;
         private readonly InvoiceManager _invoiceManager;
         private readonly CommonManager _commonManager;
@@ -67,6 +69,8 @@ namespace TACHYON.Tracking
         private readonly IEntityChangeSetReasonProvider _reasonProvider;
         private readonly PenaltyManager _penaltyManager;
         private readonly BayanIntegrationManagerV3 _banIntegrationManagerV3;
+        private readonly AdditionalStepWorkflowProvider _stepWorkflowProvider;
+
 
         public IAbpSession AbpSession { set; get; }
 
@@ -91,7 +95,9 @@ namespace TACHYON.Tracking
             IEntityChangeSetReasonProvider reasonProvider,
             IRepository<ShippingRequest, long> shippingRequestRepository,
             PenaltyManager penaltyManager,
-            BayanIntegrationManagerV3 banIntegrationManagerV3)
+            BayanIntegrationManagerV3 banIntegrationManagerV3,
+            AdditionalStepWorkflowProvider stepWorkflowProvider,
+            IRepository<AdditionalStepTransition, long> additionalStepTransition)
         {
             _routPointRepository = routPointRepository;
             _shippingRequestTripRepository = shippingRequestTrip;
@@ -561,6 +567,8 @@ namespace TACHYON.Tracking
             };
             _penaltyManager = penaltyManager;
             _banIntegrationManagerV3 = banIntegrationManagerV3;
+            _stepWorkflowProvider = stepWorkflowProvider;
+            _additionalStepTransition = additionalStepTransition;
         }
 
         #endregion
@@ -829,17 +837,19 @@ namespace TACHYON.Tracking
 
         public void ForceDeliverTrip(ImportTripTransactionFromExcelDto importTripDto)
         {
-            var currentTrip = _shippingRequestTripRepository.GetAll().FirstOrDefault(x => x.WaybillNumber == importTripDto.WaybillNumber);
-
+            var currentTrip = _shippingRequestTripRepository.GetAll().Include(x=>x.ShippingRequestFk).FirstOrDefault(x => x.WaybillNumber == importTripDto.WaybillNumber);
+            
             #region Deliver Trip / MasterWaybill
 
             if (currentTrip != null)
             {
+                var isPortMovement = currentTrip.ShippingRequestFk?.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || currentTrip.ShippingRequestFk?.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                   || currentTrip.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || currentTrip.ShippingTypeId == ShippingTypeEnum.ExportPortMovements;
                 AsyncHelper.RunSync(() => Accepted(currentTrip.Id));
                 CurrentUnitOfWork.SaveChanges();
                 AsyncHelper.RunSync(() => Start(new ShippingRequestTripDriverStartInputDto() { Id = currentTrip.Id, ForceDeliverModeEnabled = true }));
                 CurrentUnitOfWork.SaveChanges();
-                CompleteTripPoints();
+                CompleteTripPoints(isPortMovement);
                 return;
             }
 
@@ -850,12 +860,13 @@ namespace TACHYON.Tracking
             var point = _routPointRepository.GetAllIncluding(x => x.RoutPointStatusTransitions)
                 .Single(x => x.WaybillNumber == importTripDto.WaybillNumber);
 
-            currentTrip = _shippingRequestTripRepository.FirstOrDefault(point.ShippingRequestTripId);
-            var isPickupPointCompleted = _routPointRepository.GetAll()
+            currentTrip = _shippingRequestTripRepository.GetAll().Include(x=>x.ShippingRequestFk).FirstOrDefault(x=> x.Id == point.ShippingRequestTripId);
+            var isAnyPickupPointCompleted = _routPointRepository.GetAll()
                 .Any(x => x.ShippingRequestTripId == point.ShippingRequestTripId &&
                           x.PickingType == PickingType.Pickup && x.Status == RoutePointStatus.FinishLoading);
-
-            if (!isPickupPointCompleted)
+            var isPortMovementTrip = currentTrip.ShippingRequestFk?.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || currentTrip.ShippingRequestFk?.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                   || currentTrip.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || currentTrip.ShippingTypeId == ShippingTypeEnum.ExportPortMovements;
+            if (!isAnyPickupPointCompleted)
             {
 
                 var isTripStarted = currentTrip.Status == ShippingRequestTripStatus.InTransit;
@@ -872,18 +883,40 @@ namespace TACHYON.Tracking
                     AsyncHelper.RunSync(() => Start(new ShippingRequestTripDriverStartInputDto() { Id = point.ShippingRequestTripId, ForceDeliverModeEnabled = true }));
                     CurrentUnitOfWork.SaveChanges();
                 }
+                
+            }
 
-                var pickupPoint = _routPointRepository.GetAllIncluding(x => x.RoutPointStatusTransitions).Single(x =>
-                    x.ShippingRequestTripId == point.ShippingRequestTripId && x.PickingType == PickingType.Pickup);
-                CompletePoint(pickupPoint);
+            var pickupPoints = _routPointRepository.GetAllIncluding(x => x.RoutPointStatusTransitions).Where(x =>
+               x.ShippingRequestTripId == point.ShippingRequestTripId && x.PickingType == PickingType.Pickup);
+            //if port movements
+            if (isPortMovementTrip)
+            {
+                var pickupPoint = pickupPoints.Single(x=> x.PointOrder == point.PointOrder - 1);
+
+                if (pickupPoint.Status == RoutePointStatus.StandBy)
+                {
+                    if (!pickupPoint.IsResolve)
+                    {
+                        AsyncHelper.RunSync(() => GoToNextLocation(pickupPoint.Id));
+                        CurrentUnitOfWork.SaveChanges();
+                    }
+               
+                    CompletePoint(pickupPoint, isPortMovementTrip);
+                }
+               
+            }
+            else // if not port movements, there is one pickup
+            {
+                var pickupPoint = pickupPoints.Single();
+                CompletePoint(pickupPoint, isPortMovementTrip);
             }
             AsyncHelper.RunSync(() => GoToNextLocation(point.Id));
             CurrentUnitOfWork.SaveChanges();
-            CompletePoint(point);
+            CompletePoint(point, isPortMovementTrip);
 
             #endregion
 
-            void CompleteTripPoints()
+            void CompleteTripPoints(bool isPortMovementTrip)
             {
                 var points = _routPointRepository.GetAllIncluding(x => x.RoutPointStatusTransitions)
                     .OrderBy(x => x.PickingType)
@@ -897,12 +930,12 @@ namespace TACHYON.Tracking
                         CurrentUnitOfWork.SaveChanges();
                     }
 
-                    CompletePoint(points[i]);
+                    CompletePoint(points[i], isPortMovementTrip);
                 }
 
             }
 
-            void CompletePoint(RoutPoint routPoint)
+            void CompletePoint(RoutPoint routPoint, bool isPortMovementTrip)
             {
                 List<DateTime> pointDates = routPoint.PickingType switch
                 {
@@ -923,21 +956,42 @@ namespace TACHYON.Tracking
                         routPoint.RoutPointStatusTransitions.Where(c => !c.IsReset).Select(v => v.Status).ToList(),
                         routPoint.Status);
                     PointTransactionDto transaction = availableTransactions?.FirstOrDefault();
+                    if (transaction == null && isPortMovementTrip && routPoint.PickingType == PickingType.Dropoff)
+                    {
+                        AsyncHelper.RunSync((() => _stepWorkflowProvider.Invoke(new AdditionalStepArgs { CurrentUser = AbpSession.ToUserIdentifier(), PointId = routPoint.Id, Code = routPoint.Code }, AdditionalStepWorkflowActionConst.ReceiverConfirmation)));
+                        CurrentUnitOfWork.SaveChanges(); break;
+                    }
+                   
                     if (transaction == null || transaction.Action.Contains("DeliveryConfirmation")
                                             || transaction.Action.Contains("UplodeDeliveryNote")) break;
 
                     AsyncHelper.RunSync((() => Invoke(new PointTransactionArgs { PointId = routPoint.Id, Code = routPoint.Code, ForceDeliverModeEnabled = true },
                         transaction.Action)));
+                    
                     CurrentUnitOfWork.SaveChanges();
                 }
 
                 var pointTransitions = _routPointStatusTransitionRepository.GetAll()
-                    .Where(x => x.PointId == routPoint.Id && !x.IsReset).ToList();
+                    .Where(x => x.PointId == routPoint.Id && !x.IsReset && x.Status != RoutePointStatus.StandBy).ToList();
+
 
                 for (var i = 0; i < pointDates.Count; i++)
                 {
-                    var realIndex = routPoint.PickingType == PickingType.Pickup ? i + 1 : i;
-                    pointTransitions[realIndex].CreationTime = pointDates[i];
+                   // var realIndex = routPoint.PickingType == PickingType.Pickup ? i + 1 : i;
+                    if (isPortMovementTrip && i > pointTransitions.Count - 1 )
+                    {
+                        //receiver code date, to enter as additional step for port movement
+                        var isPointHaveReceiverCodeTransition = _stepWorkflowProvider.IsPointContainReceiverCodeTransition(routPoint.AdditionalStepWorkFlowVersion.Value, routPoint.Id);
+                        if (isPointHaveReceiverCodeTransition) 
+                        {
+                            var additionalPointTransition = _additionalStepTransition.FirstOrDefault(x => x.RoutePointId == routPoint.Id && x.AdditionalStepType == AdditionalStepType.ReceiverCode);
+                            additionalPointTransition.CreationTime = pointDates[pointDates.Count - 1];
+                        }
+                    }
+                    else
+                    {
+                        pointTransitions[i].CreationTime = pointDates[i];
+                    }
                 }
 
 

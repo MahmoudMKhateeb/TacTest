@@ -258,6 +258,18 @@ namespace TACHYON.Tracking.AdditionalSteps
                 ? new List<AdditionalStepTransaction<AdditionalStepArgs, AdditionalStepType>>()
                 : transactions.Where(x => availableAdditionalStepTypes.Contains(x.AdditionalStepType)).ToList();
         }
+
+        public bool IsPointContainReceiverCodeTransition(
+            int workflowVersion, long pointId)
+        {
+            var transactions = GetTransactions(workflowVersion).ToList();
+
+            var transactionsStepTypes = GetTransactions(workflowVersion)
+                .Select(x => x.AdditionalStepType).ToList();
+
+
+            return transactionsStepTypes.Contains(AdditionalStepType.ReceiverCode);
+        }
         /// <summary>
         /// This API returns all point transitions, steps that done in tracking including receiver code, files
         /// </summary>

@@ -2,6 +2,7 @@
 using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.Runtime.Session;
 using Castle.Core.Internal;
 using Hangfire;
 using System;
@@ -41,44 +42,30 @@ namespace TACHYON.Shipping.Trips
         [UnitOfWork]
         protected override async Task ExecuteAsync(ForceDeliverTripJobArgs args)
         {
-
-            
-            _workFlowProvider.AbpSession.Use(args.RequestedByTenantId,args.RequestedByUserId);
-            var binaryObject = await _binaryObjectManager.GetOrNullAsync(args.BinaryObjectId);
-            UserIdentifier userIdentifier = new UserIdentifier(args.RequestedByTenantId,
-                args.RequestedByUserId);
-            if (binaryObject == null)
+            _workFlowProvider.AbpSession.Use(args.userIdentifier.TenantId,args.userIdentifier.UserId);
+            if (args.importedTripDeliveryDetails.IsNullOrEmpty() ||
+                args.importedTripDeliveryDetails.Any(x => !x.Exception.IsNullOrEmpty()))
             {
-                await _appNotifier.NotifyUserWhenBulkDeliveryFailed(userIdentifier, L("NotFoundOrDeletedFileError"));
-                return;
-            }
-
-            List<ImportTripTransactionFromExcelDto> importedTripDeliveryDetails =
-                _excelDataReader.GetTripDeliveryDetails(binaryObject.Bytes).ToList();
-            if (importedTripDeliveryDetails.IsNullOrEmpty() ||
-                importedTripDeliveryDetails.Any(x => !x.Exception.IsNullOrEmpty()))
-            {
-                string errorMsg = importedTripDeliveryDetails.IsNullOrEmpty()
+                string errorMsg = args.importedTripDeliveryDetails.IsNullOrEmpty()
                     ? L("EmptyFileError")
-                    : GetErrorsMessage(importedTripDeliveryDetails);
+                    : GetErrorsMessage(args.importedTripDeliveryDetails);
 
-                await _appNotifier.NotifyUserWhenBulkDeliveryFailed(userIdentifier, errorMsg);
+                await _appNotifier.NotifyUserWhenBulkDeliveryFailed(args.userIdentifier, errorMsg);
                 return;
             }
 
             try
             {
-                importedTripDeliveryDetails.ForEach(_workFlowProvider.ForceDeliverTrip);
+                args.importedTripDeliveryDetails.ForEach(_workFlowProvider.ForceDeliverTrip);
             }
             catch (Exception e)
             {
-                await _appNotifier.NotifyUserWhenBulkDeliveryFailed(userIdentifier, e.Message);
+                await _appNotifier.NotifyUserWhenBulkDeliveryFailed(args.userIdentifier, e.Message);
                 Logger.Error(e.Message, e);
                 return;
             }
 
-            await _appNotifier.NotifyUserWhenBulkDeliverySucceeded(userIdentifier);
-            await _binaryObjectManager.DeleteAsync(args.BinaryObjectId);
+            await _appNotifier.NotifyUserWhenBulkDeliverySucceeded(args.userIdentifier);
         }
 
         private static string GetErrorsMessage(
