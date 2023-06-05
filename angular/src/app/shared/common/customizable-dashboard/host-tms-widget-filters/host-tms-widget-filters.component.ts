@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Injector, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from '@node_modules/moment';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { AllSaasTruckAggregationFilterEnum } from '@app/shared/common/customizable-dashboard/host-tms-widget-filters/all-saas-truckaggregation-filter-enum';
 
 @Component({
   selector: 'app-host-tms-widget-filters',
@@ -12,21 +14,32 @@ export class HostTmsWidgetFiltersComponent extends AppComponentBase implements O
     start: moment.Moment;
     end: moment.Moment;
   }>(null);
+  @Output() filterSelected: EventEmitter<number> = new EventEmitter<number>();
+  @Input() isDateDropDown = true;
   isDropdownOpen = false;
   showCustomStartEnd = false;
   start: Date;
   end: Date;
+  filtersArray: any[] = [];
 
-  constructor(injector: Injector) {
+  constructor(injector: Injector, private enumService: EnumToArrayPipe) {
     super(injector);
   }
 
   ngOnDestroy(): void {}
 
   ngOnInit(): void {
-    const startDate = moment().subtract(12, 'months').startOf('month');
-    const endDate = moment();
-    this.optionSelected.emit({ start: startDate, end: endDate });
+    if (this.isDateDropDown) {
+      const startDate = moment().subtract(12, 'months').startOf('month');
+      const endDate = moment();
+      this.optionSelected.emit({ start: startDate, end: endDate });
+      return;
+    }
+    this.filtersArray = this.enumService.transform(AllSaasTruckAggregationFilterEnum).map((item) => {
+      item.key = Number(item.key);
+      return item;
+    });
+    this.filterSelected.emit(AllSaasTruckAggregationFilterEnum.All);
   }
 
   toggleDropdown() {
@@ -80,6 +93,11 @@ export class HostTmsWidgetFiltersComponent extends AppComponentBase implements O
 
   emitCustomDate() {
     this.optionSelected.emit({ start: moment(this.start), end: moment(this.end) });
+    this.toggleDropdown();
+  }
+
+  selectFilter(filter: number) {
+    this.filterSelected.emit(filter);
     this.toggleDropdown();
   }
 }

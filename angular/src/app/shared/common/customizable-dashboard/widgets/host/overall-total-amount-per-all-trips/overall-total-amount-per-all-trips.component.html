@@ -3,14 +3,24 @@
     <!--begin::Card-->
     <div class="card card-custom card-stretch border-bottom-5 border-bottom-dark">
       <div class="card-header border-bottom-0 pl-4">
-        <div class="card-title w-50">
-          <h3 class="w-100">
-            {{ l('OverallTotalAmountPerAllTrips') }}
-          </h3>
+        <div class="d-flex w-100">
+          <div class="card-title pt-4 w-50">
+            <h3 class="w-100">
+              {{ l('OverallTotalAmountPerAllTrips') }}
+            </h3>
+          </div>
+          <div class="d-flex w-50 justify-content-end align-items-center">
+            <app-host-tms-widget-filters [isDateDropDown]="false" (filterSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
+          </div>
         </div>
-        <div class="mt-6 sar-red-circle">
-          <div class="sar-label">
-            <h1 class="h-100 d-flex flex-column align-items-center justify-content-center">{{ 'SAR' | localize }}</h1>
+        <div class="d-flex w-100">
+          <div class="w-50"></div>
+          <div class="w-50">
+            <div class="sar-red-circle">
+              <div class="sar-label">
+                <h1 class="h-100 d-flex flex-column align-items-center justify-content-center">{{ 'SAR' | localize }}</h1>
+              </div>
+            </div>
           </div>
         </div>
       </div>

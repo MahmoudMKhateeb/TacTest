@@ -1,6 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { TMSAndHostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-overall-total-amount-per-all-trips',
@@ -9,20 +10,33 @@ import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxi
 })
 export class OverallTotalAmountPerAllTripsComponent extends AppComponentBase implements OnInit {
   loading = false;
+  selling = 0;
+  cost = 0;
+  profit = 0;
 
-  selling = 20000;
-  cost = 15000;
-  profit = 5000;
-
-  constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
+  constructor(private injector: Injector, private _TMSAndHostDashboardServiceProxy: TMSAndHostDashboardServiceProxy) {
     super(injector);
   }
 
-  ngOnInit(): void {
-    this.getData();
+  ngOnInit(): void {}
+
+  getData(filter: number) {
+    this.loading = true;
+    this._TMSAndHostDashboardServiceProxy
+      .getOverallAmountForAlltrips(filter)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe((res) => {
+        this.selling = res.selling;
+        this.cost = res.cost;
+        this.profit = res.profit;
+      });
   }
 
-  getData() {
-    // this.loading = true;
+  selectedFilter(filter: number) {
+    this.getData(filter);
   }
 }
