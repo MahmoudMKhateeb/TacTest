@@ -3101,6 +3101,7 @@
     <text name="clickToRateTheShippingExperiencewith">انقر لتقييم تجربة الشحن مع</text>
     <text name="clickToRateTheShippingExperience">انقر لقييم تجربة الشحن</text>
     <text name="DeliveryDate">تاريخ التسليم</text>
+    <text name="InvoiceStamp">توقيع الفاتورة</text>
 		
 	</texts>
 </localizationDictionary>

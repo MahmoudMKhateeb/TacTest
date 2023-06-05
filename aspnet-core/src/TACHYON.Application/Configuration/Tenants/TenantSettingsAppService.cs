@@ -850,6 +850,24 @@ namespace TACHYON.Configuration.Tenants
             tenant.ClearLogo();
         }
 
+        public async Task ClearStamp()
+        {
+            var tenant = await GetCurrentTenantAsync();
+
+            if (!tenant.HasLogo())
+            {
+                return;
+            }
+
+            var stampObject = await _binaryObjectManager.GetOrNullAsync(tenant.StampId.Value);
+            if (stampObject != null)
+            {
+                await _binaryObjectManager.DeleteAsync(tenant.StampId.Value);
+            }
+
+            tenant.ClearStamp();
+        }
+
         public async Task ClearCustomCss()
         {
             var tenant = await GetCurrentTenantAsync();
