@@ -26,6 +26,6 @@ namespace TACHYON.Authorization.Users
 
         Task UnlockUser(EntityDto<long> input);
         Task<bool> CheckIfPhoneNumberValid(string phoneNumber, long? driverId);
-        Task<bool> CheckIfEmailisAvailable(string email);
+        Task<bool> CheckIfEmailisAvailable(string email,  long? userId);
     }
 }

@@ -953,12 +953,16 @@ namespace TACHYON.Authorization.Users
             return (result == null);
         }
 
-        public async Task<bool> CheckIfEmailisAvailable(string email)
+        public async Task<bool> CheckIfEmailisAvailable(string email, long? userId)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
                 var result = await UserManager.FindByEmailAsync(email);
                 if (result == null)
+                {
+                    return true;
+                }
+                else if (result != null && userId != null && result.Id == userId)
                 {
                     return true;
                 }
