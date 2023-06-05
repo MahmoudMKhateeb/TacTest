@@ -1,17 +1,8 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
-
-import { ApexAxisChartSeries, ApexTitleSubtitle, ApexDataLabels, ApexChart, ApexPlotOptions, ChartComponent } from 'ng-apexcharts';
+import { TMSAndHostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
-
-export interface ChartOptions {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  title: ApexTitleSubtitle;
-  plotOptions: ApexPlotOptions;
-}
+import { HeatmapLocationsModel } from '@app/shared/common/customizable-dashboard/widgets/host/number-of-requests-for-each-city/heatmap-locations-model';
 
 @Component({
   selector: 'app-number-of-requests-for-each-city',
@@ -19,128 +10,68 @@ export interface ChartOptions {
   styleUrls: ['./number-of-requests-for-each-city.component.css'],
 })
 export class NumberOfRequestsForEachCityComponent extends AppComponentBase implements OnInit {
-  @ViewChild('chart') chart: ChartComponent;
-  public chartOptions: Partial<ChartOptions>;
   loading = false;
-  y: number[];
-  series1: any[];
-  locations = [
-    { latitude: 24.774265, longitude: 46.738586, label: 'Riyadh' },
-    { latitude: 21.543333, longitude: 39.172779, label: 'Jeddah' },
-    { latitude: 26.4207, longitude: 50.1007, label: 'Dammam' },
-    { latitude: 24.6877, longitude: 46.7219, label: 'Al-Masjid an-Nabawi' },
-    { latitude: 24.5247, longitude: 39.5692, label: 'King Abdullah Economic City' },
-    { latitude: 21.3891, longitude: 40.0579, label: 'King Abdulaziz International Airport' },
-    { latitude: 21.7051, longitude: 39.1547, label: 'King Fahd Fountain' },
-    { latitude: 21.3891, longitude: 39.8579, label: 'Jeddah Corniche' },
-    { latitude: 18.2308, longitude: 42.5003, label: 'Abha' },
-  ];
+  locations: HeatmapLocationsModel[] = [];
 
-  constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
+  constructor(private injector: Injector, private _TMSAndHostDashboardServiceProxy: TMSAndHostDashboardServiceProxy) {
     super(injector);
   }
 
-  ngOnInit(): void {
-    this.getData();
-  }
+  ngOnInit(): void {}
 
-  getData() {
-    this.y = [];
-    this.series1 = [];
+  getData(event: { start: moment.Moment; end: moment.Moment }) {
+    this.locations = [];
     this.loading = true;
-
-    this._hostDashboardServiceProxy
-      .getNumberOfRequestsForEachCity()
+    this._TMSAndHostDashboardServiceProxy
+      .getRequestsHeapMap(event.start, event.end)
       .pipe(
         finalize(() => {
           this.loading = false;
         })
       )
       .subscribe((result) => {
-        result.forEach((element) => {
-          this.series1.push({
-            name: element.cityName,
-            data: this.generateData(element.numberOfRequests, {
-              min: element.minimumValueOfRequests,
-              max: element.maximumValueOfRequests,
-            }),
+        this.loading = false;
+        result.map(async (item) => {
+          const latlng = await this.getLatLngByCityName(item.cityName);
+          this.locations.push({
+            latitude: latlng?.lat,
+            longitude: latlng?.lng,
+            label: item.cityName,
+            count: item.numberOfRequests,
+            type: item.cityType,
           });
         });
-
-        this.chartOptions = {
-          series: this.series1,
-          chart: {
-            height: 350,
-            type: 'heatmap',
-          },
-          plotOptions: {
-            heatmap: {
-              shadeIntensity: 0.5,
-              colorScale: {
-                ranges: [
-                  {
-                    from: -30,
-                    to: 5,
-                    name: 'low',
-                    color: '#dc2c34',
-                  },
-                  {
-                    from: 6,
-                    to: 20,
-                    name: 'medium',
-                    color: '#b5b5c3',
-                  },
-                  {
-                    from: 21,
-                    to: 45,
-                    name: 'high',
-                    color: '#FFB200',
-                  },
-                  {
-                    from: 46,
-                    to: 55,
-                    name: 'extreme',
-                    color: '#FF0000',
-                  },
-                ],
-              },
-            },
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          title: {
-            // text: 'HeatMap Chart with Color Range',
-          },
-        };
-        this.loading = false;
-        (this.chartOptions.chart.locales as any[]) = [
-          {
-            name: 'en',
-            options: {
-              toolbar: {
-                exportToPNG: this.l('Download') + ' PNG',
-                exportToSVG: this.l('Download') + ' SVG',
-                exportToCSV: this.l('Download') + ' CSV',
-              },
-            },
-          },
-        ];
       });
   }
 
-  public generateData(count, yrange) {
-    let i = 0;
-    let series = [];
-    while (i < count) {
-      let x = '';
-      let y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-      series.push({
-        x: x,
-        y: y,
-      });
-      i++;
-    }
-    return series;
+  selectedFilter(event: { start: moment.Moment; end: moment.Moment }) {
+    this.getData(event);
+  }
+
+  /**
+   * Get City Coordinates By Providing City name
+   * @param cityName
+   */
+  getLatLngByCityName(cityName: string) {
+    return new Promise<any>((resolve) => {
+      console.log('cityName : ', cityName);
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode(
+        {
+          address: cityName,
+        },
+        (results, status) => {
+          console.log(results);
+          if (status === google.maps.GeocoderStatus.OK) {
+            const Lat = results[0].geometry.location.lat();
+            const Lng = results[0].geometry.location.lng();
+            resolve({ lat: Lat, lng: Lng });
+          } else {
+            console.log('Something got wrong ' + status);
+            resolve(null);
+          }
+        }
+      );
+    });
   }
 }
