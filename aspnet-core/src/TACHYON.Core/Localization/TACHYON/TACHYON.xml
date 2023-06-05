@@ -3384,6 +3384,7 @@
     <text name="ExperienceFacility">How Were your experience on this Facility?</text>
     <text name="ClickToRateTheShippingExperiencewith">Click to rate the shipping experience with</text>
     <text name="ClickToRateTheShippingExperience">Click to rate the shipping experience</text>
+    <text name="DeliveryDate">Delivery date</text>
     
 	<text name="DedicatedShippingRequestSavedTemplate">Dedicated Shipping Request Templates</text>
 	<text name="ShippingRequestSavedTemplate">Normal Shipping Request Templates</text>
