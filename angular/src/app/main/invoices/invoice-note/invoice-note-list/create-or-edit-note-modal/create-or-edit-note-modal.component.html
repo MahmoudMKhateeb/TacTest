@@ -165,7 +165,7 @@
                           id="NotePrice{{ i }}"
                           [(ngModel)]="item.price"
                           (change)="calculator(item.price, item.taxVat, i)"
-                          (keypress)="numberOnly($event)"
+                          (keypress)="validateIsDecimal($event)"
                           [required]="true"
                           class="form-control"
                           name="NotePrice{{ i }}"
@@ -215,6 +215,7 @@
                         <input type="checkbox" [(ngModel)]="field.checked" name="field.id{{ i }}" id="field.id{{ i }}" value="field.checked" hidden />
                         <input
                           [(ngModel)]="field.price"
+                          (keypress)="validateIsDecimal($event)"
                           #NewPrice="ngModel"
                           disabled
                           class="form-control"
