@@ -104,20 +104,21 @@ export class InvoicesVsPaidInvoicesComponent extends AppComponentBase implements
       unpaid,
       total: paid + unpaid,
     };
-    const categories = [
-      this.l('Jan'),
-      this.l('Feb'),
-      this.l('Mar'),
-      this.l('Apr'),
-      this.l('May'),
-      this.l('Jun'),
-      this.l('Jul'),
-      this.l('Aug'),
-      this.l('Sep'),
-      this.l('Oct'),
-      this.l('Nov'),
-      this.l('Dec'),
-    ];
+    // const categories = [
+    //   this.l('Jan'),
+    //   this.l('Feb'),
+    //   this.l('Mar'),
+    //   this.l('Apr'),
+    //   this.l('May'),
+    //   this.l('Jun'),
+    //   this.l('Jul'),
+    //   this.l('Aug'),
+    //   this.l('Sep'),
+    //   this.l('Oct'),
+    //   this.l('Nov'),
+    //   this.l('Dec'),
+    // ];
+    const categories = result.paidInvoices.map((item) => item.x.slice(0, 3));
     const paidSeries = categories.map((item) => {
       const foundFromResponse = result.paidInvoices.find((accepted) => {
         accepted.x = accepted?.x?.slice(0, 3);

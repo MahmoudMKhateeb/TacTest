@@ -86,20 +86,21 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
         };
         let categories = [];
         if (this.selectedOption == FilterDatePeriod.Monthly) {
-          categories = [
-            this.l('Jan'),
-            this.l('Feb'),
-            this.l('Mar'),
-            this.l('Apr'),
-            this.l('May'),
-            this.l('Jun'),
-            this.l('Jul'),
-            this.l('Aug'),
-            this.l('Sep'),
-            this.l('Oct'),
-            this.l('Nov'),
-            this.l('Dec'),
-          ];
+          // categories = [
+          //   this.l('Jan'),
+          //   this.l('Feb'),
+          //   this.l('Mar'),
+          //   this.l('Apr'),
+          //   this.l('May'),
+          //   this.l('Jun'),
+          //   this.l('Jul'),
+          //   this.l('Aug'),
+          //   this.l('Sep'),
+          //   this.l('Oct'),
+          //   this.l('Nov'),
+          //   this.l('Dec'),
+          // ];
+          categories = result.completedTrips.map((item) => item.x.slice(0, 3));
         }
         if (this.selectedOption == FilterDatePeriod.Weekly) {
           categories = Array.from(new Set<string>(result.completedTrips.map((item) => item.x).concat(result.podTrips.map((rej) => rej.x))).values());

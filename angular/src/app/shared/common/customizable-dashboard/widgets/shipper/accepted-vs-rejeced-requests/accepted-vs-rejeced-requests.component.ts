@@ -76,20 +76,21 @@ export class AcceptedVsRejecedRequestsComponent extends AppComponentBase impleme
         };
         let categories = [];
         if (this.selectedOption == FilterDatePeriod.Monthly) {
-          categories = [
-            this.l('Jan'),
-            this.l('Feb'),
-            this.l('Mar'),
-            this.l('Apr'),
-            this.l('May'),
-            this.l('Jun'),
-            this.l('Jul'),
-            this.l('Aug'),
-            this.l('Sep'),
-            this.l('Oct'),
-            this.l('Nov'),
-            this.l('Dec'),
-          ];
+          // categories = [
+          //   this.l('Jan'),
+          //   this.l('Feb'),
+          //   this.l('Mar'),
+          //   this.l('Apr'),
+          //   this.l('May'),
+          //   this.l('Jun'),
+          //   this.l('Jul'),
+          //   this.l('Aug'),
+          //   this.l('Sep'),
+          //   this.l('Oct'),
+          //   this.l('Nov'),
+          //   this.l('Dec'),
+          // ];
+          categories = result.acceptedOffers.map((item) => item.x.slice(0, 3));
         }
         if (this.selectedOption == FilterDatePeriod.Weekly) {
           categories = Array.from(

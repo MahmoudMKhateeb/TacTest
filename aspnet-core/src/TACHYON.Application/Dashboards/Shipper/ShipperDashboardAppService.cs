@@ -52,6 +52,7 @@ namespace TACHYON.Dashboards.Shipper
         private readonly IRepository<RoutPoint,long> _routePointRepository;
         private readonly IRepository<RoutPointStatusTransition> _transitionRepository;
         private readonly IRepository<SubmitInvoice, long> _submitInvoiceRepository;
+        private readonly DashboardDomainService _dashboardDomainService;
 
         public ShipperDashboardAppService(
              IRepository<ShippingRequest, long> shippingRequestRepository,
@@ -63,7 +64,8 @@ namespace TACHYON.Dashboards.Shipper
              IRepository<TrucksType, long> truckTypesRepository,
              IRepository<RoutPoint, long> routePointRepository,
              IRepository<RoutPointStatusTransition> transitionRepository,
-             IRepository<SubmitInvoice, long> submitInvoiceRepository)
+             IRepository<SubmitInvoice, long> submitInvoiceRepository,
+             DashboardDomainService dashboardDomainService)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestTripRepository = shippingRequestTripRepository;
@@ -75,6 +77,7 @@ namespace TACHYON.Dashboards.Shipper
             _routePointRepository = routePointRepository;
             _transitionRepository = transitionRepository;
             _submitInvoiceRepository = submitInvoiceRepository;
+            _dashboardDomainService = dashboardDomainService;
         }
 
 
@@ -245,7 +248,8 @@ namespace TACHYON.Dashboards.Shipper
                 .WhereIf(isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
                 .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year && x.CreationTime.Month == Clock.Now.Month )
-                .WhereIf(period == FilterDatePeriod.Monthly,x=>  x.CreationTime.Year == Clock.Now.Year )
+                .WhereIf(period == FilterDatePeriod.Monthly,x=> ((Clock.Now.Month == 12 && x.CreationTime.Year == Clock.Now.Year) ||
+                (Clock.Now.Month != 12 && (x.CreationTime.Year == Clock.Now.Year || x.CreationTime.Year == Clock.Now.AddYears(-1).Year))))
                 .Select(x => new { x.Status, x.CreationTime });
 
             var accepted =  await query.Where(x => x.Status == PriceOfferStatus.Accepted).ToListAsync();
@@ -266,14 +270,35 @@ namespace TACHYON.Dashboards.Shipper
 
             if (period == FilterDatePeriod.Monthly)
             {
-                acceptedOffers = accepted.GroupBy(x => x.CreationTime.Month)
-                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key ),Y = x.Count() })
-                    .ToList();
-                
-                rejectedOffers = rejected.GroupBy(x => x.CreationTime.Month)
+                var acceptedOffersList = accepted.GroupBy(x => x.CreationTime.Month);
+
+                var rejectedOffersList = rejected.GroupBy(x => x.CreationTime.Month);
+
+                foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
+                {
+                    if (acceptedOffersList.Select(x => x.Key).ToList().Contains(date.Month))
+                    {
+                        acceptedOffers.Add(acceptedOffersList.Where(x => x.Key == date.Month)
                     .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
-                    .ToList();
-            }
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        acceptedOffers.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    }
+
+                    if (rejectedOffersList.Select(x => x.Key).ToList().Contains(date.Month))
+                    {
+                        rejectedOffers.Add(rejectedOffersList.Where(x => x.Key == date.Month)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        rejectedOffers.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    }
+                }
+                }
             
             if (period == FilterDatePeriod.Weekly)
             {
@@ -350,8 +375,11 @@ namespace TACHYON.Dashboards.Shipper
                 .WhereIf(!isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId)
                 .WhereIf(isBroker,x=> x.ShippingRequestFk.TenantId == AbpSession.TenantId || x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
                 .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
-                .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year && x.CreationTime.Month == Clock.Now.Month )
-                .WhereIf(period == FilterDatePeriod.Monthly,x=>  x.CreationTime.Year == Clock.Now.Year )
+                .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year &&
+                x.CreationTime.Date >= Clock.Now.AddDays(-28).Date)
+                .WhereIf(period == FilterDatePeriod.Monthly, x => ((Clock.Now.Month == 12 && x.CreationTime.Year == Clock.Now.Year) ||
+                (Clock.Now.Month != 12 && (x.CreationTime.Year == Clock.Now.Year || x.CreationTime.Year == Clock.Now.AddYears(-1).Year)))
+                && x.CreationTime.Date >= Clock.Now.AddMonths(-11).Date)
                 .Where(x => x.Status == ShippingRequestTripStatus.Delivered || x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation);
 
 
@@ -378,27 +406,67 @@ namespace TACHYON.Dashboards.Shipper
 
             if (period == FilterDatePeriod.Monthly)
             {
-                podTripsList = podTrips.GroupBy(x => x.CreationTime.Month)
-                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key ),Y = x.Count() })
-                    .ToList();
-                
-                totalList = total.GroupBy(x => x.CreationTime.Month)
+                var groupedTrips = podTrips.GroupBy(x => x.CreationTime.Month);
+
+                foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
+                {
+                    if (groupedTrips.Select(x => x.Key).ToList().Contains(date.Month))
+                    {
+                        podTripsList.Add(groupedTrips.Where(x => x.Key == date.Month)
                     .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
-                    .ToList();
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        podTripsList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    }
+
+                    if (total.GroupBy(x => x.CreationTime.Month).Select(x => x.Key).ToList().Contains(date.Month))
+                    {
+                        totalList.Add(total.GroupBy(x => x.CreationTime.Month).Where(x => x.Key == date.Month)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        totalList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                    }
+                }
+               
+               
             }
-            
+
             if (period == FilterDatePeriod.Weekly)
             {
-                DateTime firstMonthDay = new DateTime(Clock.Now.Year, Clock.Now.Month, 1);
-                DateTime firstMonthSunday = firstMonthDay.AddDays((DayOfWeek.Sunday + 7 - firstMonthDay.DayOfWeek) % 7);
-                
-                podTripsList = podTrips.GroupBy(x => ((x.CreationTime.Day - firstMonthSunday.Day) / 7) +1)
-                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"Week {x.Key}",Y = x.Count() })
-                    .ToList();
-                
-                totalList = total.GroupBy(x => ((x.CreationTime.Day - firstMonthSunday.Day) / 7) +1)
+
+                DateTime firstDayInWeeks = Clock.Now.AddDays(-28);
+                var AllWeeks = new List<int> { 1, 2, 3, 4 };
+                foreach(var week in AllWeeks)
+                {
+                    var groupedTrips = podTrips.GroupBy(x => ((x.CreationTime.Date - firstDayInWeeks.Date).Days / 7) + 1);
+                    if (groupedTrips.Select(x=>x.Key).ToList().Contains(week))
+                    {
+                        podTripsList.Add(groupedTrips.Where(x=>x.Key == week)
                     .Select(x => new ChartCategoryPairedValuesDto() { X = $"Week {x.Key}", Y = x.Count() })
-                    .ToList();
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        podTripsList.Add(new ChartCategoryPairedValuesDto { X = $"Week {week}", Y = 0 });
+                    }
+                     var groupedTotal = total.GroupBy(x => ((x.CreationTime.Date - firstDayInWeeks.Date).Days / 7) + 1);
+                    if (groupedTotal.Select(x => x.Key).ToList().Contains(week))
+                    {
+                        totalList.Add(groupedTotal.Where(x => x.Key == week)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"Week {x.Key}", Y = x.Count() })
+                    .FirstOrDefault());
+                    }
+                    else
+                    {
+                        totalList.Add(new ChartCategoryPairedValuesDto { X = $"Week {week}", Y = 0 });
+                    }
+                }
+                
             }
 
             return new CompletedTripVsPodListDto
@@ -411,6 +479,8 @@ namespace TACHYON.Dashboards.Shipper
 
         }
 
+
+
         public async Task<InvoicesVsPaidInvoicesDto> GetInvoicesVSPaidInvoices()
         {
             DisableTenancyFilters();
@@ -419,36 +489,54 @@ namespace TACHYON.Dashboards.Shipper
             var query = _invoiceRepository
                 .GetAll()
                 .AsNoTracking()
-                .Where(x => x.TenantId == AbpSession.TenantId);
-
+                .Where(x => x.TenantId == AbpSession.TenantId && ((Clock.Now.Month == 12 && x.CreationTime.Year == Clock.Now.Year ) || (
+                Clock.Now.Month != 12 && (x.CreationTime.Year == Clock.Now.Year || x.CreationTime.Year == Clock.Now.AddYears(-1).Year))));
             var paid = (await query
                     .Where(x => x.IsPaid)
-                    .ToListAsync())
-                .GroupBy(x => x.CreationTime.Date.Month)
-                    .Select(g => new ChartCategoryPairedValuesDto
-                    {
-                        X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
-                        Y = g.Count()
-                    })
-                    .OrderBy(x => x.X)
-                    .ToList();
+                    .ToListAsync());
+
 
             var total = (await query
-                    .ToListAsync())
-                    .GroupBy(x => x.CreationTime.Date.Month)
-                    .Select(g => new ChartCategoryPairedValuesDto
-                    {
-                        X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
-                        Y = g.Count()
-                    })
-                    .OrderBy(x => x.X)
-                    .ToList();
+                    .ToListAsync()).GroupBy(x => x.CreationTime.Month);
+
+            var PaidInvoicesList = new List<ChartCategoryPairedValuesDto>();
+            var totalInvoicesList = new List<ChartCategoryPairedValuesDto>();
+            var groupedPaid = paid.GroupBy(x => x.CreationTime.Date.Month);
+
+            foreach (var date in _dashboardDomainService.GetYearMonthsEndWithCurrent())
+            {
+                if (groupedPaid.Select(x => x.Key).ToList().Contains(date.Month))
+                {
+                    PaidInvoicesList.Add(groupedPaid.Where(x => x.Key == date.Month)
+               .Select(g => new ChartCategoryPairedValuesDto
+               {
+                   X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
+                   Y = g.Count()
+               })
+                .FirstOrDefault());
+                }
+                else
+                {
+                    PaidInvoicesList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                }
+
+                if (total.Select(x => x.Key).ToList().Contains(date.Month))
+                {
+                    totalInvoicesList.Add(total.Where(x => x.Key == date.Month)
+                .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                .FirstOrDefault());
+                }
+                else
+                {
+                    totalInvoicesList.Add(new ChartCategoryPairedValuesDto { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month), Y = 0 });
+                }
+            }
 
 
             return new InvoicesVsPaidInvoicesDto
             {
-                PaidInvoices = paid,
-                ShipperInvoices = total
+                PaidInvoices = PaidInvoicesList,
+                ShipperInvoices = totalInvoicesList
             };
         }
 
@@ -725,6 +813,9 @@ namespace TACHYON.Dashboards.Shipper
             return result;
 
         }
+
+
+
 
         #endregion
 
