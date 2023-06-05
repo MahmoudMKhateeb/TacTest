@@ -68,7 +68,7 @@
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
               >
               </dxi-column>
-              <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"> </dxi-column>
+              <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}" format="fixedPoint"> </dxi-column>
               <dxi-column dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"> </dxi-column>
               <dxi-column dataField="actorInvoiceChannel" cellTemplate="channelCellTemplate" caption="{{ l('InvoiceChannel') }}"> </dxi-column>
               <dxi-column dataField="status" cellTemplate="cellTemplate_status" caption="{{ l('Status') }}">

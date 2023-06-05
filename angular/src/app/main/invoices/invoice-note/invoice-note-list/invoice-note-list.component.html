@@ -58,7 +58,7 @@
               >
               </dxi-column>
               <dxi-column dataField="generationDate" caption="{{ l('GenerationDate') }}" dataType="date"></dxi-column>
-              <dxi-column dataField="totalValue" caption="{{ l('TotalValue') }}"></dxi-column>
+              <dxi-column dataField="totalValue" caption="{{ l('TotalValue') }}" format="fixedPoint"></dxi-column>
               <dxi-column cellTemplate="noteTypeCellTemplate" dataField="noteType" caption=" {{ l('NoteType') }}"></dxi-column>
               <div *dxTemplate="let options of 'noteTypeCellTemplate'">
                 <span style="width: 137px; text-align: center">
