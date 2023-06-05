@@ -3,6 +3,7 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace TACHYON.DataExporting.Excel.NPOI
@@ -53,7 +54,12 @@ namespace TACHYON.DataExporting.Excel.NPOI
             {
                 if (text != null)
                 {
-                    return Convert.ToDateTime(text.Trim());
+                    //return Convert.ToDateTime(text.Trim());
+                    var isDateValid = DateTime.TryParseExact(text.Trim(), "dd/MM/yyyy",
+                        CultureInfo.CurrentUICulture, DateTimeStyles.None, out DateTime parsedDate);
+                    if(!isDateValid) return null;
+                    return
+                        parsedDate;
                 }
                 else
                     return null;
