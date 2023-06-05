@@ -3381,6 +3381,9 @@
     <text name="day">day</text>
     <text name="withinAWeek">with in a Week</text>
     <text name="IsTaxVatIncluded">Is tax vat included</text>
+    <text name="ExperienceFacility">How Were your experience on this Facility?</text>
+    <text name="ClickToRateTheShippingExperiencewith">Click to rate the shipping experience with</text>
+    <text name="ClickToRateTheShippingExperience">Click to rate the shipping experience</text>
     
 	<text name="DedicatedShippingRequestSavedTemplate">Dedicated Shipping Request Templates</text>
 	<text name="ShippingRequestSavedTemplate">Normal Shipping Request Templates</text>
