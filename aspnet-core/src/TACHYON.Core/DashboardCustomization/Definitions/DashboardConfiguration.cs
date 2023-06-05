@@ -419,7 +419,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                     shipperNeedsActionWidget.Id,
                     // shipperNewOffersWidget.Id,
                     
-                    carrierAcceptedVsRejectedPricingWidget.Id,
+                    //  carrierAcceptedVsRejectedPricingWidget.Id,
                     carrierMostUsedVasWidget.Id,
                     // carrierInvoicesVsPaidInvoicesWidget.Id,
                     CarrierActiveDriversAndTrucksWidget.Id,

@@ -1228,15 +1228,15 @@ namespace TACHYON.Configuration
                                 //     PositionX = 12,
                                 //     PositionY = 30
                                 // },
-                                new Widget
-                                {
-                                    WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
-                                        .CarrierAcceptedVsRejectedPricingWidget,
-                                    Height = 10,
-                                    Width = 13,
-                                    PositionX = 6,
-                                    PositionY = 62
-                                },
+                                // new Widget
+                                // {
+                                //     WidgetId = TACHYONDashboardCustomizationConsts.Widgets.Carrier
+                                //         .CarrierAcceptedVsRejectedPricingWidget,
+                                //     Height = 10,
+                                //     Width = 13,
+                                //     PositionX = 6,
+                                //     PositionY = 62
+                                // },
                                 // }
                                 //
                                 // },
