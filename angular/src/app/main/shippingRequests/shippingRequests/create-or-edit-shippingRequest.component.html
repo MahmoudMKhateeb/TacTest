@@ -144,7 +144,7 @@
                           [disabled]="shippingRequest.id"
                         >
                           <option value="">Select</option>
-                          <option value="bidding">{{ l('Marketplace') }}</option>
+                          <!--                          <option value="bidding">{{ l('Marketplace') }}</option>-->
                           <option value="tachyondeal">{{ l('TachyonManageService') }}</option>
                           <option
                             *ngIf="this.feature.isEnabled('App.SendDirectRequest') || feature.isEnabled('App.CarrierAsASaas')"
