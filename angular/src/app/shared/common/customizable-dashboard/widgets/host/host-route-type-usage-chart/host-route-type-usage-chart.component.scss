@@ -3,3 +3,22 @@
     width: 35px;
     height: 10px;
 }
+
+#routeTypesUsage {
+    min-width: 160px;
+}
+
+
+@media screen and (max-width: 1700px) {
+    ::ng-deep {
+        app-host-route-type-usage-chart {
+            .card {
+                width: 100%;
+                overflow: hidden;
+                .card-body {
+                    overflow: auto;
+                }
+            }
+        }
+    }
+}

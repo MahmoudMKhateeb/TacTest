@@ -17,3 +17,10 @@
         }
     }
 }
+
+@media screen and (max-width: 1440px) {
+    .custom-auto-small{
+        width: auto !important;
+        padding-left: 0.5em !important;
+    }
+}

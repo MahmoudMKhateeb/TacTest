@@ -5,3 +5,8 @@
         height: 10px;
     }
 }
+@media screen and (max-width: 1440px) {
+    ::ng-deep app-number-of-registered-companies .card-body {
+        flex-wrap: wrap !important;
+    }
+}

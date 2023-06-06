@@ -97,9 +97,11 @@ export class UpcomingTripsWidgetsComponent extends AppComponentBase implements O
 
   selectedFilter(filter: number) {
     this.selectedFilterId = filter;
+    this.loading = true;
     this._TMSAndHostDashboardServiceProxy.getUpcomingTrips(filter).subscribe((res) => {
       this.upcomingTrips = res;
       this.selectDay(this.weekDates[0]);
+      this.loading = false;
     });
   }
 }

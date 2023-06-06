@@ -6,7 +6,7 @@
         <div class="pd-5 text-center" *ngIf="routes.length == 0">
           {{ l('NoData') }}
         </div>
-        <div id="routeTypesUsage mr-4" style="height: 100%; width: auto; display: flex; align-items: center">
+        <div id="routeTypesUsage" class="d-flex h-100 mr-4 align-items-center">
           <apx-chart
             *ngIf="chartOptions && chartOptions.series && routes.length > 0"
             [series]="chartOptions.series"
