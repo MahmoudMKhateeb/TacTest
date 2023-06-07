@@ -5,7 +5,6 @@ import * as ApiServiceProxies from './service-proxies';
 import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.service';
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
 
-
 @NgModule({
   providers: [
     ApiServiceProxies.BayanIntegrationResultsServiceProxy,
@@ -172,7 +171,7 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
     ApiServiceProxies.DedicatedDynamicActorInvoicesServiceProxy,
     ApiServiceProxies.BrokerDashboardServiceProxy,
     ApiServiceProxies.TMSAndHostDashboardServiceProxy,
-    ApiServiceProxies.ForceDeliverTripsServiceProxy
+    ApiServiceProxies.ForceDeliverTripsServiceProxy,
 
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
