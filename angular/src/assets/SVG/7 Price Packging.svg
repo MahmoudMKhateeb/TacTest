@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="_7_Price_Packging" data-name="7 Price Packging" transform="translate(-620 -444)">
+    <g id="tag-2">
+      <path id="Vector" d="M1.4,12.526l4.53,4.53a4.78,4.78,0,0,0,6.75,0l4.39-4.39a4.78,4.78,0,0,0,0-6.75L12.535,1.4a4.751,4.751,0,0,0-3.6-1.39l-5,.24a3.864,3.864,0,0,0-3.69,3.67l-.24,5A4.8,4.8,0,0,0,1.4,12.526Z" transform="translate(622.765 446.774)" fill="#dc2434" opacity="0.4"/>
+      <path id="Vector-2" data-name="Vector" d="M5.76,2.88A2.88,2.88,0,1,1,2.88,0,2.88,2.88,0,0,1,5.76,2.88Z" transform="translate(626.62 450.62)" fill="#dc2434"/>
+      <path id="Vector-3" data-name="Vector" d="M.747,5.5a.742.742,0,0,1-.53-.22.754.754,0,0,1,0-1.06l4-4a.75.75,0,0,1,1.06,1.06l-4,4A.742.742,0,0,1,.747,5.5Z" transform="translate(632.253 456.253)" fill="#dc2434"/>
+      <path id="Vector-4" data-name="Vector" d="M0,0H24V24H0Z" transform="translate(620 444)" fill="none" opacity="0"/>
+    </g>
+  </g>
+</svg>

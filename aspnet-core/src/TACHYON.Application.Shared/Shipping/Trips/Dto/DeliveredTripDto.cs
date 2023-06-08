@@ -1,4 +1,4 @@
-﻿using Abp;
+using Abp;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,5 +14,11 @@ namespace TACHYON.Shipping.Trips.Dto
         public ShippingRequestRouteType? RouteType { get; set; }
         public ShippingRequestTripStatus Status { get; set; }
         public UserIdentifier ShipperUser { get; set; }
+        public int? TripShipperTenantId { get; set; }
+        public int? TripCarrierTenantId { get; set; }
+
+        public int CarrierTenantId { get; set; }
+        public InvoiceTripStatus InvoiceTripStatus { get; set; }
+        public InvoiceTripStatus CarrierInvoiceTripStatus { get; set; }
     }
 }

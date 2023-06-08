@@ -2660,7 +2660,7 @@
     <text name="DocumentTypeName">Document type</text>
     <text name="submitterTenatTenancyName">Submitter company</text>
     <text name="ShipperReference">Shipper reference</text>
-    <text name="ShipperInvoiceNumber">Shipper invoice</text>
+    <text name="ShipperBookingNumber">Shipper booking number</text>
     <text name="OriginCountry">Origin country</text>
     <text name="DestinationCountry">Destination country</text>
     <text name="SelectanOriginCountry">Select origin country</text>
@@ -3192,7 +3192,7 @@
     <text name="WithoutReturnTrip">Without return trip</text>
     <text name="TwoWayRoutsWithPortShuttling">Two way routs with port shuttling</text>
     <text name="TwoWayRoutsWithoutPortShuttling">Two way routs without port shuttling</text>
-    <text name="OneWayRoutWithPortShuttling">One way rout with port shuttling</text>
+    <text name="OneWayRoutWithoutPortShuttling">One way rout without port shuttling</text>
     <text name="FacilityType">Facility Type</text>
     <text name="SelectARoundTripType">Select A Round Trip Type</text>
     <text name="AllowedWeight">Allowed Weight</text>
@@ -3349,10 +3349,39 @@
 	<text name="PricePackageInvalidPricePerAdditionalDropMsg">When the price package route type is multiple drops you must fill in the Price Per Extra Drop</text>
 	<text name="PricePackageInvalidTachyonMSRequestPriceMsg">Please fill in the price package price for the tachyon manage service</text>
 	<text name="PricePackageInvalidDirectRequestPriceMsg">Please fill in the price package price that is used in matching direct requests</text>
+	<text name="CreateNewAppendix">Create a new appendix</text>
+	<text name="ContractName">Contract Name</text>
+	<text name="AppendixDate">Appendix Date</text>
+	<text name="Proposal">Proposal</text>
+	<text name="ScopeOverview">Scope Overview</text>
+	<text name="SelectProposal">Select a proposal</text>
+		<text name="ShipperInvoices">Shipper Invoices</text>
+		<text name="CarrierInvoices">Carrier Invoices</text>
+  <text name="NumberOfTrucksFeature">Number of trucks</text>
+  <text name="AdditionalTruckPriceFeature">Additional truck price</text>
+  <text name="MaxNumberOfTrucksFeature">Max number of trucks</text>
+    <text name="You are already passed the allowed number of trucks">You are already passed the allowed number of trucks</text>
+    <text name="ImportFunctionalityFeature">Import functionality</text>
+    <text name="ImportTripFeature">Import trip</text>
+    <text name="ImportTruckFeature">Import truck</text>
+    <text name="ImportDriverFeature">Import driver</text>
+    <text name="ImportSaasShipmentFeature">Import SAAS shipment</text>
+    <text name="DedicatedTruckFeature">Dedicated truck</text>
+    <text name="SaveTemplateFeature">Save template</text>
+    <text name="PortMovementFeature">Port movement</text>
+    <text name="HomeDeliveryFeature">Home Delivery</text>
+	<text name="RateShippingExp">You can rate the shipping experience with {0}</text>
+	<text name="ConfirmationDate">Confirmation date</text>
+    <text name="DirectShipmentTrackingPermission">Direct Shipment Tracking Permission</text>
+    <text name="DirectShipmentTracking">Direct Shipment Tracking</text>
+    <text name="RequiredReceiverCodeForInvoice">Is receiver code required</text>
 		
     <text name="ExportNormalToExcel">Export normal request</text>
     <text name="ExportDedicatedToExcel">Export dedicated request</text>
-    <text name="IsTaxVatIncluded">Is tax vat included</text>
     
+	<text name="DedicatedShippingRequestSavedTemplate">Dedicated Shipping Request Templates</text>
+	<text name="ShippingRequestSavedTemplate">Normal Shipping Request Templates</text>
+	<text name="TripSavedTemplate">Trip Templates</text>
+    <text name="IsTaxVatIncluded">Is tax vat included</text>
 	</texts>
 </localizationDictionary>

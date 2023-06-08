@@ -30,11 +30,7 @@
       <div class="row gutter-b">
         <div class="col-md-12" style="z-index: 0">
           <tabset #dashboardTabs [justified]="true" [ngClass]="{ 'nav-hidden': !moreThanOnePage() }">
-            <tab
-              *ngFor="let page of userDashboard?.pages || []; let i = index"
-              heading="{{ page.name | localize }}"
-              (selectTab)="selectPageTab(page.id)"
-            >
+            <tab *ngFor="let page of userDashboard?.pages || []; let i = index" heading="{{ page.name }}" (selectTab)="selectPageTab(page.id)">
               <gridster [options]="options[i]" [ngClass]="{ 'no-tab': !moreThanOnePage() }" [perfectScrollbar]="{ wheelPropagation: false }">
                 <gridster-item *ngFor="let widget of page.widgets" [item]="widget.gridInformation">
                   <ng-container *ngComponentOutlet="widget.component"></ng-container>
@@ -79,7 +75,7 @@
                     <label for="PageNameInput">{{ 'NewPageName' | localize }}</label>
                     <input type="text" class="form-control" placeholder="" [(ngModel)]="addPageInput" />
                   </div>
-                  <button class="btn btn-sm btn-block btn-info" (click)="addNewPage(addPageInput)">{{ 'Save' | localize }}</button>
+                  <button class="btn btn-sm btn-block btn-primary" (click)="addNewPage(addPageInput)">{{ 'Save' | localize }}</button>
                 </li>
               </ul>
             </div>
@@ -106,7 +102,7 @@
                     <label for="PageNameInput">{{ 'PageNewName' | localize }}</label>
                     <input type="text" class="form-control" placeholder="{{ selectedPage.name }}" [(ngModel)]="renamePageInput" />
                   </div>
-                  <button (click)="renamePage(renamePageInput)" class="btn btn-sm btn-block btn-info">{{ 'Save' | localize }}</button>
+                  <button (click)="renamePage(renamePageInput)" class="btn btn-sm btn-block btn-primary">{{ 'Save' | localize }}</button>
                 </li>
               </ul>
             </div>
@@ -122,10 +118,14 @@
             </button>
             &nbsp;
           </div>
-          <button type="button" class="btn btn-sm btn-success btn-elevate-hover btn-pill" (click)="savePage()">
+          <button type="button" class="btn btn-sm btn-primary btn-elevate-hover btn-pill" (click)="savePage()">
             <i class="fa fa-save"></i>{{ 'Save' | localize }}
           </button>
-          <button id="ResetPageButton" class="btn btn-sm btn-primary btn-elevate-hover btn-pill" (click)="resetPageToDefault()">
+          <button
+            id="ResetPageButton"
+            class="btn btn-sm btn-primary primary-invert-on-hover btn-elevate-hover btn-pill"
+            (click)="resetPageToDefault()"
+          >
             <i class="fas fa-sync"></i>
             <span>{{ 'RestoreDashboardDefaults' | localize }}</span>
           </button>
@@ -158,7 +158,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">{{ 'Close' | localize }}</button>
+          <button type="button" class="btn btn-light font-weight-bold" (click)="close()">{{ 'Close' | localize }}</button>
         </div>
       </div>
     </div>

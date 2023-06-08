@@ -70,7 +70,7 @@
                 name="facility{{ i }}"
                 class="form-control"
                 [(ngModel)]="wayPointsList[i].facilityId"
-                (change)="
+                (ngModelChange)="
                   RouteStepCordSetter(i, wayPointsList[i].facilityId);
                   wayPointsSetter();
                   loadReceivers(wayPointsList[i].facilityId);
@@ -200,7 +200,10 @@
                     id="dropNeedsClearance-{{ i }}"
                     name="dropNeedsClearance-{{ i }}"
                     value="false"
-                    [disabled]="!isTachyonDealer"
+                    [disabled]="
+                      (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isTachyonDealer) ||
+                      (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients)
+                    "
                   />
                   <span class="ml-2 mt-1"></span>
                   {{ l('needsClearance') }}
@@ -212,7 +215,10 @@
                     id="dropNeedsAppointment-{{ i }}"
                     name="dropNeedsAppointment-{{ i }}"
                     value="false"
-                    [disabled]="!isTachyonDealer"
+                    [disabled]="
+                      (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isTachyonDealer) ||
+                      (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients)
+                    "
                   />
                   <span class="ml-2 mt-1"></span>
                   {{ l('needsAppointment') }}
@@ -228,7 +234,10 @@
                     id="dropNeedsClearance-{{ i }}"
                     name="dropNeedsClearance-{{ i }}"
                     value="false"
-                    [disabled]="!isTachyonDealer"
+                    [disabled]="
+                      (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isTachyonDealer) ||
+                      (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients)
+                    "
                   />
                   <span class="ml-2 mt-1"></span>
                   {{ l('needsClearance') }}
@@ -240,7 +249,10 @@
                     id="dropNeedsAppointment-{{ i }}"
                     name="dropNeedsAppointment-{{ i }}"
                     value="false"
-                    [disabled]="!isTachyonDealer"
+                    [disabled]="
+                      (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isTachyonDealer) ||
+                      (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !hasShipperClients && !hasCarrierClients)
+                    "
                   />
                   <span class="ml-2 mt-1"></span>
                   {{ l('needsAppointment') }}
@@ -253,7 +265,8 @@
               <button *ngIf="record.dropNeedsClearance || record.dropNeedsAppointment" class="btn btn-primary" (click)="showVasModal(i)">
                 <i
                   [ngClass]="
-                    !isShipper
+                    (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isShipper) ||
+                    (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && hasShipperClients && hasCarrierClients)
                       ? (!record.appointmentDataDto || !record.tripClearancePricesDto) && !isEdit
                         ? 'fa fa-plus'
                         : 'fa fa-pen'
@@ -266,8 +279,11 @@
               <button *ngIf="record.needsClearance || record.needsAppointment" class="btn btn-primary" (click)="showVasModal(i)">
                 <i
                   [ngClass]="
-                    !isShipper &&
-                    ((record.needsAppointment && !record.appointmentDataDto) || (record.needsClearance && !record.tripClearancePricesDto))
+                    (_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id && !isShipper) ||
+                    (!_tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id &&
+                      hasShipperClients &&
+                      hasCarrierClients &&
+                      ((record.needsAppointment && !record.appointmentDataDto) || (record.needsClearance && !record.tripClearancePricesDto)))
                       ? 'fa fa-pen'
                       : 'fa fa-eye'
                   "

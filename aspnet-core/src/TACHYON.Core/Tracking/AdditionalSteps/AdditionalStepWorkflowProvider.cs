@@ -1,4 +1,5 @@
 using Abp;
+using Abp.Application.Features;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
 using Abp.Runtime.Session;
@@ -6,7 +7,6 @@ using Abp.Timing;
 using Abp.UI;
 using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -209,10 +209,9 @@ namespace TACHYON.Tracking.AdditionalSteps
            string reason = await transaction.Func(args);
 
            await LogAdditionalStepTransition(args.PointId, transaction.AdditionalStepType, transaction.RoutePointDocumentType);
-           //if (transaction.IsRequired)
-          // {
-               await HandlePointDelivery(point);
-           //}
+
+               await HandlePointDelivery(point, transaction.AdditionalStepType);
+
            
             _reasonProvider.Use(reason);
             await CurrentUnitOfWork.SaveChangesAsync(); // to save reason
@@ -393,9 +392,8 @@ namespace TACHYON.Tracking.AdditionalSteps
             await _additionalStepTransition.InsertAndGetIdAsync(transition);
         }
         
-        private async Task HandlePointDelivery(RoutPoint point)
+        private async Task HandlePointDelivery(RoutPoint point, AdditionalStepType additionalStepType)
         {
-
             DisableTenancyFilters();
            var trip = await _tripRepository.GetAll().Where(x => x.Id == point.ShippingRequestTripId)
                .Select(x => new DeliveredTripDto
@@ -405,7 +403,18 @@ namespace TACHYON.Tracking.AdditionalSteps
                    RequestRouteType = x.ShippingRequestFk.RouteTypeId,
                    RouteType = x.RouteType,
                    Status = x.Status,
-                   ShipperUser = new UserIdentifier(x.ShippingRequestFk.TenantId, x.ShippingRequestFk.CreatorUserId.Value)
+                   ShipperUser = x.ShippingRequestId.HasValue ? new UserIdentifier(x.ShippingRequestFk.TenantId, x.ShippingRequestFk.CreatorUserId.Value) : new UserIdentifier(x.ShipperTenantId, x.CreatorUserId.Value),
+                   TripShipperTenantId = x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId !=  x.ShippingRequestFk.CarrierTenantId 
+                   ?(int?) x.ShippingRequestFk.TenantId 
+                   :null,
+                   TripCarrierTenantId = x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId
+                   ? (int?)x.ShippingRequestFk.CarrierTenantId
+                   : null,
+                   CarrierTenantId = x.ShippingRequestId != null
+                   ? (int)x.ShippingRequestFk.CarrierTenantId
+                   : x.CarrierTenantId.Value,
+                   InvoiceTripStatus = x.InvoiceStatus,
+                   CarrierInvoiceTripStatus = x.CarrierInvoiceStatus
                })
                .FirstOrDefaultAsync();
 
@@ -426,6 +435,15 @@ namespace TACHYON.Tracking.AdditionalSteps
                     {
                         x.Status = ShippingRequestTripStatus.Delivered;
                     });
+                    //send notification about rating
+                    if(trip.ShippingRequestId != null)
+                    {
+                        if(trip.TripShipperTenantId != null)
+                        await _appNotifier.NotifyTenantWithRating(trip.ShippingRequestId, trip.Id, trip.TripShipperTenantId.Value, trip.TripCarrierTenantId.Value);
+                        if(trip.TripCarrierTenantId != null)
+                        await _appNotifier.NotifyTenantWithRating(trip.ShippingRequestId, trip.Id, trip.TripCarrierTenantId.Value, trip.TripShipperTenantId.Value);
+                    }
+                     
                     if (trip.ShippingRequestId != null)
                     {
                         await HandleDeliveredTrip(trip.ShippingRequestId.Value, trip.Id, trip.ShipperUser);
@@ -437,10 +455,10 @@ namespace TACHYON.Tracking.AdditionalSteps
              // if point is not completed execute the below
              
 
-             bool isAllRequiredStepsCompleted = await IsAllRequiredStepsCompleted(point.AdditionalStepWorkFlowVersion.Value, point.Id);
+             //bool isAllRequiredStepsCompleted = await IsAllRequiredStepsCompleted(point.AdditionalStepWorkFlowVersion.Value, point.Id);
            
              // don't mark trip as can be invoiced until all required transactions is completed
-             if (!isAllRequiredStepsCompleted) return; 
+             //if (!isAllRequiredStepsCompleted) return; 
              
              
              bool isSingleDrop = trip.RouteType == ShippingRequestRouteType.SingleDrop ||
@@ -448,52 +466,9 @@ namespace TACHYON.Tracking.AdditionalSteps
              
              bool isMultipleDrop = trip.RouteType == ShippingRequestRouteType.MultipleDrops ||
                                    trip.RequestRouteType == ShippingRequestRouteType.MultipleDrops;
-             
-             
-                if (isSingleDrop)
-                {
-                    _tripRepository.Update(trip.Id, x => x.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced);
-                    //we will create invoice in this case if shipper period is PayInAdvance or PayUponDelivery
-                    await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(point.ShippingRequestTripId);
-                }
-                
-                else if (isMultipleDrop)
-                {
-                //var otherPoints = await _routePointRepository.GetAll()
-                //    .Where(c => c.Id != point.Id && c.PickingType == PickingType.Dropoff && c.ShippingRequestTripId == trip.Id && c.AdditionalStepWorkFlowVersion.HasValue)
-                //    .Select(x=> new {x.Id, StepWorkflowVerion = x.AdditionalStepWorkFlowVersion.Value}).ToListAsync();
 
-                //foreach (var otherPoint in otherPoints)
-                //{
-                //    bool isOtherPointCompletedRequiredSteps =
-                //        await IsAllRequiredStepsCompleted(otherPoint.StepWorkflowVerion, otherPoint.Id);
+            await _invoiceManager.HandleInvoiceStatus(point.Id, isSingleDrop, additionalStepType == AdditionalStepType.ReceiverCode, trip.InvoiceTripStatus, trip.CarrierInvoiceTripStatus, trip.Id, trip.ShipperUser.TenantId.Value, trip.CarrierTenantId);
 
-                //    if (!isOtherPointCompletedRequiredSteps) return;
-                //}
-
-                //_tripRepository.Update(trip.Id, x => x.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced);
-                //await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip.Id);//we will create invoice in this case if shipper period is PayInAdvance
-
-
-                var otherPointsOrder = await _routePointRepository.GetAll()
-                    .Where(c => c.Id != point.Id && c.PickingType == PickingType.Dropoff && c.ShippingRequestTripId == trip.Id && c.AdditionalStepWorkFlowVersion.HasValue)
-                    .Select(x => x.PointOrder).ToListAsync();
-
-
-                // if the point is the last point in trip, and required document is uploaded, to allow invoice to be generated
-                if (!otherPointsOrder.Any(x=> x > point.PointOrder))
-                {
-                    bool isPointCompletedRequiredSteps =
-                            await IsAllRequiredStepsCompleted(point.AdditionalStepWorkFlowVersion.Value, point.Id);
-                    if (isPointCompletedRequiredSteps)
-                    {
-                        _tripRepository.Update(trip.Id, x => x.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced);
-                        await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip.Id);
-                    }
-                }
-            }
-
-            
         }
 
         private async Task<bool> CheckIfPointIsCompleted(RoutPoint point)

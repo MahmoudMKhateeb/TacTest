@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using System.Collections.Generic;
 using TACHYON.ServiceAreas;
 using TACHYON.Shipping.ShippingRequests;
@@ -13,7 +13,7 @@ namespace TACHYON.PricePackages.Dto
 
         public string Company { get; set; }
 
-        public string RouteType { get; set; }
+        public ShippingRequestRouteType? RouteType { get; set; }
 
         public string DisplayName { get; set; }
 
@@ -54,5 +54,13 @@ namespace TACHYON.PricePackages.Dto
         public List<int> ServiceAreas { get; set; }
 
         public PricePackageUsageType UsageType { get; set; }
+
+        public RoundTripType? RoundTrip { get; set; }
+        
+        public ShippingTypeEnum ShippingTypeId { get; set; }
+        
+        public long? OriginFacilityPortId { get; set; }
+        
+        public long? DestinationFacilityPortId { get; set; }
     }
 }

@@ -8,7 +8,7 @@
             <tab heading="{{ 'OperationLogs' | localize }}">
               <div class="row m-2">
                 <div class="col-sm-12 text-right">
-                  <button type="button" class="btn btn-success" (click)="exportToExcelAuditLogs()">
+                  <button type="button" class="btn btn-outline-secondary" (click)="exportToExcelAuditLogs()">
                     <i class="far fa-file-excel"></i> {{ 'ExportToExcel' | localize }}
                   </button>
                   <button type="button" class="btn btn-primary" (click)="getAuditLogs()">
@@ -51,8 +51,8 @@
                       </div>
                     </div>
                     <div class="col-md-6">
-                      <label style="display: block;">{{ 'Duration' | localize }}</label>
-                      <div class="input-group" style="width: 250px !important;">
+                      <label style="display: block">{{ 'Duration' | localize }}</label>
+                      <div class="input-group" style="width: 250px !important">
                         <input
                           type="text"
                           name="MinExecutionDuration"
@@ -141,32 +141,32 @@
                   >
                     <ng-template pTemplate="header">
                       <tr>
-                        <th style="width: 75px;"></th>
-                        <th style="width: 75px;"></th>
-                        <th style="width: 150px;" pSortableColumn="userName">
+                        <th style="width: 75px"></th>
+                        <th style="width: 75px"></th>
+                        <th style="width: 150px" pSortableColumn="userName">
                           {{ 'UserName' | localize }}
                           <p-sortIcon field="userName"></p-sortIcon>
                         </th>
-                        <th style="width: 250px;">
+                        <th style="width: 250px">
                           {{ 'Service' | localize }}
                         </th>
-                        <th style="width: 250px;">
+                        <th style="width: 250px">
                           {{ 'Action' | localize }}
                         </th>
-                        <th style="width: 100px;" pSortableColumn="executionDuration">
+                        <th style="width: 100px" pSortableColumn="executionDuration">
                           {{ 'Duration' | localize }}
                           <p-sortIcon field="executionDuration"></p-sortIcon>
                         </th>
-                        <th style="width: 150px;">
+                        <th style="width: 150px">
                           {{ 'IpAddress' | localize }}
                         </th>
-                        <th style="width: 150px;">
+                        <th style="width: 150px">
                           {{ 'Client' | localize }}
                         </th>
-                        <th style="width: 150px;">
+                        <th style="width: 150px">
                           {{ 'Browser' | localize }}
                         </th>
-                        <th style="width: 150px;" pSortableColumn="executionTime">
+                        <th style="width: 150px" pSortableColumn="executionTime">
                           {{ 'Time' | localize }}
                           <p-sortIcon field="executionTime"></p-sortIcon>
                         </th>
@@ -174,47 +174,47 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-record="$implicit">
                       <tr>
-                        <td style="width: 75px;">
+                        <td style="width: 75px">
                           <div class="text-center">
                             <button class="btn btn-outline-primary btn-sm btn-icon" (click)="showAuditLogDetails(record)">
                               <i class="la la-search" [attr.aria-label]="l('Search')"></i>
                             </button>
                           </div>
                         </td>
-                        <td style="width: 75px;">
+                        <td style="width: 75px">
                           <div class="text-center">
                             <i *ngIf="record.exception" class="fa fa-exclamation-triangle text-warning"></i>
                             <i *ngIf="!record.exception" class="fa fa-check-circle text-success"></i>
                           </div>
                         </td>
-                        <td style="width: 150px;">
+                        <td style="width: 150px">
                           <span class="ui-column-title">{{ 'UserName' | localize }}</span>
                           {{ record.userName }}
                         </td>
-                        <td style="width: 250px;">
+                        <td style="width: 250px">
                           <span class="ui-column-title">{{ 'Service' | localize }}</span>
                           {{ record.serviceName }}
                         </td>
-                        <td style="width: 250px;">
+                        <td style="width: 250px">
                           <span class="ui-column-title">{{ 'Action' | localize }}</span>
                           {{ record.methodName }}
                         </td>
-                        <td style="width: 100px;">
+                        <td style="width: 100px">
                           <span class="ui-column-title">{{ 'Duration' | localize }}</span>
                         </td>
-                        <td style="width: 150px;">
+                        <td style="width: 150px">
                           <span class="ui-column-title">{{ 'IpAddress' | localize }}</span>
                           {{ record.clientIpAddress }}
                         </td>
-                        <td style="width: 150px;">
+                        <td style="width: 150px">
                           <span class="ui-column-title">{{ 'Client' | localize }}</span>
                           {{ record.clientName }}
                         </td>
-                        <td style="width: 150px;">
+                        <td style="width: 150px">
                           <span class="ui-column-title">{{ 'Browser' | localize }}</span>
                           <span title="{{ record.browserInfo }}">{{ truncateStringWithPostfix(record.browserInfo, 20) }}</span>
                         </td>
-                        <td style="width: 150px;">
+                        <td style="width: 150px">
                           <span class="ui-column-title">{{ 'Time' | localize }}</span>
                           {{ record.executionTime | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}
                         </td>
@@ -244,7 +244,7 @@
             <tab heading="{{ 'ChangeLogs' | localize }}">
               <div class="row m-2">
                 <div class="col-sm-12 text-right">
-                  <button type="button" class="btn btn-success" (click)="exportToExcelEntityChanges()">
+                  <button type="button" class="btn btn-outline-secondary" (click)="exportToExcelEntityChanges()">
                     <i class="far fa-file-excel"></i> {{ 'ExportToExcel' | localize }}
                   </button>
                   <button type="button" class="btn btn-primary" (click)="getEntityChanges()">
@@ -287,7 +287,7 @@
                         <label for="EntityTypeFullName">{{ 'Object' | localize }}</label>
 
                         <select id="EntityTypeFullName" name="EntityTypeFullName" class="form-control" [(ngModel)]="entityTypeFullName">
-                          <option value="undefined" selected="selected">{{ 'All' | localize }} </option>
+                          <option value="undefined" selected="selected">{{ 'All' | localize }}</option>
                           <option *ngFor="let objectType of objectTypes" [value]="objectType.value">{{ objectType.name }}</option>
                         </select>
                       </div>
@@ -314,18 +314,18 @@
                   >
                     <ng-template pTemplate="header">
                       <tr>
-                        <th style="width: 40px;"></th>
-                        <th style="width: 150px;">
+                        <th style="width: 40px"></th>
+                        <th style="width: 150px">
                           {{ 'Action' | localize }}
                         </th>
-                        <th style="width: 250px;">
+                        <th style="width: 250px">
                           {{ 'Object' | localize }}
                         </th>
-                        <th style="width: 150px;" pSortableColumn="userName">
+                        <th style="width: 150px" pSortableColumn="userName">
                           {{ 'UserName' | localize }}
                           <p-sortIcon field="userName"></p-sortIcon>
                         </th>
-                        <th style="width: 150px;" pSortableColumn="changeTime">
+                        <th style="width: 150px" pSortableColumn="changeTime">
                           {{ 'Time' | localize }}
                           <p-sortIcon field="changeTime"></p-sortIcon>
                         </th>
@@ -333,26 +333,26 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-record="$implicit">
                       <tr>
-                        <td style="width: 40px;">
+                        <td style="width: 40px">
                           <div class="text-center">
                             <button class="btn btn-outline-primary btn-sm btn-icon" (click)="showEntityChangeDetails(record)">
                               <i class="la la-search" [attr.aria-label]="l('Search')"></i>
                             </button>
                           </div>
                         </td>
-                        <td style="width: 150px;">
+                        <td style="width: 150px">
                           <span class="ui-column-title">{{ 'Action' | localize }}</span>
                           <span title="{{ record.changeTypeName }}">{{ l(record.changeTypeName) }}</span>
                         </td>
-                        <td style="width: 250px;">
+                        <td style="width: 250px">
                           <span class="ui-column-title">{{ 'Object' | localize }}</span>
                           {{ record.entityTypeFullName }}
                         </td>
-                        <td style="width: 150px;">
+                        <td style="width: 150px">
                           <span class="ui-column-title">{{ 'UserName' | localize }}</span>
                           {{ record.userName }}
                         </td>
-                        <td style="width: 150px;">
+                        <td style="width: 150px">
                           <span class="ui-column-title">{{ 'Time' | localize }}</span>
                           {{ record.changeTime | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}
                         </td>

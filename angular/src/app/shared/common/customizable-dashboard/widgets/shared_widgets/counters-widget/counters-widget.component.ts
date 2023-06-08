@@ -31,7 +31,7 @@ export class CountersWidgetComponent extends AppComponentBase implements OnInit 
       return item;
     });
     if (!(this.hasCarrierClients && this.hasShipperClients)) {
-      this.invoiceType = this.isShipper ? BrokerInvoiceType.Invoice : BrokerInvoiceType.SubmitInvoice;
+      this.invoiceType = this.isShipper ? BrokerInvoiceType.ShipperInvoices : BrokerInvoiceType.CarrierInvoices;
     } else {
       this.invoiceType = this.invoiceTypes[0].key;
     }

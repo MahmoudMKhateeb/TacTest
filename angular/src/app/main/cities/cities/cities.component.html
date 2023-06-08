@@ -2,8 +2,8 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'Cities' | localize" [description]="'CitiesHeaderInfo' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
-        <button (click)="ImportCitiesPolygonsModal.show()" class="btn btn-outline-danger">
+        <button (click)="exportToExcel()" class="btn btn-outline-secondary"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button (click)="ImportCitiesPolygonsModal.show()" class="btn btn-secondary">
           <i class="fa fa-plus"></i> {{ l('ImportCitiesPolygons') }}
         </button>
         <button *ngIf="isGranted('Pages.Cities.Create')" (click)="createCity()" class="btn btn-primary blue">

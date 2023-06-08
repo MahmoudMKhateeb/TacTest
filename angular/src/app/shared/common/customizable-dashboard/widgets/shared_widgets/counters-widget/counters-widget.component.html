@@ -1,10 +1,8 @@
 <!--[busyIf]="loading"-->
 <div [ngClass]="hasCarrierClients && hasShipperClients ? 'd-flex flex-column h-100 w-100 justify-content-between' : 'w-100 h-100'">
-  <div
-    class="card card-custom card-stretch w-100"
-    [class.h-100]="!(hasCarrierClients && hasShipperClients)"
-    [class.mb-4]="hasCarrierClients && hasShipperClients"
-  >
+  <!--    [class.h-100]="!(hasCarrierClients && hasShipperClients)"-->
+  <!--    [class.mb-4]="hasCarrierClients && hasShipperClients"-->
+  <div class="card card-custom card-stretch w-100 h-100">
     <div class="card-body p-4 d-flex flex-column justify-content-center">
       <div class="d-flex">
         <div class="text-center col-4 p-0">
@@ -44,21 +42,21 @@
       <app-shipper-due-date-in-days></app-shipper-due-date-in-days>
     </div>
   </div>
-  <div *ngIf="hasCarrierClients && hasShipperClients" class="card card-custom card-stretch w-100 h-35">
-    <div class="filter-box">
-      <dx-select-box
-        id="invoiceType"
-        name="invoiceType"
-        [(value)]="invoiceType"
-        [dataSource]="invoiceTypes"
-        [searchEnabled]="true"
-        displayExpr="value"
-        valueExpr="key"
-        placeholder="{{ l('SelectInvoiceType') }}"
-      ></dx-select-box>
-    </div>
-    <div class="card-body justify-content-between p-4 d-flex flex-column justify-content-center">
-      <app-invoice-due-date [invoiceType]="invoiceType"></app-invoice-due-date>
-    </div>
-  </div>
+  <!--  <div *ngIf="hasCarrierClients && hasShipperClients" class="card card-custom card-stretch w-100 h-35">-->
+  <!--    <div class="filter-box">-->
+  <!--      <dx-select-box-->
+  <!--        id="invoiceType"-->
+  <!--        name="invoiceType"-->
+  <!--        [(value)]="invoiceType"-->
+  <!--        [dataSource]="invoiceTypes"-->
+  <!--        [searchEnabled]="true"-->
+  <!--        displayExpr="value"-->
+  <!--        valueExpr="key"-->
+  <!--        placeholder="{{ l('SelectInvoiceType') }}"-->
+  <!--      ></dx-select-box>-->
+  <!--    </div>-->
+  <!--    <div class="card-body justify-content-between p-4 d-flex flex-column justify-content-center">-->
+  <!--      <app-invoice-due-date [invoiceType]="invoiceType"></app-invoice-due-date>-->
+  <!--    </div>-->
+  <!--  </div>-->
 </div>

@@ -30,7 +30,7 @@
             <div class="form-group">
               <label for="Name">{{ 'InputType' | localize }} *</label>
               <select class="form-control" [(ngModel)]="dynamicParameter.inputType">
-                <option *ngFor="let inputType of allIputTypes" [value]="inputType">{{ inputType }} </option>
+                <option *ngFor="let inputType of allIputTypes" [value]="inputType">{{ inputType }}</option>
               </select>
             </div>
             <div class="form-group">
@@ -39,7 +39,7 @@
                 <input type="text" class="form-control" disabled="disabled" value="{{ dynamicParameter.permission }}" />
                 <div class="input-group-append">
                   <button class="btn btn-primary" type="button" (click)="openPermissionTreeModal()">
-                    <i class="fa fa-hand-pointer" style="color: white;"></i>
+                    <i class="fa fa-hand-pointer" style="color: white"></i>
                   </button>
                 </div>
               </div>
@@ -47,13 +47,13 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">
+          <button [disabled]="saving" type="button" class="btn btn-outline-danger font-weight-bold" (click)="close()">
             {{ 'Cancel' | localize }}
           </button>
 
           <button
             type="button"
-            class="btn btn-save font-weight-bold"
+            class="btn btn-primary font-weight-bold"
             (click)="save()"
             [disabled]="!dynamicParameter.parameterName || !dynamicParameter.inputType"
             [buttonBusy]="saving"

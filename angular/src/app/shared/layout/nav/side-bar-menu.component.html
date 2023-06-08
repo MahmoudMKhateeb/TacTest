@@ -51,6 +51,8 @@
     [ngClass]="getItemCssClasses(item)"
     data-placement="right"
   >
+    <!--    (mouseenter)="mouseEnterOnItem($event)"-->
+    <!--    (mouseleave)="mouseLeaveOnItem($event)"-->
     <!-- if menu item hasn't submenu -->
     <a
       *ngIf="!item.items.length && !item.external"
@@ -99,7 +101,7 @@
 
       <!--      <svg-icon *ngIf="item.icon" [src]="'assets/SVG/' + item.icon"></svg-icon>-->
 
-      <img width="25" src="assets/SVG/{{ item.icon }}" alt="" />
+      <img width="40" src="assets/SVG/{{ item.icon }}" alt="" />
 
       <!--end::Svg Icon-->
     </span>

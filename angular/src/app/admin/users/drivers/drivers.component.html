@@ -7,7 +7,7 @@
           <button
             dropdownToggle
             type="button"
-            class="btn btn-outline-success dropdown-toggle mr-1"
+            class="btn btn-outline-secondary dropdown-toggle mr-1"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
@@ -15,11 +15,25 @@
             <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
           </button>
           <div class="dropdown-menu dropdown-menu-right dropdown-excel-operations" *dropdownMenu>
-            <a class="dropdown-item" id="ExportUsersToExcelButton" (click)="exportToExcel()" href="javascript:;">
+            <a
+              *ngIf="isEnabled('App.ExportFunctionality')"
+              class="dropdown-item"
+              id="ExportUsersToExcelButton"
+              (click)="exportToExcel()"
+              href="javascript:;"
+            >
               <i class="fa fa-download mr-2 mt-1" style="font-size: 1rem"></i>
               {{ 'ExportToExcel' | localize }}
             </a>
-            <a href="javascript:;" *ngIf="'Pages.Administration.Users.Create' | permission" class="no-padding">
+            <a
+              href="javascript:;"
+              *ngIf="
+                ('Pages.Administration.Users.Create' | permission) &&
+                isEnabled('App.ImportFunctionality') &&
+                isEnabled('App.ImportFunctionality.ImportDriverFeature')
+              "
+              class="no-padding"
+            >
               <span class="fileinput-button">
                 <p-fileUpload
                   customUpload="true"
@@ -55,6 +69,10 @@
 
         <button (click)="createUser()" *ngIf="'Pages.Administration.Users.Create' | permission" class="btn btn-primary">
           <i class="fa fa-plus"></i> {{ 'CreateNewDriver' | localize }}
+        </button>
+        <button (click)="driverFilterModal.show()" class="btn btn-primary"><i class="fa fa-search"></i> {{ 'Search' | localize }}</button>
+        <button *ngIf="showClearSearchFilters" (click)="clearFilters()" class="btn btn-primary">
+          <i class="fa fa-trash"></i> {{ 'ClearFilters' | localize }}
         </button>
       </div>
     </sub-header>
@@ -129,7 +147,7 @@
                 [allowSorting]="false"
               ></dxi-column>
               <div *dxTemplate="let options of 'cellTemplate_IsActive'">
-                <span *ngIf="options.data.isActive" class="badge badge-success badge-inline">{{ 'Active' | localize }}</span>
+                <span *ngIf="options.data.isActive" class="badge badge-primary badge-inline">{{ 'Active' | localize }}</span>
                 <span *ngIf="!options.data.isActive" class="badge badge-dark badge-inline">{{ 'InActive' | localize }}</span>
               </div>
 
@@ -219,5 +237,6 @@
     <createOrEditDriverModal [creatDriver]="true" #createOrEditUserModal (modalSave)="getDrivers()"> </createOrEditDriverModal>
     <editUserPermissionsModal #editUserPermissionsModal></editUserPermissionsModal>
     <app-driver-tracking-modal #DriverTrackingModal></app-driver-tracking-modal>
+    <app-driver-filter-modal #driverFilterModal (searchClicked)="search($event)" [shouldClearInputs]="shouldClearInputs"></app-driver-filter-modal>
   </div>
 </div>

@@ -206,8 +206,8 @@ namespace TACHYON.PricePackages.PricePackageAppendices
                     .Select(x => x.TransportTypeFk?.DisplayName)?.Distinct()
                     .ToArray();
 
-                routeTypes = appendix.Proposal?.PricePackages?
-                    .Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType))?.Distinct()
+                routeTypes = appendix.Proposal?.PricePackages?.Where(x=> x.RouteType.HasValue)
+                    .Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType)).Distinct()
                     .ToArray();
             }
             // check if this carrier appendix
@@ -219,7 +219,7 @@ namespace TACHYON.PricePackages.PricePackageAppendices
                 transportTypes = appendix.PricePackages?
                     .Select(x => x.TransportTypeFk?.DisplayName).ToArray();
 
-                routeTypes = appendix.PricePackages?
+                routeTypes = appendix.PricePackages?.Where(x=> x.RouteType.HasValue)
                     .Select(x => Enum.GetName(typeof(ShippingRequestRouteType), x.RouteType)).ToArray();
                 
                 items = appendix.PricePackages?.Select(x => new AppendixTableItem()

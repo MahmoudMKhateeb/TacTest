@@ -443,9 +443,28 @@ namespace TACHYON.Rating
                 _ => null
             };
 
-            if (allRatings == null || allRatings.Count < 10) return;
-            ratingEntity.Rate = Convert.ToDecimal((allRatings.Sum() / allRatings.Count).ToString("0.0"));
-            ratingEntity.RateNumber = allRatings.Count;
+            var ratingMinCount = _settingManager.GetSettingValue<int>(AppSettings.Rating.TenantRatingMinNumber);
+            if (allRatings == null || allRatings.Count < ratingMinCount) return;
+            var rate = Convert.ToDecimal((allRatings.Sum() / allRatings.Count).ToString("0.0"));
+           var RateNumber = allRatings.Count;
+            DisableTenancyFilters();
+            switch (ratingEntity)
+            {
+                case Facility facility:
+                    _facilityRepository.Update(facility.Id, f => { f.Rate = rate; f.RateNumber = RateNumber; });
+                    break;
+                case User user:
+                    var userr = _userManager.GetUserById(user.Id);
+                    userr.Rate = rate;
+                    userr.RateNumber = RateNumber;
+                    break;
+                case Tenant tenant:
+                    var t =_tenantManager.GetById(tenant.Id);
+                    t.Rate = rate;
+                    t.RateNumber = RateNumber;
+                    break;
+
+            }
         }
 
         private async Task<List<decimal>> GetAllRatingAsync(RateType? rateType = null,
@@ -454,7 +473,7 @@ namespace TACHYON.Rating
             int? carrierId = null,
             long? driverId = null)
         {
-            return await _ratingLogRepository.GetAll().AsNoTracking()
+            return await _ratingLogRepository.GetAll()
                 .WhereIf(rateType.HasValue, x => x.RateType == rateType)
                 .WhereIf(facilityId.HasValue, x => x.FacilityId == facilityId)
                 .WhereIf(shipperId.HasValue, x => x.ShipperId == shipperId)

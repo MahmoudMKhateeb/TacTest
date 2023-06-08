@@ -59,7 +59,8 @@ import { CarrierAcceptedVsRejectdRequestsComponent } from './carrier/carrier-acc
 import { CarrierInvoicesDetailsWidgetComponent } from './carrier/carrier-invoices-details-widget/carrier-invoices-details-widget.component';
 import { ProjectPerformanceComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/project-performance/project-performance.component';
 import { TruckPerformanceChartComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/truck-performance/truck-performance-chart/truck-performance-chart.component';
-import { DxDateBoxModule, DxSelectBoxModule } from '@node_modules/devextreme-angular';
+import { DxDateBoxModule } from '@node_modules/devextreme-angular/ui/date-box';
+import { DxSelectBoxModule } from '@node_modules/devextreme-angular/ui/select-box';
 import { CountersWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/counters-widget/counters-widget.component';
 import { UpcomingTripsWidgetsComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/upcoming-trips-widgets/upcoming-trips-widgets.component';
 import { NeedsActionWidgetComponent } from '@app/shared/common/customizable-dashboard/widgets/shared_widgets/needs-action-widget/needs-action-widget.component';

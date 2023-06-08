@@ -7,18 +7,28 @@ using TACHYON.PriceOffers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.ShippingRequestVases;
+using TACHYON.Vases;
 
 namespace TACHYON.ShippingRequestTripVases
 {
     [Table("ShippingRequestTripVases")]
     public class ShippingRequestTripVas : FullAuditedEntity<long>
     {
-        public long ShippingRequestVasId { get; set; }
+        /// <summary>
+        /// Nallable bcz of direct trip
+        /// </summary>
+        public long? ShippingRequestVasId { get; set; }
 
         [ForeignKey("ShippingRequestVasId")] public ShippingRequestVas ShippingRequestVasFk { get; set; }
         public int ShippingRequestTripId { get; set; }
 
         [ForeignKey("ShippingRequestTripId")] public ShippingRequestTrip ShippingRequestTripFk { get; set; }
+        /// <summary>
+        /// This vas is for direct trip
+        /// </summary>
+        public virtual int? VasId { get; set; }
+
+        [ForeignKey("VasId")] public Vas VasFk { get; set; }
         /// <summary>
         /// This field is for appointment and clearance vas, to identify this vas is for any point
         /// </summary>

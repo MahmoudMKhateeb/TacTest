@@ -188,6 +188,7 @@ using Abp.Timing;
 using TACHYON.DedidcatedDynamicActorInvoices.Dtos;
 using TACHYON.DedicatedDynamicActorInvoices;
 using TACHYON.DedicatedDynamicActorInvoices.DedicatedDynamicActorInvoiceItems;
+using TACHYON.EntityTemplates;
 
 namespace TACHYON
 {
@@ -503,6 +504,10 @@ namespace TACHYON
 
             configuration.CreateMap<ShippingRequest, EditDedicatedStep2Dto>()
                 .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
+            
+            configuration.CreateMap<ShippingRequest, DedicatedShippingRequestTemplateDto>()
+                .ForMember(dest => dest.CountryId, opt=> opt.MapFrom(src=> src.ShippingRequestDestinationCities.First().CityFk.CountyId))
+                .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
 
             configuration.CreateMap<ShippingRequest, EditShippingRequestStep4Dto>()
                 .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src => src.ShippingRequestVases));
@@ -510,10 +515,11 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditShippingRequestTripDto, ShippingRequestTrip>()
                 .ForMember(d => d.WaybillNumber, opt => opt.Ignore())
                 .ForMember(d => d.RoutPoints, opt => opt.Ignore())
+                .ForMember(d=>d.ShippingRequestDestinationCities, opt=>opt.Ignore())
                 .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
                 .AfterMap(AddOrUpdateShippingRequestTrip);
             configuration.CreateMap<ShippingRequestTrip, TrackingShippingRequestTripDto>()
-                .ForMember(x => x.ShippingType, x => x.MapFrom(i => i.ShippingRequestFk.ShippingTypeId))
+                .ForMember(x => x.ShippingType, x => x.MapFrom(i => i.ShippingTypeId != null ?i.ShippingTypeId :i.ShippingRequestFk.ShippingTypeId))
                 .ForMember(x => x.RoutPoints, x => x.Ignore());
 
             configuration.CreateMap<ShippingRequestTripVas, CreateOrEditShippingRequestTripVasDto>()

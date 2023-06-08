@@ -1288,6 +1288,44 @@ namespace TACHYON.Notifications
             
         }
 
+        public async Task NotifyTenantWithRating(long? shippingRequestId,int tripId, int tenantId, int toTenantId)
+        {
+            var user = (await _tenantsRepository.FirstOrDefaultAsync(toTenantId)).TenancyName;
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("RateShippingExp", user),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["tripId"] = tripId;
+            notificationData["ShippingRequestId"] = shippingRequestId;
+
+         
+                var User = await GetTenantAdminUser(tenantId);
+
+                await _notificationPublisher.PublishAsync(AppNotificationNames.TripDeliveredToRate, notificationData,
+                    userIds: new[] { User });
+        }
+
+        public async Task NotifyShipperToRateDedicatedTrips(long? shippingRequestId, int shipperTenantId, int toTenantId)
+        {
+            var user = (await _tenantsRepository.FirstOrDefaultAsync(toTenantId)).TenancyName;
+            var notificationData = new LocalizableMessageNotificationData(
+               new LocalizableString(
+                   L("RateShippingExp", user),
+                   TACHYONConsts.LocalizationSourceName
+               )
+           );
+
+            notificationData["ShippingRequestId"] = shippingRequestId;
+
+                var shipperUser = await GetTenantAdminUser(shipperTenantId);
+
+                await _notificationPublisher.PublishAsync(AppNotificationNames.DedicatedRequestCompletedToRate, notificationData,
+                    userIds: new[] { shipperUser });
+        }
+
         #endregion
 
         #region Accident

@@ -24,6 +24,7 @@ import { Pokedex, styleObject } from '@app/main/addressBook/facilities/facilites
 import { WeekDay } from '@angular/common';
 import { CreateOrEditWorkingHoursComponent } from '@app/shared/common/workingHours/create-or-edit-working-hours/create-or-edit-working-hours.component';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { DxTextBoxComponent } from '@node_modules/devextreme-angular/ui/text-box';
 
 @Component({
   selector: 'createOrEditFacilityModal',
@@ -32,7 +33,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 })
 export class CreateOrEditFacilityModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('createOrEditFacilityModal', { static: true }) modal: ModalDirective;
-  @ViewChild('search') public searchElementRef: ElementRef;
+  @ViewChild('search') public searchElementRef: DxTextBoxComponent;
   @ViewChild('createFacilityForm') public createFacilityForm: NgForm;
   @ViewChild('secountInput') public secountInput: ElementRef;
   @ViewChild('CreateOrEditWorkingHoursComponent', { static: true }) CreateOrEditWorkingHoursComponent: CreateOrEditWorkingHoursComponent;
@@ -293,8 +294,9 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
         },
       };
 
+      const htmlInput = this.searchElementRef.instance.element().querySelectorAll('input.dx-texteditor-input').item(0) as any as HTMLInputElement;
       let autocomplete = new google.maps.places.Autocomplete(
-        this.searchElementRef.nativeElement,
+        htmlInput,
         isNotNullOrUndefined(this.selectedCityJson) ? options.borderRestriction : options.countryRestriction
       );
       autocomplete.addListener('place_changed', () => {
@@ -308,6 +310,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
           this.getAddress(place.geometry.location.lat(), place.geometry.location.lng());
         });
       });
+      htmlInput.placeholder = '';
     });
   }
 

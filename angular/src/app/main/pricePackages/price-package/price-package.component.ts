@@ -2,7 +2,8 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import { PricePackageServiceProxy } from '@shared/service-proxies/service-proxies';
+import { PricePackageServiceProxy, ShippingRequestRouteType } from '@shared/service-proxies/service-proxies';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   selector: 'app-price-package',
@@ -11,8 +12,9 @@ import { PricePackageServiceProxy } from '@shared/service-proxies/service-proxie
 })
 export class PricePackageComponent extends AppComponentBase implements OnInit {
   dataSource: any;
+  routeTypes = this._enumToArrayPipe.transform(ShippingRequestRouteType);
 
-  constructor(private injector: Injector, private _pricePackageProxy: PricePackageServiceProxy) {
+  constructor(private injector: Injector, private _pricePackageProxy: PricePackageServiceProxy, private _enumToArrayPipe: EnumToArrayPipe) {
     super(injector);
   }
 
@@ -42,5 +44,11 @@ export class PricePackageComponent extends AppComponentBase implements OnInit {
           });
       },
     });
+  }
+
+  getRouteTypeTitle(routeType): string {
+    let routeTypeTitle = this.routeTypes.find((item) => item.key === routeType?.toString())?.value;
+
+    return routeTypeTitle ?? '';
   }
 }

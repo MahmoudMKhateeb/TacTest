@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'RoutTypes' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button (click)="exportToExcel()" class="btn btn-outline-secondary"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
         <button *ngIf="isGranted('Pages.RoutTypes.Create')" (click)="createRoutType()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewRoutType') }}
@@ -79,12 +79,12 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.RoutTypes.Edit', 'Pages.RoutTypes.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
+                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.RoutTypes.Edit', 'Pages.RoutTypes.Delete')">{{ l('Actions') }}</th>
+                    <th style="width: 150px" pSortableColumn="displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="routType.displayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="description">
+                    <th style="width: 150px" pSortableColumn="description">
                       {{ l('Description') }}
                       <p-sortIcon field="routType.description"></p-sortIcon>
                     </th>
@@ -92,7 +92,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.RoutTypes.Edit', 'Pages.RoutTypes.Delete')">
+                    <td style="width: 130px" [hidden]="!isGrantedAny('Pages.RoutTypes.Edit', 'Pages.RoutTypes.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
@@ -125,11 +125,11 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.routType.displayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 150px">
                       <span class="ui-column-title"> {{ l('Description') }}</span>
                       {{ record.routType.description }}
                     </td>

@@ -48,7 +48,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Financials',
         'Pages.Invoices',
-        'Financials.svg',
+        '2 Financials.svg',
         '',
         [],
         [
@@ -192,7 +192,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'DocumentManagement',
         '',
-        'Document.svg',
+        '4 Documents managment.svg',
         '',
         [],
         [
@@ -266,7 +266,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Administration',
         '',
-        'content marketing, digital marketing, marketing, settings, options, key.svg',
+        '5 Admin.svg',
         '',
         [],
         [
@@ -282,12 +282,18 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Operations',
         'Pages',
-        'Operations.svg',
+        '6 Opertation.svg',
         '',
         [],
         [
           new AppMenuItem('TachyonManageService', 'Pages', '', '/app/main/tms/shippingRequests'),
-          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking'),
+          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking/shipmentTracking'),
+          new AppMenuItem(
+            'DirectShipmentTracking',
+            'Pages.Shipment.Tracking.DirectShipmentTracking',
+            '',
+            '/app/main/tracking/directShipmentTracking'
+          ),
           new AppMenuItem(
             'SavedTemplates',
             'Pages.EntityTemplate',
@@ -332,7 +338,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'PricePackages',
         '',
-        'shopping, shop, ecommerce, commerce, clipboard, finance.svg',
+        '7 Price Packging.svg',
         '',
         [],
         [
@@ -352,7 +358,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'TMSSettings',
         '',
-        'TMS Settings.svg',
+        '8 TMS Managment.svg',
         '',
         [],
         [
@@ -405,7 +411,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'AddressBook',
         '',
-        'Facility Managment.svg',
+        '9 Facilities managment.svg',
         '',
         [],
         [
@@ -428,7 +434,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'Settings',
         'Pages.Administration',
-        'Settings.svg',
+        '10 Setting.svg',
         '',
         [],
         [
@@ -494,7 +500,7 @@ export class AppHostNavigationService extends AppBaseNavigationService {
       new AppMenuItem(
         'UserManagement',
         '',
-        'User Management.svg',
+        '11 User managment.svg',
         '',
         [],
         [

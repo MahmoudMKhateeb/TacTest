@@ -1,4 +1,5 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -294,6 +295,79 @@ namespace TACHYON.Dashboards.Carrier
                 InTransitItems = inTransitTrucks,
                 TotalItemsCount = activeItems + notActiveItems
             };
+        }
+        
+        public async Task<CompletedTripVsPodListDto> GetCompletedTripVsPod(FilterDatePeriod period)
+        {
+            DisableTenancyFilters();
+
+            DateTime startOfCurrentWeek = Clock.Now.StartOfWeek(DayOfWeek.Sunday).Date;
+            DateTime endOfCurrentWeek = startOfCurrentWeek.AddDays(7).Date;
+
+            var query = _shippingRequestTripRepository
+                .GetAll()
+                .AsNoTracking()
+                .Where(x=> x.ShippingRequestId.HasValue ? x.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId: x.CarrierTenantId == AbpSession.TenantId)
+                .WhereIf(period == FilterDatePeriod.Daily,x=>  x.CreationTime.Date >= startOfCurrentWeek && x.CreationTime.Date <= endOfCurrentWeek )
+                .WhereIf(period == FilterDatePeriod.Weekly,x=>  x.CreationTime.Year == Clock.Now.Year && x.CreationTime.Month == Clock.Now.Month )
+                .WhereIf(period == FilterDatePeriod.Monthly,x=>  x.CreationTime.Year == Clock.Now.Year )
+                .Where(x => x.Status == ShippingRequestTripStatus.Delivered || x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation);
+
+
+            var podTrips = await query
+                    .Where(x=>x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
+                    .Where(x => x.RoutPoints.Where(y=>y.PickingType == PickingType.Dropoff).Any(p => !p.IsPodUploaded))
+                    .Select(x=> new {x.CreationTime,x.Id}).ToListAsync();
+            
+            var total = await query.Where(x=> x.Status == ShippingRequestTripStatus.Delivered).Select(x=> new {x.CreationTime,x.Id}).ToListAsync();
+                
+            
+            var podTripsList = new List<ChartCategoryPairedValuesDto>();
+            var totalList = new List<ChartCategoryPairedValuesDto>();
+            if (period == FilterDatePeriod.Daily)
+            {
+                podTripsList = podTrips.GroupBy(x => x.CreationTime.DayOfWeek)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = x.Key.ToString(), Y = x.Count() })
+                    .ToList();
+                
+                totalList = total.GroupBy(x => x.CreationTime.DayOfWeek)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = x.Key.ToString(), Y = x.Count() })
+                    .ToList();
+            }
+
+            if (period == FilterDatePeriod.Monthly)
+            {
+                podTripsList = podTrips.GroupBy(x => x.CreationTime.Month)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key ),Y = x.Count() })
+                    .ToList();
+                
+                totalList = total.GroupBy(x => x.CreationTime.Month)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), Y = x.Count() })
+                    .ToList();
+            }
+            
+            if (period == FilterDatePeriod.Weekly)
+            {
+                DateTime firstMonthDay = new DateTime(Clock.Now.Year, Clock.Now.Month, 1);
+                DateTime firstMonthSunday = firstMonthDay.AddDays((DayOfWeek.Sunday + 7 - firstMonthDay.DayOfWeek) % 7);
+                
+                podTripsList = podTrips.GroupBy(x => ((x.CreationTime.Day - firstMonthSunday.Day) / 7) +1)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"Week {x.Key}",Y = x.Count() })
+                    .ToList();
+                
+                totalList = total.GroupBy(x => ((x.CreationTime.Day - firstMonthSunday.Day) / 7) +1)
+                    .Select(x => new ChartCategoryPairedValuesDto() { X = $"Week {x.Key}", Y = x.Count() })
+                    .ToList();
+            }
+
+            return new CompletedTripVsPodListDto
+            {
+                CompletedTrips = totalList,
+                PODTrips = podTripsList
+            };
+
+
+
         }
 
         public async Task<ActivityItemsDto> GetTrucksActivity()

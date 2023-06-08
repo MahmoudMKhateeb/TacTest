@@ -52,6 +52,47 @@
                   {{ 'PricePackageInvalidDisplayNameMsg' | localize }}
                 </div>
               </div>
+
+              <div class="form-group col-md-6">
+                <label>{{ l('ProjectName') }} </label>
+                <input
+                  [(ngModel)]="pricePackageDto.projectName"
+                  minlength="3"
+                  maxlength="150"
+                  name="projectName"
+                  type="text"
+                  class="form-control"
+                  #projectName="ngModel"
+                  [ngClass]="{
+                    'is-invalid': projectName.invalid && (projectName.dirty || projectName.touched),
+                    'is-valid': projectName.valid && (projectName.dirty || projectName.touched)
+                  }"
+                />
+                <div *ngIf="projectName.invalid && (projectName.dirty || projectName.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidProjectNameMsg' | localize }}
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>{{ l('ScopeOfWork') }}</label>
+                <input
+                  [(ngModel)]="pricePackageDto.scopeOfWork"
+                  minlength="3"
+                  maxlength="300"
+                  name="scopeOfWork"
+                  type="text"
+                  class="form-control"
+                  #scopeOfWork="ngModel"
+                  [ngClass]="{
+                    'is-invalid': scopeOfWork.invalid && (scopeOfWork.dirty || scopeOfWork.touched),
+                    'is-valid': scopeOfWork.valid && (scopeOfWork.dirty || scopeOfWork.touched)
+                  }"
+                />
+                <div *ngIf="scopeOfWork.invalid && (scopeOfWork.dirty || scopeOfWork.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidScopeOfWorkMsg' | localize }}
+                </div>
+              </div>
+
               <div *ngIf="isTachyonDealerOrHost && !pricePackageDto.id" class="form-group col-md-6">
                 <label>{{ l('Company') }} <span class="text-danger">*</span></label>
                 <div
@@ -131,26 +172,6 @@
               </div>
 
               <div class="form-group col-md-6">
-                <label>{{ l('RouteType') }} <span class="text-danger">*</span></label>
-                <select
-                  #routeType="ngModel"
-                  [(ngModel)]="pricePackageDto.routeType"
-                  required
-                  class="form-control"
-                  name="tmsPP_RouteType"
-                  [ngClass]="{
-                    'is-invalid': routeType.invalid && (routeType.dirty || routeType.touched),
-                    'is-valid': routeType.valid && (routeType.dirty || routeType.touched)
-                  }"
-                >
-                  <option selected disabled [value]="undefined">{{ 'SelectRouteType' | localize }}</option>
-                  <option *ngFor="let item of routeTypes" [value]="item.key">{{ item.value }}</option>
-                </select>
-                <div *ngIf="routeType.invalid && (routeType.dirty || routeType.touched)" class="invalid-feedback">
-                  {{ 'PricePackageInvalidRouteTypeMsg' | localize }}
-                </div>
-              </div>
-              <div class="form-group col-md-6">
                 <label>{{ l('PricePackageType') }} <span class="text-danger">*</span></label>
                 <select
                   [(ngModel)]="pricePackageDto.type"
@@ -176,24 +197,30 @@
               </div>
               <div *ngIf="pricePackageDto.type == pricePackageType.Dedicated" class="form-group col-md-6">
                 <label>{{ l('OriginCountry') }} <span class="text-danger">*</span></label>
-                <select
-                  [(ngModel)]="pricePackageDto.originCountryId"
-                  (ngModelChange)="originCountryChanged()"
-                  required
-                  class="form-control"
-                  name="tmsPP_OriginCity"
-                  #originCity="ngModel"
+                <div
                   [ngClass]="{
-                    'is-invalid': originCity.invalid && (originCity.dirty || originCity.touched),
-                    'is-valid': originCity.valid && (originCity.dirty || originCity.touched)
+                    'spinner spinner-success spinner-right mr-1 ml-1': countriesLoading
                   }"
                 >
-                  <option selected disabled [value]="undefined">{{ 'SelectAnOriginCountry' | localize }}</option>
-                  <option *ngFor="let item of countries" [value]="item.id">
-                    {{ item.displayName }}
-                  </option>
-                </select>
-                <div *ngIf="originCity.invalid && (originCity.dirty || originCity.touched)" class="invalid-feedback">
+                  <select
+                    [(ngModel)]="pricePackageDto.originCountryId"
+                    (ngModelChange)="originCountryChanged()"
+                    required
+                    class="form-control"
+                    name="tmsPP_OriginCountry"
+                    #OriginCountry="ngModel"
+                    [ngClass]="{
+                      'is-invalid': OriginCountry.invalid && (OriginCountry.dirty || OriginCountry.touched),
+                      'is-valid': OriginCountry.valid && (OriginCountry.dirty || OriginCountry.touched)
+                    }"
+                  >
+                    <option selected disabled [value]="undefined">{{ 'SelectAnOriginCountry' | localize }}</option>
+                    <option *ngFor="let item of countries" [value]="item.id">
+                      {{ item.displayName }}
+                    </option>
+                  </select>
+                </div>
+                <div *ngIf="OriginCountry.invalid && (OriginCountry.dirty || OriginCountry.touched)" class="invalid-feedback">
                   {{ 'PricePackageInvalidOriginCountryMsg' | localize }}
                 </div>
               </div>
@@ -202,7 +229,7 @@
                 <label>{{ l('ShippingType') }} <span class="text-danger">*</span></label>
                 <select
                   [(ngModel)]="pricePackageDto.shippingTypeId"
-                  (ngModelChange)="shippingTypeChanged()"
+                  (change)="shippingTypeChanged()"
                   required
                   class="form-control"
                   name="tmsPP_ShippingType"
@@ -213,11 +240,69 @@
                   }"
                 >
                   <option selected disabled [value]="undefined">{{ 'SelectShippingType' | localize }}</option>
-                  <option *ngFor="let item of shippingTypes" [value]="item.id">
-                    {{ item.displayName }}
+                  <option *ngFor="let item of shippingTypes" [value]="item.key">
+                    {{ item.value }}
                   </option>
                 </select>
                 <div *ngIf="shippingType.invalid && (shippingType.dirty || shippingType.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidShippingTypeMsg' | localize }}
+                </div>
+              </div>
+              <div
+                *ngIf="
+                  pricePackageDto.type != pricePackageType.Dedicated &&
+                  pricePackageDto.shippingTypeId != shippingTypeEnum.ImportPortMovements &&
+                  pricePackageDto.shippingTypeId != shippingTypeEnum.ExportPortMovements
+                "
+                class="form-group col-md-6"
+              >
+                <label>{{ l('RouteType') }} <span class="text-danger">*</span></label>
+                <select
+                  #routeType="ngModel"
+                  [(ngModel)]="pricePackageDto.routeType"
+                  required
+                  (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"
+                  class="form-control"
+                  name="tmsPP_RouteType"
+                  [ngClass]="{
+                    'is-invalid': routeType.invalid && (routeType.dirty || routeType.touched),
+                    'is-valid': routeType.valid && (routeType.dirty || routeType.touched)
+                  }"
+                >
+                  <option selected disabled [value]="undefined">{{ 'SelectRouteType' | localize }}</option>
+                  <option *ngFor="let item of routeTypes" [value]="item.key">{{ item.value }}</option>
+                </select>
+                <div *ngIf="routeType.invalid && (routeType.dirty || routeType.touched)" class="invalid-feedback">
+                  {{ 'PricePackageInvalidRouteTypeMsg' | localize }}
+                </div>
+              </div>
+
+              <div
+                *ngIf="
+                  pricePackageDto.shippingTypeId == shippingTypeEnum.ImportPortMovements ||
+                  pricePackageDto.shippingTypeId == shippingTypeEnum.ExportPortMovements
+                "
+                class="form-group col-md-6"
+              >
+                <label>{{ l('RoundTripType') }} <span class="text-danger">*</span></label>
+                <select
+                  [(ngModel)]="pricePackageDto.roundTrip"
+                  (ngModelChange)="applyFilters()"
+                  required
+                  class="form-control"
+                  name="tmsPP_RoundTripType"
+                  #RoundTripType="ngModel"
+                  [ngClass]="{
+                    'is-invalid': RoundTripType.invalid && (RoundTripType.dirty || RoundTripType.touched),
+                    'is-valid': RoundTripType.valid && (RoundTripType.dirty || RoundTripType.touched)
+                  }"
+                >
+                  <option selected disabled [value]="undefined">{{ 'SelectShippingType' | localize }}</option>
+                  <option *ngFor="let item of roundTripTypes" [value]="item.id">
+                    {{ item.displayName }}
+                  </option>
+                </select>
+                <div *ngIf="RoundTripType.invalid && (RoundTripType.dirty || RoundTripType.touched)" class="invalid-feedback">
                   {{ 'PricePackageInvalidShippingTypeMsg' | localize }}
                 </div>
               </div>
@@ -228,8 +313,8 @@
                   #serviceAreas="ngModel"
                   dropdownIcon="fa fa-caret-down"
                   name="serviceAreas"
-                  [options]="cities"
-                  [(ngModel)]="pricePackageDto.serviceAreas"
+                  [options]="pricePackageOriginLocations"
+                  [(ngModel)]="selectedServiceAreas"
                   (onChange)="applyFilters()"
                   [selectedItemsLabel]="'{0} items selected'"
                   [style]="{ width: '100%' }"
@@ -250,116 +335,82 @@
                 </div>
               </div>
 
-              <div *ngIf="pricePackageDto.type == pricePackageType.Dedicated" class="form-group col-md-6">
-                <label>{{ l('ProjectName') }} </label>
-                <input
-                  [(ngModel)]="pricePackageDto.projectName"
-                  minlength="3"
-                  maxlength="150"
-                  name="projectName"
-                  type="text"
-                  class="form-control"
-                  #projectName="ngModel"
-                  [ngClass]="{
-                    'is-invalid': projectName.invalid && (projectName.dirty || projectName.touched),
-                    'is-valid': projectName.valid && (projectName.dirty || projectName.touched)
-                  }"
-                />
-                <div *ngIf="projectName.invalid && (projectName.dirty || projectName.touched)" class="invalid-feedback">
-                  {{ 'PricePackageInvalidProjectNameMsg' | localize }}
-                </div>
-              </div>
-
-              <div *ngIf="pricePackageDto.type == pricePackageType.Dedicated" class="form-group col-md-6">
-                <label>{{ l('ScopeOfWork') }}</label>
-                <input
-                  [(ngModel)]="pricePackageDto.scopeOfWork"
-                  minlength="3"
-                  maxlength="300"
-                  name="scopeOfWork"
-                  type="text"
-                  class="form-control"
-                  #scopeOfWork="ngModel"
-                  [ngClass]="{
-                    'is-invalid': scopeOfWork.invalid && (scopeOfWork.dirty || scopeOfWork.touched),
-                    'is-valid': scopeOfWork.valid && (scopeOfWork.dirty || scopeOfWork.touched)
-                  }"
-                />
-                <div *ngIf="scopeOfWork.invalid && (scopeOfWork.dirty || scopeOfWork.touched)" class="invalid-feedback">
-                  {{ 'PricePackageInvalidScopeOfWorkMsg' | localize }}
-                </div>
-              </div>
-
-              <div *ngIf="companyType == companyTypeEnum.Shipper" class="form-group col-md-6">
-                <label>{{ l('SelectCarriers') }} </label>
-                <p-multiSelect
-                  dropdownIcon="fa fa-caret-down"
-                  name="carriers"
-                  [options]="carriers"
-                  [(ngModel)]="selectedCarriers"
-                  [selectedItemsLabel]="'{0} items selected'"
-                  (ngModelChange)="applyFilters()"
-                  [style]="{ width: '100%' }"
-                  styleClass="form-control pt-1"
-                  [dataKey]="'id'"
-                  optionLabel="displayName"
-                >
-                </p-multiSelect>
-                <span class="form-text text-muted">{{ 'UseCarriersFilterMsg' | localize }}</span>
-              </div>
-
-              <div *ngIf="pricePackageDto.type == pricePackageType.PerTrip" class="form-group col-md-6">
+              <div *ngIf="pricePackageDto.type != pricePackageType.Dedicated" class="form-group col-md-6">
                 <label>{{ l('OriginCity') }} <span class="text-danger">*</span></label>
-                <select
-                  [(ngModel)]="pricePackageDto.originCityId"
-                  (ngModelChange)="originCityChanged()"
-                  required
-                  [disabled]="!pricePackageDto.shippingTypeId"
-                  class="form-control"
+
+                <dx-select-box
+                  id="PP_OriginCity"
                   name="tmsPP_OriginCity"
                   #originCity="ngModel"
+                  [(ngModel)]="originLocationId"
+                  (ngModelChange)="originCityChanged()"
+                  [dataSource]="pricePackageOriginLocations"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  [disabled]="!pricePackageDto.shippingTypeId"
+                  [required]="true"
+                  placeholder="{{ l('SelectanOriginCity') }}"
+                  fieldTemplate="originCityTemplate"
                   [ngClass]="{
                     'is-invalid': originCity.invalid && (originCity.dirty || originCity.touched),
                     'is-valid': originCity.valid && (originCity.dirty || originCity.touched)
                   }"
                 >
-                  <option selected disabled [value]="undefined">{{ 'SelectanOriginCity' | localize }}</option>
-                  <option
-                    [disabled]="pricePackageDto.shippingTypeId == 2 && pricePackageDto.destinationCityId == item.id"
-                    *ngFor="let item of cities"
-                    [value]="item.id"
-                  >
-                    {{ item.displayName }}
-                  </option>
-                </select>
+                  <div *dxTemplate="let data of 'originCityTemplate'">
+                    <dx-text-box
+                      [disabled]="
+                        pricePackageDto.shippingTypeId == shippingTypeEnum.LocalBetweenCities &&
+                        pricePackageDto.destinationLocation?.cityId == data?.cityId
+                      "
+                      class="product-name"
+                      [value]="data?.displayName"
+                      [readOnly]="true"
+                    ></dx-text-box>
+                  </div>
+                </dx-select-box>
                 <div *ngIf="originCity.invalid && (originCity.dirty || originCity.touched)" class="invalid-feedback">
                   {{ 'PricePackageInvalidOriginCityMsg' | localize }}
                 </div>
               </div>
-              <div *ngIf="pricePackageDto.type == pricePackageType.PerTrip && pricePackageDto.shippingTypeId != 1" class="form-group col-md-6">
+              <div
+                *ngIf="pricePackageDto.type == pricePackageType.PerTrip && pricePackageDto.shippingTypeId != shippingTypeEnum.LocalInsideCity"
+                class="form-group col-md-6"
+              >
                 <label>{{ l('DestinationCity') }} <span class="text-danger">*</span></label>
-                <select
-                  [(ngModel)]="pricePackageDto.destinationCityId"
-                  (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"
-                  [disabled]="!pricePackageDto.shippingTypeId"
-                  required
-                  class="form-control"
+
+                <dx-select-box
+                  id="PP_DestinationCity"
                   name="tmsPP_DestinationCity"
                   #destinationCity="ngModel"
+                  [(ngModel)]="destinationLocationId"
+                  (ngModelChange)="companyType == companyTypeEnum.Shipper ? applyFilters() : undefined"
+                  [disabled]="!pricePackageDto.shippingTypeId"
+                  [dataSource]="pricePackageDestinationLocations"
+                  [searchEnabled]="true"
+                  displayExpr="displayName"
+                  valueExpr="id"
+                  [required]="true"
+                  placeholder="{{ l('SelectaDestination') }}"
+                  fieldTemplate="destinationCityTemplate"
                   [ngClass]="{
                     'is-invalid': destinationCity.invalid && (destinationCity.dirty || destinationCity.touched),
                     'is-valid': destinationCity.valid && (destinationCity.dirty || destinationCity.touched)
                   }"
                 >
-                  <option selected disabled [value]="undefined">{{ 'SelectaDestination' | localize }}</option>
-                  <option
-                    [disabled]="pricePackageDto.shippingTypeId == 2 && pricePackageDto.originCityId == item.id"
-                    *ngFor="let item of cities"
-                    [value]="item.id"
-                  >
-                    {{ item.displayName }}
-                  </option>
-                </select>
+                  <div *dxTemplate="let data of 'destinationCityTemplate'">
+                    <dx-text-box
+                      [disabled]="
+                        pricePackageDto.shippingTypeId == shippingTypeEnum.LocalBetweenCities &&
+                        pricePackageDto?.originLocation?.cityId == data?.cityId
+                      "
+                      class="product-name"
+                      [value]="data?.displayName"
+                      [readOnly]="true"
+                    ></dx-text-box>
+                  </div>
+                </dx-select-box>
+
                 <div *ngIf="destinationCity.invalid && (destinationCity.dirty || destinationCity.touched)" class="invalid-feedback">
                   {{ 'PricePackageInvalidDestinationCityMsg' | localize }}
                 </div>
@@ -410,7 +461,7 @@
               </div>
 
               <div *ngIf="companyType == companyTypeEnum.Carrier" class="form-group col-md-6">
-                <label>{{ l('DirectRequestPrice') }} <span class="text-danger">*</span></label>
+                <label>{{ l('DirectRequestPrice') }}</label>
                 <input
                   [(ngModel)]="pricePackageDto.directRequestPrice"
                   min="0"
@@ -418,7 +469,6 @@
                   name="directRequestPrice"
                   type="number"
                   class="form-control"
-                  required
                   #directRequestPrice="ngModel"
                   [ngClass]="{
                     'is-invalid': directRequestPrice.invalid && (directRequestPrice.dirty || directRequestPrice.touched),
@@ -428,6 +478,24 @@
                 <div *ngIf="directRequestPrice.invalid && (directRequestPrice.dirty || directRequestPrice.touched)" class="invalid-feedback">
                   {{ 'PricePackageInvalidDirectRequestPriceMsg' | localize }}
                 </div>
+              </div>
+
+              <div *ngIf="companyType == companyTypeEnum.Shipper" class="form-group col-md-6">
+                <label>{{ l('SelectCarriers') }} </label>
+                <p-multiSelect
+                  dropdownIcon="fa fa-caret-down"
+                  name="carriers"
+                  [options]="carriers"
+                  [(ngModel)]="selectedCarriers"
+                  [selectedItemsLabel]="'{0} items selected'"
+                  (ngModelChange)="applyFilters()"
+                  [style]="{ width: '100%' }"
+                  styleClass="form-control pt-1"
+                  [dataKey]="'id'"
+                  optionLabel="displayName"
+                >
+                </p-multiSelect>
+                <span class="form-text text-muted">{{ 'UseCarriersFilterMsg' | localize }}</span>
               </div>
             </div>
 
@@ -465,13 +533,12 @@
                         <dxi-column dataField="company" caption="{{ l('Carrier') }} "></dxi-column>
                         <dxi-column dataField="truckType" caption="{{ l('TruckType') }}" [groupIndex]="0"></dxi-column>
                         <dxi-column dataField="totalPrice" caption="{{ l('TachyonMSRequestPrice') }}"></dxi-column>
-                        <dxi-column dataField="isMultiDrop" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"></dxi-column>
+                        <dxi-column dataField="routeType" cellTemplate="cellTemplate_RoutType" caption="{{ l('RouteType') }}"></dxi-column>
                         <dxi-column dataField="originCity" caption="{{ l('Origin') }}"></dxi-column>
                         <dxi-column dataField="destinationCity" caption="{{ l('Destination') }}"></dxi-column>
 
                         <div *dxTemplate="let options of 'cellTemplate_RoutType'">
-                          <span *ngIf="options.data.isMultiDrop" class="badge badge-success badge-inline">{{ 'MultipleDrops' | localize }}</span>
-                          <span *ngIf="!options.data.isMultiDrop" class="badge badge-danger badge-inline">{{ 'SingleDrop' | localize }}</span>
+                          <span>{{ (options.data.routeType == routeTypeEnum.MultipleDrops ? 'MultipleDrops' : 'SingleDrop') | localize }}</span>
                         </div>
                       </dx-data-grid>
                     </div>
@@ -544,11 +611,10 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="close()">{{ 'Close' | localize }}</button>
-
           <button type="submit" [buttonBusy]="isFormSaving" [disabled]="PPForm.invalid" class="btn btn-primary">
             {{ 'Save' | localize }}
           </button>
+          <button type="button" class="btn btn-light" (click)="close()">{{ 'Close' | localize }}</button>
         </div>
       </form>
     </div>

@@ -586,19 +586,19 @@ export class DashboardViewConfigurationService {
     let ActorNextInvoiceDueDate = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Broker.ActorNextInvoiceDueDate,
       ActorNextInvoiceDueDateComponent,
-      6,
+      8,
       10
     );
     let NewInvoicesVsPaidInvoices = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Broker.NewInvoicesVsPaidInvoices,
       ActorNewInvoiceVsPaidInvoiceComponent,
-      16,
+      15,
       10
     );
     let ActorsPaidInvoiceVsClaimedInvoice = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.Broker.ActorsPaidInvoiceVsClaimedInvoice,
       ActorPaidInvoiceVsClaimedInvoiceComponent,
-      16,
+      15,
       10
     );
 

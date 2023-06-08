@@ -5,6 +5,7 @@ import {
   CreateOrEditRoutPointDto,
   DropPaymentMethod,
   FacilityForDropdownDto,
+  FacilityType,
   PickingType,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
@@ -118,8 +119,32 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
         )
         .subscribe((result) => {
           this.allFacilities = result;
-          this.dropFacilities = result;
-          this.pickupFacilities = result;
+          this.dropFacilities =
+            this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+            this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements
+              ? result
+              : result.filter((fac) => {
+                  if (isNotNullOrUndefined(this._tripService.GetShippingRequestForViewOutput)) {
+                    return this._tripService.GetShippingRequestForViewOutput?.destinationCitiesDtos?.map((city) => city.cityId).includes(fac.cityId);
+                  }
+                  return this._tripService.CreateOrEditShippingRequestTripDto?.shippingRequestDestinationCities
+                    ?.map((city) => city.cityId)
+                    .includes(fac.cityId);
+                });
+          console.log('loadFacilities this.dropFacilities', this.dropFacilities);
+          this.pickupFacilities =
+            this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+            this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId == ShippingTypeEnum.ImportPortMovements
+              ? result
+              : result.filter((r) => {
+                  if (isNotNullOrUndefined(this._tripService.GetShippingRequestForViewOutput)) {
+                    return this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === 0
+                      ? r.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId
+                      : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
+                  }
+                  return r.cityId == this._tripService.CreateOrEditShippingRequestTripDto?.originCityId;
+                });
+          console.log('loadFacilities this.pickupFacilities', this.pickupFacilities);
         });
 
       return;
@@ -138,9 +163,13 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
           this.allFacilities = result;
           this.dropFacilities = result;
           this.pickupFacilities = result.filter((r) => {
-            return this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === 0
-              ? r.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId
-              : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
+            if (isNotNullOrUndefined(this._tripService.GetShippingRequestForViewOutput)) {
+              return this._tripService.GetShippingRequestForViewOutput?.shippingRequestFlag === 0
+                ? r.cityId == this._tripService.GetShippingRequestForViewOutput?.originalCityId
+                : this.DestCitiesDtos.some((y) => y.cityId == r.cityId);
+            } else {
+              return r.cityId == this._tripService.CreateOrEditShippingRequestTripDto?.originCityId;
+            }
           });
         });
     }
@@ -217,12 +246,13 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
    * creates empty points for the trip based on number of drops
    */
   createEmptyPoints(selectedPaymentMethodId?: number) {
-    console.log('createEmptyPoints', this._tripService.GetShippingRequestForViewOutput);
+    console.log('createEmptyPoints this._tripService.GetShippingRequestForViewOutput', this._tripService.GetShippingRequestForViewOutput);
+    console.log('createEmptyPoints this._tripService.CreateOrEditShippingRequestTripDto', this._tripService.CreateOrEditShippingRequestTripDto);
     let numberOfDrops = 0;
-    if (this._tripService.GetShippingRequestForViewOutput) {
-      numberOfDrops = this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.numberOfDrops;
-    } else {
+    if (!this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.id) {
       numberOfDrops = this._tripService.CreateOrEditShippingRequestTripDto?.numberOfDrops;
+    } else {
+      numberOfDrops = this._tripService.GetShippingRequestForViewOutput?.shippingRequest?.numberOfDrops;
     }
 
     //if there is already wayPoints Dont Create Empty Once
@@ -244,12 +274,15 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
     if (!this.isPortMovement) {
       this.addPointsToWayPointList(numberOfDrops, selectedPaymentMethodId);
       return;
+    } else {
+      this.wayPointsList.map((item, index) => (item.pointOrder = index + 1));
     }
     for (let i = 0; i < numberOfDrops; i++) {
       this.addPointsToWayPointList(1, selectedPaymentMethodId);
     }
     if (
-      this._tripService.GetShippingRequestForViewOutput.shippingRequest.shippingTypeId === ShippingTypeEnum.ImportPortMovements &&
+      (this._tripService?.CreateOrEditShippingRequestTripDto?.shippingTypeId === ShippingTypeEnum.ImportPortMovements ||
+        this._tripService?.GetShippingRequestForViewOutput?.shippingRequest?.shippingTypeId === ShippingTypeEnum.ImportPortMovements) &&
       !this.isCarrier
     ) {
       this.wayPointsList[0].facilityId = this._tripService.GetShippingRequestForViewOutput.shippingRequest.originFacilityId;
@@ -307,6 +340,12 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   savedAppointmentsAndClearance($event: { tripAppointment: TripAppointmentDataDto; tripClearance: TripClearancePricesDto; pointIndex: number }) {
     this.wayPointsList[$event.pointIndex].appointmentDataDto = $event.tripAppointment;
     this.wayPointsList[$event.pointIndex].tripClearancePricesDto = $event.tripClearance;
+  }
+
+  filterFacilitiesForDropDown(isPickup: boolean) {
+    return isPickup
+      ? this.pickupFacilities.filter((fac) => fac.facilityType === FacilityType.Facility)
+      : this.dropFacilities.filter((fac) => fac.facilityType === FacilityType.Facility);
   }
 
   ngOnDestroy() {

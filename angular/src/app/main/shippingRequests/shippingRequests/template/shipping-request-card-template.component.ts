@@ -9,6 +9,7 @@ import {
   ShippingRequestDirectRequestServiceProxy,
   ShippingRequestDirectRequestStatus,
   ShippingRequestFlag,
+  ShippingRequestForPriceOfferGetAllInput,
   ShippingRequestRouteType,
   ShippingRequestStatus,
   ShippingRequestType,
@@ -17,7 +18,6 @@ import {
 
 import * as _ from 'lodash';
 import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
-import { ShippingRequestForPriceOfferGetAllInput } from '@app/shared/common/search/ShippingRequestForPriceOfferGetAllInput';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ShippingrequestsDetailsModelComponent } from '../details/shippingrequests-details-model.component';
 import { LoadEntityTemplateModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/load-entity-template-modal/load-entity-template-modal.component';
@@ -26,6 +26,8 @@ import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests
 import { AssignTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/assign-trucks-and-drivers-modal/assign-trucks-and-drivers-modal.component';
 import { DedicatedShippingRequestAttendanceSheetModalComponent } from '@app/main/shippingRequests/dedicatedShippingRequest/dedicated-shipping-request-attendance-sheet-modal/dedicated-shipping-request-attendance-sheet-modal.component';
 import { ReplaceTrucksAndDriversModalComponent } from '@app/main/shippingRequests/shippingRequests/request-templates/replace-trucks-and-drivers-modal/replace-trucks-and-drivers-modal.component';
+import * as moment from '@node_modules/moment';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
@@ -65,13 +67,16 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   ShippingTypeEnum = ShippingTypeEnum;
   RoundTripType = RoundTripType;
   ShippingRequestRouteType = ShippingRequestRouteType;
+  NormalExportIsLoading: boolean = false;
+  DedicatedExportIsLoding: boolean = false;
 
   constructor(
     injector: Injector,
     private _currentServ: PriceOfferServiceProxy,
     private _directRequestSrv: ShippingRequestDirectRequestServiceProxy,
     private _activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private _fileDownloadService: FileDownloadService
   ) {
     super(injector);
     this.directRequestId = this._activatedRoute.snapshot.queryParams['directRequestId'];
@@ -84,7 +89,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     this.searchInput.shippingRequestId = this.ShippingRequestId;
     if (this.isTMS) {
       this.searchInput.requestType = ShippingRequestType.TachyonManageService;
-      this.searchInput.isTMS = true;
+      this.searchInput.isTMSRequest = true;
     }
     this.searchInput.directRequestId = this.directRequestId;
     if (isNotNullOrUndefined(this.activeShippingRequestId)) {
@@ -94,6 +99,28 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   }
 
   LoadData() {
+    // (filter,
+    // carrier,
+    // shippingRequestId,
+    // directRequestId,
+    // channel,
+    // requestType,
+    // truckTypeId,
+    // originId,
+    // destinationId,
+    // pickupFromDate,
+    // pickupToDate,
+    // fromDate,
+    // toDate,
+    // routeTypeId,
+    // status,
+    // isTachyonDeal,
+    // isTMSRequest,
+    // requestFlag,
+    // sorting,
+    // skipCount,
+    // maxResultCount)
+
     this._currentServ
       .getAllShippingRequest(
         this.searchInput.filter,
@@ -112,11 +139,12 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         this.searchInput.routeTypeId,
         this.searchInput.status,
         this.searchInput.isTachyonDeal,
-        this.searchInput.isTMS,
+        this.searchInput.isTMSRequest,
         undefined,
         '',
         this.skipCount,
-        this.maxResultCount
+        this.maxResultCount,
+        false
       )
       .subscribe((result) => {
         this.IsLoading = false;
@@ -350,5 +378,59 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
 
   showAsTable() {
     this.router.navigateByUrl(`/app/main/${this.isTMS ? 'tms' : 'shippingRequests'}/shippingRequests?showType=1`);
+  }
+
+  ExportNormalToExcel() {
+    let input: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
+    input.carrier = this.searchInput.carrier;
+    input.shippingRequestId = this.searchInput.shippingRequestId;
+    input.directRequestId = this.searchInput.directRequestId;
+    input.channel = this.searchInput.channel;
+    input.requestType = this.searchInput.requestType;
+    input.truckTypeId = this.searchInput.truckTypeId;
+    input.originId = this.searchInput.originId;
+    input.destinationId = this.searchInput.destinationId;
+    input.pickupFromDate = this.searchInput.pickupFromDate;
+    input.pickupToDate = this.searchInput.pickupToDate;
+    input.fromDate = this.searchInput.fromDate;
+    input.toDate = this.searchInput.toDate;
+    input.routeTypeId = this.searchInput.routeTypeId;
+    input.status = this.searchInput.status;
+    input.isTachyonDeal = this.searchInput.isTachyonDeal;
+    input.isTMSRequest = this.searchInput.isTMSRequest;
+    input.requestFlag = this.searchInput.requestFlag;
+
+    this.NormalExportIsLoading = true;
+    this._currentServ.exportNormalShippingRequest(input).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+      this.NormalExportIsLoading = false;
+    });
+  }
+
+  ExportDedicatedToExcel() {
+    let input: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
+    input.carrier = this.searchInput.carrier;
+    input.shippingRequestId = this.searchInput.shippingRequestId;
+    input.directRequestId = this.searchInput.directRequestId;
+    input.channel = this.searchInput.channel;
+    input.requestType = this.searchInput.requestType;
+    input.truckTypeId = this.searchInput.truckTypeId;
+    input.originId = this.searchInput.originId;
+    input.destinationId = this.searchInput.destinationId;
+    input.pickupFromDate = this.searchInput.pickupFromDate;
+    input.pickupToDate = this.searchInput.pickupToDate;
+    input.fromDate = this.searchInput.fromDate;
+    input.toDate = this.searchInput.toDate;
+    input.routeTypeId = this.searchInput.routeTypeId;
+    input.status = this.searchInput.status;
+    input.isTachyonDeal = this.searchInput.isTachyonDeal;
+    input.isTMSRequest = this.searchInput.isTMSRequest;
+    input.requestFlag = this.searchInput.requestFlag;
+    input.channel = this.searchInput.channel;
+    this.DedicatedExportIsLoding = true;
+    this._currentServ.exportDedicatedShippingRequest(input).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+      this.DedicatedExportIsLoding = false;
+    });
   }
 }

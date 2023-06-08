@@ -16,6 +16,7 @@
         public string RoundTrip { get; set; }
         public string ContainerNumber { get; set; }
         public string PlateNumber { get; set; }
+        public string BookingNumber { get; set; }
 
 
 

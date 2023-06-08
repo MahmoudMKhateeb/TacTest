@@ -8,7 +8,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
-import { DxSchedulerComponent } from '@node_modules/devextreme-angular';
+import { DxSchedulerComponent } from '@node_modules/devextreme-angular/ui/scheduler';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 import * as moment from '@node_modules/moment';
 import { Subscription } from 'rxjs';

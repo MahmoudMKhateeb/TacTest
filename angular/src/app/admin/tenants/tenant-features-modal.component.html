@@ -40,7 +40,7 @@
           >
             <span>{{ 'ResetSpecialFeatures' | localize }}</span>
           </button>
-          <button type="button" [disabled]="saving || resettingFeatures" class="btn btn-light-primary font-weight-bold" (click)="close()">
+          <button type="button" [disabled]="saving || resettingFeatures" class="btn btn-outline-danger font-weight-bold" (click)="close()">
             {{ 'Cancel' | localize }}
           </button>
           <button
@@ -48,7 +48,7 @@
             [disabled]="resettingFeatures"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
-            class="btn btn-save font-weight-bold"
+            class="btn btn-primary font-weight-bold"
           >
             <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
           </button>

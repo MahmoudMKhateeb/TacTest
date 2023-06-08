@@ -2434,7 +2434,7 @@
 		<text name="DocumentTypeName">اسم نوع المستند</text>
 		<text name="submitterTenatTenancyName">اسم الشركة المرسلة</text>
 		<text name="ShipperReference">رقم فاتورة المراجعة</text>
-		<text name="ShipperInvoiceNumber">مرجع المرسل</text>
+		<text name="ShipperBookingNumber">رقم الحجز</text>
 		<text name="OriginCountry">دولة الإنطلاق</text>
 		<text name="DestinationCountry">دولة الوصول</text>
 		<text name="SelectanOriginCountry">اختر دولة الإنطلاق</text>
@@ -2848,7 +2848,7 @@
 		<text name="ActorInvoicesList">قائمة فواتير العميل</text>
 		<text name="DownloadBayanDropWaybill">تحميل وثيقة شحن بيان</text>
 		<text name="CreateNewProposal">إضافة عرض حزم الأسعار </text>
-		<text name="ScopeOverview">نظرة عامة على النطاق</text>
+		<text name="ScopeOverview">نظرة عامة</text>
 		<text name="PricePackagesProposal">عرض حزم الأسعار</text>
 		<text name="NewDedicatedRequest">طلب تأجير شاحنات</text>
 		<text name="TMSForShipper">نظم إدارة النقل</text>
@@ -2925,7 +2925,7 @@
     <text name="WithoutReturnTrip"></text>
     <text name="TwoWayRoutsWithPortShuttling"></text>
     <text name="TwoWayRoutsWithoutPortShuttling"></text>
-    <text name="OneWayRoutWithPortShuttling"></text>
+    <text name="OneWayRoutWithoutPortShuttling"></text>
 	<text name="FacilityType">نوع المنشأة</text>
 	<text name="SelectARoundTripType">اختر نوع الرحلة العائدة</text>
 	<text name="AllowedWeight">الوزن المسموح به</text>
@@ -3091,7 +3091,10 @@
 	<text name="DirectShipmentTrackingPermission">تتبع الشحنات المباشرة</text>
 	<text name="DirectShipmentTracking">تتبع الشحنات المباشرة</text>
     <text name="RequiredReceiverCodeForInvoice">هل رمز المستلم مطلوب</text>
-    <text name="IsTaxVatIncluded">يتضمن الضريبة</text>
+	<text name="DedicatedShippingRequestSavedTemplate">قوالب طلب تأجير الشاحنات</text>
+	<text name="ShippingRequestSavedTemplate">قوالب طلب الشحن</text>
+	<text name="TripSavedTemplate">فوالب الرحلة</text>
 		
+    <text name="IsTaxVatIncluded">يتضمن الضريبة</text>
 	</texts>
 </localizationDictionary>

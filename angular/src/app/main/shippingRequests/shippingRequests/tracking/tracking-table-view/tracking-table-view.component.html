@@ -1,0 +1,125 @@
+<div class="container-fluid">
+  <div class="row">
+    <!--                    [dataSource]="dataSource"-->
+    <div class="col-12 position-relative bg-white p-4 mb-4">
+      <dx-data-grid
+        #dataGrid
+        id="gridContainer"
+        [dataSource]="dataSource"
+        [wordWrapEnabled]="true"
+        [allowColumnReordering]="true"
+        [allowColumnResizing]="true"
+        [columnAutoWidth]="true"
+        [showBorders]="true"
+        [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
+        (onRowExpanded)="getForView($event)"
+        (onRowCollapsed)="collapsedRow($event)"
+        (onExporting)="onExporting($event)"
+      >
+        <dxo-paging [pageSize]="20"> </dxo-paging>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
+        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+        <dxo-filter-builder-popup></dxo-filter-builder-popup>
+        <dxo-group-panel [visible]="true" emptyPanelText="{{ l('DragAColumnHeaderHereToGroupByThatColumn') }}"></dxo-group-panel>
+        <dxo-selection mode="multiple"></dxo-selection>
+        <dxo-column-chooser [enabled]="false" [mode]="'select'"></dxo-column-chooser>
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-load-panel [enabled]="IsLoading"></dxo-load-panel>
+        <dxo-scrolling mode="infinite"></dxo-scrolling>
+        <dxo-export *ngIf="isEnabled('App.ExportFunctionality')" [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
+        <dxi-column dataField="referenceNumber" caption="{{ 'RequestId' | localize }}" [fixed]="true"></dxi-column>
+        <dxi-column
+          *ngIf="isCarrier || isCarrierSaas || isTachyonDealer"
+          cellTemplate="shipperNameCellTemplate"
+          dataField="name"
+          caption="{{ 'ShipperName' | localize }}"
+        ></dxi-column>
+        <dxi-column
+          *ngIf="isShipper || isTachyonDealer"
+          cellTemplate="carrierNameCellTemplate"
+          dataField="name"
+          caption="{{ 'CarrierName' | localize }}"
+        ></dxi-column>
+        <dxi-column dataField="shippingRequestFlagTitle" caption="{{ 'TripType' | localize }}"></dxi-column>
+        <dxi-column dataField="shippingTypeTitle" caption="{{ 'ShippingType' | localize }}"></dxi-column>
+        <dxi-column
+          *ngIf="isTachyonDealer || isShipper"
+          dataField="shipperInvoiceNumber"
+          caption="{{ (isTachyonDealer ? 'ShipperInvoiceNumber' : 'InvoiceNumber') | localize }}"
+        ></dxi-column>
+        <dxi-column
+          *ngIf="isTachyonDealer || isCarrier"
+          dataField="carrierInvoiceNumber"
+          caption="{{ (isTachyonDealer ? 'CarrierInvoiceNumber' : 'InvoiceNumber') | localize }}"
+        ></dxi-column>
+        <dxi-column dataField="origin" caption="{{ 'Origin' | localize }}"></dxi-column>
+        <dxi-column dataField="destination" caption="{{ 'Destination' | localize }}"></dxi-column>
+        <dxi-column dataField="truckType" caption="{{ 'TrucksType' | localize }}"></dxi-column>
+        <dxi-column dataField="plateNumber" caption="{{ 'PlateNumber' | localize }}"></dxi-column>
+        <dxi-column dataField="routeType" caption="{{ 'RouteType' | localize }}"></dxi-column>
+        <dxi-column dataField="driver" caption="{{ 'Driver' | localize }}"></dxi-column>
+        <dxi-column dataField="goodsCategory" caption="{{ 'GoodsCategory' | localize }}"></dxi-column>
+        <dxi-column dataField="numberOfDrops" caption="{{ 'NumberOfDrops' | localize }}"></dxi-column>
+        <dxi-column dataField="containerNumber" caption="{{ 'ContainerNumber' | localize }}"></dxi-column>
+        <dxi-column dataField="bookingNumber" caption="{{ 'ShipperBookingNumber' | localize }}"></dxi-column>
+        <dxi-column dataField="waybillNumber" caption="{{ 'WaybillNumber' | localize }}"></dxi-column>
+        <dxi-column dataField="statusTitle" caption="{{ 'Status' | localize }}" cellTemplate="statusTitleCellTemplate"></dxi-column>
+        <dxi-column [allowExporting]="false" dataField="id" caption="{{ 'Track' | localize }}" cellTemplate="trackCellTemplate"></dxi-column>
+
+        <dxo-master-detail [enabled]="true" template="masterDetail"></dxo-master-detail>
+        <div *dxTemplate="let masterDetailItem of 'masterDetail'">
+          <div class="card with-border" *ngIf="masterDetailItem.data.showSubTable">
+            <div class="card-header pb-2" (click)="log(masterDetailItem)">
+              <h3>
+                {{ 'SubWaybill' | localize }}
+              </h3>
+            </div>
+            <div class="card-body p-0">
+              <dx-data-grid [dataSource]="tripSubDetails?.routPoints" [remoteOperations]="false" [wordWrapEnabled]="true">
+                <dxi-column dataField="waybillNumber" caption="{{ 'SubWaybill' | localize }}"></dxi-column>
+                <dxi-column dataField="address" caption="{{ 'Destination' | localize }}"></dxi-column>
+              </dx-data-grid>
+            </div>
+          </div>
+          <div class="card" *ngIf="!masterDetailItem.data.showSubTable">
+            <div class="card-body p-0">
+              <new-tracking-conponent (getForViewReady)="getForViewReady()" [trip]="masterDetailItem.data"></new-tracking-conponent>
+            </div>
+          </div>
+          <!--        <detail-view-->
+          <!--            [key]="masterDetailItem.key"-->
+          <!--            [rowData]="masterDetailItem.data"-->
+          <!--        ></detail-view>-->
+        </div>
+        <div *dxTemplate="let d of 'trackCellTemplate'">
+          <button class="btn btn-primary" (click)="track(d)">
+            {{ 'Track' | localize }}
+          </button>
+        </div>
+        <div *dxTemplate="let d of 'shipperNameCellTemplate'">
+          <span *ngIf="isTachyonDealer">
+            {{ d.data.name.split('-').length > 0 ? d.data.name.split('-')[0] : '' }}
+          </span>
+          <span *ngIf="!isTachyonDealer">
+            {{ d.data.name }}
+          </span>
+        </div>
+        <div *dxTemplate="let d of 'carrierNameCellTemplate'">
+          <span *ngIf="isTachyonDealer">
+            {{ d.data.name.split('-').length > 0 ? d.data.name.split('-')[1] : '' }}
+          </span>
+          <span *ngIf="!isTachyonDealer">
+            {{ d.data.name }}
+          </span>
+        </div>
+
+        <div *dxTemplate="let d of 'statusTitleCellTemplate'">
+          <span>
+            {{ d.data.statusTitle | localize }}
+          </span>
+        </div>
+      </dx-data-grid>
+    </div>
+  </div>
+</div>

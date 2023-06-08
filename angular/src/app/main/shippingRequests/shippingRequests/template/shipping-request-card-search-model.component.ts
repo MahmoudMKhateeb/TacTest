@@ -3,7 +3,6 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import * as moment from 'moment';
-import { ShippingRequestForPriceOfferGetAllInput } from '../../../../shared/common/search/ShippingRequestForPriceOfferGetAllInput';
 import {
   PriceOfferServiceProxy,
   GetShippingRequestSearchListDto,
@@ -11,6 +10,7 @@ import {
   ShippingRequestRouteType,
   PriceOfferChannel,
   ShippingRequestType,
+  ShippingRequestForPriceOfferGetAllInput,
 } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { finalize } from 'rxjs/operators';

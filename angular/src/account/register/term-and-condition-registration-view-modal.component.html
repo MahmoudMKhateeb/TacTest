@@ -17,7 +17,7 @@
         <div [innerHTML]="item.termAndCondition.content | safe: 'html'"></div>
       </div>
       <div class="modal-footer">
-        <button [disabled]="saving" type="button" class="btn btn-primary blue" (click)="close()">{{ l('Close') }}</button>
+        <button [disabled]="saving" type="button" class="btn btn-light blue" (click)="close()">{{ l('Close') }}</button>
         <button type="button" class="btn btn-primary" (click)="downloadAsPDF()">{{ l('Download') }}</button>
       </div>
     </div>

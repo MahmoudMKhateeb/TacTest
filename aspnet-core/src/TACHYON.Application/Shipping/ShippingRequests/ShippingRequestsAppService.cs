@@ -114,9 +114,10 @@ namespace TACHYON.Shipping.ShippingRequests
             SrPostPriceUpdateManager postPriceUpdateManager,
             IRepository<ShippingRequestDestinationCity> shippingRequestDestinationCityRepository,
             ShippingRequestManager shippingRequestManager,
-            IRepository<Actor> actorsRepository, 
+            IRepository<Actor> actorsRepository,
             IPricePackageManager pricePackageManager,
-            IRepository<Facility, long> facilityRepository)
+            IRepository<Facility, long> facilityRepository,
+            IFeatureChecker featureChecker)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -151,6 +152,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _actorsRepository = actorsRepository;
             _pricePackageManager = pricePackageManager;
             _facilityRepository = facilityRepository;
+            _featureChecker = featureChecker;
         }
 
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
@@ -185,6 +187,8 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly ShippingRequestManager _shippingRequestManager;
         private readonly IPricePackageManager _pricePackageManager;
         private readonly IRepository<Facility, long> _facilityRepository;
+        private readonly IFeatureChecker _featureChecker;
+
 
         private readonly IRepository<Actor> _actorsRepository;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
@@ -289,9 +293,12 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<long> CreateOrEditStep1(CreateOrEditShippingRequestStep1Dto input)
         {
             await _shippingRequestManager.ValidateShippingRequestStep1(input);
-            if (!await IsTachyonDealer() && input.StartTripDate.Date < Clock.Now.Date)
+
+            //check port movements feature enabled
+            if ((input.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || input.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+                && !_featureChecker.IsEnabled(AbpSession.TenantId.Value, AppFeatures.PortMovement))
             {
-                throw new UserFriendlyException(L("Start trip date cannot be before today"));
+                throw new UserFriendlyException(L("YouDon'tHavePermissionToPortMovements"));
             }
 
             if (input.Id == null)
@@ -325,8 +332,9 @@ namespace TACHYON.Shipping.ShippingRequests
             var shippingRequest = await _shippingRequestManager.GetDraftedShippingRequest(input.Id);
 
             //if request between cities and single drop
-            await _shippingRequestManager.ValidatePortMovementInputs(input, shippingRequest);
-            ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest);
+            if(shippingRequest.ShippingTypeId == ShippingTypeEnum.ImportPortMovements || shippingRequest.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
+            await _shippingRequestManager.ValidatePortMovementInputs(input.OriginFacilityId, input.RouteTypeId, input.NumberOfDrops, shippingRequest.ShippingTypeId, shippingRequest.RoundTripType);
+            _shippingRequestManager.ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest.ShippingTypeId);
 
             if (shippingRequest.DraftStep < 2)
             {
@@ -1042,7 +1050,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
 
             await ValidateGoodsCategory(input);
-            ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest);
+            _shippingRequestManager.ValidateDestinationCities(input.RouteTypeId, input.ShippingRequestDestinationCities, shippingRequest.ShippingTypeId);
             if (shippingRequest.Status == ShippingRequestStatus.NeedsAction)
                 await CheckHasOffersToNotifyCarriers(shippingRequest);
             ObjectMapper.Map(input, shippingRequest);
@@ -1240,11 +1248,15 @@ namespace TACHYON.Shipping.ShippingRequests
                     ShipperNotes = x.Note,
                     ContainerNumber = x.ContainerNumber,
                     SealNumber = x.SealNumber,
-                    MultipleDropsOrTripsLable = x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                    MultipleDropsOrTripsLable = x.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+                                                (x.ShippingRequestFk != null && x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
                                                 ? "Trips" : "Drops",
-                    MultipleDropsOrTripsLableAr = x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
-                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements
+                    MultipleDropsOrTripsLableAr = x.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingTypeId == ShippingTypeEnum.ExportPortMovements ||
+                                               ( x.ShippingRequestFk != null && x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ImportPortMovements ||
+                                                x.ShippingRequestFk.ShippingTypeId == ShippingTypeEnum.ExportPortMovements)
                                                 ? "الرحلات" : "الحمولات"
                 });
 
@@ -1353,7 +1365,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShipperNotes = x.Note,
                         ContainerNumber = x.ContainerNumber,
                         SealNumber = x.SealNumber,
-                        ShippingType = x.ShippingRequestFk.ShippingTypeId,
+                        ShippingType = x.ShippingTypeId != null ?x.ShippingTypeId.Value :x.ShippingRequestFk.ShippingTypeId,
                     }
                     );
                 }
@@ -1399,10 +1411,8 @@ namespace TACHYON.Shipping.ShippingRequests
                        // ShipperInvoiceNo = x.ShipperInvoiceNo,
                         ShipperNotes = x.Note,
                         ContainerNumber = x.ContainerNumber,
-                        
-                        //update here
                         SealNumber = x.SealNumber,
-                        
+                        ShippingType = x.ShippingTypeId.Value,
 
 
                     }
@@ -1628,6 +1638,7 @@ namespace TACHYON.Shipping.ShippingRequests
             var vases = _shippingRequestTripVasRepository.GetAll()
                 .Include(x => x.ShippingRequestVasFk)
                 .Include(x => x.ShippingRequestVasFk.VasFk)
+                .Include(x => x.VasFk)
                 .Where(x => x.ShippingRequestTripId == shippingRequestTripId)
                 .ToList();
 
@@ -1635,9 +1646,9 @@ namespace TACHYON.Shipping.ShippingRequests
             (
                 x => new GetAllShippingRequestVasesOutput
                 {
-                    VasName = x.ShippingRequestVasFk.VasFk.Key,
-                    Amount = x.ShippingRequestVasFk.RequestMaxAmount,
-                    Count = x.ShippingRequestVasFk.RequestMaxCount
+                    VasName = x.VasFk !=null ?x.VasFk.Key :x.ShippingRequestVasFk.VasFk.Key,
+                    Amount = x.VasFk!= null ?1 :x.ShippingRequestVasFk.RequestMaxAmount,
+                    Count = x.VasFk != null ?1 : x.ShippingRequestVasFk.RequestMaxCount
                 }
             );
 
@@ -1917,13 +1928,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-        private void ValidateDestinationCities(ShippingRequestRouteType routeType, List<ShippingRequestDestinationCitiesDto> shippingRequestDestinationCitiesDtos, ShippingRequest shippingRequest)
-        {
-            if (shippingRequest.ShippingTypeId == ShippingTypeEnum.LocalBetweenCities && routeType == ShippingRequestRouteType.SingleDrop && shippingRequestDestinationCitiesDtos.Count > 1)
-            {
-                throw new UserFriendlyException(L("OneDestinationCityAllowed"));
-            }
-        }
+        
 
         
 

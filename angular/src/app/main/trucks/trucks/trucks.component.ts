@@ -1,6 +1,13 @@
-﻿import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DocumentsEntitiesEnum, TokenAuthServiceProxy, TruckDto, TrucksServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  CarriersForDropDownDto,
+  DocumentsEntitiesEnum,
+  ISelectItemDto,
+  TokenAuthServiceProxy,
+  TruckDto,
+  TrucksServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { CreateOrEditTruckModalComponent } from './create-or-edit-truck-modal.component';
@@ -18,6 +25,10 @@ import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles
 import { TruckUserLookupTableModalComponent } from './truck-user-lookup-table-modal.component';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
 import { LoadOptions } from '@node_modules/devextreme/data/load_options';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { DxDataGridComponent } from '@node_modules/devextreme-angular';
+import { TruckFilter } from '@app/main/trucks/trucks/truck-filter/truck-filter-model';
+import * as moment from '@node_modules/moment';
 
 @Component({
   templateUrl: './trucks.component.html',
@@ -26,6 +37,7 @@ import { LoadOptions } from '@node_modules/devextreme/data/load_options';
   animations: [appModuleAnimation()],
 })
 export class TrucksComponent extends AppComponentBase implements OnInit, AfterViewInit {
+  @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
   @ViewChild('createOrEditTruckModal', { static: true }) createOrEditTruckModal: CreateOrEditTruckModalComponent;
   @ViewChild('viewTruckModalComponent', { static: true }) viewTruckModal: ViewTruckModalComponent;
@@ -49,6 +61,10 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
   uploadUrl: string;
   documentsEntitiesEnum = DocumentsEntitiesEnum;
   dataSource: any = {};
+  IsExceedsMaxNumberOfWaybills: boolean;
+  CanAddTruck: boolean;
+  showClearSearchFilters: boolean;
+  shouldClearInputs: boolean;
 
   constructor(
     injector: Injector,
@@ -68,6 +84,10 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
     this.isArabic = abp.localization.currentLanguage.name.startsWith('ar');
     this.refreshData();
+    this._trucksServiceProxy.getTenantExceedsNumberOfTrucks().subscribe((res) => {
+      this.IsExceedsMaxNumberOfWaybills = res.isTenantExceedsNumberOfTrucks;
+      this.CanAddTruck = res.canAddTruck;
+    });
   }
 
   ngAfterViewInit(): void {}
@@ -121,6 +141,7 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
     var filter = this._activatedRoute.snapshot.queryParams['Active'];
     this.getAllTrucks(filter);
   }
+
   exportToExcel(): void {
     this._trucksServiceProxy
       .getTrucksToExcel(
@@ -190,5 +211,85 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
           });
       },
     });
+  }
+
+  search(filterObject: TruckFilter) {
+    const loadOptions: LoadOptions = {
+      filter: [],
+    };
+    const keys = Object.keys(filterObject);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const val = filterObject[key];
+      if (isNotNullOrUndefined(val)) {
+        if (key === 'selectedCarrier' && val.length > 0) {
+          const array = [];
+          (val as CarriersForDropDownDto[]).map((item, index) => {
+            array.push(['companyName', '=', item.displayName]);
+            if (index < val.length - 1) {
+              array.push('or');
+            }
+          });
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
+          continue;
+        }
+        if (key === 'selectedTruckTypes' && val.length > 0) {
+          const array = [];
+          (val as ISelectItemDto[]).map((item, index) => {
+            array.push(['trucksTypeId', '=', item.id]);
+            array.push('or');
+            array.push(['trucksTypeDisplayName', '=', item.displayName]);
+            if (index < val.length - 1) {
+              array.push('or');
+            }
+          });
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
+          continue;
+        }
+        if (key === 'selectedCapacity' && val.length > 0) {
+          const array = [];
+          (val as ISelectItemDto[]).map((item, index) => {
+            array.push(['capacityId', '=', item.id]);
+            array.push('or');
+            array.push(['capacityDisplayName', '=', item.displayName]);
+            if (index < val.length - 1) {
+              array.push('or');
+            }
+          });
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
+          continue;
+        }
+        if (key === 'creationDate' && !!val) {
+          const array = [];
+          const date = val as Date;
+          const dateValue = moment.utc({ y: date.getFullYear(), M: date.getMonth(), d: date.getDate() });
+          array.push(['creationDate', '>=', dateValue.toISOString()]);
+          array.push('and');
+          array.push(['creationDate', '<', dateValue.add(1, 'd').toISOString()]);
+          loadOptions.filter.push(array);
+          loadOptions.filter.push('and');
+          continue;
+        }
+        if (!(val instanceof Array) && !!val) {
+          loadOptions.filter.push([key, '=', val]);
+          if (i < keys.length - 1) {
+            loadOptions.filter.push('and');
+          }
+        }
+      }
+    }
+    this.dataGrid.instance.clearFilter();
+    this.dataGrid.instance.filter(loadOptions.filter);
+    this.showClearSearchFilters = true;
+    this.shouldClearInputs = false;
+  }
+
+  clearFilters() {
+    this.dataGrid.instance.clearFilter();
+    this.showClearSearchFilters = false;
+    this.shouldClearInputs = true;
   }
 }

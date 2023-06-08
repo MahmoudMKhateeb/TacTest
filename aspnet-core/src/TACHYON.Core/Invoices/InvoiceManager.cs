@@ -31,8 +31,10 @@ using TACHYON.Invoices.Transactions;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Penalties;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
+using TACHYON.Tracking.AdditionalSteps;
 
 namespace TACHYON.Invoices
 {
@@ -58,6 +60,7 @@ namespace TACHYON.Invoices
         private readonly BalanceManager _balanceManager;
         private readonly TransactionManager _transactionManager;
         private readonly IRepository<Penalty> _penaltyRepository;
+        private readonly IRepository<RoutPoint, long> _routPointRepository;
 
         #endregion
 
@@ -78,7 +81,8 @@ namespace TACHYON.Invoices
             IRepository<ShippingRequestTrip> shippingRequestTrip,
             IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository,
             IRepository<SubmitInvoice, long> submitInvoiceRepository,
-            IRepository<Penalty> penaltyRepository)
+            IRepository<Penalty> penaltyRepository,
+            IRepository<RoutPoint, long> routPointRepository)
         {
             _periodRepository = periodRepository;
             _invoiceRepository = invoiceRepository;
@@ -97,6 +101,7 @@ namespace TACHYON.Invoices
             _invoicePaymentMethodRepository = invoicePaymentMethodRepository;
             _submitInvoiceRepository = submitInvoiceRepository;
             _penaltyRepository = penaltyRepository;
+            _routPointRepository = routPointRepository;
         }
 
 
@@ -379,7 +384,7 @@ namespace TACHYON.Invoices
                 .Where
                 (
                     x => x.ShippingRequestFk.CarrierTenantId == tenant.Id
-                         && (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered || x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
+                         && (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered || x.CarrierInvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
                          && !x.IsCarrierHaveInvoice
                 )
                 .ToList();
@@ -486,10 +491,12 @@ namespace TACHYON.Invoices
 
             if (period.PeriodType != InvoicePeriodType.PayInAdvance)
             {
+                string paymentMethod = await _featureChecker.GetValueAsync(tenant.Id, AppFeatures.InvoicePaymentMethod);
+                
                 var paymentType = await _invoicePaymentMethodRepository.FirstOrDefaultAsync
                 (
                     x =>
-                        x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.InvoicePaymentMethod))
+                        x.Id == int.Parse(paymentMethod)
                 );
                 if (paymentType.PaymentType == PaymentMethod.InvoicePaymentType.Days)
                 {
@@ -515,6 +522,7 @@ namespace TACHYON.Invoices
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.Trip,
                     Status = InvoiceStatus.Drafted,
+                    ConsiderConfirmationAndLoadingDates = true,
                     Trips = normalTrips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
                 };
                 invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
@@ -544,6 +552,7 @@ namespace TACHYON.Invoices
                     AccountType = InvoiceAccountType.AccountReceivable,
                     Channel = InvoiceChannel.SaasTrip,
                     Status = InvoiceStatus.Drafted,
+                    ConsiderConfirmationAndLoadingDates = true,
                     Trips = saasTrips.Select(r => new InvoiceTrip() { TripId = r.Id }).ToList(),
                 };
                 invoice.Id = await _invoiceRepository.InsertAndGetIdAsync(invoice);
@@ -589,6 +598,9 @@ namespace TACHYON.Invoices
 
             await _balanceManager.CheckShipperOverLimit(tenant);
             invoice.Status = InvoiceStatus.Confirmed;
+            invoice.ConfirmationDate = Clock.Now;
+            invoice.ConsiderConfirmationAndLoadingDates = true;
+            // consider confirmation date in invoice report from the date of release this update on servers
             await _appNotifier.NewInvoiceShipperGenerated(invoice);
         }
 
@@ -932,6 +944,7 @@ namespace TACHYON.Invoices
             var trip = await _shippingRequestTrip
                 .GetAllIncluding(d => d.ShippingRequestTripVases)
                 .Include(x => x.ShippingRequestFk).ThenInclude(c => c.Tenant)
+                .Include(x=>x.ShipperTenantFk)
                 .FirstOrDefaultAsync(t => t.Id == tripId);
 
            await GenertateInvoiceWhenShipmintDelivery(trip);
@@ -967,28 +980,95 @@ namespace TACHYON.Invoices
                 await GenerateShipperInvoice(tenant, new List<ShippingRequestTrip>() { trip }, period);
         }
 
+        public async Task HandleInvoiceStatus(long pointId , bool isSingleDrop,bool isReceiverCode, InvoiceTripStatus invoiceTripStatus, InvoiceTripStatus carrierInvoiceStatus ,int tripId, int shipperTenant,int carrierTenant)
+        {
+            var isFeatureEnabledForShipper = _featureChecker.IsEnabled(shipperTenant, AppFeatures.RequiredReceiverCodeForInvoice);
+            if (isSingleDrop)
+            {
+                if (isReceiverCode)
+                {
+                    if (invoiceTripStatus != InvoiceTripStatus.CanBeInvoiced)
+                    {
+                        _shippingRequestTrip.Update(tripId, x => x.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced);
+                        await GenertateInvoiceWhenShipmintDelivery(tripId);
+                    }
+                        if (carrierInvoiceStatus != InvoiceTripStatus.CanBeInvoiced)_shippingRequestTrip.Update(tripId, x => x.CarrierInvoiceStatus = InvoiceTripStatus.CanBeInvoiced);
+                }
 
+                // check if the feature is not enabled, update invoice status by any action
+                if (!isFeatureEnabledForShipper)
+                {
+                    if (invoiceTripStatus != InvoiceTripStatus.CanBeInvoiced)
+                    {
+                        _shippingRequestTrip.Update(tripId, x => x.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced);
+                        await GenertateInvoiceWhenShipmintDelivery(tripId);
+                    }
+                }
+                if(!_featureChecker.IsEnabled(carrierTenant, AppFeatures.RequiredReceiverCodeForInvoice) && carrierInvoiceStatus != InvoiceTripStatus.CanBeInvoiced)
+                {
+                    _shippingRequestTrip.Update(tripId, x => x.CarrierInvoiceStatus = InvoiceTripStatus.CanBeInvoiced);
+                }
+            }
+            else
+            {
+                var allPointHasReceiverCode = await _routPointRepository.GetAll()
+                    .Where(c => c.PickingType == PickingType.Dropoff && c.ShippingRequestTripId == tripId && c.Id != pointId)
+                    .AllAsync(x => x.RoutPointStatusTransitions.Any(x => x.Status == RoutePointStatus.ReceiverConfirmed) || 
+                    x.AdditionalStepTransitions.Any(x=> x.AdditionalStepType == AdditionalStepType.ReceiverCode));
+
+                if (_featureChecker.IsEnabled(shipperTenant, AppFeatures.RequiredReceiverCodeForInvoice))
+                {
+                    if (allPointHasReceiverCode && isReceiverCode)
+                    {
+                        if (invoiceTripStatus != InvoiceTripStatus.CanBeInvoiced)
+                        {
+                            _shippingRequestTrip.Update(tripId, x => x.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced);
+                            await GenertateInvoiceWhenShipmintDelivery(tripId);
+                        }
+                    }
+                }
+                else if (invoiceTripStatus != InvoiceTripStatus.CanBeInvoiced)
+                {
+                        _shippingRequestTrip.Update(tripId, x => x.InvoiceStatus = InvoiceTripStatus.CanBeInvoiced);
+                    await GenertateInvoiceWhenShipmintDelivery(tripId);
+                }
+
+                if (_featureChecker.IsEnabled(carrierTenant, AppFeatures.RequiredReceiverCodeForInvoice))
+                {
+                    if (allPointHasReceiverCode && isReceiverCode && carrierInvoiceStatus != InvoiceTripStatus.CanBeInvoiced)
+                    {
+                        _shippingRequestTrip.Update(tripId, x => x.CarrierInvoiceStatus = InvoiceTripStatus.CanBeInvoiced);
+                    }
+                }
+                else if(carrierInvoiceStatus != InvoiceTripStatus.CanBeInvoiced)
+                {
+                    _shippingRequestTrip.Update(tripId, x => x.CarrierInvoiceStatus = InvoiceTripStatus.CanBeInvoiced);
+                }
+
+            }
+        }
         public async Task GenertateInvoiceOnDeman(Tenant tenant, List<int> tripIdsList)
         {
             InvoicePeriod period = await GetShipperPeriod(tenant);
-
             if (period.PeriodType != InvoicePeriodType.PayuponDelivery &&
-                period.PeriodType != InvoicePeriodType.PayInAdvance)
+            period.PeriodType != InvoicePeriodType.PayInAdvance)
             {
                 var trips = _shippingRequestTrip.GetAll()
                     .Include(x => x.ShippingRequestFk)
                     .Include(x => x.ShippingRequestTripVases)
                     .Where
                     (
-                        x => x.ShippingRequestFk.TenantId == tenant.Id &&
+                        x => ((x.ShippingRequestId.HasValue && x.ShippingRequestFk.TenantId == tenant.Id) || x.ShipperTenantId == tenant.Id) &&
                              tripIdsList.Contains(x.Id) &&
                              !x.IsShipperHaveInvoice &&
                              //waybills.Contains(x.Id) &&
                              (x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered ||
-                             x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation ||
-                              x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced)
+                             x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation
+                             ||
+                              x.InvoiceStatus == InvoiceTripStatus.CanBeInvoiced
+                              )
                     );
-                if (trips != null && trips.Count() > 0)
+                if (trips != null && trips.Any())
                 {
                     await GenerateShipperInvoice(tenant, trips.ToList(), period);
                 }

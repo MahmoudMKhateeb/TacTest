@@ -115,9 +115,7 @@
             </tab>
             <tab *ngIf="!isMultiTenancyEnabled || isTwoFactorLoginEnabledForApplication" heading="{{ 'TwoFactorLogin' | localize }}">
               <div>
-                <h4>
-                  Google Authenticator
-                </h4>
+                <h4>Google Authenticator</h4>
 
                 <div [hidden]="!isGoogleAuthenticatorEnabled">
                   <div>
@@ -133,7 +131,7 @@
                 </div>
 
                 <div [hidden]="isGoogleAuthenticatorEnabled">
-                  <button type="button" class="btn btn-success" (click)="updateQrCodeSetupImageUrl()">{{ 'Enable' | localize }}</button>
+                  <button type="button" class="btn btn-dark" (click)="updateQrCodeSetupImageUrl()">{{ 'Enable' | localize }}</button>
                 </div>
 
                 <div [hidden]="!isGoogleAuthenticatorEnabled">
@@ -144,11 +142,11 @@
           </tabset>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-light-primary font-weight-bold" (click)="close()" [disabled]="saving">
-            {{ 'Cancel' | localize }}
-          </button>
           <button type="submit" class="btn btn-primary font-weight-bold" [disabled]="!mySettingsModalForm.form.valid || saving">
             <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
+          </button>
+          <button type="button" class="btn btn-outline-danger font-weight-bold" (click)="close()" [disabled]="saving">
+            {{ 'Cancel' | localize }}
           </button>
         </div>
       </form>

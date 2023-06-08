@@ -116,7 +116,12 @@ namespace TACHYON.Features
                     );
 
 
-
+            var RequiredReceiverCodeForInvoice = context.Create(
+                        AppFeatures.RequiredReceiverCodeForInvoice,
+                        "false",
+                        L("RequiredReceiverCodeForInvoice"),
+                        inputType: new CheckboxInputType()
+                    );
 
 
 
@@ -124,7 +129,7 @@ namespace TACHYON.Features
             // Clients Management System feature: this feature has sub features 
             // Sub features like : Shipper Clients, Carrier Clients, Client Login to the system, Document Management, and Direct Trip Feature
             // those feature used by Editions => Broker & Carrier SAAS .. See documentation for more details 
-            
+
             var cms = context.Create(
                 AppFeatures.CMS,
                 "false",
@@ -193,6 +198,8 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             );
             #region Saas
+
+            //waybills
             var NumberOfWaybills = context.Create(
                 AppFeatures.NumberOfWaybills,
                 "false",
@@ -213,12 +220,99 @@ namespace TACHYON.Features
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
                 );
 
+            //import
             var ImportFunctionality = context.Create(
                 AppFeatures.ImportFunctionality,
                 "true",
                 L("ImportFunctionalityFeature"),
                 inputType: new CheckboxInputType()
             );
+
+            ImportFunctionality.CreateChildFeature(
+                AppFeatures.ImportTripFeature,
+                "true",
+                L("ImportTripFeature"),
+                inputType: new CheckboxInputType()
+                );
+
+            ImportFunctionality.CreateChildFeature(
+                AppFeatures.ImportTruckFeature,
+                "true",
+                L("ImportTruckFeature"),
+                inputType: new CheckboxInputType()
+                );
+
+            ImportFunctionality.CreateChildFeature(
+                AppFeatures.ImportDriverFeature,
+                "true",
+                L("ImportDriverFeature"),
+                inputType: new CheckboxInputType()
+                );
+
+            ImportFunctionality.CreateChildFeature(
+                AppFeatures.ImportSaasShipmentFeature,
+                "true",
+                L("ImportSaasShipmentFeature"),
+                inputType: new CheckboxInputType()
+                );
+
+            //number of trucks
+            var NumberOfTrucks = context.Create(
+                AppFeatures.NumberOfTrucks,
+                "false",
+                L("NumberOfTrucksFeature"),
+                inputType: new CheckboxInputType()
+            );
+            NumberOfTrucks.CreateChildFeature(
+                AppFeatures.MaxNumberOfTrucks,
+                "false",
+                L("MaxNumberOfTrucksFeature"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+            );
+
+            NumberOfTrucks.CreateChildFeature(
+                AppFeatures.AdditionalTruckPrice,
+                "false",
+                L("AdditionalTruckPriceFeature"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
+                );
+
+            //dedicated
+            var DedicatedTruck = context.Create(
+               AppFeatures.DedicatedTruck,
+               "true",
+               L("DedicatedTruckFeature"),
+               inputType: new CheckboxInputType()
+               );
+
+            var SaveTemplate = context.Create(
+               AppFeatures.SaveTemplate,
+               "true",
+               L("SaveTemplateFeature"),
+               inputType: new CheckboxInputType()
+               );
+
+            var PortMovement = context.Create(
+              AppFeatures.PortMovement,
+              "true",
+              L("PortMovementFeature"),
+              inputType: new CheckboxInputType()
+              );
+
+            var HomeDelivery = context.Create(
+              AppFeatures.HomeDelivery,
+              "true",
+              L("HomeDeliveryFeature"),
+              inputType: new CheckboxInputType()
+              );
+
+            var ExportFunctionality = context.Create(
+              AppFeatures.ExportFunctionality,
+              "true",
+              L("ExportFunctionalityFeature"),
+              inputType: new CheckboxInputType()
+              );
+
             #endregion
 
 

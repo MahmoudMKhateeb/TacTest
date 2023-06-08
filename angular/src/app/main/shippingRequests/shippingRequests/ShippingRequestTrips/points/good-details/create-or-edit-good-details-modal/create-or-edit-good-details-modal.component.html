@@ -164,7 +164,9 @@
                       <span *ngIf="!isForDedicated && !isForPortsMovement && AllowedWeight - (weight || 0) * (amount || 1) < 0">
                         {{ l('AllowedWeightShouldBeMaximum') }} : {{ AllowedWeight }}
                       </span>
-                      <span *ngIf="!isForDedicated && isForPortsMovement"> {{ l('AllowedWeight') }} : {{ AllowedWeight }} </span>
+                      <span *ngIf="!isForDedicated && isForPortsMovement && !!this._TripService.GetShippingRequestForViewOutput?.shippingRequest?.id">
+                        {{ l('AllowedWeight') }} : {{ AllowedWeight }}
+                      </span>
                     </div>
                   </div>
 
@@ -408,7 +410,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button (click)="close()" class="btn btn-secondary" type="button">{{ l('Cancel') }}</button>
+            <button (click)="close()" class="btn btn-outline-danger" type="button">{{ l('Cancel') }}</button>
             <!--              <button [disabled]="!goodsDetailForm.form.valid" class="btn btn-primary blue" type="submit">-->
             <!--                  <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>-->
             <!--              </button>-->

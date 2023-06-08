@@ -9,17 +9,18 @@ using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper.QueryableExtensions;
-using DevExpress.XtraRichEdit.Model;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using NUglify.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.AddressBook;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
+using TACHYON.Cities;
 using TACHYON.Common;
 using TACHYON.Dto;
 using TACHYON.Features;
@@ -28,7 +29,6 @@ using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.PricePackages.Dto;
 using TACHYON.PricePackages.PricePackageOffers;
-using TACHYON.ServiceAreas;
 using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
@@ -52,6 +52,8 @@ namespace TACHYON.PricePackages
         private readonly IRepository<TrucksType, long> _truckTypeRepository;
         private readonly IRepository<TransportType> _transportTypeRepository;
         private readonly IShippingRequestDirectRequestAppService _directRequestAppService;
+        private readonly IRepository<City> _cityRepository;
+        private readonly IRepository<Facility,long> _facilityRepository;
 
         public PricePackageAppService(
             IRepository<PricePackage,long> pricePackageRepository,
@@ -66,7 +68,9 @@ namespace TACHYON.PricePackages
             IPricePackageOfferManager pricePackageOfferManager, 
             IRepository<TrucksType, long> truckTypeRepository,
             IRepository<TransportType> transportTypeRepository,
-            IShippingRequestDirectRequestAppService directRequestAppService)
+            IShippingRequestDirectRequestAppService directRequestAppService,
+            IRepository<City> cityRepository,
+            IRepository<Facility, long> facilityRepository)
         {
             _pricePackageRepository = pricePackageRepository;
             _tenantRepository = tenantRepository;
@@ -81,6 +85,8 @@ namespace TACHYON.PricePackages
             _truckTypeRepository = truckTypeRepository;
             _transportTypeRepository = transportTypeRepository;
             _directRequestAppService = directRequestAppService;
+            _cityRepository = cityRepository;
+            _facilityRepository = facilityRepository;
         }
 
 
@@ -159,7 +165,12 @@ namespace TACHYON.PricePackages
 
         private async Task CheckPricePackageImpersonate(PricePackage pricePackage)
         {
-            if (!AbpSession.TenantId.HasValue || await IsTachyonDealer())
+            if (!AbpSession.TenantId.HasValue && !pricePackage.DestinationTenantId.HasValue)
+                throw new UserFriendlyException(L("ThePricePackageMustCreatedForCurrentTenantOrForDestinationTenant"));
+            
+            // I added `(pricePackage.Id == default || pricePackage.UsageType == PricePackageUsageType.AsTachyonManageService)` to
+            // ignore change/check TenantId or Destination TenantId for `Update Carrier Price Package` case, see after map func in price package profile
+            if ((!AbpSession.TenantId.HasValue || await IsTachyonDealer()) && (pricePackage.Id == default || pricePackage.UsageType == PricePackageUsageType.AsTachyonManageService))
             {
                 switch (pricePackage.UsageType)
                 {
@@ -172,14 +183,17 @@ namespace TACHYON.PricePackages
                     case PricePackageUsageType.AsTachyonManageService when !AbpSession.TenantId.HasValue:
                         pricePackage.TenantId = await _tenantRepository.GetAll().Where(x => x.Edition.Id == TachyonEditionId).Select(x => x.Id)
                             .FirstOrDefaultAsync();
-                        if (!pricePackage.ServiceAreas.IsNullOrEmpty())
-                        {
-                            pricePackage.ServiceAreas.ForEach(x=> x.TenantId = pricePackage.TenantId);
-                        }
+                        
                         break;
                 }
             }
 
+            
+            if (!pricePackage.ServiceAreas.IsNullOrEmpty())
+            {
+                // Note: Based on the if condition in the first of this method, One of those (SessionTenantId or DestinationTenantId) must have a value 
+                pricePackage.ServiceAreas.ForEach(x => x.TenantId =  AbpSession.TenantId ?? pricePackage.DestinationTenantId.Value);
+            }
             
         }
 
@@ -187,6 +201,7 @@ namespace TACHYON.PricePackages
         protected virtual async Task Update(CreateOrEditPricePackageDto input)
         {
             if (!input.Id.HasValue) return;
+            await DisableTenancyFilterIfTachyonDealerOrHost();
             var updatedPricePackage = await _pricePackageRepository.GetAllIncluding(x => x.ServiceAreas)
                 .FirstOrDefaultAsync(x => x.Id == input.Id.Value);
             if (updatedPricePackage.Type != input.Type)
@@ -274,7 +289,9 @@ namespace TACHYON.PricePackages
                           pricePackage.Type == PricePackageType.PerTrip &&
                           pricePackage.TruckTypeId == shippingRequest.TrucksTypeId &&
                           pricePackage.OriginCityId == shippingRequest.OriginCityId &&
-                          pricePackage.RouteType == shippingRequest.RouteTypeId
+                         pricePackage.ShippingTypeId == shippingRequest.ShippingTypeId &&
+                          (((pricePackage.ShippingTypeId == ShippingTypeEnum.ExportPortMovements || pricePackage.ShippingTypeId == ShippingTypeEnum.ImportPortMovements) && pricePackage.RoundTrip == shippingRequest.RoundTripType) ||
+                           pricePackage.RouteType == shippingRequest.RouteTypeId)
                           && shippingRequest.ShippingRequestDestinationCities.Any(i =>
                               i.CityId == pricePackage.DestinationCityId)
                     orderby pricePackage.Id
@@ -432,7 +449,50 @@ namespace TACHYON.PricePackages
                     Id = p.Id.ToString()
                 }).ToListAsync();
         }
-        
+
+        public async Task<List<PricePackageLocationSelectItemDto>> GetPricePackageLocations(PricePackageLocationType locationType,int? countryId)
+        {
+            switch (locationType)
+            {
+                case PricePackageLocationType.City:
+                    return await GetCities();
+                case PricePackageLocationType.Port:
+                    return await GetPorts();
+                case PricePackageLocationType.CityAndPort:
+                    var citiesList = await GetCities();
+                    var citiesAndPortsList = await GetPorts();
+                    // cities and ports list
+                    citiesAndPortsList.AddRange(citiesList);
+                    return citiesAndPortsList;
+                
+                default: throw new UserFriendlyException(L("NotValidPricePackageLocationType"));
+            }
+
+            async Task<List<PricePackageLocationSelectItemDto>> GetCities()
+            {
+                return await _cityRepository.GetAll()
+                    .WhereIf(countryId.HasValue,x=> x.CountyId == countryId)
+                    .Select(city => new PricePackageLocationSelectItemDto
+                    {
+                        CityId = city.Id,Id = $"{PricePackageLocationType.City.ToString()} {city.Id}",
+                        DisplayName = city == null ? string.Empty : city.DisplayName,
+                        LocationType = PricePackageLocationType.City
+                    }).ToListAsync();
+            }
+
+            async Task<List<PricePackageLocationSelectItemDto>> GetPorts()
+            {
+                DisableTenancyFilters();
+                return await _facilityRepository.GetAll().Where(x=> x.FacilityType == FacilityType.Port)
+                    .Select(port => new PricePackageLocationSelectItemDto
+                    {
+                        CityId = port.CityId, Id = $"{PricePackageLocationType.Port.ToString()} {port.Id}",
+                        DisplayName = port == null ? string.Empty : port.Name,
+                        PortId = port.Id,
+                        LocationType = PricePackageLocationType.Port
+                    }).ToListAsync();
+            }
+        }
 
         #endregion
     }
