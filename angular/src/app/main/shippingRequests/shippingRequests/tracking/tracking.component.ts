@@ -1,38 +1,36 @@
-import {Component, Injector, OnInit, ViewChild} from '@angular/core';
-import {appModuleAnimation} from '@shared/animations/routerTransition';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
-    ShipmentTrackingMode,
-    ShippingRequestDriverServiceProxy,
-    ShippingRequestFlag,
-    ShippingRequestRouteType,
-    ShippingRequestStatus,
-    ShippingRequestsTripListDto,
-    ShippingRequestTripCancelStatus,
-    ShippingRequestTripDriverRoutePointDto,
-    ShippingRequestTripDriverStatus,
-    ShippingRequestTripFlag,
-    ShippingRequestTripStatus,
-    ShippingRequestType,
-    ShippingTypeEnum,
-    TrackingListDto,
-    TrackingServiceProxy,
-    WaybillsServiceProxy,
+  ShipmentTrackingMode,
+  ShippingRequestDriverServiceProxy,
+  ShippingRequestFlag,
+  ShippingRequestRouteType,
+  ShippingRequestStatus,
+  ShippingRequestsTripListDto,
+  ShippingRequestTripCancelStatus,
+  ShippingRequestTripDriverRoutePointDto,
+  ShippingRequestTripDriverStatus,
+  ShippingRequestTripFlag,
+  ShippingRequestTripStatus,
+  ShippingRequestType,
+  ShippingTypeEnum,
+  TrackingListDto,
+  TrackingServiceProxy,
+  WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
-import {ScrollPagnationComponentBase} from '@shared/common/scroll/scroll-pagination-component-base';
-import {TrackingSearchInput} from '../../../../shared/common/search/TrackingSearchInput';
-import {LocalStorageService} from '@shared/utils/local-storage.service';
-import {AppConsts} from '@shared/AppConsts';
-import {ViewTripAccidentModelComponent} from '../ShippingRequestTrips/accident/View-trip-accident-modal.component';
-import {animate, style, transition, trigger} from '@angular/animations';
-import {FileDownloadService} from '@shared/utils/file-download.service';
-import {
-    NewTrackingConponent
-} from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/new-tracking-conponent';
-import {finalize} from '@node_modules/rxjs/operators';
+import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
+import { TrackingSearchInput } from '../../../../shared/common/search/TrackingSearchInput';
+import { LocalStorageService } from '@shared/utils/local-storage.service';
+import { AppConsts } from '@shared/AppConsts';
+import { ViewTripAccidentModelComponent } from '../ShippingRequestTrips/accident/View-trip-accident-modal.component';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { FileDownloadService } from '@shared/utils/file-download.service';
+import { NewTrackingConponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/new-tracking-conponent';
+import { finalize } from '@node_modules/rxjs/operators';
 import Swal from 'sweetalert2';
-import {FileViwerComponent} from '@app/shared/common/file-viwer/file-viwer.component';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {isNotNullOrUndefined} from '@node_modules/codelyzer/util/isNotNullOrUndefined';
+import { FileViwerComponent } from '@app/shared/common/file-viwer/file-viwer.component';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   templateUrl: './tracking.component.html',
@@ -206,7 +204,8 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
       });
   }
 
-  search(): void {
+  search(input: TrackingSearchInput): void {
+    this.searchInput = { ...input };
     if (!this.showNormalView) {
       const searchInput = { ...this.searchInput };
       this.searchInput = null;
@@ -291,7 +290,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         this._shippingRequestDriverServiceProxy.reset(tripId).subscribe(() => {
           this.loadingTripId = null;
           this.notify.success(this.l('SuccessfullyReseated'));
-          this.search();
+          this.search(this.searchInput);
         });
       } //end of if
     });
@@ -397,15 +396,15 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
 
   showAsTable() {
     let pageName = this.shipmentType === AppConsts.Tracking_NormalShipment ? 'shipmentTracking' : 'directShipmentTracking';
-      console.log(pageName);
-      this.router.navigateByUrl(`/app/main/tracking/${pageName}?showType=1`);
+    console.log(pageName);
+    this.router.navigateByUrl(`/app/main/tracking/${pageName}?showType=1`);
   }
 
   showAsList() {
     let pageName = this.shipmentType === AppConsts.Tracking_NormalShipment ? 'shipmentTracking' : 'directShipmentTracking';
-      console.log(pageName);
-      this.router.navigateByUrl(`/app/main/tracking/${pageName}`);
+    console.log(pageName);
+    this.router.navigateByUrl(`/app/main/tracking/${pageName}`);
   }
 
-    protected readonly AppConsts = AppConsts;
+  protected readonly AppConsts = AppConsts;
 }

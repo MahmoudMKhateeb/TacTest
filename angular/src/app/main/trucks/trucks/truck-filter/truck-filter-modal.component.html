@@ -76,6 +76,7 @@
             <div class="dx-field-label">{{ 'TransportType' | localize }}</div>
             <div class="dx-field-value">
               <dx-select-box
+                [searchEnabled]="true"
                 [(value)]="truckFilterObj.transportTypeId"
                 [dataSource]="transportTypeList"
                 displayExpr="displayName"
@@ -159,6 +160,7 @@
             <div class="dx-field-label">{{ 'TruckStatus' | localize }}</div>
             <div class="dx-field-value">
               <dx-select-box
+                [searchEnabled]="true"
                 [(ngModel)]="truckFilterObj.truckStatusId"
                 [dataSource]="truckStatusList"
                 displayExpr="displayName"
@@ -169,12 +171,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="search()">
-          {{ l('Search') }}
-        </button>
-        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
-          {{ l('Close') }}
-        </button>
+        <button type="button" class="btn btn-primary btn-sm" (click)="search()">{{ l('Search') }}</button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="close()">{{ l('Close') }}</button>
       </div>
     </div>
   </div>
