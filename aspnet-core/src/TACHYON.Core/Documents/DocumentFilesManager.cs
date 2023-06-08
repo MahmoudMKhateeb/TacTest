@@ -23,6 +23,7 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
+using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Features;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
@@ -419,7 +420,32 @@ namespace TACHYON.Documents
                 CurrentUnitOfWork.SaveChanges();
             }
         }
-        //---R
+
+        public async Task<bool> GetIsTenentHasMissingDocuments(List<DocumentFile> documentFiles,  int tenantId)
+        {
+            DisableTenancyFilters();
+
+            var tenant = _tenantManager.GetById(tenantId);
+
+            var tenantDocumentFiles =  documentFiles
+                //await _documentFileRepository.GetAll()
+          // .Include(doc => doc.DocumentTypeFk)
+           .Where(x => x.TenantId == tenantId )
+           .Select(x => x.DocumentTypeId.Value).ToList();
+
+            var allDocumentTypes = await _documentTypeRepository.GetAll()
+                .Where(x => (x.EditionId == tenant.EditionId && x.DocumentRelatedWithId == null) ||
+                            x.DocumentRelatedWithId == tenantId)
+                .Where(x => x.IsRequired == true)
+                .Select(x => x.Id).ToListAsync();
+
+            foreach (var item in allDocumentTypes)
+            {
+                if (!tenantDocumentFiles.Contains(item)) return false;
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Document Accepted and not Rejected and not expired documentsFiles.

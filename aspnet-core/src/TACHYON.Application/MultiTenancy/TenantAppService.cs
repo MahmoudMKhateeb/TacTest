@@ -28,6 +28,8 @@ using TACHYON.Authorization.Users.Dto;
 using TACHYON.Cities;
 using TACHYON.Cities.Dtos;
 using TACHYON.Countries;
+using TACHYON.Documents;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
 using TACHYON.Editions.Dto;
 using TACHYON.Features;
@@ -45,16 +47,19 @@ namespace TACHYON.MultiTenancy
         private readonly IRepository<County, int> _lookup_countryRepository;
         private readonly IRepository<City, int> _lookup_cityRepository;
         private readonly IBackgroundJobManager _jobManager;
-
+        private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
+        private readonly DocumentFilesManager _documentFilesManager;
 
         public TenantAppService(IRepository<County, int> lookup_countryRepository,
-            IRepository<City, int> lookup_cityRepository, IBackgroundJobManager jobManager)
+            IRepository<City, int> lookup_cityRepository, IBackgroundJobManager jobManager, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager)
         {
             AppUrlService = NullAppUrlService.Instance;
             EventBus = NullEventBus.Instance;
             _lookup_countryRepository = lookup_countryRepository;
             _lookup_cityRepository = lookup_cityRepository;
             _jobManager = jobManager;
+            _documentFileRepository = documentFileRepository;
+            _documentFilesManager = documentFilesManager;
         }
 
         public async Task<PagedResultDto<TenantListDto>> GetTenants(GetTenantsInput input)
@@ -89,12 +94,22 @@ namespace TACHYON.MultiTenancy
             IQueryable<UserListDto> userListDtos = UserManager.Users.Where(x => x.UserName.ToLower() == "admin")
                 .ProjectTo<UserListDto>(AutoMapperConfigurationProvider);
 
-            var query = from t in tenantListDtos
+            var query = (from t in tenantListDtos
                 join u in userListDtos
                     on t.Id equals u.TenantId
-                select new GetAllTenantsOutput { TenantListDto = t, UserListDto = u };
+                select new GetAllTenantsOutput { TenantListDto = t, UserListDto = u }).ToList();
 
-            return await LoadResultAsync(query, loadOptions);
+            var documentFiles = await _documentFileRepository.GetAll()
+                     .Where(x => x.DocumentTypeFk.IsRequired == true && x.DocumentTypeId != null)
+                     .ToListAsync();
+            foreach (var item in query)
+            {
+                item.TenantListDto.DocumentStatus =
+                (await _documentFilesManager.GetIsTenentHasMissingDocuments(documentFiles,item.TenantListDto.Id)) == true
+                ? L("Submited") : L("NotSubmitted");
+            }
+
+            return  LoadResult(query, loadOptions);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenants_Create)]
