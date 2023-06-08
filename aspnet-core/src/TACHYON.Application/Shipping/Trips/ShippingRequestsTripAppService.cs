@@ -196,7 +196,8 @@ namespace TACHYON.Shipping.Trips
                     NumberOfDrops = x.NumberOfDrops,
                     ShipperActorName = x.ShipperActorFk.CompanyName,
                     CarrierActorName = x.CarrierActorFk.CompanyName,
-                    ContainerNumber = x.ContainerNumber
+                    ContainerNumber = x.ContainerNumber,
+                    x.BayanId
                 }
                 );
 

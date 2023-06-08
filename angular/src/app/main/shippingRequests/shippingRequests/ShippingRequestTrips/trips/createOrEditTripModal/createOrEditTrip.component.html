@@ -976,6 +976,21 @@
                   </div>
                 </div>
               </div>
+              <div class="form-group col-lg-12">
+                <div class="col-lg-6 margin-top-15">
+                  <label for="excludeFromBayanIntegration" class="checkbox">
+                    <input
+                      id="excludeFromBayanIntegration"
+                      type="checkbox"
+                      name="excludeFromBayanIntegration"
+                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.excludeFromBayanIntegration"
+                    />
+                    {{ 'excludeFromBayanIntegration' | localize }}
+                    <span></span>
+                  </label>
+                </div>
+              </div>
+
               <!--        begin of home delivery for dedicated request special fields          -->
               <ng-container
                 *ngIf="_TripService?.CreateOrEditShippingRequestTripDto?.shippingRequestTripFlag == ShippingRequestTripFlagEnum.HomeDelivery"

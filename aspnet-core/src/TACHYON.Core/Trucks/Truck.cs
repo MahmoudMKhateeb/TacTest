@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Actors;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Integration.BayanIntegration;
 using TACHYON.Integration.WaslIntegration;
 using TACHYON.Shipping.Dedicated;
 using TACHYON.Shipping.ShippingRequests;
@@ -24,7 +25,7 @@ namespace TACHYON.Trucks
     [Table("Trucks")]
     [Audited]
     [Serializable]
-    public class Truck : FullAuditedEntity<long>, IMustHaveTenant, IWaslIntegrated, IMayHaveCarrierActor
+    public class Truck : FullAuditedEntity<long>, IMustHaveTenant, IWaslIntegrated, IMayHaveCarrierActor , ICanBeExcludedFromBayanIntegration
     {
         public int TenantId { get; set; }
 
@@ -110,6 +111,9 @@ namespace TACHYON.Trucks
         public int? CarrierActorId { get; set ; }
         public ICollection<DedicatedShippingRequestTruck> DedicatedShippingRequestTrucks { get; set; }
 
+        public bool ExcludeFromBayanIntegration { get; set; }
+
+
         #region Helper
 
         /// <summary>
@@ -123,5 +127,6 @@ namespace TACHYON.Trucks
         }
 
         #endregion
+
     }
 }

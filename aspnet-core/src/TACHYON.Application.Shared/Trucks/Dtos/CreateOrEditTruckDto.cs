@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.Integration.BayanIntegration;
 
 namespace TACHYON.Trucks.Dtos
 {
-    public class CreateOrEditTruckDto : EntityDto<long?>
+    public class CreateOrEditTruckDto : EntityDto<long?> , ICanBeExcludedFromBayanIntegration
     {
         [Required]
         [StringLength(TruckConsts.MaxPlateNumberLength, MinimumLength = TruckConsts.MinPlateNumberLength)]
@@ -63,5 +64,6 @@ namespace TACHYON.Trucks.Dtos
         [StringLength(TruckConsts.MaxInternalTruckIdLength)]
         public string InternalTruckId { get; set; }
 
+        public bool ExcludeFromBayanIntegration { get; set; }
     }
 }

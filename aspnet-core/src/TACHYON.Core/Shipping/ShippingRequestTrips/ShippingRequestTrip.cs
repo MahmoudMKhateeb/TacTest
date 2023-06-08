@@ -1,4 +1,4 @@
-﻿using Abp;
+using Abp;
 using Abp.Auditing;
 using Abp.Domain.Entities.Auditing;
 using System;
@@ -10,6 +10,7 @@ using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Cities;
 using TACHYON.Goods.GoodCategories;
+using TACHYON.Integration.BayanIntegration;
 using TACHYON.Integration.WaslIntegration;
 using TACHYON.Invoices;
 using TACHYON.Invoices.ActorInvoices;
@@ -27,7 +28,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 {
     [Audited]
     [Table("ShippingRequestTrips")]
-    public class ShippingRequestTrip : FullAuditedEntity, IWaslIntegrated, IMayHaveShipperActor, IMayHaveCarrierActor
+    public class ShippingRequestTrip : FullAuditedEntity, IWaslIntegrated, IMayHaveShipperActor, IMayHaveCarrierActor , ICanBeExcludedFromBayanIntegration
     {
         /// <summary>
         /// the carrier who will take this Trip
@@ -252,5 +253,6 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public ICollection<ShippingRequestDestinationCity> ShippingRequestDestinationCities { get; set; }
 
         #endregion
+        public bool ExcludeFromBayanIntegration { get; set; }
     }
 }

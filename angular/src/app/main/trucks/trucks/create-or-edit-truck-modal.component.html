@@ -447,6 +447,17 @@
                 type="text"
               ></textarea>
             </div>
+
+            <label for="excludeFromBayanIntegration" class="checkbox">
+              <input
+                id="excludeFromBayanIntegration"
+                type="checkbox"
+                name="excludeFromBayanIntegration"
+                [(ngModel)]="truck.excludeFromBayanIntegration"
+              />
+              {{ 'excludeFromBayanIntegration' | localize }}
+              <span></span>
+            </label>
           </div>
 
           <createOrEditDocumentFileModal #createOrEditDocumentFileModal></createOrEditDocumentFileModal>

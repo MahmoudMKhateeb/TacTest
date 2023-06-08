@@ -3383,5 +3383,7 @@
 	<text name="ShippingRequestSavedTemplate">Normal Shipping Request Templates</text>
 	<text name="TripSavedTemplate">Trip Templates</text>
     <text name="IsTaxVatIncluded">Is tax vat included</text>
+		<text name="excludeFromBayanIntegration">Disable Bayan Integration</text>
+    
 	</texts>
 </localizationDictionary>

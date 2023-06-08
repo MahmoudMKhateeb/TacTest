@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Numerics;
 using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.Integration.BayanIntegration;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
@@ -20,7 +21,7 @@ using TACHYON.ShippingRequestTripVases.Dtos;
 
 namespace TACHYON.Shipping.Trips.Dto
 {
-    public class CreateOrEditShippingRequestTripDto : EntityDto<int?>, ICreateOrEditTripDtoBase, ICustomValidate, IShouldNormalize
+    public class CreateOrEditShippingRequestTripDto : EntityDto<int?>, ICreateOrEditTripDtoBase, ICustomValidate, IShouldNormalize,ICanBeExcludedFromBayanIntegration
     {
         [Required] public DateTime? StartTripDate { get; set; }
 
@@ -154,5 +155,7 @@ namespace TACHYON.Shipping.Trips.Dto
                 CreateOrEditDocumentFileDto = null;
             }
         }
+
+        public bool ExcludeFromBayanIntegration { get; set; }
     }
 }
