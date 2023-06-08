@@ -445,14 +445,14 @@ namespace TACHYON.Integration.BayanIntegration.V3
                 string tripBayanId;
                 try
                 {
-                   
-                        tripBayanId = b.tripId;
+
+                    tripBayanId = b.tripId;
                 }
                 catch
                 {
-                        tripBayanId  = b.ToString();
+                    tripBayanId = b.ToString();
                 }
-             
+
                 //var tripBayanId = "97";
 
                 var client = new RestClient(await Url + "trip/" + tripBayanId + "/print");
@@ -512,7 +512,23 @@ namespace TACHYON.Integration.BayanIntegration.V3
 
         public async Task QueueCreateTrip(int tripId)
         {
+            var x = await _shippingRequestTripTripRepository.GetAll()
+                .Where(x => x.Id == tripId)
+                .Select
+                (
+                    x => new
+                    {
+                        driverExcludeFromBayanIntegration = x.AssignedDriverUserFk.ExcludeFromBayanIntegration,
+                        TruckExcludeFromBayanIntegration = x.AssignedTruckFk.ExcludeFromBayanIntegration,
+                        TripExcludeFromBayanIntegration =  x.ExcludeFromBayanIntegration}
+                ).FirstAsync();
+
+            if (x.driverExcludeFromBayanIntegration || x.TruckExcludeFromBayanIntegration || x.TripExcludeFromBayanIntegration)
+            {
+                return;  // no integration
+            }
             var queueCreateConsignmentNoteJobId = await _backgroundJobManager.EnqueueAsync<CreateTripJop, int>(tripId);
+
         }
 
         public async Task QueueUpdateVehicleOrDriver(UpdateVehicleOrDriverJobArgs args)
@@ -601,17 +617,17 @@ namespace TACHYON.Integration.BayanIntegration.V3
                             sender = new Sender
                             {
                                 name = x.ShippingRequestId != null ? x.ShippingRequestFk.Tenant.companyName : x.ShipperTenantFk.companyName,
-                                phone =  "+966" + x.RoutPoints.FirstOrDefault(x => x.PickingType == PickingType.Pickup).ReceiverFk.PhoneNumber,
+                                phone = "+966" + x.RoutPoints.FirstOrDefault(x => x.PickingType == PickingType.Pickup).ReceiverFk.PhoneNumber,
                                 countryCode = x.ShippingRequestId != null ? x.ShippingRequestFk.Tenant.CountyFk.Code : x.ShipperTenantFk.CountyFk.Code,
                                 cityId = x.ShippingRequestId != null ? x.ShippingRequestFk.Tenant.CityFk.BayanIntegrationId.Value.ToString() : x.ShipperTenantFk.CityFk.BayanIntegrationId.Value.ToString(),
-                                address = x.ShippingRequestId != null ? x.ShippingRequestFk.Tenant.Address  : x.ShipperTenantFk.Address,
+                                address = x.ShippingRequestId != null ? x.ShippingRequestFk.Tenant.Address : x.ShipperTenantFk.Address,
                                 notes = ""
                             },
                             recipient = new Recipient
                             {
-                                name = x.ShippingRequestId != null ?  x.ShippingRequestFk.CarrierTenantFk.companyName : x.CarrierTenantFk.companyName,
+                                name = x.ShippingRequestId != null ? x.ShippingRequestFk.CarrierTenantFk.companyName : x.CarrierTenantFk.companyName,
                                 phone = "+966" + x.RoutPoints.FirstOrDefault(x => x.PickingType == PickingType.Dropoff).ReceiverFk.PhoneNumber,
-                                countryCode = x.ShippingRequestId != null ?  x.ShippingRequestFk.CarrierTenantFk.CountyFk.Code : x.CarrierTenantFk.CountyFk.Code,
+                                countryCode = x.ShippingRequestId != null ? x.ShippingRequestFk.CarrierTenantFk.CountyFk.Code : x.CarrierTenantFk.CountyFk.Code,
                                 cityId = x.ShippingRequestId != null ? x.ShippingRequestFk.CarrierTenantFk.CityFk.BayanIntegrationId.Value.ToString() : x.CarrierTenantFk.CityFk.BayanIntegrationId.Value.ToString(),
                                 address = x.ShippingRequestId != null ? x.ShippingRequestFk.CarrierTenantFk.Address : x.CarrierTenantFk.Address,
                                 notes = ""
@@ -635,7 +651,7 @@ namespace TACHYON.Integration.BayanIntegration.V3
                                     {
                                         unitId = g.UnitOfMeasureFk.BayanIntegrationId, // todo ask
                                         valid = true, // todo ask 
-                                        quantity = g.Amount!=null ?g.Amount.Value :0 ,
+                                        quantity = g.Amount != null ? g.Amount.Value : 0,
                                         price = "",
                                         goodTypeId = g.GoodCategoryFk.BayanIntegrationId.IfNullOrWhiteSpace(""),
                                         dangerousGoodTypeId = g.DangerousGoodTypeFk.BayanIntegrationId.HasValue ? g.DangerousGoodTypeFk.BayanIntegrationId.Value.ToString() : "",

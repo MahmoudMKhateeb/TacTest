@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Actors;
 using TACHYON.DriverLicenseTypes;
+using TACHYON.Integration.BayanIntegration;
 using TACHYON.Integration.WaslIntegration;
 using TACHYON.Nationalities;
 using TACHYON.Rating;
@@ -18,7 +19,7 @@ namespace TACHYON.Authorization.Users
     /// <summary>
     /// Represents a user in the system.
     /// </summary>
-    public class User : AbpUser<User>, IWaslIntegrated,IHasRating, IMayHaveCarrierActor
+    public class User : AbpUser<User>, IWaslIntegrated,IHasRating, IMayHaveCarrierActor , ICanBeExcludedFromBayanIntegration
     {
         [StringLength(12)] public string AccountNumber { get; set; }
         public virtual Guid? ProfilePictureId { get; set; }
@@ -132,5 +133,6 @@ namespace TACHYON.Authorization.Users
         //    WorkingStatus = WorkingStatus.Active;
         //    WorkingShippingRequestReference = "";
         //}
+        public bool ExcludeFromBayanIntegration { get; set; }
     }
 }

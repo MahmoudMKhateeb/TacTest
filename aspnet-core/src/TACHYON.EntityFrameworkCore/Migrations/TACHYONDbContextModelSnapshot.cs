@@ -1784,6 +1784,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(328)")
                         .HasMaxLength(328);
 
+                    b.Property<bool>("ExcludeFromBayanIntegration")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ExperienceField")
                         .HasColumnType("nvarchar(max)");
 
@@ -7125,6 +7128,9 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("EndWorking")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("ExcludeFromBayanIntegration")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("ExpectedDeliveryTime")
                         .HasColumnType("datetime2");
 
@@ -8914,6 +8920,9 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("DriverUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("ExcludeFromBayanIntegration")
+                        .HasColumnType("bit");
 
                     b.Property<string>("InternalTruckId")
                         .HasColumnType("nvarchar(10)")

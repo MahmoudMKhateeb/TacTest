@@ -3,11 +3,12 @@ using Abp.Authorization.Users;
 using Abp.Domain.Entities;
 using System;
 using System.ComponentModel.DataAnnotations;
+using TACHYON.Integration.BayanIntegration;
 
 namespace TACHYON.Authorization.Users.Dto
 {
     //Mapped to/from User in CustomDtoMapper
-    public class UserEditDto : IPassivable
+    public class UserEditDto : IPassivable , ICanBeExcludedFromBayanIntegration
     {
         /// <summary>
         /// Set null to create a new user. Set user's Id to update a user
@@ -67,6 +68,10 @@ namespace TACHYON.Authorization.Users.Dto
         public int? DriverIssueNumber { get; set; }
 
         public int? CarrierActorId { get; set; }
+
+        public bool ExcludeFromBayanIntegration { get; set; }
+
         #endregion
+
     }
 }

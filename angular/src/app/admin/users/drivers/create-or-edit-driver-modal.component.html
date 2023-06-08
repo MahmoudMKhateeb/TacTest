@@ -348,6 +348,17 @@
                   {{ 'Available' | localize }}
                   <span></span>
                 </label>
+
+                <label for="excludeFromBayanIntegration" class="checkbox">
+                  <input
+                    id="excludeFromBayanIntegration"
+                    type="checkbox"
+                    name="excludeFromBayanIntegration"
+                    [(ngModel)]="user.excludeFromBayanIntegration"
+                  />
+                  {{ 'excludeFromBayanIntegration' | localize }}
+                  <span></span>
+                </label>
               </div>
             </tab>
             <tab *ngIf="!user.id" class="pt-5" heading="{{ 'DriverDocuments' | localize }}">

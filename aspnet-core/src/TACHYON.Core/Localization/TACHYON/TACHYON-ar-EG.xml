@@ -3096,5 +3096,7 @@
 	<text name="TripSavedTemplate">فوالب الرحلة</text>
 		
     <text name="IsTaxVatIncluded">يتضمن الضريبة</text>
+    <text name="excludeFromBayanIntegration">تعطيل بيان</text>
+		
 	</texts>
 </localizationDictionary>
