@@ -37,6 +37,7 @@ namespace TACHYON.Invoices.ActorInvoices.Dto
 
 
         public   byte[] Logo { get; set; }
+        public byte[] Stamp { get; set; }
 
         public string BrokerName { get; set; }
 

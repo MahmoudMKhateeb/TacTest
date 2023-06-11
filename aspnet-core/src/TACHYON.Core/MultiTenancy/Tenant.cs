@@ -53,6 +53,9 @@ namespace TACHYON.MultiTenancy
         public virtual Guid? LogoId { get; set; }
 
         [MaxLength(MaxLogoMimeTypeLength)] public virtual string LogoFileType { get; set; }
+        public virtual Guid? StampId { get; set; }
+
+        [MaxLength(MaxLogoMimeTypeLength)] public virtual string StampFileType { get; set; }
 
         public decimal Balance { get; set; } = 0;
         public decimal ReservedBalance { get; set; } = 0;
@@ -106,10 +109,21 @@ namespace TACHYON.MultiTenancy
             return LogoId != null && LogoFileType != null;
         }
 
+        public virtual bool HasStamp()
+        {
+            return StampId != null && StampFileType != null;
+        }
+
         public void ClearLogo()
         {
             LogoId = null;
             LogoFileType = null;
+        }
+
+        public void ClearStamp()
+        {
+            StampId = null;
+            StampFileType = null;
         }
 
         public void UpdateSubscriptionDateForPayment(PaymentPeriodType paymentPeriodType,

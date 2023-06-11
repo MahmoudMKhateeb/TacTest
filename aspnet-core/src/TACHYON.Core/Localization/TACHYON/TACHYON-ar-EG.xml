@@ -3106,6 +3106,7 @@
     <text name="DocumentStatus">حالة المستندات</text>
     <text name="Submited">تم الإرسال</text>
     <text name="NotSubmitted">لم يتم الارسال</text>
+    <text name="InvoiceStamp">توقيع الفاتورة</text>
 		
 	</texts>
 </localizationDictionary>

@@ -35,7 +35,7 @@ export class TenantSettingsComponent extends AppComponentBase implements OnInit 
 
   logoUploader: FileUploader;
   customCssUploader: FileUploader;
-
+  StampUploader: FileUploader;
   remoteServiceBaseUrl = AppConsts.remoteServiceBaseUrl;
 
   defaultTimezoneScope: SettingScopes = SettingScopes.Tenant;
@@ -104,6 +104,10 @@ export class TenantSettingsComponent extends AppComponentBase implements OnInit 
       this.appSession.tenant.logoId = result.id;
     });
 
+    this.StampUploader = this.createUploader('/TenantCustomization/UploadStamp', (result) => {
+      this.appSession.tenant.stampFileType = result.fileType;
+      this.appSession.tenant.stampId = result.id;
+    });
     this.customCssUploader = this.createUploader('/TenantCustomization/UploadCustomCss', (result) => {
       this.appSession.tenant.customCssId = result.id;
 
@@ -153,6 +157,10 @@ export class TenantSettingsComponent extends AppComponentBase implements OnInit 
     this.logoUploader.uploadAll();
   }
 
+  uploadStamp(): void {
+    this.StampUploader.uploadAll();
+  }
+
   uploadCustomCss(): void {
     this.customCssUploader.uploadAll();
   }
@@ -161,6 +169,14 @@ export class TenantSettingsComponent extends AppComponentBase implements OnInit 
     this._tenantSettingsService.clearLogo().subscribe(() => {
       this.appSession.tenant.logoFileType = null;
       this.appSession.tenant.logoId = null;
+      this.notify.info(this.l('ClearedSuccessfully'));
+    });
+  }
+
+  clearStamp(): void {
+    this._tenantSettingsService.clearStamp().subscribe(() => {
+      this.appSession.tenant.stampFileType = null;
+      this.appSession.tenant.stampId = null;
       this.notify.info(this.l('ClearedSuccessfully'));
     });
   }

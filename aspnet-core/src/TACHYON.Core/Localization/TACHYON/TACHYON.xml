@@ -3394,5 +3394,6 @@
     <text name="DocumentStatus">Document status</text>
     <text name="Submited">Submited</text>
     <text name="NotSubmitted">Not submitted</text>
+    <text name="InvoiceStamp">Invoice stamp</text>
 	</texts>
 </localizationDictionary>
