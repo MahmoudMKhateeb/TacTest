@@ -51,16 +51,16 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
               showType: 1,
             }
           ),
-          new AppMenuItem(
-            'Marketplace',
-            'Pages.ShippingRequests.Marketplace',
-            '',
-            '/app/main/marketplace/list',
-            undefined,
-            undefined,
-            undefined,
-            undefined
-          ),
+          // new AppMenuItem(
+          //   'Marketplace',
+          //   'Pages.ShippingRequests.Marketplace',
+          //   '',
+          //   '/app/main/marketplace/list',
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   undefined
+          // ),
           new AppMenuItem(
             'SavedTemplates',
             'Pages.EntityTemplate',

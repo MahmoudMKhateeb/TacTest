@@ -168,16 +168,16 @@ export class AppTMSNavigationService extends AppBaseNavigationService {
           new AppMenuItem('Requests', 'Pages', '', '/app/main/shippingRequests/shippingRequests', undefined, undefined, undefined, {
             showType: 1,
           }),
-          new AppMenuItem(
-            'Marketplace',
-            'Pages',
-            '',
-            '/app/main/marketplace/list',
-            undefined,
-            undefined,
-            undefined
-            //  () => !this.isEnabled('App.Shipper') || !this._appSessionService.tenantId
-          ),
+          // new AppMenuItem(
+          //   'Marketplace',
+          //   'Pages',
+          //   '',
+          //   '/app/main/marketplace/list',
+          //   undefined,
+          //   undefined,
+          //   undefined
+          //   //  () => !this.isEnabled('App.Shipper') || !this._appSessionService.tenantId
+          // ),
 
           //  new AppMenuItem(
           //    'DirectShippingRequests',

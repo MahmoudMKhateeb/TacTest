@@ -41,9 +41,9 @@ export class AppCarrierNavigationService extends AppBaseNavigationService {
               showType: 1,
             }
           ),
-          new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
-            this.isEnabled('App.Carrier')
-          ),
+          // new AppMenuItem('Marketplace', '', '', '/app/main/marketplace/list', undefined, undefined, undefined, undefined, () =>
+          //   this.isEnabled('App.Carrier')
+          // ),
           new AppMenuItem(
             'SavedTemplates',
             'Pages.EntityTemplate',

@@ -218,15 +218,15 @@ export class CreateOrEditDedicatedShippingRequestWizardComponent
     this.isCarrierSass = this.feature.isEnabled('App.CarrierAsASaas');
     this.useShippingRequestTemplate();
     if (this.feature.isEnabled('App.MarketPlace')) {
-      this.allShippingRequestsTypes.push(
-        new SelectItemDto(
-          SelectItemDto.fromJS({
-            id: 'bidding',
-            displayName: this.l('Marketplace'),
-            isOther: null,
-          })
-        )
-      );
+      // this.allShippingRequestsTypes.push(
+      //   new SelectItemDto(
+      //     SelectItemDto.fromJS({
+      //       id: 'bidding',
+      //       displayName: this.l('Marketplace'),
+      //       isOther: null,
+      //     })
+      //   )
+      // );
     }
     this.allShippingRequestsTypes.push(
       new SelectItemDto(
