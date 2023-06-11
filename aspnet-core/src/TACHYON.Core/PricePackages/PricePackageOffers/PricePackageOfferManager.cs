@@ -36,19 +36,20 @@ namespace TACHYON.PricePackages.PricePackageOffers
         private readonly IRepository<ShippingRequestDirectRequest,long> _directRequestRepository;
         private readonly IFeatureChecker _featureChecker;
         private readonly IConfigurationProvider _configurationProvider;
-
+        private readonly ShippingRequestDirectRequestManager _shippingRequestDirectRequestManager;
 
         public PricePackageOfferManager(
             IRepository<ShippingRequest, long> shippingRequestRepository,
-            IRepository<PricePackage,long> pricePackageRepository,
+            IRepository<PricePackage, long> pricePackageRepository,
             IShippingRequestDirectRequestAppService directRequestAppService,
             PriceOfferManager priceOfferManager,
             IRepository<PriceOffer, long> priceOfferRepository,
             IRepository<PricePackageOffer, long> pricePackageOfferRepository,
             IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
-            IRepository<VasPrice> vasPriceRepository, 
+            IRepository<VasPrice> vasPriceRepository,
             IRepository<ShippingRequestDirectRequest, long> directRequestRepository,
-            IFeatureChecker featureChecker)
+            IFeatureChecker featureChecker,
+            ShippingRequestDirectRequestManager shippingRequestDirectRequestManager)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _pricePackageRepository = pricePackageRepository;
@@ -61,12 +62,9 @@ namespace TACHYON.PricePackages.PricePackageOffers
             _directRequestRepository = directRequestRepository;
             _featureChecker = featureChecker;
             _configurationProvider = IocManager.Instance.Resolve<IMapper>()?.ConfigurationProvider;
+            _shippingRequestDirectRequestManager = shippingRequestDirectRequestManager;
         }
-        
-        
-        
-        
-        
+
         /// <summary>
         /// this method used for apply the pricing that the shipper/carrier agree it by price package
         /// the stage can be use after price package appendix is confirmed 
@@ -84,7 +82,7 @@ namespace TACHYON.PricePackages.PricePackageOffers
             DisableTenancyFilters();
 
             var shippingRequest = await _shippingRequestRepository.GetAllIncluding(x=> x.ShippingRequestVases)
-                .AsNoTracking().SingleAsync(x => x.Id == srId);
+                .SingleAsync(x => x.Id == srId);
             
             PricePackage pricePackage = await _pricePackageRepository.SingleAsync(x=> x.Id == pricePackageId);
             
@@ -99,7 +97,7 @@ namespace TACHYON.PricePackages.PricePackageOffers
             if (!pricePackage.AppendixId.HasValue)
                 throw new UserFriendlyException(L("PricePackageMustHaveAppendixToSendRequest"));
 
-            await SendDirectRequestToCarrierByPricePackage(pricePackage, shippingRequest.Id);
+            await SendDirectRequestToCarrierByPricePackage(pricePackage, shippingRequest);
 
         }
 
@@ -335,30 +333,45 @@ namespace TACHYON.PricePackages.PricePackageOffers
             {
                 // send direct request to carrier by price package
 
-                await SendDirectRequestToCarrierByPricePackage(pricePackage, request.Id);
+                await SendDirectRequestToCarrierByPricePackage(pricePackage, request);
+
+
             }
             else throw new UserFriendlyException(L("PricePackageMustHaveAppendixOrProposal"));
 
 
         }
 
-        private async Task SendDirectRequestToCarrierByPricePackage(PricePackage pricePackage, long requestId)
+        private async Task SendDirectRequestToCarrierByPricePackage(PricePackage pricePackage, ShippingRequest shippingRequest)
         {
 
             var createDirectRequestInput = new CreateShippingRequestDirectRequestInput()
-            { ShippingRequestId = requestId };
+            { ShippingRequestId = shippingRequest.Id };
 
             createDirectRequestInput.CarrierTenantId = pricePackage.TenantId;
             
-            var directRequestId = await _directRequestAppService.Create(createDirectRequestInput);
+            var directRequest = await _shippingRequestDirectRequestManager.Create(createDirectRequestInput);
                
             var createdPricePackageOffer = new PricePackageOffer()
             {
-                DirectRequestId = directRequestId,
+                DirectRequestId = directRequest.Id,
                 PricePackageId = pricePackage.Id
             };
             
             await _pricePackageOfferRepository.InsertAsync(createdPricePackageOffer);
+
+            // acknowledge offer on behalf of carrier
+            await _priceOfferManager.AcknowledgeOfferOnBehalfOfCarrier(new CreateOrEditPriceOfferInput
+            {
+                Channel = PriceOfferChannel.DirectRequest,
+                IsPostPrice = false,
+                ShippingRequestId = shippingRequest.Id,
+                ItemPrice = pricePackage.TotalPrice,
+                CommissionPercentageOrAddValue = 10,
+                CommissionType = PriceOfferCommissionType.CommissionPercentage,
+                CarrierTenantId = pricePackage.TenantId
+            }, shippingRequest, directRequest);
+            
         }
         private async Task SendOfferToShipperByPricePackage(ShippingRequest shippingRequest, PricePackage pricePackage)
         {
