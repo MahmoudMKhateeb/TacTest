@@ -1,11 +1,12 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
-  ActiveActorDto,
   BrokerDashboardServiceProxy,
+  GetTruckTypeUsageOutput,
   ISelectItemDto,
   MostUsedTruckTypeDto,
   ShippingRequestsServiceProxy,
+  TMSAndHostDashboardServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { ApexPlotOptions, ChartComponent } from '@node_modules/ng-apexcharts';
 import { ApexLegend, ApexOptions } from '@node_modules/ng-apexcharts/lib/model/apex-types';
@@ -35,12 +36,14 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
   colors: string[] = [];
   allTransportTypes: ISelectItemDto[] = [];
   selectedTransportTypeId: string;
+  loading: boolean;
 
   constructor(
     injector: Injector,
     private dashboardCustomizationService: DashboardCustomizationService,
     private brokerDashboardServiceProxy: BrokerDashboardServiceProxy,
-    private shippingRequestsServiceProxy: ShippingRequestsServiceProxy
+    private shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
+    private _TMSAndHostDashboardServiceProxy: TMSAndHostDashboardServiceProxy
   ) {
     super(injector);
   }
@@ -63,64 +66,16 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
     this.getMostTruckTypeUsedComponent();
   }
 
-  fillChart(items: MostUsedTruckTypeDto[]) {
+  fillChart(items: MostUsedTruckTypeDto[] | GetTruckTypeUsageOutput[]) {
     this.colors = [];
-    // this.chartOptions = {
-    //     series: items.map((item, index) => {
-    //         this.colors.push(index % 2 == 0 ? this.dashboardCustomizationService.acceptedColor : this.dashboardCustomizationService.rejectedColor);
-    //         return {
-    //             name: item.actorName,
-    //             data: [
-    //                 {
-    //                     x: item.actorName,
-    //                     y: item.numberOfTrips,
-    //                     color: index % 2 == 0 ? this.dashboardCustomizationService.acceptedColor : this.dashboardCustomizationService.rejectedColor
-    //                 }
-    //             ],
-    //             color: index % 2 == 0 ? this.dashboardCustomizationService.acceptedColor : this.dashboardCustomizationService.rejectedColor,
-    //         };
-    //     }),
-    //     chart: {
-    //         type: 'bar',
-    //         width: '100%',
-    //         height: 250,
-    //     },
-    //     xaxis: {
-    //         type: 'category',
-    //         categories: items.map(item => item.actorName),
-    //         title: {
-    //             text: this.l('Actors')
-    //         }
-    //     },
-    //     yaxis: {
-    //         min: 0,
-    //         tickAmount: 1,
-    //         floating: false,
-    //         decimalsInFloat: 0,
-    //         title: {
-    //             text: this.l('Trips')
-    //         }
-    //     },
-    //     dataLabels: {
-    //         enabled: true,
-    //         textAnchor: 'start',
-    //     },
-    //     plotOptions: {
-    //         bar: {
-    //             horizontal: true,
-    //             // dataLabels: {
-    //             //     position: 'top' // top, center, bottom
-    //             // },
-    //             columnWidth: '10px'
-    //         }
-    //     },
-    // };
     const numberOfTripsArray = items.map((item) => item.numberOfTrips);
-    const categories = items.map((item) => item.truckTypeName + '-' + item.capacityName + ' ' + this.l('Ton'));
+    const categories = items.map(
+      (item) => (isNotNullOrUndefined(item.name) ? item.name : item.truckTypeName + '-' + item.capacityName) + ' ' + this.l('Ton')
+    );
     this.chartOptions = {
       series: [
         {
-          data: numberOfTripsArray /*[400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]*/,
+          data: numberOfTripsArray,
         },
       ],
       chart: {
@@ -128,19 +83,7 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
         height: 380,
       },
       plotOptions: this.plotOptions,
-      colors: numberOfTripsArray.map((item, i) => (i % 2 == 0 ? '#000' : '#707070')),
-      //     [
-      // '#33b2df',
-      // '#546E7A',
-      // '#d4526e',
-      // '#13d8aa',
-      // '#A5978B',
-      // '#2b908f',
-      // '#f9a3a4',
-      // '#90ee7e',
-      // '#f48024',
-      // '#69d2e7'
-      // ]
+      colors: numberOfTripsArray.map((item, i) => (i % 2 === 0 ? '#000' : '#707070')),
       dataLabels: {
         enabled: true,
         textAnchor: 'start',
@@ -148,7 +91,7 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
           colors: ['#fff'],
         },
         formatter: (val, opt) => {
-          return val + ' ' + this.l('Trip') /*opt.w.globals.labels[opt.dataPointIndex] + ':  ' + val*/;
+          return val + ' ' + this.l('Trip');
         },
         offsetX: 0,
         dropShadow: {
@@ -160,18 +103,7 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
         colors: ['transparent'],
       },
       xaxis: {
-        categories /*: [
-                    'South Korea',
-                    'Canada',
-                    'United Kingdom',
-                    'Netherlands',
-                    'Italy',
-                    'France',
-                    'Japan',
-                    'United States',
-                    'China',
-                    'India'
-                ]*/,
+        categories,
       },
       yaxis: {
         opposite: this.isRtl,
@@ -179,15 +111,6 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
           show: true,
         },
       },
-      // title: {
-      //     text: 'Custom DataLabels',
-      //     align: 'center',
-      //     floating: true
-      // },
-      // subtitle: {
-      //     text: 'Category Names as DataLabels inside bars',
-      //     align: 'center'
-      // },
       tooltip: {
         theme: 'dark',
         x: {
@@ -205,9 +128,6 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
     this.legend = {
       show: false,
       formatter: function (legendName: string, opts?: any) {
-        console.log('legendName', legendName);
-        console.log('opts', opts);
-        // return result[opts.seriesIndex].numberOfTrips + ' ' + legendName;
         return legendName;
       },
     };
@@ -217,8 +137,17 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
     if (!isNotNullOrUndefined(this.selectedTransportTypeId)) {
       return;
     }
+    this.loading = true;
+    if (this.isTachyonDealerOrHost) {
+      this._TMSAndHostDashboardServiceProxy.getTruckTypeUsage(Number(this.selectedTransportTypeId)).subscribe((res) => {
+        this.fillChart(res);
+        this.loading = false;
+      });
+      return;
+    }
     this.brokerDashboardServiceProxy.getMostTruckTypesUsed(Number(this.selectedTransportTypeId)).subscribe((res) => {
       this.fillChart(res);
+      this.loading = false;
     });
   }
 

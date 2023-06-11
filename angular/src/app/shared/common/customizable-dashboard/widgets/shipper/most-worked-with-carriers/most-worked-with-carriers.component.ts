@@ -20,28 +20,12 @@ export interface ChartOptions {
 })
 export class MostWorkedWithCarriersComponent extends AppComponentBase implements OnInit {
   Carriers: MostTenantWorksListDto[] = [];
-  loading: boolean = false;
+  loading = false;
   @ViewChild('chart') chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
   plotOptions: ApexPlotOptions = {
     pie: {
       customScale: 1,
-      // donut: {
-      //     labels: {
-      //         name: {
-      //             show: true,
-      //             formatter: function (val) {
-      //                 return val + '%';
-      //             }
-      //         },
-      //         value: {
-      //             show: false
-      //         },
-      //         total: {
-      //             show: true
-      //         }
-      //     }
-      // }
     },
   };
   legend: ApexLegend = {};
@@ -66,13 +50,13 @@ export class MostWorkedWithCarriersComponent extends AppComponentBase implements
       .subscribe((result) => {
         this.Carriers = result;
         this.chartOptions = {
-          series: this.Carriers.map((carrier) => carrier.numberOfTrips) /* [44, 55, 13, 43, 22] */,
+          series: this.Carriers.map((carrier) => carrier.numberOfTrips),
           chart: {
             type: 'donut',
             width: '100%',
             height: 250,
           },
-          labels: this.Carriers.map((carrier) => carrier.name) /* ["Team A", "Team B", "Team C", "Team D", "Team E"] */,
+          labels: this.Carriers.map((carrier) => carrier.name),
           responsive: [
             {
               breakpoint: 480,
@@ -80,17 +64,12 @@ export class MostWorkedWithCarriersComponent extends AppComponentBase implements
                 chart: {
                   width: 200,
                 },
-                // legend: {
-                //   position: 'bottom',
-                // },
               },
             },
           ],
         };
         this.legend = {
           formatter: function (legendName: string, opts?: any) {
-            console.log('legendName', legendName);
-            console.log('opts', opts);
             return result[opts.seriesIndex].numberOfTrips + ' ' + legendName;
           },
         };

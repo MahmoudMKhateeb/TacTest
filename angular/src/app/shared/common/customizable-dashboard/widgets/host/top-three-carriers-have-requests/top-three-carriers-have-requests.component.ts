@@ -1,5 +1,4 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { inject } from '@angular/core/testing';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxies';
 
@@ -10,7 +9,7 @@ import { HostDashboardServiceProxy } from '@shared/service-proxies/service-proxi
 })
 export class TopThreeCarriersHaveRequestsComponent extends AppComponentBase implements OnInit {
   Carriers: any;
-  loading: boolean = false;
+  loading = false;
 
   constructor(private injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);

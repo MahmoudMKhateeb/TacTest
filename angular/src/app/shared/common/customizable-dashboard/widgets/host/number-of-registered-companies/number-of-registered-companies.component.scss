@@ -1,0 +1,12 @@
+::ng-deep {
+    .rect-radius-10 {
+        border-radius: 10px;
+        width: 35px;
+        height: 10px;
+    }
+}
+@media screen and (max-width: 1440px) {
+    ::ng-deep app-number-of-registered-companies .card-body {
+        flex-wrap: wrap !important;
+    }
+}

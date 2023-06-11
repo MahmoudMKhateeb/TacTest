@@ -3395,5 +3395,41 @@
     <text name="Submited">Submited</text>
     <text name="NotSubmitted">Not submitted</text>
     <text name="InvoiceStamp">Invoice stamp</text>
+	<text name="NumberOfRegisteredCompanies">Number Of Registered Companies</text>
+	<text name="MostUsedRouteTypes">Most Used Route Types</text>
+	<text name="TopWorstRatedPerTripWidget">Top Worst Rated Per Trip Widget</text>
+	<text name="RateType">Rate Type</text>
+	<text name="EditionType">Edition Type</text>
+	<text name="CurrentMonth">Current Month</text>
+	<text name="NumberOfDriversAndTrucks">Number Of Drivers And Trucks</text>
+	<text name="NumberOfSaasTrips">Number Of Saas Trips</text>
+	<text name="NumberOfTruckAggregationTrips">Number Of Truck Aggregation Trips</text>
+	<text name="MostUsed">Most Used</text>
+	<text name="PaidInvoicesBeforeDueDate">Paid Invoices Before Due Date</text>
+	<text name="InvoicePerMonth">Invoice Per Month</text>
+	<text name="PaidBeforeDueDate">Paid Before Due Date</text>
+	<text name="PaidAfterDueDate">Paid After Due Date</text>
+	<text name="ThisYear">This Year</text>
+	<text name="CostVsSellingVsProfitOfTruckAggregationTrips">Cost Vs Selling Vs Profit Of Truck Aggregation Trips</text>
+    <text name="Selling">Selling</text>
+    <text name="Cost">Cost</text>
+    <text name="Profit">Profit</text>
+    <text name="Last6Months">Last 6 Months</text>
+    <text name="Last12Months">Last 12 Months</text>
+    <text name="OverallTotalAmountPerAllTrips">Overall Total Amount Per All Trips</text>
+    <text name="TruckAggregationInvoices">Truck Aggregation Invoices</text>
+    <text name="SaasInvoices">Saas Invoices</text>
+    <text name="NormalRequestsVsDedicatedRequests">Normal Requests Vs Dedicated Requests</text>
+    <text name="SaaSShipment">SaaS Shipment</text>
+    <text name="TruckAggregation">Truck Aggregation</text>
+    <text name="NumberOfTruckAggregationVsSaaSTrips">Number Of Truck Aggregation Vs SaaS Trips</text>
+    <text name="Saas">Saas</text>
+    <text name="HomeDelivery">Home Delivery</text>
+    <text name="CostVsSellingVsProfitOfSaasTrips">Cost Vs Selling Vs Profit Of Saas Trips</text>
+    <text name="NewRegisteredCompanies">New Registered Companies</text>
+    <text name="Top">Top</text>
+    <text name="Worst">Worst</text>
+    <text name="CarrierSaasOrBroker">Carrier Saas Or Broker</text>
+
 	</texts>
 </localizationDictionary>

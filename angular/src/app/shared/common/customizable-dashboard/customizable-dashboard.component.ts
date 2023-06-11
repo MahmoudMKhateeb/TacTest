@@ -455,6 +455,7 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
       scrollToNewItems: true,
       swap: true,
       swapWhileDragging: false,
+      maxRows: 200,
     };
   }
 
@@ -518,7 +519,9 @@ export class CustomizableDashboardComponent extends AppComponentBase implements 
     if (
       this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultShipperDashboard ||
       this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultCarrierDashboard ||
-      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultBrokerDashboard
+      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultBrokerDashboard ||
+      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultHostDashboard ||
+      this.dashboardName === DashboardCustomizationConst.dashboardNames.defaultTachyonMangedServiceDashboard
     ) {
       this.resetPage(this.dashboardName);
     }

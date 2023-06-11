@@ -21,7 +21,7 @@ export class InvoiceDueDateComponent extends AppComponentBase implements OnInit 
   }
   InvoicesCount: number;
   InvoiceTimeUnit: string;
-  loading: boolean = false;
+  loading = false;
 
   constructor(private injector: Injector, private router: Router, private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy) {
     super(injector);

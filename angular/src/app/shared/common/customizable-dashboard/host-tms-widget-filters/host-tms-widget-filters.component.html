@@ -1,0 +1,29 @@
+<div class="filter">
+  <div class="filter-icon" (click)="toggleDropdown()">
+    <i class="fas fa-filter"></i>
+  </div>
+  <div class="dropdown" [class.open]="isDropdownOpen">
+    <ul class="options text-left" *ngIf="isDateDropDown">
+      <li (click)="selectOption(1)">{{ 'Last6Months' | localize }}</li>
+      <li (click)="selectOption(2)">{{ 'Last12Months' | localize }}</li>
+      <li (click)="selectOption(3)">{{ 'LastYear' | localize }}</li>
+      <li (click)="selectOption(4)">{{ 'DateRange' | localize }}</li>
+    </ul>
+    <ul class="options text-left" *ngIf="!isDateDropDown">
+      <li (click)="selectFilter(filter.key)" *ngFor="let filter of filtersArray">{{ filter.value }}</li>
+    </ul>
+    <div class="d-flex w-100" *ngIf="showCustomStartEnd">
+      <div class="d-flex w-50">
+        <dx-date-box [(value)]="start" placeholder="{{ 'Date' | localize }}" type="date"></dx-date-box>
+      </div>
+      <div class="d-flex w-50 ml-2">
+        <dx-date-box [(value)]="end" placeholder="{{ 'Date' | localize }}" type="date"></dx-date-box>
+      </div>
+    </div>
+    <div class="d-flex w-100 mt-2" *ngIf="showCustomStartEnd">
+      <button class="btn btn-primary w-100" (click)="emitCustomDate()">
+        {{ 'Filter' | localize }}
+      </button>
+    </div>
+  </div>
+</div>

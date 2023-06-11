@@ -1,4 +1,4 @@
-<div class="card card-custom card-stretch w-100 h-100">
+<div class="card card-custom card-stretch w-100 h-100" [busyIf]="loading">
   <div class="card-body p-4 d-flex flex-column justify-content-center">
     <div>
       <h2>
@@ -8,13 +8,6 @@
     <div class="row">
       <div class="col-10">
         <div id="chart" *ngIf="chartOptions">
-          <!--                [series]="chartOptions.series"-->
-          <!--                [chart]="chartOptions.chart"-->
-          <!--                [labels]="chartOptions.labels"-->
-          <!--                [responsive]="chartOptions.responsive"-->
-          <!--                [plotOptions]="plotOptions"-->
-          <!--                [legend]="legend"-->
-          <!--                [dataLabels]="{ enabled: false }"-->
           <apx-chart
             #chart
             [series]="chartOptions.series"
@@ -30,7 +23,6 @@
             [tooltip]="chartOptions.tooltip"
             [legend]="legend"
           ></apx-chart>
-          <!--                [fill]="{colors}"-->
         </div>
       </div>
       <div class="col-2" *ngIf="allTransportTypes.length > 0">

@@ -1,8 +1,24 @@
 <div class="row" style="height: 100%">
   <div class="w-100 h-100 col-12">
     <div class="card card-custom card-stretch">
+      <div class="card-header p-4 pt-0 mb-8 border-0 w-100" *ngIf="isTachyonDealerOrHost">
+        <div class="card-title w-100 ribbon ribbon-left isHostOrTMS pt-2">
+          <div class="w-100 h-100 d-flex justify-content-between align-items-start">
+            <div class="card-label">{{ 'NeedsAction' | localize }}</div>
+            <app-host-tms-widget-filters (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
+          </div>
+          <div
+            class="ribbon-target bg-primary"
+            style="top: 45%; font-size: 20px"
+            [style.left]="!isRtl ? '0% !important' : 'auto !important'"
+            [style.right]="!isRtl ? 'auto !important' : '0% !important'"
+          >
+            {{ today | date: 'MMMM' }}
+          </div>
+        </div>
+      </div>
       <div class="card-body p-4 d-flex flex-column">
-        <div class="card-title mb-4">
+        <div class="card-title mb-4" *ngIf="!isTachyonDealerOrHost">
           <div class="card-label">{{ 'NeedsAction' | localize }}</div>
         </div>
         <div appMakeScrollable class="overflow-auto" [cssClassSelector]="'overflow-auto'">
@@ -11,51 +27,44 @@
             *ngFor="let trip of needsActionTrips"
             (click)="goToTrackingPage(trip)"
           >
-            <div class="card-body p-4 d-flex justify-content-between align-items-end">
-              <app-from-to [from]="trip.origin" [to]="trip.destinations" class="w-45"></app-from-to>
-              <!--            <div class="d-flex justify-content-between">-->
-              <!--              <div class="details">10:00am - 12:00pm</div>-->
-              <!--            </div>-->
-              <div class="d-flex flex-column w-55">
-                <ng-container *ngIf="trip.needsPod && !trip.needsReceiverCode">
-                  <div class="pb-3">
-                    <span class="label label-default label-rounded text-red p-2">{{ 'DeliveryConfirmation' | localize }}</span>
-                  </div>
-                </ng-container>
-                <ng-container *ngIf="!trip.needsPod && trip.needsReceiverCode">
-                  <div class="pb-3">
-                    <span class="label label-default label-rounded text-red p-2">{{ 'ReceiverCode' | localize }}</span>
-                  </div>
-                </ng-container>
-                <ng-container *ngIf="trip.needsPod && trip.needsReceiverCode">
-                  <div class="pb-3">
-                    <span class="label label-default label-rounded text-red p-2 needs-action-label"
-                      >{{ 'DeliveryConfirmation' | localize }} / {{ 'ReceiverCode' | localize }}</span
-                    >
-                  </div>
-                </ng-container>
-                <div class="pt-3 title">{{ trip.waybillNumber }}</div>
+            <ng-container *ngIf="!isTachyonDealerOrHost">
+              <div class="card-body p-4 d-flex justify-content-between align-items-end">
+                <app-from-to [from]="trip.origin" [to]="trip.destinations" class="w-45"></app-from-to>
+                <div class="d-flex flex-column w-55">
+                  <ng-container *ngIf="trip.needsPod && !trip.needsReceiverCode">
+                    <div class="pb-3">
+                      <span class="label label-default label-rounded text-red p-2">{{ 'DeliveryConfirmation' | localize }}</span>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="!trip.needsPod && trip.needsReceiverCode">
+                    <div class="pb-3">
+                      <span class="label label-default label-rounded text-red p-2">{{ 'ReceiverCode' | localize }}</span>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="trip.needsPod && trip.needsReceiverCode">
+                    <div class="pb-3">
+                      <span class="label label-default label-rounded text-red p-2 needs-action-label"
+                        >{{ 'DeliveryConfirmation' | localize }} / {{ 'ReceiverCode' | localize }}</span
+                      >
+                    </div>
+                  </ng-container>
+                  <div class="pt-3 title">{{ trip.waybillNumber }}</div>
+                </div>
               </div>
-              <!--            <div class="title">221123018844</div>-->
-              <!--            <div class="d-flex justify-content-between">-->
-              <!--              <div class="details">10:00am - 12:00pm</div>-->
-              <!--              <div><span class="label label-default label-rounded text-red p-2">POD</span></div>-->
-              <!--            </div>-->
-            </div>
+            </ng-container>
+            <ng-container *ngIf="isTachyonDealerOrHost">
+              <div class="card-body p-4 d-flex justify-content-between align-items-end">
+                <app-from-to [from]="trip.originCity" [to]="trip.destinationCity" class="w-45"></app-from-to>
+                <div class="d-flex flex-column w-55">
+                  <div class="pb-3">
+                    <span class="label label-default label-rounded text-red p-2">{{ trip.actionName }}</span>
+                  </div>
+                  <div class="pt-3 title">{{ trip.waybillOrRequestReference }}</div>
+                </div>
+              </div>
+            </ng-container>
           </div>
         </div>
-        <!--        <div class="card card-custom dashboard-plain-card">-->
-        <!--          <div class="card-body p-4 d-flex justify-content-between align-items-end">-->
-        <!--            <app-from-to from="Riyadh" to="Jeddah"></app-from-to>-->
-        <!--            &lt;!&ndash;            <div class="d-flex justify-content-between">&ndash;&gt;-->
-        <!--            &lt;!&ndash;              <div class="details">10:00am - 12:00pm</div>&ndash;&gt;-->
-        <!--            &lt;!&ndash;            </div>&ndash;&gt;-->
-        <!--            <div class="d-flex flex-column">-->
-        <!--              <div class="pb-3"><span class="label label-default label-rounded text-red p-2">Receiver Code</span></div>-->
-        <!--              <div class="pt-3 title">221123018844</div>-->
-        <!--            </div>-->
-        <!--          </div>-->
-        <!--        </div>-->
       </div>
     </div>
   </div>
