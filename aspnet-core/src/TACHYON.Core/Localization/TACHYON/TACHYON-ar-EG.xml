@@ -3101,6 +3101,11 @@
     <text name="clickToRateTheShippingExperiencewith">انقر لتقييم تجربة الشحن مع</text>
     <text name="clickToRateTheShippingExperience">انقر لقييم تجربة الشحن</text>
     <text name="DeliveryDate">تاريخ التسليم</text>
+    <text name="AdminName">إسم المسئول</text>
+    <text name="IsEmailConfirmed">البريد الالكتروني مفعل</text>
+    <text name="DocumentStatus">حالة المستندات</text>
+    <text name="Submited">تم الإرسال</text>
+    <text name="NotSubmitted">لم يتم الارسال</text>
 		
 	</texts>
 </localizationDictionary>
