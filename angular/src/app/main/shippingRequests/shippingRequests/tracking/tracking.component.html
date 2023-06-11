@@ -74,7 +74,8 @@
                     *ngIf="item.hasAccident"
                     (click)="showIncident(item)"
                     class="ribbon-target bg-gray border-0"
-                    style="right: 8%"
+                    [style.left]="!isRtl ? 'auto' : '8% !important'"
+                    [style.right]="!isRtl ? '8%' : 'auto !important'"
                     type="submit"
                     [style.top]="
                       item.shippingRequestFlag === ShippingRequestFlagEnum.Dedicated ||
@@ -149,7 +150,7 @@
                         ></a>
                         <!--end::Name-->
                         <!--begin::Contacts-->
-                        <div class="d-flex flex-wrap my-2" *ngIf="shipmentType !== 'directShipment'">
+                        <div class="d-flex flex-wrap my-2" *ngIf="shipmentType !== 'directShipment' && item.requestId">
                           <div class="d-flex align-items-center pr-5">
                             <i class="flaticon2-telegram-logo mr-2"></i>
                             <a
