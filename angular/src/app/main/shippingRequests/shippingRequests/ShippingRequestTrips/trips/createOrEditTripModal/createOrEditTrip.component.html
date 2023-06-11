@@ -596,7 +596,7 @@
               </div>
               <div class="col-lg-6 form-group d-inline-flex">
                 <div class="input-group d-inline-block mr-8">
-                  <label> {{ l('supposedPickupTimeFrom') }} <span class="required-fileds">*</span></label>
+                  <label> {{ l('supposedPickupTimeFrom') }} </label>
                   <dx-date-box
                     name="supposedPickupDateFrom"
                     [(value)]="_TripService.CreateOrEditShippingRequestTripDto.supposedPickupDateFrom"
@@ -606,16 +606,10 @@
                     [interval]="20"
                     required
                   >
-                    <dx-validator [validationGroup]="'shippingRequestTripsGroup'">
-                      <dxi-validation-rule
-                        type="required"
-                        message="{{ l('supposedPickupTimeFrom') }}: {{ 'ThisFieldIsRequired' | localize }}"
-                      ></dxi-validation-rule>
-                    </dx-validator>
                   </dx-date-box>
                 </div>
                 <div class="input-group d-inline-block">
-                  <label> {{ l('supposedPickupTimeTo') }} <span class="required-fileds">*</span></label>
+                  <label> {{ l('supposedPickupTimeTo') }} </label>
                   <dx-date-box
                     name="supposedPickupDateTo"
                     [(value)]="_TripService.CreateOrEditShippingRequestTripDto.supposedPickupDateTo"
@@ -625,12 +619,6 @@
                     [interval]="20"
                     required
                   >
-                    <dx-validator [validationGroup]="'shippingRequestTripsGroup'">
-                      <dxi-validation-rule
-                        type="required"
-                        message="{{ l('supposedPickupTimeTo') }}: {{ 'ThisFieldIsRequired' | localize }}"
-                      ></dxi-validation-rule>
-                    </dx-validator>
                   </dx-date-box>
                 </div>
               </div>
