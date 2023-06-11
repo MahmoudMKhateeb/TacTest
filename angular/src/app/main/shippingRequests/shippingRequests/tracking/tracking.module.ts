@@ -35,6 +35,10 @@ import { TripAccidentResolveModalComponent } from '@app/main/shippingRequests/sh
 import { TrackingForceDeliverTripComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-force-deliver-trip/tracking-force-deliver-trip.component';
 import { DxDataGridModule } from '@node_modules/devextreme-angular/ui/data-grid';
 import { DxCheckBoxModule } from '@node_modules/devextreme-angular/ui/check-box';
+import { DxSelectBoxModule } from '@node_modules/devextreme-angular/ui/select-box';
+import { DxTextBoxModule } from '@node_modules/devextreme-angular/ui/text-box';
+import { DxNumberBoxModule } from '@node_modules/devextreme-angular/ui/number-box';
+import { DxDateBoxModule } from '@node_modules/devextreme-angular/ui/date-box';
 import { DxPopoverModule } from '@node_modules/devextreme-angular/ui/popover';
 import { CustomMarkerComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-marker/custom-marker.component';
 import { CustomTimelineComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-timeline/custom-timeline.component';
@@ -87,6 +91,10 @@ import { ViewForceDeliverTripsFromExcelModalComponent } from '@app/main/shipping
     DxDataGridModule,
     DxCheckBoxModule,
     DxPopoverModule,
+    DxTextBoxModule,
+    DxSelectBoxModule,
+    DxNumberBoxModule,
+    DxDateBoxModule,
   ],
   exports: [
     CreateOrEditTripAccidentModalComponent,

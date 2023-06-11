@@ -8,172 +8,175 @@
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" style="position: relative; z-index: 99999" (click)="close()" aria-label="Close">
-          <i class="fas fa-times"></i>
+      <div class="modal-header">
+        <p class="modal-title">
+          <span>{{ l('Search') }}</span>
+        </p>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
         </button>
-
+      </div>
+      <div class="modal-body">
         <div class="form-body">
           <div class="row">
-            <div class="row mb-4">
-              <div class="col-xl-6">
-                <label for="Shipper">{{ 'Shipper' | localize }}</label>
-                <div class="input-group">
-                  <input
-                    id="Shipper"
-                    [(ngModel)]="input.filter"
-                    name="input.filter"
-                    class="form-control"
-                    placeholder="{{ 'SearchWithThreeDot' | localize }}"
-                    type="text"
-                  />
+            <div class="dx-field col-6">
+              <label class="dx-field-label">{{ 'Shipper' | localize }}</label>
+              <div class="dx-field-value">
+                <dx-text-box
+                  id="Shipper"
+                  [(value)]="input.filter"
+                  name="input.filter"
+                  placeholder="{{ 'SearchWithThreeDot' | localize }}"
+                ></dx-text-box>
+              </div>
+            </div>
+            <div class="dx-field col-6" *ngIf="input.channel != 1 && isTachyonDealerOrHost">
+              <label class="dx-field-label">{{ 'Carrier' | localize }}</label>
+              <div class="dx-field-value">
+                <dx-text-box id="Carrier" [(value)]="input.carrier" name="input.carrier" placeholder="{{ 'SearchWithThreeDot' | localize }}">
+                </dx-text-box>
+              </div>
+            </div>
+            <div class="dx-field col-6">
+              <label class="dx-field-label">{{ 'TruckType' | localize }}</label>
+              <div class="dx-field-value">
+                <dx-select-box
+                  [searchEnabled]="true"
+                  id="truckType"
+                  name="input.truckTypeId"
+                  [(value)]="input.truckTypeId"
+                  [dataSource]="truckTypes"
+                  displayExpr="displayText"
+                  valueExpr="value"
+                  placeholder="{{ 'Select' | localize }}"
+                ></dx-select-box>
+              </div>
+            </div>
+            <div
+              class="dx-field col-6"
+              [ngClass]="{
+                'spinner spinner-success spinner-right ': isDataLoading,
+                'input-group': !isDataLoading
+              }"
+            >
+              <label class="dx-field-label">{{ 'Origin' | localize }}</label>
+              <div class="dx-field-value">
+                <dx-select-box
+                  [searchEnabled]="true"
+                  [disabled]="isDataLoading"
+                  id="origin"
+                  name="input.originId"
+                  [(value)]="input.originId"
+                  [dataSource]="cites"
+                  displayExpr="displayText"
+                  valueExpr="value"
+                ></dx-select-box>
+              </div>
+            </div>
+            <div
+              class="dx-field col-6"
+              [ngClass]="{
+                'spinner spinner-success spinner-right ': isDataLoading,
+                'input-group': !isDataLoading
+              }"
+            >
+              <label class="dx-field-label">{{ 'Destination' | localize }}</label>
+              <div class="dx-field-value">
+                <dx-select-box
+                  [searchEnabled]="true"
+                  [disabled]="isDataLoading"
+                  id="destination"
+                  name="input.destination"
+                  [(value)]="input.destinationId"
+                  [dataSource]="cites"
+                  displayExpr="displayText"
+                  valueExpr="value"
+                ></dx-select-box>
+              </div>
+            </div>
+            <div class="dx-field col-6">
+              <label class="dx-field-label">{{ 'RouteType' | localize }}</label>
+              <div class="dx-field-value">
+                <dx-select-box
+                  [searchEnabled]="true"
+                  id="routeTypeId"
+                  name="input.routeTypeId"
+                  [(value)]="input.routeTypeId"
+                  [dataSource]="routeTypes"
+                  displayExpr="value"
+                  valueExpr="key"
+                ></dx-select-box>
+              </div>
+            </div>
+            <ng-template [ngIf]="!input.channel && !input.isTMSRequest">
+              <div class="dx-field col-6">
+                <label class="dx-field-label">{{ 'ShippingRequestType' | localize }}</label>
+                <div class="dx-field-value">
+                  <dx-select-box
+                    [searchEnabled]="true"
+                    id="requestType"
+                    name="input.requestType"
+                    [(value)]="input.requestType"
+                    [dataSource]="requestTypes"
+                    displayExpr="value"
+                    valueExpr="key"
+                  ></dx-select-box>
                 </div>
               </div>
-              <div class="col-xl-6" *ngIf="input.channel != 1 && (feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)">
-                <label for="Carrier">{{ 'Carrier' | localize }}</label>
-                <div class="input-group">
-                  <input
-                    id="Carrier"
-                    [(ngModel)]="input.carrier"
-                    name="input.carrier"
-                    class="form-control"
-                    placeholder="{{ 'SearchWithThreeDot' | localize }}"
-                    type="text"
-                  />
-                </div>
+            </ng-template>
+            <div class="dx-field col-6">
+              <label class="dx-field-label">{{ 'ShippingRequestStatusName' | localize }}</label>
+              <div class="dx-field-value">
+                <dx-select-box
+                  [searchEnabled]="true"
+                  id="status"
+                  name="input.status"
+                  [(value)]="input.status"
+                  [dataSource]="statusData"
+                  displayExpr="displayText"
+                  valueExpr="value"
+                ></dx-select-box>
               </div>
-              <div class="col-xl-6">
-                <label for="truckType">{{ 'TruckType' | localize }}</label>
-                <div class="input-group">
-                  <select id="truckType" name="input.truckTypeId" [(ngModel)]="input.truckTypeId" class="form-control" required>
-                    <option value="">{{ l('All') }}</option>
-                    <option [value]="t.value" *ngFor="let t of truckTypes">
-                      {{ t.displayText | localize }}
-                    </option>
-                  </select>
+            </div>
+            <div class="dx-field col-6">
+              <label class="dx-field-label">{{ 'PickupDate' | localize }}</label>
+              <div class="dx-field-value d-flex flex-wrap">
+                <div class="col-2 pl-0">
+                  <dx-check-box [(value)]="pickupDateRangeActive" id="pickupDateRangeActive" name="pickupDateRangeActive"></dx-check-box>
                 </div>
-              </div>
-
-              <div class="col-xl-6">
-                <div class="checkbox-list mb-2">
-                  <label class="checkbox">
-                    <input type="checkbox" [(ngModel)]="pickupDateRangeActive" id="pickupDateRangeActive" name="pickupDateRangeActive" value="true" />
-                    {{ 'PickupDate' | localize }}
-                    <span class="ml-2 mt-1"></span>
-                  </label>
-                </div>
-                <input
-                  class="form-control"
-                  name="pickupDateRange"
-                  [attr.disabled]="!pickupDateRangeActive ? 'disabled' : null"
-                  #drpSubscriptionEndDateRange="bsDaterangepicker"
-                  bsDaterangepicker
-                  readonly="readonly"
-                  dateRangePickerMomentModifier
-                  [(date)]="pickupDateRange"
-                />
-              </div>
-              <div class="col-xl-6">
-                <div class="checkbox-list mb-2">
-                  <label class="checkbox ml-2">
-                    <input
-                      type="checkbox"
-                      [(ngModel)]="creationDateRangeActive"
-                      id="creationDateRangeActive"
-                      name="CreationDateRangeActive"
-                      value="true"
-                    />
-                    {{ 'CreationTime' | localize }}
-                    <span class="ml-2 mt-1"></span>
-                  </label>
-                </div>
-                <input
-                  class="form-control"
-                  name="CreationDateRange"
-                  [attr.disabled]="!creationDateRangeActive ? 'disabled' : null"
-                  #drpCreationDateRange="bsDaterangepicker"
-                  bsDaterangepicker
-                  readonly="readonly"
-                  dateRangePickerMomentModifier
-                  [(date)]="creationDateRange"
-                />
-              </div>
-
-              <div class="col-xl-6">
-                <label for="origin">{{ 'Origin' | localize }}</label>
-                <div
-                  [ngClass]="{
-                    'spinner spinner-success spinner-right ': isDataLoading,
-                    'input-group': !isDataLoading
-                  }"
-                >
-                  <select [disabled]="isDataLoading" id="origin" name="input.originId" [(ngModel)]="input.originId" class="form-control" required>
-                    <option value="">{{ l('All') }}</option>
-                    <option [value]="c.value" *ngFor="let c of cites">
-                      {{ c.displayText | localize }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-xl-6">
-                <label for="destination">{{ 'Destination' | localize }}</label>
-                <div
-                  [ngClass]="{
-                    'spinner spinner-success spinner-right ': isDataLoading,
-                    'input-group': !isDataLoading
-                  }"
-                >
-                  <select
-                    [disabled]="isDataLoading"
-                    id="destination"
-                    name="input.destinationId"
-                    [(ngModel)]="input.destinationId"
-                    class="form-control"
-                    required
+                <div class="col-10 px-0">
+                  <dx-date-box
+                    type="date"
+                    [disabled]="!pickupDateRangeActive ? true : false"
+                    [(value)]="pickupDateRange[0]"
+                    placeholder="{{ 'From' | localize }}"
                   >
-                    <option value="">{{ l('All') }}</option>
-                    <option [value]="c.value" *ngFor="let c of cites">
-                      {{ c.displayText | localize }}
-                    </option>
-                  </select>
+                  </dx-date-box>
+                </div>
+                <div class="offset-2 col-10 px-0 pt-2">
+                  <dx-date-box
+                    type="date"
+                    [disabled]="!pickupDateRangeActive ? true : false"
+                    [(value)]="pickupDateRange[1]"
+                    placeholder="{{ 'To' | localize }}"
+                  >
+                  </dx-date-box>
                 </div>
               </div>
-
-              <div class="col-xl-6">
-                <label for="routeType">{{ 'RouteType' | localize }}</label>
-                <div class="input-group">
-                  <select id="routeType" name="input.routeTypeId" [(ngModel)]="input.routeTypeId" class="form-control" required>
-                    <option value="">{{ l('All') }}</option>
-                    <option [value]="r.key" *ngFor="let r of routeTypes">
-                      {{ l(r.value) | localize }}
-                    </option>
-                  </select>
+            </div>
+            <div class="dx-field col-6">
+              <label class="dx-field-label">{{ 'CreationTime' | localize }}</label>
+              <div class="dx-field-value d-flex flex-wrap">
+                <div class="col-2 pl-0">
+                  <dx-check-box [(value)]="creationDateRangeActive" id="creationDateRangeActive" name="creationDateRangeActive"></dx-check-box>
                 </div>
-              </div>
-              <ng-template [ngIf]="!input.channel && !input.isTMSRequest">
-                <div class="col-xl-6">
-                  <label for="requestType">{{ 'ShippingRequestType' | localize }}</label>
-                  <div class="input-group">
-                    <select id="requestType" name="input.requestType" [(ngModel)]="input.requestType" class="form-control" required>
-                      <option value="">{{ l('All') }}</option>
-                      <option [value]="r.key" *ngFor="let r of requestTypes">
-                        {{ l(r.value) | localize }}
-                      </option>
-                    </select>
-                  </div>
+                <div class="col-10 px-0">
+                  <dx-date-box type="date" [disabled]="!creationDateRangeActive ? true : false" [(value)]="creationDateRange[0]"> </dx-date-box>
                 </div>
-              </ng-template>
-              <div class="col-xl-6">
-                <label for="status">{{ 'ShippingRequestStatusName' | localize }}</label>
-                <div class="input-group">
-                  <select id="status" name="input.status" [(ngModel)]="input.status" class="form-control" required>
-                    <option value="">{{ l('All') }}</option>
-                    <option [value]="s.value" *ngFor="let s of statusData">
-                      {{ l(s.displayText) | localize }}
-                    </option>
-                  </select>
+                <div class="offset-2 col-10 px-0 pt-2">
+                  <dx-date-box type="date" [disabled]="!creationDateRangeActive ? true : false" [(value)]="creationDateRange[1]"> </dx-date-box>
                 </div>
               </div>
             </div>
@@ -181,7 +184,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" (click)="search()" class="btn btn-primary">{{ l('Search') }}</button>
+        <button type="button" (click)="search()" class="btn btn-primary btn-sm">{{ l('Search') }}</button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="close()">{{ l('Close') }}</button>
       </div>
     </div>
   </div>
