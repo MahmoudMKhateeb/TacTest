@@ -105,8 +105,8 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
       switch (this.wizard.getStep()) {
         case 1: {
           console.log('this.step1Form', this.step1Form);
-          // document.getElementById('step1FormGroupButton').click();
-          // this.step1FormGroup.instance.validate();
+          document.getElementById('step1FormGroupButton').click();
+          this.step1FormGroup.instance.validate();
           if (this.step1Form.invalid) {
             wizardObj.stop();
             this.step1Form.markAllAsTouched();
@@ -229,10 +229,10 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
 
   private loadUsers() {
     if (isNotNullOrUndefined(this.reportDto.grantedRoles)) {
-      const selectedRoles: number[] = [];
+      // const selectedRoles: number[] = [];
 
-      selectedRoles.push(Number(this.reportDto.grantedRoles as any));
-      this._reportService.getTenantUsers(selectedRoles).subscribe((result) => {
+      // selectedRoles.push(Number(this.reportDto.grantedRoles as any));
+      this._reportService.getTenantUsers(this.reportDto.grantedRoles).subscribe((result) => {
         this.allUsers = result;
       });
     }
@@ -241,5 +241,10 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
   selectedRoleChanged() {
     this.loadUsers();
     this.reportDto.excludedUsers = undefined;
+  }
+
+  validateGroup(params) {
+    console.log('params', params);
+    params.validationGroup.validate();
   }
 }

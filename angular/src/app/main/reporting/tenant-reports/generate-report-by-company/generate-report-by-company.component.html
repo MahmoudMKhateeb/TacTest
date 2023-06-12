@@ -54,94 +54,169 @@
                 <!--begin: Wizard Form-->
                 <form class="form fv-plugins-bootstrap fv-plugins-framework" id="kt_form" [formGroup]="step1Form">
                   <!--begin: Wizard Step 1-->
-                  <div class="pb-5" data-wizard-type="step-content" data-wizard-state="current">
-                    <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportSetup' | localize }}</h4>
-                    <div class="d-flex">
-                      <div class="form-group w-50">
-                        <label>{{ 'ReportType' | localize }}</label>
-                        <dx-select-box
-                          id="type"
-                          name="type"
-                          formControlName="reportType"
-                          displayExpr="displayName"
-                          valueExpr="id"
-                          [(value)]="reportDto.reportDefinitionId"
-                          [dataSource]="reportDefinitions"
-                          [searchEnabled]="true"
-                          placeholder="{{ l('SelectType') }}"
-                        >
-                          <!--                                                    displayExpr="displayName"-->
-                          <!--                                                    valueExpr="id"-->
-                        </dx-select-box>
-                        <span class="form-text text-muted">{{ 'PleaseSelectType' | localize }}</span>
+                  <dx-validation-group #step1FormGroup>
+                    <div class="pb-5" data-wizard-type="step-content" data-wizard-state="current">
+                      <h4 class="mb-10 font-weight-bold text-dark">{{ 'ReportSetup' | localize }}</h4>
+                      <div class="d-flex">
+                        <div class="form-group w-50">
+                          <label>{{ 'ReportType' | localize }}</label>
+                          <dx-select-box
+                            id="type"
+                            name="type"
+                            formControlName="reportType"
+                            displayExpr="displayName"
+                            valueExpr="id"
+                            [(value)]="reportDto.reportDefinitionId"
+                            [dataSource]="reportDefinitions"
+                            [searchEnabled]="true"
+                            placeholder="{{ l('SelectType') }}"
+                          >
+                            <!--                                                    displayExpr="displayName"-->
+                            <!--                                                    valueExpr="id"-->
+                            <dx-validator [validationGroup]="'step1FormGroup'">
+                              <dxi-validation-rule
+                                type="required"
+                                message="{{ 'ReportType' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                              ></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-select-box>
+                          <span class="form-text text-muted">{{ 'PleaseSelectType' | localize }}</span>
+                        </div>
+                        <div class="form-group w-50 ml-4">
+                          <label>{{ 'ReportName' | localize }}</label>
+                          <dx-text-box
+                            id="reportName"
+                            formControlName="reportName"
+                            name="reportName"
+                            [(value)]="reportDto.displayName"
+                            placeholder="{{ l('EnterReportName') }}"
+                          >
+                            <dx-validator [validationGroup]="'step1FormGroup'">
+                              <dxi-validation-rule
+                                type="required"
+                                message="{{ 'ReportName' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                              ></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                          <span class="form-text text-muted">{{ 'PleaseEnterReportName' | localize }}</span>
+                        </div>
                       </div>
-                      <div class="form-group w-50 ml-4">
-                        <label>{{ 'ReportName' | localize }}</label>
-                        <dx-text-box
-                          id="reportName"
-                          formControlName="reportName"
-                          name="reportName"
-                          [(value)]="reportDto.displayName"
-                          placeholder="{{ l('EnterReportName') }}"
-                        >
-                        </dx-text-box>
-                        <span class="form-text text-muted">{{ 'PleaseEnterReportName' | localize }}</span>
+                      <div class="d-flex">
+                        <div class="form-group w-50">
+                          <label>{{ 'SelectRole' | localize }}</label>
+                          <dx-drop-down-box
+                            id="role"
+                            name="role"
+                            displayExpr="displayName"
+                            formControlName="grantedRoles"
+                            valueExpr="id"
+                            placeholder="{{ l('SelectRole') }}"
+                            (onValueChanged)="selectedRoleChanged()"
+                            [(value)]="reportDto.grantedRoles"
+                            [showClearButton]="true"
+                            [dataSource]="allRoles"
+                          >
+                            <div *dxTemplate="let data of 'content'">
+                              <dx-data-grid
+                                [dataSource]="allRoles"
+                                [columns]="['displayName']"
+                                [selection]="{ mode: 'multiple' }"
+                                [hoverStateEnabled]="true"
+                                [paging]="{ enabled: true, pageSize: 10 }"
+                                [filterRow]="{ visible: true }"
+                                [scrolling]="{ mode: 'virtual' }"
+                                [height]="345"
+                                keyExpr="id"
+                                [(selectedRowKeys)]="reportDto.grantedRoles"
+                              >
+                              </dx-data-grid>
+                            </div>
+                            <dx-validator [validationGroup]="'step1FormGroup'">
+                              <dxi-validation-rule
+                                type="required"
+                                message="{{ 'SelectRole' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                              ></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-drop-down-box>
+                          <span class="form-text text-muted">{{ 'PleaseSelectType' | localize }}</span>
+                        </div>
+                        <div class="form-group w-50 ml-4">
+                          <label>{{ 'ExcludingUsers' | localize }}</label>
+                          <dx-drop-down-box
+                            id="excludingUsers"
+                            name="excludingUsers"
+                            displayExpr="displayName"
+                            valueExpr="id"
+                            formControlName="excludedUsers"
+                            placeholder="{{ l('SelectExcludingUsers') }}"
+                            [(value)]="reportDto.excludedUsers"
+                            [showClearButton]="true"
+                            [dataSource]="allUsers"
+                          >
+                            <div *dxTemplate="let data of 'content'">
+                              <dx-data-grid
+                                [dataSource]="allUsers"
+                                [columns]="['displayName']"
+                                [selection]="{ mode: 'multiple' }"
+                                [hoverStateEnabled]="true"
+                                [paging]="{ enabled: true, pageSize: 10 }"
+                                [filterRow]="{ visible: true }"
+                                [scrolling]="{ mode: 'virtual' }"
+                                [height]="345"
+                                keyExpr="id"
+                                [(selectedRowKeys)]="reportDto.excludedUsers"
+                              >
+                              </dx-data-grid>
+                            </div>
+                            <dx-validator [validationGroup]="'step1FormGroup'">
+                              <dxi-validation-rule
+                                type="required"
+                                message="{{ 'ExcludingUsers' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                              ></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-drop-down-box>
+                          <span class="form-text text-muted">{{ 'PleaseSelectExcludingUsers' | localize }}</span>
+                        </div>
+                      </div>
+                      <div class="d-flex">
+                        <div class="form-group w-50">
+                          <label>{{ 'ReportFormat' | localize }}</label>
+                          <dx-select-box
+                            id="format"
+                            name="format"
+                            displayExpr="value"
+                            valueExpr="key"
+                            formControlName="reportFormat"
+                            [(value)]="reportDto.format"
+                            [dataSource]="allFormats"
+                            [searchEnabled]="true"
+                            placeholder="{{ l('SelectFormat') }}"
+                          >
+                            <dx-validator [validationGroup]="'step1FormGroup'">
+                              <dxi-validation-rule
+                                type="required"
+                                message="{{ 'ReportFormat' | localize }}: {{ 'ThisFieldIsRequired' | localize }}"
+                              ></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-select-box>
+                          <span class="form-text text-muted">{{ 'PleaseSelectFormat' | localize }}</span>
+                        </div>
                       </div>
                     </div>
-                    <div class="d-flex">
-                      <div class="form-group w-50">
-                        <label>{{ 'SelectRole' | localize }}</label>
-                        <dx-select-box
-                          id="role"
-                          name="role"
-                          [(value)]="reportDto.grantedRoles"
-                          [dataSource]="allRoles"
-                          [searchEnabled]="true"
-                          (onValueChanged)="selectedRoleChanged()"
-                          displayExpr="displayName"
-                          formControlName="grantedRoles"
-                          valueExpr="id"
-                          placeholder="{{ l('SelectRole') }}"
-                        >
-                        </dx-select-box>
-                        <span class="form-text text-muted">{{ 'PleaseSelectType' | localize }}</span>
-                      </div>
-                      <div class="form-group w-50 ml-4">
-                        <label>{{ 'ExcludingUsers' | localize }}</label>
-                        <dx-select-box
-                          id="excludingUsers"
-                          name="excludingUsers"
-                          displayExpr="displayName"
-                          valueExpr="id"
-                          formControlName="excludedUsers"
-                          [(value)]="reportDto.excludedUsers"
-                          [dataSource]="allUsers"
-                          [searchEnabled]="true"
-                          placeholder="{{ l('SelectExcludingUsers') }}"
-                        >
-                        </dx-select-box>
-                        <span class="form-text text-muted">{{ 'PleaseSelectExcludingUsers' | localize }}</span>
+                    <div class="row pt-4">
+                      <div class="col-12">
+                        <dx-validation-summary validationGroup="step1FormGroup" id="step1-form-Group"></dx-validation-summary>
                       </div>
                     </div>
-                    <div class="d-flex">
-                      <div class="form-group w-50">
-                        <label>{{ 'ReportFormat' | localize }}</label>
-                        <dx-select-box
-                          id="format"
-                          name="format"
-                          displayExpr="value"
-                          valueExpr="key"
-                          formControlName="reportFormat"
-                          [(value)]="reportDto.format"
-                          [dataSource]="allFormats"
-                          [searchEnabled]="true"
-                          placeholder="{{ l('SelectFormat') }}"
-                        >
-                        </dx-select-box>
-                        <span class="form-text text-muted">{{ 'PleaseSelectFormat' | localize }}</span>
-                      </div>
-                    </div>
-                  </div>
+                    <dx-button
+                      class="d-none"
+                      text="Validate"
+                      id="step1FormGroupButton"
+                      [validationGroup]="'step1FormGroup'"
+                      (onClick)="validateGroup($event)"
+                    >
+                    </dx-button>
+                  </dx-validation-group>
                 </form>
                 <!--end: Wizard Step 1-->
 
