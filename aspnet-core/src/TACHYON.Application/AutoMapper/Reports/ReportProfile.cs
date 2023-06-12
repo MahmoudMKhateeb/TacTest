@@ -11,7 +11,7 @@ using TACHYON.Reports.ReportDefinitions.Dto;
 using TACHYON.Reports.ReportParameterDefinitions;
 using TACHYON.Reports.ReportPermissions;
 
-namespace TACHYON.AutoMapper.Reports;
+namespace TACHYON.AutoMapper.Reports {
 
 public class ReportProfile : Profile
 {
@@ -69,4 +69,5 @@ public class ReportProfile : Profile
             .ForMember(x => x.ReportPermissions, x => x.Ignore())
             .ForMember(x => x.Parameters, x => x.Ignore());
     }
+}
 }
