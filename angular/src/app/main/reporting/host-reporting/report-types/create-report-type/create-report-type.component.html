@@ -86,6 +86,8 @@
                           <dx-text-box
                             id="reportName"
                             name="reportName"
+                            minlength="3"
+                            maxLength="120"
                             formControlName="reportName"
                             [(value)]="reportDefinitionDto.displayName"
                             placeholder="{{ l('EnterReportName') }}"
@@ -130,15 +132,15 @@
                           [dataSource]="selectAttributesDataSource"
                           [remoteOperations]="false"
                           [showBorders]="true"
-                          [(selectedRowKeys)]="selectedFilters"
+                          [(selectedRowKeys)]="reportDefinitionDto.parameterDefinitions"
                           (onSelectionChanged)="revalidateFilters()"
                           formControlName="filters"
-                          keyExpr="id"
+                          keyExpr="name"
                         >
                           <dxo-filter-row [visible]="false"></dxo-filter-row>
                           <dxo-selection [selectAllMode]="'allPages'" [showCheckBoxesMode]="'onClick'" mode="multiple"></dxo-selection>
                           <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"> </dxo-editing>
-                          <dxi-column dataField="filterName" caption="{{ l('FilterName') }}"></dxi-column>
+                          <dxi-column dataField="name" caption="{{ l('FilterName') }}"></dxi-column>
                         </dx-data-grid>
                       </div>
                       <dx-validator [validationGroup]="'step2FormGroup'" [adapter]="filtersAdapterConfig">
@@ -173,7 +175,7 @@
                             dropdownIcon="fa fa-caret-down"
                             name="editionType"
                             [options]="allEditionTypes"
-                            [(ngModel)]="reportDefinitionDto.grantedEditionIds"
+                            [(ngModel)]="selectedGrantedEditionIds"
                             formControlName="editionType"
                             (onChange)="loadAllCompanies()"
                             [selectedItemsLabel]="'{0} items selected'"
@@ -205,7 +207,7 @@
                             id="excludingCompanies"
                             name="excludingCompanies"
                             [options]="allCompanies"
-                            [(ngModel)]="reportDefinitionDto.excludedTenantIds"
+                            [(ngModel)]="selectedExcludedTenantIds"
                             formControlName="excludingCompanies"
                             (onChange)="revalidateExcludingCompanies()"
                             [selectedItemsLabel]="'{0} items selected'"
@@ -260,7 +262,10 @@
                   <ng-container *ngIf="reportUrl.length > 0">
                     <dx-report-designer [reportUrl]="reportUrl" height="700px">
                       <dxrd-request-options [getDesignerModelAction]="getDesignerModelAction" [host]="hostUrl"></dxrd-request-options>
-                      <dxrd-callbacks (ReportSaved)="reportDefinitionDto.reportTemplateUrl = reportUrl"></dxrd-callbacks>
+                      <dxrd-callbacks
+                        (CustomizeMenuActions)="customizeMenuActions($event.args)"
+                        (ReportSaved)="reportDefinitionDto.reportTemplateUrl = reportUrl"
+                      ></dxrd-callbacks>
                     </dx-report-designer>
                   </ng-container>
                 </div>

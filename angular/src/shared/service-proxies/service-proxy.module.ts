@@ -179,6 +179,7 @@ import {
     ApiServiceProxies.TMSAndHostDashboardServiceProxy,
     ApiServiceProxies.ForceDeliverTripsServiceProxy,
     ApiServiceProxies.ReportDefinitionServiceProxy,
+    ApiServiceProxies.ReportServiceProxy,
 
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },

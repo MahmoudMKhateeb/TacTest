@@ -76,7 +76,7 @@ const dxImports = [
 ];
 
 @NgModule({
-  imports: [...imports, ...dxImports],
+  imports: [...imports, ...dxImports, ReportingRouteModule, DxReportDesignerModule, DxListModule, MultiSelectModule],
   declarations: [
     CreateReportTypeComponent,
     AllReportTypesComponent,

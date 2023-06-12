@@ -11,6 +11,8 @@ using TACHYON.Shipping.ShippingRequestTrips;
 namespace TACHYON.Reports.ReportDataSources
 {
 
+    [DontWrapResult(WrapOnSuccess = false,WrapOnError = true)]
+    [AbpAuthorize] // todo Add Permission Here
     public class TripDetailsReportDataSourceAppService : TACHYONAppServiceBase
     {
         private readonly IRepository<ShippingRequestTrip> _tripRepository;
@@ -22,9 +24,8 @@ namespace TACHYON.Reports.ReportDataSources
             _tripRepository = tripRepository;
         }
         
-        [AbpAllowAnonymous]
-        [DontWrapResult]
-        public async Task<IEnumerable<TripDetailsItem>> GetAll()
+        
+        public async Task<IEnumerable<TripDetailsItem>> GetAll(string reportUrl)
         {
             DisableTenancyFilters();
             var tripDetailItems = (from trip in _tripRepository.GetAll().OrderByDescending(x=> x.CreationTime)

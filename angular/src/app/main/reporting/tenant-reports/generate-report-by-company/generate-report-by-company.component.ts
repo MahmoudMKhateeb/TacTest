@@ -3,39 +3,26 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import KTWizard from '@metronic/common/js/components/wizard';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { DxValidationGroupComponent } from '@node_modules/devextreme-angular/ui/validation-group';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
-import { LoadOptions } from '@node_modules/devextreme/data/load_options';
-import { DxReportDesignerComponent } from '@node_modules/devexpress-reporting-angular';
-import * as ko from '@node_modules/knockout';
-import { ajaxSetup } from '@node_modules/@devexpress/analytics-core/core/internal/ajaxSetup';
 import {
   API_BASE_URL,
-  CompanyType,
-  EditionListDto,
+  CreateOrEditReportDto,
   EditionServiceProxy,
-  PricePackageServiceProxy,
+  ReportFormat,
+  ReportServiceProxy,
   SelectItemDto,
 } from '@shared/service-proxies/service-proxies';
-import { finalize } from '@node_modules/rxjs/operators';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { AutomationSetupModalComponent } from '@app/main/reporting/tenant-reports/generate-report-by-company/automation-setup-modal/automation-setup-modal.component';
+import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-generate-report-by-company',
   templateUrl: './generate-report-by-company.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: [
-    './generate-report-by-company.component.scss',
-    '../../../../../../node_modules/jquery-ui/themes/base/all.css',
-    '../../../../../../node_modules/devexpress-richedit/dist/dx.richedit.css',
-    '../../../../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.common.css',
-    '../../../../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.light.css',
-    '../../../../../../node_modules/@devexpress/analytics-core/dist/css/dx-querybuilder.css',
-    '../../../../../../node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css',
-    '../../../../../../node_modules/devexpress-reporting/dist/css/dx-reportdesigner.css',
-  ],
+  styleUrls: ['./generate-report-by-company.component.scss'],
   animations: [appModuleAnimation()],
 })
 export class GenerateReportByCompanyComponent extends AppComponentBase implements OnInit, AfterViewInit, OnDestroy {
@@ -43,62 +30,30 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
   @ViewChild('automationSetupModal', { static: false }) automationSetupModal: AutomationSetupModalComponent;
   @ViewChild('step1FormGroup', { static: false }) step1FormGroup: DxValidationGroupComponent;
 
-  @ViewChild('designer', { static: false }) designer: DxReportDesignerComponent;
-
-  title = 'DXReportViewerSample';
-  getDesignerModelAction = `/DXXRD/GetDesignerModel`;
-  hostUrl: string;
-  koReportUrl = ko.observable('');
-  get reportUrl() {
-    return this.koReportUrl();
-  }
-
-  set reportUrl(newUrl) {
-    this.koReportUrl(newUrl);
-  }
-
   // start of form groups and form models
   step1Form = this.fb.group({
-    // reportType: [null, Validators.required],
-    // reportName: [null, Validators.required],
+    reportType: [null, Validators.required],
+    reportName: [null, Validators.required],
+    grantedRoles: [null, Validators.required],
+    excludedUsers: [null, Validators.required],
+    reportFormat: [null, Validators.required],
   });
-  step1Model: any = {
-    type: null,
-    reportName: null,
-  };
-  step2Form = this.fb.group({
-    // reportType: [null, Validators.required],
-    // reportName: [null, Validators.required],
-  });
-  step2Model: any[] = [];
-  step3Form = this.fb.group({
-    // reportType: [null, Validators.required],
-    // reportName: [null, Validators.required],
-  });
-  step3Model: any = {
-    editionType: null,
-    excludingCompanies: null,
-  };
-  step4Form = this.fb.group({
-    // isGeneratedAutomatically: [null, Validators.required],
-    // reportName: [null, Validators.required],
-  });
-  step4Model: any = {
-    isGeneratedAutomatically: false,
-  };
+
+  step2Form = this.fb.group({});
+
+  step3Form = this.fb.group({});
+
   // end of form groups and form models
 
   private wizard: KTWizard;
   stepToCompleteFrom: number = this._activatedRoute.snapshot.queryParams['completedSteps'];
   activeStep: number;
-  allTypes: any[] = [];
-
+  reportDefinitions: SelectItemDto[] = [];
   selectAttributesDataSource: any = {};
-  allCompanies: SelectItemDto[] = [];
-  allEditionTypes: EditionListDto[] = [];
-  allRoles: any[] = [];
-  allFormats: any[] = [];
-  allUsers: any[] = [];
+  allRoles: SelectItemDto[] = [];
+  allUsers: SelectItemDto[] = [];
+  reportDto: CreateOrEditReportDto;
+  allFormats;
 
   constructor(
     injector: Injector,
@@ -107,30 +62,33 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
     private fb: FormBuilder,
     @Inject(API_BASE_URL) hostUrl: string,
     private _editionService: EditionServiceProxy,
-    private _pricePackagesServiceProxy: PricePackageServiceProxy,
-    private enumService: EnumToArrayPipe
+    private _reportService: ReportServiceProxy,
+    private _enumToArray: EnumToArrayPipe
   ) {
     super(injector);
-    ajaxSetup.ajaxSettings = {
-      headers: {
-        Authorization: 'Bearer ' + abp.auth.getToken(),
-      },
-    };
-    this.hostUrl = hostUrl;
   }
 
   ngOnInit(): void {
-    this.reportUrl = 'TripDetailsReport';
+    this.reportDto = new CreateOrEditReportDto();
+    this.allFormats = this._enumToArray.transform(ReportFormat).map((item) => {
+      item.key = Number(item.key);
+      return item;
+    });
+    this.loadReportDefinitions();
+    this.loadRoles();
   }
 
+  private loadReportDefinitions() {
+    this._reportService.getReportDefinitionsForDropdown().subscribe((result) => {
+      this.reportDefinitions = result;
+    });
+  }
   ngAfterViewInit() {
     // Initialize form wizard
     this.wizard = new KTWizard(this.el.nativeElement, {
       startStep: this.stepToCompleteFrom || 1,
     });
     this.activeStep = this.wizard.getStep();
-    console.log('activeStep', this.activeStep);
-    // Validation before going to next page
     this.watchForWizardNextBtnOnClick();
   }
 
@@ -228,168 +186,9 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
     this.selectAttributesDataSource = {};
     this.selectAttributesDataSource.store = new CustomStore({
       key: 'id',
-      load(loadOptions: LoadOptions) {
-        return new Promise((resolve) => {
-          resolve([
-            {
-              id: 0,
-              filterName: 'ShipperName',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'Shipper1' },
-                { id: 2, displayName: 'Shipper2' },
-              ],
-            },
-            {
-              id: 1,
-              filterName: 'CarrierName',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'Carrier1' },
-                { id: 2, displayName: 'Carrier2' },
-              ],
-            },
-            { id: 2, filterName: 'DateRange', filterData: { from: null, to: null }, filterSource: 'dateRange' },
-            { id: 3, filterName: 'Date', filterData: null, filterSource: 'date' },
-            {
-              id: 4,
-              filterName: 'RequestID',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'Request1' },
-                { id: 2, displayName: 'Request2' },
-              ],
-            },
-            {
-              id: 5,
-              filterName: 'RequestType',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'RequestType1' },
-                { id: 2, displayName: 'RequestType2' },
-              ],
-            },
-            {
-              id: 6,
-              filterName: 'ShippingType',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'ShippingType1' },
-                { id: 2, displayName: 'ShippingType2' },
-              ],
-            },
-            {
-              id: 7,
-              filterName: 'TripType',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'TripType1' },
-                { id: 2, displayName: 'TripType2' },
-              ],
-            },
-            {
-              id: 8,
-              filterName: 'TripStatus',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'TripStatus1' },
-                { id: 2, displayName: 'TripStatus2' },
-              ],
-            },
-            {
-              id: 9,
-              filterName: 'TransportType',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'TransportType1' },
-                { id: 2, displayName: 'TransportType2' },
-              ],
-            },
-            {
-              id: 10,
-              filterName: 'TruckType',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'TruckType1' },
-                { id: 2, displayName: 'TruckType2' },
-              ],
-            },
-            {
-              id: 11,
-              filterName: 'RouteType',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'RouteType1' },
-                { id: 2, displayName: 'RouteType2' },
-              ],
-            },
-            {
-              id: 12,
-              filterName: 'Origin',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'Origin1' },
-                { id: 2, displayName: 'Origin2' },
-              ],
-            },
-            {
-              id: 13,
-              filterName: 'Destination',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'Destination1' },
-                { id: 2, displayName: 'Destination2' },
-              ],
-            },
-            { id: 14, filterName: 'ExpectedDeliveryDate', filterData: null, filterSource: 'date' },
-            { id: 15, filterName: 'TripsPickupDateStart', filterData: null, filterSource: 'dateTime' },
-            {
-              id: 16,
-              filterName: 'IsPODSubmitted',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'Yes' },
-                { id: 2, displayName: 'No' },
-              ],
-            },
-            {
-              id: 17,
-              filterName: 'IsInvoiceIssued',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'Yes' },
-                { id: 2, displayName: 'No' },
-              ],
-            },
-            {
-              id: 18,
-              filterName: 'IsAttachedVAS',
-              filterData: null,
-              filterSource: [
-                { id: 1, displayName: 'Yes' },
-                { id: 2, displayName: 'No' },
-              ],
-            },
-          ]);
-        }).then((res) => {
-          return {
-            data: res,
-            totalCount: 0,
-          };
-        });
-        /*self._unitOfMeasuresServiceProxy
-                    .getAll(JSON.stringify(loadOptions))
-                    .toPromise()
-                    .then((response) => {
-                        return {
-                            data: response.data,
-                            totalCount: response.totalCount,
-                        };
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        throw new Error('Data Loading Error');
-                    });*/
+      load() {
+        // todo call backend end point
+        return undefined;
       },
     });
   }
@@ -408,15 +207,10 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
     this.activeStep = step;
   }
 
-  open() {
-    this.designer.bindingSender.open(this.reportUrl);
-  }
-
   openGeneratedAutomaticallyModal() {
-    console.log('openGeneratedAutomaticallyModal', this.step4Model);
-    if (this.step4Model.isGeneratedAutomatically) {
-      this.automationSetupModal.show();
-    }
+    // if (this.step4Model.isGeneratedAutomatically) {
+    //   this.automationSetupModal.show();
+    // }
   }
 
   automationSetupModalSave($event: any) {
@@ -425,5 +219,27 @@ export class GenerateReportByCompanyComponent extends AppComponentBase implement
 
   isArray(item: any): boolean {
     return Array.isArray(item);
+  }
+
+  private loadRoles() {
+    this._reportService.getTenantRoles().subscribe((result) => {
+      this.allRoles = result;
+    });
+  }
+
+  private loadUsers() {
+    if (isNotNullOrUndefined(this.reportDto.grantedRoles)) {
+      const selectedRoles: number[] = [];
+
+      selectedRoles.push(Number(this.reportDto.grantedRoles as any));
+      this._reportService.getTenantUsers(selectedRoles).subscribe((result) => {
+        this.allUsers = result;
+      });
+    }
+  }
+
+  selectedRoleChanged() {
+    this.loadUsers();
+    this.reportDto.excludedUsers = undefined;
   }
 }

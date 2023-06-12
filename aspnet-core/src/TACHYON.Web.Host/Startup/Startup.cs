@@ -3,18 +3,12 @@ using Abp.AspNetCore.Mvc.Antiforgery;
 using Abp.AspNetCore.SignalR.Hubs;
 using Abp.AspNetZeroCore.Web.Authentication.JwtBearer;
 using Abp.Castle.Logging.Log4Net;
-using Abp.Extensions;
 using Abp.Hangfire;
 using Abp.PlugIns;
 using Abp.Timing;
 using Castle.Facilities.Logging;
 using CrystalQuartz.AspNetCore;
 using DevExpress.AspNetCore;
-using DevExpress.AspNetCore.Reporting;
-using DevExpress.AspNetCore.Reporting.QueryBuilder;
-using DevExpress.AspNetCore.Reporting.ReportDesigner;
-using DevExpress.AspNetCore.Reporting.WebDocumentViewer;
-using DevExpress.XtraReports.Web.Extensions;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using GraphQL.Server;
@@ -32,14 +26,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Owl.reCAPTCHA;
 using Quartz.Impl;
 using Stripe;
-using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using TACHYON.Authorization;
 using TACHYON.Configuration;
@@ -187,18 +178,8 @@ namespace TACHYON.Web.Startup
             services.AddDevExpressControls();
             // Use the AddMvcCore (or AddMvc) method to add MVC services
             services.AddMvcCore();
-            // todo find another workaround
-            services.AddScoped<ReportStorageWebExtension, ReportStorageWebExtensionService>();
-            services.ConfigureReportingServices(configurator => {
-                configurator.ConfigureReportDesigner(designerConfigurator => {
 
-                    designerConfigurator.RegisterDataSourceWizardJsonConnectionStorage<CustomDataSourceWizardJsonDataConnectionStorage>(true);
-                });
-                configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
-
-                    viewerConfigurator.RegisterJsonDataConnectionProviderFactory<CustomJsonDataConnectionProviderFactory>();
-                });
-            });
+            services.RegisterReportingServices();
 
             //Configure Abp and Dependency Injection
             return services.AddAbp<TACHYONWebHostModule>(options =>

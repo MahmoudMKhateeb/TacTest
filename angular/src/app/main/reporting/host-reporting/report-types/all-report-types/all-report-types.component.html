@@ -44,11 +44,23 @@
               [fixed]="true"
               [alignment]="'center'"
             ></dxi-column>
-            <dxi-column dataField="reportType" caption="{{ l('ReportType') }}"></dxi-column>
-            <dxi-column dataField="reportName" caption="{{ l('ReportName') }}"></dxi-column>
-            <dxi-column dataField="creationDate" caption="{{ l('CreationDate') }}"></dxi-column>
-            <dxi-column dataField="accessEdition" caption="{{ l('AccessEdition') }}"></dxi-column>
-            <dxi-column [allowFiltering]="false" [width]="350" dataField="accessException" caption="{{ l('AccessException') }}"></dxi-column>
+            <dxi-column dataField="reportType" caption="{{ l('ReportType') }}" [allowSearch]="false"></dxi-column>
+            <dxi-column dataField="displayName" caption="{{ l('ReportName') }}"></dxi-column>
+            <dxi-column dataField="creationTime" caption="{{ l('CreationDate') }}" [allowSearch]="false"></dxi-column>
+            <dxi-column dataField="grantedEditions" caption="{{ l('AccessEdition') }}" [allowSearch]="false"></dxi-column>
+            <dxi-column
+              [allowFiltering]="false"
+              [width]="350"
+              dataField="excludedCompanies"
+              caption="{{ l('AccessException') }}"
+              [allowSearch]="false"
+            ></dxi-column>
+            <dxi-column dataField="isActive" [caption]="l('IsActive')" cellTemplate="cellTemplate_IsActive" [allowSearch]="false"></dxi-column>
+
+            <div *dxTemplate="let options of 'cellTemplate_IsActive'">
+              <span *ngIf="options.data.isActive">{{ 'Yes' | localize }}</span>
+              <span *ngIf="!options.data.isActive">{{ 'No' | localize }}</span>
+            </div>
 
             <div *dxTemplate="let options of 'cellTemplateActions'">
               <div class="btn-group dropdown" dropdown container="body">
@@ -60,24 +72,14 @@
                 <!--                                    {{'Actions' | localize}}-->
                 <!--                                </a>-->
                 <ul class="dropdown-menu z-index-1000" *dropdownMenu>
-                  <li>
-                    <a href="javascript:;" class="dropdown-item" (click)="viewReportType(options.data.id)">
-                      {{ 'View' | localize }}
+                  <li *ngIf="!options.data.isActive">
+                    <a href="javascript:;" class="dropdown-item" (click)="activateReportType(options.data.id)">
+                      {{ 'Activate' | localize }}
                     </a>
                   </li>
-                  <li>
-                    <a href="javascript:;" class="dropdown-item" (click)="editReportType(options.data.id)">
-                      {{ 'Edit' | localize }}
-                    </a>
-                  </li>
-                  <li>
-                    <a href="javascript:;" class="dropdown-item" (click)="editAccessReportType(options.data.id)">
-                      {{ 'EditAccess' | localize }}
-                    </a>
-                  </li>
-                  <li>
-                    <a href="javascript:;" class="dropdown-item" (click)="deleteReportType(options.data.id)">
-                      {{ 'Delete' | localize }}
+                  <li *ngIf="options.data.isActive">
+                    <a href="javascript:;" class="dropdown-item" (click)="deactivateReportType(options.data.id)">
+                      {{ 'Deactivate' | localize }}
                     </a>
                   </li>
                   <li>

@@ -57,22 +57,11 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
   </ItemGroup>
   <ItemGroup>
-    
-    <EmbeddedResource Include="Reports\TripDetailsReport.repx" />
     <EmbeddedResource Include="wwwroot\swagger\ui\index.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Xml\" />
+    <Folder Include="Reports\" />
     <Folder Include="wwwroot\Plugins\" />
-  </ItemGroup>
-  <ItemGroup>
-
-    <Compile Update="Reports\TripDetailsReport.cs">
-      <DependentUpon>TripDetailsReport.repx</DependentUpon>
-    </Compile>
-
-    <Compile Update="Reports\TripDetailsReport.Designer.cs">
-      <DependentUpon>TripDetailsReport.repx</DependentUpon>
-    </Compile>
   </ItemGroup>
 </Project>

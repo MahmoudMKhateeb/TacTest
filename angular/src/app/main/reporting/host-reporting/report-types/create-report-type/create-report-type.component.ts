@@ -12,6 +12,7 @@ import {
   API_BASE_URL,
   CompanyType,
   CreateOrEditReportDefinitionDto,
+  CreateReportTemplateByNameInput,
   EditionListDto,
   EditionServiceProxy,
   ReportDefinitionServiceProxy,
@@ -20,8 +21,8 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
-import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { ActionId } from '@node_modules/devexpress-reporting/designer/actions/actionId';
 
 @Component({
   selector: 'app-create-report-type',
@@ -79,7 +80,10 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   private wizard: KTWizard;
   stepToCompleteFrom: number = this._activatedRoute.snapshot.queryParams['completedSteps'];
   activeStep: number;
-  allTypes = this.enumService.transform(ReportType);
+  allTypes = this.enumService.transform(ReportType).map((item) => {
+    item.key = Number(item.key);
+    return item;
+  });
   allCompanies: SelectItemDto[] = [];
   allEditionTypes: EditionListDto[] = [];
   reportDefinitionDto: CreateOrEditReportDefinitionDto;
@@ -88,7 +92,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   editionTypeCallbacks: any[] = [];
   editionTypeAdapterConfig = {
     getValue: () => {
-      return this.reportDefinitionDto?.grantedEditionIds?.length > 0;
+      return this.selectedGrantedEditionIds?.length > 0;
     },
     applyValidationResults: (e) => {
       this.isEditionTypeInvalid = !e.isValid;
@@ -100,7 +104,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   excludingCompaniesCallbacks: any[] = [];
   excludingCompaniesAdapterConfig = {
     getValue: () => {
-      return this.reportDefinitionDto?.excludedTenantIds?.length > 0;
+      return this.selectedExcludedTenantIds?.length > 0;
     },
     applyValidationResults: (e) => {
       this.isExcludingCompaniesInvalid = !e.isValid;
@@ -112,7 +116,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   filtersCallbacks: any[] = [];
   filtersAdapterConfig = {
     getValue: () => {
-      return this.selectedFilters?.length > 0;
+      return this.reportDefinitionDto.parameterDefinitions?.length > 0;
     },
     applyValidationResults: (e) => {
       this.isFiltersInvalid = !e.isValid;
@@ -120,7 +124,8 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
     validationRequestsCallbacks: this.filtersCallbacks,
   };
   selectAttributesDataSource: any = {};
-  selectedFilters: any[] = [];
+  selectedGrantedEditionIds: number[];
+  selectedExcludedTenantIds: number[];
 
   constructor(
     injector: Injector,
@@ -143,8 +148,19 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
 
   ngOnInit(): void {
     this.reportDefinitionDto = new CreateOrEditReportDefinitionDto();
-    console.log('this.reportDefinitionDto', this.reportDefinitionDto);
     this.reportUrl = '';
+    const clonedReportDefinitionId = this._activatedRoute.snapshot.queryParams['clonedReportDefinitionId'];
+
+    if (isNotNullOrUndefined(clonedReportDefinitionId)) {
+      // do a request to server-side to get cloned report definition
+      this._reportDefinitionService.getReportDefinitionForClone(clonedReportDefinitionId).subscribe((result) => {
+        this.reportDefinitionDto.type = result.type;
+        this.reportDefinitionDto.displayName = result.displayName;
+        this.reportDefinitionDto.parameterDefinitions = result.parameterDefinitions;
+        this.selectedGrantedEditionIds = result.grantedEditionIds;
+        this.selectedExcludedTenantIds = result.excludedTenantIds;
+      });
+    }
   }
 
   ngAfterViewInit() {
@@ -153,7 +169,6 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
       startStep: this.stepToCompleteFrom || 1,
     });
     this.activeStep = this.wizard.getStep();
-    console.log('activeStep', this.activeStep);
     // Validation before going to next page
     this.watchForWizardNextBtnOnClick();
   }
@@ -164,11 +179,9 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
    */
   private watchForWizardNextBtnOnClick() {
     this.wizard.on('afterPrev', (wizardObj) => {
-      console.log('afterPrev', wizardObj);
       this.updateRoutingQueries(this.wizard.getStep());
     });
     this.wizard.on('beforeNext', (wizardObj) => {
-      console.log('beforeNext');
       switch (this.wizard.getStep()) {
         case 1: {
           document.getElementById('step1FormGroupButton').click();
@@ -179,7 +192,7 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
             this.createOrEditStep1();
-            this.getAttributes();
+            this.getFilters();
             this.getEditionTypes();
             wizardObj.goNext();
           }
@@ -206,7 +219,6 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
             this.step3Form.markAllAsTouched();
             this.notify.error(this.l('PleaseCompleteMissingFields'));
           } else {
-            this.updateReportUrl();
             this.createOrEditStep3();
             wizardObj.goNext();
           }
@@ -233,6 +245,15 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
    */
   private createOrEditStep1() {
     this.updateRoutingQueries(1);
+    const reportTemplateInput = new CreateReportTemplateByNameInput();
+    reportTemplateInput.reportDefinitionType = this.reportDefinitionDto.type;
+    reportTemplateInput.reportDefinitionName = this.reportDefinitionDto.displayName;
+    if (isNotNullOrUndefined(this.reportDefinitionDto.reportTemplateUrl) && this.reportDefinitionDto.reportTemplateUrl !== '') {
+      this._reportDefinitionService.createTemplateByName(reportTemplateInput).subscribe((result) => {
+        this.reportDefinitionDto.reportTemplateUrl = result.url;
+        this.reportUrl = result.url;
+      });
+    }
   }
 
   /**
@@ -252,11 +273,8 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   }
 
   createOrEdit(): void {
-    let selectedCompanies = (this.reportDefinitionDto.excludedTenantIds as any[]).map((x) => x.id);
-    let selectedEditions = (this.reportDefinitionDto.grantedEditionIds as any[]).map((x) => x.id);
-
-    this.reportDefinitionDto.grantedEditionIds = selectedEditions;
-    this.reportDefinitionDto.excludedTenantIds = selectedCompanies;
+    this.reportDefinitionDto.grantedEditionIds = (this.selectedGrantedEditionIds as any[]).map((x) => x.id);
+    this.reportDefinitionDto.excludedTenantIds = (this.selectedExcludedTenantIds as any[]).map((x) => x.id);
     this._reportDefinitionService.createOrEdit(this.reportDefinitionDto).subscribe(() => {
       this.notify.success('SavedSuccessfully');
       this._router.navigate(['app/main/reporting/report-types']);
@@ -294,6 +312,10 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
         displayName: item.value,
       };
     });
+    if (isNotNullOrUndefined(this.selectedGrantedEditionIds)) {
+      (this.selectedGrantedEditionIds as any) = this.allEditionTypes.filter((item) => this.selectedGrantedEditionIds.includes(item.id as any));
+      this.loadAllCompanies();
+    }
   }
 
   /**
@@ -302,27 +324,18 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
   loadAllCompanies(): void {
     // there is a difference between company type in front end  & backend
     this.revalidateEditionType();
-    if (isNotNullOrUndefined(this.reportDefinitionDto.grantedEditionIds)) {
-      const selectedEditionIds = (this.reportDefinitionDto.grantedEditionIds as any[]).map((x) => x.id);
+    if (isNotNullOrUndefined(this.selectedGrantedEditionIds)) {
+      const selectedEditionIds = (this.selectedGrantedEditionIds as any[]).map((x) => x.id);
 
       this._reportDefinitionService.getCompanies(selectedEditionIds).subscribe((res) => {
         this.allCompanies = res.map((item) => {
           (item.id as any) = Number(item.id);
           return item;
         });
+        if (isNotNullOrUndefined(this.selectedExcludedTenantIds)) {
+          (this.selectedExcludedTenantIds as any) = this.allCompanies.filter((item) => this.selectedExcludedTenantIds.includes(item.id as any));
+        }
       });
-    }
-  }
-
-  private updateReportUrl() {
-    switch (ReportType[this.reportDefinitionDto.type]) {
-      case ReportType[ReportType.TripDetailsReport]:
-        this.reportUrl = 'TripDetailsReport';
-        break;
-      default:
-        this.reportUrl = '';
-        this.notify.error(this.l('ReportUrlNotFound'));
-        break;
     }
   }
 
@@ -346,60 +359,30 @@ export class CreateReportTypeComponent extends AppComponentBase implements OnIni
     this.filtersCallbacks.forEach((func) => {
       func();
     });
-    this.step2Form.get('filters').setValue(this.selectedFilters);
+    this.step2Form.get('filters').setValue(this.reportDefinitionDto.parameterDefinitions);
   }
 
   /**
    * send api to get all report type attributes
    */
-  getAttributes() {
+  getFilters() {
     let self = this;
     this.selectAttributesDataSource = {};
     this.selectAttributesDataSource.store = new CustomStore({
-      key: 'id',
-      load(loadOptions: LoadOptions) {
-        return new Promise((resolve) => {
-          resolve([
-            { id: 0, filterName: 'ShipperName' },
-            { id: 1, filterName: 'CarrierName' },
-            { id: 2, filterName: 'DateRange' },
-            { id: 3, filterName: 'Date' },
-            { id: 4, filterName: 'RequestID' },
-            { id: 5, filterName: 'RequestType' },
-            { id: 6, filterName: 'ShippingType' },
-            { id: 7, filterName: 'TripType' },
-            { id: 8, filterName: 'TripStatus' },
-            { id: 9, filterName: 'TransportType' },
-            { id: 10, filterName: 'TruckType' },
-            { id: 11, filterName: 'RouteType' },
-            { id: 12, filterName: 'Origin' },
-            { id: 13, filterName: 'Destination' },
-            { id: 14, filterName: 'ExpectedDeliveryDate' },
-            { id: 15, filterName: 'TripsPickupDateStart' },
-            { id: 16, filterName: 'IsPODSubmitted' },
-            { id: 17, filterName: 'IsInvoiceIssued' },
-            { id: 18, filterName: 'IsAttachedVAS' },
-          ]);
-        }).then((res) => {
-          return {
-            data: res,
-            totalCount: 0,
-          };
-        });
-        /*self._unitOfMeasuresServiceProxy
-                          .getAll(JSON.stringify(loadOptions))
-                          .toPromise()
-                          .then((response) => {
-                              return {
-                                  data: response.data,
-                                  totalCount: response.totalCount,
-                              };
-                          })
-                          .catch((error) => {
-                              console.log(error);
-                              throw new Error('Data Loading Error');
-                          });*/
+      key: 'name',
+      load() {
+        return self._reportDefinitionService.getReportFilters(self.reportDefinitionDto.type).toPromise();
       },
     });
+  }
+
+  customizeMenuActions(args) {
+    args.GetById(ActionId.Scripts).visible = false;
+    args.GetById(ActionId.NewReport).visible = false;
+    args.GetById(ActionId.NewReportViaWizard).visible = false;
+    args.GetById(ActionId.OpenReport).visible = false;
+    args.GetById(ActionId.SaveAs).visible = false;
+    args.GetById(ActionId.Exit).visible = false;
+    args.GetById(ActionId.Preview).visible = true;
   }
 }

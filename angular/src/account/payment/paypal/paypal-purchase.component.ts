@@ -53,21 +53,19 @@ export class PayPalPurchaseComponent extends AppComponentBase implements OnInit 
     this._payPalPaymentAppService.getConfiguration().subscribe((config: PayPalConfigurationDto) => {
       this.config = config;
 
-      new ScriptLoaderService()
-        .load('https://www.paypal.com/sdk/js?client-id=' + config.clientId + '&currency=' + this.appSession.application.currency)
-        .then(() => {
-          this._paymentAppService.getPayment(this.paymentId).subscribe((result: SubscriptionPaymentDto) => {
-            this.description = result.description;
-            this.totalAmount = result.amount;
-            this.successCallbackUrl = result.successUrl;
-            this.errorCallbackUrl = result.errorUrl;
+      new ScriptLoaderService().load().then(() => {
+        this._paymentAppService.getPayment(this.paymentId).subscribe((result: SubscriptionPaymentDto) => {
+          this.description = result.description;
+          this.totalAmount = result.amount;
+          this.successCallbackUrl = result.successUrl;
+          this.errorCallbackUrl = result.errorUrl;
 
-            this.subscriptionPaymentGateway = result.gateway as any;
+          this.subscriptionPaymentGateway = result.gateway as any;
 
-            this.paypalIsLoading = false;
-            this.preparePaypalButton();
-          });
+          this.paypalIsLoading = false;
+          this.preparePaypalButton();
         });
+      });
     });
   }
 
