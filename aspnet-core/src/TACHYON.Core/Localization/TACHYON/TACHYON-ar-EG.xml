@@ -3094,8 +3094,8 @@
 	<text name="DedicatedShippingRequestSavedTemplate">قوالب طلب تأجير الشاحنات</text>
 	<text name="ShippingRequestSavedTemplate">قوالب طلب الشحن</text>
 	<text name="TripSavedTemplate">فوالب الرحلة</text>
-    <text name="ValueOfGoods"></text>
-    <text name="InsuranceCoverage"></text>
+    <text name="ValueOfGoods">قيمة البضائع</text>
+    <text name="InsuranceCoverage">تغطية الحمل</text>
 		
 	</texts>
 </localizationDictionary>
