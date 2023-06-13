@@ -14,6 +14,7 @@ using TACHYON.Actors;
 using TACHYON.Authorization;
 using TACHYON.Dashboards.Broker.Dto;
 using TACHYON.Dashboards.Carrier;
+using TACHYON.Dashboards.Host.TMS_HostDto;
 using TACHYON.Dashboards.Shipper.Dto;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Invoices;
@@ -459,14 +460,15 @@ namespace TACHYON.Dashboards.Broker
         }
 
 
-        public async Task<List<MostUsedTruckTypeDto>> GetMostTruckTypesUsed(int transportTypeId)
+        public async Task<List<MostUsedTruckTypeDto>> GetMostTruckTypesUsed(int transportTypeId, DateRangeInput dateRangeInput)
         {
             var truckTypes = await (from trip in _tripRepository.GetAll()
                 where (trip.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId &&
                        trip.ShippingRequestFk.TenantId == AbpSession.TenantId) &&
                       (trip.ShippingRequestFk.ShipperActorId.HasValue ||
                        trip.ShippingRequestFk.CarrierActorId.HasValue) &&
-                      (trip.ShippingRequestFk.TransportTypeId == transportTypeId)
+                      (trip.ShippingRequestFk.TransportTypeId == transportTypeId &&
+                      trip.CreationTime.Date > dateRangeInput.StartDate && trip.CreationTime.Date < dateRangeInput.EndDate)
                 select new
                 {
                     TruckTypeId = trip.ShippingRequestFk.TrucksTypeId,
