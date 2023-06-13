@@ -141,8 +141,9 @@ namespace TACHYON.Dashboards.Host
 
         public async Task<long> GetDeliveredTripsInCurrentMonth()
         {
-            return await _shippingRequestTripRepository.GetAll().Where(x => (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId) ||
-                           (x.ShippingRequestFk == null && x.ShipperTenantId != x.CarrierTenantId) &&
+            DisableTenancyFilters();
+            return await _shippingRequestTripRepository.GetAll().Where(x => ((x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId) ||
+                           (x.ShippingRequestFk == null && x.ShipperTenantId != x.CarrierTenantId)) &&
                            x.CreationTime.Month == Clock.Now.Month && (
                            x.Status == ShippingRequestTripStatus.Delivered || x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation))
                            .CountAsync();
@@ -150,8 +151,9 @@ namespace TACHYON.Dashboards.Host
 
         public async Task<long> GetInTransitTripsInCurrentMonth()
         {
-            return await _shippingRequestTripRepository.GetAll().Where(x => (x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId) ||
-                            (x.ShippingRequestFk == null && x.ShipperTenantId != x.CarrierTenantId) &&
+            DisableTenancyFilters();
+            return await _shippingRequestTripRepository.GetAll().Where(x => ((x.ShippingRequestFk != null && x.ShippingRequestFk.TenantId != x.ShippingRequestFk.CarrierTenantId) ||
+                            (x.ShippingRequestFk == null && x.ShipperTenantId != x.CarrierTenantId)) &&
                             x.CreationTime.Month == Clock.Now.Month && 
                             x.Status == ShippingRequestTripStatus.InTransit)
                             .CountAsync();
@@ -253,6 +255,7 @@ namespace TACHYON.Dashboards.Host
 
         public async Task<List<GetTruckTypeUsageOutput>> GetTruckTypeUsage(int transportTypeId)
         {
+            DisableTenancyFilters();
                 var trips =await _shippingRequestTripRepository.GetAll()
             .Where(x => (x.Status == ShippingRequestTripStatus.Delivered || 
             x.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation) &&
