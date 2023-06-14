@@ -758,6 +758,19 @@ export class DashboardCustomizationConst {
             },
           ],
         },
+        {
+          id: 'Page2bb3cc48fbf042819fbb12dc233d4f4d',
+          name: 'Tracking',
+          widgets: [
+            {
+              widgetId: 'Widgets_Tenant_Host_TrackingMapWidget',
+              height: 30,
+              width: 15,
+              positionX: 0,
+              positionY: 0,
+            },
+          ],
+        },
       ],
     },
     {
@@ -956,6 +969,19 @@ export class DashboardCustomizationConst {
           id: 'Page1cd5a414b8ec419d83b691e0370d8b64',
           name: 'Operation',
           widgets: [],
+        },
+        {
+          id: 'Page2bb3cc48fbf042819fbb12dc233d4f4d',
+          name: 'Interactive map',
+          widgets: [
+            {
+              widgetId: 'Widgets_Tenant_Host_TrackingMapWidget',
+              height: 30,
+              width: 15,
+              positionX: 0,
+              positionY: 0,
+            },
+          ],
         },
         {
           id: 'Page2bb3cc48fbf042819fbb12dc233d4f4d',
