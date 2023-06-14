@@ -20,3 +20,8 @@
   right: -2px !important;
   left: auto !important;
 }
+
+::ng-deep app-needs-action-widget .ribbon-target.bg-dark {
+  background: var(--dark, #231f20) !important;
+  color: var(--white, #fff) !important;
+}

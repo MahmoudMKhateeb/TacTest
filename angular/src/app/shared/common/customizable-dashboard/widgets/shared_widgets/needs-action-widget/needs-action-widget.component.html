@@ -53,13 +53,20 @@
               </div>
             </ng-container>
             <ng-container *ngIf="isTachyonDealerOrHost">
-              <div class="card-body p-4 d-flex justify-content-between align-items-end">
+              <div class="card-body p-4 d-flex justify-content-between align-items-end ribbon ribbon-right">
                 <app-from-to [from]="trip.originCity" [to]="trip.destinationCity" class="w-45"></app-from-to>
                 <div class="d-flex flex-column w-55">
-                  <div class="pb-3">
-                    <span class="label label-default label-rounded text-red p-2">{{ trip.actionName }}</span>
+                  <div
+                    class="ribbon-target bg-dark"
+                    [style.left]="isRtl ? '0 !important' : 'auto !important'"
+                    [style.right]="isRtl ? 'auto !important' : '0 !important'"
+                    [style.top]="'6%'"
+                    [style.font-size]="'0.85rem !important'"
+                    [style.padding]="'0.7rem !important'"
+                  >
+                    {{ trip.actionName }}
                   </div>
-                  <div class="pt-3 title">{{ trip.waybillOrRequestReference }}</div>
+                  <div class="pt-3 title text-right">{{ trip.waybillOrRequestReference }}</div>
                 </div>
               </div>
             </ng-container>

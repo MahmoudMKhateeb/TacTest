@@ -1,194 +1,194 @@
-.from-to {
-    border-left: 3px dashed #E3E3E3;
-    .from,
-    .to {
-        &:before {
-            content: '';
-            display: block;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            z-index: 1;
-            position: absolute;
-            left: 1% !important;
-        }
-    }
+::ng-deep {
+    [dir=ltr] {
+        .from-to {
+            border-left: 3px dashed #E3E3E3;
+            .from,
+            .to {
+                &:before {
+                    content: '';
+                    display: block;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    z-index: 1;
+                    position: absolute;
+                    left: 1% !important;
+                }
+            }
 
-    .from {
-        &:before {
-            background-color: #D9D9D9;
-        }
-        .red-circle {
-            width: 8px;
-            height: 8px;
-            background: #dc2434 !important;
-            border-radius: 50%;
-            position: absolute;
-            z-index: 1;
-            left: 3%;
-            top: 21%;
-        }
-    }
-    .to {
-        &:before {
-            background-color: #E5E5FE;
-        }
-        .pin-icon {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            position: absolute;
-            z-index: 1;
-            left: 1.8%;
-            bottom: 16.5%;
-        }
-    }
+            .from {
+                &:before {
+                    background-color: #D9D9D9;
+                }
+                .red-circle {
+                    width: 8px;
+                    height: 8px;
+                    background: #dc2434 !important;
+                    border-radius: 50%;
+                    position: absolute;
+                    z-index: 1;
+                    left: 2%;
+                    top: 21%;
+                }
+            }
+            .to {
+                &:before {
+                    background-color: #E5E5FE;
+                }
+                .pin-icon {
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 50%;
+                    position: absolute;
+                    z-index: 1;
+                    left: 1.8%;
+                    bottom: 16.5%;
+                }
+            }
 
-}
+        }
 
-@media screen and (min-width: 1684px) and (max-width: 1725px) {
-    ::ng-deep {
-        app-needs-action-widget {
-            .from-to {
-                .from {
-                    .red-circle{
-                        top: 26% !important;
+        @media screen and (min-width: 1684px) and (max-width: 1725px) {
+            ::ng-deep {
+                app-needs-action-widget {
+                    .from-to {
+                        .from {
+                            .red-circle{
+                                top: 26% !important;
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-}
-//@media (min-width: 1683px) and (max-width: 1684px) {
-//    ::ng-deep {
-//        app-needs-action-widget {
-//            .from-to {
-//                .from {
-//                    .red-circle{
-//                        top: 41% !important;
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-@media screen and (min-width: 1682px) and (max-width: 1683px) {
-    ::ng-deep {
-        app-needs-action-widget {
-            .from-to {
-                .from {
-                    .red-circle{
-                        top: 41% !important;
+        @media screen and (min-width: 1682px) and (max-width: 1683px) {
+            ::ng-deep {
+                app-needs-action-widget {
+                    .from-to {
+                        .from {
+                            .red-circle{
+                                top: 41% !important;
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-}
-@media screen and (min-width: 1514px) and (max-width: 1682px) {
-    .from-to {
-        .from {
-            .red-circle{
-                left: 3.5% !important;
-            }
-        }
-        .to {
-            .pin-icon {
-                left: 2.5% !important;
-            }
-        }
-    }
-    ::ng-deep {
-        app-needs-action-widget {
+        @media screen and (min-width: 1514px) and (max-width: 1682px) {
             .from-to {
                 .from {
                     .red-circle{
-                        top: 41% !important;
+                        left: 3% !important;
                     }
                 }
                 .to {
                     .pin-icon {
-                        bottom: 13.5% !important;
+                        left: 2.5% !important;
+                    }
+                }
+            }
+            ::ng-deep {
+                app-needs-action-widget {
+                    .from-to {
+                        .from {
+                            .red-circle{
+                                top: 20% !important;
+                            }
+                        }
+                        .to {
+                            .pin-icon {
+                                bottom: 13.5% !important;
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-}
-//@media (min-width: 1513px) and (max-width: 1683px) {
-//    ::ng-deep {
-//        app-needs-action-widget {
-//            .from-to {
-//                .from {
-//                    .red-circle{
-//                        //top: 41% !important;
-//                    }
-//                }
-//                .to {
-//                    .pin-icon {
-//                        bottom: 13.5% !important;
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-@media screen and (min-width: 1485px) and (max-width: 1513px) {
-    //::ng-deep {
-    //    app-needs-action-widget {
-    //        .from-to {
-    //            .from {
-    //                .red-circle{
-    //                    top: 26% !important;
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-    ::ng-deep {
-        app-needs-action-widget {
+        @media screen and (min-width: 1485px) and (max-width: 1513px) {
+            ::ng-deep {
+                app-needs-action-widget {
+                    .from-to {
+                        .from {
+                            .red-circle{
+                                top: 14% !important;
+                            }
+                        }
+                        .to {
+                            &:before{
+                                bottom: 10% !important;
+                            }
+                            .pin-icon {
+                                bottom: 13.5% !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        @media screen and (min-width: 1268px) and (max-width: 1484px) {
             .from-to {
                 .from {
                     .red-circle{
-                        top: 14% !important;
+                        left: 3%;
+                        top: 20%;
                     }
                 }
                 .to {
-                    &:before{
-                        bottom: 10% !important;
+                    &:before {
+                        bottom: 10%;
                     }
                     .pin-icon {
-                        bottom: 13.5% !important;
+                        left: 3%;
+                        bottom: 13%;
+                    }
+                }
+            }
+            ::ng-deep {
+                app-needs-action-widget {
+                    .from-to {
+                        .from {
+                            .red-circle{
+                                left: 3%;
+                                top: 20%;
+                            }
+                        }
+                        .to {
+                            &:before {
+                                bottom: 5%;
+                            }
+                            .pin-icon {
+                                left: 3%;
+                                bottom: 7%;
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-}
-@media screen and (min-width: 1268px) and (max-width: 1484px) {
-    .from-to {
-        .from {
-            .red-circle{
-                left: 5%;
-                top: 15%;
-            }
-        }
-        .to {
-            &:before {
-                bottom: 10%;
-            }
-            .pin-icon {
-                left: 3%;
-                bottom: 13%;
-            }
-        }
-    }
-    ::ng-deep {
-        app-needs-action-widget {
+        @media screen and (max-width: 1268px) {
             .from-to {
                 .from {
                     .red-circle{
-                        left: 5%;
+                        left: 4%;
+                        top: 20%;
+                    }
+                }
+                .to {
+                    &:before {
+                        bottom: 5%;
+                    }
+                    .pin-icon {
+                        left: 3%;
+                        bottom: 7%;
+                    }
+                }
+            }
+        }
+        @media screen and (max-width: 1037px) {
+            .from-to {
+                .from {
+                    .red-circle{
+                        left: 4.5%;
                         top: 15%;
                     }
                 }
@@ -204,34 +204,209 @@
             }
         }
     }
-}
-@media screen and (max-width: 1268px) {
-    .from-to {
-        .from {
-            .red-circle{
-                left: 5%;
-                top: 11%;
+    [dir=rtl] {
+        .from-to {
+            border-right: 3px dashed #E3E3E3;
+            .from,
+            .to {
+                &:before {
+                    content: '';
+                    display: block;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    z-index: 1;
+                    position: absolute;
+                    right: 1% !important;
+                }
+            }
+
+            .from {
+                &:before {
+                    background-color: #D9D9D9;
+                }
+                .red-circle {
+                    width: 8px;
+                    height: 8px;
+                    background: #dc2434 !important;
+                    border-radius: 50%;
+                    position: absolute;
+                    z-index: 1;
+                    right: 2%;
+                    top: 21%;
+                }
+            }
+            .to {
+                &:before {
+                    background-color: #E5E5FE;
+                }
+                .pin-icon {
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 50%;
+                    position: absolute;
+                    z-index: 1;
+                    right: 1.8%;
+                    bottom: 16.5%;
+                }
+            }
+
+        }
+
+        @media screen and (min-width: 1684px) and (max-width: 1725px) {
+            ::ng-deep {
+                app-needs-action-widget {
+                    .from-to {
+                        .from {
+                            .red-circle{
+                                top: 26% !important;
+                            }
+                        }
+                    }
+                }
             }
         }
-        .to {
-            &:before {
-                bottom: 5%;
+        @media screen and (min-width: 1682px) and (max-width: 1683px) {
+            ::ng-deep {
+                app-needs-action-widget {
+                    .from-to {
+                        .from {
+                            .red-circle{
+                                top: 41% !important;
+                            }
+                        }
+                    }
+                }
             }
-            .pin-icon {
-                left: 3%;
-                bottom: 7%;
+        }
+        @media screen and (min-width: 1514px) and (max-width: 1682px) {
+            .from-to {
+                .from {
+                    .red-circle{
+                        right: 3% !important;
+                    }
+                }
+                .to {
+                    .pin-icon {
+                        right: 2.5% !important;
+                    }
+                }
+            }
+            ::ng-deep {
+                app-needs-action-widget {
+                    .from-to {
+                        .from {
+                            .red-circle{
+                                top: 20% !important;
+                            }
+                        }
+                        .to {
+                            .pin-icon {
+                                bottom: 13.5% !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        @media screen and (min-width: 1485px) and (max-width: 1513px) {
+            ::ng-deep {
+                app-needs-action-widget {
+                    .from-to {
+                        .from {
+                            .red-circle{
+                                top: 14% !important;
+                            }
+                        }
+                        .to {
+                            &:before{
+                                bottom: 10% !important;
+                            }
+                            .pin-icon {
+                                bottom: 13.5% !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        @media screen and (min-width: 1268px) and (max-width: 1484px) {
+            .from-to {
+                .from {
+                    .red-circle{
+                        right: 3%;
+                        top: 20%;
+                    }
+                }
+                .to {
+                    &:before {
+                        bottom: 10%;
+                    }
+                    .pin-icon {
+                        right: 3%;
+                        bottom: 13%;
+                    }
+                }
+            }
+            ::ng-deep {
+                app-needs-action-widget {
+                    .from-to {
+                        .from {
+                            .red-circle{
+                                right: 3%;
+                                top: 20%;
+                            }
+                        }
+                        .to {
+                            &:before {
+                                bottom: 5%;
+                            }
+                            .pin-icon {
+                                right: 3%;
+                                bottom: 7%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        @media screen and (max-width: 1268px) {
+            .from-to {
+                .from {
+                    .red-circle{
+                        right: 4%;
+                        top: 20%;
+                    }
+                }
+                .to {
+                    &:before {
+                        bottom: 5%;
+                    }
+                    .pin-icon {
+                        right: 3%;
+                        bottom: 7%;
+                    }
+                }
+            }
+        }
+        @media screen and (max-width: 1037px) {
+            .from-to {
+                .from {
+                    .red-circle{
+                        right: 4.5%;
+                        top: 15%;
+                    }
+                }
+                .to {
+                    &:before {
+                        bottom: 5%;
+                    }
+                    .pin-icon {
+                        right: 3%;
+                        bottom: 7%;
+                    }
+                }
             }
         }
     }
-    //::ng-deep {
-    //    app-needs-action-widget {
-    //        .from-to {
-    //            .from {
-    //                .red-circle{
-    //                    top: 11%;
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
 }
