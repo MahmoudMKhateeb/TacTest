@@ -1032,8 +1032,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   isGoodDetailsValidForPoint(point: CreateOrEditRoutPointDto, isWeightRequired: boolean, isQtyRequired: boolean, isDescRequired: boolean) {
-    return isNotNullOrUndefined(point.goodsDetailListDto) && point.goodsDetailListDto.length > 0
-      ? point.goodsDetailListDto.filter((goodDetail) => {
+    if (!isNotNullOrUndefined(point)) {
+      return false;
+    }
+    return isNotNullOrUndefined(point?.goodsDetailListDto) && point?.goodsDetailListDto?.length > 0
+      ? point?.goodsDetailListDto?.filter((goodDetail) => {
           if (isWeightRequired && isQtyRequired && isDescRequired) {
             return (
               isNotNullOrUndefined(goodDetail.amount) &&
@@ -1061,7 +1064,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
           if (isDescRequired) {
             return isNotNullOrUndefined(goodDetail.description) && goodDetail.description?.length > 0;
           }
-        }).length === point.goodsDetailListDto.length
+        })?.length === point?.goodsDetailListDto?.length
       : false;
   }
 
