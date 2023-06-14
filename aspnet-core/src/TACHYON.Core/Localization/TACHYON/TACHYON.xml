@@ -3431,5 +3431,8 @@
     <text name="Worst">Worst</text>
     <text name="CarrierSaasOrBroker">Carrier Saas Or Broker</text>
 
+    <text name="ValueOfGoods">Value of goods</text>
+    <text name="InsuranceCoverage">Insurance coverage</text>
+    
 	</texts>
 </localizationDictionary>

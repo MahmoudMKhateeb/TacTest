@@ -1,4 +1,4 @@
-﻿using Abp;
+using Abp;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -49,9 +49,10 @@ namespace TACHYON.MultiTenancy
         private readonly IBackgroundJobManager _jobManager;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly DocumentFilesManager _documentFilesManager;
+        private readonly IFeatureChecker _featureChecker;
 
         public TenantAppService(IRepository<County, int> lookup_countryRepository,
-            IRepository<City, int> lookup_cityRepository, IBackgroundJobManager jobManager, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager)
+            IRepository<City, int> lookup_cityRepository, IBackgroundJobManager jobManager, IRepository<DocumentFile, Guid> documentFileRepository, DocumentFilesManager documentFilesManager , IFeatureChecker featureChecker)
         {
             AppUrlService = NullAppUrlService.Instance;
             EventBus = NullEventBus.Instance;
@@ -60,6 +61,7 @@ namespace TACHYON.MultiTenancy
             _jobManager = jobManager;
             _documentFileRepository = documentFileRepository;
             _documentFilesManager = documentFilesManager;
+            _featureChecker = featureChecker;
         }
 
         public async Task<PagedResultDto<TenantListDto>> GetTenants(GetTenantsInput input)
@@ -127,6 +129,8 @@ namespace TACHYON.MultiTenancy
         public async Task<TenantEditDto> GetTenantForEdit(EntityDto input)
         {
             var tenantEditDto = ObjectMapper.Map<TenantEditDto>(await TenantManager.GetByIdAsync(input.Id));
+            tenantEditDto.IsCarrier = (await _featureChecker.IsEnabledAsync(tenantEditDto.Id, AppFeatures.Carrier) &&
+              !await _featureChecker.IsEnabledAsync(tenantEditDto.Id, AppFeatures.CMS));
             tenantEditDto.ConnectionString = SimpleStringCipher.Instance.Decrypt(tenantEditDto.ConnectionString);
             return tenantEditDto;
         }

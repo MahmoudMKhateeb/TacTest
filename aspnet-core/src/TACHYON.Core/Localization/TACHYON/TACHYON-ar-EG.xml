@@ -3142,6 +3142,8 @@
 	<text name="Top">Top</text>
 	<text name="Worst">Worst</text>
 	<text name="CarrierSaasOrBroker">Carrier Saas Or Broker</text>
+    <text name="ValueOfGoods">قيمة البضائع</text>
+    <text name="InsuranceCoverage">تغطية الحمل</text>
 		
 	</texts>
 </localizationDictionary>
