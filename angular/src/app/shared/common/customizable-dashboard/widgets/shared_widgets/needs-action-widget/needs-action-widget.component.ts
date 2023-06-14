@@ -3,6 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   BrokerDashboardServiceProxy,
   CarrierDashboardServiceProxy,
+  FilterDatePeriod,
   GetNeedsActionTripsAndRequestsOutput,
   NeedsActionTripDto,
   ShipperDashboardServiceProxy,
@@ -20,6 +21,9 @@ export class NeedsActionWidgetComponent extends AppComponentBase implements OnIn
   needsActionTrips: NeedsActionTripDto[] | GetNeedsActionTripsAndRequestsOutput[] = [];
   loading: boolean;
   today = new Date();
+  private selectedOption = FilterDatePeriod.Monthly;
+  private start: moment.Moment;
+  private end: moment.Moment;
 
   constructor(
     injector: Injector,
@@ -50,13 +54,13 @@ export class NeedsActionWidgetComponent extends AppComponentBase implements OnIn
       return;
     }
     if (this.isShipper) {
-      this._shipperDashboardServiceProxy.getNeedsActionTrips().subscribe((res) => {
+      this._shipperDashboardServiceProxy.getNeedsActionTrips(this.start, this.end).subscribe((res) => {
         this.needsActionTrips = res;
         this.loading = false;
       });
     }
     if (this.isCarrier || this.isCarrierSaas) {
-      this._carrierDashboardServiceProxy.getNeedsActionTrips().subscribe((res) => {
+      this._carrierDashboardServiceProxy.getNeedsActionTrips(this.start, this.end).subscribe((res) => {
         this.needsActionTrips = res;
         this.loading = false;
       });
@@ -72,7 +76,17 @@ export class NeedsActionWidgetComponent extends AppComponentBase implements OnIn
 
   selectedFilter(filter: { start: moment.Moment; end: moment.Moment }) {
     this.loading = true;
-    this._TMSAndHostDashboardServiceProxy.getNeedsActionTripsAndRequests(filter.start, filter.end).subscribe((res) => {
+    this.start = filter.start;
+    this.end = filter.end;
+    if (this.isTachyonDealerOrHost) {
+      this.getNeedsActionTripsAndRequests();
+    } else {
+      this.fetchData();
+    }
+  }
+
+  private getNeedsActionTripsAndRequests() {
+    this._TMSAndHostDashboardServiceProxy.getNeedsActionTripsAndRequests(this.start, this.end).subscribe((res) => {
       this.needsActionTrips = res;
       this.loading = false;
     });

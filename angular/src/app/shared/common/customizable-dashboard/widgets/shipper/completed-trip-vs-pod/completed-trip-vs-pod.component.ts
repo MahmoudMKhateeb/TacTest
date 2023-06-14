@@ -95,7 +95,7 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
         if (this.selectedOption == FilterDatePeriod.Daily) {
           categories = [this.l('Sun'), this.l('Mon'), this.l('Tue'), this.l('Wed'), this.l('Thu'), this.l('Fri'), this.l('Sat')];
         }
-        const completedSeries = categories.map((item) => {
+        let completedSeries = categories.map((item) => {
           const foundFromResponse = result.completedTrips.find((completed) => {
             completed.x = this.selectedOption != FilterDatePeriod.Weekly ? completed?.x?.slice(0, 3) : completed?.x;
             return completed.x.toLocaleLowerCase() === item.toLocaleLowerCase();
@@ -106,7 +106,7 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
             y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
           });
         });
-        const podSeries = categories.map((item) => {
+        let podSeries = categories.map((item) => {
           const foundFromResponse = result.podTrips.find((pod) => {
             pod.x = this.selectedOption != FilterDatePeriod.Weekly ? pod?.x?.slice(0, 3) : pod?.x;
             return pod.x.toLocaleLowerCase() === item.toLocaleLowerCase();
@@ -116,6 +116,10 @@ export class CompletedTripVsPodComponent extends AppComponentBase implements OnI
             y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
           });
         });
+        if (this.selectedOption == FilterDatePeriod.Yearly) {
+          completedSeries = result.completedTrips;
+          podSeries = result.podTrips;
+        }
         this.chartOptions = {
           series: [
             {

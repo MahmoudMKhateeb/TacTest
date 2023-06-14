@@ -7,10 +7,25 @@
     </div>
     <div class="row border-left pl-4" *ngIf="!isForActor">
       <ng-container *ngIf="!isTachyonDealerOrHost">
-        <div class="col-6 d-flex">
+        <div class="col-4 d-flex">
           <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i> {{ 'Paid' | localize }}
         </div>
-        <div class="col-6 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
+        <div class="col-4 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
+        <div class="col-4">
+          <app-daily-monthly-yearly (optionSelected)="filterOptionSelected($event)"></app-daily-monthly-yearly>
+          <!--            <div class="filter-box">-->
+          <!--                <dx-select-box-->
+          <!--                    id="shipperActorId"-->
+          <!--                    name="shipperActor"-->
+          <!--                    [(value)]="selectedOption"-->
+          <!--                    [dataSource]="options"-->
+          <!--                    [searchEnabled]="true"-->
+          <!--                    displayExpr="value"-->
+          <!--                    valueExpr="key"-->
+          <!--                    (onValueChanged)="fetchData()"-->
+          <!--                ></dx-select-box>-->
+          <!--            </div>-->
+        </div>
       </ng-container>
       <ng-container *ngIf="isTachyonDealerOrHost">
         <div class="col-5 d-flex">
