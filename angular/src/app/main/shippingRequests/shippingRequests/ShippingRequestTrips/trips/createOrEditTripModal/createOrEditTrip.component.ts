@@ -1072,20 +1072,20 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   public CanCreateTemplate(): boolean {
     //if there is no routePoints
     if (
-      !isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto.routPoints) &&
+      !isNotNullOrUndefined(this._TripService?.CreateOrEditShippingRequestTripDto?.routPoints) &&
       !isNotNullOrUndefined(this.PointsComponent?.wayPointsList)
     ) {
       return false;
     } else if (
-      this._TripService.CreateOrEditShippingRequestTripDto.routPoints.find(
-        (x) => x.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x.goodsDetailListDto)
+      this._TripService?.CreateOrEditShippingRequestTripDto?.routPoints?.find(
+        (x) => x?.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x?.goodsDetailListDto)
       ) ||
-      this.PointsComponent?.wayPointsList?.find((x) => x.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x.goodsDetailListDto))
+      this.PointsComponent?.wayPointsList?.find((x) => x?.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x?.goodsDetailListDto))
     ) {
       return false;
     } else if (
-      this._TripService.CreateOrEditShippingRequestTripDto.routPoints.length < this.shippingRequest.numberOfDrops + 1 &&
-      this.PointsComponent?.wayPointsList?.length < this.shippingRequest.numberOfDrops + 1
+      this._TripService?.CreateOrEditShippingRequestTripDto?.routPoints?.length < this.shippingRequest?.numberOfDrops + 1 &&
+      this.PointsComponent?.wayPointsList?.length < this.shippingRequest?.numberOfDrops + 1
     ) {
       return false;
     } else {
