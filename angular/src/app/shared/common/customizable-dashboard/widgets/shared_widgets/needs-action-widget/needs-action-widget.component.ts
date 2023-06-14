@@ -66,8 +66,9 @@ export class NeedsActionWidgetComponent extends AppComponentBase implements OnIn
     }
   }
 
-  goToTrackingPage(trip: NeedsActionTripDto): void {
-    this.router.navigateByUrl(`/app/main/tracking?waybillNumber=${trip.waybillNumber}`);
+  goToTrackingPage(trip: NeedsActionTripDto | GetNeedsActionTripsAndRequestsOutput): void {
+    const waybillNumber = trip instanceof NeedsActionTripDto ? trip.waybillNumber : trip.waybillOrRequestReference;
+    this.router.navigateByUrl(`/app/main/tracking/shipmentTracking?waybillNumber=${waybillNumber}`);
   }
 
   selectedFilter(filter: { start: moment.Moment; end: moment.Moment }) {
