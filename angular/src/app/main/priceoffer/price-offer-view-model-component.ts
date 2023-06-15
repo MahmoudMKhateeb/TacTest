@@ -21,6 +21,14 @@ import { OfferPostPriceResponse } from '../shippingRequests/shippingRequests/srp
   // styleUrls: ['/assets/custom/css/model.scss'],
   selector: 'price-offer-view-model',
   animations: [appModuleAnimation()],
+  styles: [
+    `
+      .custom-primary-outline {
+        color: var(--primary, #da1a32) !important;
+        background: var(--white, #fff) !important;
+      }
+    `,
+  ],
 })
 export class PriceOfferViewModelComponent extends AppComponentBase {
   @Input() Channel: PriceOfferChannel | null | undefined;

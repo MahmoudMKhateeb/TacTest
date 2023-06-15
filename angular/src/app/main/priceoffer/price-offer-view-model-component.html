@@ -35,8 +35,7 @@
           </ng-template>
           <div
             *ngIf="isTachyonDealer && CarrierInsuranceCoverage && ShipperValueOfGoods && CarrierInsuranceCoverage < ShipperValueOfGoods"
-            class="row alert alert-primary"
-            style="background-color: #fff3cd; color: #856404; border-color: #ffeeba"
+            class="alert alert-primary custom-primary-outline"
             role="alert"
           >
             {{l('Note that Carrier insurance coverage {0} less than shipper value of goods {1}', CarrierInsuranceCoverage, ShipperValueOfGoods)}}
