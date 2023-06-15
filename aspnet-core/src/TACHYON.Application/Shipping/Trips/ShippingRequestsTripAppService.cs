@@ -1106,7 +1106,7 @@ namespace TACHYON.Shipping.Trips
            
             foreach (var point in trip.RoutPoints.Where(x => x.NeedsAppointment && input.RoutPoints.First(y => y.PointOrder == x.PointOrder).AppointmentDataDto != null))
             {
-                if (request != null && (request.Status != ShippingRequestStatus.PostPrice || request.Status != ShippingRequestStatus.Completed))
+                if (request != null && (request.Status != ShippingRequestStatus.PostPrice && request.Status != ShippingRequestStatus.Completed))
                 {
                     throw new UserFriendlyException(L("RequestMustBeConfirmedToAddAppointmentAndClearanceVases"));
                 }
@@ -1119,7 +1119,7 @@ namespace TACHYON.Shipping.Trips
             var ClearancePoints = trip.RoutPoints.Where(x => x.NeedsClearance && input.RoutPoints.First(y => y.PointOrder == x.PointOrder).TripClearancePricesDto != null);
             foreach(var point in ClearancePoints)
             {
-                if (request!= null && (request.Status != ShippingRequestStatus.PostPrice || request.Status != ShippingRequestStatus.Completed))
+                if (request!= null && (request.Status != ShippingRequestStatus.PostPrice && request.Status != ShippingRequestStatus.Completed))
                 {
                     throw new UserFriendlyException(L("RequestMustBeConfirmedToAddAppointmentAndClearanceVases"));
                 }
