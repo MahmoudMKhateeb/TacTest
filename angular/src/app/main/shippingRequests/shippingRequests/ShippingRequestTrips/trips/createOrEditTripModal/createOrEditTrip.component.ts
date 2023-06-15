@@ -414,26 +414,29 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   prepareRoundTripInputs() {
     console.log('prepareStep2Inputs');
-    switch (Number(this._TripService.CreateOrEditShippingRequestTripDto.roundTripType)) {
-      case RoundTripType.TwoWayRoutsWithPortShuttling: {
-        this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
-        this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = !this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id
-          ? 3
-          : 2;
-        break;
-      }
-      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
-      case RoundTripType.WithReturnTrip: {
-        this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
-        this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 2;
-        break;
-      }
-      case RoundTripType.WithoutReturnTrip:
-      case RoundTripType.OneWayRoutWithoutPortShuttling:
-      default: {
-        this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.SingleDrop;
-        this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 1;
-        break;
+    if (isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto.roundTripType)) {
+      switch (Number(this._TripService.CreateOrEditShippingRequestTripDto.roundTripType)) {
+        case RoundTripType.TwoWayRoutsWithPortShuttling: {
+          this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
+          this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = !this._TripService?.GetShippingRequestForViewOutput?.shippingRequest
+            ?.id
+            ? 3
+            : 2;
+          break;
+        }
+        case RoundTripType.TwoWayRoutsWithoutPortShuttling:
+        case RoundTripType.WithReturnTrip: {
+          this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
+          this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 2;
+          break;
+        }
+        case RoundTripType.WithoutReturnTrip:
+        case RoundTripType.OneWayRoutWithoutPortShuttling:
+        default: {
+          this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.SingleDrop;
+          this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 1;
+          break;
+        }
       }
     }
     this.onRouteTypeChange();
