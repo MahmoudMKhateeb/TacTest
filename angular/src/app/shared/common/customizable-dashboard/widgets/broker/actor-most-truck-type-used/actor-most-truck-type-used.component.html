@@ -4,7 +4,7 @@
       <h2>
         {{ 'MostTruckTypeUsed' | localize }}
       </h2>
-      <app-host-tms-widget-filters (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
+      <app-host-tms-widget-filters [showCurrentMonth]="true" (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
     </div>
     <div class="row">
       <div class="col-10">

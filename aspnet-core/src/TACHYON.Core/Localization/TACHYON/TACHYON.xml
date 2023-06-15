@@ -3430,6 +3430,7 @@
     <text name="Top">Top</text>
     <text name="Worst">Worst</text>
     <text name="CarrierSaasOrBroker">Carrier Saas Or Broker</text>
+    <text name="LastWeek">Last Week</text>
 
 	</texts>
 </localizationDictionary>

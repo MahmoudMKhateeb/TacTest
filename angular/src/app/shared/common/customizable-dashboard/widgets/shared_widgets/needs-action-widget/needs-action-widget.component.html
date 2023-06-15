@@ -22,7 +22,7 @@
           <div class="d-flex w-100 justify-content-between align-items-center">
             <div class="card-label">{{ 'NeedsAction' | localize }}</div>
             <div *ngIf="!isForActors">
-              <app-host-tms-widget-filters (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
+              <app-host-tms-widget-filters [showCurrentMonth]="true" (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
             </div>
           </div>
         </div>
