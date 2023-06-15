@@ -3433,6 +3433,9 @@
 
     <text name="ValueOfGoods">Value of goods</text>
     <text name="InsuranceCoverage">Insurance coverage</text>
+    <text name="SubmitOffer">Submit offer</text>
+    <text name="SendPriceOnBehalfCarrier">Send price on behalf carrier</text>
+    <text name="SendRequest">Send request</text>
     
 	</texts>
 </localizationDictionary>

@@ -3144,6 +3144,9 @@
 	<text name="CarrierSaasOrBroker">Carrier Saas Or Broker</text>
     <text name="ValueOfGoods">قيمة البضائع</text>
     <text name="InsuranceCoverage">تغطية الحمل</text>
+    <text name="SubmitOffer">إرسال العرض</text>
+    <text name="SendPriceOnBehalfCarrier">إرسال سعر نيابةً عن الناقل </text>
+    <text name="SendRequest">إرسال الطلب</text>
 		
 	</texts>
 </localizationDictionary>

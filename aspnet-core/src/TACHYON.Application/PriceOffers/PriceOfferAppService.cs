@@ -52,6 +52,7 @@ using TACHYON.Exporting;
 using TACHYON.Invoices.SubmitInvoices.Dto;
 using TACHYON.Common;
 using System.Threading.Channels;
+using TACHYON.Shipping.DirectRequests.Dto;
 
 namespace TACHYON.PriceOffers
 {
@@ -81,6 +82,8 @@ namespace TACHYON.PriceOffers
         private readonly IRepository<PricePackageOffer,long> _pricePackageOfferRepository;
         private readonly IExcelExporterManager<GetShippingRequestForPriceOfferListDto> _excelExporterManager;
         private readonly CommonManager _commonManager;
+        private readonly ShippingRequestDirectRequestManager _shippingRequestDirectRequestManager;
+
 
 
 
@@ -103,7 +106,7 @@ namespace TACHYON.PriceOffers
             IRepository<PackingType> packingTypesRepository,
             IRepository<DedicatedShippingRequestDriver, long> dedicatedShippingRequestDriverRepository,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
-            IPricePackageManager pricePackageManager, IRepository<PricePackageOffer, long> pricePackageOfferRepository, IExcelExporterManager<GetShippingRequestForPriceOfferListDto> excelExporterManager, CommonManager commonManager)
+            IPricePackageManager pricePackageManager, IRepository<PricePackageOffer, long> pricePackageOfferRepository, IExcelExporterManager<GetShippingRequestForPriceOfferListDto> excelExporterManager, CommonManager commonManager, ShippingRequestDirectRequestManager shippingRequestDirectRequestManager)
         {
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -128,6 +131,7 @@ namespace TACHYON.PriceOffers
             _pricePackageOfferRepository = pricePackageOfferRepository;
             _excelExporterManager = excelExporterManager;
             _commonManager = commonManager;
+            _shippingRequestDirectRequestManager = shippingRequestDirectRequestManager;
         }
         #region Services
 
@@ -646,6 +650,29 @@ namespace TACHYON.PriceOffers
         {
             await CheckSrHasBendingUpdates(id);
             return await _priceOfferManager.AcceptOfferOnBehalfShipper(id);
+        }
+
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        public async Task<long> SendDirectRequestToCarrierAndSubmitPrice(CreateOrEditPriceOfferInput input)
+        {
+            var createDirectRequestInput = new CreateShippingRequestDirectRequestInput
+            {
+                ShippingRequestId = input.ShippingRequestId,
+                CarrierTenantId = input.CarrierTenantId.Value
+            };
+
+            var directRequest = await _shippingRequestDirectRequestManager.Create(createDirectRequestInput);
+
+            var createdPricePackageOffer = new PricePackageOffer()
+            {
+                DirectRequestId = directRequest.Id,
+            };
+
+            DisableTenancyFilters();
+            var shippingRequest = _shippingRequestsRepository.GetAll().Include(x => x.ShippingRequestVases).FirstOrDefault(x => x.Id == input.ShippingRequestId);
+            // acknowledge offer on behalf of carrier
+            return await _priceOfferManager.AcknowledgeOfferOnBehalfOfCarrier(input, shippingRequest, directRequest);
+             
         }
 
 
