@@ -3900,6 +3900,9 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsManual")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsTaxVatIncluded")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
@@ -4706,6 +4709,13 @@ namespace TACHYON.Migrations
 
                     b.Property<decimal>("ReservedBalance")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("StampFileType")
+                        .HasColumnType("nvarchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<Guid?>("StampId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("SubscriptionEndDateUtc")
                         .HasColumnType("datetime2");
