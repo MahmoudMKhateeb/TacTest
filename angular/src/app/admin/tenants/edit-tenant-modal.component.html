@@ -174,7 +174,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-6">
+            <div *ngIf="!tenant.isCarrier" class="col-6">
               <div class="form-group">
                 <label>{{ 'ValueOfGoods' | localize }}</label>
                 <input

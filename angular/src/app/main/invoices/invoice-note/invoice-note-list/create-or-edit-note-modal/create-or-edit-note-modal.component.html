@@ -131,6 +131,22 @@
               </div>
             </div>
 
+            <div class="form-check checkClass">
+              <input
+                class="form-check-input"
+                (change)="calculatePrice(newAttribute.price); getAllWaybillByInvoiceId()"
+                name="IsTaxVatIncluded"
+                checked
+                [(ngModel)]="form.isTaxVatIncluded"
+                type="checkbox"
+                value=""
+                id="IsTaxVatIncluded"
+              />
+              <label class="form-check-label" for="IsTaxVatIncluded">
+                {{ l('IsTaxVatIncluded') }}
+              </label>
+            </div>
+
             <div class="row col-lg-12 mt-4">
               <div class="col-sm-12">
                 <!-- *ngIf="allWaybills.length > 0" -->
@@ -165,7 +181,7 @@
                           id="NotePrice{{ i }}"
                           [(ngModel)]="item.price"
                           (change)="calculator(item.price, item.taxVat, i)"
-                          (keypress)="numberOnly($event)"
+                          (keypress)="validateIsDecimal($event)"
                           [required]="true"
                           class="form-control"
                           name="NotePrice{{ i }}"
@@ -215,6 +231,7 @@
                         <input type="checkbox" [(ngModel)]="field.checked" name="field.id{{ i }}" id="field.id{{ i }}" value="field.checked" hidden />
                         <input
                           [(ngModel)]="field.price"
+                          (keypress)="validateIsDecimal($event)"
                           #NewPrice="ngModel"
                           disabled
                           class="form-control"

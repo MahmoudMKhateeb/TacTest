@@ -286,13 +286,6 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-12 mt-4 mb-2">
-            <dx-validator [validationGroup]="'createFacilityGroup'" [adapter]="adapterConfig">
-              <dxi-validation-rule type="required" message="{{ 'WorkingDaysHours' | localize }}: {{ 'PleaseEnterfacilityWorkingHours' | localize }}">
-              </dxi-validation-rule>
-            </dx-validator>
-            <dx-validation-summary validationGroup="createFacilityGroup" id="create-facility-summary"></dx-validation-summary>
-          </div>
           <div class="modal-footer">
             <dx-button
               type="submit"

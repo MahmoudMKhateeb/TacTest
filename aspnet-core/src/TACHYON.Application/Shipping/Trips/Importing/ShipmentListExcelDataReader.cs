@@ -63,13 +63,19 @@ namespace TACHYON.Shipping.Trips.Importing
                 //1
                 var startDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,
                     row, 1, "Trip Pick up Date Start *", exceptionMessage);
-                var startTripDate = GetDateTimeValueFromTextOrNull(startDate);
-                if(startTripDate == null )
+                if (startDate == null)
                 {
-                    startTripDate = Clock.Now.Date;
+                    trip.StartTripDate = Clock.Now.Date;
+                }
+                else
+                {
+                    var startTripDate = GetDateTimeValueFromTextOrNull(startDate);
+                    if(startTripDate == null)
+                        exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("StartTripDate"));
+                    else
+                    trip.StartTripDate = startTripDate;
                 }
 
-                    trip.StartTripDate = startTripDate;
 
                 //2
                 var endDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet,

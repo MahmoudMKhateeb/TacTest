@@ -92,10 +92,10 @@
             <tr *ngFor="let row of root.dedicatedActorInvoiceItems; let i = index">
               <td>{{ row.numberOfDays }}</td>
               <td>{{ getWorkingDayTitle(row.workingDayType) }}</td>
-              <td>{{ row.itemSubTotalAmount }}</td>
-              <td>{{ row.vatAmount }}</td>
+              <td>{{ row.itemSubTotalAmount | number: '1.0-0' }}</td>
+              <td>{{ row.vatAmount | number: '1.0-0' }}</td>
               <td>{{ taxVat }}</td>
-              <td>{{ row.itemTotalAmount }}</td>
+              <td>{{ row.itemTotalAmount | number: '1.0-0' }}</td>
               <td>{{ row.remarks }}</td>
               <td>
                 <div *ngIf="!isView" class="d-flex">
@@ -111,10 +111,10 @@
             <tr class="table-dark-custom" *ngIf="root?.dedicatedActorInvoiceItems?.length > 0">
               <td>{{ 'Total' | localize }}</td>
               <td></td>
-              <td>{{ getTotalByAttributeName('itemSubTotalAmount') }}</td>
-              <td>{{ getTotalByAttributeName('vatAmount') }}</td>
+              <td>{{ getTotalByAttributeName('itemSubTotalAmount') | number: '1.0-0' }}</td>
+              <td>{{ getTotalByAttributeName('vatAmount') | number: '1.0-0' }}</td>
               <td></td>
-              <td>{{ getTotalByAttributeName('itemTotalAmount') }}</td>
+              <td>{{ getTotalByAttributeName('itemTotalAmount') | number: '1.0-0' }}</td>
               <td></td>
               <td></td>
             </tr>

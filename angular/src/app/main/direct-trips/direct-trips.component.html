@@ -171,12 +171,12 @@
 
               <div *dxTemplate="let d of 'startTripDateTemplate'">
                 <span>
-                  {{ d?.data?.startTripDate | date: 'yyyy/MM/dd hh:mm a' }}
+                  {{ d?.data?.startTripDate | date: 'dd/MM/yyyy hh:mm a' }}
                 </span>
               </div>
               <div *dxTemplate="let d of 'endTripDateTemplate'">
                 <span>
-                  {{ d?.data?.endWorking | date: 'yyyy/MM/dd hh:mm a' }}
+                  {{ d?.data?.endWorking | date: 'dd/MM/yyyy hh:mm a' }}
                 </span>
               </div>
               <div *dxTemplate="let d of 'routeTypeTemplate'">

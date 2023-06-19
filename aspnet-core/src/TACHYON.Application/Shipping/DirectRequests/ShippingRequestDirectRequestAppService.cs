@@ -37,6 +37,7 @@ namespace TACHYON.Shipping.DirectRequests
         private readonly IRepository<TenantFeatureSetting, long> _tenantFeatureRepository;
         private readonly IRepository<EditionFeatureSetting, long> _editionFeatureRepository;
         private readonly IRepository<PricePackage,long> _pricePackageRepository;
+        private readonly ShippingRequestDirectRequestManager _shippingRequestDirectRequestManager;
 
 
         public ShippingRequestDirectRequestAppService(IRepository<TenantCarrier, long> tenantCarrierRepository,
@@ -48,7 +49,8 @@ namespace TACHYON.Shipping.DirectRequests
             IRepository<ShippingRequest, long> shippingRequestRepository,
             IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
             IRepository<EditionFeatureSetting, long> editionFeatureRepository,
-            IRepository<PricePackage,long> pricePackageRepository)
+            IRepository<PricePackage, long> pricePackageRepository,
+            ShippingRequestDirectRequestManager shippingRequestDirectRequestManager)
         {
             _tenantCarrierRepository = tenantCarrierRepository;
             _tenantRepository = tenantRepository;
@@ -60,6 +62,7 @@ namespace TACHYON.Shipping.DirectRequests
             _tenantFeatureRepository = tenantFeatureRepository;
             _editionFeatureRepository = editionFeatureRepository;
             _pricePackageRepository = pricePackageRepository;
+            _shippingRequestDirectRequestManager = shippingRequestDirectRequestManager;
         }
 
         [RequiresFeature(AppFeatures.SendDirectRequest)]
@@ -105,42 +108,7 @@ namespace TACHYON.Shipping.DirectRequests
         {
             IfCanAccessService();
             await CheckCanAddDriectRequestToCarrirer(input);
-            var id = await _shippingRequestDirectRequestRepository.InsertAndGetIdAsync(
-                ObjectMapper.Map<ShippingRequestDirectRequest>(input));
-            // todo =======>   find workaround and customize dto to complete carrier price package process
-            if (input.PricePackageId.HasValue)
-            {
-                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
-                {
-                    var lookupDto = await (from request in _shippingRequestRepository.GetAll()
-                        from pricePackage in _pricePackageRepository.GetAll()
-                        from tenant in _tenantRepository.GetAll()
-                        where request.Id == input.ShippingRequestId && pricePackage.Id == input.PricePackageId &&
-                              tenant.Id == AbpSession.TenantId
-                        select new
-                        {
-                            RequestReference = request.ReferenceNumber,
-                            PackageReference = pricePackage.PricePackageReference,
-                            CurrentTenantName = tenant.Name
-                        }).SingleAsync();
-
-                    await _appNotifier.NotfiyCarrierWhenReceiveBidPricePackage(input.CarrierTenantId,
-                        lookupDto.CurrentTenantName, lookupDto.PackageReference, id, lookupDto.RequestReference);
-                }
-            }
-            else
-            {
-                string currentTenantName;
-                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
-                {
-                    currentTenantName = await _tenantRepository.GetAll().Where(x => x.Id == AbpSession.TenantId)
-                        .Select(x => x.Name).SingleAsync();
-                }
-
-                await _appNotifier.SendDriectRequest(currentTenantName, input.CarrierTenantId, id);
-            }
-
-            return id;
+            return (await _shippingRequestDirectRequestManager.Create(input)).Id;
         }
 
         [RequiresFeature(AppFeatures.SendDirectRequest)]

@@ -71,7 +71,7 @@
                 *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')"
               >
               </dxi-column>
-              <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}"></dxi-column>
+              <dxi-column dataField="totalAmount" caption="{{ l('TotalAmount') }}" format="fixedPoint"></dxi-column>
               <dxi-column *ngIf="isTachyonDealer" dataField="confirmationDate" caption="{{ l('ConfirmationDate') }}" dataType="date"></dxi-column>
               <dxi-column *ngIf="isTachyonDealer" dataField="creationTime" caption="{{ l('IssuanceDate') }}" dataType="date"></dxi-column>
               <dxi-column

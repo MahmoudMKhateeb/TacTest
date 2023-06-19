@@ -58,7 +58,7 @@
                 <dxo-lookup [dataSource]="Periods" displayExpr="displayName" valueExpr="id"></dxo-lookup>
               </dxi-column>
 
-              <dxi-column dataField="totalAmount" caption="  {{ l('TotalAmount') }}"> </dxi-column>
+              <dxi-column dataField="totalAmount" caption="  {{ l('TotalAmount') }}" format="fixedPoint"> </dxi-column>
               <dxi-column dataField="creationTime" caption="  {{ l('IssuanceDate') }}" dataType="date"> </dxi-column>
               <dxi-column dataField="dueDate" caption="{{ l('DueDate') }}" dataType="date"> </dxi-column>
               <dxi-column cellTemplate="statusCellTemplate" dataField="status" caption=" {{ l('Status') }}">
@@ -82,7 +82,7 @@
 
               <div *dxTemplate="let options of 'PeriodCellTemplate'">
                 <span style="width: 137px"
-                  ><span> {{ l(options.data.periodId) }}</span></span
+                  ><span> {{ l(options.data.period) }}</span></span
                 >
               </div>
               <div *dxTemplate="let options of 'channelCellTemplate'">

@@ -26,7 +26,6 @@ export class ActorPendingPriceOffersComponent extends AppComponentBase implement
   }
 
   goToPriceOffer(offer: NewPriceOfferListDto) {
-    console.log('offer', offer);
     this.router.navigateByUrl(`/app/main/shippingRequests/shippingRequests/view?id=${offer.shippingRequestId}`);
   }
 }

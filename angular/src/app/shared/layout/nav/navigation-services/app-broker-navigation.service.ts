@@ -39,17 +39,28 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.TachyonDealer')
           ),
-          new AppMenuItem('MyShippingRequests', 'Pages.ShippingRequests', '', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
-            'Marketplace',
-            'Pages.ShippingRequests.Marketplace',
+            'MyShippingRequests',
+            'Pages.ShippingRequests',
             '',
-            '/app/main/marketplace/list',
+            '/app/main/shippingRequests/shippingRequests',
             undefined,
             undefined,
             undefined,
-            undefined
+            {
+              showType: 1,
+            }
           ),
+          // new AppMenuItem(
+          //   'Marketplace',
+          //   'Pages.ShippingRequests.Marketplace',
+          //   '',
+          //   '/app/main/marketplace/list',
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   undefined
+          // ),
           new AppMenuItem(
             'SavedTemplates',
             'Pages.EntityTemplate',
@@ -61,16 +72,9 @@ export class AppBrokerNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.SaveTemplateFeature')
           ),
-          new AppMenuItem(
-            'ShipmentTracking',
-            'Pages.shipment.Tracking',
-            '',
-            '/app/main/tracking/shipmentTracking',
-            undefined,
-            undefined,
-            undefined,
-            undefined
-          ),
+          new AppMenuItem('ShipmentTracking', 'Pages.shipment.Tracking', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, {
+            showType: 1,
+          }),
         ],
         undefined,
         undefined

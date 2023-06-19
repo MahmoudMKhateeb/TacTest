@@ -105,7 +105,7 @@
             <tr *ngFor="let row of root.items; let i = index">
               <td>{{ row.waybillNumber }}</td>
               <td>
-                {{ row.price }} {{ l('SAR') }}
+                {{ row.price | number: '1.0-0' }} {{ l('SAR') }}
                 <!--                <br *ngIf="row.price > 0" />-->
                 <!--                <span *ngIf="row.price > 0"> {{ l('TaxVat') }}: {{ row.price * 0.15 }} </span>-->
                 <!--                <br *ngIf="row.price > 0"/>-->
@@ -113,8 +113,8 @@
               </td>
 
               <td>{{ row.vatTax }} {{ l('%') }}</td>
-              <td>{{ row.vatAmount }} {{ l('SAR') }}</td>
-              <td>{{ row.totalAmount }} {{ l('SAR') }}</td>
+              <td>{{ row.vatAmount | number: '1.0-0' }} {{ l('SAR') }}</td>
+              <td>{{ row.totalAmount | number: '1.0-0' }} {{ l('SAR') }}</td>
               <td>{{ row.description }}</td>
               <td>{{ getCityToDisplay(row.originCityId) }}</td>
               <td>{{ getCityToDisplay(row.destinationCityId) }}</td>

@@ -286,13 +286,23 @@ export class AppHostNavigationService extends AppBaseNavigationService {
         '',
         [],
         [
-          new AppMenuItem('TachyonManageService', 'Pages', '', '/app/main/tms/shippingRequests'),
-          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking/shipmentTracking'),
+          new AppMenuItem('TachyonManageService', 'Pages', '', '/app/main/tms/shippingRequests', undefined, undefined, undefined, {
+            showType: 1,
+          }),
+          new AppMenuItem('ShipmentTracking', 'Pages', '', '/app/main/tracking/shipmentTracking', undefined, undefined, undefined, {
+            showType: 1,
+          }),
           new AppMenuItem(
             'DirectShipmentTracking',
             'Pages.Shipment.Tracking.DirectShipmentTracking',
             '',
-            '/app/main/tracking/directShipmentTracking'
+            '/app/main/tracking/directShipmentTracking',
+            undefined,
+            undefined,
+            undefined,
+            {
+              showType: 1,
+            }
           ),
           new AppMenuItem(
             'SavedTemplates',
@@ -305,17 +315,19 @@ export class AppHostNavigationService extends AppBaseNavigationService {
             undefined,
             () => this.isEnabled('App.TachyonDealer')
           ),
-          new AppMenuItem('Requests', 'Pages', '', '/app/main/shippingRequests/shippingRequests'),
-          new AppMenuItem(
-            'Marketplace',
-            'Pages',
-            '',
-            '/app/main/marketplace/list',
-            undefined,
-            undefined,
-            undefined,
-            () => !this.isEnabled('App.Shipper') || !this._appSessionService.tenantId
-          ),
+          new AppMenuItem('Requests', 'Pages', '', '/app/main/shippingRequests/shippingRequests', undefined, undefined, undefined, {
+            showType: 1,
+          }),
+          // new AppMenuItem(
+          //   'Marketplace',
+          //   'Pages',
+          //   '',
+          //   '/app/main/marketplace/list',
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   () => !this.isEnabled('App.Shipper') || !this._appSessionService.tenantId
+          // ),
           // new AppMenuItem(
           //     'DirectShippingRequests',
           //     'Pages',

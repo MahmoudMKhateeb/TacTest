@@ -1,12 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { ChartOptions, ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
+import { ChartOptionsBars } from '@app/shared/common/customizable-dashboard/widgets/ApexInterfaces';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import {
-  CarrierDashboardServiceProxy,
-  ChartCategoryPairedValuesDto,
-  FilterDatePeriod,
-  ShipperDashboardServiceProxy,
-} from '@shared/service-proxies/service-proxies';
+import { CarrierDashboardServiceProxy, ChartCategoryPairedValuesDto, FilterDatePeriod } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 import { ApexLegend } from '@node_modules/ng-apexcharts';
 import { isNotNullOrUndefined } from '@node_modules/codelyzer/util/isNotNullOrUndefined';
@@ -19,7 +14,6 @@ import { DashboardCustomizationService } from '@app/shared/common/customizable-d
   styleUrls: ['./accepted-vs-rejected-pricing.component.css'],
 })
 export class AcceptedVsRejectedPricingComponent extends AppComponentBase implements OnInit {
-  // public chartOptions: Partial<ChartOptions>;
   months: string[] = [
     this.l('Jan'),
     this.l('Feb'),
@@ -34,18 +28,12 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
     this.l('Nov'),
     this.l('Dec'),
   ];
-  // acceptedReqs: number[];
-  // rejectedReqs: number[];
-  // loading = false;
 
   public chartOptions: Partial<ChartOptionsBars>;
   loading = false;
 
   legend: ApexLegend = {
     show: false,
-    // position: 'right',
-    // offsetY: 40,
-    // fontWeight: 500,
   };
   public acceptedVsRejected: any;
   options: { key: any; value: any }[] = [];
@@ -67,8 +55,6 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
   }
 
   getRequests() {
-    // this.acceptedReqs = [];
-    // this.rejectedReqs = [];
     this.loading = true;
 
     this._carrierDashboardServiceProxy
@@ -88,20 +74,21 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
         };
         let categories = [];
         if (this.selectedOption == FilterDatePeriod.Monthly) {
-          categories = [
-            this.l('Jan'),
-            this.l('Feb'),
-            this.l('Mar'),
-            this.l('Apr'),
-            this.l('May'),
-            this.l('Jun'),
-            this.l('Jul'),
-            this.l('Aug'),
-            this.l('Sep'),
-            this.l('Oct'),
-            this.l('Nov'),
-            this.l('Dec'),
-          ];
+          // categories = [
+          //   this.l('Jan'),
+          //   this.l('Feb'),
+          //   this.l('Mar'),
+          //   this.l('Apr'),
+          //   this.l('May'),
+          //   this.l('Jun'),
+          //   this.l('Jul'),
+          //   this.l('Aug'),
+          //   this.l('Sep'),
+          //   this.l('Oct'),
+          //   this.l('Nov'),
+          //   this.l('Dec'),
+          // ];
+          categories = result.acceptedOffers.map((item) => item.x.slice(0, 3));
         }
         if (this.selectedOption == FilterDatePeriod.Weekly) {
           categories = Array.from(
@@ -116,7 +103,6 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
             accepted.x = this.selectedOption != FilterDatePeriod.Weekly ? accepted?.x?.slice(0, 3) : accepted?.x;
             return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
-          console.log('acceptedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
             y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
@@ -127,14 +113,11 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
             rejected.x = this.selectedOption != FilterDatePeriod.Weekly ? rejected?.x?.slice(0, 3) : rejected?.x;
             return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
-          console.log('rejectedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
             y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
           });
         });
-        console.log('acceptedSeries', acceptedSeries);
-        console.log('rejectedSeries', rejectedSeries);
         this.chartOptions = {
           series: [
             {
@@ -177,7 +160,6 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
         (this.chartOptions as any).plotOptions = {
           bar: {
             columnWidth: '45%',
-            // distributed: true
           },
         };
         (this.chartOptions.chart.locales as any[]) = [
@@ -192,85 +174,7 @@ export class AcceptedVsRejectedPricingComponent extends AppComponentBase impleme
             },
           },
         ];
-        console.log('this.chartOptions', this.chartOptions);
         this.loading = false;
       });
-    // this.months.forEach((d) => {
-    //   let i = this.months.indexOf(d) + 1;
-    //   let year = new Date().getFullYear();
-    //   const foundAcceptElement = result.acceptedRequests.filter((el) => el.month === i);
-    //   if (!foundAcceptElement) {
-    //     result.acceptedRequests.push(
-    //       new RequestsListPerMonthDto({
-    //         count: 0,
-    //         month: i,
-    //         year: year,
-    //       })
-    //     );
-    //   }
-    //   const foundRejectElement = result.rejectedRequests.filter((el) => el.month === i);
-    //   if (!foundRejectElement) {
-    //     result.rejectedRequests.push(
-    //       new RequestsListPerMonthDto({
-    //         count: 0,
-    //         month: i,
-    //         year: year,
-    //       })
-    //     );
-    //   }
-    // });
-    // result.acceptedRequests.sort(function (a, b) {
-    //   return a.month - b.month;
-    // });
-    // result.acceptedRequests.forEach((element) => {
-    //   this.acceptedReqs.push(element.count);
-    // });
-    // result.rejectedRequests.sort(function (a, b) {
-    //   return a.month - b.month;
-    // });
-    // result.rejectedRequests.forEach((element) => {
-    //   this.rejectedReqs.push(element.count);
-    // });
-    //
-    // this.chartOptions = {
-    //   series: [
-    //     {
-    //       name: 'Accepted',
-    //       data: this.acceptedReqs,
-    //       color: 'rgba(187, 41, 41, 0.847)',
-    //     },
-    //     {
-    //       name: 'Rejected',
-    //       data: this.rejectedReqs,
-    //       color: '#b10303',
-    //     },
-    //   ],
-    //   chart: {
-    //     height: 350,
-    //     type: 'area',
-    //   },
-    //   dataLabels: {
-    //     enabled: false,
-    //   },
-    //   stroke: {
-    //     curve: 'smooth',
-    //   },
-    //   xaxis: {
-    //     type: 'category',
-    //     categories: this.months,
-    //   },
-    //   tooltip: {
-    //     x: {
-    //       format: 'dd/MM/yy',
-    //     },
-    //     y: {
-    //       formatter: function (val) {
-    //         return val.toFixed(0);
-    //       },
-    //     },
-    //   },
-    // };
-    // this.loading = false;
-    // });
   }
 }

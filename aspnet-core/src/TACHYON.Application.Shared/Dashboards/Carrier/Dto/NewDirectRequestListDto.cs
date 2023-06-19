@@ -1,3 +1,5 @@
+using System;
+
 namespace TACHYON.Dashboards.Carrier.Dto
 {
     public class NewDirectRequestListDto
@@ -8,6 +10,7 @@ namespace TACHYON.Dashboards.Carrier.Dto
         public string ReferenceNumber { get; set; }
 
         public string CompanyName { get; set; }
+        public DateTime CreationTime { get; set; }
         
         
     }

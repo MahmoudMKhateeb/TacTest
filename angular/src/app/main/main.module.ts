@@ -363,6 +363,7 @@ import { DxSchedulerModule } from '@node_modules/devextreme-angular/ui/scheduler
 import { DxPopupModule } from '@node_modules/devextreme-angular/ui/popup';
 import { DxScrollViewModule } from '@node_modules/devextreme-angular/ui/scroll-view';
 import { DxTextAreaModule } from '@node_modules/devextreme-angular/ui/text-area';
+import { MakeScrollableModule } from '@app/shared/common/make-scrollable-directive/make-scrollable.module';
 
 @NgModule({
   imports: [
@@ -442,6 +443,7 @@ import { DxTextAreaModule } from '@node_modules/devextreme-angular/ui/text-area'
     DxSchedulerModule,
     DxScrollViewModule,
     DxTextAreaModule,
+    MakeScrollableModule,
   ],
   declarations: [
     EmailTemplatesComponent,
@@ -689,7 +691,6 @@ import { DxTextAreaModule } from '@node_modules/devextreme-angular/ui/text-area'
     AppointmentAndClearanceModalComponent,
     ActorSubmitInvoiceItemDetailComponent,
     ActorInvoiceItemDetailComponent,
-    MakeScrollableDirective,
     DirectTripsComponent,
     ShippingRequestsTableComponent,
     ShippingRequestCardComponent,

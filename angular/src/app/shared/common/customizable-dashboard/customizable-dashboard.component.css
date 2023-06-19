@@ -221,3 +221,6 @@ gridster-item {
 ::ng-deep customizable-dashboard .w-55 {
   width: 55%;
 }
+::ng-deep customizable-dashboard apx-chart {
+  z-index: 1;
+}

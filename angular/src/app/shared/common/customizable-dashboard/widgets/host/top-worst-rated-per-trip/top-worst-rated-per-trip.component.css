@@ -1,0 +1,22 @@
+.star {
+  position: relative;
+  display: inline-block;
+  font-size: 2rem;
+  color: #d3d3d3;
+}
+.full {
+  color: #000;
+}
+.half {
+  position: absolute;
+  display: inline-block;
+  overflow: hidden;
+  color: #000;
+}
+th,
+td {
+  text-align: center !important;
+}
+.progress {
+  background-color: #f8d3d6;
+}

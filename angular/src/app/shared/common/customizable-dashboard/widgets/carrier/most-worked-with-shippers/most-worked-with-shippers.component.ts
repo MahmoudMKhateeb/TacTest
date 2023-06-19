@@ -20,22 +20,6 @@ export class MostWorkedWithShippersComponent extends AppComponentBase implements
   plotOptions: ApexPlotOptions = {
     pie: {
       customScale: 1,
-      // donut: {
-      //     labels: {
-      //         name: {
-      //             show: true,
-      //             formatter: function (val) {
-      //                 return val + '%';
-      //             }
-      //         },
-      //         value: {
-      //             show: false
-      //         },
-      //         total: {
-      //             show: true
-      //         }
-      //     }
-      // }
     },
   };
   legend: ApexLegend = {};
@@ -59,13 +43,13 @@ export class MostWorkedWithShippersComponent extends AppComponentBase implements
       .subscribe((result) => {
         this.Shippers = result;
         this.chartOptions = {
-          series: this.Shippers.map((carrier) => carrier.numberOfTrips) /* [44, 55, 13, 43, 22] */,
+          series: this.Shippers.map((carrier) => carrier.numberOfTrips),
           chart: {
             type: 'donut',
             width: '100%',
             height: 250,
           },
-          labels: this.Shippers.map((carrier) => carrier.name) /* ["Team A", "Team B", "Team C", "Team D", "Team E"] */,
+          labels: this.Shippers.map((carrier) => carrier.name),
           responsive: [
             {
               breakpoint: 480,
@@ -73,9 +57,6 @@ export class MostWorkedWithShippersComponent extends AppComponentBase implements
                 chart: {
                   width: 200,
                 },
-                // legend: {
-                //   position: 'bottom',
-                // },
               },
             },
           ],
@@ -85,8 +66,6 @@ export class MostWorkedWithShippersComponent extends AppComponentBase implements
         };
         this.legend = {
           formatter: function (legendName: string, opts?: any) {
-            console.log('legendName', legendName);
-            console.log('opts', opts);
             return result[opts.seriesIndex].numberOfTrips + ' ' + legendName;
           },
         };

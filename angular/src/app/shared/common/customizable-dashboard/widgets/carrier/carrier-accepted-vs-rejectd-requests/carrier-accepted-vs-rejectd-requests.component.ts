@@ -19,12 +19,8 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
 
   legend: ApexLegend = {
     show: false,
-    // position: 'right',
-    // offsetY: 40,
-    // fontWeight: 500,
   };
   public acceptedVsRejected: any;
-  // options: string[] = [this.l('Daily'), this.l('Weekly'), this.l('Monthly')];
   options: { key: any; value: any }[] = [];
   selectedOption = FilterDatePeriod.Monthly;
 
@@ -62,20 +58,21 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
         };
         let categories = [];
         if (this.selectedOption == FilterDatePeriod.Monthly) {
-          categories = [
-            this.l('Jan'),
-            this.l('Feb'),
-            this.l('Mar'),
-            this.l('Apr'),
-            this.l('May'),
-            this.l('Jun'),
-            this.l('Jul'),
-            this.l('Aug'),
-            this.l('Sep'),
-            this.l('Oct'),
-            this.l('Nov'),
-            this.l('Dec'),
-          ];
+          // categories = [
+          //   this.l('Jan'),
+          //   this.l('Feb'),
+          //   this.l('Mar'),
+          //   this.l('Apr'),
+          //   this.l('May'),
+          //   this.l('Jun'),
+          //   this.l('Jul'),
+          //   this.l('Aug'),
+          //   this.l('Sep'),
+          //   this.l('Oct'),
+          //   this.l('Nov'),
+          //   this.l('Dec'),
+          // ];
+          categories = result.acceptedOffers.map((item) => item.x.slice(0, 3));
         }
         if (this.selectedOption == FilterDatePeriod.Weekly) {
           categories = Array.from(
@@ -90,7 +87,6 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
             accepted.x = this.selectedOption != FilterDatePeriod.Weekly ? accepted?.x?.slice(0, 3) : accepted?.x;
             return accepted.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
-          console.log('acceptedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
             y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
@@ -101,14 +97,11 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
             rejected.x = this.selectedOption != FilterDatePeriod.Weekly ? rejected?.x?.slice(0, 3) : rejected?.x;
             return rejected.x.toLocaleLowerCase() === item.toLocaleLowerCase();
           });
-          console.log('rejectedSeries foundFromResponse', foundFromResponse);
           return ChartCategoryPairedValuesDto.fromJS({
             x: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.x : item,
             y: isNotNullOrUndefined(foundFromResponse) ? foundFromResponse.y : 0,
           });
         });
-        console.log('acceptedSeries', acceptedSeries);
-        console.log('rejectedSeries', rejectedSeries);
         this.chartOptions = {
           series: [
             {
@@ -166,7 +159,6 @@ export class CarrierAcceptedVsRejectdRequestsComponent extends AppComponentBase 
             },
           },
         ];
-        console.log('this.chartOptions', this.chartOptions);
         this.loading = false;
       });
   }

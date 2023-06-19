@@ -46,7 +46,7 @@
               <thead>
                 <tr class="table-active">
                   <th>{{l('Price')}}</th>
-                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">{{l('CommissionType')}}</th>
+                  <!--                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">{{l('CommissionType')}}</th>-->
                   <th>{{l(!isForDedicated ? 'NoOfTrips' : 'NoOfTrucks')}}</th>
                   <th>{{l('Total')}}</th>
                 </tr>
@@ -56,9 +56,9 @@
                   <td>
                     <price-sar [value]="offerForEditOutput.priceOfferViewDto.itemPrice"></price-sar>
                   </td>
-                  <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
-                    {{l(offerForEditOutput.priceOfferViewDto.commissionTypeTitle)}}
-                  </td>
+                  <!--                  <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">-->
+                  <!--                    {{l(offerForEditOutput.priceOfferViewDto.commissionTypeTitle)}}-->
+                  <!--                  </td>-->
                   <td>{{offerForEditOutput.priceOfferViewDto.quantity}}</td>
                   <td>
                     <price-sar [value]="(offerForEditOutput.priceOfferViewDto.itemPrice * offerForEditOutput.priceOfferViewDto.quantity)"></price-sar>
@@ -103,8 +103,8 @@
                   <th scope="col">{{l('SubTotalAmount')}}</th>
                   <th scope="col">{{l('VatAmount')}}</th>
                   <th scope="col">{{l('TotalAmount')}}</th>
-                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId" scope="col">{{l('CommissionPerTrip')}}</th>
-                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId" scope="col">{{l('TotalCommission')}}</th>
+                  <!--                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId" scope="col">{{l('CommissionPerTrip')}}</th>-->
+                  <!--                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId" scope="col">{{l('TotalCommission')}}</th>-->
                 </tr>
               </thead>
               <tbody>
@@ -121,13 +121,13 @@
                     <price-sar [value]="offerForEditOutput.priceOfferViewDto.totalAmount"></price-sar>
                   </td>
 
-                  <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
-                    <price-sar [value]="offerForEditOutput.priceOfferViewDto.itemCommissionAmount"></price-sar>
-                  </td>
+                  <!--                  <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">-->
+                  <!--                    <price-sar [value]="offerForEditOutput.priceOfferViewDto.itemCommissionAmount"></price-sar>-->
+                  <!--                  </td>-->
 
-                  <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
-                    <price-sar [value]="offerForEditOutput.priceOfferViewDto.commissionAmount"></price-sar>
-                  </td>
+                  <!--                  <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">-->
+                  <!--                    <price-sar [value]="offerForEditOutput.priceOfferViewDto.commissionAmount"></price-sar>-->
+                  <!--                  </td>-->
                 </tr>
               </tbody>
             </table>

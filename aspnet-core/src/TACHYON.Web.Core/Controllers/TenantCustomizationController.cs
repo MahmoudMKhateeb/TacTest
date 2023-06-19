@@ -82,6 +82,58 @@ namespace TACHYON.Web.Controllers
             }
         }
 
+
+        [HttpPost]
+        [AbpMvcAuthorize(AppPermissions.Pages_Administration_Tenant_Settings)]
+        public async Task<JsonResult> UploadStamp()
+        {
+            try
+            {
+                var File = Request.Form.Files.First();
+
+                //Check input
+                if (File == null)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (File.Length > 30720) //30KB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                byte[] fileBytes;
+                using (var stream = File.OpenReadStream())
+                {
+                    fileBytes = stream.GetAllBytes();
+                }
+
+                var imageFormat = ImageFormatHelper.GetRawImageFormat(fileBytes);
+                if (!imageFormat.IsIn(ImageFormat.Jpeg, ImageFormat.Png, ImageFormat.Gif))
+                {
+                    throw new UserFriendlyException(L("File_Invalid_Type_Error"));
+                }
+
+                var Object = new BinaryObject(AbpSession.GetTenantId(), fileBytes);
+                await _binaryObjectManager.SaveAsync(Object);
+
+                var tenant = await _tenantManager.GetByIdAsync(AbpSession.GetTenantId());
+                tenant.StampId = Object.Id;
+                tenant.StampFileType = File.ContentType;
+
+                return Json(new AjaxResponse(new
+                {
+                    id = Object.Id,
+                    TenantId = tenant.Id,
+                    fileType = tenant.StampFileType
+                }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
+
         [HttpPost]
         [AbpMvcAuthorize(AppPermissions.Pages_Administration_Tenant_Settings)]
         public async Task<JsonResult> UploadCustomCss()
@@ -149,6 +201,37 @@ namespace TACHYON.Web.Controllers
                 }
 
                 return File(logoObject.Bytes, tenant.LogoFileType);
+            }
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> GetStamp(int? tenantId)
+        {
+            if (tenantId == null)
+            {
+                tenantId = AbpSession.TenantId;
+            }
+
+            if (!tenantId.HasValue)
+            {
+                return StatusCode((int)HttpStatusCode.NotFound);
+            }
+
+            var tenant = await _tenantManager.FindByIdAsync(tenantId.Value);
+            if (tenant == null || !tenant.HasStamp())
+            {
+                return StatusCode((int)HttpStatusCode.NotFound);
+            }
+
+            using (CurrentUnitOfWork.SetTenantId(tenantId.Value))
+            {
+                var stampObject = await _binaryObjectManager.GetOrNullAsync(tenant.StampId.Value);
+                if (stampObject == null)
+                {
+                    return StatusCode((int)HttpStatusCode.NotFound);
+                }
+
+                return File(stampObject.Bytes, tenant.StampFileType);
             }
         }
 

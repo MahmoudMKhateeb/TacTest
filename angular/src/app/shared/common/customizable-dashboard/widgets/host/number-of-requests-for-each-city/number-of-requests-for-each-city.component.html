@@ -1,18 +1,44 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div class="card card-custom card-stretch">
-  <div class="card-header border-0">
-    <div class="card-title text-center">
-      <h3 class="card-label">{{ l('NumberOfRequestsForEachCity') }}</h3>
-    </div>
+<div class="p-0 d-flex w-100 h-100 bg-white border-radius-as-card" [busyIf]="loading">
+  <div class="w-100 h-100">
+    <agm-map style="height: 470px; width: 100%; margin-bottom: 10px" [latitude]="24.774265" [longitude]="46.738586" [zoom]="6">
+      <agm-marker-cluster [minimumClusterSize]="2" [maxZoom]="8">
+        <agm-marker *ngFor="let location of locations" [latitude]="location.latitude" [longitude]="location.longitude"></agm-marker>
+      </agm-marker-cluster>
+    </agm-map>
   </div>
-  <div id="chart" [busyIf]="loading">
-    <apx-chart
-      *ngIf="chartOptions && chartOptions.series"
-      [series]="chartOptions.series"
-      [chart]="chartOptions.chart"
-      [dataLabels]="chartOptions.dataLabels"
-      [plotOptions]="chartOptions.plotOptions"
-      [title]="chartOptions.title"
-    ></apx-chart>
+  <div class="card w-100 h-100 card-custom card-stretch">
+    <div class="card-header border-0">
+      <div class="w-100 d-flex justify-content-between align-items-center">
+        <div class="card-title text-center">
+          <h3 class="card-label text-dark">{{ l('NumberOfRequestsForEachCity') }}</h3>
+        </div>
+        <app-host-tms-widget-filters (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
+      </div>
+    </div>
+    <div class="card-body pt-0 h-100 d-flex flex-column">
+      <table>
+        <thead>
+          <tr>
+            <th class="font-size-h3 pb-4">
+              <b>{{ 'City' | localize }}</b>
+            </th>
+            <th class="font-size-h3 pb-4">
+              <b>{{ 'NumberOfRequests' | localize }}</b>
+            </th>
+            <th class="font-size-h3 pb-4">
+              <b>{{ 'MostUsed' | localize }}</b>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let location of locations; let i = index">
+            <td class="pb-2">{{ location.label }}</td>
+            <td class="pb-2">{{ location.count }}</td>
+            <td class="pb-2">{{ location.type }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

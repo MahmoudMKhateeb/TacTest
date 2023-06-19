@@ -76,5 +76,8 @@ namespace TACHYON.Tracking.Dto
         public long? CarrierInvoiceNumber { get; set; }
         public int? CarrierTenantId { get; set; }
         public DateTime StartTripDate { get; set; }
+        public string ActualDeliveryDate { get; set; }
+        public string ActualPickupDate { get; set; }
+
     }
 }

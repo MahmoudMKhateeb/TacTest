@@ -3,3 +3,25 @@
   top: 10px;
   height: auto;
 }
+.isHostOrTMS {
+  position: relative;
+  height: 5em;
+  background: #f0f0f0;
+  padding: 0.7em;
+  border-radius: 5px;
+}
+
+.custom-left-ribbon {
+  left: -2px;
+  font-size: 1em;
+}
+
+::ng-deep [dir='rtl'] .custom-left-ribbon {
+  right: -2px !important;
+  left: auto !important;
+}
+
+::ng-deep app-needs-action-widget .ribbon-target.bg-dark {
+  background: var(--dark, #231f20) !important;
+  color: var(--white, #fff) !important;
+}

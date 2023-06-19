@@ -65,6 +65,8 @@
         <dxi-column dataField="bookingNumber" caption="{{ 'ShipperBookingNumber' | localize }}"></dxi-column>
         <dxi-column dataField="waybillNumber" caption="{{ 'WaybillNumber' | localize }}"></dxi-column>
         <dxi-column dataField="statusTitle" caption="{{ 'Status' | localize }}" cellTemplate="statusTitleCellTemplate"></dxi-column>
+        <dxi-column dataField="actualPickupDate" caption="{{ 'PickupDate' | localize }}"></dxi-column>
+        <dxi-column dataField="actualDeliveryDate" caption="{{ 'DeliveryDate' | localize }}"></dxi-column>
         <dxi-column [allowExporting]="false" dataField="id" caption="{{ 'Track' | localize }}" cellTemplate="trackCellTemplate"></dxi-column>
 
         <dxo-master-detail [enabled]="true" template="masterDetail"></dxo-master-detail>

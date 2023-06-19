@@ -268,7 +268,7 @@ export class TrackingTableViewComponent extends AppComponentBase implements OnIn
 
   onExporting(e) {
     const workbook = new Workbook();
-    const worksheet = workbook.addWorksheet('Employees');
+    const worksheet = workbook.addWorksheet('ShippingRequests');
 
     exportDataGrid({
       component: e.component,

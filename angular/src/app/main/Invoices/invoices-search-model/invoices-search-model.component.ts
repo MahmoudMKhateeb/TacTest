@@ -18,7 +18,7 @@ export class InvoicesSearchModelComponent extends AppComponentBase implements On
   saving = false;
   direction: string;
   input: InvoiceSearchInputDto = new InvoiceSearchInputDto();
-  paymentDate: moment.Moment;
+  paymentDate: Date;
   constructor(injector: Injector) {
     super(injector);
   }

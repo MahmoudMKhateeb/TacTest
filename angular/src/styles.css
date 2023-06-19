@@ -665,6 +665,35 @@ dx-button.btn.btn-success {
 .label-gray,
 .bg-gray,
 .badge-gray {
-  color: var(--white);
-  background-color: var(--gray-dark-55c);
+  color: var(--white) !important;
+  background-color: var(--gray-dark-55c) !important;
+}
+
+.sar-red-circle {
+  color: var(--white, #fff);
+  background-color: #dc2434;
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+  padding: 0.5em;
+}
+
+.sar-red-circle .sar-label {
+  position: relative;
+  border-radius: 50%;
+  border: 3px dashed var(--white, #fff);
+  padding: 0.4em;
+  width: 100%;
+  height: 100%;
+}
+
+.sar-red-circle .sar-label::before {
+  content: '';
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  border: 2px solid var(--white, #fff);
+  border-radius: 50%;
+  left: 5%;
+  top: 5%;
 }

@@ -132,10 +132,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
             if (importTripDto.ShippingRequestId != null && sr.ShippingRequestFlag == ShippingRequestFlag.Normal)
             {
-                if (importTripDto.StartTripDate?.Date == null)
-                {
-                    importTripDto.StartTripDate = sr.StartTripDate;
-                }
+                //if (importTripDto.StartTripDate?.Date == null)
+                //{
+                //    importTripDto.StartTripDate = sr.StartTripDate;
+                //}
                 if (importTripDto.EndTripDate != null && importTripDto.StartTripDate?.Date > importTripDto.EndTripDate.Value.Date)
                 {
                     exceptionMessage.Append("The start date must be less or equal to end date." + "; ");

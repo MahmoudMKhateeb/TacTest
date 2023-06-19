@@ -16,7 +16,7 @@ import { finalize } from 'rxjs/operators';
 export class MostUsedOriginComponent extends AppComponentBase implements OnInit {
   @Input('isForActors') isForActors = false;
   data: MostUsedOriginsDto[] | MostUsedCityDto[] = [];
-  loading: boolean = false;
+  loading = false;
   total = 0;
 
   constructor(

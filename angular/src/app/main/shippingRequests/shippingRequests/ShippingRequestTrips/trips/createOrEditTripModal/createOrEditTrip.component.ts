@@ -414,26 +414,29 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   prepareRoundTripInputs() {
     console.log('prepareStep2Inputs');
-    switch (Number(this._TripService.CreateOrEditShippingRequestTripDto.roundTripType)) {
-      case RoundTripType.TwoWayRoutsWithPortShuttling: {
-        this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
-        this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = !this._TripService?.GetShippingRequestForViewOutput?.shippingRequest?.id
-          ? 3
-          : 2;
-        break;
-      }
-      case RoundTripType.TwoWayRoutsWithoutPortShuttling:
-      case RoundTripType.WithReturnTrip: {
-        this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
-        this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 2;
-        break;
-      }
-      case RoundTripType.WithoutReturnTrip:
-      case RoundTripType.OneWayRoutWithoutPortShuttling:
-      default: {
-        this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.SingleDrop;
-        this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 1;
-        break;
+    if (isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto.roundTripType)) {
+      switch (Number(this._TripService.CreateOrEditShippingRequestTripDto.roundTripType)) {
+        case RoundTripType.TwoWayRoutsWithPortShuttling: {
+          this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
+          this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = !this._TripService?.GetShippingRequestForViewOutput?.shippingRequest
+            ?.id
+            ? 3
+            : 2;
+          break;
+        }
+        case RoundTripType.TwoWayRoutsWithoutPortShuttling:
+        case RoundTripType.WithReturnTrip: {
+          this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.MultipleDrops;
+          this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 2;
+          break;
+        }
+        case RoundTripType.WithoutReturnTrip:
+        case RoundTripType.OneWayRoutWithoutPortShuttling:
+        default: {
+          this._TripService.CreateOrEditShippingRequestTripDto.routeType = ShippingRequestRouteType.SingleDrop;
+          this._TripService.CreateOrEditShippingRequestTripDto.numberOfDrops = 1;
+          break;
+        }
       }
     }
     this.onRouteTypeChange();
@@ -1032,8 +1035,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   isGoodDetailsValidForPoint(point: CreateOrEditRoutPointDto, isWeightRequired: boolean, isQtyRequired: boolean, isDescRequired: boolean) {
-    return isNotNullOrUndefined(point.goodsDetailListDto) && point.goodsDetailListDto.length > 0
-      ? point.goodsDetailListDto.filter((goodDetail) => {
+    if (!isNotNullOrUndefined(point)) {
+      return false;
+    }
+    return isNotNullOrUndefined(point?.goodsDetailListDto) && point?.goodsDetailListDto?.length > 0
+      ? point?.goodsDetailListDto?.filter((goodDetail) => {
           if (isWeightRequired && isQtyRequired && isDescRequired) {
             return (
               isNotNullOrUndefined(goodDetail.amount) &&
@@ -1061,7 +1067,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
           if (isDescRequired) {
             return isNotNullOrUndefined(goodDetail.description) && goodDetail.description?.length > 0;
           }
-        }).length === point.goodsDetailListDto.length
+        })?.length === point?.goodsDetailListDto?.length
       : false;
   }
 
@@ -1072,20 +1078,20 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   public CanCreateTemplate(): boolean {
     //if there is no routePoints
     if (
-      !isNotNullOrUndefined(this._TripService.CreateOrEditShippingRequestTripDto.routPoints) &&
+      !isNotNullOrUndefined(this._TripService?.CreateOrEditShippingRequestTripDto?.routPoints) &&
       !isNotNullOrUndefined(this.PointsComponent?.wayPointsList)
     ) {
       return false;
     } else if (
-      this._TripService.CreateOrEditShippingRequestTripDto.routPoints.find(
-        (x) => x.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x.goodsDetailListDto)
+      this._TripService?.CreateOrEditShippingRequestTripDto?.routPoints?.find(
+        (x) => x?.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x?.goodsDetailListDto)
       ) ||
-      this.PointsComponent?.wayPointsList?.find((x) => x.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x.goodsDetailListDto))
+      this.PointsComponent?.wayPointsList?.find((x) => x?.pickingType == PickingType.Dropoff && !isNotNullOrUndefined(x?.goodsDetailListDto))
     ) {
       return false;
     } else if (
-      this._TripService.CreateOrEditShippingRequestTripDto.routPoints.length < this.shippingRequest.numberOfDrops + 1 &&
-      this.PointsComponent?.wayPointsList?.length < this.shippingRequest.numberOfDrops + 1
+      this._TripService?.CreateOrEditShippingRequestTripDto?.routPoints?.length < this.shippingRequest?.numberOfDrops + 1 &&
+      this.PointsComponent?.wayPointsList?.length < this.shippingRequest?.numberOfDrops + 1
     ) {
       return false;
     } else {

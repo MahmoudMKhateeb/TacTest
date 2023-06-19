@@ -252,10 +252,14 @@
           <DataField>BrokerVat</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="Stamp">
+          <DataField>Stamp</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>GetInvoiceReportInfoDataset</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core1\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
@@ -4033,21 +4037,6 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Image Name="Image1">
-            <Source>Embedded</Source>
-            <Value>ID154405</Value>
-            <Sizing>FitProportional</Sizing>
-            <Top>6.9645cm</Top>
-            <Left>0.56761cm</Left>
-            <Height>2.06458cm</Height>
-            <Width>5.19843cm</Width>
-            <ZIndex>8</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-            </Style>
-          </Image>
           <Textbox Name="Textbox95">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
@@ -4070,7 +4059,7 @@
             <Left>7.57342cm</Left>
             <Height>0.6cm</Height>
             <Width>1.57971cm</Width>
-            <ZIndex>9</ZIndex>
+            <ZIndex>8</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -4658,7 +4647,7 @@
             <Left>13.98892cm</Left>
             <Height>2.5cm</Height>
             <Width>14.86626cm</Width>
-            <ZIndex>10</ZIndex>
+            <ZIndex>9</ZIndex>
             <Style>
               <Border>
                 <Color>Gray</Color>
@@ -4882,13 +4871,29 @@
             <Left>0.56761cm</Left>
             <Height>2.48374cm</Height>
             <Width>13.15cm</Width>
-            <ZIndex>11</ZIndex>
+            <ZIndex>10</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
             </Style>
           </Tablix>
+          <Image Name="Image1">
+            <Source>Database</Source>
+            <Value>=First(Fields!Stamp.Value, "GetInvoiceReportInfoDataset")</Value>
+            <MIMEType>image/jpeg</MIMEType>
+            <Sizing>FitProportional</Sizing>
+            <Top>6.98364cm</Top>
+            <Left>0.56761cm</Left>
+            <Height>2.03635cm</Height>
+            <Width>4.79932cm</Width>
+            <ZIndex>11</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Image>
         </ReportItems>
         <Height>12.04211cm</Height>
         <Style>

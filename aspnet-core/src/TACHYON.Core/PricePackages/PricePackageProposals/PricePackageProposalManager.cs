@@ -1,5 +1,6 @@
 ﻿using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Reflection.Extensions;
 using Abp.UI;
 using DevExpress.XtraRichEdit;
@@ -37,7 +38,7 @@ namespace TACHYON.PricePackages.PricePackageProposals
 
         public async Task<int> CreateProposal(PricePackageProposal createdProposal,List<long> pricePackages,string emailAddress)
         {
-            
+            DisableTenancyFilters();
             // check items if them used in any another proposal
 
             bool anyItemUsedInAnotherProposal = await _pricePackageRepository.GetAll()

@@ -3,8 +3,10 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import {
   BrokerDashboardServiceProxy,
   CarrierDashboardServiceProxy,
+  GetNeedsActionTripsAndRequestsOutput,
   NeedsActionTripDto,
   ShipperDashboardServiceProxy,
+  TMSAndHostDashboardServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { Router } from '@angular/router';
 
@@ -15,14 +17,16 @@ import { Router } from '@angular/router';
 })
 export class NeedsActionWidgetComponent extends AppComponentBase implements OnInit {
   @Input('isForActors') isForActors = false;
-  needsActionTrips: NeedsActionTripDto[] = [];
+  needsActionTrips: NeedsActionTripDto[] | GetNeedsActionTripsAndRequestsOutput[] = [];
   loading: boolean;
+  today = new Date();
 
   constructor(
     injector: Injector,
     private _shipperDashboardServiceProxy: ShipperDashboardServiceProxy,
     private _carrierDashboardServiceProxy: CarrierDashboardServiceProxy,
     private _brokerDashboardServiceProxy: BrokerDashboardServiceProxy,
+    private _TMSAndHostDashboardServiceProxy: TMSAndHostDashboardServiceProxy,
     private router: Router
   ) {
     super(injector);
@@ -57,9 +61,21 @@ export class NeedsActionWidgetComponent extends AppComponentBase implements OnIn
         this.loading = false;
       });
     }
+    if (this.isTachyonDealerOrHost) {
+      this.loading = false;
+    }
   }
 
-  goToTrackingPage(trip: NeedsActionTripDto): void {
-    this.router.navigateByUrl(`/app/main/tracking?waybillNumber=${trip.waybillNumber}`);
+  goToTrackingPage(trip: NeedsActionTripDto | GetNeedsActionTripsAndRequestsOutput): void {
+    const waybillNumber = trip instanceof NeedsActionTripDto ? trip.waybillNumber : trip.waybillOrRequestReference;
+    this.router.navigateByUrl(`/app/main/tracking/shipmentTracking?waybillNumber=${waybillNumber}`);
+  }
+
+  selectedFilter(filter: { start: moment.Moment; end: moment.Moment }) {
+    this.loading = true;
+    this._TMSAndHostDashboardServiceProxy.getNeedsActionTripsAndRequests(filter.start, filter.end).subscribe((res) => {
+      this.needsActionTrips = res;
+      this.loading = false;
+    });
   }
 }

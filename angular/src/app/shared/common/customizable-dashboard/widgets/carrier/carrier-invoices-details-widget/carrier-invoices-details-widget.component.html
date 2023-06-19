@@ -6,10 +6,21 @@
       <h3 class="card-label" *ngIf="isForActor">{{ 'PaidInvoiceVsClaimedInvoice' | localize }}</h3>
     </div>
     <div class="row border-left pl-4" *ngIf="!isForActor">
-      <div class="col-6 d-flex">
-        <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i> {{ 'Paid' | localize }}
-      </div>
-      <div class="col-6 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
+      <ng-container *ngIf="!isTachyonDealerOrHost">
+        <div class="col-6 d-flex">
+          <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i> {{ 'Paid' | localize }}
+        </div>
+        <div class="col-6 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
+      </ng-container>
+      <ng-container *ngIf="isTachyonDealerOrHost">
+        <div class="col-5 d-flex">
+          <i class="fa fa-circle text-red mx-1" [class.broker]="hasShipperClients && hasCarrierClients"></i> {{ 'Paid' | localize }}
+        </div>
+        <div class="col-5 d-flex"><i class="fa fa-circle text-gray mx-1"></i> {{ 'Claimed' | localize }}</div>
+        <div class="col-2 d-flex">
+          <app-host-tms-widget-filters (optionSelected)="selectedFilter($event)"></app-host-tms-widget-filters>
+        </div>
+      </ng-container>
     </div>
     <div class="row border-left pl-4" *ngIf="isForActor">
       <div class="col-4 d-flex">
@@ -34,9 +45,6 @@
     </div>
   </div>
   <div class="card-body p-4">
-    <!--        <div class="pd-5 text-center" *ngIf="invoices.length == 0 && paidInvoices.length == 0">-->
-    <!--          {{ l('NoData') }}-->
-    <!--        </div>-->
     <div id="chart">
       <apx-chart
         *ngIf="chartOptions && chartOptions.series"

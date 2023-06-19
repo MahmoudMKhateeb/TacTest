@@ -27,7 +27,7 @@
   <dxi-column cellTemplate="cellTemplateActions" [allowFiltering]="false" [allowSorting]="false" [width]="50"></dxi-column>
   <dxi-column dataField="actorName" caption="{{ l('ActorName') }}"></dxi-column>
   <dxi-column cellTemplate="cellActorType" dataField="actorType" caption="{{ l('ActorType') }}"></dxi-column>
-  <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="datetime"></dxi-column>
+  <dxi-column dataField="creationTime" caption="{{ l('SubmittingTime') }}" dataType="datetime" [format]="'dd/MM/yyyy hh:mm a'"></dxi-column>
   <dxi-column dataField="documentTypeName" caption="{{ l('DatatableDocumentName') }}" [allowGrouping]="false"></dxi-column>
   <dxi-column dataField="expirationDate" caption="{{ l('ExpirationDate') }}" dataType="date" cellTemplate="cellTemplateStatus"></dxi-column>
   <dxi-column dataField="extn" caption="{{ l('Extn') }}" [allowFiltering]="false"></dxi-column>
@@ -36,8 +36,8 @@
   <dxi-column dataField="number" caption="{{ l('Number') }}"></dxi-column>
 
   <div *dxTemplate="let data of 'cellTemplateStatus'">
-    <span *ngIf="data.value <= todayMoment" class="text-warning"> {{ data.value | date }}</span>
-    <span *ngIf="data.value > todayMoment"> {{ data.value | date }}</span>
+    <span *ngIf="data.value <= todayMoment" class="text-warning"> {{ data.value | momentFormat: 'DD/MM/YYYY' }}</span>
+    <span *ngIf="data.value > todayMoment"> {{ data.value | momentFormat: 'DD/MM/YYYY' }}</span>
   </div>
   <div *dxTemplate="let data of 'cellActorType'">
     <span> {{ getActorTypeTitle(data.value) }}</span>
