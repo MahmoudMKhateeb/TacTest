@@ -14,6 +14,7 @@ using TACHYON.Integration.WaslIntegration;
 using TACHYON.Invoices;
 using TACHYON.Invoices.ActorInvoices;
 using TACHYON.MultiTenancy;
+using TACHYON.Packing.PackingTypes;
 using TACHYON.Penalties;
 using TACHYON.PriceOffers;
 using TACHYON.Rating;
@@ -116,6 +117,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public virtual long? DestinationFacilityId { get; set; }
 
         [ForeignKey("DestinationFacilityId")] public Facility DestinationFacilityFk { get; set; }
+        public int? PackingTypeId { get; set; }
+
+        [ForeignKey("PackingTypeId")] public PackingType PackingTypeFk { get; set; }
 
         public ICollection<RoutPoint> RoutPoints { get; set; }
         public ICollection<ShippingRequestTripVas> ShippingRequestTripVases { get; set; }

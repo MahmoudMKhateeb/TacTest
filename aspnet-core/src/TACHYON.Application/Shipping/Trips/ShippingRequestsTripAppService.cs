@@ -1080,8 +1080,11 @@ namespace TACHYON.Shipping.Trips
                 var pointHasAbilityToChangeWorkflow =
                     trip.RoutPoints?.Where(x => x.Status == RoutePointStatus.StandBy).ToList();
 
+                    var shippingType = request != null ? request.ShippingTypeId : trip.ShippingTypeId;
+                var roundTrip = request != null ? request.RoundTripType : trip.RoundTripType;
+
                 if (pointHasAbilityToChangeWorkflow != null && pointHasAbilityToChangeWorkflow.Count > 0)
-                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag, request.ShippingTypeId,request.RoundTripType, pointHasAbilityToChangeWorkflow.ToArray());
+                    _shippingRequestTripManager.AssignWorkFlowVersionToRoutPoints(trip.NeedsDeliveryNote, trip.ShippingRequestTripFlag, shippingType,roundTrip, pointHasAbilityToChangeWorkflow.ToArray());
             }
 
             if (!trip.BayanId.IsNullOrEmpty())

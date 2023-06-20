@@ -234,13 +234,6 @@
                       (change)="ShippingTypeChanged()"
                       required
                     >
-                      <!-- [class.is-valid]="
-                    shippingType.valid && (shippingType.dirty || shippingType.touched)
-                  "
-                  [class.is-invalid]="
-                    shippingType.invalid && (shippingType.dirty || shippingType.touched)
-                  " -->
-                      <!--                          <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>-->
                       <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                     </select>
                   </div>
@@ -268,12 +261,6 @@
                       required
                       (ngModelChange)="resetShippingInputs(); prepareRoundTripInputs(); onRouteTypeChange()"
                     >
-                      <!-- [class.is-valid]="
-                    roundTripType.valid && (roundTripType.dirty || roundTripType.touched)
-                  "
-                  [class.is-invalid]="
-                    roundTripType.invalid && (roundTripType.dirty || roundTripType.touched)
-                  " -->
                       <option disabled [ngValue]="null">{{ l('SelectARoundTripType') }}</option>
                       <option *ngFor="let item of allRoundTripTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                     </select>
@@ -282,6 +269,29 @@
                 </div>
               </div>
               <!-- End Shipping Type -->
+              <!-- packing type -->
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label> {{ l('PackingType') }} <span class="required-fileds">*</span></label>
+                  <div
+                    [ngClass]="{
+                      'spinner spinner-success spinner-right mr-1 ml-1': !allpackingTypes
+                    }"
+                  >
+                    <select
+                      class="form-control"
+                      name="packingTypeId"
+                      [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.packingTypeId"
+                      required
+                    >
+                      <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                    </select>
+                  </div>
+                  <span class="form-text text-muted">{{ l('SelectaPackingType') }}</span>
+                </div>
+              </div>
+
+              <!-- End packing type -->
 
               <!-- Route type -->
 

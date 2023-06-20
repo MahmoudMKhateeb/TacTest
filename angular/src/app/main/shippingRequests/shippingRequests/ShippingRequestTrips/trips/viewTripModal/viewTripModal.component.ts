@@ -101,6 +101,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
   destinationCities: ShippingRequestDestinationCitiesDto[] = [];
   allOriginPorts: SelectFacilityItemDto[] = [];
   allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
+  allpackingTypes: SelectItemDto[];
 
   constructor(
     injector: Injector,
@@ -154,6 +155,10 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
       this.allOriginPorts = result;
     });
     this.getAllGoodCategories();
+
+    this._shippingRequestsServiceProxy.getAllPackingTypesForDropdown().subscribe((result) => {
+      this.allpackingTypes = result;
+    });
   }
 
   ngAfterViewInit() {

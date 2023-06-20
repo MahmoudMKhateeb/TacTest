@@ -61,21 +61,29 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     opt => opt.MapFrom(src => $"{src.OriginFacilityFk.CityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
                 .ForPath(dst => dst.Distination,
                     opt => opt.MapFrom(src => $"{src.DestinationFacilityFk.CityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
-                .ForMember(dst => dst.RouteTypeId, opt => opt.MapFrom(src => src.ShippingRequestFk.RouteTypeId))
+                .ForMember(dst => dst.RouteTypeId, opt => opt.MapFrom(src => src.ShippingRequestFk != null ? src.ShippingRequestFk.RouteTypeId
+                :src.RouteType))
                 .ForMember(dst => dst.StartDate, opt => opt.MapFrom(src => src.StartTripDate))
                 .ForMember(dst => dst.EndDate, opt => opt.MapFrom(src => src.EndTripDate))
                 .ForMember(dst => dst.IsSaas, opt => opt.MapFrom(src => src.ShippingRequestFk.IsSaas()))
                 .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointStatus), src.RoutePointStatus)))
                 .ForMember(dst => dst.TripStatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
                 .ForMember(dst => dst.DriverLoadStatus, opt => opt.MapFrom(src => GetMobileTripStatus(src)))
-                .ForMember(dst => dst.IsPortMovementRequest, opt => opt.MapFrom(src => src.ShippingRequestFk.ShippingTypeId == TACHYON.Shipping.ShippingRequests.ShippingTypeEnum.ImportPortMovements ||
-                src.ShippingRequestFk.ShippingTypeId == TACHYON.Shipping.ShippingRequests.ShippingTypeEnum.ExportPortMovements
+                .ForMember(dst => dst.IsPortMovement, opt => opt.MapFrom(src => src.ShippingRequestFk != null
+                ?( src.ShippingRequestFk.ShippingTypeId == TACHYON.Shipping.ShippingRequests.ShippingTypeEnum.ImportPortMovements ||
+                src.ShippingRequestFk.ShippingTypeId == TACHYON.Shipping.ShippingRequests.ShippingTypeEnum.ExportPortMovements) 
+                : (src.ShippingTypeId == TACHYON.Shipping.ShippingRequests.ShippingTypeEnum.ImportPortMovements ||
+                src.ShippingTypeId == TACHYON.Shipping.ShippingRequests.ShippingTypeEnum.ExportPortMovements)
                 ))
-                .ForMember(dst => dst.RoundTripType, opt => opt.MapFrom(src => src.ShippingRequestFk.RoundTripType));
+                .ForMember(dst => dst.RoundTripType, opt => opt.MapFrom(src =>src.ShippingRequestFk != null
+                ? src.ShippingRequestFk.RoundTripType
+                :src.RoundTripType));
 
 
             CreateMap<ShippingRequestTrip, ShippingRequestTripDriverDetailsDto>()
-                .ForMember(dst => dst.ShipperName, opt => opt.MapFrom(src => src.ShippingRequestFk.Tenant.TenancyName))
+                .ForMember(dst => dst.ShipperName, opt => opt.MapFrom(src => src.ShippingRequestFk != null 
+                ? src.ShippingRequestFk.Tenant.TenancyName
+                :src.ShipperTenantFk.TenancyName))
                 .ForMember(dst => dst.ShipperRating, opt => opt.MapFrom(src => src.ShippingRequestFk.Tenant.Rate))
                 .ForMember(dst => dst.ShipperRatingNumber, opt => opt.MapFrom(src => src.ShippingRequestFk.Tenant.RateNumber))
                 .ForMember(dst => dst.Source,
@@ -106,7 +114,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                         src.StartWorking == null ? "" : ((DateTime)src.StartWorking).ToString("hh:mm")))
                 .ForMember(dst => dst.TotalWeight, opt => opt.MapFrom(src => src.ShippingRequestFk.TotalWeight))
                 .ForMember(dst => dst.PackingType,
-                    opt => opt.MapFrom(src => src.ShippingRequestFk.PackingTypeFk.DisplayName))
+                    opt => opt.MapFrom(src => src.ShippingRequestFk != null ?src.ShippingRequestFk.PackingTypeFk.DisplayName
+                    : src.PackingTypeFk != null ? src.PackingTypeFk.DisplayName :""))
                 .ForMember(dst => dst.PlateNumber, opt => opt.MapFrom(src => src.AssignedTruckFk.PlateNumber))
                 .ForMember(dst => dst.RoutePoints,
                     opt => opt.MapFrom(src => src.RoutPoints.OrderBy(x => x.PickingType)))
@@ -114,7 +123,9 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointStatus), src.RoutePointStatus)))
                 .ForMember(dst => dst.TripStatus,
                     opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
-                .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.RoutePointStatus));
+                .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.RoutePointStatus))
+                .ForMember(dst => dst.IsSaasTrip, opt => opt.MapFrom(src => (src.ShippingRequestFk != null && src.ShippingRequestFk.TenantId == src.ShippingRequestFk.CarrierTenantId) ||
+                (src.ShippingRequestFk == null && src.ShipperTenantId == src.CarrierTenantId)));
 
 
             //GoodsDetails

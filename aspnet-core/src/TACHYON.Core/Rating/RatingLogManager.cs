@@ -537,8 +537,8 @@ namespace TACHYON.Rating
                 .Include(x => x.ShippingRequestTripFk)
                 .ThenInclude(x => x.ShippingRequestFk)
                 .Where(x => x.Id == log.PointId || x.ShippingRequestTripId == log.TripId)
-                .AnyAsync(x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId
-                               == x.ShippingRequestTripFk.ShippingRequestFk.TenantId);
+                .AnyAsync(x => (x.ShippingRequestTripFk.ShippingRequestFk != null && x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId
+                               == x.ShippingRequestTripFk.ShippingRequestFk.TenantId));
         }
         #endregion
     }
