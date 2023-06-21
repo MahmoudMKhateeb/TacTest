@@ -463,7 +463,7 @@ namespace TACHYON.Shipping.Drivers
         /// <param name="pointId"></param>
         /// <param name="rate"></param>
         /// <param name="note"></param>
-        [RequiresFeature(AppFeatures.Carrier)]
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.CMS)]
         public async Task SetRating(long pointId, int rate, string note)
         {
            var isCurrentUserDriver = AbpSession.UserId.HasValue && await _shippingRequestDriverManager.IsCurrentUserDriver(AbpSession.UserId.Value);
@@ -486,13 +486,13 @@ namespace TACHYON.Shipping.Drivers
         /// <summary>
         /// The driver rate shipping Experience after trip delivered
         /// </summary>
-        [RequiresFeature(AppFeatures.Carrier)]
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.CMS)]
         public async Task SetShippingExpRating(int tripId, int rate, string note)
         {
             var isCurrentUserDriver = AbpSession.UserId.HasValue && await _shippingRequestDriverManager.IsCurrentUserDriver(AbpSession.UserId.Value);
             if (!isCurrentUserDriver)
                 throw new AbpValidationException(L("YouMustBeDriverToRateFacility"));
-            
+
             var input = new RatingLog() { TripId = tripId, RateType = RateType.SEByDriver, Rate = rate, Note = note, DriverId = AbpSession.UserId };
             await _ratingLogManager.CreateRating(input);
         }
