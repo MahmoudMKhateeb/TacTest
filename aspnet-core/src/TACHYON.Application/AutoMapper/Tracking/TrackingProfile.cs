@@ -64,6 +64,8 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.BookingNumber, opt => opt.MapFrom(src => src.ShippingRequestFk != null ?src.ShippingRequestFk.ShipperInvoiceNo  :""))
             .ForMember(dst => dst.ActualDeliveryDate, opt => opt.MapFrom(src => src.ActualDeliveryDate != null ?src.ActualDeliveryDate.Value.ToString("dd/MM/yyyy")  :""))
             .ForMember(dst => dst.ActualPickupDate, opt => opt.MapFrom(src => src.StartTripDate.ToString("dd/MM/yyyy")))
+            .ForMember(dst => dst.IsPODUploaded, opt => opt.MapFrom(src => src.RoutPoints.Where(x=>x.PickingType == PickingType.Dropoff).All(x=>x.IsPodUploaded)))
+            .ForMember(dst => dst.IsInvoiceIssued, opt => opt.MapFrom(src => src.IsShipperHaveInvoice))
             ;
 
 

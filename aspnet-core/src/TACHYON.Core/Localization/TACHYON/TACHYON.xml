@@ -3433,6 +3433,8 @@
 
     <text name="ValueOfGoods">Value of goods</text>
     <text name="InsuranceCoverage">Insurance coverage</text>
+    <text name="IsPODUploaded">Is POD uploaded</text>
+    <text name="IsInvoiceIssued">Is invoice issued</text>
     
 	</texts>
 </localizationDictionary>
