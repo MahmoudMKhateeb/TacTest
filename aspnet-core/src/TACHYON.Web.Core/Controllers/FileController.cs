@@ -113,9 +113,11 @@ namespace TACHYON.Web.Controllers
                 var user = await _userManager.FindByIdAsync(AbpSession.UserId.ToString());
                 documentFile = await _documentFileRepository.GetAll()
                     .WhereIf(IsEnabled(AppFeatures.Shipper),
-                        x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
+                        x => (x.ShippingRequestTripFk.ShippingRequestFk != null && x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId) ||
+                        (x.ShippingRequestTripFk.ShippingRequestFk == null && x.ShippingRequestTripFk.ShipperTenantId == AbpSession.TenantId))
                     .WhereIf(IsEnabled(AppFeatures.Carrier),
-                        x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId)
+                        x => (x.ShippingRequestTripFk.ShippingRequestFk != null && x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId) ||
+                        (x.ShippingRequestTripFk.ShippingRequestFk == null && x.ShippingRequestTripFk.CarrierTenantId == AbpSession.TenantId))
                     .WhereIf(user.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
                     .FirstOrDefaultAsync(x => x.ShippingRequestTripId == id && x.ShippingRequestTripFk.HasAttachment);
             }
