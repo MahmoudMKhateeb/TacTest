@@ -37,6 +37,10 @@ namespace TACHYON.Rating
         /// This field is for receiver
         /// </summary>
         public string Code { get; set; }
+        /// <summary>
+        /// presents trip saas or request saas
+        /// </summary>
+        public bool IsSaas { get; set; }
 
         // note => Stay DRY 
         /// <summary>
