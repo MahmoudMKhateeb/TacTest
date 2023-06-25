@@ -308,7 +308,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Drivers For Direct Shipment
    */
   getAllDriversForDirectShipment() {
-    this._trucksServiceProxy.getAllDriversForDropDown(undefined).subscribe((result) => {
+    this._trucksServiceProxy.getAllDriversForDropDown(undefined, null).subscribe((result) => {
       this.allDrivers = result;
     });
   }
@@ -317,7 +317,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit, 
    * this method is for Getting All Trucks For Direct Shipment
    */
   getAllTrucksForDirectShipment() {
-    this._dedicatedShippingRequestsServiceProxy.getAllTrucksWithDriversList(undefined, undefined).subscribe((res) => {
+    this._dedicatedShippingRequestsServiceProxy.getAllTrucksWithDriversList(undefined, undefined, null).subscribe((res) => {
       this.allTrucks = res;
     });
   }

@@ -178,6 +178,7 @@
                       displayExpr="displayName"
                       valueExpr="id"
                       placeholder="{{ l('SelectActor') }}"
+                      (onValueChanged)="getAllDrivers(); getAllTrucks(undefined)"
                     >
                     </dx-select-box>
                   </div>
