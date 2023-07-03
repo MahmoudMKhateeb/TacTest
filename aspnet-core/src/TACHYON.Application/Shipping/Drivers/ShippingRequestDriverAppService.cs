@@ -424,7 +424,11 @@ namespace TACHYON.Shipping.Drivers
             });
             DropOff.AvailableTransactions = !Point.IsResolve ? new List<PointTransactionDto>()
                 : _workFlowProvider.GetTransactionsByStatus(Point.WorkFlowVersion, statuses, Point.Status);
-
+            DropOff.AdditionalSteps = Point.AdditionalStepWorkFlowVersion == null ?new List<AdditionalStepDto>()
+                : (await _stepWorkflowProvider.GetPointAdditionalSteps(Point.AdditionalStepWorkFlowVersion.Value,
+                        Point.Id)).Select(x =>
+                        new AdditionalStepDto { Action = x.Action, Name = x.Name, StepType = x.AdditionalStepType })
+                    .ToList();
             return DropOff;
         }
 
