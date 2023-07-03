@@ -157,6 +157,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   isEdit: boolean;
   allOriginPorts: SelectFacilityItemDto[] = [];
   selectedShippingRequestDestinationCities: ShippingRequestDestinationCitiesDto[];
+  allpackingTypes: SelectItemDto[];
 
   get isFileInputValid() {
     return this._TripService.CreateOrEditShippingRequestTripDto.hasAttachment
@@ -245,6 +246,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
     this._facilitiesServiceProxy.getAllPortsForTableDropdown().subscribe((result) => {
       this.allOriginPorts = result;
+    });
+
+    this._shippingRequestsServiceProxy.getAllPackingTypesForDropdown().subscribe((result) => {
+      this.allpackingTypes = result;
     });
   }
 

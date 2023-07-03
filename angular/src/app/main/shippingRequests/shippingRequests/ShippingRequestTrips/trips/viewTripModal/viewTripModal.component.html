@@ -415,6 +415,26 @@
             </div>
           </div>
         </div>
+
+        <div class="row" [hidden]="_TripService.GetShippingRequestForViewOutput" *ngIf="_TripService.CreateOrEditShippingRequestTripDto">
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label> {{ l('PackingType') }}</label>
+              <div>
+                <select
+                  class="form-control"
+                  name="packingTypeId"
+                  [(ngModel)]="_TripService.CreateOrEditShippingRequestTripDto.packingTypeId"
+                  disabled
+                >
+                  <option [ngValue]="null">{{ l('SelectaPackingType') }}</option>
+                  -->
+                  <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <!--begin::Body-->
           <div class="col-lg-6">

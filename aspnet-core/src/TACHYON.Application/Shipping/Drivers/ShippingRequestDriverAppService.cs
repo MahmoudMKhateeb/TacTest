@@ -122,7 +122,8 @@ namespace TACHYON.Shipping.Drivers
         .Include(i => i.OriginFacilityFk)
        .ThenInclude(i=>i.CityFk)
        .Include(i => i.DestinationFacilityFk).ThenInclude(x=> x.CityFk)
-           .Where(t => t.AssignedDriverUserId == AbpSession.UserId &&
+           .Where(t => 
+           t.AssignedDriverUserId == AbpSession.UserId &&
            t.Status != ShippingRequestTripStatus.Canceled && t.DriverStatus != ShippingRequestTripDriverStatus.Rejected)
         .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Current, e => e.StartTripDate.Date <= Clock.Now.Date && e.Status != ShippingRequestTripStatus.Delivered && e.Status != ShippingRequestTripStatus.DeliveredAndNeedsConfirmation)
         .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Past, e => (e.Status == ShippingRequestTripStatus.Delivered || e.Status == ShippingRequestTripStatus.DeliveredAndNeedsConfirmation))
@@ -227,8 +228,14 @@ namespace TACHYON.Shipping.Drivers
              .Include(x => x.AssignedTruckFk)
               .ThenInclude(t => t.TrucksTypeFk)
                .ThenInclude(t => t.Translations)
+               .Include(x=>x.PackingTypeFk)
+               .Include(x=>x.GoodCategoryFk)
+               .ThenInclude(x=>x.Translations)
+               .Include(x=>x.ShipperTenantFk)
              .WhereIf(IsAccepted, t => t.DriverStatus == ShippingRequestTripDriverStatus.Accepted)
-            .SingleOrDefaultAsync(t => t.Id == TripId && t.Status != ShippingRequestTripStatus.Canceled && t.AssignedDriverUserId == AbpSession.UserId);
+            .SingleOrDefaultAsync(t => t.Id == TripId && t.Status != ShippingRequestTripStatus.Canceled 
+            && t.AssignedDriverUserId == AbpSession.UserId
+            );
 
 
             if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
@@ -463,7 +470,7 @@ namespace TACHYON.Shipping.Drivers
         /// <param name="pointId"></param>
         /// <param name="rate"></param>
         /// <param name="note"></param>
-        [RequiresFeature(AppFeatures.Carrier)]
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.CMS)]
         public async Task SetRating(long pointId, int rate, string note)
         {
            var isCurrentUserDriver = AbpSession.UserId.HasValue && await _shippingRequestDriverManager.IsCurrentUserDriver(AbpSession.UserId.Value);
@@ -486,13 +493,13 @@ namespace TACHYON.Shipping.Drivers
         /// <summary>
         /// The driver rate shipping Experience after trip delivered
         /// </summary>
-        [RequiresFeature(AppFeatures.Carrier)]
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.CMS)]
         public async Task SetShippingExpRating(int tripId, int rate, string note)
         {
             var isCurrentUserDriver = AbpSession.UserId.HasValue && await _shippingRequestDriverManager.IsCurrentUserDriver(AbpSession.UserId.Value);
             if (!isCurrentUserDriver)
                 throw new AbpValidationException(L("YouMustBeDriverToRateFacility"));
-            
+
             var input = new RatingLog() { TripId = tripId, RateType = RateType.SEByDriver, Rate = rate, Note = note, DriverId = AbpSession.UserId };
             await _ratingLogManager.CreateRating(input);
         }

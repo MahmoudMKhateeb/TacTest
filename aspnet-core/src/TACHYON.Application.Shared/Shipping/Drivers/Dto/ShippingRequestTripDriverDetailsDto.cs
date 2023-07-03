@@ -51,5 +51,6 @@ namespace TACHYON.Shipping.Drivers.Dto
         public bool HasAttachment { get; set; }
         public bool NeedsDeliveryNote { get; set; }
         public ShippingRequestTripFlag ShippingRequestTripFlag { get; set; }
+        public bool IsDirectTrip { get; set; }
     }
 }
