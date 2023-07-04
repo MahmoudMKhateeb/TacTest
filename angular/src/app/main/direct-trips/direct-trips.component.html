@@ -109,12 +109,13 @@
 
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
-        <div class="card-body">
-          <div class="row align-items-center">
+        <div class="card-body overflow-hidden">
+          <div class="row align-items-center overflow-hidden">
             <dx-data-grid
               style="height: 45vw"
               #grid
               id="dataGrid"
+              class="overflow-hidden"
               [dataSource]="dataSource"
               [remoteOperations]="{ groupPaging: true, sorting: true, filtering: true }"
               [showColumnLines]="true"
@@ -126,6 +127,7 @@
               (onRowExpanded)="getForView($event)"
               (onRowCollapsed)="collapsedRow($event)"
               (onExporting)="onExporting($event)"
+              [columnAutoWidth]="true"
             >
               <dxo-filter-row [visible]="true"></dxo-filter-row>
               <dxo-search-panel [visible]="true" placeholder="{{ 'Search' | localize }}..."></dxo-search-panel>
