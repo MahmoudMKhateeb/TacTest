@@ -34,97 +34,129 @@ namespace TACHYON.Invoices.Reports
             _invoiceRepository = invoiceRepository;
         }
 
-        public FileDto? DownloadInvoiceReportPdf(long invoiceId)
+        public FileDto DownloadInvoiceReportPdf(long invoiceId)
         {
             DisableTenancyFilters();
             AsyncHelper.RunSync(() => DisableInvoiceDraftedFilter());
-            var invoice = _invoiceRepository.GetAll().FirstOrDefault(i => i.Id == invoiceId);
+            var invoice = _invoiceRepository.GetAll().Select(x=> new { x.Channel, x.Id }).FirstOrDefault(i => i.Id == invoiceId);
 
-            if(invoice.Channel == InvoiceChannel.Trip)
+            if (invoice.Channel == InvoiceChannel.Trip)
             {
-                var reportPath = "/Invoices/Reports/LandScapeInvoice.rdlc";
-
-                ArrayList names = new ArrayList();
-                ArrayList data = new ArrayList();
-
-                var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
-                names.Add("GetInvoiceReportInfoDataset");
-                data.Add(invoiceDto);
-
-                names.Add("GetInvoiceShippingRequestsReportInfoDataset");
-                data.Add(_invoiceAppService.GetInvoiceShippingRequestsReportInfo(invoiceId));
-                return _pdfExporterBase.CreateRdlcPdfPackageFromList(invoice.InvoiceNumber?.ToString(), reportPath, names, data);
+               return DownloadTripInvoice(invoiceId);
             }
-            else if(invoice.Channel == InvoiceChannel.SaasTrip)
+            else if (invoice.Channel == InvoiceChannel.SaasTrip)
             {
-                var reportPath = "/Invoices/Reports/LandScapeInvoice_SAAS.rdlc";
+                return DownloadSAASTripInvoice(invoice.Id);
+            }
 
-                ArrayList names = new ArrayList();
-                ArrayList data = new ArrayList();
+            else if (invoice.Channel == InvoiceChannel.Penalty)
+            {
+                return DonwloadPenaltyInvoice(invoice.Id);
+            }
 
-                var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
-                names.Add("GetInvoiceReportInfoDataset");
-                data.Add(invoiceDto);
-
-                names.Add("GetSAASInvoiceShippingRequestsReportInfoDataset");
-                data.Add(_invoiceAppService.GetSAASInvoiceShippingRequestsReportInfo(invoiceId));
-
-                return _pdfExporterBase.CreateRdlcPdfPackageFromList(invoice.InvoiceNumber?.ToString(), reportPath, names, data);
+            else if (invoice.Channel == InvoiceChannel.DynamicInvoice)
+            {
+                return DownloadDynamicInvoice(invoice.Id);
+            }
+            else if (invoice.Channel == InvoiceChannel.Dedicated)
+            {
+                return DownloadDedicatedDynamicInvoice(invoice.Id);
             }
             return null;
-
         }
-        public FileDto DonwloadPenaltyInvoice(long invoiceId)
+
+
+        private FileDto DownloadTripInvoice(long invoiceId)
+        {
+            var reportPath = "/Invoices/Reports/LandScapeInvoice.rdlc";
+
+            ArrayList names = new();
+            ArrayList data = new();
+
+            var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
+            names.Add("GetInvoiceReportInfoDataset");
+            data.Add(invoiceDto);
+
+            names.Add("GetInvoiceShippingRequestsReportInfoDataset");
+            data.Add(_invoiceAppService.GetInvoiceShippingRequestsReportInfo(invoiceId));
+            var file = _pdfExporterBase.CreateRdlcPdfPackageFromList(invoiceDto.First().InvoiceNumber.ToString(), reportPath, names, data);
+            return file;
+        }
+
+        private FileDto DownloadSAASTripInvoice(long invoiceId)
+        {
+            var reportPath = "/Invoices/Reports/LandScapeInvoice_SAAS.rdlc";
+
+            ArrayList names = new ();
+            ArrayList data = new ();
+
+            var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
+            names.Add("GetInvoiceReportInfoDataset");
+            data.Add(invoiceDto);
+
+            names.Add("GetSAASInvoiceShippingRequestsReportInfoDataset");
+            data.Add(_invoiceAppService.GetSAASInvoiceShippingRequestsReportInfo(invoiceId));
+
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(invoiceDto.First().InvoiceNumber.ToString(), reportPath, names, data);
+        }
+
+        private FileDto DonwloadPenaltyInvoice(long invoiceId)
         {
             var reportPath = "/Invoices/Reports/PenaltyInvoice.rdlc";
 
-            ArrayList names = new ArrayList();
-            ArrayList data = new ArrayList();
+            ArrayList names = new ();
+            ArrayList data = new ();
+
+            var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
             names.Add("GetInvoiceReportInfoDataset");
-            data.Add(_invoiceAppService.GetInvoiceReportInfo(invoiceId));
+            data.Add(invoiceDto);
 
             names.Add("GetInvoicePenaltiseInvoiceReportInfo");
             data.Add(_invoiceAppService.GetInvoicePenaltiseInvoiceReportInfo(invoiceId));
 
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetInvoiceNumber(invoiceId), reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(invoiceDto.First().InvoiceNumber.ToString(), reportPath, names, data);
         }
 
-        public FileDto DownloadDynamicInvoice(long invoiceId)
+        private FileDto DownloadDynamicInvoice(long invoiceId)
         {
             var reportPath = "/Invoices/Reports/DynamicInvoice.rdlc";
 
-            ArrayList names = new ArrayList();
-            ArrayList data = new ArrayList();
+            ArrayList names = new ();
+            ArrayList data = new ();
+            var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
             names.Add("GetInvoiceReportInfoDataset");
-            data.Add(_invoiceAppService.GetInvoiceReportInfo(invoiceId));
+            data.Add(invoiceDto);
 
             names.Add("GetInvoiceShippingRequestsReportInfoDataset");
             data.Add(_invoiceAppService.GetDynamicInvoiceItemsReportInfo(invoiceId));
 
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetInvoiceNumber(invoiceId), reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(invoiceDto.First().InvoiceNumber.ToString(), reportPath, names, data);
         }
 
-        public FileDto DownloadDedicatedDynamicInvoice(long invoiceId)
+        private FileDto DownloadDedicatedDynamicInvoice(long invoiceId)
         {
             var reportPath = "/Invoices/Reports/DedicatedInvoice.rdlc";
 
-            ArrayList names = new ArrayList();
-            ArrayList data = new ArrayList();
+            ArrayList names = new ();
+            ArrayList data = new ();
+
+            var invoiceDto = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
+
             names.Add("GetInvoiceReportInfoDataset");
-            data.Add(_invoiceAppService.GetInvoiceReportInfo(invoiceId));
+            data.Add(invoiceDto);
 
             names.Add("GetDedicatedInvoiceItemReportInfo");
             data.Add(_invoiceAppService.GetDedicatedDynamicInvoiceItemsReportInfo(invoiceId));
 
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetInvoiceNumber(invoiceId), reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(invoiceDto.First().InvoiceNumber.ToString(), reportPath, names, data) ;
         }
 
         public FileDto DownloadInvoiceNoteReportPdf(long invoiceNoteId)
         {
             var reportPath = "/Invoices/Reports/InvoiceNote.rdlc";
 
-            ArrayList names = new ArrayList();
-            ArrayList data = new ArrayList();
+            ArrayList names = new ();
+            ArrayList data = new ();
 
             names.Add("GetInvoiceNoteReportInfoDataset");
             data.Add(_InvoiceNoteAppService.GetInvoiceNoteReportInfo(invoiceNoteId));
@@ -135,11 +167,11 @@ namespace TACHYON.Invoices.Reports
             return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetInvoiceNumberFromNote(invoiceNoteId), reportPath, names, data);
         }
 
-        private string GetInvoiceNumber(long invoiceId)
-        {
-            var invoice = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
-            return invoice.FirstOrDefault()?.InvoiceNumber.ToString();
-        }
+        //private string GetInvoiceNumber(Invoice invoice)
+        //{
+        //   // var invoice = _invoiceAppService.GetInvoiceReportInfo(invoiceId);
+        //    return invoice?.InvoiceNumber.ToString();
+        //}
 
         private string GetInvoiceNumberFromNote(long invoiceNoteId)
         {
