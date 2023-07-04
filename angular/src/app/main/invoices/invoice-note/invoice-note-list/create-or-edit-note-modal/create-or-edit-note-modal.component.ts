@@ -265,4 +265,10 @@ export class CreateOrEditNoteModalComponent extends AppComponentBase implements 
     this.form.vatAmount = allVatAmount;
     this.form.totalValue = sumAllPrice + allVatAmount;
   }
+
+  IncludeTaxChange(newPrice: number): void {
+    this.calculatePrice(newPrice);
+    this.getAllWaybillByInvoiceId();
+    this.calculateTotalPrice();
+  }
 }
