@@ -193,50 +193,21 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  downloadPenaltyReport(id: number) {
-    this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(id).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-    });
-  }
-
-  downloadDynamicReport(id: number) {
-    this._InvoiceReportServiceProxy.downloadDynamicInvoice(id).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-    });
-  }
-
-  downloadDedicatedReport(id: number) {
-    this._InvoiceReportServiceProxy.downloadDedicatedDynamicInvoice(id).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-    });
-  }
-
   details(invoice: any): void {
-    if (invoice.channel == InvoiceChannel.Dedicated) {
-      this._InvoiceReportServiceProxy.downloadDedicatedDynamicInvoice(invoice.id).subscribe((result) => {
-        let file = this._fileDownloadService.downloadTempFile(result);
-        this.sharedPdfViewer.show(file, 'pdf');
-      });
-    } else if (invoice.channel == InvoiceChannel.Trip) {
-      this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(invoice.id).subscribe((result) => {
-        let file = this._fileDownloadService.downloadTempFile(result);
-        this.sharedPdfViewer.show(file, 'pdf');
-      });
-    } else if (invoice.channel == InvoiceChannel.Penalty) {
-      this._InvoiceReportServiceProxy.donwloadPenaltyInvoice(invoice.id).subscribe((result) => {
-        let file = this._fileDownloadService.downloadTempFile(result);
-        this.sharedPdfViewer.show(file, 'pdf');
-      });
-    }
-
-    // if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
-    //  this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
-    // } else {
-    //   this._InvoiceServiceProxy.getById(invoice.id).subscribe((result) => {
-    //     this.InvoiceDetailsModel.show(result);
-    //   });
-    // }
+    this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(invoice.id).subscribe((result) => {
+      let file = this._fileDownloadService.GetTempFileUrl(result);
+      this.sharedPdfViewer.show(file, 'pdf');
+    });
   }
+
+  // if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
+  //  this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
+  // } else {
+  //   this._InvoiceServiceProxy.getById(invoice.id).subscribe((result) => {
+  //     this.InvoiceDetailsModel.show(result);
+  //   });
+  // }
+  //}
 
   getAllInvoices() {
     let self = this;
