@@ -250,6 +250,32 @@
                                   </div>
                                 </div>
 
+                                <div
+                                  class="d-inline-block"
+                                  ngbDropdown
+                                  *ngIf="point.isDeliveryNoteUploaded &&
+                                        (shippingType != ShippingTypeEnum.ImportPortMovements && shippingType != ShippingTypeEnum.ExportPortMovements)"
+                                >
+                                  <button
+                                    class="btn btn-sm btn-danger mx-2"
+                                    ngbDropdownToggle
+                                    [buttonBusy]="loadPodForPointId == point.id"
+                                    (click)="getDeliveryNoteListForPoint(point)"
+                                  >
+                                    {{l('DeliveryNote')}}
+                                  </button>
+                                  <div ngbDropdownMenu aria-labelledby="dropdownManual" dropdownConfig>
+                                    <button
+                                      ngbDropdownItem
+                                      class="overflow-hidden"
+                                      *ngFor="let deliverNote of pointDeliveryNoteList; let x = index"
+                                      (click)="downloadPOD(deliverNote)"
+                                    >
+                                      {{ deliverNote.fileName | slice:0:20 }}{{ '...'}}
+                                    </button>
+                                  </div>
+                                </div>
+
                                 <button *ngIf="point.isResolve" (click)="showPointLog(point.id)" class="btn btn-sm btn-danger mr-1 ml-1">
                                   {{ l('ActivityLog') }}
                                 </button>
