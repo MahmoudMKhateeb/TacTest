@@ -1828,8 +1828,8 @@ namespace TACHYON.Tracking
         /// </summary>
         private async Task ChangeShippingRequestStatusIfAllTripsDone(ShippingRequestTrip trip)
         {
-            if (_shippingRequestTripRepository.GetAll().Where(x=> x.ShippingRequestId == trip.ShippingRequestId &&
-            x.ShippingRequestFk.NumberOfTrips == x.ShippingRequestFk.TotalsTripsAddByShippier).All(x =>
+            if (_shippingRequestTripRepository.GetAll().Where(x=> x.ShippingRequestId == trip.ShippingRequestId ).All(x =>
+                    x.ShippingRequestFk.NumberOfTrips == x.ShippingRequestFk.TotalsTripsAddByShippier  &&
                     x.Status == ShippingRequestTripStatus.Delivered ))
             {
                 trip.ShippingRequestFk.Status = ShippingRequestStatus.Completed;
