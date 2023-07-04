@@ -23,7 +23,7 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
   public chartOptions: Partial<ApexOptions>;
   plotOptions: ApexPlotOptions = {
     bar: {
-      barHeight: '10px',
+      barHeight: '50px',
       columnWidth: '10px',
       distributed: true,
       horizontal: true,
@@ -121,6 +121,9 @@ export class ActorMostTruckTypeUsedComponent extends AppComponentBase implements
             formatter: function () {
               return '';
             },
+          },
+          formatter: (val, opts) => {
+            return val + ' ' + this.l('Trip');
           },
         },
       },
