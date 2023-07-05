@@ -634,7 +634,7 @@ namespace TACHYON.Shipping.Trips
             // appointment attachment
             if (input.DocumentId != null)
             {
-                input.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.DocumentId.ToString(), AbpSession.TenantId);
+                input.DocumentId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.DocumentId.ToString(), input.DocumentContentType, AbpSession.TenantId);
                 var document = ObjectMapper.Map<IHasDocument>(input);
                 await _shippingRequestPointWorkFlowProvider.UploadFiles(new List<IHasDocument> { document }, point.Id, RoutePointDocumentType.Appointment);
             }
