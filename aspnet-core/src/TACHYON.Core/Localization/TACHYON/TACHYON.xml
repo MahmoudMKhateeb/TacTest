@@ -2615,8 +2615,8 @@
 	<text name="TMS_RouteTypesUsageWidget">Routes types usage</text>
 	<text name="TMS_MostRequestingShippersWidget">Most requesting shippers</text>
 	<text name="TMS_MostRequestedCarriersWidget">Most requested carriers</text>
-	<text name="TMS_TopRatedShippersWidget">Top rated shippers</text>
-	<text name="TMS_TopRatedCarriersWidget">Top rated carriers</text>
+	<text name="TMS_TopRatedShippersWidget">Top shippers</text>
+	<text name="TMS_TopRatedCarriersWidget">Top carriers</text>
 	<text name="TMS_WorstRatedShippersWidget">Worst rated shippers</text>
 	<text name="TMS_WorstRatedCarriersWidget">Worst rated carriers</text>
 	<text name="TMS_UnPricedRequestsInMarketPlaceWidget">Unpriced requests in marketplace</text>

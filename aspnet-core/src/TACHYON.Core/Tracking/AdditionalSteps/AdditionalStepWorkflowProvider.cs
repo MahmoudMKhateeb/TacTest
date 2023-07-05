@@ -500,9 +500,9 @@ namespace TACHYON.Tracking.AdditionalSteps
         private async Task HandleDeliveredTrip(long srId, int tripId, UserIdentifier shipper)
         {
             // when set All asyn ==> delivered it get false ? question why ?
-            bool isOtherTripsDelivered = await _tripRepository.GetAll().Where(x => x.ShippingRequestId == srId && x.Id != tripId && 
-            x.ShippingRequestFk.NumberOfTrips == x.ShippingRequestFk.TotalsTripsAddByShippier)
-                 .AllAsync(x => x.Status == ShippingRequestTripStatus.Delivered);
+            bool isOtherTripsDelivered = await _tripRepository.GetAll().Where(x => x.ShippingRequestId == srId)
+                 .AllAsync(x => x.ShippingRequestFk.NumberOfTrips == x.ShippingRequestFk.TotalsTripsAddByShippier
+                 && x.Status == ShippingRequestTripStatus.Delivered);
             if (isOtherTripsDelivered)
             {
                 _shippingRequestRepository.Update(srId, x =>

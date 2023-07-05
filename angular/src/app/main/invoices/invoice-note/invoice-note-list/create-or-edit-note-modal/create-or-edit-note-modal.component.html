@@ -134,7 +134,7 @@
             <div class="form-check checkClass">
               <input
                 class="form-check-input"
-                (change)="calculatePrice(newAttribute.price); getAllWaybillByInvoiceId()"
+                (change)="IncludeTaxChange(newAttribute.price)"
                 name="IsTaxVatIncluded"
                 checked
                 [(ngModel)]="form.isTaxVatIncluded"

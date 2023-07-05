@@ -55,6 +55,8 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public RoutePointCompletedStatus CompletedStatus { get; set; }
         public DropAppointmentDataDto DropAppointmentData { get; set; } = new DropAppointmentDataDto();
         public List<PointTransactionDto> AvailableTransactions { get; set; }
+        public List<AdditionalStepDto> AdditionalSteps { get; set; }
+
 
         // public double TotalWeight { get; set; }
 

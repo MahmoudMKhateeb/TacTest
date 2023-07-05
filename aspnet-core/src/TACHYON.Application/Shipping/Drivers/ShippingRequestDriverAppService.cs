@@ -396,6 +396,9 @@ namespace TACHYON.Shipping.Drivers
                  .ThenInclude(c => c.CityFk)
                 .Include(i => i.ReceiverFk)
                 .Include(i => i.GoodsDetails)
+                .ThenInclude(x=>x.GoodCategoryFk)
+                .ThenInclude(x=>x.Translations)
+                .Include(i => i.GoodsDetails)
                  .ThenInclude(i => i.UnitOfMeasureFk)
                  .ThenInclude(x => x.Translations)
             .SingleOrDefaultAsync(t => t.Id == PointId && t.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled 
@@ -424,7 +427,11 @@ namespace TACHYON.Shipping.Drivers
             });
             DropOff.AvailableTransactions = !Point.IsResolve ? new List<PointTransactionDto>()
                 : _workFlowProvider.GetTransactionsByStatus(Point.WorkFlowVersion, statuses, Point.Status);
-
+            DropOff.AdditionalSteps = Point.AdditionalStepWorkFlowVersion == null ?new List<AdditionalStepDto>()
+                : (await _stepWorkflowProvider.GetPointAdditionalSteps(Point.AdditionalStepWorkFlowVersion.Value,
+                        Point.Id)).Select(x =>
+                        new AdditionalStepDto { Action = x.Action, Name = x.Name, StepType = x.AdditionalStepType })
+                    .ToList();
             return DropOff;
         }
 
