@@ -44,7 +44,6 @@ import { CustomMarkerComponent } from '@app/main/shippingRequests/shippingReques
 import { CustomTimelineComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/custom-timeline/custom-timeline.component';
 import { UploadAdditionalDocumentsComponent } from '@app/main/shippingRequests/shippingRequests/tracking/new-tracking/upload-additional-documents/upload-additional-documents.component';
 import { TrackingTableViewComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-table-view/tracking-table-view.component';
-import { DxSelectBoxModule } from '@node_modules/devextreme-angular/ui/select-box';
 import { ViewForceDeliverTripsFromExcelModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tracking-force-deliver-trip/view-force-deliver-trips-from-excel-modal/view-force-deliver-trips-from-excel-modal.component';
 
 @NgModule({

@@ -249,7 +249,7 @@
         <div class="modal-footer">
           <dx-load-panel [closeOnOutsideClick]="true" [(visible)]="saving" [showIndicator]="false"> </dx-load-panel>
           <!--          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>-->
-          <dx-button id="button" text="{{ l('Save') }}" type="success" [useSubmitBehavior]="true"> </dx-button>
+          <dx-button id="button" text="{{ l('Save') }}" type="danger" [useSubmitBehavior]="true"> </dx-button>
           <dx-button id="buttonBack" text="{{ l('Cancel') }}" (click)="close()"> </dx-button>
         </div>
       </form>
