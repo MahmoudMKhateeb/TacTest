@@ -3144,6 +3144,9 @@
 	<text name="CarrierSaasOrBroker">Carrier Saas Or Broker</text>
     <text name="ValueOfGoods">قيمة البضائع</text>
     <text name="InsuranceCoverage">تغطية الحمل</text>
+    <text name="Hour">ساعة</text>
+    <text name="Minute">دقيقة</text>
+    <text name="Before">قبل</text>
 		
 	</texts>
 </localizationDictionary>
