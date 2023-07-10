@@ -11,7 +11,7 @@ namespace TACHYON.Dashboards.Host
     public interface ITMSAndHostDashboard
     {
         Task<GetRegisteredCompaniesNumberOutput> GetRegisteredCompaniesNumber();
-        Task<List<ChartCategoryPairedValuesDto>> GetRegisteredCompaniesNumberInRange(DateRangeInput input);
+        Task<GetRegisteredCompaniesNumberInRangeDto> GetRegisteredCompaniesNumberInRange(DateRangeInput input);
         Task<List<RouteTypeAvailableDto>> GetRouteTypeCount();
 
     }

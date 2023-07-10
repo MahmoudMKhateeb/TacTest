@@ -63,34 +63,79 @@ namespace TACHYON.Dashboards.Host
                 .CountAsync(),
                 CarriersCount = await _tenantRepository.GetAll().AsNoTracking()
                 .Where(r => r.Edition.DisplayName.Equals(TACHYONConsts.CarrierEdtionName))
+                .CountAsync(),
+                SAASCount = await _tenantRepository.GetAll().AsNoTracking()
+                .Where(r => r.Edition.DisplayName.Equals(TACHYONConsts.BrokerEditionName) || r.Edition.DisplayName.Equals(TACHYONConsts.CarrierSaasEditionName))
                 .CountAsync()
             };
-            dto.TotalNumber = dto.ShippersNumber + dto.CarriersCount;
+            dto.TotalNumber = dto.ShippersNumber + dto.CarriersCount + dto.SAASCount;
             return dto;
         }
 
-        public async Task<List<ChartCategoryPairedValuesDto>> GetRegisteredCompaniesNumberInRange(DateRangeInput input)
+        public async Task<GetRegisteredCompaniesNumberInRangeDto> GetRegisteredCompaniesNumberInRange(DateRangeInput input)
         {
             await DisableTenancyFiltersIfTachyonDealer();
 
-            var list = (await _tenantRepository.GetAll().AsNoTracking()
-            .Where(r => r.CreationTime.Date > input.StartDate && r.CreationTime.Date < input.EndDate).Select(x=>x.CreationTime).ToListAsync())
+            var list = _tenantRepository.GetAll().AsNoTracking()
+            .Where(r => r.CreationTime.Date > input.StartDate && r.CreationTime.Date < input.EndDate && !r.Name.Equals("Default"));
+
+
+            var shippers = (await list.Where(x=>x.Edition.DisplayName == TACHYONConsts.ShipperEdtionName).Select(x => x.CreationTime)
+            .ToListAsync())
             .Select(creationTime => new { y = creationTime.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationTime.Month) })
             .GroupBy(x => x.y).Select(x => new { X = x.Key, Y= x.Count()}).ToList();
 
-            var dto = new List<ChartCategoryPairedValuesDto>();
-             foreach(var monthWithYear in MonthsWithYearsInRange(input.StartDate, input.EndDate))
+            var carriers = (await list.Where(x => x.Edition.DisplayName == TACHYONConsts.CarrierEdtionName).Select(x => x.CreationTime)
+            .ToListAsync())
+            .Select(creationTime => new { y = creationTime.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationTime.Month) })
+            .GroupBy(x => x.y).Select(x => new { X = x.Key, Y = x.Count() }).ToList();
+
+            var saas = (await list.Where(x => x.Edition.DisplayName.Equals(TACHYONConsts.BrokerEditionName) || x.Edition.DisplayName.Equals(TACHYONConsts.CarrierSaasEditionName)).Select(x => x.CreationTime)
+            .ToListAsync())
+            .Select(creationTime => new { y = creationTime.Year + "-" + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(creationTime.Month) })
+            .GroupBy(x => x.y).Select(x => new { X = x.Key, Y = x.Count() }).ToList();
+
+            var dto = new GetRegisteredCompaniesNumberInRangeDto
+            {
+                CarriersList = new List<ChartCategoryPairedValuesDto>(),
+                ShippersList = new List<ChartCategoryPairedValuesDto>(),
+                SaasList = new List<ChartCategoryPairedValuesDto>()
+            };
+
+            foreach (var monthWithYear in MonthsWithYearsInRange(input.StartDate, input.EndDate))
              {
-                var item = list.FirstOrDefault(x => x.X == monthWithYear);
-                if (item != null)
+                var shipper = shippers.FirstOrDefault(x => x.X == monthWithYear);
+                if (shipper != null)
                 {
-                    dto.Add(new ChartCategoryPairedValuesDto { X = item.X, Y = item.Y });
+                    dto.ShippersList.Add(new ChartCategoryPairedValuesDto { X = shipper.X, Y = shipper.Y });
                 }
                 else
                 {
-                    dto.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                    dto.ShippersList.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
                 }
-             }
+
+                var carrier = carriers.FirstOrDefault(x => x.X == monthWithYear);
+                if (carrier != null)
+                {
+                    dto.CarriersList.Add(new ChartCategoryPairedValuesDto { X = carrier.X, Y = carrier.Y });
+                }
+                else
+                {
+                    dto.CarriersList.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                }
+
+
+                var saasItem = saas.FirstOrDefault(x => x.X == monthWithYear);
+                if (saasItem != null)
+                {
+                    dto.SaasList.Add(new ChartCategoryPairedValuesDto { X = saasItem.X, Y = saasItem.Y });
+                }
+                else
+                {
+                    dto.SaasList.Add(new ChartCategoryPairedValuesDto { X = monthWithYear, Y = 0 });
+                }
+
+            }
             return dto;
         }
 
