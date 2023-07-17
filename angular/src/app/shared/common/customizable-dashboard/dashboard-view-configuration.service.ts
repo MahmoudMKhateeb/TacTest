@@ -273,12 +273,12 @@ export class DashboardViewConfigurationService {
 
     let NumberOfTrips = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.NumberOfTripsWidget, NumberOfTripsComponent, 9, 10);
 
-    let NormalRequestsVSDedicatedRequests = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.NormalRequestsVSDedicatedRequestsWidget,
-      NormalRequestsVSDedicatedRequestsComponent,
-      12,
-      10
-    );
+    // let NormalRequestsVSDedicatedRequests = new WidgetViewDefinition(
+    //   DashboardCustomizationConst.widgets.host.NormalRequestsVSDedicatedRequestsWidget,
+    //   NormalRequestsVSDedicatedRequestsComponent,
+    //   12,
+    //   10
+    // );
 
     let NumberOfTruckAggregationTripsVsSaasTrips = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.NumberOfTruckAggregationTripsVsSaasTrips,
@@ -593,12 +593,12 @@ export class DashboardViewConfigurationService {
       10
     );
 
-    let NormalRequestsVSDedicatedRequests_TMS = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.TachyonDealer.NormalRequestsVSDedicatedRequestsWidget,
-      NormalRequestsVSDedicatedRequestsComponent,
-      12,
-      10
-    );
+    // let NormalRequestsVSDedicatedRequests_TMS = new WidgetViewDefinition(
+    //   DashboardCustomizationConst.widgets.TachyonDealer.NormalRequestsVSDedicatedRequestsWidget,
+    //   NormalRequestsVSDedicatedRequestsComponent,
+    //   12,
+    //   10
+    // );
 
     let NumberOfTruckAggregationTripsVsSaasTrips_TMS = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.TachyonDealer.NumberOfTruckAggregationTripsVsSaasTrips,
@@ -881,7 +881,7 @@ export class DashboardViewConfigurationService {
     this.WidgetViewDefinitions.push(numberOfRegisteredCompanies_TMS);
     this.WidgetViewDefinitions.push(NumberOfDriversAndTrucks_TMS);
     this.WidgetViewDefinitions.push(TopRatedShippersAndCarriersWidget_TMS);
-    this.WidgetViewDefinitions.push(NormalRequestsVSDedicatedRequests_TMS);
+    // this.WidgetViewDefinitions.push(NormalRequestsVSDedicatedRequests_TMS);
     this.WidgetViewDefinitions.push(HostMostTruckTypeUsed_TMS);
     this.WidgetViewDefinitions.push(NumberOfTrips_TMS);
     this.WidgetViewDefinitions.push(NumberOfSaasTrips_TMS);
@@ -905,7 +905,7 @@ export class DashboardViewConfigurationService {
 
     this.WidgetViewDefinitions.push(NumberOfDriversAndTrucks);
     this.WidgetViewDefinitions.push(NumberOfTrips);
-    this.WidgetViewDefinitions.push(NormalRequestsVSDedicatedRequests);
+    // this.WidgetViewDefinitions.push(NormalRequestsVSDedicatedRequests);
     this.WidgetViewDefinitions.push(NumberOfRegisteredTrucks);
     this.WidgetViewDefinitions.push(numberOfRegisteredCompanies);
     this.WidgetViewDefinitions.push(NumberOfRegisteredShippers);
