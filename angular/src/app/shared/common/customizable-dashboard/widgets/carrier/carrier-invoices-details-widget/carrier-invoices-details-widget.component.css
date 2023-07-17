@@ -5,6 +5,10 @@ input[type='radio'] {
   margin-left: -35px !important;
   margin-top: 35px !important;
 }
+
+.card-label.is-for-actor {
+  font-size: 1.2rem !important;
+}
 .card-label {
   font-size: 20px !important;
   font-weight: 600 !important;

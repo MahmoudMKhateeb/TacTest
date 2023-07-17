@@ -2988,8 +2988,8 @@
 	<text name="NumberOfActiveActors">عدد العملاء النشطين</text>
 	<text name="NumberOfNonActiveActors">عدد العملاء غير النشطين</text>
 	<text name="Shippers">الشاحنون</text>
-	<text name="NewInvoicesVsPaidInvoices">الفواتير الجديدة مقابل الفواتير المدفوعة</text>
-	<text name="PaidInvoiceVsClaimedInvoice">الفاتورة المدفوعة مقابل الفاتورة المطالب بها</text>
+	<text name="NewInvoicesVsPaidInvoices">الفواتير الجديدة مقابل الفواتير المدفوعة - عميل الشاحن</text>
+	<text name="PaidInvoiceVsClaimedInvoice">الفاتورة المدفوعة مقابل الفاتورة المطالب بها - عميل الناقل</text>
 	<text name="Claimed">مطالب بها</text>
 	<text name="Week">أسبوع</text>
 	<text name="Sun">الأحد</text>
