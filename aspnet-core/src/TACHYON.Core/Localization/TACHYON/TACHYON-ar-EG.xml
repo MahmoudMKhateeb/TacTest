@@ -3180,7 +3180,6 @@
 	<text name="PleaseSelectReportType">الرجاء اختيار نوع التقرير</text>
 	<text name="GrantedEditionType">نوع الإشتراك الممنوح</text>
 	<text name="SelectAnExcludedCompany">أختر الشركة المستبعدة</text>
-	<text name="DeliveryDate">تاريخ التسليم</text>
 	<text name="IsPodSubmitted">إثبات التوصيل مُقَدَّم</text>
 	<text name="InvoiceIssued">تم إصدار الفاتورة</text>
 	<text name="CreateNewReport">إنشاء تقرير جديد</text>
@@ -3196,7 +3195,18 @@
 	<text name="FinancialReport">تقرير مالي</text>
 	<text name="PodStatus">حالة اثبات التسليم</text>
 	<text name="Submitted">تم إرساله</text>
-	<text name="NotSubmitted">لم يتم إرساله</text>
+	<text name="MinCostWithVat">التكلفة الدنيا مع ضريبة القيمة المضافة</text>
+	<text name="MinCostWithoutVat">التكلفة الدنيا بدون ضريبة القيمة المضافة</text>
+	<text name="MinSellingWithVat">الحد الأدنى للبيع بضريبة القيمة المضافة</text>
+	<text name="MinSellingWithoutVat">الحد الأدنى للبيع بدون ضريبة القيمة المضافة</text>
+	<text name="MinProfitWithVat">الحد الأدنى للربح مع ضريبة القيمة المضافة</text>
+	<text name="MinProfitWithoutVat">الحد الأدنى للربح بدون ضريبة القيمة المضافة</text>
+	<text name="MaxCostWithVat">التكلفة القصوى مع ضريبة القيمة المضافة</text>
+	<text name="MaxCostWithoutVat">التكلفة القصوى بدون ضريبة القيمة المضافة</text>
+	<text name="MaxSellingWithVat">الحد الأقصى للبيع مع ضريبة القيمة المضافة</text>
+	<text name="MaxSellingWithoutVat">ماكس بيع بدون ضريبة القيمة المضافة</text>
+	<text name="MaxProfitWithVat">أقصى ربح مع ضريبة القيمة المضافة</text>
+	<text name="MaxProfitWithoutVat">أقصى ربح بدون ضريبة القيمة المضافة</text>
 		
 	</texts>
 </localizationDictionary>

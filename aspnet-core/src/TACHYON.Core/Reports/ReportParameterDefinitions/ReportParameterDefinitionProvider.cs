@@ -52,7 +52,7 @@ namespace TACHYON.Reports.ReportParameterDefinitions
                  
              {
                  Name = ReportParameterNames.ShipperName,
-                 Type = typeof(int?),
+                 Type = typeof(int),
                  ListDataCallback = () => GetCompanies(ShipperEditionId),
                  ExpressionCallback = (args) =>
                      x =>  (x.ShippingRequestId.HasValue ? x.ShippingRequestFk.TenantId : x.ShipperTenantId) == int.Parse(args.ParameterValue)
@@ -60,7 +60,7 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              var carrierNameParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.CarrierName,
-                 Type = typeof(int?),
+                 Type = typeof(int),
                  ListDataCallback = () => GetCompanies(CarrierEditionId),
                  ExpressionCallback = (args) => x => (x.ShippingRequestId.HasValue ? x.ShippingRequestFk.CarrierTenantId : x.CarrierTenantId) ==
                                                                int.Parse(args.ParameterValue) 
@@ -75,7 +75,7 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              var transportParameterDefinition = new StaticReportParameterDefinition
              {
                  Name = ReportParameterNames.TransportType,
-                 Type = typeof(int?),
+                 Type = typeof(int),
                  ListDataCallback = GetTransportTypes,
                  ExpressionCallback = (args) => x=> (x.ShippingRequestId.HasValue
                      ? x.ShippingRequestFk.TrucksTypeId
@@ -83,7 +83,7 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              };
              var shippingTypeParameterDefinition = new StaticReportParameterDefinition
              {
-                 Name = ReportParameterNames.ShippingType, Type = typeof(int?), ListDataCallback = GetShippingTypes,
+                 Name = ReportParameterNames.ShippingType, Type = typeof(int), ListDataCallback = GetShippingTypes,
                  ExpressionCallback = (args) => x=> (x.ShippingRequestId.HasValue ? x.ShippingRequestFk.ShippingTypeId : x.ShippingTypeId) ==
                                                               (ShippingTypeEnum)byte.Parse(args.ParameterValue)
              };
@@ -105,13 +105,13 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              };
              var originParameterDefinition = new StaticReportParameterDefinition
              {
-                 Name = ReportParameterNames.Origin, Type = typeof(int?), ListDataCallback = GetCities,
+                 Name = ReportParameterNames.Origin, Type = typeof(int), ListDataCallback = GetCities,
                  ExpressionCallback = (args) => x=> (x.ShippingRequestId.HasValue ? x.ShippingRequestFk.OriginCityId : x.OriginCityId) ==
                                                               int.Parse(args.ParameterValue)
              };
              var destinationParameterDefinition = new StaticReportParameterDefinition
              {
-                 Name = ReportParameterNames.Destination, Type = typeof(int?), ListDataCallback = GetCities,
+                 Name = ReportParameterNames.Destination, Type = typeof(int), ListDataCallback = GetCities,
                  ExpressionCallback = (args) => x=> (x.ShippingRequestId.HasValue
                          ? x.ShippingRequestFk.ShippingRequestDestinationCities
                          : x.ShippingRequestDestinationCities)
@@ -151,6 +151,80 @@ namespace TACHYON.Reports.ReportParameterDefinitions
                  ListDataCallback = GetEnumAsList<ReportPodStatus>,
                  ExpressionCallback = (args) => x=> (ReportPodStatus.PodSubmitted == (ReportPodStatus)int.Parse(args.ParameterValue) && x.RoutPoints.Where(p=> p.PickingType == PickingType.Dropoff).All(p=> p.IsPodUploaded))
                  || (ReportPodStatus.PodNotSubmitted == (ReportPodStatus)int.Parse(args.ParameterValue) && x.RoutPoints.Where(p=> p.PickingType == PickingType.Dropoff).Any(p=> !p.IsPodUploaded))
+             };
+             
+             var minCostWithVatParameterDefinition = new StaticReportParameterDefinition
+             {
+                 Name = ReportParameterNames.MinCostWithVat,
+                 Type = typeof(int),
+                 ExpressionCallback = (args) => x=> x.TotalAmount >= int.Parse(args.ParameterValue)
+             };             
+             var minCostWithoutVatParameterDefinition = new StaticReportParameterDefinition
+             {
+                 Name = ReportParameterNames.MinCostWithoutVat,
+                 Type = typeof(int),
+                 ExpressionCallback = (args) => x=> x.SubTotalAmount >= int.Parse(args.ParameterValue)
+             };             
+             var minSellingWithVatParameterDefinition = new StaticReportParameterDefinition
+             {
+                 Name = ReportParameterNames.MinSellingWithVat,
+                 Type = typeof(int),
+                 ExpressionCallback = (args) => x=> x.TotalAmountWithCommission >= int.Parse(args.ParameterValue)
+             };             
+             var minSellingWithoutVatParameterDefinition = new StaticReportParameterDefinition
+             {
+                 Name = ReportParameterNames.MinSellingWithoutVat,
+                 Type = typeof(int),
+                 ExpressionCallback = (args) => x=> x.SubTotalAmountWithCommission >= int.Parse(args.ParameterValue)
+             };             
+             var minProfitWithVatParameterDefinition = new StaticReportParameterDefinition
+             {
+                 Name = ReportParameterNames.MinProfitWithVat,
+                 Type = typeof(int),
+                 ExpressionCallback = (args) => x=> x.VatAmountWithCommission >= int.Parse(args.ParameterValue)
+             };             
+             var minProfitWithoutVatParameterDefinition = new StaticReportParameterDefinition
+             {
+                 Name = ReportParameterNames.MinProfitWithoutVat,
+                 Type = typeof(int),
+                 ExpressionCallback = (args) => x=> x.CommissionAmount >= int.Parse(args.ParameterValue)
+             };
+             
+             var maxCostWithVatParameterDefinition = new StaticReportParameterDefinition
+             {
+                 Name = ReportParameterNames.MaxCostWithVat,
+                 Type = typeof(int),
+                 ExpressionCallback = (args) => x=> x.TotalAmount <= int.Parse(args.ParameterValue)
+             };             
+             var maxCostWithoutVatParameterDefinition = new StaticReportParameterDefinition
+             {
+                 Name = ReportParameterNames.MaxCostWithoutVat,
+                 Type = typeof(int),
+                 ExpressionCallback = (args) => x=> x.SubTotalAmount <= int.Parse(args.ParameterValue)
+             };             
+             var maxSellingWithVatParameterDefinition = new StaticReportParameterDefinition
+             {
+                 Name = ReportParameterNames.MaxSellingWithVat,
+                 Type = typeof(int),
+                 ExpressionCallback = (args) => x=> x.TotalAmountWithCommission <= int.Parse(args.ParameterValue)
+             };             
+             var maxSellingWithoutVatParameterDefinition = new StaticReportParameterDefinition
+             {
+                 Name = ReportParameterNames.MaxSellingWithoutVat,
+                 Type = typeof(int),
+                 ExpressionCallback = (args) => x=> x.SubTotalAmountWithCommission <= int.Parse(args.ParameterValue)
+             };             
+             var maxProfitWithVatParameterDefinition = new StaticReportParameterDefinition
+             {
+                 Name = ReportParameterNames.MaxProfitWithVat,
+                 Type = typeof(int),
+                 ExpressionCallback = (args) => x=> x.VatAmountWithCommission <= int.Parse(args.ParameterValue)
+             };             
+             var maxProfitWithoutVatParameterDefinition = new StaticReportParameterDefinition
+             {
+                 Name = ReportParameterNames.MaxProfitWithoutVat,
+                 Type = typeof(int),
+                 ExpressionCallback = (args) => x=> x.CommissionAmount <= int.Parse(args.ParameterValue)
              };
 
              #endregion
@@ -192,6 +266,18 @@ namespace TACHYON.Reports.ReportParameterDefinitions
              Register(ReportType.FinancialReport,carrierNameParameterDefinition);
              Register(ReportType.FinancialReport,truckTypeParameterDefinition);
              Register(ReportType.FinancialReport,transportParameterDefinition);
+             Register(ReportType.FinancialReport,minCostWithVatParameterDefinition);
+             Register(ReportType.FinancialReport,minCostWithoutVatParameterDefinition);
+             Register(ReportType.FinancialReport,minSellingWithVatParameterDefinition);
+             Register(ReportType.FinancialReport,minSellingWithoutVatParameterDefinition);
+             Register(ReportType.FinancialReport,minProfitWithVatParameterDefinition);
+             Register(ReportType.FinancialReport,minProfitWithoutVatParameterDefinition);
+             Register(ReportType.FinancialReport,maxCostWithVatParameterDefinition);
+             Register(ReportType.FinancialReport,maxCostWithoutVatParameterDefinition);
+             Register(ReportType.FinancialReport,maxSellingWithVatParameterDefinition);
+             Register(ReportType.FinancialReport,maxSellingWithoutVatParameterDefinition);
+             Register(ReportType.FinancialReport,maxProfitWithVatParameterDefinition);
+             Register(ReportType.FinancialReport,maxProfitWithoutVatParameterDefinition);
 
              #endregion
          }

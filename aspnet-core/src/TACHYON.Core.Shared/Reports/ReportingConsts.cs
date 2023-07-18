@@ -30,6 +30,19 @@
         public const string DeliveryDate = "DeliveryDate";
         public const string InvoiceStatus = "InvoiceStatus";
         public const string PodStatus = "PodStatus";
+        public const string MinCostWithVat = "MinCostWithVat";
+        public const string MinCostWithoutVat = "MinCostWithoutVat";
+        public const string MinSellingWithVat = "MinSellingWithVat";
+        public const string MinSellingWithoutVat = "MinSellingWithoutVat";
+        public const string MinProfitWithVat = "MinProfitWithVat";
+        public const string MinProfitWithoutVat = "MinProfitWithoutVat";
+        public const string MaxCostWithVat = "MaxCostWithVat";
+        public const string MaxCostWithoutVat = "MaxCostWithoutVat";
+        public const string MaxSellingWithVat = "MaxSellingWithVat";
+        public const string MaxSellingWithoutVat = "MaxSellingWithoutVat";
+        public const string MaxProfitWithVat = "MaxProfitWithVat";
+        public const string MaxProfitWithoutVat = "MaxProfitWithoutVat";
+        
 
         #endregion
         

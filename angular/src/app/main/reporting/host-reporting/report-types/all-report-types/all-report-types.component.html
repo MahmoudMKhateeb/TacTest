@@ -71,7 +71,7 @@
               <span *ngIf="!options.data.isActive">{{ 'No' | localize }}</span>
             </div>
             <div *dxTemplate="let options of 'reportTypeTemplate'">
-              <span class="badge badge-primary badge-inline">{{ options.data.reportType | localize }}</span>
+              <span>{{ options.data.reportType | localize }}</span>
             </div>
             <div *dxTemplate="let optoins of 'creationTimeTemplate'">
               <span>{{ optoins.data.creationTime | momentFormat: 'DD/MM/yyyy' }}</span>

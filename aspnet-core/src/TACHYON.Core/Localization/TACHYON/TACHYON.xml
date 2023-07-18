@@ -3470,7 +3470,6 @@
 	<text name="PleaseSelectReportType">Please select a report type</text>
 	<text name="GrantedEditionType">Granted Edition Type</text>
 	<text name="SelectAnExcludedCompany">Select an excluded company</text>
-	<text name="DeliveryDate">Date of delivery</text>
 	<text name="IsPodSubmitted">Is proof of delivery submitted</text>
 	<text name="InvoiceIssued">Is invoice issued</text>
 	<text name="CreateNewReport">Create A New Report</text>
@@ -3485,7 +3484,18 @@
 	<text name="FinancialReport">Financial Report</text>
 	<text name="PodStatus">Pod Status</text>
 	<text name="Submitted">Submitted</text>
-	<text name="NotSubmitted">Not Submitted</text>
+	<text name="MinCostWithVat">Min Cost With Vat</text>
+	<text name="MinCostWithoutVat">Min Cost Without Vat</text>
+	<text name="MinSellingWithVat">Min Selling With Vat</text>
+	<text name="MinSellingWithoutVat">Min Selling Without Vat</text>
+	<text name="MinProfitWithVat">Min Profit With Vat</text>
+	<text name="MinProfitWithoutVat">Min Profit Without Vat</text>
+	<text name="MaxCostWithVat">Max Cost With Vat</text>
+	<text name="MaxCostWithoutVat">Max Cost Without Vat</text>
+	<text name="MaxSellingWithVat">Max Selling With Vat</text>
+	<text name="MaxSellingWithoutVat">Max Selling Without Vat</text>
+	<text name="MaxProfitWithVat">Max Profit With Vat</text>
+	<text name="MaxProfitWithoutVat">Max Profit Without Vat</text>
 		
 	</texts>
 </localizationDictionary>
